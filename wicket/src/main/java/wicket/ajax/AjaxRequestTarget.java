@@ -327,16 +327,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("<ajax-response>");
 
 			// invoke onbeforerespond event on listeners
-			if (listeners != null)
-			{
-				final Map<String, Component> components = Collections
-						.unmodifiableMap(markupIdToComponent);
-
-				for (IListener listener : listeners)
-				{
-					listener.onBeforeRespond(components, this);
-				}
-			}
+			fireOnBeforeRespondListeners();
 
 			// normal behavior
 			for (String js : prependJavascripts)
@@ -346,35 +337,12 @@ public class AjaxRequestTarget implements IRequestTarget
 
 			respondComponents(response);
 
+			fireOnAfterRespondListeners(response);
+
 			for (String js : appendJavascripts)
 			{
 				respondInvocation(response, js);
 			}
-
-			// invoke onafterresponse event on listeners
-			if (listeners != null)
-			{
-				final Map<String, Component> components = Collections
-						.unmodifiableMap(markupIdToComponent);
-
-				// create response that will be used by listeners to append
-				// javascript
-				final IJavascriptResponse jsresponse = new IJavascriptResponse()
-				{
-
-					public void addJavascript(String script)
-					{
-						respondInvocation(response, script);
-					}
-
-				};
-
-				for (IListener listener : listeners)
-				{
-					listener.onAfterRespond(components, jsresponse);
-				}
-			}
-
 
 			response.write("</ajax-response>");
 		}
@@ -388,6 +356,46 @@ public class AjaxRequestTarget implements IRequestTarget
 		finally
 		{
 			requestCycle.setResponse(response);
+		}
+	}
+
+	private void fireOnBeforeRespondListeners()
+	{
+		if (listeners != null)
+		{
+			final Map<String, Component> components = Collections
+					.unmodifiableMap(markupIdToComponent);
+
+			for (IListener listener : listeners)
+			{
+				listener.onBeforeRespond(components, this);
+			}
+		}
+	}
+
+	private void fireOnAfterRespondListeners(final WebResponse response)
+	{
+		if (listeners != null)
+		{
+			final Map<String, Component> components = Collections
+					.unmodifiableMap(markupIdToComponent);
+
+			// create response that will be used by listeners to append
+			// javascript
+			final IJavascriptResponse jsresponse = new IJavascriptResponse()
+			{
+
+				public void addJavascript(String script)
+				{
+					respondInvocation(response, script);
+				}
+
+			};
+
+			for (IListener listener : listeners)
+			{
+				listener.onAfterRespond(components, jsresponse);
+			}
 		}
 	}
 
