@@ -248,6 +248,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		else if (requestTarget instanceof IPageRequestTarget)
 		{
 			url = encode(requestCycle, (IPageRequestTarget)requestTarget);
+			return url;
 		}
 		// fallthough for non-default request targets
 		else
