@@ -65,9 +65,9 @@ import wicket.util.string.Strings;
  * feature can be useful when it is desirable to link component update with some
  * javascript effects.
  * <p>
- * The target provides a listener interface {@link Listener} that can be used to
- * add code that responds to various target events by adding listeners via
- * {@link #addListener(wicket.ajax.AjaxRequestTarget.Listener)}
+ * The target provides a listener interface {@link IListener} that can be used
+ * to add code that responds to various target events by adding listeners via
+ * {@link #addListener(wicket.ajax.AjaxRequestTarget.IListener)}
  * 
  * @since 1.2
  * 
@@ -81,7 +81,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * various target-related events
 	 * 
 	 */
-	public static interface Listener
+	public static interface IListener
 	{
 		/**
 		 * Triggered before ajax request target begins its response cycle
@@ -95,6 +95,41 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * 
 		 */
 		public void onBeforeRespond(Map map, AjaxRequestTarget target);
+
+		/**
+		 * Triggered after ajax request target is done with its response cycle.
+		 * At this point only additional javascript can be output to the
+		 * response using the provided {@link IJavascriptResponse} object
+		 * 
+		 * NOTE: During this stage of processing any calls to target that
+		 * manipulate the response (adding components, javascript) will have no
+		 * effect
+		 * 
+		 * @param map
+		 *            read-only map:markupId->component of components already
+		 *            added to the target
+		 * @param response
+		 *            response object that can be used to output javascript
+		 */
+		public void onAfterRespond(Map map, IJavascriptResponse response);
+	}
+
+	/**
+	 * An ajax javascript response that allows users to add javascript to be
+	 * executed on the client side
+	 * 
+	 * @author ivaynberg
+	 */
+	public static interface IJavascriptResponse
+	{
+		/**
+		 * Adds more javascript to the ajax response that will be executed on
+		 * the client side
+		 * 
+		 * @param script
+		 *            javascript
+		 */
+		public void addJavascript(String script);
 	}
 
 	/**
@@ -225,7 +260,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * 
 	 * @param listener
 	 */
-	public void addListener(Listener listener)
+	public void addListener(IListener listener)
 	{
 		if (listener == null)
 		{
@@ -393,7 +428,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 			// Set content type based on markup type for page
-			WebResponse response = (WebResponse)requestCycle.getResponse();
+			final WebResponse response = (WebResponse)requestCycle.getResponse();
 			response.setCharacterEncoding(encoding);
 			response.setContentType("text/xml; charset=" + encoding);
 
@@ -415,7 +450,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				Iterator it = listeners.iterator();
 				while (it.hasNext())
 				{
-					((Listener)it.next()).onBeforeRespond(components, this);
+					((IListener)it.next()).onBeforeRespond(components, this);
 				}
 			}
 
@@ -437,6 +472,30 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondInvocation(response, js);
 			}
 
+			// invoke onafterresponse event on listeners
+			if (listeners != null)
+			{
+				final Map components = Collections.unmodifiableMap(markupIdToComponent);
+
+				// create response that will be used by listeners to append
+				// javascript
+				final IJavascriptResponse jsresponse = new IJavascriptResponse()
+				{
+
+					public void addJavascript(String script)
+					{
+						respondInvocation(response, script);
+					}
+
+				};
+
+				it = listeners.iterator();
+				while (it.hasNext())
+				{
+					((IListener)it.next()).onAfterRespond(components, jsresponse);
+				}
+			}
+
 			response.write("</ajax-response>");
 		}
 		catch (RuntimeException ex)
@@ -448,7 +507,6 @@ public class AjaxRequestTarget implements IRequestTarget
 			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
 		}
 	}
-
 
 	/**
 	 * Processes components added to the target. This involves attaching
