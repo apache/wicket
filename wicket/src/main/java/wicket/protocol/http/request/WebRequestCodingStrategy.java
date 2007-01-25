@@ -39,7 +39,6 @@ import wicket.PageParameters;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
-import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebApplication;
 import wicket.request.IRequestCodingStrategy;
@@ -232,10 +231,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			Page page = ((IPageRequestTarget)requestTarget).getPage();
 			requestTarget = new RedirectPageRequestTarget(page);
-			// Touch the page once because it could be that it did go from stateless
-			// to statefull or it was a internally made page where just a url must
-			// be made for (frames)
-			Session.get().touch(page);
 		}
                 
 		// First check to see whether the target is mounted
