@@ -442,17 +442,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
-			// invoke onbeforerespond event on listeners
-			if (listeners != null)
-			{
-				final Map components = Collections.unmodifiableMap(markupIdToComponent);
-
-				Iterator it = listeners.iterator();
-				while (it.hasNext())
-				{
-					((IListener)it.next()).onBeforeRespond(components, this);
-				}
-			}
+			fireOnBeforeRespondListeners();
 
 			// normal behavior
 			Iterator it = prependJavascripts.iterator();
@@ -465,6 +455,8 @@ public class AjaxRequestTarget implements IRequestTarget
 			// process added components
 			respondComponents(response);
 
+			fireOnAfterRespondListeners(response);
+
 			it = appendJavascripts.iterator();
 			while (it.hasNext())
 			{
@@ -472,29 +464,6 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondInvocation(response, js);
 			}
 
-			// invoke onafterresponse event on listeners
-			if (listeners != null)
-			{
-				final Map components = Collections.unmodifiableMap(markupIdToComponent);
-
-				// create response that will be used by listeners to append
-				// javascript
-				final IJavascriptResponse jsresponse = new IJavascriptResponse()
-				{
-
-					public void addJavascript(String script)
-					{
-						respondInvocation(response, script);
-					}
-
-				};
-
-				it = listeners.iterator();
-				while (it.hasNext())
-				{
-					((IListener)it.next()).onAfterRespond(components, jsresponse);
-				}
-			}
 
 			response.write("</ajax-response>");
 		}
@@ -505,6 +474,48 @@ public class AjaxRequestTarget implements IRequestTarget
 			// of response will cause any javascript failureHandler to be
 			// invoked
 			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
+		}
+	}
+
+	private void fireOnBeforeRespondListeners()
+	{
+		if (listeners != null)
+		{
+			final Map components = Collections.unmodifiableMap(markupIdToComponent);
+
+			Iterator it = listeners.iterator();
+			while (it.hasNext())
+			{
+				((IListener)it.next()).onBeforeRespond(components, this);
+			}
+		}
+	}
+
+	private void fireOnAfterRespondListeners(final WebResponse response)
+	{
+		Iterator it;
+		// invoke onafterresponse event on listeners
+		if (listeners != null)
+		{
+			final Map components = Collections.unmodifiableMap(markupIdToComponent);
+
+			// create response that will be used by listeners to append
+			// javascript
+			final IJavascriptResponse jsresponse = new IJavascriptResponse()
+			{
+
+				public void addJavascript(String script)
+				{
+					respondInvocation(response, script);
+				}
+
+			};
+
+			it = listeners.iterator();
+			while (it.hasNext())
+			{
+				((IListener)it.next()).onAfterRespond(components, jsresponse);
+			}
 		}
 	}
 
