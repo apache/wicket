@@ -308,19 +308,20 @@ public class WicketFilter implements Filter
 			}
 		}
 
-		if (filterPath != null)
+		if (filterPath != null && filterPath.length() > 0 && !path.endsWith("/"))
 		{
-			if (!path.endsWith("/"))
-			{
-				path = path + "/" + filterPath;
-			}
-			else
-			{
-				path = path + filterPath;
-			}
+			path += "/" + filterPath;
 		}
 		
 		return rootPath = path;
+	}
+	
+	/**
+	 * @return Path for the filter
+	 */
+	public String getFilterPath()
+	{
+		return filterPath;
 	}
 
 	/**
