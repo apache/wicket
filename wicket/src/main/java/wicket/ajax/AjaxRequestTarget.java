@@ -18,8 +18,10 @@ package wicket.ajax;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -58,10 +60,14 @@ import wicket.util.string.Strings;
  * add the attribute with value Component#getMarkupId() to the tag ( such as
  * MarkupIdSetter )
  * <p>
- * Any javascript that needs to be evaluater on the client side can be added
- * using AjaxRequestTarget#addJavascript(String). For example, this feature can
- * be useful when it is desirable to link component update with some javascript
- * effects.
+ * Any javascript that needs to be evaluated on the client side can be added
+ * using AjaxRequestTarget#append/prependJavascript(String). For example, this
+ * feature can be useful when it is desirable to link component update with some
+ * javascript effects.
+ * <p>
+ * The target provides a listener interface {@link Listener} that can be used to
+ * add code that responds to various target events by adding listeners via
+ * {@link #addListener(wicket.ajax.AjaxRequestTarget.Listener)}
  * 
  * @since 1.2
  * 
@@ -70,6 +76,27 @@ import wicket.util.string.Strings;
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
+	/**
+	 * An {@link AjaxRequestTarget} listener that can be used to respond to
+	 * various target-related events
+	 * 
+	 */
+	public static interface Listener
+	{
+		/**
+		 * Triggered before ajax request target begins its response cycle
+		 * 
+		 * @param map
+		 *            read-only map:markupId->component of components already
+		 *            added to the target
+		 * @param target
+		 *            the target itself. Could be used to add components or to
+		 *            append/prepend javascript
+		 * 
+		 */
+		public void onBeforeRespond(Map map, AjaxRequestTarget target);
+	}
+
 	/**
 	 * Response that uses an encoder to encode its contents
 	 * 
@@ -180,6 +207,9 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	private final List/* <String> */prependJavascripts = new ArrayList();
 
+	/** a list of listeners */
+	private List listeners = null;
+
 	/**
 	 * Constructor
 	 */
@@ -191,6 +221,29 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * Adds a listener to this target
+	 * 
+	 * @param listener
+	 */
+	public void addListener(Listener listener)
+	{
+		if (listener == null)
+		{
+			throw new IllegalArgumentException("Argument `listener` cannot be null");
+		}
+
+		if (listeners == null)
+		{
+			listeners = new LinkedList();
+		}
+
+		if (!listeners.contains(listener))
+		{
+			listeners.add(listener);
+		}
+	}
+
+	/**
 	 * Adds a component to the list of components to be rendered
 	 * 
 	 * @param component
@@ -198,12 +251,15 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addComponent(Component component)
 	{
-		if (component==null) {
+		if (component == null)
+		{
 			throw new IllegalArgumentException("component cannot be null");
 		}
-		if (component.getOutputMarkupId()==false)
+		if (component.getOutputMarkupId() == false)
 		{
-			throw new IllegalArgumentException("cannot update component that does not have setOutputMarkupId property set to true. Component: "+component.toString());
+			throw new IllegalArgumentException(
+					"cannot update component that does not have setOutputMarkupId property set to true. Component: "
+							+ component.toString());
 		}
 		addComponent(component, component.getMarkupId());
 	}
@@ -270,11 +326,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
-		// Page page = requestCycle.getRequest().getPage();
-		// if(page != null)
-		// {
-		// page.detachModels();
-		// }
+
 	}
 
 	/**
@@ -355,6 +407,18 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
+			// invoke onbeforerespond event on listeners
+			if (listeners != null)
+			{
+				final Map components = Collections.unmodifiableMap(markupIdToComponent);
+
+				Iterator it = listeners.iterator();
+				while (it.hasNext())
+				{
+					((Listener)it.next()).onBeforeRespond(components, this);
+				}
+			}
+
 			// normal behavior
 			Iterator it = prependJavascripts.iterator();
 			while (it.hasNext())
@@ -385,12 +449,12 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 	}
 
-	 
+
 	/**
 	 * Processes components added to the target. This involves attaching
 	 * components, rendering markup into a client side xml envelope, and
 	 * detaching them
-	 *
+	 * 
 	 * @param response
 	 */
 	private void respondComponents(WebResponse response)
@@ -404,7 +468,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			while (it.hasNext())
 			{
 				final Component component = (Component)((Entry)it.next()).getValue();
-				
+
 				if (component instanceof MarkupContainer)
 				{
 					MarkupContainer container = (MarkupContainer)component;
@@ -457,7 +521,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			}
 		}
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
