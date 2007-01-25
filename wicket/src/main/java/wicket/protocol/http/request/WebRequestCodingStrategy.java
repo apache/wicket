@@ -50,6 +50,7 @@ import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarge
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
+import wicket.request.target.component.listener.RedirectPageRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.PrependingStringBuffer;
@@ -225,8 +226,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 *      wicket.IRequestTarget)
 	 */
 	public final CharSequence encode(final RequestCycle requestCycle,
-			final IRequestTarget requestTarget, final boolean absolutePath)
+			IRequestTarget requestTarget, boolean absolutePath)
 	{
+		if (requestTarget instanceof IPageRequestTarget)
+		{
+			Page page = ((IPageRequestTarget)requestTarget).getPage();
+			requestTarget = new RedirectPageRequestTarget(page);
+			// Touch the page once because it could be that it did go from stateless
+			// to statefull or it was a internally made page where just a url must
+			// be made for (frames)
+			Session.get().touch(page);
+		}
+                
 		// First check to see whether the target is mounted
 		CharSequence url = pathForTarget(requestTarget);
 		
@@ -244,10 +255,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
 			url = encode(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
-		}
-		else if (requestTarget instanceof IPageRequestTarget)
-		{
-			url = encode(requestCycle, (IPageRequestTarget)requestTarget);
 		}
 		// fallthough for non-default request targets
 		else
@@ -801,30 +808,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 
 		return url;
-	}
-
-	/**
-	 * Encode a page target.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 * @param requestTarget
-	 *            the target to encode
-	 * @return the encoded url
-	 */
-	protected CharSequence encode(RequestCycle requestCycle, IPageRequestTarget requestTarget)
-	{
-		// Get the page we want a url from:
-		Page page = requestTarget.getPage();
-
-		// A url to a page is the IRedirectListener interface:
-		CharSequence urlRedirect = page.urlFor(IRedirectListener.INTERFACE);
-
-		// Touch the page once because it could be that it did go from stateless
-		// to statefull or it was a internally made page where just a url must
-		// be made for (frames)
-		Session.get().touch(page);
-		return urlRedirect;
 	}
 
 	/**
