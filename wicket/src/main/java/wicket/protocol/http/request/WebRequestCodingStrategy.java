@@ -52,6 +52,7 @@ import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -256,15 +257,20 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		
 		if (url != null)
 		{
+			String rootPath = ((WebApplication)Application.get()).getRootPath();
+			String filterPath = ((WebApplication)Application.get()).getFilterPath();
+			
+			// Strip off leading /
 			if (url.length() > 0 && url.charAt(0) == '/')
 			{
 				url = url.subSequence(1, url.length());
 			}
-
 			if (absolutePath)
 			{
-				url = urlPrefix(requestCycle).toString() + url;
+				url = rootPath + "/" + url;
+				return requestCycle.getOriginalResponse().encodeURL(url);
 			}
+
 			String relativeUrl = requestCycle.getRequest().getRelativeURL();
 			String segments = "";
 			for (int i = 0; i < relativeUrl.length(); i++)
@@ -278,16 +284,29 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					segments += "../";
 				}
 			}
-			if (segments.length() > 0)
+			PrependingStringBuffer prepender = new PrependingStringBuffer();
+			
+			prepender.prepend(url.toString());
+			if (url.length() > 0 && (url.charAt(0) == '?' || url.charAt(0) == ';'))
 			{
-				url = segments + url;
+				if (segments.length() == 0) {
+					if (filterPath.length() == 0) {
+						prepender.prepend("./");
+					}
+					else {
+						
+					}
+				}
 			}
-			else if (url.length() > 0 && (url.charAt(0) == '?' || url.charAt(0) == ';'))
+			else if (filterPath.length() > 0)
 			{
-				url = "./" + url;
+				prepender.prepend('/');
 			}
-			url = requestCycle.getOriginalResponse().encodeURL(url);
-			return url;
+			prepender.prepend(filterPath);
+			if (segments.length() > 0) {
+				prepender.prepend(segments);
+			}
+			return requestCycle.getOriginalResponse().encodeURL(prepender.toString());
 		}
 		
 		// Just return null intead of throwing an exception. So that it can be
@@ -843,23 +862,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	protected String getRequestPath(Request request)
 	{
 		return request.getPath();
-	}
-
-	/**
-	 * Gets prefix.
-	 * 
-	 * @param requestCycle
-	 *            the request cycle
-	 * 
-	 * @return prefix
-	 */
-	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
-	{
-		if (urlPrefix == null)
-		{
-			urlPrefix = ((WebApplication)Application.get()).getRootPath();
-		}
-		return urlPrefix;
 	}
 	
 	/**
