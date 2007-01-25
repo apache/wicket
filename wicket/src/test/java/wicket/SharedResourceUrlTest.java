@@ -44,11 +44,11 @@ public class SharedResourceUrlTest extends WicketTestCase
 		
 		ResourceReference rr = new ResourceReference("test");
 		CharSequence url = cycle.urlFor(rr);
-		assertEquals("resources/wicket.Application/test", url);
+		assertEquals("WicketTester/resources/wicket.Application/test", url);
 
 		rr = new ResourceReference(SharedResourceUrlTest.class,"test");
 		url = cycle.urlFor(rr);
-		assertEquals("resources/wicket.SharedResourceUrlTest/test", url);
+		assertEquals("WicketTester/resources/wicket.SharedResourceUrlTest/test", url);
 }
 	
 	/**
@@ -61,11 +61,11 @@ public class SharedResourceUrlTest extends WicketTestCase
 		
 		ResourceReference rr = new ResourceReference("test");
 		CharSequence url = cycle.urlFor(rr,new ValueMap("param=value",""));
-		assertEquals("resources/wicket.Application/test?param=value", url);
+		assertEquals("WicketTester/resources/wicket.Application/test?param=value", url);
 
 		rr = new ResourceReference(SharedResourceUrlTest.class,"test");
 		url = cycle.urlFor(rr,new ValueMap("param=value",""));
-		assertEquals("resources/wicket.SharedResourceUrlTest/test?param=value", url);
+		assertEquals("WicketTester/resources/wicket.SharedResourceUrlTest/test?param=value", url);
 	}	
 
 }
