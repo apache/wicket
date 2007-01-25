@@ -17,8 +17,10 @@
 package wicket.ajax;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -57,10 +59,14 @@ import wicket.util.string.Strings;
  * add the attribute with value Component#getMarkupId() to the tag (such as
  * MarkupIdSetter)
  * <p>
- * Any javascript that needs to be evaluater on the client side can be added
- * using AjaxRequestTarget#addJavascript(String). For example, this feature can
- * be useful when it is desirable to link component update with some javascript
- * effects.
+ * Any javascript that needs to be evaluated on the client side can be added
+ * using AjaxRequestTarget#prepend/appendJavascript(String). For example, this
+ * feature can be useful when it is desirable to link component update with some
+ * javascript effects.
+ * <p>
+ * The target provides a listener interface {@link Listener} that can be used to
+ * add code that responds to various target events by adding listeners via
+ * {@link #addListener(wicket.ajax.AjaxRequestTarget.Listener)}
  * 
  * @since 1.2
  * 
@@ -68,6 +74,27 @@ import wicket.util.string.Strings;
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
+	/**
+	 * An {@link AjaxRequestTarget} listener that can be used to respond to
+	 * various target-related events
+	 * 
+	 */
+	public static interface Listener
+	{
+		/**
+		 * Triggered before ajax request target begins its response cycle
+		 * 
+		 * @param map
+		 *            read-only map:markupId->component of components already
+		 *            added to the target
+		 * @param target
+		 *            the target itself. Could be used to add components or to
+		 *            append/prepend javascript
+		 * 
+		 */
+		public void onBeforeRespond(Map map, AjaxRequestTarget target);
+	}
+
 	private static final Logger Log = LoggerFactory.getLogger(AjaxRequestTarget.class);
 
 	/** */
@@ -79,11 +106,37 @@ public class AjaxRequestTarget implements IRequestTarget
 	/** the component instances that will be rendered */
 	private final Map<String, Component> markupIdToComponent = new HashMap<String, Component>();
 
+	/** a list of listeners */
+	private List<Listener> listeners = null;
+
 	/**
 	 * Constructor
 	 */
 	public AjaxRequestTarget()
 	{
+	}
+
+	/**
+	 * Adds a listener to this target
+	 * 
+	 * @param listener
+	 */
+	public void addListener(Listener listener)
+	{
+		if (listener == null)
+		{
+			throw new IllegalArgumentException("Argument `listener` cannot be null");
+		}
+
+		if (listeners == null)
+		{
+			listeners = new LinkedList<Listener>();
+		}
+
+		if (!listeners.contains(listener))
+		{
+			listeners.add(listener);
+		}
 	}
 
 	/**
@@ -238,8 +291,19 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
-			// normal behavior
+			// invoke onbeforerespond event on listeners
+			if (listeners != null)
+			{
+				final Map<String, Component> components = Collections
+						.unmodifiableMap(markupIdToComponent);
 
+				for (Listener listener : listeners)
+				{
+					listener.onBeforeRespond(components, this);
+				}
+			}
+
+			// normal behavior
 			for (String js : prependJavascripts)
 			{
 				respondInvocation(response, js);
@@ -274,6 +338,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * 
 	 * @param response
 	 */
+	@SuppressWarnings("unchecked")
 	private void respondComponents(WebResponse response)
 	{
 		Iterator it;
