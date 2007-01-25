@@ -224,50 +224,72 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 *      wicket.IRequestTarget)
 	 */
 	public final CharSequence encode(final RequestCycle requestCycle,
-			final IRequestTarget requestTarget)
+			final IRequestTarget requestTarget, final boolean absolutePath)
 	{
-		// first check whether the target was mounted
-		CharSequence path = pathForTarget(requestTarget);
-		if (path != null)
-		{
-			CharSequence prefix = urlPrefix(requestCycle);
-			if (prefix.length() > 0) {
-				// special check if the prefix ends on '/' because a mount always
-				// starts with '/'
-				if (prefix.charAt(prefix.length() - 1) == '/')
-					prefix = prefix.subSequence(0, prefix.length() - 1);
-			}
-			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
-					+ path.length());
-			buffer.append(prefix);
-			buffer.append(path);
-			return requestCycle.getOriginalResponse().encodeURL(buffer);
+		// First check to see whether the target is mounted
+		CharSequence url = pathForTarget(requestTarget);
+		
+		if (url != null) {
+			// Do nothing - we've found the URL and it's mounted.
 		}
-
-		// no mount found; go on with default processing
-		if (requestTarget instanceof IBookmarkablePageRequestTarget)
+		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
-			return encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
+			url = encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
-			return encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
+			url = encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
-			return encode(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
+			url = encode(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
 		}
 		else if (requestTarget instanceof IPageRequestTarget)
 		{
-			return encode(requestCycle, (IPageRequestTarget)requestTarget);
+			url = encode(requestCycle, (IPageRequestTarget)requestTarget);
 		}
-
 		// fallthough for non-default request targets
-		String url = doEncode(requestCycle, requestTarget);
+		else
+		{
+			url = doEncode(requestCycle, requestTarget);
+		}
+		
 		if (url != null)
 		{
+			if (url.length() > 0 && url.charAt(0) == '/')
+			{
+				url = url.subSequence(1, url.length());
+			}
+
+			if (absolutePath)
+			{
+				url = urlPrefix(requestCycle).toString() + url;
+			}
+			String relativeUrl = requestCycle.getRequest().getRelativeURL();
+			String segments = "";
+			for (int i = 0; i < relativeUrl.length(); i++)
+			{
+				if (relativeUrl.charAt(i) == '?')
+				{
+					break;
+				}
+				if (relativeUrl.charAt(i) == '/')
+				{
+					segments += "../";
+				}
+			}
+			if (segments.length() > 0)
+			{
+				url = segments + url;
+			}
+			else if (url.length() > 0 && (url.charAt(0) == '?' || url.charAt(0) == ';'))
+			{
+				url = "./" + url;
+			}
+			url = requestCycle.getOriginalResponse().encodeURL(url);
 			return url;
 		}
+		
 		// Just return null intead of throwing an exception. So that it can be
 		// handled better
 		return null;
@@ -553,7 +575,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		// Begin encoding URL
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
-		url.append(urlPrefix(requestCycle));
 
 		// Get page Class
 		final Class pageClass = requestTarget.getPageClass();
@@ -652,7 +673,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				}
 			}
 		}
-		return requestCycle.getOriginalResponse().encodeURL(url);
+		return url;
 	}
 
 	/**
@@ -671,26 +692,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	protected CharSequence encode(RequestCycle requestCycle,
 			ISharedResourceRequestTarget requestTarget)
 	{
-		final CharSequence prefix = urlPrefix(requestCycle);
 		final String sharedResourceKey = requestTarget.getResourceKey();
 		if ((sharedResourceKey == null) || (sharedResourceKey.trim().length() == 0))
 		{
-			return prefix;
+			return "";
 		}
 		else
 		{
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(sharedResourceKey
-					.length()
-					+ prefix.length() + 11);
-			buffer.append(prefix);
-			if ((buffer.length() > 0) && buffer.charAt(buffer.length() - 1) == '/')
-			{
-				buffer.append("resources/");
-			}
-			else
-			{
-				buffer.append("/resources/");
-			}
+					.length());
+			buffer.append("resources/");
 			buffer.append(sharedResourceKey);
 			Map map = requestTarget.getRequestParameters().getParameters();
 			if (map != null && map.size() > 0)
@@ -707,7 +718,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				}
 				buffer.setLength(buffer.length() - 1);
 			}
-			return requestCycle.getOriginalResponse().encodeURL(buffer);
+			return buffer;
 		}
 	}
 
@@ -731,7 +742,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		// Start string buffer for url
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
-		url.append(urlPrefix(requestCycle));
 		url.append('?');
 		url.append(INTERFACE_PARAMETER_NAME);
 		url.append('=');
@@ -771,7 +781,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url.append(listenerName);
 		}
 
-		return requestCycle.getOriginalResponse().encodeURL(url);
+		return url;
 	}
 
 	/**
