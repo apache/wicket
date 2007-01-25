@@ -67,7 +67,6 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 
 		// Start string buffer for url
 		final AppendingStringBuffer url = new AppendingStringBuffer(64);
-		url.append(urlPrefix(requestCycle));
 		url.append('?');
 		url.append(INTERFACE_PARAMETER_NAME);
 		url.append('=');

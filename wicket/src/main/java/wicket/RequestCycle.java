@@ -675,7 +675,7 @@ public abstract class RequestCycle
 		}
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return requestCodingStrategy.encode(this, target, false);
 	}
 
 	/**
@@ -688,7 +688,7 @@ public abstract class RequestCycle
 	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
 		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, requestTarget);
+		return requestCodingStrategy.encode(this, requestTarget, false);
 	}
 
 	/**
@@ -730,7 +730,7 @@ public abstract class RequestCycle
 				: pageMap.getName(), pageClass, parameters);
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return requestCodingStrategy.encode(this, target, false);
 	}
 
 	/**
@@ -762,7 +762,7 @@ public abstract class RequestCycle
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
 		requestParameters.setParameters(parameters);
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
-				new SharedResourceRequestTarget(requestParameters));
+				new SharedResourceRequestTarget(requestParameters), false);
 		return url;
 	}
 

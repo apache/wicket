@@ -215,8 +215,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			if (requestCycle.getRedirect())
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
-				String redirectUrl = processor.getRequestCodingStrategy()
-						.encode(requestCycle, this).toString();
+				String redirectUrl = processor.getRequestCodingStrategy().encode(requestCycle, this, true).toString();
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else

@@ -53,7 +53,11 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 * 
 	 * @param requestTarget
 	 *            the request target
+	 *            
+	 * @param absolutePath
+	 *            true if you want the URL to be absolute. You do for 302 redirects, but not for usual HTML markup.
+	 *
 	 * @return the url to the provided target
 	 */
-	CharSequence encode(RequestCycle requestCycle, IRequestTarget requestTarget);
+	CharSequence encode(RequestCycle requestCycle, IRequestTarget requestTarget, boolean absolutePath);
 }

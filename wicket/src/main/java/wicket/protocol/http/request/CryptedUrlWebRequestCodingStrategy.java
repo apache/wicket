@@ -106,9 +106,9 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 * @see wicket.request.IRequestCodingStrategy#encode(wicket.RequestCycle,
 	 *      wicket.IRequestTarget)
 	 */
-	public CharSequence encode(final RequestCycle requestCycle, final IRequestTarget requestTarget)
+	public CharSequence encode(final RequestCycle requestCycle, final IRequestTarget requestTarget, final boolean absolutePath)
 	{
-		CharSequence url = this.defaultStrategy.encode(requestCycle, requestTarget);
+		CharSequence url = this.defaultStrategy.encode(requestCycle, requestTarget, absolutePath);
 		url = encodeURL(url);
 		return url;
 	}

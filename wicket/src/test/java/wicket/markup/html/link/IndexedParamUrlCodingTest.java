@@ -56,12 +56,12 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		parameters.add("1", "Integer1");
 		
 		String url1 = cycle.urlFor(new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class,parameters)).toString();
-		assertEquals(url1, "/WicketTester/WicketTester/test1/Integer0/Integer1");
+		assertEquals(url1, "test1/Integer0/Integer1");
 		String url2 = cycle.urlFor(new BookmarkablePageRequestTarget("mypagemap",BookmarkableHomePageLinksPage.class,parameters)).toString();
-		assertEquals(url2, "/WicketTester/WicketTester/test2/Integer0/Integer1/wicket:pageMapName/mypagemap");
+		assertEquals(url2, "test2/Integer0/Integer1/wicket:pageMapName/mypagemap");
 		
 		application.setupRequestAndResponse();
-		application.getServletRequest().setURL(url1);
+		application.getServletRequest().setURL("/WicketTester/WicketTester/" + url1);
 		cycle = application.createRequestCycle();
 		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
 		
@@ -78,7 +78,7 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		}
 		
 		application.setupRequestAndResponse();
-		application.getServletRequest().setURL(url2);
+		application.getServletRequest().setURL("/WicketTester/WicketTester/" + url2);
 		cycle = application.createRequestCycle();
 		encoder = cycle.getProcessor().getRequestCodingStrategy();
 		

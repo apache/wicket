@@ -285,41 +285,42 @@ public class WicketFilter implements Filter
 	 */
 	public String getRootPath(HttpServletRequest request)
 	{
-		if (rootPath == null)
+		if (rootPath != null)
 		{
-			String path = webApplication.getApplicationSettings().getContextPath();
+			return rootPath;
+		}
+		String path = webApplication.getApplicationSettings().getContextPath();
+		if (path == null)
+		{
+			path = request.getContextPath();
 			if (path == null)
 			{
-				path = request.getContextPath();
-				if (path == null)
-				{
-					path = "";
-				}
-			}
-
-			if (SERVLET_PATH_HOLDER.equals(filterPath))
-			{
-				filterPath = request.getServletPath();
-				if (filterPath.startsWith("/"))
-				{
-					filterPath = filterPath.substring(1);
-				}
-			}
-
-			rootPath = path;
-
-			if (filterPath != null) {
-				if (!path.endsWith("/"))
-				{
-					rootPath = rootPath + "/" + filterPath;
-				}
-				else
-				{
-					rootPath = rootPath + filterPath;
-				}
+				path = "";
 			}
 		}
-		return rootPath;
+
+		if (SERVLET_PATH_HOLDER.equals(filterPath))
+		{
+			filterPath = request.getServletPath();
+			if (filterPath.startsWith("/"))
+			{
+				filterPath = filterPath.substring(1);
+			}
+		}
+
+		if (filterPath != null)
+		{
+			if (!path.endsWith("/"))
+			{
+				path = path + "/" + filterPath;
+			}
+			else
+			{
+				path = path + filterPath;
+			}
+		}
+		
+		return rootPath = path;
 	}
 
 	/**
