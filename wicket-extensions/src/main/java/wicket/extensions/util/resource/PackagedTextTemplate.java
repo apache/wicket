@@ -128,16 +128,13 @@ public class PackagedTextTemplate extends TextTemplate
 		}
 		finally
 		{
-			if (stream != null)
+			try
 			{
-				try
-				{
-					stream.close();
-				}
-				catch (IOException e)
-				{
-					log.error(e.getMessage(), e);
-				}
+				stream.close();
+			}
+			catch (IOException e)
+			{
+				log.error(e.getMessage(), e);
 			}
 		}
 	}
