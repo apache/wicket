@@ -10,6 +10,5 @@
   </buildSpec>
   <natures>
     <nature>org.eclipse.jdt.core.javanature</nature>
-    <nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
   </natures>
 </projectDescription>
