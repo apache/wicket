@@ -48,7 +48,7 @@ import wicket.markup.resolver.EnclosureResolver;
  * 	public MarkupParser newMarkupParser(MarkupResourceStream resource)
  * 	{
  * 		MarkupParser parser = super.newMarkupParser(resource);
- * 		parser.registerMarkupFilter(new EnclosureHandler(application));
+ * 		parser.registerMarkupFilter(new EnclosureHandler());
  * 		return parser;
  * 	}
  * });
