@@ -41,7 +41,7 @@ public class StartExamples {
 		server.setConnectors(new Connector[] { connector });
 
 		WebAppContext web = new WebAppContext();
-		web.setContextPath("/wicket-examples");
+		web.setContextPath("/wicket-auth-roles-examples");
 		web.setWar("src/main/webapp");
 		server.addHandler(web);
 
