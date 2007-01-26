@@ -46,18 +46,22 @@ import wicket.request.target.component.listener.RedirectPageRequestTarget;
 import wicket.util.string.Strings;
 
 /**
- * Base class for  target resolver strategies {@link DefaultRequestTargetResolverStrategy} 
- * and {@link PortletRequestTargetResolverStrategy}
+ * Base class for target resolver strategies
+ * {@link DefaultRequestTargetResolverStrategy} and
+ * {@link PortletRequestTargetResolverStrategy}
  * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg
  * @author Jonathan Locke
  */
-public abstract class AbstractRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
+public abstract class AbstractRequestTargetResolverStrategy
+		implements
+			IRequestTargetResolverStrategy
 {
 
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(AbstractRequestTargetResolverStrategy.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(AbstractRequestTargetResolverStrategy.class);
 
 	/**
 	 * Resolves to a page target that was previously rendered. Optionally
@@ -149,17 +153,20 @@ public abstract class AbstractRequestTargetResolverStrategy implements IRequestT
 			// Get component
 			final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 					Component.PATH_SEPARATOR);
+
+			Component component = null;
 			if (Strings.isEmpty(pageRelativeComponentPath))
 			{
-				// We have an interface that is not a redirect, but no
-				// component... that must be wrong
-				throw new WicketRuntimeException("When trying to call " + listener
-						+ ", a component must be provided");
+				component = page;
 			}
-			final Component component = page.get(pageRelativeComponentPath);
+			else
+			{
+				component = page.get(pageRelativeComponentPath);
+			}
 			if (component == null || !component.isEnabled() || !component.isVisibleInHierarchy())
 			{
-				log.info("component not enabled or visible, redirecting to calling page, component: "
+				log
+						.info("component not enabled or visible, redirecting to calling page, component: "
 								+ component);
 				return new RedirectPageRequestTarget(page);
 			}
@@ -173,7 +180,7 @@ public abstract class AbstractRequestTargetResolverStrategy implements IRequestT
 			return listener.newRequestTarget(page, component, listener, requestParameters);
 		}
 	}
-	
+
 	/**
 	 * Resolves to a bookmarkable page target.
 	 * 
@@ -207,10 +214,10 @@ public abstract class AbstractRequestTargetResolverStrategy implements IRequestT
 					&& requestParameters.getInterfaceName() != null)
 			{
 				final String componentPath = requestParameters.getComponentPath();
-				final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
-						requestParameters.getVersionNumber());
-				
-				if(page != null && page.getClass() == pageClass)
+				final Page page = session.getPage(requestParameters.getPageMapName(),
+						componentPath, requestParameters.getVersionNumber());
+
+				if (page != null && page.getClass() == pageClass)
 				{
 					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
 							requestParameters.getInterfaceName(), requestParameters);
@@ -218,8 +225,8 @@ public abstract class AbstractRequestTargetResolverStrategy implements IRequestT
 				else
 				{
 					return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-							.getPageMapName(), pageClass, params, requestParameters.getComponentPath(),
-							requestParameters.getInterfaceName());
+							.getPageMapName(), pageClass, params, requestParameters
+							.getComponentPath(), requestParameters.getInterfaceName());
 				}
 			}
 			else
@@ -233,8 +240,7 @@ public abstract class AbstractRequestTargetResolverStrategy implements IRequestT
 			throw new WicketRuntimeException("Unable to instantiate Page class: "
 					+ bookmarkablePageClass + ". See below for details.", e);
 		}
-	}	
-	
+	}
 
 
 	/**
@@ -286,5 +292,5 @@ public abstract class AbstractRequestTargetResolverStrategy implements IRequestT
 		{
 			throw new WicketRuntimeException("Could not create home page", e);
 		}
-	}	
+	}
 }
