@@ -23,12 +23,12 @@ import javax.swing.tree.TreeNode;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.ResourceReference;
 import wicket.behavior.AbstractBehavior;
 import wicket.extensions.markup.html.tree.AbstractTree;
 import wicket.extensions.markup.html.tree.DefaultAbstractTree;
 import wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Fragment;
@@ -109,7 +109,7 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	/** Reference to the css file. */
-	private static final PackageResourceReference CSS = new PackageResourceReference(
+	private static final ResourceReference CSS = new ResourceReference(
 			DefaultAbstractTree.class, "res/tree-table.css");
 
 	private static final long serialVersionUID = 1L;
@@ -240,7 +240,7 @@ public class TreeTable extends DefaultAbstractTree
 	/**
 	 * @see wicket.extensions.markup.html.tree.DefaultAbstractTree#getCSS()
 	 */
-	protected PackageResourceReference getCSS()
+	protected ResourceReference getCSS()
 	{
 		return CSS;
 	}
