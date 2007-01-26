@@ -85,7 +85,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				.targetForRequest(requestParameters);
 		if (mounted != null)
 		{
-			if(mounted instanceof IBookmarkablePageRequestTarget)
+			if (mounted instanceof IBookmarkablePageRequestTarget)
 			{
 				IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
 				// the path was mounted, so return that directly
@@ -93,20 +93,22 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 						&& requestParameters.getInterfaceName() != null)
 				{
 					final String componentPath = requestParameters.getComponentPath();
-					final Page page = Session.get().getPage(requestParameters.getPageMapName(), componentPath,
-							requestParameters.getVersionNumber());
-					
-					if(page != null && page.getClass() == bookmarkableTarget.getPageClass())
+					final Page page = Session.get().getPage(requestParameters.getPageMapName(),
+							componentPath, requestParameters.getVersionNumber());
+
+					if (page != null && page.getClass() == bookmarkableTarget.getPageClass())
 					{
 						return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
 								requestParameters.getInterfaceName(), requestParameters);
 					}
 					else
 					{
-						PageParameters params = new PageParameters(requestParameters.getParameters());
+						PageParameters params = new PageParameters(requestParameters
+								.getParameters());
 						return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-								.getPageMapName(), bookmarkableTarget.getPageClass(), params, requestParameters.getComponentPath(),
-								requestParameters.getInterfaceName());
+								.getPageMapName(), bookmarkableTarget.getPageClass(), params,
+								requestParameters.getComponentPath(), requestParameters
+										.getInterfaceName());
 					}
 				}
 			}
@@ -145,12 +147,13 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 						// request
 						processRequest = false;
 					}
-					else if(pageMap instanceof AccessStackPageMap)
+					else if (pageMap instanceof AccessStackPageMap)
 					{
 						AccessStackPageMap accessStackPageMap = (AccessStackPageMap)pageMap;
 						if (accessStackPageMap.getAccessStack().size() > 0)
 						{
-							final Access access = (Access)accessStackPageMap.getAccessStack().peek();
+							final Access access = (Access)accessStackPageMap.getAccessStack()
+									.peek();
 
 							final int pageId = Integer
 									.parseInt(Strings.firstPathComponent(requestParameters
@@ -175,9 +178,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 							}
 						}
 					}
-					else 
+					else
 					{
-						// TODO also this should work.. also forward port to 2.0!!!
+						// TODO also this should work.. also forward port to
+						// 2.0!!!
 					}
 
 				}
@@ -312,16 +316,18 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			}
 
 			// Get component
+			Component component = null;
 			final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 					Component.PATH_SEPARATOR);
 			if (Strings.isEmpty(pageRelativeComponentPath))
 			{
-				// We have an interface that is not a redirect, but no
-				// component... that must be wrong
-				throw new WicketRuntimeException("When trying to call " + listener
-						+ ", a component must be provided");
+				component = page;
 			}
-			final Component component = page.get(pageRelativeComponentPath);
+			else
+			{
+				component = page.get(pageRelativeComponentPath);
+			}
+
 			if (component == null || !component.isEnabled() || !component.isVisibleInHierarchy())
 			{
 				log
@@ -372,10 +378,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 					&& requestParameters.getInterfaceName() != null)
 			{
 				final String componentPath = requestParameters.getComponentPath();
-				final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
-						requestParameters.getVersionNumber());
-				
-				if(page != null && page.getClass() == pageClass)
+				final Page page = session.getPage(requestParameters.getPageMapName(),
+						componentPath, requestParameters.getVersionNumber());
+
+				if (page != null && page.getClass() == pageClass)
 				{
 					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
 							requestParameters.getInterfaceName(), requestParameters);
@@ -383,8 +389,8 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				else
 				{
 					return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-							.getPageMapName(), pageClass, params, requestParameters.getComponentPath(),
-							requestParameters.getInterfaceName());
+							.getPageMapName(), pageClass, params, requestParameters
+							.getComponentPath(), requestParameters.getInterfaceName());
 				}
 			}
 			else
