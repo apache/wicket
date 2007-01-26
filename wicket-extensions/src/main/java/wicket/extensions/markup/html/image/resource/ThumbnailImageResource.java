@@ -158,7 +158,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 
 			// convert Image to BufferedImage
 			BufferedImage bufferedImage = new BufferedImage(newWidth, newHeight,
-					BufferedImage.TYPE_INT_BGR);
+					BufferedImage.TYPE_INT_ARGB);
 			bufferedImage.createGraphics().drawImage(image, 0, 0, null);
 
 			return bufferedImage;
