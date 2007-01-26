@@ -35,4 +35,11 @@ public class QuickStartApplication extends WebApplication
 		return new QuickStartSession(QuickStartApplication.this, request);
 	}
 
+	/**
+	 * @see wicket.protocol.http.WebApplication#init()
+	 */
+	protected void init()
+	{
+		// put any configuration here
+	}
 }
