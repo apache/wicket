@@ -247,6 +247,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		else if (requestTarget instanceof IPageRequestTarget)
 		{
+			// This calls page.urlFor(IRedirectListener.INTERFACE), which calls
+			// the function we're in again. We therefore need to jump out here and
+			// return the url immediately, otherwise we end up prefixing it with
+			// relative path or absolute prefixes twice.
 			url = encode(requestCycle, (IPageRequestTarget)requestTarget);
 			return url;
 		}
@@ -261,14 +265,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			String rootPath = ((WebApplication)Application.get()).getRootPath();
 			String filterPath = ((WebApplication)Application.get()).getFilterPath();
 			
-			// Strip off leading /
+			// Strip off leading / (for custom encodes or mounted resources/pages)
 			if (url.length() > 0 && url.charAt(0) == '/')
 			{
 				url = url.subSequence(1, url.length());
 			}
+			
+			// If we're doing a 302-redirect, prepend the root path
 			if (absolutePath)
 			{
-				url = rootPath + "/" + url;
+				if (rootPath.endsWith("/") || url.length() > 0 && url.charAt(0) == '?')
+				{
+					url = rootPath + url;
+				}
+				else
+				{
+					url = rootPath + "/" + url;
+				}
 				return requestCycle.getOriginalResponse().encodeURL(url);
 			}
 
@@ -290,13 +303,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			prepender.prepend(url.toString());
 			if (url.length() > 0 && (url.charAt(0) == '?' || url.charAt(0) == ';'))
 			{
-				if (segments.length() == 0) {
-					if (filterPath.length() == 0) {
-						prepender.prepend("./");
-					}
-					else {
-						
-					}
+				if (segments.length() == 0 && filterPath.length() == 0) {
+					prepender.prepend("./");
 				}
 			}
 			else if (filterPath.length() > 0)
@@ -570,7 +578,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * 
 	 * @param requestTarget
 	 *            the request target
-	 * @return the url to the provided target
+	 * @return the url to the provided target, as a relative path from the filter root.
 	 */
 	protected String doEncode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
