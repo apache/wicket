@@ -57,6 +57,9 @@ import wicket.markup.resolver.EnclosureResolver;
  * @see EnclosureResolver
  * @see Enclosure
  * 
+ * TODO 2.0: enable by default
+ * 
+ * 
  * @author Juergen Donnerstag
  */
 public final class EnclosureHandler extends AbstractMarkupFilter
