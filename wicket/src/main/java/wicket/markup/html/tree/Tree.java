@@ -30,7 +30,9 @@ import wicket.model.Model;
 
 /**
  * A complete tree implementation where three item consists of junction link,
- * icon and label.
+ * icon and label. This is a simple implementation and it's not intented to
+ * be very customisable. If you need more flixibility than Tree can provide,
+ * use {@link DefaultAbstractTree} instead. 
  * 
  * @author Matej Knopp
  */
