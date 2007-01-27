@@ -39,13 +39,6 @@ import wicket.RequestCycle;
  * };
  * </pre>
  * 
- * <p>
- * Though you can override methods {@link #onAttach()} and {@link #detach()} for
- * additional attach/ detach behavior, the point of this class is to hide as
- * much of the attaching/ detaching as possible. So you should rarely need to
- * override those methods, if ever.
- * </p>
- * 
  * @param <T>
  *            The Type
  * 
