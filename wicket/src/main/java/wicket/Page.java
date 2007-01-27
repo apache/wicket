@@ -36,6 +36,7 @@ import wicket.request.RequestParameters;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
+import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
@@ -136,6 +137,11 @@ import wicket.version.undo.UndoPageVersionManager;
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * {@link #isBookmarkable()} is expensive, we cache the result here
+	 */
+	private static ConcurrentHashMap pageClassToBookmarkableCache = new ConcurrentHashMap();
 
 	/**
 	 * When passed to {@link Page#getVersion(int)} the latest page version is
@@ -665,28 +671,35 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public boolean isBookmarkable()
 	{
-		try
-		{
-			if (getClass().getConstructor(new Class[] { PageParameters.class }) != null)
-			{
-				return true;
-			}
-
-		}
-		catch (Exception ignore)
+		Boolean bookmarkable = (Boolean)pageClassToBookmarkableCache.get(getClass());
+		if (bookmarkable == null)
 		{
 			try
 			{
-				if (getClass().getConstructor(new Class[] {}) != null)
+				if (getClass().getConstructor(new Class[] { PageParameters.class }) != null)
 				{
-					return true;
+					bookmarkable = Boolean.TRUE;
+				}
+
+			}
+			catch (Exception ignore)
+			{
+				try
+				{
+					if (getClass().getConstructor(new Class[] {}) != null)
+					{
+						bookmarkable = Boolean.TRUE;
+					}
+				}
+				catch (Exception ignore2)
+				{
 				}
 			}
-			catch (Exception ignore2)
-			{
-			}
+			bookmarkable = Boolean.FALSE;
+			pageClassToBookmarkableCache.put(getClass(), bookmarkable);
 		}
-		return false;
+		return bookmarkable.booleanValue();
+
 	}
 
 	/**
