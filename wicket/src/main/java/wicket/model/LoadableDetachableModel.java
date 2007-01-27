@@ -61,7 +61,7 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	private transient boolean attached = false;
 
 	/** temporary, transient object. */
-	private transient T tempModelObject;
+	private transient T transientModelObject;
 
 	/**
 	 * Construct.
@@ -79,7 +79,7 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	 */
 	public LoadableDetachableModel(T object)
 	{
-		this.tempModelObject = object;
+		this.transientModelObject = object;
 		attached = true;
 	}
 
@@ -92,7 +92,7 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 		if (attached)
 		{
 			attached = false;
-			tempModelObject = null;
+			transientModelObject = null;
 
 			if (log.isDebugEnabled())
 			{
@@ -112,17 +112,17 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 		if (!attached)
 		{
 			attached = true;
-			tempModelObject = load();
+			transientModelObject = load();
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("loaded transient object " + tempModelObject + " for " + this
+				log.debug("loaded transient object " + transientModelObject + " for " + this
 						+ ", requestCycle " + RequestCycle.get());
 			}
 
 			onAttach();
 		}
-		return tempModelObject;
+		return transientModelObject;
 	}
 
 	/**
@@ -143,7 +143,7 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	{
 		StringBuffer sb = new StringBuffer(super.toString());
 		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
-				this.tempModelObject).append("]");
+				this.transientModelObject).append("]");
 		return sb.toString();
 	}
 
