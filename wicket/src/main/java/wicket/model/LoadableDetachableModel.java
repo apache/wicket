@@ -136,5 +136,28 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	 */
 	protected abstract T load();
 
+	/**
+	 * Attaches to the current request. Implement this method with custom
+	 * behavior, such as loading the model object.
+	 * 
+	 * @deprecated you can perform this logic inside load() implementation
+	 */
+	@Deprecated
+	protected final void onAttach()
+	{
+	}
+
+	/**
+	 * Detaches from the current request. Implement this method with custom
+	 * behavior, such as setting the model object to null.
+	 * 
+	 * @deprecated you can perform this logic by overriding detach() (dont
+	 *             forget to call super.detach())
+	 */
+	@Deprecated
+	protected final void onDetach()
+	{
+	}
+
 
 }
