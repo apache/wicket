@@ -696,7 +696,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				{
 				}
 			}
-			bookmarkable = Boolean.FALSE;
+			if (bookmarkable == null)
+			{
+				bookmarkable = Boolean.FALSE;
+			}
 			pageClassToBookmarkableCache.put(getClass(), bookmarkable);
 		}
 		return bookmarkable.booleanValue();
