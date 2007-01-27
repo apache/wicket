@@ -24,8 +24,8 @@ import wicket.RequestCycle;
 /**
  * Model that makes working with detachable models a breeze.
  * LoadableDetachableModel holds a temporary, transient model object, that is
- * set when {@link #getObject()} is called by calling abstract method
- * 'load', and that will be reset/ set to null on {@link #detach()}.
+ * set when {@link #getObject()} is called by calling abstract method 'load',
+ * and that will be reset/ set to null on {@link #detach()}.
  * 
  * A usage example:
  * 
@@ -85,9 +85,11 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 
 	/**
 	 * @see wicket.model.IDetachable#detach()
+	 * 
+	 * IMPORTANT: overrides must call super
 	 */
 	@Override
-	public final void detach()
+	public void detach()
 	{
 		if (attached)
 		{
@@ -99,7 +101,6 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 				log.debug("removed transient object for " + this + ", requestCycle "
 						+ RequestCycle.get());
 			}
-			onDetach();
 		}
 	}
 
@@ -107,7 +108,7 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	 * @see wicket.model.IModel#getObject()
 	 */
 	@Override
-	public T getObject()
+	public final T getObject()
 	{
 		if (!attached)
 		{
@@ -119,20 +120,8 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 				log.debug("loaded transient object " + transientModelObject + " for " + this
 						+ ", requestCycle " + RequestCycle.get());
 			}
-
-			onAttach();
 		}
 		return transientModelObject;
-	}
-
-	/**
-	 * Gets the attached status of this model instance
-	 * 
-	 * @return true if the model is attached, false otherwise
-	 */
-	public final boolean isAttached()
-	{
-		return attached;
 	}
 
 	/**
@@ -154,19 +143,5 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	 */
 	protected abstract T load();
 
-	/**
-	 * Attaches to the current request. Implement this method with custom
-	 * behavior, such as loading the model object.
-	 */
-	protected void onAttach()
-	{
-	}
 
-	/**
-	 * Detaches from the current request. Implement this method with custom
-	 * behavior, such as setting the model object to null.
-	 */
-	protected void onDetach()
-	{
-	}
 }
