@@ -141,7 +141,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * {@link #isBookmarkable()} is expensive, we cache the result here
 	 */
-	private static ConcurrentHashMap pageClassToBookmarkableCache = new ConcurrentHashMap();
+	private static final ConcurrentHashMap pageClassToBookmarkableCache = new ConcurrentHashMap();
 
 	/**
 	 * When passed to {@link Page#getVersion(int)} the latest page version is
