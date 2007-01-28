@@ -141,7 +141,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/**
 	 * {@link #isBookmarkable()} is expensive, we cache the result here
 	 */
-	private static ConcurrentHashMap<Class<? extends Page>, Boolean> pageClassToBookmarkableCache = new ConcurrentHashMap<Class<? extends Page>, Boolean>();
+	private static final ConcurrentHashMap<Class<? extends Page>, Boolean> pageClassToBookmarkableCache = new ConcurrentHashMap<Class<? extends Page>, Boolean>();
 
 	/**
 	 * When passed to {@link Page#getVersion(int)} the latest page version is
