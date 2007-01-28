@@ -108,7 +108,7 @@ public final class MarkupParserTest extends WicketTestCase
 	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamFactory locator,
 			final Class c, final String style, final Locale locale, final String extension)
 	{
-		IResourceStream resource = locator.locate(c, c.getName().replace('.', '/'), style, locale,
+		IResourceStream resource = locator.newResourceStream(c, c.getName().replace('.', '/'), style, locale,
 				extension);
 		MarkupResourceStream res = new MarkupResourceStream(resource, null, null);
 		return res;

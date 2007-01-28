@@ -94,7 +94,7 @@ public class PackagedTextTemplate extends TextTemplate
 		super(contentType);
 
 		String path = Packages.absolutePath(clazz, fileName);
-		IResourceStream stream = ResourceStreamFactory.get().locate(clazz, path);
+		IResourceStream stream = ResourceStreamFactory.get().newResourceStream(clazz, path);
 
 		if (stream == null)
 		{

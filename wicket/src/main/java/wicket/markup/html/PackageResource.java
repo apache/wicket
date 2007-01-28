@@ -182,7 +182,7 @@ public class PackageResource extends WebResource
 			extension = absolutePath.substring(index+1);
 			absolutePath = absolutePath.substring(0,index);
 		}
-		return Application.get().getResourceSettings().getResourceStreamFactory().locate(scope,
+		return Application.get().getResourceSettings().getResourceStreamFactory().newResourceStream(scope,
 				absolutePath, style, locale, extension) != null;
 	}
 
@@ -353,7 +353,7 @@ public class PackageResource extends WebResource
 	{
 		// Locate resource
 		IResourceStream resourceStream = Application.get().getResourceSettings()
-				.getResourceStreamFactory().locate(scope, absolutePath, style, locale, extension);
+				.getResourceStreamFactory().newResourceStream(scope, absolutePath, style, locale, extension);
 
 		// Check that resource was found
 		if (resourceStream == null)

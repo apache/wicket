@@ -82,7 +82,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 		while (containerClass != MarkupContainer.class)
 		{
 			String path = containerClass.getName().replace('.', '/');
-			IResourceStream resourceStream = locator.locate(container.getClass(), path, style,
+			IResourceStream resourceStream = locator.newResourceStream(container.getClass(), path, style,
 					locale, ext);
 
 			// Did we find it already?

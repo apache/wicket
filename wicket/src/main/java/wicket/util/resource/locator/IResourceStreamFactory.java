@@ -44,7 +44,7 @@ public interface IResourceStreamFactory
 	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
+	public IResourceStream newResourceStream(Class clazz, String path, String style, Locale locale,
 			String extension);
 
 	/**
@@ -57,5 +57,5 @@ public interface IResourceStreamFactory
 	 * 
 	 * @return The resource
 	 */
-	public IResourceStream locate(Class clazz, String path);
+	public IResourceStream newResourceStream(Class clazz, String path);
 }

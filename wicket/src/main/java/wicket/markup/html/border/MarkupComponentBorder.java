@@ -154,7 +154,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		while (containerClass != MarkupComponentBorder.class)
 		{
 			String path = containerClass.getName().replace('.', '/');
-			IResourceStream resourceStream = locator.locate(containerClass, path, style, locale,
+			IResourceStream resourceStream = locator.newResourceStream(containerClass, path, style, locale,
 					extension);
 
 			// Did we find it already?

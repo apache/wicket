@@ -106,7 +106,7 @@ public class ResourceStreamFactory implements IResourceStreamFactory
 	 * 
 	 * @return The Resource, or null if not found.
 	 */
-	public IResourceStream locate(final Class clazz, String path, final String style,
+	public IResourceStream newResourceStream(final Class clazz, String path, final String style,
 			final Locale locale, final String extension)
 	{
 		// Try the various combinations of style, locale and extension to find
@@ -129,7 +129,7 @@ public class ResourceStreamFactory implements IResourceStreamFactory
 				while (extIter.hasNext())
 				{
 					newPath = extIter.next();
-					IResourceStream stream = locate(clazz, newPath);
+					IResourceStream stream = newResourceStream(clazz, newPath);
 					if (stream != null)
 					{
 						stream.setLocale(localeIter.getLocale());
@@ -154,7 +154,7 @@ public class ResourceStreamFactory implements IResourceStreamFactory
 	 *            be forward slashes.
 	 * @return The Resource, or null if not found.
 	 */
-	public IResourceStream locate(final Class clazz, final String path)
+	public IResourceStream newResourceStream(final Class clazz, final String path)
 	{
 		// First search it on the resource on the classpath
 		IResourceStream stream = locateByClassLoader(clazz, path);

@@ -63,7 +63,7 @@ public class ResourceTest extends TestCase
 	public void createAndTestResource(Path sourcePath, String style, Locale locale, String extension)
 	{
 		IResourceStreamFactory locator = new ResourceStreamFactory(sourcePath);
-		IResourceStream resource = locator.locate(this.getClass(), this.getClass().getName()
+		IResourceStream resource = locator.newResourceStream(this.getClass(), this.getClass().getName()
 				.replace('.', '/'), style, locale, "txt");
 		compareFilename(resource, extension);
 	}
@@ -112,7 +112,7 @@ public class ResourceTest extends TestCase
 
 		// Determine source path
 		IResourceStreamFactory locator = new ResourceStreamFactory();
-		IResourceStream resource = locator.locate(getClass(), this.getClass().getName().replace(
+		IResourceStream resource = locator.newResourceStream(getClass(), this.getClass().getName().replace(
 				'.', '/'), null, null, "txt");
 		String path = getPath(resource);
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
