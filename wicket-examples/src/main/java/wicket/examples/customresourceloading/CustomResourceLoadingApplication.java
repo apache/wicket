@@ -51,11 +51,11 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	private final class CustomResourceStreamFactory extends ResourceStreamFactory
 	{
 		/**
-		 * @see wicket.util.resource.locator.ResourceStreamFactory#locate(java.lang.Class,
+		 * @see wicket.util.resource.locator.ResourceStreamFactory#newResourceStream(java.lang.Class,
 		 *      java.lang.String)
 		 */
 		@Override
-		public IResourceStream locate(final Class clazz, final String path)
+		public IResourceStream newResourceStream(final Class clazz, final String path)
 		{
 			// Log attempt
 			if (log.isDebugEnabled())
@@ -95,7 +95,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 			}
 
 			// resource not found; fall back on Wicket default
-			return super.locate(clazz, path);
+			return super.newResourceStream(clazz, path);
 		}
 	}
 
