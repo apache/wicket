@@ -16,6 +16,8 @@
  */
 package wicket;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,6 +137,11 @@ public abstract class Page<T> extends MarkupContainer<T>
 			IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * {@link #isBookmarkable()} is expensive, we cache the result here
+	 */
+	private static ConcurrentHashMap<Class<? extends Page>, Boolean> pageClassToBookmarkableCache = new ConcurrentHashMap<Class<? extends Page>, Boolean>();
 
 	/**
 	 * When passed to {@link Page#getVersion(int)} the latest page version is
@@ -748,28 +755,38 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	public boolean isBookmarkable()
 	{
-		try
-		{
-			if (getClass().getConstructor(new Class[] { PageParameters.class }) != null)
-			{
-				return true;
-			}
-
-		}
-		catch (Exception ignore)
+		Boolean bookmarkable = pageClassToBookmarkableCache.get(getClass());
+		if (bookmarkable == null)
 		{
 			try
 			{
+
 				if (getClass().getConstructor(new Class[] {}) != null)
 				{
-					return true;
+					bookmarkable = Boolean.TRUE;
+				}
+
+			}
+			catch (Exception ignore)
+			{
+				try
+				{
+					if (getClass().getConstructor(new Class[] { PageParameters.class }) != null)
+					{
+						bookmarkable = Boolean.TRUE;
+					}
+				}
+				catch (Exception ignore2)
+				{
 				}
 			}
-			catch (Exception ignore2)
+			if (bookmarkable == null)
 			{
+				bookmarkable = Boolean.FALSE;
 			}
+			pageClassToBookmarkableCache.put(getClass(), bookmarkable);
 		}
-		return false;
+		return bookmarkable;
 	}
 
 	/**
