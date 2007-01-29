@@ -215,7 +215,7 @@ public class WebResponse extends Response
 				}
 				catch (IOException e)
 				{
-					throw new WicketRuntimeException("Redirect failed", e);
+					log.warn("redirect to " + url + " failed: " + e.getMessage(), e);
 				}
 			}
 		}
