@@ -56,11 +56,13 @@ public final class DiffUtil
 	 *            Expected ouput
 	 * @param clazz
 	 *            Used to load the file (relativ to clazz package)
+	 * @param wicketTestCase
+	 * @param failWithAssert
 	 * @return true, if equal
 	 * @throws IOException
 	 */
-	public static final boolean validatePage(String document, final Class clazz, final String file)
-			throws IOException
+	public static final boolean validatePage(String document, final Class clazz, final String file,
+			boolean failWithAssert) throws IOException
 	{
 		String filename = clazz.getPackage().getName();
 		filename = filename.replace('.', '/');
@@ -100,37 +102,37 @@ public final class DiffUtil
 				return true;
 			}
 
-			Assert.assertEquals(filename, reference, document);
-			
-			log.error("File name: " + file);
-			/*  */
-			log.error("===================");
-			log.error(reference);
-			log.error("===================");
-
-			log.error(document);
-			log.error("===================");
-			/* */
-
-			String[] test1 = StringList.tokenize(reference, "\n").toArray();
-			String[] test2 = StringList.tokenize(document, "\n").toArray();
-			Diff df = new Diff(test1);
-			Revision r;
-			try
+			if (failWithAssert)
 			{
-				r = df.diff(test2);
+				Assert.assertEquals(filename, reference, document);
 			}
-			catch (DifferentiationFailedException e)
+			else
 			{
-				throw new RuntimeException(e);
-			}
+				log.error("File name: " + file);
+				/*  */
+				log.error("===================");
+				log.error(reference);
+				log.error("===================");
 
-			//Diff diff = new Diff(test1, test2);
-			//Diff.change script = diff.diff_2(false);
-			//DiffPrint.Base p = new DiffPrint.UnifiedPrint(test1, test2);
-			//p.setOutput(new PrintWriter(System.err));
-			//p.print_script(script);
-			System.out.println(r.toString());
+				log.error(document);
+				log.error("===================");
+				/* */
+
+				String[] test1 = StringList.tokenize(reference, "\n").toArray();
+				String[] test2 = StringList.tokenize(document, "\n").toArray();
+				Diff df = new Diff(test1);
+				Revision r;
+				try
+				{
+					r = df.diff(test2);
+				}
+				catch (DifferentiationFailedException e)
+				{
+					throw new RuntimeException(e);
+				}
+
+				System.out.println(r.toString());
+			}
 		}
 
 		return equals;

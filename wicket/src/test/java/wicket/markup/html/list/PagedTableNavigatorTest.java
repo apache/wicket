@@ -16,7 +16,6 @@
  */
 package wicket.markup.html.list;
 
-import java.io.IOException;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -59,7 +58,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.processRequestCycle();
 		PagedTableNavigatorPage page = (PagedTableNavigatorPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_1.html"));
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_1.html", true);
 
 		Link link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -78,7 +77,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_2.html"));
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_2.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -97,7 +96,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_3.html"));
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_3.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -116,7 +115,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_4.html"));
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_4.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -135,7 +134,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_5.html"));
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_5.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -154,7 +153,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_6.html"));
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_6.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -173,7 +172,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_7.html"));
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_7.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -198,11 +197,6 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_8.html"));
-	}
-	
-	private boolean validatePage(final String document, final String file) throws IOException
-	{
-		return DiffUtil.validatePage(document, this.getClass(), file);
+		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_8.html", true);
 	}
 }

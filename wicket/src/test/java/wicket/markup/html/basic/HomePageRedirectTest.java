@@ -34,7 +34,6 @@ public class HomePageRedirectTest extends TestCase
 		super();
 	}
 
-	
 	/**
 	 * @throws Exception
 	 */
@@ -52,8 +51,7 @@ public class HomePageRedirectTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html"));
-		
+		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
 	}
 
 	/**
@@ -73,8 +71,6 @@ public class HomePageRedirectTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html"));
-		
+		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
 	}
-	
 }

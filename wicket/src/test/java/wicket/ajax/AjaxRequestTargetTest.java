@@ -152,7 +152,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		}
 		else
 		{
-			assertTrue(DiffUtil.validatePage(headerContribution, this.getClass(), expectedFile));
+			DiffUtil.validatePage(headerContribution, this.getClass(), expectedFile, true);
 		}
 	}
 }
