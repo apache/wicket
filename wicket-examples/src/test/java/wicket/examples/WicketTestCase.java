@@ -65,6 +65,6 @@ public abstract class WicketTestCase extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename, false));
 	}
 }
