@@ -55,6 +55,6 @@ public class SimpleTestPanelTest extends WicketTestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, SimpleTestPage.class, "SimpleTestPageExpectedResult-1.html"));
+		DiffUtil.validatePage(document, SimpleTestPage.class, "SimpleTestPageExpectedResult-1.html", true);
 	}
 }

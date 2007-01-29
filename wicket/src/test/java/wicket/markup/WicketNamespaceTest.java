@@ -105,6 +105,6 @@ public class WicketNamespaceTest extends TestCase
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+		DiffUtil.validatePage(document, this.getClass(), filename, true);
 	}
 }
