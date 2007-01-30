@@ -385,7 +385,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		}
 		finally
 		{
-			// avoid NPEs by checking for null first
+			// avoid throwing an NPE and hiding the real exception
 			if (resource != null)
 			{
 				resource.close();
