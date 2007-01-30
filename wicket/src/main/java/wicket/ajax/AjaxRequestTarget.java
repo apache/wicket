@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +140,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final List<String> prependJavascripts = new ArrayList<String>();
 
 	/** the component instances that will be rendered */
-	private final Map<String, Component> markupIdToComponent = new HashMap<String, Component>();
+	private final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
 
 	/** a list of listeners */
 	private List<IListener> listeners = null;
