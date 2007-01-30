@@ -108,19 +108,6 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
-	 * Adds a new ui message with level DEBUG to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	public final void debug(Component reporter, Serializable message)
-	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
-	}
-
-	/**
 	 * Adds a new ui message with level ERROR to the current messages.
 	 * 
 	 * @param reporter
@@ -131,19 +118,6 @@ public final class FeedbackMessages implements Serializable
 	public final void error(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
-	}
-
-	/**
-	 * Adds a new ui message with level FATAL to the current messages.
-	 * 
-	 * @param reporter
-	 *            the reporting component
-	 * @param message
-	 *            the actual message
-	 */
-	public final void fatal(Component reporter, Serializable message)
-	{
-		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}
 
 	/**

@@ -30,14 +30,8 @@ public class FeedbackMessage implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Constant for debug level. */
-	public static final int DEBUG = 1;
-
 	/** Constant for error level. */
 	public static final int ERROR = 4;
-
-	/** Constant for fatal level. */
-	public static final int FATAL = 5;
 
 	/** Constant for info level. */
 	public static final int INFO = 2;
@@ -152,16 +146,6 @@ public class FeedbackMessage implements Serializable
 	}
 
 	/**
-	 * Gets whether the current level is DEBUG or up.
-	 * 
-	 * @return whether the current level is DEBUG or up.
-	 */
-	public final boolean isDebug()
-	{
-		return isLevel(DEBUG);
-	}
-
-	/**
 	 * Gets whether the current level is ERROR or up.
 	 * 
 	 * @return whether the current level is ERROR or up.
@@ -171,15 +155,6 @@ public class FeedbackMessage implements Serializable
 		return isLevel(ERROR);
 	}
 
-	/**
-	 * Gets whether the current level is FATAL or up.
-	 * 
-	 * @return whether the current level is FATAL or up.
-	 */
-	public final boolean isFatal()
-	{
-		return isLevel(FATAL);
-	}
 
 	/**
 	 * Gets whether the current level is INFO or up.

@@ -833,17 +833,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * Registers a debug feedback message for this component
-	 * 
-	 * @param message
-	 *            The feedback message
-	 */
-	public final void debug(final Serializable message)
-	{
-		getPage().getFeedbackMessages().debug(this, message);
-	}
-
-	/**
 	 * Detaches all models
 	 */
 	public void detachModels()
@@ -870,17 +859,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	public final void error(final Serializable message)
 	{
 		getPage().getFeedbackMessages().error(this, message);
-	}
-
-	/**
-	 * Registers an fatal error feedback message for this component
-	 * 
-	 * @param message
-	 *            The feedback message
-	 */
-	public final void fatal(final Serializable message)
-	{
-		getPage().getFeedbackMessages().fatal(this, message);
 	}
 
 	/**

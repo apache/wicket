@@ -28,7 +28,7 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 {
 	private static final long serialVersionUID = 1L;
 
-	private final MarkupContainer container;
+	private final MarkupContainer<?> container;
 
 	/**
 	 * Constructor
@@ -56,7 +56,8 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 		}
 		else
 		{
-			return container.contains(message.getReporter(), true);
+			return container.contains(message.getReporter(), true)
+					|| container == message.getReporter();
 		}
 	}
 }

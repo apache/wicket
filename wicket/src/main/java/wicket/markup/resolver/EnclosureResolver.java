@@ -25,20 +25,20 @@ import wicket.markup.parser.filter.EnclosureHandler;
 
 /**
  * This is a tag resolver which automatically adds a Enclosure container for
- * each &lt;wicket:enclosure&gt; tag. As this is no default resolver, it must
- * be added manually:
+ * each &lt;wicket:enclosure&gt; tag. As this is no default resolver, it must be
+ * added manually:
  * 
  * <pre>
- * MyApplication.java
- * { 
- *   ...
- *   public void init()
- *   {
- *       super.init();
- *       getPageSettings().addComponentResolver(new EnclosureResolver());
- *   }
- *   </pre>
- *
+ *  MyApplication.java
+ *  { 
+ *    ...
+ *    public void init()
+ *    {
+ *        super.init();
+ *        getPageSettings().addComponentResolver(new EnclosureResolver());
+ *    }
+ * </pre>
+ * 
  * @see EnclosureHandler
  * @see Enclosure
  * 
@@ -47,7 +47,7 @@ import wicket.markup.parser.filter.EnclosureHandler;
 public class EnclosureResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * 
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(wicket.MarkupContainer,
