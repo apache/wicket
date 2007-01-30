@@ -29,6 +29,11 @@ import wicket.util.string.AppendingStringBuffer;
  * using javascript and request header analysis. Wicket provides a default
  * implementation of this in {@link BrowserInfoPage}.
  * 
+ * WARNING: Be sure you think about the dangers of depending on
+ * information you pull from the client too much. They may be easily
+ * spoofed or inaccurate in other ways, and properties like
+ * window and browser size are all too easy to be used naively.
+ * 
  * @see BrowserInfoPage
  * @author Frank Bille (frankbille)
  */
