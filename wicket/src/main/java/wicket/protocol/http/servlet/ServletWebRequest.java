@@ -142,14 +142,7 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public String getPath()
 	{
-		String url = Strings.stripJSessionId(httpServletRequest.getRequestURI());
-		String rootPath = ((WebApplication)Application.get()).getRootPath();
-		if (url.startsWith(rootPath))
-		{
-			// We return everything after rootPath, making sure we start with a slash.
-			return url.substring(rootPath.endsWith("/") ? rootPath.length() - 1 : rootPath.length());
-		}
-		return null;
+		return ((WebApplication)Application.get()).getWicketFilter().getRelativePath(httpServletRequest);
 	}
 
 	/**

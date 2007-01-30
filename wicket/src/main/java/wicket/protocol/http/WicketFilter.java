@@ -17,7 +17,9 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,9 +29,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import wicket.AbortException;
 import wicket.Application;
@@ -37,6 +43,7 @@ import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.session.ISessionStore;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.resource.IResourceStream;
@@ -60,7 +67,7 @@ public class WicketFilter implements Filter
 	 * The name of the root path parameter that specifies the root dir of the
 	 * app.
 	 */
-	public static final String FILTER_PATH_PARAM = "filterPath";
+	public static final String FILTER_MAPPING_PARAM = "filterMappingUrlPattern";
 
 	/**
 	 * The servlet path holder when the WicketSerlvet is used. So that the
@@ -72,9 +79,6 @@ public class WicketFilter implements Filter
 	/** Log. */
 	private static final Log log = LogFactory.getLog(WicketFilter.class);
 
-	/** The URL path prefix expected for (so called) resources (not html pages). */
-	private static final String RESOURCES_PATH_PREFIX = "/resources/";
-
 	/** See javax.servlet.FilterConfig */
 	private FilterConfig filterConfig;
 
@@ -85,15 +89,11 @@ public class WicketFilter implements Filter
 	 */
 	private String filterPath;
 
-	/**
-	 * This holds the complete full root path including context and filter or
-	 * servlet path
-	 */
-	private String rootPath;
-
 	/** The Wicket Application associated with the Filter */
 	private WebApplication webApplication;
 
+	private boolean servletMode = false;
+	
 	/**
 	 * Servlet cleanup.
 	 */
@@ -104,6 +104,15 @@ public class WicketFilter implements Filter
 	}
 
 	/**
+	 * Sets the filter to be used by WicketServlet.
+	 * @param servletCompatibilityMode
+	 */
+	public void setServletMode(boolean servletCompatibilityMode)
+	{
+		this.servletMode = true;
+	}
+	
+	/**
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
@@ -111,7 +120,9 @@ public class WicketFilter implements Filter
 			throws IOException, ServletException
 	{
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-		if (isWicketRequest(httpServletRequest))
+		String relativePath = getRelativePath(httpServletRequest);
+				
+		if (isWicketRequest(relativePath))
 		{
 			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 			long lastModified = getLastModified(httpServletRequest);
@@ -158,6 +169,15 @@ public class WicketFilter implements Filter
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
+		String relativePath = getRelativePath(servletRequest);
+		// Special-case for home page - we redirect to add a trailing slash.
+		if (relativePath.length() == 0 && !Strings.stripJSessionId(servletRequest.getRequestURI()).endsWith("/"))
+		{
+			String foo = servletRequest.getRequestURI() + "/";
+			servletResponse.sendRedirect(foo);
+			return;
+		}
+
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
@@ -274,68 +294,45 @@ public class WicketFilter implements Filter
 	}
 
 	/**
-	 * Returns the full rootpath of this application. This is the
-	 * ApplicationSettings.contextpath and the WicketFilter.rootpath concatted.
-	 * 
-	 * @param request
-	 *            The request where the optional context path (if not specified
-	 *            in the settings) can be get from.
-	 * 
-	 * @return String the full rootpath.
-	 */
-	public String getRootPath(HttpServletRequest request)
-	{
-		if (rootPath != null)
-		{
-			return rootPath;
-		}
-		String path = webApplication.getApplicationSettings().getContextPath();
-		if (path == null)
-		{
-			path = request.getContextPath();
-			if (path == null)
-			{
-				path = "";
-			}
-		}
-
-		if (SERVLET_PATH_HOLDER.equals(filterPath))
-		{
-			filterPath = request.getServletPath();
-			if (filterPath.startsWith("/"))
-			{
-				filterPath = filterPath.substring(1);
-			}
-		}
-
-		if (filterPath != null && filterPath.length() > 0 && !path.endsWith("/"))
-		{
-			path += "/" + filterPath;
-		}
-		
-		return rootPath = path;
-	}
-	
-	/**
-	 * @return Path for the filter
-	 */
-	public String getFilterPath()
-	{
-		return filterPath;
-	}
-
-	/**
 	 * 
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
-
+		
+		if (SERVLET_PATH_HOLDER.equals(filterConfig.getInitParameter(FILTER_MAPPING_PARAM)))
+		{
+			servletMode = true;
+		}
+		
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
 			Thread.currentThread().setContextClassLoader(getClassLoader());
+			
+			// Try to configure filterPath from web.xml if it's not specified as an init-param.
+			if (filterConfig.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM) == null)
+			{
+				InputStream is = filterConfig.getServletContext().getResourceAsStream("/WEB-INF/web.xml");
+				if (is != null)
+				{
+					try
+					{
+						filterPath = getFilterPath(filterConfig.getFilterName(), is);
+						is.close();
+					}
+					catch (Exception e)
+					{
+						// Swallow IOException or SecurityException or similar, and log.info below.
+					}
+				}
+				if (filterPath == null)
+				{
+					log.info("Unable to parse filter mapping web.xml for " + filterConfig.getFilterName() + ". " +
+							"Configure with init-param " + FILTER_MAPPING_PARAM + " if it is not \"/*\".");
+				}
+			}
 
 			IWebApplicationFactory factory = getApplicationFactory();
 
@@ -346,12 +343,9 @@ public class WicketFilter implements Filter
 			this.webApplication.setWicketFilter(this);
 
 			// Store instance of this application object in servlet context to
-			// make
-			// integration with outside world easier
+			// make integration with outside world easier
 			String contextKey = "wicket:" + filterConfig.getFilterName();
 			filterConfig.getServletContext().setAttribute(contextKey, this.webApplication);
-
-			filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
 
 			Application.set(webApplication);
 
@@ -443,19 +437,16 @@ public class WicketFilter implements Filter
 	/**
 	 * Gets the last modified time stamp for the given request.
 	 * 
-	 * @param servletRequest
+	 * @param request
 	 * @return The last modified time stamp
 	 */
-	long getLastModified(final HttpServletRequest servletRequest)
+	long getLastModified(final HttpServletRequest request)
 	{
-		final String pathInfo = servletRequest.getRequestURI();
-
-		int rootPathLength = getRootPath(servletRequest).length();
-		if (pathInfo.length() > rootPathLength
-				&& pathInfo.substring(rootPathLength).startsWith(RESOURCES_PATH_PREFIX))
-		{
-			final String resourceReferenceKey = pathInfo.substring(rootPathLength
-					+ RESOURCES_PATH_PREFIX.length());
+		final String pathInfo = getRelativePath(request);
+		
+		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
+			
+			final String resourceReferenceKey = pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
 
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
@@ -467,7 +458,7 @@ public class WicketFilter implements Filter
 				{
 					Application.set(webApplication);
 
-					final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
+					final WebRequest webRequest = webApplication.newWebRequest(request);
 
 					// Set parameters from servlet request
 					resource.setParameters(webRequest.getParameterMap());
@@ -506,68 +497,100 @@ public class WicketFilter implements Filter
 	/**
 	 * Is this a Wicket request?
 	 * 
-	 * @param request
-	 *            The servlet request
+	 * @param relativePath
+	 *            The relativePath
 	 * @return True if this is a Wicket request
 	 */
-	private boolean isWicketRequest(HttpServletRequest request)
+	private boolean isWicketRequest(String relativePath)
 	{
-		String fullRootPath = getRootPath(request);
-		String url = request.getRequestURI();
-		String containerSuppliedContextPath = request.getContextPath();
-		if (!fullRootPath.startsWith(containerSuppliedContextPath)) {
-			url = url.substring(containerSuppliedContextPath.length());
-		}
-
-		// Homepage
-		if (url.startsWith(fullRootPath))
-		{
-			// url == "/"
-			// fullRootPath == ""
-			if (url.equals("/"))
-			{
-				return true;
-			}
-			// Strip trailing slash off url, but not if the filter is mapped at the root /
-			if (fullRootPath.length() > 0 && fullRootPath.length() == url.length() - 1 && url.endsWith("/"))
-			{
-				url = url.substring(0, url.length() - 1);
-			}
-			// url == fullRootPath
-			if (url.length() == fullRootPath.length())
-			{
-				return true;
-			}
-			// NOTE: a semicolon may be delimiting the jsessionid in the URI
-			if ((url.length() > fullRootPath.length())
-					&& (url.charAt(fullRootPath.length()) == ';'))
-			{
-				return true;
-			}
-		}
-		// SharedResources
-		String tmp = Strings.join("/", new String[] { fullRootPath, RESOURCES_PATH_PREFIX });
-		if (url.startsWith(tmp))
-		{
+		// Special case home page
+		if (relativePath.equals("")) {
 			return true;
 		}
-		// Mounted url
-		String path = null;
-		if (fullRootPath.length() < url.length())
-		{
-			path = url.substring(fullRootPath.length());
+				
+		// Resources
+		if (relativePath.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
+			return true;
 		}
-		else
+		
+		// Mounted page
+		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath) != null;
+	}
+	
+	/**
+	 * Returns a relative path from an HttpServletRequest Use this to resolve a
+	 * Wicket request.
+	 * 
+	 * @param request
+	 * @return Path requested, minus query string, context path, and filterPath.
+	 *         Relative, no leading '/'.
+	 */
+	public String getRelativePath(HttpServletRequest request) {
+		String path = request.getServletPath();
+		if (servletMode)
 		{
-			path = url;
+			path = request.getPathInfo();
+			// No path info => root.
+			if (path == null)
+			{
+				path = "";
+			}
+		}
+		filterPath = getFilterPath(request);
+		
+		if (path.length() > 0)
+		{
+			path = path.substring(1);
+		}
+		
+		// We should always be under the rootPath, except
+		// for the special case of someone landing on the
+		// home page without a trailing slash.
+		if (!path.startsWith(filterPath))
+		{
+			if (filterPath.equals(path + "/"))
+			{
+				path += "/";
+			}
+		}
+		if (path.startsWith(filterPath))
+		{
+			path = path.substring(filterPath.length());
 		}
 
-		if (!path.startsWith("/"))
+		return path;
+
+	}
+	
+	protected String getFilterPath(HttpServletRequest request)
+	{
+		if (filterPath != null)
 		{
-			path = "/" + path;
+			return filterPath;
 		}
-		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy()
-				.urlCodingStrategyForPath(path) != null;
+		if (servletMode)
+		{
+			return filterPath = request.getServletPath();
+		}
+		String result;
+		// Legacy migration check. TODO: Remove this after 1.3 is released and everyone's upgraded.
+		if (filterConfig.getInitParameter("filterPath") != null)
+		{
+			throw new WicketRuntimeException("\nThe filterPath init-param for WicketFilter has been removed.\n" +
+					"Please use a param called " + FILTER_MAPPING_PARAM + " with a value that exactly\n" +
+					"matches that in the <url-pattern> element of your <filter-mapping> (e.g. \"/app/*\").");
+		}
+		
+		result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
+		if (result == null || result.equals("/*"))
+		{
+			return "";
+		}
+		else if (!result.startsWith("/") || !result.endsWith("/*"))
+		{
+			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM + " must start with \"/\" and end with \"/*\". It is: " + result);
+		}
+		return filterPath = result.substring(1, result.length() - 2);
 	}
 
 	/**
@@ -586,6 +609,85 @@ public class WicketFilter implements Filter
 		if (lastModified >= 0)
 		{
 			resp.setDateHeader("Last-Modified", lastModified);
+		}
+	}
+	
+	private String getFilterPath(String filterName, InputStream is) throws ServletException
+	{
+		/*
+		 * Filter mappings look like this:
+		 * 
+		 * <filter-mapping> <filter-name>WicketFilter</filter-name>
+		 * <url-pattern>/*</url-pattern> <...> <filter-mapping>
+		 */
+		try
+		{
+			ArrayList urlPatterns = new ArrayList();
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
+			is.close();
+			NodeList filterMappings = doc.getElementsByTagName("filter-mapping");
+			for (int i = 0; i < filterMappings.getLength(); i++)
+			{
+				Node filterMapping = filterMappings.item(i);
+				NodeList mappingElements = filterMapping.getChildNodes();
+
+				// We might have filter-name and url-pattern in the
+				// wrong order, even though it's a DTD-violation -
+				// many containers don't use strict parsing, so we
+				// have to deal with this.
+				String urlPattern = null;
+				boolean add = false;
+				for (int j = 0; j < mappingElements.getLength(); j++)
+				{
+					Node mappingElement = mappingElements.item(j);
+					if (mappingElement.getNodeType() != Node.ELEMENT_NODE)
+					{
+						continue;
+					}
+					if (mappingElement.getNodeName().equals("filter-name")
+							&& mappingElement.getFirstChild().getNodeValue().equals(filterName))
+					{
+						add = true;
+					}
+					if (mappingElement.getNodeName().equals("url-pattern"))
+					{
+						urlPattern = mappingElement.getFirstChild().getNodeValue();
+					}
+				}
+				if (add)
+				{
+					add = false;
+					urlPatterns.add(urlPattern);
+				}
+			}
+			// By the time we get here, we have a list of urlPatterns we match
+			// this filter against.
+			// In all likelihood, we will only have one. If we have none, we
+			// have an error.
+			// If we have more than one, we pick the first one to use for any
+			// 302 redirects that
+			// require absolute URLs.
+			if (urlPatterns.size() == 0)
+			{
+				throw new ServletException(
+						"Error initialising WicketFilter - you have no filter-mapping element with a url-pattern that uses filter: "
+								+ filterName);
+			}
+			String urlPattern = (String)urlPatterns.get(0);
+
+			// Check for leading '/' and trailing '*'.
+			if (!urlPattern.startsWith("/") || !urlPattern.endsWith("*"))
+			{
+				throw new ServletException(
+						"Filter mappings for Wicket filter must start with '/' and end with '*'.");
+			}
+
+			// Strip trailing '*' and leading '/'.
+			return urlPattern.substring(1, urlPattern.length() - 1);
+		}
+		catch (Exception e)
+		{
+			throw new ServletException("Error finding filter " + filterName + " in web.xml", e);
 		}
 	}
 }

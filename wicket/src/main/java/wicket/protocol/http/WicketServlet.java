@@ -31,8 +31,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * 
- * Please use {@link WicketFilter} if possible instead of this servlet.
- * OSGi doesn't support filters yet, so you may be stuck with this.
+ * Please use {@link WicketFilter} if you require advanced chaining of resources.
  * 
  * Servlet class for all wicket applications. The specific application class to
  * instantiate should be specified to the application server via an init-params
@@ -71,7 +70,7 @@ import org.apache.commons.logging.LogFactory;
  * {@link wicket.protocol.http.IWebApplicationFactory}.
  * 
  * <p>
- * When GET/POST requests are made via HTTP, an WebRequestCycle object is
+ * When GET/POST requests are made via HTTP, a WebRequestCycle object is
  * created from the request, response and session objects (after wrapping them
  * in the appropriate wicket wrappers). The RequestCycle's render() method is
  * then called to produce a response to the HTTP request.
@@ -91,14 +90,14 @@ import org.apache.commons.logging.LogFactory;
  * </p>
  * In order to support frameworks like Spring, the class is non-final and the
  * variable webApplication is protected instead of private. Thus subclasses may
- * provide there own means of providing the application object.
+ * provide their own means of providing the application object.
  * 
  * @see wicket.RequestCycle
  * @author Jonathan Locke
  * @author Timur Mehrvarz
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @author Al Maw
  */
 public class WicketServlet extends HttpServlet
 {
@@ -107,18 +106,8 @@ public class WicketServlet extends HttpServlet
 	/** Log. */
 	private static final Log log = LogFactory.getLog(WicketServlet.class);
 
-	/** The WicketFilter where all the handling is done in */
+	/** The WicketFilter where all the handling is done */
 	protected WicketFilter wicketFilter;
-
-	/**
-	 * Construct.
-	 */
-	public WicketServlet() {
-		// log warning
-		log.info("********************************************");
-		log.info("DEPRECATED! Please use WicketFilter instead.");
-		log.info("********************************************");
-	}
 
 	/**
 	 * Handles servlet page requests.
@@ -184,7 +173,7 @@ public class WicketServlet extends HttpServlet
 			 */
 			public String getInitParameter(String name)
 			{
-				if (WicketFilter.FILTER_PATH_PARAM.equals(name))
+				if (WicketFilter.FILTER_MAPPING_PARAM.equals(name))
 				{
 					return WicketFilter.SERVLET_PATH_HOLDER;
 				}

@@ -2258,6 +2258,21 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * Gets a URL for the listener interface on a behaviour
+	 * (e.g. IBehaviorListener on AjaxPagingNavigationBehavior).
+	 * 
+	 * @param behaviour
+	 *            The behaviour that the URL should point to
+	 * @param listener
+	 *            The listener interface that the URL should call
+	 * @return The URL
+	 */
+	public final CharSequence urlFor(final IBehavior behaviour, final RequestListenerInterface listener)
+	{
+		return getRequestCycle().urlFor(this, behaviour, listener);
+	}
+
+	/**
 	 * Returns a URL that references a shared resource through the provided
 	 * resource reference.
 	 * 

@@ -166,9 +166,10 @@ public class MockWebApplication extends WebApplication
 
 				public String getInitParameter(String name)
 				{
-					if (name.equals(WicketFilter.FILTER_PATH_PARAM))
+					if (name.equals(WicketFilter.FILTER_MAPPING_PARAM))
 					{
-						return MockWebApplication.this.getName();
+						return WicketFilter.SERVLET_PATH_HOLDER;
+						//return "/" + MockWebApplication.this.getName() + "/*";
 					}
 					return null;
 				}

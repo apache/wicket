@@ -180,29 +180,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Returns the full rootpath of this application. This is the
-	 * ApplicationSettings.contextpath and the WicketFilter.filterPath concatted.
-	 * 
-	 * @return String the full rootpath.
-	 */
-	public String getRootPath()
-	{
-		HttpServletRequest httpServletRequest = ((WebRequestCycle)RequestCycle.get())
-				.getWebRequest().getHttpServletRequest();
-		return wicketFilter.getRootPath(httpServletRequest);
-	}
-
-	/**
-	 * Returns the WicketFilter.filterpath path of this application.
-	 * 
-	 * @return String the full rootpath.
-	 */
-	public String getFilterPath()
-	{
-		return wicketFilter.getFilterPath();
-	}
-
-	/**
 	 * Gets the servlet context for this application. Use this to get references
 	 * to absolute paths, global web.xml parameters (<context-param>), etc.
 	 * 

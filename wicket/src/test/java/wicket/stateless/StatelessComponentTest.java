@@ -42,7 +42,7 @@ public class StatelessComponentTest extends WicketTestCase
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_result.html");
 		
 		application.setupRequestAndResponse();
-		application.getServletRequest().setURL("/WicketTester/WicketTester?wicket:bookmarkablePage=:wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener");
+		application.getServletRequest().setURL("/WicketTester/WicketTester/?wicket:bookmarkablePage=:wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener:");
 		try
 		{
 			application.processRequestCycle();
@@ -50,7 +50,7 @@ public class StatelessComponentTest extends WicketTestCase
 		} 
 		catch (Exception e)
 		{
-			assertEquals(e.getMessage(),"wanted exception");
+			assertEquals("wanted exception", e.getMessage());
 		}
 
 	}
@@ -72,7 +72,7 @@ public class StatelessComponentTest extends WicketTestCase
 		} 
 		catch (Exception e)
 		{
-			assertEquals(e.getMessage(),"wanted exception");
+			assertEquals("wanted exception", e.getMessage());
 		}
 	}
 
