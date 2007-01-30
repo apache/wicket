@@ -39,7 +39,9 @@
 			  document.postback.screenColorDepth.value = window.screen.colorDepth;
 		  }
 		  document.postback.utcOffset.value = (new Date().getTimezoneOffset() / -60);
-		  document.postback.submit();
+          document.postback.browserWidth.value =  window.innerWidth || document.body.offsetWidth;
+          document.postback.browserHeight.value =  window.innerHeight || document.body.offsetHeight;
+ 		  document.postback.submit();
 		}
 		</script>
 	</head>
@@ -60,6 +62,8 @@
 			<input type="text" wicket:id="screenHeight" />
 			<input type="text" wicket:id="screenColorDepth" />
 			<input type="text" wicket:id="utcOffset" />
+			<input type="text" wicket:id="browserWidth" />
+			<input type="text" wicket:id="browserHeight" />
 		</form>
 	</body>
 </html>

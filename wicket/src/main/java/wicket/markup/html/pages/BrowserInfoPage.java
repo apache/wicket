@@ -79,6 +79,28 @@ public class BrowserInfoPage extends WebPage
 		private String screenHeight;
 		private String screenWidth;
 		private String utcOffset;
+		private String browserWidth;
+		private String browserHeight;
+
+		/**
+		 * Gets browserHeight.
+		 * 
+		 * @return browserHeight
+		 */
+		public String getBrowserHeight()
+		{
+			return browserHeight;
+		}
+
+		/**
+		 * Gets browserWidth.
+		 * 
+		 * @return browserWidth
+		 */
+		public String getBrowserWidth()
+		{
+			return browserWidth;
+		}
 
 		/**
 		 * Gets navigatorAppCodeName.
@@ -218,22 +240,32 @@ public class BrowserInfoPage extends WebPage
 			properties.setNavigatorUserAgent(navigatorUserAgent);
 			properties.setScreenWidth(getInt(screenWidth));
 			properties.setScreenHeight(getInt(screenHeight));
+			properties.setBrowserWidth(getInt(browserWidth));
+			properties.setBrowserHeight(getInt(browserHeight));
 			properties.setScreenColorDepth(getInt(screenColorDepth));
 			properties.setUtcOffset(utcOffset);
 		}
-		
-		private int getInt(String value) 
+
+		/**
+		 * Sets browserHeight.
+		 * 
+		 * @param browserHeight
+		 *            browserHeight
+		 */
+		public void setBrowserHeight(String browserHeight)
 		{
-			int intValue = -1;
-			try 
-			{
-				intValue = Integer.parseInt(value);
-			}
-			catch (NumberFormatException e)
-			{
-				// Do nothing
-			}
-			return intValue;
+			this.browserHeight = browserHeight;
+		}
+
+		/**
+		 * Sets browserWidth.
+		 * 
+		 * @param browserWidth
+		 *            browserWidth
+		 */
+		public void setBrowserWidth(String browserWidth)
+		{
+			this.browserWidth = browserWidth;
 		}
 
 		/**
@@ -367,6 +399,20 @@ public class BrowserInfoPage extends WebPage
 		{
 			this.utcOffset = utcOffset;
 		}
+
+		private int getInt(String value)
+		{
+			int intValue = -1;
+			try
+			{
+				intValue = Integer.parseInt(value);
+			}
+			catch (NumberFormatException e)
+			{
+				// Do nothing
+			}
+			return intValue;
+		}
 	}
 
 	/**
@@ -385,23 +431,25 @@ public class BrowserInfoPage extends WebPage
 		 * @param id
 		 *            component id
 		 */
-		public PostBackForm(MarkupContainer parent, String id)
+		public PostBackForm(MarkupContainer<?> parent, String id)
 		{
 			super(parent, id, new CompoundPropertyModel<ClientPropertiesBean>(
 					new ClientPropertiesBean()));
 
-			new TextField(this, "navigatorAppName");
-			new TextField(this, "navigatorAppVersion");
-			new TextField(this, "navigatorAppCodeName");
-			new TextField(this, "navigatorCookieEnabled");
-			new TextField(this, "navigatorJavaEnabled");
-			new TextField(this, "navigatorLanguage");
-			new TextField(this, "navigatorPlatform");
-			new TextField(this, "navigatorUserAgent");
-			new TextField(this, "screenWidth");
-			new TextField(this, "screenHeight");
-			new TextField(this, "screenColorDepth");
-			new TextField(this, "utcOffset");
+			new TextField<String>(this, "navigatorAppName");
+			new TextField<String>(this, "navigatorAppVersion");
+			new TextField<String>(this, "navigatorAppCodeName");
+			new TextField<String>(this, "navigatorCookieEnabled");
+			new TextField<String>(this, "navigatorJavaEnabled");
+			new TextField<String>(this, "navigatorLanguage");
+			new TextField<String>(this, "navigatorPlatform");
+			new TextField<String>(this, "navigatorUserAgent");
+			new TextField<String>(this, "screenWidth");
+			new TextField<String>(this, "screenHeight");
+			new TextField<String>(this, "screenColorDepth");
+			new TextField<String>(this, "utcOffset");
+			new TextField<String>(this, "browserWidth");
+			new TextField<String>(this, "browserHeight");
 		}
 
 		/**
@@ -511,6 +559,36 @@ public class BrowserInfoPage extends WebPage
 	}
 
 	/**
+	 * Adds components.
+	 */
+	private final void initComps()
+	{
+		WebComponent<?> meta = new WebComponent<Object>(this, "meta");
+		PageParameters parameters = new PageParameters();
+		parameters.put("cto", continueTo);
+		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class,
+				parameters));
+		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));
+		WebMarkupContainer<?> link = new WebMarkupContainer<Object>(this, "link");
+		link.add(new AttributeModifier("href", true, new Model<CharSequence>(url)));
+		new PostBackForm(this, "postback");
+	}
+
+	/**
+	 * Log a warning that for in order to use this page, you should really be
+	 * using {@link WebClientInfo}.
+	 * 
+	 * @param clientInfo
+	 *            the actual client info object
+	 */
+	private void warnNotUsingWebClientInfo(ClientInfo clientInfo)
+	{
+		log.warn("using " + getClass().getName() + " makes no sense if you are not using "
+				+ WebClientInfo.class.getName() + " (you are using "
+				+ clientInfo.getClass().getName() + " instead)");
+	}
+
+	/**
 	 * Continue to the location previous to this interception.
 	 */
 	protected final void continueToPrevious()
@@ -533,35 +611,5 @@ public class BrowserInfoPage extends WebPage
 	protected final void setContinueTo(String continueTo)
 	{
 		this.continueTo = continueTo;
-	}
-
-	/**
-	 * Adds components.
-	 */
-	private final void initComps()
-	{
-		WebComponent meta = new WebComponent<Object>(this, "meta");
-		PageParameters parameters = new PageParameters();
-		parameters.put("cto", continueTo);
-		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class,
-				parameters));
-		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));
-		WebMarkupContainer link = new WebMarkupContainer<Object>(this, "link");
-		link.add(new AttributeModifier("href", true, new Model<CharSequence>(url)));
-		new PostBackForm(this, "postback");
-	}
-
-	/**
-	 * Log a warning that for in order to use this page, you should really be
-	 * using {@link WebClientInfo}.
-	 * 
-	 * @param clientInfo
-	 *            the actual client info object
-	 */
-	private void warnNotUsingWebClientInfo(ClientInfo clientInfo)
-	{
-		log.warn("using " + getClass().getName() + " makes no sense if you are not using "
-				+ WebClientInfo.class.getName() + " (you are using "
-				+ clientInfo.getClass().getName() + " instead)");
 	}
 }
