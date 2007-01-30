@@ -43,7 +43,6 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestTargetMountsInfo;
