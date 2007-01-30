@@ -112,7 +112,8 @@ public class Home extends WebPage {
 			};
 
 			new TextField<String>(this, "stringProperty").setRequired(true).setLabel(new Model<String>("String"));
-			new TextField<Integer>(this, "integerProperty", Integer.class).setRequired(true).add(NumberValidator.POSITIVE);
+			new TextField<Integer>(this, "integerProperty", Integer.class).setRequired(true).add(
+					NumberValidator.POSITIVE);
 			new TextField<Double>(this, "doubleProperty", Double.class).setRequired(true);
 			// we have a component attached to the label here, as we want to
 			// synchronize the
@@ -122,8 +123,8 @@ public class Home extends WebPage {
 			WebMarkupContainer dateLabel = new WebMarkupContainer(this, "dateLabel");
 			TextField datePropertyTextField = new TextField<Date>(this, "dateProperty", Date.class);
 			new DatePicker(this, "datePicker", dateLabel, datePropertyTextField);
-			new TextField<Integer>(this, "integerInRangeProperty", Integer.class).add(NumberValidator.range(0,
-					100)).setRequired(true);
+			new TextField<Integer>(this, "integerInRangeProperty", Integer.class).add(NumberValidator.range(0, 100))
+					.setRequired(true);
 			new CheckBox(this, "booleanProperty");
 			RadioChoice<String> rc = new RadioChoice<String>(this, "numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model<String>("number"));
@@ -286,7 +287,7 @@ public class Home extends WebPage {
 		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
 		@Override
-		public void onSelectionChanged(Object newSelection) {
+		public void onSelectionChanged(Locale newSelection) {
 			// note that we don't have to do anything here, as our property
 			// model allready calls FormInput.setLocale when the model is
 			// updated

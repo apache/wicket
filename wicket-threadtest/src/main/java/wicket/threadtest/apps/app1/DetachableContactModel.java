@@ -1,6 +1,7 @@
 /*
- * $Id: DetachableContactModel.java 5394 2006-04-16 06:36:52 -0700 (Sun, 16 Apr 2006) jdonnerstag $
- * $Revision: 5394 $ $Date: 2006-04-16 06:36:52 -0700 (Sun, 16 Apr 2006) $
+ * $Id: DetachableContactModel.java 5832 2006-05-24 05:36:28 +0000 (Wed, 24 May
+ * 2006) ivaynberg $ $Revision: 501283 $ $Date: 2006-05-24 05:36:28 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,8 +19,7 @@
 package wicket.threadtest.apps.app1;
 
 import wicket.markup.repeater.IItemReuseStrategy;
-import wicket.markup.repeater.ReuseIfModelsEqualStrategy;
-import wicket.model.AbstractReadOnlyDetachableModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * detachable model for an instance of contact
@@ -27,23 +27,26 @@ import wicket.model.AbstractReadOnlyDetachableModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Contact> {
-	private transient Contact contact;
-
+public class DetachableContactModel extends LoadableDetachableModel<Contact> {
 	private long id;
 
 	/**
 	 * @param c
 	 */
-	public DetachableContactModel(Contact c) {
-		this(c.getId());
-		contact = c;
+	public DetachableContactModel(final Contact c) {
+		super(c);
+		if (c == null) {
+			throw new IllegalArgumentException();
+
+		}
+		id = c.getId();
+
 	}
 
 	/**
 	 * @param id
 	 */
-	public DetachableContactModel(long id) {
+	public DetachableContactModel(final long id) {
 		if (id == 0) {
 			throw new IllegalArgumentException();
 		}
@@ -53,13 +56,17 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	/**
 	 * used for dataview with ReuseIfModelsEqualStrategy item reuse strategy
 	 * 
-	 * @see AbstractPageableView#setItemReuseStrategy(IItemReuseStrategy)
-	 * @see ReuseIfModelsEqualStrategy
+	 * @see wicket.markup.repeater.PageableRefreshingView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see wicket.markup.repeater.ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof DetachableContactModel) {
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (obj instanceof DetachableContactModel) {
 			DetachableContactModel other = (DetachableContactModel) obj;
 			return other.id == this.id;
 		}
@@ -78,20 +85,12 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 		return DatabaseLocator.getDatabase();
 	}
 
+	/**
+	 * @see wicket.model.LoadableDetachableModel#load()
+	 */
 	@Override
-	protected void onAttach() {
-		if (contact == null) {
-			contact = getContactsDB().get(id);
-		}
-	}
-
-	@Override
-	protected void onDetach() {
-		contact = null;
-	}
-
-	@Override
-	protected Contact onGetObject() {
-		return contact;
+	protected Contact load() {
+		// loads contact from the database
+		return getContactsDB().get(id);
 	}
 }
