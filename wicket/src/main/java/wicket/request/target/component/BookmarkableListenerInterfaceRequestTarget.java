@@ -95,6 +95,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		}
 		param.append(Component.PATH_SEPARATOR);
 		param.append(getInterfaceName());
+		param.append(Component.PATH_SEPARATOR);
 
 		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, param.toString());
 	}
