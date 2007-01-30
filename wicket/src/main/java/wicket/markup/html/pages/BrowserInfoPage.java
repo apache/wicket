@@ -70,7 +70,7 @@ public class BrowserInfoPage extends WebPage
 		private String navigatorAppCodeName;
 		private String navigatorAppName;
 		private String navigatorAppVersion;
-		private Boolean navigatorCookieEnabled;
+		private Boolean navigatorCookieEnabled = Boolean.FALSE;
 		private Boolean navigatorJavaEnabled = Boolean.FALSE;
 		private String navigatorLanguage;
 		private String navigatorPlatform;
