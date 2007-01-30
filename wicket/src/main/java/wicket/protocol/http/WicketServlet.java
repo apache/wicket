@@ -163,7 +163,7 @@ public class WicketServlet extends HttpServlet
 	@Override
 	public void init() throws ServletException
 	{
-		wicketFilter = new WicketFilter();
+		wicketFilter = newWicketFilter();
 		wicketFilter.init(new FilterConfig()
 		{
 			/**
@@ -202,6 +202,14 @@ public class WicketServlet extends HttpServlet
 				return WicketServlet.this.getServletName();
 			}
 		});
+	}
+	
+	/**
+	 * @return The wicket filter 
+	 */
+	protected WicketFilter newWicketFilter()
+	{
+		return new WicketFilter();
 	}
 
 	/**
