@@ -40,9 +40,9 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically,
-	 * this might differ from {@link ClientProperties#isJavaEnabled()}
-	 * property, which is not set until an actual reply from a browser (e.g.
-	 * using {@link wicket.markup.html.pages.BrowserInfoPage} is set.
+	 * this might differ from {@link ClientProperties#isJavaEnabled()} property,
+	 * which is not set until an actual reply from a browser (e.g. using
+	 * {@link wicket.markup.html.pages.BrowserInfoPage} is set.
 	 */
 	private final String userAgent;
 
@@ -88,9 +88,29 @@ public class WebClientInfo extends ClientInfo
 
 		this.userAgent = userAgent;
 		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
-		.getHttpServletRequest();
+				.getHttpServletRequest();
 		properties.setRemoteAddress(httpServletRequest.getRemoteAddr());
 		init();
+	}
+
+	/**
+	 * Gets the client properties object.
+	 * 
+	 * @return the client properties object
+	 */
+	public final ClientProperties getProperties()
+	{
+		return properties;
+	}
+
+	/**
+	 * Gets the user agent string.
+	 * 
+	 * @return the user agent string
+	 */
+	public final String getUserAgent()
+	{
+		return userAgent;
 	}
 
 	/**
@@ -188,25 +208,5 @@ public class WebClientInfo extends ClientInfo
 		{
 			log.debug("determined user agent: " + properties);
 		}
-	}
-
-	/**
-	 * Gets the user agent string.
-	 * 
-	 * @return the user agent string
-	 */
-	public final String getUserAgent()
-	{
-		return userAgent;
-	}
-
-	/**
-	 * Gets the client properties object.
-	 * 
-	 * @return the client properties object
-	 */
-	public final ClientProperties getProperties()
-	{
-		return properties;
 	}
 }
