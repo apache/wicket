@@ -78,6 +78,28 @@ public class BrowserInfoPage extends WebPage
 		private String screenHeight;
 		private String screenWidth;
 		private String utcOffset;
+		private String browserWidth;
+		private String browserHeight;
+
+		/**
+		 * Gets browserHeight.
+		 * 
+		 * @return browserHeight
+		 */
+		public String getBrowserHeight()
+		{
+			return browserHeight;
+		}
+
+		/**
+		 * Gets browserWidth.
+		 * 
+		 * @return browserWidth
+		 */
+		public String getBrowserWidth()
+		{
+			return browserWidth;
+		}
 
 		/**
 		 * Gets navigatorAppCodeName.
@@ -217,22 +239,32 @@ public class BrowserInfoPage extends WebPage
 			properties.setNavigatorUserAgent(navigatorUserAgent);
 			properties.setScreenWidth(getInt(screenWidth));
 			properties.setScreenHeight(getInt(screenHeight));
+			properties.setBrowserWidth(getInt(browserWidth));
+			properties.setBrowserHeight(getInt(browserHeight));
 			properties.setScreenColorDepth(getInt(screenColorDepth));
 			properties.setUtcOffset(utcOffset);
 		}
 
-		private int getInt(String value)
+		/**
+		 * Sets browserHeight.
+		 * 
+		 * @param browserHeight
+		 *            browserHeight
+		 */
+		public void setBrowserHeight(String browserHeight)
 		{
-			int intValue = -1;
-			try
-			{
-				intValue = Integer.parseInt(value);
-			}
-			catch (NumberFormatException e)
-			{
-				// Do nothing
-			}
-			return intValue;
+			this.browserHeight = browserHeight;
+		}
+
+		/**
+		 * Sets browserWidth.
+		 * 
+		 * @param browserWidth
+		 *            browserWidth
+		 */
+		public void setBrowserWidth(String browserWidth)
+		{
+			this.browserWidth = browserWidth;
 		}
 
 		/**
@@ -366,6 +398,20 @@ public class BrowserInfoPage extends WebPage
 		{
 			this.utcOffset = utcOffset;
 		}
+
+		private int getInt(String value)
+		{
+			int intValue = -1;
+			try
+			{
+				intValue = Integer.parseInt(value);
+			}
+			catch (NumberFormatException e)
+			{
+				// Do nothing
+			}
+			return intValue;
+		}
 	}
 
 	/**
@@ -397,6 +443,8 @@ public class BrowserInfoPage extends WebPage
 			add(new TextField("screenHeight"));
 			add(new TextField("screenColorDepth"));
 			add(new TextField("utcOffset"));
+			add(new TextField("browserWidth"));
+			add(new TextField("browserHeight"));
 		}
 
 		/**
@@ -504,31 +552,6 @@ public class BrowserInfoPage extends WebPage
 	}
 
 	/**
-	 * Continue to the location previous to this interception.
-	 */
-	protected final void continueToPrevious()
-	{
-		// continue to original distination
-		RequestCycle requestCycle = getRequestCycle();
-		// Since we are explicitly redirecting to a page already, we do not
-		// want a second redirect to occur automatically
-		requestCycle.setRedirect(false);
-		// Redirect there
-		requestCycle.getResponse().redirect(continueTo);
-	}
-
-	/**
-	 * Set the url to continue to after this page.
-	 * 
-	 * @param continueTo
-	 *            the url
-	 */
-	protected final void setContinueTo(String continueTo)
-	{
-		this.continueTo = continueTo;
-	}
-
-	/**
 	 * Adds components.
 	 */
 	private final void initComps()
@@ -558,5 +581,30 @@ public class BrowserInfoPage extends WebPage
 		log.warn("using " + getClass().getName() + " makes no sense if you are not using "
 				+ WebClientInfo.class.getName() + " (you are using "
 				+ clientInfo.getClass().getName() + " instead)");
+	}
+
+	/**
+	 * Continue to the location previous to this interception.
+	 */
+	protected final void continueToPrevious()
+	{
+		// continue to original distination
+		RequestCycle requestCycle = getRequestCycle();
+		// Since we are explicitly redirecting to a page already, we do not
+		// want a second redirect to occur automatically
+		requestCycle.setRedirect(false);
+		// Redirect there
+		requestCycle.getResponse().redirect(continueTo);
+	}
+
+	/**
+	 * Set the url to continue to after this page.
+	 * 
+	 * @param continueTo
+	 *            the url
+	 */
+	protected final void setContinueTo(String continueTo)
+	{
+		this.continueTo = continueTo;
 	}
 }
