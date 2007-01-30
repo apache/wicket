@@ -165,7 +165,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			// There is no next matching tag
 			return null;
 		}
-		
+
 		// Determine line number
 		this.input.countLinesTo(openBracketIndex);
 
@@ -174,8 +174,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 		if (closeBracketIndex == -1)
 		{
-			throw new ParseException("No matching close bracket at position "
-					+ openBracketIndex, this.input.getPosition());
+			throw new ParseException("No matching close bracket at position " + openBracketIndex,
+					this.input.getPosition());
 		}
 
 		// Get the tagtext between open and close brackets
@@ -197,7 +197,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			}
 
 			// Conditional comment? <!--[if ...]>..<![endif]-->
-			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") 
+			if (tagText.startsWith("!--[if ") && tagText.endsWith("]")
 					&& this.input.getSubstring(pos + 3 - 12, pos + 3).equals("<![endif]-->"))
 			{
 				// fall through
@@ -219,17 +219,17 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			{
 				// Get index of closing tag and advance past the tag
 				closeBracketIndex = findCloseBracket('>', pos1);
-	
+
 				if (closeBracketIndex == -1)
 				{
 					throw new ParseException("No matching close bracket at position "
 							+ openBracketIndex, this.input.getPosition());
 				}
-	
+
 				// Get the tagtext between open and close brackets
 				tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
 						.toString();
-				
+
 				pos1 = closeBracketIndex + 1;
 			}
 			while (tagText.endsWith("]]") == false);
@@ -302,9 +302,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				}
 				else
 				{
-					throw new ParseException("Malformed tag (line "
-							+ this.input.getLineNumber() + ", column "
-							+ this.input.getColumnNumber() + ")", openBracketIndex);
+					throw new ParseException("Malformed tag (line " + this.input.getLineNumber()
+							+ ", column " + this.input.getColumnNumber() + ")", openBracketIndex);
 				}
 			}
 		}
@@ -380,14 +379,21 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	{
 		try
 		{
-			this.xmlReader = new XmlReader(
-					new BufferedInputStream(resource.getInputStream(), 4000), encoding);
-			this.input = new FullyBufferedReader(this.xmlReader);
+			xmlReader = new XmlReader(new BufferedInputStream(resource.getInputStream(), 4000),
+					encoding);
+			input = new FullyBufferedReader(xmlReader);
 		}
 		finally
 		{
-			resource.close();
-			this.xmlReader.close();
+			// avoid NPEs by checking for null first
+			if (resource != null)
+			{
+				resource.close();
+			}
+			if (xmlReader != null)
+			{
+				xmlReader.close();
+			}
 		}
 	}
 
