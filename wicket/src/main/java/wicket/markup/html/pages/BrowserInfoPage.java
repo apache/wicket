@@ -69,7 +69,7 @@ public class BrowserInfoPage extends WebPage
 		private String navigatorAppCodeName;
 		private String navigatorAppName;
 		private String navigatorAppVersion;
-		private Boolean navigatorCookieEnabled;
+		private Boolean navigatorCookieEnabled = Boolean.FALSE;
 		private Boolean navigatorJavaEnabled = Boolean.FALSE;
 		private String navigatorLanguage;
 		private String navigatorPlatform;
@@ -220,11 +220,11 @@ public class BrowserInfoPage extends WebPage
 			properties.setScreenColorDepth(getInt(screenColorDepth));
 			properties.setUtcOffset(utcOffset);
 		}
-		
-		private int getInt(String value) 
+
+		private int getInt(String value)
 		{
 			int intValue = -1;
-			try 
+			try
 			{
 				intValue = Integer.parseInt(value);
 			}
