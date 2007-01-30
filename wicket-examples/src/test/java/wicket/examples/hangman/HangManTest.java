@@ -17,7 +17,11 @@
  */
 package wicket.examples.hangman;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
+
+import org.apache.commons.io.FileUtils;
 
 import junit.framework.Assert;
 import junit.framework.Test;
@@ -154,8 +158,9 @@ public class HangManTest extends WicketWebTestCase
 	 */
 	public void testHangmanSuccessWebGame()
 	{
+		
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
-		beginAt("/hangman?word=hangman");
+		beginAt("/hangman/?word=hangman");
 
 		assertTitleEquals("Wicket Examples - hangman");
 		assertLinkPresent("start");
@@ -170,15 +175,29 @@ public class HangManTest extends WicketWebTestCase
 
 		assertElementPresent("guessesRemaining");
 		assertTextInElement("guessesRemaining", "4");
-
+		
 		clickLink("letter_h");
 		assertElementPresent("guessesRemaining");
+
+
+		try
+		{
+			FileUtils.writeStringToFile(new File("/home/fb/Desktop/out.txt"), getPageSource(), "UTF-8");
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
 		assertTextInElement("guessesRemaining", "4");
 
 		clickLink("letter_a");
 		clickLink("letter_n");
 		clickLink("letter_g");
 		clickLink("letter_m");
+		
+//		System.out.println(getPageSource());
+		
 		assertTextPresent("Congratulations! You guessed that the word was ");
 	}
 
@@ -188,7 +207,7 @@ public class HangManTest extends WicketWebTestCase
 	public void testHangmanFailureWebGame()
 	{
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
-		beginAt("/hangman?word=hangman");
+		beginAt("/hangman/?word=hangman");
 
 		assertTitleEquals("Wicket Examples - hangman");
 		assertLinkPresent("start");
