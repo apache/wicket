@@ -1203,7 +1203,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':'
 					+ component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':'
-					+ Classes.simpleName(clazz));
+					+ Classes.simpleName(clazz) + ':');
 		}
 	}
 

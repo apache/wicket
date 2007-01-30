@@ -62,7 +62,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			throw new IllegalArgumentException("Argument mountPath must be not null");
 		}
 
-		this.mountPath = mountPath;
+		this.mountPath = mountPath.substring(1);
 	}
 
 	/**

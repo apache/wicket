@@ -107,14 +107,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			throw new IllegalArgumentException(
 					"Behavior must be bound to a component to create the URL");
 		}
-
-		int index = getComponent().getBehaviors().indexOf(this);
-		if (index == -1)
-		{
-			throw new IllegalArgumentException("Behavior " + this
-					+ " was not registered with this component: " + getComponent().toString());
-		}
-
+		
 		final RequestListenerInterface rli;
 		if (recordPageVersion)
 		{
@@ -124,19 +117,12 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		{
 			rli = IUnversionedBehaviorListener.INTERFACE;
 		}
-
-		// TODO Post 1.2: URL encoding strategies are not applied
-		// And you can not simply call getResponse().encodeUrl() as the URL
-		// might
-		// already be encoded.
-		AppendingStringBuffer url = new AppendingStringBuffer(getComponent().urlFor(rli)).append(
-				'&').append(WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME).append('=')
-				.append(index);
-
+		
+		AppendingStringBuffer url = new AppendingStringBuffer(getComponent().urlFor(this, rli));
+		
 		if (onlyTargetActivePage)
 		{
-			url.append("&").append(WebRequestCodingStrategy.IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME)
-					.append("=true");
+			url.append("&").append(WebRequestCodingStrategy.IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 
 		return url;

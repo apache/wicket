@@ -83,7 +83,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		// first, see whether we can find any mount
 		IRequestTarget mounted = requestCycle.getProcessor().getRequestCodingStrategy()
 				.targetForRequest(requestParameters);
-		if (mounted != null)
+		
+		// If we've found a mount, only use it if the componentPath is null.
+		// Otherwise, we'll service it later with the components. 
+		if (mounted != null && requestParameters.getComponentPath() == null)
 		{
 			if (mounted instanceof IBookmarkablePageRequestTarget)
 			{

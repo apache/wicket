@@ -21,6 +21,7 @@ import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.behavior.IBehavior;
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.protocol.http.IRequestLogger;
 import wicket.request.ClientInfo;
@@ -33,6 +34,7 @@ import wicket.request.target.component.ComponentRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
+import wicket.request.target.component.listener.BehaviorRequestTarget;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.collections.ArrayListStack;
@@ -675,7 +677,39 @@ public abstract class RequestCycle
 		}
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target, false);
+		return requestCodingStrategy.encode(this, target);
+	}
+        
+	/**
+	 * Returns a URL that references a given interface on a given behaviour of
+	 * a component. When the URL is requested from the server at a later time,
+	 * the interface on the behaviour will be called. A URL returned by this
+	 * method will not be stable across sessions and cannot be bookmarked by a
+	 * user.
+	 * 
+	 * @param component
+	 *            The component to reference
+	 * @param behaviour
+	 *            The behaviour to reference 
+	 * @param listener
+	 *            The listener interface on the component
+	 * @return A URL that encodes a page, component, behaviour and interface to call
+	 */
+	public final CharSequence urlFor(final Component component,
+			final IBehavior behaviour, final RequestListenerInterface listener)
+	{
+		int index = component.getBehaviors().indexOf(behaviour);
+		if (index == -1)
+		{
+			throw new IllegalArgumentException("Behavior " + this
+					+ " was not registered with this component: " + component.toString());
+		}
+		RequestParameters params = new RequestParameters();
+		params.setBehaviorId(String.valueOf(index));
+
+		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component, listener, params);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
 	}
 
 	/**
@@ -688,7 +722,7 @@ public abstract class RequestCycle
 	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
 		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, requestTarget, false);
+		return requestCodingStrategy.encode(this, requestTarget);
 	}
 
 	/**
@@ -730,7 +764,7 @@ public abstract class RequestCycle
 				: pageMap.getName(), pageClass, parameters);
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target, false);
+		return requestCodingStrategy.encode(this, target);
 	}
 
 	/**
@@ -762,7 +796,7 @@ public abstract class RequestCycle
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
 		requestParameters.setParameters(parameters);
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
-				new SharedResourceRequestTarget(requestParameters), false);
+				new SharedResourceRequestTarget(requestParameters));
 		return url;
 	}
 
