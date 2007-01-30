@@ -165,50 +165,6 @@ public class ModelToStringTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * Tests AbstractReadOnlyModel.toString().
-	 */
-	public void testAbstractReadOnlyModel()
-	{
-		AbstractReadOnlyModel model = new MyAbstractReadOnlyModel();
-		String expected = "Model:classname=[" + model.getClass().getName() + "]";
-		assertEquals(expected, model.toString());
-	}
-
-	/**
-	 * Test stub for testing AbstractReadOnlyDetachableModel.toString()
-	 */
-	private static class MyAbstractReadOnlyDetachableModel extends AbstractReadOnlyDetachableModel
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected void onAttach()
-		{
-		}
-
-		@Override
-		protected void onDetach()
-		{
-		}
-
-		@Override
-		protected Object onGetObject()
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Tests AbstractReadOnlyModel.toString().
-	 */
-	public void testAbstractReadOnlyDetachableModel()
-	{
-		AbstractReadOnlyDetachableModel model = new MyAbstractReadOnlyDetachableModel();
-		String expected = "Model:classname=[" + model.getClass().getName() + "]"
-				+ ":attached=false";
-		assertEquals(expected, model.toString());
-	}
 
 	private static final class MyLoadableDetachableModel extends LoadableDetachableModel
 	{

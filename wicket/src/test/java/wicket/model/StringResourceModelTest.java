@@ -65,7 +65,7 @@ public class StringResourceModelTest extends TestCase
 		ws = new WeatherStation();
 		wsModel = new Model<WeatherStation>(ws);
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception
 	{
@@ -195,8 +195,9 @@ public class StringResourceModelTest extends TestCase
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
 		tester.setupRequestAndResponse();
-		new WebRequestCycle(tester.getWicketSession(), tester.getWicketRequest(), tester.getWicketResponse());
-		model.attach();
+		new WebRequestCycle(tester.getWicketSession(), tester.getWicketRequest(), tester
+				.getWicketResponse());
+		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		Assert.assertNull(model.getLocalizer());
@@ -207,35 +208,25 @@ public class StringResourceModelTest extends TestCase
 	 */
 	public void testDetachAttachDetachableModel() throws Exception
 	{
-		IModel wsDetachModel = new AbstractReadOnlyDetachableModel<WeatherStation>()
+		IModel wsDetachModel = new LoadableDetachableModel<WeatherStation>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			private transient WeatherStation station;
 
 			@Override
-			protected void onAttach()
+			protected WeatherStation load()
 			{
-				station = new WeatherStation();
+				return new WeatherStation();
 			}
 
-			@Override
-			protected void onDetach()
-			{
-				station = null;
-			}
-
-			@Override
-			protected WeatherStation onGetObject()
-			{
-				return station;
-			}
 
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		tester.setupRequestAndResponse();
-		new WebRequestCycle(tester.getWicketSession(), tester.getWicketRequest(), tester.getWicketResponse());
-		model.attach();
+		new WebRequestCycle(tester.getWicketSession(), tester.getWicketRequest(), tester
+				.getWicketResponse());
+		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...

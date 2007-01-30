@@ -87,15 +87,15 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * In its simplest form, the model can be used as follows:
  * 
  * <pre>
- *     
- *                public MyPage extends WebPage 
- *                {
- *                    public MyPage(final PageParameters parameters) 
- *                    {
- *                        add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
- *                    }
- *                }
  *      
+ *                 public MyPage extends WebPage 
+ *                 {
+ *                     public MyPage(final PageParameters parameters) 
+ *                     {
+ *                         add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
+ *                     }
+ *                 }
+ *       
  * </pre>
  * 
  * Where the resource bundle for the page contains the entry
@@ -107,17 +107,17 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * property expression:
  * 
  * <pre>
- *     
- *                public MyPage extends WebPage 
- *                {
- *                    public MyPage(final PageParameters parameters) 
- *                    {
- *                        WeatherStation ws = new WeatherStation();
- *                        add(new Label(&quot;weatherMessage&quot;,
- *                                      new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
- *                    }
- *                }
  *      
+ *                 public MyPage extends WebPage 
+ *                 {
+ *                     public MyPage(final PageParameters parameters) 
+ *                     {
+ *                         WeatherStation ws = new WeatherStation();
+ *                         add(new Label(&quot;weatherMessage&quot;,
+ *                                       new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
+ *                     }
+ *                 }
+ *       
  * </pre>
  * 
  * Which will call the WeatherStation.getCurrentStatus() method each time the
@@ -125,12 +125,12 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * contains the entries:
  * 
  * <pre>
- *     
- *                weather.sunny=Don't forget sunscreen!
- *                weather.raining=You might need an umberella
- *                weather.snowing=Got your skis?
- *                weather.overcast=Best take a coat to be safe
  *      
+ *                 weather.sunny=Don't forget sunscreen!
+ *                 weather.raining=You might need an umberella
+ *                 weather.snowing=Got your skis?
+ *                 weather.overcast=Best take a coat to be safe
+ *       
  * </pre>
  * 
  * <p>
@@ -140,25 +140,25 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * is substituted via the model:
  * 
  * <pre>
- *     
  *      
  *       
  *        
  *         
- *                public MyPage extends WebPage 
- *                {
- *                    public MyPage(final PageParameters parameters) 
- *                    {
- *                        WeatherStation ws = new WeatherStation();
- *                        add(new Label(&quot;weatherMessage&quot;,
- *                                      new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
- *                    }
- *                }
+ *          
+ *                 public MyPage extends WebPage 
+ *                 {
+ *                     public MyPage(final PageParameters parameters) 
+ *                     {
+ *                         WeatherStation ws = new WeatherStation();
+ *                         add(new Label(&quot;weatherMessage&quot;,
+ *                                       new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
+ *                     }
+ *                 }
+ *           
  *          
  *         
  *        
  *       
- *      
  * </pre>
  * 
  * Where the resource bundle contains the entry
@@ -172,56 +172,56 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * powerful use of the string resource model:
  * 
  * <pre>
- *     
  *      
  *       
  *        
  *         
- *                public MyPage extends WebPage 
- *                {
- *                    public MyPage(final PageParameters parameters) 
- *                    {
- *                        WeatherStation ws = new WeatherStation();
- *                        Model model = new Model(ws);
- *                        add(new Label(&quot;weatherMessage&quot;,
- *                                  new StringResourceModel(
- *                                      &quot;weather.detail&quot;, this, model,
- *                                      new Object[] 
- *                                      {
- *                                          new Date(),
- *                                          new PropertyModel(model, &quot;currentStatus&quot;),
- *                                          new PropertyModel(model, &quot;currentTemperature&quot;),
- *                                          new PropertyModel(model, &quot;units&quot;)
- *                                      }));
- *                    }
- *                }
+ *          
+ *                 public MyPage extends WebPage 
+ *                 {
+ *                     public MyPage(final PageParameters parameters) 
+ *                     {
+ *                         WeatherStation ws = new WeatherStation();
+ *                         Model model = new Model(ws);
+ *                         add(new Label(&quot;weatherMessage&quot;,
+ *                                   new StringResourceModel(
+ *                                       &quot;weather.detail&quot;, this, model,
+ *                                       new Object[] 
+ *                                       {
+ *                                           new Date(),
+ *                                           new PropertyModel(model, &quot;currentStatus&quot;),
+ *                                           new PropertyModel(model, &quot;currentTemperature&quot;),
+ *                                           new PropertyModel(model, &quot;units&quot;)
+ *                                       }));
+ *                     }
+ *                 }
+ *           
  *          
  *         
  *        
  *       
- *      
  * </pre>
  * 
  * And where the resource bundle entry is:
  * 
  * <pre>
- *     
  *      
  *       
  *        
  *         
- *                weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
- *                               and the weather to be {1}
+ *          
+ *                 weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
+ *                                and the weather to be {1}
+ *           
  *          
  *         
  *        
  *       
- *      
  * </pre>
  * 
  * @author Chris Turner
  */
-public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
+public class StringResourceModel extends LoadableDetachableModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -263,7 +263,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	public StringResourceModel(final String resourceKey, final Component component,
 			final IModel model)
 	{
-		this(resourceKey, component, model, null,null);
+		this(resourceKey, component, model, null, null);
 	}
 
 	/**
@@ -275,15 +275,15 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	 *            The component that the resource is relative to
 	 * @param model
 	 *            The model to use for property substitutions
-	 * @param defaultValue 
+	 * @param defaultValue
 	 *            The default value if the resource key is not found.
-	 *            
+	 * 
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
 			final IModel model, final String defaultValue)
 	{
-		this(resourceKey, component, model, null,defaultValue);
+		this(resourceKey, component, model, null, defaultValue);
 	}
 
 	/**
@@ -297,9 +297,9 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	 *            The model to use for property substitutions
 	 * @param parameters
 	 *            The parameters to substitute using a Java MessageFormat object
-	 * @param defaultValue 
+	 * @param defaultValue
 	 *            The default value if the resource key is not found.
-	 *            
+	 * 
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
@@ -307,7 +307,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	{
 		this(resourceKey, component, model, parameters, null);
 	}
-	
+
 	/**
 	 * Creates a new string resource model using the supplied parameters.
 	 * <p>
@@ -330,7 +330,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	 *            The model to use for property substitutions
 	 * @param parameters
 	 *            The parameters to substitute using a Java MessageFormat object
-	 * @param defaultValue 
+	 * @param defaultValue
 	 *            The default value if the resource key is not found.
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
@@ -383,9 +383,10 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 		// Get the string resource, doing any property substitutions as part
 		// of the get operation
 		String s = localizer.getString(getResourceKey(), component, model);
-		if(s == null) s = defaultValue;
+		if (s == null)
+			s = defaultValue;
 
-		if(s != null)
+		if (s != null)
 		{
 			// Substitute any parameters if necessary
 			Object[] parameters = getParameters();
@@ -401,15 +402,15 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 					}
 					else if (model != null && parameters[i] instanceof String)
 					{
-						realParams[i] = PropertyVariableInterpolator.interpolate((String)parameters[i],
-								model.getObject());
+						realParams[i] = PropertyVariableInterpolator.interpolate(
+								(String)parameters[i], model.getObject());
 					}
 					else
 					{
 						realParams[i] = parameters[i];
 					}
 				}
-								
+
 				// Apply the parameters
 				final MessageFormat format = new MessageFormat(s, component != null ? component
 						.getLocale() : locale);
@@ -477,10 +478,13 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	}
 
 	/**
-	 * Attaches to the given session.
+	 * Gets the string that this string resource model currently represents. The
+	 * string is returned as an object to allow it to be used generically within
+	 * components.
+	 * 
 	 */
 	@Override
-	protected final void onAttach()
+	protected String load()
 	{
 		// Initialise information that we need to work successfully
 		final Session session = Session.get();
@@ -494,13 +498,14 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 			throw new WicketRuntimeException(
 					"Cannot attach a string resource model without a Session context because that is required to get a Localizer");
 		}
+		return getString();
 	}
 
 	/**
 	 * Detaches from the given session
 	 */
 	@Override
-	protected final void onDetach()
+	public final void detach()
 	{
 		// Detach any model
 		if (model != null)
@@ -511,18 +516,9 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 		// Null out references
 		this.localizer = null;
 		this.locale = null;
+
+		super.detach();
 	}
 
-	/**
-	 * Gets the string that this string resource model currently represents. The
-	 * string is returned as an object to allow it to be used generically within
-	 * components.
-	 * 
-	 * @see AbstractDetachableModel#onGetObject()
-	 */
-	@Override
-	protected final String onGetObject()
-	{
-		return getString();
-	}
+
 }

@@ -1,7 +1,7 @@
 /*
  * $Id: DetachableContactModel.java 5832 2006-05-24 05:36:28 +0000 (Wed, 24 May
- * 2006) ivaynberg $ $Revision$ $Date: 2006-05-24 05:36:28 +0000 (Wed, 24
- * May 2006) $
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-05-24 05:36:28 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,7 +19,7 @@
 package wicket.examples.repeater;
 
 import wicket.markup.repeater.IItemReuseStrategy;
-import wicket.model.AbstractReadOnlyDetachableModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * detachable model for an instance of contact
@@ -27,10 +27,9 @@ import wicket.model.AbstractReadOnlyDetachableModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Contact>
+public class DetachableContactModel extends LoadableDetachableModel<Contact>
 {
 	private long id;
-	private transient Contact contact;
 
 	protected ContactsDatabase getContactsDB()
 	{
@@ -42,8 +41,14 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	 */
 	public DetachableContactModel(final Contact c)
 	{
-		this(c.getId());
-		contact = c;
+		super(c);
+		if (c == null)
+		{
+			throw new IllegalArgumentException();
+
+		}
+		id = c.getId();
+
 	}
 
 	/**
@@ -56,27 +61,6 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 			throw new IllegalArgumentException();
 		}
 		this.id = id;
-	}
-
-	@Override
-	protected void onAttach()
-	{
-		if (contact == null)
-		{
-			contact = getContactsDB().get(id);
-		}
-	}
-
-	@Override
-	protected void onDetach()
-	{
-		contact = null;
-	}
-
-	@Override
-	protected Contact onGetObject()
-	{
-		return contact;
 	}
 
 	/**
@@ -98,11 +82,29 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	@Override
 	public boolean equals(final Object obj)
 	{
-		if (obj instanceof DetachableContactModel)
+		if (obj == this)
+		{
+			return true;
+		}
+		else if (obj == null)
+		{
+			return false;
+		}
+		else if (obj instanceof DetachableContactModel)
 		{
 			DetachableContactModel other = (DetachableContactModel)obj;
 			return other.id == this.id;
 		}
 		return false;
+	}
+
+	/**
+	 * @see wicket.model.LoadableDetachableModel#load()
+	 */
+	@Override
+	protected Contact load()
+	{
+		// loads contact from the database
+		return getContactsDB().get(id);
 	}
 }

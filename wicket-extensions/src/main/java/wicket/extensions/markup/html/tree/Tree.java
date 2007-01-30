@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.tree;
 
@@ -39,7 +39,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.Loop;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
 
 /**
@@ -219,9 +218,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Model for the paths of the tree.
 	 */
-	private final class TreePathsModel
-			extends
-				AbstractReadOnlyDetachableModel<List<DefaultMutableTreeNode>>
+	private final class TreePathsModel implements IModel<List<DefaultMutableTreeNode>>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -231,44 +228,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/** tree paths. */
 		private List<DefaultMutableTreeNode> paths = new ArrayList<DefaultMutableTreeNode>();
 
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onAttach()
-		 */
-		@Override
-		protected void onAttach()
-		{
-			if (dirty)
-			{
-				paths.clear();
-				TreeModel model = getTreeState().getModel();
-				DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
-				Enumeration e = rootNode.preorderEnumeration();
-				while (e.hasMoreElements())
-				{
-					DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
-					// TreePath path = new TreePath(treeNode.getPath());
-					paths.add(treeNode);
-				}
-				dirty = false;
-			}
-		}
-
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onDetach()
-		 */
-		@Override
-		protected void onDetach()
-		{
-		}
-
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onGetObject()
-		 */
-		@Override
-		protected List<DefaultMutableTreeNode> onGetObject()
-		{
-			return paths;
-		}
+		private transient boolean attached = false;
 
 		/**
 		 * Inserts the given node in the path list with the given index.
@@ -304,6 +264,37 @@ public class Tree extends AbstractTree implements TreeModelListener
 		void remove(DefaultMutableTreeNode node)
 		{
 			paths.remove(node);
+		}
+
+
+		public List<DefaultMutableTreeNode> getObject()
+		{
+			if (dirty && !attached)
+			{
+				paths.clear();
+				TreeModel model = getTreeState().getModel();
+				DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
+				Enumeration e = rootNode.preorderEnumeration();
+				while (e.hasMoreElements())
+				{
+					DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
+					// TreePath path = new TreePath(treeNode.getPath());
+					paths.add(treeNode);
+				}
+				dirty = false;
+			}
+			attached = true;
+			return paths;
+		}
+
+		public void setObject(List<DefaultMutableTreeNode> object)
+		{
+			throw new UnsupportedOperationException("This is a read-only model");
+		}
+
+		public void detach()
+		{
+			attached = false;
 		}
 	}
 

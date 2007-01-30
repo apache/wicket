@@ -26,6 +26,7 @@ import java.util.List;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.form.select.IOptionRenderer;
 import wicket.extensions.markup.html.form.select.Select;
+import wicket.extensions.markup.html.form.select.SelectMultiple;
 import wicket.extensions.markup.html.form.select.SelectOption;
 import wicket.extensions.markup.html.form.select.SelectOptions;
 import wicket.markup.html.form.Form;
@@ -78,7 +79,7 @@ public class SelectPage extends WicketExamplePage
 		new SelectOption<String>(site, "site3", new Model<String>("sd"));
 		new SelectOption<String>(site, "site4", new Model<String>("bn"));
 
-		Select choices = new Select(form, "choices");
+		SelectMultiple choices = new SelectMultiple(form, "choices");
 		IOptionRenderer renderer = new IOptionRenderer()
 		{
 			public String getDisplayValue(Object object)

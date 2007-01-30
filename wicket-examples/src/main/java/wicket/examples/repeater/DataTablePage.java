@@ -21,6 +21,7 @@ package wicket.examples.repeater;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -59,6 +60,6 @@ public class DataTablePage extends BasePage
 		columns.add(new PropertyColumn<String>(new Model<String>("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn<String>(new Model<String>("Cell Phone"), "cellPhone"));
 
-		new DefaultDataTable(this, "table", columns, new SortableContactDataProvider(), 8);
+		new AjaxFallbackDefaultDataTable(this, "table", columns, new SortableContactDataProvider(), 8);
 	}
 }

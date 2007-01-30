@@ -26,8 +26,8 @@ import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
-import wicket.model.AbstractModel;
 import wicket.model.CompoundPropertyModel;
+import wicket.model.Model;
 import wicket.util.string.Strings;
 
 /**
@@ -62,7 +62,7 @@ public class UnicodeConverter extends WicketExamplePage
 	 * {@link Component#getModelObject()} on the component that holds it, and we
 	 * would have a recent value.
 	 */
-	private final class ConverterModel extends AbstractModel<String>
+	private final class ConverterModel extends Model<String>
 	{
 		/**
 		 * @see wicket.model.IModel#getObject()

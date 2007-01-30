@@ -21,7 +21,7 @@ import java.io.Serializable;
 import wicket.AttributeModifier;
 import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
-import wicket.model.AbstractModel;
+import wicket.model.Model;
 import wicket.util.lang.Objects;
 import wicket.version.undo.Change;
 
@@ -200,7 +200,7 @@ public class OrderByLink extends Link
 		 */
 		public CssModifier(final OrderByLink link, final ICssProvider provider)
 		{
-			super("class", true, new AbstractModel()
+			super("class", true, new Model()
 			{
 				private static final long serialVersionUID = 1L;
 

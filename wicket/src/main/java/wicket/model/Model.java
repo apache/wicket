@@ -37,7 +37,7 @@ import wicket.WicketRuntimeException;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class Model<T> extends AbstractModel<T>
+public class Model<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -141,8 +141,16 @@ public class Model<T> extends AbstractModel<T>
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer(super.toString());
-		sb.append(":object=[").append(this.object).append("]");
+		StringBuffer sb = new StringBuffer();
+		sb.append("Model:classname=[").append(getClass().getName()).append("]:object=[")
+				.append(this.object).append("]");
 		return sb.toString();
+	}
+
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
 	}
 }

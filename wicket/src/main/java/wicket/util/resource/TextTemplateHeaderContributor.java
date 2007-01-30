@@ -19,8 +19,8 @@ package wicket.util.resource;
 import java.util.Map;
 
 import wicket.behavior.StringHeaderContributor;
-import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * A header contributor that will contribute the contents of the given template
@@ -34,7 +34,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * This model holds the template and returns the interpolation of the
 	 * template with of any of the
 	 */
-	private static final class TemplateModel extends AbstractReadOnlyDetachableModel<String>
+	private static final class TemplateModel extends LoadableDetachableModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -69,31 +69,23 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 			this.variablesModel = variablesModel;
 		}
 
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onAttach()
-		 */
-		@Override
-		protected void onAttach()
-		{
-		}
 
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onDetach()
-		 */
 		@Override
-		protected void onDetach()
+		public void detach()
 		{
 			if (variablesModel != null)
 			{
 				variablesModel.detach();
 			}
+			super.detach();
 		}
 
+
 		/**
-		 * @see wicket.model.AbstractDetachableModel#onGetObject()
+		 * @see wicket.model.LoadableDetachableModel#load()
 		 */
 		@Override
-		protected String onGetObject()
+		protected String load()
 		{
 			if (variablesModel != null)
 			{
@@ -105,6 +97,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 			}
 			return template.asString();
 		}
+
 	}
 
 	private static final long serialVersionUID = 1L;

@@ -23,7 +23,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.HiddenField;
-import wicket.model.AbstractModel;
 import wicket.model.Model;
 
 /**
@@ -136,7 +135,7 @@ public class FilterForm extends Form
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class FilterStateModel extends AbstractModel<Object>
+	private static class FilterStateModel extends Model<Object>
 	{
 		private static final long serialVersionUID = 1L;
 

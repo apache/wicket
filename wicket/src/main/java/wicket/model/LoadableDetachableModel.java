@@ -123,7 +123,8 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	@Override
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer(super.toString());
+		StringBuffer sb = new StringBuffer();
+		sb.append("Model:classname=[").append(getClass().getName()).append("]");
 		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
 				this.transientModelObject).append("]");
 		return sb.toString();

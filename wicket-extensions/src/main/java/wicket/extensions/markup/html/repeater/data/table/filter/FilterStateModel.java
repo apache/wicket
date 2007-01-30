@@ -16,7 +16,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
-import wicket.model.AbstractModel;
+import wicket.model.Model;
 
 /**
  * Model that wraps filter state locator to make its use transparent to wicket
@@ -35,7 +35,7 @@ import wicket.model.AbstractModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-class FilterStateModel extends AbstractModel
+class FilterStateModel extends Model
 {
 	private static final long serialVersionUID = 1L;
 

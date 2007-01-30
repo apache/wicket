@@ -26,7 +26,7 @@ package wicket.model;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public abstract class AbstractReadOnlyModel<T> extends AbstractModel<T>
+public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 {
 
 	/**
@@ -56,5 +56,12 @@ public abstract class AbstractReadOnlyModel<T> extends AbstractModel<T>
 	public String toString()
 	{
 		return super.toString();
+	}
+	
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
 	}
 }

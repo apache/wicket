@@ -16,7 +16,7 @@
  */
 package wicket.markup.html.list;
 
-import wicket.model.AbstractDetachableModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * Model for list items.
@@ -25,18 +25,14 @@ import wicket.model.AbstractDetachableModel;
  *            Type of model object this model holds
  * 
  */
-public class ListItemModel<T> extends AbstractDetachableModel<T>
+public class ListItemModel<T> extends LoadableDetachableModel<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	// It is easy and cheap to re-build it if necessary.
-	// Avoid synchronising it in a cluster
-	private transient T object;
 
 	/** The ListView's list model */
 	private final ListView<T> listView;
 
-	/* The list item's index */
+	/** The list item's index */
 	private final int index;
 
 	/**
@@ -51,43 +47,12 @@ public class ListItemModel<T> extends AbstractDetachableModel<T>
 	{
 		this.listView = listView;
 		this.index = index;
-		attach();
 	}
 
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onAttach()
-	 */
-	@Override
-	protected void onAttach()
-	{
-		// Re-attach the model object based on index and ListView model object
-		this.object = listView.getModelObject().get(index);
-	}
 
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onDetach()
-	 */
 	@Override
-	protected void onDetach()
+	protected T load()
 	{
-		this.object = null;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject()
-	 */
-	@Override
-	protected T onGetObject()
-	{
-		return object;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onSetObject(java.lang.Object)
-	 */
-	@Override
-	protected void onSetObject(final T object)
-	{
-		this.object = object;
+		return listView.getModelObject().get(index);
 	}
 }
