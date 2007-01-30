@@ -186,7 +186,7 @@ public class FilePageStore implements IPageStore
 				long t2 = System.currentTimeMillis();
 				log.info("storing page " + page.getNumericId() + ","
 						+ page.getCurrentVersionNumber() + " for session " + sessionId + " took "
-						+ (t2 - t1) + " miliseconds");
+						+ (t2 - t1) + " miliseconds, bytes saved: " + bytes.length);
 			}
 		}
 		catch (Exception e)
