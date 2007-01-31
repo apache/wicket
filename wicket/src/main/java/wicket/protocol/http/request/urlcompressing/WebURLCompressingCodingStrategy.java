@@ -25,6 +25,7 @@ import wicket.RequestListenerInterface;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -117,7 +118,14 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 		}
 		
 		url.append(Component.PATH_SEPARATOR);
-
+		url.append(Component.PATH_SEPARATOR);
+		
+		// Add behaviourId
+		RequestParameters params = requestTarget.getRequestParameters();
+		if (params != null && params.getBehaviorId() != null)
+		{
+			url.append(params.getBehaviorId());
+		}
 		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
 }
