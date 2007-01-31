@@ -26,50 +26,56 @@ public class StatelessComponentTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public StatelessComponentTest(String name)
 	{
 		super(name);
 	}
-	
-	
+
+
 	/**
 	 * @throws Exception
 	 */
 	public void testStatelessComponentPage() throws Exception
 	{
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_result.html");
-		
+
 		application.setupRequestAndResponse();
-		application.getServletRequest().setURL("/WicketTester/WicketTester/?wicket:bookmarkablePage=:wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener:");
+		application
+				.getServletRequest()
+				.setURL(
+						"/WicketTester/WicketTester/?wicket:bookmarkablePage=:wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener:");
 		try
 		{
 			application.processRequestCycle();
 			assertTrue(false);
-		} 
+		}
 		catch (Exception e)
 		{
 			assertEquals("wanted exception", e.getMessage());
 		}
 
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
 	public void testStatelessComponentPageWithMount() throws Exception
 	{
 		application.mountBookmarkablePage("/stateless", StatelessComponentPage.class);
-// test is always the home page. it doesn't work then		
-//		executeTest(StatelessComponentPage.class, "StatelessComponentPage_mount_result.html");
+		// test is always the home page. it doesn't work then
+		// executeTest(StatelessComponentPage.class,
+		// "StatelessComponentPage_mount_result.html");
 		application.setupRequestAndResponse();
-		application.getServletRequest().setURL("/WicketTester/WicketTester/stateless/wicket:interface/:0:link::ILinkListener");
+		application.getServletRequest().setURL(
+				"/WicketTester/WicketTester/stateless/wicket:interface/:0:link::ILinkListener:");
 		try
 		{
 			application.processRequestCycle();
 			assertTrue(false);
-		} 
+		}
 		catch (Exception e)
 		{
 			assertEquals("wanted exception", e.getMessage());
