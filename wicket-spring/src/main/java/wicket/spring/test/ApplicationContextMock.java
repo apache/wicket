@@ -330,4 +330,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see org.springframework.beans.factory.BeanFactory#isTypeMatch(String, Class)
+	 */
+	public boolean isTypeMatch(String name, Class targetType) throws NoSuchBeanDefinitionException
+	{
+		throw new UnsupportedOperationException();
+	}
+
 }
