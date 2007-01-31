@@ -119,4 +119,30 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 			// noop
 		}
 	}
+	
+	public void testFailsIfBeanWithIdIsNotFound() throws Exception
+	{
+		InjectableWithReferenceToNonexistingBean obj = new InjectableWithReferenceToNonexistingBean();
+		Field field = obj.getClass().getDeclaredField("nonExisting");
+		try 
+		{
+			factory.getFieldValue(field, obj);
+			fail();
+		}
+		catch (RuntimeException e) {			
+		}
+	}
+	
+	public void testSucceedsIfBeanWithIdIsNotFoundWhenFailFastIsDisabled() throws Exception
+	{
+		InjectableWithReferenceToNonexistingBean obj = new InjectableWithReferenceToNonexistingBean();
+		Field field = obj.getClass().getDeclaredField("nonExisting");
+		factory.setFailFast(false);
+		factory.getFieldValue(field, obj);
+	}
+	
+	static class InjectableWithReferenceToNonexistingBean {
+		@SpringBean(id="nonExisting")
+		private Bean nonExisting;
+	}
 }

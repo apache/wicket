@@ -62,6 +62,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = new ConcurrentHashMap<SpringBeanLocator, Object>();
 
+	private boolean failFast = true;
+
 	/**
 	 * @param contextLocator
 	 *            spring context locator
@@ -96,8 +98,10 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 
 			// fail early - see if the locator can locate the spring bean
-			testLocator(locator, fieldOwner, field);
-
+			if (failFast) {
+				testLocator(locator, fieldOwner, field);
+			}
+			
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(), locator);
 			cache.put(locator, proxy);
 			return proxy;
@@ -144,4 +148,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		return field.isAnnotationPresent(SpringBean.class);
 	}
 
+	/**
+	 * @param failFast true if the locator fails if a bean can't be located
+	 */
+	public void setFailFast(boolean failFast)
+	{
+		this.failFast = failFast;
+	}
 }
