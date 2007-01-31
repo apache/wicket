@@ -106,7 +106,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 						+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = "
 						+ bookmarkableInterfaceListener);
 			}
-			final String interfaceName = pathComponents[pathComponents.length - 1];
+			final String interfaceName = pathComponents[pathComponents.length - 2];
 			int start = (pageMapName != null) ? pageMapName.length() + 1 : 1;
 			final String componentPath = bookmarkableInterfaceListener.substring(start,
 					bookmarkableInterfaceListener.length() - interfaceName.length() - 2);

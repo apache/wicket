@@ -80,7 +80,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		int version = component.getPage().getCurrentVersionNumber();
 
 		// add the wicket:interface param to the params.
-		AppendingStringBuffer param = new AppendingStringBuffer(3 + componentPath.length()
+		AppendingStringBuffer param = new AppendingStringBuffer(4 + componentPath.length()
 				+ interfaceName.length());
 		if (pageMapName != null)
 		{
