@@ -20,6 +20,7 @@ import java.util.List;
 
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
+import wicket.Session;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
@@ -231,6 +232,20 @@ public interface IRequestCycleSettings
 	 * method is used by the default implementation of
 	 * {@link WebRequestCycle#newClientInfo()}, so if that method is overriden,
 	 * there is no guarantee this method will be taken into account.
+	 * 
+	 * <p>
+	 * <strong>WARNING: </strong> though this facility should work transparently
+	 * in most cases, it is recommended that you trigger the roundtrip to get
+	 * the browser info somewhere where it hurts the least. The roundtrip will
+	 * be triggered the first time you call {@link Session#getClientInfo()} for
+	 * a session, and after the roundtrip a new request with the same info (url,
+	 * post parameters) is handled. So rather than calling this in the middle of
+	 * an implementation of a form submit method, which would result in the code
+	 * of that method before the call to {@link Session#getClientInfo()} to be
+	 * executed twice, you best call {@link Session#getClientInfo()} e.g. in a
+	 * page constructor or somewhere else where you didn't do a lot of
+	 * processing first.
+	 * </p>
 	 * 
 	 * @param gatherExtendedBrowserInfo
 	 *            Whether to gather extensive client info
