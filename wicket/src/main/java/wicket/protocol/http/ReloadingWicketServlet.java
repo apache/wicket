@@ -16,23 +16,18 @@
  */
 package wicket.protocol.http;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-
-import wicket.application.ReloadingClassLoader;
-import wicket.util.listener.IChangeListener;
 
 /**
- * Custom WicketFilter that reloads the web applications when classes are
+ * Custom WicketServlet that reloads the web applications when classes are
  * modified. In order to reload your own classes, use include and exclude
  * patterns using wildcards. And in web.xml, point to the reloading wicket
- * filter instead of the original one.
+ * servlet instead of the original one.
  * 
  * <p>
  * <b>Example denoting the built-in patterns:</b>
  * 
  * <pre>
- * public class MyFilter extends ReloadingWicketFilter
+ * public class MyServlet extends ReloadingWicketServlet
  * {
  * 	static
  * 	{
@@ -48,50 +43,17 @@ import wicket.util.listener.IChangeListener;
  * locations we can find for the provided class loader are registered.
  * </p>
  * 
- * @see WicketFilter
+ * @see ReloadingWicketFilter
  */
-public class ReloadingWicketFilter extends WicketFilter
+public class ReloadingWicketServlet extends WicketServlet
 {
-	private ReloadingClassLoader reloadingClassLoader;
-
 	/**
-	 * Instantiate the reloading class loader
+	 * 
 	 */
-	public ReloadingWicketFilter()
-	{
-		// Create a reloading classloader
-		reloadingClassLoader = new ReloadingClassLoader(getClass().getClassLoader());
-	}
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see wicket.protocol.http.WicketFilter#getClassLoader()
-	 */
-	protected ClassLoader getClassLoader()
+	protected WicketFilter newWicketFilter()
 	{
-		return reloadingClassLoader;
-	}
-
-	/**
-	 * @see wicket.protocol.http.WicketFilter#init(javax.servlet.FilterConfig)
-	 */
-	public void init(final FilterConfig filterConfig) throws ServletException
-	{
-		reloadingClassLoader.setListener(new IChangeListener()
-		{
-			public void onChange()
-			{
-				reloadingClassLoader = new ReloadingClassLoader(getClass().getClassLoader());
-				try
-				{
-					init(filterConfig);
-				}
-				catch (ServletException e)
-				{
-					throw new RuntimeException(e);
-				}
-			}
-		});
-
-		super.init(filterConfig);
+		return new ReloadingWicketFilter();
 	}
 }
