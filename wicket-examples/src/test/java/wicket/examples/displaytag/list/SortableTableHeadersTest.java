@@ -61,8 +61,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"SortableTableHeadersExpectedResult_1.html", false));
+		DiffUtil.validatePage(document, this.getClass(), "SortableTableHeadersExpectedResult_1.html", true);
 
 		Link link = (Link)page.get("header:id:actionLink");
 		assertTrue(link.isEnabled());
