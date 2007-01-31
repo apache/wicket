@@ -842,6 +842,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url.append(listenerName);
 		}
 		url.append(Component.PATH_SEPARATOR);
+		
+		// Add behaviourId
 		RequestParameters params = requestTarget.getRequestParameters();
 		if (params != null && params.getBehaviorId() != null)
 		{
