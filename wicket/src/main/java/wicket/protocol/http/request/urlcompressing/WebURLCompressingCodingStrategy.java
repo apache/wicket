@@ -118,7 +118,6 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 		}
 		
 		url.append(Component.PATH_SEPARATOR);
-		url.append(Component.PATH_SEPARATOR);
 		
 		// Add behaviourId
 		RequestParameters params = requestTarget.getRequestParameters();
