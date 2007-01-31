@@ -185,7 +185,7 @@ public class ServletWebRequest extends WebRequest
 		 * Context Path or the Servlet Path. It is either null if there is no
 		 * extra path, or is a string with a leading "/".
 		 */
-		String url = httpServletRequest.getServletPath();
+		String url = getServletPath();
 		final String pathInfo = httpServletRequest.getPathInfo();
 
 		if (pathInfo != null)
