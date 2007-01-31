@@ -12,6 +12,18 @@
 	<url>http://wicketframework.org/${project.artifactId}</url>
 	<inceptionYear>2004</inceptionYear>
 
+	<modules>
+		<module>../wicket</module>
+		<module>../wicket-auth-roles</module>
+		<module>../wicket-auth-roles-examples</module>
+		<module>../wicket-examples</module>
+		<module>../wicket-extensions</module>
+		<module>../wicket-quickstart</module>
+		<module>../wicket-spring</module>
+		<module>../wicket-spring-examples</module>
+		<module>../wicket-threadtest</module>
+	</modules>
+
 	<organization>
 		<name>Wicket developers</name>
 		<url>http://wicketframework.org</url>
