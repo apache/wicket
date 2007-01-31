@@ -890,14 +890,6 @@ public abstract class RequestCycle
 		// clear the used pagemap for this thread, 
 		// maybe we can move this a few lines above to have a but more
 		// concurrency (session.update)
-		try
-		{
-			session.requestDetached();
-		}
-		catch(RuntimeException re)
-		{
-			log.error("there was an error detaching the request from the session " + session + ".", re);
-		}
 		if (getResponse() instanceof BufferedWebResponse)
 		{
 			try
@@ -910,12 +902,28 @@ public abstract class RequestCycle
 			}
 		}
 
-		IRequestLogger requestLogger = getApplication().getRequestLogger();
-		if (requestLogger != null)
+		try
 		{
-			requestLogger.requestTime((System.currentTimeMillis() - startTime));
+			IRequestLogger requestLogger = getApplication().getRequestLogger();
+			if (requestLogger != null)
+			{
+				requestLogger.requestTime((System.currentTimeMillis() - startTime));
+			}
 		}
-		
+		catch(RuntimeException re)
+		{
+			log.error("there was an error in the RequestLogger ending.", re);
+		}
+
+		try
+		{
+			session.requestDetached();
+		}
+		catch(RuntimeException re)
+		{
+			log.error("there was an error detaching the request from the session " + session + ".", re);
+		}
+
 		try
 		{
 			onEndRequest();

@@ -202,20 +202,6 @@ public class RequestLogger implements IRequestLogger
 		RequestData rd = (RequestData)currentRequest.get();
 		if(rd != null)
 		{
-			Session session = Session.get();
-			String sessionId = session.getId();
-			rd.setSessionId(sessionId);
-			
-			Object sessionInfo = getSessionInfo(session);
-			rd.setSessionInfo(sessionInfo);
-			
-			long sizeInBytes = -1;
-			if(Application.get().getRequestLoggerSettings().getRecordSessionSize())
-			{
-				sizeInBytes = session.getSizeInBytes();
-			}
-			rd.setSessionSize(sizeInBytes);
-			rd.setTimeTaken(timeTaken);
 			synchronized (this)
 			{
 				if(active > 0)
@@ -223,7 +209,21 @@ public class RequestLogger implements IRequestLogger
 					rd.setActiveRequest(active--);
 				}
 			}
-			
+			Session session = Session.get();
+			String sessionId = session.getId();
+			rd.setSessionId(sessionId);
+
+			Object sessionInfo = getSessionInfo(session);
+			rd.setSessionInfo(sessionInfo);
+
+			long sizeInBytes = -1;
+			if(Application.get().getRequestLoggerSettings().getRecordSessionSize())
+			{
+				sizeInBytes = session.getSizeInBytes();
+			}
+			rd.setSessionSize(sizeInBytes);
+			rd.setTimeTaken(timeTaken);
+
 			requests.add(0, rd);
 			currentRequest.set(null);
 			if(sessionId != null)
