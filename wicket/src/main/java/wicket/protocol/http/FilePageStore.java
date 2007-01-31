@@ -185,7 +185,7 @@ public class FilePageStore implements IPageStore
 			if (log.isDebugEnabled())
 			{
 				long t2 = System.currentTimeMillis();
-				log.info("storing page " + page.getNumericId() + ","
+				log.debug("storing page " + page.getNumericId() + ","
 						+ page.getCurrentVersionNumber() + " for session " + sessionId + " took "
 						+ (t2 - t1) + " miliseconds");
 			}
