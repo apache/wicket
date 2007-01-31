@@ -554,7 +554,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			// Component path is everything after pageMapName and before version
 			final int start = pageMapName.length() + 1;
 			final int end = requestString.length() - behaviourId.length() - interfaceName.length()
-					- versionNumberString.length() - 2;
+					- versionNumberString.length() - 3;
 			final String componentPath = requestString.substring(start, end);
 			parameters.setComponentPath(componentPath);
 		}

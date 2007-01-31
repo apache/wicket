@@ -115,6 +115,8 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 		{
 			url.append(listenerName);
 		}
+		
+		url.append(Component.PATH_SEPARATOR);
 
 		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
