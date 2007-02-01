@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import wicket.Application;
 import wicket.Component;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
@@ -29,7 +28,6 @@ import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.PackageResource;
 import wicket.model.AbstractReadOnlyModel;
-import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
 
@@ -198,27 +196,33 @@ public class HeaderContributor extends AbstractHeaderContributor
 	
 	// Appends a path to the string buffer, adding the context path on the front if it's not
 	// a fully-qualified URL.
-	private static final void appendPathWithContext(AppendingStringBuffer b, String location)
+	private static final void appendPathWithPrependedContext(AppendingStringBuffer b, String location)
 	{
 		
 		// WICKET-59 allow external URLs.
 		if (!location.startsWith("http://") && !location.startsWith("https://"))
 		{
-			String contextPath = Application.get().getApplicationSettings()
-					.getContextPath();
-			if (contextPath == null)
+			String relativeUrl = RequestCycle.get().getRequest().getPath();
+			
+			// We need to effectively strip off any leading "/" here.
+			// However, we're just counting the slashes in relativeUrl, so rather
+			// than have substring overhead, we just change the position we start
+			// searching for / at to skip the leading one.
+			int start = 0;
+			if (relativeUrl.length() > 0 && relativeUrl.charAt(0) == '/')
 			{
-				contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-						.getContextPath();
-				if (contextPath == null)
-				{
-					contextPath = "";
-				}
+				start = 1;
 			}
-			b.append(contextPath);
-			if (!contextPath.endsWith("/") && !location.startsWith("/"))
+			for (int i = start; i < relativeUrl.length(); i++)
 			{
-				b.append("/");
+				if (relativeUrl.charAt(i) == '?')
+				{
+					break;
+				}
+				if (relativeUrl.charAt(i) == '/')
+				{
+					b.append("../");
+				}
 			}
 		}
 		b.append(location);
@@ -268,7 +272,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 						}
 						AppendingStringBuffer b = new AppendingStringBuffer();
 						b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-						appendPathWithContext(b, location);
+						appendPathWithPrependedContext(b, location);
 						if (media != null)
 						{
 							b.append("\" media=\"");
@@ -373,7 +377,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 						}
 						AppendingStringBuffer b = new AppendingStringBuffer();
 						b.append("<script type=\"text/javascript\" src=\"");
-						appendPathWithContext(b, location);
+						appendPathWithPrependedContext(b, location);
 						b.append("\"></script>");
 						path = b.toString();
 					}
