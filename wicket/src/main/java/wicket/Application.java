@@ -395,7 +395,7 @@ public abstract class Application
 			getMarkupSettings().setStripWicketTags(false);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_EXCEPTION_PAGE);
-			getAjaxSettings().setAjaxDebugModeEnabled(true);
+			getDebugSettings().setAjaxDebugModeEnabled(true);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
@@ -405,7 +405,7 @@ public abstract class Application
 			getMarkupSettings().setStripWicketTags(true);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
-			getAjaxSettings().setAjaxDebugModeEnabled(false);
+			getDebugSettings().setAjaxDebugModeEnabled(false);
 		}
 		else
 		{
