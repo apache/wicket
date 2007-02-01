@@ -128,11 +128,6 @@ public class UndoPageVersionManager implements IPageVersionManager
 				ChangeList previous = (ChangeList)changeListStack.peek();
 				previous.add(changeList);
 			}
-			else
-			{
-				// ignore this request.. mergeVersion shouldn generate a new version..
-				log.info("an end version request is made with mergedVersion to true without previous changes, can't merge");
-			}
 		}
 		else
 		{
