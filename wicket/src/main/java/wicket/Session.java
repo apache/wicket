@@ -303,8 +303,11 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	protected Session(final Application application, Request request)
 	{
-		// Set locale to request's locale
-		setLocale(request.getLocale());
+		this.locale = request.getLocale();
+		if (locale == null)
+		{
+			throw new IllegalArgumentException("Parameter 'locale' must not be null");
+		}
 	}
 
 	/**
