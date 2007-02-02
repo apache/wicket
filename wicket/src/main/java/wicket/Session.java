@@ -292,8 +292,11 @@ public abstract class Session implements Serializable
 	 */
 	protected Session(Application application, Request request)
 	{
-		// Set locale to one in the current request
-		setLocale(request.getLocale());
+		this.locale = request.getLocale();
+		if (locale == null)
+		{
+			throw new IllegalArgumentException("Parameter 'locale' must not be null");
+		}
 	}
 
 	/**
