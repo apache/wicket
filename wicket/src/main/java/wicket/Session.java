@@ -332,6 +332,7 @@ public abstract class Session implements Serializable, IConverterLocator
 			// bind it
 			store.bind(request, this);
 		}
+		RequestCycle.get().setUpdateSession(true);
 	}
 
 	/**
