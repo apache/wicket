@@ -419,6 +419,10 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 					tag.put("onclick", popupSettings.getPopupJavaScript());
 				}
 			}
+			else if (tag.getName().equalsIgnoreCase("script") || tag.getName().equalsIgnoreCase("style"))
+			{
+				tag.put("src", Strings.replaceAll(url, "&", "&amp;"));
+			}
 			else
 			{
 				// generate a popup script by asking popup settings for one
