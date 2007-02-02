@@ -647,6 +647,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					}
 				});
 
+		if (getDefaultButton() != null)
+		{
+			return getDefaultButton();
+		}
+
+
 		return submit;
 	}
 
