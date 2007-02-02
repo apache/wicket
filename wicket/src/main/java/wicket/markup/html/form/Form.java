@@ -557,17 +557,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		}
 
 		// append the button
-		String userAgent = ((WebClientInfo)getSession().getClientInfo()).getUserAgent();
 		buffer.append("<input type=\"submit\" value=\"").append(value).append("\" name=\"").append(
 				defaultButton.getInputName()).append("\"");
-		if (userAgent != null && userAgent.indexOf("MSIE") != -1)
-		{
-			buffer.append("style=\"width: 0px; height: 0px; position: absolute;\"");
-		}
-		else
-		{
-			buffer.append(" style=\"display: none\"");
-		}
+		buffer.append("style=\"width: 0px; height: 0px; position: absolute; left;-10px;\"");
 		buffer.append(" />");
 		getResponse().write(buffer);
 	}
