@@ -321,6 +321,7 @@ public abstract class Session implements Serializable
 			// bind it
 			store.bind(request, this);
 		}
+		RequestCycle.get().setUpdateSession(true);
 	}
 
 	/**
