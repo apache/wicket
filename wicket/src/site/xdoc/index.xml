@@ -8,15 +8,9 @@
 	<body>
 		<section name="Welcome to Wicket">
 			<p>
-				Wicket is a Java web application framework that takes
-				simplicity, separation of concerns and ease of
-				development to a whole new level. Wicket pages can be
-				mocked up, previewed and later revised using standard
-				WYSIWYG HTML design tools. Dynamic content processing
-				and form handling is all handled in Java code using a
-				first-class component model backed by POJO data beans
-				that can easily be persisted using your favourite
-				technology.
+				With proper mark-up/logic separation, a POJO data model, and a refreshing lack of XML, Wicket makes developing 
+				web-apps in Java simple and enjoyable again. Swap the boilerplate, complex debugging and brittle code for powerful, 
+				reusable components written with plain Java and HTML.
 			</p>
 			<ul>
 				<li>
@@ -48,7 +42,7 @@
 					Download
 					<a
 						href="http://sourceforge.net/projects/wicket/files">
-						Wicket
+						Wicket 1.2.5
 					</a>
 				</li>
 			</ul>
@@ -58,7 +52,46 @@
 				.
 			</p>
 		</section>
+		<section name="Incubating at Apache">
+			<p>
+				Wicket is currently undergoing <a href="http://incubator.apache.org">incubation</a>. When 
+				projects first move to Apache, they are housed at the Apache Incubator. The Incubator helps 
+				incoming projects migrate to the vibrant Apache community. The two goals of the incubator are:
+				<ul>
+					<li>to ensure that the joining codebase is in accordance with the ASF 
+						<a href="http://www.apache.org/licenses/">legal standards</a></li>
+					<li>to ensure that the joining community is an 
+						<a href="http://www.apache.org/foundation/how-it-works.html">open, diverse and effective meritocracy</a>.</li>
+				</ul>
+				During Wicket's incubation we will resolve any issues regarding license (in)compatibilities 
+				that might be present in our code. In the mean time we have moved some of our infrastructure 
+				from <a href="http://sourceforge.net/projects/wicket">SourceForge.net</a> over to the Apache infrastructure. 
+				[<a href="http://incubator.apache.org/wicket/incubator.html">more...</a>].
+			</p>
+		</section>
 		<section name="Latest News">
+			<subsection name="Febuari 5th, 2007 - Wicket 1.2.5 available">
+				<p>
+					With Valentine's day rapidly approaching, what could be better than roses, chocolates or fancy dinners? 
+					Yes, that's right - a new Wicket release! Get out of the office faster and back to where it matters with 
+					this list of fixes to help you:
+				</p>
+				<ul>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-188'>WICKET-188</a>] - Header contribution is sometimes not rendered after the request</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-218'>WICKET-218</a>] - Removing comments from markup can fail</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-242'>WICKET-242</a>] - Modal Window always creates new cookies</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-251'>WICKET-251</a>] - replace &amp; with &amp;amp; in ExternalLink</li>
+				</ul>
+				<p>
+					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely 
+					as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the 
+					Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in 
+					no way affiliated with this release.
+				</p>
+				<ul>
+					<li>Download the Wicket 1.2.5 <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
+				</ul>
+			</subsection>
 			<subsection name="December 24th, 2006 - Santa bring Wicket 1.2.4">
 				<p>
 					As a thank you for your support in 2006, Santa has put Wicket 1.2.4 under the tree! Happy holidays and best wishes for 2007!
