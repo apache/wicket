@@ -1,9 +1,27 @@
 Wicket 1.2
 ==========
 
-This is the readme file for the Wicket core project. 
+This is the README file for the Wicket core project. 
 
-Wicket is an open source, java, component based, web application framework.
+Wicket is a component oriented, open source Java web application framework.
+With proper mark-up/logic separation, a POJO data model, and a refreshing lack 
+of XML, Wicket makes developing Java web-apps simple and enjoyable again. Swap 
+the boilerplate, complex debugging and brittle code for powerful, reusable 
+components written with plain Java and HTML.
+
+-------------------------------------------------------------------------------
+DISCLAIMER
+
+This release of the Wicket project is not endorsed or approved by the Apache 
+Software Foundation.
+
+Although Wicket has recently entered the ASF Incubator, this interim release 
+is provided outside of the ASF, solely as a service to existing Wicket users 
+to resolve existing bugs in the Wicket product.
+
+The Apache Software Foundation is in no way affiliated with this release.
+
+-------------------------------------------------------------------------------
 
 Contents
 --------
@@ -68,14 +86,14 @@ Migrating from 1.1
 ------------------
 
 There is a migration guide available on our Wiki:
-    http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2
+    http://cwiki.apache.org/WICKET/migrate-12.html
     
 Getting help
 ------------
 
  - Read the supplied documentation in the docs/ directory
- - Read the online documentation available on our Wiki (http://www.wicket-wiki.org.uk/wiki/index.php)
- - Read the migration guide (http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2)
+ - Read the online documentation available on our Wiki (http://cwiki.apache.org/WICKET)
+ - Read the migration guide (http://cwiki.apache.org/WICKET/migrate-12.html)
  - Read the mailing archives available on nabble, gmane and sourceforge
  - Send a complete message containing your problem, stacktrace and problem you're trying
    to solve to the user list (wicket-user@lists.sourceforge.net)
