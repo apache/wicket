@@ -54,17 +54,17 @@
 	</menu>
 	<menu name="Project News">
 		<item name="News" href="/News.html" />
-		<item name="Blogs" href="/Blogs.html" />
+		<item name="Planet Wicket" href="http://incubator.apache.org/wicket/planet-wicket.html" />
+		<item name="Incubating@Apache" href="http://incubator.apache.org/wicket" />
 	</menu>
 	<menu name="Documentation">
 		<item name="Vision" href="/Vision.html" />
-		<item name="FAQ" href="/faqs.html" />
+		<item name="FAQ" href="http://cwiki.apache.org/WICKET/faqs.html" />
 		<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
-		<item name="Wiki" href="/wiki" />
+		<item name="Wiki" href="http://cwiki.apache.org/WICKET" />
 		<item name="Dependencies" href="/dependencies.html" />
 	</menu>
 	<menu name="Releases">
-		<item name="Wicket 1.3-beta" href="http://incubator.apache.org/wicket" />
 		<item name="Wicket 1.2" href="/wicket-1.2/index.html"/>
 		<item name="Wicket 1.1" href="/wicket-1.1/index.html" />
 		<item name="Wicket 1.0" href="/wicket-1.0/index.html" />
