@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Wicket">
-	<bannerLeft>
-		<name>Wicket</name>
-		<src>http://wicketframework.org/images/logo.png</src>
-		<href>http://wicketframework.org/</href>
-	</bannerLeft>
-	<body>
-	<links>
-		<item name="1.0" href="/wicket-1.0/index.html" />
-		<item name="1.1" href="/wicket-1.1/index.html"/>
-		<item name="1.2" href="/wicket-1.2/index.html"/>
-	</links>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="Maven">
+  <bannerLeft>
+    <name>Wicket</name>
+    <src>http://wicket.sourceforge.net/images/logo.png</src>
+    <href>http://wicket.sourceforge.net/</href>
+  </bannerLeft>
+  <body>
+    <links>
+      <item name="1.0" href="/wicket-1.0/index.html" />
+      <item name="1.1" href="/wicket-1.1/index.html"/>
+      <item name="1.2" href="/wicket-1.2/index.html"/>
+    </links>
 
 	<menu name="Wicket">
 		<item name="Home" href="/index.html" />
@@ -43,35 +59,31 @@
 		<item name="Vision" href="/Vision.html" />
 		<item name="FAQ" href="/faqs.html" />
 		<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
-		<item name="Wiki" href="http://cwiki.apache.org/WICKET/" />
+		<item name="Wiki" href="/wiki" />
 		<item name="Dependencies" href="/dependencies.html" />
 	</menu>
 	<menu name="Releases">
-		<item name="Wicket 1.2" href="http://wicketframework.org/wicket-1.2/index.html" />
-		<item name="Wicket 1.1" href="http://wicketframework.org/wicket-1.1/index.html" />
-		<item name="Wicket 1.0" href="http://wicketframework.org/wicket-1.0/index.html" />
-	</menu>
-	<menu name="Companies">
-		<item name="Commercial Services" href="http://cwiki.apache.org/WICKET/companies-that-provide-services.html" />
+		<item name="Wicket 1.2" href="/wicket-1.2/index.html"/>
+		<item name="Wicket 1.1" href="/wicket-1.1/index.html" />
+		<item name="Wicket 1.0" href="/wicket-1.0/index.html" />
 	</menu>
 	<menu name="Related projects">
-		<item name="Wicket Extensions" href="http://wicketframework.org/wicket-extensions/index.html" />
-		<item name="Wicket QuickStart" href="http://wicketframework.org/wicket-quickstart/index.html" />
+		<item name="Wicket Extensions" href="/wicket-extensions/index.html" />
+		<item name="Wicket QuickStart" href="/wicket-quickstart/index.html" />
 		<item name="Wicket Stuff" href="http://wicket-stuff.sourceforge.net" />
-		<item name="Wicket Library" href="http://www.wicket-library.com" />		
+		<item name="Wicket Library" href="http://www.wicket-library.com" />
 	</menu>
 	<menu name="Project Info">
 		<item name="Mailing Lists" href="/mail-lists.html" />
 		<item name="SourceForge" href="/SourceForge.html" />
-		<item name="Apache Incubator" href="http://incubator.apache.org/projects/wicket.html" />
-		<item name="Issue Tracker" href="http://issues.apache.org/jira/browse/WICKET" />
+		<item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783" />
 		<item name="License" href="/license.html" />
 	</menu>
 	<menu name="Development">
 		<item name="Developers" href="/team-list.html" />
 		<item name="SVN Access" href="/source-repository.html" />
-		<item name="Build Reports" href="/project-reports.html" collapse="true">
-			<item name="Unit Tests" href="/surefire-report.html" />
+		<item name="Build Reports" href="/maven-reports.html" collapse="true">
+			<item name="Unit Tests" href="/junit-report.html" />
 			<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
 		</item>
 	</menu>
