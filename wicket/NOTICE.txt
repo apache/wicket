@@ -1,0 +1,43 @@
+   Apache Wicket
+   Copyright 2006 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+   
+   The library for dragging the AJAX debug dialog has the
+   following notice:
+   "distributed under commons creative license 2.0"
+   
+   Contains Diff library from Mavens JRCS, released under
+   The Apache Software License, Version 1.1.
+   (c) 1999-2003
+   
+   wicket.util.upload contains parts of Apache Jakarta Commons FileUpload,
+   released under the Apache Software License, Version 2.0. 
+   (c) 2001-2004
+   
+   wicket.util.io.IOUtils is taken from Apache Avalon, released
+   under the Apache Software License, Version 2.0.
+   (c) 2001-2004
+   
+   wicket.util.io.ThresholdingOutputStream is taken from
+   Apache Jakarta Commons IO, released under the
+   Apache Software License, Version 2.0.
+   (c) 2001-2004
+   
+   wicket.util.crypt contains Base64 which is taken from
+   Apache Jakarta Commons Codec, released under the
+   Apache Software License, Version 2.0. Base64UrlSafe
+   is derived from Base64.
+   (c) 2001-2005
+   
+   wicket.util.concurrent is taken from [1], which states the following:
+     "All classes are released to the public domain and may be used for 
+      any purpose whatsoever without permission or acknowledgment. 
+      Portions of the CopyOnWriteArrayList and ConcurrentReaderHashMap 
+      classes are adapted from Sun JDK source code. These are copyright 
+      of Sun Microsystems, Inc, and are used with their kind permission,  
+      as described in this license[2]."
+   [1]: http://g.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html
+   [2]: licenses/sun-u.c.license.pdf
+   
