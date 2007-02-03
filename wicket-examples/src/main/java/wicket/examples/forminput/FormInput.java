@@ -132,10 +132,6 @@ public class FormInput extends WicketExamplePage
 					Integer.class);
 			add(integerTextField.add(NumberValidator.POSITIVE));
 			add(new RequiredTextField("doubleProperty", Double.class));
-			// we have a component attached to the label here, as we want to
-			// synchronize the id's of the label, textfield and datepicker. Note
-			// that you can perfectly do without labels
-
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
 					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
