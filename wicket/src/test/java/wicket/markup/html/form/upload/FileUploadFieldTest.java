@@ -20,6 +20,7 @@ package wicket.markup.html.form.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 
 import wicket.Page;
 import wicket.RequestCycle;
@@ -76,7 +77,9 @@ public class FileUploadFieldTest extends WicketTestCase
 		servletRequest.setParameter("wicketState", "");
 		
 		// Let's upload the dtd file. It's large enough to avoid being in memory.
-		servletRequest.addFile("upload", new File("wicket-xhtml1-strict.dtd"), "text/xml");
+		
+		URI uri = URI.create(getClass().getResource("testuploadfile.xml").toString());
+		servletRequest.addFile("upload", new File(uri), "text/xml");
 
 		requestCycle.setRequest(new MultipartServletWebRequest(servletRequest, Bytes.MAX));
 		
