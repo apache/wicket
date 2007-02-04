@@ -41,10 +41,6 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 			"src/main/java/wicket/extensions/explorerpngfix"
 		};
 		
-		xmlIgnore = new String[] {
-			"src/assembly/bin.xml"
-		};
-		
 		cssIgnore = new String[] {
 			"src/main/java/wicket/extensions/markup/html/datepicker"
 		};
