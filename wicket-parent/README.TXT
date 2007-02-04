@@ -63,8 +63,21 @@ the latest and greatest development version (currently Wicket 2.x) can be found 
 The branches 1.0.x, 1.1.x and 1.2.x are for versions that are no longer actively
 developed, but which may in exception cases receive bug fixes.
 
- In the root of the wicket-parent project do the following to build all Wicket projects:
 
+Stage one:
+---------------------------------------------------------------------------
+mvn -Pjdk1.4 install
+---------------------------------------------------------------------------
+
+Stage two (if you're running JDK 5):
+---------------------------------------------------------------------------
+mvn -Pjdk1.5 install
+---------------------------------------------------------------------------
+
+You may need to run with -Dmaven.test.skip=true if you have failing unit tests (this obviously
+shouldn't be the case for a release build).
+
+The following commands are useful:
 ---------------------------------------------------------------------------
 mvn compile             <- compiles the projects
 mvn package             <- creates the jar files in the target/ subdirectories
@@ -73,37 +86,4 @@ mvn install             <- installs the jar files in your local repository
 
  You can just run the install target, as Maven will build the previous stages automatically.
 
- If you run using Java 5, you may need to edit the wicket-parent pom, and add the modules from
- the Java 1.4 profile to the Java 5 profile, otherwise you will only build the Java 5 specific
- projects. See the following section for more information:
-
----------------------------------------------------------------------------
-<profiles> 
-	<profile> 
-		<id>jdk1.4</id> 
-		<activation> 
-			<jdk>1.4</jdk> 
-		</activation> 
-		<modules> 
-			<module>../wicket</module>
-			<module>../wicket-extensions</module>
-			<module>../wicket-examples</module>
-			<module>../wicket-spring</module>
-			<module>../wicket-spring-examples</module>
-			<module>../wicket-quickstart</module>
-		</modules> 
-	</profile> 
-	<profile> 
-		<id>jdk1.5</id> 
-		<activation> 
-			<jdk>1.5</jdk> 
-		</activation> 
-		<modules> 
-			<module>../wicket-spring-annot</module>
-			<module>../wicket-spring-annot-examples</module>
-			<module>../wicket-auth-roles</module> 
-			<module>../wicket-auth-roles-examples</module> 
-		</modules> 
-	</profile> 
-</profiles> 
 ---------------------------------------------------------------------------
