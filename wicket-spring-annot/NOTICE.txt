@@ -1,5 +1,16 @@
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
+DISCLAIMER
+
+This release of the Wicket project is not endorsed or approved by 
+the Apache Software Foundation.
+
+Although Wicket has recently entered the ASF Incubator, this interim 
+release is provided outside of the ASF, solely as a service to existing
+Wicket users to resolve existing bugs in the Wicket product.
+
+The Apache Software Foundation is in no way affiliated with this
+release.
+
+========================================================================
 
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
