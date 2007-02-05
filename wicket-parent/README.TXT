@@ -32,6 +32,7 @@ Building
  * wicket-spring
  * wicket-spring-examples
  * wicket-portlet-examples
+ * wicket-datetime
 ---------------------------------------------------------------------------
 	
  Here's a list of the Java 5 based projects:
@@ -41,6 +42,7 @@ Building
  * wicket-auth-roles-examples
  * wicket-spring-annot
  * wicket-spring-annot-examples
+ * wicket-jmx
 ---------------------------------------------------------------------------
 
  To build the projects, make sure you have downloaded and installed all projects in one
