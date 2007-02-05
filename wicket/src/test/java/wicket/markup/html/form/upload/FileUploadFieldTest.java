@@ -16,8 +16,11 @@
  */
 package wicket.markup.html.form.upload;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import wicket.Page;
 import wicket.RequestCycle;
@@ -73,37 +76,63 @@ public class FileUploadFieldTest extends WicketTestCase
 		servletRequest.setParameter("form2:hf:fs", "");
 		servletRequest.setParameter("wicketState", "");
 		
-		// Let's upload the dtd file. It's large enough to avoid being in memory.
-		servletRequest.addFile("upload", new File("wicket-xhtml1-strict.dtd"), "text/xml");
-
-		requestCycle.setRequest(new MultipartServletWebRequest(servletRequest, Bytes.MAX));
+		File tmp = null;
+		try {
+			// Write out a large text file. We need to make this file reasonably sizable,
+			// because things get handled using input streams, and we want to check to make
+			// sure they're closed properly if we abort mid-request.
+			
+			// We create a temp file because we don't want to depend on a file we might not
+			// know the path of (e.g. the big DTD this test used previously). This enables
+			// us to run the test out of a JAR file if need be, and also with an unknown
+			// running directory (e.g. when run from wicket-parent).
+			tmp = new File(File.createTempFile(this.getClass().getName(), ".txt"));
+			OutputStream os = new BufferedOutputStream(new FileOutputStream(tmp));
+			for (int i = 0; i < 1000; i++)
+			{
+				os.write("test test test test test\n".getBytes());
+			}
+			os.close();
 		
-		// Get the file upload
-		FileUpload fileUpload = field.getFileUpload();
-		
-		assertNotNull(fileUpload);
-		
-		// Get an input stream from the file upload
-		InputStream is = fileUpload.getInputStream();
-		
-		// We should be able to read a byte
-		assertTrue(is.read() != -1);
-		
-		field.internalOnDetach();
-		
-		// The input stream should be closed so we shouldn't be able to read any more bytes
-		try 
-		{
-			is.read();
-			fail();
-		} 
-		catch (IOException e)
-		{
-			// Expected
+			// Let's upload the dtd file. It's large enough to avoid being in memory.
+			servletRequest.addFile("upload", tmp, "text/plain");
+	
+			requestCycle.setRequest(new MultipartServletWebRequest(servletRequest, Bytes.MAX));
+			
+			// Get the file upload
+			FileUpload fileUpload = field.getFileUpload();
+			
+			assertNotNull(fileUpload);
+			
+			// Get an input stream from the file upload
+			InputStream is = fileUpload.getInputStream();
+			
+			// We should be able to read a byte
+			assertTrue(is.read() != -1);
+			
+			field.internalOnDetach();
+			
+			// The input stream should be closed so we shouldn't be able to read any more bytes
+			try 
+			{
+				is.read();
+				fail();
+			} 
+			catch (IOException e)
+			{
+				// Expected
+			}
+			catch (Exception e)
+			{
+				fail();
+			}
 		}
-		catch (Exception e)
+		finally
 		{
-			fail();
+			if (tmp != null && tmp.exists())
+			{
+				tmp.delete();
+			}
 		}
 	}
 }
