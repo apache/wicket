@@ -1,0 +1,184 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package wicket.extensions.yui.calendar;
+
+import wicket.behavior.HeaderContributor;
+import wicket.behavior.StringHeaderContributor;
+import wicket.extensions.yui.YuiLib;
+import wicket.markup.html.WebComponent;
+import wicket.model.LoadableDetachableModel;
+import wicket.util.string.JavascriptUtils;
+
+/**
+ * Abstract calendar component based on the YUI (Yahoo User Interface library)
+ * javascript widget.
+ * <p>
+ * Although this component by itself is fully functional, it doesn't do much
+ * other than just displaying the calendar. Hence, this class is abstract.
+ * </p>
+ * <p>
+ * An easy way to build upon this component is to override
+ * {@link #appendToInit(String, String, String, StringBuffer)} and add event
+ * handlers etc. in the YUI widget's initialization function.
+ * </p>
+ * See <a href="http://developer.yahoo.com/yui/calendar/">YUI's calendar
+ * documentation</a> for more info.
+ * 
+ * @author eelcohillenius
+ * 
+ * @see CalendarPopup
+ */
+// TODO see if configuration of the widget can be made a little bit easier
+// TODO provide localization strings (base them on the messages of
+// JsDatePicker?)
+public abstract class AbstractCalendar extends WebComponent {
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct. Contributes packaged dependencies.
+	 * 
+	 * @param id
+	 *            The component id
+	 */
+	public AbstractCalendar(String id) {
+		this(id, true);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param contributeDependencies
+	 *            Whether to contribute the packaged dependencies. Pass false in
+	 *            case you want to include the dependencies manually in your own
+	 *            page, e.g. when you want to keep them in your web application
+	 *            dir. To contribute yourself (in case you want to pass false),
+	 *            your page header should look like:
+	 * 
+	 * <pre>
+	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt; 
+	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;dom.js&quot;&gt;&lt;/script&gt; 
+	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;event.js&quot;&gt;&lt;/script&gt; 
+	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;calendar.js&quot;&gt;&lt;/script&gt; 
+	 *    	 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;calendar.css&quot; /&gt; 
+	 * </pre>
+	 */
+	public AbstractCalendar(String id, boolean contributeDependencies) {
+
+		super(id);
+		setOutputMarkupId(true);
+		if (contributeDependencies) {
+			contributeDependencies();
+		}
+
+		add(new StringHeaderContributor(new LoadableDetachableModel() {
+
+			private static final long serialVersionUID = 1L;
+
+			protected Object load() {
+
+				// not pretty to look at, but cheaper than using a template
+				String markupId = AbstractCalendar.this.getMarkupId();
+				String javascriptId = getJavascriptId();
+				String javascriptWidgetId = getJavascriptWidgetId();
+				StringBuffer b = new StringBuffer();
+				b.append(JavascriptUtils.SCRIPT_OPEN_TAG);
+				// initialize wicket namespace and register the init function
+				// for the YUI widget
+				b.append("YAHOO.namespace(\"wicket\");\nfunction init");
+				b.append(javascriptId);
+				b.append("() {\n");
+				// append the javascript we want for our init function; call
+				// this in an overridable method so that clients can add their
+				// stuff without needing a big ass API
+				appendToInit(markupId, javascriptId, javascriptWidgetId, b);
+				b.append("}\n");
+				// register the function for execution when the page is loaded
+				b.append("YAHOO.util.Event.addListener(window, \"load\", init");
+				b.append(javascriptId);
+				b.append(");");
+				b.append(JavascriptUtils.SCRIPT_CLOSE_TAG);
+				return b;
+			}
+		}));
+	}
+
+	/**
+	 * Gets the id of the javascript widget. Note that this is the
+	 * non-namespaced id, so depending on what you want to do with it, you may
+	 * need to prepend 'YAHOO.wicket.' to it. Or you can call
+	 * {@link #getJavascriptWidgetId()}.
+	 * 
+	 * @return The javascript id
+	 * @see #getJavascriptWidgetId()
+	 */
+	public final String getJavascriptId() {
+		return getMarkupId() + "Js";
+	}
+
+	/**
+	 * The name spaced id of the widget.
+	 * 
+	 * @return The widget id
+	 * @see #getJavascriptId()
+	 */
+	public final String getJavascriptWidgetId() {
+		return "YAHOO.wicket." + getJavascriptId();
+	}
+
+	/**
+	 * add header contributions for packaged resources.
+	 */
+	private void contributeDependencies() {
+		add(HeaderContributor.forJavaScript(YuiLib.class, "yahoo-min.js"));
+		add(HeaderContributor.forJavaScript(YuiLib.class, "event-min.js"));
+		add(HeaderContributor.forJavaScript(YuiLib.class, "dom-min.js"));
+		add(HeaderContributor.forJavaScript(AbstractCalendar.class,
+				"calendar-min.js"));
+		add(HeaderContributor.forCss(AbstractCalendar.class,
+				"assets/calendar.css"));
+	}
+
+	/**
+	 * Append javascript to the initialization function for the YUI widget. Can
+	 * be used by subclasses to conveniently extend configuration without having
+	 * to write a separate contribution.
+	 * 
+	 * @param markupId
+	 *            The markup id of the calendar component
+	 * @param javascriptId
+	 *            the non-name spaced javascript id of the widget
+	 * @param javascriptWidgetId
+	 *            the name space id of the widget
+	 * @param b
+	 *            the buffer to append the script to
+	 */
+	protected void appendToInit(String markupId, String javascriptId,
+			String javascriptWidgetId, StringBuffer b) {
+		b.append("  ");
+		b.append(javascriptWidgetId);
+		b.append(" = new YAHOO.widget.Calendar(\"");
+		b.append(javascriptId);
+		b.append("\",\"");
+		b.append(markupId);
+		b.append("\");\n  ");
+		b.append(javascriptWidgetId);
+		b.append(".render();\n");
+	}
+}
