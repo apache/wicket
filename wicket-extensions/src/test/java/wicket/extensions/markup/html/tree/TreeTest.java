@@ -63,7 +63,7 @@ public class TreeTest extends WicketTestCase
 		executeTest(TreePageWithBorder.class, "TreePageWithBorderExpectedResult_1.html");
 
 		executedListener(TreePageWithBorder.class, tester.getLastRenderedPage().get(
-				"tree:tree:3:node:junctionLink"), "TreePageWithBorderExpectedResult_1-1.html");
+				"border:borderBody:tree:tree:3:node:junctionLink"), "TreePageWithBorderExpectedResult_1-1.html");
 	}
 
 	/**
