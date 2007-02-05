@@ -23,13 +23,25 @@ package wicket.util.license;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
-{
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
+
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest()
-	{
-//		addHeaders = true;
+	public ApacheLicenceHeaderTest() {
+
+		// addHeaders = true;
+
+		xmlIgnore = new String[] { "src/assembly/bin.xml",
+				"src/assembly/build.xml" };
+
+		cssIgnore = new String[] { "src/main/java/wicket/extensions/yui/calendar/assets/calendar.css" };
+
+		javaScriptIgnore = new String[] {
+				"src/main/java/wicket/extensions/yui/yahoo-min.js",
+				"src/main/java/wicket/extensions/yui/event-min.js",
+				"src/main/java/wicket/extensions/yui/dom-min.js",
+				"src/main/java/wicket/extensions/yui/calendar/calendar-min.js",
+				"src/etc" };
 	}
 }
