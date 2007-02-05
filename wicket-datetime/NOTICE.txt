@@ -1,0 +1,10 @@
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+   
+   Contains code of the Yahoo User Interface library (version: 0.12.2),
+   released under the BSD License:
+   http://developer.yahoo.net/yui/license.txt
+   Copyright (c) 2006, Yahoo!
