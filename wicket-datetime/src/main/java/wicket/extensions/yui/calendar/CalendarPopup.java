@@ -16,6 +16,8 @@
  */
 package wicket.extensions.yui.calendar;
 
+import java.util.Map;
+
 import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.datetime.markup.html.form.DateTextField;
@@ -113,6 +115,7 @@ public class CalendarPopup extends Panel {
 		final Icon icon = new Icon("icon");
 		add(icon);
 
+		// The calendar component
 		final AbstractCalendar calendar = new AbstractCalendar("cal",
 				contributeDependencies) {
 
@@ -120,9 +123,6 @@ public class CalendarPopup extends Panel {
 
 			protected void appendToInit(String markupId, String javascriptId,
 					String javascriptWidgetId, StringBuffer b) {
-
-				super.appendToInit(markupId, javascriptId, javascriptWidgetId,
-						b);
 
 				// not pretty to look at, but cheaper than using a template
 				String iconId = icon.getMarkupId();
@@ -151,12 +151,19 @@ public class CalendarPopup extends Panel {
 				b.append(".replace(/y+/, yr);\n    YAHOO.util.Dom.get(\"");
 				b.append(target.getMarkupId());
 				b.append("\").value = val;\n");
-				b.append("    cal.hide();\n}");
+				b.append("    cal.hide();\n  }\n");
 				b.append("  ");
 				b.append(javascriptWidgetId);
 				b.append(".selectEvent.subscribe(selectHandler, ");
 				b.append(javascriptWidgetId);
-				b.append(");");
+				b.append(");\n");
+			}
+			
+			protected void configureWidgetProperties(
+					Map widgetProperties) {
+				super.configureWidgetProperties(widgetProperties);
+				// property to display a close button
+				widgetProperties.put("close", Boolean.TRUE);
 			}
 		};
 		add(calendar);

@@ -16,6 +16,11 @@
  */
 package wicket.extensions.yui.calendar;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
+
 import wicket.behavior.HeaderContributor;
 import wicket.behavior.StringHeaderContributor;
 import wicket.extensions.yui.YuiLib;
@@ -42,7 +47,6 @@ import wicket.util.string.JavascriptUtils;
  * 
  * @see CalendarPopup
  */
-// TODO see if configuration of the widget can be made a little bit easier
 // TODO provide localization strings (base them on the messages of
 // JsDatePicker?)
 public abstract class AbstractCalendar extends WebComponent {
@@ -72,11 +76,11 @@ public abstract class AbstractCalendar extends WebComponent {
 	 *            your page header should look like:
 	 * 
 	 * <pre>
-	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt; 
-	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;dom.js&quot;&gt;&lt;/script&gt; 
-	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;event.js&quot;&gt;&lt;/script&gt; 
-	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;calendar.js&quot;&gt;&lt;/script&gt; 
-	 *     	 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;calendar.css&quot; /&gt; 
+	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt; 
+	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;dom.js&quot;&gt;&lt;/script&gt; 
+	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;event.js&quot;&gt;&lt;/script&gt; 
+	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;calendar.js&quot;&gt;&lt;/script&gt; 
+	 * 	 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;calendar.css&quot; /&gt; 
 	 * </pre>
 	 */
 	public AbstractCalendar(String id, boolean contributeDependencies) {
@@ -104,10 +108,48 @@ public abstract class AbstractCalendar extends WebComponent {
 				b.append("YAHOO.namespace(\"wicket\");\nfunction init");
 				b.append(javascriptId);
 				b.append("() {\n");
+
+				// instantiate the calendar object
+				b.append("  ");
+				b.append(javascriptWidgetId);
+				b.append(" = new YAHOO.widget.Calendar(\"");
+				b.append(javascriptId);
+				b.append("\",\"");
+				b.append(markupId);
+
+				Properties p = new Properties();
+				configureWidgetProperties(p);
+				b.append("\", { ");
+				for (Iterator i = p.entrySet().iterator(); i.hasNext();) {
+					Entry entry = (Entry) i.next();
+					b.append(entry.getKey());
+					Object value = entry.getValue();
+					if (value instanceof CharSequence) {
+						b.append(":\"");
+						b.append(value);
+						b.append("\"");
+					} else {
+						b.append(":");
+						b.append(value);
+					}
+					// TODO handle arrays
+					if (i.hasNext()) {
+						b.append(",");
+					}
+				}
+
+				b.append(" });\n");
+
 				// append the javascript we want for our init function; call
 				// this in an overridable method so that clients can add their
 				// stuff without needing a big ass API
 				appendToInit(markupId, javascriptId, javascriptWidgetId, b);
+
+				// trigger rendering
+				b.append("  ");
+				b.append(javascriptWidgetId);
+				b.append(".render();\n");
+
 				b.append("}\n");
 				// register the function for execution when the page is loaded
 				b.append("YAHOO.util.Event.addListener(window, \"load\", init");
@@ -171,14 +213,19 @@ public abstract class AbstractCalendar extends WebComponent {
 	 */
 	protected void appendToInit(String markupId, String javascriptId,
 			String javascriptWidgetId, StringBuffer b) {
-		b.append("  ");
-		b.append(javascriptWidgetId);
-		b.append(" = new YAHOO.widget.Calendar(\"");
-		b.append(javascriptId);
-		b.append("\",\"");
-		b.append(markupId);
-		b.append("\");\n  ");
-		b.append(javascriptWidgetId);
-		b.append(".render();\n");
+	}
+
+	/**
+	 * Gives overriding classes the option of adding (or even changing/
+	 * removing) configuration properties for the javascript widget. See <a
+	 * href="http://developer.yahoo.com/yui/calendar/">the widget's
+	 * documentation</a> for the available options. If you want to override/
+	 * remove properties, you obviously should call
+	 * {@link super#setWidgetProperties(Properties)} first.
+	 * 
+	 * @param widgetProperties
+	 *            the current widget properties
+	 */
+	protected void configureWidgetProperties(Map widgetProperties) {
 	}
 }
