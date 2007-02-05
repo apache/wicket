@@ -268,7 +268,9 @@ public class FormInput extends WicketExamplePage
 			// note that we don't have to do anything here, as our property
 			// model allready calls FormInput.setLocale when the model is
 			// updated
-			// setLocale((Locale)newSelection); // so we don't need to do this
+
+			// force re-render
+			getForm().modelChanged();
 		}
 	}
 
