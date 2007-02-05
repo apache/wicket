@@ -72,11 +72,11 @@ public abstract class AbstractCalendar extends WebComponent {
 	 *            your page header should look like:
 	 * 
 	 * <pre>
-	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt; 
-	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;dom.js&quot;&gt;&lt;/script&gt; 
-	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;event.js&quot;&gt;&lt;/script&gt; 
-	 *    	 &lt;script type=&quot;text/javascript&quot; src=&quot;calendar.js&quot;&gt;&lt;/script&gt; 
-	 *    	 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;calendar.css&quot; /&gt; 
+	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt; 
+	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;dom.js&quot;&gt;&lt;/script&gt; 
+	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;event.js&quot;&gt;&lt;/script&gt; 
+	 *     	 &lt;script type=&quot;text/javascript&quot; src=&quot;calendar.js&quot;&gt;&lt;/script&gt; 
+	 *     	 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;calendar.css&quot; /&gt; 
 	 * </pre>
 	 */
 	public AbstractCalendar(String id, boolean contributeDependencies) {
