@@ -16,6 +16,9 @@
  */
 package wicket.behavior;
 
+import static wicket.behavior.HeaderContributor.forCss;
+import static wicket.behavior.HeaderContributor.forJavaScript;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +28,7 @@ import wicket.ResourceReference;
 import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
-import wicket.model.AbstractReadOnlyModel;
+import wicket.model.LoadableDetachableModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
@@ -49,16 +52,16 @@ import wicket.util.string.JavascriptUtils;
 // meta data object to avoid the use of a static map
 public class HeaderContributor extends AbstractHeaderContributor
 {
-	// Appends a path to the string buffer, adding the context path on the front if it's not
+	// Appends a path to the string buffer, adding the context path on the front
+	// if it's not
 	// a fully-qualified URL.
 	private static final void appendPathWithContext(AppendingStringBuffer b, String location)
 	{
-		
+
 		// WICKET-59 allow external URLs.
 		if (!location.startsWith("http://") && !location.startsWith("https://"))
 		{
-			String contextPath = Application.get().getApplicationSettings()
-					.getContextPath();
+			String contextPath = Application.get().getApplicationSettings().getContextPath();
 			if (contextPath == null)
 			{
 				contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
@@ -76,7 +79,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 		b.append(location);
 	}
-	
+
 	/**
 	 * Contributes a reference to a javascript file relative to the context
 	 * path.
@@ -93,28 +96,22 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public JavaScriptHeaderContributor(final String location)
 		{
-			super(new AbstractReadOnlyModel<String>()
+			super(new LoadableDetachableModel<CharSequence>()
 			{
-
 				private static final long serialVersionUID = 1L;
-				private String path = null;
 
 				@Override
-				public String getObject()
+				public CharSequence load()
 				{
-					if (path == null)
+					if (location == null)
 					{
-						if (location == null)
-						{
-							return null;
-						}
-						AppendingStringBuffer b = new AppendingStringBuffer();
-						b.append("<script type=\"text/javascript\" src=\"");
-						appendPathWithContext(b, location);
-						b.append("\"></script>");
-						path = b.toString();
+						return null;
 					}
-					return path;
+					AppendingStringBuffer b = new AppendingStringBuffer();
+					b.append("<script type=\"text/javascript\" src=\"");
+					appendPathWithContext(b, location);
+					b.append("\"></script>");
+					return b;
 				}
 			});
 		}
@@ -137,44 +134,39 @@ public class HeaderContributor extends AbstractHeaderContributor
 		{
 			this(location, null);
 		}
-		
+
 		/**
 		 * Construct.
 		 * 
 		 * @param location
-		 *            the location of the CSS file relative to the context path, or a fully qualified http url.
+		 *            the location of the CSS file relative to the context path,
+		 *            or a fully qualified http url.
 		 * @param media
 		 *            the media type for this CSS ("print", "screen", etc.)
 		 */
 		public CSSHeaderContributor(final String location, final String media)
 		{
-			super(new AbstractReadOnlyModel<String>()
+			super(new LoadableDetachableModel<CharSequence>()
 			{
-
 				private static final long serialVersionUID = 1L;
-				private String path = null;
 
 				@Override
-				public String getObject()
+				public CharSequence load()
 				{
-					if (path == null)
+					if (location == null)
 					{
-						if (location == null)
-						{
-							return "";
-						}
-						AppendingStringBuffer b = new AppendingStringBuffer();
-						b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-						appendPathWithContext(b, location);
-						if (media != null)
-						{
-							b.append("\" media=\"");
-							b.append(media);
-						}
-						b.append("\" />");
-						path = b.toString();
+						return "";
 					}
-					return path;
+					AppendingStringBuffer b = new AppendingStringBuffer();
+					b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+					appendPathWithContext(b, location);
+					if (media != null)
+					{
+						b.append("\" media=\"");
+						b.append(media);
+					}
+					b.append("\" />");
+					return b;
 				}
 			});
 		}
@@ -374,9 +366,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forCss(final String location, final String media)
 	{
-		return new HeaderContributor(new CSSHeaderContributor(location, media));		
+		return new HeaderContributor(new CSSHeaderContributor(location, media));
 	}
-	
+
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in the web application
@@ -404,7 +396,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		return new HeaderContributor(new CSSReferenceHeaderContributor(reference, media));
 	}
-	
+
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
@@ -446,11 +438,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class scope, final String path, final String media)
+	public static final HeaderContributor forCss(final Class scope, final String path,
+			final String media)
 	{
 		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path, media));
 	}
-	
+
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
