@@ -390,6 +390,13 @@ public abstract class FileUploadBase
 		Map params = parser.parse(contentType, ';');
 		String boundaryStr = (String)params.get("boundary");
 
+		// some software separates the boundary with ',' instead of ';'
+		if (boundaryStr == null)
+		{
+			params = parser.parse(contentType, ',');
+			boundaryStr = (String)params.get("boundary");
+		}
+		
 		if (boundaryStr == null)
 		{
 			return null;
