@@ -110,7 +110,7 @@ public abstract class DateConverter extends SimpleConverterAdapter {
 			// parse date retaining the time of the submission
 			format.parseInto(dt, value, 0);
 			// apply the server time zone to the parsed value
-			dt.setZone(DateTimeZone.forTimeZone(TimeZone.getDefault()));
+			dt.setZone(getTimeZone());
 			return dt.toDate();
 		} else {
 			return format.parseDateTime(value).toDate();
@@ -122,7 +122,7 @@ public abstract class DateConverter extends SimpleConverterAdapter {
 	 */
 	public final String toString(Object value) {
 
-		DateTime dt = new DateTime(((Date) value).getTime());
+		DateTime dt = new DateTime(((Date) value).getTime(), getTimeZone());
 		DateTimeFormatter format = getFormat();
 
 		if (applyTimeZoneDifference) {
@@ -152,4 +152,14 @@ public abstract class DateConverter extends SimpleConverterAdapter {
 	 * @return formatter The formatter for the current conversion
 	 */
 	protected abstract DateTimeFormatter getFormat();
+
+	/**
+	 * Gets the server time zone. Override this method if you want to fix to a
+	 * certain time zone, regardless of what actual time zone the server is in.
+	 * 
+	 * @return The server time zone
+	 */
+	protected DateTimeZone getTimeZone() {
+		return DateTimeZone.getDefault();
+	}
 }
