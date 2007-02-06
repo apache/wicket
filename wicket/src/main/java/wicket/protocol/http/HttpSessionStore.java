@@ -31,10 +31,7 @@ import wicket.Page;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.settings.IPageSettings;
 import wicket.util.lang.Bytes;
-import wicket.version.IPageVersionManager;
-import wicket.version.undo.UndoPageVersionManager;
 
 /**
  * Default web implementation of {@link wicket.session.ISessionStore} that uses
@@ -180,14 +177,5 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	public IPageMap createPageMap(String name, Session session)
 	{
 		return new AccessStackPageMap(name, session);
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#newVersionManager(Page)
-	 */
-	public IPageVersionManager newVersionManager(Page page)
-	{
-		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
-		return new UndoPageVersionManager(page, settings.getMaxPageVersions());
 	}
 }

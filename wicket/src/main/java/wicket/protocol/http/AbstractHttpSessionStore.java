@@ -26,9 +26,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.Page;
 import wicket.Request;
 import wicket.Session;
 import wicket.session.ISessionStore;
+import wicket.settings.IPageSettings;
+import wicket.version.IPageVersionManager;
+import wicket.version.undo.UndoPageVersionManager;
 
 
 /**
@@ -282,5 +286,14 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	public void onEndRequest(Request request)
 	{
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#newVersionManager(Page)
+	 */
+	public IPageVersionManager newVersionManager(Page page)
+	{
+		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
+		return new UndoPageVersionManager(page, settings.getMaxPageVersions());
 	}
 }
