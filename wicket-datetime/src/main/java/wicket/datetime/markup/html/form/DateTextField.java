@@ -141,11 +141,44 @@ public class DateTextField extends TextField {
 	 * 
 	 * @param id
 	 *            The id of the text field
+	 * @param model
+	 *            The model
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
 	public static DateTextField forShortStyle(String id, IModel model) {
 		return new DateTextField(id, model, new StyleDateConverter(true));
+	}
+
+	/**
+	 * Creates a new DateTextField using the provided converter.
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param converter
+	 *            the date converter
+	 * 
+	 * @see wicket.markup.html.form.TextField
+	 */
+	public static DateTextField withConverter(String id, DateConverter converter) {
+		return withConverter(id, null, converter);
+	}
+
+	/**
+	 * Creates a new DateTextField using the provided converter.
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param model
+	 *            The model
+	 * @param converter
+	 *            the date converter
+	 * 
+	 * @see wicket.markup.html.form.TextField
+	 */
+	public static DateTextField withConverter(String id, IModel model,
+			DateConverter converter) {
+		return new DateTextField(id, model, converter);
 	}
 
 	/**
@@ -165,6 +198,9 @@ public class DateTextField extends TextField {
 	 */
 	protected DateTextField(String id, IModel model, DateConverter converter) {
 		super(id, model, Date.class);
+		if (converter == null) {
+			throw new IllegalStateException("converter may not be null");
+		}
 		this.converter = converter;
 	}
 
