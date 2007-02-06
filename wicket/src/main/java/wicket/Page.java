@@ -35,7 +35,6 @@ import wicket.model.IModel;
 import wicket.request.RequestParameters;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.settings.IDebugSettings;
-import wicket.settings.IPageSettings;
 import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
@@ -43,7 +42,6 @@ import wicket.util.string.StringValue;
 import wicket.util.value.Count;
 import wicket.version.IPageVersionManager;
 import wicket.version.undo.Change;
-import wicket.version.undo.UndoPageVersionManager;
 
 /**
  * Abstract base class for pages. As a MarkupContainer subclass, a Page can
@@ -292,6 +290,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public void internalDetach()
 	{
 		super.internalDetach();
+		endVersion();
 		attached = false;
 	}
 
@@ -928,17 +927,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		detachModels();
-
-		if (isVersioned())
-		{
-			// Any changes to the page after this point will be tracked by the
-			// page's version manager. Since trackChanges is never set to false,
-			// this effectively means that change tracking begins after the
-			// first request to a page completes.
-			setFlag(FLAG_TRACK_CHANGES, true);
-
-			endVersion();
-		}
 	}
 
 	/**
@@ -966,10 +954,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @return Factory method that creates a version manager for this Page
 	 */
-	protected IPageVersionManager newVersionManager()
+	protected final IPageVersionManager newVersionManager()
 	{
-		final IPageSettings settings = getSession().getApplication().getPageSettings();
-		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
+		return null;
 	}
 
 	/**
@@ -1258,9 +1245,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final void endVersion()
 	{
+		// Any changes to the page after this point will be tracked by the
+		// page's version manager. Since trackChanges is never set to false,
+		// this effectively means that change tracking begins after the
+		// first request to a page completes.
+		setFlag(FLAG_TRACK_CHANGES, true);
+		
 		// If a new version was created
 		if (getFlag(FLAG_NEW_VERSION))
 		{
+			// Reset boolean for next request
+			setFlag(FLAG_NEW_VERSION, false);
+
 			// We're done with this version
 			if (versionManager != null)
 			{
@@ -1269,9 +1265,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 			// Evict any page version(s) as need be
 			getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(getPageMap());
-
-			// Reset boolean for next request
-			setFlag(FLAG_NEW_VERSION, false);
 		}
 	}
 
@@ -1348,7 +1341,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					if (versionManager == null)
 					{
 						// then install a new version manager
-						versionManager = newVersionManager();
+						versionManager = getSession().getSessionStore().newVersionManager(this);
 					}
 
 					// start a new version

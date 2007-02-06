@@ -30,13 +30,17 @@ import org.apache.commons.logging.LogFactory;
 import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.IPageMap;
+import wicket.Page;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.session.ISessionStore;
+import wicket.settings.IPageSettings;
 import wicket.util.lang.Bytes;
+import wicket.version.IPageVersionManager;
+import wicket.version.undo.UndoPageVersionManager;
 
 
 /**
@@ -337,6 +341,15 @@ public class PortletSessionStore implements ISessionStore
 	}
 
 	/**
+	 * @see wicket.session.ISessionStore#newVersionManager(wicket.Page)
+	 */
+	public IPageVersionManager newVersionManager(Page page)
+	{
+		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
+		return new UndoPageVersionManager(page, settings.getMaxPageVersions());
+	}
+
+	/**
 	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request, boolean)
 	 */
 	public final String getSessionId(Request request, boolean create)
@@ -353,5 +366,4 @@ public class PortletSessionStore implements ISessionStore
 	public void onEndRequest(Request request)
 	{
 	}
-
 }

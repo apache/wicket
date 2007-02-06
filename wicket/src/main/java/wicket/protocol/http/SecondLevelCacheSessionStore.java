@@ -20,6 +20,7 @@ import java.lang.ref.SoftReference;
 import java.util.Map;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.IPageMap;
 import wicket.Page;
 import wicket.PageMap;
@@ -27,6 +28,8 @@ import wicket.Request;
 import wicket.Session;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.concurrent.ConcurrentHashMap;
+import wicket.version.IPageVersionManager;
+import wicket.version.undo.Change;
 
 /**
  * FIXME document me!
@@ -66,6 +69,115 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 */
 		void unbind(String sessionId);
 
+	}
+	
+	private static final class SecondLevelCachePageVersionManager implements IPageVersionManager
+	{
+		private static final long serialVersionUID = 1L;
+
+		private int currentVersionNumber;
+
+		private Page page;
+		
+		
+		/**
+		 * Construct.
+		 * @param page
+		 */
+		public SecondLevelCachePageVersionManager(Page page)
+		{
+			this.page = page;
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#beginVersion(boolean)
+		 */
+		public void beginVersion(boolean mergeVersion)
+		{
+			if(!mergeVersion)
+			{
+				currentVersionNumber++;
+			}
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#componentAdded(wicket.Component)
+		 */
+		public void componentAdded(Component component)
+		{
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#componentModelChanging(wicket.Component)
+		 */
+		public void componentModelChanging(Component component)
+		{
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#componentRemoved(wicket.Component)
+		 */
+		public void componentRemoved(Component component)
+		{
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#componentStateChanging(wicket.version.undo.Change)
+		 */
+		public void componentStateChanging(Change change)
+		{
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#endVersion(boolean)
+		 */
+		public void endVersion(boolean mergeVersion)
+		{
+			String sessionId = page.getSession().getId();
+			// can we really test here for merge versions? Ajax request does change the page.
+			// And the last version should be stored to disk..
+			if (sessionId != null /*&& !mergeVersion*/) 
+			{
+				IPageStore store = ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
+				store.storePage(sessionId, page);
+			}
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#expireOldestVersion()
+		 */
+		public void expireOldestVersion()
+		{
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#getCurrentVersionNumber()
+		 */
+		public int getCurrentVersionNumber()
+		{
+			return currentVersionNumber;
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#getVersion(int)
+		 */
+		public Page getVersion(int versionNumber)
+		{
+			if(currentVersionNumber == versionNumber)
+			{
+				return page;
+			}
+			return null;
+		}
+
+		/**
+		 * @see wicket.version.IPageVersionManager#getVersions()
+		 */
+		public int getVersions()
+		{
+			return 0;
+		}
+		
 	}
 
 	private static final class SecondLevelCachePageMap extends PageMap
@@ -110,8 +222,15 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				String sessionId = getSession().getId();
 				if (sessionId != null)
 				{
+					if(lastPage != page && page.getCurrentVersionNumber() == 0)
+					{
+						// we have to save a new page directly to the file store
+						// so that this version is also recoverable.
+						// first call detach because put can be called withing a request.
+						page.internalDetach();
+						getStore().storePage(sessionId, page);
+					}
 					lastPage = page;
-					getStore().storePage(sessionId, page);
 					dirty();
 				}
 			}
@@ -213,6 +332,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	public IPageMap createPageMap(String name, Session session)
 	{
 		return new SecondLevelCachePageMap(name, session);
+	}
+	
+	/**
+	 * @see wicket.protocol.http.HttpSessionStore#newVersionManager(wicket.Page)
+	 */
+	public IPageVersionManager newVersionManager(Page page)
+	{
+		return new SecondLevelCachePageVersionManager(page);
 	}
 
 	/**
