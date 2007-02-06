@@ -207,7 +207,8 @@ public class WebRequestCycle extends RequestCycle
 
 			// Redirect page can touch its models already (via for example the
 			// constructors)
-			page.internalDetach();
+			// this can be removed i guess because this page will be detached in the page target
+			//page.internalDetach();
 		}
 
 		if (redirectUrl == null)

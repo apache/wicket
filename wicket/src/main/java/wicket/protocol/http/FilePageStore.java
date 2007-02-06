@@ -158,17 +158,11 @@ public class FilePageStore implements IPageStore
 		sessionDir.mkdirs();
 		File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
 
-		// currently, we always have to write, as we don't know whether
-		// it is a new version or really the same one
-
-		// only store when not yet stored
-		// if (!pageFile.exists())
-		// {
-		page.internalDetach();
 		FileOutputStream fos = null;
+		long t1 = System.currentTimeMillis();
+		long t2 = 0;
 		try
 		{
-			long t1 = System.currentTimeMillis();
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try
 			{
@@ -179,16 +173,10 @@ public class FilePageStore implements IPageStore
 				out.close();
 			}
 			byte[] bytes = out.toByteArray();
+			t2 = System.currentTimeMillis();
 			fos = new FileOutputStream(pageFile);
 			ByteBuffer bb = ByteBuffer.wrap(bytes);
 			fos.getChannel().write(bb);
-			if (log.isDebugEnabled())
-			{
-				long t2 = System.currentTimeMillis();
-				log.debug("storing page " + page.getNumericId() + ","
-						+ page.getCurrentVersionNumber() + " for session " + sessionId + " took "
-						+ (t2 - t1) + " miliseconds");
-			}
 		}
 		catch (Exception e)
 		{
@@ -209,7 +197,13 @@ public class FilePageStore implements IPageStore
 				// ignore
 			}
 		}
-		// }
+		if (log.isDebugEnabled())
+		{
+			long t3 = System.currentTimeMillis();
+			log.debug("storing page " + page.getNumericId() + ","
+					+ page.getCurrentVersionNumber() + " for session " + sessionId + " took "
+					+ (t2 - t1) + " miliseconds to serialize and " + (t3-t2) + "miliseconds to save");
+		}
 	}
 
 	/**

@@ -21,8 +21,10 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import wicket.IPageMap;
+import wicket.Page;
 import wicket.Request;
 import wicket.Session;
+import wicket.version.IPageVersionManager;
 
 /**
  * The actual store that is used by {@link wicket.Session} to store its
@@ -155,4 +157,10 @@ public interface ISessionStore
 	 * @return The pagemap instances for the session
 	 */
 	IPageMap createPageMap(String name, Session session);
+
+	/**
+	 * @param page The page for which this version manager must be created
+	 * @return A instance of a IPageVersionManager that the page will use.
+	 */
+	IPageVersionManager newVersionManager(Page page);
 }
