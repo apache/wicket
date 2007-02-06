@@ -69,22 +69,6 @@ public class FilePageStore implements IPageStore
 			File pageFile = getPageFile(id, versionNumber, sessionDir);
 			if (pageFile.exists())
 			{
-
-				// TODO Deleting newer files was not a good idea, as pushing the
-				// back button a few times and then pressing refresh, would
-				// trigger this delete, while the forward button is still in
-				// effect. We should try to come up with an alternative, where
-				// we don't serialize and write to the same file all the time,
-				// but are sure we do when we need to. This would probably
-				// involve keeping meta data or do something smart.
-
-				// int tmp = versionNumber;
-				// File f;
-				// while ((f = getPageFile(id, tmp++, sessionDir)).exists())
-				// {
-				// f.delete();
-				// }
-
 				FileInputStream fis = null;
 				try
 				{
