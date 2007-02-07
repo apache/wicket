@@ -80,7 +80,7 @@ public class FormInput extends WicketExamplePage
 
 			// Dropdown for selecting locale
 			new LocaleDropDownChoice(this, "localeSelect");
-			
+
 
 			// Link to return to default locale
 			new Link(this, "defaultLocaleLink")
@@ -169,16 +169,18 @@ public class FormInput extends WicketExamplePage
 			};
 
 			// TextField using a mask converter
-			new TextField<UsPhoneNumber>(this, "phoneNumberUS", UsPhoneNumber.class)
+			// NOTE: you have to provide the third argument to trigger
+			// the converter being used
+			new TextField<String>(this, "phoneNumberUS", String.class)
 			{
 				/**
 				 * @see wicket.Component#getConverter(java.lang.Class)
 				 */
 				@Override
-				public IConverter getConverter(final Class type)
+				public IConverter getConverter(final Class< ? > type)
 				{
 					// US telephone number mask
-					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
+					return new MaskConverter("(###) ###-####");
 				}
 			};
 

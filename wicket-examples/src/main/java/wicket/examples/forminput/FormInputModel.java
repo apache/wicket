@@ -94,7 +94,7 @@ public final class FormInputModel implements Serializable
 	private final List<String> numbersCheckGroup = new ArrayList<String>();
 	private String numbersGroup;
 	/** US phone number with mask '(###) ###-####'. */
-	private UsPhoneNumber phoneNumberUS = new UsPhoneNumber("(123) 456-1234");
+	private String phoneNumberUS = "(123) 456-1234";
 	private Set siteSelection = new HashSet();
 
 	private String stringProperty = "test";
@@ -207,7 +207,7 @@ public final class FormInputModel implements Serializable
 	/**
 	 * @return the phoneNumberUS
 	 */
-	public UsPhoneNumber getPhoneNumberUS()
+	public String getPhoneNumberUS()
 	{
 		return phoneNumberUS;
 	}
@@ -334,7 +334,7 @@ public final class FormInputModel implements Serializable
 	 * @param phoneNumberUS
 	 *            the phoneNumberUS to set
 	 */
-	public void setPhoneNumberUS(final UsPhoneNumber phoneNumberUS)
+	public void setPhoneNumberUS(final String phoneNumberUS)
 	{
 		this.phoneNumberUS = phoneNumberUS;
 	}
