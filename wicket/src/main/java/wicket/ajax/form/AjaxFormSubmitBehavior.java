@@ -136,7 +136,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			onSubmit(target);
 		}
 
-		if (!form.hasError())
+		if (form.hasError())
 		{
 			onError(target);
 		}
