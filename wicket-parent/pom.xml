@@ -408,7 +408,7 @@
 				<filtering>false</filtering>
 				<directory>src/main/java</directory>
 				<includes>
-					<include>**</include>
+					<include>**/*</include>
 				</includes>
 				<excludes>
 					<exclude>**/*.java</exclude>
@@ -418,7 +418,7 @@
 				<filtering>false</filtering>
 				<directory>src/main/resources</directory>
 				<includes>
-					<include>**</include>
+					<include>**/*</include>
 				</includes>
 				<excludes>
 					<exclude>**/*.java</exclude>
@@ -439,7 +439,7 @@
 				<filtering>false</filtering>
 				<directory>src/test/java</directory>
 				<includes>
-					<include>**</include>
+					<include>**/*</include>
 				</includes>
 				<excludes>
 					<exclude>**/*.java</exclude>
