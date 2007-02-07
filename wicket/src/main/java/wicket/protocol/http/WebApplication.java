@@ -455,6 +455,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	protected void internalDestroy()
 	{
+		// destroy the resource watcher
 		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher(false);
 		if (resourceWatcher != null)
 		{
@@ -462,7 +463,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 		}
 		super.internalDestroy();
 		bufferedResponses.clear();
-		// destroy the resource watcher
+		getSessionStore().destroy();
 	}
 
 	/**

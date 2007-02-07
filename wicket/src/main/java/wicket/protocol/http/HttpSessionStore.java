@@ -27,7 +27,6 @@ import javax.servlet.http.HttpSession;
 import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.IPageMap;
-import wicket.Page;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
@@ -52,10 +51,12 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		// session replication
 		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
 		{
-			if (value instanceof Page)
-			{
-				((Page)value).internalDetach();
-			}
+			// TODO this shouldn't be needed anymore, because this method
+			// should only be called with already detached pages (See session.touch)
+//			if (value instanceof Page)
+//			{
+//				((Page)value).internalDetach();
+//			}
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try
 			{

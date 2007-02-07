@@ -366,4 +366,11 @@ public class PortletSessionStore implements ISessionStore
 	public void onEndRequest(Request request)
 	{
 	}
+
+	/**
+	 * @see wicket.session.ISessionStore#destroy()
+	 */
+	public void destroy()
+	{
+	}
 }
