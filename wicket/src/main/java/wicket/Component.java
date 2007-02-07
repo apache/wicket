@@ -959,7 +959,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public IConverter getConverter(Class type)
+	public IConverter getConverter(Class<?> type)
 	{
 		return getSession().getConverter(type);
 	}

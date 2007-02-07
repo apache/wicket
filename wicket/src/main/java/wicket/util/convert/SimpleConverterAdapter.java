@@ -35,14 +35,6 @@ import wicket.Component;
  * with an instance of {@link ConverterLocator} is a better choice for that.
  * </p>
  * <p>
- * <strong>WARNING. Due to a current limitation as a result of how
- * {@link IConverter} works, classes that extend this adapter will not be much
- * use with string values. If you want to use a custom converter for string
- * values, consider wrapping the values in another class so that conversion will
- * be triggered. See the form input example of wicket-examples for how this can
- * be done. </strong>
- * </p>
- * <p>
  * An example of the use of this class is the following:
  * 
  * <pre>
@@ -102,15 +94,6 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 	}
 
 	/**
-	 * Convert the given value to a string.
-	 * 
-	 * @param value
-	 *            The value to convert, may be null
-	 * @return The value as a string
-	 */
-	public abstract String toString(Object value);
-
-	/**
 	 * Convert the given string to an object of choice.
 	 * 
 	 * @param value
@@ -118,4 +101,13 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 	 * @return The string value converted to an object of choice
 	 */
 	public abstract Object toObject(String value);
+
+	/**
+	 * Convert the given value to a string.
+	 * 
+	 * @param value
+	 *            The value to convert, may be null
+	 * @return The value as a string
+	 */
+	public abstract String toString(Object value);
 }

@@ -107,20 +107,41 @@ public class MaskConverter implements IConverter
 	/**
 	 * Construct.
 	 * 
+	 * @param maskFormatter
+	 *            The mask formatter to use for masking and unmasking values
+	 */
+	public MaskConverter(MaskFormatter maskFormatter)
+	{
+		if (maskFormatter == null)
+		{
+			throw new IllegalArgumentException("argument maskFormatter may not be null");
+		}
+
+		this.maskFormatter = maskFormatter;
+	}
+
+	/**
+	 * Construct; converts to Strings.
+	 * 
+	 * @param mask
+	 *            The mask to use for this converter instance
+	 * @see MaskFormatter
+	 */
+	public MaskConverter(String mask)
+	{
+		this(mask, String.class);
+	}
+
+	/**
+	 * Construct.
+	 * 
 	 * @param mask
 	 *            The mask to use for this converter instance
 	 * @param type
-	 *            The type to convert string values to. WARNING: adding anything
-	 *            that implements charsequence here will probably not have the
-	 *            desired effect as then only {@link #toString(Object)} will be
-	 *            called. Consider wrapping your string value in a custom class
-	 *            so that conversion will be triggered properly. That class
-	 *            should have a public constructor with a single string
-	 *            argument. That constructor will be used by
-	 *            {@link MaskFormatter} to construct instances.
+	 *            The type to convert string values to.
 	 * @see MaskFormatter
 	 */
-	public MaskConverter(String mask, Class type)
+	public MaskConverter(String mask, Class<?> type)
 	{
 		try
 		{
@@ -136,26 +157,22 @@ public class MaskConverter implements IConverter
 	}
 
 	/**
-	 * Construct. WARNING: setting {@link MaskFormatter#setValueClass(Class)} to
-	 * anything that implements charsequence, or not setting that class at all,
-	 * which has the effect that String will be used will probably not have the
-	 * desired effect as then only {@link #toString(Object)} will be called.
-	 * Consider wrapping your string value in a custom class so that conversion
-	 * will be triggered properly. That class should have a public constructor
-	 * with a single string argument. That constructor will be used by
-	 * {@link MaskFormatter} to construct instances.
+	 * Converts a string to an object using
+	 * {@link MaskFormatter#stringToValue(String)}.
 	 * 
-	 * @param maskFormatter
-	 *            The mask formatter to use for masking and unmasking values
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      Locale)
 	 */
-	public MaskConverter(MaskFormatter maskFormatter)
+	public Object convertToObject(String value, Locale locale)
 	{
-		if (maskFormatter == null)
+		try
 		{
-			throw new IllegalArgumentException("argument maskFormatter may not be null");
+			return maskFormatter.stringToValue(value);
 		}
-
-		this.maskFormatter = maskFormatter;
+		catch (ParseException e)
+		{
+			throw new ConversionException(e);
+		}
 	}
 
 	/**
@@ -170,25 +187,6 @@ public class MaskConverter implements IConverter
 		try
 		{
 			return maskFormatter.valueToString(value);
-		}
-		catch (ParseException e)
-		{
-			throw new ConversionException(e);
-		}
-	}
-
-	/**
-	 * Converts a string to an object using
-	 * {@link MaskFormatter#stringToValue(String)}.
-	 * 
-	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
-	 *      Locale)
-	 */
-	public Object convertToObject(String value, Locale locale)
-	{
-		try
-		{
-			return maskFormatter.stringToValue(value);
 		}
 		catch (ParseException e)
 		{

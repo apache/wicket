@@ -40,5 +40,5 @@ public interface IConverterLocator extends Serializable
 	 * @param type
 	 * @return The converter for the given type.
 	 */
-	public IConverter getConverter(Class type);
+	public IConverter getConverter(Class<?> type);
 }

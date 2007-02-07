@@ -71,21 +71,21 @@ public class ConverterLocator implements IConverterLocator
 	private static final long serialVersionUID = 1L;
 
 	/** Maps Classes to ITypeConverters. */
-	private final Map<Class, IConverter> classToConverter = new HashMap<Class, IConverter>();
+	private final Map<Class<?>, IConverter> classToConverter = new HashMap<Class<?>, IConverter>();
 
 	/**
 	 * CoverterLocator that is to be used when no registered converter is found.
 	 */
 	private class DefaultConverter implements IConverter
 	{
-		private Class type;
+		private Class<?> type;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param type
 		 */
-		public DefaultConverter(Class type)
+		public DefaultConverter(Class<?> type)
 		{
 			this.type = type;
 		}
@@ -174,6 +174,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
 	 *      java.lang.Class, Locale)
 	 */
+	@SuppressWarnings("unchecked")
 	public final IConverter getConverter(Class type)
 	{
 		// Null is always converted to null
@@ -200,7 +201,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The type converter that is registered for class c or null if no
 	 *         type converter was registered for class c
 	 */
-	public final IConverter get(Class c)
+	public final IConverter get(Class<?> c)
 	{
 		return classToConverter.get(c);
 	}
@@ -214,7 +215,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The converter that was registered for class c before removal or
 	 *         null if none was registered
 	 */
-	public final IConverter remove(Class c)
+	public final IConverter remove(Class<?> c)
 	{
 		return classToConverter.remove(c);
 	}
@@ -229,7 +230,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The previous registered converter for class c or null if none was
 	 *         registered yet for class c
 	 */
-	public final IConverter set(final Class c, final IConverter converter)
+	public final IConverter set(final Class<?> c, final IConverter converter)
 	{
 		if (converter == null)
 		{
