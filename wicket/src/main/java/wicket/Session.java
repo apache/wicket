@@ -165,6 +165,9 @@ public abstract class Session implements Serializable
 	/** A store for dirty objects for one request */
 	private static final ThreadLocal dirtyObjects = new ThreadLocal();
 
+	/** A store for touched pages for one request */
+	private static final ThreadLocal touchedPages = new ThreadLocal();
+	
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
@@ -821,8 +824,16 @@ public abstract class Session implements Serializable
 	 */
 	public final void touch(Page page)
 	{
-		// Touch the page in its pagemap.
-		page.getPageMap().put(page);
+		// store it in a list, so that the pages are really pushed
+		// to the pagemap when the session does it update/detaches.
+		// all the pages are then detached
+		List lst = (List)touchedPages.get();
+		if(lst == null)
+		{
+			lst = new ArrayList();
+			touchedPages.set(lst);
+		}
+		lst.add(page);
 	}
 
 	/**
@@ -1042,6 +1053,17 @@ public abstract class Session implements Serializable
 	 */
 	protected void update()
 	{
+		List lst = (List)touchedPages.get();
+		if(lst != null)
+		{
+			for (int i = 0; i < lst.size(); i++)
+			{
+				Page page = (Page)lst.get(i);
+				page.getPageMap().put(page);
+			}
+			touchedPages.set(null);
+		}
+		
 		// If state is dirty
 		if (dirty)
 		{

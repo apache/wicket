@@ -163,4 +163,9 @@ public interface ISessionStore
 	 * @return A instance of a IPageVersionManager that the page will use.
 	 */
 	IPageVersionManager newVersionManager(Page page);
+
+	/**
+	 * Called when the WebApplication is destroyed.
+	 */
+	void destroy();
 }

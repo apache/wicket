@@ -296,4 +296,12 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
 		return new UndoPageVersionManager(page, settings.getMaxPageVersions());
 	}
+	
+	/**
+	 * @see wicket.session.ISessionStore#destroy()
+	 */
+	public void destroy()
+	{
+		// nop
+	}
 }

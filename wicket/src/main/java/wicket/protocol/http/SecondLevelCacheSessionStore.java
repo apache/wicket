@@ -39,12 +39,20 @@ import wicket.version.undo.Change;
 public class SecondLevelCacheSessionStore extends HttpSessionStore
 {
 	/**
-	 * FIXME document me!
+	 * This interface is used by the SecondLevelCacheSessionStore
+	 * so that pages can be stored to a persistent layer.
+	 * Implemenation should store the page that it gets under the
+	 * id and versionnumber. So that every page version can be 
+	 * reconstructed when asked for.
+	 *    
+	 * @see FilePageStore as default implementation.
 	 */
 	public static interface IPageStore
 	{
 
 		/**
+		 * Restores a page version from the persistent layer
+		 * 
 		 * @param sessionId
 		 * @param id
 		 * @param versionNumber
@@ -53,21 +61,43 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		Page getPage(String sessionId, int id, int versionNumber);
 
 		/**
+		 * Removes a page from the persistent layer.
+		 * 
 		 * @param sessionId
 		 * @param page
 		 */
 		void removePage(String sessionId, Page page);
 
 		/**
+		 * Stores the page to a persistent layer. The page should be stored
+		 * under the id and the version number.
+		 * 
 		 * @param sessionId
 		 * @param page
 		 */
 		void storePage(String sessionId, Page page);
 
 		/**
+		 * The pagestore should cleanup all the pages for that sessionid.
+		 *  
 		 * @param sessionId
 		 */
 		void unbind(String sessionId);
+		
+		/**
+		 * This method is called when the page is accessed. A IPageStore 
+		 * implemenation can block until a save of that page version is 
+		 * done. So that a specifiek page version is always restoreable.
+		 * 
+		 * @param sessionId 
+		 * @param page 
+		 */
+		void pageAccessed(String sessionId, Page page);
+
+		/**
+		 * 
+		 */
+		void destroy();
 
 	}
 	
@@ -199,15 +229,17 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		public Page get(int id, int versionNumber)
 		{
+			String sessionId = getSession().getId();
 			if (lastPage != null && lastPage.getNumericId() == id)
 			{
 				Page page = lastPage.getVersion(versionNumber);
 				if (page != null)
 				{
+					// ask the page store if it is ready saving the page.
+					getStore().pageAccessed(sessionId, page);
 					return page;
 				}
 			}
-			String sessionId = getSession().getId();
 			if (sessionId != null)
 			{
 				return getStore().getPage(sessionId, id, versionNumber);
@@ -226,8 +258,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					{
 						// we have to save a new page directly to the file store
 						// so that this version is also recoverable.
-						// first call detach because put can be called withing a request.
-						page.internalDetach();
 						getStore().storePage(sessionId, page);
 					}
 					lastPage = page;
@@ -322,6 +352,16 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				sessionMap.remove(sessionId);
 				pageStore.unbind(sessionId);
 			}
+
+			public void pageAccessed(String sessionId, Page page)
+			{
+				pageStore.pageAccessed(sessionId, page);
+			}
+
+			public void destroy()
+			{
+				pageStore.destroy();
+			}
 		};
 	}
 
@@ -369,5 +409,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	protected void onUnbind(String sessionId)
 	{
 		getStore().unbind(sessionId);
+	}
+	
+	/**
+	 * @see wicket.protocol.http.AbstractHttpSessionStore#destroy()
+	 */
+	public void destroy()
+	{
+		super.destroy();
+		getStore().destroy();
 	}
 }
