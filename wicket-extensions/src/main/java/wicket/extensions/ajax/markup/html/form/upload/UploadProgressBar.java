@@ -21,10 +21,10 @@ import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.IInitializer;
 import wicket.ResourceReference;
+import wicket.behavior.HeaderContributor;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.resources.JavaScriptReference;
 import wicket.model.Model;
 
 /**
@@ -75,8 +75,8 @@ public class UploadProgressBar extends Panel
 		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
-
-		add(new JavaScriptReference("javascript", JS_PROGRESSBAR));
+		
+		add(HeaderContributor.forJavaScript(JS_PROGRESSBAR));
 
 		final WebMarkupContainer barDiv = new WebMarkupContainer("bar");
 		barDiv.setOutputMarkupId(true);
