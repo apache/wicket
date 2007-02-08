@@ -38,14 +38,7 @@ public class PackageResourceReference extends ResourceReference
 	private int hash;
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource. It will
-	 * bind itself directly to the given application object, so that the
-	 * resource will be created if it did not exist and added to the application
-	 * shared resources.
-	 * 
-	 * Package resources should be added by a IInitializer implementation So
-	 * that all needed packaged resources are there on startup of the
-	 * application.
+	 * Constuctor to get a resource reference to a packaged resource.
 	 * 
 	 * @param application
 	 *            The application to bind to
@@ -79,14 +72,7 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource. It will
-	 * bind itself directly to the given application object, so that the
-	 * resource will be created if it did not exist and added to the application
-	 * shared resources.
-	 * 
-	 * Package resources should be added by a IInitializer implementation So
-	 * that all needed packaged resources are there on startup of the
-	 * application.
+	 * Constuctor to get a resource reference to a packaged resource.
 	 * 
 	 * @param application
 	 *            The application to bind to
@@ -104,14 +90,7 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource. It will
-	 * bind itself directly to the given application object, so that the
-	 * resource will be created if it did not exist and added to the application
-	 * shared resources.
-	 * 
-	 * Package resources should be added by a IInitializer implementation So
-	 * that all needed packaged resources are there on startup of the
-	 * application.
+	 * Constuctor to get a resource reference to a packaged resource.
 	 * 
 	 * The scope of this constructor will be the wicket.Application.class
 	 * itself. so the shared resources key wil be "wicket.Application/name"
@@ -131,11 +110,7 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Constuctor to get a resource reference to a packaged resource that is
-	 * already bindend to the current applicaiton.
-	 * 
-	 * It will not bind a resource to the current application object, so the
-	 * resource must be created by a IInitializer implementation. So that it is
-	 * already binded at startup.
+	 * already bound to the current applicaiton.
 	 * 
 	 * @param scope
 	 *            The scope of the binding
