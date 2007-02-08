@@ -1282,10 +1282,9 @@ public final class Objects
 			out.close();
 			return out.size();
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			log.warn("Size of failed of object: " + object.getClass().getName(), e);
-			return 0;
+			return -1;
 		}
 	}
 
