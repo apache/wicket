@@ -236,9 +236,6 @@ public final class Settings
 	 */
 	private String responseRequestEncoding = "UTF-8";
 
-	/** Flag for serialize session attributes feature */
-	private boolean serializeSessionAttributes = false;
-
 	/** Chain of string resource loaders to use */
 	private List<IStringResourceLoader> stringResourceLoaders = new ArrayList<IStringResourceLoader>(
 			4);
@@ -733,15 +730,6 @@ public final class Settings
 	}
 
 	/**
-	 * 
-	 * @see wicket.settings.IDebugSettings#getSerializeSessionAttributes()
-	 */
-	public boolean getSerializeSessionAttributes()
-	{
-		return serializeSessionAttributes;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List<IStringResourceLoader> getStringResourceLoaders()
@@ -1156,15 +1144,6 @@ public final class Settings
 	public void setResponseRequestEncoding(final String responseRequestEncoding)
 	{
 		this.responseRequestEncoding = responseRequestEncoding;
-	}
-
-	/**
-	 * 
-	 * @see wicket.settings.IDebugSettings#setSerializeSessionAttributes(boolean)
-	 */
-	public void setSerializeSessionAttributes(boolean serialize)
-	{
-		this.serializeSessionAttributes = serialize;
 	}
 
 	/**

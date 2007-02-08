@@ -45,11 +45,11 @@ import wicket.session.DefaultPageFactory;
 import wicket.util.file.WebApplicationPath;
 
 /**
- * This class provides a mock implementation of a Wicket portlet based
- * tester that can be used for testing. It emulates all of the
- * functionality of an Portlet in a controlled, single-threaded environment. It
- * is supported with mock objects for PortletSession, PortletRequest,
- * PortletResponse and PortletContext.
+ * This class provides a mock implementation of a Wicket portlet based tester
+ * that can be used for testing. It emulates all of the functionality of an
+ * Portlet in a controlled, single-threaded environment. It is supported with
+ * mock objects for PortletSession, PortletRequest, PortletResponse and
+ * PortletContext.
  * <p>
  * 
  * @author Janne Hietam&auml;ki (jannehietamaki)
@@ -134,8 +134,6 @@ public class MockPortletApplication extends PortletApplication
 		});
 
 		this.internalInit();
-
-		getDebugSettings().setSerializeSessionAttributes(false);
 
 		// Call init method of web tester
 		this.init();

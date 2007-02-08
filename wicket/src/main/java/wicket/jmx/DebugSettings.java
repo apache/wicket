@@ -45,14 +45,6 @@ public class DebugSettings implements DebugSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.DebugSettingsMBean#getSerializeSessionAttributes()
-	 */
-	public boolean getSerializeSessionAttributes()
-	{
-		return application.getDebugSettings().getSerializeSessionAttributes();
-	}
-
-	/**
 	 * @see wicket.jmx.DebugSettingsMBean#isAjaxDebugModeEnabled()
 	 */
 	public boolean isAjaxDebugModeEnabled()
@@ -74,13 +66,5 @@ public class DebugSettings implements DebugSettingsMBean
 	public void setComponentUseCheck(boolean check)
 	{
 		application.getDebugSettings().setComponentUseCheck(check);
-	}
-
-	/**
-	 * @see wicket.jmx.DebugSettingsMBean#setSerializeSessionAttributes(boolean)
-	 */
-	public void setSerializeSessionAttributes(boolean serialize)
-	{
-		application.getDebugSettings().setSerializeSessionAttributes(serialize);
 	}
 }

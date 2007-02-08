@@ -48,36 +48,6 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 */
 	public void setAttribute(Request request, String name, Object value)
 	{
-		// Do some extra profiling/ debugging. This can be a great help
-		// just for testing whether your webbapp will behave when using
-		// session replication
-		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
-		{
-			if (value instanceof Page)
-			{
-				((Page<?>)value).detach();
-			}
-			String valueTypeName = (value != null ? value.getClass().getName() : "null");
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				new ObjectOutputStream(out).writeObject(value);
-				log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
-						+ Bytes.bytes(out.size()));
-			}
-			catch (Exception e)
-			{
-				// trigger serialization again, but this time gather some more
-				// info
-				Objects.checkSerializable(value);
-				// this should never happen
-				throw new WicketRuntimeException(
-						"first pass of serialization failed, but the second one "
-								+ "(that should gather extended information) passed? Please "
-								+ "report this error to the Wicket team", e);
-			}
-		}
-
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)

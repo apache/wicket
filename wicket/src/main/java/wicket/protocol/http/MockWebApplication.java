@@ -211,8 +211,6 @@ public class MockWebApplication
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
 		this.application.getResourceSettings().setResourcePollFrequency(null);
 
-		this.application.getDebugSettings().setSerializeSessionAttributes(false);
-
 		createRequestCycle();
 	}
 
