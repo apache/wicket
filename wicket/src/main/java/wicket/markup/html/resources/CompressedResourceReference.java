@@ -22,7 +22,6 @@ import wicket.markup.html.CompressedPackageResource;
 import wicket.markup.html.PackageResource;
 
 /**
- * 
  * A static resource reference which can be transferred to the browser using the
  * gzip compression. Reduces the download size of for example javascript
  * resources.
@@ -36,16 +35,16 @@ public class CompressedResourceReference extends ResourceReference
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 * 
-	 * @param scope
-	 * @param name
+	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
 	public CompressedResourceReference(Class scope, String name)
 	{
 		super(scope, name);
 	}
 
+	/**
+	 * @see wicket.ResourceReference#newResource()
+	 */
 	protected Resource newResource()
 	{
 		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(),
@@ -60,6 +59,5 @@ public class CompressedResourceReference extends ResourceReference
 					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
-
 	}
 }
