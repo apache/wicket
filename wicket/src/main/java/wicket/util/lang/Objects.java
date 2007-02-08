@@ -139,9 +139,6 @@ public final class Objects
 		}
 	}
 
-	/** defaults for primitives. */
-	static HashMap primitiveDefaults = new HashMap();
-
 	/** Type tag meaning java.math.BigDecimal. */
 	private static final int BIGDEC = 9;
 
@@ -187,6 +184,9 @@ public final class Objects
 
 	/** Type tag meaning short. */
 	private static final int SHORT = 3;
+
+	/** defaults for primitives. */
+	static HashMap primitiveDefaults = new HashMap();
 
 	static
 	{
@@ -385,11 +385,13 @@ public final class Objects
 
 	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The
-	 * object must be fully serializable to be cloned.
+	 * object must be fully serializable to be cloned. No extra debug info is
+	 * gathered.
 	 * 
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
+	 * @see #cloneObject(Object, boolean)
 	 */
 	public static Object cloneObject(final Object object)
 	{
@@ -1052,7 +1054,8 @@ public final class Objects
 	 */
 	public static long sizeof(final Object object)
 	{
-		if (object == null) return 0;
+		if (object == null)
+			return 0;
 		try
 		{
 			final ByteCountingOutputStream out = new ByteCountingOutputStream();
