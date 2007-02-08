@@ -190,8 +190,6 @@ public class MockWebApplication extends WebApplication
 		// initialisation
 		this.internalInit();
 		
-		getDebugSettings().setSerializeSessionAttributes(false);
-		
 		// Call init method of web application
 		this.init();
 		

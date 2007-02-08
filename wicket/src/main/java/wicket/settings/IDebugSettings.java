@@ -60,17 +60,4 @@ public interface IDebugSettings
 	 * 
 	 */
 	boolean isAjaxDebugModeEnabled();
-
-	/**
-	 * Sets the seriaalize session attributes setting
-	 * 
-	 * @param serialize
-	 */
-	void setSerializeSessionAttributes(boolean serialize);
-
-	/**
-	 * @return true if serialize session attributes is enabled, false otherwise
-	 */
-	boolean getSerializeSessionAttributes();
-
 }
