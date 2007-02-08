@@ -16,14 +16,12 @@
  */
 package wicket.jmx;
 
-
 /**
  * Exposes Application related functionality for JMX.
  * 
  * @author eelcohillenius
  */
-public class DebugSettings implements DebugSettingsMBean
-{
+public class DebugSettings implements DebugSettingsMBean {
 	private final wicket.Application application;
 
 	/**
@@ -31,56 +29,35 @@ public class DebugSettings implements DebugSettingsMBean
 	 * 
 	 * @param application
 	 */
-	public DebugSettings(wicket.Application application)
-	{
+	public DebugSettings(wicket.Application application) {
 		this.application = application;
 	}
 
 	/**
 	 * @see wicket.jmx.DebugSettingsMBean#getComponentUseCheck()
 	 */
-	public boolean getComponentUseCheck()
-	{
+	public boolean getComponentUseCheck() {
 		return application.getDebugSettings().getComponentUseCheck();
-	}
-
-	/**
-	 * @see wicket.jmx.DebugSettingsMBean#getSerializeSessionAttributes()
-	 */
-	public boolean getSerializeSessionAttributes()
-	{
-		return application.getDebugSettings().getSerializeSessionAttributes();
 	}
 
 	/**
 	 * @see wicket.jmx.DebugSettingsMBean#isAjaxDebugModeEnabled()
 	 */
-	public boolean isAjaxDebugModeEnabled()
-	{
+	public boolean isAjaxDebugModeEnabled() {
 		return application.getDebugSettings().isAjaxDebugModeEnabled();
 	}
 
 	/**
 	 * @see wicket.jmx.DebugSettingsMBean#setAjaxDebugModeEnabled(boolean)
 	 */
-	public void setAjaxDebugModeEnabled(boolean enable)
-	{
+	public void setAjaxDebugModeEnabled(boolean enable) {
 		application.getDebugSettings().setAjaxDebugModeEnabled(enable);
 	}
 
 	/**
 	 * @see wicket.jmx.DebugSettingsMBean#setComponentUseCheck(boolean)
 	 */
-	public void setComponentUseCheck(boolean check)
-	{
+	public void setComponentUseCheck(boolean check) {
 		application.getDebugSettings().setComponentUseCheck(check);
-	}
-
-	/**
-	 * @see wicket.jmx.DebugSettingsMBean#setSerializeSessionAttributes(boolean)
-	 */
-	public void setSerializeSessionAttributes(boolean serialize)
-	{
-		application.getDebugSettings().setSerializeSessionAttributes(serialize);
 	}
 }
