@@ -16,8 +16,6 @@
  */
 package wicket.protocol.http.portlet;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -33,12 +31,10 @@ import wicket.IPageMap;
 import wicket.Page;
 import wicket.Request;
 import wicket.Session;
-import wicket.WicketRuntimeException;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.session.ISessionStore;
 import wicket.settings.IPageSettings;
-import wicket.util.lang.Bytes;
 import wicket.version.IPageVersionManager;
 import wicket.version.undo.UndoPageVersionManager;
 
@@ -213,27 +209,6 @@ public class PortletSessionStore implements ISessionStore
 	 */
 	public void setAttribute(Request request, String name, Object value)
 	{
-		// Do some extra profiling/ debugging. This can be a great help
-		// just for testing whether your webbapp will behave when using
-		// session replication
-		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
-		{
-			String valueTypeName = (value != null ? value.getClass().getName() : "null");
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				new ObjectOutputStream(out).writeObject(value);
-				log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
-						+ Bytes.bytes(out.size()));
-			}
-			catch (Exception e)
-			{
-				throw new WicketRuntimeException(
-						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
-								+ valueTypeName, e);
-			}
-		}
-
 		WicketPortletRequest webRequest = toPortletRequest(request);
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)

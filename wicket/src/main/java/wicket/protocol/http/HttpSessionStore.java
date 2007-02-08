@@ -16,8 +16,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -25,13 +23,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import wicket.AccessStackPageMap;
-import wicket.Application;
 import wicket.IPageMap;
 import wicket.Request;
 import wicket.Session;
-import wicket.WicketRuntimeException;
-import wicket.util.lang.Bytes;
-import wicket.util.lang.Objects;
 
 /**
  * Default web implementation of {@link wicket.session.ISessionStore} that uses
@@ -118,40 +112,6 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 */
 	public void setAttribute(Request request, String name, Object value)
 	{
-		// Do some extra profiling/ debugging. This can be a great help
-		// just for testing whether your webbapp will behave when using
-		// session replication
-
-		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
-		{
-			// TODO this shouldn't be needed anymore, because this method
-			// should only be called with already detached pages (See
-			// session.touch)
-			// if (value instanceof Page)
-			// {
-			// ((Page)value).internalDetach();
-			// }
-			String valueTypeName = (value != null ? value.getClass().getName() : "null");
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				new ObjectOutputStream(out).writeObject(value);
-				log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
-						+ Bytes.bytes(out.size()));
-			}
-			catch (Exception e)
-			{
-				// trigger serialization again, but this time gather some more
-				// info
-				Objects.checkSerializable(value);
-				// this should never happen
-				throw new WicketRuntimeException(
-						"first pass of serialization failed, but the second one "
-								+ "(that should gather extended information) passed? Please "
-								+ "report this error to the Wicket team", e);
-			}
-		}
-
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)

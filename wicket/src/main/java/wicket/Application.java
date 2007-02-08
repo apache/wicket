@@ -391,7 +391,6 @@ public abstract class Application
 		{
 			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 			getDebugSettings().setComponentUseCheck(true);
-			getDebugSettings().setSerializeSessionAttributes(true);
 			getMarkupSettings().setStripWicketTags(false);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_EXCEPTION_PAGE);
@@ -401,7 +400,6 @@ public abstract class Application
 		{
 			getResourceSettings().setResourcePollFrequency(null);
 			getDebugSettings().setComponentUseCheck(false);
-			getDebugSettings().setSerializeSessionAttributes(false);
 			getMarkupSettings().setStripWicketTags(true);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
