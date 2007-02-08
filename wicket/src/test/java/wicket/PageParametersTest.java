@@ -27,16 +27,6 @@ import junit.framework.TestCase;
 public class PageParametersTest extends TestCase
 {
 	/**
-	 * Parsing of negative numbers on the right side of the assignment didn't
-	 * work, as the minus character was not part of the word pattern.
-	 */
-	public void testNegativeNumberParameter()
-	{
-		PageParameters parameters = new PageParameters("a=-1");
-		assertEquals("-1", parameters.get("a"));
-	}
-
-	/**
 	 * 
 	 */
 	public void test_1()
@@ -77,5 +67,40 @@ public class PageParametersTest extends TestCase
 		{
 			// ok; expected
 		}
+	}
+
+	/**
+	 * Test creation of an array on multiple calls to add.
+	 */
+	public void testArray1()
+	{
+		PageParameters parameters = new PageParameters();
+		parameters.add("a", "1");
+		assertEquals("1", parameters.get("a"));
+		parameters.add("a", "2");
+		Object o = parameters.get("a");
+		assertTrue(o instanceof String[]);
+		String[] a = (String[])o;
+		assertEquals(2, a.length);
+		assertEquals("1", a[0]);
+		assertEquals("2", a[1]);
+		parameters.add("a", "3");
+		o = parameters.get("a");
+		assertTrue(o instanceof String[]);
+		a = (String[])o;
+		assertEquals(3, a.length);
+		assertEquals("1", a[0]);
+		assertEquals("2", a[1]);
+		assertEquals("3", a[2]);
+	}
+
+	/**
+	 * Parsing of negative numbers on the right side of the assignment didn't
+	 * work, as the minus character was not part of the word pattern.
+	 */
+	public void testNegativeNumberParameter()
+	{
+		PageParameters parameters = new PageParameters("a=-1");
+		assertEquals("-1", parameters.get("a"));
 	}
 }
