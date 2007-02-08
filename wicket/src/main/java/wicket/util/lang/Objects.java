@@ -1376,6 +1376,8 @@ public final class Objects
 	 */
 	public static long sizeof(final Object object)
 	{
+		if (object == null)
+			return 0;
 		try
 		{
 			final ByteCountingOutputStream out = new ByteCountingOutputStream();
