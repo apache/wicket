@@ -31,11 +31,6 @@ public interface DebugSettingsMBean
 	boolean getComponentUseCheck();
 
 	/**
-	 * @return true if serialize session attributes is enabled, false otherwise
-	 */
-	boolean getSerializeSessionAttributes();
-
-	/**
 	 * Returns status of ajax debug mode. See {@link IDebugSettings} for details
 	 * 
 	 * @return true if ajax debug mode is enabled, false otherwise
@@ -58,11 +53,4 @@ public interface DebugSettingsMBean
 	 * @param check
 	 */
 	void setComponentUseCheck(boolean check);
-
-	/**
-	 * Sets the seriaalize session attributes setting
-	 * 
-	 * @param serialize
-	 */
-	void setSerializeSessionAttributes(boolean serialize);
 }
