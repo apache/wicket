@@ -44,65 +44,11 @@ import wicket.util.time.Time;
  */
 public final class CompressedPackageResource extends PackageResource
 {
-	private static final long serialVersionUID = 1L;
-
-	private CompressingResourceStream resourceStream;
-
-	protected CompressedPackageResource(Class scope, String path, Locale locale, String style)
-	{
-		super(scope, path, locale, style);
-		resourceStream = new CompressingResourceStream();
-	}
-
-	/**
-	 * Gets the resource for a given set of criteria. Only one resource will be
-	 * loaded for the same criteria.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the class in which you call this method
-	 * @param path
-	 *            The path to the resource
-	 * @param locale
-	 *            The locale of the resource
-	 * @param style
-	 *            The style of the resource (see {@link wicket.Session})
-	 * @return The resource
-	 * @throws PackageResourceBlockedException
-	 *             when the target resource is not accepted by
-	 *             {@link IPackageResourceGuard the package resource guard}.
-	 */
-	public static PackageResource get(final Class scope, final String path, final Locale locale,
-			final String style)
-	{
-		final SharedResources sharedResources = Application.get().getSharedResources();
-
-		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-				true);
-		if (resource == null)
-		{
-			resource = new CompressedPackageResource(scope, path, locale, style);
-			sharedResources.add(scope, path, locale, style, resource);
-		}
-		return resource;
-	}
-
-	/**
-	 * 
-	 * @see wicket.markup.html.PackageResource#getResourceStream()
-	 */
-	@Override
-	public IResourceStream getResourceStream()
-	{
-		return resourceStream;
-	}
-
 	/**
 	 * IResourceStream implementation which compresses the data with gzip if the
 	 * requests header Accept-Encoding contains string gzip
 	 */
-	private class CompressingResourceStream implements IResourceStream
+	private final class CompressingResourceStream implements IResourceStream
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -113,8 +59,76 @@ public final class CompressedPackageResource extends PackageResource
 		private Time timeStamp = null;
 
 		/**
-		 * 
-		 * @return byte[]
+		 * @see wicket.util.resource.IResourceStream#close()
+		 */
+		public void close() throws IOException
+		{
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#getContentType()
+		 */
+		public String getContentType()
+		{
+			return CompressedPackageResource.super.getResourceStream().getContentType();
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#getInputStream()
+		 */
+		public InputStream getInputStream() throws ResourceStreamNotFoundException
+		{
+			if (supportsCompression())
+			{
+				return new ByteArrayInputStream(getCompressedContent());
+			}
+			else
+			{
+				return CompressedPackageResource.super.getResourceStream().getInputStream();
+			}
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#getLocale()
+		 */
+		public Locale getLocale()
+		{
+			return CompressedPackageResource.super.getResourceStream().getLocale();
+		}
+
+		/**
+		 * @see wicket.util.watch.IModifiable#lastModifiedTime()
+		 */
+		public Time lastModifiedTime()
+		{
+			return CompressedPackageResource.super.getResourceStream().lastModifiedTime();
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#length()
+		 */
+		public long length()
+		{
+			if (supportsCompression())
+			{
+				return getCompressedContent().length;
+			}
+			else
+			{
+				return CompressedPackageResource.super.getResourceStream().length();
+			}
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
+		 */
+		public void setLocale(Locale locale)
+		{
+			CompressedPackageResource.super.getResourceStream().setLocale(locale);
+		}
+
+		/**
+		 * @return compressed content
 		 */
 		private byte[] getCompressedContent()
 		{
@@ -149,88 +163,79 @@ public final class CompressedPackageResource extends PackageResource
 				throw new RuntimeException(e);
 			}
 		}
+	}
 
-		/**
-		 * 
-		 * @see wicket.util.resource.IResourceStream#close()
-		 */
-		public void close() throws IOException
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Gets the resource for a given set of criteria. Only one resource will be
+	 * loaded for the same criteria.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the class in which you call this method
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link wicket.Session})
+	 * @return The resource
+	 * @throws PackageResourceBlockedException
+	 *             when the target resource is not accepted by
+	 *             {@link IPackageResourceGuard the package resource guard}.
+	 */
+	public static PackageResource get(final Class<?> scope, final String path, final Locale locale,
+			final String style)
+	{
+		final SharedResources sharedResources = Application.get().getSharedResources();
+
+		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
+				true);
+		if (resource == null)
 		{
-
+			resource = new CompressedPackageResource(scope, path, locale, style);
+			sharedResources.add(scope, path, locale, style, resource);
 		}
+		return resource;
+	}
 
-		/**
-		 * 
-		 * @see wicket.util.resource.IResourceStream#getContentType()
-		 */
-		public String getContentType()
-		{
-			return CompressedPackageResource.super.getResourceStream().getContentType();
-		}
+	private final CompressingResourceStream resourceStream;
 
-		/**
-		 * 
-		 * @see wicket.util.resource.IResourceStream#getInputStream()
-		 */
-		public InputStream getInputStream() throws ResourceStreamNotFoundException
-		{
-			if (supportsCompression())
-			{
-				return new ByteArrayInputStream(getCompressedContent());
-			}
-			else
-			{
-				return CompressedPackageResource.super.getResourceStream().getInputStream();
-			}
-		}
-
-		/**
-		 * 
-		 * @see wicket.util.resource.IResourceStream#getLocale()
-		 */
-		public Locale getLocale()
-		{
-			return CompressedPackageResource.super.getResourceStream().getLocale();
-		}
-
-		/**
-		 * 
-		 * @see wicket.util.resource.IResourceStream#length()
-		 */
-		public long length()
-		{
-			if (supportsCompression())
-			{
-				return getCompressedContent().length;
-			}
-			else
-			{
-				return CompressedPackageResource.super.getResourceStream().length();
-			}
-		}
-
-		/**
-		 * 
-		 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
-		 */
-		public void setLocale(Locale locale)
-		{
-			CompressedPackageResource.super.getResourceStream().setLocale(locale);
-		}
-
-		/**
-		 * 
-		 * @see wicket.util.watch.IModifiable#lastModifiedTime()
-		 */
-		public Time lastModifiedTime()
-		{
-			return CompressedPackageResource.super.getResourceStream().lastModifiedTime();
-		}
+	/**
+	 * Hidden constructor.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource
+	 */
+	protected CompressedPackageResource(Class<?> scope, String path, Locale locale, String style)
+	{
+		super(scope, path, locale, style);
+		resourceStream = new CompressingResourceStream();
 	}
 
 	/**
+	 * IResourceStream implementation which compresses the data with gzip if the
+	 * requests header Accept-Encoding contains string gzip
 	 * 
-	 * @return boolean
+	 * @see wicket.markup.html.PackageResource#getResourceStream()
+	 */
+	@Override
+	public IResourceStream getResourceStream()
+	{
+		return resourceStream;
+	}
+
+	/**
+	 * @return Whether the client supports compression
 	 */
 	private boolean supportsCompression()
 	{
@@ -247,7 +252,6 @@ public final class CompressedPackageResource extends PackageResource
 	}
 
 	/**
-	 * 
 	 * @see wicket.markup.html.WebResource#setHeaders(wicket.protocol.http.WebResponse)
 	 */
 	@Override
