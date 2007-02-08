@@ -17,7 +17,6 @@
 package wicket.protocol.http;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -31,8 +30,8 @@ import wicket.IPageMap;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.util.io.DebuggingObjectOutputStream;
 import wicket.util.lang.Bytes;
+import wicket.util.lang.Objects;
 
 /**
  * Default web implementation of {@link wicket.session.ISessionStore} that uses
@@ -122,6 +121,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		// Do some extra profiling/ debugging. This can be a great help
 		// just for testing whether your webbapp will behave when using
 		// session replication
+
 		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
 		{
 			// TODO this shouldn't be needed anymore, because this method
@@ -141,15 +141,9 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 			}
 			catch (Exception e)
 			{
-				// trigger serialization again, but this time gather some more info
-				try
-				{
-					new DebuggingObjectOutputStream().writeObject(value);
-				}
-				catch (IOException e1)
-				{
-					throw new RuntimeException(e1);
-				}
+				// trigger serialization again, but this time gather some more
+				// info
+				Objects.checkSerializable(value);
 				// this should never happen
 				throw new WicketRuntimeException(
 						"first pass of serialization failed, but the second one "
