@@ -55,7 +55,7 @@
 				<filtering>false</filtering>
 				<directory>src/java</directory>
 				<includes>
-					<include>**</include>
+					<include>**/*</include>
 				</includes>
 			</resource>
 		</resources>
