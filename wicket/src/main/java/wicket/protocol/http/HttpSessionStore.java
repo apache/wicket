@@ -41,6 +41,77 @@ import wicket.util.lang.Bytes;
 public class HttpSessionStore extends AbstractHttpSessionStore
 {
 	/**
+	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
+	 *      wicket.Session)
+	 */
+	public IPageMap createPageMap(String name, Session session)
+	{
+		return new AccessStackPageMap(name, session);
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request,
+	 *      java.lang.String)
+	 */
+	public Object getAttribute(Request request, String name)
+	{
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
+		if (httpSession != null)
+		{
+			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name);
+		}
+		return null;
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#getAttributeNames(Request)
+	 */
+	public List getAttributeNames(Request request)
+	{
+		List list = new ArrayList();
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
+		if (httpSession != null)
+		{
+			final Enumeration names = httpSession.getAttributeNames();
+			final String prefix = getSessionAttributePrefix(webRequest);
+			while (names.hasMoreElements())
+			{
+				final String name = (String)names.nextElement();
+				if (name.startsWith(prefix))
+				{
+					list.add(name.substring(prefix.length()));
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#removeAttribute(Request,java.lang.String)
+	 */
+	public void removeAttribute(Request request, String name)
+	{
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
+		if (httpSession != null)
+		{
+			String attributeName = getSessionAttributePrefix(webRequest) + name;
+			IRequestLogger logger = application.getRequestLogger();
+			if (logger != null)
+			{
+				Object value = httpSession.getAttribute(attributeName);
+				if (value != null)
+				{
+					logger.objectRemoved(value);
+				}
+			}
+			httpSession.removeAttribute(attributeName);
+		}
+	}
+
+	/**
 	 * @see wicket.session.ISessionStore#setAttribute(Request,java.lang.String,
 	 *      java.lang.Object)
 	 */
@@ -52,11 +123,12 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
 		{
 			// TODO this shouldn't be needed anymore, because this method
-			// should only be called with already detached pages (See session.touch)
-//			if (value instanceof Page)
-//			{
-//				((Page)value).internalDetach();
-//			}
+			// should only be called with already detached pages (See
+			// session.touch)
+			// if (value instanceof Page)
+			// {
+			// ((Page)value).internalDetach();
+			// }
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try
 			{
@@ -96,68 +168,6 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request,
-	 *      java.lang.String)
-	 */
-	public Object getAttribute(Request request, String name)
-	{
-		WebRequest webRequest = toWebRequest(request);
-		HttpSession httpSession = getHttpSession(webRequest);
-		if (httpSession != null)
-		{
-			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name);
-		}
-		return null;
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#removeAttribute(Request,java.lang.String)
-	 */
-	public void removeAttribute(Request request, String name)
-	{
-		WebRequest webRequest = toWebRequest(request);
-		HttpSession httpSession = getHttpSession(webRequest);
-		if (httpSession != null)
-		{
-			String attributeName = getSessionAttributePrefix(webRequest) + name;
-			IRequestLogger logger = application.getRequestLogger();
-			if (logger != null)
-			{
-				Object value = httpSession.getAttribute(attributeName);
-				if (value != null)
-				{
-					logger.objectRemoved(value);
-				}
-			}
-			httpSession.removeAttribute(attributeName);
-		}
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#getAttributeNames(Request)
-	 */
-	public List getAttributeNames(Request request)
-	{
-		List list = new ArrayList();
-		WebRequest webRequest = toWebRequest(request);
-		HttpSession httpSession = getHttpSession(webRequest);
-		if (httpSession != null)
-		{
-			final Enumeration names = httpSession.getAttributeNames();
-			final String prefix = getSessionAttributePrefix(webRequest);
-			while (names.hasMoreElements())
-			{
-				final String name = (String)names.nextElement();
-				if (name.startsWith(prefix))
-				{
-					list.add(name.substring(prefix.length()));
-				}
-			}
-		}
-		return list;
-	}
-
-	/**
 	 * Gets the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
 	 * 
@@ -169,14 +179,5 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	private String getSessionAttributePrefix(final WebRequest request)
 	{
 		return application.getSessionAttributePrefix(request);
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
-	 *      wicket.Session)
-	 */
-	public IPageMap createPageMap(String name, Session session)
-	{
-		return new AccessStackPageMap(name, session);
 	}
 }
