@@ -64,13 +64,46 @@ public class HeaderResponse implements IHeaderResponse
 	 */
 	public final void renderCSSReference(ResourceReference reference)
 	{
-		if (wasRendered(reference) == false)
+		CharSequence url = RequestCycle.get().urlFor(reference);
+		renderCSSReference(url.toString(), null);
+	}
+	
+	/**
+	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(wicket.ResourceReference, java.lang.String)
+	 */
+	public void renderCSSReference(ResourceReference reference, String media)
+	{
+		CharSequence url = RequestCycle.get().urlFor(reference);
+		renderCSSReference(url.toString(), media);
+	}
+
+	/**
+	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(java.lang.String)
+	 */
+	public void renderCSSReference(String url)
+	{
+		renderCSSReference(url, null);
+	}
+	
+	/**
+	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(java.lang.String, java.lang.String)
+	 */
+	public void renderCSSReference(String url, String media)
+	{
+		List<Object> token = Arrays.asList(new Object[] { "css", url, media });
+		if (wasRendered(token) == false)
 		{
-			final CharSequence url = RequestCycle.get().urlFor(reference);
 			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 			response.write(url);
-			response.println("\"></link>");
-			markRendered(reference);
+			response.write("\"");
+			if (media != null)
+			{
+				response.write(" media=\"");
+				response.write(media);
+				response.write("\"");
+			}
+			response.println(" />");
+			markRendered(token);
 		}
 	}
 
@@ -79,13 +112,24 @@ public class HeaderResponse implements IHeaderResponse
 	 */
 	public final void renderJavascriptReference(ResourceReference reference)
 	{
-		if (wasRendered(reference) == false)
+		CharSequence url = RequestCycle.get().urlFor(reference);
+		renderJavascriptReference(url.toString());
+	}
+
+	/**
+	 * @see wicket.markup.html.IHeaderResponse#renderJavascriptReference(java.lang.String)
+	 */
+	public final void renderJavascriptReference(String url)
+	{
+		List<Object> token = Arrays.asList(new Object[] { "javascript", url });
+		if (wasRendered(token) == false)
 		{
-			JavascriptUtils.writeJavascriptUrl(getResponse(), RequestCycle.get().urlFor(reference));
-			markRendered(reference);
+			JavascriptUtils.writeJavascriptUrl(getResponse(), url);
+			markRendered(token);
 		}
 	}
 
+	
 	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderJavascript(java.lang.CharSequence, java.lang.String)
 	 */

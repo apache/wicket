@@ -16,22 +16,16 @@
  */
 package wicket.behavior;
 
-import static wicket.behavior.HeaderContributor.forCss;
-import static wicket.behavior.HeaderContributor.forJavaScript;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
-import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
-import wicket.model.LoadableDetachableModel;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.util.string.AppendingStringBuffer;
-import wicket.util.string.JavascriptUtils;
 
 /**
  * A {@link wicket.behavior.AbstractHeaderContributor} behavior that is
@@ -46,21 +40,23 @@ import wicket.util.string.JavascriptUtils;
  * </pre>
  * 
  * @author Eelco Hillenius
+ * @author Matej Knopp
  */
-// TODO Cache pattern results, at least the ones that were fetched by callin the
-// javascript or css methods. The cache could be put in an application scoped
-// meta data object to avoid the use of a static map
 public class HeaderContributor extends AbstractHeaderContributor
 {
-	// Appends a path to the string buffer, adding the context path on the front
-	// if it's not
+	// adds the context path on the front of the location, if it's not
 	// a fully-qualified URL.
-	private static final void appendPathWithContext(AppendingStringBuffer b, String location)
+	private static final String returnLocationWithContextPath(String location)
 	{
 
 		// WICKET-59 allow external URLs.
-		if (!location.startsWith("http://") && !location.startsWith("https://"))
+		if (location.startsWith("http://") || location.startsWith("https://"))
 		{
+			return location;
+		}
+		else
+		{
+			StringBuilder b = new StringBuilder();
 			String contextPath = Application.get().getApplicationSettings().getContextPath();
 			if (contextPath == null)
 			{
@@ -76,278 +72,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 			{
 				b.append("/");
 			}
-		}
-		b.append(location);
-	}
-
-	/**
-	 * Contributes a reference to a javascript file relative to the context
-	 * path.
-	 */
-	private static final class JavaScriptHeaderContributor extends StringHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param location
-		 *            the location of the CSS file relative to the context path.
-		 */
-		public JavaScriptHeaderContributor(final String location)
-		{
-			super(new LoadableDetachableModel<CharSequence>()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public CharSequence load()
-				{
-					if (location == null)
-					{
-						return null;
-					}
-					AppendingStringBuffer b = new AppendingStringBuffer();
-					b.append("<script type=\"text/javascript\" src=\"");
-					appendPathWithContext(b, location);
-					b.append("\"></script>");
-					return b;
-				}
-			});
-		}
-	}
-
-	/**
-	 * Contributes a reference to a css file relative to the context path.
-	 */
-	private static final class CSSHeaderContributor extends StringHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param location
-		 *            the location of the CSS file relative to the context path.
-		 */
-		public CSSHeaderContributor(final String location)
-		{
-			this(location, null);
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param location
-		 *            the location of the CSS file relative to the context path,
-		 *            or a fully qualified http url.
-		 * @param media
-		 *            the media type for this CSS ("print", "screen", etc.)
-		 */
-		public CSSHeaderContributor(final String location, final String media)
-		{
-			super(new LoadableDetachableModel<CharSequence>()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public CharSequence load()
-				{
-					if (location == null)
-					{
-						return "";
-					}
-					AppendingStringBuffer b = new AppendingStringBuffer();
-					b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-					appendPathWithContext(b, location);
-					if (media != null)
-					{
-						b.append("\" media=\"");
-						b.append(media);
-					}
-					b.append("\" />");
-					return b;
-				}
-			});
-		}
-	}
-
-	/**
-	 * prints a css resource reference.
-	 */
-	private static final class CSSReferenceHeaderContributor
-			extends
-				ResourceReferenceHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		private String media;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param scope
-		 *            The scope of the reference (typically the calling class)
-		 * @param name
-		 *            The name of the reference.
-		 * @param media
-		 *            The media type for this CSS ("print", "screen", etc.)
-		 */
-		public CSSReferenceHeaderContributor(Class scope, String name, String media)
-		{
-			super(scope, name);
-			this.media = media;
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param reference
-		 * @param media
-		 *            The media type for this CSS ("print", "screen", etc.)
-		 */
-		public CSSReferenceHeaderContributor(ResourceReference reference, String media)
-		{
-			super(reference);
-			this.media = media;
-		}
-
-		/**
-		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
-		 */
-		public void renderHead(IHeaderResponse headerResponse)
-		{
-			Response response = headerResponse.getResponse();
-			final CharSequence url = RequestCycle.get().urlFor(getResourceReference());
-			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-			response.write(url);
-			if (media != null)
-			{
-				response.write("\" media=\"");
-				response.write(media);
-			}
-			response.println("\" />");
-		}
-	}
-
-	/**
-	 * prints a javascript resource reference.
-	 */
-	private static final class JavaScriptReferenceHeaderContributor
-			extends
-				ResourceReferenceHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param scope
-		 *            The scope of the reference (typically the calling class)
-		 * @param name
-		 *            The name .
-		 */
-		public JavaScriptReferenceHeaderContributor(Class scope, String name)
-		{
-			super(scope, name);
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param reference
-		 */
-		public JavaScriptReferenceHeaderContributor(ResourceReference reference)
-		{
-			super(reference);
-		}
-
-		/**
-		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
-		 */
-		public void renderHead(IHeaderResponse response)
-		{
-			final CharSequence url = RequestCycle.get().urlFor(getResourceReference());
-			JavascriptUtils.writeJavascriptUrl(response.getResponse(), url);
-		}
-	}
-
-	/**
-	 * Wraps a {@link ResourceReference} and knows how to print a header
-	 * statement based on that resource. Default implementations are
-	 * {@link JavaScriptReferenceHeaderContributor} and
-	 * {@link CSSReferenceHeaderContributor}, which print out javascript
-	 * statements and css ref statements respectively.
-	 */
-	private static abstract class ResourceReferenceHeaderContributor implements IHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** the pre calculated hash code. */
-		private final int hash;
-
-		/** the package resource reference. */
-		private final ResourceReference resourceReference;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param scope
-		 *            The scope of the reference (typically the calling class)
-		 * @param name
-		 *            The name of the reference (typically the name of the
-		 *            packaged resource, like 'myscripts.js').
-		 */
-		public ResourceReferenceHeaderContributor(Class scope, String name)
-		{
-			this(new ResourceReference(scope, name));
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param reference
-		 */
-		public ResourceReferenceHeaderContributor(ResourceReference reference)
-		{
-			this.resourceReference = reference;
-			int result = 17;
-			result = 37 * result + getClass().hashCode();
-			result = 37 * result + resourceReference.hashCode();
-			hash = result;
-		}
-
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (obj.getClass().equals(getClass()))
-			{
-				ResourceReferenceHeaderContributor that = (ResourceReferenceHeaderContributor)obj;
-				return this.resourceReference.equals(that.resourceReference);
-			}
-			return false;
-		}
-
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode()
-		{
-			return hash;
-		}
-
-		/**
-		 * Gets the package resource reference.
-		 * 
-		 * @return the package resource reference
-		 */
-		protected final ResourceReference getResourceReference()
-		{
-			return resourceReference;
+			b.append(location);
+			return b.toString();
 		}
 	}
 
@@ -366,7 +92,15 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forCss(final String location, final String media)
 	{
-		return new HeaderContributor(new CSSHeaderContributor(location, media));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(returnLocationWithContextPath(location), media);
+			}
+		});
 	}
 
 	/**
@@ -380,7 +114,15 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forCss(final String location)
 	{
-		return new HeaderContributor(new CSSHeaderContributor(location, null));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(returnLocationWithContextPath(location));
+			}
+		});
 	}
 
 	/**
@@ -392,9 +134,18 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(ResourceReference reference, final String media)
+	public static final HeaderContributor forCss(final ResourceReference reference,
+			final String media)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(reference, media));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(reference, media);
+			}
+		});
 	}
 
 	/**
@@ -405,9 +156,17 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * 
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(ResourceReference reference)
+	public static final HeaderContributor forCss(final ResourceReference reference)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(reference, null));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -421,7 +180,15 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forJavaScript(final String location)
 	{
-		return new HeaderContributor(new JavaScriptHeaderContributor(location));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderJavascriptReference(returnLocationWithContextPath(location));
+			}
+		});
 	}
 
 	/**
@@ -441,7 +208,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	public static final HeaderContributor forCss(final Class scope, final String path,
 			final String media)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path, media));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderCSSReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -458,7 +234,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forCss(final Class scope, final String path)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path, null));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderCSSReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -475,7 +260,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forJavaScript(final Class scope, final String path)
 	{
-		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(scope, path));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderJavascriptReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -488,7 +282,15 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forJavaScript(final ResourceReference reference)
 	{
-		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(reference));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderJavascriptReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -565,7 +367,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final void addCssReference(final Class scope, final String path)
 	{
-		addContributor(new CSSReferenceHeaderContributor(scope, path, null));
+		addContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				ResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderCSSReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -581,7 +392,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final void addJavaScriptReference(final Class scope, final String path)
 	{
-		addContributor(new JavaScriptReferenceHeaderContributor(scope, path));
+		addContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				ResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderJavascriptReference(reference);
+			}
+		});
 	}
 
 	/**

@@ -43,6 +43,15 @@ public interface IHeaderResponse extends Serializable
 	public void renderJavascriptReference(ResourceReference reference);
 
 	/**
+	 * Writes a javascript reference, if the specified reference hasn't been
+	 * rendered yet.
+	 * 
+	 * @param url
+	 *            url of the the javascript resource
+	 */
+	public void renderJavascriptReference(String url);
+	
+	/**
 	 * Renders javascript code to the response, if the javascript has not
 	 * already been rendered.
 	 * 
@@ -67,6 +76,37 @@ public interface IHeaderResponse extends Serializable
 	 *            resource reference pointing to the CSS resource
 	 */
 	public void renderCSSReference(ResourceReference reference);
+	
+	/**
+	 * Writes a CSS reference, if the specified reference hasn't been rendered
+	 * yet.
+	 * 
+	 * @param url
+	 *            url of the CSS resource
+	 */
+	public void renderCSSReference(String url);
+	
+	/**
+	 * Writes a CSS reference, if the specified reference hasn't been rendered
+	 * yet.
+	 * 
+	 * @param reference
+	 *            resource reference pointing to the CSS resource
+	 * @param media
+	 * 			  the media type for this CSS ("print", "screen", etc.)
+	 */
+	public void renderCSSReference(ResourceReference reference, String media);
+	
+	/**
+	 * Writes a CSS reference, if the specified reference hasn't been rendered
+	 * yet.
+	 * 
+	 * @param url
+	 *            url of the CSS resource
+	 * @param media
+	 * 			  the media type for this CSS ("print", "screen", etc.)
+	 */
+	public void renderCSSReference(String url, String media);
 
 	/**
 	 * Renders an arbitrary string to the header. The string is only rendered if
