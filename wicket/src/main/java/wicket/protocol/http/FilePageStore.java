@@ -30,10 +30,8 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import wicket.util.concurrent.ConcurrentHashMap;
-import wicket.util.io.DebuggingObjectOutputStream;
 import wicket.util.lang.Objects;
 
 /**
@@ -492,10 +490,11 @@ public class FilePageStore implements IPageStore
 			}
 			catch (Exception e)
 			{
-				// trigger serialization again, but this time gather some more info
+				// trigger serialization again, but this time gather some more
+				// info
 				try
 				{
-					new DebuggingObjectOutputStream().writeObject(page);
+					Objects.checkSerializable(page);
 				}
 				catch (Exception e1)
 				{
