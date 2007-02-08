@@ -26,14 +26,14 @@ import wicket.markup.html.PackageResourceReference;
 
 /**
  * 
- * A static resource reference which can be transferred to the browser
- * using the gzip compression. Reduces the download size of for example 
- * javascript resources.
+ * A static resource reference which can be transferred to the browser using the
+ * gzip compression. Reduces the download size of for example javascript
+ * resources.
  * 
  * see {@link PackageResourceReference} and {@link CompressedPackageResource}
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  * @deprecated Will be renamed to CompressedResourceReference in Wicket 2.0
  */
 public class CompressedPackageResourceReference extends PackageResourceReference
@@ -41,23 +41,8 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 * @param application
-	 * @param scope
-	 * @param name
-	 * @param locale
-	 * @param style
-	 */
-	public CompressedPackageResourceReference(Application application, Class scope, String name, Locale locale, String style)
-	{
-		super(application, scope, name, locale, style);
-	}
-
-	/**
-	 * Construct.
-	 * @param application
-	 * @param scope
-	 * @param name
+	 * @see PackageResourceReference#PackageResourceReference(Application,
+	 *      Class, String)
 	 */
 	public CompressedPackageResourceReference(Application application, Class scope, String name)
 	{
@@ -65,9 +50,18 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	}
 
 	/**
-	 * Construct.
-	 * @param application
-	 * @param name
+	 * @see PackageResourceReference#PackageResourceReference(Application,
+	 *      Class, String, Locale, String)
+	 */
+	public CompressedPackageResourceReference(Application application, Class scope, String name,
+			Locale locale, String style)
+	{
+		super(application, scope, name, locale, style);
+	}
+
+	/**
+	 * @see PackageResourceReference#PackageResourceReference(Application,
+	 *      String)
 	 */
 	public CompressedPackageResourceReference(Application application, String name)
 	{
@@ -75,19 +69,20 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	}
 
 	/**
-	 * Construct.
-	 * @param scope
-	 * @param name
+	 * @see PackageResourceReference#PackageResourceReference(Class, String)
 	 */
 	public CompressedPackageResourceReference(Class scope, String name)
 	{
 		super(scope, name);
 	}
-	
+
+	/**
+	 * @see wicket.markup.html.PackageResourceReference#newResource()
+	 */
 	protected Resource newResource()
 	{
-		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(), getLocale(),
-				getStyle());
+		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(),
+				getLocale(), getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();
@@ -98,6 +93,6 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
-		
-	}	
+
+	}
 }
