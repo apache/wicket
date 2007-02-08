@@ -120,7 +120,7 @@ public final class Tester implements CommandRunnerObserver {
 
 		activeThreads = 0;
 		Server server = new Server(port);
-		WebAppContext ctx = new WebAppContext("./src/webapp", "/");
+		WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
 		server.addHandler(ctx);
 		server.start();
 
