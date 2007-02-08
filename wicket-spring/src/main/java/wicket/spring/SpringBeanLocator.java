@@ -101,7 +101,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			{
 				throw new RuntimeException("SpringBeanLocator could not find class ["
 						+ beanTypeName + "] needed to locate the ["
-						+ ((beanId != null) ? (beanId) : ("bean name not specified"))
+						+ ((beanId != null) ? (beanId) : ("bean id not specified"))
 						+ "] bean", e);
 			}
 		}
@@ -230,7 +230,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 		catch (NoSuchBeanDefinitionException e)
 		{
-			throw new IllegalStateException("bean with name ["
+			throw new IllegalStateException("bean with id ["
 					+ name + "] and class [" + clazz.getName() + "] not found");
 		}
 	}
