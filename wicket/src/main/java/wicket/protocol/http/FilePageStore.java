@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import wicket.Application;
 import wicket.Page;
 import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
+import wicket.util.io.DebuggingObjectOutputStream;
 import wicket.util.lang.Objects;
 
 /**
@@ -191,8 +192,17 @@ public class FilePageStore implements IPageStore
 		}
 		catch (Exception e)
 		{
-			log.error("Error saving page " + page.getId() + "," + page.getCurrentVersionNumber()
-					+ " for the sessionid " + sessionId, e);
+			// trigger serialization again, but this time gather some more info
+			try
+			{
+				new DebuggingObjectOutputStream().writeObject(page);
+			}
+			catch (Exception e1)
+			{
+				log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
+						+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
+						+ ": " + e1.getMessage(), e1);
+			}
 		}
 		finally
 		{

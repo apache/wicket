@@ -17,6 +17,7 @@
 package wicket.protocol.http;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -31,6 +32,7 @@ import wicket.Page;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.util.io.DebuggingObjectOutputStream;
 import wicket.util.lang.Bytes;
 
 /**
@@ -54,7 +56,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		{
 			if (value instanceof Page)
 			{
-				((Page)value).detach();
+				((Page<?>)value).detach();
 			}
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try
@@ -66,9 +68,20 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 			}
 			catch (Exception e)
 			{
+				// trigger serialization again, but this time gather some more info
+				try
+				{
+					new DebuggingObjectOutputStream().writeObject(value);
+				}
+				catch (IOException e1)
+				{
+					throw new RuntimeException(e1);
+				}
+				// this should never happen
 				throw new WicketRuntimeException(
-						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class="
-								+ valueTypeName + ",attribute=" + name + ", value=" + value, e);
+						"first pass of serialization failed, but the second one "
+								+ "(that should gather extended information) passed? Please "
+								+ "report this error to the Wicket team", e);
 			}
 		}
 
