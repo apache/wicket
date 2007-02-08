@@ -188,7 +188,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 			String msg = "more then one bean of type [["
 					+ clazz.getName()
-					+ "]] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict. Beans that match type [[";
+					+ "]] found, you have to specify the name of the bean (@SpringBean(id=\"foo\")) in order to resolve this conflict. Beans that match type [[";
 
 			Iterator beanNames = beans.keySet().iterator();
 			while (beanNames.hasNext())
