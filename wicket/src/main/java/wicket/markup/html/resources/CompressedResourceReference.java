@@ -36,16 +36,16 @@ public class CompressedResourceReference extends ResourceReference
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 * 
-	 * @param scope
-	 * @param name
+	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
-	public CompressedResourceReference(Class scope, String name)
+	public CompressedResourceReference(Class<?> scope, String name)
 	{
 		super(scope, name);
 	}
 
+	/**
+	 * @see wicket.ResourceReference#newResource()
+	 */
 	@Override
 	protected Resource newResource()
 	{
@@ -61,6 +61,5 @@ public class CompressedResourceReference extends ResourceReference
 					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
-
 	}
 }
