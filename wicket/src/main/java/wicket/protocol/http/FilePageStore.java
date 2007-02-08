@@ -30,8 +30,10 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Page;
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import wicket.util.concurrent.ConcurrentHashMap;
+import wicket.util.io.DebuggingObjectOutputStream;
 import wicket.util.lang.Objects;
 
 /**
@@ -49,9 +51,9 @@ public class FilePageStore implements IPageStore
 	protected static Log log = LogFactory.getLog(FilePageStore.class);
 
 	private final File defaultWorkDir;
-	
+
 	private final ConcurrentHashMap storePageMap;
-	
+
 	private final PageSavingThread thread;
 
 	private final String appName;
@@ -61,13 +63,15 @@ public class FilePageStore implements IPageStore
 	 */
 	public FilePageStore()
 	{
-		this((File)((WebApplication)Application.get()).getServletContext()
-				.getAttribute("javax.servlet.context.tempdir"));
+		this((File)((WebApplication)Application.get()).getServletContext().getAttribute(
+				"javax.servlet.context.tempdir"));
 	}
 
 	/**
 	 * Construct.
-	 * @param dir The directory to save to.
+	 * 
+	 * @param dir
+	 *            The directory to save to.
 	 */
 	public FilePageStore(File dir)
 	{
@@ -75,10 +79,10 @@ public class FilePageStore implements IPageStore
 		storePageMap = new ConcurrentHashMap();
 		thread = new PageSavingThread();
 		appName = Application.get().getApplicationKey();
-		Thread t = new Thread(thread,"FilePageStoreThread-" +appName);
+		Thread t = new Thread(thread, "FilePageStoreThread-" + appName);
 		t.setDaemon(true);
 		t.start();
-		
+
 	}
 
 	/**
@@ -118,9 +122,11 @@ public class FilePageStore implements IPageStore
 					if (page != null && log.isDebugEnabled())
 					{
 						long t3 = System.currentTimeMillis();
-						log.debug("restoring page " + page.getClass() + "[" + page.getNumericId() + ","
-								+ page.getCurrentVersionNumber() + "] size: " + pageData.length +  " for session " + sessionId + " took "
-								+ (t2 - t1) + " miliseconds to read in and " + (t3-t2) + " miliseconds to deserialize");
+						log.debug("restoring page " + page.getClass() + "[" + page.getNumericId()
+								+ "," + page.getCurrentVersionNumber() + "] size: "
+								+ pageData.length + " for session " + sessionId + " took "
+								+ (t2 - t1) + " miliseconds to read in and " + (t3 - t2)
+								+ " miliseconds to deserialize");
 					}
 
 					return page;
@@ -157,7 +163,8 @@ public class FilePageStore implements IPageStore
 	{
 		synchronized (storePageMap)
 		{
-			storePageMap.put(new SessionPageKey(sessionId,page.getNumericId(),page.getCurrentVersionNumber(),true), page);
+			storePageMap.put(new SessionPageKey(sessionId, page.getNumericId(), page
+					.getCurrentVersionNumber(), true), page);
 			storePageMap.notifyAll();
 		}
 	}
@@ -170,13 +177,15 @@ public class FilePageStore implements IPageStore
 	{
 		synchronized (storePageMap)
 		{
-			storePageMap.put(new SessionPageKey(sessionId,page.getNumericId(),page.getCurrentVersionNumber()), page);
+			storePageMap.put(new SessionPageKey(sessionId, page.getNumericId(), page
+					.getCurrentVersionNumber()), page);
 			storePageMap.notifyAll();
 		}
 	}
 
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#pageAccessed(java.lang.String, wicket.Page)
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#pageAccessed(java.lang.String,
+	 *      wicket.Page)
 	 */
 	public void pageAccessed(String sessionId, Page page)
 	{
@@ -192,24 +201,26 @@ public class FilePageStore implements IPageStore
 		thread.stop();
 	}
 
-	private void testMap(String sessionId, int id , int versionNumber)
+	private void testMap(String sessionId, int id, int versionNumber)
 	{
-		SessionPageKey curentKey = new SessionPageKey(sessionId,id,versionNumber);
+		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber);
 		Object key = storePageMap.get(curentKey);
 		while (key != null)
 		{
-			if( log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
-				log.debug("The page " + id + ":" + versionNumber+" for session " + sessionId + 
-						" wasn't saved yet. blocking for 200ms");
+				log.debug("The page " + id + ":" + versionNumber + " for session " + sessionId
+						+ " wasn't saved yet. blocking for 200ms");
 			}
 			synchronized (key)
 			{
 				try
 				{
 					// for now i just wait 200ms and then try again.
-					// i could use synchronized() and then notifyAll in the saving thread.
-					// But maybe it is really busy and we should just block for 200ms
+					// i could use synchronized() and then notifyAll in the
+					// saving thread.
+					// But maybe it is really busy and we should just block for
+					// 200ms
 					key.wait(200);
 				}
 				catch (InterruptedException ex)
@@ -229,7 +240,7 @@ public class FilePageStore implements IPageStore
 	{
 		synchronized (storePageMap)
 		{
-			SessionPageKey key = new SessionPageKey(sessionId,-1,-1,true);
+			SessionPageKey key = new SessionPageKey(sessionId, -1, -1, true);
 			storePageMap.put(key, key);
 			storePageMap.notifyAll();
 		}
@@ -255,8 +266,7 @@ public class FilePageStore implements IPageStore
 	 */
 	private File getPageFile(int id, int versionNumber, File sessionDir)
 	{
-		return new File(sessionDir, appName + "-page-" + id
-				+ "-version-" + versionNumber);
+		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber);
 	}
 
 	private class SessionPageKey
@@ -270,7 +280,7 @@ public class FilePageStore implements IPageStore
 		{
 			this(sessionId, id, versionNumber, false);
 		}
-		
+
 		SessionPageKey(String sessionId, int id, int versionNumber, boolean remove)
 		{
 			this.sessionId = sessionId;
@@ -278,7 +288,7 @@ public class FilePageStore implements IPageStore
 			this.versionNumber = versionNumber;
 			this.remove = remove;
 		}
-		
+
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
@@ -286,7 +296,7 @@ public class FilePageStore implements IPageStore
 		{
 			return sessionId.hashCode() + id + versionNumber;
 		}
-		
+
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
@@ -295,17 +305,17 @@ public class FilePageStore implements IPageStore
 			if (obj instanceof SessionPageKey)
 			{
 				SessionPageKey key = (SessionPageKey)obj;
-				return id == key.id && versionNumber == key.versionNumber && 
-					sessionId.equals(key.sessionId) && remove == key.remove;
+				return id == key.id && versionNumber == key.versionNumber
+						&& sessionId.equals(key.sessionId) && remove == key.remove;
 			}
 			return false;
 		}
 	}
-	
+
 	private class PageSavingThread implements Runnable
 	{
 		private volatile boolean stop = false;
-		
+
 		/**
 		 * Stops this thread.
 		 */
@@ -317,12 +327,13 @@ public class FilePageStore implements IPageStore
 				storePageMap.notifyAll();
 			}
 		}
+
 		/**
 		 * @see java.lang.Runnable#run()
 		 */
 		public void run()
 		{
-			while(!stop)
+			while (!stop)
 			{
 				Iterator iterator = null;
 				try
@@ -332,29 +343,33 @@ public class FilePageStore implements IPageStore
 					{
 						synchronized (storePageMap)
 						{
-							if(stop) return;
+							if (stop)
+								return;
 							storePageMap.wait();
 						}
 						continue;
 					}
-					while(iterator.hasNext())
+					while (iterator.hasNext())
 					{
 						SessionPageKey key = (SessionPageKey)iterator.next();
 						Object value = storePageMap.get(key);
-						if (value == null) continue;
-						if(key.remove)
+						if (value == null)
+							continue;
+						if (key.remove)
 						{
 							if (key.id == -1)
 							{
 								removeSession(key.sessionId);
-								// now remove any other pending save for that page.
+								// now remove any other pending save for that
+								// page.
 								removeSessionFromPendingMap(key.sessionId);
 							}
 							else
 							{
 								removePage(key.sessionId, key.id, key.versionNumber);
-								// now remove any other pending save for that page.
-								removePageFromPendingMap(key.sessionId,key.id);
+								// now remove any other pending save for that
+								// page.
+								removePageFromPendingMap(key.sessionId, key.id);
 							}
 						}
 						else
@@ -363,16 +378,17 @@ public class FilePageStore implements IPageStore
 						}
 						iterator.remove();
 					}
-				} 
+				}
 				catch (Exception e)
 				{
 					log.error("Error in page save thread", e);
 					// removing the one that did fail...
-					if(iterator != null) iterator.remove();
+					if (iterator != null)
+						iterator.remove();
 				}
 			}
 		}
-		
+
 		/**
 		 * @param sessionId
 		 * @param id
@@ -380,10 +396,10 @@ public class FilePageStore implements IPageStore
 		private void removePageFromPendingMap(String sessionId, int id)
 		{
 			Iterator iterator = storePageMap.keySet().iterator();
-			while(iterator.hasNext())
+			while (iterator.hasNext())
 			{
 				SessionPageKey key = (SessionPageKey)iterator.next();
-				if(key.sessionId == sessionId && key.id == id)
+				if (key.sessionId == sessionId && key.id == id)
 				{
 					iterator.remove();
 				}
@@ -393,23 +409,24 @@ public class FilePageStore implements IPageStore
 		private void removeSessionFromPendingMap(String sessionId)
 		{
 			Iterator iterator = storePageMap.keySet().iterator();
-			while(iterator.hasNext())
+			while (iterator.hasNext())
 			{
 				SessionPageKey key = (SessionPageKey)iterator.next();
-				if(key.sessionId == sessionId)
+				if (key.sessionId == sessionId)
 				{
 					iterator.remove();
 				}
 			}
 		}
+
 		private void removePage(String sessionId, int id, int currentVersionNumber)
 		{
 			File sessionDir = new File(getWorkDir(), sessionId);
 			if (sessionDir.exists())
 			{
-				while(currentVersionNumber >= 0)
+				while (currentVersionNumber >= 0)
 				{
-					File pageFile = getPageFile(id,currentVersionNumber,sessionDir);
+					File pageFile = getPageFile(id, currentVersionNumber, sessionDir);
 					if (pageFile.exists())
 					{
 						pageFile.delete();
@@ -419,7 +436,7 @@ public class FilePageStore implements IPageStore
 			}
 
 		}
-		
+
 		private void removeSession(String sessionId)
 		{
 			File sessionDir = new File(getWorkDir(), sessionId);
@@ -439,7 +456,7 @@ public class FilePageStore implements IPageStore
 				}
 			}
 		}
-		
+
 		/**
 		 * @param sessionId
 		 * @param page
@@ -448,7 +465,8 @@ public class FilePageStore implements IPageStore
 		{
 			File sessionDir = new File(getWorkDir(), sessionId);
 			sessionDir.mkdirs();
-			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
+			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(),
+					sessionDir);
 
 			FileOutputStream fos = null;
 			long t1 = System.currentTimeMillis();
@@ -474,8 +492,17 @@ public class FilePageStore implements IPageStore
 			}
 			catch (Exception e)
 			{
-				log.error("Error saving page " + page.getClass() + "["+ page.getId() + "," + page.getCurrentVersionNumber()
-						+ "] for the sessionid " + sessionId, e);
+				// trigger serialization again, but this time gather some more info
+				try
+				{
+					new DebuggingObjectOutputStream().writeObject(page);
+				}
+				catch (Exception e1)
+				{
+					log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
+							+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
+							+ ": " + e1.getMessage(), e1);
+				}
 			}
 			finally
 			{
@@ -494,9 +521,10 @@ public class FilePageStore implements IPageStore
 			if (log.isDebugEnabled())
 			{
 				long t3 = System.currentTimeMillis();
-				log.debug("storing page " + page.getClass() + "["+ page.getNumericId() + ","
-						+ page.getCurrentVersionNumber() + "] size: " + length + " for session " + sessionId + " took "
-						+ (t2 - t1) + " miliseconds to serialize and " + (t3-t2) + " miliseconds to save");
+				log.debug("storing page " + page.getClass() + "[" + page.getNumericId() + ","
+						+ page.getCurrentVersionNumber() + "] size: " + length + " for session "
+						+ sessionId + " took " + (t2 - t1) + " miliseconds to serialize and "
+						+ (t3 - t2) + " miliseconds to save");
 			}
 		}
 	}
