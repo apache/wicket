@@ -26,6 +26,7 @@ import java.util.zip.GZIPOutputStream;
 
 import wicket.Application;
 import wicket.SharedResources;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
@@ -43,15 +44,125 @@ import wicket.util.time.Time;
  */
 public final class CompressedPackageResource extends PackageResource
 {
-	private static final long serialVersionUID = 1L;
-	
-	CompressingResourceStream resourceStream;
-
-	protected CompressedPackageResource(Class scope, String path, Locale locale, String style)
+	/** Compressing stream. */
+	private final class CompressingResourceStream implements IResourceStream
 	{
-		super(scope, path, locale, style);
-		resourceStream=new CompressingResourceStream();
+		private static final long serialVersionUID = 1L;
+
+		/** Cache for compressed data. */
+		private SoftReference/* <byte[]> */cache = new SoftReference/* <byte[]> */(null);
+
+		/** Timestamp of the cache. */
+		private Time timeStamp = null;
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#close()
+		 */
+		public void close() throws IOException
+		{
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#getContentType()
+		 */
+		public String getContentType()
+		{
+			return CompressedPackageResource.super.getResourceStream().getContentType();
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#getInputStream()
+		 */
+		public InputStream getInputStream() throws ResourceStreamNotFoundException
+		{
+			if (supportsCompression())
+			{
+				return new ByteArrayInputStream(getCompressedContent());
+			}
+			else
+			{
+				return CompressedPackageResource.super.getResourceStream().getInputStream();
+			}
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#getLocale()
+		 */
+		public Locale getLocale()
+		{
+			return CompressedPackageResource.super.getResourceStream().getLocale();
+		}
+
+		/**
+		 * @see wicket.util.watch.IModifiable#lastModifiedTime()
+		 */
+		public Time lastModifiedTime()
+		{
+			return CompressedPackageResource.super.getResourceStream().lastModifiedTime();
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#length()
+		 */
+		public long length()
+		{
+			if (supportsCompression())
+			{
+				return getCompressedContent().length;
+			}
+			else
+			{
+				return CompressedPackageResource.super.getResourceStream().length();
+			}
+		}
+
+		/**
+		 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
+		 */
+		public void setLocale(Locale locale)
+		{
+			CompressedPackageResource.super.getResourceStream().setLocale(locale);
+		}
+
+		/**
+		 * @return compressed content
+		 */
+		private byte[] getCompressedContent()
+		{
+			IResourceStream stream = CompressedPackageResource.super.getResourceStream();
+			try
+			{
+				byte ret[] = (byte[])cache.get();
+				if (ret != null && timeStamp != null)
+				{
+					if (timeStamp.equals(stream.lastModifiedTime()))
+					{
+						return ret;
+					}
+				}
+
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				GZIPOutputStream zout = new GZIPOutputStream(out);
+				Streams.copy(stream.getInputStream(), zout);
+				zout.close();
+				stream.close();
+				ret = out.toByteArray();
+				timeStamp = stream.lastModifiedTime();
+				cache = new SoftReference/* <byte[]> */(ret);
+				return ret;
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
+			catch (ResourceStreamNotFoundException e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
 	}
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Gets the resource for a given set of criteria. Only one resource will be
@@ -86,124 +197,66 @@ public final class CompressedPackageResource extends PackageResource
 		}
 		return resource;
 	}
-	
+
+	private final CompressingResourceStream resourceStream;
+
+	/**
+	 * Hidden constructor.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource
+	 */
+	protected CompressedPackageResource(Class scope, String path, Locale locale, String style)
+	{
+		super(scope, path, locale, style);
+		resourceStream = new CompressingResourceStream();
+	}
+
+
+	/**
+	 * IResourceStream implementation which compresses the data with gzip if the
+	 * requests header Accept-Encoding contains string gzip
+	 * 
+	 * @see wicket.markup.html.PackageResource#getResourceStream()
+	 */
 	public IResourceStream getResourceStream()
 	{
 		return resourceStream;
 	}
 
-	/*
-	 *  IResourceStream implementation which compresses the data with gzip if the requests
-	 *  header Accept-Encoding contains string gzip
+	/**
+	 * @return Whether the client supports compression
 	 */
-
-	private class CompressingResourceStream implements IResourceStream {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		/* Cache for compressed data */
-		SoftReference/*<byte[]>*/ cache=new SoftReference/*<byte[]>*/(null);
-
-		/* Timestamp of the cache */
-		Time timeStamp=null;
-
-		private byte[] getCompressedContent() {
-			IResourceStream stream=CompressedPackageResource.super.getResourceStream();
-			try
-			{
-				byte ret[]=(byte[])cache.get();
-				if(ret!=null && timeStamp!=null)
-				{
-					if(timeStamp.equals(stream.lastModifiedTime()))
-					{
-						return ret;
-					}
-				}
-
-				ByteArrayOutputStream out=new ByteArrayOutputStream();
-				GZIPOutputStream zout=new GZIPOutputStream(out);
-				Streams.copy(stream.getInputStream(),zout);
-				zout.close();
-				stream.close();
-				ret=out.toByteArray();
-				timeStamp=stream.lastModifiedTime();
-				cache=new SoftReference/*<byte[]>*/(ret);
-				return ret;
-			} catch (IOException e)
-			{
-				throw new RuntimeException(e);
-			}
-			catch (ResourceStreamNotFoundException e)
-			{
-				throw new RuntimeException(e);
-			}
-		}
-
-		public void close() throws IOException
-		{
-
-		}
-
-		public String getContentType()
-		{
-			return CompressedPackageResource.super.getResourceStream().getContentType();
-		}
-
-		public InputStream getInputStream() throws ResourceStreamNotFoundException
-		{
-			if(supportsCompression())
-			{
-				return new ByteArrayInputStream(getCompressedContent());
-			} else {
-				return CompressedPackageResource.super.getResourceStream().getInputStream();
-			}
-		}
-
-		public Locale getLocale()
-		{
-			return CompressedPackageResource.super.getResourceStream().getLocale();
-		}
-
-		public long length()
-		{
-			if(supportsCompression())
-			{
-				return getCompressedContent().length;
-			} else {
-				return CompressedPackageResource.super.getResourceStream().length();
-			}
-		}
-
-		public void setLocale(Locale locale)
-		{
-			CompressedPackageResource.super.getResourceStream().setLocale(locale);
-		}
-
-		public Time lastModifiedTime()
-		{
-			return CompressedPackageResource.super.getResourceStream().lastModifiedTime();
-		}
-	}
-
-	private boolean supportsCompression(){
-		WebRequest request=(WebRequest)WebRequestCycle.get().getRequest();
+	private boolean supportsCompression()
+	{
+		WebRequest request = (WebRequest)WebRequestCycle.get().getRequest();
 		String s = request.getHttpServletRequest().getHeader("Accept-Encoding");
-		if(s == null)
+		if (s == null)
 		{
 			return false;
-		} else {
+		}
+		else
+		{
 			return s.indexOf("gzip") >= 0;
 		}
 	}
 
+	/**
+	 * @see wicket.markup.html.WebResource#setHeaders(wicket.protocol.http.WebResponse)
+	 */
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
-		if(supportsCompression())
+		if (supportsCompression())
 		{
-			response.setHeader("Content-Encoding","gzip");
+			response.setHeader("Content-Encoding", "gzip");
 		}
 	}
 }
