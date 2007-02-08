@@ -16,6 +16,8 @@
  */
 package wicket.markup.html.resources;
 
+import java.util.Locale;
+
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.markup.html.CompressedPackageResource;
@@ -40,6 +42,23 @@ public class CompressedResourceReference extends ResourceReference
 	public CompressedResourceReference(Class scope, String name)
 	{
 		super(scope, name);
+	}
+
+	/**
+	 * @see ResourceReference#ResourceReference(Class scope, String name, Locale
+	 *      locale, String style)
+	 */
+	public CompressedResourceReference(Class scope, String name, Locale locale, String style)
+	{
+		super(scope, name, locale, style);
+	}
+
+	/**
+	 * @see ResourceReference#ResourceReference(String)
+	 */
+	public CompressedResourceReference(String name)
+	{
+		super(name);
 	}
 
 	/**
