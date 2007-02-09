@@ -965,7 +965,7 @@ public final class Strings
 	 *            The unicode string
 	 * @return The escaped unicode string, like '\u4F60\u597D'.
 	 */
-	public static CharSequence toEscapedUnicode(final CharSequence unicodeString)
+	public static String toEscapedUnicode(final String unicodeString)
 	{
 		if ((unicodeString == null) || (unicodeString.length() == 0))
 		{
