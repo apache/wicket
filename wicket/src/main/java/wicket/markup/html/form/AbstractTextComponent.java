@@ -16,6 +16,8 @@
  */
 package wicket.markup.html.form;
 
+import java.text.SimpleDateFormat;
+
 import wicket.MarkupContainer;
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
@@ -31,6 +33,25 @@ import wicket.util.string.Strings;
  */
 public abstract class AbstractTextComponent<T> extends FormComponent<T>
 {
+	/**
+	 * Text components that implement this interface are know to be able to
+	 * provide a pattern for formatting output and parsing input. This can be
+	 * used by for instance date picker components which are based on Javascript
+	 * and need some knowledge as to how to communicate properly via request
+	 * parameters.
+	 */
+	public static interface ITextFormatProvider
+	{
+
+		/**
+		 * Gets the pattern for printing output and parsing input.
+		 * 
+		 * @return The text pattern
+		 * @see SimpleDateFormat
+		 */
+		String getTextFormat();
+	}
+
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
@@ -89,15 +110,6 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	}
 
 	/**
-	 * @see FormComponent#supportsPersistence()
-	 */
-	@Override
-	protected final boolean supportsPersistence()
-	{
-		return true;
-	}
-
-	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
@@ -109,5 +121,14 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 			return null;
 		}
 		return super.convertValue(value);
+	}
+
+	/**
+	 * @see FormComponent#supportsPersistence()
+	 */
+	@Override
+	protected final boolean supportsPersistence()
+	{
+		return true;
 	}
 }
