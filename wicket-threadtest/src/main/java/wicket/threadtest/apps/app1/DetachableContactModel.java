@@ -18,7 +18,7 @@
 package wicket.threadtest.apps.app1;
 
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy;
+import wicket.markup.repeater.IItemReuseStrategy;
 import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
 

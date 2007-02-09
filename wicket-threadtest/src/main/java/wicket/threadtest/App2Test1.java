@@ -28,13 +28,14 @@ public class App2Test1 {
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 5);
 
 		// getCmd.setPrintResponse(true);
-		
+
 		// AS OF OCTOBER 9 2006, THIS TYPICALLY RESULTS IN A DEADLOCK
+		// FIXED now... keep this test
 		Tester tester = new Tester(getCmd, 50, false);
-		
+
 		// new Tester(.., .., false) would not give a deadlock, as then
 		// all threads point to seperate sessions
-		
+
 		tester.run();
 	}
 }

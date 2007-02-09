@@ -20,6 +20,7 @@ package wicket.threadtest.apps.app2;
 import wicket.Application;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.WebApplication;
+import wicket.session.ISessionStore;
 
 public class TestApp2 extends WebApplication {
 
@@ -38,5 +39,10 @@ public class TestApp2 extends WebApplication {
 	@Override
 	protected void init() {
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
+	}
+
+	@Override
+	protected ISessionStore newSessionStore() {
+		return super.newSessionStore();
 	}
 }
