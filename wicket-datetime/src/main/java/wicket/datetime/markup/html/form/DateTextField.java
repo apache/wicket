@@ -24,6 +24,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
 import wicket.datetime.util.DateConverter;
+import wicket.datetime.util.IDatePatternProvider;
 import wicket.datetime.util.PatternDateConverter;
 import wicket.datetime.util.StyleDateConverter;
 import wicket.markup.html.form.TextField;
@@ -50,7 +51,7 @@ import wicket.util.convert.IConverter;
  * 
  * @author eelcohillenius
  */
-public class DateTextField extends TextField {
+public class DateTextField extends TextField implements IDatePatternProvider {
 
 	private static final long serialVersionUID = 1L;
 
@@ -67,7 +68,7 @@ public class DateTextField extends TextField {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forDatePattern(String id, IModel model,
+	public static IDatePatternProvider forDatePattern(String id, IModel model,
 			String datePattern) {
 		return new DateTextField(id, model, new PatternDateConverter(
 				datePattern, true));
@@ -84,7 +85,7 @@ public class DateTextField extends TextField {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forDatePattern(String id, String datePattern) {
+	public static IDatePatternProvider forDatePattern(String id, String datePattern) {
 		return forDateStyle(id, null, datePattern);
 	}
 
@@ -102,7 +103,7 @@ public class DateTextField extends TextField {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forDateStyle(String id, IModel model,
+	public static IDatePatternProvider forDateStyle(String id, IModel model,
 			String dateStyle) {
 		return new DateTextField(id, model, new StyleDateConverter(dateStyle,
 				true));
@@ -120,7 +121,7 @@ public class DateTextField extends TextField {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forDateStyle(String id, String dateStyle) {
+	public static IDatePatternProvider forDateStyle(String id, String dateStyle) {
 		return forDateStyle(id, null, dateStyle);
 	}
 
@@ -132,7 +133,7 @@ public class DateTextField extends TextField {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static DateTextField forShortStyle(String id) {
+	public static IDatePatternProvider forShortStyle(String id) {
 		return forShortStyle(id, null);
 	}
 
@@ -160,7 +161,7 @@ public class DateTextField extends TextField {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static DateTextField withConverter(String id, DateConverter converter) {
+	public static IDatePatternProvider withConverter(String id, DateConverter converter) {
 		return withConverter(id, null, converter);
 	}
 
@@ -176,7 +177,7 @@ public class DateTextField extends TextField {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static DateTextField withConverter(String id, IModel model,
+	public static IDatePatternProvider withConverter(String id, IModel model,
 			DateConverter converter) {
 		return new DateTextField(id, model, converter);
 	}
@@ -211,11 +212,10 @@ public class DateTextField extends TextField {
 		return converter;
 	}
 
-	/**
-	 * @return The specialized converter cast to the
-	 *         {@link DateConverter actual type}.
+	/* (non-Javadoc)
+	 * @see wicket.datetime.markup.html.form.IDatePatternProvider#getDatePattern()
 	 */
-	public final DateConverter getDateConverter() {
-		return (DateConverter) converter;
+	public final String getDatePattern() {
+		return ((DateConverter) converter).getDatePattern();
 	}
 }

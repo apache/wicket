@@ -102,7 +102,7 @@ public class DateField extends FormComponentPanel {
 		setType(Date.class);
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(
 				this, "date")));
-		add(new CalendarPopup("picker", dateField));
+		dateField.add(new DatePicker());
 	}
 
 	/**
