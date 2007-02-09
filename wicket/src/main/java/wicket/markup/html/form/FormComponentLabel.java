@@ -37,14 +37,18 @@ public class FormComponentLabel extends WebMarkupContainer
 	 * 
 	 * @param id
 	 *            component id
-	 * @param fc
+	 * @param formcomponent
 	 *            form component that this label represents
 	 */
-	public FormComponentLabel(String id, FormComponent fc)
+	public FormComponentLabel(String id, FormComponent formcomponent)
 	{
 		super(id);
-		this.fc = fc;
-		fc.setOutputMarkupId(true);
+		if (formcomponent == null)
+		{
+			throw new IllegalArgumentException("Argument `formcomponent` cannot be null");
+		}
+		this.fc = formcomponent;
+		formcomponent.setOutputMarkupId(true);
 	}
 
 	protected void onComponentTag(ComponentTag tag)
@@ -53,5 +57,16 @@ public class FormComponentLabel extends WebMarkupContainer
 
 		checkComponentTag(tag, "label");
 		tag.put("for", fc.getMarkupId());
+	}
+
+
+	/**
+	 * Returns form component bound to this label
+	 * 
+	 * @return form component
+	 */
+	public FormComponent getFormComponent()
+	{
+		return fc;
 	}
 }
