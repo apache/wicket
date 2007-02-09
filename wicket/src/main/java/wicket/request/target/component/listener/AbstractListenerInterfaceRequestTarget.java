@@ -28,9 +28,9 @@ import wicket.settings.IRequestCycleSettings;
 
 /**
  * The abstract implementation of
- * {@link wicket.request.target.component.listener.IListenerInterfaceRequestTarget}. Target that denotes
- * a page instance and a call to a component on that page using an listener
- * interface method.
+ * {@link wicket.request.target.component.listener.IListenerInterfaceRequestTarget}.
+ * Target that denotes a page instance and a call to a component on that page
+ * using an listener interface method.
  * 
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -100,32 +100,6 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * Common functionality to be called by processEvents()
-	 * 
-	 * @param requestCycle
-	 *            The request cycle
-	 */
-	protected void onProcessEvents(final RequestCycle requestCycle)
-	{
-		// Assume cluster needs to be updated now, unless listener
-		// invocation changes this
-		requestCycle.setUpdateSession(true);
-
-		// Clear all feedback messages if it isn't a redirect
-		getPage().getFeedbackMessages().clear();
-
-		getPage().startComponentRender(getTarget());
-
-		final Application application = requestCycle.getApplication();
-		// and see if we have to redirect the render part by default
-		IRequestCycleSettings.RenderStrategy strategy = application.getRequestCycleSettings()
-				.getRenderStrategy();
-		boolean issueRedirect = (strategy == IRequestCycleSettings.REDIRECT_TO_RENDER || strategy == IRequestCycleSettings.REDIRECT_TO_BUFFER);
-
-		requestCycle.setRedirect(issueRedirect);
-	}
-
-	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj)
@@ -150,19 +124,19 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	}
 
 	/**
-	 * @see wicket.request.target.component.listener.IListenerInterfaceRequestTarget#getRequestParameters()
-	 */
-	public final RequestParameters getRequestParameters()
-	{
-		return this.requestParameters;
-	}
-
-	/**
 	 * @see wicket.request.target.component.listener.IListenerInterfaceRequestTarget#getRequestListenerInterface()
 	 */
 	public final RequestListenerInterface getRequestListenerInterface()
 	{
 		return listener;
+	}
+
+	/**
+	 * @see wicket.request.target.component.listener.IListenerInterfaceRequestTarget#getRequestParameters()
+	 */
+	public final RequestParameters getRequestParameters()
+	{
+		return this.requestParameters;
 	}
 
 	/**
@@ -200,5 +174,31 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 			buf.append(" (request paramaters: ").append(requestParameters.toString()).append(")");
 		}
 		return buf.toString();
+	}
+
+	/**
+	 * Common functionality to be called by processEvents()
+	 * 
+	 * @param requestCycle
+	 *            The request cycle
+	 */
+	protected void onProcessEvents(final RequestCycle requestCycle)
+	{
+		// Assume cluster needs to be updated now, unless listener
+		// invocation changes this
+		requestCycle.setUpdateSession(true);
+
+		// Clear all feedback messages if it isn't a redirect
+		getPage().getFeedbackMessages().clear();
+
+		getPage().startComponentRender(getTarget());
+
+		final Application application = requestCycle.getApplication();
+		// and see if we have to redirect the render part by default
+		IRequestCycleSettings.RenderStrategy strategy = application.getRequestCycleSettings()
+				.getRenderStrategy();
+		boolean issueRedirect = (strategy == IRequestCycleSettings.REDIRECT_TO_RENDER || strategy == IRequestCycleSettings.REDIRECT_TO_BUFFER);
+
+		requestCycle.setRedirect(issueRedirect);
 	}
 }

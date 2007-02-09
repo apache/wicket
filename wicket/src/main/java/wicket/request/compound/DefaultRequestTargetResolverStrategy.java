@@ -331,14 +331,6 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			{
 				component = page.get(pageRelativeComponentPath);
 			}
-
-			if (component == null || !component.isEnabled() || !component.isVisibleInHierarchy())
-			{
-				log
-						.info("component not enabled or visible, redirecting to calling page, component: "
-								+ component);
-				return new RedirectPageRequestTarget(page);
-			}
 			if (!component.isEnableAllowed())
 			{
 				throw new UnauthorizedActionException(component, Component.ENABLE);
