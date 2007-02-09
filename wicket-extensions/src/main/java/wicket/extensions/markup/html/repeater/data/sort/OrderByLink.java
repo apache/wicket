@@ -159,7 +159,7 @@ public class OrderByLink extends Link
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final ISortState old = (ISortState)Objects.cloneModel(stateLocator.getSortState());
+		private final ISortState old = Objects.cloneModel(stateLocator.getSortState());
 
 		/**
 		 * @see wicket.version.undo.Change#undo()
