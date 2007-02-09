@@ -25,7 +25,6 @@ import wicket.Component;
  * substitutions, but is generaly easier to use.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class ResourceModel extends AbstractReadOnlyModel<String>
 		implements
@@ -70,7 +69,8 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	public String getObject()
 	{
 		// this shouldn't be called always wrapped!
-		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,null, defaultValue);
+		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
+				(Component)null, defaultValue);
 	}
 
 
@@ -83,10 +83,12 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		return new AssignmentWrapper(resourceKey, defaultValue, component);
 	}
 
+	/**
+	 * 
+	 */
 	private class AssignmentWrapper extends ResourceModel implements IWrapModel<String>
 	{
 		private static final long serialVersionUID = 1L;
-
 
 		private Component component;
 
@@ -103,10 +105,14 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 			this.component = component;
 		}
 
+		/**
+		 * @see wicket.model.IWrapModel#getNestedModel()
+		 */
 		public IModel getNestedModel()
 		{
 			return ResourceModel.this;
 		}
+
 		/**
 		 * @see wicket.model.AbstractReadOnlyModel#getObject()
 		 */
@@ -117,5 +123,4 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 					component, defaultValue);
 		}
 	}
-
 }

@@ -569,7 +569,7 @@ public final class Settings
 	{
 		if (localizer == null)
 		{
-			this.localizer = new Localizer(application);
+			this.localizer = new Localizer();
 		}
 		return localizer;
 	}

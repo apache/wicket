@@ -56,19 +56,12 @@ public class Localizer
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(Localizer.class);
 
-	/** The application and its settings to use to control the utils. */
-	private Application application;
-
 	/**
 	 * Create the utils instance class backed by the configuration information
 	 * contained within the supplied application object.
-	 * 
-	 * @param application
-	 *            The application to localize for
 	 */
-	public Localizer(final Application application)
+	public Localizer()
 	{
-		this.application = application;
 	}
 
 	/**
@@ -86,16 +79,7 @@ public class Localizer
 	public String getString(final String key, final Component component)
 			throws MissingResourceException
 	{
-		if (component != null)
-		{
-			return getString(key, component, null, component.getLocale(), component.getStyle(),
-					null);
-		}
-		else
-		{
-			Session session = Session.get();
-			return getString(key, component, null, session.getLocale(), session.getStyle(), null);
-		}
+		return getString(key, component, null, null, null, null);
 	}
 
 	/**
@@ -116,16 +100,7 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model)
 			throws MissingResourceException
 	{
-		if (component != null)
-		{
-			return getString(key, component, model, component.getLocale(), component.getStyle(),
-					null);
-		}
-		else
-		{
-			Session session = Session.get();
-			return getString(key, component, model, session.getLocale(), session.getStyle(), null);
-		}
+		return getString(key, component, model, null, null, null);
 	}
 
 	/**
@@ -148,17 +123,7 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model,
 			final String defaultValue) throws MissingResourceException
 	{
-		if (component != null)
-		{
-			return getString(key, component, model, component.getLocale(), component.getStyle(),
-					defaultValue);
-		}
-		else
-		{
-			Session session = Session.get();
-			return getString(key, component, model, session.getLocale(), session.getStyle(),
-					defaultValue);
-		}
+		return getString(key, component, model, null, null, defaultValue);
 	}
 
 	/**
@@ -178,17 +143,7 @@ public class Localizer
 	public String getString(final String key, final Component component, final String defaultValue)
 			throws MissingResourceException
 	{
-		if (component != null)
-		{
-			return getString(key, component, null, component.getLocale(), component.getStyle(),
-					defaultValue);
-		}
-		else
-		{
-			Session session = Session.get();
-			return getString(key, component, null, session.getLocale(), session.getStyle(),
-					defaultValue);
-		}
+		return getString(key, component, null, null, null, defaultValue);
 	}
 
 	/**
@@ -217,22 +172,42 @@ public class Localizer
 	 *             exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final IModel model,
-			final Locale locale, final String style, final String defaultValue)
-			throws MissingResourceException
+			Locale locale, String style, final String defaultValue) throws MissingResourceException
 	{
 		final List searchStack;
 		final String path;
 		if (component != null)
 		{
-			// The reason why need to create that stack is because we need to
+			// The reason why we need to create that stack is because we need to
 			// walk it downwards starting with Page down to the Component
 			searchStack = getComponentStack(component);
 			path = Strings.replaceAll(component.getPageRelativePath(), ":", ".").toString();
+
+			if (locale == null)
+			{
+				locale = component.getLocale();
+			}
+
+			if (style == null)
+			{
+				style = component.getStyle();
+			}
 		}
 		else
 		{
 			searchStack = null;
 			path = null;
+
+			Session session = Session.get();
+			if (locale == null)
+			{
+				locale = session.getLocale();
+			}
+
+			if (style == null)
+			{
+				style = session.getStyle();
+			}
 		}
 
 		// Iterate over all registered string resource loaders until the
@@ -248,7 +223,7 @@ public class Localizer
 
 		// Resource not found, so handle missing resources based on application
 		// configuration
-		final IResourceSettings resourceSettings = application.getResourceSettings();
+		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 		if (resourceSettings.getUseDefaultOnMissingResource() && (defaultValue != null))
 		{
 			return defaultValue;
@@ -281,7 +256,7 @@ public class Localizer
 	 * @param searchStack
 	 *            A stack of classes to get the resource for
 	 * @param path
-	 *            The component id path relative to the page
+	 *            A (file) path to the resource containing the key
 	 * @param locale
 	 *            The locale to get the resource for (optional)
 	 * @param style
@@ -292,19 +267,10 @@ public class Localizer
 	 *             If resource not found and configuration dictates that
 	 *             exception should be thrown
 	 */
-	public String getString(final String key, final String path, final List searchStack,
-			final Locale locale, final String style) throws MissingResourceException
+	private String getString(final String key, final String path, final Locale locale,
+			final String style) throws MissingResourceException
 	{
-		if (searchStack == null)
-		{
-			throw new IllegalArgumentException(
-					"Parameter 'searchStack' must have at least one entry");
-		}
-
-		// Get the property by iterating over the register string resouce loader
-		// until the property has been found. Null, if not found.
-		String string = visitResourceLoaders(key, path, searchStack, locale, style);
-		return string;
+		return visitResourceLoaders(key, path, null, locale, style);
 	}
 
 	/**
@@ -392,7 +358,7 @@ public class Localizer
 			final List searchStack, final Locale locale, final String style)
 	{
 		// Search each loader in turn and return the string if it is found
-		final Iterator<IStringResourceLoader> iterator = application.getResourceSettings()
+		final Iterator<IStringResourceLoader> iterator = Application.get().getResourceSettings()
 				.getStringResourceLoaders().iterator();
 
 		// The return value
@@ -414,8 +380,7 @@ public class Localizer
 					Class clazz = (Class)searchStack.get(i);
 
 					// First check if a property with the 'key' provided by the
-					// user
-					// is available.
+					// user is available.
 					string = loader.loadStringResource(clazz, key, locale, style);
 
 					// If not, prepend the component relativ path to the key
@@ -440,7 +405,7 @@ public class Localizer
 				// ApplicationStringResourceLoader,
 				// does not necessarily require the component hierachy
 				string = loader.loadStringResource(null, key, locale, style);
-				if ((string == null) && (path != null) && (prefix.length() > 0))
+				if ((string == null) && (prefix != null) && (prefix.length() > 0))
 				{
 					string = loader.loadStringResource(null, prefix + '.' + key, locale, style);
 				}
