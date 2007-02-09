@@ -19,11 +19,11 @@
 			<attribute name="javadoc_location" value="jar:file://Users/eelcohillenius/.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/wicket/wicket/1.2-SNAPSHOT/wicket-1.2-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket/1.2-SNAPSHOT/wicket-1.2-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/servlet-api-2.5/6.0.1/servlet-api-2.5-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/servlet-api-2.5/6.0.1/servlet-api-2.5-6.0.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/wicket/wicket-extensions/1.2-SNAPSHOT/wicket-extensions-1.2-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket-extensions/1.2-SNAPSHOT/wicket-extensions-1.2-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.2.1/xmlParserAPIs-2.2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1.jar" sourcepath="M2_REPO/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

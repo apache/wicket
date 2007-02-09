@@ -28,9 +28,6 @@ import java.util.Locale;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Session;
-import wicket.extensions.markup.html.datepicker.DatePicker;
-import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -53,6 +50,8 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.data.DataView;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
@@ -112,7 +111,6 @@ public class Home extends WebPage {
 			add(dateLabel);
 			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
 			add(datePropertyTextField);
-			add(new DatePicker("datePicker", dateLabel, datePropertyTextField));
 			add(new TextField("integerInRangeProperty", Integer.class).add(NumberValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
@@ -251,9 +249,6 @@ public class Home extends WebPage {
 		}
 	}
 
-	/** available numbers for the radio selection. */
-	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
-
 	/** Relevant locales wrapped in a list. */
 	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH, new Locale("nl"), Locale.GERMAN,
 			Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE, new Locale("pt", "BR"), new Locale("fa", "IR"),
@@ -261,6 +256,9 @@ public class Home extends WebPage {
 
 	/** available sites for the multiple select. */
 	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+
+	/** available numbers for the radio selection. */
+	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
 
 	private Contact selected;
 
