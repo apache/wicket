@@ -16,8 +16,6 @@
  */
 package wicket.protocol.http.portlet;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -32,11 +30,9 @@ import wicket.Application;
 import wicket.IPageMap;
 import wicket.Request;
 import wicket.Session;
-import wicket.WicketRuntimeException;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.session.ISessionStore;
-import wicket.util.lang.Bytes;
 
 
 /**

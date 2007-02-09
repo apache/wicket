@@ -16,8 +16,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -25,14 +23,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import wicket.AccessStackPageMap;
-import wicket.Application;
 import wicket.IPageMap;
-import wicket.Page;
 import wicket.Request;
 import wicket.Session;
-import wicket.WicketRuntimeException;
-import wicket.util.lang.Bytes;
-import wicket.util.lang.Objects;
 
 /**
  * Default web implementation of {@link wicket.session.ISessionStore} that uses
