@@ -170,7 +170,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			// The url must have a query string, otherwise keep the url
 			// unchanged
 			final int pos = url.toString().indexOf('?');
-			if (pos > 0)
+			if (pos > -1)
 			{
 				// The url's path
 				CharSequence urlPrefix = url.subSequence(0, pos);
