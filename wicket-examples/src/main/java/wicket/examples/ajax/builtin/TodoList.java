@@ -13,6 +13,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.CompoundPropertyModel;
@@ -370,7 +371,7 @@ public class TodoList extends BasePage
 	/**
 	 * The list of todo items.
 	 */
-	static final List items = new ArrayList();
+	final List items = new ArrayList();
 
 	/**
 	 * Constructor.
@@ -381,6 +382,16 @@ public class TodoList extends BasePage
 		showItems = new TodoItemsContainer("showItems");
 		add(showItems);
 
+		add(new AjaxFallbackLink("ajaxback")
+		{
+			/**
+			 * @see wicket.ajax.markup.html.AjaxFallbackLink#onClick(wicket.ajax.AjaxRequestTarget)
+			 */
+			public void onClick(AjaxRequestTarget target)
+			{
+				setResponsePage(getPage().rollbackPage(1));
+			}
+		});
 		// add the add container for the todo items.
 		add(new AddItemsContainer("addItems"));
 	}
