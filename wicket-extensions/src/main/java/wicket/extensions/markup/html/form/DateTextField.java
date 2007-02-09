@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.form;
 
@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import wicket.MarkupContainer;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import wicket.model.IModel;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.converters.DateConverter;
@@ -39,7 +40,7 @@ import wicket.util.convert.converters.DateConverter;
  * 
  * @author Stefan Kanev
  */
-public class DateTextField extends TextField<Date>
+public class DateTextField extends TextField<Date> implements ITextFormatProvider
 {
 
 	private static final long serialVersionUID = 1L;
@@ -69,11 +70,34 @@ public class DateTextField extends TextField<Date>
 	 * Creates a new DateTextField, without a specified pattern. This is the
 	 * same as calling <code>new TextField(id, object, Date.class)</code>
 	 * 
-	 * @see wicket.markup.html.form.TextField#TextField(MarkupContainer, String, IModel)
+	 * @see wicket.markup.html.form.TextField#TextField(MarkupContainer, String,
+	 *      IModel)
 	 */
 	public DateTextField(MarkupContainer parent, final String id, IModel<Date> object)
 	{
 		super(parent, id, object, Date.class);
+	}
+
+	/**
+	 * Creates a new DateTextField bound with a specific
+	 * <code>SimpleDateFormat</code> pattern.
+	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
+	 * @param id
+	 *            The id of the text field
+	 * @param object
+	 *            The model
+	 * @param datePattern
+	 *            A <code>SimpleDateFormat</code> pattern
+	 * 
+	 * @see wicket.markup.html.form.TextField
+	 */
+	public DateTextField(MarkupContainer parent, final String id, IModel<Date> object,
+			String datePattern)
+	{
+		this(parent, id, datePattern);
+		setModel(object);
 	}
 
 	/**
@@ -109,27 +133,6 @@ public class DateTextField extends TextField<Date>
 	}
 
 	/**
-	 * Creates a new DateTextField bound with a specific
-	 * <code>SimpleDateFormat</code> pattern.
-	 * 
-	 * @param parent
-	 *            The parent of this component The parent of this component.
-	 * @param id
-	 *            The id of the text field
-	 * @param object
-	 *            The model
-	 * @param datePattern
-	 *            A <code>SimpleDateFormat</code> pattern
-	 * 
-	 * @see wicket.markup.html.form.TextField
-	 */
-	public DateTextField(MarkupContainer parent, final String id, IModel<Date> object, String datePattern)
-	{
-		this(parent, id, datePattern);
-		setModel(object);
-	}
-
-	/**
 	 * Returns the default converter if created without pattern; otherwise it
 	 * returns a pattern-specific converter.
 	 * 
@@ -151,5 +154,15 @@ public class DateTextField extends TextField<Date>
 		{
 			return converter;
 		}
+	}
+
+	/**
+	 * Returns the date pattern.
+	 * 
+	 * @see wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider#getTextFormat()
+	 */
+	public String getTextFormat()
+	{
+		return dateFormat.toPattern();
 	}
 }
