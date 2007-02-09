@@ -26,6 +26,7 @@ import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.PackageResource;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.model.LoadableDetachableModel;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
@@ -269,7 +270,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public ResourceReferenceHeaderContributor(Class scope, String name)
 		{
-			this(new ResourceReference(scope, name));
+			this(new CompressedResourceReference(scope, name));
 		}
 
 		/**
