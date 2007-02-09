@@ -19,20 +19,20 @@ package wicket.datetime.util;
 import java.text.SimpleDateFormat;
 
 /**
- * Components that implement this are know to be able to provide a date pattern.
- * This can be used by for instance date picker components which are based on
- * Javascript and need some knowledge as to how to communicate properly via
- * request parameters.
+ * Components that implement this are know to be able to provide a pattern for
+ * formatting output and parsing input. This can be used by for instance date
+ * picker components which are based on Javascript and need some knowledge as to
+ * how to communicate properly via request parameters.
  * 
  * @author eelcohillenius
  */
-public interface IDatePatternProvider {
+public interface ITextFormatProvider {
 
 	/**
-	 * Gets the date pattern for printing output and parsing input.
+	 * Gets the pattern for printing output and parsing input.
 	 * 
-	 * @return The date pattern
+	 * @return The text pattern
 	 * @see SimpleDateFormat
 	 */
-	String getDatePattern();
+	String getTextFormat();
 }

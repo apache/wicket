@@ -30,7 +30,7 @@ import wicket.ResourceReference;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
-import wicket.datetime.util.IDatePatternProvider;
+import wicket.datetime.util.ITextFormatProvider;
 import wicket.extensions.yui.YuiLib;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
@@ -46,7 +46,7 @@ import wicket.util.string.Strings;
  * Pops up a YUI calendar component so that the user can select a date. On
  * selection, the date is set in the component it is coupled to, after which the
  * popup is closed again. This behavior can only be used with components that
- * implement {@link IDatePatternProvider}.
+ * implement {@link ITextFormatProvider}.
  * 
  * @author eelcohillenius
  */
@@ -239,7 +239,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 */
 	protected void checkComponentProvidesDateFormat(Component component) {
 
-		if (component instanceof IDatePatternProvider) {
+		if (component instanceof ITextFormatProvider) {
 			// were ok
 			return;
 		}
@@ -260,7 +260,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		}
 		throw new WicketRuntimeException(
 				"this behavior can only be added to components that either implement "
-						+ IDatePatternProvider.class.getName()
+						+ ITextFormatProvider.class.getName()
 						+ " or that use " + DateConverter.class.getName()
 						+ " configured with an instance of "
 						+ SimpleDateFormat.class.getName()
@@ -315,8 +315,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 */
 	protected String getDatePattern() {
 
-		if (component instanceof IDatePatternProvider) {
-			return ((IDatePatternProvider) component).getDatePattern();
+		if (component instanceof ITextFormatProvider) {
+			return ((ITextFormatProvider) component).getTextFormat();
 		} else {
 			// cast from hell, but we checked before whether we could
 			DateConverter dateConverter = (DateConverter) ((Converter) component
