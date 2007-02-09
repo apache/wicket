@@ -88,16 +88,16 @@ public class PasswordTextField extends TextField
 	public final String getModelValue()
 	{
 		final String value = getModelObjectAsString();
-		if(value != null)
+		if (value != null)
 		{
 			try
 			{
 				return getApplication().getSecuritySettings().getCryptFactory().newCrypt()
 						.encryptUrlSafe(value);
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				log.error("Failed to instantiate encryption object. Continue without encryption");
+				log.error("Problem applying encryption; go on without for now", e);
 			}
 		}
 		return value;
@@ -126,17 +126,17 @@ public class PasswordTextField extends TextField
 	 */
 	public final void setModelValue(String[] valueArray)
 	{
-		String value = valueArray != null && valueArray.length > 0? valueArray[0]: null;
+		String value = valueArray != null && valueArray.length > 0 ? valueArray[0] : null;
 		String decryptedValue;
 		try
 		{
 			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
 					.decryptUrlSafe(value);
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
 			decryptedValue = value;
-			log.error("Failed to instantiate encryption object. Continue without encryption");
+			log.error("Problem applying encryption; go on without for now", e);
 		}
 
 		setModelObject(decryptedValue);
@@ -154,10 +154,10 @@ public class PasswordTextField extends TextField
 		super.onComponentTag(tag);
 		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
 	}
-	
+
 	protected String getInputType()
 	{
 		return "password";
 	}
-	
+
 }
