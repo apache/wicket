@@ -60,11 +60,15 @@ public class SunJceCrypt extends AbstractCrypt
 	 */
 	public SunJceCrypt()
 	{
+		if (Security.getProviders("Cipher." + CRYPT_METHOD).length > 0)
+		{
+			return; // we are good to go!
+		}
 		try
 		{
 			// Initialize and add a security provider required for encryption
 			final Class clazz = Classes.resolveClass("com.sun.crypto.provider.SunJCE");
-			
+
 			Security.addProvider((Provider)clazz.newInstance());
 		}
 		catch (IllegalAccessException ex)
