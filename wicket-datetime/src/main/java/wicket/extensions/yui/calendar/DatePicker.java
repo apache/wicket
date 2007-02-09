@@ -30,6 +30,7 @@ import wicket.ResourceReference;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
+import wicket.datetime.markup.html.form.DateTextField;
 import wicket.extensions.yui.YuiLib;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
@@ -46,7 +47,12 @@ import wicket.util.string.Strings;
  * Pops up a YUI calendar component so that the user can select a date. On
  * selection, the date is set in the component it is coupled to, after which the
  * popup is closed again. This behavior can only be used with components that
- * implement {@link ITextFormatProvider}.
+ * either implement {@link ITextFormatProvider} or that use
+ * {@link DateConverter} configured with an instance of {@link SimpleDateFormat}
+ * (like Wicket's default configuration has).
+ * 
+ * To use, simply add a new instance to your component, which would typically a
+ * TextField, like {@link DateTextField}.
  * 
  * @author eelcohillenius
  */
