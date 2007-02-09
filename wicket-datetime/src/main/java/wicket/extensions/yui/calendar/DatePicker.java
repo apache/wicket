@@ -16,6 +16,9 @@
  */
 package wicket.extensions.yui.calendar;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -32,6 +35,10 @@ import wicket.extensions.yui.YuiLib;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedResourceReference;
+import wicket.util.convert.Converter;
+import wicket.util.convert.IConverter;
+import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.converters.DateConverter;
 import wicket.util.string.JavascriptUtils;
 import wicket.util.string.Strings;
 
@@ -60,11 +67,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @see wicket.behavior.AbstractBehavior#bind(wicket.Component)
 	 */
 	public void bind(Component component) {
-		if (!(component instanceof IDatePatternProvider)) {
-			throw new WicketRuntimeException(
-					"this behavior can only be added to components that implement "
-							+ IDatePatternProvider.class.getName());
-		}
+		checkComponentProvidesDateFormat(component);
 		component.setOutputMarkupId(true);
 		this.component = component;
 	}
@@ -167,8 +170,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		buffer.append("    var dt = selDateArray[2];\n");
 
 		buffer.append("    var val = '");
-		String datePattern = ((IDatePatternProvider) component)
-				.getDatePattern();
+		String datePattern = getDatePattern();
 		// use the target component's pattern to fill in the date
 		// it's quite rough (e.g. YY is still filled in as YYYY), but
 		// should work without problems
@@ -224,6 +226,48 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	}
 
 	/**
+	 * Check that this behavior can get a date format out of the component it is
+	 * coupled to. if you override this method to allow for other types (such as
+	 * your own), you should override {@link #getDatePattern()} as well. This
+	 * method should return normally if the component is accepted or throw a RTE
+	 * when it is not.
+	 * 
+	 * @param component
+	 *            the component this behavior is being coupled to
+	 * @throws WicketRuntimeException
+	 *             if the component is not support.
+	 */
+	protected void checkComponentProvidesDateFormat(Component component) {
+
+		if (component instanceof IDatePatternProvider) {
+			// were ok
+			return;
+		}
+
+		IConverter converter = component.getConverter();
+		if (converter instanceof Converter) {
+			ITypeConverter typeConverter = ((Converter) converter)
+					.get(Date.class);
+			if (typeConverter instanceof DateConverter) {
+				DateConverter dateConverter = (DateConverter) typeConverter;
+				DateFormat df = dateConverter.getDateFormat(component
+						.getLocale());
+				if (df instanceof SimpleDateFormat) {
+					// not as nice as IDatePatternProvider, but it'll do
+					return;
+				}
+			}
+		}
+		throw new WicketRuntimeException(
+				"this behavior can only be added to components that either implement "
+						+ IDatePatternProvider.class.getName()
+						+ " or that use " + DateConverter.class.getName()
+						+ " configured with an instance of "
+						+ SimpleDateFormat.class.getName()
+						+ " (like Wicket's default configuration has)");
+	}
+
+	/**
 	 * Gives overriding classes the option of adding (or even changing/
 	 * removing) configuration properties for the javascript widget. See <a
 	 * href="http://developer.yahoo.com/yui/calendar/">the widget's
@@ -258,6 +302,28 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 */
 	protected final String getCalendarMarkupId() {
 		return component.getMarkupId() + "Dp";
+	}
+
+	/**
+	 * Gets the date pattern to use for putting selected values in the coupled
+	 * component. If you override this method to support components that would
+	 * otherwise not be supported, you should override
+	 * {@link #checkComponentProvidesDateFormat(Component)} and let it return
+	 * normally.
+	 * 
+	 * @return The date pattern
+	 */
+	protected String getDatePattern() {
+
+		if (component instanceof IDatePatternProvider) {
+			return ((IDatePatternProvider) component).getDatePattern();
+		} else {
+			// cast from hell, but we checked before whether we could
+			DateConverter dateConverter = (DateConverter) ((Converter) component
+					.getConverter()).get(Date.class);
+			return ((SimpleDateFormat) dateConverter.getDateFormat(component
+					.getLocale())).toPattern();
+		}
 	}
 
 	/**
