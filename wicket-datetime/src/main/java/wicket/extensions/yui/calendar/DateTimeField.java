@@ -244,7 +244,8 @@ public class DateTimeField extends FormComponentPanel {
 		setType(Date.class);
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(
 				this, "date")));
-		add(new CalendarPopup("picker", dateField));
+		dateField.add(new DatePicker());
+		//add(new CalendarPopup("picker", dateField));
 		add(hoursField = new TextField("hours",
 				new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
