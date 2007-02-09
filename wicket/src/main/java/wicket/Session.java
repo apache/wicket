@@ -832,8 +832,12 @@ public abstract class Session implements Serializable
 		{
 			lst = new ArrayList();
 			touchedPages.set(lst);
+			lst.add(page);
 		}
-		lst.add(page);
+		else if (!lst.contains(page))
+		{
+			lst.add(page);
+		}
 	}
 
 	/**

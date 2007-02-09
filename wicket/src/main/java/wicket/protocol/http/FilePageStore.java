@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
@@ -87,13 +88,13 @@ public class FilePageStore implements IPageStore
 	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
 	 *      int, int)
 	 */
-	public Page getPage(String sessionId, int id, int versionNumber)
+	public Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 	{
-		testMap(sessionId, id, versionNumber);
+		testMap(sessionId, id, versionNumber,ajaxVersionNumber);
 		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
-			File pageFile = getPageFile(id, versionNumber, sessionDir);
+			File pageFile = getPageFile(id, versionNumber, ajaxVersionNumber, sessionDir);
 			if (pageFile.exists())
 			{
 				long t1 = System.currentTimeMillis();
@@ -162,7 +163,7 @@ public class FilePageStore implements IPageStore
 		synchronized (storePageMap)
 		{
 			storePageMap.put(new SessionPageKey(sessionId, page.getNumericId(), page
-					.getCurrentVersionNumber(), true), page);
+					.getCurrentVersionNumber(), page.getAjaxVersionNumber(), true), page);
 			storePageMap.notifyAll();
 		}
 	}
@@ -176,7 +177,7 @@ public class FilePageStore implements IPageStore
 		synchronized (storePageMap)
 		{
 			storePageMap.put(new SessionPageKey(sessionId, page.getNumericId(), page
-					.getCurrentVersionNumber()), page);
+					.getCurrentVersionNumber(), page.getAjaxVersionNumber()), page);
 			storePageMap.notifyAll();
 		}
 	}
@@ -187,7 +188,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public void pageAccessed(String sessionId, Page page)
 	{
-		testMap(sessionId, page.getNumericId(), page.getCurrentVersionNumber());
+		testMap(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page.getAjaxVersionNumber());
 	}
 
 
@@ -199,9 +200,9 @@ public class FilePageStore implements IPageStore
 		thread.stop();
 	}
 
-	private void testMap(String sessionId, int id, int versionNumber)
+	private void testMap(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 	{
-		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber);
+		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber,ajaxVersionNumber);
 		Object key = storePageMap.get(curentKey);
 		while (key != null)
 		{
@@ -238,7 +239,7 @@ public class FilePageStore implements IPageStore
 	{
 		synchronized (storePageMap)
 		{
-			SessionPageKey key = new SessionPageKey(sessionId, -1, -1, true);
+			SessionPageKey key = new SessionPageKey(sessionId, -1, -1, -1, true);
 			storePageMap.put(key, key);
 			storePageMap.notifyAll();
 		}
@@ -259,12 +260,13 @@ public class FilePageStore implements IPageStore
 	/**
 	 * @param id
 	 * @param versionNumber
+	 * @param ajaxVersionNumber 
 	 * @param sessionDir
 	 * @return The file pointing to the page
 	 */
-	private File getPageFile(int id, int versionNumber, File sessionDir)
+	private File getPageFile(int id, int versionNumber, int ajaxVersionNumber, File sessionDir)
 	{
-		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber);
+		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber + "-ajax-" + ajaxVersionNumber);
 	}
 
 	private class SessionPageKey
@@ -272,18 +274,20 @@ public class FilePageStore implements IPageStore
 		private final String sessionId;
 		private final int id;
 		private final int versionNumber;
+		private final int ajaxVersionNumber;
 		private final boolean remove;
 
-		SessionPageKey(String sessionId, int id, int versionNumber)
+		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 		{
-			this(sessionId, id, versionNumber, false);
+			this(sessionId, id, versionNumber, ajaxVersionNumber, false);
 		}
 
-		SessionPageKey(String sessionId, int id, int versionNumber, boolean remove)
+		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, boolean remove)
 		{
 			this.sessionId = sessionId;
 			this.id = id;
 			this.versionNumber = versionNumber;
+			this.ajaxVersionNumber = ajaxVersionNumber;
 			this.remove = remove;
 		}
 
@@ -364,7 +368,7 @@ public class FilePageStore implements IPageStore
 							}
 							else
 							{
-								removePage(key.sessionId, key.id, key.versionNumber);
+								removePage(key.sessionId, key.id);
 								// now remove any other pending save for that
 								// page.
 								removePageFromPendingMap(key.sessionId, key.id);
@@ -417,20 +421,19 @@ public class FilePageStore implements IPageStore
 			}
 		}
 
-		private void removePage(String sessionId, int id, int currentVersionNumber)
+		private void removePage(String sessionId, int id)
 		{
 			File sessionDir = new File(getWorkDir(), sessionId);
 			if (sessionDir.exists())
 			{
-				while (currentVersionNumber >= 0)
+				final String filepart = appName + "-page-" + id;
+				sessionDir.listFiles(new FilenameFilter()
 				{
-					File pageFile = getPageFile(id, currentVersionNumber, sessionDir);
-					if (pageFile.exists())
+					public boolean accept(File dir, String name)
 					{
-						pageFile.delete();
+						return name.startsWith(filepart);
 					}
-					currentVersionNumber--;
-				}
+				});
 			}
 
 		}
@@ -464,7 +467,7 @@ public class FilePageStore implements IPageStore
 			File sessionDir = new File(getWorkDir(), sessionId);
 			sessionDir.mkdirs();
 			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(),
-					sessionDir);
+					page.getAjaxVersionNumber(), sessionDir);
 
 			FileOutputStream fos = null;
 			long t1 = System.currentTimeMillis();
