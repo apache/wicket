@@ -23,7 +23,6 @@ import java.util.List;
 
 import wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
-import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
 import wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import wicket.markup.repeater.Item;
