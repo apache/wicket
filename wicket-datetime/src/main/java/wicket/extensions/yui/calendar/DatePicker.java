@@ -286,6 +286,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 */
 	protected void configureWidgetProperties(Map widgetProperties) {
 		widgetProperties.put("close", Boolean.TRUE);
+		// TODO localize
+		widgetProperties.put("title", "Select a date:");
 	}
 
 	/**
