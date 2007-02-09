@@ -24,10 +24,10 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
 import wicket.datetime.util.DateConverter;
-import wicket.datetime.util.ITextFormatProvider;
 import wicket.datetime.util.PatternDateConverter;
 import wicket.datetime.util.StyleDateConverter;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import wicket.model.IModel;
 import wicket.util.convert.IConverter;
 
@@ -85,7 +85,8 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider forDatePattern(String id, String datePattern) {
+	public static ITextFormatProvider forDatePattern(String id,
+			String datePattern) {
 		return forDateStyle(id, null, datePattern);
 	}
 
@@ -161,7 +162,8 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider withConverter(String id, DateConverter converter) {
+	public static ITextFormatProvider withConverter(String id,
+			DateConverter converter) {
 		return withConverter(id, null, converter);
 	}
 
@@ -212,8 +214,8 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 		return converter;
 	}
 
-	/* (non-Javadoc)
-	 * @see wicket.datetime.markup.html.form.IDatePatternProvider#getDatePattern()
+	/**
+	 * @see wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider#getTextFormat()
 	 */
 	public final String getTextFormat() {
 		return ((DateConverter) converter).getDatePattern();

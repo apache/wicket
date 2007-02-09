@@ -30,10 +30,10 @@ import wicket.ResourceReference;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
-import wicket.datetime.util.ITextFormatProvider;
 import wicket.extensions.yui.YuiLib;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
+import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
@@ -260,8 +260,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		}
 		throw new WicketRuntimeException(
 				"this behavior can only be added to components that either implement "
-						+ ITextFormatProvider.class.getName()
-						+ " or that use " + DateConverter.class.getName()
+						+ ITextFormatProvider.class.getName() + " or that use "
+						+ DateConverter.class.getName()
 						+ " configured with an instance of "
 						+ SimpleDateFormat.class.getName()
 						+ " (like Wicket's default configuration has)");
