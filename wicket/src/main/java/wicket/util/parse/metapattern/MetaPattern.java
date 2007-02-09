@@ -339,7 +339,7 @@ public class MetaPattern
 	 *            One or more of the standard Java regular expression compile
 	 *            flags (see {@link Pattern#compile(String, int)})
 	 */
-	private void compile(final int flags)
+	private synchronized void compile(final int flags)
 	{
 		if (compiledPattern == null)
 		{
