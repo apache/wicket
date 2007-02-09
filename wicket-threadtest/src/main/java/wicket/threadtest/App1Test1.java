@@ -29,9 +29,9 @@ public class App1Test1 {
 				"/app1?wicket:interface=one:${iteration}:link::ILinkListener",
 				"/app1?wicket:interface=two:${iteration}:link::ILinkListener" });
 
-		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 10);
+		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 100);
 		//getCmd.setPrintResponse(true);
-		Tester tester = new Tester(getCmd, 50, true);
+		Tester tester = new Tester(getCmd, 10, true);
 		tester.run();
 	}
 }
