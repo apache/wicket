@@ -247,7 +247,7 @@ public final class Strings
 	 * @see Strings#escapeMarkup(String, boolean)
 	 * @return The escaped string
 	 */
-	public static CharSequence escapeMarkup(final String s)
+	public static CharSequence escapeMarkup(final CharSequence s)
 	{
 		return escapeMarkup(s, false);
 	}
@@ -265,7 +265,7 @@ public final class Strings
 	 *            True to replace ' ' with nonbreaking space
 	 * @return The escaped string
 	 */
-	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces)
+	public static CharSequence escapeMarkup(final CharSequence s, final boolean escapeSpaces)
 	{
 		return escapeMarkup(s, escapeSpaces, false);
 	}
@@ -285,7 +285,7 @@ public final class Strings
 	 *            True to convert non-7 bit characters to unicode HTML (&#...)
 	 * @return The escaped string
 	 */
-	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces,
+	public static CharSequence escapeMarkup(final CharSequence s, final boolean escapeSpaces,
 			final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)
@@ -550,7 +550,7 @@ public final class Strings
 	 * @param string2
 	 * @return true, if both strings are equal
 	 */
-	public static boolean isEqual(final String string1, final String string2)
+	public static boolean isEqual(final CharSequence string1, final CharSequence string2)
 	{
 		if ((string1 == null) && (string2 == null))
 		{
@@ -965,7 +965,7 @@ public final class Strings
 	 *            The unicode string
 	 * @return The escaped unicode string, like '\u4F60\u597D'.
 	 */
-	public static String toEscapedUnicode(final String unicodeString)
+	public static CharSequence toEscapedUnicode(final CharSequence unicodeString)
 	{
 		if ((unicodeString == null) || (unicodeString.length() == 0))
 		{
