@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.authorization.AuthorizationException;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
@@ -36,6 +39,9 @@ public class RequestListenerInterface
 {
 	/** Map from name to request listener interface */
 	private static final Map interfaces = Collections.synchronizedMap(new HashMap());
+
+	/** Log. */
+	private static final Log log = LogFactory.getLog(RequestListenerInterface.class);
 
 	/**
 	 * Looks up a request interface listener by name.
@@ -145,6 +151,16 @@ public class RequestListenerInterface
 	}
 
 	/**
+	 * @return true if urls encoded for this interface should record the page
+	 *         version, false if they should always be encoded for the latest
+	 *         page version
+	 */
+	public final boolean getRecordsPageVersion()
+	{
+		return recordsPageVersion;
+	}
+
+	/**
 	 * Invokes a given interface on a component.
 	 * 
 	 * @param page
@@ -155,6 +171,14 @@ public class RequestListenerInterface
 	public final void invoke(final Page page, final Component component)
 	{
 		page.beforeCallComponent(component, this);
+
+		if (!component.isEnabled() || !component.isVisibleInHierarchy())
+		{
+			// just return so that we have a silent fail and just re-render the
+			// page
+			log.info("component not enabled or visible; ignoring call. Component: " + component);
+			return;
+		}
 
 		try
 		{
@@ -222,6 +246,7 @@ public class RequestListenerInterface
 		return "[RequestListenerInterface name=" + name + ", method=" + method + "]";
 	}
 
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
@@ -254,16 +279,5 @@ public class RequestListenerInterface
 
 		// Save this interface method by the non-qualified class name
 		interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
-	}
-
-
-	/**
-	 * @return true if urls encoded for this interface should record the page
-	 *         version, false if they should always be encoded for the latest
-	 *         page version
-	 */
-	public final boolean getRecordsPageVersion()
-	{
-		return recordsPageVersion;
 	}
 }
