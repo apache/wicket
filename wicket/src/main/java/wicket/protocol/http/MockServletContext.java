@@ -118,7 +118,7 @@ public class MockServletContext implements ServletContext
 	 * Creates a temp directory
 	 * 
 	 * @param name
-	 * @return
+	 * @return File
 	 */
 	public static File createTempDir(String name)
 	{
