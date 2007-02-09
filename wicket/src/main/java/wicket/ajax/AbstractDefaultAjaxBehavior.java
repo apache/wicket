@@ -17,7 +17,6 @@
 package wicket.ajax;
 
 import wicket.Application;
-import wicket.Page;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.behavior.AbstractAjaxBehavior;
