@@ -23,6 +23,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.authorization.AuthorizationException;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
@@ -37,6 +40,9 @@ public class RequestListenerInterface
 {
 	/** Map from name to request listener interface */
 	private static final Map interfaces = Collections.synchronizedMap(new HashMap());
+
+	/** Log. */
+	private static final Log log = LogFactory.getLog(RequestListenerInterface.class);
 
 	/**
 	 * Looks up a request interface listener by name.
@@ -57,6 +63,7 @@ public class RequestListenerInterface
 	/** The name of this listener interface */
 	private String name;
 
+
 	/**
 	 * Whether or not this listener is targetted for a specific page version. If
 	 * recordVersion is true the page will be rolled back to the version which
@@ -76,7 +83,6 @@ public class RequestListenerInterface
 	{
 		this(listenerInterfaceClass, true);
 	}
-
 
 	/**
 	 * Constructor.
@@ -146,6 +152,16 @@ public class RequestListenerInterface
 	}
 
 	/**
+	 * @return true if urls encoded for this interface should record the page
+	 *         version, false if they should always be encoded for the latest
+	 *         page version
+	 */
+	public final boolean getRecordsPageVersion()
+	{
+		return recordsPageVersion;
+	}
+
+	/**
 	 * Invokes a given interface on a component.
 	 * 
 	 * @param page
@@ -157,6 +173,14 @@ public class RequestListenerInterface
 	{
 		page.beforeCallComponent(component, this);
 
+		if (!component.isEnabled() || !component.isVisibleInHierarchy())
+		{
+			// just return so that we have a silent fail and just re-render the
+			// page
+			log.info("component not enabled or visible; ignoring call. Component: " + component);
+			return;
+		}
+
 		try
 		{
 			// Invoke the interface method on the component
@@ -165,9 +189,9 @@ public class RequestListenerInterface
 		catch (InvocationTargetException e)
 		{
 			// Honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException || 
-					e.getTargetException() instanceof AuthorizationException ||
-					e.getTargetException() instanceof WicketRuntimeException)
+			if (e.getTargetException() instanceof AbstractRestartResponseException
+					|| e.getTargetException() instanceof AuthorizationException
+					|| e.getTargetException() instanceof WicketRuntimeException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
@@ -223,6 +247,7 @@ public class RequestListenerInterface
 		return "[RequestListenerInterface name=" + name + ", method=" + method + "]";
 	}
 
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
@@ -255,16 +280,5 @@ public class RequestListenerInterface
 
 		// Save this interface method by the non-qualified class name
 		interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
-	}
-
-
-	/**
-	 * @return true if urls encoded for this interface should record the page
-	 *         version, false if they should always be encoded for the latest
-	 *         page version
-	 */
-	public final boolean getRecordsPageVersion()
-	{
-		return recordsPageVersion;
 	}
 }
