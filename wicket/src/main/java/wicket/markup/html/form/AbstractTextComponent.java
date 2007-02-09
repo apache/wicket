@@ -16,6 +16,8 @@
  */
 package wicket.markup.html.form;
 
+import java.text.SimpleDateFormat;
+
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
 import wicket.util.string.Strings;
@@ -27,6 +29,25 @@ import wicket.util.string.Strings;
  */
 public abstract class AbstractTextComponent extends FormComponent
 {
+	/**
+	 * Text components that implement this interface are know to be able to
+	 * provide a pattern for formatting output and parsing input. This can be
+	 * used by for instance date picker components which are based on Javascript
+	 * and need some knowledge as to how to communicate properly via request
+	 * parameters.
+	 */
+	public static interface ITextFormatProvider
+	{
+
+		/**
+		 * Gets the pattern for printing output and parsing input.
+		 * 
+		 * @return The text pattern
+		 * @see SimpleDateFormat
+		 */
+		String getTextFormat();
+	}
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -84,23 +105,23 @@ public abstract class AbstractTextComponent extends FormComponent
 	}
 
 	/**
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
+	 */
+	protected Object convertValue(String[] value) throws ConversionException
+	{
+		String tmp = value != null && value.length > 0 ? value[0] : null;
+		if (getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
+		{
+			return null;
+		}
+		return super.convertValue(value);
+	}
+
+	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
 	protected final boolean supportsPersistence()
 	{
 		return true;
-	}
-	
-	/**
-	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
-	 */
-	protected Object convertValue(String[] value) throws ConversionException
-	{
-		String tmp = value != null && value.length > 0?value[0]:null;
-		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
-		{
-			return null;
-		}
-		return super.convertValue(value);
 	}
 }
