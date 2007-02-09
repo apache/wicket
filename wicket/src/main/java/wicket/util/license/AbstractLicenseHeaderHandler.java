@@ -21,7 +21,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
-import java.net.URL;
 
 import junit.framework.Assert;
 import wicket.util.io.Streams;
