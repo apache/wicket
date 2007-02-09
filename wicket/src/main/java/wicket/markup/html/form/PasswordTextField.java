@@ -82,9 +82,9 @@ public class PasswordTextField extends TextField<String>
 				return getApplication().getSecuritySettings().getCryptFactory().newCrypt()
 						.encryptUrlSafe(value);
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				log.error("Failed to instantiate encryption object. Continue without encryption");
+				log.error("Problem applying encryption; go on without for now", e);
 			}
 		}
 		return value;
@@ -115,15 +115,13 @@ public class PasswordTextField extends TextField<String>
 		String decryptedValue;
 		try
 		{
-			// TODO kept for backwards compatibility. Replace with
-			// decryptUrlSafe after 1.2
 			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
 					.decryptUrlSafe(value);
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
 			decryptedValue = value;
-			log.error("Failed to instantiate encryption object. Continue without encryption");
+			log.error("Problem applying encryption; go on without for now", e);
 		}
 
 		setModelObject(decryptedValue);
