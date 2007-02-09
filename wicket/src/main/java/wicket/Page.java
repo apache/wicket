@@ -483,6 +483,29 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * @return The current ajax version number of this page. 
+	 */
+	public final int getAjaxVersionNumber()
+	{
+		return versionManager == null ? 0 : versionManager.getAjaxVersionNumber();
+	}
+	
+	/**
+	 * This returns a page instance that is rollbacked the number of versions
+	 * that is specified compared to the current page.
+	 * 
+	 * This is a rollback including ajax versions. 
+	 * 
+	 * @param numberOfVersions to rollback
+	 * @return
+	 */
+	public final Page rollbackPage(int numberOfVersions)
+	{
+		Page page =  versionManager == null? this : versionManager.rollbackPage(numberOfVersions);
+		getSession().touch(page);
+		return page;
+	}
+	/**
 	 * @return Returns feedback messages from all components in this page
 	 *         (including the page itself).
 	 */
@@ -615,7 +638,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				}
 
 				// If we went all the way back to the original page
-				if (page != null && page.getCurrentVersionNumber() == 0)
+				if (page != null && page.getCurrentVersionNumber() == 0 && page.getAjaxVersionNumber() == 0)
 				{
 					// remove version info
 					page.versionManager = null;
@@ -866,7 +889,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public String toString()
 	{
-		return "[Page class = " + getClass().getName() + ", id = " + getId() + "]";
+		if(versionManager != null)
+		{
+			return "[Page class = " + getClass().getName() + ", id = " + getId() + 
+				", version = " + versionManager.getCurrentVersionNumber()  + ", ajax = " + 
+				versionManager.getAjaxVersionNumber() + "]";	
+		}
+		else
+		{
+			return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " + 0 + "]";
+		}
 	}
 
 	/**

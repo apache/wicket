@@ -107,12 +107,23 @@ public interface IPageVersionManager extends Serializable
 
 	/**
 	 * Retrieves a given Page version.
+	 * This method does not take use the ajax versions.
 	 * 
 	 * @param versionNumber
 	 *            The version of the page to get
 	 * @return The page or null if the version requested is not available
 	 */
 	Page getVersion(int versionNumber);
+
+
+	/**
+	 * This method rollbacks the page the number of versions specified
+	 * Including the ajax versions.
+	 * 
+	 * @param numberOfVersions
+	 * @return
+	 */
+	Page rollbackPage(int numberOfVersions);
 
 	/**
 	 * @return The number of versions stored in this version manager
@@ -124,4 +135,9 @@ public interface IPageVersionManager extends Serializable
 	 *         this version manager.
 	 */
 	int getCurrentVersionNumber();
+
+	/**
+	 * @return
+	 */
+	int getAjaxVersionNumber();
 }

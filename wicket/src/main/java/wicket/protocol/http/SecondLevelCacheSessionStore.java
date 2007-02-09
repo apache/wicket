@@ -16,6 +16,8 @@
  */
 package wicket.protocol.http;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.lang.ref.SoftReference;
 import java.util.Map;
 
@@ -56,9 +58,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param sessionId
 		 * @param id
 		 * @param versionNumber
+		 * @param ajaxVersionNumber 
 		 * @return The page
 		 */
-		Page getPage(String sessionId, int id, int versionNumber);
+		Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber);
 
 		/**
 		 * Removes a page from the persistent layer.
@@ -105,10 +108,15 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 		private static final long serialVersionUID = 1L;
 
-		private int currentVersionNumber;
+		private short currentVersionNumber;
+		
+		private short currentAjaxVersionNumber;
+		
+		private short lastAjaxVersionNumber;
 
 		private Page page;
 		
+		private transient boolean versionStarted;
 		
 		/**
 		 * Construct.
@@ -124,9 +132,19 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 */
 		public void beginVersion(boolean mergeVersion)
 		{
+			// this is an hack.. when object is read in. It must ignore the first version bump.
+			if(versionStarted) return;
+			
+			versionStarted = true;
 			if(!mergeVersion)
 			{
 				currentVersionNumber++;
+				lastAjaxVersionNumber = currentAjaxVersionNumber;
+				currentAjaxVersionNumber = 0;
+			}
+			else
+			{
+				currentAjaxVersionNumber++;
 			}
 		}
 
@@ -163,10 +181,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 */
 		public void endVersion(boolean mergeVersion)
 		{
+			versionStarted = false;
 			String sessionId = page.getSession().getId();
-			// can we really test here for merge versions? Ajax request does change the page.
-			// And the last version should be stored to disk..
-			if (sessionId != null /*&& !mergeVersion*/) 
+			if (sessionId != null) 
 			{
 				IPageStore store = ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
 				store.storePage(sessionId, page);
@@ -187,6 +204,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			return currentVersionNumber;
 		}
+		
+		/**
+		 * @see wicket.version.IPageVersionManager#getAjaxVersionNumber()
+		 */
+		public int getAjaxVersionNumber()
+		{
+			return currentAjaxVersionNumber;
+		}
 
 		/**
 		 * @see wicket.version.IPageVersionManager#getVersion(int)
@@ -197,6 +222,53 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				return page;
 			}
+			return null;
+		}
+		
+		private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+		{
+			s.defaultReadObject();
+			// this is an hack.. when object is read in. It must ignore the first version bump.
+			versionStarted = true;
+		}
+		/**
+		 * @see wicket.version.IPageVersionManager#rollbackPage(int)
+		 */
+		public Page rollbackPage(int numberOfVersions)
+		{
+			String sessionId = page.getSession().getId();
+			if (sessionId != null) 
+			{
+				int versionNumber = currentVersionNumber;
+				int ajaxNumber = currentAjaxVersionNumber;
+				if (versionStarted)
+				{
+					versionNumber--;
+					ajaxNumber--;
+				}
+				
+				IPageStore store = ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
+				// if the number of versions to rollback can be done inside the current page version.
+				if ( ajaxNumber >= numberOfVersions)
+				{
+					return store.getPage(sessionId, page.getNumericId(), versionNumber, ajaxNumber-numberOfVersions);
+				}
+				else
+				{
+					// else go one page version down.
+					versionNumber--;
+					// then calculate the previous ajax version by looking at the last ajax number of the previous version.
+					ajaxNumber = lastAjaxVersionNumber - (numberOfVersions-ajaxNumber);
+					if (ajaxNumber < 0)
+					{
+						// currently it is not supported to jump over 2 pages....
+						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
+						return null;
+					}
+					return store.getPage(sessionId, page.getNumericId(), versionNumber, ajaxNumber);
+				}
+			}
+
 			return null;
 		}
 
@@ -242,7 +314,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 			if (sessionId != null)
 			{
-				return getStore().getPage(sessionId, id, versionNumber);
+				// this is really a page request for a default page. (so without an ajax version)
+				return getStore().getPage(sessionId, id, versionNumber,0);
 			}
 			return null;
 		}
@@ -294,7 +367,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			private Map sessionMap = new ConcurrentHashMap();
 
-			public Page getPage(String sessionId, int id, int versionNumber)
+			public Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 			{
 				SoftReference sr = (SoftReference)sessionMap.get(sessionId);
 				if (sr != null)
@@ -310,14 +383,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 							{
 								page = page.getVersion(versionNumber);
 							}
-							if (page != null)
+							if (page != null && page.getAjaxVersionNumber() == ajaxVersionNumber)
 							{
 								return page;
 							}
 						}
 					}
 				}
-				return pageStore.getPage(sessionId, id, versionNumber);
+				return pageStore.getPage(sessionId, id, versionNumber, ajaxVersionNumber);
 			}
 
 			public void removePage(String sessionId, Page page)

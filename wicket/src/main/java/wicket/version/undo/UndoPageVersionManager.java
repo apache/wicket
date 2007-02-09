@@ -46,7 +46,10 @@ public class UndoPageVersionManager implements IPageVersionManager
 
 	/** The current version number */
 	private int currentVersionNumber = 0;
-	
+
+	/** The current version number */
+	private int currentAjaxVersionNumber = 0;
+
 	/** Maximum number of most-recent versions to keep */
 	private final int maxVersions;
 
@@ -81,6 +84,11 @@ public class UndoPageVersionManager implements IPageVersionManager
 		{
 			// We are working on the next version now
 			currentVersionNumber++;
+			currentAjaxVersionNumber = 0;
+		}
+		else
+		{
+			currentAjaxVersionNumber++;
 		}
 	}
 
@@ -165,6 +173,14 @@ public class UndoPageVersionManager implements IPageVersionManager
 	{
 		return currentVersionNumber;
 	}
+	
+	/**
+	 * @see wicket.version.IPageVersionManager#getAjaxVersionNumber()
+	 */
+	public int getAjaxVersionNumber()
+	{
+		return currentAjaxVersionNumber;
+	}
 
 	/**
 	 * @see wicket.version.IPageVersionManager#getVersion(int)
@@ -192,6 +208,14 @@ public class UndoPageVersionManager implements IPageVersionManager
 			// The version is not available
 			return null;
 		}
+	}
+	
+	/**
+	 * @see wicket.version.IPageVersionManager#rollbackPage(int)
+	 */
+	public Page rollbackPage(int numberOfVersions)
+	{
+		return null;
 	}
 
 	/**
