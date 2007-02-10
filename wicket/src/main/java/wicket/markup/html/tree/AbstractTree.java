@@ -31,12 +31,14 @@ import javax.swing.tree.TreeNode;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.ResourceReference;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.HeaderContributor;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.model.IDetachable;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -241,7 +243,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	 * Components that holds tree items. This is similiar to ListView, but it
 	 * renders tree items in the right order.
 	 */
-	private class TreeItemContainer extends WebMarkupContainer
+	private class TreeItemContainer extends WebMarkupContainer<Object>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -1094,6 +1096,8 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		// tree and '_'.
 		return item.getMarkupId().substring(skip);
 	}
+	
+	private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(AbstractTree.class, "res/tree.js");
 
 	/**
 	 * Initialize the component.
@@ -1109,7 +1113,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		// create container for tree items
 		itemContainer = new TreeItemContainer(this, "i");
 
-		add(HeaderContributor.forJavaScript(AbstractTree.class, "res/tree.js"));
+		add(HeaderContributor.forJavaScript(JAVASCRIPT));
 	}
 
 	/**

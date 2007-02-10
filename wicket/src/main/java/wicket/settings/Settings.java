@@ -227,6 +227,9 @@ public final class Settings
 
 	/** List of {@link IResponseFilter}s. */
 	private List<IResponseFilter> responseFilters;
+	
+	/** Whether the comments and whitespaces will be stripped from javascript resources */
+	private boolean stripJavascriptCommentsAndWhitespace;
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the
@@ -1309,4 +1312,20 @@ public final class Settings
 	{
 		requestsWindowSize = size;
 	}
+	
+	/**
+	 * @see wicket.settings.IResourceSettings#getStripJavascriptCommentsAndWhitespace()
+	 */
+	public boolean getStripJavascriptCommentsAndWhitespace()
+	{
+		return stripJavascriptCommentsAndWhitespace;
+	}
+	
+	/**
+	 * @see wicket.settings.IResourceSettings#setStripJavascriptCommentsAndWhitespace(boolean)
+	 */
+	public void setStripJavascriptCommentsAndWhitespace(boolean value)
+	{
+		stripJavascriptCommentsAndWhitespace = value;
+	}	
 }

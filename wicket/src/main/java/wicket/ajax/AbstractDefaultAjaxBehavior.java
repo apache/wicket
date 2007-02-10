@@ -21,7 +21,7 @@ import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.resources.CompressedResourceReference;
+import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.settings.IDebugSettings;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -44,15 +44,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
 	/** reference to the default ajax support javascript file. */
-	private static final ResourceReference JAVASCRIPT = new CompressedResourceReference(
+	private static final ResourceReference JAVASCRIPT = new JavascriptResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
 
 	/** reference to the default ajax debug support javascript file. */
-	private static final ResourceReference JAVASCRIPT_DEBUG_DRAG = new CompressedResourceReference(
+	private static final ResourceReference JAVASCRIPT_DEBUG_DRAG = new JavascriptResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug-drag.js");
 
 	/** reference to the default ajax debug support javascript file. */
-	private static final ResourceReference JAVASCRIPT_DEBUG = new CompressedResourceReference(
+	private static final ResourceReference JAVASCRIPT_DEBUG = new JavascriptResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 
 

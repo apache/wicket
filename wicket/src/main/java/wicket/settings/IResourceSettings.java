@@ -21,6 +21,7 @@ import java.util.List;
 import wicket.IResourceFactory;
 import wicket.Localizer;
 import wicket.markup.html.IPackageResourceGuard;
+import wicket.markup.html.JavascriptPackageResource;
 import wicket.markup.html.PackageResourceGuard;
 import wicket.model.IModel;
 import wicket.resource.IPropertiesFactory;
@@ -246,4 +247,17 @@ public interface IResourceSettings
 	 *            resource is requested
 	 */
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
+	
+	/**
+	 * Sets whether the whitespace characters and comments should be stripped for 
+	 * resources served through {@link JavascriptPackageResource}
+	 * @param value
+	 */
+	void setStripJavascriptCommentsAndWhitespace(boolean value);
+	
+	/**
+	 * @return whether the comments and whitespace characters will be stripped
+	 * from resources served through {@link JavascriptPackageResource}
+	 */
+	boolean getStripJavascriptCommentsAndWhitespace();
 }
