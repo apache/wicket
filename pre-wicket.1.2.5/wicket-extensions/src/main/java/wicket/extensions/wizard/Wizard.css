@@ -1,0 +1,33 @@
+.wicketExtensionsWizardInnerTable {
+	width: 600px;
+	border: thin solid black;
+}
+.wicketExtensionsWizardHeaderRow {
+	height: 20px;
+}
+.wicketExtensionsWizardHeader {
+	border: thin solid black;
+}
+.wicketExtensionsWizardView {
+	border: thin solid black;
+}
+.wicketExtensionsWizardViewInner {
+	margin: 10 10 10 10;
+}
+.wicketExtensionsWizardViewRow {
+	height: 140px;
+}
+.wicketExtensionsWizardButtonBar {
+	text-align: right;
+}
+.wicketExtensionsWizardButtonBar input {
+	width: 80px;
+}
+.wicketExtensionsWizardHeaderTitle {
+	margin: 10 5 10 15;
+	font-weight: bold;
+}
+.wicketExtensionsWizardHeaderSummary {
+	margin: 10 5 5 5;
+	font-style: italic;
+}

@@ -1,0 +1,58 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+  <title>Wicket Examples - displaytag</title>
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+<body>
+  <span wicket:id="mainNavigation" />
+  
+  <h2><wicket:link><a href="DisplaytagIndex.html">Example</a></wicket:link> &gt; Basic, showing subsets of data from the List</h2>
+  Basically this is a no-brainer for Wicket as the HTML does not contain any logic. The logic is with Java and you
+  have all Java means at hand to create/maintain sublists. <p/>
+  The example uses more or less static data to fill the table only. In real life applications these data are usually loaded
+  from a database. Take a look at IModel and the various implementations of this interface on how this concept can ease
+  your developers life.
+  <br />
+  <br />
+  All rows:   
+  <span wicket:id="table1"/>
+
+  Rows 0-5 (List.subList()):
+  <span wicket:id="table2"/>
+  
+  Rows 3-8 (ListView's view capabilities):
+  <span wicket:id="table3"/>
+  
+  <wicket:fragment wicket:id="tableFrag">
+    <table>
+      <thead>
+	    <tr>
+	      <th>ID</th>
+	      <th>Email</th>
+	      <th>Status</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr wicket:id="rows" class="even">
+	      <td><span wicket:id="id">Test ID</span></td>
+	      <td><span wicket:id="email">Test EMail</span></td>
+	      <td><span wicket:id="status">Test Status</span></td>
+	    </tr>
+	    <wicket:remove>
+	      <tr class="odd">
+	        <td>Test ID</td>
+	        <td>Test Email</td>
+	        <td>Test Status</td>
+	      </tr>
+	    </wicket:remove>
+	  </tbody>
+    </table>
+    <br />
+  </wicket:fragment>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0"  encoding="ISO-8859-1"?>
+<!DOCTYPE Configure PUBLIC  
+ "-//Mort Bay Consulting//DTD Configure 1.1//EN"
+ "http://jetty.mortbay.org/configure_1_2.dtd">
+<!-- =============================================================== -->
+<!-- Configure the Jetty Server                                      -->
+<!-- =============================================================== -->
+<Configure class="org.mortbay.jetty.Server">
+
+  <!-- =============================================================== -->
+  <!-- Configure the Request Listeners                                 -->
+  <!-- =============================================================== -->
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- Add and configure a HTTP listener to port 8081                  -->
+  <!-- The default port can be changed using: java -Djetty.port=80     -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <Call name="addListener">
+    <Arg>
+      <New class="org.mortbay.http.SocketListener">
+        <Set name="Port"><SystemProperty name="jetty.port" default="8080"/></Set>
+        <Set name="MinThreads">10</Set>
+        <Set name="MaxThreads">100</Set>
+        <Set name="MaxIdleTimeMs">30000</Set>
+        <Set name="LowResourcePersistTimeMs">5000</Set>
+        <Set name="ConfidentialPort">8443</Set>
+        <Set name="IntegralPort">8443</Set>
+      </New>
+    </Arg>
+  </Call>
+
+  <!-- =============================================================== -->
+  <!-- Configure the Contexts                                          -->
+  <!-- =============================================================== -->
+  
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- Add and configure a specific web application                    -->
+  <!-- + Set Unpack WAR files                                          -->
+  <!-- + Set Default Descriptor.  Resource, file or URL                -->
+  <!-- + Set Virtual Hosts. A Null host or empty array means all hosts -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <Call name="addWebApplication">
+    <Arg>/spring</Arg>
+    <Arg>src/main/webapp</Arg>
+  </Call>
+
+  <!-- =============================================================== -->
+  <!-- Configure the Other Server Options                              -->
+  <!-- =============================================================== -->
+  <Set name="requestsPerGC">2000</Set>
+  <Set name="statsOn">false</Set>
+  
+
+
+</Configure>

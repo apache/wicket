@@ -1,0 +1,72 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - library</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>    
+<style type="text/css">
+<!--
+.italic {
+	font-style: italic;
+}
+-->
+</style>
+<body>
+
+  <span wicket:id = "border">
+  Book Details
+  <p>
+  <table>
+	<tr>
+	  <td align="right">Title:</td>
+	  <td>
+	    <span wicket:id = "title">
+        Huckleberry Finn
+        </span>
+      </td>
+	</tr>
+	<tr>
+	  <td align="right">Author:</td>
+	  <td>
+	    <span wicket:id = "author">
+        Mark Twain
+        </span>
+	  </td>
+	</tr>
+	<tr>
+	  <td align="right">Fiction:</td>
+	  <td>
+	    <span wicket:id = "fiction">
+	    true
+        </span>
+	  </td>
+	</tr>
+	<tr>
+	  <td align="right">Companion Book:</td>
+	  <td>
+	    <a wicket:id = "companion">
+	    <span wicket:id = "title">Cat in Hat</span>
+        </a>
+	  </td>
+	</tr>
+	<tr>
+	  <td align="right">Styles:</td>
+	  <td>
+	    <span wicket:id = "writingStyles">
+	      Style1, Style2
+      </span>
+	  </td>
+	</tr>
+	<tr>
+	  <td align="right">Related Book:</td>
+	  <td>
+	    <a wicket:id = "related">
+	    <span wicket:id = "title">Cat in Hat</span>
+        </a>
+	  </td>
+	</tr>	
+  </table>	
+  <p>
+  <a wicket:id = "edit" href="EditBook.html">Edit</a>
+  </span>
+</body>
+</html>

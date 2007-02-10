@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>
+			Wicket Authorization Roles Example
+		</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		This page has three panels. Depending on the roles of the selected user, you either see one, two or three of them.
+	</body>
+
+	<span wicket:id="forAllUsersPanel">
+		panel for all users here
+	</span>
+
+	<span wicket:id="forAdminsAndUsersPanel">
+		panel for roles ADMIN and USER here
+	</span>
+
+	<span wicket:id="forAdminsPanel">
+		panel for only role ADMIN here
+	</span>
+
+</html>

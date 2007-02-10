@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Blogs</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java, blogs" />
+	<body>
+		<section name="Blogs">
+			<p>
+				Any (open source) project exists solely because a community wants to support it. The
+				Wicket community consists of the users and developers. There are many who want to
+				share their experiences with Wicket and do so on the
+				<a href="/mail-lists.html">mailing lists</a>
+				, on several online media portals (for example
+				<a href="http://www.theserverside.com">The ServerSide</a>
+				and
+				<a href="http://www.javalobby.org">JavaLobby</a>
+				), and on their blogs.
+			</p>
+			<p>
+				Here is a list of regular Wicket bloggers, consisting of core contributers and
+				enthousiastic users.
+			</p>
+			<ul>
+				<li>
+					<a href="http://www.jroller.com/page/dashorst">A Wicket Diary</a>
+					- Martijn Dashorst
+				</li>
+				<li>
+					<a href="http://chillenious.wordpress.com/">Chillenious!</a>
+					- Eelco Hillenius
+				</li>
+				<li>
+					<a href="http://www.jroller.com/page/JonathanLocke">Jonathan</a>
+					- Jonathan Locke
+				</li>
+				<li>
+				    <a href="http://technically.us/n8/">N8than</a>
+				    - Nathan Hamblen
+				</li>
+				<li>
+				    <a href="http://www.antwerkz.com/wp/">Antwerkz</a>
+				    - Justin Lee
+				</li>
+				<li>
+				    <a href="http://www.systemmobile.com">System Mobile</a>
+				    - Nick Heudecker
+				</li>
+				<li>
+					<a href="http://blogs.sun.com/geertjan">Geertjan</a>
+					- Geertjan Wielenga
+				</li>
+			</ul>
+			<subsection name="Adding your blog">
+				<p>
+					If you think your blog is missing, then please send a message to one of the core
+					contributors or the mailinglist. In the mean time you can add your blog to our
+					<a href="http://cwiki.apache.org/WICKET/wicket-blogs.html">wiki's special blog page</a>
+					.
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+
+	<p>
+	This page is bookmarkable. Users can navigate to this page from anywhere (hence they
+	can even bookmark it), and a user doesn't have to be in a session prior to addressing
+	a bookmarkable page (though a session will be created right away).
+	</p>
+	
+	<p>
+	The message beneath is either the message that was passed as a PageParameters argument (which
+	maps directly to a request parameter) or the default message. <br />
+	<span wicket:id="messageLabel" class="mark">message comes here</span>
+	</p>
+
+	<p>
+	<a wicket:id="navigateBackLink">navigate back to where we came from</a>
+	</p>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<html xmlns:wicket>
+<head>
+<title>Wicket Examples - displaytag</title>
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+<body>
+  <span wicket:id="mainNavigation"/>
+  <h2><wicket:link><a href="DisplaytagIndex.html">Example</a></wicket:link> &gt; Simplest case, no columns</h2>
+  <br/>
+  <table>
+    <thead>
+      <tr>
+        <th>Please provide column tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="entries" class="even">
+        <td><span wicket:id="entry">Test Eintrag</span></td>
+      </tr>
+      <wicket:remove>
+        <tr class="odd">
+          <td>Test Eintrag 2</td>
+        </tr>
+      </wicket:remove>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<projectDescription>
+  <name>wicket-extensions</name>
+  <comment>Wicket Extensions is a rich component library for the Wicket framework.</comment>
+  <projects>
+    <project>wicket</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+      <arguments/>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

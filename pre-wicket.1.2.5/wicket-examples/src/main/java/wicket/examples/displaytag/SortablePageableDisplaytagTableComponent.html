@@ -1,0 +1,39 @@
+<html xmlns:wicket>
+<body>
+<wicket:panel>
+  <span wicket:id="headline">xxx items found, displaying yy to zz.</span>
+  <p />[<a wicket:id="first">First</a>/<a wicket:id="prev">Prev</a>] <span wicket:id="navigation"> <a
+    wicket:id="pageLink" href="#"> <span wicket:id="pageNumber">1</span> </a> </span> [<a
+    wicket:id="next">Next</a>/<a wicket:id="last">Last</a>] <br />
+  <table>
+    <thead wicket:id="header">
+      <tr>
+        <th wicket:id="id" class="sortable">ID</th>
+        <th wicket:id="name" class="sortable">Name</th>
+        <th wicket:id="email" class="sortable">Email</th>
+        <th wicket:id="status" class="sortable">Status</th>
+        <th wicket:id="comment" class="sortable">Comment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="description">Test Comments</span></td>
+      </tr>
+      <wicket:remove>
+        <tr class="odd">
+          <td>Test ID</td>
+          <td>Test Name</td>
+          <td>Test Email</td>
+          <td>Test Status</td>
+          <td>Test Comments</td>
+        </tr>
+      </wicket:remove>
+    </tbody>
+  </table>
+</wicket:panel>
+</body>
+</html>

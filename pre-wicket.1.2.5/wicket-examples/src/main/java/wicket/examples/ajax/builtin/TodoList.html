@@ -1,0 +1,46 @@
+<html>
+<head>
+  <title>Wicket Examples - Ajax - Todo list</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <wicket:head>
+    <style type="text/css">
+		div {
+			aborder : 1px solid red;
+		}
+		.item {
+		}
+		.itemCheck {
+			float : left;
+			width : 50px;
+			text-align : right;
+			padding-right : 10px;
+		}
+		.itemText {
+			width : auto;
+		}
+    </style>
+  </wicket:head>
+</head>
+<body>
+  <wicket:extend>
+	<div wicket:id="showItems">
+		<div class="item" wicket:id="item">
+			<div class="itemCheck"><input type="checkbox" wicket:id="check" /></div>
+			<div class="itemText"><span wicket:id="text">item text</span></div>
+		</div>
+	</div>
+
+	<div class="item">
+		<div class="itemCheck">&nbsp;</div>
+		<div class="itemText" wicket:id="addItems">
+			<a href="#" wicket:id="link">New item</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" wicket:id="remove">Remove completed</a>
+			<form wicket:id="form">
+				<input type="text" wicket:id="text" /> 
+				<input type="button" wicket:id="add" value="Add item" /> or 
+				<input type="button" wicket:id="cancel" value="Cancel" />
+			</form>
+		</div>
+	</div>
+  </wicket:extend>
+</body>
+</html>

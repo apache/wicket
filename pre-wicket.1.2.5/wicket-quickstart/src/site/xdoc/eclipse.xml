@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Eclipse Kick Start Guide</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java, eclipse" />
+	<body>
+		<section name="Eclipse QuickStart Guide">
+			<p>
+				This quickstart is a small guide to get you up and running to start using Wicket
+				within minutes. This project is meant to be a starting point for your first project.
+				If you are looking for examples, please look at the example projects.
+			</p>
+			<p>
+				This document and project assume you have no special plugins or application servers
+				installed on your machine. In the
+				<a href="#Next_Steps">final section</a>
+				of this document some hints are given to speed up your development even further.
+			</p>
+			<p>
+				If you have another IDE you'd like to see quickstart support for,
+				don't hesitate to contribute!
+			</p>
+			<subsection name="Summary">
+				<p>
+					For the more seasoned developers here's a short list of steps to quickstart your
+					Wicket development. All these steps are explained in more detail below.
+				</p>
+				<ul>
+					<li>download the quickstart project (follow the link in the navigation menu)</li>
+					<li>unzip in your workspace</li>
+					<li>rename directory to project name</li>
+					<li>create new Java project in Eclipse, using previous project name</li>
+					<li>run the Start class (Run as - Java application)</li>
+					<li>
+						open browser to
+						<a href="http://localhost:8081/quickstart">
+							<code>http://localhost:8081/quickstart</code>
+						</a>
+					</li>
+				</ul>
+				<p>
+					At the
+					<a href="#Next_Steps">end of this document</a>
+					we suggest some next steps to take.
+				</p>
+			</subsection>
+		</section>
+		<section name="Setting Up">
+			<subsection name="Prerequisites">
+				<p>We assume you have the following already installed:</p>
+				<ul>
+					<li>Java 1.4 (or newer)</li>
+					<li>Eclipse 3.0 (or newer)</li>
+				</ul>
+				<p>
+					It is assumed, but not obligatory, that you have installed eclipse in the
+					following (Windows) directory:
+				</p>
+				<ul>
+					<li>
+						<code>C:\eclipse</code>
+					</li>
+				</ul>
+				<p>and that your workspace resides in the default location:</p>
+				<ul>
+					<li>
+						<code>C:\eclipse\workspace</code>
+					</li>
+				</ul>
+				<p>
+					Like stated before, it is not obligatory to use these settings, but if your
+					installation does not match this one, please substitute your setup for these
+					assumptions.
+				</p>
+			</subsection>
+			<subsection name="The QuickStart Project">
+				<p>
+					Next you need to download the quickstart distribution project from our
+					sourceforge site.
+				</p>
+				<ul>
+					<li>
+						Download the
+						<a
+							href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850">
+							wicket-quickstart distribution
+						</a>
+					</li>
+				</ul>
+				<p>
+					Unzip the distribution into your Eclipse workspace (which is typically located
+					under
+					<code>C:\eclipse\workspace</code>
+					).
+				</p>
+				<p>
+					Rename the directory that was just created to your required project name. In the
+					following the directory name is renamed to 'foobar'.
+				</p>
+				<img src="images/eclipse-rename.png" />
+			</subsection>
+		</section>
+		<section name="Running Eclipse">
+			<subsection name="Configuring Eclipse">
+				<p>
+					Now it is time to start Eclipse, if you haven't done so already. Select the
+					workspace where you have installed the Wicket quickstart project. In order to
+					have Eclipse import your project we will create a new Java project using the
+					directory name of your project.
+				</p>
+				<ul>
+					<li>Start the 'New project' wizard in Eclipse.</li>
+					<li>
+						Select 'Java project' and click next.
+						<img src="images/eclipse-newproject.png" />
+					</li>
+					<li>
+						Enter in the 'project name' box the name of your directory (chosen in the
+						directory rename action of before). Notice the text at the bottom of the
+						dialog saying
+						<blockquote>
+							The specified external location already exists. If a project is created
+							in this location, the wizard will automatically try to detect existing
+							sources and class files and configure the classpath appropriately.
+						</blockquote>
+						<img src="images/eclipse-newproject2.png" />
+					</li>
+					<li>Leave all other options on their default values and click 'Finish'.</li>
+				</ul>
+			</subsection>
+			<subsection name="Running the Application">
+				<p>
+					The application has an internal webserver (
+					<a href="http://jetty.mortbay.org">Jetty</a>
+					) which can be used to quickly develop webapplications. All you need to do is to
+					run the application and point your browser to the webserver running from within
+					Eclipse.
+				</p>
+				<ul>
+					<li>
+						Start the Jetty server by right-clicking on the
+						<code>src/main/java</code>
+						directory in the project and selecting the menu: 'Run as - Java
+						application'. If Eclipse prompts you for a main class, browse to the class
+						named 'Start'.
+					</li>
+					<li>Start your browser</li>
+					<li>
+						Point the browser to the local Jetty server:
+						<a href="http://localhost:8081/quickstart">
+							http://localhost:8081/quickstart
+						</a>
+						.
+					</li>
+				</ul>
+			</subsection>
+		</section>
+		<section name="Next Steps">
+			<p>This section gives some pointers on where to go now.</p>
+			<ul>
+				<li>
+					take a look at the
+					<a href="/Examples.html">examples</a>
+				</li>
+				<li>
+					find more information in the
+					<a href="/manual.html">manual</a>
+				</li>
+				<li>
+					find more information on the
+					<a href="/wiki">wiki</a>
+				</li>
+				<li>
+					take a look at the
+					<a href="http://jettylauncher.sourceforge.net/">Jetty launcher</a>
+					plugin to ease your development
+				</li>
+			</ul>
+			<subsection name="Jetty Configuration">
+				<p>The Jetty configuration file is located in the project directory:</p>
+				<blockquote>src/main/resources/jetty-config.xml</blockquote>
+				<p>
+					Jetty is started on port 8081 in order to avoid conflicts with other installed
+					application servers (for instance Tomcat). This way it is easier to test with
+					different application servers. This can be configured in the configuration file.
+				</p>
+				<p>
+					See the
+					<a href="http://jetty.mortbay.org/jetty/tut/XmlConfiguration.html">
+						Jetty documentation
+					</a>
+					for information on how to configure Jetty.
+				</p>
+				<p>
+					Jetty is started in the
+					<code>main</code>
+					-method of the
+					<code>wicket.quickstart.Start</code>
+					class.
+				</p>
+			</subsection>
+			<subsection name="Customizing the Application">
+				<p>
+					The main page definitions can be found in the
+					<code>src/main/java/Index.html</code>
+					HTML file and the
+					<code>src/main/java/wicket.quickstart.Index.java</code>
+					class.
+				</p>
+			</subsection>
+			<subsection name="Other Application Servers">
+				<p>
+					Even though this project is aimed at Jetty, it is not prohibited to develop
+					using other application servers. If you have another setup, please leave a
+					note on how you set up your environment on the <a href="/wiki">wiki</a>.
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,21 @@
+<head>
+	<wicket:head>
+		<script language="JavaScript" type="text/javascript" src="prototype.js"></script>
+		<script language="JavaScript" type="text/javascript" src="scriptaculous.js"></script>
+		<script language="JavaScript" type="text/javascript" src="effects.js"></script>
+	</wicket:head>
+</head>
+<wicket:extend>
+<style>
+	div.container { font-size: 14pt; }
+</style>
+<div class="container">
+counter 1:<span wicket:id="c1"></span> 
+<br/>
+<br/>
+counter 2: <span wicket:id="c2"></span>
+<br/>
+<br/>
+<a href="#" wicket:id="c1-link">counter1++ and shake</a>&nbsp;&nbsp;<a href="#" wicket:id="c2-link">counter2++ and highlight</a>
+</div>
+</wicket:extend>

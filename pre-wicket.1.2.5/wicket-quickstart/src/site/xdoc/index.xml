@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Home</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java, quickstart, eclipse, netbeans, intellij, idea" />
+	<body>
+		<section name="Quick Start">
+			<p>
+				This quick start is a small guide to get you up and running to start using
+				<a href="http://wicket.sourceforge.net">Wicket</a>
+				within minutes. This project is meant to be a starting point for your first project.
+				If you are looking for examples, please look at the example projects.
+			</p>
+			<p>This project has guides to the major three IDE's available:</p>
+			<ul>
+				<li><a href="eclipse.html">Eclipse</a></li>
+				<li><a href="netbeans.html">Netbeans</a></li>
+				<li><a href="intellij.html">IntelliJ IDEA</a></li>
+			</ul>
+			<p>
+				These quick start guides assume you have some knowlegde of developing Java web
+				applications and using your IDE. This kick start will only give you a working
+				environment, it is not intended as a blueprint project.
+			</p>
+		</section>
+		<section name="Latest News">
+			<subsection name="May 22, 2006 - Wicket QuickStart 1.2 released">
+				<p>
+					The Wicket Quickstart project has been upgraded to use Wicket 1.2.
+				</p>
+			</subsection>
+		</section>
+		<section name="Special Thanks">
+			<p>
+				The Wicket Stuff development team would like to thank the following partners for
+				supporting Open Source in general and Wicket in particular.
+			</p>
+			<a href="http://www.sourceforge.net" target="_blank" class="logoLink">
+				<img alt="SourceForge.net"
+					src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" />
+			</a>
+		</section>
+	</body>
+</document>

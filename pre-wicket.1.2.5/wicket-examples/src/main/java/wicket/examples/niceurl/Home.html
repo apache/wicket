@@ -1,0 +1,44 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+	<head>
+		<title>Wicket Examples - niceurl</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+
+		<span wicket:id="mainNavigation"></span>
+
+		<p>
+			This example displays how you can work with 'nice' urls for bookmarkable pages.
+		</p>
+
+		<p>
+			These links refer to pages that were mounted one by one <br />
+			<a wicket:id="page1Link">
+				Click this BookmarkablePageLink to go to Page 1
+			</a><br/>
+			<a wicket:id="page2Link">
+				Click this BookmarkablePageLink to go to Page 2
+			</a>
+			&nbsp;After Page 2 is displayed click refresh link to see url parameters in action <br />
+            <a wicket:id="page2LinkQP">
+                Same as page 2, but now the url parameters are encoded in a normal fashion
+            </a>
+            <br />
+
+		</p>
+		<p>
+			These links refere to pages that were mounted as a whole package <br />
+			<a wicket:id="page3Link">
+				Click this BookmarkablePageLink to go to Page 3
+			</a><br/>
+			<a wicket:id="page4Link">
+				Click this BookmarkablePageLink to go to Page 4
+			</a><br/>
+			<a wicket:id="page5Link">
+				Click this BookmarkablePageLink to go to Page 5
+			</a>
+			&nbsp;After Page 5 is displayed click refresh link to see url parameters in action <br />
+		</p>
+
+	</body>
+</html>

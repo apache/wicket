@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Wicket QuickTour: Markup Inheritance!</title>
+	</properties>
+
+	<meta
+		name="keyword"
+		content="wicket, example, web, j2ee, java" />
+
+<body>
+<section name="Markup inheritance">
+	<p>
+		This markup inheritance example show you how to create reusable page layouts and
+		panel layouts.
+	</p>
+	<p>
+        In all the Wicket examples, you have to put all files in the same package directory. 
+        This means putting the markup files and the java files next to one another. It is 
+        possible to alter this behavior, but that is beyond the scope of this example. The
+        only exception is the oblibatory <code>web.xml</code> file which should reside
+        in the <code>WEB-INF/</code> directory of your web application root folder.
+	</p>
+	<p>
+	 	In this example we assume you already have read and understood the other examples
+	 	which give you information on the structure and nature of Wicket applications.
+	 	Specifically read and understand the <a href="ExampleHelloWorld.html">Hello, World 
+	 	example</a>.
+	</p>
+<subsection name="Page layout">
+	<p>
+		In the next figure we show a standard strategy for laying out a page. A standard
+		header, the main content body and a standard footer.
+	</p>
+	<img src="images/markupinheritence.png" alt="page layout" title="Page layout showing a header, body and footer"/>
+	<p>
+		In Wicket you can achieve this using different strategies. This article focuses on
+		one strategy: markup inheritance.
+	</p>
+</subsection>
+<subsection name="What is markup inheritance?">
+	<p>
+		In Java you can extend classes. This same concept has been fitted into the markup
+		parsing of Java. Markup containers that have files associated (page and panels)
+		can inherit the markup of their super containers.
+	</p>
+	<p>
+		This is done using two special Wicket tags: <tt>&lt;wicket:child&gt;</tt> and 
+		<tt>&lt;wicket:extend&gt;</tt>. In the super markup you define where the child markup
+		should be put, and in the sub markup you delineate where the child markup starts and 
+		ends.
+	</p>
+	<h3>Listing 1 the super markup file</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+This is in the super markup.<br>
+<wicket:child />
+This is in the super markup.<br>
+</body>
+</html>]]></source>
+	<p>
+		In this markup you see two sentences that surround the <tt>wicket:child</tt> tag. All
+		markup in this file will remain when a sub class of this page is created, only the
+		<tt>wicket:child</tt> tag will be replaced with the child markup. So if we look at
+		the following markup:
+	</p>
+	<h3>Listing 2 the child markup file</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+This is in de child markup.<br>
+<wicket:extend>
+This is in the child markup.<br>
+</wicket:extend>
+This is in the child markup.<br>
+</body>
+</html>]]></source>
+	<p>
+		we can see the markup that should be included in the parent. Only the markup between
+		the <tt>wicket:extend</tt> tags is included in the final page. Take a look at the
+		following markup which is the final markup when you would use this in a Wicket
+		application.
+	</p>
+	<h3>Listing 3 the final markup</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+This is in the super markup.<br>
+<wicket:child><wicket:extend>
+This is in the child markup.<br>
+</wicket:extend></wicket:child>
+This is in the super markup.<br>
+</body>
+</html>]]></source>
+	<p>
+		Here you can see that the <tt>&lt;wicket:child /&gt;</tt> tag has been expanded,
+		and its contents filled with exactly the markup between the <tt>&lt;wicket:extend&gt;</tt>
+		tags. If you want to get rid of the special Wicket tags, you can disable that on the
+		markup settings (<a href="apidocs/wicket/settings/IMarkupSettings.html#setStripWicketTags(boolean)">IMarkupSettings</a>).
+	</p>
+</subsection>
+<subsection name="Implementing the BasePage">
+	<p>
+		Now that we have seen the basics for markup inheritance, we can now take a look
+		at the example at hand. Let's first create the base page.
+	</p>
+	<h3>Listing 4 The base page's Java class</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.markup.html.WebPage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.BookmarkablePageLink;
+
+public abstract class BasePage extends WebPage {
+	public BasePage() {
+		add(new BookmarkablePageLink("page1", Page1.class));
+		add(new BookmarkablePageLink("page2", Page2.class));
+		add(new Label("footer", "This is in the footer"));
+	}
+}]]></source>
+	<p>
+		The two links should go into the header, and the footer in the footer of the page. 
+		Note that the <tt>abstract</tt> keyword isn't required, but considered a good 
+		practise. Now let's take a look at the markup for the <tt>BasePage</tt>
+	</p>
+	<h3>Listing 5 The base page's markup file</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+<div id="header">
+    <a href="#" wicket:id="page1">Page1</a>
+    <a href="#" wicket:id="page2">Page2</a>
+</div>
+<div id="body">
+<wicket:child />
+</div>
+<div id="footer">
+	<span wicket:id="footer"></span>
+</div>
+</body>
+</html>]]></source>
+	<p>
+		In this markup file you see the specific basic layout: we have 3 <tt>div</tt> elements:
+		<ul>
+		<li><tt>div id="header"</tt></li>
+		<li><tt>div id="body"</tt></li>
+		<li><tt>div id="footer"</tt></li>
+		</ul>
+		Note that these aren't Wicket components, just plain markup. We could have made them
+		components, such as a <tt>Panel</tt> but for brevity we keep it this way.
+	</p>
+	<p>
+		Now that we have the <tt>BasePage</tt> finished, we can implement the two subclasses
+		to finish this example.
+	</p>
+</subsection>
+<subsection name="Implementing the sub pages">
+	<p>
+		We need to build two pages: <tt>Page1</tt> and <tt>Page2</tt>. Each page needs its own
+		markup file and Java class. Let's first implement <tt>Page1</tt>.
+	</p>
+	<h3>Listing 6 Page1's Java class</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.markup.html.basic.Label;
+
+public class Page1 extends BasePage {
+	public Page1() {
+		add(new Label("label1", "This is in the subclass Page1"));
+	}
+}]]></source>
+	<p>
+		In this example you see that we add a new label component to the page: <tt>label1</tt>.
+		This component is only available for <tt>Page1</tt>, as such <tt>Page2</tt> can define
+		its own component hierarchy. Let's take a look at the markup for <tt>Page1</tt>:
+	</p>
+	<h3>Listing 7 Page1's Markup file</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+<wicket:extend>
+<h1>Page1</h1>
+<span wicket:id="label1"></span>
+</wicket:extend>
+</body>
+</html>]]></source>
+	<p>
+		Here you see that we added the <tt>Label</tt> component in the markup between the
+		<tt>wicket:extend</tt> tags. If we were to add the component outside those tags,
+		Wicket will not be able to render the component in the final page.
+	</p>
+	<p>
+		Now, let's do the same for Page2.
+	</p>
+	<h3>Listing 8 Page2's Java class</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.markup.html.basic.Label;
+
+public class Page2 extends BasePage {
+	public Page2() {
+		add(new Label("label2", "This is in the subclass Page2"));
+	}
+}]]></source>
+	<h3>Listing 9 Page2's Markup file</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+<wicket:extend>
+<h1>Page2</h1>
+<span wicket:id="label2"></span>
+</wicket:extend>
+</body>
+</html>]]></source>
+	<p>
+		In <tt>Page2</tt> you see that we have a different component structure (label2
+		instead of label1), and as such that the pages are quite different.
+	</p>
+	<p>
+		If you paste this code into a Wicket quickstart application, you can see it immediately
+		working (don't forget to set the homepage to <tt>Page1</tt> or <tt>Page2</tt>).
+	</p>
+</subsection>
+<subsection name="Conclusion">
+	<p>
+		With markup inheritance you can get a standard layout for your application without too
+		much hassle. It follows the natural inheritance strategy for Java code and makes
+		encapsulation of your component hierarchy possible.
+	</p>
+	<p>
+		In this example we haven't touched on the other possible features of markup inheritance:
+		<ul>
+		<li>contributing to the <tt>&lt;head&gt;</tt> section from your sub pages</li>
+		<li>multiple layers of inheritance (this just works)</li>
+		<li>markup inheritance used with <tt>Panel</tt> components</li>
+		</ul>
+		However, this example should get you up and running.
+	</p>
+</subsection>
+</section>
+</body>
+</document>

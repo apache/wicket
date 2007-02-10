@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket>
+<head>
+    <title>Wicket Examples - sourcecode</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+	<script language="JavaScript" type="text/javascript" src="prototype.js"></script>
+	<script language="JavaScript" type="text/javascript" src="scriptaculous.js"></script>
+	<script language="JavaScript" type="text/javascript" src="effects.js"></script>
+	<style type="text/css">
+		#content {
+		    width : 800px;
+			height : 600px;
+		}
+		#header {
+		}
+		.header {
+			height : 20px;
+			background-color : #888;
+			color : #fff;
+			position : absolute;
+			top : 0px;
+			text-align : center;
+		}
+		.body {
+			position : absolute;
+			top : 20px;
+			height : 490px;
+			overflow : scroll;
+			border-bottom : 1px solid #aaa;
+		}
+		.left {
+			width : 220px;
+			left : 0px;
+		}
+		.left{
+			border-right : 1px solid #aaa;
+		}
+		.right {
+			width : 579px;
+			left : 221px;
+		}
+		.body.right {
+			padding-left : 5px;
+			width : 574px;
+		}
+		#footer {
+		    text-align : center;
+		    position : absolute;
+		    bottom : 0;
+		    height : 90px;
+		    width : 100%;
+		}
+		pre {
+			line-height : 14px;
+			font-size : 10px;
+			font-family : Lucida Console, Courier New, Courier, Fixed;
+		}
+		ul {
+			list-style-type : none;
+			margin : 0px;
+			padding : 10px;
+		}
+	</style>
+</head>
+<body>
+<div id="content">
+	<div id="header">
+		<div class="left header">Files</div>
+		<div class="right header">Code for <span wicket:id="filename"></span></div>
+	</div>
+	<div id="body">
+		<div class="left body" wicket:id="filespanel">
+			<ul>
+				<li wicket:id="file">
+					<a href="#" wicket:id="link"><span wicket:id="name"></span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="right body" wicket:id="codepanel">
+			<pre wicket:id="code"></pre>
+		</div>
+	</div>
+	<div id="footer">
+		<a href="#" wicket:id="close">[close]</a>
+	</div>
+</div>
+
+</body>
+</html>

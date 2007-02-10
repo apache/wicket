@@ -1,0 +1,57 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - linkomatic</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+
+    <span wicket:id="mainNavigation"/>
+
+    <!-- Example to demonstrate different kinds of linking supported -->
+
+    <a wicket:id = "actionLink">Action link clicked <span wicket:id = "linkClickCount">0</span> times</a>    
+    <p>
+    <a wicket:id = "linkToAnchor">Execute link and go to the link's anchor</a>
+    </p><p>
+    <a wicket:id = "anotherlinkToAnchor" href="#anotherAnchor">Another anchor link, this time using href attribute's value</a>
+    </p><p>
+    <input type="button" wicket:id = "actionOnClickLink" value="click me">
+    	Button link clicked <span wicket:id = "onClickLinkClickCount">0</span> times
+    </p><p>
+    <a wicket:id = "page1Link">Click this BookmarkablePageLink to go to Page1</a>
+    </p><p>
+    <wicket:link><a href = "Page2.html">Click this 'autolink' to go to Page2</a></wicket:link>
+    </p><p>    
+    <a wicket:id = "page3Link">Click this BookmarkablePageLink to go to Page3</a>
+    </p><p>    
+    <a wicket:id = "bookDetailsLink">Click this PageLink for BookDetails on The Hobbit</a>
+    </p><p>    
+    <a wicket:id = "bookDetailsLink2">Click this PageLink for BookDetails on Inside The Matrix</a>
+    </p><p>
+    <img border = "0" wicket:id = "imageMap" src = "ImageMap.gif">
+    </p><p>
+    <a wicket:id = "popupLink">Click this link for a popup</a>
+    </p><p>
+    <input type="submit" wicket:id = "popupButtonLink" value="Click this button for a popup" />
+    </p><p>
+    <a wicket:id = "google" href="#">[link text here]</a>
+    </p><p>
+    <a wicket:id = "googlePopup" href="#">[link text here]</a>
+    </p><p>
+    <a wicket:id = "cancelButtonLink">cancel button</a>
+    </p><p>
+	<form wicket:id="redirectForm">
+		<input wicket:id="redirectUrl" type="text" size="50" /><input type="submit" value="go"/>
+	</form>
+	</p><p>
+    <div wicket:id="anchorLabel">[label for anchor]</div>
+	</p><p>
+    <div id="anotherAnchor">This is another div that serves as an anchor</div>
+    </p>
+
+	<p>
+		<span wicket:id="feedback" />
+	</p>
+    
+</body>
+</html>

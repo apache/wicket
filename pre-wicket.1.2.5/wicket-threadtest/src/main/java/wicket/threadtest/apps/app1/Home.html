@@ -1,0 +1,88 @@
+<html>
+<body>
+<a href="#" wicket:id="link">go</a>
+<span style="display: block; border: 1px solid black;"> Selected
+Contact: <span wicket:id="selectedLabel">[selected contact]</span> </span>
+<br />
+<table cellspacing="0" class="dataview">
+  <tr>
+    <th>Actions</th>
+    <th>ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Home Phone</th>
+    <th>Cell Phone</th>
+  </tr>
+  <tr wicket:id="simple">
+    <td><span wicket:id="actions">[actions]</span></td>
+    <td><span wicket:id="contactid">[contactid]</span></td>
+    <td><span wicket:id="firstname">[firstname]</span></td>
+    <td><span wicket:id="lastname">[lastname]</span></td>
+    <td><span wicket:id="homephone">[homephone]</span></td>
+    <td><span wicket:id="cellphone">[cellphone]</span></td>
+  </tr>
+</table>
+<form wicket:id="inputForm" id="inputForm">
+<div>Use locale: <select wicket:id="localeSelect" />
+  <!--  option>locale1</option>
+      <option>locale2</option>
+    </select -->
+  <a href="#" wicket:id="defaultLocaleLink">[default]</a></div>
+<p>
+<fieldset><legend>Input Form</legend>
+<table id="inputFormTable">
+  <tr>
+    <td valign="top"><label for="stringProperty">String</label> <input
+      wicket:id="stringProperty" id="stringProperty" type="text"
+      size="40" /> <label for="integerProperty">Integer</label> <input
+      wicket:id="integerProperty" id="integerProperty" type="text"
+      size="40" /> <label for="doubleProperty">Double</label> <input
+      wicket:id="doubleProperty" id="doubleProperty" type="text"
+      size="40" /> <label wicket:id="dateLabel" for="dateProperty">Date</label>
+    <input wicket:id="dateProperty" id="dateProperty" type="text"
+      size="40" /> <span wicket:id="datePicker"></span> <label>Listview
+    in a Form</label>
+    <ul>
+      <li wicket:id="lines"><input type="text" wicket:id="lineEdit" />
+      </li>
+    </ul>
+    <label for="booleanProperty">Boolean</label> <input
+      wicket:id="booleanProperty" id="booleanProperty" type="checkbox" />
+    </td>
+    <td valign="top"><label for="integerInRangeProperty">Value
+    between 0 and 100</label> <input wicket:id="integerInRangeProperty"
+      id="integerInRangeProperty" type="text" size="40" /> <label
+      for="urlProperty">URL (has to be a valid url)</label> <input
+      wicket:id="urlProperty" id="urlProperty" type="text" size="40" />
+    <label for="phoneNumberUS">US phone number (mask: '(###)
+    ###-####')</label> <input wicket:id="phoneNumberUS" id="phoneNumberUS"
+      type="text" size="40" /> <label for="numberRadioChoice">select
+    a number (RadioChoice)</label> <span valign="top"
+      wicket:id="numberRadioChoice" id="numberRadioChoice"> <input
+      type="radio">foo</input> <input type="radio">bar</input> </span> <span
+      wicket:id="numbersGroup"> <label>select a number
+    (RadioGroup)</label> <span wicket:id="numbers"> <input type="radio"
+      wicket:id="radio" /> <span wicket:id="number">[this is
+    where number will be]</span> </span> </span> <span wicket:id="numbersCheckGroup">
+    <label>select one or more numbers (CheckGroup)</label> <span
+      wicket:id="numbers"> <input type="checkbox"
+      wicket:id="check" /> <span wicket:id="number">[this is
+    where number will be]</span> </span> </span> <label for="siteSelection">your
+    favorite sites</label> <select wicket:id="siteSelection" id="siteSelection">
+      <option>foo</option>
+      <option>bar</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td colspan="2"><input wicket:id="saveButton" type="image"
+      value="buttonFactory:save:Save" /> <a wicket:id="resetButtonLink"
+      src=""> <img wicket:id="resetButtonImage"
+      value="buttonFactory:reset:Reset" /> </a></td>
+  </tr>
+</table>
+</fieldset>
+</form>
+
+<div id="feedbackPanel"><span wicket:id="feedback" /></div>
+</body>
+</html>

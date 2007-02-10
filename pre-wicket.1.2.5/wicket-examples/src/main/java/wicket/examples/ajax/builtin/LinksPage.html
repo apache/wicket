@@ -1,0 +1,32 @@
+<wicket:head>
+
+<style>
+
+	span.wicket-ajax-indicator { margin:0; padding:0; padding-left: 2px; }
+	
+</style>
+
+</wicket:head>
+
+<wicket:extend>
+
+
+counter 1: <span wicket:id="c1"></span> <a href="#" wicket:id="c1-link">increment</a> ( ajax-only link )
+<br/>
+<br/>
+counter 2: <span wicket:id="c2"></span> <a href="#" wicket:id="c2-link">increment</a> ( ajax fallback link. this link uses ajax when it is available, and a regular wicket roundtrip when ajax or javascript are not available. )
+<br/>
+<br/>
+counter 3: <span wicket:id="c3"></span> <a href="#" wicket:id="c3-link">increment</a> ( ajax link with a busy indicator. the server will deliberately pause for five seconds. both ajax-only and fallback versions exist. )
+<br/>
+<br/>
+onSuccess script: <a href="#" wicket:id="success-link">success</a> (will trigger the onsuccess javascript)
+<br/>
+<br/>
+onFailure script: <a href="#" wicket:id="failure-link">failure</a> (will trigger the onfailure javascript)
+<br/>
+<br/>
+break out of ajax and redirect to a new page: <a href="#" wicket:id="set-response-page">redirect</a>
+<br/>
+<br/>
+</wicket:extend>

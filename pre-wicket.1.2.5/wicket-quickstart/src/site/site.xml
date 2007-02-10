@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Wicket Quickstart">
+<bannerLeft>
+	<name>Wicket</name>
+	<src>http://wicket.sourceforge.net/images/logo.png</src>
+	<href>http://wicket.sourceforge.net/</href>
+</bannerLeft>
+<body>
+	<links>
+		<item name="1.0" href="/wicket-1.0/index.html" />
+		<item name="1.1" href="/wicket-1.1/index.html"/>
+		<item name="1.2" href="/wicket-1.2/index.html"/>
+	</links>
+
+    <menu name="Wicket QuickStart">
+        <item name="Home" href="/index.html"/>
+        <item name="News" href="/News.html"/>
+           <item name="License" href="/license.html"/>
+        <item name="Dependencies" href="/dependencies.html"/>
+    </menu>
+
+	<menu name="IDE Demos">
+		<item name="Eclipse Live!" href="demos/EclipseDemo.html"/>
+	</menu>
+	
+	<menu name="IDE Guides">
+		<item name="Eclipse" href="/eclipse.html" collapse="true">
+			<item name="Introduction" href="#Eclipse_Kick_Start_Guide" />
+			<item name="Setting Up" href="#Setting_Up" />
+			<item name="Running Eclipse" href="#Running_Eclipse" />
+			<item name="Next Steps" href="#Next_Steps" />
+		</item>
+ 		<item name="IntelliJ IDEA" href="/intellij.html" collapse="true">
+			<item name="Introduction" href="#IntelliJ_IDEA_Kick_Start_Guide" />
+			<item name="Setting Up" href="#Setting_Up" />
+			<item name="Running IDEA" href="#Running_IntelliJ_IDEA" />
+			<item name="Next Steps" href="#Next_Steps" />
+ 		</item>
+		<item name="NetBeans" href="/netbeans.html" collapse="true">
+			<item name="Introduction" href="#NetBeans_Kick_Start_Guide" />
+			<item name="Setting Up" href="#Setting_Up" />
+			<item name="Running NetBeans" href="#Running_NetBeans" />
+			<item name="Next Steps" href="#Next_Steps" />
+		</item>
+	</menu>
+
+	<menu name="Download">
+		<item name="QuickStart Project" href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850"/>
+		</menu>
+
+    <menu name="Related projects">
+        <item name="Wicket" href="//index.html"/>
+        <item name="Eclipse" href="http://www.eclipse.org"/>
+        <item name="NetBeans" href="http://www.netbeans.org"/>
+        <item name="IntelliJ IDEA" href="http://www.jetbrains.com/idea/"/>
+    </menu>
+
+    <menu name="Project Info">
+        <item name="Mailing Lists" href="/mail-lists.html" />
+        <item name="SourceForge" href="/SourceForge.html"/>
+           <item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783"/>
+       </menu>
+
+    <menu name="Development">
+        <item name="Developers" href="/team-list.html"/>
+        <item name="CVS Access" href="/cvs-usage.html"/>
+        <item name="Build Reports" href="/maven-reports.html" collapse="true">
+   	        <item name="License" href="/license.html"/>
+        </item>
+    </menu>
+</body>
+</project>

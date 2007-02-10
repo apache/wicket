@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcatProjectProperties>
+    <rootDir>/src/webapp</rootDir>
+    <exportSource>false</exportSource>
+    <reloadable>true</reloadable>
+    <redirectLogger>false</redirectLogger>
+    <updateXml>true</updateXml>
+    <warLocation></warLocation>
+    <extraInfo></extraInfo>
+    <webPath>/wicket-quickstart</webPath>
+    <webClassPathEntries>
+        <webClassPathEntry>/wicket-quickstart/target/classes</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/junit/jars/junit-3.8.1.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/log4j/jars/log4j-1.2.11.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/ognl/jars/ognl-2.6.7.jar</webClassPathEntry>
+        <webClassPathEntry>MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar</webClassPathEntry>
+        <webClassPathEntry>/wicket/target/classes</webClassPathEntry>
+    </webClassPathEntries>
+</tomcatProjectProperties>

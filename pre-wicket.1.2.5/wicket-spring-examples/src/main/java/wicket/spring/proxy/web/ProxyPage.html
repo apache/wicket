@@ -1,0 +1,66 @@
+<wicket:extend>
+<b>Bean Proxy Approach</b><br/>
+This approach wraps spring beans with proxies to allow the beans to be treated as regular objects without worries of serializing the entire spring container when a model object is cloned for versioning or replicated across a cluster.<br/>This approach also allows us to centralize all static lookups in the page objects (or in a single base page) instead of having them spread out over other objects (such as models).<br/>
+<table cellspacing="0" cellpadding="2">
+<tr>
+	<td style="width:50%; vertical-align:top;">
+		<u>Pros:</u><br/>
+		<ul>
+			<li>Allows models and other components to be decoupled from any spring based code and lookups</li>
+			<li>Spring beans can be treated as regular objects without worries about serialization/cluster replication</li>
+		</ul>
+	</td>
+	<td style="width:50%; vertical-align:top;">
+		<u>Cons:</u><br/>
+		<ul>
+			<li>Slightly increased session size due to storage of bean proxies</li>
+		</ul>
+	</td>
+</tr>
+</table>
+Interesting classes:<br/>
+<ul>
+	<li>ExampleApplication - serves as a link between wicket and spring ApplicationContext</li>
+	<li>ProxyPage - sets up the data table below, also retrieves the proxy used by the data provider and detachable model</li>
+	<li>ProxyDataProvider</li>
+	<li>ProxyModel</li>
+</ul>
+<table wicket:id="contacts" cellspacing="0" cellpadding="2" class="grid"></table>
+<br/>
+Below is comparison of detachable models from the direct approach and the proxy approach. Notice that the proxy model has no knowledge of application subclass or spring, it simply knows about the DAO object it needs and stores it as a field variable.
+<table cellspacing="0" cellpadding="2">
+<tr>
+	<td style="width:50%; vertical-align:top; border-right: 1px solid gray;">
+<pre>
+public class ProxyModel extends ContactDetachableModel {
+	private ContactDao dao;
+
+	public ProxyModel(Contact contact, ContactDao dao) {
+		super(contact);
+		this.dao = dao;
+	}
+
+	protected ContactDao getContactDao() {
+		return dao;
+	}
+}
+</pre>
+	</td>
+	<td style="width:50%; vertical-align:top;">
+<pre>
+public class DirectModel extends ContactDetachableModel {
+
+	public DirectModel(Contact contact) {
+		super(contact);
+	}
+
+	protected ContactDao getContactDao() {
+		return ((ExampleApplication) Application.get()).getContactDao();
+	}
+}
+</pre>
+	</td>
+</tr>
+</table>
+
+</wicket:extend>

@@ -1,0 +1,41 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+  <title>Wicket Examples - displaytag</title>
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+<body>
+  
+  <span wicket:id="mainNavigation" />
+  
+  <h2><wicket:link>
+    <a href="DisplaytagIndex.html">Example</a>
+  </wicket:link> &gt; Data exporting (excel, csv, xml)</h2>
+  <br />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="date">Test Date</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="exportlinks">Export options: <a wicket:id="exportCsv"><span class="export csv">CSV </span></a>|
+  <a wicket:id="exportExcel"><span class="export excel">Excel </span></a>| <a wicket:id="exportXml"><span
+    class="export xml">XML </span></a></div>
+</body>
+</html>

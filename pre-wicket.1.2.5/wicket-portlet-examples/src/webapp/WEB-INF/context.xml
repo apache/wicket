@@ -1,0 +1,10 @@
+<!-- 
+This is for tomcat, see: 
+
+http://weblogs.java.net/blog/wholder/archive/2005/02/session_session.html
+http://issues.apache.org/jira/browse/PLUTO-53
+http://www.doc.ic.ac.uk/~mo197/portlets/portlet_testing/context.php
+ -->
+<Context crossContext="true" path="/wicket-portlet-examples" docBase="wicket-portlet-examples">
+
+</Context>
