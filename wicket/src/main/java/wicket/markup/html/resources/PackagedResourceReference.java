@@ -19,12 +19,14 @@ package wicket.markup.html.resources;
 import wicket.AttributeModifier;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
+import wicket.behavior.HeaderContributor;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
  * Base class for components that render references to packaged resources.
+ * @deprecated use {@link HeaderContributor} instead
  * 
  * @author Eelco Hillenius
  */

@@ -18,6 +18,7 @@ package wicket.markup.html.resources;
 
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
+import wicket.behavior.HeaderContributor;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.util.value.IValueMap;
@@ -25,6 +26,7 @@ import wicket.util.value.IValueMap;
 /**
  * Link to a packaged style sheet.
  * 
+ * @deprecated Use the {@link HeaderContributor#forCss(ResourceReference)} instead
  * @author Eelco Hillenius
  */
 public final class StyleSheetReference extends PackagedResourceReference

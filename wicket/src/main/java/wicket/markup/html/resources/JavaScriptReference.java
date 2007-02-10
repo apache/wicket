@@ -18,6 +18,7 @@ package wicket.markup.html.resources;
 
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
+import wicket.behavior.HeaderContributor;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.util.value.IValueMap;
@@ -25,6 +26,7 @@ import wicket.util.value.IValueMap;
 /**
  * Link to a packaged JavaScript file.
  * 
+ * @deprecated Use the {@link HeaderContributor#forJavaScript(ResourceReference)} instead
  * @author Eelco Hillenius
  */
 public class JavaScriptReference extends PackagedResourceReference
