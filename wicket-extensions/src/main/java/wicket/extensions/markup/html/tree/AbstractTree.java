@@ -31,11 +31,13 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
 import wicket.Component;
+import wicket.ResourceReference;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.HeaderContributor;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.markup.html.tree.Tree;
 import wicket.model.IDetachable;
 import wicket.model.IModel;
@@ -1054,6 +1056,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		return item.getMarkupId().substring(skip);
 	}
 
+	private final static ResourceReference JAVASCRIPT = new JavascriptResourceReference(AbstractTree.class, "res/tree.js");
+	
 	/**
 	 * Initialize the component.
 	 */
@@ -1068,7 +1072,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		itemContainer = new TreeItemContainer("i");
 		add(itemContainer);
 
-		add(HeaderContributor.forJavaScript(AbstractTree.class, "res/tree.js"));
+		add(HeaderContributor.forJavaScript(JAVASCRIPT));
 	}
 
 	/**
