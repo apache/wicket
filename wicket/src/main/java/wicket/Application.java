@@ -395,6 +395,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_EXCEPTION_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(true);
+			getResourceSettings().setStripJavascriptCommentsAndWhitespace(false);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
@@ -404,6 +405,7 @@ public abstract class Application
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(false);
+			getResourceSettings().setStripJavascriptCommentsAndWhitespace(true);
 		}
 		else
 		{
