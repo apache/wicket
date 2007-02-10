@@ -35,16 +35,17 @@ import wicket.util.string.JavascriptStripper;
 import wicket.util.time.Time;
 
 /**
- * Package resource for javascript files. It strips comments and whitespaces from
- * javascript and gzips the content. The stripped and gzipped version is cached.
+ * Package resource for javascript files. It strips comments and whitespaces
+ * from javascript and gzips the content. The stripped and gzipped version is
+ * cached.
+ * 
  * @author Matej Knopp
  */
 public class JavascriptPackageResource extends CompressedPackageResource
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Resource Stream that caches the stripped content.
+	 * 
 	 * @author Matej Knopp
 	 */
 	protected abstract class FilteringResourceStream implements IResourceStream
@@ -150,10 +151,50 @@ public class JavascriptPackageResource extends CompressedPackageResource
 		protected abstract byte[] filterContent(byte[] input);
 
 		protected abstract IResourceStream getOriginalResourceStream();
-	};
+	}
+
+	private static final long serialVersionUID = 1L;;
+
+	private static final Logger log = LoggerFactory.getLogger(JavascriptPackageResource.class);
+
+	/**
+	 * Gets the resource for a given set of criteria. Only one resource will be
+	 * loaded for the same criteria.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the class in which you call this method
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link wicket.Session})
+	 * @return The resource
+	 * @throws PackageResourceBlockedException
+	 *             when the target resource is not accepted by
+	 *             {@link IPackageResourceGuard the package resource guard}.
+	 */
+	public static PackageResource get(final Class<?> scope, final String path, final Locale locale,
+			final String style)
+	{
+		final SharedResources sharedResources = Application.get().getSharedResources();
+
+		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
+				true);
+
+		if (resource == null)
+		{
+			resource = new JavascriptPackageResource(scope, path, locale, style);
+			sharedResources.add(scope, path, locale, style, resource);
+		}
+		return resource;
+	}
 
 	/**
 	 * Creates a new javascript package resource.
+	 * 
 	 * @param scope
 	 * @param path
 	 * @param locale
@@ -179,11 +220,12 @@ public class JavascriptPackageResource extends CompressedPackageResource
 			{
 				try
 				{
-					if (Application.get().getResourceSettings().getStripJavascriptCommentsAndWhitespace())
+					if (Application.get().getResourceSettings()
+							.getStripJavascriptCommentsAndWhitespace())
 					{
 						String s = new String(input, "utf-8");
 						return JavascriptStripper.stripCommentsAndWhitespace(s).getBytes("utf8");
-					} 
+					}
 					else
 					{
 						// don't strip the comments, just return original input
@@ -215,41 +257,4 @@ public class JavascriptPackageResource extends CompressedPackageResource
 			}
 		};
 	}
-
-	/**
-	 * Gets the resource for a given set of criteria. Only one resource will be
-	 * loaded for the same criteria.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the class in which you call this method
-	 * @param path
-	 *            The path to the resource
-	 * @param locale
-	 *            The locale of the resource
-	 * @param style
-	 *            The style of the resource (see {@link wicket.Session})
-	 * @return The resource
-	 * @throws PackageResourceBlockedException
-	 *             when the target resource is not accepted by
-	 *             {@link IPackageResourceGuard the package resource guard}.
-	 */
-	public static PackageResource get(final Class<?> scope, final String path, final Locale locale,
-			final String style)
-	{
-		final SharedResources sharedResources = Application.get().getSharedResources();
-
-		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-				true);
-		
-		if (resource == null)
-		{
-			resource = new JavascriptPackageResource(scope, path, locale, style);
-			sharedResources.add(scope, path, locale, style, resource);
-		}
-		return resource;
-	}
-
-	private static final Logger log = LoggerFactory.getLogger(JavascriptPackageResource.class);
 }
