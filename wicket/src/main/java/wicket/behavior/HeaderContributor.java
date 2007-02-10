@@ -18,18 +18,14 @@ package wicket.behavior;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
+import wicket.Application;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
-import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.resources.CompressedResourceReference;
-import wicket.model.LoadableDetachableModel;
-import wicket.util.string.AppendingStringBuffer;
-import wicket.util.string.JavascriptUtils;
+import wicket.protocol.http.WebRequestCycle;
 
 /**
  * A {@link wicket.behavior.AbstractHeaderContributor} behavior that is
@@ -44,370 +40,155 @@ import wicket.util.string.JavascriptUtils;
  * </pre>
  * 
  * @author Eelco Hillenius
+ * @author Matej Knopp
  */
-// TODO Cache pattern results, at least the ones that were fetched by callin the
-// javascript or css methods. The cache could be put in an application scoped
-// meta data object to avoid the use of a static map
 public class HeaderContributor extends AbstractHeaderContributor
 {
-	/**
-	 * Contributes a reference to a css file relative to the context path.
-	 */
-	private static final class CSSHeaderContributor extends StringHeaderContributor
+	// adds the context path on the front of the location, if it's not
+	// a fully-qualified URL.
+	private static final String returnLocationWithContextPath(String location)
 	{
-		private static final long serialVersionUID = 1L;
 
-		/**
-		 * Construct.
-		 * 
-		 * @param location
-		 *            the location of the CSS file relative to the context path,
-		 *            or a fully qualified http url.
-		 */
-		public CSSHeaderContributor(final String location)
+		// WICKET-59 allow external URLs.
+		if (location.startsWith("http://") || location.startsWith("https://"))
 		{
-			this(location, null);
+			return location;
 		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param location
-		 *            the location of the CSS file relative to the context path,
-		 *            or a fully qualified http url.
-		 * @param media
-		 *            the media type for this CSS ("print", "screen", etc.)
-		 */
-		public CSSHeaderContributor(final String location, final String media)
+		else
 		{
-			super(new LoadableDetachableModel()
+			StringBuilder b = new StringBuilder();
+			String contextPath = Application.get().getApplicationSettings().getContextPath();
+			if (contextPath == null)
 			{
-				private static final long serialVersionUID = 1L;
-
-				protected Object load()
+				contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+						.getContextPath();
+				if (contextPath == null)
 				{
-					if (location == null)
-					{
-						return "";
-					}
-					AppendingStringBuffer b = new AppendingStringBuffer();
-					b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-					appendPathWithPrependedContext(b, location);
-					if (media != null)
-					{
-						b.append("\" media=\"");
-						b.append(media);
-					}
-					b.append("\" />");
-					return b;
+					contextPath = "";
 				}
-			});
-		}
-	}
-
-	/**
-	 * prints a css resource reference.
-	 */
-	private static final class CSSReferenceHeaderContributor
-			extends
-				ResourceReferenceHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		private String media;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param scope
-		 *            The scope of the reference (typically the calling class)
-		 * @param name
-		 *            The name of the reference.
-		 * @param media
-		 *            The media type for this CSS ("print", "screen", etc.)
-		 */
-		public CSSReferenceHeaderContributor(Class scope, String name, String media)
-		{
-			super(scope, name);
-			this.media = media;
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param reference
-		 * @param media
-		 *            The media type for this CSS ("print", "screen", etc.)
-		 */
-		public CSSReferenceHeaderContributor(ResourceReference reference, String media)
-		{
-			super(reference);
-			this.media = media;
-		}
-
-		/**
-		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
-		 */
-		public void renderHead(IHeaderResponse headerResponse)
-		{
-			Response response = headerResponse.getResponse();
-			final CharSequence url = RequestCycle.get().urlFor(getResourceReference());
-			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-			response.write(url);
-			if (media != null)
-			{
-				response.write("\" media=\"");
-				response.write(media);
 			}
-			response.println("\" />");
-		}
-	}
-
-	/**
-	 * Contributes a reference to a javascript file relative to the context
-	 * path.
-	 */
-	private static final class JavaScriptHeaderContributor extends StringHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param location
-		 *            the location of the CSS file relative to the context path,
-		 *            or a fully qualified http url.
-		 */
-		public JavaScriptHeaderContributor(final String location)
-		{
-			super(new LoadableDetachableModel()
+			b.append(contextPath);
+			if (!contextPath.endsWith("/") && !location.startsWith("/"))
 			{
-				private static final long serialVersionUID = 1L;
-
-				protected Object load()
-				{
-					if (location == null)
-					{
-						return "";
-					}
-					AppendingStringBuffer b = new AppendingStringBuffer();
-					b.append("<script type=\"text/javascript\" src=\"");
-					appendPathWithPrependedContext(b, location);
-					b.append("\"></script>");
-					return b;
-				}
-			});
-		}
-	}
-
-	/**
-	 * prints a javascript resource reference.
-	 */
-	private static final class JavaScriptReferenceHeaderContributor
-			extends
-				ResourceReferenceHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param scope
-		 *            The scope of the reference (typically the calling class)
-		 * @param name
-		 *            The name .
-		 */
-		public JavaScriptReferenceHeaderContributor(Class scope, String name)
-		{
-			super(scope, name);
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param reference
-		 */
-		public JavaScriptReferenceHeaderContributor(ResourceReference reference)
-		{
-			super(reference);
-		}
-
-		/**
-		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
-		 */
-		public void renderHead(IHeaderResponse response)
-		{
-			final CharSequence url = RequestCycle.get().urlFor(getResourceReference());
-			JavascriptUtils.writeJavascriptUrl(response.getResponse(), url);
-		}
-	}
-
-	/**
-	 * Wraps a {@link ResourceReference} and knows how to print a header
-	 * statement based on that resource. Default implementations are
-	 * {@link JavaScriptReferenceHeaderContributor} and
-	 * {@link CSSReferenceHeaderContributor}, which print out javascript
-	 * statements and css ref statements respectively.
-	 */
-	private static abstract class ResourceReferenceHeaderContributor implements IHeaderContributor
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** the pre calculated hash code. */
-		private final int hash;
-
-		/** the package resource reference. */
-		private final ResourceReference resourceReference;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param scope
-		 *            The scope of the reference (typically the calling class)
-		 * @param name
-		 *            The name of the reference (typically the name of the
-		 *            packaged resource, like 'myscripts.js').
-		 */
-		public ResourceReferenceHeaderContributor(Class scope, String name)
-		{
-			this(new CompressedResourceReference(scope, name));
-		}
-
-		/**
-		 * Construct.
-		 * 
-		 * @param reference
-		 */
-		public ResourceReferenceHeaderContributor(ResourceReference reference)
-		{
-			this.resourceReference = reference;
-			int result = 17;
-			result = 37 * result + getClass().hashCode();
-			result = 37 * result + resourceReference.hashCode();
-			hash = result;
-		}
-
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		public boolean equals(Object obj)
-		{
-			if (obj.getClass().equals(getClass()))
-			{
-				ResourceReferenceHeaderContributor that = (ResourceReferenceHeaderContributor)obj;
-				return this.resourceReference.equals(that.resourceReference);
+				b.append("/");
 			}
-			return false;
-		}
-
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
-		public int hashCode()
-		{
-			return hash;
-		}
-
-		/**
-		 * Gets the package resource reference.
-		 * 
-		 * @return the package resource reference
-		 */
-		protected final ResourceReference getResourceReference()
-		{
-			return resourceReference;
+			b.append(location);
+			return b.toString();
 		}
 	}
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that reference all CSS files with extension 'css' that live
-	 * in a package.
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in the web application
+	 * directory and that is addressed relative to the context path.
 	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @param media
+	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
 	 */
-	public static final HeaderContributor forCss(final Class scope)
+	public static final HeaderContributor forCss(final String location, final String media)
 	{
-		return forCss(scope, PackageResource.EXTENSION_CSS);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that reference CSS files that match the pattern and that
-	 * live in a package.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @return the new header contributor instance
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
-	 */
-	public static final HeaderContributor forCss(final Class scope, final Pattern pattern)
-	{
-		return forCss(scope, pattern, false);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that reference CSS files that match the pattern and that
-	 * live in a package and its sub packages in case recurse is true.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @param recurse
-	 *            whether to recurse into sub packages
-	 * @return the new header contributor instance
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
-	 */
-	public static final HeaderContributor forCss(final Class scope, final Pattern pattern,
-			boolean recurse)
-	{
-		PackageResource[] resources = PackageResource.get(scope, pattern, recurse);
-		HeaderContributor contributor = new HeaderContributor();
-		if (resources != null)
+		return new HeaderContributor(new IHeaderContributor()
 		{
-			int len = resources.length;
-			for (int i = 0; i < len; i++)
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
 			{
-				contributor.addContributor(new CSSReferenceHeaderContributor(scope, resources[i]
-						.getPath(), null));
+				response.renderCSSReference(returnLocationWithContextPath(location), media);
 			}
-		}
-		return contributor;
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in the web application
+	 * directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final String location)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(returnLocationWithContextPath(location));
+			}
+		});
 	}
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
 	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param path
-	 *            The path
+	 * @param reference
+	 * @param media
+	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class scope, final String path)
+	public static final HeaderContributor forCss(final ResourceReference reference,
+			final String media)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path, null));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(reference, media);
+			}
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in a package.
+	 * 
+	 * @param reference
+	 * 
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final ResourceReference reference)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(reference);
+			}
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a JavaScript file that lives in the web
+	 * application directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forJavaScript(final String location)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderJavascriptReference(returnLocationWithContextPath(location));
+			}
+		});
 	}
 
 	/**
@@ -427,140 +208,42 @@ public class HeaderContributor extends AbstractHeaderContributor
 	public static final HeaderContributor forCss(final Class scope, final String path,
 			final String media)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path, media));
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in a package.
-	 * 
-	 * @param reference
-	 * 
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(ResourceReference reference)
-	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(reference, null));
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in a package.
-	 * 
-	 * @param reference
-	 * @param media
-	 *            The media type for this CSS ("print", "screen", etc.)
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(ResourceReference reference, final String media)
-	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(reference, media));
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path, or a fully
-	 * qualified URL (starting with http:// or https://).
-	 * 
-	 * @param location
-	 *            The location of the css file relative to the context path, or
-	 *            a fully qualified http url.
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final String location)
-	{
-		return new HeaderContributor(new CSSHeaderContributor(location, null));
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path, or a fully
-	 * qualified URL (starting with http:// or https://).
-	 * 
-	 * @param location
-	 *            The location of the css file relative to the context path, or
-	 *            a fully qualified http url.
-	 * @param media
-	 *            The media type for this CSS ("print", "screen", etc.)
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final String location, final String media)
-	{
-		return new HeaderContributor(new CSSHeaderContributor(location, media));
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that reference all javascript files with extension 'js' that
-	 * live in a package.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @return the new header contributor instance
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
-	 */
-	public static final HeaderContributor forJavaScript(final Class scope)
-	{
-		return forJavaScript(scope, PackageResource.EXTENSION_JS);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that references java script files that match the pattern and
-	 * that live in a package.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @return the new header contributor instance
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
-	 */
-	public static final HeaderContributor forJavaScript(final Class scope, final Pattern pattern)
-	{
-		return forJavaScript(scope, pattern, false);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that references java script files that match the pattern and
-	 * that live in a package and sub packages in case recurse is true.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @param recurse
-	 *            whether to recurse into sub packages
-	 * @return the new header contributor instance
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
-	 */
-	public static final HeaderContributor forJavaScript(final Class scope, final Pattern pattern,
-			boolean recurse)
-	{
-		PackageResource[] resources = PackageResource.get(scope, pattern, recurse);
-		HeaderContributor contributor = new HeaderContributor();
-		if (resources != null)
+		return new HeaderContributor(new IHeaderContributor()
 		{
-			int len = resources.length;
-			for (int i = 0; i < len; i++)
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
 			{
-				contributor.addContributor(new JavaScriptReferenceHeaderContributor(scope,
-						resources[i].getPath()));
+				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderCSSReference(reference);
 			}
-		}
-		return contributor;
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in a package.
+	 * 
+	 * @param scope
+	 *            The scope of the package resource (typically the class of the
+	 *            caller, or a class that lives in the package where the
+	 *            resource lives).
+	 * @param path
+	 *            The path
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final Class scope, final String path)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderCSSReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -577,7 +260,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forJavaScript(final Class scope, final String path)
 	{
-		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(scope, path));
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderJavascriptReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -590,60 +282,15 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forJavaScript(final ResourceReference reference)
 	{
-		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(reference));
-	}
-
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a JavaScript file that lives in the web
-	 * application directory and that is addressed relative to the context path.
-	 * 
-	 * @param location
-	 *            The location of the css file relative to the context path
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forJavaScript(final String location)
-	{
-		return new HeaderContributor(new JavaScriptHeaderContributor(location));
-	}
-
-	// Appends a path to the string buffer, adding the context path on the front
-	// if it's not
-	// a fully-qualified URL.
-	private static final void appendPathWithPrependedContext(AppendingStringBuffer b,
-			String location)
-	{
-
-		// WICKET-59 allow external URLs.
-		if (!location.startsWith("http://") && !location.startsWith("https://"))
+		return new HeaderContributor(new IHeaderContributor()
 		{
-			String relativeUrl = RequestCycle.get().getRequest().getPath();
+			private static final long serialVersionUID = 1L;
 
-			// We need to effectively strip off any leading "/" here.
-			// However, we're just counting the slashes in relativeUrl, so
-			// rather
-			// than have substring overhead, we just change the position we
-			// start
-			// searching for / at to skip the leading one.
-			int start = 0;
-			if (relativeUrl.length() > 0 && relativeUrl.charAt(0) == '/')
+			public void renderHead(IHeaderResponse response)
 			{
-				start = 1;
+				response.renderJavascriptReference(reference);
 			}
-			for (int i = start; i < relativeUrl.length(); i++)
-			{
-				if (relativeUrl.charAt(i) == '?')
-				{
-					break;
-				}
-				if (relativeUrl.charAt(i) == '/')
-				{
-					b.append("../");
-				}
-			}
-		}
-		b.append(location);
+		});
 	}
 
 	/**
@@ -720,7 +367,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final void addCssReference(final Class scope, final String path)
 	{
-		addContributor(new CSSReferenceHeaderContributor(scope, path, null));
+		addContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				ResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderCSSReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -736,7 +392,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final void addJavaScriptReference(final Class scope, final String path)
 	{
-		addContributor(new JavaScriptReferenceHeaderContributor(scope, path));
+		addContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				ResourceReference reference = new CompressedResourceReference(scope, path);
+				response.renderJavascriptReference(reference);
+			}
+		});
 	}
 
 	/**
@@ -746,8 +411,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		if (headerContributors != null)
 		{
-			return (IHeaderContributor[])headerContributors
-					.toArray(new IHeaderContributor[headerContributors.size()]);
+			return (IHeaderContributor[]) headerContributors.toArray(new IHeaderContributor[headerContributors.size()]);
 		}
 		return null;
 	}
