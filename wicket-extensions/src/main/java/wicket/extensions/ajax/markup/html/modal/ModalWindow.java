@@ -35,6 +35,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.resources.CompressedResourceReference;
+import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.request.RequestParameters;
 import wicket.settings.IPageSettings;
 import wicket.util.lang.EnumeratedType;
@@ -122,7 +123,7 @@ public class ModalWindow extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	private static ResourceReference JAVASCRIPT = new CompressedResourceReference(
+	private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
 			ModalWindow.class, "res/modal.js");
 
 	private static ResourceReference CSS = new CompressedResourceReference(
