@@ -93,7 +93,7 @@ public class JavascriptStripper
 				{
 					// ignore all whitespace characters after this one
 					state = State.WHITE_SPACE;
-					c = ' ';
+					c = '\n';
 				}
 				else if (c == '\'')
 				{
