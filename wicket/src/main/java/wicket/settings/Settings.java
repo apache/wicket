@@ -284,6 +284,9 @@ public final class Settings
 
 	private boolean requestLoggerEnabled;
 
+	/** Whether the comments and whitespaces will be stripped from javascript resources */
+	private boolean stripJavascriptCommentsAndWhitespace;
+	
 	/**
 	 * Create the application settings, carrying out any necessary
 	 * initialisations.
@@ -1242,4 +1245,20 @@ public final class Settings
 	{
 		requestsWindowSize = size;
 	}
+	
+	/**
+	 * @see wicket.settings.IResourceSettings#getStripJavascriptCommentsAndWhitespace()
+	 */
+	public boolean getStripJavascriptCommentsAndWhitespace()
+	{
+		return stripJavascriptCommentsAndWhitespace;
+	}
+	
+	/**
+	 * @see wicket.settings.IResourceSettings#setStripJavascriptCommentsAndWhitespace(boolean)
+	 */
+	public void setStripJavascriptCommentsAndWhitespace(boolean value)
+	{
+		stripJavascriptCommentsAndWhitespace = value;
+	}	
 }

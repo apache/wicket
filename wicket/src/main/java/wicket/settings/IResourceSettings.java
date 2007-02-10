@@ -247,4 +247,16 @@ public interface IResourceSettings
 	 */
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 
+	/**
+	 * Sets whether the whitespace characters and comments should be stripped for 
+	 * resources served through {@link JavascriptPackageResource}
+	 * @param value
+	 */
+	void setStripJavascriptCommentsAndWhitespace(boolean value);
+	
+	/**
+	 * @return whether the comments and whitespace characters will be stripped
+	 * from resources served through {@link JavascriptPackageResource}
+	 */
+	boolean getStripJavascriptCommentsAndWhitespace();
 }
