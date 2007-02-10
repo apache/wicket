@@ -194,7 +194,7 @@ public final class Objects
 		{
 			parentsStack.clear();
 			checked.clear();
-			check(root);
+			check(root, "");
 		}
 
 		/**
@@ -202,17 +202,26 @@ public final class Objects
 		 * 
 		 * @param obj
 		 *            object to analyze
+		 * @param name
+		 *            field name
 		 */
-		private void check(Object obj)
+		private void check(Object obj, String name)
 		{
 			if (obj == null)
 			{
 				return;
 			}
+
+			if (!(obj instanceof Serializable))
+			{
+				throw new WicketRuntimeException(getPrettyPrintedStack(obj.getClass().getName())
+						.toString(), new NotSerializableException(name));
+			}
+
 			// Check for circular reference.
 			if (checked.contains(obj))
 			{
-				return;
+				//return;
 			}
 			if (parentsStack.isEmpty())
 			{
@@ -290,24 +299,17 @@ public final class Objects
 				}
 
 				parentsStack.add(buffer.toString());
-				if (Serializable.class.isAssignableFrom(fields[i].getType()))
+
+				try
 				{
-					try
-					{
-						check(fields[i].get(obj));
-					}
-					catch (IllegalAccessException e)
-					{
-						throw new WicketRuntimeException(getPrettyPrintedStack(fields[i].getType()
-								.getName()), e);
-					}
+					check(fields[i].get(obj), fields[i].getName());
 				}
-				else
+				catch (IllegalAccessException e)
 				{
-					throw new WicketRuntimeException(getPrettyPrintedStack(
-							fields[i].getType().getName()).toString(),
-							new NotSerializableException(fields[i].getType().getName()));
+					throw new WicketRuntimeException(getPrettyPrintedStack(fields[i].getType()
+							.getName()), e);
 				}
+
 				parentsStack.removeLast();
 			}
 			if (parentsStack.size() == 1)
