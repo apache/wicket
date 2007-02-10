@@ -90,7 +90,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 	{
-		testMap(sessionId, id, versionNumber,ajaxVersionNumber);
+		testMap(sessionId, id, versionNumber, ajaxVersionNumber);
 		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
@@ -188,7 +188,8 @@ public class FilePageStore implements IPageStore
 	 */
 	public void pageAccessed(String sessionId, Page page)
 	{
-		testMap(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page.getAjaxVersionNumber());
+		testMap(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page
+				.getAjaxVersionNumber());
 	}
 
 
@@ -202,7 +203,8 @@ public class FilePageStore implements IPageStore
 
 	private void testMap(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 	{
-		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber,ajaxVersionNumber);
+		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber,
+				ajaxVersionNumber);
 		Object key = storePageMap.get(curentKey);
 		while (key != null)
 		{
@@ -260,13 +262,14 @@ public class FilePageStore implements IPageStore
 	/**
 	 * @param id
 	 * @param versionNumber
-	 * @param ajaxVersionNumber 
+	 * @param ajaxVersionNumber
 	 * @param sessionDir
 	 * @return The file pointing to the page
 	 */
 	private File getPageFile(int id, int versionNumber, int ajaxVersionNumber, File sessionDir)
 	{
-		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber + "-ajax-" + ajaxVersionNumber);
+		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber
+				+ "-ajax-" + ajaxVersionNumber);
 	}
 
 	private class SessionPageKey
@@ -282,7 +285,8 @@ public class FilePageStore implements IPageStore
 			this(sessionId, id, versionNumber, ajaxVersionNumber, false);
 		}
 
-		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, boolean remove)
+		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber,
+				boolean remove)
 		{
 			this.sessionId = sessionId;
 			this.id = id;
@@ -466,8 +470,8 @@ public class FilePageStore implements IPageStore
 		{
 			File sessionDir = new File(getWorkDir(), sessionId);
 			sessionDir.mkdirs();
-			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(),
-					page.getAjaxVersionNumber(), sessionDir);
+			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), page
+					.getAjaxVersionNumber(), sessionDir);
 
 			FileOutputStream fos = null;
 			long t1 = System.currentTimeMillis();
@@ -493,18 +497,23 @@ public class FilePageStore implements IPageStore
 			}
 			catch (Exception e)
 			{
+				// TODO as long as our extended info isn't accurate, at least
+				// print the stack trace
+				log.error(e.getMessage(), e);
+				
+				// TODO doesn't work yet.
 				// trigger serialization again, but this time gather some more
 				// info
-				try
-				{
-					Objects.checkSerializable(page);
-				}
-				catch (Exception e1)
-				{
-					log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
-							+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
-							+ ": " + e1.getMessage(), e1);
-				}
+//				try
+//				{
+//					Objects.checkSerializable(page);
+//				}
+//				catch (Exception e1)
+//				{
+//					log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
+//							+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
+//							+ ": " + e1.getMessage(), e1);
+//				}
 			}
 			finally
 			{
