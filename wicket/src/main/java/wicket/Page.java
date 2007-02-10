@@ -1017,8 +1017,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	public final void renderPage()
 	{
-		resetHeadRendered();
-
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -1076,8 +1074,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 		{
 			public Object component(final Component component)
 			{
-				component.resetHeadRendered();
-
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 

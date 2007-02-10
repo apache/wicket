@@ -543,9 +543,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/** Visibility boolean */
 	private static final int FLAG_VISIBLE = 0x0010;
 
-	/** Whether the header has already been contributed */
-	private static final int FLAG_HEAD_RENDERED = 0x100000;
-
 	private static final int FLAG_ATTACHED = 0x20000000;
 	private static final int FLAG_ATTACHING = 0x40000000;
 	private static final int FLAG_DETACHING = 0x80000000;
@@ -1607,7 +1604,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		{
 			parent.add(this);
 		}
-		resetHeadRendered();
 		return this;
 	}
 
@@ -2020,7 +2016,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public void renderHead(final IHeaderResponse response)
 	{
-		if ((isVisible() == true) && (isHeadRendered() == false))
+		if (isVisible())
 		{
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
@@ -2034,7 +2030,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					}
 				}
 			}
-			setFlag(FLAG_HEAD_RENDERED, true);
 		}
 	}
 
@@ -3306,26 +3301,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	final void setRenderAllowed(boolean renderAllowed)
 	{
 		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
-	}
-
-	/**
-	 * Returns whether the head has already been rendered.
-	 * 
-	 * @return whether the head has already been rendered
-	 */
-	final protected boolean isHeadRendered()
-	{
-		return getFlag(FLAG_HEAD_RENDERED);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * Resets the state of head rendering.
-	 */
-	final protected void resetHeadRendered()
-	{
-		setFlag(FLAG_HEAD_RENDERED, false);
 	}
 
 	/**

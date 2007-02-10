@@ -587,6 +587,34 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("]]></component>");
 	}
 
+	private class AjaxHeaderResponse extends HeaderResponse {
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * @param response
+		 */
+		public AjaxHeaderResponse(Response response)
+		{
+			super(response);
+		}
+
+		@Override
+		public void renderOnDomReadyJavascript(String javascript)
+		{
+			// execute the javascript as first javascript after component replacement
+			appendJavascripts.add(0, javascript);
+		}
+		
+		@Override
+		public void renderOnLoadJavascript(String javascript)
+		{
+			// execute the javascript after all other scripts are executed
+			appendJavascripts.add(javascript);
+		}
+	};
+	
 	/**
 	 * 
 	 * @param response
@@ -598,7 +626,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		try
 		{
-			final IHeaderResponse headerResponse = new HeaderResponse(encodingResponse);
+			final IHeaderResponse headerResponse = new AjaxHeaderResponse(encodingResponse);
 			RequestCycle.get().setResponse(headerResponse.getResponse());
 			component.renderHead(headerResponse);
 		}
