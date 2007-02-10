@@ -56,7 +56,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 		else
 		{
-			StringBuilder b = new StringBuilder();
+			StringBuffer b = new StringBuffer();
 			String contextPath = Application.get().getApplicationSettings().getContextPath();
 			if (contextPath == null)
 			{
