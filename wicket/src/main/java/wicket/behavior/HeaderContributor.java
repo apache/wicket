@@ -25,6 +25,7 @@ import wicket.ResourceReference;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedResourceReference;
+import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.protocol.http.WebRequestCycle;
 
 /**
@@ -205,7 +206,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class scope, final String path,
+	public static final HeaderContributor forCss(final Class<?> scope, final String path,
 			final String media)
 	{
 		return new HeaderContributor(new IHeaderContributor()
@@ -214,8 +215,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderCSSReference(reference);
+				response.renderCSSReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -232,7 +232,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class scope, final String path)
+	public static final HeaderContributor forCss(final Class<?> scope, final String path)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -240,8 +240,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderCSSReference(reference);
+				response.renderCSSReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -258,7 +257,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forJavaScript(final Class scope, final String path)
+	public static final HeaderContributor forJavaScript(final Class<?> scope, final String path)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -266,8 +265,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderJavascriptReference(reference);
+				response.renderJavascriptReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -365,7 +363,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param path
 	 *            The path
 	 */
-	public final void addCssReference(final Class scope, final String path)
+	public final void addCssReference(final Class<?> scope, final String path)
 	{
 		addContributor(new IHeaderContributor()
 		{
@@ -373,8 +371,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				ResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderCSSReference(reference);
+				response.renderCSSReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -390,7 +387,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param path
 	 *            The path
 	 */
-	public final void addJavaScriptReference(final Class scope, final String path)
+	public final void addJavaScriptReference(final Class<?> scope, final String path)
 	{
 		addContributor(new IHeaderContributor()
 		{
@@ -398,8 +395,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				ResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderJavascriptReference(reference);
+				response.renderJavascriptReference(new JavascriptResourceReference(scope, path));
 			}
 		});
 	}
