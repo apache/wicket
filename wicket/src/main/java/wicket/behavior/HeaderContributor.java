@@ -25,6 +25,7 @@ import wicket.ResourceReference;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedResourceReference;
+import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.protocol.http.WebRequestCycle;
 
 /**
@@ -214,8 +215,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderCSSReference(reference);
+				response.renderCSSReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -240,8 +240,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderCSSReference(reference);
+				response.renderCSSReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -266,8 +265,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				CompressedResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderJavascriptReference(reference);
+				response.renderJavascriptReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -373,8 +371,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				ResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderCSSReference(reference);
+				response.renderCSSReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -398,8 +395,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				ResourceReference reference = new CompressedResourceReference(scope, path);
-				response.renderJavascriptReference(reference);
+				response.renderJavascriptReference(new JavascriptResourceReference(scope, path));
 			}
 		});
 	}
@@ -411,7 +407,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		if (headerContributors != null)
 		{
-			return (IHeaderContributor[]) headerContributors.toArray(new IHeaderContributor[headerContributors.size()]);
+			return (IHeaderContributor[])headerContributors
+					.toArray(new IHeaderContributor[headerContributors.size()]);
 		}
 		return null;
 	}
