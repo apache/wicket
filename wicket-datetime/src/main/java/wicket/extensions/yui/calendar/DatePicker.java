@@ -36,6 +36,7 @@ import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import wicket.markup.html.resources.CompressedResourceReference;
+import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.ITypeConverter;
@@ -104,14 +105,16 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	public void renderHead(IHeaderResponse response) {
 
 		// add YUI contributions
-		response.renderJavascriptReference(new CompressedResourceReference(
-				YuiLib.class, "yahoo-min.js"));
-		response.renderJavascriptReference(new CompressedResourceReference(
-				YuiLib.class, "event-min.js"));
-		response.renderJavascriptReference(new CompressedResourceReference(
-				YuiLib.class, "dom-min.js"));
-		response.renderJavascriptReference(new CompressedResourceReference(
-				DatePicker.class, "calendar-min.js"));
+		// NOTE JavascriptResourceReference takes care of stripping comments
+		// when in deployment (production) mode
+		response.renderJavascriptReference(new JavascriptResourceReference(
+				YuiLib.class, "yahoo.js"));
+		response.renderJavascriptReference(new JavascriptResourceReference(
+				YuiLib.class, "event.js"));
+		response.renderJavascriptReference(new JavascriptResourceReference(
+				YuiLib.class, "dom.js"));
+		response.renderJavascriptReference(new JavascriptResourceReference(
+				DatePicker.class, "calendar.js"));
 		response.renderCSSReference(new CompressedResourceReference(
 				DatePicker.class, "assets/calendar.css"));
 
