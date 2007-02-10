@@ -188,11 +188,11 @@ public abstract class AbstractCalendar extends WebComponent {
 	 * add header contributions for packaged resources.
 	 */
 	private void contributeDependencies() {
-		add(HeaderContributor.forJavaScript(YuiLib.class, "yahoo-min.js"));
-		add(HeaderContributor.forJavaScript(YuiLib.class, "event-min.js"));
-		add(HeaderContributor.forJavaScript(YuiLib.class, "dom-min.js"));
+		add(HeaderContributor.forJavaScript(YuiLib.class, "yahoo.js"));
+		add(HeaderContributor.forJavaScript(YuiLib.class, "event.js"));
+		add(HeaderContributor.forJavaScript(YuiLib.class, "dom.js"));
 		add(HeaderContributor.forJavaScript(AbstractCalendar.class,
-				"calendar-min.js"));
+				"calendar.js"));
 		add(HeaderContributor.forCss(AbstractCalendar.class,
 				"assets/calendar.css"));
 	}
