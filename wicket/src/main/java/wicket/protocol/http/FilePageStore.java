@@ -16,13 +16,11 @@
  */
 package wicket.protocol.http;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 
@@ -48,6 +46,8 @@ public class FilePageStore implements IPageStore
 {
 	/** log. */
 	protected static Log log = LogFactory.getLog(FilePageStore.class);
+	
+	private static final Object SERIALIZING = new Object();
 
 	private final File defaultWorkDir;
 
@@ -56,6 +56,11 @@ public class FilePageStore implements IPageStore
 	private final PageSavingThread thread;
 
 	private final String appName;
+
+	volatile long totalSavingTime = 0;
+	volatile long totalSerializationTime = 0;
+
+	
 
 	/**
 	 * Construct.
@@ -90,7 +95,13 @@ public class FilePageStore implements IPageStore
 	 */
 	public Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 	{
-		testMap(sessionId, id, versionNumber, ajaxVersionNumber);
+		byte[] bytes = testMap(sessionId, id, versionNumber,ajaxVersionNumber);
+		if(bytes != null)
+		{
+			Page page = (Page)Objects.byteArrayToObject(bytes);
+			page = page.getVersion(versionNumber);
+			return page; 
+		}
 		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
@@ -162,8 +173,7 @@ public class FilePageStore implements IPageStore
 	{
 		synchronized (storePageMap)
 		{
-			storePageMap.put(new SessionPageKey(sessionId, page.getNumericId(), page
-					.getCurrentVersionNumber(), page.getAjaxVersionNumber(), true), page);
+			storePageMap.put(new SessionPageKey(sessionId, page,true), page);
 			storePageMap.notifyAll();
 		}
 	}
@@ -174,11 +184,23 @@ public class FilePageStore implements IPageStore
 	 */
 	public void storePage(String sessionId, Page page)
 	{
-		synchronized (storePageMap)
+		// if the pagemap falls behind, directly serialize it here.
+		if(storePageMap.size() > 25)
 		{
-			storePageMap.put(new SessionPageKey(sessionId, page.getNumericId(), page
-					.getCurrentVersionNumber(), page.getAjaxVersionNumber()), page);
-			storePageMap.notifyAll();
+			byte[] bytes = serializePage(page);
+			if (bytes != null)
+			{
+				storePageMap.put(new SessionPageKey(sessionId, page,false), bytes);
+			}
+			
+		}
+		else
+		{
+			synchronized (storePageMap)
+			{
+				storePageMap.put(new SessionPageKey(sessionId, page,false), page);
+				storePageMap.notifyAll();
+			}
 		}
 	}
 
@@ -188,8 +210,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public void pageAccessed(String sessionId, Page page)
 	{
-		testMap(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page
-				.getAjaxVersionNumber());
+		testMap(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page.getAjaxVersionNumber());
 	}
 
 
@@ -201,36 +222,45 @@ public class FilePageStore implements IPageStore
 		thread.stop();
 	}
 
-	private void testMap(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
+	private byte[] testMap(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
 	{
-		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber,
-				ajaxVersionNumber);
-		Object key = storePageMap.get(curentKey);
-		while (key != null)
+		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber,ajaxVersionNumber,null);
+		Object value = storePageMap.get(curentKey);
+		if (value instanceof Page)
 		{
-			if (log.isDebugEnabled())
+			// if the page was still not saved before the next request. Then 
+			// the request itself will serialize it
+			if( storePageMap.put(curentKey, SERIALIZING) == value)
 			{
-				log.debug("The page " + id + ":" + versionNumber + " for session " + sessionId
-						+ " wasn't saved yet. blocking for 200ms");
+				byte[] bytes = serializePage((Page)value);
+				if ( bytes != null)
+				{
+					storePageMap.put(curentKey,bytes);
+				}
+				else
+				{
+					storePageMap.remove(curentKey);
+				}
+				return bytes;
 			}
-			synchronized (key)
+			else
 			{
-				try
-				{
-					// for now i just wait 200ms and then try again.
-					// i could use synchronized() and then notifyAll in the
-					// saving thread.
-					// But maybe it is really busy and we should just block for
-					// 200ms
-					key.wait(200);
-				}
-				catch (InterruptedException ex)
-				{
-					log.error(ex);
-				}
+				value = SERIALIZING;
 			}
-			key = storePageMap.get(curentKey);
 		}
+		while(value == SERIALIZING)
+		{
+			try
+			{
+				Thread.sleep(50);
+			}
+			catch (InterruptedException ex)
+			{
+				throw new RuntimeException(ex);
+			}
+			value = storePageMap.get(curentKey);
+		}
+		return value instanceof byte[]? (byte[])value:null;
 	}
 
 
@@ -241,7 +271,7 @@ public class FilePageStore implements IPageStore
 	{
 		synchronized (storePageMap)
 		{
-			SessionPageKey key = new SessionPageKey(sessionId, -1, -1, -1, true);
+			SessionPageKey key = new SessionPageKey(sessionId, -1, -1, -1, true,null);
 			storePageMap.put(key, key);
 			storePageMap.notifyAll();
 		}
@@ -262,15 +292,73 @@ public class FilePageStore implements IPageStore
 	/**
 	 * @param id
 	 * @param versionNumber
-	 * @param ajaxVersionNumber
+	 * @param ajaxVersionNumber 
 	 * @param sessionDir
 	 * @return The file pointing to the page
 	 */
 	private File getPageFile(int id, int versionNumber, int ajaxVersionNumber, File sessionDir)
 	{
-		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber
-				+ "-ajax-" + ajaxVersionNumber);
+		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber + "-ajax-" + ajaxVersionNumber);
 	}
+	
+	private byte[] serializePage(Page page)
+	{
+		long t1 = System.currentTimeMillis();
+		byte[] bytes = Objects.objectToByteArray(page);
+		totalSerializationTime += (System.currentTimeMillis()-t1);
+		return bytes;
+	}
+	
+	/**
+	 * @param sessionId
+	 * @param key 
+	 * @param bytes 
+	 */
+	private void savePage(SessionPageKey key, byte[] bytes)
+	{
+		File sessionDir = new File(getWorkDir(), key.sessionId);
+		sessionDir.mkdirs();
+		File pageFile = getPageFile(key.id, key.versionNumber,key.ajaxVersionNumber, sessionDir);
+
+		FileOutputStream fos = null;
+		long t1 = System.currentTimeMillis();
+		int length = 0;
+		try
+		{
+			fos = new FileOutputStream(pageFile);
+			ByteBuffer bb = ByteBuffer.wrap(bytes);
+			fos.getChannel().write(bb);
+			length = bytes.length;
+		}
+		catch (Exception e)
+		{
+			log.error("Error saving page " + key.pageClass +" [" + key.id + ","
+					+ key.versionNumber + "] for the sessionid " + key.sessionId);
+		}
+		finally
+		{
+			try
+			{
+				if (fos != null)
+				{
+					fos.close();
+				}
+			}
+			catch (IOException ex)
+			{
+				// ignore
+			}
+		}
+		long t3 = System.currentTimeMillis();
+		if (log.isDebugEnabled())
+		{
+			log.debug("storing page " + key.pageClass + "[" + key.id + ","
+					+ key.versionNumber + "] size: " + length + " for session "
+					+ key.sessionId + " took " + (t3 - t1) + " miliseconds to save");
+		}
+		totalSavingTime += (t3-t1);
+	}
+	
 
 	private class SessionPageKey
 	{
@@ -279,20 +367,27 @@ public class FilePageStore implements IPageStore
 		private final int versionNumber;
 		private final int ajaxVersionNumber;
 		private final boolean remove;
+		private final Class pageClass;
 
-		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
+		SessionPageKey(String sessionId, Page page, boolean remove)
 		{
-			this(sessionId, id, versionNumber, ajaxVersionNumber, false);
+			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), 
+					page.getAjaxVersionNumber(), remove, page.getClass());
 		}
 
-		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber,
-				boolean remove)
+		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, Class pageClass)
+		{
+			this(sessionId, id, versionNumber, ajaxVersionNumber, false, pageClass);
+		}
+
+		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, boolean remove, Class pageClass)
 		{
 			this.sessionId = sessionId;
 			this.id = id;
 			this.versionNumber = versionNumber;
 			this.ajaxVersionNumber = ajaxVersionNumber;
 			this.remove = remove;
+			this.pageClass = pageClass;
 		}
 
 		/**
@@ -327,6 +422,8 @@ public class FilePageStore implements IPageStore
 		 */
 		public void stop()
 		{
+			System.err.println("Total time in saving: " + totalSavingTime);
+			System.err.println("Total time in serialization: " + totalSerializationTime);
 			synchronized (storePageMap)
 			{
 				stop = true;
@@ -359,7 +456,8 @@ public class FilePageStore implements IPageStore
 					{
 						SessionPageKey key = (SessionPageKey)iterator.next();
 						Object value = storePageMap.get(key);
-						if (value == null)
+						// continue if the value is already null or currently SERIALIZING (by another thread)
+						if (value == null || value == SERIALIZING)
 							continue;
 						if (key.remove)
 						{
@@ -377,12 +475,36 @@ public class FilePageStore implements IPageStore
 								// page.
 								removePageFromPendingMap(key.sessionId, key.id);
 							}
+							iterator.remove();
 						}
-						else
+						else 
 						{
-							savePage(key.sessionId, (Page)value);
+							byte[] pageBytes = null;
+							if ( value instanceof Page)
+							{
+								if (storePageMap.put(key, SERIALIZING) == value)
+								{
+									pageBytes = serializePage((Page)value);
+									if ( pageBytes != null)
+									{
+										storePageMap.put(key, pageBytes);
+									}
+									else
+									{
+										iterator.remove();
+									}
+								}
+							}
+							else
+							{
+								pageBytes = (byte[])value;
+							}
+							if ( pageBytes != null)
+							{
+								savePage(key, pageBytes);
+								iterator.remove();
+							}
 						}
-						iterator.remove();
 					}
 				}
 				catch (Exception e)
@@ -462,81 +584,5 @@ public class FilePageStore implements IPageStore
 			}
 		}
 
-		/**
-		 * @param sessionId
-		 * @param page
-		 */
-		private void savePage(String sessionId, Page page)
-		{
-			File sessionDir = new File(getWorkDir(), sessionId);
-			sessionDir.mkdirs();
-			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), page
-					.getAjaxVersionNumber(), sessionDir);
-
-			FileOutputStream fos = null;
-			long t1 = System.currentTimeMillis();
-			long t2 = 0;
-			int length = 0;
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				try
-				{
-					new ObjectOutputStream(out).writeObject(page);
-				}
-				finally
-				{
-					out.close();
-				}
-				byte[] bytes = out.toByteArray();
-				t2 = System.currentTimeMillis();
-				fos = new FileOutputStream(pageFile);
-				ByteBuffer bb = ByteBuffer.wrap(bytes);
-				fos.getChannel().write(bb);
-				length = bytes.length;
-			}
-			catch (Exception e)
-			{
-				// TODO as long as our extended info isn't accurate, at least
-				// print the stack trace
-				log.error(e.getMessage(), e);
-				
-				// TODO doesn't work yet.
-				// trigger serialization again, but this time gather some more
-				// info
-//				try
-//				{
-//					Objects.checkSerializable(page);
-//				}
-//				catch (Exception e1)
-//				{
-//					log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
-//							+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
-//							+ ": " + e1.getMessage(), e1);
-//				}
-			}
-			finally
-			{
-				try
-				{
-					if (fos != null)
-					{
-						fos.close();
-					}
-				}
-				catch (IOException ex)
-				{
-					// ignore
-				}
-			}
-			if (log.isDebugEnabled())
-			{
-				long t3 = System.currentTimeMillis();
-				log.debug("storing page " + page.getClass() + "[" + page.getNumericId() + ","
-						+ page.getCurrentVersionNumber() + "] size: " + length + " for session "
-						+ sessionId + " took " + (t2 - t1) + " miliseconds to serialize and "
-						+ (t3 - t2) + " miliseconds to save");
-			}
-		}
 	}
 }
