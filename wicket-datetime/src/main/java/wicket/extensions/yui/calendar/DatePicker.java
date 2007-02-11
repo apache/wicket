@@ -95,7 +95,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 				.write("\"></div><img style=\"cursor: pointer; border: none;\" id=\"");
 		response.write(getIconId());
 		response.write("\" src=\"");
-		response.write(Strings.escapeMarkup(getIconUrl()));
+		CharSequence iconUrl = getIconUrl();
+		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl
+				.toString() : ""));
 		response.write("\" /></span>");
 	}
 
