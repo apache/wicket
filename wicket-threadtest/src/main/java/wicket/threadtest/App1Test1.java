@@ -23,12 +23,13 @@ public class App1Test1 {
 	public static void main(String[] args) throws Exception {
 
 		List<String> gets = Arrays.asList(new String[] {
-				"/app1?wicket:bookmarkablePage=one:wicket.threadtest.apps.app1.Home",
-				"/app1?wicket:bookmarkablePage=two:wicket.threadtest.apps.app1.Home",
-				"/app1?wicket:interface=two:${iteration}:link::ILinkListener",
-				"/app1?wicket:interface=one:${iteration}:link::ILinkListener",
-				"/app1?wicket:interface=two:${iteration}:link::ILinkListener" });
+				"/app1/?wicket:bookmarkablePage=one:wicket.threadtest.apps.app1.Home",
+				"/app1/?wicket:bookmarkablePage=two:wicket.threadtest.apps.app1.Home",
+				"/app1/?wicket:interface=two:${iteration}:link::ILinkListener:",
+				"/app1/?wicket:interface=one:${iteration}:link::ILinkListener:",
+				"/app1/?wicket:interface=two:${iteration}:link::ILinkListener:" });
 
+		Thread.sleep(5000);
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 100);
 		//getCmd.setPrintResponse(true);
 		Tester tester = new Tester(getCmd, 10, true);

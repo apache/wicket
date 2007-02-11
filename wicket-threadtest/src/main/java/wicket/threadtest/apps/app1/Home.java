@@ -265,10 +265,16 @@ public class Home extends WebPage {
 	public Home() {
 
 		add(new Link("link") {
-
+			int i=0;
 			@Override
 			public void onClick() {
-				System.out.println("click received for session " + Session.get());
+//				try {
+//					Thread.sleep(200);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				i++;
 			}
 		});
 
