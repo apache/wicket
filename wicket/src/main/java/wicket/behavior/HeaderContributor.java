@@ -215,7 +215,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				response.renderCSSReference(new CompressedResourceReference(scope, path));
+				response.renderCSSReference(new CompressedResourceReference(scope, path), media);
 			}
 		});
 	}
