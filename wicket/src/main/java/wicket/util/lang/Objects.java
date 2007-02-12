@@ -41,6 +41,7 @@ import wicket.settings.IApplicationSettings;
 import wicket.util.io.ByteCountingOutputStream;
 import wicket.util.io.SerializableChecker;
 import wicket.util.io.WicketObjectInputStream;
+import wicket.util.io.WicketObjectOutputStream;
 import wicket.util.string.Strings;
 
 /**
@@ -1033,11 +1034,8 @@ public final class Objects
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try
 			{
-				new ObjectOutputStream(out).writeObject(object);
-
-				// let's keep this commented in SVN until we're absolutely sure
-				// it works without any flaws
-				// new WicketObjectOutputStream(out).writeObject(object);
+				//new ObjectOutputStream(out).writeObject(object);
+				new WicketObjectOutputStream(out).writeObject(object);
 			}
 			finally
 			{
