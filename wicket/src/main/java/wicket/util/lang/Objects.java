@@ -39,9 +39,9 @@ import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
 import wicket.util.io.ByteCountingOutputStream;
+import wicket.util.io.IObjectStreamFactory;
 import wicket.util.io.SerializableChecker;
-import wicket.util.io.WicketObjectInputStream;
-import wicket.util.io.WicketObjectOutputStream;
+import wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import wicket.util.string.Strings;
 
 /**
@@ -191,6 +191,13 @@ public final class Objects
 	/** defaults for primitives. */
 	private static final HashMap primitiveDefaults = new HashMap();
 
+	/**
+	 * The default object stream factory to use. Keep this as a static here
+	 * opposed to in Application, as the Application most likely isn't available
+	 * in the threads we'll be using this with.
+	 */
+	private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
+
 	static
 	{
 		primitiveDefaults.put(Boolean.TYPE, Boolean.FALSE);
@@ -328,8 +335,7 @@ public final class Objects
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
 			try
 			{
-				// return new ObjectInputStream(in).readObject();
-				return new WicketObjectInputStream(in).readObject();
+				return objectStreamFactory.newObjectInputStream(in).readObject();
 			}
 			finally
 			{
@@ -823,6 +829,7 @@ public final class Objects
 		return NONNUMERIC;
 	}
 
+
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of a numeric operation on the two given objects.
@@ -837,7 +844,6 @@ public final class Objects
 	{
 		return getNumericType(v1, v2, false);
 	}
-
 
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
@@ -1034,8 +1040,7 @@ public final class Objects
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try
 			{
-				//new ObjectOutputStream(out).writeObject(object);
-				new WicketObjectOutputStream(out).writeObject(object);
+				objectStreamFactory.newObjectOutputStream(out).writeObject(object);
 			}
 			finally
 			{
@@ -1070,6 +1075,27 @@ public final class Objects
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Configure this utility class to use the provided
+	 * {@link IObjectStreamFactory} instance.
+	 * 
+	 * @param objectStreamFactory
+	 *            The factory instance to use. If you pass in null, the
+	 *            {@link DefaultObjectStreamFactory default} will be set
+	 *            (again).
+	 */
+	public static void setObjectStreamFactory(IObjectStreamFactory objectStreamFactory)
+	{
+		if (objectStreamFactory == null)
+		{
+			Objects.objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
+		}
+		else
+		{
+			Objects.objectStreamFactory = objectStreamFactory;
+		}
 	}
 
 	/**
