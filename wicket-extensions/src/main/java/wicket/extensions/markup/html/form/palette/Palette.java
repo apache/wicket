@@ -19,9 +19,9 @@ package wicket.extensions.markup.html.form.palette;
 import java.util.Collection;
 import java.util.Iterator;
 
-import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
+import wicket.behavior.HeaderContributor;
 import wicket.extensions.markup.html.form.palette.component.Choices;
 import wicket.extensions.markup.html.form.palette.component.Recorder;
 import wicket.extensions.markup.html.form.palette.component.Selection;
@@ -31,9 +31,8 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractModel;
+import wicket.markup.html.resources.StyleSheetReference;
 import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * Palette is a component that allows the user to easily select and order
@@ -95,22 +94,26 @@ public class Palette extends Panel
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference javascript = new ResourceReference(Palette.class,
+	private static final ResourceReference JAVASCRIPT = new ResourceReference(Palette.class,
 			"palette.js");
+	
+	/** reference to the palette's css resource */
+	private static final ResourceReference CSS = new ResourceReference(Palette.class, "palette.css");
+
 
 	/** reference to default up buttom image */
-	private static final ResourceReference upImage = new ResourceReference(Palette.class, "up.gif");
+	private static final ResourceReference UP_IMAGE = new ResourceReference(Palette.class, "up.gif");
 
 	/** reference to default down button image */
-	private static final ResourceReference downImage = new ResourceReference(Palette.class,
+	private static final ResourceReference DOWN_IMAGE = new ResourceReference(Palette.class,
 			"down.gif");
 
 	/** reference to default remove button image */
-	private static final ResourceReference removeImage = new ResourceReference(Palette.class,
+	private static final ResourceReference REMOVE_IMAGE = new ResourceReference(Palette.class,
 			"remove.gif");
 
 	/** reference to default add buttom image */
-	private static final ResourceReference addImage = new ResourceReference(Palette.class,
+	private static final ResourceReference ADD_IMAGE = new ResourceReference(Palette.class,
 			"add.gif");
 
 	/**
@@ -173,27 +176,31 @@ public class Palette extends Panel
 		add(newAvailableHeader(AVAILABLE_HEADER_ID));
 		add(newSelectedHeader(SELECTED_HEADER_ID));
 
-		addJavascript();
-	}
-
-	/**
-	 * adds the component used to represent the link the the javascript file to
-	 * the header
-	 */
-	private void addJavascript()
-	{
-		IModel srcReplacement = new Model()
+		add(HeaderContributor.forJavaScript(JAVASCRIPT));
+		ResourceReference css = getCSS();
+		if (css != null)
 		{
-			private static final long serialVersionUID = 1L;
-
-			public Object getObject(Component component)
-			{
-				return urlFor(javascript);
-			};
-		};
-		WebMarkupContainer javascript = new WebMarkupContainer("javascript");
-		javascript.add(new AttributeModifier("src", true, srcReplacement));
-		add(javascript);
+			add(HeaderContributor.forCss(css));
+		}
+	}
+	
+	/**
+	 * Returns the resource reference of the default stylesheet.
+	 * You may return null to avoid using any stylesheet.
+	 * 
+	 * @return A resource reference
+	 */
+	protected ResourceReference getCSS()
+	{
+		return CSS;
+	}
+	
+	/**
+	 * Can be overriden by clients for custom style sheet
+	 * @return the style sheet reference
+	 */
+	protected StyleSheetReference getStyleSheet() {
+		return new StyleSheetReference("paletteCSS", getClass(), "palette.css");
 	}
 
 	/**
@@ -287,7 +294,7 @@ public class Palette extends Panel
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getDownOnClickJS());
 			}
-		}.add(new Image("image", downImage));
+		}.add(new Image("image", DOWN_IMAGE));
 	}
 
 	/**
@@ -306,7 +313,7 @@ public class Palette extends Panel
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getUpOnClickJS());
 			}
-		}.add(new Image("image", upImage));
+		}.add(new Image("image", UP_IMAGE));
 	}
 
 	/**
@@ -325,7 +332,7 @@ public class Palette extends Panel
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getRemoveOnClickJS());
 			}
-		}.add(new Image("image", removeImage));
+		}.add(new Image("image", REMOVE_IMAGE));
 	}
 
 	/**
@@ -344,7 +351,7 @@ public class Palette extends Panel
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getAddOnClickJS());
 			}
-		}.add(new Image("image", addImage));
+		}.add(new Image("image", ADD_IMAGE));
 	}
 
 	/**
@@ -538,31 +545,4 @@ public class Palette extends Panel
 			}
 		}
 	}
-
-	/**
-	 * Model that allows other components to benefit of the compound model that
-	 * AjaxEditableLabel inherits.
-	 */
-	private final class PassThroughModel extends AbstractModel
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
-		 */
-		public Object getObject(Component component)
-		{
-			return getModel().getObject(Palette.this);
-		}
-
-		/**
-		 * @see wicket.model.IModel#setObject(wicket.Component,
-		 *      java.lang.Object)
-		 */
-		public void setObject(Component component, Object object)
-		{
-			getModel().setObject(Palette.this, object);
-		}
-	}
-
 }
