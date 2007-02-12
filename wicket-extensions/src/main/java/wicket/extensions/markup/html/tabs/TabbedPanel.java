@@ -59,7 +59,7 @@ import wicket.model.Model;
  *                                 
  *                                 });
  *                                
- *                                 add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *                                 add(new TabbedPanel(&quot;tabs&quot;, tabs));
  *                             
  *                                 
  *                                 &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
