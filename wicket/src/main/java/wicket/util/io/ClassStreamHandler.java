@@ -168,7 +168,7 @@ public final class ClassStreamHandler
 			cons = getSerializableConstructor(clz);
 			if (cons == null)
 			{
-				throw new RuntimeException("Failed to get the constructor");
+				throw new RuntimeException("Failed to get the constructor from clz: " + clz);
 			}
 		}
 		writeObjectMethod = getPrivateMethod(cls, "writeObject",
@@ -449,7 +449,7 @@ public final class ClassStreamHandler
 					}
 					else
 					{
-						throw new RuntimeException("not support prim type??");
+						throw new RuntimeException("not support prim type?? "  + cls);
 					}
 				}
 				else
