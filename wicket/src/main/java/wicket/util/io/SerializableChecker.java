@@ -28,6 +28,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 import wicket.WicketRuntimeException;
 
@@ -86,6 +89,9 @@ public final class SerializableChecker
 			return object.getClass() + " - " + fieldDescription;
 		}
 	}
+
+	/** log. */
+	private static final Log log = LogFactory.getLog(SerializableChecker.class);
 
 	/** Whether we can execute the tests. If false, check will just return. */
 	private static boolean available = true;
@@ -314,7 +320,8 @@ public final class SerializableChecker
 			for (int i = 0; i < objVals.length; i++)
 			{
 				if (objVals[i] instanceof String || objVals[i] instanceof Number
-						|| objVals[i] instanceof Date || objVals[i] instanceof Boolean)
+						|| objVals[i] instanceof Date || objVals[i] instanceof Boolean
+						|| objVals[i] instanceof Class)
 				{
 					// fitler out common cases
 					continue;
@@ -325,7 +332,6 @@ public final class SerializableChecker
 					// Check for circular reference.
 					if (checked.contains(objVals[i]))
 					{
-						// System.err.println("skip circular " + path);
 						continue;
 					}
 					checked.add(objVals[i]);
@@ -341,7 +347,7 @@ public final class SerializableChecker
 							b.append('/');
 						}
 					}
-					System.err.println("error invoking hashCode on " + b + ": " + e.getMessage());
+					log.error("error invoking hashCode on " + b + ": " + e.getMessage());
 					continue;
 				}
 
