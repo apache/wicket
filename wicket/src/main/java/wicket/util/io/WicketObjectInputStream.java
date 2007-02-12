@@ -312,5 +312,36 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	}
 	in.readFully(buf, off, len);
     }
-	
+
+    /**
+     * @see java.io.ObjectInputStream#readUTF()
+     */
+    public String readUTF() throws IOException
+    {
+    	return in.readUTF();
+    }
+    
+    /**
+     * @see java.io.ObjectInputStream#read()
+     */
+    public int read() throws IOException
+    {
+    	return in.read();
+    }
+    
+    /**
+     * @see java.io.InputStream#read(byte[])
+     */
+    public int read(byte[] b) throws IOException
+    {
+    	return in.read(b);
+    }
+    
+    /**
+     * @see java.io.ObjectInputStream#read(byte[], int, int)
+     */
+    public int read(byte[] buf, int off, int len) throws IOException
+    {
+    	return in.read(buf, off, len);
+    }
 }
