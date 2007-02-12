@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 
@@ -30,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import wicket.Application;
 import wicket.Page;
 import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
+import wicket.util.io.SerializableChecker;
 import wicket.util.lang.Objects;
 
 /**
@@ -191,17 +193,35 @@ public class FilePageStore implements IPageStore
 		}
 		catch (Exception e)
 		{
-			// trigger serialization again, but this time gather some more
-			// info
-			try
+			// FIXME this is temporary until 1.3 gets ported
+			if ((e instanceof NotSerializableException) && SerializableChecker.isAvailable())
 			{
-				Objects.checkSerializable(page);
+				// trigger serialization again, but this time gather some more
+				// info
+				try
+				{
+					new SerializableChecker((NotSerializableException)e).writeObject(page);
+					// if we get here, we didn't fail, while we should; print
+					// out the message contains a pointer to where in the object
+					// hierarchy to trouble maker is
+					log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
+							+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
+							+ ": " + e.getMessage(), e);
+				}
+				catch (Exception e1)
+				{
+					// the message contains a pointer to where in the object
+					// hierarchy to trouble maker is
+					log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
+							+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
+							+ ": " + e1.getMessage(), e1);
+				}
 			}
-			catch (Exception e1)
+			else
 			{
 				log.error("Error saving page " + page.getClass() + "[" + page.getId() + ","
 						+ page.getCurrentVersionNumber() + "] for the sessionid " + sessionId
-						+ ": " + e1.getMessage(), e1);
+						+ ": " + e.getMessage(), e);
 			}
 		}
 		finally

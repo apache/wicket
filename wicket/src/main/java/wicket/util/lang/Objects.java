@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
@@ -32,8 +33,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +46,8 @@ import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
 import wicket.util.collections.MiniMap;
 import wicket.util.io.ByteCountingOutputStream;
+import wicket.util.io.IObjectStreamFactory;
+import wicket.util.io.SerializableChecker;
 import wicket.util.string.Strings;
 
 /**
@@ -157,24 +158,6 @@ public final class Objects
 		}
 	}
 
-	/**
-	 * Exception for serialization analysis.
-	 */
-	private static final class NotSerializableException extends WicketRuntimeException
-	{
-		private static final long serialVersionUID = 1L;
-
-		NotSerializableException(String message)
-		{
-			super(message);
-		}
-
-		NotSerializableException(String message, Throwable cause)
-		{
-			super(message, cause);
-		}
-	}
-
 	private static class ObjectInstanceHashmapHolder implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
@@ -242,187 +225,6 @@ public final class Objects
 
 	}
 
-	/**
-	 * Utility class that analyzes objects for non-serializable nodes.
-	 */
-	private static final class SerializableChecker
-	{
-		/** stack for string representations of objects that are handled. */
-		private final LinkedList<CharSequence> parentsStack = new LinkedList<CharSequence>();
-
-		/** set for checking circular references. */
-		private final HashSet<Object> checked = new HashSet<Object>();
-
-		/** root object being analyzed. */
-		private final Object root;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param root
-		 *            the root object to analyze.
-		 */
-		public SerializableChecker(Object root)
-		{
-			this.root = root;
-		}
-
-		/**
-		 * Check root object for non-serializable children.
-		 */
-		public void check()
-		{
-			parentsStack.clear();
-			checked.clear();
-			check(root);
-		}
-
-		/**
-		 * Recursive function to do the tracing.
-		 * 
-		 * @param obj
-		 *            object to analyze
-		 */
-		private void check(Object obj)
-		{
-			if (obj == null)
-			{
-				return;
-			}
-			// Check for circular reference.
-			if (checked.contains(obj))
-			{
-				return;
-			}
-			if (parentsStack.isEmpty())
-			{
-				parentsStack.add("Class " + obj.getClass().getName());
-			}
-			checked.add(obj);
-			Field[] fields = obj.getClass().getDeclaredFields();
-			for (int i = 0; i < fields.length; i++)
-			{
-				fields[i].setAccessible(true);
-				StringBuffer buffer = new StringBuffer();
-				Field f = fields[i];
-				int m = f.getModifiers();
-				if (fields[i].getType().isPrimitive() || Modifier.isTransient(m)
-						|| Modifier.isStatic(m))
-				{
-					continue;
-				}
-
-				if (Modifier.isPrivate(m))
-				{
-					buffer.append("private ");
-				}
-				if (Modifier.isProtected(m))
-				{
-					buffer.append("protected ");
-				}
-				if (Modifier.isPublic(m))
-				{
-					buffer.append("public ");
-				}
-				if (Modifier.isAbstract(m))
-				{
-					buffer.append("abstract ");
-				}
-				if (Modifier.isFinal(m))
-				{
-					buffer.append("final ");
-				}
-				if (Modifier.isStatic(m))
-				{
-					buffer.append("static ");
-				}
-				if (Modifier.isVolatile(m))
-				{
-					buffer.append("volatile ");
-				}
-				buffer.append(f.getType().getName()).append("");
-				buffer.append(" ").append(f.getName()).append(" => ");
-
-				// now that we have the reference, try to get the actual value
-				try
-				{
-					Object val = f.get(obj);
-					if (val != null)
-					{
-						buffer.append(val.getClass().getName());
-						if (val instanceof Component)
-						{
-							buffer.append(" [path=").append(((Component<?>)val).getPath()).append(
-									"]");
-						}
-					}
-					else
-					{
-						buffer.append(" null");
-					}
-				}
-				catch (IllegalArgumentException e)
-				{
-					buffer.append("? (").append(e.getMessage()).append(")");
-				}
-				catch (IllegalAccessException e)
-				{
-					buffer.append("? (").append(e.getMessage()).append(")");
-				}
-
-				parentsStack.add(buffer.toString());
-				if (Serializable.class.isAssignableFrom(fields[i].getType()))
-				{
-					try
-					{
-						check(fields[i].get(obj));
-					}
-					catch (IllegalAccessException e)
-					{
-						throw new WicketRuntimeException(getPrettyPrintedStack(fields[i].getType()
-								.getName()), e);
-					}
-				}
-				else
-				{
-					throw new WicketRuntimeException(getPrettyPrintedStack(
-							fields[i].getType().getName()).toString(),
-							new NotSerializableException(fields[i].getType().getName()));
-				}
-				parentsStack.removeLast();
-			}
-			if (parentsStack.size() == 1)
-			{
-				checked.clear();
-				parentsStack.removeLast();
-			}
-		}
-
-		/**
-		 * Dump with identation.
-		 * 
-		 * @param type
-		 *            the type that couldn't be serialized
-		 * @return A very pretty dump
-		 */
-		private String getPrettyPrintedStack(String type)
-		{
-			checked.clear();
-			StringBuffer result = new StringBuffer();
-			StringBuffer spaces = new StringBuffer();
-			result.append("Unable to serialize class: ");
-			result.append(type);
-			result.append("\nField hierarchy is:");
-			while (!parentsStack.isEmpty())
-			{
-				spaces.append("  ");
-				result.append("\n").append(spaces).append(parentsStack.removeFirst());
-			}
-			result.append(" <----- field that is not serializable");
-			return result.toString();
-		}
-	}
-
 	/** Type tag meaning java.math.BigDecimal. */
 	private static final int BIGDEC = 9;
 
@@ -473,6 +275,13 @@ public final class Objects
 
 	/** defaults for primitives. */
 	private static final HashMap<Class, Comparable> primitiveDefaults = new HashMap<Class, Comparable>();
+
+	/**
+	 * The default object stream factory to use. Keep this as a static here
+	 * opposed to in Application, as the Application most likely isn't available
+	 * in the threads we'll be using this with.
+	 */
+	private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
 
 	static
 	{
@@ -609,18 +418,13 @@ public final class Objects
 		try
 		{
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
-			ObjectInputStream ois = null;
 			try
 			{
-				ois = new ObjectInputStream(in);
-				return ois.readObject();
+				return objectStreamFactory.newObjectInputStream(in).readObject();
 			}
 			finally
 			{
-				if (ois != null)
-				{
-					ois.close();
-				}
+				in.close();
 			}
 		}
 		catch (ClassNotFoundException e)
@@ -633,22 +437,6 @@ public final class Objects
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	/**
-	 * Track down a non-serializable object starting from the provided object.
-	 * When it finds a non-serializable object, this method will throw a runtime
-	 * exception with a message that prints out the non-serializable object and
-	 * it's parents. If everything is serializable, this method will return
-	 * normally. NOT intended for any other use than determining the hierarchy
-	 * for a non-serializable object when you already know you have one.
-	 * 
-	 * @param obj
-	 *            The object to analyze
-	 */
-	public static void checkSerializable(Object obj)
-	{
-		new SerializableChecker(obj).check();
 	}
 
 	/**
@@ -1319,26 +1107,43 @@ public final class Objects
 		try
 		{
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ObjectOutputStream oos = null;
 			try
 			{
-				oos = new ObjectOutputStream(out);
-				oos.writeObject(object);
+				objectStreamFactory.newObjectOutputStream(out).writeObject(object);
 			}
 			finally
 			{
-				if (oos != null)
-				{
-					oos.close();
-				}
+				out.close();
 			}
 			return out.toByteArray();
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return null;
+			if ((e instanceof NotSerializableException) && SerializableChecker.isAvailable())
+			{
+				// trigger serialization again, but this time gather some more
+				// info
+				try
+				{
+					new SerializableChecker((NotSerializableException)e).writeObject(object);
+					// if we get here, we didn't fail, while we should; print
+					// out the message contains a pointer to where in the object
+					// hierarchy to trouble maker is
+					logSerializationException(object, e);
+				}
+				catch (Exception e1)
+				{
+					// the message contains a pointer to where in the object
+					// hierarchy to trouble maker is
+					logSerializationException(object, e1);
+				}
+			}
+			else
+			{
+				logSerializationException(object, e);
+			}
 		}
+		return null;
 	}
 
 	/**
@@ -1509,6 +1314,11 @@ public final class Objects
 			fieldList.addAll(getFields(superClz));
 		}
 		return fieldList;
+	}
+
+	private static void logSerializationException(final Object object, Exception e)
+	{
+		log.error("Error serializing object " + object.getClass() + " [object=" + object + "]", e);
 	}
 
 	private static MiniMap<Field, Object> mapObject(final Object object, List<Object> addedObjects)
