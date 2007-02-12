@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
@@ -1046,28 +1047,28 @@ public final class Objects
 		}
 		catch (IOException e)
 		{
-			if (SerializableChecker.isAvailable())
+			if ((e instanceof NotSerializableException) && SerializableChecker.isAvailable())
 			{
 				// trigger serialization again, but this time gather some more
 				// info
 				try
 				{
-					new SerializableChecker().writeObject(object);
+					new SerializableChecker((NotSerializableException)e).writeObject(object);
+					// if we get here, we didn't fail, while we should; print
+					// out the message contains a pointer to where in the object
+					// hierarchy to trouble maker is
+					logSerializationException(object, e);
 				}
 				catch (Exception e1)
 				{
 					// the message contains a pointer to where in the object
 					// hierarchy to trouble maker is
-					log.error("Error serializing object " + object.getClass() + " [object="
-							+ object + "]", e1);
+					logSerializationException(object, e1);
 				}
 			}
 			else
 			{
-				// the message contains a pointer to where in the object
-				// hierarchy to trouble maker is
-				log.error("Error serializing object " + object.getClass() + " [object=" + object
-						+ "]", e);
+				logSerializationException(object, e);
 			}
 		}
 		return null;
@@ -1138,6 +1139,11 @@ public final class Objects
 			}
 		}
 		return result;
+	}
+
+	private static void logSerializationException(final Object object, Exception e)
+	{
+		log.error("Error serializing object " + object.getClass() + " [object=" + object + "]", e);
 	}
 
 	/**

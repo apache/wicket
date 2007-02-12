@@ -287,13 +287,21 @@ public final class SerializableChecker extends ObjectOutputStream
 	/** current full field description. */
 	private String fieldDescription;
 
+	/** Exception that should be set as the cause when throwing a new exception. */
+	private NotSerializableException exception;
+
 	/**
 	 * Construct.
 	 * 
+	 * @param exception
+	 *            exception that should be set as the cause when throwing a new
+	 *            exception
+	 * 
 	 * @throws IOException
 	 */
-	public SerializableChecker() throws IOException
+	public SerializableChecker(NotSerializableException exception) throws IOException
 	{
+		this.exception = exception;
 	}
 
 	/**
@@ -324,7 +332,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		if (!(obj instanceof Serializable))
 		{
 			throw new WicketNotSerializableException(toPrettyPrintedStack(obj.getClass().getName())
-					.toString(), new NotSerializableException(obj.getClass().getName()));
+					.toString(), exception);
 		}
 
 		final ObjectStreamClass desc;
