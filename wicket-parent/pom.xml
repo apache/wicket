@@ -184,6 +184,12 @@
 			</roles>
 			<timezone>0</timezone>
 		</developer>
+		<developer>
+			<name>Jean-Baptiste Quenot</name>
+			<email>jbq@apache.org</email>
+			<organization>ASF</organization>
+			<timezone>+1</timezone>
+		</developer>
 	</developers>
 
 	<contributors>
