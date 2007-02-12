@@ -68,7 +68,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider forDatePattern(String id, IModel model,
+	public static DateTextField forDatePattern(String id, IModel model,
 			String datePattern) {
 		return new DateTextField(id, model, new PatternDateConverter(
 				datePattern, true));
@@ -85,8 +85,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider forDatePattern(String id,
-			String datePattern) {
+	public static DateTextField forDatePattern(String id, String datePattern) {
 		return forDatePattern(id, null, datePattern);
 	}
 
@@ -104,7 +103,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider forDateStyle(String id, IModel model,
+	public static DateTextField forDateStyle(String id, IModel model,
 			String dateStyle) {
 		return new DateTextField(id, model, new StyleDateConverter(dateStyle,
 				true));
@@ -122,7 +121,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider forDateStyle(String id, String dateStyle) {
+	public static DateTextField forDateStyle(String id, String dateStyle) {
 		return forDateStyle(id, null, dateStyle);
 	}
 
@@ -134,7 +133,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider forShortStyle(String id) {
+	public static DateTextField forShortStyle(String id) {
 		return forShortStyle(id, null);
 	}
 
@@ -162,8 +161,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider withConverter(String id,
-			DateConverter converter) {
+	public static DateTextField withConverter(String id, DateConverter converter) {
 		return withConverter(id, null, converter);
 	}
 
@@ -179,7 +177,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public static ITextFormatProvider withConverter(String id, IModel model,
+	public static DateTextField withConverter(String id, IModel model,
 			DateConverter converter) {
 		return new DateTextField(id, model, converter);
 	}
