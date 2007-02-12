@@ -40,7 +40,6 @@ import wicket.settings.IApplicationSettings;
 import wicket.util.io.ByteCountingOutputStream;
 import wicket.util.io.SerializableChecker;
 import wicket.util.io.WicketObjectInputStream;
-import wicket.util.io.WicketObjectOutputStream;
 import wicket.util.string.Strings;
 
 /**
@@ -1053,7 +1052,7 @@ public final class Objects
 				// info
 				try
 				{
-					new SerializableChecker(object).check();
+					new SerializableChecker().writeObject(object);
 				}
 				catch (Exception e1)
 				{

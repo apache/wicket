@@ -16,17 +16,23 @@
  */
 package wicket.util.io;
 
+import java.io.Externalizable;
+import java.io.IOException;
 import java.io.NotSerializableException;
+import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.ObjectStreamField;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +61,7 @@ import wicket.WicketRuntimeException;
  * @author eelcohillenius
  * @author Al Maw
  */
-public final class SerializableChecker
+public final class SerializableChecker extends ObjectOutputStream
 {
 	/**
 	 * Exception that is thrown when a non-serializable object was found.
@@ -69,6 +75,34 @@ public final class SerializableChecker
 			super(message, cause);
 		}
 	}
+
+	/**
+	 * Does absolutely nothing.
+	 */
+	private static class NoopOutputStream extends OutputStream
+	{
+		public void close()
+		{
+		}
+
+		public void flush()
+		{
+		}
+
+		public void write(byte[] b)
+		{
+		}
+
+		public void write(byte[] b, int i, int l)
+		{
+		}
+
+		public void write(int b)
+		{
+		}
+	}
+
+	private static final NoopOutputStream DUMMY_OUTPUT_STREAM = new NoopOutputStream();
 
 	/** Holds information about the field and the resulting object being traced. */
 	private static final class TraceSlot
@@ -172,35 +206,51 @@ public final class SerializableChecker
 	private LinkedList nameStack = new LinkedList();
 
 	/** root object being analyzed. */
-	private final Object root;
+	private Object root;
+
+	/** cache for classes - writeObject methods. */
+	private Map writeObjectMethodCache = new HashMap();
+
+	/** current simple field name. */
+	private String simpleName = "";
+
+	/** current full field description. */
+	private String fieldDescription;
+
+	private LinkedList previousRoots = new LinkedList();
 
 	/**
 	 * Construct.
 	 * 
-	 * @param root
-	 *            the root object to analyze.
+	 * @throws IOException
 	 */
-	public SerializableChecker(Object root)
+	public SerializableChecker() throws IOException
 	{
-		this.root = root;
 	}
 
 	/**
-	 * Trace for objects that are not serializable, starting from the root
-	 * object.
+	 * @see java.io.ObjectOutputStream#writeObjectOverride(java.lang.Object)
 	 */
-	public void check()
+	protected void writeObjectOverride(Object obj) throws IOException
 	{
 		if (!available)
 		{
 			return;
 		}
+		if (this.root != null)
+		{
+			previousRoots.add(this.root);
+		}
+		this.root = obj;
+		if (fieldDescription == null)
+		{
+			fieldDescription = (root instanceof Component) ? ((Component)root).getPath() : "";
+		}
 
-		String name = (root instanceof Component) ? ((Component)root).getPath() : "";
-		check(root, "", name);
+		check(root);
 	}
 
-	private void check(Object obj, String simpleName, String fieldDescription)
+	private void check(final Object obj)
 	{
 		if (obj == null)
 		{
@@ -246,36 +296,110 @@ public final class SerializableChecker
 				for (int i = 0; i < objs.length; i++)
 				{
 					String arrayPos = "[" + i + "]";
-					check(objs[i], arrayPos, fieldDescription + arrayPos);
+					simpleName = arrayPos;
+					fieldDescription += arrayPos;
+					check(objs[i]);
 				}
 			}
 		}
-		// TODO handle Externalizable and writeObject
+		else if (obj instanceof Externalizable)
+		{
+			// TODO handle Externalizable
+		}
 		else
 		{
-			Object[] slots;
-			try
+			Method writeObjectMethod = null;
+			Object o = writeObjectMethodCache.get(cls);
+			if (o != null)
 			{
-				slots = (Object[])getClassDataLayoutMethod.invoke(desc, null);
+				if (o instanceof Method)
+				{
+					writeObjectMethod = (Method)o;
+				}
 			}
-			catch (Exception e)
+			else
 			{
-				throw new RuntimeException(e);
-			}
-			for (int i = 0; i < slots.length; i++)
-			{
-				ObjectStreamClass slotDesc;
 				try
 				{
-					Field descField = slots[i].getClass().getDeclaredField("desc");
-					descField.setAccessible(true);
-					slotDesc = (ObjectStreamClass)descField.get(slots[i]);
+					writeObjectMethod = cls.getDeclaredMethod("writeObject",
+							new Class[] { java.io.ObjectOutputStream.class });
+					writeObjectMethod.setAccessible(true);
+				}
+				catch (SecurityException e)
+				{
+					// we can't access/ set accessible to true
+					writeObjectMethodCache.put(cls, Boolean.FALSE);
+				}
+				catch (NoSuchMethodException e)
+				{
+					// cls doesn't have that method
+					writeObjectMethodCache.put(cls, Boolean.FALSE);
+				}
+			}
+
+			if (writeObjectMethod != null)
+			{
+				try
+				{
+					class Counter
+					{
+						int count;
+					}
+					final Counter counter = new Counter();
+					class InterceptingObjectOutputStream extends ObjectOutputStream
+					{
+						InterceptingObjectOutputStream() throws IOException
+						{
+							super(DUMMY_OUTPUT_STREAM);
+							enableReplaceObject(true);
+							// initialize
+							writeObject("");
+						}
+
+						protected Object replaceObject(Object streamObj) throws IOException
+						{
+							counter.count++;
+							String arrayPos = "[" + counter.count + "]";
+							simpleName = arrayPos;
+							fieldDescription += arrayPos;
+							check(streamObj);
+							return super.replaceObject(streamObj);
+						}
+					}
+					// writeObjectMethod.invoke(obj,
+					// new Object[] { new InterceptingObjectOutputStream() });
 				}
 				catch (Exception e)
 				{
 					throw new RuntimeException(e);
 				}
-				checkFields(obj, slotDesc, fieldDescription);
+			}
+			else
+			{
+				Object[] slots;
+				try
+				{
+					slots = (Object[])getClassDataLayoutMethod.invoke(desc, null);
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException(e);
+				}
+				for (int i = 0; i < slots.length; i++)
+				{
+					ObjectStreamClass slotDesc;
+					try
+					{
+						Field descField = slots[i].getClass().getDeclaredField("desc");
+						descField.setAccessible(true);
+						slotDesc = (ObjectStreamClass)descField.get(slots[i]);
+					}
+					catch (Exception e)
+					{
+						throw new RuntimeException(e);
+					}
+					checkFields(obj, slotDesc);
+				}
 			}
 		}
 
@@ -283,7 +407,7 @@ public final class SerializableChecker
 		nameStack.removeLast();
 	}
 
-	private void checkFields(Object obj, ObjectStreamClass desc, String fieldDescription)
+	private void checkFields(Object obj, ObjectStreamClass desc)
 	{
 		int numFields;
 		try
@@ -338,15 +462,7 @@ public final class SerializableChecker
 				}
 				catch (Exception e)
 				{
-					StringBuffer b = new StringBuffer();
-					for (Iterator it = nameStack.iterator(); it.hasNext();)
-					{
-						b.append(it.next());
-						if (it.hasNext())
-						{
-							b.append('/');
-						}
-					}
+					StringBuffer b = getCurrentPath();
 					log.error("error invoking hashCode on " + b + ": " + e.getMessage());
 					continue;
 				}
@@ -367,9 +483,28 @@ public final class SerializableChecker
 				}
 
 				String fieldName = field.getName();
-				check(objVals[i], fieldName, field.toString());
+				simpleName = field.getName();
+				fieldDescription = field.toString();
+				check(objVals[i]);
 			}
 		}
+	}
+
+	/**
+	 * @return name from root to current node concatted with slashes
+	 */
+	private StringBuffer getCurrentPath()
+	{
+		StringBuffer b = new StringBuffer();
+		for (Iterator it = nameStack.iterator(); it.hasNext();)
+		{
+			b.append(it.next());
+			if (it.hasNext())
+			{
+				b.append('/');
+			}
+		}
+		return b;
 	}
 
 	/**
