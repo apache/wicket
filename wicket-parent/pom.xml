@@ -554,8 +554,8 @@
 			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>mx-snapshot</id>
-			<url>scpexe://maven2/mnt/disk/maven2/mx-snapshot</url>
+			<id>81.17.46.170</id>
+			<url>file:///home/wicket/maven/</url>
 			<uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
 	</distributionManagement>
