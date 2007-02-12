@@ -19,10 +19,10 @@ package wicket.extensions.markup.html.form.palette;
 import java.util.Collection;
 import java.util.Iterator;
 
-import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
+import wicket.behavior.HeaderContributor;
 import wicket.extensions.markup.html.form.palette.component.Choices;
 import wicket.extensions.markup.html.form.palette.component.Recorder;
 import wicket.extensions.markup.html.form.palette.component.Selection;
@@ -33,7 +33,6 @@ import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
-import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -100,22 +99,25 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference javascript = new ResourceReference(Palette.class,
+	private static final ResourceReference JAVASCRIPT = new ResourceReference(Palette.class,
 			"palette.js");
 
+	/** reference to the palette's css resource */
+	private static final ResourceReference CSS = new ResourceReference(Palette.class, "palette.css");
+
 	/** reference to default up buttom image */
-	private static final ResourceReference upImage = new ResourceReference(Palette.class, "up.gif");
+	private static final ResourceReference UP_IMAGE = new ResourceReference(Palette.class, "up.gif");
 
 	/** reference to default down button image */
-	private static final ResourceReference downImage = new ResourceReference(Palette.class,
+	private static final ResourceReference DOWN_IMAGE = new ResourceReference(Palette.class,
 			"down.gif");
 
 	/** reference to default remove button image */
-	private static final ResourceReference removeImage = new ResourceReference(Palette.class,
+	private static final ResourceReference REMOVE_IMAGE = new ResourceReference(Palette.class,
 			"remove.gif");
 
 	/** reference to default add buttom image */
-	private static final ResourceReference addImage = new ResourceReference(Palette.class,
+	private static final ResourceReference ADD_IMAGE = new ResourceReference(Palette.class,
 			"add.gif");
 
 	/**
@@ -179,27 +181,20 @@ public class Palette<T, E> extends Panel<Collection<T>>
 		newAvailableHeader(AVAILABLE_HEADER_ID);
 		newSelectedHeader(SELECTED_HEADER_ID);
 
-		addJavascript();
-	}
-
-	/**
-	 * adds the component used to represent the link the the javascript file to
-	 * the header
-	 */
-	private void addJavascript()
-	{
-		IModel<CharSequence> srcReplacement = new Model<CharSequence>()
+		add(HeaderContributor.forJavaScript(JAVASCRIPT));
+		HeaderContributor css = getCss();
+		if (css != null)
 		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public CharSequence getObject()
-			{
-				return urlFor(javascript);
-			};
-		};
-		WebMarkupContainer javascript = new WebMarkupContainer(this, "javascript");
-		javascript.add(new AttributeModifier("src", true, srcReplacement));
+			add(css);
+		}
+	}
+	
+	/**
+	 * @return CSS for this palette component. May be null to use none.
+	 */
+	protected HeaderContributor getCss()
+	{
+		return HeaderContributor.forCss(CSS);
 	}
 
 	/**
@@ -283,7 +278,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 				tag.getAttributes().put("onclick", Palette.this.getDownOnClickJS());
 			}
 		};
-		return new Image(webMarkupContainer, "image", downImage);
+		return new Image(webMarkupContainer, "image", DOWN_IMAGE);
 	}
 
 	/**
@@ -304,7 +299,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 				tag.getAttributes().put("onclick", Palette.this.getUpOnClickJS());
 			}
 		};
-		return new Image(webMarkupContainer, "image", upImage);
+		return new Image(webMarkupContainer, "image", UP_IMAGE);
 	}
 
 	/**
@@ -325,7 +320,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 				tag.getAttributes().put("onclick", Palette.this.getRemoveOnClickJS());
 			}
 		};
-		return new Image(webMarkupContainer, "image", removeImage);
+		return new Image(webMarkupContainer, "image", REMOVE_IMAGE);
 	}
 
 	/**
@@ -346,7 +341,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 				tag.getAttributes().put("onclick", Palette.this.getAddOnClickJS());
 			}
 		};
-		return new Image(webMarkupContainer, "image", addImage);
+		return new Image(webMarkupContainer, "image", ADD_IMAGE);
 	}
 
 	/**
