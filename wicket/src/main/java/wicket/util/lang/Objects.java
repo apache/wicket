@@ -43,6 +43,8 @@ import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
 import wicket.util.io.ByteCountingOutputStream;
+import wicket.util.io.WicketObjectInputStream;
+import wicket.util.io.WicketObjectOutputStream;
 import wicket.util.string.Strings;
 
 /**
@@ -530,7 +532,8 @@ public final class Objects
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
 			try
 			{
-				return new ObjectInputStream(in).readObject();
+				//return new ObjectInputStream(in).readObject();
+				return new WicketObjectInputStream(in).readObject();
 			}
 			finally
 			{
@@ -1251,7 +1254,8 @@ public final class Objects
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try
 			{
-				new ObjectOutputStream(out).writeObject(object);
+				//new ObjectOutputStream(out).writeObject(object);
+				new WicketObjectOutputStream(out).writeObject(object);
 			}
 			finally
 			{
@@ -1261,9 +1265,18 @@ public final class Objects
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return null;
+			// trigger serialization again, but this time gather some more
+			// info
+			try
+			{
+				Objects.checkSerializable(object);
+			}
+			catch (Exception e1)
+			{
+				log.error("Error serializing object " + object.getClass() + "[" + object + "]" );
+			}
 		}
+		return null;
 	}
 
 	/**
