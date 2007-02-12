@@ -258,6 +258,37 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	out.writeChars(str);
     }
 	
+    /**
+     * @see java.io.ObjectOutputStream#write(byte[])
+     */
+    public void write(byte[] buf) throws IOException
+    {
+    	out.write(buf);
+    }
+    
+    /**
+     * @see java.io.ObjectOutputStream#write(byte[], int, int)
+     */
+    public void write(byte[] buf, int off, int len) throws IOException
+    {
+    	out.write(buf, off, len);
+    }
+    
+    /**
+     * @see java.io.ObjectOutputStream#write(int)
+     */
+    public void write(int val) throws IOException
+    {
+    	out.write(val);
+    }
+    
+    /**
+     * @see java.io.ObjectOutputStream#writeUTF(java.lang.String)
+     */
+    public void writeUTF(String str) throws IOException
+    {
+    	out.writeUTF(str);
+    }
 	/**
 	 * @see java.io.ObjectOutputStream#close()
 	 */
