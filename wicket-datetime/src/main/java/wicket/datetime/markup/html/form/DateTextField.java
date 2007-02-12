@@ -87,7 +87,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 */
 	public static ITextFormatProvider forDatePattern(String id,
 			String datePattern) {
-		return forDateStyle(id, null, datePattern);
+		return forDatePattern(id, null, datePattern);
 	}
 
 	/**
