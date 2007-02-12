@@ -22,7 +22,10 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Page;
 import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
-import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Objects;
 
 /**
@@ -51,7 +53,7 @@ public class FilePageStore implements IPageStore
 
 	private final File defaultWorkDir;
 
-	private final ConcurrentHashMap storePageMap;
+	private final List storePageMap;
 
 	private final PageSavingThread thread;
 
@@ -59,6 +61,10 @@ public class FilePageStore implements IPageStore
 
 	volatile long totalSavingTime = 0;
 	volatile long totalSerializationTime = 0;
+
+	private volatile int saved;
+
+	private volatile int bytesSaved;
 
 	
 
@@ -80,7 +86,7 @@ public class FilePageStore implements IPageStore
 	public FilePageStore(File dir)
 	{
 		defaultWorkDir = dir;
-		storePageMap = new ConcurrentHashMap();
+		storePageMap = Collections.synchronizedList(new LinkedList());
 		thread = new PageSavingThread();
 		appName = Application.get().getApplicationKey();
 		Thread t = new Thread(thread, "FilePageStoreThread-" + appName);
@@ -93,9 +99,10 @@ public class FilePageStore implements IPageStore
 	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
 	 *      int, int)
 	 */
-	public Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
+	public Page getPage(String sessionId, String pagemapName, int id, int versionNumber, int ajaxVersionNumber)
 	{
-		byte[] bytes = testMap(sessionId, id, versionNumber,ajaxVersionNumber);
+		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber,ajaxVersionNumber,pagemapName ,null);
+		byte[] bytes = testMap(currentKey);
 		if(bytes != null)
 		{
 			Page page = (Page)Objects.byteArrayToObject(bytes);
@@ -105,7 +112,7 @@ public class FilePageStore implements IPageStore
 		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
-			File pageFile = getPageFile(id, versionNumber, ajaxVersionNumber, sessionDir);
+			File pageFile = getPageFile(currentKey, sessionDir);
 			if (pageFile.exists())
 			{
 				long t1 = System.currentTimeMillis();
@@ -138,7 +145,6 @@ public class FilePageStore implements IPageStore
 								+ (t2 - t1) + " miliseconds to read in and " + (t3 - t2)
 								+ " miliseconds to deserialize");
 					}
-
 					return page;
 				}
 				catch (Exception e)
@@ -171,11 +177,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public void removePage(String sessionId, Page page)
 	{
-		synchronized (storePageMap)
-		{
-			storePageMap.put(new SessionPageKey(sessionId, page,true), page);
-			storePageMap.notifyAll();
-		}
+		removePageFromPendingMap(sessionId,page.getNumericId());
 	}
 
 	/**
@@ -187,10 +189,12 @@ public class FilePageStore implements IPageStore
 		// if the pagemap falls behind, directly serialize it here.
 		if(storePageMap.size() > 25)
 		{
-			byte[] bytes = serializePage(page);
+			SessionPageKey key = new SessionPageKey(sessionId, page);
+			byte[] bytes = serializePage(key,page);
 			if (bytes != null)
 			{
-				storePageMap.put(new SessionPageKey(sessionId, page,false), bytes);
+				key.setObject(bytes);
+				storePageMap.add(key);
 			}
 			
 		}
@@ -198,7 +202,7 @@ public class FilePageStore implements IPageStore
 		{
 			synchronized (storePageMap)
 			{
-				storePageMap.put(new SessionPageKey(sessionId, page,false), page);
+				storePageMap.add(new SessionPageKey(sessionId, page));
 				storePageMap.notifyAll();
 			}
 		}
@@ -210,7 +214,8 @@ public class FilePageStore implements IPageStore
 	 */
 	public void pageAccessed(String sessionId, Page page)
 	{
-		testMap(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page.getAjaxVersionNumber());
+		SessionPageKey currentKey = new SessionPageKey(sessionId, page);
+		testMap(currentKey);
 	}
 
 
@@ -222,45 +227,68 @@ public class FilePageStore implements IPageStore
 		thread.stop();
 	}
 
-	private byte[] testMap(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
+	private byte[] testMap(SessionPageKey currentKey )
 	{
-		SessionPageKey curentKey = new SessionPageKey(sessionId, id, versionNumber,ajaxVersionNumber,null);
-		Object value = storePageMap.get(curentKey);
-		if (value instanceof Page)
+		synchronized (storePageMap)
 		{
-			// if the page was still not saved before the next request. Then 
-			// the request itself will serialize it
-			if( storePageMap.put(curentKey, SERIALIZING) == value)
+			int index = storePageMap.indexOf(currentKey);
+			if (index != -1)
 			{
-				byte[] bytes = serializePage((Page)value);
-				if ( bytes != null)
+				currentKey = (SessionPageKey)storePageMap.get(index);
+				Object object = currentKey.data;
+				if ( object instanceof Page)
 				{
-					storePageMap.put(curentKey,bytes);
+					storePageMap.remove(index);
 				}
-				else
+				else if ( object instanceof byte[])
 				{
-					storePageMap.remove(curentKey);
+					return (byte[])object;
 				}
-				return bytes;
+				else if (object != SERIALIZING)
+				{
+					currentKey = null;
+				}
 			}
 			else
 			{
-				value = SERIALIZING;
+				currentKey = null;
 			}
 		}
-		while(value == SERIALIZING)
+		
+		
+		if (currentKey != null)
 		{
-			try
+			if ( currentKey.data == SERIALIZING)
 			{
-				Thread.sleep(50);
+				synchronized (currentKey)
+				{
+					try
+					{
+						currentKey.wait();
+					}
+					catch (InterruptedException ex)
+					{
+						throw new RuntimeException(ex);
+					}
+				}
+				Object data = currentKey.data;
+				if(data instanceof byte[])
+				{
+					return (byte[])data;
+				}
 			}
-			catch (InterruptedException ex)
+			else
 			{
-				throw new RuntimeException(ex);
+				byte[] bytes = serializePage(currentKey, (Page)currentKey.data);
+				if ( bytes != null)
+				{
+					currentKey.setObject(bytes);
+					storePageMap.add(currentKey);
+				}
+				return bytes;
 			}
-			value = storePageMap.get(curentKey);
 		}
-		return value instanceof byte[]? (byte[])value:null;
+		return null;
 	}
 
 
@@ -269,12 +297,89 @@ public class FilePageStore implements IPageStore
 	 */
 	public void unbind(String sessionId)
 	{
+		removeSessionFromPendingMap(sessionId);
+	}
+
+	private void removeSessionFromPendingMap(String sessionId)
+	{
 		synchronized (storePageMap)
 		{
-			SessionPageKey key = new SessionPageKey(sessionId, -1, -1, -1, true,null);
-			storePageMap.put(key, key);
-			storePageMap.notifyAll();
+			Iterator iterator = storePageMap.iterator();
+			while (iterator.hasNext())
+			{
+				SessionPageKey key = (SessionPageKey)iterator.next();
+				if (key.sessionId == sessionId)
+				{
+					iterator.remove();
+				}
+			}
 		}
+		
+		removeSession(sessionId);
+		
+	}
+
+	private void removeSession(String sessionId)
+	{
+		File sessionDir = new File(getWorkDir(), sessionId);
+		if (sessionDir.exists())
+		{
+			File[] files = sessionDir.listFiles();
+			if (files != null)
+			{
+				for (int i = 0; i < files.length; i++)
+				{
+					files[i].delete();
+				}
+			}
+			if (!sessionDir.delete())
+			{
+				sessionDir.deleteOnExit();
+			}
+		}
+	}
+
+	/**
+	 * @param sessionId
+	 * @param id
+	 */
+	private void removePageFromPendingMap(String sessionId, int id)
+	{
+		synchronized (storePageMap)
+		{
+			Iterator iterator = storePageMap.iterator();
+			while (iterator.hasNext())
+			{
+				SessionPageKey key = (SessionPageKey)iterator.next();
+				if (key.sessionId == sessionId && key.id == id)
+				{
+					iterator.remove();
+				}
+			}
+		}
+		removePage(sessionId, id);
+	}
+
+
+	private void removePage(String sessionId, int id)
+	{
+		File sessionDir = new File(getWorkDir(), sessionId);
+		if (sessionDir.exists())
+		{
+			final String filepart = appName + "-page-" + id;
+			File[] listFiles = sessionDir.listFiles(new FilenameFilter()
+			{
+				public boolean accept(File dir, String name)
+				{
+					return name.startsWith(filepart);
+				}
+			});
+			for (int i = 0; i < listFiles.length; i++)
+			{
+				listFiles[i].delete();
+			}
+		}
+
 	}
 
 	/**
@@ -290,22 +395,28 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * @param id
-	 * @param versionNumber
-	 * @param ajaxVersionNumber 
+	 * @param key 
 	 * @param sessionDir
 	 * @return The file pointing to the page
 	 */
-	private File getPageFile(int id, int versionNumber, int ajaxVersionNumber, File sessionDir)
+	private File getPageFile(SessionPageKey key, File sessionDir)
 	{
-		return new File(sessionDir, appName + "-page-" + id + "-version-" + versionNumber + "-ajax-" + ajaxVersionNumber);
+		return new File(sessionDir, appName + "-pm-" + key.pageMap+ "-p-" + key.id + "-v-" + key.versionNumber + "-a-" + key.ajaxVersionNumber);
 	}
 	
-	private byte[] serializePage(Page page)
+	private byte[] serializePage(SessionPageKey key, Page page)
 	{
+		if (page.getCurrentVersionNumber() != key.versionNumber)
+		{
+			System.err.println("ERROR versionnumber dont match1!");
+		}
 		long t1 = System.currentTimeMillis();
 		byte[] bytes = Objects.objectToByteArray(page);
 		totalSerializationTime += (System.currentTimeMillis()-t1);
+		if (page.getCurrentVersionNumber() != key.versionNumber)
+		{
+			System.err.println("ERROR versionnumber dont match2!");
+		}
 		return bytes;
 	}
 	
@@ -318,7 +429,7 @@ public class FilePageStore implements IPageStore
 	{
 		File sessionDir = new File(getWorkDir(), key.sessionId);
 		sessionDir.mkdirs();
-		File pageFile = getPageFile(key.id, key.versionNumber,key.ajaxVersionNumber, sessionDir);
+		File pageFile = getPageFile(key, sessionDir);
 
 		FileOutputStream fos = null;
 		long t1 = System.currentTimeMillis();
@@ -357,6 +468,8 @@ public class FilePageStore implements IPageStore
 					+ key.sessionId + " took " + (t3 - t1) + " miliseconds to save");
 		}
 		totalSavingTime += (t3-t1);
+		saved++;
+		bytesSaved += length;
 	}
 	
 
@@ -366,28 +479,41 @@ public class FilePageStore implements IPageStore
 		private final int id;
 		private final int versionNumber;
 		private final int ajaxVersionNumber;
-		private final boolean remove;
+		private final String pageMap;
 		private final Class pageClass;
+		
+		private Object data;
 
-		SessionPageKey(String sessionId, Page page, boolean remove)
+		SessionPageKey(String sessionId, Page page)
 		{
 			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), 
-					page.getAjaxVersionNumber(), remove, page.getClass());
+					page.getAjaxVersionNumber(), page.getPageMap().getName(), page.getClass(),page);
 		}
 
-		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, Class pageClass)
+		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, String pagemap, Class pageClass)
 		{
-			this(sessionId, id, versionNumber, ajaxVersionNumber, false, pageClass);
+			this(sessionId, id, versionNumber, ajaxVersionNumber, pagemap, pageClass, null);
 		}
-
-		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, boolean remove, Class pageClass)
+		
+		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber, String pagemap, Class pageClass, Page page)
 		{
 			this.sessionId = sessionId;
 			this.id = id;
 			this.versionNumber = versionNumber;
 			this.ajaxVersionNumber = ajaxVersionNumber;
-			this.remove = remove;
 			this.pageClass = pageClass;
+			this.pageMap = pagemap;
+			this.data = page;
+		}
+		
+		public Object getObject()
+		{
+			return data;
+		}
+		
+		public void setObject(Object  o)
+		{
+			data = o;
 		}
 
 		/**
@@ -407,9 +533,19 @@ public class FilePageStore implements IPageStore
 			{
 				SessionPageKey key = (SessionPageKey)obj;
 				return id == key.id && versionNumber == key.versionNumber
-						&& sessionId.equals(key.sessionId) && remove == key.remove;
+						&& ajaxVersionNumber == key.ajaxVersionNumber
+						&& ((pageMap != null && pageMap.equals(key.pageMap)) || (pageMap == null && key.pageMap == null)) 
+						&& sessionId.equals(key.sessionId);
 			}
 			return false;
+		}
+		
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "SessionPageKey[" +sessionId + "," + id + "," + versionNumber + "," + ajaxVersionNumber + ", "+ pageMap+", " + data + "]";
 		}
 	}
 
@@ -424,6 +560,8 @@ public class FilePageStore implements IPageStore
 		{
 			System.err.println("Total time in saving: " + totalSavingTime);
 			System.err.println("Total time in serialization: " + totalSerializationTime);
+			System.err.println("Bytes saved: " + bytesSaved);
+			System.err.println("Pages saved: " + saved);
 			synchronized (storePageMap)
 			{
 				stop = true;
@@ -438,151 +576,55 @@ public class FilePageStore implements IPageStore
 		{
 			while (!stop)
 			{
-				Iterator iterator = null;
+				SessionPageKey key = null;
 				try
 				{
-					iterator = storePageMap.keySet().iterator();
-					if (!iterator.hasNext())
+					Object data = null;
+					synchronized (storePageMap)
 					{
-						synchronized (storePageMap)
+						if (stop)
+							return;
+						while (storePageMap.size() == 0)
 						{
-							if (stop)
-								return;
 							storePageMap.wait();
 						}
-						continue;
+						key = (SessionPageKey)storePageMap.get(0);
+						data = key.getObject();
+						if ( data instanceof Page)
+						{
+							key.setObject(SERIALIZING);
+						}
 					}
-					while (iterator.hasNext())
+					byte[] pageBytes = null;
+					if ( data instanceof Page)
 					{
-						SessionPageKey key = (SessionPageKey)iterator.next();
-						Object value = storePageMap.get(key);
-						// continue if the value is already null or currently SERIALIZING (by another thread)
-						if (value == null || value == SERIALIZING)
-							continue;
-						if (key.remove)
+						pageBytes = serializePage(key,(Page)data);
+						synchronized (key)
 						{
-							if (key.id == -1)
-							{
-								removeSession(key.sessionId);
-								// now remove any other pending save for that
-								// page.
-								removeSessionFromPendingMap(key.sessionId);
-							}
-							else
-							{
-								removePage(key.sessionId, key.id);
-								// now remove any other pending save for that
-								// page.
-								removePageFromPendingMap(key.sessionId, key.id);
-							}
-							iterator.remove();
+							key.setObject(pageBytes);
+							key.notifyAll();
 						}
-						else 
-						{
-							byte[] pageBytes = null;
-							if ( value instanceof Page)
-							{
-								if (storePageMap.put(key, SERIALIZING) == value)
-								{
-									pageBytes = serializePage((Page)value);
-									if ( pageBytes != null)
-									{
-										storePageMap.put(key, pageBytes);
-									}
-									else
-									{
-										iterator.remove();
-									}
-								}
-							}
-							else
-							{
-								pageBytes = (byte[])value;
-							}
-							if ( pageBytes != null)
-							{
-								savePage(key, pageBytes);
-								iterator.remove();
-							}
-						}
+					}
+					else if ( data instanceof byte[])
+					{
+						pageBytes = (byte[])data;
+					}
+					if ( pageBytes != null)
+					{
+						savePage(key, pageBytes);
+					}
+					if (storePageMap.remove(0) != key)
+					{
+						System.err.println("Remove 0 is not the same!!");
 					}
 				}
 				catch (Exception e)
 				{
 					log.error("Error in page save thread", e);
 					// removing the one that did fail...
-					if (iterator != null)
-						iterator.remove();
+					storePageMap.remove(key);
 				}
 			}
 		}
-
-		/**
-		 * @param sessionId
-		 * @param id
-		 */
-		private void removePageFromPendingMap(String sessionId, int id)
-		{
-			Iterator iterator = storePageMap.keySet().iterator();
-			while (iterator.hasNext())
-			{
-				SessionPageKey key = (SessionPageKey)iterator.next();
-				if (key.sessionId == sessionId && key.id == id)
-				{
-					iterator.remove();
-				}
-			}
-		}
-
-		private void removeSessionFromPendingMap(String sessionId)
-		{
-			Iterator iterator = storePageMap.keySet().iterator();
-			while (iterator.hasNext())
-			{
-				SessionPageKey key = (SessionPageKey)iterator.next();
-				if (key.sessionId == sessionId)
-				{
-					iterator.remove();
-				}
-			}
-		}
-
-		private void removePage(String sessionId, int id)
-		{
-			File sessionDir = new File(getWorkDir(), sessionId);
-			if (sessionDir.exists())
-			{
-				final String filepart = appName + "-page-" + id;
-				sessionDir.listFiles(new FilenameFilter()
-				{
-					public boolean accept(File dir, String name)
-					{
-						return name.startsWith(filepart);
-					}
-				});
-			}
-
-		}
-
-		private void removeSession(String sessionId)
-		{
-			File sessionDir = new File(getWorkDir(), sessionId);
-			if (sessionDir.exists())
-			{
-				File[] files = sessionDir.listFiles();
-				if (files != null)
-				{
-					for (int i = 0; i < files.length; i++)
-					{
-						files[i].delete();
-					}
-				}
-				if (!sessionDir.delete())
-				{
-					sessionDir.deleteOnExit();
-				}
-			}
-		}
-
 	}
 }
