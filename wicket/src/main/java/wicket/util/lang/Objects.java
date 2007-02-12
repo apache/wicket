@@ -48,6 +48,7 @@ import wicket.util.collections.MiniMap;
 import wicket.util.io.ByteCountingOutputStream;
 import wicket.util.io.IObjectStreamFactory;
 import wicket.util.io.SerializableChecker;
+import wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import wicket.util.string.Strings;
 
 /**
@@ -815,7 +816,6 @@ public final class Objects
 		}
 	}
 
-
 	/**
 	 * Returns a constant from the NumericTypes interface that represents the
 	 * numeric type of the given object.
@@ -872,6 +872,7 @@ public final class Objects
 		}
 		return NONNUMERIC;
 	}
+
 
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
@@ -1169,6 +1170,27 @@ public final class Objects
 				throw new WicketRuntimeException(
 						"Internal error cloning/restoring from map the object: " + object, e);
 			}
+		}
+	}
+
+	/**
+	 * Configure this utility class to use the provided
+	 * {@link IObjectStreamFactory} instance.
+	 * 
+	 * @param objectStreamFactory
+	 *            The factory instance to use. If you pass in null, the
+	 *            {@link DefaultObjectStreamFactory default} will be set
+	 *            (again).
+	 */
+	public static void setObjectStreamFactory(IObjectStreamFactory objectStreamFactory)
+	{
+		if (objectStreamFactory == null)
+		{
+			Objects.objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
+		}
+		else
+		{
+			Objects.objectStreamFactory = objectStreamFactory;
 		}
 	}
 
