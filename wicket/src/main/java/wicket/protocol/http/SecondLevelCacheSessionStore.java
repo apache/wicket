@@ -56,12 +56,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * Restores a page version from the persistent layer
 		 * 
 		 * @param sessionId
+		 * @param pagemap 
 		 * @param id
 		 * @param versionNumber
 		 * @param ajaxVersionNumber 
 		 * @return The page
 		 */
-		Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber);
+		Page getPage(String sessionId, String pagemap, int id, int versionNumber, int ajaxVersionNumber);
 
 		/**
 		 * Removes a page from the persistent layer.
@@ -251,7 +252,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				// if the number of versions to rollback can be done inside the current page version.
 				if ( ajaxNumber >= numberOfVersions)
 				{
-					return store.getPage(sessionId, page.getNumericId(), versionNumber, ajaxNumber-numberOfVersions);
+					return store.getPage(sessionId, page.getPageMap().getName(), page.getNumericId(), versionNumber, ajaxNumber-numberOfVersions);
 				}
 				else
 				{
@@ -265,7 +266,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
 						return null;
 					}
-					return store.getPage(sessionId, page.getNumericId(), versionNumber, ajaxNumber);
+					return store.getPage(sessionId, page.getPageMap().getName(), page.getNumericId(), versionNumber, ajaxNumber);
 				}
 			}
 
@@ -315,7 +316,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			if (sessionId != null)
 			{
 				// this is really a page request for a default page. (so without an ajax version)
-				return getStore().getPage(sessionId, id, versionNumber,0);
+				return getStore().getPage(sessionId,getName(), id, versionNumber,0);
 			}
 			return null;
 		}
@@ -367,7 +368,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			private Map sessionMap = new ConcurrentHashMap();
 
-			public Page getPage(String sessionId, int id, int versionNumber, int ajaxVersionNumber)
+			public Page getPage(String sessionId, String pagemapName, int id, int versionNumber, int ajaxVersionNumber)
 			{
 				SoftReference sr = (SoftReference)sessionMap.get(sessionId);
 				if (sr != null)
@@ -390,7 +391,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 						}
 					}
 				}
-				return pageStore.getPage(sessionId, id, versionNumber, ajaxVersionNumber);
+				return pageStore.getPage(sessionId, pagemapName, id, versionNumber, ajaxVersionNumber);
 			}
 
 			public void removePage(String sessionId, Page page)
