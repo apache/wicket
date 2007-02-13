@@ -44,6 +44,8 @@ package wicket.protocol.http;
  * </p>
  * 
  * @see ReloadingWicketFilter
+ * 
+ * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class ReloadingWicketServlet extends WicketServlet
 {

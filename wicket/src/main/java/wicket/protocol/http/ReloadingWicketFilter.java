@@ -49,6 +49,8 @@ import wicket.util.listener.IChangeListener;
  * </p>
  * 
  * @see WicketFilter
+ * 
+ * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class ReloadingWicketFilter extends WicketFilter
 {
