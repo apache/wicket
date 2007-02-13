@@ -37,6 +37,8 @@ import wicket.util.watch.ModificationWatcher;
 /**
  * Custom ClassLoader that reverses the classloader lookups, and that is able to
  * notify a listener when a class file is changed.
+ * 
+ * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class ReloadingClassLoader extends URLClassLoader
 {
