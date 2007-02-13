@@ -80,9 +80,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 */
 	private Map renderedComponentsPerScope;
 	/**
-	 * Header response that is responsible for filtering duplicate contributions.
+	 * Header response that is responsible for filtering duplicate
+	 * contributions.
 	 */
-	private IHeaderResponse headerResponse = null;	
+	private IHeaderResponse headerResponse = null;
 
 	/**
 	 * Construct
@@ -98,7 +99,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		// No contribution usually only happens if none of the components
 		// including the page does have a <head> or <wicket:head> tag.
 		setRenderBodyOnly(true);
-		
+
 		setAuto(true);
 	}
 
@@ -125,7 +126,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		{
 			final StringResponse response = new StringResponse();
 			this.getRequestCycle().setResponse(response);
-			
+
 			// In any case, first render the header section directly associated
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
@@ -175,7 +176,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 						char ch = output.charAt(i);
 						if (ch != '\n')
 						{
-							output = output.subSequence(i - 1,output.length());
+							output = output.subSequence(i - 1, output.length());
 							break;
 						}
 					}
@@ -187,7 +188,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 				webResponse.write("<head>");
 				webResponse.write(output);
 				webResponse.write("</head>");
-			}						
+			}
 		}
 		finally
 		{
@@ -233,7 +234,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 				}
 			}
 		});
-		
+
 		page.renderHead(container);
 	}
 
@@ -261,11 +262,11 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			this.renderedComponentsPerScope = new HashMap();
 		}
 
-//		if (scope == null)
-//		{
-//			scope = header.getMarkupStream().getContainerClass().getName();
-//		}
-		
+		// if (scope == null)
+		// {
+		// scope = header.getMarkupStream().getContainerClass().getName();
+		// }
+
 		List componentScope = (List)this.renderedComponentsPerScope.get(scope);
 		if (componentScope == null)
 		{
@@ -288,18 +289,30 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		this.renderedComponentsPerScope = null;
 		this.headerResponse = null;
 	}
-	
+
 	/**
-	 * Returns the header response. 
+	 * Factory method for creating header response
+	 * 
+	 * @param response
+	 * @return new header response
+	 */
+	protected IHeaderResponse newHeaderResponse(Response response)
+	{
+		return new HeaderResponse(response);
+	}
+
+	/**
+	 * Returns the header response.
 	 * 
 	 * @return header response
 	 */
-	public IHeaderResponse getHeaderResponse() {
+	public IHeaderResponse getHeaderResponse()
+	{
 		if (this.headerResponse == null)
 		{
-			headerResponse = new HeaderResponse(getResponse());
+			headerResponse = newHeaderResponse(getResponse());
 		}
 		return headerResponse;
 	}
-	
+
 }

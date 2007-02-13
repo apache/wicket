@@ -38,6 +38,8 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Component.IVisitor;
 import wicket.feedback.IFeedback;
+import wicket.markup.html.IHeaderResponse;
+import wicket.markup.html.internal.HeaderResponse;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
@@ -704,6 +706,34 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingBodyResponse.reset();
 	}
 
+	private class AjaxHeaderResponse extends HeaderResponse
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param response
+		 */
+		public AjaxHeaderResponse(Response response)
+		{
+			super(response);
+		}
+
+		public void renderOnDomReadyJavascript(String javascript)
+		{
+			// execute the javascript as first javascript after component
+			// replacement
+			appendJavascripts.add(0, javascript);
+		}
+
+		public void renderOnLoadJavascript(String javascript)
+		{
+			// execute the javascript after all other scripts are executed
+			appendJavascripts.add(javascript);
+		}
+	};
 
 	private HtmlHeaderContainer header = null;
 
@@ -716,7 +746,15 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		if (header == null)
 		{
-			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
+			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID)
+			{
+				private static final long serialVersionUID = 1L;
+
+				protected IHeaderResponse newHeaderResponse(Response response)
+				{
+					return new AjaxHeaderResponse(response);
+				}
+			};
 		}
 
 		if (component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID) != null)

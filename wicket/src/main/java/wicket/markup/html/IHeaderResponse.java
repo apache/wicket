@@ -161,4 +161,17 @@ public interface IHeaderResponse extends Serializable
 	 * @return Reponse
 	 */
 	public Response getResponse();
+	
+	/**
+	 * Renders javascript that is executed right after the DOM is built, before external resources
+	 * (e.g. images) are loaded.
+	 * @param javascript
+	 */
+	public void renderOnDomReadyJavascript(String javascript);
+	
+	/**
+	 * Renders javascript that is executed after the entire page is loaded.
+	 * @param javascript
+	 */
+	public void renderOnLoadJavascript(String javascript);
 }

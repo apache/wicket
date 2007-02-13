@@ -170,4 +170,20 @@ public class HeaderResponse implements IHeaderResponse
 	{
 		return response;
 	}
+	
+	/**
+	 * @see wicket.markup.html.IHeaderResponse#renderOnDomReadyJavascript(java.lang.String)
+	 */
+	public void renderOnDomReadyJavascript(String javascript)
+	{
+		JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(window, \"domready\", function() { " + javascript + ";});");
+	}
+	
+	/**
+	 * @see wicket.markup.html.IHeaderResponse#renderOnLoadJavascript(java.lang.String)
+	 */
+	public void renderOnLoadJavascript(String javascript)
+	{
+		JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(window, \"load\", function() { " + javascript + ";});");
+	}
 }
