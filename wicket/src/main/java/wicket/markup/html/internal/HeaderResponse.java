@@ -179,6 +179,9 @@ public class HeaderResponse implements IHeaderResponse
 		JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(window, \"domready\", function() { " + javascript + ";});");
 	}
 	
+	/**
+	 * @see wicket.markup.html.IHeaderResponse#renderOnLoadJavascript(java.lang.String)
+	 */
 	public void renderOnLoadJavascript(String javascript)
 	{
 		JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(window, \"load\", function() { " + javascript + ";});");
