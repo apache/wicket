@@ -130,7 +130,8 @@ public class JavascriptPackageResource extends CompressedPackageResource
 					}
 				}
 
-				ByteArrayOutputStream out = new ByteArrayOutputStream((int)stream.length());
+				int length = (int) stream.length();
+				ByteArrayOutputStream out = new ByteArrayOutputStream(length > 0 ? length : 0);
 				Streams.copy(stream.getInputStream(), out);
 				stream.close();
 				ret = filterContent(out.toByteArray());
