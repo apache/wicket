@@ -293,7 +293,7 @@ public final class ClassStreamHandler
 				}
 				else if (value instanceof Long)
 				{
-					woos.getOutputStream().writeLong(((Long)value).intValue());
+					woos.getOutputStream().writeLong(((Long)value).longValue());
 					continue;
 				}
 				else if (value instanceof Float)
