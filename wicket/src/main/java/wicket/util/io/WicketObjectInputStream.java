@@ -39,6 +39,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	private final DataInputStream in;
 	private ClassStreamHandler currentStreamHandler;
 	private Object currentObject;
+	private boolean defaultReadHappend;
 
 	/**
 	 * Construct.
@@ -134,11 +135,11 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			short classDef = in.readShort();
 			ClassStreamHandler lookup = ClassStreamHandler.lookup(classDef);
 			int length = in.readInt();
-			Object[] array = (Object[])Array.newInstance(lookup.getStreamClass(), length);
+			Object array = Array.newInstance(lookup.getStreamClass(), length);
 			handledObjects.put(new Short(handleCounter++),array);
-			for (int i = 0; i < array.length; i++)
+			for (int i = 0; i < length; i++)
 			{
-				array[i] = readObjectOverride();
+				Array.set(array, i, readObjectOverride());
 			}
 			value = array;
 		}
@@ -154,7 +155,11 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 */
 	public void defaultReadObject() throws IOException, ClassNotFoundException
 	{
-		currentStreamHandler.readFields(this,currentObject);
+		if ( !defaultReadHappend )
+		{
+			defaultReadHappend = true;
+			currentStreamHandler.readFields(this,currentObject);
+		}
 	}
 
 	/**

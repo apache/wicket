@@ -35,7 +35,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	private final DataOutputStream out;
 	private ClassStreamHandler classHandler;
 	private Object currentObject;
-
+	private boolean defaultWriteHappend;
+	
 	/**
 	 * Construct.
 	 * @param out
@@ -81,7 +82,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 				{
 					Class componentType = cls.getComponentType();
 					ClassStreamHandler classHandler = ClassStreamHandler.lookup(componentType);
-					if(componentType.isPrimitive() || Number.class.isAssignableFrom(componentType))
+					if(componentType.isPrimitive())
 					{
 						out.write(ClassStreamHandler.PRIMITIVE_ARRAY);
 						out.writeShort(classHandler.getClassId());
@@ -125,6 +126,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						{
 							classHandler.writeFields(this,obj);
 						}
+						defaultWriteHappend = false;
 					}
 				}
 			}
@@ -136,7 +138,11 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 */
 	public void defaultWriteObject() throws IOException
 	{
-		classHandler.writeFields(this,currentObject);	
+		if (! defaultWriteHappend)
+		{
+			defaultWriteHappend = true;
+			classHandler.writeFields(this,currentObject);
+		}
 	}
 
 	/**
