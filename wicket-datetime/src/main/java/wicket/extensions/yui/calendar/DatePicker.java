@@ -25,12 +25,10 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import wicket.Component;
-import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Response;
 import wicket.WicketRuntimeException;
-import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.AbstractBehavior;
 import wicket.datetime.markup.html.form.DateTextField;
 import wicket.extensions.yui.YuiLib;
@@ -210,28 +208,17 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		buffer.append(".render();\n");
 		buffer.append("}\n");
 
-		// Find out how to initialize the calendar, depending on whether the
-		// request is AJAX or not.
-		// TODO: Rewrite this when WICKET-285 is fixed.
-		IRequestTarget requestTarget = RequestCycle.get().getRequestTarget();
-
-		if (requestTarget instanceof AjaxRequestTarget) {
-			StringBuffer initBuffer = new StringBuffer();
-			initBuffer.append("init");
-			initBuffer.append(javascriptId);
-			initBuffer.append("();");
-			AjaxRequestTarget ajaxRequestTarget = (AjaxRequestTarget) requestTarget;
-			ajaxRequestTarget.appendJavascript(initBuffer.toString());
-		} else {
-			// register the function for execution when the page is loaded
-			buffer.append("YAHOO.util.Event.addListener(window, \"load\", init");
-			buffer.append(javascriptId);
-			buffer.append(");");			
-		}
-
 		buffer.insert(0, JavascriptUtils.SCRIPT_OPEN_TAG);
 		buffer.append(JavascriptUtils.SCRIPT_CLOSE_TAG);
 		response.renderString(buffer);
+
+		// Initialize the calendar. This depends on how the datepicker is
+		// used (AJAX or not).
+		StringBuffer initBuffer = new StringBuffer();
+		initBuffer.append("init");
+		initBuffer.append(javascriptId);
+		initBuffer.append("();");
+		response.renderOnLoadJavascript(initBuffer.toString());
 	}
 
 	/**
