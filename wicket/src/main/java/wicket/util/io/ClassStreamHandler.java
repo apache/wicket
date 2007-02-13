@@ -44,6 +44,11 @@ public final class ClassStreamHandler
 {
 	private static Unsafe unsafe;
 
+
+	private static Map handlesClasses = new HashMap();
+	
+	private static short classCounter = 0;
+
 	private class FieldAndIndex
 	{
 		Field field;
@@ -112,10 +117,6 @@ public final class ClassStreamHandler
 	 */
 	public static final int CLASS = 5;
 
-	private static Map handlesClasses = new HashMap();
-
-	private static short classCounter = 0;
-
 	static ClassStreamHandler lookup(Class cls)
 	{
 		ClassStreamHandler classHandler = (ClassStreamHandler)handlesClasses.get(cls.getName());
@@ -147,9 +148,9 @@ public final class ClassStreamHandler
 
 	private Constructor cons;
 
-	private Method writeObjectMethod;
+	private List writeObjectMethod;
 
-	private Method readObjectMethod;
+	private List readObjectMethod;
 
 	/**
 	 * Construct.
@@ -158,25 +159,42 @@ public final class ClassStreamHandler
 	 * @param wicketObjectOutputStream
 	 *            TODO
 	 */
-	public ClassStreamHandler(Class cls)
+	private ClassStreamHandler(Class cls)
 	{
 		this.classId = classCounter++;
 		this.clz = cls;
-		this.fields = new ArrayList();
-		if (cons == null)
+		if (!cls.isPrimitive())
 		{
+			this.fields = new ArrayList();
 			cons = getSerializableConstructor(clz);
 			if (cons == null)
 			{
 				throw new RuntimeException("Failed to get the constructor from clz: " + clz);
 			}
+			
+			writeObjectMethod = new ArrayList();
+			readObjectMethod = new ArrayList();
+			
+			Class parent = cls;
+			while(parent != Object.class)
+			{
+				Method method = getPrivateMethod(parent, "writeObject", new Class[] { ObjectOutputStream.class }, Void.TYPE);
+				if (method != null) writeObjectMethod.add(method);
+				method = getPrivateMethod(parent, "readObject", new Class[] { ObjectInputStream.class }, Void.TYPE);
+				if (method != null) readObjectMethod.add(method);
+				
+				parent = parent.getSuperclass();
+			}
+			fillFields(cls);
 		}
-		writeObjectMethod = getPrivateMethod(cls, "writeObject",
-				new Class[] { ObjectOutputStream.class }, Void.TYPE);
-		readObjectMethod = getPrivateMethod(cls, "readObject",
-				new Class[] { ObjectInputStream.class }, Void.TYPE);
+		else
+		{
+			fields = null;
+			cons = null;
+			writeObjectMethod = null;
+			readObjectMethod = null;
+		}
 
-		fillFields(cls);
 	}
 
 	/**
@@ -534,23 +552,28 @@ public final class ClassStreamHandler
 	 */
 	public boolean invokeWriteMethod(WicketObjectOutputStream woos, Object obj)
 	{
-		if (writeObjectMethod != null)
+		if (writeObjectMethod.size() > 0)
 		{
-			try
+			for (int i = writeObjectMethod.size(); --i >= 0;)
 			{
-				writeObjectMethod.invoke(obj, new Object[] { woos });
-			}
-			catch (IllegalArgumentException ex)
-			{
-				throw new RuntimeException(ex);
-			}
-			catch (IllegalAccessException ex)
-			{
-				throw new RuntimeException(ex);
-			}
-			catch (InvocationTargetException ex)
-			{
-				throw new RuntimeException(ex);
+				Method method = (Method)writeObjectMethod.get(i);
+				
+				try
+				{
+					method.invoke(obj, new Object[] { woos });
+				}
+				catch (IllegalArgumentException ex)
+				{
+					throw new RuntimeException(ex);
+				}
+				catch (IllegalAccessException ex)
+				{
+					throw new RuntimeException(ex);
+				}
+				catch (InvocationTargetException ex)
+				{
+					throw new RuntimeException(ex);
+				}
 			}
 			return true;
 		}
@@ -563,23 +586,27 @@ public final class ClassStreamHandler
 	 */
 	public boolean invokeReadMethod(WicketObjectInputStream wois, Object obj)
 	{
-		if (readObjectMethod != null)
+		if (readObjectMethod.size() > 0)
 		{
-			try
+			for (int i = readObjectMethod.size(); --i >= 0;)
 			{
-				readObjectMethod.invoke(obj, new Object[] { wois });
-			}
-			catch (IllegalArgumentException ex)
-			{
-				throw new RuntimeException(ex);
-			}
-			catch (IllegalAccessException ex)
-			{
-				throw new RuntimeException(ex);
-			}
-			catch (InvocationTargetException ex)
-			{
-				throw new RuntimeException(ex);
+				Method method = (Method)readObjectMethod.get(i);
+				try
+				{
+					method.invoke(obj, new Object[] { wois });
+				}
+				catch (IllegalArgumentException ex)
+				{
+					throw new RuntimeException(ex);
+				}
+				catch (IllegalAccessException ex)
+				{
+					throw new RuntimeException(ex);
+				}
+				catch (InvocationTargetException ex)
+				{
+					throw new RuntimeException(ex);
+				}
 			}
 			return true;
 		}
