@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
@@ -47,7 +46,6 @@ import wicket.settings.IApplicationSettings;
 import wicket.util.collections.MiniMap;
 import wicket.util.io.ByteCountingOutputStream;
 import wicket.util.io.IObjectStreamFactory;
-import wicket.util.io.SerializableChecker;
 import wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import wicket.util.string.Strings;
 
@@ -1120,29 +1118,8 @@ public final class Objects
 		}
 		catch (IOException e)
 		{
-			if ((e instanceof NotSerializableException) && SerializableChecker.isAvailable())
-			{
-				// trigger serialization again, but this time gather some more
-				// info
-				try
-				{
-					new SerializableChecker((NotSerializableException)e).writeObject(object);
-					// if we get here, we didn't fail, while we should; print
-					// out the message contains a pointer to where in the object
-					// hierarchy to trouble maker is
-					logSerializationException(object, e);
-				}
-				catch (Exception e1)
-				{
-					// the message contains a pointer to where in the object
-					// hierarchy to trouble maker is
-					logSerializationException(object, e1);
-				}
-			}
-			else
-			{
-				logSerializationException(object, e);
-			}
+			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
+					e);
 		}
 		return null;
 	}

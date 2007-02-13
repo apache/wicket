@@ -18,6 +18,7 @@ package wicket.util.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -54,7 +55,30 @@ public interface IObjectStreamFactory
 		 */
 		public ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 		{
-			return new ObjectOutputStream(out);
+			final ObjectOutputStream oos = new ObjectOutputStream(out);
+			return new ObjectOutputStream()
+			{
+				protected void writeObjectOverride(final Object obj) throws IOException
+				{
+					try
+					{
+						oos.writeObject(obj);
+					}
+					catch (IOException e)
+					{
+						if (SerializableChecker.isAvailable())
+						{
+							// trigger serialization again, but this time gather
+							// some more info
+							new SerializableChecker((NotSerializableException)e).writeObject(obj);
+							// if we get here, we didn't fail, while we
+							// should;
+							throw e;
+						}
+						throw e;
+					}
+				}
+			};
 		}
 
 	}
