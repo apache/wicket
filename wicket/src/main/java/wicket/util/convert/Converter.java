@@ -44,8 +44,7 @@ import wicket.util.lang.Objects;
  * converter interface:
  * 
  * <pre>
- * final IConverter converter = new ConverterFactory().newConverter();
- * converter.setLocale(Locale.US);
+ * final IConverter converter = new ConverterFactory().newConverter(Locale.US);
  * converter.convert(new Double(7.1), String.class);
  * </pre>
  * 
