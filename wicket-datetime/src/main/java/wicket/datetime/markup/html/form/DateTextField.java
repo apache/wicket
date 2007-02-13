@@ -197,7 +197,7 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 	 * @param converter
 	 *            The converter to use
 	 */
-	protected DateTextField(String id, IModel model, DateConverter converter) {
+	public DateTextField(String id, IModel model, DateConverter converter) {
 		super(id, model, Date.class);
 		if (converter == null) {
 			throw new IllegalStateException("converter may not be null");
