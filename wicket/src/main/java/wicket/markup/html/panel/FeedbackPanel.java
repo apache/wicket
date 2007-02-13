@@ -310,7 +310,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 	protected Component newMessageDisplayComponent(MarkupContainer parent, String id,
 			FeedbackMessage message)
 	{
-		return new Label(parent, id, message.getMessage().toString());
+		Label label = new Label(parent, id, message.getMessage().toString());
+		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
+		return label;
 	}
 
 }
