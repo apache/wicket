@@ -385,9 +385,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Now, do the initialization for the other components
 		internalAttach();
 
-		// Call reset head rendered on the page
-		resetHeadRendered();
-
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
@@ -401,8 +398,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			public Object component(final Component component)
 			{
-				component.resetHeadRendered();
-
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 

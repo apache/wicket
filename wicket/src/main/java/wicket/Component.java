@@ -512,9 +512,6 @@ public abstract class Component implements Serializable
 	/** Visibility boolean */
 	private static final int FLAG_VISIBLE = 0x0010;
 
-	/** Whether the header has already been contributed */
-	private static final int FLAG_HEAD_RENDERED = 0x8000;
-
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Component.class);
 
@@ -1759,23 +1756,19 @@ public abstract class Component implements Serializable
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		if (isHeadRendered() == false)
+		// Ask all behaviors if they have something to contribute to the
+		// header or body onLoad tag.
+		if (this.behaviors != null)
 		{
-			// Ask all behaviors if they have something to contribute to the
-			// header or body onLoad tag.
-			if (this.behaviors != null)
+			final Iterator iter = this.behaviors.iterator();
+			while (iter.hasNext())
 			{
-				final Iterator iter = this.behaviors.iterator();
-				while (iter.hasNext())
+				IBehavior behavior = (IBehavior)iter.next();
+				if (behavior instanceof IHeaderContributor)
 				{
-					IBehavior behavior = (IBehavior)iter.next();
-					if (behavior instanceof IHeaderContributor)
-					{
-						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
-					}
+					((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
 				}
 			}
-			setFlag(FLAG_HEAD_RENDERED, true);
 		}
 	}
 
@@ -3083,26 +3076,6 @@ public abstract class Component implements Serializable
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
-	}
-
-	/**
-	 * Returns whether the head has already been rendered.
-	 * 
-	 * @return boolean
-	 */
-	final protected boolean isHeadRendered()
-	{
-		return getFlag(FLAG_HEAD_RENDERED);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * Resets the state of head rendering.
-	 */
-	final protected void resetHeadRendered()
-	{
-		setFlag(FLAG_HEAD_RENDERED, false);
 	}
 
 	/**
