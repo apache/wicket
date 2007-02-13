@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package wicket.util.collections;
 
 import java.io.ObjectOutputStream;
@@ -21,12 +37,21 @@ public final class HandleTable
 	private int[] next;
 	/* maps handle value -> associated object */
 	private Object[] objs;
-	
+
+	/**
+	 * Construct.
+	 */
 	public HandleTable()
 	{
-		this(16,0.75f);
+		this(16, 0.75f);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param initialCapacity
+	 * @param loadFactor
+	 */
 	public HandleTable(int initialCapacity, float loadFactor)
 	{
 		this.loadFactor = loadFactor;
@@ -35,6 +60,81 @@ public final class HandleTable
 		objs = new Object[initialCapacity];
 		threshold = (int)(initialCapacity * loadFactor);
 		clear();
+	}
+
+	/**
+	 * Assigns next available handle to given object, and returns handle value.
+	 * Handles are assigned in ascending order starting at 0.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public int assign(Object obj)
+	{
+		if (size >= next.length)
+		{
+			growEntries();
+		}
+		if (size >= threshold)
+		{
+			growSpine();
+		}
+		insert(obj, size);
+		return size++;
+	}
+
+	/**
+	 * Clears this table.
+	 */
+	public void clear()
+	{
+		Arrays.fill(spine, -1);
+		Arrays.fill(objs, 0, size, null);
+		size = 0;
+	}
+
+	/**
+	 * Whether this table contains the provided object.
+	 * 
+	 * @param obj
+	 *            object to check
+	 * @return whether it contains the provided object
+	 */
+	public boolean contains(Object obj)
+	{
+		return lookup(obj) != -1;
+	}
+
+	/**
+	 * Looks up and returns handle associated with given object, or -1 if no
+	 * mapping found.
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public int lookup(Object obj)
+	{
+		if (size == 0)
+		{
+			return -1;
+		}
+		int index = hash(obj) % spine.length;
+		for (int i = spine[index]; i >= 0; i = next[i])
+		{
+			if (objs[i] == obj)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * @return The number of elements
+	 */
+	public int size()
+	{
+		return size;
 	}
 
 	private void growEntries()
@@ -71,67 +171,5 @@ public final class HandleTable
 		objs[handle] = obj;
 		next[handle] = spine[index];
 		spine[index] = handle;
-	}
-
-	/**
-	 * Assigns next available handle to given object, and returns handle
-	 * value. Handles are assigned in ascending order starting at 0.
-	 * 
-	 * @param obj
-	 * @return
-	 */
-	public int assign(Object obj)
-	{
-		if (size >= next.length)
-		{
-			growEntries();
-		}
-		if (size >= threshold)
-		{
-			growSpine();
-		}
-		insert(obj, size);
-		return size++;
-	}
-
-	public void clear()
-	{
-		Arrays.fill(spine, -1);
-		Arrays.fill(objs, 0, size, null);
-		size = 0;
-	}
-
-	public boolean contains(Object obj)
-	{
-		return lookup(obj) != -1;
-	}
-
-	/**
-	 * Looks up and returns handle associated with given object, or -1 if no
-	 * mapping found.
-	 * 
-	 * @param obj
-	 * @return
-	 */
-	public int lookup(Object obj)
-	{
-		if (size == 0)
-		{
-			return -1;
-		}
-		int index = hash(obj) % spine.length;
-		for (int i = spine[index]; i >= 0; i = next[i])
-		{
-			if (objs[i] == obj)
-			{
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	int size()
-	{
-		return size;
 	}
 }
