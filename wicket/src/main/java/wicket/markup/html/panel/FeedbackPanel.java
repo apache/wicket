@@ -87,7 +87,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 			};
 
 			final Label label = new Label("message", message.getMessage());
-			label.setEscapeModelStrings(getEscapeMessages());
+			label.setEscapeModelStrings(getEscapeMessages()
+					|| FeedbackPanel.this.getEscapeModelStrings());
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
@@ -189,6 +190,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * Gets whether model messages should be HTML escaped. Default is true.
 	 * 
 	 * @return whether model messages should be HTML escaped
+	 * 
+	 * @deprecated use {@link #getEscapeModelStrings(boolean)} instead
 	 */
 	public final boolean getEscapeMessages()
 	{
@@ -233,6 +236,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @param escapeMessages
 	 *            whether model messages should be HTML escaped
+	 * 
+	 * @deprecated use {@link #setEscapeModelStrings(boolean)}
 	 */
 	public final void setEscapeMessages(boolean escapeMessages)
 	{
