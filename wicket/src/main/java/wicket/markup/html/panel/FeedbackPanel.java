@@ -299,6 +299,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * By default a {@link Label} is used.
 	 * 
+	 * Note that the created component is expected to respect feedback panel's
+	 * {@link #getEscapeModelStrings()} value
+	 * 
 	 * @param parent
 	 *            component parent
 	 * @param id
