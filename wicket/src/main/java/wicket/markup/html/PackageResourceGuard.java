@@ -40,6 +40,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		blockedExtensions.add("properties");
 		blockedExtensions.add("class");
 		blockedExtensions.add("java");
+		blockedExtensions.add("html");
 	}
 
 	/**
