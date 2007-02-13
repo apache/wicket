@@ -296,6 +296,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		widgetProperties.put("close", Boolean.TRUE);
 		// TODO localize
 		widgetProperties.put("title", "Select a date:");
+		
+		Date date = (Date) component.getModelObject();
+		if (date != null) {
+			widgetProperties.put("selected", AbstractCalendar.FORMAT_DATE.format(date));
+			widgetProperties.put("pagedate", AbstractCalendar.FORMAT_PAGEDATE.format(date));
+		}
 	}
 
 	/**

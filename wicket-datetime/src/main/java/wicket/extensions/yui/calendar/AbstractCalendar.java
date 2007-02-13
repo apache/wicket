@@ -16,6 +16,8 @@
  */
 package wicket.extensions.yui.calendar;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -50,8 +52,21 @@ import wicket.util.string.JavascriptUtils;
 // TODO provide localization strings (base them on the messages of
 // JsDatePicker?)
 public abstract class AbstractCalendar extends WebComponent {
-
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Format to be used when configuring YUI calendar. Can be used when using
+	 * the &quot;selected&quot; property.
+	 */
+	public static final DateFormat FORMAT_DATE = new SimpleDateFormat(
+			"MM/dd/yyyy");
+	/**
+	 * For specifying which page (month/year) to show in the calendar, use this
+	 * format for the date. This is to be used together with the property
+	 * &quot;pagedate&quot;
+	 */
+	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat(
+			"MM/yyyy");
 
 	/**
 	 * Construct. Contributes packaged dependencies.
