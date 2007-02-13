@@ -36,13 +36,13 @@ public class WicketOutputStreamTest extends TestCase
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		
 		
-		ObjectOutputStream woos = new ObjectOutputStream(baos);
+		WicketObjectOutputStream woos = new WicketObjectOutputStream(baos);
 		woos.writeObject(gc);
 		woos.close();
 		
 		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 		
-		ObjectInputStream wois = new ObjectInputStream(bais);
+		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
 		GregorianCalendar gc2 = (GregorianCalendar)wois.readObject();
 		
 		Assert.assertEquals(gc, gc2);

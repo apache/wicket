@@ -23,8 +23,9 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+
+import wicket.util.collections.HandleArrayListStack;
+import wicket.util.collections.IntHashMap;
 
 /**
  * @author jcompagner
@@ -32,14 +33,14 @@ import java.util.Map;
 public final class WicketObjectInputStream extends ObjectInputStream
 {
 	 
-	private Map handledObjects = new HashMap(); 
+	private IntHashMap handledObjects = new IntHashMap(); 
 	private short handleCounter = 0;
 
 	
 	private final DataInputStream in;
 	private ClassStreamHandler currentStreamHandler;
-	private Object currentObject;
-	private boolean defaultReadHappend;
+	private HandleArrayListStack stack = new HandleArrayListStack();
+	private HandleArrayListStack defaultRead = new HandleArrayListStack();
 
 	/**
 	 * Construct.
@@ -66,7 +67,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		else if ( token == ClassStreamHandler.HANDLE)
 		{
 			short handle = in.readShort();
-			value = handledObjects.get(new Short(handle));
+			value = handledObjects.get(handle);
 			if (value == null)
 			{
 				throw new RuntimeException("Expected to find a handle for " + handle);
@@ -79,19 +80,20 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			if (currentStreamHandler.getStreamClass() == String.class)
 			{
 				value = in.readUTF();
-				handledObjects.put(new Short(handleCounter++),value);
+				handledObjects.put(handleCounter++,value);
 			}
 			else
 			{
 				try
 				{
 					value = currentStreamHandler.createObject();
-					handledObjects.put(new Short(handleCounter++),value);
-					currentObject = value;
+					handledObjects.put(handleCounter++,value);
+					stack.push(value);
 					if ( !currentStreamHandler.invokeReadMethod(this, value))
 					{
 						currentStreamHandler.readFields(this,value);
 					}
+					stack.pop();
 				}
 				catch (IllegalArgumentException ex)
 				{
@@ -123,7 +125,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			ClassStreamHandler lookup = ClassStreamHandler.lookup(classDef);
 			int length = in.readInt();
 			Object[] array = (Object[])Array.newInstance(lookup.getStreamClass(), length);
-			handledObjects.put(new Short(handleCounter++),array);
+			handledObjects.put(handleCounter++,array);
 			for (int i = 0; i < array.length; i++)
 			{
 				array[i] = readObjectOverride();
@@ -136,7 +138,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			ClassStreamHandler lookup = ClassStreamHandler.lookup(classDef);
 			int length = in.readInt();
 			Object array = Array.newInstance(lookup.getStreamClass(), length);
-			handledObjects.put(new Short(handleCounter++),array);
+			handledObjects.put(handleCounter++,array);
 			for (int i = 0; i < length; i++)
 			{
 				Array.set(array, i, readObjectOverride());
@@ -155,9 +157,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 */
 	public void defaultReadObject() throws IOException, ClassNotFoundException
 	{
-		if ( !defaultReadHappend )
+		Object currentObject = stack.peek();
+		if ( !defaultRead.contains(currentObject) )
 		{
-			defaultReadHappend = true;
+			defaultRead.add(currentObject);
 			currentStreamHandler.readFields(this,currentObject);
 		}
 	}
@@ -175,7 +178,8 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	 */
 	public void close() throws IOException
 	{
-		currentObject = null;
+		stack = null;
+		defaultRead = null;
 		currentStreamHandler = null;
 		in.close();
 	}

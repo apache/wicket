@@ -21,21 +21,24 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import wicket.util.collections.HandleArrayListStack;
 
 /**
  * @author jcompagner
  */
 public final class WicketObjectOutputStream extends ObjectOutputStream
 {
-	private Map handledObjects = new HashMap(); 
-	private short handleCounter = 0;
+	private wicket.util.collections.HandleTable handledObjects = new wicket.util.collections.HandleTable(); 
+	
+	private HandleArrayListStack stack = new HandleArrayListStack();
+	private HandleArrayListStack defaultWrite = new HandleArrayListStack();
 	
 	private final DataOutputStream out;
 	private ClassStreamHandler classHandler;
-	private Object currentObject;
-	private boolean defaultWriteHappend;
+	
 	
 	/**
 	 * Construct.
@@ -59,11 +62,11 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			out.write(ClassStreamHandler.NULL);
 			return;
 		}
-		Object handle = handledObjects.get(obj);
-		if ( handle != null)
+		int handle = handledObjects.lookup(obj);
+		if ( handle != -1)
 		{
 			out.write(ClassStreamHandler.HANDLE);
-			out.writeShort(((Short)handle).shortValue());
+			out.writeShort((int)handle);
 		}
 		else
 		{
@@ -75,7 +78,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			}
 			else
 			{
-				handledObjects.put(obj, new Short(handleCounter++));
+				handledObjects.assign(obj);
 				Class cls = obj.getClass();
 	
 				if(cls.isArray())
@@ -121,12 +124,12 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 					}
 					else
 					{
-						currentObject = obj;
+						stack.push(obj);
 						if (!classHandler.invokeWriteMethod(this,obj))
 						{
 							classHandler.writeFields(this,obj);
 						}
-						defaultWriteHappend = false;
+						stack.pop();
 					}
 				}
 			}
@@ -138,9 +141,10 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 */
 	public void defaultWriteObject() throws IOException
 	{
-		if (! defaultWriteHappend)
+		Object currentObject = stack.peek();
+		if ( !defaultWrite.contains(currentObject))
 		{
-			defaultWriteHappend = true;
+			defaultWrite.add(currentObject);
 			classHandler.writeFields(this,currentObject);
 		}
 	}
@@ -301,7 +305,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	public void close() throws IOException
 	{
 		classHandler = null;
-		currentObject = null;
+		stack = null;
+		defaultWrite = null;
 		out.close();
 	}
 }
