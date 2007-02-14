@@ -17,8 +17,6 @@
 package wicket.util.io;
 
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.GregorianCalendar;
 
 import junit.framework.Assert;
@@ -30,6 +28,9 @@ import junit.framework.TestCase;
 public class WicketOutputStreamTest extends TestCase
 {
 
+	/**
+	 * @throws Exception
+	 */
 	public void testGregorianCalendar() throws Exception
 	{
 		GregorianCalendar gc = new GregorianCalendar(2005,10,10);
@@ -48,4 +49,5 @@ public class WicketOutputStreamTest extends TestCase
 		Assert.assertEquals(gc, gc2);
 		
 	}
+
 }

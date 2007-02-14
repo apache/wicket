@@ -408,17 +408,9 @@ public class FilePageStore implements IPageStore
 
 	private byte[] serializePage(SessionPageKey key, Page page)
 	{
-		if (page.getCurrentVersionNumber() != key.versionNumber)
-		{
-			System.err.println("ERROR versionnumber dont match1!");
-		}
 		long t1 = System.currentTimeMillis();
 		byte[] bytes = Objects.objectToByteArray(page);
 		totalSerializationTime += (System.currentTimeMillis() - t1);
-		if (page.getCurrentVersionNumber() != key.versionNumber)
-		{
-			System.err.println("ERROR versionnumber dont match2!");
-		}
 		return bytes;
 	}
 

@@ -39,6 +39,7 @@ import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
 import wicket.util.io.ByteCountingOutputStream;
 import wicket.util.io.IObjectStreamFactory;
+import wicket.util.io.WicketObjectStreamFactory;
 import wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import wicket.util.string.Strings;
 
@@ -194,7 +195,8 @@ public final class Objects
 	 * opposed to in Application, as the Application most likely isn't available
 	 * in the threads we'll be using this with.
 	 */
-	private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
+	private static IObjectStreamFactory objectStreamFactory = new WicketObjectStreamFactory();
+	//private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
 
 	static
 	{

@@ -136,14 +136,8 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		{
 			short classDef = in.readShort();
 			ClassStreamHandler lookup = ClassStreamHandler.lookup(classDef);
-			int length = in.readInt();
-			Object array = Array.newInstance(lookup.getStreamClass(), length);
-			handledObjects.put(handleCounter++,array);
-			for (int i = 0; i < length; i++)
-			{
-				Array.set(array, i, readObjectOverride());
-			}
-			value = array;
+			value = lookup.readArray(this);
+			handledObjects.put(handleCounter++,value);
 		}
 		else
 		{
@@ -165,13 +159,6 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	DataInputStream getInputStream()
-	{
-		return in;
-	}
 	
 	/**
 	 * @see java.io.ObjectInputStream#close()
@@ -327,7 +314,8 @@ public final class WicketObjectInputStream extends ObjectInputStream
      */
     public String readUTF() throws IOException
     {
-    	return in.readUTF();
+    	String s = in.readUTF();
+    	return s;
     }
     
     /**
