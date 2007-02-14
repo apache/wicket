@@ -209,6 +209,16 @@ public class MockWebApplication
 				.setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
 		this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
+
+		// Since the purpose of MockWebApplication is singlethreaded 
+		// programmatic testing it doesn't make much sense to have a
+		// modification watcher thread started to watch for changes in the
+		// markup.
+		// Disabling this also helps test suites with many test cases 
+		// (problems has been noticed with >~300 test cases). The problem 
+		// is that even if the wicket tester is GC'ed the modification 
+		// watcher still runs, taking up file handles and memory, leading
+		// to "Too many files opened" or a regular OutOfMemoryException
 		this.application.getResourceSettings().setResourcePollFrequency(null);
 
 		createRequestCycle();
