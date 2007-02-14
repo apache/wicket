@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 import wicket.util.collections.HandleArrayListStack;
 
@@ -38,6 +36,10 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	
 	private final DataOutputStream out;
 	private ClassStreamHandler classHandler;
+
+	private int booleanCounter;
+
+	private int byteCounter;
 	
 	
 	/**
@@ -66,7 +68,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		if ( handle != -1)
 		{
 			out.write(ClassStreamHandler.HANDLE);
-			out.writeShort((int)handle);
+			out.writeShort(handle);
 		}
 		else
 		{
@@ -89,14 +91,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 					{
 						out.write(ClassStreamHandler.PRIMITIVE_ARRAY);
 						out.writeShort(classHandler.getClassId());
-						// this should be different!!
-						// write directly the primitives 
-						int length = Array.getLength(obj);
-						out.writeInt(length);
-						for (int i = 0; i < length; i++)
-						{
-							writeObjectOverride(Array.get(obj, i));
-						}
+						classHandler.writeArray(obj,this);
 					}
 					else
 					{
@@ -148,15 +143,6 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			classHandler.writeFields(this,currentObject);
 		}
 	}
-
-	/**
-	 * @return
-	 */
-	DataOutputStream getOutputStream()
-	{
-		return out;
-	}
-
 	
 	  /**
      * Writes a boolean.
@@ -265,15 +251,14 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
      * 		stream
      */
     public void writeChars(String str) throws IOException {
-	out.writeChars(str);
+    	out.writeChars(str);
     }
 	
     /**
      * @see java.io.ObjectOutputStream#write(byte[])
      */
     public void write(byte[] buf) throws IOException
-    {
-    	out.write(buf);
+    {    	out.write(buf);
     }
     
     /**
