@@ -21,8 +21,12 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.Serializable;
+import java.io.ObjectInputStream.GetField;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import wicket.util.collections.HandleArrayListStack;
 import wicket.util.collections.IntHashMap;
@@ -340,5 +344,271 @@ public final class WicketObjectInputStream extends ObjectInputStream
     public int read(byte[] buf, int off, int len) throws IOException
     {
     	return in.read(buf, off, len);
+    }
+    
+    /**
+     * @see java.io.ObjectInputStream#readFields()
+     */
+    public GetField readFields() throws IOException, ClassNotFoundException
+    {
+    	GetFieldImpl field = new GetFieldImpl();
+    	field.read();
+    	return field;
+    }
+    
+    
+    private class GetFieldImpl extends GetField
+    {
+    	private HashMap values = new HashMap();
+    	
+    	private void read() throws IOException, ClassNotFoundException
+    	{
+    		short token = readShort();
+			ClassStreamHandler lookup = ClassStreamHandler.lookup(boolean.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, readBoolean()?Boolean.TRUE:Boolean.FALSE);
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(byte.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, new Byte(readByte()));
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(short.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, new Short(readShort()));
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(char.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, new Character(readChar()));
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(int.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, new Integer(readInt()));
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(long.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, new Long(readLong()));
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(float.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, new Float(readFloat()));
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(double.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, new Double(readDouble()));
+				}
+				token = readShort();
+				if (token == ClassStreamHandler.NULL) return;
+			}
+			lookup = ClassStreamHandler.lookup(Serializable.class);
+			if (token == lookup.getClassId())
+			{
+				short count = readShort();
+				for (int i = 0; i < count; i++)
+				{
+					String key = (String)readObjectOverride();
+					values.put(key, readObjectOverride());
+				}
+				token = readShort();
+			}
+			if (token != ClassStreamHandler.NULL)
+			{
+				throw new RuntimeException("Expected NULL end byte");
+			}
+    	}
+    	
+		/**
+		 * @see java.io.ObjectInputStream.GetField#defaulted(java.lang.String)
+		 */
+		public boolean defaulted(String name) throws IOException
+		{
+			return values.get(name) == null;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, byte)
+		 */
+		public byte get(String name, byte val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Byte)
+			{
+				return ((Byte)o).byteValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, char)
+		 */
+		public char get(String name, char val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Byte)
+			{
+				return ((Character)o).charValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, double)
+		 */
+		public double get(String name, double val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Double)
+			{
+				return ((Double)o).doubleValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, float)
+		 */
+		public float get(String name, float val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Float)
+			{
+				return ((Float)o).floatValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, int)
+		 */
+		public int get(String name, int val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Integer)
+			{
+				return ((Integer)o).intValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, long)
+		 */
+		public long get(String name, long val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Long)
+			{
+				return ((Long)o).longValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, short)
+		 */
+		public short get(String name, short val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Short)
+			{
+				return ((Short)o).shortValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, boolean)
+		 */
+		public boolean get(String name, boolean val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o instanceof Boolean)
+			{
+				return ((Boolean)o).booleanValue();
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#get(java.lang.String, java.lang.Object)
+		 */
+		public Object get(String name, Object val) throws IOException
+		{
+			Object o = values.get(name);
+			if (o != null)
+			{
+				return o;
+			}
+			return val;
+		}
+
+		/**
+		 * @see java.io.ObjectInputStream.GetField#getObjectStreamClass()
+		 */
+		public ObjectStreamClass getObjectStreamClass()
+		{
+			return null;
+		}
+    	
     }
 }
