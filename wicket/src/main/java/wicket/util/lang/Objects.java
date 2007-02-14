@@ -1048,7 +1048,7 @@ public final class Objects
 			}
 			return out.toByteArray();
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
 					e);
