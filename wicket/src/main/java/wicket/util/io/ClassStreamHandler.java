@@ -17,6 +17,7 @@
 package wicket.util.io;
 
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
@@ -106,7 +107,7 @@ public final class ClassStreamHandler
 	 */
 	public static final int CLASS = 5;
 
-	static ClassStreamHandler lookup(Class cls)
+	static ClassStreamHandler lookup(Class cls) throws NotSerializableException
 	{
 		ClassStreamHandler classHandler = (ClassStreamHandler)handlesClasses.get(cls.getName());
 		if (classHandler == null)
@@ -150,8 +151,9 @@ public final class ClassStreamHandler
 	 * @param cls
 	 * @param wicketObjectOutputStream
 	 *            TODO
+	 * @throws NotSerializableException 
 	 */
-	private ClassStreamHandler(Class cls)
+	private ClassStreamHandler(Class cls) throws NotSerializableException
 	{
 		this.classId = classCounter++;
 		this.clz = cls;
@@ -210,10 +212,10 @@ public final class ClassStreamHandler
 		{
 			this.fields = new ArrayList();
 			cons = getSerializableConstructor(clz);
-//			if (cons == null)
-//			{
-//				throw new RuntimeException("Failed to get the constructor from clz: " + clz);
-//			}
+			if (cons == null)
+			{
+				throw new NotSerializableException("No serializeable constructor found for " + cls);
+			}
 			
 			writeObjectMethods = new ArrayList();
 			readObjectMethods = new ArrayList();
