@@ -18,9 +18,16 @@ package wicket.util.io;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
+import java.io.ObjectOutputStream.PutField;
 import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import wicket.util.collections.HandleArrayListStack;
 
@@ -40,6 +47,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	private int booleanCounter;
 
 	private int byteCounter;
+
+	private PutField curPut;
 	
 	
 	/**
@@ -119,12 +128,15 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 					}
 					else
 					{
+						PutField old = curPut;
+						curPut = null;
 						stack.push(obj);
 						if (!classHandler.invokeWriteMethod(this,obj))
 						{
 							classHandler.writeFields(this,obj);
 						}
 						stack.pop();
+						curPut = old;
 					}
 				}
 			}
@@ -284,6 +296,29 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
     {
     	out.writeUTF(str);
     }
+    
+    /**
+     * @see java.io.ObjectOutputStream#putFields()
+     */
+    public PutField putFields() throws IOException
+    {
+    	if (curPut == null)
+    	{
+    		curPut = new PutFieldImpl();
+    	}
+    	return curPut;
+    }
+    
+    /**
+     * @see java.io.ObjectOutputStream#writeFields()
+     */
+    public void writeFields() throws IOException
+    {
+    	if (curPut != null)
+    	{
+    		curPut.write(this);
+    	}
+    }
 	/**
 	 * @see java.io.ObjectOutputStream#close()
 	 */
@@ -293,5 +328,239 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		stack = null;
 		defaultWrite = null;
 		out.close();
+	}
+	
+	private class PutFieldImpl extends PutField
+	{
+		private HashMap mapBytes;
+		private HashMap mapChar;
+		private HashMap mapDouble;
+		private HashMap mapFloat;
+		private HashMap mapInt;
+		private HashMap mapLong;
+		private HashMap mapShort;
+		private HashMap mapBoolean;
+		private HashMap mapObject;
+		
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, byte)
+		 */
+		public void put(String name, byte val)
+		{
+			if (mapBytes == null) mapBytes = new HashMap(4);
+			mapBytes.put(name, new Byte(val));
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, char)
+		 */
+		public void put(String name, char val)
+		{
+			if (mapChar == null) mapChar = new HashMap(4);
+			mapChar.put(name, new Character(val));
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, double)
+		 */
+		public void put(String name, double val)
+		{
+			if (mapDouble == null) mapDouble = new HashMap(4);
+			mapDouble.put(name, new Double(val));
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, float)
+		 */
+		public void put(String name, float val)
+		{
+			if (mapFloat == null) mapFloat = new HashMap(4);
+			mapFloat.put(name, new Float(val));
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, int)
+		 */
+		public void put(String name, int val)
+		{
+			if (mapInt == null) mapInt = new HashMap(4);
+			mapInt.put(name, new Integer(val));
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, long)
+		 */
+		public void put(String name, long val)
+		{
+			if (mapLong == null) mapLong = new HashMap(4);
+			mapLong.put(name, new Long(val));
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, short)
+		 */
+		public void put(String name, short val)
+		{
+			if (mapShort == null) mapShort = new HashMap(4);
+			mapShort.put(name, new Short(val));
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, boolean)
+		 */
+		public void put(String name, boolean val)
+		{
+			if (mapBoolean== null) mapBoolean = new HashMap(4);
+			mapBoolean.put(name, val?Boolean.TRUE:Boolean.FALSE);
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, java.lang.Object)
+		 */
+		public void put(String name, Object val)
+		{
+			if (mapObject == null) mapObject = new HashMap(4);
+			mapObject.put(name,val);
+		}
+
+		/**
+		 * @see java.io.ObjectOutputStream.PutField#write(java.io.ObjectOutput)
+		 */
+		public void write(ObjectOutput out) throws IOException
+		{
+			// i don't know if all the fields (names in the map)
+			// are really also always real fields.. So i just
+			// write them by name->value
+			// maybe in the further we can really calculate an offset?
+			if (mapBoolean != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(boolean.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapBoolean.size());
+				Iterator it = mapBoolean.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeBoolean(((Boolean)entry.getValue()).booleanValue());
+				}
+			}
+			if (mapBytes != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(byte.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapBytes.size());
+				Iterator it = mapBytes.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeByte( ((Byte)entry.getValue()).byteValue());
+				}
+			}
+			if (mapShort != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(short.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapShort.size());
+				Iterator it = mapShort.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeShort( ((Short)entry.getValue()).shortValue());
+				}
+			}
+			if (mapChar != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(char.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapChar.size());
+				Iterator it = mapChar.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeChar( ((Character)entry.getValue()).charValue());
+				}
+			}
+			if (mapInt != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(int.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapInt.size());
+				Iterator it = mapInt.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeInt( ((Integer)entry.getValue()).intValue());
+				}
+			}
+			if (mapLong != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(long.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapLong.size());
+				Iterator it = mapLong.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeLong( ((Long)entry.getValue()).longValue());
+				}
+			}
+			if (mapFloat != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(float.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapFloat.size());
+				Iterator it = mapFloat.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeFloat( ((Float)entry.getValue()).floatValue());
+				}
+			}
+			if (mapDouble != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(double.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapDouble.size());
+				Iterator it = mapDouble.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeDouble( ((Double)entry.getValue()).doubleValue());
+				}
+			}
+			if (mapObject != null)
+			{
+				ClassStreamHandler lookup = ClassStreamHandler.lookup(Serializable.class);
+				writeShort(lookup.getClassId());
+				writeShort(mapObject.size());
+				Iterator it = mapObject.entrySet().iterator();
+				while (it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					// write the key.
+					writeObjectOverride(entry.getKey());
+					writeObjectOverride(entry.getValue());
+				}
+			}
+			// end byte.
+			writeShort(ClassStreamHandler.NULL);
+		}
+		
 	}
 }

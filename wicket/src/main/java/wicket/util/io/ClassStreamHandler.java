@@ -135,14 +135,14 @@ public final class ClassStreamHandler
 	private final List fields;
 	private final short classId;
 
-	private Constructor cons;
+	private final Constructor cons;
 
-	private List writeObjectMethod;
+	private final List writeObjectMethods;
 
-	private List readObjectMethod;
+	private final List readObjectMethods;
 
 
-	private PrimitiveArray primitiveArray;
+	private final PrimitiveArray primitiveArray;
 
 	/**
 	 * Construct.
@@ -155,36 +155,12 @@ public final class ClassStreamHandler
 	{
 		this.classId = classCounter++;
 		this.clz = cls;
-		if (!cls.isPrimitive())
-		{
-			this.fields = new ArrayList();
-			cons = getSerializableConstructor(clz);
-			if (cons == null)
-			{
-				throw new RuntimeException("Failed to get the constructor from clz: " + clz);
-			}
-			
-			writeObjectMethod = new ArrayList();
-			readObjectMethod = new ArrayList();
-			
-			Class parent = cls;
-			while(parent != Object.class)
-			{
-				Method method = getPrivateMethod(parent, "writeObject", new Class[] { ObjectOutputStream.class }, Void.TYPE);
-				if (method != null) writeObjectMethod.add(method);
-				method = getPrivateMethod(parent, "readObject", new Class[] { ObjectInputStream.class }, Void.TYPE);
-				if (method != null) readObjectMethod.add(method);
-				
-				parent = parent.getSuperclass();
-			}
-			fillFields(cls);
-		}
-		else
+		if (cls.isPrimitive())
 		{
 			fields = null;
 			cons = null;
-			writeObjectMethod = null;
-			readObjectMethod = null;
+			writeObjectMethods = null;
+			readObjectMethods = null;
 			if (clz == boolean.class)
 			{
 				primitiveArray = new BooleanPrimitiveArray();
@@ -217,8 +193,44 @@ public final class ClassStreamHandler
 			{
 				primitiveArray = new DoublePrimitiveArray();
 			}
+			else
+			{
+				throw new RuntimeException("Unsupported primitive " + cls);
+			}
 		}
-
+		else if (cls.isInterface())
+		{
+			fields = null;
+			cons = null;
+			writeObjectMethods = null;
+			readObjectMethods = null;
+			primitiveArray = null;
+		}
+		else
+		{
+			this.fields = new ArrayList();
+			cons = getSerializableConstructor(clz);
+//			if (cons == null)
+//			{
+//				throw new RuntimeException("Failed to get the constructor from clz: " + clz);
+//			}
+			
+			writeObjectMethods = new ArrayList();
+			readObjectMethods = new ArrayList();
+			primitiveArray = null;
+			
+			Class parent = cls;
+			while(parent != Object.class)
+			{
+				Method method = getPrivateMethod(parent, "writeObject", new Class[] { ObjectOutputStream.class }, Void.TYPE);
+				if (method != null) writeObjectMethods.add(method);
+				method = getPrivateMethod(parent, "readObject", new Class[] { ObjectInputStream.class }, Void.TYPE);
+				if (method != null) readObjectMethods.add(method);
+				
+				parent = parent.getSuperclass();
+			}
+			fillFields(cls);
+		}
 	}
 
 	/**
@@ -386,11 +398,11 @@ public final class ClassStreamHandler
 	 */
 	public boolean invokeWriteMethod(WicketObjectOutputStream woos, Object obj)
 	{
-		if (writeObjectMethod.size() > 0)
+		if (writeObjectMethods.size() > 0)
 		{
-			for (int i = writeObjectMethod.size(); --i >= 0;)
+			for (int i = writeObjectMethods.size(); --i >= 0;)
 			{
-				Method method = (Method)writeObjectMethod.get(i);
+				Method method = (Method)writeObjectMethods.get(i);
 				
 				try
 				{
@@ -420,11 +432,11 @@ public final class ClassStreamHandler
 	 */
 	public boolean invokeReadMethod(WicketObjectInputStream wois, Object obj)
 	{
-		if (readObjectMethod.size() > 0)
+		if (readObjectMethods.size() > 0)
 		{
-			for (int i = readObjectMethod.size(); --i >= 0;)
+			for (int i = readObjectMethods.size(); --i >= 0;)
 			{
-				Method method = (Method)readObjectMethod.get(i);
+				Method method = (Method)readObjectMethods.get(i);
 				try
 				{
 					method.invoke(obj, new Object[] { wois });
