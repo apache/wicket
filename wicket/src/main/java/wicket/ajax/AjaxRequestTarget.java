@@ -378,6 +378,15 @@ public class AjaxRequestTarget implements IRequestTarget
 			// invoked
 			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
 		}
+		finally
+		{
+			// clean up the page
+			if (markupIdToComponent.size() > 0)
+			{
+				final Component c = (Component)markupIdToComponent.values().iterator().next();
+				c.getPage().internalDetach();
+			}
+		}
 	}
 
 	/**

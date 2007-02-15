@@ -49,7 +49,7 @@ public abstract class AbstractBehavior implements IBehavior
 	 */
 	public void detachModel(Component component)
 	{
-	
+		cleanup();
 	}
 
 	/**

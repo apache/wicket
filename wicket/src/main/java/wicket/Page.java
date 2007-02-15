@@ -295,15 +295,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public void internalDetach()
 	{
-		try
-		{
-			super.internalDetach();
-		} 
-		catch (RuntimeException re)
-		{
-			throw re;
-		}
+		super.internalDetach();
 	}
+
 	/**
 	 * Detaches any attached models referenced by this page.
 	 */
@@ -375,16 +369,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		});
 
-		if (this instanceof IFeedback) {
+		if (this instanceof IFeedback)
+		{
 			((IFeedback)this).updateFeedback();
 		}
-		
+
 		// Now, do the initialization for the other components
 		internalAttach();
 
 		// Call reset head rendered on the page
 		resetHeadRendered();
-		
+
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
@@ -399,7 +394,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			public Object component(final Component component)
 			{
 				component.resetHeadRendered();
-				
+
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 
@@ -475,7 +470,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Returns feedback messages from all components in this page (including the page itself).
+	 * @return Returns feedback messages from all components in this page
+	 *         (including the page itself).
 	 */
 	public final FeedbackMessages getFeedbackMessages()
 	{
@@ -897,7 +893,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component,null))
+		if (mayTrackChangesFor(component, null))
 		{
 			versionManager.componentModelChanging(component);
 		}
@@ -954,7 +950,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component,null))
+		if (mayTrackChangesFor(component, null))
 		{
 			versionManager.componentStateChanging(change);
 		}
@@ -1005,22 +1001,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Save name for restoring transient
 		this.pageMapName = pageMap.getName();
 	}
-	
-	
+
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
+	 * 
 	 * @param map
 	 */
 	protected final void moveToPageMap(PageMap map)
 	{
-		// TODO post 1.2 shouldn't we remove this page from the pagemap/session if it would be in there?
-		// This should be done if the page was not cloned first, but shouldn't be done if it was cloned..
+		// TODO post 1.2 shouldn't we remove this page from the pagemap/session
+		// if it would be in there?
+		// This should be done if the page was not cloned first, but shouldn't
+		// be done if it was cloned..
 		setPageMap(map);
 		numericId = (short)map.nextId();
 	}
 
-	
 
 	/**
 	 * Checks whether the hierarchy may be changed at all, and throws an
@@ -1189,16 +1187,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @param component
 	 *            The component which is affected
-	 * @param parent 
+	 * @param parent
 	 * @return True if the change is okay to report
 	 */
 	private final boolean mayTrackChangesFor(final Component component, MarkupContainer parent)
 	{
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto() || 
-				(parent == null && !component.isVersioned()) || 
-				(parent != null && !parent.isVersioned()) )
+		if (component.isAuto() || (parent == null && !component.isVersioned())
+				|| (parent != null && !parent.isVersioned()))
 		{
 			return false;
 		}

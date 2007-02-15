@@ -67,6 +67,8 @@ public interface IBehavior extends Serializable
 	 * rendering). Note that if you share a behavior between components, this
 	 * method is called multiple times.
 	 * 
+	 * YOU MUST CALL SUPER WHEN IMPLEMENTING THIS METHOD
+	 * 
 	 * @param component
 	 *            the component that initiates the detachement of this behavior
 	 */
