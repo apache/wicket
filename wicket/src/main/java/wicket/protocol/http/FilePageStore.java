@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Page;
 import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
+import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Objects;
 
 /**
@@ -53,18 +56,22 @@ public class FilePageStore implements IPageStore
 
 	private final File defaultWorkDir;
 
-	private final List storePageMap;
+	private final ConcurrentHashMap storePageMap;
 
 	private final PageSavingThread thread;
 
 	private final String appName;
 
-	volatile long totalSavingTime = 0;
-	volatile long totalSerializationTime = 0;
+	private volatile long totalSavingTime = 0;
+	private volatile long totalSerializationTime = 0;
 
 	private volatile int saved;
 
 	private volatile int bytesSaved;
+
+	private volatile int serialized;
+
+	private int pagesInMap;
 
 
 	/**
@@ -85,7 +92,7 @@ public class FilePageStore implements IPageStore
 	public FilePageStore(File dir)
 	{
 		defaultWorkDir = dir;
-		storePageMap = Collections.synchronizedList(new LinkedList());
+		storePageMap = new ConcurrentHashMap();
 		thread = new PageSavingThread();
 		appName = Application.get().getApplicationKey();
 		Thread t = new Thread(thread, "FilePageStoreThread-" + appName);
@@ -103,6 +110,7 @@ public class FilePageStore implements IPageStore
 	{
 		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber,
 				ajaxVersionNumber, pagemapName, null);
+		long t = System.currentTimeMillis();
 		byte[] bytes = testMap(currentKey);
 		if (bytes != null)
 		{
@@ -187,23 +195,34 @@ public class FilePageStore implements IPageStore
 	 */
 	public void storePage(String sessionId, Page page)
 	{
+		List list = (List)storePageMap.get(sessionId);
+		if (list == null)
+		{
+			list = Collections.synchronizedList(new LinkedList());
+		}
 		// if the pagemap falls behind, directly serialize it here.
-		if (storePageMap.size() > 25)
+		// this check is now really wrong!! We should use a complete counter..
+		if (pagesInMap  > 25)
 		{
 			SessionPageKey key = new SessionPageKey(sessionId, page);
 			byte[] bytes = serializePage(key, page);
 			if (bytes != null)
 			{
 				key.setObject(bytes);
-				storePageMap.add(key);
+				list.add(key);
+				// do really put it back in.. The writer thread could have removed it.
+				storePageMap.put(sessionId, list);
 			}
 
 		}
 		else
 		{
+			list.add(new SessionPageKey(sessionId, page));
+			// do really put it back in.. The writer thread could have removed it.
+			storePageMap.put(sessionId, list);
 			synchronized (storePageMap)
 			{
-				storePageMap.add(new SessionPageKey(sessionId, page));
+				pagesInMap++;
 				storePageMap.notifyAll();
 			}
 		}
@@ -230,66 +249,63 @@ public class FilePageStore implements IPageStore
 
 	private byte[] testMap(SessionPageKey currentKey)
 	{
-		synchronized (storePageMap)
+		List list = (List)storePageMap.get(currentKey.sessionId);
+
+		if (list == null) return null;
+
+		synchronized (list)
 		{
-			int index = storePageMap.indexOf(currentKey);
+			int index = list.indexOf(currentKey);
 			if (index != -1)
 			{
-				currentKey = (SessionPageKey)storePageMap.get(index);
+				currentKey = (SessionPageKey)list.get(index);
 				Object object = currentKey.data;
 				if (object instanceof Page)
 				{
-					storePageMap.remove(index);
+					list.remove(index);
 				}
 				else if (object instanceof byte[])
 				{
 					return (byte[])object;
 				}
-				else if (object != SERIALIZING)
-				{
-					currentKey = null;
-				}
-			}
-			else
-			{
-				currentKey = null;
-			}
-		}
-
-
-		if (currentKey != null)
-		{
-			if (currentKey.data == SERIALIZING)
-			{
-				synchronized (currentKey)
+				else if (object == SERIALIZING)
 				{
 					try
 					{
-						currentKey.wait();
+						list.wait();
 					}
 					catch (InterruptedException ex)
 					{
 						throw new RuntimeException(ex);
 					}
-				}
-				Object data = currentKey.data;
-				if (data instanceof byte[])
-				{
-					return (byte[])data;
+					object = currentKey.data;
+					if (object instanceof byte[])
+					{
+						return (byte[])object;
+					}
+					else
+					{
+						return null;
+					}
 				}
 			}
 			else
 			{
-				byte[] bytes = serializePage(currentKey, (Page)currentKey.data);
-				if (bytes != null)
-				{
-					currentKey.setObject(bytes);
-					storePageMap.add(currentKey);
-				}
-				return bytes;
+				return null;
 			}
 		}
-		return null;
+
+		synchronized (storePageMap)
+		{
+			pagesInMap--;
+		}
+		byte[] bytes = serializePage(currentKey, (Page)currentKey.data);
+		if (bytes != null)
+		{
+			currentKey.setObject(bytes);
+			list.add(currentKey);
+		}
+		return bytes;
 	}
 
 
@@ -303,19 +319,7 @@ public class FilePageStore implements IPageStore
 
 	private void removeSessionFromPendingMap(String sessionId)
 	{
-		synchronized (storePageMap)
-		{
-			Iterator iterator = storePageMap.iterator();
-			while (iterator.hasNext())
-			{
-				SessionPageKey key = (SessionPageKey)iterator.next();
-				if (key.sessionId == sessionId)
-				{
-					iterator.remove();
-				}
-			}
-		}
-
+		storePageMap.remove(sessionId);
 		removeSession(sessionId);
 
 	}
@@ -346,9 +350,13 @@ public class FilePageStore implements IPageStore
 	 */
 	private void removePageFromPendingMap(String sessionId, int id)
 	{
-		synchronized (storePageMap)
+		List list = (List)storePageMap.get(sessionId);
+
+		if (list == null) return;
+
+		synchronized (list)
 		{
-			Iterator iterator = storePageMap.iterator();
+			Iterator iterator = list.iterator();
 			while (iterator.hasNext())
 			{
 				SessionPageKey key = (SessionPageKey)iterator.next();
@@ -411,6 +419,7 @@ public class FilePageStore implements IPageStore
 		long t1 = System.currentTimeMillis();
 		byte[] bytes = Objects.objectToByteArray(page);
 		totalSerializationTime += (System.currentTimeMillis() - t1);
+		serialized++;
 		return bytes;
 	}
 
@@ -476,7 +485,7 @@ public class FilePageStore implements IPageStore
 		private final String pageMap;
 		private final Class pageClass;
 
-		private Object data;
+		private volatile Object data;
 
 		SessionPageKey(String sessionId, Page page)
 		{
@@ -502,11 +511,18 @@ public class FilePageStore implements IPageStore
 			this.data = page;
 		}
 
+		/**
+		 * @return The current object inside the SessionPageKey
+		 */
 		public Object getObject()
 		{
 			return data;
 		}
 
+		/**
+		 * Sets the current object inside the SessionPageKey
+		 * @param o The object
+		 */
 		public void setObject(Object o)
 		{
 			data = o;
@@ -557,9 +573,10 @@ public class FilePageStore implements IPageStore
 		public void stop()
 		{
 			System.err.println("Total time in saving: " + totalSavingTime);
-			System.err.println("Total time in serialization: " + totalSerializationTime);
 			System.err.println("Bytes saved: " + bytesSaved);
 			System.err.println("Pages saved: " + saved);
+			System.err.println("Total time in serialization: " + totalSerializationTime);
+			System.err.println("Pages serialized: " + serialized);
 			synchronized (storePageMap)
 			{
 				stop = true;
@@ -574,10 +591,8 @@ public class FilePageStore implements IPageStore
 		{
 			while (!stop)
 			{
-				SessionPageKey key = null;
 				try
 				{
-					Object data = null;
 					synchronized (storePageMap)
 					{
 						if (stop)
@@ -586,41 +601,76 @@ public class FilePageStore implements IPageStore
 						{
 							storePageMap.wait();
 						}
-						key = (SessionPageKey)storePageMap.get(0);
-						data = key.getObject();
-						if (data instanceof Page)
+					}
+					
+					Iterator it = storePageMap.entrySet().iterator();
+					outer : while (it.hasNext())
+					{
+						Map.Entry entry = (Entry)it.next();
+						List sessionList = (List)entry.getValue();
+						while (true)
 						{
-							key.setObject(SERIALIZING);
+							byte[] pageBytes = null;
+							Object data = null;
+							SessionPageKey key = null;
+							synchronized (sessionList)
+							{
+								if (sessionList.size() != 0)
+								{
+									key = (SessionPageKey)sessionList.get(0);
+									data = key.data;
+									if (data instanceof Page)
+									{
+										key.setObject(SERIALIZING);
+									}
+									else if (data instanceof byte[])
+									{
+										pageBytes = (byte[])data;
+									}
+									else
+									{
+										sessionList.remove(0);
+									}
+								}
+								// no key found in the current list.
+								if (key == null)
+								{
+									// the list is removed now! 
+									// but it could be that a request add something to the list now.
+									// thats why a request has to check it again.
+									storePageMap.remove(entry.getKey());
+									continue outer;
+								}
+							}
+							
+							if (data instanceof Page)
+							{
+								pageBytes = serializePage(key, (Page)data);
+								synchronized (sessionList)
+								{
+									key.setObject(pageBytes);
+									sessionList.notifyAll();
+								}
+								synchronized (storePageMap)
+								{
+									pagesInMap--;
+								}
+							}
+
+							if (pageBytes != null)
+							{
+								savePage(key, pageBytes);
+							}
+							sessionList.remove(key);
+							key = null;
+							pageBytes = null;
+							data = null;
 						}
-					}
-					byte[] pageBytes = null;
-					if (data instanceof Page)
-					{
-						pageBytes = serializePage(key, (Page)data);
-						synchronized (key)
-						{
-							key.setObject(pageBytes);
-							key.notifyAll();
-						}
-					}
-					else if (data instanceof byte[])
-					{
-						pageBytes = (byte[])data;
-					}
-					if (pageBytes != null)
-					{
-						savePage(key, pageBytes);
-					}
-					if (storePageMap.remove(0) != key)
-					{
-						System.err.println("Remove 0 is not the same!!");
 					}
 				}
 				catch (Exception e)
 				{
 					log.error("Error in page save thread", e);
-					// removing the one that did fail...
-					storePageMap.remove(key);
 				}
 			}
 		}
