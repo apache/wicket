@@ -72,11 +72,11 @@ import wicket.util.watch.ModificationWatcher;
  * override the init() method. For example:
  * 
  * <pre>
- *        public void init()
- *        {
- *            String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
- *            URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *            ...
+ *           public void init()
+ *           {
+ *               String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *               URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *               ...
  * </pre>
  * 
  * @see WicketFilter
@@ -116,9 +116,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	private final Map bufferedResponses = new HashMap();
 
-	/** the default request cycle processor implementation. */
-	private IRequestCycleProcessor requestCycleProcessor;
-
 	/**
 	 * the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
@@ -140,15 +137,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @return The Wicket filter for this application
-	 */
-	public final WicketFilter getWicketFilter()
-	{
-		return wicketFilter;
-	}
-
-
-	/**
 	 * @see wicket.Application#getApplicationKey()
 	 */
 	public final String getApplicationKey()
@@ -162,21 +150,23 @@ public abstract class WebApplication extends Application implements ISessionFact
 		return applicationKey;
 	}
 
+
 	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
+	 * Gets an init parameter from the filter's context.
 	 * 
-	 * @return the default request cycle processor
+	 * @param key
+	 *            the key to search for
+	 * @return the value of the filter init parameter
 	 */
-	public final IRequestCycleProcessor getRequestCycleProcessor()
+	public final String getInitParameter(String key)
 	{
-		if (requestCycleProcessor == null)
+		if (wicketFilter != null)
 		{
-			requestCycleProcessor = newRequestCycleProcessor();
+			return wicketFilter.getFilterConfig().getInitParameter(key);
 		}
-		return requestCycleProcessor;
+		throw new IllegalStateException("servletContext is not set yet. Any code in your"
+				+ " Application object that uses the wicketServlet/Filter instance should be put"
+				+ " in the init() method instead of your constructor");
 	}
 
 	/**
@@ -219,6 +209,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
 		return sessionAttributePrefix;
+	}
+
+	/**
+	 * @return The Wicket filter for this application
+	 */
+	public final WicketFilter getWicketFilter()
+	{
+		return wicketFilter;
 	}
 
 	/**
@@ -404,6 +402,28 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * Checks mount path is valid.
+	 * 
+	 * @param path
+	 *            mount path
+	 */
+	private void checkMountPath(String path)
+	{
+		if (path == null)
+		{
+			throw new IllegalArgumentException("Mount path cannot be null");
+		}
+		if (!path.startsWith("/"))
+		{
+			throw new IllegalArgumentException("Mount path has to start with '/'");
+		}
+		if (path.startsWith("/resources/") || path.equals("/resources"))
+		{
+			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
+		}
+	}
+
+	/**
 	 * Create a request cycle factory which is used by default by WebSession.
 	 * You may provide your own default factory by subclassing WebApplication
 	 * and overriding this method or your may subclass WebSession to create a
@@ -464,24 +484,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		super.internalDestroy();
 		bufferedResponses.clear();
 		getSessionStore().destroy();
-	}
-
-	/**
-	 * Gets an init parameter from the filter's context.
-	 * 
-	 * @param key
-	 *            the key to search for
-	 * @return the value of the filter init parameter
-	 */
-	public final String getInitParameter(String key)
-	{
-		if (wicketFilter != null)
-		{
-			return wicketFilter.getFilterConfig().getInitParameter(key);
-		}
-		throw new IllegalStateException("servletContext is not set yet. Any code in your"
-				+ " Application object that uses the wicketServlet/Filter instance should be put"
-				+ " in the init() method instead of your constructor");
 	}
 
 	/**
@@ -560,10 +562,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
-	// TODO Doesn't this method belong in Application, not WebApplication?
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new DefaultWebRequestCycleProcessor();
+		return new WebRequestCycleProcessor();
 	}
 
 	/**
@@ -714,27 +715,5 @@ public abstract class WebApplication extends Application implements ISessionFact
 			return buffered;
 		}
 		return null;
-	}
-
-	/**
-	 * Checks mount path is valid.
-	 * 
-	 * @param path
-	 *            mount path
-	 */
-	private void checkMountPath(String path)
-	{
-		if (path == null)
-		{
-			throw new IllegalArgumentException("Mount path cannot be null");
-		}
-		if (!path.startsWith("/"))
-		{
-			throw new IllegalArgumentException("Mount path has to start with '/'");
-		}
-		if (path.startsWith("/resources/") || path.equals("/resources"))
-		{
-			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
-		}
 	}
 }

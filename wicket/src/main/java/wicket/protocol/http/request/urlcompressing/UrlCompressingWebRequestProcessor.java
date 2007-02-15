@@ -16,9 +16,7 @@
  */
 package wicket.protocol.http.request.urlcompressing;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import wicket.Application;
 import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
@@ -29,78 +27,74 @@ import wicket.WicketRuntimeException;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.html.INewBrowserWindowListener;
 import wicket.markup.html.WebPage;
-import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebRequestCycleProcessor;
 import wicket.protocol.http.request.urlcompressing.URLCompressor.ComponentAndInterface;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.compound.DefaultRequestTargetResolverStrategy;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
 import wicket.util.string.Strings;
 
-
 /**
- * Use this ResolverStrategy with the {@link WebURLCompressingCodingStrategy} to 
- * minimize the wicket:interface urls. The component path and the interface name
- * will be removed from the url and only an uid will be inserted into the url.
+ * Use this processor to minimize the wicket:interface urls. The component path
+ * and the interface name will be removed from the url and only an uid will be
+ * inserted into the url.
  * 
- * To use this url compressing behaviour you must override the 
- * {@link WebApplication} newRequestCycleProcessor() method. To make a request cycle
- * processor with this ResolverStrategy and the {@link WebURLCompressingCodingStrategy}
- * 
- * <pre>
- * protected IRequestCycleProcessor newRequestCycleProcessor()
- * {
- *   return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
- * }
- * </pre>
+ * To use this url compressing behaviour you must override the
+ * {@link Application}'s newRequestCycleProcessor() method and return an
+ * instance of this
  * 
  * @author jcompagner
  * 
- * @since 1.2
+ * @since 1.3
  */
-public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTargetResolverStrategy
+public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 {
-	/** log. */
-	private static final Log log = LogFactory.getLog(WebURLCompressingTargetResolverStrategy.class);
-	
 	/**
-	 * Resolves the RequestTarget for the given interface. This method can be
-	 * overriden if some special interface needs to resolve to its own target.
-	 * 
-	 * @param requestCycle
-	 *            The current RequestCycle object
-	 * @param page
-	 *            The page object which holds the component for which this
-	 *            interface is called on.
-	 * @param componentPath
-	 *            The component path for looking up the component in the page.
-	 * @param interfaceName
-	 *            The interface to resolve.
-	 * @param requestParameters
-	 * @return The RequestTarget that was resolved
+	 * Construct.
+	 */
+	public UrlCompressingWebRequestProcessor()
+	{
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebRequestCycleProcessor#newRequestCodingStrategy()
+	 */
+	protected IRequestCodingStrategy newRequestCodingStrategy()
+	{
+		return new URLCompressingWebCodingStrategy();
+	}
+
+	/**
+	 * @see wicket.request.AbstractRequestCycleProcessor#resolveListenerInterfaceTarget(wicket.RequestCycle,
+	 *      wicket.Page, java.lang.String, java.lang.String,
+	 *      wicket.request.RequestParameters)
 	 */
 	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
 			final Page page, final String componentPath, String interfaceName,
 			final RequestParameters requestParameters)
 	{
-		String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath, Component.PATH_SEPARATOR);
+		String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
+				Component.PATH_SEPARATOR);
 		Component component = null;
 		if (page instanceof WebPage && !"IResourceListener".equals(interfaceName))
 		{
-			ComponentAndInterface cai = ((WebPage)page).getUrlCompressor().getComponentAndInterfaceForUID(pageRelativeComponentPath);
-			if(cai != null)
+			ComponentAndInterface cai = ((WebPage)page).getUrlCompressor()
+					.getComponentAndInterfaceForUID(pageRelativeComponentPath);
+			if (cai != null)
 			{
 				interfaceName = cai.getInterfaceName();
 				component = cai.getComponent();
 			}
 		}
-		
+
 		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
 		}
-		else if(interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
+		else if (interfaceName.equals(INewBrowserWindowListener.INTERFACE.getName()))
 		{
-			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,INewBrowserWindowListener.INTERFACE, requestParameters);
+			return INewBrowserWindowListener.INTERFACE.newRequestTarget(page, page,
+					INewBrowserWindowListener.INTERFACE, requestParameters);
 		}
 		else
 		{
@@ -112,7 +106,7 @@ public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTarge
 				throw new WicketRuntimeException(
 						"Attempt to access unknown request listener interface " + interfaceName);
 			}
-			
+
 			// Get component
 			if (component == null)
 			{
@@ -128,10 +122,11 @@ public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTarge
 
 			if (!component.isEnableAllowed())
 			{
-				throw new UnauthorizedActionException(component,Component.ENABLE);
+				throw new UnauthorizedActionException(component, Component.ENABLE);
 			}
-			
-			// Ask the request listener interface object to create a request target
+
+			// Ask the request listener interface object to create a request
+			// target
 			return listener.newRequestTarget(page, component, listener, requestParameters);
 		}
 	}

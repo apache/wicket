@@ -16,14 +16,13 @@
  */
 package wicket.protocol.http.portlet;
 
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import javax.servlet.http.HttpServletResponse;
 
 import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageFactory;
 import wicket.IPageMap;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
@@ -31,44 +30,51 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.AccessStackPageMap.Access;
+import wicket.authorization.AuthorizationException;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
+import wicket.protocol.http.portlet.pages.ExceptionErrorPortletPage;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
+import wicket.request.AbstractRequestCycleProcessor;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.compound.IRequestTargetResolverStrategy;
 import wicket.request.target.basic.EmptyRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ExpiredPageClassRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
+import wicket.settings.IExceptionSettings;
 import wicket.util.string.Strings;
 
 /**
- * Portlet target resolver strategy. Almost identical to the
- * DefaultRequestTargetResolverStrategy but does not support page mounting.
+ * Shared functionality for portlet request cycle processors.
  * 
  * @author Janne Hietam&auml;ki
- * @author Eelco Hillenius
- * @author Igor Vaynberg
- * @author Jonathan Locke
+ * 
  */
-public class PortletRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
+public abstract class AbstractPortletRequestCycleProcessor extends AbstractRequestCycleProcessor
 {
-
-	/** log. */
-	private static final Log log = LogFactory.getLog(PortletRequestTargetResolverStrategy.class);
+	/**
+	 * Construct.
+	 */
+	public AbstractPortletRequestCycleProcessor()
+	{
+		super();
+	}
 
 	/**
-	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle,
+	 * @see wicket.request.AbstractRequestCycleProcessor#resolve(wicket.RequestCycle,
 	 *      wicket.request.RequestParameters)
 	 */
 	public final IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
-	{		
+	{
 		if (requestParameters.getBookmarkablePageClass() != null)
 		{
 			return resolveBookmarkablePage(requestCycle, requestParameters);
@@ -103,16 +109,16 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 						// request
 						processRequest = false;
 					}
-					else if(pageMap instanceof AccessStackPageMap)
+					else if (pageMap instanceof AccessStackPageMap)
 					{
-						AccessStackPageMap accessStackPm = (AccessStackPageMap)pageMap; 
+						AccessStackPageMap accessStackPm = (AccessStackPageMap)pageMap;
 						if (accessStackPm.getAccessStack().size() > 0)
 						{
 							final Access access = (Access)accessStackPm.getAccessStack().peek();
 
 							final int pageId = Integer
-							.parseInt(Strings.firstPathComponent(requestParameters
-									.getComponentPath(), Component.PATH_SEPARATOR));
+									.parseInt(Strings.firstPathComponent(requestParameters
+											.getComponentPath(), Component.PATH_SEPARATOR));
 
 							if (pageId != access.getId())
 							{
@@ -133,9 +139,10 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 							}
 						}
 					}
-					else 
+					else
 					{
-						// TODO also this should work.. also forward port to 2.0!!!
+						// TODO also this should work.. also forward port to
+						// 2.0!!!
 					}
 				}
 			}
@@ -162,6 +169,79 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	}
 
 	/**
+	 * @see wicket.request.IRequestCycleProcessor#respond(java.lang.RuntimeException,
+	 *      wicket.RequestCycle)
+	 */
+	public final void respond(RuntimeException e, RequestCycle requestCycle)
+	{
+		// If application doesn't want debug info showing up for users
+		final Session session = requestCycle.getSession();
+		final Application application = session.getApplication();
+		final IExceptionSettings settings = application.getExceptionSettings();
+		final Page responsePage = requestCycle.getResponsePage();
+
+		Page override = onRuntimeException(responsePage, e);
+		if (override != null)
+		{
+			requestCycle.setResponsePage(override);
+		}
+		else if (e instanceof AuthorizationException)
+		{
+			// are authorization exceptions always thrown before the real
+			// render?
+			// else we need to make a page (see below) or set it hard to a
+			// redirect.
+			Class accessDeniedPageClass = application.getApplicationSettings()
+					.getAccessDeniedPage();
+
+			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
+		}
+		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
+		{
+			Class internalErrorPageClass = application.getApplicationSettings()
+					.getInternalErrorPage();
+			Class responseClass = responsePage != null ? responsePage.getClass() : null;
+
+			if (responseClass != internalErrorPageClass
+					&& settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
+			{
+				// Show internal error page
+				final IPageFactory pageFactory;
+				IRequestTarget requestTarget = requestCycle.getRequestTarget();
+				if (requestTarget instanceof IPageRequestTarget)
+				{
+					pageFactory = session.getPageFactory(((IPageRequestTarget)requestTarget)
+							.getPage());
+				}
+				else
+				{
+					pageFactory = session.getPageFactory();
+				}
+				requestCycle.setResponsePage(pageFactory.newPage(internalErrorPageClass));
+			}
+			else if (responseClass != ExceptionErrorPortletPage.class)
+			{
+				// Show full details
+				requestCycle.setResponsePage(new ExceptionErrorPortletPage(e, responsePage));
+			}
+			else
+			{
+				// give up while we're ahead!
+				throw new WicketRuntimeException("Internal Error: Could not render error page "
+						+ internalErrorPageClass, e);
+			}
+		}
+	}
+
+	/**
+	 * @see wicket.request.AbstractRequestCycleProcessor#newRequestCodingStrategy()
+	 */
+	protected IRequestCodingStrategy newRequestCodingStrategy()
+	{
+		return new PortletRequestCodingStrategy();
+	}
+
+	/**
 	 * Resolves to a bookmarkable page target.
 	 * 
 	 * @param requestCycle
@@ -184,7 +264,7 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		catch (RuntimeException e)
 		{
 			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-			"Unable to load Bookmarkable Page");
+					"Unable to load Bookmarkable Page");
 		}
 
 		try
@@ -200,51 +280,39 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		}
 	}
 
-
 	/**
-	 * Resolves to a page target that was previously rendered. Optionally
-	 * resolves to a component call target, which is a specialization of a page
-	 * target. If no corresponding page could be found, a expired page target
-	 * will be returned.
+	 * Resolves to a home page target.
 	 * 
 	 * @param requestCycle
-	 *            the current request cycle
+	 *            the current request cycle.
 	 * @param requestParameters
 	 *            the request parameters object
-	 * @return the previously rendered page as a request target
+	 * @return the home page as a request target
 	 */
-	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
+	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
-		final String componentPath = requestParameters.getComponentPath();
-		final Session session = requestCycle.getSession();
-
-		final PortletPage page = (PortletPage)session.getPage(requestParameters.getPageMapName(), componentPath,
-				requestParameters.getVersionNumber());
-
-		// Does page exist?
-		if (page != null)
+		Session session = requestCycle.getSession();
+		Application application = session.getApplication();
+		try
 		{
-			// Set page on request
-			requestCycle.getRequest().setPage(page);
+			// Get the home page class
+			Class homePageClass = application.getHomePage();
+			PageParameters parameters = new PageParameters(requestParameters.getParameters());
+			BookmarkablePageRequestTarget homepageTarget = new BookmarkablePageRequestTarget(
+					homePageClass, parameters);
 
-			// see whether this resolves to a component call or just the page
-			final String interfaceName = requestParameters.getInterfaceName();
-			if (interfaceName != null)
-			{
-				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-						interfaceName, requestParameters);
-			}
-			else
-			{
-				return new PageRequestTarget(page);
-			}
+			return homepageTarget;
 		}
-		else
+		catch (MarkupException e)
 		{
-			// Page was expired from session, probably because backtracking
-			// limit was reached
-			return new ExpiredPageClassRequestTarget();
+			// Markup exception should pass without modification. They show
+			// a nice error page
+			throw e;
+		}
+		catch (WicketRuntimeException e)
+		{
+			throw new WicketRuntimeException("Could not create home page", e);
 		}
 	}
 
@@ -304,6 +372,53 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	}
 
 	/**
+	 * Resolves to a page target that was previously rendered. Optionally
+	 * resolves to a component call target, which is a specialization of a page
+	 * target. If no corresponding page could be found, a expired page target
+	 * will be returned.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestParameters
+	 *            the request parameters object
+	 * @return the previously rendered page as a request target
+	 */
+	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
+	{
+		final String componentPath = requestParameters.getComponentPath();
+		final Session session = requestCycle.getSession();
+
+		final PortletPage page = (PortletPage)session.getPage(requestParameters.getPageMapName(),
+				componentPath, requestParameters.getVersionNumber());
+
+		// Does page exist?
+		if (page != null)
+		{
+			// Set page on request
+			requestCycle.getRequest().setPage(page);
+
+			// see whether this resolves to a component call or just the page
+			final String interfaceName = requestParameters.getInterfaceName();
+			if (interfaceName != null)
+			{
+				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+						interfaceName, requestParameters);
+			}
+			else
+			{
+				return new PageRequestTarget(page);
+			}
+		}
+		else
+		{
+			// Page was expired from session, probably because backtracking
+			// limit was reached
+			return new ExpiredPageClassRequestTarget();
+		}
+	}
+
+	/**
 	 * Resolves to a shared resource target.
 	 * 
 	 * @param requestCycle
@@ -317,41 +432,5 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	{
 		String resourceKey = requestParameters.getResourceKey();
 		return new SharedResourceRequestTarget(requestParameters);
-	}
-
-	/**
-	 * Resolves to a home page target.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle.
-	 * @param requestParameters
-	 *            the request parameters object
-	 * @return the home page as a request target
-	 */
-	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
-	{
-		Session session = requestCycle.getSession();
-		Application application = session.getApplication();
-		try
-		{
-			// Get the home page class
-			Class homePageClass = application.getHomePage();
-			PageParameters parameters = new PageParameters(requestParameters.getParameters());
-			BookmarkablePageRequestTarget homepageTarget = new BookmarkablePageRequestTarget(
-					homePageClass, parameters);
-
-			return homepageTarget;
-		}
-		catch (MarkupException e)
-		{
-			// Markup exception should pass without modification. They show
-			// a nice error page
-			throw e;
-		}
-		catch (WicketRuntimeException e)
-		{
-			throw new WicketRuntimeException("Could not create home page", e);
-		}
 	}
 }

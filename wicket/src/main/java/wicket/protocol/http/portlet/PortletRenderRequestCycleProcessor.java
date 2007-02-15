@@ -16,14 +16,17 @@
  */
 package wicket.protocol.http.portlet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import wicket.request.compound.CompoundRequestCycleProcessor;
-import wicket.request.compound.IEventProcessorStrategy;
-import wicket.request.compound.IExceptionResponseStrategy;
-import wicket.request.compound.IRequestTargetResolverStrategy;
-import wicket.request.compound.IResponseStrategy;
+import wicket.Application;
+import wicket.Component;
+import wicket.IRequestTarget;
+import wicket.Page;
+import wicket.RequestCycle;
+import wicket.Response;
+import wicket.Component.IVisitor;
+import wicket.feedback.IFeedback;
+import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.request.target.component.PageRequestTarget;
 
 /**
  * A RequestCycleProcessor for portlet render requests. The events are not
@@ -34,44 +37,118 @@ import wicket.request.compound.IResponseStrategy;
  * @author Janne Hietam&auml;ki
  * 
  */
-public class PortletRenderRequestCycleProcessor extends CompoundRequestCycleProcessor
+public class PortletRenderRequestCycleProcessor extends AbstractPortletRequestCycleProcessor
 {
-
-	/** log. */
-	private static final Log log = LogFactory.getLog(PortletRenderRequestCycleProcessor.class);
-
 	/**
 	 * Construct.
 	 */
 	public PortletRenderRequestCycleProcessor()
 	{
-		super(new PortletRequestCodingStrategy());
 	}
 
 	/**
-	 * Overridable factory method for creating the exception response strategy.
-	 * Called by {@link #getExceptionResponseStrategy()}.
+	 * Process only PortletMode and WindowState changes in the RenderRequests
 	 * 
-	 * @return a new response strategy instance
+	 * @see wicket.request.compound.IEventProcessorStrategy#processEvents(wicket.RequestCycle)
+	 * @param requestCycle
 	 */
-	protected IExceptionResponseStrategy newExceptionResponseStrategy()
+	public void processEvents(final RequestCycle requestCycle)
 	{
-		return new PortletExceptionResponseStrategy();
+		PortletPage page = (PortletPage)requestCycle.getRequest().getPage();
+		if (page != null)
+		{
+			PortletRequestCycle cycle = (PortletRequestCycle)requestCycle;
+			page.setPortletMode(cycle.getPortletRequest().getPortletRequest().getPortletMode());
+			page.setWindowState(cycle.getPortletRequest().getPortletRequest().getWindowState());
+		}
 	}
 
-	protected IRequestTargetResolverStrategy newRequestTargetResolverStrategy()
+	public void respond(RequestCycle requestCycle)
 	{
-		return new PortletRequestTargetResolverStrategy();
+		IRequestTarget requestTarget = requestCycle.getRequestTarget();
+		if (requestTarget != null)
+		{
+			Application.get().logResponseTarget(requestTarget);
+			respondHeaderContribution(requestCycle, requestTarget);
+			requestTarget.respond(requestCycle);
+		}
 	}
 
-	protected IEventProcessorStrategy newEventProcessorStrategy()
+	private void respondHeaderContribution(final RequestCycle requestCycle,
+			final IRequestTarget requestTarget)
 	{
-		return new PortletRenderRequestEventProcessorStrategy();
+		if (requestTarget instanceof PageRequestTarget)
+		{
+			final PageRequestTarget target = (PageRequestTarget)requestTarget;
+			final Response response = RequestCycle.get().getResponse();
+			final Page page = target.getPage();
+
+			final HtmlHeaderContainer header = new HtmlHeaderContainer(
+					HtmlHeaderSectionHandler.HEADER_ID);
+
+			if (page.get(HtmlHeaderSectionHandler.HEADER_ID) != null)
+			{
+				page.replace(header);
+			}
+			else
+			{
+				page.add(header);
+			}
+
+			page.visitChildren(new Component.IVisitor()
+			{
+				public Object component(Component component)
+				{
+					if (component.isVisible())
+					{
+						component.renderHead(header);
+						return CONTINUE_TRAVERSAL;
+					}
+					else
+					{
+						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					}
+				}
+			});
+
+
+			// collect feedback, is this really necessary for a header
+			// container?
+			header.visitChildren(IFeedback.class, new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					((IFeedback)component).updateFeedback();
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+
+			if (header instanceof IFeedback)
+			{
+				((IFeedback)header).updateFeedback();
+			}
+
+			header.internalAttach();
+
+			try
+			{
+				header.visitChildren(new Component.IVisitor()
+				{
+					public Object component(Component component)
+					{
+						page.startComponentRender(component);
+						component.renderComponent();
+						page.endComponentRender(component);
+						return CONTINUE_TRAVERSAL;
+					}
+				});
+			}
+			finally
+			{
+				header.internalDetach();
+			}
+
+			page.remove(header);
+		}
 	}
-
-
-	protected IResponseStrategy newResponseStrategy()
-	{
-		return new PortletRenderResponseStrategy();
-	}	
 }
