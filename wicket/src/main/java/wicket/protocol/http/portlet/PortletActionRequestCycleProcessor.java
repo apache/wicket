@@ -16,13 +16,40 @@
  */
 package wicket.protocol.http.portlet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import javax.servlet.http.HttpServletResponse;
 
-import wicket.request.compound.CompoundRequestCycleProcessor;
-import wicket.request.compound.IExceptionResponseStrategy;
-import wicket.request.compound.IRequestTargetResolverStrategy;
-import wicket.request.compound.IResponseStrategy;
+import wicket.AccessStackPageMap;
+import wicket.Application;
+import wicket.Component;
+import wicket.IPageFactory;
+import wicket.IPageMap;
+import wicket.IRedirectListener;
+import wicket.IRequestTarget;
+import wicket.Page;
+import wicket.PageParameters;
+import wicket.RequestCycle;
+import wicket.RequestListenerInterface;
+import wicket.RestartResponseAtInterceptPageException;
+import wicket.Session;
+import wicket.WicketRuntimeException;
+import wicket.AccessStackPageMap.Access;
+import wicket.authorization.AuthorizationException;
+import wicket.authorization.UnauthorizedActionException;
+import wicket.markup.MarkupException;
+import wicket.protocol.http.portlet.pages.ExceptionErrorPortletPage;
+import wicket.protocol.http.request.WebErrorCodeResponseTarget;
+import wicket.request.AbstractRequestCycleProcessor;
+import wicket.request.IRequestCodingStrategy;
+import wicket.request.RequestParameters;
+import wicket.request.target.basic.EmptyRequestTarget;
+import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.request.target.component.ExpiredPageClassRequestTarget;
+import wicket.request.target.component.IPageRequestTarget;
+import wicket.request.target.component.PageRequestTarget;
+import wicket.request.target.component.listener.RedirectPageRequestTarget;
+import wicket.request.target.resource.SharedResourceRequestTarget;
+import wicket.settings.IExceptionSettings;
+import wicket.util.string.Strings;
 
 /**
  * A RequestCycleProcessor for portlet action requests. The page is not rendered
@@ -33,39 +60,24 @@ import wicket.request.compound.IResponseStrategy;
  * @see PortletRequestCycle
  * 
  * @author Janne Hietam&auml;ki
- * 
  */
-public class PortletActionRequestCycleProcessor extends CompoundRequestCycleProcessor
+public class PortletActionRequestCycleProcessor extends AbstractPortletRequestCycleProcessor
 {
-	/** log. */
-	private static final Log log = LogFactory.getLog(PortletRenderRequestCycleProcessor.class);
-
 	/**
 	 * Construct.
 	 */
 	public PortletActionRequestCycleProcessor()
 	{
-		super(new PortletRequestCodingStrategy());
 	}
 
 	/**
-	 * Overridable factory method for creating the exception response strategy.
-	 * Called by {@link #getExceptionResponseStrategy()}.
-	 * 
-	 * @return a new response strategy instance
+	 * @see wicket.request.AbstractRequestCycleProcessor#respond(wicket.RequestCycle)
 	 */
-	protected IExceptionResponseStrategy newExceptionResponseStrategy()
+	public void respond(RequestCycle requestCycle)
 	{
-		return new PortletExceptionResponseStrategy();
-	}
-
-	protected IRequestTargetResolverStrategy newRequestTargetResolverStrategy()
-	{
-		return new PortletRequestTargetResolverStrategy();
-	}
-
-	protected IResponseStrategy newResponseStrategy()
-	{
-		return new PortletActionRequestResponseStrategy();
+		PortletRequestCodingStrategy strategy = (PortletRequestCodingStrategy)requestCycle
+				.getProcessor().getRequestCodingStrategy();
+		strategy.setRenderParameters((PortletRequestCycle)requestCycle, requestCycle
+				.getRequestTarget());
 	}
 }

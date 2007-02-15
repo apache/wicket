@@ -42,8 +42,7 @@ import wicket.model.Model;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Objects;
@@ -258,8 +257,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * <pre>
 	 * protected IRequestCycleProcessor newRequestCycleProcessor()
 	 * {
-	 * 	return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
-	 * 			new WebURLCompressingTargetResolverStrategy(), null, null, null);
+	 * 	return new UrlCompressingWebRequestProcessor();
 	 * }
 	 * </pre>
 	 * 
@@ -267,8 +265,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * 
 	 * @since 1.2
 	 * 
-	 * @see WebURLCompressingCodingStrategy
-	 * @see WebURLCompressingTargetResolverStrategy
+	 * @see UrlCompressingWebRequestProcessor
 	 * @see URLCompressor
 	 */
 	public final URLCompressor getUrlCompressor()
@@ -367,16 +364,19 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				// this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
+				response
+						.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
 				response.write(name);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 			else
 			{
-				// Here is our trickery to detect whether the current request was
+				// Here is our trickery to detect whether the current request
+				// was
 				// made in a new window/ tab, in which case it should go in a
-				// different page map so that we don't intermangle the history of
+				// different page map so that we don't intermangle the history
+				// of
 				// those windows
 				CharSequence url = null;
 				if (target instanceof IBookmarkablePageRequestTarget)
@@ -384,7 +384,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
 							getSession().createAutoPageMapName(), current.getPageClass(), current
-							.getPageParameters());
+									.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else
@@ -392,7 +392,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					url = urlFor(INewBrowserWindowListener.INTERFACE);
 				}
 				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" + name+ "')) { window.location=\"");
+				response
+						.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='"
+								+ name + "')) { window.location=\"");
 				response.write(url);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);

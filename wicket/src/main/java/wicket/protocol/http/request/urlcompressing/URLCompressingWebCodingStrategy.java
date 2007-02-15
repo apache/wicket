@@ -48,9 +48,9 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author jcompagner
  * 
- * @since 1.2
+ * @since 1.3
  */
-public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
+public class URLCompressingWebCodingStrategy extends WebRequestCodingStrategy
 {
 	/**
 	 * Encode a listener interface target.

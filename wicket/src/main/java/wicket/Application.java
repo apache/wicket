@@ -43,6 +43,7 @@ import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
+import wicket.request.IRequestCycleProcessor;
 import wicket.session.ISessionStore;
 import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
@@ -215,6 +216,9 @@ public abstract class Application
 		current.set(null);
 	}
 
+	/** the default request cycle processor implementation. */
+	private IRequestCycleProcessor requestCycleProcessor;
+
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
 
@@ -283,36 +287,6 @@ public abstract class Application
 				}
 			}
 		});
-	}
-
-	/**
-	 * Gets the {@link RequestLogger}.
-	 * 
-	 * @return The RequestLogger
-	 */
-	public final IRequestLogger getRequestLogger()
-	{
-		if (getRequestLoggerSettings().isRequestLoggerEnabled())
-		{
-			if (requestLogger == null)
-				requestLogger = newRequestLogger();
-		}
-		else
-		{
-			requestLogger = null;
-		}
-		return requestLogger;
-	}
-
-	/**
-	 * creates a new request logger when requests logging is enabled.
-	 * 
-	 * @return The new request logger
-	 * 
-	 */
-	protected IRequestLogger newRequestLogger()
-	{
-		return new RequestLogger();
 	}
 
 	/**
@@ -565,6 +539,23 @@ public abstract class Application
 	}
 
 	/**
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
+	 * 
+	 * @return the default request cycle processor
+	 */
+	public final IRequestCycleProcessor getRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = newRequestCycleProcessor();
+		}
+		return requestCycleProcessor;
+	}
+
+	/**
 	 * @return Application's request cycle related settings
 	 * @see IDebugSettings
 	 * @since 1.2
@@ -575,13 +566,22 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Application's resources related settings
-	 * @see IResourceSettings
-	 * @since 1.2
+	 * Gets the {@link RequestLogger}.
+	 * 
+	 * @return The RequestLogger
 	 */
-	public IResourceSettings getResourceSettings()
+	public final IRequestLogger getRequestLogger()
 	{
-		return getSettings();
+		if (getRequestLoggerSettings().isRequestLoggerEnabled())
+		{
+			if (requestLogger == null)
+				requestLogger = newRequestLogger();
+		}
+		else
+		{
+			requestLogger = null;
+		}
+		return requestLogger;
 	}
 
 	/**
@@ -590,6 +590,16 @@ public abstract class Application
 	 * @since 1.3
 	 */
 	public IRequestLoggerSettings getRequestLoggerSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * @return Application's resources related settings
+	 * @see IResourceSettings
+	 * @since 1.2
+	 */
+	public IResourceSettings getResourceSettings()
 	{
 		return getSettings();
 	}
@@ -622,38 +632,6 @@ public abstract class Application
 	public final ISessionStore getSessionStore()
 	{
 		return sessionStore;
-	}
-
-	/**
-	 * This method is still here for backwards compatibility with 1.1 source
-	 * code. The getXXXSettings() methods are now preferred. This method will be
-	 * removed post 1.2 version.
-	 * 
-	 * @return Application settings
-	 * 
-	 * @see Application#getApplicationSettings()
-	 * @see Application#getDebugSettings()
-	 * @see Application#getExceptionSettings()
-	 * @see Application#getMarkupSettings()
-	 * @see Application#getPageSettings()
-	 * @see Application#getRequestCycleSettings()
-	 * @see Application#getResourceSettings()
-	 * @see Application#getSecuritySettings()
-	 * @see Application#getSessionSettings()
-	 */
-	private Settings getSettings()
-	{
-		if (!settingsAccessible)
-		{
-			throw new WicketRuntimeException(
-					"Use Application.init() method for configuring your application object");
-		}
-
-		if (settings == null)
-		{
-			settings = new Settings(this);
-		}
-		return settings;
 	}
 
 	/**
@@ -781,6 +759,93 @@ public abstract class Application
 	}
 
 	/**
+	 * Construct and add initializer from the provided class name.
+	 * 
+	 * @param className
+	 */
+	private final void addInitializer(String className)
+	{
+		IInitializer initializer = (IInitializer)Objects.newInstance(className);
+		if (initializer != null)
+		{
+			initializers.add(initializer);
+		}
+	}
+
+	/**
+	 * @param properties
+	 *            Properties map with names of any library destroyers in it
+	 */
+	private final void callDestroyers()
+	{
+		for (Iterator i = initializers.iterator(); i.hasNext();)
+		{
+			IInitializer initializer = (IInitializer)i.next();
+			if (initializer instanceof IDestroyer)
+			{
+				log.info("[" + getName() + "] destroy: " + initializer);
+				((IDestroyer)initializer).destroy(this);
+			}
+		}
+	}
+
+	/**
+	 * @param properties
+	 *            Properties map with names of any library destroyers in it
+	 */
+	private final void callInitializers()
+	{
+		for (Iterator i = initializers.iterator(); i.hasNext();)
+		{
+			IInitializer initializer = (IInitializer)i.next();
+			log.info("[" + getName() + "] init: " + initializer);
+			initializer.init(this);
+		}
+	}
+
+	/**
+	 * This method is still here for backwards compatibility with 1.1 source
+	 * code. The getXXXSettings() methods are now preferred. This method will be
+	 * removed post 1.2 version.
+	 * 
+	 * @return Application settings
+	 * 
+	 * @see Application#getApplicationSettings()
+	 * @see Application#getDebugSettings()
+	 * @see Application#getExceptionSettings()
+	 * @see Application#getMarkupSettings()
+	 * @see Application#getPageSettings()
+	 * @see Application#getRequestCycleSettings()
+	 * @see Application#getResourceSettings()
+	 * @see Application#getSecuritySettings()
+	 * @see Application#getSessionSettings()
+	 */
+	private Settings getSettings()
+	{
+		if (!settingsAccessible)
+		{
+			throw new WicketRuntimeException(
+					"Use Application.init() method for configuring your application object");
+		}
+
+		if (settings == null)
+		{
+			settings = new Settings(this);
+		}
+		return settings;
+	}
+
+	/**
+	 * @param properties
+	 *            Properties map with names of any library initializers in it
+	 */
+	private final void load(final Properties properties)
+	{
+		addInitializer(properties.getProperty("initializer"));
+		addInitializer(properties.getProperty(getName() + "-initializer"));
+	}
+
+	/**
 	 * Called when wicket servlet is destroyed. Overrides do not have to call
 	 * super.
 	 */
@@ -843,6 +908,25 @@ public abstract class Application
 	}
 
 	/**
+	 * May be replaced by subclasses which whishes to uses there own
+	 * implementation of IRequestCycleProcessor
+	 * 
+	 * @return IRequestCycleProcessor
+	 */
+	protected abstract IRequestCycleProcessor newRequestCycleProcessor();
+
+	/**
+	 * creates a new request logger when requests logging is enabled.
+	 * 
+	 * @return The new request logger
+	 * 
+	 */
+	protected IRequestLogger newRequestLogger()
+	{
+		return new RequestLogger();
+	}
+
+	/**
 	 * Creates a new session facade. Is called once per application, and is
 	 * typically not something clients reimplement.
 	 * 
@@ -864,60 +948,5 @@ public abstract class Application
 		{
 			componentInstantiationListeners[i].onInstantiation(component);
 		}
-	}
-
-	/**
-	 * Construct and add initializer from the provided class name.
-	 * 
-	 * @param className
-	 */
-	private final void addInitializer(String className)
-	{
-		IInitializer initializer = (IInitializer)Objects.newInstance(className);
-		if (initializer != null)
-		{
-			initializers.add(initializer);
-		}
-	}
-
-	/**
-	 * @param properties
-	 *            Properties map with names of any library destroyers in it
-	 */
-	private final void callDestroyers()
-	{
-		for (Iterator i = initializers.iterator(); i.hasNext();)
-		{
-			IInitializer initializer = (IInitializer)i.next();
-			if (initializer instanceof IDestroyer)
-			{
-				log.info("[" + getName() + "] destroy: " + initializer);
-				((IDestroyer)initializer).destroy(this);
-			}
-		}
-	}
-
-	/**
-	 * @param properties
-	 *            Properties map with names of any library destroyers in it
-	 */
-	private final void callInitializers()
-	{
-		for (Iterator i = initializers.iterator(); i.hasNext();)
-		{
-			IInitializer initializer = (IInitializer)i.next();
-			log.info("[" + getName() + "] init: " + initializer);
-			initializer.init(this);
-		}
-	}
-
-	/**
-	 * @param properties
-	 *            Properties map with names of any library initializers in it
-	 */
-	private final void load(final Properties properties)
-	{
-		addInitializer(properties.getProperty("initializer"));
-		addInitializer(properties.getProperty(getName() + "-initializer"));
 	}
 }
