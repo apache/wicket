@@ -24,10 +24,11 @@ import wicket.Session;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
+import wicket.protocol.http.WebRequestCycleProcessor;
 import wicket.protocol.http.request.CryptedUrlWebRequestCodingStrategy;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * Forms example.
@@ -41,6 +42,22 @@ public final class SignIn2Application extends WicketExampleApplication
 	 */
 	public SignIn2Application()
 	{
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
+	 */
+	public Session newSession(Request request)
+	{
+		return new SignIn2Session(SignIn2Application.this, request);
 	}
 
 	/**
@@ -77,28 +94,17 @@ public final class SignIn2Application extends WicketExampleApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
-	 */
-	public Session newSession(Request request)
-	{
-		return new SignIn2Session(SignIn2Application.this, request);
-	}
-
-	/**
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new CompoundRequestCycleProcessor(new CryptedUrlWebRequestCodingStrategy(
-				new WebRequestCodingStrategy()), null, null, null, null);
-	}
-
-	/**
-	 * @see wicket.Application#getHomePage()
-	 */
-	public Class getHomePage()
-	{
-		return Home.class;
+		return new WebRequestCycleProcessor()
+		{
+			protected IRequestCodingStrategy newRequestCodingStrategy()
+			{
+				return new CryptedUrlWebRequestCodingStrategy(new WebRequestCodingStrategy());
+			}
+		};
 	}
 
 }
