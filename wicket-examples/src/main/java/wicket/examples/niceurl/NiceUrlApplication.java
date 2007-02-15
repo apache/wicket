@@ -20,9 +20,10 @@ package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
+import wicket.protocol.http.WebRequestCycleProcessor;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import wicket.util.lang.PackageName;
 
@@ -47,6 +48,11 @@ public class NiceUrlApplication extends WicketExampleApplication
 	public Class getHomePage()
 	{
 		return Home.class;
+	}
+
+	private void mountBookmarkablePageWithUrlCoding(String path, Class pageClass)
+	{
+		mount(path, new QueryStringUrlCodingStrategy(path, pageClass));
 	}
 
 	/**
@@ -75,11 +81,6 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mount("/my/mounted/package", PackageName.forClass(Page3.class));
 	}
 
-	private void mountBookmarkablePageWithUrlCoding(String path, Class pageClass)
-	{
-		mount(path, new QueryStringUrlCodingStrategy(path, pageClass));
-	}
-
 	/**
 	 * Sets up a request coding strategy that uses case-insensitive mounts
 	 * 
@@ -87,10 +88,14 @@ public class NiceUrlApplication extends WicketExampleApplication
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
-		stratSettings.setMountsCaseSensitive(false);
-
-		WebRequestCodingStrategy strat = new WebRequestCodingStrategy(stratSettings);
-		return new CompoundRequestCycleProcessor(strat);
+		return new WebRequestCycleProcessor()
+		{
+			protected IRequestCodingStrategy newRequestCodingStrategy()
+			{
+				WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
+				stratSettings.setMountsCaseSensitive(false);
+				return new WebRequestCodingStrategy(stratSettings);
+			}
+		};
 	}
 }
