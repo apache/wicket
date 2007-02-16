@@ -24,7 +24,7 @@ import wicket.MarkupContainer;
  * 
  * @author Jonathan Locke
  */
-public final class BoxBorder extends Border
+public class BoxBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 
