@@ -30,7 +30,7 @@ import wicket.model.IModel;
  */
 public abstract class AbstractTab implements ITab
 {
-	private final IModel title;
+	private final IModel<String> title;
 
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public abstract class AbstractTab implements ITab
 	 *            IModel used to represent the title of the tab. Must contain a
 	 *            string
 	 */
-	public AbstractTab(IModel title)
+	public AbstractTab(IModel<String> title)
 	{
 		this.title = title;
 	}
@@ -47,7 +47,7 @@ public abstract class AbstractTab implements ITab
 	/**
 	 * @see wicket.extensions.markup.html.tabs.ITab#getTitle()
 	 */
-	public IModel getTitle()
+	public IModel<String> getTitle()
 	{
 		return title;
 	}

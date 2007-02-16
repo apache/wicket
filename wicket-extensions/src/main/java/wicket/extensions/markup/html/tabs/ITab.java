@@ -37,7 +37,7 @@ public interface ITab extends Serializable
 	 * @return IModel used to represent the title of the tab. Must contain a
 	 *         string.
 	 */
-	IModel getTitle();
+	IModel<String> getTitle();
 
 	/**
 	 * @param parent

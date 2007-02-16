@@ -51,7 +51,7 @@ public class PanelCachingTab implements ITab
 	/**
 	 * @see wicket.extensions.markup.html.tabs.ITab#getTitle()
 	 */
-	public IModel getTitle()
+	public IModel<String> getTitle()
 	{
 		return delegate.getTitle();
 	}
