@@ -16,6 +16,8 @@
  */
 package wicket.protocol.http.portlet;
 
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -72,7 +74,24 @@ public class WicketPortletRequest extends Request
 	 */
 	public Map getParameterMap()
 	{
-		return req.getParameterMap();
+		final Map map = new HashMap();
+
+		for (final Enumeration enumeration = req.getParameterNames(); enumeration
+				.hasMoreElements();)
+		{
+			final String name = (String)enumeration.nextElement();
+			String[] parameterValues = req.getParameterValues(name);
+			if(parameterValues.length == 1)
+			{
+				map.put(name, parameterValues[0]);
+			}
+			else
+			{
+				map.put(name, parameterValues);
+			}
+		}
+
+		return map;
 	}
 
 	/*
