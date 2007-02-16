@@ -48,25 +48,28 @@ import wicket.util.lang.Classes;
 public class MockPortletRequest implements PortletRequest
 {
 	MockHttpServletRequest req;
-	PortletMode portletMode=PortletMode.VIEW;
-	WindowState windowState=WindowState.NORMAL;
+	PortletMode portletMode = PortletMode.VIEW;
+	WindowState windowState = WindowState.NORMAL;
 	MockPortletApplication application;
 	MockPortletSession portletSession;
-	Map<String,Object> renderParameters;
+	Map<String, Object> renderParameters;
 
 	/**
 	 * Construct.
+	 * 
 	 * @param application
 	 * @param portletSession
 	 * @param req
-	 * @param renderParameters 
+	 * @param renderParameters
 	 */
-	public MockPortletRequest(MockPortletApplication application, MockPortletSession portletSession, MockHttpServletRequest req,Map<String,Object> renderParameters)
-	{		
-		this.req=req;
-		this.portletSession=portletSession;
-		this.application=application;
-		this.renderParameters=renderParameters;
+	public MockPortletRequest(MockPortletApplication application,
+			MockPortletSession portletSession, MockHttpServletRequest req,
+			Map<String, Object> renderParameters)
+	{
+		this.req = req;
+		this.portletSession = portletSession;
+		this.application = application;
+		this.renderParameters = renderParameters;
 	}
 
 	public Object getAttribute(String key)
@@ -117,7 +120,15 @@ public class MockPortletRequest implements PortletRequest
 
 	public String[] getParameterValues(String key)
 	{
-		return (String[])renderParameters.get(key);
+		Object o = renderParameters.get(key);
+		if (o instanceof String[])
+		{
+			return (String[])o;
+		}
+		else
+		{
+			return new String[] { (String)o };
+		}
 	}
 
 	public PortalContext getPortalContext()
@@ -173,7 +184,7 @@ public class MockPortletRequest implements PortletRequest
 
 	public String getResponseContentType()
 	{
-		//  TODO
+		// TODO
 		return null;
 	}
 
@@ -239,7 +250,7 @@ public class MockPortletRequest implements PortletRequest
 
 	public void setAttribute(String key, Object value)
 	{
-		req.setAttribute(key,value);
+		req.setAttribute(key, value);
 	}
 
 	/**
@@ -279,8 +290,9 @@ public class MockPortletRequest implements PortletRequest
 		if (component instanceof BookmarkablePageLink)
 		{
 			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			renderParameters.put(PortletRequestCodingStrategy.PAGEMAP,PageMap.DEFAULT_NAME);
-			renderParameters.put(PortletRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,clazz.getName());
+			renderParameters.put(PortletRequestCodingStrategy.PAGEMAP, PageMap.DEFAULT_NAME);
+			renderParameters.put(PortletRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+					clazz.getName());
 		}
 		else
 		{
@@ -310,13 +322,17 @@ public class MockPortletRequest implements PortletRequest
 			{
 				throw new IllegalArgumentException(
 						"The component class doesn't seem to implement any of the known *Listener Interfaces: "
-						+ component.getClass());
+								+ component.getClass());
 			}
 
-			renderParameters.put(PortletRequestCodingStrategy.VERSION_PARAMETER_NAME,version==0?"":""+version);
-			renderParameters.put(PortletRequestCodingStrategy.COMPONENT_PATH_PARAMETER_NAME, component.getPath());
-			renderParameters.put(PortletRequestCodingStrategy.INTERFACE_PARAMETER_NAME,Classes.simpleName(clazz));
-			renderParameters.put(PortletRequestCodingStrategy.PAGEMAP,PageMap.DEFAULT_NAME);
+			renderParameters.put(PortletRequestCodingStrategy.VERSION_PARAMETER_NAME, version == 0
+					? ""
+					: "" + version);
+			renderParameters.put(PortletRequestCodingStrategy.COMPONENT_PATH_PARAMETER_NAME,
+					component.getPath());
+			renderParameters.put(PortletRequestCodingStrategy.INTERFACE_PARAMETER_NAME, Classes
+					.simpleName(clazz));
+			renderParameters.put(PortletRequestCodingStrategy.PAGEMAP, PageMap.DEFAULT_NAME);
 		}
 	}
 }
