@@ -53,8 +53,13 @@ import wicket.util.string.Strings;
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
  * {
- * 	return new CompoundRequestCycleProcessor(new CryptedUrlWebRequestCodingStrategy(
- * 			new WebRequestCodingStrategy()), null, null, null, null);
+ * 	return new WebRequestCycleProcessor()
+ * 	{
+ * 		protected IRequestCodingStrategy newRequestCodingStrategy()
+ * 		{
+ * 			return new CryptedUrlWebRequestCodingStrategy(new WebRequestCodingStrategy());
+ * 		}
+ * 	};
  * }
  * </pre>
  * 
@@ -238,17 +243,17 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 				{
 					secureParam = url.substring(startIndex, endIndex);
 				}
-	
-				secureParam = URLDecoder.decode(secureParam, Application
-						.get().getRequestCycleSettings().getResponseRequestEncoding());
-	
+
+				secureParam = URLDecoder.decode(secureParam, Application.get()
+						.getRequestCycleSettings().getResponseRequestEncoding());
+
 				// Get the crypt implementation from the application
 				final ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory()
 						.newCrypt();
-	
+
 				// Decrypt the query string
 				String queryString = urlCrypt.decryptUrlSafe(secureParam);
-	
+
 				// The querystring might have been shortened (length reduced).
 				// In that case, lengthen the query string again.
 				queryString = rebuildUrl(queryString);
@@ -261,7 +266,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param ex
 	 * 
@@ -270,7 +275,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	protected String onError(final Exception ex)
 	{
 		log.error(ex);
-	
+
 		throw new HackAttackException("Invalid URL");
 	}
 
@@ -388,7 +393,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			String decodedParamReplacement = encodedParamReplacement;
 			try
 			{
-				decodedParamReplacement = URLDecoder.decode(encodedParamReplacement, Application.get().getRequestCycleSettings().getResponseRequestEncoding());
+				decodedParamReplacement = URLDecoder.decode(encodedParamReplacement, Application
+						.get().getRequestCycleSettings().getResponseRequestEncoding());
 			}
 			catch (UnsupportedEncodingException ex)
 			{

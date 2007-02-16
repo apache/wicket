@@ -28,7 +28,7 @@ import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.html.INewBrowserWindowListener;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.WebRequestCycleProcessor;
-import wicket.protocol.http.request.urlcompressing.URLCompressor.ComponentAndInterface;
+import wicket.protocol.http.request.urlcompressing.UrlCompressor.ComponentAndInterface;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
@@ -41,7 +41,7 @@ import wicket.util.string.Strings;
  * 
  * To use this url compressing behaviour you must override the
  * {@link Application}'s newRequestCycleProcessor() method and return an
- * instance of this
+ * instance of this.
  * 
  * @author jcompagner
  * 
@@ -61,7 +61,7 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 	 */
 	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
-		return new URLCompressingWebCodingStrategy();
+		return new UrlCompressingWebCodingStrategy();
 	}
 
 	/**
