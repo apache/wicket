@@ -21,6 +21,7 @@ import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.IHeaderResponse;
+import wicket.markup.html.WicketEventReference;
 import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.settings.IDebugSettings;
 import wicket.util.string.AppendingStringBuffer;
@@ -77,8 +78,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		final IDebugSettings settings = Application.get().getDebugSettings();
 
-		response.renderJavascriptReference(JAVASCRIPT);
 
+		response.renderJavascriptReference(JAVASCRIPT);
+		response.renderJavascriptReference(WicketEventReference.INSTANCE);
 		if (settings.isAjaxDebugModeEnabled())
 		{
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
@@ -220,9 +222,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @param target
 	 *            The AJAX target
 	 */
-	// TODO rename this to onEvent or something? respond is mostly the same as onRender
-	// this is not the case this is still the event handling period. respond is called
-	// in the RequestCycle on the AjaxRequestTarget..	
+	// TODO rename this to onEvent or something? respond is mostly the same as
+	// onRender
+	// this is not the case this is still the event handling period. respond is
+	// called
+	// in the RequestCycle on the AjaxRequestTarget..
 	protected abstract void respond(AjaxRequestTarget target);
 
 	/**
