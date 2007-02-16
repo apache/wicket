@@ -72,11 +72,11 @@ import wicket.util.watch.ModificationWatcher;
  * override the init() method. For example:
  * 
  * <pre>
- *           public void init()
- *           {
- *               String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
- *               URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *               ...
+ *              public void init()
+ *              {
+ *                  String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                  URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                  ...
  * </pre>
  * 
  * @see WicketFilter
@@ -128,6 +128,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/** The WicketFilter that this application is attached to */
 	private WicketFilter wicketFilter;
 
+	/** the default request cycle processor implementation. */
+	private IRequestCycleProcessor requestCycleProcessor;
+
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
 	 * application instead of overriding the constructor.</strong>
@@ -135,6 +138,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	public WebApplication()
 	{
 	}
+
 
 	/**
 	 * @see wicket.Application#getApplicationKey()
@@ -149,7 +153,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		}
 		return applicationKey;
 	}
-
 
 	/**
 	 * Gets an init parameter from the filter's context.
@@ -167,6 +170,23 @@ public abstract class WebApplication extends Application implements ISessionFact
 		throw new IllegalStateException("servletContext is not set yet. Any code in your"
 				+ " Application object that uses the wicketServlet/Filter instance should be put"
 				+ " in the init() method instead of your constructor");
+	}
+
+	/**
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
+	 * 
+	 * @return the default request cycle processor
+	 */
+	public final IRequestCycleProcessor getRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = newRequestCycleProcessor();
+		}
+		return requestCycleProcessor;
 	}
 
 	/**
@@ -557,8 +577,13 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
+	 * Gets a new request cycle processor for web requests. May be replaced by
+	 * subclasses which whishes to uses there own implementation of
+	 * IRequestCycleProcessor.
+	 * 
+	 * NOTE this can't be moved to application as portlets use two different
+	 * request cycle processors, and hence have two different methods for them,
+	 * depending on the kind of request.
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
