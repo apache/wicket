@@ -17,6 +17,7 @@
 package wicket.ajax.form;
 
 import wicket.Component;
+import wicket.Page;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.Button;
@@ -129,9 +130,19 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		{
 			onSubmit(target);
 		}
-		if (getForm().hasError())
+		if (form.findParent(Page.class) != null)
 		{
-			onError(target);
+			/*
+			 * there can be cases when a form is replaced with another component
+			 * in the onsubmit() handler of this behavior. in that case form no
+			 * longer has a page and so calling .hasError on it will cause an
+			 * exception, thus the check above.
+			 */
+			if (getForm().hasError())
+			{
+				onError(target);
+			}
+
 		}
 	}
 
