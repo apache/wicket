@@ -29,7 +29,6 @@ import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Response;
 import wicket.WicketRuntimeException;
-import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.behavior.AbstractBehavior;
 import wicket.datetime.markup.html.form.DateTextField;
 import wicket.extensions.yui.YuiLib;
@@ -106,12 +105,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.IHeaderResponse)
 	 */
 	public void renderHead(IHeaderResponse response) {
-
-		// FIXME this shouldn't be needed. This behavior doesn't use AJAX
-		// and the call to response.renderOnLoadJavascript should ensure the
-		// proper javascript is available.
-		response.renderJavascriptReference(new JavascriptResourceReference(
-				AbstractDefaultAjaxBehavior.class, "wicket-ajax.js"));
 
 		// add YUI contributions
 		// NOTE JavascriptResourceReference takes care of stripping comments
