@@ -43,7 +43,6 @@ import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
-import wicket.request.IRequestCycleProcessor;
 import wicket.session.ISessionStore;
 import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
@@ -215,9 +214,6 @@ public abstract class Application
 	{
 		current.set(null);
 	}
-
-	/** the default request cycle processor implementation. */
-	private IRequestCycleProcessor requestCycleProcessor;
 
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
@@ -536,23 +532,6 @@ public abstract class Application
 	public IPageSettings getPageSettings()
 	{
 		return getSettings();
-	}
-
-	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
-	 * 
-	 * @return the default request cycle processor
-	 */
-	public final IRequestCycleProcessor getRequestCycleProcessor()
-	{
-		if (requestCycleProcessor == null)
-		{
-			requestCycleProcessor = newRequestCycleProcessor();
-		}
-		return requestCycleProcessor;
 	}
 
 	/**
@@ -906,14 +885,6 @@ public abstract class Application
 
 		sessionStore = newSessionStore();
 	}
-
-	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
-	 * 
-	 * @return IRequestCycleProcessor
-	 */
-	protected abstract IRequestCycleProcessor newRequestCycleProcessor();
 
 	/**
 	 * creates a new request logger when requests logging is enabled.

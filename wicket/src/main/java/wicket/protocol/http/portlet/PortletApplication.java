@@ -33,7 +33,6 @@ import wicket.markup.resolver.AutoLinkResolver;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.protocol.http.WebRequestCycleProcessor;
 import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.WebSession;
 import wicket.protocol.http.portlet.pages.AccessDeniedPortletPage;
@@ -410,8 +409,9 @@ public abstract class PortletApplication extends Application implements ISession
 	}
 
 	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
+	 * Gets a new request cycle processor for an action request. May be replaced
+	 * by subclasses which whishes to uses there own implementation of
+	 * IRequestCycleProcessor
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
@@ -420,10 +420,10 @@ public abstract class PortletApplication extends Application implements ISession
 		return new PortletActionRequestCycleProcessor();
 	}
 
-
 	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
+	 * Gets a new request cycle processor for an render request. May be replaced
+	 * by subclasses which whishes to uses there own implementation of
+	 * IRequestCycleProcessor
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
@@ -433,17 +433,8 @@ public abstract class PortletApplication extends Application implements ISession
 	}
 
 	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
-	 * 
-	 * @return IRequestCycleProcessor
+	 * @see wicket.Application#newSessionStore()
 	 */
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new WebRequestCycleProcessor();
-	}
-
-
 	protected ISessionStore newSessionStore()
 	{
 		return new PortletSessionStore();
