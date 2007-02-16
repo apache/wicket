@@ -25,12 +25,14 @@ import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Response;
 import wicket.markup.html.IHeaderResponse;
+import wicket.markup.html.WicketEventReference;
 import wicket.util.string.JavascriptUtils;
 
 /**
  * Default implementation of the {@link IHeaderResponse} interface.
  * 
  * @author Matej Knopp
+ * @author Igor Vaynberg (ivaynberg)
  */
 public class HeaderResponse implements IHeaderResponse
 {
@@ -67,9 +69,10 @@ public class HeaderResponse implements IHeaderResponse
 		CharSequence url = RequestCycle.get().urlFor(reference);
 		renderCSSReference(url.toString(), null);
 	}
-	
+
 	/**
-	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(wicket.ResourceReference, java.lang.String)
+	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(wicket.ResourceReference,
+	 *      java.lang.String)
 	 */
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
@@ -84,9 +87,10 @@ public class HeaderResponse implements IHeaderResponse
 	{
 		renderCSSReference(url, null);
 	}
-	
+
 	/**
-	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(java.lang.String, java.lang.String)
+	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(java.lang.String,
+	 *      java.lang.String)
 	 */
 	public void renderCSSReference(String url, String media)
 	{
@@ -129,18 +133,19 @@ public class HeaderResponse implements IHeaderResponse
 		}
 	}
 
-	
+
 	/**
-	 * @see wicket.markup.html.IHeaderResponse#renderJavascript(java.lang.CharSequence, java.lang.String)
+	 * @see wicket.markup.html.IHeaderResponse#renderJavascript(java.lang.CharSequence,
+	 *      java.lang.String)
 	 */
 	public void renderJavascript(CharSequence javascript, String id)
 	{
 		List token = Arrays.asList(new Object[] { javascript, id });
-		if (wasRendered(token) == false) 
+		if (wasRendered(token) == false)
 		{
 			JavascriptUtils.writeJavascript(getResponse(), javascript, id);
 			markRendered(token);
-		}		
+		}
 	}
 
 	/**
@@ -170,20 +175,24 @@ public class HeaderResponse implements IHeaderResponse
 	{
 		return response;
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderOnDomReadyJavascript(java.lang.String)
 	 */
 	public void renderOnDomReadyJavascript(String javascript)
 	{
-		JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(window, \"domready\", function() { " + javascript + ";});");
+		renderJavascriptReference(WicketEventReference.INSTANCE);
+		JavascriptUtils.writeJavascript(getResponse(),
+				"Wicket.Event.add(window, \"domready\", function() { " + javascript + ";});");
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderOnLoadJavascript(java.lang.String)
 	 */
 	public void renderOnLoadJavascript(String javascript)
 	{
-		JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(window, \"load\", function() { " + javascript + ";});");
+		renderJavascriptReference(WicketEventReference.INSTANCE);
+		JavascriptUtils.writeJavascript(getResponse(),
+				"Wicket.Event.add(window, \"load\", function() { " + javascript + ";});");
 	}
 }
