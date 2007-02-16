@@ -41,9 +41,9 @@ import wicket.util.string.Strings;
  * <code>
  * <span wicket:id="checkboxgroup">
  *   ...
- *   <input type="radio" wicket:id="checkbox1">choice 1</input>
+ *   <input type="checkbox" wicket:id="checkbox1">choice 1</input>
  *   ...
- *   <input type="radio" wicket:id="checkbox2">choice 2</input>
+ *   <input type="checkbox" wicket:id="checkbox2">choice 2</input>
  *   ...
  * </span>
  * </code>
