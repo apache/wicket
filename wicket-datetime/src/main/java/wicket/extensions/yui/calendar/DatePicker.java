@@ -107,7 +107,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 */
 	public void renderHead(IHeaderResponse response) {
 
-		// add wicket js contribution
+		// FIXME this shouldn't be needed. This behavior doesn't use AJAX
+		// and the call to response.renderOnLoadJavascript should ensure the
+		// proper javascript is available.
 		response.renderJavascriptReference(new JavascriptResourceReference(
 				AbstractDefaultAjaxBehavior.class, "wicket-ajax.js"));
 
