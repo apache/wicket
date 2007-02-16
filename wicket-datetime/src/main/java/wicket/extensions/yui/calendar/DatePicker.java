@@ -29,6 +29,7 @@ import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.behavior.AbstractBehavior;
 import wicket.datetime.markup.html.form.DateTextField;
 import wicket.extensions.yui.YuiLib;
@@ -105,6 +106,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.IHeaderResponse)
 	 */
 	public void renderHead(IHeaderResponse response) {
+
+		// add wicket js contribution
+		response.renderJavascriptReference(new JavascriptResourceReference(
+				AbstractDefaultAjaxBehavior.class, "wicket-ajax.js"));
 
 		// add YUI contributions
 		// NOTE JavascriptResourceReference takes care of stripping comments
@@ -296,11 +301,13 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		widgetProperties.put("close", Boolean.TRUE);
 		// TODO localize
 		widgetProperties.put("title", "Select a date:");
-		
+
 		Date date = (Date) component.getModelObject();
 		if (date != null) {
-			widgetProperties.put("selected", AbstractCalendar.FORMAT_DATE.format(date));
-			widgetProperties.put("pagedate", AbstractCalendar.FORMAT_PAGEDATE.format(date));
+			widgetProperties.put("selected", AbstractCalendar.FORMAT_DATE
+					.format(date));
+			widgetProperties.put("pagedate", AbstractCalendar.FORMAT_PAGEDATE
+					.format(date));
 		}
 	}
 
