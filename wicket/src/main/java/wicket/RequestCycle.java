@@ -1042,7 +1042,11 @@ public abstract class RequestCycle
 						throw new WicketRuntimeException(
 								"the processor did not resolve to any request target");
 					}
-					requestTargets.push(target);
+					// Add (inserting at the bottom) in case before or during
+					// target resolving one or more request targets were pushed
+					// on the stack before this. If that is the case, they
+					// should be handled before this
+					requestTargets.add(target);
 					break;
 				}
 				case PROCESS_EVENTS : {
