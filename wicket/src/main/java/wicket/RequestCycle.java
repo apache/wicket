@@ -205,7 +205,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets request cycle for calling thread.
-	 *
+	 * 
 	 * @return Request cycle for calling thread
 	 */
 	public final static RequestCycle get()
@@ -343,7 +343,7 @@ public abstract class RequestCycle
 	 */
 	public final IRequestTarget getRequestTarget()
 	{
-		return (!requestTargets.isEmpty()) ? (IRequestTarget) requestTargets.peek() : null;
+		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
 	}
 
 	/**
@@ -535,7 +535,7 @@ public abstract class RequestCycle
 		{
 			if (!requestTargets.isEmpty())
 			{
-				IRequestTarget former = (IRequestTarget) requestTargets.peek();
+				IRequestTarget former = (IRequestTarget)requestTargets.peek();
 				log.debug("replacing request target " + former + " with " + requestTarget);
 			}
 			else
@@ -679,24 +679,24 @@ public abstract class RequestCycle
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
 	}
-        
+
 	/**
-	 * Returns a URL that references a given interface on a given behaviour of
-	 * a component. When the URL is requested from the server at a later time,
-	 * the interface on the behaviour will be called. A URL returned by this
-	 * method will not be stable across sessions and cannot be bookmarked by a
-	 * user.
+	 * Returns a URL that references a given interface on a given behaviour of a
+	 * component. When the URL is requested from the server at a later time, the
+	 * interface on the behaviour will be called. A URL returned by this method
+	 * will not be stable across sessions and cannot be bookmarked by a user.
 	 * 
 	 * @param component
 	 *            The component to reference
 	 * @param behaviour
-	 *            The behaviour to reference 
+	 *            The behaviour to reference
 	 * @param listener
 	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component, behaviour and interface to call
+	 * @return A URL that encodes a page, component, behaviour and interface to
+	 *         call
 	 */
-	public final CharSequence urlFor(final Component component,
-			final IBehavior behaviour, final RequestListenerInterface listener)
+	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
+			final RequestListenerInterface listener)
 	{
 		int index = component.getBehaviors().indexOf(behaviour);
 		if (index == -1)
@@ -707,8 +707,10 @@ public abstract class RequestCycle
 		RequestParameters params = new RequestParameters();
 		params.setBehaviorId(String.valueOf(index));
 
-		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component, listener, params);
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
+		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,
+				listener, params);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
 	}
 
@@ -868,11 +870,11 @@ public abstract class RequestCycle
 		{
 			session.cleanupFeedbackMessages();
 		}
-		catch(RuntimeException re)
+		catch (RuntimeException re)
 		{
 			log.error("there was an error cleaning up the feedback messages", re);
 		}
-		
+
 		if (updateSession)
 		{
 			// At the end of our response, we need to set any session
@@ -880,14 +882,14 @@ public abstract class RequestCycle
 			try
 			{
 				session.update();
-			} 
-			catch(RuntimeException re)
+			}
+			catch (RuntimeException re)
 			{
 				log.error("there was an error updating the session " + session + ".", re);
 			}
 		}
 
-		// clear the used pagemap for this thread, 
+		// clear the used pagemap for this thread,
 		// maybe we can move this a few lines above to have a but more
 		// concurrency (session.update)
 		if (getResponse() instanceof BufferedWebResponse)
@@ -896,7 +898,7 @@ public abstract class RequestCycle
 			{
 				((BufferedWebResponse)getResponse()).filter();
 			}
-			catch(RuntimeException re)
+			catch (RuntimeException re)
 			{
 				log.error("there was an error filtering the response.", re);
 			}
@@ -910,7 +912,7 @@ public abstract class RequestCycle
 				requestLogger.requestTime((System.currentTimeMillis() - startTime));
 			}
 		}
-		catch(RuntimeException re)
+		catch (RuntimeException re)
 		{
 			log.error("there was an error in the RequestLogger ending.", re);
 		}
@@ -919,9 +921,10 @@ public abstract class RequestCycle
 		{
 			session.requestDetached();
 		}
-		catch(RuntimeException re)
+		catch (RuntimeException re)
 		{
-			log.error("there was an error detaching the request from the session " + session + ".", re);
+			log.error("there was an error detaching the request from the session " + session + ".",
+					re);
 		}
 
 		try
@@ -938,7 +941,7 @@ public abstract class RequestCycle
 		{
 			threadDetach();
 		}
-		catch(RuntimeException re)
+		catch (RuntimeException re)
 		{
 			log.error("Exception occurred during threadDetach", re);
 		}
@@ -1056,7 +1059,11 @@ public abstract class RequestCycle
 						throw new WicketRuntimeException(
 								"the processor did not resolve to any request target");
 					}
-					requestTargets.push(target);
+					// Add (inserting at the bottom) in case before or during
+					// target resolving one or more request targets were pushed
+					// on the stack before this. If that is the case, they
+					// should be handled before this
+					requestTargets.add(target);
 					break;
 				}
 				case PROCESS_EVENTS : {
