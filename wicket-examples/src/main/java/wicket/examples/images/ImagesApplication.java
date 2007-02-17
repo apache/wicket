@@ -1,7 +1,7 @@
 /*
  * $Id: ImagesApplication.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
- * 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16
+ * Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -21,11 +21,8 @@ package wicket.examples.images;
 import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.protocol.http.request.urlcompressing.URLCompressor;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
 import wicket.request.IRequestCycleProcessor;
-import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
@@ -62,13 +59,11 @@ public class ImagesApplication extends WicketExampleApplication
 	/**
 	 * Special overwrite to have url compressing for this example.
 	 * 
-	 * @see URLCompressor
+	 * @see UrlCompressor
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
-	@Override
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
-				new WebURLCompressingTargetResolverStrategy(), null, null, null);
+		return new UrlCompressingWebRequestProcessor();
 	}
 }

@@ -23,7 +23,6 @@ import java.lang.ref.WeakReference;
 import java.util.Iterator;
 
 import wicket.Component;
-import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.util.collections.IntHashMap;
 import wicket.util.collections.IntHashMap.Entry;
 
@@ -54,118 +53,6 @@ import wicket.util.collections.IntHashMap.Entry;
  */
 public class URLCompressor implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-
-	private transient ReferenceQueue<Object> queue = new ReferenceQueue<Object>();
-
-	private transient IntHashMap<ComponentAndInterface> directComponentRefs = new IntHashMap<ComponentAndInterface>(); // uid->component/interface
-
-	private int uid = 1;
-
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
-	{
-		s.defaultReadObject();
-
-		int size = s.readInt();
-		queue = new ReferenceQueue<Object>();
-		directComponentRefs = new IntHashMap<ComponentAndInterface>((int)(size * 1.25));
-
-		while (--size >= 0)
-		{
-			int uid = s.readInt();
-			Component component = (Component)s.readObject();
-			String interfaceName = s.readUTF();
-
-			IntKeyWeakReference ref = new IntKeyWeakReference(uid, component, queue);
-			directComponentRefs.put(uid, new ComponentAndInterface(ref, interfaceName));
-		}
-
-	}
-
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException
-	{
-		Object ref = null;
-		while ((ref = queue.poll()) != null)
-		{
-			directComponentRefs.remove(((IntKeyWeakReference)ref).uid);
-		}
-
-		s.defaultWriteObject();
-
-		s.writeInt(directComponentRefs.size());
-
-		Iterator it = directComponentRefs.entrySet().iterator();
-		while (it.hasNext())
-		{
-			IntHashMap.Entry entry = (Entry)it.next();
-
-			s.writeInt(entry.getKey());
-			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
-			s.writeObject(cai.getComponent());
-			s.writeUTF(cai.getInterfaceName());
-		}
-	}
-
-	/**
-	 * @return the next uid for this url compressor
-	 */
-	public int getNewUID()
-	{
-		return uid++;
-	}
-
-	/**
-	 * Returns a uid for the combination component and the to call interface.
-	 * Will return the same uid if it was already called for this specific
-	 * combination.
-	 * 
-	 * @param component
-	 *            The Component
-	 * @param interfaceName
-	 *            The interface name
-	 * @return int The uid for the component/interfaceName combination
-	 */
-	public int getUIDForComponentAndInterface(Component component, String interfaceName)
-	{
-		int uid = 0;
-		Iterator it = directComponentRefs.entrySet().iterator();
-		while (it.hasNext())
-		{
-			IntHashMap.Entry entry = (IntHashMap.Entry)it.next();
-			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
-			if (cai.getInterfaceName().equals(interfaceName) && cai.getComponent() == component)
-			{
-				uid = entry.getKey();
-				break;
-			}
-		}
-		if (uid == 0)
-		{
-			uid = getNewUID();
-			IntKeyWeakReference ref = new IntKeyWeakReference(uid, component, queue);
-			directComponentRefs.put(uid, new ComponentAndInterface(ref, interfaceName));
-		}
-		return uid;
-	}
-
-	/**
-	 * Gets the combination
-	 * 
-	 * @param uidString
-	 * @return ComponentAndInterface
-	 */
-	public ComponentAndInterface getComponentAndInterfaceForUID(String uidString)
-	{
-		Object ref;
-		while ((ref = queue.poll()) != null)
-		{
-			directComponentRefs.remove(((IntKeyWeakReference)ref).uid);
-		}
-		int uid = Integer.parseInt(uidString);
-		ComponentAndInterface cai = directComponentRefs.get(uid);
-		return cai;
-	}
-
 	/**
 	 * @author jcompagner
 	 */
@@ -214,6 +101,118 @@ public class URLCompressor implements Serializable
 		{
 			super(referent, q);
 			this.uid = uid;
+		}
+	}
+
+	private static final long serialVersionUID = 1L;
+
+	private transient ReferenceQueue<Object> queue = new ReferenceQueue<Object>();
+
+	private transient IntHashMap<ComponentAndInterface> directComponentRefs = new IntHashMap<ComponentAndInterface>(); // uid->component/interface
+
+	private int uid = 1;
+
+	/**
+	 * Gets the combination
+	 * 
+	 * @param uidString
+	 * @return ComponentAndInterface
+	 */
+	public ComponentAndInterface getComponentAndInterfaceForUID(String uidString)
+	{
+		Object ref;
+		while ((ref = queue.poll()) != null)
+		{
+			directComponentRefs.remove(((IntKeyWeakReference)ref).uid);
+		}
+		int uid = Integer.parseInt(uidString);
+		ComponentAndInterface cai = directComponentRefs.get(uid);
+		return cai;
+	}
+
+	/**
+	 * @return the next uid for this url compressor
+	 */
+	public int getNewUID()
+	{
+		return uid++;
+	}
+
+	/**
+	 * Returns a uid for the combination component and the to call interface.
+	 * Will return the same uid if it was already called for this specific
+	 * combination.
+	 * 
+	 * @param component
+	 *            The Component
+	 * @param interfaceName
+	 *            The interface name
+	 * @return int The uid for the component/interfaceName combination
+	 */
+	public int getUIDForComponentAndInterface(Component component, String interfaceName)
+	{
+		int uid = 0;
+		Iterator it = directComponentRefs.entrySet().iterator();
+		while (it.hasNext())
+		{
+			IntHashMap.Entry entry = (IntHashMap.Entry)it.next();
+			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
+			if (cai.getInterfaceName().equals(interfaceName) && cai.getComponent() == component)
+			{
+				uid = entry.getKey();
+				break;
+			}
+		}
+		if (uid == 0)
+		{
+			uid = getNewUID();
+			IntKeyWeakReference ref = new IntKeyWeakReference(uid, component, queue);
+			directComponentRefs.put(uid, new ComponentAndInterface(ref, interfaceName));
+		}
+		return uid;
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	{
+		s.defaultReadObject();
+
+		int size = s.readInt();
+		queue = new ReferenceQueue<Object>();
+		directComponentRefs = new IntHashMap<ComponentAndInterface>((int)(size * 1.25));
+
+		while (--size >= 0)
+		{
+			int uid = s.readInt();
+			Component component = (Component)s.readObject();
+			String interfaceName = s.readUTF();
+
+			IntKeyWeakReference ref = new IntKeyWeakReference(uid, component, queue);
+			directComponentRefs.put(uid, new ComponentAndInterface(ref, interfaceName));
+		}
+
+	}
+
+	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	{
+		Object ref = null;
+		while ((ref = queue.poll()) != null)
+		{
+			directComponentRefs.remove(((IntKeyWeakReference)ref).uid);
+		}
+
+		s.defaultWriteObject();
+
+		s.writeInt(directComponentRefs.size());
+
+		Iterator it = directComponentRefs.entrySet().iterator();
+		while (it.hasNext())
+		{
+			IntHashMap.Entry entry = (Entry)it.next();
+
+			s.writeInt(entry.getKey());
+			ComponentAndInterface cai = (ComponentAndInterface)entry.getValue();
+			s.writeObject(cai.getComponent());
+			s.writeUTF(cai.getInterfaceName());
 		}
 	}
 }

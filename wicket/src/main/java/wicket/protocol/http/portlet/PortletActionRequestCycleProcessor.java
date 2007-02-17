@@ -16,13 +16,7 @@
  */
 package wicket.protocol.http.portlet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import wicket.request.compound.CompoundRequestCycleProcessor;
-import wicket.request.compound.IExceptionResponseStrategy;
-import wicket.request.compound.IRequestTargetResolverStrategy;
-import wicket.request.compound.IResponseStrategy;
+import wicket.RequestCycle;
 
 /**
  * A RequestCycleProcessor for portlet action requests. The page is not rendered
@@ -33,36 +27,24 @@ import wicket.request.compound.IResponseStrategy;
  * @see PortletRequestCycle
  * 
  * @author Janne Hietam&auml;ki
- * 
  */
-public class PortletActionRequestCycleProcessor extends CompoundRequestCycleProcessor
+public class PortletActionRequestCycleProcessor extends AbstractPortletRequestCycleProcessor
 {
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(PortletRenderRequestCycleProcessor.class);
-
 	/**
 	 * Construct.
 	 */
 	public PortletActionRequestCycleProcessor()
 	{
-		super(new PortletRequestCodingStrategy());
-	}
-	
-	@Override
-	protected IRequestTargetResolverStrategy newRequestTargetResolverStrategy()
-	{
-		return new PortletRequestTargetResolverStrategy();
 	}
 
-	@Override
-	protected IResponseStrategy newResponseStrategy()
+	/**
+	 * @see wicket.request.AbstractRequestCycleProcessor#respond(wicket.RequestCycle)
+	 */
+	public void respond(RequestCycle requestCycle)
 	{
-		return new PortletActionRequestResponseStrategy();
+		PortletRequestCodingStrategy strategy = (PortletRequestCodingStrategy)requestCycle
+				.getProcessor().getRequestCodingStrategy();
+		strategy.setRenderParameters((PortletRequestCycle)requestCycle, requestCycle
+				.getRequestTarget());
 	}
-	
-	@Override
-	protected IExceptionResponseStrategy newExceptionResponseStrategy()
-	{
-		return new PortletExceptionResponseStrategy();
-	}	
 }

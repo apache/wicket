@@ -16,19 +16,14 @@
  */
 package wicket;
 
-import wicket.request.compound.IExceptionResponseStrategy;
 
 /**
- * Immediately aborts any further processing. This exception will not be handled
- * by {@link IExceptionResponseStrategy}.
+ * Immediately aborts any further processing.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class AbortException extends RuntimeException
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**

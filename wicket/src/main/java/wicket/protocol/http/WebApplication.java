@@ -67,16 +67,16 @@ import wicket.util.watch.ModificationWatcher;
  * not do this in the constructor itself because the defaults will then override
  * your settings.
  * <p>
- * If you want to use a filter specific configuration, e.g. using init parameters
- * from the {@link javax.servlet.FilterConfig} object, you should override the
- * init() method. For example:
+ * If you want to use a filter specific configuration, e.g. using init
+ * parameters from the {@link javax.servlet.FilterConfig} object, you should
+ * override the init() method. For example:
  * 
  * <pre>
- *   public void init()
- *   {
- *       String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
- *       URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *       ...
+ *    public void init()
+ *    {
+ *        String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *        ...
  * </pre>
  * 
  * @see WicketFilter
@@ -564,15 +564,19 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
+	 * Gets a new request cycle processor for web requests. May be replaced by
+	 * subclasses which whishes to uses there own implementation of
+	 * IRequestCycleProcessor.
+	 * 
+	 * NOTE this can't be moved to application as portlets use two different
+	 * request cycle processors, and hence have two different methods for them,
+	 * depending on the kind of request.
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
-	// TODO Doesn't this method belong in Application, not WebApplication?
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new DefaultWebRequestCycleProcessor();
+		return new WebRequestCycleProcessor();
 	}
 
 	/**

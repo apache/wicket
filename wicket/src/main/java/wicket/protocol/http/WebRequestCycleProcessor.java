@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.request.compound;
+package wicket.protocol.http;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,41 +28,36 @@ import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
-import wicket.protocol.http.request.WebExternalResourceRequestTarget;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.AbstractRequestCycleProcessor;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
-import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**
- * Default target resolver strategy. It tries to lookup any registered mount
- * with {@link wicket.request.IRequestCodingStrategy} and in case no mount was
- * found, it uses the {@link wicket.request.RequestParameters} object for
- * default resolving.
+ * Default request processor implementation for normal web applications.
  * 
- * @author Eelco Hillenius
- * @author Igor Vaynberg
- * @author Jonathan Locke
+ * @author eelcohillenius
  */
-public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetResolverStrategy
+public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(DefaultRequestTargetResolverStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractRequestCycleProcessor.class);
 
 	/**
 	 * Construct.
 	 */
-	public DefaultRequestTargetResolverStrategy()
+	public WebRequestCycleProcessor()
 	{
 	}
 
 	/**
-	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle,
+	 * @see wicket.request.IRequestCycleProcessor#resolve(wicket.RequestCycle,
 	 *      wicket.request.RequestParameters)
 	 */
-	public final IRequestTarget resolve(final RequestCycle requestCycle,
+	public IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
 		// first, see whether we can find any mount
@@ -71,7 +66,7 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 		IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
 		if (mounted != null)
 		{
-			if(mounted instanceof IBookmarkablePageRequestTarget)
+			if (mounted instanceof IBookmarkablePageRequestTarget)
 			{
 				IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
 				// the path was mounted, so return that directly
@@ -79,20 +74,22 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 						&& requestParameters.getInterfaceName() != null)
 				{
 					final String componentPath = requestParameters.getComponentPath();
-					final Page<?> page = Session.get().getPage(requestParameters.getPageMapName(), componentPath,
-							requestParameters.getVersionNumber());
-					
-					if(page != null && page.getClass() == bookmarkableTarget.getPageClass())
+					final Page<?> page = Session.get().getPage(requestParameters.getPageMapName(),
+							componentPath, requestParameters.getVersionNumber());
+
+					if (page != null && page.getClass() == bookmarkableTarget.getPageClass())
 					{
 						return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
 								requestParameters.getInterfaceName(), requestParameters);
 					}
 					else
 					{
-						PageParameters params = new PageParameters(requestParameters.getParameters());
+						PageParameters params = new PageParameters(requestParameters
+								.getParameters());
 						return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-								.getPageMapName(), bookmarkableTarget.getPageClass(), params, requestParameters.getComponentPath(),
-								requestParameters.getInterfaceName());
+								.getPageMapName(), bookmarkableTarget.getPageClass(), params,
+								requestParameters.getComponentPath(), requestParameters
+										.getInterfaceName());
 					}
 				}
 			}
@@ -110,7 +107,7 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 		// See whether this request points to a rendered page
 		else if (requestParameters.getComponentPath() != null)
 		{
-			// TODO in 1.2/1.3 this looks completely different!!  
+			// TODO in 1.2/1.3 this looks completely different!!
 			// checks for: requestParameters.isOnlyProcessIfPathActive()
 			target = resolveRenderedPage(requestCycle, requestParameters);
 		}
@@ -148,36 +145,13 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 		}
 	}
 
-	/**
-	 * Resolves to an external resource.
-	 * 
-	 * @param requestCycle
-	 *            The current request cycle
-	 * @return The external resource request target
-	 */
-	protected IRequestTarget resolveExternalResource(RequestCycle requestCycle)
-	{
-		// Get the relative URL we need for loading the resource from
-		// the servlet context
-		// NOTE: we NEED to put the '/' in front as otherwise some versions
-		// of application servers (e.g. Jetty 5.1.x) will fail for requests
-		// like '/mysubdir/myfile.css'
-		final String url = '/' + requestCycle.getRequest().getRelativeURL();
-		return new WebExternalResourceRequestTarget(url);
-	}
 
 	/**
-	 * Resolves to a shared resource target.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 * @param requestParameters
-	 *            the request parameters object
-	 * @return the shared resource as a request target
+	 * @see wicket.request.AbstractRequestCycleProcessor#newRequestCodingStrategy()
 	 */
-	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
+	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
-		return new SharedResourceRequestTarget(requestParameters);
+		return new WebRequestCodingStrategy();
 	}
+
 }

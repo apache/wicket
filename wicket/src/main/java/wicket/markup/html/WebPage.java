@@ -43,8 +43,7 @@ import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.WebSession;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Objects;
@@ -287,8 +286,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 * <pre>
 	 * protected IRequestCycleProcessor newRequestCycleProcessor()
 	 * {
-	 * 	return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
-	 * 			new WebURLCompressingTargetResolverStrategy(), null, null, null);
+	 * 	return new UrlCompressingWebRequestProcessor();
 	 * }
 	 * </pre>
 	 * 
@@ -296,9 +294,8 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 * 
 	 * @since 1.2
 	 * 
-	 * @see WebURLCompressingCodingStrategy
-	 * @see WebURLCompressingTargetResolverStrategy
-	 * @see URLCompressor
+	 * @see UrlCompressingWebRequestProcessor
+	 * @see UrlCompressor
 	 */
 	public final URLCompressor getUrlCompressor()
 	{

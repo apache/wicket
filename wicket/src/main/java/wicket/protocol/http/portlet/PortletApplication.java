@@ -96,19 +96,39 @@ public abstract class PortletApplication extends Application implements ISession
 	WicketPortlet portlet;
 
 	/**
-	 * @param portlet
+	 * 
 	 */
-	public void setWicketPortlet(WicketPortlet portlet)
+	public void destroyPortlet()
 	{
-		if (this.portlet == null)
+		internalDestroy();
+	}
+
+	/**
+	 * @return the request cycle processor
+	 */
+	public IRequestCycleProcessor getActionRequestCycleProcessor()
+	{
+		if (actionRequestCycleProcessor == null)
 		{
-			this.portlet = portlet;
-			this.applicationKey = portlet.getPortletName();
+			actionRequestCycleProcessor = newActionRequestCycleProcessor();
 		}
-		else
+		return actionRequestCycleProcessor;
+	}
+
+	/*
+	 * @see wicket.Application#getApplicationKey()
+	 */
+	@Override
+	public String getApplicationKey()
+	{
+
+		if (applicationKey == null)
 		{
-			throw new IllegalStateException("WicketPortlet cannot be changed once it is set");
+			throw new IllegalStateException("the application key does not seem to"
+					+ " be set properly or this method is called before WicketPortlet is"
+					+ " set, which leads to the wrong behavior");
 		}
+		return applicationKey;
 	}
 
 	/**
@@ -151,14 +171,55 @@ public abstract class PortletApplication extends Application implements ISession
 	}
 
 	/**
-	 * @param res
-	 * @return new WicketPortletResponse
+	 * Gets the prefix for storing variables in the actual session (typically
+	 * {@link HttpSession} for this application instance.
 	 * 
+	 * @param request
+	 *            the request
+	 * 
+	 * @return the prefix for storing variables in the actual session
 	 */
-	public WicketPortletResponse newPortletResponse(final PortletResponse res)
+	public final String getSessionAttributePrefix(final WicketPortletRequest request)
 	{
-		return new WicketPortletResponse(res);
+		if (sessionAttributePrefix == null)
+		{
+			String contextPath = getApplicationKey();
+			if (contextPath == null)
+			{
+				throw new WicketRuntimeException("unable to retrieve portlet context path");
+			}
+
+			// WARNING: this has to match the string which is returned from the
+			// WebApplication
+			// getServletPath is not available in portlets, so we have to use
+			// empty servlet path
+			// and a empty servlet path string here.
+			sessionAttributePrefix = "wicket::";
+		}
+		// Namespacing for session attributes is provided by
+		// adding the portlet path
+		return sessionAttributePrefix;
 	}
+
+	/**
+	 * Gets portlet.
+	 * 
+	 * @return portlet
+	 */
+	public final WicketPortlet getWicketPortlet()
+	{
+		return portlet;
+	}
+
+	/**
+	 * Initialize the portlet
+	 */
+	public void initPortlet()
+	{
+		internalInit();
+		init();
+	}
+
 
 	/**
 	 * @param req
@@ -169,34 +230,15 @@ public abstract class PortletApplication extends Application implements ISession
 		return new WicketPortletRequest(req);
 	}
 
-	/*
-	 * @see wicket.Application#getApplicationKey()
+	/**
+	 * @param res
+	 * @return new WicketPortletResponse
+	 * 
 	 */
-	@Override
-	public String getApplicationKey()
+	public WicketPortletResponse newPortletResponse(final PortletResponse res)
 	{
-
-		if (applicationKey == null)
-		{
-			throw new IllegalStateException("the application key does not seem to"
-					+ " be set properly or this method is called before WicketPortlet is"
-					+ " set, which leads to the wrong behavior");
-		}
-		return applicationKey;
+		return new WicketPortletResponse(res);
 	}
-
-	@Override
-	protected ISessionFactory getSessionFactory()
-	{
-		return this.sessionFactory;
-	}
-
-	@Override
-	protected ISessionStore newSessionStore()
-	{
-		return new PortletSessionStore();
-	}
-
 
 	/**
 	 * Create new WicketPortletSession object
@@ -210,13 +252,90 @@ public abstract class PortletApplication extends Application implements ISession
 	}
 
 	/**
-	 * Initialize the portlet
+	 * @param portlet
 	 */
-	public void initPortlet()
+	public void setWicketPortlet(WicketPortlet portlet)
 	{
-		internalInit();
-		init();
+		if (this.portlet == null)
+		{
+			this.portlet = portlet;
+			this.applicationKey = portlet.getPortletName();
+		}
+		else
+		{
+			throw new IllegalStateException("WicketPortlet cannot be changed once it is set");
+		}
 	}
+
+	/**
+	 * Create a request cycle factory which is used by default by WebSession.
+	 * You may provide your own default factory by subclassing WebApplication
+	 * and overriding this method or your may subclass WebSession to create a
+	 * session specific request cycle factory.
+	 * 
+	 * @see WebSession#getRequestCycleFactory()
+	 * @see IRequestCycleFactory
+	 * 
+	 * @return Request cycle factory
+	 */
+	protected IRequestCycleFactory getDefaultRequestCycleFactory()
+	{
+		return new IRequestCycleFactory()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public RequestCycle newRequestCycle(Session session, Request request, Response response)
+			{
+				if (request instanceof WicketPortletRequest)
+				{
+
+					WicketPortletRequest req = (WicketPortletRequest)request;
+					WicketPortletResponse res = (WicketPortletResponse)response;
+					PortletRequest preq = req.getPortletRequest();
+					PortletResponse pres = res.getPortletResponse();
+					if (preq instanceof ActionRequest)
+					{
+						return new PortletActionRequestCycle((WicketPortletSession)session,
+								(WicketPortletRequest)request, (WicketPortletResponse)response);
+
+					}
+					else
+					{
+						return new PortletRenderRequestCycle((WicketPortletSession)session,
+								(WicketPortletRequest)request, (WicketPortletResponse)response);
+
+					}
+				}
+				return new WebRequestCycle((WebSession)session, (WebRequest)request,
+						(WebResponse)response);
+			}
+		};
+	}
+
+
+	/**
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
+	 * 
+	 * @return the default request cycle processor
+	 */
+	protected final IRequestCycleProcessor getRenderRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = newRenderRequestCycleProcessor();
+		}
+		return requestCycleProcessor;
+	}
+
+	@Override
+	protected ISessionFactory getSessionFactory()
+	{
+		return this.sessionFactory;
+	}
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
@@ -292,73 +411,9 @@ public abstract class PortletApplication extends Application implements ISession
 	}
 
 	/**
-	 * 
-	 */
-	public void destroyPortlet()
-	{
-		internalDestroy();
-	}
-
-	/**
-	 * Create a request cycle factory which is used by default by WebSession.
-	 * You may provide your own default factory by subclassing WebApplication
-	 * and overriding this method or your may subclass WebSession to create a
-	 * session specific request cycle factory.
-	 * 
-	 * @see WebSession#getRequestCycleFactory()
-	 * @see IRequestCycleFactory
-	 * 
-	 * @return Request cycle factory
-	 */
-	protected IRequestCycleFactory getDefaultRequestCycleFactory()
-	{
-		return new IRequestCycleFactory()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public RequestCycle newRequestCycle(Session session, Request request, Response response)
-			{
-				if (request instanceof WicketPortletRequest)
-				{
-
-					WicketPortletRequest req = (WicketPortletRequest)request;
-					WicketPortletResponse res = (WicketPortletResponse)response;
-					PortletRequest preq = req.getPortletRequest();
-					PortletResponse pres = res.getPortletResponse();
-					if (preq instanceof ActionRequest)
-					{
-						return new PortletActionRequestCycle((WicketPortletSession)session,
-								(WicketPortletRequest)request, (WicketPortletResponse)response);
-
-					}
-					else
-					{
-						return new PortletRenderRequestCycle((WicketPortletSession)session,
-								(WicketPortletRequest)request, (WicketPortletResponse)response);
-
-					}
-				}
-				return new WebRequestCycle((WebSession)session, (WebRequest)request,
-						(WebResponse)response);
-			}
-		};
-	}
-
-
-	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
-	 * 
-	 * @return IRequestCycleProcessor
-	 */
-	protected IRequestCycleProcessor newRenderRequestCycleProcessor()
-	{
-		return new PortletRenderRequestCycleProcessor();
-	}
-
-	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
+	 * Gets a new request cycle processor for an action request. May be replaced
+	 * by subclasses which whishes to uses there own implementation of
+	 * IRequestCycleProcessor
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
@@ -367,74 +422,21 @@ public abstract class PortletApplication extends Application implements ISession
 		return new PortletActionRequestCycleProcessor();
 	}
 
-
 	/**
-	 * @return the request cycle processor
+	 * Gets a new request cycle processor for an render request. May be replaced
+	 * by subclasses which whishes to uses there own implementation of
+	 * IRequestCycleProcessor
+	 * 
+	 * @return IRequestCycleProcessor
 	 */
-	public IRequestCycleProcessor getActionRequestCycleProcessor()
+	protected IRequestCycleProcessor newRenderRequestCycleProcessor()
 	{
-		if (actionRequestCycleProcessor == null)
-		{
-			actionRequestCycleProcessor = newActionRequestCycleProcessor();
-		}
-		return actionRequestCycleProcessor;
+		return new PortletRenderRequestCycleProcessor();
 	}
 
-	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
-	 * 
-	 * @return the default request cycle processor
-	 */
-	protected final IRequestCycleProcessor getRenderRequestCycleProcessor()
+	@Override
+	protected ISessionStore newSessionStore()
 	{
-		if (requestCycleProcessor == null)
-		{
-			requestCycleProcessor = newRenderRequestCycleProcessor();
-		}
-		return requestCycleProcessor;
-	}
-
-	/**
-	 * Gets the prefix for storing variables in the actual session (typically
-	 * {@link HttpSession} for this application instance.
-	 * 
-	 * @param request
-	 *            the request
-	 * 
-	 * @return the prefix for storing variables in the actual session
-	 */
-	public final String getSessionAttributePrefix(final WicketPortletRequest request)
-	{
-		if (sessionAttributePrefix == null)
-		{
-			String contextPath = getApplicationKey();
-			if (contextPath == null)
-			{
-				throw new WicketRuntimeException("unable to retrieve portlet context path");
-			}
-
-			// WARNING: this has to match the string which is returned from the
-			// WebApplication
-			// getServletPath is not available in portlets, so we have to use
-			// empty servlet path
-			// and a empty servlet path string here.
-			sessionAttributePrefix = "wicket::";
-		}
-		// Namespacing for session attributes is provided by
-		// adding the portlet path
-		return sessionAttributePrefix;
-	}
-
-	/**
-	 * Gets portlet.
-	 * 
-	 * @return portlet
-	 */
-	public final WicketPortlet getWicketPortlet()
-	{
-		return portlet;
+		return new PortletSessionStore();
 	}
 }
