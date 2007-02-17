@@ -28,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.IPageMap;
 import wicket.IRequestCycleFactory;
 import wicket.IRequestTarget;
 import wicket.ISessionFactory;
@@ -72,11 +71,11 @@ import wicket.util.watch.ModificationWatcher;
  * override the init() method. For example:
  * 
  * <pre>
- *              public void init()
- *              {
- *                  String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
- *                  URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                  ...
+ *               public void init()
+ *               {
+ *                   String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                   URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                   ...
  * </pre>
  * 
  * @see WicketFilter
@@ -324,17 +323,17 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
-	 * @param pageMap
-	 *            pagemap this mount is for
+	 * @param pageMapName
+	 *            name of the pagemap this mount is for
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final IPageMap pageMap,
+	public final void mountBookmarkablePage(final String path, final String pageMapName,
 			final Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
 		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
-				pageMap.getName()));
+				pageMapName));
 	}
 
 	/**
