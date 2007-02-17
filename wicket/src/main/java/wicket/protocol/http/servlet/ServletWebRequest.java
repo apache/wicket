@@ -18,7 +18,6 @@
  */
 package wicket.protocol.http.servlet;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -42,11 +41,11 @@ import wicket.util.upload.FileUploadException;
  */
 public class ServletWebRequest extends WebRequest
 {
-	/** Servlet request information. */
-	private final HttpServletRequest httpServletRequest;
-	
 	/** Log */
 	private static final Log log = LogFactory.getLog(ServletWebRequest.class);
+
+	/** Servlet request information. */
+	private final HttpServletRequest httpServletRequest;
 
 	/**
 	 * Protected constructor.
@@ -67,6 +66,16 @@ public class ServletWebRequest extends WebRequest
 	public String getContextPath()
 	{
 		return httpServletRequest.getContextPath();
+	}
+
+	/**
+	 * Gets the wrapped http servlet request object.
+	 * 
+	 * @return the wrapped http serlvet request object.
+	 */
+	public final HttpServletRequest getHttpServletRequest()
+	{
+		return httpServletRequest;
 	}
 
 	/**
@@ -101,24 +110,7 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public Map getParameterMap()
 	{
-		final Map map = new HashMap();
-
-		for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
-				.hasMoreElements();)
-		{
-			final String name = (String)enumeration.nextElement();
-			String[] parameterValues = httpServletRequest.getParameterValues(name);
-			if(parameterValues.length == 1)
-			{
-				map.put(name, parameterValues[0]);
-			}
-			else
-			{
-				map.put(name, parameterValues);
-			}
-		}
-
-		return map;
+		return new HashMap(httpServletRequest.getParameterMap());
 	}
 
 	/**
@@ -141,26 +133,6 @@ public class ServletWebRequest extends WebRequest
 	public String getPath()
 	{
 		return httpServletRequest.getPathInfo();
-	}
-
-	/**
-	 * Gets the servlet path.
-	 * 
-	 * @return Servlet path
-	 */
-	public String getServletPath()
-	{
-		return httpServletRequest.getServletPath();
-	}
-
-	/**
-	 * Gets the wrapped http servlet request object.
-	 * 
-	 * @return the wrapped http serlvet request object.
-	 */
-	public final HttpServletRequest getHttpServletRequest()
-	{
-		return httpServletRequest;
 	}
 
 	/**
@@ -208,20 +180,34 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * Gets the servlet path.
+	 * 
+	 * @return Servlet path
 	 */
-	public String toString()
+	public String getServletPath()
 	{
-		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
-				+ httpServletRequest.getProtocol() + ", requestURL = "
-				+ httpServletRequest.getRequestURL() + ", contentType = "
-				+ httpServletRequest.getContentType() + ", contentLength = "
-				+ httpServletRequest.getContentLength() + ", contextPath = "
-				+ httpServletRequest.getContextPath() + ", pathInfo = "
-				+ httpServletRequest.getPathInfo() + ", requestURI = "
-				+ httpServletRequest.getRequestURI() + ", servletPath = "
-				+ httpServletRequest.getServletPath() + ", pathTranslated = "
-				+ httpServletRequest.getPathTranslated() + "]";
+		return httpServletRequest.getServletPath();
+	}
+
+	public boolean isAjax()
+	{
+		boolean ajax = false;
+
+		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+		if (Strings.isEmpty(ajaxHeader) == false)
+		{
+			try
+			{
+				ajax = Strings.isTrue(ajaxHeader);
+			}
+			catch (StringValueConversionException e)
+			{
+				// We are not interested in this exception but we log it anyway
+				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
+			}
+		}
+
+		return ajax;
 	}
 
 	/**
@@ -238,25 +224,21 @@ public class ServletWebRequest extends WebRequest
 			throw new WicketRuntimeException(e);
 		}
 	}
-	
-	public boolean isAjax()
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
 	{
-		boolean ajax = false;
-
-		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
-		if (Strings.isEmpty(ajaxHeader) == false)
-		{
-			try
-			{
-				ajax = Strings.isTrue(ajaxHeader);
-			}
-			catch (StringValueConversionException e)
-			{
-				// We are not interested in this exception but we log it anyway
-				log.debug("Couldn't convert the Wicket-Ajax header: "+ajaxHeader);
-			}
-		}
-
-		return ajax;
+		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
+				+ httpServletRequest.getProtocol() + ", requestURL = "
+				+ httpServletRequest.getRequestURL() + ", contentType = "
+				+ httpServletRequest.getContentType() + ", contentLength = "
+				+ httpServletRequest.getContentLength() + ", contextPath = "
+				+ httpServletRequest.getContextPath() + ", pathInfo = "
+				+ httpServletRequest.getPathInfo() + ", requestURI = "
+				+ httpServletRequest.getRequestURI() + ", servletPath = "
+				+ httpServletRequest.getServletPath() + ", pathTranslated = "
+				+ httpServletRequest.getPathTranslated() + "]";
 	}
 }
