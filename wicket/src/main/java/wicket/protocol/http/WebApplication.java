@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.Application;
-import wicket.IPageMap;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
 import wicket.Page;
@@ -72,11 +71,11 @@ import wicket.util.watch.ModificationWatcher;
  * override the init() method. For example:
  * 
  * <pre>
- *    public void init()
- *    {
- *        String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
- *        URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *        ...
+ *       public void init()
+ *       {
+ *           String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *           URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *           ...
  * </pre>
  * 
  * @see WicketFilter
@@ -307,6 +306,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
+	@SuppressWarnings("unchecked")
 	public final void mountBookmarkablePage(final String path,
 			final Class<? extends Page> bookmarkablePageClass)
 	{
@@ -318,16 +318,16 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
-	 * @param pageMap
-	 *            pagemap this mount is for
+	 * @param pageMapName
+	 *            name of the pagemap this mount is for
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final IPageMap pageMap,
-			final Class<? extends Page> bookmarkablePageClass)
+	public final void mountBookmarkablePage(final String path, final String pageMapName,
+			final Class<? extends Page<?>> bookmarkablePageClass)
 	{
 		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
-				pageMap.getName()));
+				pageMapName));
 	}
 
 	/**
