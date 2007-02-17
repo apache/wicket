@@ -129,11 +129,14 @@ public class Check extends WebMarkupContainer
 		{
 			final String[] input = group.getInputAsArray();
 
-			for (int i = 0; i < input.length; i++)
+			if (input != null)
 			{
-				if (uuid.equals(input[i]))
+				for (int i = 0; i < input.length; i++)
 				{
-					tag.put("checked", "checked");
+					if (uuid.equals(input[i]))
+					{
+						tag.put("checked", "checked");
+					}
 				}
 			}
 		}
