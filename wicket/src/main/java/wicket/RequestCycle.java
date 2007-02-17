@@ -1063,7 +1063,7 @@ public abstract class RequestCycle
 					// target resolving one or more request targets were pushed
 					// on the stack before this. If that is the case, they
 					// should be handled before this
-					requestTargets.add(target);
+					requestTargets.add(0, target);
 					break;
 				}
 				case PROCESS_EVENTS : {
