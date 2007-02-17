@@ -18,6 +18,7 @@ package wicket.request;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.protocol.http.WebRequestCycleProcessor;
 
 /**
  * <p>
@@ -47,12 +48,9 @@ import wicket.RequestCycle;
  * otherwise. </li>
  * </ul>
  * </p>
- * <p>
- * A convenience implementation that makes breaking up this processor in smaller
- * delegate strategies easier can be found in class
- * {@link wicket.request.compound.CompoundRequestCycleProcessor} (or
- * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor}).
- * </p>
+ * 
+ * @see AbstractRequestCycleProcessor
+ * @see WebRequestCycleProcessor
  * 
  * @author hillenius
  */

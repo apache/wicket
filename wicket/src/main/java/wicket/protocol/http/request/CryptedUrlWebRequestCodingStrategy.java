@@ -53,8 +53,13 @@ import wicket.util.string.Strings;
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
  * {
- * 	return new CompoundRequestCycleProcessor(new CryptedUrlWebRequestCodingStrategy(
- * 			new WebRequestCodingStrategy()), null, null, null, null);
+ * 	return new WebRequestCycleProcessor()
+ * 	{
+ * 		protected IRequestCodingStrategy newRequestCodingStrategy()
+ * 		{
+ * 			return new CryptedUrlWebRequestCodingStrategy(new WebRequestCodingStrategy());
+ * 		}
+ * 	};
  * }
  * </pre>
  * 

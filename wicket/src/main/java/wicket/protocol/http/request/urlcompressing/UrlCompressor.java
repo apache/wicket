@@ -28,13 +28,9 @@ import wicket.util.collections.IntHashMap.Entry;
 
 /**
  * This class generates UID for Component/Interface combinations when used in
- * conjunction with {@link URLCompressingWebCodingStrategy} and
- * {@link WebUrlCompressingTargetResolverStrategy}
+ * conjunction with {@link UrlCompressingWebCodingStrategy}
  * 
- * To use the 2 strategies you have to create your own
- * {@link CompoundRequestCycleProcessor} in your application's
- * newRequestCycleProcessor() method, which should be overridden and implemented
- * like this:
+ * Use it like this:
  * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()

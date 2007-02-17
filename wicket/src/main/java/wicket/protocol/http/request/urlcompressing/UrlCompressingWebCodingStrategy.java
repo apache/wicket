@@ -23,7 +23,6 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.markup.html.WebPage;
-import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
@@ -34,16 +33,12 @@ import wicket.util.string.AppendingStringBuffer;
  * wicket:interface urls. The component path and the interface name will be
  * removed from the url and only an uid will be inserted into the url.
  * 
- * To use this url compressing behaviour you must override the
- * {@link WebApplication}'s newRequestCycleProcessor() method. To make a
- * request cycle processor with this CodingStrategy and the
- * {@link WebUrlCompressingTargetResolverStrategy}
+ * Use it like this:
  * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
  * {
- * 	return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
- * 			new WebURLCompressingTargetResolverStrategy(), null, null, null);
+ * 	return new UrlCompressingWebRequestProcessor();
  * }
  * </pre>
  * 
@@ -93,8 +88,8 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		{
 			url.append(page.getId());
 			url.append(Component.PATH_SEPARATOR);
-			url.append(((WebPage<?>)page).getUrlCompressor().getUIDForComponentAndInterface(component,
-					listenerName));
+			url.append(((WebPage<?>)page).getUrlCompressor().getUIDForComponentAndInterface(
+					component, listenerName));
 			listenerName = null;
 		}
 		else
