@@ -28,7 +28,7 @@ import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.html.INewBrowserWindowListener;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.WebRequestCycleProcessor;
-import wicket.protocol.http.request.urlcompressing.URLCompressor.ComponentAndInterface;
+import wicket.protocol.http.request.urlcompressing.UrlCompressor.ComponentAndInterface;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;

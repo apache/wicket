@@ -30,14 +30,14 @@ import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Use this CodingStategy with the
- * {@link WebURLCompressingTargetResolverStrategy} to minimize the
+ * {@link WebUrlCompressingTargetResolverStrategy} to minimize the
  * wicket:interface urls. The component path and the interface name will be
  * removed from the url and only an uid will be inserted into the url.
  * 
  * To use this url compressing behaviour you must override the
  * {@link WebApplication}'s newRequestCycleProcessor() method. To make a
  * request cycle processor with this CodingStrategy and the
- * {@link WebURLCompressingTargetResolverStrategy}
+ * {@link WebUrlCompressingTargetResolverStrategy}
  * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()

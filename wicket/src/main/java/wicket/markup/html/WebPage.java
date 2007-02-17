@@ -42,7 +42,7 @@ import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.WebSession;
-import wicket.protocol.http.request.urlcompressing.URLCompressor;
+import wicket.protocol.http.request.urlcompressing.UrlCompressor;
 import wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -95,7 +95,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 * The url compressor that will compress the urls by collapsing the
 	 * component path and listener interface
 	 */
-	private URLCompressor compressor;
+	private UrlCompressor compressor;
 
 	/**
 	 * Constructor. Having this constructor public means that your page is
@@ -297,11 +297,11 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 * @see UrlCompressingWebRequestProcessor
 	 * @see UrlCompressor
 	 */
-	public final URLCompressor getUrlCompressor()
+	public final UrlCompressor getUrlCompressor()
 	{
 		if (compressor == null)
 		{
-			compressor = new URLCompressor();
+			compressor = new UrlCompressor();
 		}
 		return compressor;
 	}
