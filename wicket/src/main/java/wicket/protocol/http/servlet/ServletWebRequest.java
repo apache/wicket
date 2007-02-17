@@ -16,7 +16,6 @@
  */
 package wicket.protocol.http.servlet;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -44,11 +43,11 @@ import wicket.util.upload.FileUploadException;
  */
 public class ServletWebRequest extends WebRequest
 {
-	/** Servlet request information. */
-	private final HttpServletRequest httpServletRequest;
-	
 	/** Log */
 	private static final Log log = LogFactory.getLog(ServletWebRequest.class);
+
+	/** Servlet request information. */
+	private final HttpServletRequest httpServletRequest;
 
 	/**
 	 * Protected constructor.
@@ -69,6 +68,16 @@ public class ServletWebRequest extends WebRequest
 	public String getContextPath()
 	{
 		return httpServletRequest.getContextPath();
+	}
+
+	/**
+	 * Gets the wrapped http servlet request object.
+	 * 
+	 * @return the wrapped http serlvet request object.
+	 */
+	public final HttpServletRequest getHttpServletRequest()
+	{
+		return httpServletRequest;
 	}
 
 	/**
@@ -103,24 +112,8 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public Map getParameterMap()
 	{
-		final Map map = new HashMap();
-
-		for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
-				.hasMoreElements();)
-		{
-			final String name = (String)enumeration.nextElement();
-			String[] parameterValues = httpServletRequest.getParameterValues(name);
-			if(parameterValues.length == 1)
-			{
-				map.put(name, parameterValues[0]);
-			}
-			else
-			{
-				map.put(name, parameterValues);
-			}
-		}
-
-		return map;
+		// return a mutable copy
+		return new HashMap(httpServletRequest.getParameterMap());
 	}
 
 	/**
@@ -142,27 +135,8 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public String getPath()
 	{
-		return ((WebApplication)Application.get()).getWicketFilter().getRelativePath(httpServletRequest);
-	}
-
-	/**
-	 * Gets the servlet path.
-	 * 
-	 * @return Servlet path
-	 */
-	public String getServletPath()
-	{
-		return httpServletRequest.getServletPath();
-	}
-
-	/**
-	 * Gets the wrapped http servlet request object.
-	 * 
-	 * @return the wrapped http serlvet request object.
-	 */
-	public final HttpServletRequest getHttpServletRequest()
-	{
-		return httpServletRequest;
+		return ((WebApplication)Application.get()).getWicketFilter().getRelativePath(
+				httpServletRequest);
 	}
 
 	/**
@@ -210,20 +184,57 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * Gets the servlet path.
+	 * 
+	 * @return Servlet path
 	 */
-	public String toString()
+	public String getServletPath()
 	{
-		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
-				+ httpServletRequest.getProtocol() + ", requestURL = "
-				+ httpServletRequest.getRequestURL() + ", contentType = "
-				+ httpServletRequest.getContentType() + ", contentLength = "
-				+ httpServletRequest.getContentLength() + ", contextPath = "
-				+ httpServletRequest.getContextPath() + ", pathInfo = "
-				+ httpServletRequest.getPathInfo() + ", requestURI = "
-				+ httpServletRequest.getRequestURI() + ", servletPath = "
-				+ httpServletRequest.getServletPath() + ", pathTranslated = "
-				+ httpServletRequest.getPathTranslated() + "]";
+		return httpServletRequest.getServletPath();
+	}
+
+	/**
+	 * This will return true if the header "Wicket-Ajax" is set.
+	 * 
+	 * @see wicket.protocol.http.WebRequest#isAjax()
+	 */
+	// TODO matej? should we have a simple way of supporting other ajax things?
+	// or should they just set that same header??
+	public boolean isAjax()
+	{
+		boolean ajax = false;
+
+		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+		if (Strings.isEmpty(ajaxHeader) == false)
+		{
+			try
+			{
+				ajax = Strings.isTrue(ajaxHeader);
+			}
+			catch (StringValueConversionException e)
+			{
+				// We are not interested in this exception but we log it anyway
+				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
+			}
+		}
+
+		return ajax;
+	}
+
+	/**
+	 * This method by default calls isAjax(), wicket ajax request do have an
+	 * header set. And for all the ajax request the versioning should be merged
+	 * with the previous one. And when it sees that the current request is a
+	 * redirect to page request the version will also be merged with the
+	 * previous one because refresh in the browser or redirects to a page
+	 * shouldn't generate a new version.
+	 * 
+	 * @see wicket.Request#mergeVersion()
+	 */
+	public boolean mergeVersion()
+	{
+		RequestListenerInterface intface = getRequestParameters().getInterface();
+		return isAjax() || intface == IRedirectListener.INTERFACE;
 	}
 
 	/**
@@ -240,48 +251,21 @@ public class ServletWebRequest extends WebRequest
 			throw new WicketRuntimeException(e);
 		}
 	}
-	
-	/**
-	 * This will return true if the header "Wicket-Ajax" is set.
-	 * 
-	 * @see wicket.protocol.http.WebRequest#isAjax()
-	 */
-	// TODO matej? should we have a simple way of supporting other ajax things? 
-	// or should they just set that same header??
-	public boolean isAjax()
-	{
-		boolean ajax = false;
 
-		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
-		if (Strings.isEmpty(ajaxHeader) == false)
-		{
-			try
-			{
-				ajax = Strings.isTrue(ajaxHeader);
-			}
-			catch (StringValueConversionException e)
-			{
-				// We are not interested in this exception but we log it anyway
-				log.debug("Couldn't convert the Wicket-Ajax header: "+ajaxHeader);
-			}
-		}
-
-		return ajax;
-	}
-	
 	/**
-	 * This method by default calls isAjax(), wicket ajax request do have
-	 * an header set. And for all the ajax request the versioning should be merged
-	 * with the previous one. And when it sees that the current request is a 
-	 * redirect to page request the version will also be merged with the previous one
-	 * because refresh in the browser or redirects to a page shouldn't generate a new
-	 * version. 
-	 * 
-	 * @see wicket.Request#mergeVersion()
+	 * @see java.lang.Object#toString()
 	 */
-	public boolean mergeVersion()
+	public String toString()
 	{
-		RequestListenerInterface intface = getRequestParameters().getInterface();
-		return isAjax() || intface == IRedirectListener.INTERFACE;
+		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
+				+ httpServletRequest.getProtocol() + ", requestURL = "
+				+ httpServletRequest.getRequestURL() + ", contentType = "
+				+ httpServletRequest.getContentType() + ", contentLength = "
+				+ httpServletRequest.getContentLength() + ", contextPath = "
+				+ httpServletRequest.getContextPath() + ", pathInfo = "
+				+ httpServletRequest.getPathInfo() + ", requestURI = "
+				+ httpServletRequest.getRequestURI() + ", servletPath = "
+				+ httpServletRequest.getServletPath() + ", pathTranslated = "
+				+ httpServletRequest.getPathTranslated() + "]";
 	}
 }
