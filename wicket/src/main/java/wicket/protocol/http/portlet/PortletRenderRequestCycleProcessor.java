@@ -47,10 +47,9 @@ public class PortletRenderRequestCycleProcessor extends AbstractPortletRequestCy
 	}
 
 	/**
-	 * Process only PortletMode and WindowState changes in the RenderRequests
+	 * Process only PortletMode and WindowState changes in the RenderRequests.
 	 * 
-	 * @see wicket.request.compound.IEventProcessorStrategy#processEvents(wicket.RequestCycle)
-	 * @param requestCycle
+	 * @see wicket.request.AbstractRequestCycleProcessor#processEvents(wicket.RequestCycle)
 	 */
 	public void processEvents(final RequestCycle requestCycle)
 	{
@@ -63,6 +62,9 @@ public class PortletRenderRequestCycleProcessor extends AbstractPortletRequestCy
 		}
 	}
 
+	/**
+	 * @see wicket.request.AbstractRequestCycleProcessor#respond(wicket.RequestCycle)
+	 */
 	public void respond(RequestCycle requestCycle)
 	{
 		IRequestTarget requestTarget = requestCycle.getRequestTarget();
@@ -74,9 +76,22 @@ public class PortletRenderRequestCycleProcessor extends AbstractPortletRequestCy
 		}
 	}
 
+	/**
+	 * Handle header contribution.
+	 * 
+	 * @param requestCycle
+	 *            The request cycle
+	 * @param requestTarget
+	 *            The request target
+	 */
 	private void respondHeaderContribution(final RequestCycle requestCycle,
 			final IRequestTarget requestTarget)
 	{
+
+		// TODO Does this work with portlets - I thought header contributions
+		// were not supported in JSR 170? And if it works, it should be
+		// forwarded to 2.0 as there is no such facility for it now (Eelco)
+
 		if (requestTarget instanceof PageRequestTarget)
 		{
 			final PageRequestTarget target = (PageRequestTarget)requestTarget;

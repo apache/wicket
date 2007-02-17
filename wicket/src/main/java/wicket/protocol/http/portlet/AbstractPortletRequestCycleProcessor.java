@@ -72,7 +72,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 * @see wicket.request.AbstractRequestCycleProcessor#resolve(wicket.RequestCycle,
 	 *      wicket.request.RequestParameters)
 	 */
-	public final IRequestTarget resolve(final RequestCycle requestCycle,
+	public IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
 		if (requestParameters.getBookmarkablePageClass() != null)
@@ -172,7 +172,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 * @see wicket.request.IRequestCycleProcessor#respond(java.lang.RuntimeException,
 	 *      wicket.RequestCycle)
 	 */
-	public final void respond(RuntimeException e, RequestCycle requestCycle)
+	public void respond(RuntimeException e, RequestCycle requestCycle)
 	{
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
