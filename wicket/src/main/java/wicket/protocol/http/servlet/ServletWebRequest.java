@@ -16,7 +16,6 @@
  */
 package wicket.protocol.http.servlet;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -44,11 +43,11 @@ import wicket.util.upload.FileUploadException;
  */
 public class ServletWebRequest extends WebRequest
 {
-	/** Servlet request information. */
-	private final HttpServletRequest httpServletRequest;
-
 	/** Log */
 	private static final Logger log = LoggerFactory.getLogger(ServletWebRequest.class);
+
+	/** Servlet request information. */
+	private final HttpServletRequest httpServletRequest;
 
 	/**
 	 * Protected constructor.
@@ -70,6 +69,17 @@ public class ServletWebRequest extends WebRequest
 	public String getContextPath()
 	{
 		return httpServletRequest.getContextPath();
+	}
+
+	/**
+	 * Gets the wrapped http servlet request object.
+	 * 
+	 * @return the wrapped http serlvet request object.
+	 */
+	@Override
+	public final HttpServletRequest getHttpServletRequest()
+	{
+		return httpServletRequest;
 	}
 
 	/**
@@ -104,27 +114,11 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Map of parameters
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getParameterMap()
 	{
-		final Map<String, Object> map = new HashMap<String, Object>();
-
-		for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
-				.hasMoreElements();)
-		{
-			final String name = (String)enumeration.nextElement();
-			String[] parameterValues = httpServletRequest.getParameterValues(name);
-			if (parameterValues.length == 1)
-			{
-				map.put(name, parameterValues[0]);
-			}
-			else
-			{
-				map.put(name, parameterValues);
-			}
-		}
-
-		return map;
+		return new HashMap<String, Object>(httpServletRequest.getParameterMap());
 	}
 
 	/**
@@ -152,32 +146,12 @@ public class ServletWebRequest extends WebRequest
 		String rootPath = ((WebApplication)Application.get()).getRootPath();
 		if (url.startsWith(rootPath))
 		{
-			// We return everything after rootPath, making sure we start with a slash.
-			return url.substring(rootPath.endsWith("/") ? rootPath.length() - 1 : rootPath.length());
+			// We return everything after rootPath, making sure we start with a
+			// slash.
+			return url
+					.substring(rootPath.endsWith("/") ? rootPath.length() - 1 : rootPath.length());
 		}
 		return null;
-	}
-
-	/**
-	 * Gets the servlet path.
-	 * 
-	 * @return Servlet path
-	 */
-	@Override
-	public String getServletPath()
-	{
-		return httpServletRequest.getServletPath();
-	}
-
-	/**
-	 * Gets the wrapped http servlet request object.
-	 * 
-	 * @return the wrapped http serlvet request object.
-	 */
-	@Override
-	public final HttpServletRequest getHttpServletRequest()
-	{
-		return httpServletRequest;
 	}
 
 	/**
@@ -230,37 +204,14 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * Gets the servlet path.
+	 * 
+	 * @return Servlet path
 	 */
 	@Override
-	public String toString()
+	public String getServletPath()
 	{
-		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
-				+ httpServletRequest.getProtocol() + ", requestURL = "
-				+ httpServletRequest.getRequestURL() + ", contentType = "
-				+ httpServletRequest.getContentType() + ", contentLength = "
-				+ httpServletRequest.getContentLength() + ", contextPath = "
-				+ httpServletRequest.getContextPath() + ", pathInfo = "
-				+ httpServletRequest.getPathInfo() + ", requestURI = "
-				+ httpServletRequest.getRequestURI() + ", servletPath = "
-				+ httpServletRequest.getServletPath() + ", pathTranslated = "
-				+ httpServletRequest.getPathTranslated() + "]";
-	}
-
-	/**
-	 * @see wicket.protocol.http.WebRequest#newMultipartWebRequest(wicket.util.lang.Bytes)
-	 */
-	@Override
-	public WebRequest newMultipartWebRequest(Bytes maxsize)
-	{
-		try
-		{
-			return new MultipartServletWebRequest(httpServletRequest, maxsize);
-		}
-		catch (FileUploadException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		return httpServletRequest.getServletPath();
 	}
 
 	/**
@@ -291,14 +242,14 @@ public class ServletWebRequest extends WebRequest
 
 		return ajax;
 	}
-	
+
 	/**
-	 * This method by default calls isAjax(), wicket ajax request do have
-	 * an header set. And for all the ajax request the versioning should be merged
-	 * with the previous one. And when it sees that the current request is a 
-	 * redirect to page request the version will also be merged with the previous one
-	 * because refresh in the browser or redirects to a page shouldn't generate a new
-	 * version. 
+	 * This method by default calls isAjax(), wicket ajax request do have an
+	 * header set. And for all the ajax request the versioning should be merged
+	 * with the previous one. And when it sees that the current request is a
+	 * redirect to page request the version will also be merged with the
+	 * previous one because refresh in the browser or redirects to a page
+	 * shouldn't generate a new version.
 	 * 
 	 * @see wicket.Request#mergeVersion()
 	 */
@@ -306,5 +257,39 @@ public class ServletWebRequest extends WebRequest
 	{
 		RequestListenerInterface intface = getRequestParameters().getInterface();
 		return isAjax() || intface == IRedirectListener.INTERFACE;
-	}	
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebRequest#newMultipartWebRequest(wicket.util.lang.Bytes)
+	 */
+	@Override
+	public WebRequest newMultipartWebRequest(Bytes maxsize)
+	{
+		try
+		{
+			return new MultipartServletWebRequest(httpServletRequest, maxsize);
+		}
+		catch (FileUploadException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
+				+ httpServletRequest.getProtocol() + ", requestURL = "
+				+ httpServletRequest.getRequestURL() + ", contentType = "
+				+ httpServletRequest.getContentType() + ", contentLength = "
+				+ httpServletRequest.getContentLength() + ", contextPath = "
+				+ httpServletRequest.getContextPath() + ", pathInfo = "
+				+ httpServletRequest.getPathInfo() + ", requestURI = "
+				+ httpServletRequest.getRequestURI() + ", servletPath = "
+				+ httpServletRequest.getServletPath() + ", pathTranslated = "
+				+ httpServletRequest.getPathTranslated() + "]";
+	}
 }

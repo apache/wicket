@@ -16,7 +16,6 @@
  */
 package wicket.protocol.http.portlet;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -34,16 +33,16 @@ import wicket.WicketRuntimeException;
 public class WicketPortletRequest extends Request
 {
 	/** The underlying request object. */
-	PortletRequest req;
+	private final PortletRequest request;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param req
+	 * @param request
 	 */
-	public WicketPortletRequest(PortletRequest req)
+	public WicketPortletRequest(PortletRequest request)
 	{
-		this.req = req;
+		this.request = request;
 	}
 
 	/**
@@ -51,7 +50,7 @@ public class WicketPortletRequest extends Request
 	 */
 	public String getContextPath()
 	{
-		return req.getContextPath();
+		return request.getContextPath();
 	}
 
 	/**
@@ -60,7 +59,7 @@ public class WicketPortletRequest extends Request
 	@Override
 	public Locale getLocale()
 	{
-		return req.getLocale();
+		return request.getLocale();
 	}
 
 	/**
@@ -69,7 +68,7 @@ public class WicketPortletRequest extends Request
 	@Override
 	public String getParameter(String key)
 	{
-		return req.getParameter(key);
+		return request.getParameter(key);
 	}
 
 	/**
@@ -79,24 +78,7 @@ public class WicketPortletRequest extends Request
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getParameterMap()
 	{
-		final Map<String, Object> map = new HashMap<String, Object>();
-
-		for (final Enumeration enumeration = req.getParameterNames(); enumeration
-				.hasMoreElements();)
-		{
-			final String name = (String)enumeration.nextElement();
-			String[] parameterValues = req.getParameterValues(name);
-			if (parameterValues.length == 1)
-			{
-				map.put(name, parameterValues[0]);
-			}
-			else
-			{
-				map.put(name, parameterValues);
-			}
-		}
-
-		return map;
+		return new HashMap<String, Object>(request.getParameterMap());
 	}
 
 	/**
@@ -105,7 +87,7 @@ public class WicketPortletRequest extends Request
 	@Override
 	public String[] getParameters(String key)
 	{
-		return req.getParameterValues(key);
+		return request.getParameterValues(key);
 	}
 
 	/**
@@ -122,7 +104,7 @@ public class WicketPortletRequest extends Request
 	 */
 	public PortletRequest getPortletRequest()
 	{
-		return req;
+		return request;
 	}
 
 	/**
