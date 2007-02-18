@@ -27,7 +27,6 @@ import java.util.Locale;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.Session;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -265,15 +264,10 @@ public class Home extends WebPage {
 	public Home() {
 
 		add(new Link("link") {
-			int i=0;
+			int i = 0;
+
 			@Override
 			public void onClick() {
-//				try {
-//					Thread.sleep(200);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 				i++;
 			}
 		});
