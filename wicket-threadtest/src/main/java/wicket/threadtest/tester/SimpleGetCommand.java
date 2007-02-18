@@ -73,7 +73,7 @@ public class SimpleGetCommand extends AbstractGetCommand {
 			int code = client.executeMethod(method);
 			if (code != 200) {
 				log.error("ERROR! code: " + code);
-				//log.error(method.getResponseBodyAsString());
+				log.error(method.getResponseBodyAsString());
 				// TODO rather than failing, just gather statistics
 				// throw new Exception(new String(method.getResponseBody()));
 			}
