@@ -23,11 +23,10 @@ public class App1Test1 {
 	public static void main(String[] args) throws Exception {
 
 		List<String> gets = Arrays.asList(new String[] {
-				"/app1/?wicket:bookmarkablePage=one:wicket.threadtest.apps.app1.Home",
-				"/app1/?wicket:bookmarkablePage=two:wicket.threadtest.apps.app1.Home",
-				"/app1/?wicket:interface=two:${iteration}:link::ILinkListener:",
-				"/app1/?wicket:interface=one:${iteration}:link::ILinkListener:",
-				"/app1/?wicket:interface=two:${iteration}:link::ILinkListener:" });
+				"/app1/?wicket:bookmarkablePage=:wicket.threadtest.apps.app1.Home",
+				"/app1/?wicket:interface=:${iteration}:link::ILinkListener:",
+				"/app1/?wicket:interface=:${iteration}:link:1:ILinkListener:",
+				"/app1/?wicket:interface=:${iteration}:link:2:ILinkListener:" });
 
 		// you can turn this on if you e.g. want to attach to a profiler
 		// Thread.sleep(5000);
