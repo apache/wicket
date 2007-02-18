@@ -29,9 +29,11 @@ public class App1Test1 {
 				"/app1/?wicket:interface=one:${iteration}:link::ILinkListener:",
 				"/app1/?wicket:interface=two:${iteration}:link::ILinkListener:" });
 
-		Thread.sleep(5000);
+		// you can turn this on if you e.g. want to attach to a profiler
+		// Thread.sleep(5000);
+
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 100);
-		//getCmd.setPrintResponse(true);
+		// getCmd.setPrintResponse(true);
 		Tester tester = new Tester(getCmd, 10, true);
 		tester.run();
 	}
