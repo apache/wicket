@@ -111,11 +111,6 @@ public class DownloadLink extends Link
 			{
 			}
 
-			public Object getLock(RequestCycle requestCycle)
-			{
-				return null;
-			}
-
 			public void respond(RequestCycle requestCycle)
 			{
 				WebResponse r = (WebResponse)requestCycle.getResponse();

@@ -382,14 +382,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(final RequestCycle requestCycle)
-	{
-		return requestCycle.getSession();
-	}
-
-	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode()

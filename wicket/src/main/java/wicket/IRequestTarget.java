@@ -53,15 +53,4 @@ public interface IRequestTarget
 	 *            the current request cycle
 	 */
 	void detach(RequestCycle requestCycle);
-
-	/**
-	 * Gets the lock to be used for synchronization.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 * 
-	 * @return Any lock to be used to synchronize this target or null if no
-	 *         synchronization is needed.
-	 */
-	Object getLock(RequestCycle requestCycle);
 }

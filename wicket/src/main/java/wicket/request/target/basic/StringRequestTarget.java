@@ -91,14 +91,6 @@ public class StringRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		return null;
-	}
-
-	/**
 	 * Gets the string property.
 	 * 
 	 * @return the string property

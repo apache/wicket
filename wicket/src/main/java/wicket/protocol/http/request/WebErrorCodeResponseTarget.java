@@ -125,14 +125,6 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		return null;
-	}
-
-	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj)

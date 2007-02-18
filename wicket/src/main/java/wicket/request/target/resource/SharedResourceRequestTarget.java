@@ -87,14 +87,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		return null;
-	}
-
-	/**
 	 * @see wicket.request.target.resource.ISharedResourceRequestTarget#getRequestParameters()
 	 */
 	public final RequestParameters getRequestParameters()
@@ -146,8 +138,9 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 				{
 					// First try to match mounted resources.
 					scope = Application.get().getSharedResources().getAliasClass(className);
-					
-					// If that fails, resolve it as a fully qualified class name.
+
+					// If that fails, resolve it as a fully qualified class
+					// name.
 					if (scope == null)
 					{
 						scope = resolver.resolveClass(className);

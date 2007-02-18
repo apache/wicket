@@ -181,11 +181,6 @@ public abstract class PageMap implements Serializable, IPageMap
 				{
 				}
 
-				public Object getLock(RequestCycle requestCycle)
-				{
-					return null;
-				}
-
 				public void respond(RequestCycle requestCycle)
 				{
 					// Redirect there
