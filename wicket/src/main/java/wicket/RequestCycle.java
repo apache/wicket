@@ -948,22 +948,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * @param processor
-	 *            The request processor
-	 */
-	private final void doProcessEventsAndRespond(IRequestCycleProcessor processor)
-	{
-		// let the processor handle/ issue any events
-		processor.processEvents(this);
-
-		// set current stage manually this time
-		currentStep = RESPOND;
-
-		// generate a response
-		processor.respond(this);
-	}
-
-	/**
 	 * Prepare the request cycle.
 	 */
 	private void prepare()
@@ -981,19 +965,14 @@ public abstract class RequestCycle
 	 */
 	private final void processEventsAndRespond()
 	{
-		// Use any synchronization lock provided by the target
-		Object lock = getRequestTarget().getLock(this);
-		if (lock != null)
-		{
-			synchronized (lock)
-			{
-				doProcessEventsAndRespond(processor);
-			}
-		}
-		else
-		{
-			doProcessEventsAndRespond(processor);
-		}
+		// let the processor handle/ issue any events
+		processor.processEvents(this);
+
+		// set current stage manually this time
+		currentStep = RESPOND;
+
+		// generate a response
+		processor.respond(this);
 	}
 
 	/**
@@ -1002,19 +981,7 @@ public abstract class RequestCycle
 	 */
 	private final void respond()
 	{
-		// Use any synchronization lock provided by the target
-		Object lock = getRequestTarget().getLock(this);
-		if (lock != null)
-		{
-			synchronized (lock)
-			{
-				processor.respond(this);
-			}
-		}
-		else
-		{
-			processor.respond(this);
-		}
+		processor.respond(this);
 	}
 
 	/**
