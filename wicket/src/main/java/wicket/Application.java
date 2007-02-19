@@ -277,7 +277,7 @@ public abstract class Application
 
 		for (IComponentInstantiationListener element : componentInstantiationListeners)
 		{
-			if (listener == element)
+			if (listener.equals(element))
 			{
 				return;
 			}
