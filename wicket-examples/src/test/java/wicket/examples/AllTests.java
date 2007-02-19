@@ -1,7 +1,7 @@
 /*
  * $Id: AllTests.java 5395 2006-04-16 13:42:28 +0000 (Sun, 16 Apr 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:42:28 +0000 (Sun, 16 Apr
- * 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:42:28 +0000 (Sun, 16
+ * Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -30,7 +30,6 @@ import wicket.examples.forminput.FormInputTest;
 import wicket.examples.guestbook.GuestbookTest;
 import wicket.examples.hangman.HangManTest;
 import wicket.examples.hangman.WordGeneratorTest;
-import wicket.examples.hellobrowser.HelloBrowserTest;
 import wicket.examples.helloworld.HelloWorldTest;
 import wicket.examples.images.ImagesTest;
 import wicket.examples.library.LibraryTest;
@@ -48,45 +47,6 @@ import com.meterware.httpunit.HttpUnitOptions;
  */
 public final class AllTests extends TestSuite
 {
-	/**
-	 * Construct.
-	 */
-	public AllTests()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public AllTests(final Class arg0, final String arg1)
-	{
-		super(arg0, arg1);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public AllTests(final Class arg0)
-	{
-		super(arg0);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public AllTests(final String arg0)
-	{
-		super(arg0);
-	}
-
 	/**
 	 * Suite method.
 	 * 
@@ -113,7 +73,6 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(AjaxTest.class);
 		suite.addTestSuite(ComprefTest.class);
 		suite.addTestSuite(EncodingTest.class);
-		suite.addTestSuite(HelloBrowserTest.class);
 		suite.addTestSuite(NiceUrlTest.class);
 		suite.addTestSuite(TemplateTest.class);
 		suite.addTestSuite(RepeaterTest.class);
@@ -124,5 +83,44 @@ public final class AllTests extends TestSuite
 		deco.setWebappContextRoot("src/webapp");
 		deco.setContextPath("/wicket-examples");
 		return deco;
+	}
+
+	/**
+	 * Construct.
+	 */
+	public AllTests()
+	{
+		super();
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param arg0
+	 */
+	public AllTests(final Class arg0)
+	{
+		super(arg0);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public AllTests(final Class arg0, final String arg1)
+	{
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param arg0
+	 */
+	public AllTests(final String arg0)
+	{
+		super(arg0);
 	}
 }
