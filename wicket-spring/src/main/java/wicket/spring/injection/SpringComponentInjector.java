@@ -208,4 +208,35 @@ public class SpringComponentInjector extends ComponentInjector
 
 	}
 
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		// all instances of this class are considered equal
+		return getClass().hashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		// all instances of this class are considered equal
+		if (obj == this)
+		{
+			return true;
+		}
+		else if (obj == null)
+		{
+			return false;
+		}
+		else
+		{
+			return getClass().equals(obj.getClass());
+		}
+	}
+
 }
