@@ -17,8 +17,6 @@
  */
 package wicket.examples;
 
-import com.meterware.httpunit.HttpUnitOptions;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import nl.openedge.util.jetty.JettyDecorator;
@@ -31,7 +29,6 @@ import wicket.examples.forminput.FormInputTest;
 import wicket.examples.guestbook.GuestbookTest;
 import wicket.examples.hangman.HangManTest;
 import wicket.examples.hangman.WordGeneratorTest;
-import wicket.examples.hellobrowser.HelloBrowserTest;
 import wicket.examples.helloworld.HelloWorldTest;
 import wicket.examples.images.ImagesTest;
 import wicket.examples.library.LibraryTest;
@@ -41,6 +38,8 @@ import wicket.examples.panels.signin.CookieTest;
 import wicket.examples.repeater.RepeaterTest;
 import wicket.examples.signin2.Signin2Test;
 import wicket.examples.template.TemplateTest;
+
+import com.meterware.httpunit.HttpUnitOptions;
 
 /**
  * All tests in the project; used by Maven.
@@ -112,7 +111,6 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(AjaxTest.class);
 		suite.addTestSuite(ComprefTest.class);
 		suite.addTestSuite(EncodingTest.class);
-		suite.addTestSuite(HelloBrowserTest.class);
 		suite.addTestSuite(NiceUrlTest.class);
 		suite.addTestSuite(TemplateTest.class);
 		suite.addTestSuite(RepeaterTest.class);
