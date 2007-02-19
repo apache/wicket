@@ -131,14 +131,6 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(final RequestCycle requestCycle)
-	{
-		return requestCycle.getSession();
-	}
-
-	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

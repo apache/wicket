@@ -99,14 +99,6 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		return null;
-	}
-
-	/**
 	 * Gets the resource stream for the response.
 	 * 
 	 * @return the resource stream for the response

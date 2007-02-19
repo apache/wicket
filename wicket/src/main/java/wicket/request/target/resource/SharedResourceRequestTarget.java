@@ -89,14 +89,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		return null;
-	}
-
-	/**
 	 * @see wicket.request.target.resource.ISharedResourceRequestTarget#getRequestParameters()
 	 */
 	public final RequestParameters getRequestParameters()

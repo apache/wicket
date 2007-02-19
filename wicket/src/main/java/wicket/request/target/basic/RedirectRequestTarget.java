@@ -55,14 +55,6 @@ public class RedirectRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(wicket.RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		return null;
-	}
-
-	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)

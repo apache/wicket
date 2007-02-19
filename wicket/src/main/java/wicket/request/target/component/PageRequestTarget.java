@@ -86,16 +86,6 @@ public class PageRequestTarget implements IPageRequestTarget
 	}
 
 	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		// we need to lock when we are not redirecting, i.e. we are
-		// actually rendering the page
-		return !requestCycle.getRedirect() ? requestCycle.getSession() : null;
-	}
-
-	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
