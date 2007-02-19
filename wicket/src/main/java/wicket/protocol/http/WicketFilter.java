@@ -164,99 +164,100 @@ public class WicketFilter implements Filter
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+
 		try
 		{
-		Thread.currentThread().setContextClassLoader(getClassLoader());
+			Thread.currentThread().setContextClassLoader(getClassLoader());
 
-		// If the request does not provide information about the encoding of its
-		// body (which includes POST parameters), than assume the default
-		// encoding as defined by the wicket application. Bear in mind that the
-		// encoding of the request usually is equal to the previous response.
-		// However it is a known bug of IE that it does not provide this
-		// information. Please see the wiki for more details and why all other
-		// browser deliberately copied that bug.
-		if (servletRequest.getCharacterEncoding() == null)
-		{
-			try
+			// If the request does not provide information about the encoding of its
+			// body (which includes POST parameters), than assume the default
+			// encoding as defined by the wicket application. Bear in mind that the
+			// encoding of the request usually is equal to the previous response.
+			// However it is a known bug of IE that it does not provide this
+			// information. Please see the wiki for more details and why all other
+			// browser deliberately copied that bug.
+			if (servletRequest.getCharacterEncoding() == null)
 			{
-				// The encoding defined by the wicket settings is used to encode
-				// the responses. Thus, it is reasonable to assume the request
-				// has the same encoding. This is especially important for
-				// forms and form parameters.
-				servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
-						.getResponseRequestEncoding());
-			}
-			catch (UnsupportedEncodingException ex)
-			{
-				throw new WicketRuntimeException(ex.getMessage());
-			}
-		}
-
-		// Create a new webrequest
-		final WebRequest request = webApplication.newWebRequest(servletRequest);
-
-		// Are we using REDIRECT_TO_BUFFER?
-		if (webApplication.getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER)
-		{
-			String queryString = servletRequest.getQueryString();
-			if (!Strings.isEmpty(queryString))
-			{
-				// Try to see if there is a redirect stored
-				ISessionStore sessionStore = webApplication.getSessionStore();
-				String sessionId = sessionStore.getSessionId(request, false);
-				if (sessionId != null)
+				try
 				{
-					BufferedHttpServletResponse bufferedResponse = webApplication
-							.popBufferedResponse(sessionId, queryString);
-
-					if (bufferedResponse != null)
+					// The encoding defined by the wicket settings is used to encode
+					// the responses. Thus, it is reasonable to assume the request
+					// has the same encoding. This is especially important for
+					// forms and form parameters.
+					servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
+							.getResponseRequestEncoding());
+				}
+				catch (UnsupportedEncodingException ex)
+				{
+					throw new WicketRuntimeException(ex.getMessage());
+				}
+			}
+	
+			// Create a new webrequest
+			final WebRequest request = webApplication.newWebRequest(servletRequest);
+	
+			// Are we using REDIRECT_TO_BUFFER?
+			if (webApplication.getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER)
+			{
+				String queryString = servletRequest.getQueryString();
+				if (!Strings.isEmpty(queryString))
+				{
+					// Try to see if there is a redirect stored
+					ISessionStore sessionStore = webApplication.getSessionStore();
+					String sessionId = sessionStore.getSessionId(request, false);
+					if (sessionId != null)
 					{
-						bufferedResponse.writeTo(servletResponse);
-						// redirect responses are ignored for the request
-						// logger...
-						return;
+						BufferedHttpServletResponse bufferedResponse = webApplication
+								.popBufferedResponse(sessionId, queryString);
+	
+						if (bufferedResponse != null)
+						{
+							bufferedResponse.writeTo(servletResponse);
+							// redirect responses are ignored for the request
+							// logger...
+							return;
+						}
 					}
 				}
 			}
-		}
-
-		// First, set the webapplication for this thread
-		Application.set(webApplication);
-
-		// Get session for request
-		final WebSession session = webApplication.getSession(request);
-
-		// Create a response object and set the output encoding according to
-		// wicket's application setttings.
-		final WebResponse response = webApplication.newWebResponse(servletResponse);
-		response.setAjax(request.isAjax());
-		response.setCharacterEncoding(webApplication.getRequestCycleSettings()
-				.getResponseRequestEncoding());
-
-		try
-		{
-			RequestCycle cycle = session.newRequestCycle(request, response);
+	
+			// First, set the webapplication for this thread
+			Application.set(webApplication);
+	
+			// Get session for request
+			final WebSession session = webApplication.getSession(request);
+	
+			// Create a response object and set the output encoding according to
+			// wicket's application setttings.
+			final WebResponse response = webApplication.newWebResponse(servletResponse);
+			response.setAjax(request.isAjax());
+			response.setCharacterEncoding(webApplication.getRequestCycleSettings()
+					.getResponseRequestEncoding());
+	
 			try
 			{
-				// Process request
-				cycle.request();
+				RequestCycle cycle = session.newRequestCycle(request, response);
+				try
+				{
+					// Process request
+					cycle.request();
+				}
+				catch (AbortException e)
+				{
+					// noop
+				}
 			}
-			catch (AbortException e)
+			finally
 			{
-				// noop
+				// Close response
+				response.close();
+	
+				// Clean up thread local session
+				Session.unset();
+	
+				// Clean up thread local application
+				Application.unset();
 			}
-		}
-		finally
-		{
-			// Close response
-			response.close();
-
-			// Clean up thread local session
-			Session.unset();
-
-			// Clean up thread local application
-			Application.unset();
-		}
 		}
 		finally
 		{
@@ -328,25 +329,27 @@ public class WicketFilter implements Filter
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
+
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+
 		try
 		{
-		Thread.currentThread().setContextClassLoader(getClassLoader());
+			Thread.currentThread().setContextClassLoader(getClassLoader());
 
-		IWebApplicationFactory factory = getApplicationFactory();
-
-		// Construct WebApplication subclass
-		this.webApplication = factory.createApplication(this);
-
-		// Set this WicketServlet as the servlet for the web application
-		this.webApplication.setWicketFilter(this);
-
-		// Store instance of this application object in servlet context to make
-		// integration with outside world easier
-		String contextKey = "wicket:" + filterConfig.getFilterName();
-		filterConfig.getServletContext().setAttribute(contextKey, this.webApplication);
-
-		filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
+			IWebApplicationFactory factory = getApplicationFactory();
+	
+			// Construct WebApplication subclass
+			this.webApplication = factory.createApplication(this);
+	
+			// Set this WicketServlet as the servlet for the web application
+			this.webApplication.setWicketFilter(this);
+	
+			// Store instance of this application object in servlet context to make
+			// integration with outside world easier
+			String contextKey = "wicket:" + filterConfig.getFilterName();
+			filterConfig.getServletContext().setAttribute(contextKey, this.webApplication);
+	
+			filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
 
 			Application.set(webApplication);
 
