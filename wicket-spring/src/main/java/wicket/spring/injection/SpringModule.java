@@ -38,7 +38,8 @@ public class SpringModule implements IInitializer
 		if (!(application instanceof WebApplication))
 		{
 			throw new IllegalStateException(
-					"This initializer can only be used with applications that extend WebApplication");
+					"This initializer can only be used with applications that extend "
+							+ WebApplication.class.getName());
 		}
 
 		application.addComponentInstantiationListener(new SpringComponentInjector(
