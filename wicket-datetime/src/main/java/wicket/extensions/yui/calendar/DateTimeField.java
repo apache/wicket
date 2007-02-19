@@ -213,14 +213,16 @@ public class DateTimeField extends FormComponentPanel {
 				} else {
 					date.set(DateTimeFieldType.halfdayOfDay(), 0);
 				}
+
+				// the date will be in the server's timezone
+				Date d = date.toDate();
+				setModelObject(d);
+
 			} catch (RuntimeException e) {
 				DateTimeField.this.error(e.getMessage());
 				invalid();
 			}
 
-			// the date will be in the server's timezone
-			Date d = date.toDate();
-			setModelObject(d);
 		} else {
 			setModelObject(null);
 		}
@@ -245,7 +247,7 @@ public class DateTimeField extends FormComponentPanel {
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(
 				this, "date")));
 		dateField.add(new DatePicker());
-		//add(new CalendarPopup("picker", dateField));
+		// add(new CalendarPopup("picker", dateField));
 		add(hoursField = new TextField("hours",
 				new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
