@@ -48,8 +48,12 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 
 		try
 		{
-			final Class applicationClass = getClass().getClassLoader().loadClass(
-					applicationClassName);
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			if (loader == null)
+			{
+				loader = getClass().getClassLoader();
+			}
+			final Class applicationClass = loader.loadClass(applicationClassName);
 			if (WebApplication.class.isAssignableFrom(applicationClass))
 			{
 				// Construct WebApplication subclass

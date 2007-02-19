@@ -144,6 +144,11 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	protected ClassLoader getClassLoader()
+	{
+		return getClass().getClassLoader();
+	}
+	
 	/**
 	 * Handles servlet page requests.
 	 * 
@@ -158,6 +163,11 @@ public class WicketFilter implements Filter
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
+		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+		try
+		{
+		Thread.currentThread().setContextClassLoader(getClassLoader());
+
 		// If the request does not provide information about the encoding of its
 		// body (which includes POST parameters), than assume the default
 		// encoding as defined by the wicket application. Bear in mind that the
@@ -247,6 +257,11 @@ public class WicketFilter implements Filter
 			// Clean up thread local application
 			Application.unset();
 		}
+		}
+		finally
+		{
+			Thread.currentThread().setContextClassLoader(previousClassLoader);
+		}
 	}
 
 	/**
@@ -313,6 +328,10 @@ public class WicketFilter implements Filter
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
+		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+		try
+		{
+		Thread.currentThread().setContextClassLoader(getClassLoader());
 
 		IWebApplicationFactory factory = getApplicationFactory();
 
@@ -329,8 +348,6 @@ public class WicketFilter implements Filter
 
 		filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
 
-		try
-		{
 			Application.set(webApplication);
 
 			// Call internal init method of web application for default
@@ -352,6 +369,7 @@ public class WicketFilter implements Filter
 		finally
 		{
 			Application.unset();
+			Thread.currentThread().setContextClassLoader(previousClassLoader);
 		}
 	}
 
@@ -379,7 +397,7 @@ public class WicketFilter implements Filter
 			try
 			{
 				// Try to find the specified factory class
-				final Class factoryClass = getClass().getClassLoader().loadClass(
+				final Class factoryClass = Thread.currentThread().getContextClassLoader().loadClass(
 						appFactoryClassName);
 
 				// Instantiate the factory
