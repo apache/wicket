@@ -16,34 +16,36 @@
  */
 package wicket.spring.injection;
 
-import wicket.Application;
-import wicket.IInitializer;
 import wicket.protocol.http.WebApplication;
 
 /**
  * A spring integration module. This module takes care of configuring wicket to
- * allow injection of {@link SpringBean} annotated fields
+ * allow injection of {@link SpringBean} annotated fields. To install the module do 
+ * <code>
+ * MyApplication extends WebApplication
+ * {
+ * ...
+ * public void init() {
+ *     new SpringWicketModule(this);
+ * }
+ * ...
+ * }
+ * </code>
  * 
  * @author ivaynberg
  * 
  */
-public class SpringModule implements IInitializer
+public class SpringWicketModule
 {
-
 	/**
-	 * @see wicket.IInitializer#init(wicket.Application)
+	 * Constructor
+	 * 
+	 * @param application
 	 */
-	public void init(Application application)
+	public SpringWicketModule(WebApplication application)
 	{
-		if (!(application instanceof WebApplication))
-		{
-			throw new IllegalStateException(
-					"This initializer can only be used with applications that extend "
-							+ WebApplication.class.getName());
-		}
-
 		application.addComponentInstantiationListener(new SpringComponentInjector(
-				(WebApplication) application));
+				application));
 	}
 
 }
