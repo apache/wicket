@@ -34,6 +34,7 @@ import wicket.protocol.http.WicketServlet;
  * http://weblogs.java.net/blog/wholder/archive/2005/02/session_session.html
  * http://issues.apache.org/jira/browse/PLUTO-53
  * 
+ * @deprecated Use WicketPortletFilter instead
  * @author Janne Hietam&auml;ki
  */
 public class WicketPortletServlet extends WicketServlet
