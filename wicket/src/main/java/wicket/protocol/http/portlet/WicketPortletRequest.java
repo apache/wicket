@@ -108,4 +108,12 @@ public class WicketPortletRequest extends Request
 	{
 		throw new WicketRuntimeException("URL is not available in portlet request");
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "PortletRequest[parameters=" + request.getParameterMap() + " portletMode="+ request.getPortletMode() +" windowState= "+ request.getWindowState() +"]";
+	}	
 }
