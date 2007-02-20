@@ -50,6 +50,7 @@ import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
+import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RadioGroup;
@@ -166,8 +167,8 @@ import wicket.util.tester.WicketTesterHelper.ComponentData;
  * Instead of <code>tester.startPage(pageClass)</code>, we define a
  * {@link wicket.util.tester.ITestPageSource} to provide testing page instance
  * for WicketTester. This is necessary because <code>YourPage</code> uses a
- * custom constructor, which is very common for transfering model data, but can
- * not be instansiated by reflection. Finally, we use
+ * custom constructor, which is very common for transferring model data, but can
+ * not be instantiated by reflection. Finally, we use
  * <code>assertInfoMessages</code> to assert there is a feedback message
  * "Wicket Rocks ;-)" in INFO level.
  * 
@@ -240,8 +241,8 @@ public class WicketTester extends MockWebApplication
 	 * @param application
 	 *            The wicket tester object
 	 * @param path
-	 *            The absolute path on disk to the web tester contents (e.g. war
-	 *            root) - may be null
+	 *            The absolute path on disk to the web application contents
+	 *            (e.g. war root) - may be null
 	 * 
 	 * @see wicket.protocol.http.MockWebApplication#MockWebApplication(String)
 	 */
@@ -624,8 +625,8 @@ public class WicketTester extends MockWebApplication
 	 * and {@link AjaxSubmitLink}.
 	 * <p>
 	 * On AjaxLinks and AjaxFallbackLinks the onClick method is invoked with a
-	 * valid AjaxRequestTarget. In that way you can test the flow of your tester
-	 * when using AJAX.
+	 * valid AjaxRequestTarget. In that way you can test the flow of your
+	 * application when using AJAX.
 	 * <p>
 	 * When clicking an AjaxSubmitLink the form, which the AjaxSubmitLink is
 	 * attached to is first submitted, and then the onSubmit method on
@@ -721,42 +722,10 @@ public class WicketTester extends MockWebApplication
 			String failMessage = "No form submit behavior found on the submit link. Strange!!";
 			Assert.assertNotNull(failMessage, ajaxFormSubmitBehavior);
 
-			// We need to get the form submitted, using reflection.
-			// It needs to be "submitted".
-			Form form = null;
-			try
-			{
-				Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
-				formField.setAccessible(true);
-				form = (Form)formField.get(ajaxFormSubmitBehavior);
-			}
-			catch (Exception e)
-			{
-				Assert.fail(e.getMessage());
-			}
-
-			failMessage = "No form attached to the submitlink.";
-			Assert.assertNotNull(failMessage, form);
-
 			setupRequestAndResponse();
 			RequestCycle requestCycle = createRequestCycle();
 
-			// "Submit" the form
-			form.visitFormComponents(new FormComponent.AbstractVisitor()
-			{
-				@Override
-				public void onFormComponent(FormComponent formComponent)
-				{
-					if (!(formComponent instanceof Button)
-							&& !(formComponent instanceof RadioGroup))
-					{
-						String name = formComponent.getInputName();
-						String value = formComponent.getValue();
-
-						getServletRequest().setParameter(name, value);
-					}
-				}
-			});
+			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
 
 			// Ok, finally we "click" the link
 			ajaxFormSubmitBehavior.onRequest();
@@ -1086,6 +1055,24 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
+	 * Simulate that an AJAX event has been fired.
+	 * 
+	 * @see #executeAjaxEvent(Component, String)
+	 * 
+	 * @since 1.2.3
+	 * @param componentPath
+	 *            The component path.
+	 * @param event
+	 *            The event which we simulate is fired. If the event is null,
+	 *            the test will fail.
+	 */
+	public void executeAjaxEvent(String componentPath, ClientEvent event)
+	{
+		Component component = getComponentFromLastRenderedPage(componentPath);
+		executeAjaxEvent(component, event);
+	}
+
+	/**
 	 * Simulate that an AJAX event has been fired. You add an AJAX event to a
 	 * component by using:
 	 * 
@@ -1157,6 +1144,13 @@ public class WicketTester extends MockWebApplication
 		setupRequestAndResponse();
 		RequestCycle requestCycle = createRequestCycle();
 
+		// If the event is an FormSubmitBehavior then also "submit" the form
+		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
+		{
+			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = (AjaxFormSubmitBehavior)ajaxEventBehavior;
+			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
+		}
+
 		ajaxEventBehavior.onRequest();
 
 		// process the request target
@@ -1188,5 +1182,47 @@ public class WicketTester extends MockWebApplication
 	public TagTester getTagById(String id)
 	{
 		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "id", id);
+	}
+
+	/**
+	 * Helper method for all the places where an AjaxCall should submit an
+	 * associated form.
+	 * 
+	 * @param behavior
+	 *            The AjaxFormSubmitBehavior with the form to "submit"
+	 */
+	private void submitAjaxFormSubmitBehavior(AjaxFormSubmitBehavior behavior)
+	{
+		// We need to get the form submitted, using reflection.
+		// It needs to be "submitted".
+		Form form = null;
+		try
+		{
+			Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
+			formField.setAccessible(true);
+			form = (Form)formField.get(behavior);
+		}
+		catch (Exception e)
+		{
+			Assert.fail(e.getMessage());
+		}
+
+		String failMessage = "No form attached to the submitlink.";
+		Assert.assertNotNull(failMessage, form);
+
+		form.visitFormComponents(new FormComponent.AbstractVisitor()
+		{
+			public void onFormComponent(FormComponent formComponent)
+			{
+				if (!(formComponent instanceof Button) && !(formComponent instanceof RadioGroup)
+						&& !(formComponent instanceof CheckGroup))
+				{
+					String name = formComponent.getInputName();
+					String value = formComponent.getValue();
+
+					getServletRequest().setParameter(name, value);
+				}
+			}
+		});
 	}
 }
