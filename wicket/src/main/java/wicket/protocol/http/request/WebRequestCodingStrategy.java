@@ -852,6 +852,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 			else
 			{
+				/*
+				 * make the urls consistent. if the mapping is /app/* wicket
+				 * will switch off between /app/foo and /app?wicket:interface
+				 * which messes with the path, appending / always to the end
+				 * makes sure the base path is always /context/servletmapping/
+				 */
+				if (!buffer.endsWith("/"))
+				{
+					buffer.append("/");
+				}
 				urlPrefix = buffer;
 			}
 		}
