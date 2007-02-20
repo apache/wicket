@@ -24,27 +24,25 @@ import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.protocol.http.IWebApplicationFactory;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WicketFilter;
-import wicket.protocol.http.WicketServlet;
 
 /**
  * 
- * Dummy utility servlet to support dynamic resources with portlets
+ *  Filter to support dynamic resources with portlets
  * 
  * See:
  * 
  * http://weblogs.java.net/blog/wholder/archive/2005/02/session_session.html
  * http://issues.apache.org/jira/browse/PLUTO-53
  * 
- * @deprecated use WicketPortletFilter instead
  * @author Janne Hietam&auml;ki
  */
-@SuppressWarnings("deprecation")
-public class WicketPortletServlet extends WicketServlet
+public class WicketPortletFilter extends WicketFilter
 {
-	private static final Logger log = LoggerFactory.getLogger(WicketPortletServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketPortletFilter.class);
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected final IWebApplicationFactory getApplicationFactory()
 	{
 		return new IWebApplicationFactory()
