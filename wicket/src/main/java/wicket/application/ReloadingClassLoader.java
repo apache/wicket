@@ -103,9 +103,9 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * 
 	 * @return list of patterns as String
 	 */
-	public static Set getPatterns()
+	public static List getPatterns()
 	{
-		return urls;
+		return patterns;
 	}
 
 	/**
