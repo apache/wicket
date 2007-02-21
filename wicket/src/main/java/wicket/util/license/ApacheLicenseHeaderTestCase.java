@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import wicket.util.string.Strings;
 
 /**
  * Testcase used in the different wicket projects for testing for the correct
@@ -133,6 +134,11 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 			if (pathname.isDirectory())
 			{
+				String relativePathname = pathname.getAbsolutePath();
+				relativePathname = Strings.replaceAll(relativePathname,
+						baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
+						.toString();
+				if (relativePathname.equals("target") == false) {
 				boolean found = false;
 				for (String ignore : ignoreDirectory)
 				{
@@ -145,6 +151,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				if (found == false)
 				{
 					accept = true;
+				}
 				}
 			}
 
