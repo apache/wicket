@@ -38,7 +38,6 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 {
 	private wicket.util.collections.HandleTable handledObjects = new wicket.util.collections.HandleTable(); 
 	
-	private HandleArrayListStack stack = new HandleArrayListStack();
 	private HandleArrayListStack defaultWrite = new HandleArrayListStack();
 	
 	private final DataOutputStream out;
@@ -49,7 +48,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	private int byteCounter;
 
 	private PutField curPut;
-	
+	private Object curObject;
 	
 	/**
 	 * Construct.
@@ -89,8 +88,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 			}
 			else
 			{
-				handledObjects.assign(obj);
 				Class cls = obj.getClass();
+				handledObjects.assign(obj);
 	
 				if(cls.isArray())
 				{
@@ -98,27 +97,60 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 					ClassStreamHandler classHandler = ClassStreamHandler.lookup(componentType);
 					if(componentType.isPrimitive())
 					{
-						out.write(ClassStreamHandler.PRIMITIVE_ARRAY);
-						out.writeShort(classHandler.getClassId());
-						classHandler.writeArray(obj,this);
+						try
+						{
+							out.write(ClassStreamHandler.PRIMITIVE_ARRAY);
+							out.writeShort(classHandler.getClassId());
+							classHandler.writeArray(obj,this);
+						}
+						catch (WicketSerializeableException wse)
+						{
+							wse.addTrace(componentType.getName() + "[" + Array.getLength(obj)+ "]");
+							throw wse;
+						}
+						catch (Exception e)
+						{
+							throw new WicketSerializeableException("Error writing primitive array of " + componentType.getName()+ "[" + Array.getLength(obj)+ "]",e);
+						}
 					}
 					else
 					{
-						out.write(ClassStreamHandler.ARRAY);
-						out.writeShort(classHandler.getClassId());
 						int length = Array.getLength(obj);
-						out.writeInt(length);
-						for (int i = 0; i < length; i++)
+						try
 						{
-							writeObjectOverride(Array.get(obj, i));
+							out.write(ClassStreamHandler.ARRAY);
+							out.writeShort(classHandler.getClassId());
+							out.writeInt(length);
+							for (int i = 0; i < length; i++)
+							{
+								writeObjectOverride(Array.get(obj, i));
+							}
+						}
+						catch (WicketSerializeableException wse)
+						{
+							wse.addTrace(componentType.getName() + "[" + length+ "]");
+							throw wse;
+						}
+						catch (Exception e)
+						{
+							throw new WicketSerializeableException("Error writing array of " + componentType.getName()+ "[" + length+ "]",e);
 						}
 					}
 					return;
 				}
 				else
 				{
-					classHandler = ClassStreamHandler.lookup(cls);
+					Class realClz = cls;
+					classHandler = ClassStreamHandler.lookup(realClz);
 					
+					Object object = classHandler.writeReplace(obj);
+					if (object != null)
+					{
+						obj = object;
+						realClz = obj.getClass();
+						classHandler = ClassStreamHandler.lookup(realClz);
+					}
+
 					out.write(ClassStreamHandler.CLASS_DEF);
 					out.writeShort(classHandler.getClassId());
 					// handle strings directly.
@@ -129,14 +161,45 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 					else
 					{
 						PutField old = curPut;
+						Object oldObject = curObject;
 						curPut = null;
-						stack.push(obj);
-						if (!classHandler.invokeWriteMethod(this,obj))
+						curObject = obj;
+						try
 						{
-							classHandler.writeFields(this,obj);
+							if (!classHandler.invokeWriteMethod(this,obj))
+							{
+								classHandler.writeFields(this,obj);
+							}
+						} 
+						catch (WicketSerializeableException wse)
+						{
+							if (realClz != cls)
+							{
+								wse.addTrace(realClz.getName() + "(ReplaceOf:" + cls.getName() + ")");
+							}
+							else
+							{
+								wse.addTrace(realClz.getName());
+							}
+							throw wse;
 						}
-						stack.pop();
-						curPut = old;
+						catch (Exception e)
+						{
+							if (realClz != cls)
+							{
+								throw new WicketSerializeableException("Error writing fields for " + realClz.getName()+ "(ReplaceOf:" + cls.getName() + ")", e);
+
+							}
+							else
+							{
+								throw new WicketSerializeableException("Error writing fields for " + realClz.getName(), e);
+							}
+						}
+						finally
+						{
+							curObject = oldObject;
+							curPut = old;
+						}
 					}
 				}
 			}
@@ -148,11 +211,10 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	 */
 	public void defaultWriteObject() throws IOException
 	{
-		Object currentObject = stack.peek();
-		if ( !defaultWrite.contains(currentObject))
+		if ( !defaultWrite.contains(curObject))
 		{
-			defaultWrite.add(currentObject);
-			classHandler.writeFields(this,currentObject);
+			defaultWrite.add(curObject);
+			classHandler.writeFields(this,curObject);
 		}
 	}
 	
@@ -304,7 +366,14 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
     {
     	if (curPut == null)
     	{
-    		curPut = new PutFieldImpl();
+    		try
+    		{
+    			curPut = new PutFieldImpl();
+    		} 
+    		catch (Exception e)
+    		{
+    			throw new WicketSerializeableException("Error reading put fields", e);
+    		}
     	}
     	return curPut;
     }
@@ -316,7 +385,14 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
     {
     	if (curPut != null)
     	{
-    		curPut.write(this);
+    		try
+    		{
+    			curPut.write(this);
+    		}
+    		catch (Exception e)
+    		{
+    			throw new WicketSerializeableException("Error writing put fields", e);
+    		}
     	}
     }
 	/**
@@ -325,7 +401,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 	public void close() throws IOException
 	{
 		classHandler = null;
-		stack = null;
+		curObject = null;
+		curPut = null;
 		defaultWrite = null;
 		out.close();
 	}

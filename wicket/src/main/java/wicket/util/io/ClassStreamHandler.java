@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,6 +138,9 @@ public final class ClassStreamHandler
 	private final short classId;
 
 	private final Constructor cons;
+	
+	private final Method writeReplaceMethod;
+	private final Method readResolveMethod;
 
 	private final List writeObjectMethods;
 
@@ -145,15 +149,18 @@ public final class ClassStreamHandler
 
 	private final PrimitiveArray primitiveArray;
 
+
+	private boolean isProxy;
+
 	/**
 	 * Construct.
 	 * 
 	 * @param cls
 	 * @param wicketObjectOutputStream
 	 *            TODO
-	 * @throws NotSerializableException 
+	 * @throws WicketSerializeableException 
 	 */
-	private ClassStreamHandler(Class cls) throws NotSerializableException
+	private ClassStreamHandler(Class cls) throws WicketSerializeableException
 	{
 		this.classId = classCounter++;
 		this.clz = cls;
@@ -163,6 +170,10 @@ public final class ClassStreamHandler
 			cons = null;
 			writeObjectMethods = null;
 			readObjectMethods = null;
+			
+			writeReplaceMethod = null;
+			readResolveMethod = null;
+			
 			if (clz == boolean.class)
 			{
 				primitiveArray = new BooleanPrimitiveArray();
@@ -206,21 +217,46 @@ public final class ClassStreamHandler
 			cons = null;
 			writeObjectMethods = null;
 			readObjectMethods = null;
+			writeReplaceMethod = null;
+			readResolveMethod = null;
+			primitiveArray = null;
+			isProxy = false;
+		}
+		else if (Proxy.isProxyClass(clz))
+		{
+			isProxy = true;
+			fields = null;
+			cons = null;
+			writeObjectMethods = null;
+			writeReplaceMethod = null;
+			readResolveMethod = null;
+			readObjectMethods = null;
 			primitiveArray = null;
 		}
 		else
 		{
-			this.fields = new ArrayList();
-			cons = getSerializableConstructor(clz);
-			if (cons == null)
-			{
-				throw new NotSerializableException("No serializeable constructor found for " + cls);
-			}
-			
-			writeObjectMethods = new ArrayList();
-			readObjectMethods = new ArrayList();
+			fields = new ArrayList();
 			primitiveArray = null;
+	    	writeObjectMethods = new ArrayList(2);
+			readObjectMethods = new ArrayList(2);
+			isProxy = false;
 			
+		    writeReplaceMethod = getInheritableMethod( clz, "writeReplace", null, Object.class);
+		    
+		    readResolveMethod = getInheritableMethod(clz, "readResolve", null, Object.class);
+		    if (readResolveMethod == null)
+		    {
+				cons = getSerializableConstructor(clz);
+				if (cons == null)
+				{
+					throw new WicketSerializeableException("No serializeable constructor found for " + cls);
+				}
+		    }
+		    else
+		    {
+		    	cons = null;
+		    }
+
 			Class parent = cls;
 			while(parent != Object.class)
 			{
@@ -231,7 +267,10 @@ public final class ClassStreamHandler
 				
 				parent = parent.getSuperclass();
 			}
-			fillFields(cls);
+			if (writeReplaceMethod == null)
+			{
+				fillFields(cls);
+			}
 		}
 	}
 
@@ -331,52 +370,54 @@ public final class ClassStreamHandler
 	 * @param woos
 	 * @param obj
 	 * @param out
+	 * @throws WicketSerializeableException 
 	 */
-	public void writeFields(WicketObjectOutputStream woos, Object obj)
+	public void writeFields(WicketObjectOutputStream woos, Object obj) throws WicketSerializeableException
 	{
+		FieldAndIndex fai = null;
 		try
 		{
 			for (int i = 0; i < fields.size(); i++)
 			{
-				FieldAndIndex fai = (FieldAndIndex)fields.get(i);
+				fai = (FieldAndIndex)fields.get(i);
 				fai.writeField(obj, woos);
 			}
 		}
-		catch (IllegalArgumentException ex)
+		catch (WicketSerializeableException wse)
 		{
-			throw new RuntimeException(ex);
+			wse.addTrace(fai.field.getName());
+			throw wse;
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
-			throw new RuntimeException(ex);
+			throw new WicketSerializeableException("Error writing field: " + fai.field.getName() + " for object class: " + obj.getClass(), ex);
 		}
 
 	}
 
 	/**
 	 * @param wois
+	 * @throws WicketSerializeableException 
 	 */
-	public void readFields(WicketObjectInputStream wois, Object object)
+	public void readFields(WicketObjectInputStream wois, Object object)  throws WicketSerializeableException
 	{
+		FieldAndIndex fai = null;
 		try
 		{
 			for (int i = 0; i < fields.size(); i++)
 			{
-				FieldAndIndex fai = (FieldAndIndex)fields.get(i);
+				fai = (FieldAndIndex)fields.get(i);
 				fai.readField(object, wois);
 			}
 		}
-		catch (IllegalArgumentException ex)
+		catch (WicketSerializeableException wse)
 		{
-			throw new RuntimeException(ex);
+			wse.addTrace(fai.field.getName());
+			throw wse;
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
-			throw new RuntimeException(ex);
-		}
-		catch (ClassNotFoundException ex)
-		{
-			throw new RuntimeException(ex);
+			throw new WicketSerializeableException("Error reading field: " + fai.field.getName() + " for object class: " + object.getClass(),ex);
 		}
 	}
 	
@@ -510,6 +551,55 @@ public final class ClassStreamHandler
 		catch (NoSuchMethodException ex)
 		{
 			return null;
+		}
+	}
+	
+	/**
+     * Returns non-static, non-abstract method with given signature provided it
+     * is defined by or accessible (via inheritance) by the given class, or
+     * null if no match found.  Access checks are disabled on the returned
+     * method (if any).
+     */
+    private static Method getInheritableMethod(Class cl, String name,
+					       Class[] argTypes,
+					       Class returnType)
+    {
+		Method meth = null;
+		Class defCl = cl;
+		while (defCl != null)
+		{
+			try
+			{
+				meth = defCl.getDeclaredMethod(name, argTypes);
+				break;
+			}
+			catch (NoSuchMethodException ex)
+			{
+				defCl = defCl.getSuperclass();
+			}
+		}
+
+		if ((meth == null) || (meth.getReturnType() != returnType))
+		{
+			return null;
+		}
+		meth.setAccessible(true);
+		int mods = meth.getModifiers();
+		if ((mods & (Modifier.STATIC | Modifier.ABSTRACT)) != 0)
+		{
+			return null;
+		}
+		else if ((mods & (Modifier.PUBLIC | Modifier.PROTECTED)) != 0)
+		{
+			return meth;
+		}
+		else if ((mods & Modifier.PRIVATE) != 0)
+		{
+			return (cl == defCl) ? meth : null;
+		}
+		else
+		{
+			return packageEquals(cl, defCl) ? meth : null;
 		}
 	}
 
@@ -1031,6 +1121,26 @@ public final class ClassStreamHandler
 			}
 			return array;
 		}
+	}
+
+	/**
+	 * @return
+	 * @throws NotSerializableException 
+	 */
+	public Object writeReplace(Object o) throws NotSerializableException
+	{
+		if (writeReplaceMethod != null)
+		{
+			try
+			{
+				return writeReplaceMethod.invoke(o, null);
+			}
+			catch (Exception ex)
+			{
+				throw new NotSerializableException(ex.getMessage());
+			} 
+		}
+		return null;
 	}
 	
 }
