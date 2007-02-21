@@ -1498,13 +1498,16 @@ public abstract class Component implements Serializable
 					for (Iterator i = behaviors.iterator(); i.hasNext();)
 					{
 						IBehavior behavior = (IBehavior)i.next();
-						try
+						if (isBehaviorAccepted(behavior))
 						{
-							behavior.exception(this, ex);
-						}
-						catch (Throwable ex2)
-						{
-							log.error("Error while cleaning up after exception", ex2);
+							try
+							{
+								behavior.exception(this, ex);
+							}
+							catch (Throwable ex2)
+							{
+								log.error("Error while cleaning up after exception", ex2);
+							}
 						}
 					}
 				}
@@ -1740,7 +1743,10 @@ public abstract class Component implements Serializable
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
 				IBehavior behavior = (IBehavior)i.next();
-				behavior.detachModel(this);
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.detachModel(this);
+				}
 			}
 		}
 	}
@@ -2588,7 +2594,7 @@ public abstract class Component implements Serializable
 			return false;
 		}
 
-		return true;
+		return behavior.isEnabled();
 	}
 
 	/**
