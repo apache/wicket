@@ -662,8 +662,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			// Create session using session factory
 			session = getSessionFactory().newSession(request);
-			// Set the client Locale for this session
-			session.setLocale(request.getLocale());
 
 			if (sessionStore.getSessionId(request, false) != null)
 			{
