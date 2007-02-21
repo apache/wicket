@@ -20,6 +20,9 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import junit.framework.Assert;
 import wicket.util.diff.Diff;
 import wicket.util.diff.Revision;
@@ -28,7 +31,7 @@ import wicket.util.string.Strings;
 class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
 	private Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^"+LINE_ENDING+"]+?)"+LINE_ENDING+"(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
-	
+	private static final Logger logger = LoggerFactory.getLogger(XmlLicenseHeaderHandler.class);
 	/**
 	 * Construct.
 	 * 
@@ -56,9 +59,11 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			if (header.startsWith("<?xml"))
 			{
 				header = header.substring(header.indexOf(LINE_ENDING) + LINE_ENDING.length());
+				logger.debug("Header for " + file + ": " + header);
 			}
 			else
 			{
+				logger.debug(file + " does not start with XML prolog");
 				// Then only take the first 16 lines
 				String[] headers = header.split(LINE_ENDING);
 				header = "";
@@ -73,6 +78,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			}
 
 			revision = Diff.diff(getLicenseHeader().split(LINE_ENDING), header.split(LINE_ENDING));
+			logger.debug("License diff for " + file + ": " + revision);
 		}
 		catch (Exception e)
 		{
