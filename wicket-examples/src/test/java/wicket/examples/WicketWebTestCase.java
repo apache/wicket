@@ -22,6 +22,8 @@ import junit.framework.TestSuite;
 import net.sourceforge.jwebunit.junit.WebTestCase;
 import nl.openedge.util.jetty.JettyDecorator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -36,6 +38,8 @@ import com.meterware.httpunit.HttpUnitOptions;
  */
 public abstract class WicketWebTestCase extends WebTestCase
 {
+	private static final Log logger = LogFactory.getLog(WicketWebTestCase.class);
+
 	/**
 	 * Suite method.
 	 * 
@@ -55,7 +59,13 @@ public abstract class WicketWebTestCase extends WebTestCase
 		suite.addTestSuite(clazz);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
-		deco.setWebappContextRoot("src/main/webapp");
+		String basedir = System.getProperty("basedir");
+		logger.debug("basedir="+basedir);
+		String path = "";
+		if (basedir != null)
+			path = basedir + "/";
+		path += "src/main/webapp";
+		deco.setWebappContextRoot(path);
 		deco.setContextPath("/wicket-examples");
 
 		return deco;
