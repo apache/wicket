@@ -957,8 +957,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Validates the form. This method is typically called before updating any
-	 * models.
+	 * Validates the form by checking required fields, converting raw input and
+	 * running validators for every form component, and last running global form
+	 * validators. This method is typically called before updating any models.
+	 * <p>
+	 * NOTE: in most cases, custom validations on the form can be achieved using
+	 * an IFormValidator that can be added using addValidator().
+	 * </p>
 	 */
 	protected void validate()
 	{
