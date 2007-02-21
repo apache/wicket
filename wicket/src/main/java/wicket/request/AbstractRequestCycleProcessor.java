@@ -373,6 +373,14 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			{
 				component = page.get(pageRelativeComponentPath);
 			}
+
+			if (component == null)
+			{
+				throw new WicketRuntimeException("component " + pageRelativeComponentPath
+						+ " not found on page " + page.getClass().getName() + "[id = "
+						+ page.getNumericId() + "], listener interface = " + listener);
+			}
+
 			if (!component.isEnableAllowed())
 			{
 				throw new UnauthorizedActionException(component, Component.ENABLE);
