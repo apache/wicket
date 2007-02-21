@@ -69,12 +69,4 @@ public class SimpleAttributeModifier extends AbstractBehavior
 			tag.getAttributes().put(attribute, value);
 		}
 	}
-
-	/**
-	 * @return True to enable the modifier, false to disable
-	 */
-	protected boolean isEnabled()
-	{
-		return true;
-	}
 }

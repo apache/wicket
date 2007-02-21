@@ -148,4 +148,12 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	public void renderHead(IHeaderResponse response)
 	{
 	}
+	
+	/**
+	 * @see wicket.behavior.IBehavior#isEnabled()
+	 */
+	public boolean isEnabled()
+	{
+		return true;
+	}
 }
