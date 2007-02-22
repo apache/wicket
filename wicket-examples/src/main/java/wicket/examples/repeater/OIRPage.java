@@ -61,7 +61,7 @@ public class OIRPage extends BasePage
 			super(id, index, model);
 			add(new AttributeModifier("style", true, new Model("background-color:#80b6ed;"))
 			{
-				public boolean isEnabled()
+				public boolean isEnabled(Component component)
 				{
 					return HighlitableDataItem.this.highlite;
 				}
