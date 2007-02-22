@@ -20,12 +20,12 @@ package wicket.examples.displaytag.list;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.examples.WicketTestCase;
+import wicket.WicketTestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
-import wicket.protocol.http.MockWebApplication;
 import wicket.settings.IRequestCycleSettings;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -53,12 +53,10 @@ public class SortableTableHeadersTest extends WicketTestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		application.getRequestCycleSettings().setRenderStrategy(
+		WicketTester application = new WicketTester();
+		application.getApplication().getRequestCycleSettings().setRenderStrategy(
 				IRequestCycleSettings.REDIRECT_TO_BUFFER);
-		application.setHomePage(SortableTableHeadersPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application.startPage(SortableTableHeadersPage.class);
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(), "SortableTableHeadersExpectedResult_1.html", true);
@@ -99,7 +97,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 		// Check that redirect was set as expected and invoke it
 		// Check that wicket:border tag gets removed
 		assertTrue("Response should be a redirect", application.getServletResponse().isRedirect());
-		application.getMarkupSettings().setStripWicketTags(true);
+		application.getApplication().getMarkupSettings().setStripWicketTags(true);
 		redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);
@@ -108,5 +106,6 @@ public class SortableTableHeadersTest extends WicketTestCase
 		document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(),
 				"SortableTableHeadersExpectedResult_3.html", false));
+		application.destroy();
 	}
 }

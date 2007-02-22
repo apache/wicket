@@ -37,13 +37,6 @@ import wicket.util.tester.WicketTester;
  */
 public class LazyInitProxyFactoryTest extends TestCase
 {
-
-
-	protected void setUp() throws Exception
-	{
-		new WicketTester(null);
-	}
-
 	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
 
 	private static ConcreteObject concreteObject = new ConcreteObject("concrete");

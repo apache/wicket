@@ -33,11 +33,11 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.settings.ISecuritySettings;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCryptFactory;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -49,7 +49,7 @@ public class CookieTest extends TestCase
 {
 	private static final Log log = LogFactory.getLog(CookieTest.class);
 
-	private MockWebApplication application;
+	private WicketTester application;
 	private SignInPanel panel;
 	private Form form;
 	private Cookie cookieUsername;
@@ -73,11 +73,10 @@ public class CookieTest extends TestCase
 	{
 		super.setUp();
 
-		application = new MockWebApplication(null);
-		application.setHomePage(MockPage.class);
+		application = new WicketTester(MockPage.class);
 		application.setupRequestAndResponse();
 
-		final ISecuritySettings settings = application.getSecuritySettings();
+		final ISecuritySettings settings = application.getApplication().getSecuritySettings();
 		settings.setCryptFactory(new NoCryptFactory());
 
 		this.panel = new SignInPanel("panel")
@@ -91,7 +90,7 @@ public class CookieTest extends TestCase
 		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
 
-		final ICrypt crypt = application.getSecuritySettings().getCryptFactory().newCrypt();
+		final ICrypt crypt = application.getApplication().getSecuritySettings().getCryptFactory().newCrypt();
 		final String encryptedPassword = crypt.encryptUrlSafe("test");
 		assertNotNull(encryptedPassword);
 		this.cookieUsername = new Cookie("panel:signInForm:username", "juergen");
