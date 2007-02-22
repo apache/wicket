@@ -98,9 +98,12 @@ public interface IBehavior extends Serializable
 	 * This method returns false if the behaviour generates a callback url (for
 	 * example ajax behaviours)
 	 * 
+	 * @param component 
+	 * 			 the component that has this behavior coupled.
+	 * 
 	 * @return boolean true or false.
 	 */
-	boolean getStatelessHint();
+	boolean getStatelessHint(Component component);
 
 	/**
 	 * Called when a components is rendering and wants to render this behavior.
