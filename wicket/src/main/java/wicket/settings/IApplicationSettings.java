@@ -68,7 +68,7 @@ public interface IApplicationSettings
 	 * 
 	 * @param factory
 	 */
-	public void setConverterSupplierFactory(IConverterLocatorFactory factory);
+	public void setConverterLocatorFactory(IConverterLocatorFactory factory);
 
 	/**
 	 * Gets the access denied page class.

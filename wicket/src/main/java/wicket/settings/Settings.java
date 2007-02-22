@@ -134,7 +134,7 @@ public final class Settings
 	/** The context path that should be used for url prefixing */
 	private String contextPath;
 
-	private IConverterLocatorFactory converterFactory;
+	private IConverterLocatorFactory converterLocatorFactory;
 
 	/** Default values for persistence of form data (by means of cookies) */
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
@@ -490,11 +490,11 @@ public final class Settings
 	 */
 	public IConverterLocatorFactory getConverterLocatorFactory()
 	{
-		if (converterFactory == null)
+		if (converterLocatorFactory == null)
 		{
-			converterFactory = new ConverterLocatorFactory();
+			converterLocatorFactory = new ConverterLocatorFactory();
 		}
-		return converterFactory;
+		return converterLocatorFactory;
 	}
 
 	/**
@@ -937,15 +937,15 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#setConverterSupplierFactory(wicket.util.convert.IConverterLocatorFactory)
+	 * @see wicket.settings.IApplicationSettings#setConverterLocatorFactory(wicket.util.convert.IConverterLocatorFactory)
 	 */
-	public void setConverterSupplierFactory(IConverterLocatorFactory factory)
+	public void setConverterLocatorFactory(IConverterLocatorFactory factory)
 	{
 		if (factory == null)
 		{
 			throw new IllegalArgumentException("converter factory cannot be set to null");
 		}
-		this.converterFactory = factory;
+		this.converterLocatorFactory = factory;
 	}
 
 	/**
