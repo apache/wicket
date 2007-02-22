@@ -145,7 +145,7 @@ public class TabbedPanel extends Panel
 				{
 					private static final long serialVersionUID = 1L;
 
-					public boolean isEnabled()
+					public boolean isEnabled(Component component)
 					{
 						return index == selected;
 					}

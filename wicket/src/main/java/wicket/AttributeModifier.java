@@ -190,11 +190,21 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	}
 
 	/**
+	 * Made final to support the parameterless variant.
+	 * 
+	 * @see wicket.behavior.AbstractBehavior#isEnabled(wicket.Component)
+	 */
+	public final boolean isEnabled(Component component)
+	{
+		return isEnabled();
+	}
+
+	/**
 	 * Checks whether this attribute modifier is enabled or not.
 	 * 
 	 * @return Whether enabled or not
 	 */
-	public boolean isEnabled(Component component)
+	public boolean isEnabled()
 	{
 		return enabled;
 	}
