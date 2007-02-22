@@ -217,7 +217,6 @@ public class OrderByLink extends Link
 			});
 		}
 
-
 		/**
 		 * @see wicket.AttributeModifier#isEnabled()
 		 */
@@ -225,8 +224,6 @@ public class OrderByLink extends Link
 		{
 			return getReplaceModel().getObject(null) != null;
 		}
-
-
 	};
 
 
