@@ -19,13 +19,22 @@ package wicket.markup.html.basic;
 import junit.framework.TestCase;
 import wicket.protocol.http.MockWebApplication;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
  */
 public class HomePageRedirectTest extends TestCase
 {
-
+	WicketTester application;
+	protected void setUp() throws Exception
+	{
+		application = new WicketTester();
+	}
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
+	}
 	/**
 	 * Construct.
 	 */
@@ -37,15 +46,9 @@ public class HomePageRedirectTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePagePageRedirect()  throws Exception
+	public void testRenderHomePagePageRedirect() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		
-		application.setHomePage(HomePagePageRedirect.class);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application.startPage(HomePagePageRedirect.class);
 
 		assertEquals(RedirectPage.class, application.getLastRenderedPage().getClass());
 
@@ -57,15 +60,9 @@ public class HomePageRedirectTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testRenderHomePageClassRedirect()  throws Exception
+	public void testRenderHomePageClassRedirect() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		
-		application.setHomePage(HomePageClassRedirect.class);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application.startPage(HomePageClassRedirect.class);
 
 		assertEquals(RedirectPage.class, application.getLastRenderedPage().getClass());
 

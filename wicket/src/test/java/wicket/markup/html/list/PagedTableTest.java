@@ -18,11 +18,11 @@ package wicket.markup.html.list;
 
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -54,10 +54,8 @@ public class PagedTableTest extends TestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		application.setHomePage(PagedTablePage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		WicketTester application = new WicketTester();
+		application.startPage(PagedTablePage.class);
 		PagedTablePage page = (PagedTablePage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
 		assertTrue(validatePage1(document));
@@ -68,6 +66,7 @@ public class PagedTableTest extends TestCase
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(), "PagedTablePageExpectedResult.html", true);
+		application.destroy();
 	}
 
 	/**

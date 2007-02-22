@@ -17,6 +17,8 @@
 package wicket.markup.html.link;
 
 import wicket.WicketTestCase;
+import wicket.protocol.http.WebApplication;
+import wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
@@ -33,6 +35,14 @@ public class ContextPathLinkTest extends WicketTestCase
 		super(name);
 	}
 
+	protected void setUp() throws Exception
+	{
+		application = new WicketTester(ContextPathPage.class);
+	}
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
+	}
 	/**
 	 * @throws Exception
 	 */
@@ -46,7 +56,7 @@ public class ContextPathLinkTest extends WicketTestCase
 	 */
 	public void testEmptyContextPath() throws Exception
 	{
-		application.getApplicationSettings().setContextPath("");
+		application.getApplication().getApplicationSettings().setContextPath("");
 		executeTest(ContextPathPage.class, "ContextPathPageEmptyContextResult.html");
 	}
 
@@ -55,7 +65,7 @@ public class ContextPathLinkTest extends WicketTestCase
 	 */
 	public void testNamedContextPath() throws Exception
 	{
-		application.getApplicationSettings().setContextPath("root");
+		application.getApplication().getApplicationSettings().setContextPath("root");
 		executeTest(ContextPathPage.class, "ContextPathPageRootContextResult.html");
 	}
 

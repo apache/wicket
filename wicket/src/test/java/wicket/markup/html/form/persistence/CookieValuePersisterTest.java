@@ -27,10 +27,10 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.persistence.CookieValuePersisterTestPage.TestForm;
 import wicket.protocol.http.MockHttpServletRequest;
 import wicket.protocol.http.MockHttpServletResponse;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.util.tester.WicketTester;
 
 /**
  * How to test CookieValuePersister. Problem: CookieValuePersister relies on
@@ -55,17 +55,17 @@ import wicket.protocol.http.WebResponse;
  */
 public class CookieValuePersisterTest extends TestCase
 {
-	private MockWebApplication application;
+	private WicketTester application;
 
 	protected void setUp() throws Exception
 	{
-		super.setUp();
-		application = new MockWebApplication(null);
-		application.setHomePage(CookieValuePersisterTestPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application = new WicketTester();
+		application.startPage(CookieValuePersisterTestPage.class);
 	}
-
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
+	}
 	/**
 	 * 
 	 * @throws Exception

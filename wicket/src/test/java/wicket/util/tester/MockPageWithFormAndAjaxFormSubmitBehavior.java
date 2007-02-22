@@ -33,6 +33,8 @@ import wicket.model.CompoundPropertyModel;
  */
 public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 {
+	public static final String EVENT_COMPONENT = "eventComponent";
+
 	private static final long serialVersionUID = 1L;
 
 	private boolean executed = false;
@@ -52,7 +54,7 @@ public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 		form.add(new TextField("name"));
 
 		// The Event behavior
-		WebComponent eventComponent = new WebComponent("eventComponent");
+		WebComponent eventComponent = new WebComponent(EVENT_COMPONENT);
 		add(eventComponent);
 		eventComponent.add(new AjaxFormSubmitBehavior(form, "onclick")
 		{

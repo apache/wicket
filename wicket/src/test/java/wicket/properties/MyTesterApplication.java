@@ -16,20 +16,18 @@
  */
 package wicket.properties;
 
-import wicket.util.tester.WicketTester;
+import wicket.protocol.http.WebApplication;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class MyTesterApplication extends WicketTester
+public class MyTesterApplication extends WebApplication
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Construct.
-	 */
-	public MyTesterApplication()
+	public Class getHomePage()
 	{
+		return null;
 	}
 }

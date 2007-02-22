@@ -18,8 +18,8 @@ package wicket.markup.html.list;
 
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -50,10 +50,8 @@ public class PagedTableNavigatorWithLabelProviderTest extends TestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		application.setHomePage(PagedTableNavigatorWithLabelProviderPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		WicketTester application = new WicketTester();
+		application.startPage(PagedTableNavigatorWithLabelProviderPage.class);
 		PagedTableNavigatorWithLabelProviderPage page = (PagedTableNavigatorWithLabelProviderPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorWithLabelProviderExpectedResult_1.html", true);
@@ -183,5 +181,7 @@ public class PagedTableNavigatorWithLabelProviderTest extends TestCase
 
 		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
+		
+		application.destroy();
 	}
 }

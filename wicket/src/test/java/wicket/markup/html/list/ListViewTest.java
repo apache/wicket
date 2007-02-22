@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 import wicket.model.Model;
-import wicket.protocol.http.MockWebApplication;
 
 /**
  * Test for ListView
@@ -28,19 +27,6 @@ import wicket.protocol.http.MockWebApplication;
  */
 public class ListViewTest extends TestCase
 {
-	/** Use a mock application to handle Link-clicked event */
-	private static MockWebApplication application;
-
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-
-		if (application == null)
-		{
-			application = new MockWebApplication(null);
-		}
-	}
-
 	/**
 	 * Create a predefined ListView
 	 * @param modelListSize # of elements to go into the list

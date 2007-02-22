@@ -25,6 +25,7 @@ import wicket.model.Model;
 import wicket.resource.DummyApplication;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.settings.IResourceSettings;
+import wicket.util.tester.WicketTester;
 import wicket.util.value.ValueMap;
 
 /**
@@ -55,9 +56,9 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	protected void setUp() throws Exception
 	{
-		application = new DummyApplication();
-		settings = application.getResourceSettings();
-		localizer = application.getResourceSettings().getLocalizer();
+		application = new WicketTester(new DummyApplication());
+		settings = application.getApplication().getResourceSettings();
+		localizer = application.getApplication().getResourceSettings().getLocalizer();
 	}
 
 	/**

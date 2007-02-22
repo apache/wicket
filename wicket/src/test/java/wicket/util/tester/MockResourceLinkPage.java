@@ -14,19 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.resource;
+package wicket.util.tester;
 
-import wicket.protocol.http.WebApplication;
+import wicket.ResourceReference;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.link.ResourceLink;
 
 /**
- * Dummy application used for resource loader testing.
+ * Mock page for testing WicketTesters ability to test ResourceLinks
  * 
- * @author Chris Turner
+ * @author frankbille
  */
-public class DummyApplication extends WebApplication
+public class MockResourceLinkPage extends WebPage
 {
-	public Class getHomePage()
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Construct.
+	 */
+	public MockResourceLinkPage()
 	{
-		return null;
+		add(new ResourceLink("link", new ResourceReference(MockResourceLinkPage.class, "MockResourceLinkPage.html")));
 	}
 }

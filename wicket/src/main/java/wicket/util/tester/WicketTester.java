@@ -33,6 +33,7 @@ import wicket.Component;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
@@ -54,16 +55,17 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
+import wicket.markup.html.link.ResourceLink;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
+import wicket.protocol.http.WebApplication;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
 /**
  * A helper to ease unit testing of Wicket applications without the need for a
- * servlet container. To start a test, we can use either startPage() or
- * startPanel():
+ * servlet container. To start a test, either use startPage() or startPanel():
  * 
  * <pre>
  * // production page  
@@ -155,15 +157,14 @@ import wicket.util.string.Strings;
  * 
  * 	// assert feedback messages in INFO Level 
  * 	tester.assertInfoMessages(new String[] { &quot;Wicket Rocks ;-)&quot; });
- * 
  * }
  * </pre>
  * 
  * Instead of <code>tester.startPage(pageClass)</code>, we define a
  * {@link wicket.util.tester.ITestPageSource} to provide testing page instance
  * for WicketTester. This is necessary because <code>YourPage</code> uses a
- * custom constructor, which is very common for transfering model data, can not
- * be instansiated by reflection. Finally, we use
+ * custom constructor, which is very common for transferring model data, but can
+ * not be instantiated by reflection. Finally, we use
  * <code>assertInfoMessages</code> to assert there is a feedback message
  * "Wicket Rocks ;-)" in INFO level.
  * 
@@ -179,32 +180,74 @@ public class WicketTester extends MockWebApplication
 	private static final Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
-	 * create WicketTester with null path
-	 * 
-	 * @see #WicketTester(String)
+	 * @author frankbille
 	 */
-	public WicketTester()
+	public static class DummyWebApplication extends WebApplication
 	{
-		this(null);
+		public Class getHomePage()
+		{
+			return DummyHomePage.class;
+		}
 	}
 
 	/**
-	 * create a WicketTester to help unit testing.
+	 * Create WicketTester and automatically create a WebApplication, but the
+	 * tester will have no home page.
+	 */
+	public WicketTester()
+	{
+		this(new DummyWebApplication(), null);
+	}
+
+	/**
+	 * Create WicketTester and automatically create a WebApplication.
 	 * 
+	 * @param homePage
+	 */
+	public WicketTester(final Class homePage)
+	{
+		this(new WebApplication()
+		{
+			/**
+			 * @see wicket.Application#getHomePage()
+			 */
+			public Class getHomePage()
+			{
+				return homePage;
+			}
+		}, null);
+	}
+
+	/**
+	 * Create WicketTester
+	 * 
+	 * @param application
+	 *            The wicket tester object
+	 */
+	public WicketTester(final WebApplication application)
+	{
+		this(application, null);
+	}
+
+	/**
+	 * Create WicketTester to help unit testing
+	 * 
+	 * @param application
+	 *            The wicket tester object
 	 * @param path
 	 *            The absolute path on disk to the web application contents
 	 *            (e.g. war root) - may be null
 	 * 
 	 * @see wicket.protocol.http.MockWebApplication#MockWebApplication(String)
 	 */
-	public WicketTester(final String path)
+	public WicketTester(final WebApplication application, final String path)
 	{
-		super(path);
+		super(application, path);
 	}
 
 	/**
-	 * Render a page defined in <code>TestPageSource</code>. This usually
-	 * used when a page does not have default consturctor. For example, a
+	 * Render a page defined in <code>TestPageSource</code>. This is usually
+	 * used when a page does not have default constructor. For example, a
 	 * <code>ViewBook</code> page requires a <code>Book</code> instance:
 	 * 
 	 * <pre>
@@ -222,11 +265,9 @@ public class WicketTester extends MockWebApplication
 	 *            a page factory that creating test page instance
 	 * @return Page rendered page
 	 */
-	public final Page startPage(ITestPageSource testPageSource)
+	public final Page startPage(final ITestPageSource testPageSource)
 	{
-		setHomePage(DummyHomePage.class);
-		setupRequestAndResponse();
-		processRequestCycle();
+		startPage(DummyHomePage.class);
 		DummyHomePage page = (DummyHomePage)getLastRenderedPage();
 		page.setTestPageSource(testPageSource);
 
@@ -242,7 +283,6 @@ public class WicketTester extends MockWebApplication
 	{
 		setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
-		// getServletRequest().getSession().getPageMap(null);
 		processRequestCycle();
 	}
 
@@ -254,17 +294,16 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final Page page)
 	{
-		setHomePage(DummyHomePage.class);
 		processRequestCycle(page);
 
 		Page last = getLastRenderedPage();
-
-		createRequestCycle();
-		getWicketSession().touch(page);
-		if (page != last)
-		{
-			getWicketSession().touch(last);
-		}
+		//
+		// createRequestCycle();
+		// getWicketSession().touch(page);
+		// if (page != last)
+		// {
+		// getWicketSession().touch(last);
+		// }
 		return last;
 	}
 
@@ -277,9 +316,8 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Page startPage(Class pageClass)
 	{
-		setHomePage(pageClass);
 		setupRequestAndResponse();
-		processRequestCycle();
+		processRequestCycle(pageClass);
 		return getLastRenderedPage();
 	}
 
@@ -666,7 +704,6 @@ public class WicketTester extends MockWebApplication
 			for (Iterator iter = behaviors.iterator(); iter.hasNext();)
 			{
 				Object behavior = iter.next();
-
 				if (behavior instanceof AjaxFormSubmitBehavior)
 				{
 					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior)behavior;
@@ -687,6 +724,34 @@ public class WicketTester extends MockWebApplication
 
 			// process the request target
 			requestCycle.getRequestTarget().respond(requestCycle);
+		}
+		// ResourceLink
+		else if (linkComponent instanceof ResourceLink)
+		{
+			// Let's see if we should invoke the onclick or not
+			Resource resource = null;
+
+			try
+			{
+				Field resourceField = ResourceLink.class.getDeclaredField("resource");
+				resourceField.setAccessible(true);
+				resource = (Resource)resourceField.get(linkComponent);
+			}
+			catch (Exception e)
+			{
+				Assert.fail(e.getMessage());
+			}
+
+			// If the link holds the resource itself we should
+			if (resource != null)
+			{
+				newRequestToComponent(linkComponent);
+			}
+			// Else we should not (Should we do anything else?)
+			else
+			{
+				// Do nothing
+			}
 		}
 		// if the link is a normal link
 		else if (linkComponent instanceof Link)
@@ -889,12 +954,13 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * dump component tree
+	 * dump component trees
 	 */
 	public void debugComponentTrees()
 	{
 		debugComponentTrees("");
 	}
+
 
 	/**
 	 * Dump the component trees to log.
@@ -915,6 +981,24 @@ public class WicketTester extends MockWebApplication
 				log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
 			}
 		}
+	}
+
+	/**
+	 * Test that a component has been added to a AjaxRequestTarget, using
+	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually
+	 * tests that a component is on the AJAX response sent back to the client.
+	 * <p>
+	 * PLEASE NOTE! This method doesn't actually insert the component in the
+	 * client DOM tree, using javascript. But it shouldn't be needed because you
+	 * have to trust that the Wicket Ajax Javascript just works.
+	 * 
+	 * @param componentPath
+	 *            The component path to the component to test whether it's on
+	 *            the response.
+	 */
+	public void assertComponentOnAjaxResponse(String componentPath)
+	{
+		assertComponentOnAjaxResponse(getComponentFromLastRenderedPage(componentPath));
 	}
 
 	/**
@@ -981,24 +1065,24 @@ public class WicketTester extends MockWebApplication
 	 * component by using:
 	 * 
 	 * <pre>
-	 *    ...
-	 *    component.add(new AjaxEventBehavior(&quot;ondblclick&quot;) {
+	 *     ...
+	 *     component.add(new AjaxEventBehavior(&quot;ondblclick&quot;) {
 	 *        public void onEvent(AjaxRequestTarget) {
-	 *            // Do something.
+	 *           // Do something.
 	 *        }
-	 *    });
-	 *    ...
+	 *     });
+	 *     ...
 	 * </pre>
 	 * 
 	 * You can then test that the code inside onEvent actually does what it's
 	 * supposed to, using the WicketTester:
 	 * 
 	 * <pre>
-	 *    ...
-	 *    tester.executeAjaxEvent(component, &quot;ondblclick&quot;);
-	 *              
-	 *    // Test that the code inside onEvent is correct.
-	 *    ...
+	 *     ...
+	 *     tester.executeAjaxEvent(component, &quot;ondblclick&quot;);
+	 * 
+	 *     // Test that the code inside onEvent is correct.
+	 *     ...
 	 * </pre>
 	 * 
 	 * This also works with AjaxFormSubmitBehavior, where it will "submit" the

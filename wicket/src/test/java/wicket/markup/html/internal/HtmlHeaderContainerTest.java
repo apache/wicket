@@ -40,9 +40,7 @@ public class HtmlHeaderContainerTest extends WicketTestCase
 	 */
 	public void testCleanUpOfAutoAddedComponents()
 	{
-		application.setHomePage(ComponentResolvingPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application.startPage(ComponentResolvingPage.class);
 
 		// onEndRequest() of auto added component was not called in
 		// MarkupContainer#internalEndRequest() using an iterator

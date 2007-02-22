@@ -57,7 +57,7 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	 */
 	public final void testWithRootContext() throws Exception
 	{
-		application.getApplicationSettings().setContextPath("");
+		application.getApplication().getApplicationSettings().setContextPath("");
 		executeTest(Page_1.class, "PageExpectedResult_rootcontext.html");
 	}
 
@@ -66,7 +66,7 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	 */
 	public final void testWithOtherContext() throws Exception
 	{
-		application.getApplicationSettings().setContextPath("/other");
+		application.getApplication().getApplicationSettings().setContextPath("/other");
 		executeTest(Page_1.class, "PageExpectedResult_othercontext.html");
 	}
 
@@ -75,7 +75,7 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	 */
 	public final void testAnchors() throws Exception
 	{
-		application.getApplicationSettings().setContextPath("/other");
+		application.getApplication().getApplicationSettings().setContextPath("/other");
 		executeTest(Page_2.class, "Page2ExpectedResult.html");
 	}
 	
