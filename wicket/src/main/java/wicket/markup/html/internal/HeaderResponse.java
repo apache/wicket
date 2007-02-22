@@ -140,7 +140,7 @@ public class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascript(CharSequence javascript, String id)
 	{
-		List token = Arrays.asList(new Object[] { javascript, id });
+		List token = Arrays.asList(new Object[] { javascript.toString(), id });
 		if (wasRendered(token) == false)
 		{
 			JavascriptUtils.writeJavascript(getResponse(), javascript, id);
@@ -153,10 +153,11 @@ public class HeaderResponse implements IHeaderResponse
 	 */
 	public final void renderString(CharSequence string)
 	{
-		if (wasRendered(string) == false)
+		String token = string.toString();
+		if (wasRendered(token) == false)
 		{
 			getResponse().write(string);
-			markRendered(string);
+			markRendered(token);
 		}
 	}
 
