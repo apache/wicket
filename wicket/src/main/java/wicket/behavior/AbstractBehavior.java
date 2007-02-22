@@ -85,11 +85,11 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 			cleanup();
 		}
 	}
-
+	
 	/**
-	 * @see wicket.behavior.IBehavior#getStatelessHint()
+	 * @see wicket.behavior.IBehavior#getStatelessHint(wicket.Component)
 	 */
-	public boolean getStatelessHint()
+	public boolean getStatelessHint(Component component)
 	{
 		return true;
 	}

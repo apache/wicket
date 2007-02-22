@@ -69,4 +69,14 @@ public class SimpleAttributeModifier extends AbstractBehavior
 			tag.getAttributes().put(attribute, value);
 		}
 	}
+	
+	/**
+	 * This method is depricated use the isEnabled(Component)
+	 * @return true
+	 * @deprecated use isEnabled(Component) now.
+	 */
+	public final boolean isEnabled()
+	{
+		return true;
+	}
 }
