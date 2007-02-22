@@ -194,7 +194,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 * 
 	 * @return Whether enabled or not
 	 */
-	public boolean isEnabled()
+	public boolean isEnabled(Component component)
 	{
 		return enabled;
 	}
@@ -223,7 +223,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 */
 	public final void replaceAttibuteValue(final Component component, final ComponentTag tag)
 	{
-		if (isEnabled())
+		if (isEnabled(component))
 		{
 			final ValueMap attributes = tag.getAttributes();
 			final Object replacementValue = getReplacementOrNull(component);
@@ -278,8 +278,8 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 */
 	public String toString()
 	{
-		return "[AttributeModifier attribute=" + attribute + ", enabled=" + isEnabled()
-				+ ", pattern=" + pattern + ", replacementModel=" + replaceModel + "]";
+		return "[AttributeModifier attribute=" + attribute + ", enabled=" + enabled + ", pattern="
+				+ pattern + ", replacementModel=" + replaceModel + "]";
 	}
 
 	/**

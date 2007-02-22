@@ -2594,7 +2594,7 @@ public abstract class Component implements Serializable
 			return false;
 		}
 
-		return behavior.isEnabled();
+		return behavior.isEnabled(this);
 	}
 
 	/**

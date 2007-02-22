@@ -150,9 +150,9 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	}
 	
 	/**
-	 * @see wicket.behavior.IBehavior#isEnabled()
+	 * @see wicket.behavior.IBehavior#isEnabled(Component)
 	 */
-	public boolean isEnabled()
+	public boolean isEnabled(Component component)
 	{
 		return true;
 	}
