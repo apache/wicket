@@ -218,9 +218,9 @@ public class OrderByLink extends Link
 		}
 
 		/**
-		 * @see wicket.AttributeModifier#isEnabled()
+		 * @see wicket.AttributeModifier#isEnabled(Component)
 		 */
-		public boolean isEnabled()
+		public boolean isEnabled(Component component)
 		{
 			return getReplaceModel().getObject(null) != null;
 		}
