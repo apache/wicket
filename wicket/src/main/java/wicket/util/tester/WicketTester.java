@@ -194,7 +194,7 @@ public class WicketTester extends MockWebApplication
 			return DummyHomePage.class;
 		}
 	}
-	
+
 	/**
 	 * Create WicketTester and automatically create a WebApplication, but the
 	 * tester will have no home page.
@@ -738,18 +738,18 @@ public class WicketTester extends MockWebApplication
 		{
 			// Let's see if we should invoke the onclick or not
 			Resource resource = null;
-			
-			try 
+
+			try
 			{
 				Field resourceField = ResourceLink.class.getDeclaredField("resource");
 				resourceField.setAccessible(true);
 				resource = (Resource)resourceField.get(linkComponent);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Assert.fail(e.getMessage());
 			}
-			
+
 			// If the link holds the resource itself we should
 			if (resource != null)
 			{
@@ -789,7 +789,7 @@ public class WicketTester extends MockWebApplication
 				}
 
 			}
-			
+
 			newRequestToComponent(link);
 		}
 		else
@@ -967,7 +967,7 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * dump component tree
+	 * dump component trees
 	 */
 	public void debugComponentTrees()
 	{
@@ -976,7 +976,7 @@ public class WicketTester extends MockWebApplication
 
 
 	/**
-	 * Dump the component tree to log.
+	 * Dump the component trees to log.
 	 * 
 	 * @param filter
 	 *            Show only the components, which path contains the
@@ -1077,26 +1077,29 @@ public class WicketTester extends MockWebApplication
 	 * component by using:
 	 * 
 	 * <pre>
-	 * ...
-	 * component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
-	 *    public void onEvent(AjaxRequestTarget) {
-	 *       // Do something.
-	 *    }
-	 * });
-	 * ...
+	 *     ...
+	 *     component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *         public void onEvent(AjaxRequestTarget) {
+	 *             // Do something.
+	 *         }
+	 *     });
+	 *     ...
 	 * </pre>
 	 * 
 	 * You can then test that the code inside onEvent actually does what it's
 	 * supposed to, using the WicketTester:
 	 * 
 	 * <pre>
-	 * ...
-	 * tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
-	 *                              
-	 * // Test that the code inside onEvent is correct.
-	 * ...
+	 *     ...
+	 *     tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *                                                                                          
+	 *     // Test that the code inside onEvent is correct.
+	 *     ...
 	 * </pre>
 	 * 
+	 * This also works with AjaxFormSubmitBehavior, where it will "submit" the
+	 * form before executing the command.
+	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the component in the
 	 * client DOM tree, using javascript.
 	 * 
