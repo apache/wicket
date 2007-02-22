@@ -29,7 +29,9 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.Link;
+import wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
 import wicket.util.tester.apps_1.Book;
 import wicket.util.tester.apps_1.CreateBook;
 import wicket.util.tester.apps_1.MyMockApplication;
@@ -44,11 +46,19 @@ import wicket.util.tester.apps_1.ViewBook;
 public class WicketTesterTest extends TestCase
 {
 	private boolean eventExecuted;
+	private WicketTester tester;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		eventExecuted = false;
+		tester = new WicketTester(new MyMockApplication());
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
 	}
 
 	/**
@@ -57,8 +67,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testViewBook() throws Exception
 	{
-		MyMockApplication tester = new MyMockApplication();
-
 		// for WebPage without default constructor, I define a TestPageSource to
 		// let the page be instatiated lately.
 		tester.startPage(new ITestPageSource()
@@ -76,8 +84,6 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.assertLabel("id", "xxId");
 		tester.assertLabel("name", "xxName");
-		
-		tester.destroy();
 	}
 
 	/**
@@ -86,7 +92,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testCreateBook_validateFail() throws Exception
 	{
-		MyMockApplication tester = new MyMockApplication();
 		Session.get().setLocale(Locale.US); // fix locale
 		tester.startPage(CreateBook.class);
 
@@ -100,8 +105,6 @@ public class WicketTesterTest extends TestCase
 
 		// assert error message from validation
 		tester.assertErrorMessages(new String[] { "id is required", "name is required" });
-		
-		tester.destroy();
 	}
 
 	/**
@@ -110,7 +113,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testCreateBook_validatePass() throws Exception
 	{
-		MyMockApplication tester = new MyMockApplication();
 		tester.startPage(CreateBook.class);
 
 		FormTester formTester = tester.newFormTester("createForm");
@@ -127,7 +129,6 @@ public class WicketTesterTest extends TestCase
 		// assert previous page expired.
 		// TODO Post 1.2: General: No longer a valid test
 		// tester.assertExpirePreviousPage();
-		tester.destroy();
 	}
 
 	/**
@@ -136,8 +137,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testBookmarkableLink() throws Exception
 	{
-		MyMockApplication tester = new MyMockApplication();
-
 		// for WebPage without default constructor, I define a TestPageSource to
 		// let the page be instatiated lately.
 		tester.startPage(new ITestPageSource()
@@ -155,8 +154,6 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
-		
-		tester.destroy();
 	}
 
 	/**
@@ -165,7 +162,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testPageConstructor() throws Exception
 	{
-		MyMockApplication tester = new MyMockApplication();
 		Book mockBook = new Book("xxId", "xxName");
 		Page page = new ViewBook(mockBook);
 		tester.startPage(page);
@@ -174,8 +170,6 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
-		
-		tester.destroy();
 	}
 
 	/**
@@ -183,9 +177,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testAssertComponentOnAjaxResponse()
 	{
-		// Start the tester
-		WicketTester tester = new WicketTester();
-
 		final Page page = new MockPageWithLink();
 		AjaxLink ajaxLink = new AjaxLink(page, MockPageWithLink.LINK_ID)
 		{
@@ -234,8 +225,6 @@ public class WicketTesterTest extends TestCase
 
 		// This must not fail
 		tester.assertComponentOnAjaxResponse(component);
-		
-		tester.destroy();
 	}
 
 	/**
@@ -243,9 +232,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testExecuteAjaxEvent()
 	{
-		// Start the tester
-		WicketTester tester = new WicketTester();
-
 		// Setup mocks
 		final MockPageWithOneComponent page = new MockPageWithOneComponent();
 
@@ -276,8 +262,55 @@ public class WicketTesterTest extends TestCase
 		tester.executeAjaxEvent(label, ClientEvent.DBLCLICK);
 
 		assertTrue(eventExecuted);
+	}
+
+	/**
+	 * Test that the clickLink works when submitting a form with a checkgroup
+	 * inside.
+	 */
+	public void testClickLink_ajaxSubmitLink_checkGroup()
+	{
+		tester.startPage(MockPageWithFormAndCheckGroup.class);
+
+		// Click the submit
+		tester.clickLink("submitLink");
+	}
+
+	/**
+	 * Test that the executeAjaxEvent "submits" the form if the event is a
+	 * AjaxFormSubmitBehavior.
+	 */
+	public void testExecuteAjaxEvent_ajaxFormSubmitLink()
+	{
+		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
+
+		// Get the page
+		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester
+				.getLastRenderedPage();
+
+		Pojo pojo = page.getPojo();
+
+		assertEquals("Mock name", pojo.getName());
+		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form"
+				+ Component.PATH_SEPARATOR + "name")).getValue());
+
+		assertFalse(page.isExecuted());
+
+		// Execute the ajax event
+		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
+				ClientEvent.CLICK);
+
+		assertTrue("AjaxFormSubmitBehavior.onSubmit() has not been executed in "
+				+ MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
+
+		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form" + Component.PATH_SEPARATOR + "name")).getValue());
 		
-		tester.destroy();
+		// The name of the pojo should still be the same. If the
+		// executeAjaxEvent weren't submitting the form the name would have been
+		// reset to null, because the form would have been updated but there
+		// wouldn't be any data to update it with.
+		assertNotNull("executeAjaxEvent() did not properly submit the form", pojo.getName());
+		assertEquals("Mock name", pojo.getName());
 	}
 
 	/**
@@ -285,8 +318,6 @@ public class WicketTesterTest extends TestCase
 	 */
 	public void testRedirectWithPageParameters()
 	{
-		WicketTester tester = new WicketTester();
-
 		tester.startPage(MockPageParameterPage.class);
 
 		tester.assertLabel("label", "");
@@ -298,8 +329,6 @@ public class WicketTesterTest extends TestCase
 		// label should now have "1" in it because that's what comes
 		// from the page parameter.
 		tester.assertLabel("label", "1");
-		
-		tester.destroy();
 	}
 
 	/**
