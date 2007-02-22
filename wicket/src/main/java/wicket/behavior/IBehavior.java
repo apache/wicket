@@ -103,6 +103,17 @@ public interface IBehavior extends Serializable
 	boolean getStatelessHint();
 
 	/**
+	 * Called when a components is rendering and wants to render this behavior.
+	 * If false is returned this behavior will be ignored.
+	 * 
+	 * @param component
+	 *            the component that has this behavior coupled
+	 * 
+	 * @return true if this behaviour must be executed/rendered
+	 */
+	boolean isEnabled(Component component);
+
+	/**
 	 * Called any time a component that has this behavior registered is
 	 * rendering the component tag.
 	 * 
@@ -120,12 +131,4 @@ public interface IBehavior extends Serializable
 	 *            the component that has this behavior coupled
 	 */
 	void rendered(Component component);
-	
-	/**
-	 * Called when a components is rendering and wants to render this
-	 * behavior. If false is returned this behavior will be ignored.
-	 * 
-	 * @return true if this behaviour must be executed/rendered
-	 */
-	boolean isEnabled();
 }

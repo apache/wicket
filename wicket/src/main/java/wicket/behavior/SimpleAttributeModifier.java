@@ -64,7 +64,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	 */
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
-		if (isEnabled())
+		if (isEnabled(component))
 		{
 			tag.getAttributes().put(attribute, value);
 		}
