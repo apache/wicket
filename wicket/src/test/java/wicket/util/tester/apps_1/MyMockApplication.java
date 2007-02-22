@@ -21,12 +21,6 @@ import wicket.util.tester.WicketTester;
 /**
  * @author Juergen Donnerstag
  */
-public class MyMockApplication extends WicketTester
+public class MyMockApplication extends WicketTester.DummyWebApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public MyMockApplication()
-	{
-	}
 }

@@ -312,10 +312,12 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
-		tester.setHomePage(TestPage.class);
-		tester.getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+		tester.getApplication().getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
 	}
-
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
 	/**
 	 * @param parameterMap
 	 *            a map

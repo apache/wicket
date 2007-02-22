@@ -24,6 +24,7 @@ import wicket.Session;
 import wicket.feedback.FeedbackMessage;
 import wicket.markup.html.link.Link;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -34,7 +35,7 @@ import wicket.util.diff.DiffUtil;
 public class MockWebApplicationTest extends TestCase
 {
 
-	private MockWebApplication application;
+	private WicketTester application;
 
 	/**
 	 * Create the test.
@@ -50,8 +51,12 @@ public class MockWebApplicationTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null);
-		application.setHomePage(MockPage.class);
+		application = new WicketTester();
+		application.startPage(MockPage.class);
+	}
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
 	}
 
 	/**
@@ -59,10 +64,6 @@ public class MockWebApplicationTest extends TestCase
 	 */
 	public void testRenderHomePage() throws Exception
 	{
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult.html", true);
@@ -77,8 +78,6 @@ public class MockWebApplicationTest extends TestCase
 	 */
 	public void testSessionFeedbackMessagesCleanUp() 
 	{
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
 		Session session = Session.get();
 		session.info("Message");
 		session.info("Not rendered");

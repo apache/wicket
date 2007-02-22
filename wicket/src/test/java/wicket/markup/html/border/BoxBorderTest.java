@@ -100,13 +100,11 @@ public class BoxBorderTest extends WicketTestCase
 		Class pageClass = BorderTestHierarchyPage_4.class;
 
 		System.out.println("=== " + pageClass.getName() + " ===");
-		application.setHomePage(pageClass);
-		application.setupRequestAndResponse();
 
 		MarkupException markupException = null;
 		try
 		{
-			application.processRequestCycle();
+			application.startPage(pageClass);
 		}
 		catch (MarkupException e)
 		{

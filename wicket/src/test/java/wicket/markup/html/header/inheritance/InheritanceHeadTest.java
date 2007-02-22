@@ -20,6 +20,7 @@ import wicket.Request;
 import wicket.Session;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
+import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 import wicket.util.tester.WicketTester;
 
@@ -73,7 +74,7 @@ public class InheritanceHeadTest extends WicketTestCase
 	 */
 	public void test_3() throws Exception
 	{
-		application = new WicketTester()
+		application = new WicketTester(new WebApplication()
 		{
 			/**
 			 * @see wicket.protocol.http.WebApplication#newSession(Request)
@@ -82,7 +83,12 @@ public class InheritanceHeadTest extends WicketTestCase
 			{
 				return new WebSession(this, request).setStyle("myStyle");
 			}
-		};
+			
+			public Class getHomePage()
+			{
+				return ConcretePage2.class;
+			}
+		});
 		
 		executeTest(ConcretePage2.class, "ExpectedResult3.html");
 	}

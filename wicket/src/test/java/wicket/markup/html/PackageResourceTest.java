@@ -20,6 +20,8 @@ import junit.framework.TestCase;
 import wicket.Application;
 import wicket.SharedResources;
 import wicket.protocol.http.MockWebApplication;
+import wicket.protocol.http.WebApplication;
+import wicket.util.tester.WicketTester;
 
 /**
  * Tests for package resources.
@@ -29,7 +31,7 @@ import wicket.protocol.http.MockWebApplication;
 public class PackageResourceTest extends TestCase
 {
 	/** mock application object */
-	public MockWebApplication application;
+	public WebApplication application;
 
 	/**
 	 * Construct.
@@ -90,6 +92,6 @@ public class PackageResourceTest extends TestCase
 	 */
 	protected void setUp() throws Exception
 	{
-		application = new MockWebApplication(null);
+		application = new WicketTester().getApplication();
 	}
 }

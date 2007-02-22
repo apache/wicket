@@ -22,10 +22,10 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
+import wicket.util.tester.WicketTester;
 
 /**
  * This set of tests builds a sample application for testing the dynamic modicication of
@@ -38,7 +38,7 @@ public class AttributeModifierComponentTest extends TestCase
 {
 	private static final Log log = LogFactory.getLog(AttributeModifierComponentTest.class);
 
-	private MockWebApplication application;
+	private WicketTester application;
 
 	/**
 	 * Create a test case instance.
@@ -52,23 +52,18 @@ public class AttributeModifierComponentTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null) {
-			public Class getHomePage()
-			{
-				return AttributeModifierComponentPage.class;
-			}
-		};
+		application = new WicketTester();
+		application.startPage(AttributeModifierComponentPage.class);
 	}
-
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
+	}
 	/**
 	 * @throws Exception
 	 */
 	public void testComponentTagAttributeModification() throws Exception
 	{
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
 		log.info(document);

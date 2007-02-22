@@ -20,11 +20,11 @@ import java.util.List;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.resource.DummyApplication;
 import wicket.resource.loader.BundleStringResourceLoader;
 import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.settings.Settings;
+import wicket.util.tester.WicketTester;
 
 /**
  * Test cases for the <code>ApplicationSettings</code> class.
@@ -33,21 +33,22 @@ import wicket.settings.Settings;
  */
 public class ApplicationSettingsTest extends TestCase
 {
-	/**
-	 * @param message
-	 *            The name of the test being run
-	 */
-	public ApplicationSettingsTest(final String message)
-	{
-		super(message);
-	}
+	WicketTester tester;
 
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester();
+	}
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
 	/**
 	 * 
 	 */
 	public void testFrameworkVersion()
 	{
-		Settings settings = new Settings(new DummyApplication());
+		Settings settings = new Settings(tester.getApplication());
 		assertEquals("n/a", settings.getVersion());
 	}
 
@@ -56,7 +57,7 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
-		Settings settings = new Settings(new DummyApplication());
+		Settings settings = new Settings(tester.getApplication());
 		Assert.assertTrue("exceptionOnMissingResource should default to true", settings
 				.getThrowExceptionOnMissingResource());
 	}
@@ -66,7 +67,7 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testExceptionOnMissingResourceSetsCorrectly() throws Exception
 	{
-		Settings settings = new Settings(new DummyApplication());
+		Settings settings = new Settings(tester.getApplication());
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertFalse("exceptionOnMissingResource should have been set to false", settings
 				.getThrowExceptionOnMissingResource());
@@ -77,7 +78,7 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
-		Settings settings = new Settings(new DummyApplication());
+		Settings settings = new Settings(tester.getApplication());
 		Assert.assertTrue("useDefaultOnMissingResource should default to true", settings
 				.getUseDefaultOnMissingResource());
 	}
@@ -87,7 +88,7 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception
 	{
-		Settings settings = new Settings(new DummyApplication());
+		Settings settings = new Settings(tester.getApplication());
 		settings.setUseDefaultOnMissingResource(false);
 		Assert.assertFalse("useDefaultOnMissingResource should have been set to false", settings
 				.getUseDefaultOnMissingResource());
@@ -98,7 +99,7 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testDefaultStringResourceLoaderSetup()
 	{
-		Settings settings = new Settings(new DummyApplication());
+		Settings settings = new Settings(tester.getApplication());
 		List loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
@@ -112,7 +113,7 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testOverrideStringResourceLoaderSetup()
 	{
-		Application dummy = new DummyApplication();
+		Application dummy = tester.getApplication();
 		Settings settings = new Settings(dummy);
 		settings.addStringResourceLoader(new BundleStringResourceLoader(
 				"wicket.resource.DummyResources"));
@@ -130,7 +131,7 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testLocalizer()
 	{
-		Application dummy = new DummyApplication();
+		Application dummy = tester.getApplication();
 		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings()
 				.getLocalizer());
 	}

@@ -45,15 +45,14 @@ public class IndexedParamTest extends WicketTestCase
 	 */
 	public void testPage() throws Exception
 	{
-		application.setHomePage(Page1.class);
-		application.mount("/page2", new IndexedParamUrlCodingStrategy("/page2", Page2.class));
+		application.getApplication().mount("/page2", new IndexedParamUrlCodingStrategy("/page2", Page2.class));
 
 		executeTest(Page1.class, "IndexedParamTest_ExpectedResult-1.html");
 
 		// Click the autolink
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
-		((MockHttpServletRequest)application.getWicketRequest().getHttpServletRequest()).setURL("/WicketTester/WicketTester/page2/abc");
+		((MockHttpServletRequest)application.getWicketRequest().getHttpServletRequest()).setURL("/page2/abc");
 		application.processRequestCycle(cycle);
 		
 		assertEquals(Page2.class, application.getLastRenderedPage().getClass());

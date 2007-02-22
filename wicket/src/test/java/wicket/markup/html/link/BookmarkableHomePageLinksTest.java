@@ -17,6 +17,8 @@
 package wicket.markup.html.link;
 
 import wicket.WicketTestCase;
+import wicket.protocol.http.WebApplication;
+import wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
@@ -26,19 +28,31 @@ public class BookmarkableHomePageLinksTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public BookmarkableHomePageLinksTest(String name)
 	{
 		super(name);
 	}
-	
+
+	protected void setUp() throws Exception
+	{
+		application = new WicketTester(BookmarkableHomePageLinksPage.class);
+	}
+
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
+	}
+
 	/**
 	 * @throws Exception
 	 */
 	public void testTestLinks() throws Exception
 	{
-		executeTest(BookmarkableHomePageLinksPage.class, "BookmarkableHomePageLinksPage_result.html");
+		executeTest(BookmarkableHomePageLinksPage.class,
+				"BookmarkableHomePageLinksPage_result.html");
 	}
 
 }

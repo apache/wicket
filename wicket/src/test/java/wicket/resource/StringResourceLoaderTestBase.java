@@ -21,7 +21,9 @@ import java.util.Locale;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.Component;
+import wicket.protocol.http.WebApplication;
 import wicket.resource.loader.IStringResourceLoader;
+import wicket.util.tester.WicketTester;
 
 /**
  * Abstract base class providing common test functionality to ensure that all loader
@@ -30,12 +32,12 @@ import wicket.resource.loader.IStringResourceLoader;
  */
 public abstract class StringResourceLoaderTestBase extends TestCase
 {
-
+	WicketTester tester;
 	// The loader to test
 	protected IStringResourceLoader loader;
 
 	// The dummy application
-	protected DummyApplication application;
+	protected WebApplication application;
 
 	// The dummy component
 	protected Component component;
@@ -59,10 +61,16 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	{
 		super.setUp();
 		this.application = new DummyApplication();
+		// Initialize the application
+		tester = new WicketTester(this.application);
 		this.component = new DummyComponent("test", this.application);
 		DummyPage page = new DummyPage();
 		page.add(this.component);
 		this.loader = createLoader();
+	}
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
 	}
 
 	/**

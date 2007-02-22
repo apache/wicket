@@ -71,11 +71,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 	{
 		System.out.println("=== " + MarkupInheritanceExtension_4.class.getName() + " ===");
 		
-		application.setHomePage(MarkupInheritanceExtension_4.class);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application.startPage(MarkupInheritanceExtension_4.class);
 
 		// Validate the document
 		assertEquals(MarkupInheritanceExtension_4.class, application.getLastRenderedPage().getClass());
@@ -124,7 +120,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_8() throws Exception
 	{
-		application.getMarkupSettings().setStripWicketTags(true);
+		application.getApplication().getMarkupSettings().setStripWicketTags(true);
 	    executeTest(MarkupInheritanceExtension_8.class, "MarkupInheritanceExpectedResult_8.html");
 	}
 

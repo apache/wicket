@@ -45,8 +45,8 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 	 */
 	public void testIndexedLink() throws Exception
 	{
-		application.mount("/test1", new IndexedParamUrlCodingStrategy("/test1",BookmarkableHomePageLinksPage.class,null));
-		application.mount("/test2", new IndexedParamUrlCodingStrategy("/test2",BookmarkableHomePageLinksPage.class,"mypagemap"));
+		application.getApplication().mount("/test1", new IndexedParamUrlCodingStrategy("/test1",BookmarkableHomePageLinksPage.class,null));
+		application.getApplication().mount("/test2", new IndexedParamUrlCodingStrategy("/test2",BookmarkableHomePageLinksPage.class,"mypagemap"));
 		
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
@@ -61,7 +61,7 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		assertEquals("test2/Integer0/Integer1/wicket:pageMapName/mypagemap", url2);
 		
 		application.setupRequestAndResponse();
-		application.getServletRequest().setURL("/WicketTester/WicketTester/" + url1);
+		application.getServletRequest().setURL("/" + url1);
 		cycle = application.createRequestCycle();
 		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
 		
@@ -78,7 +78,7 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		}
 		
 		application.setupRequestAndResponse();
-		application.getServletRequest().setURL("/WicketTester/" + url2);
+		application.getServletRequest().setURL("/" + url2);
 		cycle = application.createRequestCycle();
 		encoder = cycle.getProcessor().getRequestCodingStrategy();
 		

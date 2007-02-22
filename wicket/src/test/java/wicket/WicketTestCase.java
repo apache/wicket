@@ -47,9 +47,12 @@ public abstract class WicketTestCase extends TestCase
 
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester(null);
+		application = new WicketTester();
 	}
-
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
+	}
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to
 	 * automatically replace the expected output file.
@@ -62,11 +65,7 @@ public abstract class WicketTestCase extends TestCase
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
-		application.setHomePage(pageClass);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application.startPage(pageClass);
 
 		assertEquals(pageClass, application.getLastRenderedPage().getClass());
 

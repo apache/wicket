@@ -26,9 +26,9 @@ import wicket.Component;
 import wicket.RequestCycle;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.resource.loader.BundleStringResourceLoader;
+import wicket.util.tester.WicketTester;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
@@ -37,7 +37,7 @@ import wicket.resource.loader.BundleStringResourceLoader;
 public class StringResourceModelTest extends TestCase
 {
 
-	private MockWebApplication application;
+	private WicketTester application;
 
 	private WebPage page;
 
@@ -56,13 +56,16 @@ public class StringResourceModelTest extends TestCase
 
 	protected void setUp() throws Exception
 	{
-		super.setUp();
-		application = new MockWebApplication(null);
-		application.getResourceSettings().addStringResourceLoader(
+		application = new WicketTester();
+		application.getApplication().getResourceSettings().addStringResourceLoader(
 				new BundleStringResourceLoader("wicket.model.StringResourceModelTest"));
 		page = new MockPage();
 		ws = new WeatherStation();
 		wsModel = new Model(ws);
+	}
+	protected void tearDown() throws Exception
+	{
+		application.destroy();
 	}
 
 	/**

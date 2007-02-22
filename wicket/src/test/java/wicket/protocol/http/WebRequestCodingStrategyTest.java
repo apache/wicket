@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import wicket.PageParameters;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
+import wicket.util.tester.WicketTester;
 
 /**
  * Tests for WebRequestCodingStrategy
@@ -33,8 +34,8 @@ public class WebRequestCodingStrategyTest extends TestCase
 	 */
 	public void bugTestEncodeStringArray() {
 		WebRequestCodingStrategy wrcs = new WebRequestCodingStrategy();
-		MockWebApplication app = new MockWebApplication("");
-		app.setHomePage(MockPage.class);
+		WicketTester app = new WicketTester();
+		app.startPage(MockPage.class);
 		PageParameters params = new PageParameters();
 		params.add("a", "1");
 		params.add("a", "2");
@@ -42,5 +43,6 @@ public class WebRequestCodingStrategyTest extends TestCase
 		app.setupRequestAndResponse();
 		CharSequence cs = wrcs.encode(app.createRequestCycle(), requestTarget);
 		assertEquals("?a=1&a=2", cs.toString());
+		app.destroy();
 	}
 }

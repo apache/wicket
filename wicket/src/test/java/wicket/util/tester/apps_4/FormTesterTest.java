@@ -43,9 +43,7 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		application.setHomePage(EmailPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		application.startPage(EmailPage.class);
 
 		assertEquals(EmailPage.class, application.getLastRenderedPage().getClass());
 		EmailPage page = (EmailPage)application.getLastRenderedPage();
