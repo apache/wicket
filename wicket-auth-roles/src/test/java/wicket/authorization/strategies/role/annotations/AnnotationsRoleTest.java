@@ -37,7 +37,9 @@ import wicket.util.tester.WicketTester;
  */
 public class AnnotationsRoleTest extends TestCase
 {
-	/**
+    WicketTester tester;
+
+    /**
 	 * Construct.
 	 */
 	public AnnotationsRoleTest()
@@ -55,13 +57,20 @@ public class AnnotationsRoleTest extends TestCase
 		super(arg0);
 	}
 
+    @Override
+    protected void setUp() throws Exception {
+        tester = new WicketTester();
+    }
+    @Override
+    protected void tearDown() throws Exception {
+        tester.destroy();
+    }
 	/**
 	 * @throws Exception
 	 */
 	public void testClear() throws Exception
 	{
-		WicketTester tester = new WicketTester();
-		tester.getSecuritySettings().setAuthorizationStrategy(
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
 		tester.startPage(new ITestPageSource()
 		{
@@ -81,7 +90,7 @@ public class AnnotationsRoleTest extends TestCase
 	public void testAuthorized() throws Exception
 	{
 		WicketTester tester = new WicketTester();
-		tester.getSecuritySettings().setAuthorizationStrategy(
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer("ADMIN")));
 		tester.startPage(new ITestPageSource()
 		{
@@ -101,7 +110,7 @@ public class AnnotationsRoleTest extends TestCase
 	public void testNotAuthorized() throws Exception
 	{
 		WicketTester tester = new WicketTester();
-		tester.getSecuritySettings().setAuthorizationStrategy(
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer("USER")));
 		final class Listener implements IUnauthorizedComponentInstantiationListener
 		{
@@ -113,7 +122,7 @@ public class AnnotationsRoleTest extends TestCase
 			}
 		}
 		Listener listener = new Listener();
-		tester.getSecuritySettings().setUnauthorizedComponentInstantiationListener(listener);
+		tester.getApplication().getSecuritySettings().setUnauthorizedComponentInstantiationListener(listener);
 
 		try
 		{
