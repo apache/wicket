@@ -35,10 +35,10 @@ import wicket.util.value.IValueMap;
  * Example:
  * 
  * <pre>
- *   ...
- *   TagTester tagTester = application.getTagByWicketId(&quot;form&quot;);
- *   assertTrue(tag.hasAttribute(&quot;action&quot;));
- *   ...
+ *  ...
+ *  TagTester tagTester = application.getTagByWicketId(&quot;form&quot;);
+ *  assertTrue(tag.hasAttribute(&quot;action&quot;));
+ *  ...
  * </pre>
  * 
  * @author Frank Bille (billen)
@@ -132,7 +132,7 @@ public class TagTester
 	 * <b>Markup:</b>
 	 * 
 	 * <pre>
-	 *   &lt;span wicket:id=&quot;helloComp&quot; class=&quot;style1 style2&quot;&gt;Hello&lt;/span&gt;
+	 *  &lt;span wicket:id=&quot;helloComp&quot; class=&quot;style1 style2&quot;&gt;Hello&lt;/span&gt;
 	 * </pre>
 	 * 
 	 * <p>
@@ -239,6 +239,7 @@ public class TagTester
 		{
 			try 
 			{
+				// Get the content of the tag
 				int startPos = openTag.getPos() + openTag.getLength();
 				int endPos = closeTag.getPos();
 				String markup = parser.getInput(startPos, endPos).toString();

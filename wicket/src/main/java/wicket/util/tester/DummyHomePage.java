@@ -21,12 +21,45 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.link.Link;
 
 /**
- * A dummy homepage required by WicketTester only.
+ * A dummy homepage required by WicketTester only
  * 
  * @author Ingram Chen
  */
 public class DummyHomePage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
+	private ITestPageSource testPageSource;
+
+	private Link testPageLink;
+
+	/**
+	 * Construct
+	 */
+	public DummyHomePage()
+	{
+		testPageLink = new TestLink(this, "testPage");
+	}
+
+	/**
+	 * Sets page source.
+	 * 
+	 * @param testPageSource
+	 */
+	public void setTestPageSource(ITestPageSource testPageSource)
+	{
+		this.testPageSource = testPageSource;
+	}
+
+	/**
+	 * Gets test link.
+	 * 
+	 * @return Link
+	 */
+	public Link getTestPageLink()
+	{
+		return testPageLink;
+	}
 	/**
 	 * Test link.
 	 */
@@ -53,39 +86,5 @@ public class DummyHomePage extends WebPage
 		{
 			setResponsePage(testPageSource.getTestPage());
 		}
-	}
-
-	private static final long serialVersionUID = 1L;
-
-	private Link testPageLink;
-
-	private ITestPageSource testPageSource;
-
-	/**
-	 * Construct
-	 */
-	public DummyHomePage()
-	{
-		testPageLink = new TestLink(this, "testPage");
-	}
-
-	/**
-	 * Gets test link.
-	 * 
-	 * @return Link
-	 */
-	public Link getTestPageLink()
-	{
-		return testPageLink;
-	}
-
-	/**
-	 * Sets page source.
-	 * 
-	 * @param testPageSource
-	 */
-	public void setTestPageSource(ITestPageSource testPageSource)
-	{
-		this.testPageSource = testPageSource;
 	}
 }

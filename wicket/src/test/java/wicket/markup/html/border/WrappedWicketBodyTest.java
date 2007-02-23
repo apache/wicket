@@ -42,7 +42,8 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	 */
 	public void testSimpleBorder() throws Exception
 	{
-		String document = accessPage(TestPage3.class).getDocument();
+		tester.startPage(TestPage3.class);
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(document.contains("[[SUCCESS]]"));
 		assertTrue(document.contains("[[TEST]]"));
 	}
@@ -55,7 +56,8 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	 */
 	public void testWicketBodyContainer() throws Exception
 	{
-		String document = accessPage(TestPage.class).getDocument();
+		tester.startPage(TestPage.class);
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(document.contains("[[SUCCESS]]"));
 		assertTrue(document.contains("[[TEST]]"));
 		assertTrue(document.contains("[[TEST-2]]"));
@@ -71,7 +73,8 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	{
 		// FIXME I wasn't able to make this work (JDo 2006-09-28); need to make
 		// some other changes first
-		String document = accessPage(TestPage2.class).getDocument();
+		tester.startPage(TestPage2.class);
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(document.contains("[[SUCCESS]]"));
 		assertTrue(document.contains("[[TEST]]"));
 		assertTrue(document.contains("[[TEST-2]]"));

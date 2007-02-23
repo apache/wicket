@@ -55,5 +55,4 @@ public class DisabledComponentTest extends WicketTestCase
 		link.setEnabled(false);
 		executedListener(DisabledComponentPage1.class, link, "DisabledComponentPage1b_result.html");
 	}
-
 }

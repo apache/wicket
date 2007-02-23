@@ -18,7 +18,6 @@ package wicket;
 
 import java.io.Serializable;
 
-import junit.framework.TestCase;
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
@@ -28,14 +27,13 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.model.CompoundPropertyModel;
-import wicket.util.tester.WicketTester;
 
 /**
  * Authorization tests.
  * 
  * @author hillenius
  */
-public class AuthorizationTest extends TestCase
+public class AuthorizationTest extends WicketTestCase
 {
 	/**
 	 * Construct.
@@ -56,26 +54,13 @@ public class AuthorizationTest extends TestCase
 	}
 
 	/**
-	 * Sets up this test.
-	 * 
-	 * @throws Exception
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		super.setUp();
-	}
-
-	/**
 	 * Tests that a component can be created when authorization is allowed.
 	 * 
 	 * @throws Exception
 	 */
 	public void testCreateAllowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester();
 		new WebComponent(new MockPageWithOneComponent(), "component");
-		app.destroy();
 	}
 
 	/**
@@ -86,8 +71,7 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testCreateDisallowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester();
-		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			@Override
 			public boolean isInstantiationAuthorized(Class c)
@@ -105,7 +89,6 @@ public class AuthorizationTest extends TestCase
 		{
 			// this is good: authorization should have failed
 		}
-		app.destroy();
 	}
 
 	/**
@@ -115,14 +98,11 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testRenderAllowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester();
-		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
 
-		app.startPage(AuthTestPage1.class);
-		app.assertRenderedPage(AuthTestPage1.class);
-		app.assertLabel("label", "wicked!");
-		
-		app.destroy();
+		tester.startPage(AuthTestPage1.class);
+		tester.assertRenderedPage(AuthTestPage1.class);
+		tester.assertLabel("label", "wicked!");
 	}
 
 	/**
@@ -132,8 +112,7 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testRenderDisallowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester();
-		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
 			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
@@ -149,11 +128,9 @@ public class AuthorizationTest extends TestCase
 				return true;
 			}
 		});
-		app.startPage(AuthTestPage1.class);
-		app.assertRenderedPage(AuthTestPage1.class);
-		app.assertInvisible("label");
-		
-		app.destroy();
+		tester.startPage(AuthTestPage1.class);
+		tester.assertRenderedPage(AuthTestPage1.class);
+		tester.assertInvisible("label");
 	}
 
 	/**
@@ -163,21 +140,18 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testEnabledAllowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester();
-		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
 
-		app.startPage(AuthTestPage1.class);
-		app.assertRenderedPage(AuthTestPage1.class);
-		app.setParameterForNextRequest("form:stringInput", "test");
-		app.submitForm("form");
-		app.assertRenderedPage(AuthTestPage1.class);
-		AuthTestPage1 page = (AuthTestPage1)app.getLastRenderedPage();
+		tester.startPage(AuthTestPage1.class);
+		tester.assertRenderedPage(AuthTestPage1.class);
+		tester.setParameterForNextRequest("form:stringInput", "test");
+		tester.submitForm("form");
+		tester.assertRenderedPage(AuthTestPage1.class);
+		AuthTestPage1 page = (AuthTestPage1)tester.getLastRenderedPage();
 		assertTrue(page.isSubmitted());
 		Input input = page.getTestModel();
 		assertNotNull(input.getStringInput());
 		assertEquals("test", input.getStringInput());
-		
-		app.destroy();
 	}
 
 	/**
@@ -187,8 +161,7 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testEnabledDisallowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester();
-		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
 			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
@@ -205,21 +178,19 @@ public class AuthorizationTest extends TestCase
 				return true;
 			}
 		});
-		app.startPage(AuthTestPage1.class);
-		app.assertRenderedPage(AuthTestPage1.class);
-		app.setParameterForNextRequest("form:stringInput", "test");
+		tester.startPage(AuthTestPage1.class);
+		tester.assertRenderedPage(AuthTestPage1.class);
+		tester.setParameterForNextRequest("form:stringInput", "test");
 		try
 		{
-			app.submitForm("form");
-			Component component = app.getComponentFromLastRenderedPage("form:stringInput");
+			tester.submitForm("form");
+			Component component = tester.getComponentFromLastRenderedPage("form:stringInput");
 			assertEquals("", component.getModelObjectAsString());
 		}
 		catch (WicketRuntimeException e)
 		{
 			// good
 		}
-
-		app.destroy();
 	}
 
 	/**

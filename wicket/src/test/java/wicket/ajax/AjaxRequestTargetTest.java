@@ -139,11 +139,12 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		Matcher mat = pat.matcher(document);
 
 		String headerContribution = null;
+
 		if (mat.matches())
 		{
 			headerContribution = mat.group(1);
 		}
-		
+
 		// If the filename is empty we use it to say that the headerContribution
 		// should be empty.
 		// This means that it doesn't exist at all

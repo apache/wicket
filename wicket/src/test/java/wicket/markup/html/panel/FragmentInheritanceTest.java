@@ -33,8 +33,8 @@ public class FragmentInheritanceTest extends WicketTestCase
 	 */
 	public void testFragmentInInheritance() throws Exception
 	{
-		assertTrue(accessPage(FragmentInheritanceTestPage.class).getDocument()
-				.equals("<html><body><wicket:child><wicket:extend><span wicket:id=\"fragment\">fragment</span></wicket:extend></wicket:child></body></html>"));
+		tester.startPage(FragmentInheritanceTestPage.class);
+		tester.assertResultPage("<html><body><wicket:child><wicket:extend><span wicket:id=\"fragment\">fragment</span></wicket:extend></wicket:child></body></html>");
 	}
 
 }

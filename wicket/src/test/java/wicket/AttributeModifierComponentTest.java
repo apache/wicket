@@ -60,6 +60,11 @@ public class AttributeModifierComponentTest extends TestCase
 		tester = new WicketTester(AttributeModifierComponentPage.class);
 	}
 
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
+
 	/**
 	 * @throws Exception
 	 */

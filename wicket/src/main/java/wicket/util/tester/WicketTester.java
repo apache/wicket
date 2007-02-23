@@ -35,7 +35,6 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.Resource;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
@@ -44,6 +43,7 @@ import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.ajax.markup.html.form.AjaxSubmitLink;
+import wicket.behavior.AbstractAjaxBehavior;
 import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
@@ -58,11 +58,12 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
-import wicket.markup.html.link.ResourceLink;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.util.diff.DiffUtil;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 import wicket.util.tester.WicketTesterHelper.ComponentData;
@@ -277,19 +278,35 @@ public class WicketTester extends MockWebApplication
 		DummyHomePage page = (DummyHomePage)getLastRenderedPage();
 		page.setTestPageSource(testPageSource);
 
-		newRequestToComponent(page.getTestPageLink());
+		executeListener(page.getTestPageLink());
 		return getLastRenderedPage();
 	}
 
 	/**
+	 * Builds and processes a request suitable for invoking a listener. The
+	 * component must implement any of the known *Listener interfaces.
 	 * 
-	 * @param component
+	 * @param component the listener to invoke
 	 */
-	private void newRequestToComponent(Component component)
+	public void executeListener(Component component)
 	{
 		setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
 		processRequestCycle();
+	}
+
+	/**
+	 * Builds and processes a request suitable for executing an ajax behavior.
+	 * 
+	 * @param behavior the ajax behavior to execute
+	 */
+	public void executeBehavior(final AbstractAjaxBehavior behavior)
+	{
+		setupRequestAndResponse();
+		WebRequestCycle cycle = createRequestCycle();
+		getServletRequest().setRequestToRedirectString(
+				behavior.getCallbackUrl(false).toString());
+		processRequestCycle(cycle);
 	}
 
 	/**
@@ -762,7 +779,7 @@ public class WicketTester extends MockWebApplication
 
 			}
 
-			newRequestToComponent(link);
+			executeListener(link);
 		}
 		else
 		{
@@ -780,7 +797,7 @@ public class WicketTester extends MockWebApplication
 	public void submitForm(String path)
 	{
 		Form form = (Form)getComponentFromLastRenderedPage(path);
-		newRequestToComponent(form);
+		executeListener(form);
 	}
 
 	/**
@@ -821,16 +838,52 @@ public class WicketTester extends MockWebApplication
 	/**
 	 * assert last rendered Page class
 	 * 
-	 * @param expectedReneredPageClass
+	 * FIXME explain why the code is so complicated to compare two classes, or simplify
+	 * 
+	 * @param expectedRenderedPageClass
 	 *            expected class of last renered page
 	 */
-	public void assertRenderedPage(Class expectedReneredPageClass)
+	public void assertRenderedPage(Class expectedRenderedPageClass)
 	{
-		if (!getLastRenderedPage().getClass().isAssignableFrom(expectedReneredPageClass))
+		if (!getLastRenderedPage().getClass().isAssignableFrom(expectedRenderedPageClass))
 		{
-			Assert.assertEquals(Classes.simpleName(expectedReneredPageClass), Classes
+			Assert.assertEquals(Classes.simpleName(expectedRenderedPageClass), Classes
 					.simpleName(getLastRenderedPage().getClass()));
 		}
+	}
+
+	/**
+	 * assert last rendered Page against an expected HTML document contained in a file
+	 * <p>
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to
+	 * automatically replace the expected output file.
+	 * </p>
+	 * 
+	 * @param pageClass
+	 *            Used to load the file (relative to clazz package)
+	 * @param filename
+	 *            Expected output
+	 * @throws Exception
+	 */
+	public void assertResultPage(final Class pageClass, final String filename) throws Exception
+	{
+		// Validate the document
+		String document = getServletResponse().getDocument();
+		DiffUtil.validatePage(document, pageClass, filename, true);
+	}
+
+	/**
+	 * assert last rendered Page against an expected HTML document as a String
+	 * 
+	 * @param expectedDocument
+	 *            Expected output
+	 * @throws Exception
+	 */
+	public void assertResultPage(final String expectedDocument) throws Exception
+	{
+		// Validate the document
+		String document = getServletResponse().getDocument();
+		Assert.assertTrue(document.equals(expectedDocument));
 	}
 
 	/**

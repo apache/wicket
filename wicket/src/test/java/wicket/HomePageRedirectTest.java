@@ -36,6 +36,8 @@ public class HomePageRedirectTest extends TestCase
 	}
 
 	/**
+	 * Test page.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPage() throws Exception
@@ -45,6 +47,7 @@ public class HomePageRedirectTest extends TestCase
 
 		tester.setupRequestAndResponse();
 		tester.processRequestCycle();
+		tester.destroy();
 	}
 
 	/**

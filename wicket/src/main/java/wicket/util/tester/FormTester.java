@@ -51,6 +51,7 @@ import wicket.util.upload.FileUploadException;
  * A helper for testing validaiton and submission of Form component.
  * 
  * @author Ingram Chen
+ * @author Frank Bille (frankbille)
  */
 public class FormTester
 {
@@ -128,10 +129,7 @@ public class FormTester
 					Assert.fail("RadioGroup " + formComponent.getPath() + " does not has index:"
 							+ index);
 				}
-				else
-				{
-					assignValueToFormComponent(formComponent, foundRadio.getValue());
-				}
+				assignValueToFormComponent(formComponent, foundRadio.getValue());
 			}
 			else if (formComponent instanceof CheckGroup)
 			{
@@ -386,6 +384,29 @@ public class FormTester
 	}
 
 	/**
+	 * @return work form
+	 */
+	public Form getForm()
+	{
+		return workingForm;
+	}
+
+	/**
+	 * Gets value for text component with provided id.
+	 * 
+	 * @param id
+	 *            Component's id
+	 * @return value text component
+	 */
+	public String getTextComponentValue(String id)
+	{
+		Component c = getForm().get(id);
+		if (c instanceof AbstractTextComponent)
+			return ((AbstractTextComponent)c).getValue();
+		return null;
+	}
+
+	/**
 	 * simulate selecting an option of a Form Component. Support RadioGroup,
 	 * CheckGroup, and AbstractChoice family currently. The behavior is similar
 	 * to interacting on the browser: For single choice, such as Radio or
@@ -495,7 +516,7 @@ public class FormTester
 		}
 		catch (FileUploadException e)
 		{
-			throw new IllegalStateException(e);
+			throw new WicketRuntimeException(e);
 		}
 		finally
 		{

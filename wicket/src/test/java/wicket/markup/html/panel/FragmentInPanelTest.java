@@ -41,7 +41,9 @@ public class FragmentInPanelTest extends WicketTestCase
 	 */
 	public void testFragmentInPanel() throws Exception
 	{
-		assertTrue(accessPage(TestPage.class).getDocument().contains("[[SUCCESS]]"));
+		tester.startPage(TestPage.class);
+		String document = tester.getServletResponse().getDocument();
+		assertTrue(document.contains("[[SUCCESS]]"));
 	}
 
 	/**
