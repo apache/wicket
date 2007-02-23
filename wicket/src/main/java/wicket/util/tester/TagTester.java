@@ -18,6 +18,7 @@ package wicket.util.tester;
 
 import java.util.Iterator;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
@@ -410,7 +411,8 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				throw new IllegalStateException(e);
+				// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
+				throw new WicketRuntimeException(e);
 			}
 		}
 
