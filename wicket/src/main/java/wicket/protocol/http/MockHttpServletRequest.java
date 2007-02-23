@@ -173,9 +173,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private String path;
 
-	private String url;
-
 	private final HttpSession session;
+
+	private String url;
 
 	private Map/* <String, UploadedFile> */uploadedFiles;
 
@@ -775,6 +775,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
+	 * Get the request url. Always return the path value.
+	 * 
+	 * @return The path value
 	 * @see javax.servlet.http.HttpServletRequest#getRequestURI()
 	 */
 	public String getRequestURI()
@@ -1197,7 +1200,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			else
 			{
 				throw new IllegalArgumentException(
-						"The component class doesn't seem to implement any of the known *Listener Interfaces: "
+						"The component class doesn't seem to implement any of the known *Listener interfaces: "
 								+ component.getClass());
 			}
 
@@ -1367,7 +1370,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 		catch (IOException e)
 		{
-			throw new IllegalStateException(e.getMessage());
+			throw new IllegalStateException(e);
 		}
 
 		issb.append(boundary).append("--").append(crlf);
