@@ -37,9 +37,9 @@ public class HeaderResponse implements IHeaderResponse
 {
 	private static final long serialVersionUID = 1L;
 
-	private Response response;
+	private final Response response;
 
-	private Set<Object> rendered = new HashSet<Object>();
+	private final Set<Object> rendered = new HashSet<Object>();
 
 	/**
 	 * Creates a new header response instance.
