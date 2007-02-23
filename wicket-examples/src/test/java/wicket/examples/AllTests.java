@@ -22,8 +22,6 @@ import junit.framework.TestSuite;
 import nl.openedge.util.jetty.JettyDecorator;
 import wicket.examples.ajax.prototype.AjaxTest;
 import wicket.examples.compref.ComprefTest;
-import wicket.examples.displaytag.DisplaytagTest;
-import wicket.examples.displaytag.list.SortableTableHeadersTest;
 import wicket.examples.encodings.EncodingTest;
 import wicket.examples.forminput.FormInputTest;
 import wicket.examples.guestbook.GuestbookTest;
@@ -102,8 +100,6 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(WordGeneratorTest.class);
 		suite.addTestSuite(HelloWorldTest.class);
 		suite.addTestSuite(GuestbookTest.class);
-		suite.addTestSuite(DisplaytagTest.class);
-		suite.addTestSuite(SortableTableHeadersTest.class);
 		suite.addTestSuite(FormInputTest.class);
 		suite.addTestSuite(LinkomaticTest.class);
 		suite.addTestSuite(Signin2Test.class);
