@@ -69,7 +69,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 		};
 		page.add(link);
 		
-		application.startPage(new ITestPageSource() {
+		tester.startPage(new ITestPageSource() {
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -78,13 +78,13 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 			}
 		});
 		
-		application.assertRenderedPage(MockPageWithFormAndLink.class);
+		tester.assertRenderedPage(MockPageWithFormAndLink.class);
 		
 		// Change the name in the textfield
 		page.getNameField().setModelValue("new mock value");
 
 		// Click the submit link
-		application.clickLink("link");
+		tester.clickLink("link");
 		
 		// Has it really been clicked?
 		assertTrue(linkClicked);

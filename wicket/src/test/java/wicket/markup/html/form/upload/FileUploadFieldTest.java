@@ -59,7 +59,7 @@ public class FileUploadFieldTest extends WicketTestCase
 		FileUploadField field = new FileUploadField("upload");
 		page.getForm().add(field);
 
-		application.startPage(new ITestPageSource() 
+		tester.startPage(new ITestPageSource() 
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -70,8 +70,8 @@ public class FileUploadFieldTest extends WicketTestCase
 		});
 
 		// Setup the request. It should be a IMultipartWebRequest
-		RequestCycle requestCycle = application.createRequestCycle();
-		MockHttpServletRequest servletRequest = application.getServletRequest();
+		RequestCycle requestCycle = tester.createRequestCycle();
+		MockHttpServletRequest servletRequest = tester.getServletRequest();
 		servletRequest.setMethod("POST");
 		servletRequest.setParameter("form2:hf:fs", "");
 		servletRequest.setParameter("wicketState", "");

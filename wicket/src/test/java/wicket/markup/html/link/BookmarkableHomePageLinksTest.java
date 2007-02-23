@@ -38,12 +38,12 @@ public class BookmarkableHomePageLinksTest extends WicketTestCase
 
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester(BookmarkableHomePageLinksPage.class);
+		tester = new WicketTester(BookmarkableHomePageLinksPage.class);
 	}
 
 	protected void tearDown() throws Exception
 	{
-		application.destroy();
+		tester.destroy();
 	}
 
 	/**

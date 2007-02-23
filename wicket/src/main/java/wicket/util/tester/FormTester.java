@@ -141,8 +141,7 @@ public class FormTester
 							+ index);
 				}
 
-
-				assignValueToFormComponent(formComponent, String.valueOf(foundCheck.getValue()));
+				assignValueToFormComponent(formComponent, foundCheck.getValue());
 			}
 			else
 			{
@@ -159,7 +158,6 @@ public class FormTester
 		}
 
 		/**
-		 * 
 		 * @param formComponent
 		 * @param index
 		 * @return xxx

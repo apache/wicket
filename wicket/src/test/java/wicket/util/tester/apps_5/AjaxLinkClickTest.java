@@ -70,7 +70,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		};
 
-		application.startPage(new ITestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			/**
 			 * 
@@ -86,7 +86,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		});
 
-		application.clickLink("ajaxLink");
+		tester.clickLink("ajaxLink");
 
 		assertTrue(linkClicked);
 		assertNotNull(ajaxRequestTarget);
@@ -114,7 +114,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		});
 
-		application.startPage(new ITestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			/**
 			 * 
@@ -127,7 +127,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		});
 
-		application.clickLink("ajaxLink");
+		tester.clickLink("ajaxLink");
 
 		assertTrue(linkClicked);
 		assertNotNull(ajaxRequestTarget);
@@ -153,7 +153,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 			}
 		});
 
-		application.startPage(new ITestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			/**
 			 * 
@@ -167,7 +167,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 		});
 
 		// Click the link with ajax disabled
-		application.clickLink("ajaxLink", false);
+		tester.clickLink("ajaxLink", false);
 
 		assertTrue(linkClicked);
 		assertNull(ajaxRequestTarget);

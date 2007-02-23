@@ -85,7 +85,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			}
 		});
 
-		application.startPage(new ITestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -95,7 +95,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			}
 		});
 
-		application.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		validate(timer, false);
 
@@ -115,7 +115,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		label.setOutputMarkupId(true);
 		label.add(timer);
 
-		application.startPage(new ITestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -138,7 +138,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 */
 	private void validate(MyAjaxSelfUpdatingTimerBehavior timer, boolean inBodyOnLoad)
 	{
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 
 		String updateScript = timer.getUpdateScript();
 		String bodyOnLoadUpdateScript = "<body onload=\"" + Strings.replaceAll(updateScript, "\"", "\\\"")+ "\">";
@@ -153,15 +153,15 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		}
 
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		String url = timer.getCallbackUrl().toString();
-		application.getServletRequest().setRequestToRedirectString(url);
+		tester.getServletRequest().setRequestToRedirectString(url);
 
-		application.processRequestCycle(cycle);
+		tester.processRequestCycle(cycle);
 
 		// Validate the document
-		document = application.getServletResponse().getDocument();
+		document = tester.getServletResponse().getDocument();
 		validateTimerScript(document, updateScript);
 	}
 

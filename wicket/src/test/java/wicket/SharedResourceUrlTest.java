@@ -39,8 +39,8 @@ public class SharedResourceUrlTest extends WicketTestCase
 	 */
 	public void testResourceReferenceUrl() throws Exception
 	{
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		
 		ResourceReference rr = new ResourceReference("test");
 		CharSequence url = cycle.urlFor(rr);
@@ -56,8 +56,8 @@ public class SharedResourceUrlTest extends WicketTestCase
 	 */
 	public void testResourceReferenceWithParamsUrl() throws Exception
 	{
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		
 		ResourceReference rr = new ResourceReference("test");
 		CharSequence url = cycle.urlFor(rr,new ValueMap("param=value",""));

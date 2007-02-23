@@ -124,7 +124,7 @@ public class CheckGroupTest extends WicketTestCase
 
 		// set up necessary objects to emulate a form submission
 
-		RequestCycle cycle = application.createRequestCycle();
+		RequestCycle cycle = tester.createRequestCycle();
 
 		MockPage page = new MockPage();
 
@@ -153,13 +153,13 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue("running with nothing selected - model must be empty", modelObject.getProp1()
 				.size() == 0);
 
-		application.getServletRequest().setParameter(group.getInputName(),
+		tester.getServletRequest().setParameter(group.getInputName(),
 				String.valueOf(choice1.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice1 selected - model must only contain value of check1",
 				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
 
-		application.getServletRequest().setParameter(group.getInputName(),
+		tester.getServletRequest().setParameter(group.getInputName(),
 				String.valueOf(choice2.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice2 selected - model must only contain value of check2",
@@ -167,7 +167,7 @@ public class CheckGroupTest extends WicketTestCase
 
 		// throw in some nulls into the request param to make sure they are
 		// ignored
-		application.getServletRequest().getParameterMap().put(
+		tester.getServletRequest().getParameterMap().put(
 				group.getInputName(),
 				new String[] { null, String.valueOf(choice1.getValue()), null,
 						String.valueOf(choice2.getValue()) });
@@ -177,7 +177,7 @@ public class CheckGroupTest extends WicketTestCase
 				modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2)
 						&& modelObject.getProp1().contains(check1));
 
-		application.getServletRequest().getParameterMap().put(group.getInputName(),
+		tester.getServletRequest().getParameterMap().put(group.getInputName(),
 				new String[] { "some weird choice uuid to test error" });
 		try
 		{

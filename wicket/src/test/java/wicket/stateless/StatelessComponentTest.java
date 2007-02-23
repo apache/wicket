@@ -42,14 +42,14 @@ public class StatelessComponentTest extends WicketTestCase
 	{
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_result.html");
 
-		application.setupRequestAndResponse();
-		application
+		tester.setupRequestAndResponse();
+		tester
 				.getServletRequest()
 				.setURL(
 						"?wicket:bookmarkablePage=:wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener:");
 		try
 		{
-			application.processRequestCycle();
+			tester.processRequestCycle();
 			assertTrue(false);
 		}
 		catch (Exception e)
@@ -64,16 +64,16 @@ public class StatelessComponentTest extends WicketTestCase
 	 */
 	public void testStatelessComponentPageWithMount() throws Exception
 	{
-		application.getApplication().mountBookmarkablePage("/stateless", StatelessComponentPage.class);
+		tester.getApplication().mountBookmarkablePage("/stateless", StatelessComponentPage.class);
 		// test is always the home page. it doesn't work then
 		// executeTest(StatelessComponentPage.class,
 		// "StatelessComponentPage_mount_result.html");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setURL(
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL(
 				"/stateless/wicket:interface/:0:link::ILinkListener:");
 		try
 		{
-			application.processRequestCycle();
+			tester.processRequestCycle();
 			fail("An exception should have been thrown for this request!");
 		}
 		catch (Exception e)

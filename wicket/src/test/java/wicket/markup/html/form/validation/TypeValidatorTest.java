@@ -102,7 +102,7 @@ public class TypeValidatorTest extends WicketTestCase
 	 */
 	public void testDateField()
 	{
-		RequestCycle cycle = application.createRequestCycle();
+		RequestCycle cycle = tester.createRequestCycle();
 
 		MockPage page = new MockPage();
 

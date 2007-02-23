@@ -45,11 +45,11 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 	 */
 	public void testIndexedLink() throws Exception
 	{
-		application.getApplication().mount("/test1", new IndexedParamUrlCodingStrategy("/test1",BookmarkableHomePageLinksPage.class,null));
-		application.getApplication().mount("/test2", new IndexedParamUrlCodingStrategy("/test2",BookmarkableHomePageLinksPage.class,"mypagemap"));
+		tester.getApplication().mount("/test1", new IndexedParamUrlCodingStrategy("/test1",BookmarkableHomePageLinksPage.class,null));
+		tester.getApplication().mount("/test2", new IndexedParamUrlCodingStrategy("/test2",BookmarkableHomePageLinksPage.class,"mypagemap"));
 		
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		
 		PageParameters parameters = new PageParameters();
 		parameters.add("0", "Integer0");
@@ -60,12 +60,12 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		assertEquals("test1/Integer0/Integer1", url1);
 		assertEquals("test2/Integer0/Integer1/wicket:pageMapName/mypagemap", url2);
 		
-		application.setupRequestAndResponse();
-		application.getServletRequest().setURL("/" + url1);
-		cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL("/" + url1);
+		cycle = tester.createRequestCycle();
 		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
 		
-		RequestParameters requestParameters = encoder.decode(application.getWicketRequest());
+		RequestParameters requestParameters = encoder.decode(tester.getWicketRequest());
 		
 		IRequestTarget target1 = cycle.getProcessor().resolve(cycle, requestParameters);
 		if(target1 instanceof BookmarkablePageRequestTarget)
@@ -77,12 +77,12 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 			fail("url: " + url1 + " wasn't resolved to a bookmarkable target: " + target1);
 		}
 		
-		application.setupRequestAndResponse();
-		application.getServletRequest().setURL("/" + url2);
-		cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL("/" + url2);
+		cycle = tester.createRequestCycle();
 		encoder = cycle.getProcessor().getRequestCodingStrategy();
 		
-		requestParameters = encoder.decode(application.getWicketRequest());
+		requestParameters = encoder.decode(tester.getWicketRequest());
 		
 		IRequestTarget target2 = cycle.getProcessor().resolve(cycle, requestParameters);
 		

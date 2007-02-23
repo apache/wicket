@@ -52,7 +52,7 @@ public class ComponentTest extends WicketTestCase
 	public void testDetachPage() throws Exception
 	{
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
-		TestDetachPage page = (TestDetachPage)application.getLastRenderedPage();
+		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
 		assertEquals(1, page.getNrComponentDetachModelCalls());
 		assertEquals(1, page.getNrComponentDetachModelsCalls());
 		assertEquals(1, page.getNrComponentInternalDetachCalls());
@@ -74,7 +74,7 @@ public class ComponentTest extends WicketTestCase
 	public void testDetachPageAjaxRequest() throws Exception
 	{
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
-		TestDetachPage page = (TestDetachPage)application.getLastRenderedPage();
+		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
 
 		assertEquals(1, page.getNrComponentDetachModelCalls());
 		assertEquals(1, page.getNrComponentDetachModelsCalls());

@@ -115,7 +115,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			}
 		});
 
-		application.startPage(new ITestPageSource() {
+		tester.startPage(new ITestPageSource() {
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -124,12 +124,12 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			}
 		});
 		
-		System.out.println(application.getServletResponse().getDocument());
-		application.debugComponentTrees();
+		System.out.println(tester.getServletResponse().getDocument());
+		tester.debugComponentTrees();
 		
-		application.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 
 		Pattern pat = Pattern.compile(".*<header-contribution>(.*?)</header-contribution>.*",
 				Pattern.DOTALL);

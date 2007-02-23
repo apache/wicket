@@ -71,23 +71,23 @@ public class MarkupInheritanceTest extends WicketTestCase
 	{
 		System.out.println("=== " + MarkupInheritanceExtension_4.class.getName() + " ===");
 		
-		application.startPage(MarkupInheritanceExtension_4.class);
+		tester.startPage(MarkupInheritanceExtension_4.class);
 
 		// Validate the document
-		assertEquals(MarkupInheritanceExtension_4.class, application.getLastRenderedPage().getClass());
-		String document = application.getServletResponse().getDocument();
+		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage().getClass());
+		String document = tester.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4.html", true);
 
-		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)application.getLastRenderedPage();
+		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)tester.getLastRenderedPage();
 
 		Link link = (Link)page.get("link");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
 
-		assertEquals(MarkupInheritanceExtension_4.class, application.getLastRenderedPage().getClass());
+		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage().getClass());
 
-		document = application.getServletResponse().getDocument();
+		document = tester.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4-1.html", true);
 	}
 
@@ -120,7 +120,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_8() throws Exception
 	{
-		application.getApplication().getMarkupSettings().setStripWicketTags(true);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 	    executeTest(MarkupInheritanceExtension_8.class, "MarkupInheritanceExpectedResult_8.html");
 	}
 

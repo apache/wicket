@@ -43,7 +43,7 @@ public class DisabledComponentPage1 extends WebPage
 			{
 				setResponsePage(new DisabledComponentPage2());
 			}
-			
+
 		};
 		add(link);
 	}
