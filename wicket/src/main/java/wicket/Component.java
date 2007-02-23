@@ -454,6 +454,8 @@ public abstract class Component implements Serializable
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
+		private static final long serialVersionUID = 1L;
+
 		public boolean compare(Component component, Object b)
 		{
 			final Object a = component.getModelObject();
