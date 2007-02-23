@@ -43,7 +43,7 @@ public class AutolinkTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-        application.getApplication().getMarkupSettings().setAutomaticLinking(true);
+        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 	    executeTest(AutolinkPage_1.class, "AutolinkPageExpectedResult_1.html");
 	}
     
@@ -52,8 +52,8 @@ public class AutolinkTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-        application.getApplication().getMarkupSettings().setAutomaticLinking(true);
-        application.getApplication().getMarkupSettings().setStripWicketTags(true);
+        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
+        tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 	    executeTest(AutolinkPage_2.class, "AutolinkPageExpectedResult_2.html");
 	}
     
@@ -62,7 +62,7 @@ public class AutolinkTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-        application.getApplication().getMarkupSettings().setAutomaticLinking(true);
+        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 	    executeTest(AutolinkPage_3.class, "AutolinkPageExpectedResult_3.html");
 	}
     
@@ -71,7 +71,7 @@ public class AutolinkTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
-        application.getApplication().getMarkupSettings().setAutomaticLinking(true);
+        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 	    executeTest(AutolinkPage_4.class, "AutolinkPageExpectedResult_4.html");
 	}
 }

@@ -29,6 +29,7 @@ public class MarkupContainerTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public MarkupContainerTest(String name)
@@ -37,12 +38,12 @@ public class MarkupContainerTest extends WicketTestCase
 	}
 
 	/**
-	 * Make sure components are iterated in the order they were added.
-	 * Required e.g. for Repeaters
+	 * Make sure components are iterated in the order they were added. Required
+	 * e.g. for Repeaters
 	 */
 	public void testIteratorOrder()
 	{
-		MarkupContainer container = new WebMarkupContainer("test");
+		MarkupContainer container = new WebMarkupContainer("component");
 		for (int i=0; i < 10; i++)
 		{
 			container.add(new WebComponent(Integer.toString(i)));

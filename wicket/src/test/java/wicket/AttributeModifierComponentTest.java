@@ -28,17 +28,19 @@ import wicket.protocol.http.documentvalidation.TextContent;
 import wicket.util.tester.WicketTester;
 
 /**
- * This set of tests builds a sample application for testing the dynamic modicication of
- * attributes in both component tags and also in raw markup. The tests contained here
- * represent testing on one specific area of functionality of the Component class. It is
- * expected that separate test cases will be added to test other facets of Components.
+ * This set of tests builds a sample tester for testing the dynamic modicication
+ * of attributes in both component tags and also in raw markup. The tests
+ * contained here represent testing on one specific area of functionality of the
+ * Component class. It is expected that separate test cases will be added to
+ * test other facets of Components.
+ * 
  * @author Chris Turner
  */
 public class AttributeModifierComponentTest extends TestCase
 {
 	private static final Log log = LogFactory.getLog(AttributeModifierComponentTest.class);
 
-	private WicketTester application;
+	private WicketTester tester;
 
 	/**
 	 * Create a test case instance.
@@ -52,20 +54,22 @@ public class AttributeModifierComponentTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new WicketTester();
-		application.startPage(AttributeModifierComponentPage.class);
+		tester = new WicketTester();
+		tester.startPage(AttributeModifierComponentPage.class);
 	}
+
 	protected void tearDown() throws Exception
 	{
-		application.destroy();
+		tester.destroy();
 	}
+
 	/**
 	 * @throws Exception
 	 */
 	public void testComponentTagAttributeModification() throws Exception
 	{
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		log.info(document);
 		Assert.assertTrue(validateDocument(document));
 	}

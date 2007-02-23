@@ -71,21 +71,21 @@ public class BoxBorderTest extends WicketTestCase
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
 
-		Border border = (Border)application.getLastRenderedPage().get("border");
-		Form form = (Form)application.getLastRenderedPage().get("border:myForm");
+		Border border = (Border)tester.getLastRenderedPage().get("border");
+		Form form = (Form)tester.getLastRenderedPage().get("border:myForm");
 
-		TextField input = (TextField)application.getLastRenderedPage().get("border:name");
+		TextField input = (TextField)tester.getLastRenderedPage().get("border:name");
 		assertEquals("", input.getModelObjectAsString());
 
-		application.setupRequestAndResponse();
+		tester.setupRequestAndResponse();
 
-		MockHttpServletRequest mockRequest = application.getServletRequest();
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
 		mockRequest.setRequestToComponent(form);
 		mockRequest.setParameter(input.getInputName(), "jdo");
 
-		application.processRequestCycle();
+		tester.processRequestCycle();
 
-		input = (TextField)application.getLastRenderedPage().get("border:name");
+		input = (TextField)tester.getLastRenderedPage().get("border:name");
 		assertEquals("jdo", input.getModelObjectAsString());
 	}
 
@@ -104,7 +104,7 @@ public class BoxBorderTest extends WicketTestCase
 		MarkupException markupException = null;
 		try
 		{
-			application.startPage(pageClass);
+			tester.startPage(pageClass);
 		}
 		catch (MarkupException e)
 		{

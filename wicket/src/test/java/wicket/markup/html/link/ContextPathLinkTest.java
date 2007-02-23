@@ -37,11 +37,11 @@ public class ContextPathLinkTest extends WicketTestCase
 
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester(ContextPathPage.class);
+		tester = new WicketTester(ContextPathPage.class);
 	}
 	protected void tearDown() throws Exception
 	{
-		application.destroy();
+		tester.destroy();
 	}
 	/**
 	 * @throws Exception
@@ -56,7 +56,7 @@ public class ContextPathLinkTest extends WicketTestCase
 	 */
 	public void testEmptyContextPath() throws Exception
 	{
-		application.getApplication().getApplicationSettings().setContextPath("");
+		tester.getApplication().getApplicationSettings().setContextPath("");
 		executeTest(ContextPathPage.class, "ContextPathPageEmptyContextResult.html");
 	}
 
@@ -65,7 +65,7 @@ public class ContextPathLinkTest extends WicketTestCase
 	 */
 	public void testNamedContextPath() throws Exception
 	{
-		application.getApplication().getApplicationSettings().setContextPath("root");
+		tester.getApplication().getApplicationSettings().setContextPath("root");
 		executeTest(ContextPathPage.class, "ContextPathPageRootContextResult.html");
 	}
 

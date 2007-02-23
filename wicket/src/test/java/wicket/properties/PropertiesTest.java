@@ -41,11 +41,11 @@ public class PropertiesTest extends WicketTestCase
 
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester(new MyApplication());
+		tester = new WicketTester(new MyApplication());
 	}
 	protected void tearDown() throws Exception
 	{
-		application.destroy();
+		tester.destroy();
 	}
 
 	/**
@@ -56,11 +56,11 @@ public class PropertiesTest extends WicketTestCase
 	{
 		// Add the string resource loader with the special Bundle like
 		// behavior
-		application.getApplication().getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(application.getApplication()));
+		tester.getApplication().getResourceSettings().addStringResourceLoader(
+				new WicketBundleStringResourceLoader(tester.getApplication()));
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		TestPage page = new TestPage();
 		cycle.getSession().setLocale(Locale.GERMANY);
 		cycle.getSession().setStyle("mystyle");
@@ -79,11 +79,11 @@ public class PropertiesTest extends WicketTestCase
 	{
 		// Add the string resource loader with the special Bundle like
 		// behavior
-		application.getApplication().getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(application.getApplication()));
+		tester.getApplication().getResourceSettings().addStringResourceLoader(
+				new WicketBundleStringResourceLoader(tester.getApplication()));
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.getSession().setLocale(Locale.GERMANY);
 		TestPage page = new TestPage()
 		{

@@ -266,7 +266,7 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				throw new IllegalStateException();
+				throw new IllegalStateException(e);
 			}
 
 		}
@@ -410,7 +410,7 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				throw new IllegalStateException();
+				throw new IllegalStateException(e);
 			}
 		}
 

@@ -40,13 +40,13 @@ public class TestPage_1 extends WebPage
 		add(new WebComponent("comp")
 		{
 			private static final long serialVersionUID = 1L;
-	
+
 			protected void onComponentTag(ComponentTag tag)
 			{
 				tag.setType(XmlTag.OPEN);
 				super.onComponentTag(tag);
 			}
-			
+
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				replaceComponentTagBody(markupStream, openTag, "body");

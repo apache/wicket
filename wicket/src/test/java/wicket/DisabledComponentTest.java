@@ -26,6 +26,7 @@ public class DisabledComponentTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public DisabledComponentTest(String name)
@@ -39,23 +40,19 @@ public class DisabledComponentTest extends WicketTestCase
 	public void testEnabled() throws Exception
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
-		Link link = ((DisabledComponentPage1)application.getLastRenderedPage()).link;
+		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
 		executedListener(DisabledComponentPage2.class, link, "DisabledComponentPage2_result.html");
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
 	public void testDisabled() throws Exception
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
-		Link link = ((DisabledComponentPage1)application.getLastRenderedPage()).link;
-		// we need to setup request/response before calling setenabled
-		application.setupRequestAndResponse();
-		application.createRequestCycle();
+		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
+		tester.createRequestCycle();
 		link.setEnabled(false);
 		executedListener(DisabledComponentPage1.class, link, "DisabledComponentPage1b_result.html");
 	}
-	
 }
-

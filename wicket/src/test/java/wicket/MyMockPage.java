@@ -28,7 +28,7 @@ import wicket.markup.html.form.Form;
 public class MyMockPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	DropDownChoice drop1;
 	DropDownChoice drop2;
 
@@ -43,10 +43,10 @@ public class MyMockPage extends WebPage
 		String[] choices = { "choice1", "choice2" };
 		drop1 = new DropDownChoice("drop1", Arrays.asList(choices));
 		drop2 = new DropDownChoice("drop2", Arrays.asList(choices));
-		
+
 		drop1.setNullValid(true);
 		drop2.setNullValid(true);
-		
+
 		form.add(drop1);
 		form.add(drop2);
 	}

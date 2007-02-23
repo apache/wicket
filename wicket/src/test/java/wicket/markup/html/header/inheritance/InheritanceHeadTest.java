@@ -74,7 +74,7 @@ public class InheritanceHeadTest extends WicketTestCase
 	 */
 	public void test_3() throws Exception
 	{
-		application = new WicketTester(new WebApplication()
+		tester = new WicketTester(new WebApplication()
 		{
 			/**
 			 * @see wicket.protocol.http.WebApplication#newSession(Request)

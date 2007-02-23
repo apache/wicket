@@ -44,17 +44,17 @@ public class SimpleTestPanelTest extends WicketTestCase
 	{
 	    executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 	    
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		
-		Page page = application.getLastRenderedPage();
+		Page page = tester.getLastRenderedPage();
 	    String url = ((SimpleTestPanel)page.get("testPanel")).getTimeBehavior().getCallbackUrl().toString();
-		application.getServletRequest().setRequestToRedirectString(url);
+		tester.getServletRequest().setRequestToRedirectString(url);
 
-		application.processRequestCycle(cycle);
+		tester.processRequestCycle(cycle);
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		DiffUtil.validatePage(document, SimpleTestPage.class, "SimpleTestPageExpectedResult-1.html", true);
 	}
 }

@@ -18,8 +18,6 @@ package wicket;
 
 import junit.framework.TestCase;
 import wicket.behavior.AbstractAjaxBehavior;
-import wicket.protocol.http.WebRequestCycle;
-import wicket.util.diff.DiffUtil;
 import wicket.util.tester.WicketTester;
 
 /**
@@ -32,7 +30,14 @@ import wicket.util.tester.WicketTester;
 public abstract class WicketTestCase extends TestCase
 {
 	/** */
-	public WicketTester application;
+	public WicketTester tester;
+
+	/**
+	 * Constructor
+	 */
+	public WicketTestCase()
+	{
+	}
 
 	/**
 	 * Create the test.
@@ -47,12 +52,13 @@ public abstract class WicketTestCase extends TestCase
 
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester();
+		tester = new WicketTester();
 	}
 	protected void tearDown() throws Exception
 	{
-		application.destroy();
+		tester.destroy();
 	}
+
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to
 	 * automatically replace the expected output file.
@@ -61,17 +67,14 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Class pageClass, final String filename) throws Exception
+	protected void executeTest(final Class pageClass, final String filename)
+			throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
-		application.startPage(pageClass);
-
-		assertEquals(pageClass, application.getLastRenderedPage().getClass());
-
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), filename, true);
+		tester.startPage(pageClass);
+		tester.assertRenderedPage(pageClass);
+		tester.assertResultPage(this.getClass(), filename);
 	}
 
 	/**
@@ -85,19 +88,14 @@ public abstract class WicketTestCase extends TestCase
 			final String filename) throws Exception
 	{
 		assertNotNull(component);
-		
+
 		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath()
 				+ " ===");
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
-		application.getServletRequest().setRequestToComponent(component);
-		application.processRequestCycle(cycle);
-
-		String document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, pageClass, filename, true);
+		tester.executeListener(component);
+		tester.assertResultPage(pageClass, filename);
 	}
-	
+
 	/**
 	 * 
 	 * @param pageClass
@@ -109,15 +107,10 @@ public abstract class WicketTestCase extends TestCase
 			final String filename) throws Exception
 	{
 		assertNotNull(behavior);
-		
+
 		System.out.println("=== " + pageClass.getName() + " : " + behavior.toString() + " ===");
-		
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
-		application.getServletRequest().setRequestToRedirectString(behavior.getCallbackUrl(false, false).toString());
-		application.processRequestCycle(cycle);
-	
-		String document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, pageClass, filename, true);
+
+		tester.executeBehavior(behavior);
+		tester.assertResultPage(pageClass, filename);
 	}
 }

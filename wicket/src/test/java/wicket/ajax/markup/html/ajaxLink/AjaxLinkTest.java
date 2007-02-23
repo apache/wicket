@@ -54,7 +54,7 @@ public class AjaxLinkTest extends WicketTestCase
 	{
 		executeTest(AjaxLinkWithBorderPage.class, "AjaxLinkWithBorderPageExpectedResult.html");
 
-		Page page = application.getLastRenderedPage();
+		Page page = tester.getLastRenderedPage();
 		Component ajaxLink = page.get("ajaxLink");
 		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
 
@@ -69,7 +69,7 @@ public class AjaxLinkTest extends WicketTestCase
 	{
 		executeTest(AjaxPage2.class, "AjaxPage2_ExpectedResult.html");
 
-		Page page = application.getLastRenderedPage();
+		Page page = tester.getLastRenderedPage();
 		Component ajaxLink = page.get("ajaxLink");
 		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
 
@@ -83,9 +83,9 @@ public class AjaxLinkTest extends WicketTestCase
 	 */
 	public void testJavascriptEndsWithReturn()
 	{
-		application.startPage(AjaxLinkPage.class);
+		tester.startPage(AjaxLinkPage.class);
 
-		TagTester ajaxLink = application.getTagByWicketId("ajaxLink");
+		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
 
 		assertTrue(ajaxLink.getAttributeEndsWith("onclick", "return !wcall;"));
 	}
@@ -96,9 +96,9 @@ public class AjaxLinkTest extends WicketTestCase
 	 */
 	public void testAnchorGetsHrefReplaced()
 	{
-		application.startPage(AjaxLinkPage.class);
+		tester.startPage(AjaxLinkPage.class);
 
-		TagTester ajaxLink = application.getTagByWicketId("ajaxLink");
+		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
 
 		// It was a link to google in the markup, but should be replaced to "#"
 		assertTrue(ajaxLink.getAttributeIs("href", "#"));

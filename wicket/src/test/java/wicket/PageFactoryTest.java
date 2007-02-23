@@ -152,15 +152,15 @@ public class PageFactoryTest extends WicketTestCase
 
 		// String: Illegal String parameter constructor only
 		e = null;
-		try 
-		{ 
-		    factory.newPage(String.class, new PageParameters()).getClass(); 
-		} 
-		catch (ClassCastException ex) 
-		{ 
-		    e = ex; 
-		} 
-		
-		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
+		try
+		{
+			factory.newPage(String.class, new PageParameters()).getClass();
+		}
+		catch (ClassCastException ex)
+		{
+			e = ex;
+		}
+
+		assertNotNull("String does not extend Page. Should have thrown an exception", e);
 	}
 }

@@ -26,6 +26,7 @@ import wicket.model.Model;
 
 /**
  * Test case for the component tag attribute modifer test.
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -89,7 +90,7 @@ public class AttributeModifierTest extends TestCase
 		AttributeModifier modifier = new AttributeModifier("test", true, null)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected String newValue(String currentValue, String replacementValue)
 			{
 				return "the replacement";
@@ -144,7 +145,8 @@ public class AttributeModifierTest extends TestCase
 	}
 
 	/**
-	 * Test that the current attribute is overwritten by the one that the model provides.
+	 * Test that the current attribute is overwritten by the one that the model
+	 * provides.
 	 */
 	public void testModelReplacementOverwritingExistingAttributeValue()
 	{
@@ -188,7 +190,7 @@ public class AttributeModifierTest extends TestCase
 		AttributeModifier modifier = new AttributeModifier("test", true, new Model("happy"))
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected String newValue(String currentValue, String replacementValue)
 			{
 				return replacementValue + " together";
@@ -214,7 +216,7 @@ public class AttributeModifierTest extends TestCase
 		AttributeModifier modifier = new AttributeModifier("test", null)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected String newValue(String currentValue, String replacementValue)
 			{
 				return currentValue + " two";

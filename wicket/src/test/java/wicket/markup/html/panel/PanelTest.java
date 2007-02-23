@@ -88,7 +88,7 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel() throws Exception
 	{
-		application.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
+		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_1.class, "InlinePanelPageExpectedResult_1.html");
 	}
 
@@ -97,7 +97,7 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_2() throws Exception
 	{
-		application.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
+		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_2.class, "InlinePanelPageExpectedResult_2.html");
 	}
 
@@ -106,7 +106,7 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_3() throws Exception
 	{
-		application.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
+		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_3.class, "InlinePanelPageExpectedResult_3.html");
 	}
 
@@ -115,7 +115,7 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_4() throws Exception
 	{
-		application.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
+		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_4.class, "InlinePanelPageExpectedResult_4.html");
 	}
 
@@ -124,7 +124,7 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_5() throws Exception
 	{
-		application.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
+		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_5.class, "InlinePanelPageExpectedResult_5.html");
 	}
 
@@ -134,7 +134,7 @@ public class PanelTest extends WicketTestCase
 	// TODO FIX this test.
 //	public void testInlinePanel_6() throws Exception
 //	{
-//		application.getPageSettings().addComponentResolver(new FragmentResolver());
+//		tester.getPageSettings().addComponentResolver(new FragmentResolver());
 //		executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
 //	}
 

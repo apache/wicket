@@ -40,9 +40,9 @@ public class FormDispatchEventTest extends WicketTestCase
 
 		protected void onSubmit()
 		{
-			submit= true;
+			submit = true;
 		}
-		
+
 		/**
 		 * @return The hidden field id of the form
 		 */
@@ -96,8 +96,8 @@ public class FormDispatchEventTest extends WicketTestCase
 		MockPage page = new MockPage();
 		page.add(form);
 
-		application.setupRequestAndResponse();
-		RequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		RequestCycle cycle = tester.createRequestCycle();
 
 		page.urlFor(IRedirectListener.INTERFACE);
 		cycle.getSession().touch(page);
@@ -106,7 +106,7 @@ public class FormDispatchEventTest extends WicketTestCase
 		form.onFormSubmitted();
 		assertTrue("form should should set value ", submit);
 
-		application.getServletRequest().setParameter(form.getHiddenField(),
+		tester.getServletRequest().setParameter(form.getHiddenField(),
 				dropDown.urlFor(IOnChangeListener.INTERFACE).toString());
 
 		form.onFormSubmitted();

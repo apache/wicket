@@ -43,18 +43,18 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void test_1() throws Exception
 	{
-		application.startPage(EmailPage.class);
+		tester.startPage(EmailPage.class);
 
-		assertEquals(EmailPage.class, application.getLastRenderedPage().getClass());
-		EmailPage page = (EmailPage)application.getLastRenderedPage();
+		assertEquals(EmailPage.class, tester.getLastRenderedPage().getClass());
+		EmailPage page = (EmailPage)tester.getLastRenderedPage();
 
-		FormTester formTester = application.newFormTester("form");
+		FormTester formTester = tester.newFormTester("form");
 		
 		formTester.setValue("email", "a");
 		formTester.submit();
 
-		assertEquals(EmailPage.class, application.getLastRenderedPage().getClass());
-		page = (EmailPage)application.getLastRenderedPage();
+		assertEquals(EmailPage.class, tester.getLastRenderedPage().getClass());
+		page = (EmailPage)tester.getLastRenderedPage();
 		
 		assertNull(page.getEmail());
 		assertTrue(page.getFeedbackMessages().hasMessageFor(page.get("form:email")));

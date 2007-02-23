@@ -56,9 +56,9 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester(new DummyApplication());
-		settings = application.getApplication().getResourceSettings();
-		localizer = application.getApplication().getResourceSettings().getLocalizer();
+		tester = new WicketTester(new DummyApplication());
+		settings = tester.getApplication().getResourceSettings();
+		localizer = tester.getApplication().getResourceSettings().getLocalizer();
 	}
 
 	/**
@@ -156,13 +156,13 @@ public class LocalizerTest extends WicketTestCase
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 		String drop1 = localizer.getString("null", page.drop1);
 		String drop2 = localizer.getString("null", page.drop2);
-		
+
 		assertEquals("value 1", drop1);
 		assertEquals("value 2", drop2);
 	}
 
 	/**
-	 * 
+	 * Test label.
 	 */
 	public static class MyLabel extends Label
 	{
@@ -186,5 +186,4 @@ public class LocalizerTest extends WicketTestCase
 
 		}
 	}
-
 }
