@@ -16,8 +16,6 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
-
 import wicket.ResourceReference;
 import wicket.Response;
 
@@ -31,7 +29,7 @@ import wicket.Response;
  * 
  * @author Matej Knopp
  */
-public interface IHeaderResponse extends Serializable
+public interface IHeaderResponse
 {
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been
@@ -50,7 +48,7 @@ public interface IHeaderResponse extends Serializable
 	 *            url of the the javascript resource
 	 */
 	public void renderJavascriptReference(String url);
-	
+
 	/**
 	 * Renders javascript code to the response, if the javascript has not
 	 * already been rendered.
@@ -76,7 +74,7 @@ public interface IHeaderResponse extends Serializable
 	 *            resource reference pointing to the CSS resource
 	 */
 	public void renderCSSReference(ResourceReference reference);
-	
+
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered
 	 * yet.
@@ -85,7 +83,7 @@ public interface IHeaderResponse extends Serializable
 	 *            url of the CSS resource
 	 */
 	public void renderCSSReference(String url);
-	
+
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered
 	 * yet.
@@ -93,10 +91,10 @@ public interface IHeaderResponse extends Serializable
 	 * @param reference
 	 *            resource reference pointing to the CSS resource
 	 * @param media
-	 * 			  the media type for this CSS ("print", "screen", etc.)
+	 *            the media type for this CSS ("print", "screen", etc.)
 	 */
 	public void renderCSSReference(ResourceReference reference, String media);
-	
+
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered
 	 * yet.
@@ -104,7 +102,7 @@ public interface IHeaderResponse extends Serializable
 	 * @param url
 	 *            url of the CSS resource
 	 * @param media
-	 * 			  the media type for this CSS ("print", "screen", etc.)
+	 *            the media type for this CSS ("print", "screen", etc.)
 	 */
 	public void renderCSSReference(String url, String media);
 
@@ -161,16 +159,18 @@ public interface IHeaderResponse extends Serializable
 	 * @return Reponse
 	 */
 	public Response getResponse();
-	
+
 	/**
-	 * Renders javascript that is executed right after the DOM is built, before external resources
-	 * (e.g. images) are loaded.
+	 * Renders javascript that is executed right after the DOM is built, before
+	 * external resources (e.g. images) are loaded.
+	 * 
 	 * @param javascript
 	 */
 	public void renderOnDomReadyJavascript(String javascript);
-	
+
 	/**
 	 * Renders javascript that is executed after the entire page is loaded.
+	 * 
 	 * @param javascript
 	 */
 	public void renderOnLoadJavascript(String javascript);
