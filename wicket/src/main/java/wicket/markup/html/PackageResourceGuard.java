@@ -40,7 +40,6 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		blockedExtensions.add("properties");
 		blockedExtensions.add("class");
 		blockedExtensions.add("java");
-		blockedExtensions.add("html");
 	}
 
 	/**
@@ -73,6 +72,10 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		else
 		{
 			ext = path.substring(ixExtension + 1).toLowerCase();
+		}
+		if ("html".equals(ext) && getClass().getClassLoader().getResource(path.replaceAll(".html", ".class")) != null)
+		{
+			return false;
 		}
 		return acceptExtension(ext);
 	}

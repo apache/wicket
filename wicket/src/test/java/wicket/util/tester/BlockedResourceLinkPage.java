@@ -25,15 +25,15 @@ import wicket.markup.html.link.ResourceLink;
  * 
  * @author frankbille
  */
-public class MockResourceLinkPage extends WebPage
+public class BlockedResourceLinkPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public MockResourceLinkPage()
+	public BlockedResourceLinkPage()
 	{
-		new ResourceLink(this, "link", new ResourceReference(MockResourceLinkPage.class, "test.html"));
+		new ResourceLink(this, "link", new ResourceReference(BlockedResourceLinkPage.class, "BlockedResourceLinkPage.html"));
 	}
 }
