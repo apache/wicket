@@ -16,8 +16,6 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
-
 import wicket.ResourceReference;
 import wicket.Response;
 
@@ -31,7 +29,7 @@ import wicket.Response;
  * 
  * @author Matej Knopp
  */
-public interface IHeaderResponse extends Serializable
+public interface IHeaderResponse
 {
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been
