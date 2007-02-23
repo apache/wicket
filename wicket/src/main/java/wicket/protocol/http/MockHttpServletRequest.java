@@ -780,7 +780,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the request url. Always return the path value.
 	 * 
-	 * @return The oath value
+	 * @return The path value
 	 */
 	public String getRequestURI()
 	{
@@ -1098,7 +1098,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Set the complete url for this request. The url will be analized.
+	 * Set the complete url for this request. The url will be analyzed.
 	 * 
 	 * @param url
 	 */
