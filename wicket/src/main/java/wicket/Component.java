@@ -2638,7 +2638,7 @@ public abstract class Component implements Serializable
 		while (behaviors.hasNext())
 		{
 			IBehavior behavior = (IBehavior)behaviors.next();
-			if (!behavior.getStatelessHint())
+			if (!behavior.getStatelessHint(this))
 			{
 				return false;
 			}
