@@ -278,19 +278,6 @@
 	</filter>
 
 	<filter>
-		<filter-name>DisplaytagApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.displaytag.DisplaytagApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>displaytag</param-value>
-		</init-param>
-	</filter>
-
-	<filter>
 		<filter-name>EncodingsApplication</filter-name>
 		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -553,11 +540,6 @@
 	<filter-mapping>
 		<filter-name>UploadApplication</filter-name>
 		<url-pattern>/upload/*</url-pattern>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>DisplaytagApplication</filter-name>
-		<url-pattern>/displaytag/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
