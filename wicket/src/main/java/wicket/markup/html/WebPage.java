@@ -25,7 +25,9 @@ import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.RequestCycle;
 import wicket.ResourceReference;
+import wicket.Response;
 import wicket.Session;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.MarkupFragment;
@@ -47,6 +49,7 @@ import wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProce
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Objects;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when
@@ -272,7 +275,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		// if automatic multi window support is on, add a page checker instance
 		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
 		{
-			add(new PageMapChecker());
+			add(new PageMapChecker(this));
 		}
 
 		// Do all the default staff
@@ -332,22 +335,38 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 * is created for this page instance, so that it will start using it's own
 	 * history in sync with the browser window or tab.
 	 */
-	private final class PageMapChecker extends AbstractBehavior implements IHeaderContributor
+	private static final class PageMapChecker extends AbstractBehavior
+			implements
+				IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
 		/** The unload model for deleting the pagemap cookie */
 		private Model onUnLoadModel;
 
+		private final WebPage webPage;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param webPage
+		 */
+		PageMapChecker(WebPage webPage)
+		{
+			this.webPage = webPage;
+		}
+
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
-			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
+			Response response = headResponse.getResponse();
+			final WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
 			final IRequestTarget target = cycle.getRequestTarget();
 
-			String name = getPageMap().getName();
+			IPageMap pageMap = webPage.getPageMap();
+			String name = pageMap.getName();
 			if (name == null)
 			{
 				name = "wicket:default";
@@ -357,57 +376,53 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 				name = name.replace('"', '_');
 			}
 
-			Session session = getSession();
+			Session session = Session.get();
 
-			Session.PageMapAccessMetaData meta = session.getMetaData(Session.PAGEMAP_ACCESS_MDK);
+			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session
+					.getMetaData(Session.PAGEMAP_ACCESS_MDK);
 			if (meta == null)
 			{
 				meta = new Session.PageMapAccessMetaData();
 				session.setMetaData(Session.PAGEMAP_ACCESS_MDK, meta);
 			}
-			boolean firstAccess = meta.add(getPageMap());
+			boolean firstAccess = meta.add(pageMap);
 
 			if (firstAccess)
 			{
-				StringBuilder javascript = new StringBuilder();
 				// this is the first access to the pagemap, set window.name
-				javascript
-						.append("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
-				javascript.append(name);
-				javascript.append("\"; }");
-
-				headResponse.renderJavascript(javascript.toString(), getClass().getName());
+				JavascriptUtils.writeOpenTag(response);
+				response
+						.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
+				response.write(name);
+				response.write("\"; }");
+				JavascriptUtils.writeCloseTag(response);
 			}
 			else
 			{
 				// Here is our trickery to detect whether the current request
-				// was
-				// made in a new window/ tab, in which case it should go in a
-				// different page map so that we don't intermangle the history
-				// of
-				// those windows
+				// was made in a new window/ tab, in which case it should go in
+				// a different page map so that we don't intermangle the
+				// history ofthose windows
 				CharSequence url = null;
 				if (target instanceof IBookmarkablePageRequestTarget)
 				{
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-							getSession().createAutoPageMapName(), current.getPageClass(), current
+							session.createAutoPageMapName(), current.getPageClass(), current
 									.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else
 				{
-					url = urlFor(INewBrowserWindowListener.INTERFACE);
+					url = webPage.urlFor(INewBrowserWindowListener.INTERFACE);
 				}
-
-				StringBuilder javascript = new StringBuilder();
-				javascript
-						.append("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='"
+				JavascriptUtils.writeOpenTag(response);
+				response
+						.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='"
 								+ name + "')) { window.location=\"");
-				javascript.append(url);
-				javascript.append("\"; }");
-
-				headResponse.renderJavascript(javascript, getClass().getName());
+				response.write(url);
+				response.write("\"; }");
+				JavascriptUtils.writeCloseTag(response);
 			}
 		}
 	}
