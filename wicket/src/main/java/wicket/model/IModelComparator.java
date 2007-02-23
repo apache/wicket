@@ -16,6 +16,8 @@
  */
 package wicket.model;
 
+import java.io.Serializable;
+
 import wicket.Component;
 
 /**
@@ -30,7 +32,7 @@ import wicket.Component;
  * @author jcompagner
  * @author Jonathan Locke
  */
-public interface IModelComparator
+public interface IModelComparator extends Serializable
 {
 	/**
 	 * @param component

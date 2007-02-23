@@ -16,6 +16,7 @@
  */
 package wicket.feedback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -111,6 +112,10 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	 */
 	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
 	{
+		if (!(sortingComparator instanceof Serializable))
+		{
+			throw new IllegalArgumentException("sortingComparator must be serializable");
+		}
 		this.sortingComparator = sortingComparator;
 	}
 
