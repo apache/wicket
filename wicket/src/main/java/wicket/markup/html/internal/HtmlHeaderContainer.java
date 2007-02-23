@@ -78,12 +78,13 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * markup which contains the wicket:head. It can be modified by means of the
 	 * scope attribute.
 	 */
-	private Map renderedComponentsPerScope;
+	private transient Map renderedComponentsPerScope;
+
 	/**
 	 * Header response that is responsible for filtering duplicate
 	 * contributions.
 	 */
-	private IHeaderResponse headerResponse = null;
+	private transient IHeaderResponse headerResponse = null;
 
 	/**
 	 * Construct
