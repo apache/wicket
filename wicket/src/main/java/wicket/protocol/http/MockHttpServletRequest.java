@@ -54,6 +54,7 @@ import wicket.IPageMap;
 import wicket.IRedirectListener;
 import wicket.IResourceListener;
 import wicket.Page;
+import wicket.WicketRuntimeException;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IFormSubmitListener;
@@ -1370,7 +1371,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 		catch (IOException e)
 		{
-			throw new IllegalStateException(e);
+			// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
+			throw new WicketRuntimeException(e);
 		}
 
 		issb.append(boundary).append("--").append(crlf);
