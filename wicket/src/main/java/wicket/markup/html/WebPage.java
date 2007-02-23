@@ -25,6 +25,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
+import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Response;
 import wicket.Session;
@@ -241,7 +242,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		// if automatic multi window support is on, add a page checker instance
 		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
 		{
-			add(new PageMapChecker());
+			add(new PageMapChecker(this));
 		}
 
 		// TODO Post 1.2: If the concept proofs valuable we could add the header
@@ -323,12 +324,26 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * is created for this page instance, so that it will start using it's own
 	 * history in sync with the browser window or tab.
 	 */
-	private final class PageMapChecker extends AbstractBehavior implements IHeaderContributor
+	private static final class PageMapChecker extends AbstractBehavior
+			implements
+				IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
 		/** The unload model for deleting the pagemap cookie */
 		private Model onUnLoadModel;
+
+		private final WebPage webPage;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param webPage
+		 */
+		PageMapChecker(WebPage webPage)
+		{
+			this.webPage = webPage;
+		}
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
@@ -336,10 +351,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
 			Response response = headResponse.getResponse();
-			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
+			final WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
 			final IRequestTarget target = cycle.getRequestTarget();
 
-			String name = getPageMap().getName();
+			IPageMap pageMap = webPage.getPageMap();
+			String name = pageMap.getName();
 			if (name == null)
 			{
 				name = "wicket:default";
@@ -349,7 +365,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				name = name.replace('"', '_');
 			}
 
-			Session session = getSession();
+			Session session = Session.get();
 
 			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session
 					.getMetaData(Session.PAGEMAP_ACCESS_MDK);
@@ -358,7 +374,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				meta = new Session.PageMapAccessMetaData();
 				session.setMetaData(Session.PAGEMAP_ACCESS_MDK, meta);
 			}
-			boolean firstAccess = meta.add(getPageMap());
+			boolean firstAccess = meta.add(pageMap);
 
 			if (firstAccess)
 			{
@@ -383,13 +399,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				{
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-							getSession().createAutoPageMapName(), current.getPageClass(), current
+							session.createAutoPageMapName(), current.getPageClass(), current
 									.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else
 				{
-					url = urlFor(INewBrowserWindowListener.INTERFACE);
+					url = webPage.urlFor(INewBrowserWindowListener.INTERFACE);
 				}
 				JavascriptUtils.writeOpenTag(response);
 				response
