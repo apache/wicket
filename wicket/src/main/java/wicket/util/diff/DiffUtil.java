@@ -53,9 +53,9 @@ public final class DiffUtil
 	 * @param document
 	 *            Current output
 	 * @param file
-	 *            Expected ouput
+	 *            Expected output
 	 * @param clazz
-	 *            Used to load the file (relativ to clazz package)
+	 *            Used to load the file (relative to clazz package)
 	 * @param wicketTestCase
 	 * @param failWithAssert
 	 * @return true, if equal

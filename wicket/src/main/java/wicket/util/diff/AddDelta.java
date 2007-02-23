@@ -73,74 +73,76 @@ public class AddDelta extends Delta
 	/**
 	 * Construct.
 	 */
-    AddDelta()
-    {
-    }
+	AddDelta()
+	{
+	}
 
-    /**
-     * Construct.
-     * @param origpos
-     * @param rev
-     */
-    public AddDelta(int origpos, Chunk rev)
-    {
-        init(new Chunk(origpos, 0), rev);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param origpos
+	 * @param rev
+	 */
+	public AddDelta(int origpos, Chunk rev)
+	{
+		init(new Chunk(origpos, 0), rev);
+	}
 
-    /**
-     * @see wicket.util.diff.Delta#verify(java.util.List)
-     */
-    @Override
+	/**
+	 * @see wicket.util.diff.Delta#verify(java.util.List)
+	 */
+	@Override
 	public void verify(List<Object> target) throws PatchFailedException
-    {
-        if (original.first() > target.size())
-        {
-            throw new PatchFailedException("original.first() > target.size()");
-        }
-    }
+	{
+		if (original.first() > target.size())
+		{
+			throw new PatchFailedException("original.first() > target.size()");
+		}
+	}
 
-    /**
-     * @see wicket.util.diff.Delta#applyTo(java.util.List)
-     */
-    @Override
+	/**
+	 * @see wicket.util.diff.Delta#applyTo(java.util.List)
+	 */
+	@Override
 	public void applyTo(List<Object> target)
-    {
-        revised.applyAdd(original.first(), target);
-    }
+	{
+		revised.applyAdd(original.first(), target);
+	}
 
-    /**
-     * @see wicket.util.diff.Delta#toString(java.lang.StringBuffer)
-     */
-    @Override
+	/**
+	 * @see wicket.util.diff.Delta#toString(java.lang.StringBuffer)
+	 */
+	@Override
 	public void toString(StringBuffer s)
-    {
-        s.append(original.anchor());
-        s.append("a");
-        s.append(revised.rangeString());
-        s.append(Diff.NL);
-        revised.toString(s, "> ", Diff.NL);
-    }
+	{
+		s.append(original.anchor());
+		s.append("a");
+		s.append(revised.rangeString());
+		s.append(Diff.NL);
+		revised.toString(s, "> ", Diff.NL);
+	}
 
-    /**
-     * @see wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
-     */
-    @Override
+	/**
+	 * @see wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer,
+	 *      java.lang.String)
+	 */
+	@Override
 	public void toRCSString(StringBuffer s, String EOL)
-    {
-        s.append("a");
-        s.append(original.anchor());
-        s.append(" ");
-        s.append(revised.size());
-        s.append(EOL);
-        revised.toString(s, "", EOL);
-    }
+	{
+		s.append("a");
+		s.append(original.anchor());
+		s.append(" ");
+		s.append(revised.size());
+		s.append(EOL);
+		revised.toString(s, "", EOL);
+	}
 
-    /**
-     * @see wicket.util.diff.Delta#accept(wicket.util.diff.RevisionVisitor)
-     */
-    @Override
+	/**
+	 * @see wicket.util.diff.Delta#accept(wicket.util.diff.RevisionVisitor)
+	 */
+	@Override
 	public void accept(RevisionVisitor visitor)
-    {
-        visitor.visit(this);
-    }
+	{
+		visitor.visit(this);
+	}
 }
