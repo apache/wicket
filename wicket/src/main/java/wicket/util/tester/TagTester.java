@@ -267,7 +267,8 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				throw new IllegalStateException(e);
+				// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
+				throw new WicketRuntimeException(e);
 			}
 
 		}
