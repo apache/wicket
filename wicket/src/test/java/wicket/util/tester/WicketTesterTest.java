@@ -27,9 +27,11 @@ import wicket.Session;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
+import wicket.markup.html.PackageResource.PackageResourceBlockedException;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.Link;
+import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
 import wicket.util.tester.apps_1.Book;
 import wicket.util.tester.apps_1.CreateBook;
@@ -332,17 +334,26 @@ public class WicketTesterTest extends TestCase
 	 * Test that clickLink on a ResourceLink with a ResourceReference on it
 	 * works.
 	 * 
-	 * FIXME this test should be activated again once a proper solution to
-	 * <b>WICKET-280 Allow to access html resources</b> is found
+	 * <p>See also WICKET-280 Allow to access html resources</p>
 	 */
-	public void bugTestClickResourceLink()
+	public void testClickResourceLink()
 	{
-		WicketTester tester = new WicketTester();
+		try
+		{
+			tester.startPage(BlockedResourceLinkPage.class);
+			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " + PackageResourceBlockedException.class);
+		}
+		catch(PackageResourceBlockedException e)
+		{
+			
+		}
 		
 		tester.startPage(MockResourceLinkPage.class);
-		
 		tester.clickLink("link");
-		
-		tester.destroy();
+		assertNull(getRequestCodingStrategy());
+	}
+	IRequestTargetUrlCodingStrategy getRequestCodingStrategy() {
+		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(tester.getServletRequest());
+		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath);
 	}
 }
