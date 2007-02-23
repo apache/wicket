@@ -725,35 +725,7 @@ public class WicketTester extends MockWebApplication
 			// process the request target
 			requestCycle.getRequestTarget().respond(requestCycle);
 		}
-		// ResourceLink
-		else if (linkComponent instanceof ResourceLink)
-		{
-			// Let's see if we should invoke the onclick or not
-			Resource resource = null;
-
-			try
-			{
-				Field resourceField = ResourceLink.class.getDeclaredField("resource");
-				resourceField.setAccessible(true);
-				resource = (Resource)resourceField.get(linkComponent);
-			}
-			catch (Exception e)
-			{
-				Assert.fail(e.getMessage());
-			}
-
-			// If the link holds the resource itself we should
-			if (resource != null)
-			{
-				newRequestToComponent(linkComponent);
-			}
-			// Else we should not (Should we do anything else?)
-			else
-			{
-				// Do nothing
-			}
-		}
-		// if the link is a normal link
+		// if the link is a normal link (or ResourceLink)
 		else if (linkComponent instanceof Link)
 		{
 			Link link = (Link)linkComponent;
