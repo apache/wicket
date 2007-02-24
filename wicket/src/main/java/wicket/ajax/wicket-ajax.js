@@ -873,8 +873,12 @@ Wicket.Ajax.Call.prototype = {
 		steps.push(function(notify) {
 			Wicket.Log.info("Response processed successfully.");			
 			Wicket.Ajax.invokePostCallHandlers();
+			// retach the events to the new components (a bit blunt method...)
+			Wicket.Focus.attachFocusEvent();
+			// set the focus to the last component
+			Wicket.Focus.requestFocus();	
 			this.request.done();
-			this.successHandler();	
+			this.successHandler();
 			// continue to next step (which should make the processing stop, as success should be the final step)		
 			notify();			
 		}.bind(this));
@@ -1287,92 +1291,6 @@ Wicket.Throttler.prototype = {
 
 Wicket.throttler = new Wicket.Throttler();
 
-/**
- * Events related code
- * Based on code from Mootools (http://mootools.net)
- */
-
-Wicket.Event = {
-	// adds an event of specified type to the element
-	// also supports the domready event on window
-	// domready is event fired when the DOM is complete, but before loading external resources (images, ...)
-	add: function(element, type, fn) {
-		// is the event domready?
-		if (element == window && type == "domready") {
-			Wicket.Event.addDomReadyEvent(fn);
-		} else {
-			if (element.addEventListener){
-				element.addEventListener((type == 'mousewheel' && window.gecko) ? 'DOMMouseScroll' : type, fn, false);
-			} else {
-				fn = fn.bind(element);
-				element.attachEvent('on'+type, fn);
-			}
-		}
-		return element;
-	},
-	
-	// handlers that will be fired on dom ready event
-	domReadyHandlers : new Array(),
-	
-	// fires the dom ready event and cleanup the handlers
-	fireDomReadyHandlers : function() {
-		var h = Wicket.Event.domReadyHandlers;
-		while (h.length > 0) {
-			var c = h.shift();
-			c();
-		}
-		Wicket.Event.domReadyHandlers = null;
-	},
-	
-	// adds the dom ready event 
-	addDomReadyEvent : function(fn) {
-		// is the window already loaded?
-		if (window.loaded)  {
-			fn();
-		} else if (!window.events || !window.events.domready) {
-			// register the handler
-			Wicket.Event.domReadyHandlers.push(fn);
-		
-			// callback
-			var domReady = function() {
-				if (window.loaded) 
-					return;
-				window.loaded = true;
-				
-				// if there was a timer, clean it (khtml, safari)
-				if (Wicket.Event.domReadyTimer) {
-					clearTimeout(Wicket.Event.domReadyTimer);
-					Wicket.Event.domReadyTimer = null;
-				}
-				
-				// invoke the handlers
-				Wicket.Event.fireDomReadyHandlers();
-			}.bind(this);
-			
-			if (document.readyState && (Wicket.Browser.isKHTML() || Wicket.Browser.isSafari())) { 
-			   //safari and konqueror don't support the event - simulate it through a timeou
-				Wicket.Event.domReadyTimer = window.setTimeout(function() {
-					if (document.readyState == "loaded" ||
-					    document.readyState == "complete") {
-					    domReady();
-					}
-				}, 1);
-			} else if (document.readyState && Wicket.Browser.isIE()) { 
-				// internet explorer - use script with defer attribute
-				document.write("<script id=ie_ready defer src=javascript:void(0)><\/script>");
-				document.getElementById('ie_ready').onreadystatechange = function() {
-					if (this.readyState == 'complete') domReady();
-				};
-			} else { 
-				// other browsers
-				Wicket.Event.add(document, "DOMContentLoaded", domReady);
-			}
-		} else {
-			window.addEventListener("domready", fn, false);
-		}
-	}
-}
-
 /*
  * Compatibility layer to maintain the original wicket-ajax API.
  */
@@ -1437,6 +1355,61 @@ Wicket.Ajax.registerFailureHandler(function() {
 	    }
 	}    
 });
+
+// FOCUS FUNCTIONS
+
+Wicket.Focus = {
+	lastFocusId : "",
+
+	setFocus: function(event)
+	{ 
+		lastFocusId=event.target.id;
+		Wicket.Log.info("focus set on " + lastFocusId);
+	},
+	
+	setFocusOnId: function(id)
+	{
+		lastFocusId=id;
+		Wicket.Log.info("focus set on " + lastFocusId + " from serverside");
+	},
+	
+	requestFocus: function()
+	{
+		if (lastFocusId)
+		{ 
+			Wicket.Log.info("Calling focus on " + lastFocusId);
+			document.getElementById(lastFocusId).focus();
+		}
+		else
+		{
+			Wicket.Log.info("last focus id was not set");
+		}
+	},
+	
+	setFocusOnElements: function (elements)
+	{
+		for (var i=0; i< elements.length; i++)
+		{
+		// do it for all elements even without id. then those will set the focus
+		// but then the focus can't be set back (but also don't get set to the last one with id.
+//		    if ( typeof(elements[i].id) != "undefined")
+		    {
+		         Wicket.Event.add(elements[i],'focus',Wicket.Focus.setFocus);
+		    }
+		}
+	},
+	
+	attachFocusEvent: function()
+	{
+		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("input"));
+		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("select"));
+		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("textarea"));
+		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("button"));
+		Wicket.Focus.setFocusOnElements(document.getElementsByTagName("a"));
+	}
+}
+Wicket.Event.addDomReadyEvent(Wicket.Focus.attachFocusEvent);
+
 
 // DEBUG FUNCTIONS
 function wicketAjaxDebugEnabled() {
