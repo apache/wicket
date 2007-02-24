@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Map;
 
 /**
  * Automatically generates a basic button image. The model for the component
@@ -31,33 +32,24 @@ import java.awt.RenderingHints;
 public class DefaultButtonImageResource extends RenderedDynamicImageResource
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The default height for button images */
 	private static int defaultHeight = 26;
 
 	/** The default width for button images */
 	private static int defaultWidth = 74;
 
-	/** The height of the arc in the corner */
-	private int arcHeight = 10;
+	/** default color: orange. */
+	private static final int DEFAULT_COLOR = new Color(0xE9, 0x60, 0x1A).getRGB();
 
-	/** The width of the arc in the corner */
-	private int arcWidth = 10;
+	/** default background color: white. */
+	private static final int DEFAULT_BACKGROUND_COLOR = Color.WHITE.getRGB();
 
-	/** The background color behind the button */
-	private Color backgroundColor = Color.WHITE;
+	/** default text color: white. */
+	private static final int DEFAULT_TEXT_COLOR = Color.WHITE.getRGB();
 
-	/** The color of the button itself */
-	private Color color = new Color(0xE9, 0x60, 0x1A);
-
-	/** The font to use */
-	private Font font = new Font("Helvetica", Font.BOLD, 16);
-
-	/** The color of the text */
-	private Color textColor = Color.WHITE;
-	
-	/** The button label */
-	private final String label;
+	/** default font: Helvetica bold 16. */
+	private static final Map DEFAULT_FONT = new Font("Helvetica", Font.BOLD, 16).getAttributes();
 
 	/**
 	 * @param defaultHeight
@@ -77,6 +69,27 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 		DefaultButtonImageResource.defaultWidth = defaultWidth;
 	}
 
+	/** The height of the arc in the corner */
+	private int arcHeight = 10;
+
+	/** The width of the arc in the corner */
+	private int arcWidth = 10;
+
+	/** The background color behind the button */
+	private int backgroundColorRgb = DEFAULT_BACKGROUND_COLOR;
+
+	/** The color of the button itself */
+	private int colorRgb = DEFAULT_COLOR;
+
+	/** The font to use */
+	private Map fontAttributes = DEFAULT_FONT;
+
+	/** The color of the text */
+	private int textColorRgb = DEFAULT_TEXT_COLOR;
+
+	/** The button label */
+	private final String label;
+
 	/**
 	 * @param label
 	 *            The label for this button image
@@ -87,7 +100,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public DefaultButtonImageResource(int width, int height, final String label)
 	{
-		super(width, height,"png");
+		super(width, height, "png");
 		this.label = label;
 		setWidth(width == -1 ? defaultWidth : width);
 		setHeight(height == -1 ? defaultHeight : height);
@@ -105,7 +118,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the arcHeight.
 	 */
-	public synchronized  int getArcHeight()
+	public synchronized int getArcHeight()
 	{
 		return arcHeight;
 	}
@@ -123,7 +136,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized Color getBackgroundColor()
 	{
-		return backgroundColor;
+		return new Color(backgroundColorRgb);
 	}
 
 	/**
@@ -131,7 +144,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized Color getColor()
 	{
-		return color;
+		return new Color(colorRgb);
 	}
 
 	/**
@@ -139,7 +152,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized Font getFont()
 	{
-		return font;
+		return new Font(fontAttributes);
 	}
 
 	/**
@@ -147,7 +160,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized Color getTextColor()
 	{
-		return textColor;
+		return new Color(textColorRgb);
 	}
 
 	/**
@@ -176,7 +189,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setBackgroundColor(Color backgroundColor)
 	{
-		this.backgroundColor = backgroundColor;
+		this.backgroundColorRgb = backgroundColor.getRGB();
 		invalidate();
 	}
 
@@ -186,7 +199,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setColor(Color color)
 	{
-		this.color = color;
+		this.colorRgb = color.getRGB();
 		invalidate();
 	}
 
@@ -196,7 +209,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setFont(Font font)
 	{
-		this.font = font;
+		this.fontAttributes = font.getAttributes();
 		invalidate();
 	}
 
@@ -206,7 +219,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setTextColor(Color textColor)
 	{
-		this.textColor = textColor;
+		this.textColorRgb = textColor.getRGB();
 		invalidate();
 	}
 
@@ -219,14 +232,14 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	{
 		// Get width and height
 		final int width = getWidth();
-		final int height = getHeight();		
-		
+		final int height = getHeight();
+
 		// Get size of text
-		graphics.setFont(font);
+		graphics.setFont(getFont());
 		final FontMetrics fontMetrics = graphics.getFontMetrics();
 		final int dxText = fontMetrics.stringWidth(label);
 		final int dxMargin = 10;
-		
+
 		// Does text fit with a nice margin?
 		if (dxText > width - dxMargin)
 		{
@@ -239,18 +252,19 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 			// Turn on anti-aliasing
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
-	
+
 			// Draw background
-			graphics.setColor(backgroundColor);
+			Color bgColor = getBackgroundColor();
+			graphics.setColor(bgColor);
 			graphics.fillRect(0, 0, width, height);
-	
+
 			// Draw round rectangle
-			graphics.setColor(color);
-			graphics.setBackground(backgroundColor);
+			graphics.setColor(getColor());
+			graphics.setBackground(bgColor);
 			graphics.fillRoundRect(0, 0, width, height, arcWidth, arcHeight);
-			
+
 			// Draw text
-			graphics.setColor(textColor);
+			graphics.setColor(getTextColor());
 			final int x = (width - dxText) / 2;
 			final int y = (getHeight() - fontMetrics.getHeight()) / 2;
 			graphics.drawString(label, x, y + fontMetrics.getAscent());
