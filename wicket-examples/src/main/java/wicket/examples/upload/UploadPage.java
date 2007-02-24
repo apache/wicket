@@ -1,7 +1,7 @@
 /*
  * $Id: UploadPage.java 4619 2006-02-23 14:25:06 -0800 (Thu, 23 Feb 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-02-23 14:25:06 -0800 (Thu, 23 Feb
- * 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-02-23 14:25:06 -0800 (Thu, 23
+ * Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +19,6 @@
 package wicket.examples.upload;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +37,8 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 import wicket.util.file.Files;
 import wicket.util.file.Folder;
 import wicket.util.lang.Bytes;
@@ -65,7 +66,8 @@ public class UploadPage extends WicketExamplePage
 		 * @param files
 		 *            The file list model
 		 */
-		public FileListView(final MarkupContainer parent, final String name, final List<File> files)
+		public FileListView(final MarkupContainer parent, final String name,
+				final IModel<List<File>> files)
 		{
 			super(parent, name, files);
 		}
@@ -84,7 +86,6 @@ public class UploadPage extends WicketExamplePage
 				public void onClick()
 				{
 					Files.remove(file);
-					refreshFiles();
 					UploadPage.this.info("Deleted " + file);
 				}
 			};
@@ -131,7 +132,7 @@ public class UploadPage extends WicketExamplePage
 			if (upload != null)
 			{
 				// Create a new file
-				File newFile = new File(uploadFolder, upload.getClientFileName());
+				File newFile = new File(getUploadFolder(), upload.getClientFileName());
 
 				// Check new file, delete if it allready existed
 				checkFileExists(newFile);
@@ -147,9 +148,6 @@ public class UploadPage extends WicketExamplePage
 				{
 					throw new IllegalStateException("Unable to write file");
 				}
-
-				// refresh the file list view
-				refreshFiles();
 			}
 		}
 	}
@@ -159,13 +157,7 @@ public class UploadPage extends WicketExamplePage
 	private static final Logger log = LoggerFactory.getLogger(UploadPage.class);
 
 	/** Reference to listview for easy access. */
-	private FileListView fileListView;
-
-	/** List of files, model for file table. */
-	private final List<File> files = new ArrayList<File>();
-
-	/** Upload folder */
-	private Folder uploadFolder;
+	private final FileListView fileListView;
 
 	/**
 	 * Constructor.
@@ -175,11 +167,7 @@ public class UploadPage extends WicketExamplePage
 	 */
 	public UploadPage(final PageParameters parameters)
 	{
-		// Set upload folder to tempdir + 'wicket-uploads'.
-		this.uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
-
-		// Ensure folder exists
-		uploadFolder.mkdirs();
+		Folder uploadFolder = getUploadFolder();
 
 		// Create feedback panels
 		new FeedbackPanel(this, "uploadFeedback");
@@ -190,8 +178,14 @@ public class UploadPage extends WicketExamplePage
 
 		// Add folder view
 		new Label(this, "dir", uploadFolder.getAbsolutePath());
-		files.addAll(Arrays.asList(uploadFolder.listFiles()));
-		fileListView = new FileListView(this, "fileList", files);
+		fileListView = new FileListView(this, "fileList", new LoadableDetachableModel<List<File>>()
+		{
+			@Override
+			protected List<File> load()
+			{
+				return Arrays.asList(getUploadFolder().listFiles());
+			}
+		});
 
 		// Add upload form with ajax progress bar
 		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm(this, "ajax-simpleUpload");
@@ -217,13 +211,8 @@ public class UploadPage extends WicketExamplePage
 		}
 	}
 
-	/**
-	 * Refresh file list.
-	 */
-	private void refreshFiles()
+	private Folder getUploadFolder()
 	{
-		fileListView.modelChanging();
-		files.clear();
-		files.addAll(Arrays.asList(uploadFolder.listFiles()));
+		return UploadApplication.get().getUploadFolder();
 	}
 }

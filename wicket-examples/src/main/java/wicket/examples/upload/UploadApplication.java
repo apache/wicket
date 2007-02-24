@@ -20,10 +20,12 @@ package wicket.examples.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
+import wicket.Application;
 import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.extensions.ajax.markup.html.form.upload.UploadWebRequest;
 import wicket.protocol.http.WebRequest;
+import wicket.util.file.Folder;
 
 /**
  * WicketServlet class for wicket.examples.upload example.
@@ -33,10 +35,37 @@ import wicket.protocol.http.WebRequest;
 public class UploadApplication extends WicketExampleApplication
 {
 	/**
+	 * @return The application
+	 */
+	public static UploadApplication get()
+	{
+		return (UploadApplication)Application.get();
+	}
+
+	private Folder uploadFolder = null;
+
+	/**
 	 * Constructor.
 	 */
 	public UploadApplication()
 	{
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	@Override
+	public Class< ? extends Page> getHomePage()
+	{
+		return UploadPage.class;
+	}
+
+	/**
+	 * @return the folder for uploads
+	 */
+	public Folder getUploadFolder()
+	{
+		return uploadFolder;
 	}
 
 	/**
@@ -46,16 +75,10 @@ public class UploadApplication extends WicketExampleApplication
 	protected void init()
 	{
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
-	}
 
-
-	/**
-	 * @see wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class< ? extends Page> getHomePage()
-	{
-		return UploadPage.class;
+		uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
+		// Ensure folder exists
+		uploadFolder.mkdirs();
 	}
 
 	/**
