@@ -91,6 +91,15 @@ public class UndoPageVersionManager implements IPageVersionManager
 			currentAjaxVersionNumber++;
 		}
 	}
+	
+	/**
+	 * @see wicket.version.IPageVersionManager#ignoreVersionMerge()
+	 */
+	public void ignoreVersionMerge()
+	{
+		currentVersionNumber++;
+		currentAjaxVersionNumber = 0;
+	}
 
 	/**
 	 * @see wicket.version.IPageVersionManager#componentAdded(wicket.Component)
@@ -215,6 +224,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public Page rollbackPage(int numberOfVersions)
 	{
+		// TODO NEEDS IMPL! See SecondLevelCache PageMap impl
 		return null;
 	}
 
