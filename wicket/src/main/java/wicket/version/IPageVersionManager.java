@@ -137,7 +137,18 @@ public interface IPageVersionManager extends Serializable
 	int getCurrentVersionNumber();
 
 	/**
-	 * @return
+	 * @return Returns the current ajax version number.
 	 */
 	int getAjaxVersionNumber();
+
+	/**
+	 * Call this method when the current (ajax) request
+	 * shouldn't merge the changes that are happening to the page 
+	 * with the previous version. This is for example needed
+	 * when you want to redirect to this page in an ajax request
+	 * and then you do want to version normally.. 
+	 * 
+	 * This method should only be called if the beginVersion was called with true!
+	 */
+	void ignoreVersionMerge();
 }

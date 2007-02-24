@@ -150,6 +150,16 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 
 		/**
+		 * @see wicket.version.IPageVersionManager#ignoreVersionMerge()
+		 */
+		public void ignoreVersionMerge()
+		{
+			currentVersionNumber++;
+			lastAjaxVersionNumber = currentAjaxVersionNumber;
+			currentAjaxVersionNumber = 0;
+		}
+		
+		/**
 		 * @see wicket.version.IPageVersionManager#componentAdded(wicket.Component)
 		 */
 		public void componentAdded(Component component)

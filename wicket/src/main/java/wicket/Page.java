@@ -1385,4 +1385,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
+	/**
+	 * Call this method when the current (ajax) request shouldn't merge 
+	 * the changes that are happening to the page with the previous version. 
+	 * 
+	 * This is for example needed when you want to redirect to this 
+	 * page in an ajax request and then you do want to version normally.. 
+	 * 
+	 * This method doesn't do anything if the getRequest().mergeVersion
+	 * doesn't return true.
+	 */
+	public final void ignoreVersionMerge()
+	{
+		if (getRequest().mergeVersion())
+		{
+			mayTrackChangesFor(this, null);
+			if (versionManager != null)
+			{
+				versionManager.ignoreVersionMerge();
+			}
+		}
+	}
 }
