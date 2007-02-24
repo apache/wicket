@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 5089 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -22,27 +22,22 @@ import javax.servlet.http.HttpServletRequest;
 import wicket.examples.WicketExampleApplication;
 import wicket.extensions.ajax.markup.html.form.upload.UploadWebRequest;
 import wicket.protocol.http.WebRequest;
+import wicket.util.file.Folder;
 
 /**
- * WicketServlet class for wicket.examples.upload example.
+ * Application class for wicket.examples.upload example.
  * 
  * @author Eelco Hillenius
  */
 public class UploadApplication extends WicketExampleApplication
 {
+	private Folder uploadFolder = null;
+
 	/**
 	 * Constructor.
 	 */
 	public UploadApplication()
 	{
-	}
-
-	/**
-	 * @see wicket.examples.WicketExampleApplication#init()
-	 */
-	protected void init()
-	{
-		getResourceSettings().setThrowExceptionOnMissingResource(false);
 	}
 
 
@@ -52,6 +47,26 @@ public class UploadApplication extends WicketExampleApplication
 	public Class getHomePage()
 	{
 		return UploadPage.class;
+	}
+
+	/**
+	 * @return the folder for uploads
+	 */
+	public Folder getUploadFolder()
+	{
+		return uploadFolder;
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
+
+		uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
+		// Ensure folder exists
+		uploadFolder.mkdirs();
 	}
 
 	/**
