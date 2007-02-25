@@ -54,7 +54,7 @@ public final class Objects
 	 * Interface that enables users to plugin the way object sizes are
 	 * calculated with Wicket.
 	 */
-	public static interface ISizeOfStrategy
+	public static interface IObjectSizeOfStrategy
 	{
 		/**
 		 * Computes the size of an object. This typically is an estimation, not
@@ -68,17 +68,17 @@ public final class Objects
 	}
 
 	/**
-	 * {@link ISizeOfStrategy} that works by serializing the object to an
+	 * {@link IObjectSizeOfStrategy} that works by serializing the object to an
 	 * instance of {@link ByteCountingOutputStream}, which records the number
 	 * of bytes written to it. Hence, this gives the size of the object as it
 	 * would be serialized,including all the overhead of writing class headers
 	 * etc. Not very accurate (the real memory consumption should be lower) but
 	 * the best we can do in a cheap way pre JDK 5.
 	 */
-	public static final class SerializingSizeOfStrategy implements ISizeOfStrategy
+	public static final class SerializingObjectSizeOfStrategy implements IObjectSizeOfStrategy
 	{
 		/**
-		 * @see wicket.util.lang.Objects.ISizeOfStrategy#sizeOf(java.lang.Object)
+		 * @see wicket.util.lang.Objects.IObjectSizeOfStrategy#sizeOf(java.lang.Object)
 		 */
 		public long sizeOf(Object object)
 		{
@@ -255,7 +255,7 @@ public final class Objects
 	 * to the JDK version used, so varying them between applications doesn't
 	 * make a lot of sense.
 	 */
-	private static ISizeOfStrategy sizeOfStrategy = new SerializingSizeOfStrategy();
+	private static IObjectSizeOfStrategy objectSizeOfStrategy = new SerializingObjectSizeOfStrategy();
 
 	static
 	{
@@ -739,7 +739,6 @@ public final class Objects
 		return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
 	}
 
-
 	/**
 	 * Returns true if a and b are equal. Either object may be null.
 	 * 
@@ -763,6 +762,7 @@ public final class Objects
 
 		return false;
 	}
+
 
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
@@ -1116,6 +1116,17 @@ public final class Objects
 	}
 
 	/**
+	 * Sets the strategy for determining the sizes of objects.
+	 * 
+	 * @param objectSizeOfStrategy
+	 *            the strategy
+	 */
+	public static void setObjectSizeOfStrategy(IObjectSizeOfStrategy objectSizeOfStrategy)
+	{
+		Objects.objectSizeOfStrategy = objectSizeOfStrategy;
+	}
+
+	/**
 	 * Configure this utility class to use the provided
 	 * {@link IObjectStreamFactory} instance.
 	 * 
@@ -1146,7 +1157,7 @@ public final class Objects
 	 */
 	public static long sizeof(final Object object)
 	{
-		return sizeOfStrategy.sizeOf(object);
+		return objectSizeOfStrategy.sizeOf(object);
 	}
 
 	/**
