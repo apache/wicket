@@ -1119,11 +1119,19 @@ public final class Objects
 	 * Sets the strategy for determining the sizes of objects.
 	 * 
 	 * @param objectSizeOfStrategy
-	 *            the strategy
+	 *            the strategy. Pass null to reset to the default.
 	 */
 	public static void setObjectSizeOfStrategy(IObjectSizeOfStrategy objectSizeOfStrategy)
 	{
-		Objects.objectSizeOfStrategy = objectSizeOfStrategy;
+		if (objectSizeOfStrategy == null)
+		{
+			Objects.objectSizeOfStrategy = new SerializingObjectSizeOfStrategy();
+		}
+		else
+		{
+			Objects.objectSizeOfStrategy = objectSizeOfStrategy;
+		}
+		log.info("using " + objectSizeOfStrategy + " for calculating object sizes");
 	}
 
 	/**
@@ -1133,7 +1141,7 @@ public final class Objects
 	 * @param objectStreamFactory
 	 *            The factory instance to use. If you pass in null, the
 	 *            {@link DefaultObjectStreamFactory default} will be set
-	 *            (again).
+	 *            (again). Pass null to reset to the default.
 	 */
 	public static void setObjectStreamFactory(IObjectStreamFactory objectStreamFactory)
 	{
@@ -1145,6 +1153,7 @@ public final class Objects
 		{
 			Objects.objectStreamFactory = objectStreamFactory;
 		}
+		log.info("using " + objectStreamFactory + " for creating object streams");
 	}
 
 	/**
