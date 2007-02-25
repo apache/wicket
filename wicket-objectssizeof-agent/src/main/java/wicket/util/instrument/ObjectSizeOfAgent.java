@@ -27,11 +27,9 @@ public class ObjectSizeOfAgent {
 	public static void agentmain(String agentArgs,
 			Instrumentation instrumentation) {
 
-		System.err.println("******* ENTER ***********");
 		InstrumentationObjectSizeOfStrategy strategy = new InstrumentationObjectSizeOfStrategy(
 				instrumentation);
 		Objects.setObjectSizeOfStrategy(strategy);
-		System.err.println("******* EXIT ***********");
 	}
 
 	/**
