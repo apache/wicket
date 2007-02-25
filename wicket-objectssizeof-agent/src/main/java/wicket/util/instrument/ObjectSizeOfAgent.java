@@ -25,13 +25,13 @@ import java.util.Map;
 import java.util.Stack;
 
 /** Instrumentation agent used */
-public class SizeOfAgent {
+public class ObjectSizeOfAgent {
 
 	private static Instrumentation inst;
 
 	/** initializes agent when it is attached to an already running JVM. */
 	public static void agentmain(String agentArgs, Instrumentation inst) {
-		SizeOfAgent.inst = inst;
+		ObjectSizeOfAgent.inst = inst;
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class SizeOfAgent {
 	 * executed.
 	 */
 	public static void premain(String agentArgs, Instrumentation inst) {
-		SizeOfAgent.inst = inst;
+		ObjectSizeOfAgent.inst = inst;
 		System.out.println("SizeOfAgent initialized");
 	}
 
@@ -88,7 +88,7 @@ public class SizeOfAgent {
 
 		long result = 0;
 		// get size of object + primitive variables + member pointers
-		result += SizeOfAgent.sizeOf(obj);
+		result += ObjectSizeOfAgent.sizeOf(obj);
 
 		// process all array elements
 		Class clazz = obj.getClass();
