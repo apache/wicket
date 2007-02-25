@@ -38,6 +38,7 @@
 		<module>../wicket-spring</module>
 		<module>../wicket-spring-examples</module>
 		<module>../wicket-threadtest</module>
+		<module>../wicket-datetime</module>
 	</modules>
 
 	<organization>
