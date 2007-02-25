@@ -31,6 +31,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -40,7 +41,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.WicketRuntimeException;
-import wicket.util.collections.HandleTable;
 
 /**
  * Utility class that analyzes objects for non-serializable nodes. Construct
@@ -270,7 +270,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	private final LinkedList traceStack = new LinkedList();
 
 	/** set for checking circular references. */
-	private final HandleTable checked = new HandleTable(10, (float)3.00);
+	private final Map checked = new IdentityHashMap();
 
 	/** string stack with current names pushed. */
 	private LinkedList nameStack = new LinkedList();
@@ -355,7 +355,7 @@ public final class SerializableChecker extends ObjectOutputStream
 		}
 		else if (cls.isArray())
 		{
-			checked.assign(obj);
+			checked.put(obj, null);
 			Class ccl = cls.getComponentType();
 			if (!(ccl.isPrimitive()))
 			{
@@ -381,12 +381,12 @@ public final class SerializableChecker extends ObjectOutputStream
 					public void writeObject(Object streamObj) throws IOException
 					{
 						// Check for circular reference.
-						if (checked.contains(streamObj))
+						if (checked.containsKey(streamObj))
 						{
 							return;
 						}
 
-						checked.assign(streamObj);
+						checked.put(streamObj, null);
 						String arrayPos = "[write:" + count++ + "]";
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
@@ -456,12 +456,12 @@ public final class SerializableChecker extends ObjectOutputStream
 
 						counter++;
 						// Check for circular reference.
-						if (checked.contains(streamObj))
+						if (checked.containsKey(streamObj))
 						{
 							return null;
 						}
 
-						checked.assign(obj);
+						checked.put(obj, null);
 						String arrayPos = "[write:" + counter + "]";
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
@@ -508,7 +508,7 @@ public final class SerializableChecker extends ObjectOutputStream
 					{
 						throw new RuntimeException(e);
 					}
-					checked.assign(obj);
+					checked.put(obj, null);
 					checkFields(obj, slotDesc);
 				}
 			}
@@ -563,7 +563,7 @@ public final class SerializableChecker extends ObjectOutputStream
 				}
 
 				// Check for circular reference.
-				if (checked.contains(objVals[i]))
+				if (checked.containsKey(objVals[i]))
 				{
 					continue;
 				}

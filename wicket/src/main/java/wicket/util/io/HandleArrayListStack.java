@@ -14,29 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.collections;
+package wicket.util.io;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EmptyStackException;
 
 /**
+ * TODO document me.
+ * 
  * @author jcompagner
  */
-public final class HandleArrayListStack extends ArrayList
+final class HandleArrayListStack extends ArrayList
 {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param initialCapacity
-	 *            Initial capacity of the stack
-	 */
-	public HandleArrayListStack(final int initialCapacity)
-	{
-		super(initialCapacity);
-	}
 
 	/**
 	 * Construct.
@@ -58,28 +49,74 @@ public final class HandleArrayListStack extends ArrayList
 	}
 
 	/**
-	 * Pushes an item onto the top of this stack.
+	 * Construct.
 	 * 
-	 * @param item
-	 *            the item to be pushed onto this stack.
+	 * @param initialCapacity
+	 *            Initial capacity of the stack
 	 */
-	public final void push(final Object item)
+	public HandleArrayListStack(final int initialCapacity)
 	{
-		add(item);
+		super(initialCapacity);
 	}
 
 	/**
-	 * Removes the object at the top of this stack and returns that object.
+	 * Tests if this stack is empty.
 	 * 
-	 * @return The object at the top of this stack
-	 * @exception EmptyStackException
-	 *                If this stack is empty.
+	 * @return <code>true</code> if and only if this stack contains no items;
+	 *         <code>false</code> otherwise.
 	 */
-	public final Object pop()
+	public final boolean empty()
 	{
-		final Object top = peek();
-		remove(size() - 1);
-		return top;
+		return size() == 0;
+	}
+
+	/**
+	 * @see java.util.ArrayList#indexOf(java.lang.Object)
+	 */
+	public int indexOf(Object elem)
+	{
+		int size = size();
+		if (elem == null)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				if (get(i) == null)
+					return i;
+			}
+		}
+		else
+		{
+			for (int i = 0; i < size; i++)
+				if (elem == get(i))
+				{
+					return i;
+				}
+		}
+		return -1;
+	}
+
+	/**
+	 * @see java.util.ArrayList#lastIndexOf(java.lang.Object)
+	 */
+	public int lastIndexOf(Object elem)
+	{
+		if (elem == null)
+		{
+			for (int i = size() - 1; i >= 0; i--)
+			{
+				if (get(i) == null)
+					return i;
+			}
+		}
+		else
+		{
+			for (int i = size() - 1; i >= 0; i--)
+			{
+				if (elem == get(i))
+					return i;
+			}
+		}
+		return -1;
 	}
 
 	/**
@@ -100,14 +137,28 @@ public final class HandleArrayListStack extends ArrayList
 	}
 
 	/**
-	 * Tests if this stack is empty.
+	 * Removes the object at the top of this stack and returns that object.
 	 * 
-	 * @return <code>true</code> if and only if this stack contains no items;
-	 *         <code>false</code> otherwise.
+	 * @return The object at the top of this stack
+	 * @exception EmptyStackException
+	 *                If this stack is empty.
 	 */
-	public final boolean empty()
+	public final Object pop()
 	{
-		return size() == 0;
+		final Object top = peek();
+		remove(size() - 1);
+		return top;
+	}
+
+	/**
+	 * Pushes an item onto the top of this stack.
+	 * 
+	 * @param item
+	 *            the item to be pushed onto this stack.
+	 */
+	public final void push(final Object item)
+	{
+		add(item);
 	}
 
 	/**
@@ -130,55 +181,6 @@ public final class HandleArrayListStack extends ArrayList
 		if (i >= 0)
 		{
 			return size() - i;
-		}
-		return -1;
-	}
-	
-	/**
-	 * @see java.util.ArrayList#indexOf(java.lang.Object)
-	 */
-	public int indexOf(Object elem)
-	{
-		int size = size();
-		if (elem == null) 
-		{
-		    for (int i = 0; i < size; i++)
-		    {
-				if (get(i) == null)
-				    return i;
-		    }
-		} 
-		else 
-		{
-		    for (int i = 0; i < size; i++)
-			if (elem == get(i))
-			{
-			    return i;
-			}
-		}
-		return -1;
-	}
-	
-	/**
-	 * @see java.util.ArrayList#lastIndexOf(java.lang.Object)
-	 */
-	public int lastIndexOf(Object elem)
-	{
-		if (elem == null) 
-		{
-		    for (int i = size()-1; i >= 0; i--)
-		    {
-				if (get(i) ==null)
-				    return i;
-		    }
-		} 
-		else 
-		{
-		    for (int i = size()-1; i >= 0; i--)
-		    {
-				if (elem == get(i))
-				    return i;
-		    }
 		}
 		return -1;
 	}

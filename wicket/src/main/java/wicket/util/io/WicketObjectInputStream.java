@@ -28,7 +28,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-import wicket.util.collections.HandleArrayListStack;
 import wicket.util.collections.IntHashMap;
 
 /**
