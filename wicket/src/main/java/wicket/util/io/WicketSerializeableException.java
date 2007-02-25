@@ -28,29 +28,31 @@ import wicket.util.string.AppendingStringBuffer;
 public class WicketSerializeableException extends NotSerializableException
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final List list;
 
 	/**
 	 * Construct.
-	 * @param message 
-	 * @param cause 
+	 * 
+	 * @param message
+	 * @param cause
 	 */
 	public WicketSerializeableException(String message)
 	{
 		super(message);
 		list = new ArrayList();
 	}
-	
+
 	/**
 	 * Construct.
-	 * @param message 
-	 * @param cause 
+	 * 
+	 * @param message
+	 * @param cause
 	 */
-	public WicketSerializeableException(String message, Throwable cause )
+	public WicketSerializeableException(String message, Throwable cause)
 	{
 		this(message);
-		initCause(cause); 
+		initCause(cause);
 	}
 
 	/**
@@ -62,17 +64,24 @@ public class WicketSerializeableException extends NotSerializableException
 		if (list.size() > 0)
 		{
 			asb.append("\n");
-			for (int i = list.size(); --i >=0 ;)
+			for (int i = list.size(); --i >= 0;)
 			{
 				String element = (String)list.get(i);
 				asb.append(element);
 				asb.append("->");
 			}
-			asb.setLength(asb.length()-2);
+			asb.setLength(asb.length() - 2);
 		}
+		asb
+				.append("\nNOTE: if you feel Wicket is at fault with this exception")
+				.append(", please report to the mailing list. You can switch to ")
+				.append("JDK based serialization by calling: ")
+				.append(
+						"java.util.lang.Objects.setObjectStreamFactory(new IObjectStreamFactory.DefaultObjectStreamFactory()) ")
+				.append("e.g. in the init method of your application");
 		return asb.toString();
 	}
-	
+
 	/**
 	 * @param traceString
 	 */

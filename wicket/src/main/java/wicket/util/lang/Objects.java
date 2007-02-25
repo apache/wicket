@@ -50,6 +50,57 @@ import wicket.util.string.Strings;
  */
 public final class Objects
 {
+	/**
+	 * Interface that enables users to plugin the way object sizes are
+	 * calculated with Wicket.
+	 */
+	public static interface ISizeOfStrategy
+	{
+		/**
+		 * Computes the size of an object. This typically is an estimation, not
+		 * an absolute accurate size.
+		 * 
+		 * @param object
+		 *            Object to compute size of
+		 * @return The size of the object in bytes.
+		 */
+		long sizeOf(Object object);
+	}
+
+	/**
+	 * {@link ISizeOfStrategy} that works by serializing the object to an
+	 * instance of {@link ByteCountingOutputStream}, which records the number
+	 * of bytes written to it. Hence, this gives the size of the object as it
+	 * would be serialized,including all the overhead of writing class headers
+	 * etc. Not very accurate (the real memory consumption should be lower) but
+	 * the best we can do in a cheap way pre JDK 5.
+	 */
+	public static final class SerializingSizeOfStrategy implements ISizeOfStrategy
+	{
+		/**
+		 * @see wicket.util.lang.Objects.ISizeOfStrategy#sizeOf(java.lang.Object)
+		 */
+		public long sizeOf(Object object)
+		{
+			if (object == null)
+			{
+				return 0;
+			}
+			try
+			{
+				final ByteCountingOutputStream out = new ByteCountingOutputStream();
+				new ObjectOutputStream(out).writeObject(object);
+				out.close();
+				return out.size();
+			}
+			catch (IOException e)
+			{
+				return -1;
+			}
+		}
+
+	}
+
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
 		private final ClassLoader classloader;
@@ -195,8 +246,16 @@ public final class Objects
 	 * opposed to in Application, as the Application most likely isn't available
 	 * in the threads we'll be using this with.
 	 */
-//	private static IObjectStreamFactory objectStreamFactory = new WicketObjectStreamFactory();
-	private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
+	private static IObjectStreamFactory objectStreamFactory = new WicketObjectStreamFactory();
+
+	/**
+	 * Strategy for calculating sizes of objects. Note: I didn't make this an
+	 * application setting as we have enough of those already, and the typical
+	 * way this probably would be used is that install a different one according
+	 * to the JDK version used, so varying them between applications doesn't
+	 * make a lot of sense.
+	 */
+	private static ISizeOfStrategy sizeOfStrategy = new SerializingSizeOfStrategy();
 
 	static
 	{
@@ -680,6 +739,7 @@ public final class Objects
 		return (s.length() == 0) ? 0.0 : Double.parseDouble(s);
 	}
 
+
 	/**
 	 * Returns true if a and b are equal. Either object may be null.
 	 * 
@@ -828,7 +888,6 @@ public final class Objects
 		}
 		return NONNUMERIC;
 	}
-
 
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
@@ -1078,7 +1137,8 @@ public final class Objects
 	}
 
 	/**
-	 * Computes the size of an object by serializing it to a byte array.
+	 * Computes the size of an object. Note that this is an estimation, never an
+	 * absolute accurate size.
 	 * 
 	 * @param object
 	 *            Object to compute size of
@@ -1086,19 +1146,7 @@ public final class Objects
 	 */
 	public static long sizeof(final Object object)
 	{
-		if (object == null)
-			return 0;
-		try
-		{
-			final ByteCountingOutputStream out = new ByteCountingOutputStream();
-			new ObjectOutputStream(out).writeObject(object);
-			out.close();
-			return out.size();
-		}
-		catch (IOException e)
-		{
-			return -1;
-		}
+		return sizeOfStrategy.sizeOf(object);
 	}
 
 	/**
