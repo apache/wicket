@@ -1377,8 +1377,15 @@ Wicket.Focus = {
 	{
 		if (lastFocusId)
 		{ 
-			Wicket.Log.info("Calling focus on " + lastFocusId);
-			document.getElementById(lastFocusId).focus();
+			var toFocus = document.getElementById(lastFocusId);
+			if (typeof(toFocus) != "undefined") {
+				Wicket.Log.info("Calling focus on " + lastFocusId);
+				toFocus.focus();
+			}
+			else
+			{
+				Wicket.Log.info("Couldn't set focus on " + lastFocusId + " not on the page anymore");
+			}
 		}
 		else
 		{

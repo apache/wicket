@@ -56,6 +56,8 @@ public class UndoPageVersionManager implements IPageVersionManager
 	/** The page being managed */
 	private final Page page;
 
+	private transient boolean ignoreMerge = false;
+
 	/**
 	 * Constructor
 	 * 
@@ -97,6 +99,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void ignoreVersionMerge()
 	{
+		ignoreMerge = true;
 		currentVersionNumber++;
 		currentAjaxVersionNumber = 0;
 	}
@@ -138,7 +141,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void endVersion(boolean mergeVersion)
 	{
-		if(mergeVersion)
+		if(mergeVersion && !ignoreMerge)
 		{
 			if(changeListStack.size() > 0)
 			{
@@ -148,6 +151,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 		}
 		else
 		{
+			ignoreMerge = false;
 			// Push change list onto stack
 			changeListStack.push(changeList);
 			
