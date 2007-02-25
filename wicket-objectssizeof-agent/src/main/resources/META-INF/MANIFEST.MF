@@ -1,2 +1,4 @@
 Manifest-Version: 1.0
 Premain-Class: wicket.util.instrument.ObjectSizeOfAgent
+Agent-Class: wicket.util.instrument.ObjectSizeOfAgent
+
