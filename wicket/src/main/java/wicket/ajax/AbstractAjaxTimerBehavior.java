@@ -34,8 +34,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	/** The update interval */
 	private final Duration updateInterval;
 
-	private boolean attachedBodyOnLoadModifier = false;
-
 	private boolean stopped = false;
 
 	/**
@@ -64,17 +62,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(response);
 
-		if (this.attachedBodyOnLoadModifier == false)
+		if (RequestCycle.get().getRequestTarget() instanceof AjaxRequestTarget) {
+			response.renderJavascript(getJsTimeoutCall(updateInterval), getComponent().getMarkupId());
+		}
+		else
 		{
-			this.attachedBodyOnLoadModifier = true;
-			if (RequestCycle.get().getRequestTarget() instanceof AjaxRequestTarget) {
-				response.renderJavascript(getJsTimeoutCall(updateInterval), getComponent().getMarkupId());
-			}
-			else
-			{
-				((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(
-						getJsTimeoutCall(updateInterval), getComponent());
-			}
+			response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
 		}
 	}
 
@@ -86,7 +79,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
 		// this might look strange, but it is necessary for IE not to leak :(
-		return "setTimeout(&quot;" + getCallbackScript(false, true) + "&quot;, "
+		return "setTimeout(\"" + getCallbackScript(false, true) + "\", "
 				+ updateInterval.getMilliseconds() + ");";
 	}
 
