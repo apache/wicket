@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.commons.logging.Log;
@@ -29,6 +30,33 @@ public final class Tester implements CommandRunnerObserver {
 	static {
 		params = new HttpClientParams();
 		params.setParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
+	}
+
+	/**
+	 * Main method for just starting the server
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// start server on its own
+		int port = 8090;
+		if (args.length > 0) {
+			port = Integer.valueOf(args[0]);
+		}
+		Server server = new Server(port);
+		WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
+		server.addHandler(ctx);
+		try {
+			server.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				server.stop();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			System.exit(1);
+		}
 	}
 
 	private int activeThreads = 0;
@@ -119,15 +147,28 @@ public final class Tester implements CommandRunnerObserver {
 	public void run() throws Exception {
 
 		activeThreads = 0;
-		Server server = new Server(port);
-		WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
-		server.addHandler(ctx);
-		server.start();
 
 		HttpConnectionManagerParams connManagerParams = new HttpConnectionManagerParams();
 		connManagerParams.setDefaultMaxConnectionsPerHost(numberOfThreads * 2);
 		MultiThreadedHttpConnectionManager manager = new MultiThreadedHttpConnectionManager();
 		manager.setParams(connManagerParams);
+
+		Server server = null;
+		GetMethod getMethod = new GetMethod("http://localhost:" + port + "/");
+		try {
+			getMethod.setFollowRedirects(true);
+			HttpClient httpClient = new HttpClient(params, manager);
+			int code = httpClient.executeMethod(getMethod);
+			if (code != 200) {
+				// start up server
+				server = new Server(port);
+				WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
+				server.addHandler(ctx);
+				server.start();
+			}
+		} finally {
+			getMethod.releaseConnection();
+		}
 
 		try {
 
@@ -166,7 +207,9 @@ public final class Tester implements CommandRunnerObserver {
 
 		} finally {
 			MultiThreadedHttpConnectionManager.shutdownAll();
-			server.stop();
+			if (server != null) {
+				server.stop();
+			}
 		}
 	}
 
