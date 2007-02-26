@@ -16,13 +16,10 @@
  */
 package wicket.util.instrument;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Stack;
 
 import wicket.util.lang.Objects.IObjectSizeOfStrategy;
 
@@ -33,6 +30,49 @@ import wicket.util.lang.Objects.IObjectSizeOfStrategy;
  */
 public class InstrumentationObjectSizeOfStrategy implements
 		IObjectSizeOfStrategy {
+
+	/**
+	 * Records the size of an object and it's dependants as if they were
+	 * serialized but using the instrumentation API to calculate.
+	 */
+	private final class SizeRecodingOuputStream extends ObjectOutputStream {
+
+		private long totalSize = 0;
+
+		/**
+		 * Construct.
+		 * 
+		 * @throws IOException
+		 */
+		public SizeRecodingOuputStream() throws IOException {
+			super(new OutputStream() {
+
+				@Override
+				public void write(int b) throws IOException {
+				}
+			});
+			enableReplaceObject(true);
+		}
+
+		/**
+		 * Gets the calculated size.
+		 * 
+		 * @return
+		 */
+		public long getTotalSize() {
+			return totalSize;
+		}
+
+		@Override
+		protected Object replaceObject(Object obj) throws IOException {
+
+			if (obj != null) {
+				totalSize += instrumentation.getObjectSize(obj);
+			}
+
+			return obj;
+		}
+	}
 
 	/**
 	 * Instrumentation instance.
@@ -61,91 +101,14 @@ public class InstrumentationObjectSizeOfStrategy implements
 		if (obj == null) {
 			return 0;
 		}
-		Map<Object, Object> visited = new IdentityHashMap<Object, Object>();
-		Stack<Object> stack = new Stack<Object>();
-
-		long result = internalSizeOf(obj, stack, visited);
-		while (!stack.isEmpty()) {
-			result += internalSizeOf(stack.pop(), stack, visited);
-		}
-		visited.clear();
-		return result;
-	}
-
-	/**
-	 * Returns object size without member sub-objects.
-	 * 
-	 * @param o
-	 *            object to get size of
-	 * @return object size
-	 */
-	public long sizeOfSingleObject(Object o) {
-		if (instrumentation == null) {
-			throw new IllegalStateException(
-					"Can not access instrumentation environment.\n"
-							+ "Please check if jar file containing SizeOfAgent class is \n"
-							+ "specified in the java's \"-javaagent\" command line argument.");
-		}
-		return instrumentation.getObjectSize(o);
-	}
-
-	private long internalSizeOf(Object obj, Stack<Object> stack,
-			Map<Object, Object> visited) {
-		if (skipObject(obj, visited)) {
-			return 0;
-		}
-		visited.put(obj, null);
-
-		long result = 0;
-		// get size of object + primitive variables + member pointers
-		result += sizeOf(obj);
-
-		// process all array elements
-		Class clazz = obj.getClass();
-		if (clazz.isArray()) {
-			if (clazz.getName().length() != 2) {// skip primitive type array
-				int length = Array.getLength(obj);
-				for (int i = 0; i < length; i++) {
-					stack.add(Array.get(obj, i));
-				}
-			}
-			return result;
+		try {
+			SizeRecodingOuputStream recorder = new SizeRecodingOuputStream();
+			recorder.writeObject(obj);
+			return recorder.getTotalSize();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return -1;
 		}
 
-		// process all fields of the object
-		while (clazz != null) {
-			Field[] fields = clazz.getDeclaredFields();
-			for (int i = 0; i < fields.length; i++) {
-				if (!Modifier.isStatic(fields[i].getModifiers())) {
-					if (fields[i].getType().isPrimitive()) {
-						continue; // skip primitive fields
-					} else {
-						fields[i].setAccessible(true);
-						try {
-							// objects to be estimated are put to stack
-							Object objectToAdd = fields[i].get(obj);
-							if (objectToAdd != null) {
-								stack.add(objectToAdd);
-							}
-						} catch (IllegalAccessException ex) {
-							assert false;
-						}
-					}
-				}
-			}
-			clazz = clazz.getSuperclass();
-		}
-		return result;
-	}
-
-	private boolean skipObject(Object obj, Map<Object, Object> visited) {
-		if (obj instanceof String) {
-			// skip interned string
-			if (obj == ((String) obj).intern()) {
-				return true;
-			}
-		}
-		return (obj == null) // skip visited object
-				|| visited.containsKey(obj);
 	}
 }

@@ -4,6 +4,3 @@
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
 
-   Base on an idea from Maxim Zakharenkov as described on his blog:
-   http://www.jroller.org/page/maxim?entry=again_about_determining_size_of
-
