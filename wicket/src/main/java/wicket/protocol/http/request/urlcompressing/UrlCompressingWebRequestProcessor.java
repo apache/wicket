@@ -112,12 +112,12 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 			{
 				if (Strings.isEmpty(pageRelativeComponentPath))
 				{
-					// We have an interface that is not a redirect, but no
-					// component... that must be wrong
-					throw new WicketRuntimeException("When trying to call " + listener
-							+ ", a component must be provided");
+					component = page;
 				}
-				component = page.get(pageRelativeComponentPath);
+				else
+				{
+					component = page.get(pageRelativeComponentPath);
+				}
 			}
 
 			if (!component.isEnableAllowed())
