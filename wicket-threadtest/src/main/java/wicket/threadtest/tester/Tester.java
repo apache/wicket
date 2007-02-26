@@ -43,9 +43,7 @@ public final class Tester implements CommandRunnerObserver {
 		if (args.length > 0) {
 			port = Integer.valueOf(args[0]);
 		}
-		Server server = new Server(port);
-		WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
-		server.addHandler(ctx);
+		Server server = startServer(port);
 		try {
 			server.start();
 		} catch (Exception e) {
@@ -57,6 +55,26 @@ public final class Tester implements CommandRunnerObserver {
 			}
 			System.exit(1);
 		}
+	}
+
+	/**
+	 * Start Jetty server instance and return the handle.
+	 * 
+	 * @param port
+	 * @return server handle
+	 */
+	private static Server startServer(int port) {
+		Server server;
+		// start up server
+		server = new Server(port);
+		WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
+		server.addHandler(ctx);
+		try {
+			server.start();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return server;
 	}
 
 	private int activeThreads = 0;
@@ -160,12 +178,10 @@ public final class Tester implements CommandRunnerObserver {
 			HttpClient httpClient = new HttpClient(params, manager);
 			int code = httpClient.executeMethod(getMethod);
 			if (code != 200) {
-				// start up server
-				server = new Server(port);
-				WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
-				server.addHandler(ctx);
-				server.start();
+				server = startServer(port);
 			}
+		} catch (Exception e) {
+			server = startServer(port);
 		} finally {
 			getMethod.releaseConnection();
 		}
