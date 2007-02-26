@@ -56,6 +56,56 @@ import wicket.util.string.Strings;
  */
 public final class Objects
 {
+	/**
+	 * Interface that enables users to plugin the way object sizes are
+	 * calculated with Wicket.
+	 */
+	public static interface IObjectSizeOfStrategy
+	{
+		/**
+		 * Computes the size of an object. This typically is an estimation, not
+		 * an absolute accurate size.
+		 * 
+		 * @param object
+		 *            Object to compute size of
+		 * @return The size of the object in bytes.
+		 */
+		long sizeOf(Object object);
+	}
+
+	/**
+	 * {@link IObjectSizeOfStrategy} that works by serializing the object to an
+	 * instance of {@link ByteCountingOutputStream}, which records the number
+	 * of bytes written to it. Hence, this gives the size of the object as it
+	 * would be serialized,including all the overhead of writing class headers
+	 * etc. Not very accurate (the real memory consumption should be lower) but
+	 * the best we can do in a cheap way pre JDK 5.
+	 */
+	public static final class SerializingObjectSizeOfStrategy implements IObjectSizeOfStrategy
+	{
+		/**
+		 * @see wicket.util.lang.Objects.IObjectSizeOfStrategy#sizeOf(java.lang.Object)
+		 */
+		public long sizeOf(Object object)
+		{
+			if (object == null)
+			{
+				return 0;
+			}
+			try
+			{
+				final ByteCountingOutputStream out = new ByteCountingOutputStream();
+				new ObjectOutputStream(out).writeObject(object);
+				out.close();
+				return out.size();
+			}
+			catch (IOException e)
+			{
+				return -1;
+			}
+		}
+
+	}
 
 	private static class ArrayInstanceHolder implements Serializable
 	{
@@ -223,6 +273,15 @@ public final class Objects
 		}
 
 	}
+
+	/**
+	 * Strategy for calculating sizes of objects. Note: I didn't make this an
+	 * application setting as we have enough of those already, and the typical
+	 * way this probably would be used is that install a different one according
+	 * to the JDK version used, so varying them between applications doesn't
+	 * make a lot of sense.
+	 */
+	private static IObjectSizeOfStrategy objectSizeOfStrategy = new SerializingObjectSizeOfStrategy();
 
 	/** Type tag meaning java.math.BigDecimal. */
 	private static final int BIGDEC = 9;
@@ -871,7 +930,6 @@ public final class Objects
 		return NONNUMERIC;
 	}
 
-
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of a numeric operation on the two given objects.
@@ -886,6 +944,7 @@ public final class Objects
 	{
 		return getNumericType(v1, v2, false);
 	}
+
 
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
@@ -1151,6 +1210,25 @@ public final class Objects
 	}
 
 	/**
+	 * Sets the strategy for determining the sizes of objects.
+	 * 
+	 * @param objectSizeOfStrategy
+	 *            the strategy. Pass null to reset to the default.
+	 */
+	public static void setObjectSizeOfStrategy(IObjectSizeOfStrategy objectSizeOfStrategy)
+	{
+		if (objectSizeOfStrategy == null)
+		{
+			Objects.objectSizeOfStrategy = new SerializingObjectSizeOfStrategy();
+		}
+		else
+		{
+			Objects.objectSizeOfStrategy = objectSizeOfStrategy;
+		}
+		log.info("using " + objectSizeOfStrategy + " for calculating object sizes");
+	}
+
+	/**
 	 * Configure this utility class to use the provided
 	 * {@link IObjectStreamFactory} instance.
 	 * 
@@ -1172,7 +1250,8 @@ public final class Objects
 	}
 
 	/**
-	 * Computes the size of an object by serializing it to a byte array.
+	 * Computes the size of an object. Note that this is an estimation, never an
+	 * absolute accurate size.
 	 * 
 	 * @param object
 	 *            Object to compute size of
@@ -1180,19 +1259,7 @@ public final class Objects
 	 */
 	public static long sizeof(final Object object)
 	{
-		if (object == null)
-			return 0;
-		try
-		{
-			final ByteCountingOutputStream out = new ByteCountingOutputStream();
-			new ObjectOutputStream(out).writeObject(object);
-			out.close();
-			return out.size();
-		}
-		catch (IOException e)
-		{
-			return -1;
-		}
+		return objectSizeOfStrategy.sizeOf(object);
 	}
 
 	/**
