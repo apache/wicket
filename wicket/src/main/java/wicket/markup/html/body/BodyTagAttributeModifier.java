@@ -179,7 +179,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 			// return the attribute value unchanged.
 
 			// Component.findPage() is 'protected'. But this works as well.
-			if (behaviorOwner.findParent(Page.class) == null)
+			if ( !(behaviorOwner instanceof Page) && behaviorOwner.findParent(Page.class) == null)
 			{
 				setEnabled(false);
 				return currentValue;
