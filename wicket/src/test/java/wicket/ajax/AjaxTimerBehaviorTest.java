@@ -141,7 +141,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		String document = tester.getServletResponse().getDocument();
 
 		String updateScript = timer.getUpdateScript();
-		String bodyOnLoadUpdateScript = "<body onload=\"" + Strings.replaceAll(updateScript, "\"", "\\\"")+ "\">";
+		String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function() { " + updateScript + ";});";
 
 		if (inBodyOnLoad) 
 		{

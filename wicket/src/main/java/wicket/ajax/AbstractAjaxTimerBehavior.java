@@ -62,12 +62,16 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(response);
 
-		if (RequestCycle.get().getRequestTarget() instanceof AjaxRequestTarget) {
-			response.renderJavascript(getJsTimeoutCall(updateInterval), getComponent().getMarkupId());
-		}
-		else
+
+		if (!stopped)
 		{
-			response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
+			if (RequestCycle.get().getRequestTarget() instanceof AjaxRequestTarget) {
+				response.renderJavascript(getJsTimeoutCall(updateInterval), getComponent().getMarkupId());
+			}
+			else
+			{
+				response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
+			}
 		}
 	}
 
@@ -90,11 +94,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);
-
-		if (!stopped)
-		{
-			target.appendJavascript(getJsTimeoutCall(updateInterval));
-		}
 	}
 
 	/**
