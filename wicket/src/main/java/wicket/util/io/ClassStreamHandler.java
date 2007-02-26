@@ -308,6 +308,10 @@ public final class ClassStreamHandler
 	 */
 	private void fillFields(Class cls)
 	{
+		if (cls == null)
+		{
+			return;
+		}
 		Field[] fields = cls.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++)
 		{
