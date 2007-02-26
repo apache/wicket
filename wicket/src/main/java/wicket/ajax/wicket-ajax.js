@@ -1375,15 +1375,16 @@ Wicket.Focus = {
 	
 	requestFocus: function()
 	{
-		if (lastFocusId)
+		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
 		{ 
 			var toFocus = document.getElementById(lastFocusId);
-			if (typeof(toFocus) != "undefined") {
+			if (toFocus != null && typeof(toFocus) != "undefined") {
 				Wicket.Log.info("Calling focus on " + lastFocusId);
 				toFocus.focus();
 			}
 			else
 			{
+				lastFocusId = "";
 				Wicket.Log.info("Couldn't set focus on " + lastFocusId + " not on the page anymore");
 			}
 		}
