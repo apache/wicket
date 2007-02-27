@@ -889,21 +889,6 @@ public abstract class RequestCycle
 			}
 		}
 
-		// clear the used pagemap for this thread,
-		// maybe we can move this a few lines above to have a but more
-		// concurrency (session.update)
-		if (getResponse() instanceof BufferedWebResponse)
-		{
-			try
-			{
-				((BufferedWebResponse)getResponse()).filter();
-			}
-			catch (RuntimeException re)
-			{
-				log.error("there was an error filtering the response.", re);
-			}
-		}
-
 		try
 		{
 			IRequestLogger requestLogger = getApplication().getRequestLogger();
@@ -917,6 +902,7 @@ public abstract class RequestCycle
 			log.error("there was an error in the RequestLogger ending.", re);
 		}
 
+		// clear the used pagemap for this thread,
 		try
 		{
 			session.requestDetached();
@@ -926,6 +912,19 @@ public abstract class RequestCycle
 			log.error("there was an error detaching the request from the session " + session + ".",
 					re);
 		}
+
+		if (getResponse() instanceof BufferedWebResponse)
+		{
+			try
+			{
+				((BufferedWebResponse)getResponse()).filter();
+			}
+			catch (RuntimeException re)
+			{
+				log.error("there was an error filtering the response.", re);
+			}
+		}
+
 
 		try
 		{
