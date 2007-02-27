@@ -24,6 +24,8 @@ import wicket.util.tester.WicketTester;
 
 /**
  * Tests for WebRequestCodingStrategy
+ *
+ * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class WebRequestCodingStrategyTest extends TestCase
 {
