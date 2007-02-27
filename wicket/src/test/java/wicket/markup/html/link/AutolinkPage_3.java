@@ -21,18 +21,18 @@ import wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class AutolinkPage_3 extends WebPage 
+public class AutolinkPage_3 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
-
+	 * 
 	 */
-	public AutolinkPage_3() 
+	public AutolinkPage_3()
 	{
-    }
+	}
 }

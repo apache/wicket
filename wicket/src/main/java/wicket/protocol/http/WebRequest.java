@@ -139,7 +139,7 @@ public abstract class WebRequest extends Request
 	
 	/**
 	 * Is the request an ajax request?
-	 *
+	 * 
 	 * @return True if the ajax is an ajax request. False if it's not.
 	 */
 	public abstract boolean isAjax();

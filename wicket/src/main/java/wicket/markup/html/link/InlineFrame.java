@@ -42,8 +42,8 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	private final IPageLink pageLink;
 
 	/**
-	 * The pagemap name where the page that will be created by this inline
-	 * frame will be created in.
+	 * The pagemap name where the page that will be created by this inline frame
+	 * will be created in.
 	 */
 	private final String pageMapName;
 

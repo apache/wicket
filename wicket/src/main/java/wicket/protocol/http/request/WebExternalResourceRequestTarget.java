@@ -84,6 +84,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 			if (in != null)
 			{
 				webResponse.write(in);
+				// Set content type
 				webResponse.detectContentType(requestCycle, url);
 				// FIXME do we need to call webResponse.setContentLength()?
 			}

@@ -30,9 +30,10 @@ public class AutolinkTest extends WicketTestCase
 {
 	/** Logging */
 	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
-	
+
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public AutolinkTest(String name)

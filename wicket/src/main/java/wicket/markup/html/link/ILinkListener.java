@@ -27,8 +27,9 @@ import wicket.RequestListenerInterface;
 public interface ILinkListener extends IRequestListener
 {
 	/** Listener interface */
-	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(ILinkListener.class);
-	
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+			ILinkListener.class);
+
 	/**
 	 * Called when a link is clicked.
 	 */

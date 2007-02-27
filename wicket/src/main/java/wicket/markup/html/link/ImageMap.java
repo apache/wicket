@@ -43,7 +43,7 @@ public final class ImageMap extends WebMarkupContainer
 	private static final class CircleLink extends ShapeLink
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** The circle's radius. */
 		private final int radius;
 
@@ -96,7 +96,7 @@ public final class ImageMap extends WebMarkupContainer
 	private static final class PolygonLink extends ShapeLink
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** Its coordinates. */
 		private final int[] coordinates;
 

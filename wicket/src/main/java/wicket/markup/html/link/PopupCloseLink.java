@@ -28,7 +28,7 @@ import wicket.model.IModel;
 public class PopupCloseLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * ClosePopupPage closes the popup window.
 	 */
@@ -57,7 +57,7 @@ public class PopupCloseLink extends Link
 	{
 		super(id, object);
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */

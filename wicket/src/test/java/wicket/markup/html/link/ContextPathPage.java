@@ -25,7 +25,7 @@ import wicket.resource.ByteArrayResource;
 public class ContextPathPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 */

@@ -22,10 +22,10 @@ import wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class Href_3 extends WebPage 
+public class Href_3 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,9 +33,9 @@ public class Href_3 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public Href_3() 
+	public Href_3()
 	{
-	    add(new WebMarkupContainer("link1"));
-	    add(new WebMarkupContainer("link2").setVisible(false));
-    }
+		add(new WebMarkupContainer("link1"));
+		add(new WebMarkupContainer("link2").setVisible(false));
+	}
 }
