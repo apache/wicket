@@ -18,14 +18,10 @@ package wicket.markup.html.link;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.protocol.http.WebResponse;
-import wicket.util.io.Streams;
 import wicket.util.string.Strings;
 
 /**
@@ -118,28 +114,11 @@ public class DownloadLink extends Link
 
 				try
 				{
-					InputStream is = new FileInputStream(file);
-					try
-					{
-						Streams.copy(is, r.getOutputStream());
-					}
-					catch (IOException e)
-					{
-						throw new RuntimeException(e);
-					}
-					finally
-					{
-						try
-						{
-							is.close();
-						}
-						catch (IOException e)
-						{
-							throw new RuntimeException(e);
-						}
-					}
+					r.write(new FileInputStream(file));
+					r.setContentLength(file.length());
+					r.detectContentType(requestCycle, fileName);
 				}
-				catch (FileNotFoundException e)
+				catch (Exception e)
 				{
 					throw new RuntimeException(e);
 				}
