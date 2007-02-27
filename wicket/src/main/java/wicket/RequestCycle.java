@@ -883,9 +883,14 @@ public abstract class RequestCycle
 			}
 		}
 
+
+		IRequestLogger requestLogger = getApplication().getRequestLogger();
+		if (requestLogger != null)
+		{
+			requestLogger.requestTime((System.currentTimeMillis() - startTime));
+		}
+
 		// clear the used pagemap for this thread,
-		// maybe we can move this a few lines above to have a but more
-		// concurrency (session.update)
 		try
 		{
 			session.requestDetached();
@@ -918,12 +923,6 @@ public abstract class RequestCycle
 			log.error("Exception occurred during request detachement", e);
 		}
 
-
-		IRequestLogger requestLogger = getApplication().getRequestLogger();
-		if (requestLogger != null)
-		{
-			requestLogger.requestTime((System.currentTimeMillis() - startTime));
-		}
 
 		// Release thread local resources
 		threadDetach();
