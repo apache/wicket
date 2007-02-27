@@ -22,7 +22,6 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,7 +85,8 @@ public class FilePageStore implements IPageStore
 	 */
 	public FilePageStore(File dir)
 	{
-		defaultWorkDir = dir;
+		defaultWorkDir = new File(dir,"sessions/");
+		defaultWorkDir.mkdirs();
 		pagesToBeSerialized = new ConcurrentHashMap();
 		pagesToBeSaved = new ConcurrentHashMap();
 		appName = Application.get().getApplicationKey();
@@ -100,7 +100,7 @@ public class FilePageStore implements IPageStore
 		serThread = new PageSerializingThread();
 		t = new Thread(serThread, "FilePageSerializingThread-" + appName);
 		t.setDaemon(true);
-		t.setPriority(Thread.MIN_PRIORITY);
+		t.setPriority(Thread.NORM_PRIORITY);
 		t.start();
 	}
 
