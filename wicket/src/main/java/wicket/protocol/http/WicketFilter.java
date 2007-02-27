@@ -102,15 +102,6 @@ public class WicketFilter implements Filter
 		this.webApplication.internalDestroy();
 		this.webApplication = null;
 	}
-
-	/**
-	 * Sets the filter to be used by WicketServlet.
-	 * @param servletCompatibilityMode
-	 */
-	public void setServletMode(boolean servletCompatibilityMode)
-	{
-		this.servletMode = true;
-	}
 	
 	/**
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
