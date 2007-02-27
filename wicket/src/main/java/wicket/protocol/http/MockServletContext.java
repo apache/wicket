@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -107,58 +106,6 @@ public class MockServletContext implements ServletContext
 		mimeTypes.put("gif", "image/gif");
 		mimeTypes.put("jpg", "image/jpeg");
 		mimeTypes.put("png", "image/png");
-
-		// Set ServletContext temp dir
-		setAttribute("javax.servlet.context.tempdir", createTempDir("wicket" + UUID.randomUUID()));
-	}
-
-	/**
-	 * Creates a temp directory
-	 * 
-	 * @param name
-	 * @return File
-	 */
-	public static File createTempDir(String name)
-	{
-		String tempDir = System.getProperty("java.io.tmpdir");
-		if (tempDir == null || tempDir.trim().length() == 0)
-		{
-			throw new RuntimeException(
-					"Could not create a temporary directory. System's [[java.io.tmpdir]] property is not "
-							+ "properly set. Current value is [[" + tempDir
-							+ "]]. Set via [[java -Djava.io.tmpdir=/var/tmp]]");
-		}
-
-		if (!tempDir.endsWith(File.separator))
-		{
-			tempDir += File.separator;
-		}
-
-		tempDir += name;
-
-		File dir = new File(tempDir);
-
-		int counter = 0;
-		while (dir.exists())
-		{
-			dir = new File(dir.getAbsolutePath() + counter);
-			counter++;
-			if (counter > 100)
-			{
-				throw new RuntimeException("Could not create temporary directory [["
-						+ dir.getAbsolutePath() + "]] after attempting 100 tries");
-			}
-		}
-
-		if (!dir.mkdirs())
-		{
-			throw new RuntimeException("Could not create path for tempdir [["
-					+ dir.getAbsolutePath() + "]]");
-		}
-
-		dir.deleteOnExit();
-
-		return dir;
 	}
 
 	/**
