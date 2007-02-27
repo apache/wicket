@@ -124,7 +124,7 @@ public class BookmarkablePageLink extends Link
 	{
 		return true;
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT USED! Bookmarkable links do not have a click handler.
 	 * It is here to satisfy the interface only, as bookmarkable links will be

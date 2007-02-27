@@ -21,10 +21,10 @@ import wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class XmlPage extends WebPage 
+public class XmlPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -32,10 +32,10 @@ public class XmlPage extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public XmlPage() 
+	public XmlPage()
 	{
-    }
-	
+	}
+
 	/**
 	 * 
 	 * @return string

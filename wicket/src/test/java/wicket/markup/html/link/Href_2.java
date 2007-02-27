@@ -17,10 +17,9 @@
 package wicket.markup.html.link;
 
 
-
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class Href_2 extends Href_1
@@ -31,8 +30,8 @@ public class Href_2 extends Href_1
 	 * Construct.
 	 * 
 	 */
-	public Href_2() 
+	public Href_2()
 	{
-	    
-    }
+
+	}
 }

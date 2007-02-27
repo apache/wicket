@@ -21,57 +21,58 @@ import wicket.WicketTestCase;
 
 /**
  * Test autolinks (href="...")
- *
+ * 
  * @author Juergen Donnerstag
  */
-public class AutolinkTest extends WicketTestCase 
+public class AutolinkTest extends WicketTestCase
 {
 	// private static final Log log = LogFactory.getLog(AutolinkTest.class);
 
-    /**
-     * Create the test.
-     *
-     * @param name The test name
-     */
-    public AutolinkTest(String name) 
-    {
-        super(name);
-    }
-    
+	/**
+	 * Create the test.
+	 * 
+	 * @param name
+	 *            The test name
+	 */
+	public AutolinkTest(String name)
+	{
+		super(name);
+	}
+
 	/**
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
-	    executeTest(AutolinkPage_1.class, "AutolinkPageExpectedResult_1.html");
+		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
+		executeTest(AutolinkPage_1.class, "AutolinkPageExpectedResult_1.html");
 	}
-    
+
 	/**
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
-        tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(AutolinkPage_2.class, "AutolinkPageExpectedResult_2.html");
+		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+		executeTest(AutolinkPage_2.class, "AutolinkPageExpectedResult_2.html");
 	}
-    
+
 	/**
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
-	    executeTest(AutolinkPage_3.class, "AutolinkPageExpectedResult_3.html");
+		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
+		executeTest(AutolinkPage_3.class, "AutolinkPageExpectedResult_3.html");
 	}
-    
+
 	/**
 	 * @throws Exception
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
-        tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
-	    executeTest(AutolinkPage_4.class, "AutolinkPageExpectedResult_4.html");
+		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
+		executeTest(AutolinkPage_4.class, "AutolinkPageExpectedResult_4.html");
 	}
 }

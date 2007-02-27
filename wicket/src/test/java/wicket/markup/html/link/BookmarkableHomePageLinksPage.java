@@ -27,8 +27,8 @@ import wicket.markup.html.WebPage;
 public class BookmarkableHomePageLinksPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	/**
 	 * Construct.
 	 */

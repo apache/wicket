@@ -33,42 +33,53 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public IndexedParamUrlCodingTest(String name)
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
 	public void testIndexedLink() throws Exception
 	{
-		tester.getApplication().mount("/test1", new IndexedParamUrlCodingStrategy("/test1",BookmarkableHomePageLinksPage.class,null));
-		tester.getApplication().mount("/test2", new IndexedParamUrlCodingStrategy("/test2",BookmarkableHomePageLinksPage.class,"mypagemap"));
-		
+		tester.getApplication().mount(
+				"/test1",
+				new IndexedParamUrlCodingStrategy("/test1", BookmarkableHomePageLinksPage.class,
+						null));
+		tester.getApplication().mount(
+				"/test2",
+				new IndexedParamUrlCodingStrategy("/test2", BookmarkableHomePageLinksPage.class,
+						"mypagemap"));
+
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
-		
+
 		PageParameters parameters = new PageParameters();
 		parameters.add("0", "Integer0");
 		parameters.add("1", "Integer1");
-		
-		String url1 = cycle.urlFor(new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class,parameters)).toString();
-		String url2 = cycle.urlFor(new BookmarkablePageRequestTarget("mypagemap",BookmarkableHomePageLinksPage.class,parameters)).toString();
+
+		String url1 = cycle.urlFor(
+				new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class, parameters))
+				.toString();
+		String url2 = cycle.urlFor(
+				new BookmarkablePageRequestTarget("mypagemap", BookmarkableHomePageLinksPage.class,
+						parameters)).toString();
 		assertEquals("test1/Integer0/Integer1", url1);
 		assertEquals("test2/Integer0/Integer1/wicket:pageMapName/mypagemap", url2);
-		
+
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL("/" + url1);
 		cycle = tester.createRequestCycle();
 		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
-		
+
 		RequestParameters requestParameters = encoder.decode(tester.getWicketRequest());
-		
+
 		IRequestTarget target1 = cycle.getProcessor().resolve(cycle, requestParameters);
-		if(target1 instanceof BookmarkablePageRequestTarget)
+		if (target1 instanceof BookmarkablePageRequestTarget)
 		{
 			assertNull(((BookmarkablePageRequestTarget)target1).getPageMapName());
 		}
@@ -76,17 +87,17 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		{
 			fail("url: " + url1 + " wasn't resolved to a bookmarkable target: " + target1);
 		}
-		
+
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL("/" + url2);
 		cycle = tester.createRequestCycle();
 		encoder = cycle.getProcessor().getRequestCodingStrategy();
-		
+
 		requestParameters = encoder.decode(tester.getWicketRequest());
-		
+
 		IRequestTarget target2 = cycle.getProcessor().resolve(cycle, requestParameters);
-		
-		if(target2 instanceof BookmarkablePageRequestTarget)
+
+		if (target2 instanceof BookmarkablePageRequestTarget)
 		{
 			assertEquals("mypagemap", ((BookmarkablePageRequestTarget)target2).getPageMapName());
 		}
@@ -95,5 +106,4 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 			fail("url: " + url2 + " wasn't resolved to a bookmarkable target: " + target2);
 		}
 	}
-
 }

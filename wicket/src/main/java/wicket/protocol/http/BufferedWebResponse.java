@@ -74,7 +74,7 @@ public class BufferedWebResponse extends WebResponse
 			}
 		}
 	}
-	
+
 	/**
 	 * @see wicket.Response#reset()
 	 */
@@ -124,5 +124,14 @@ public class BufferedWebResponse extends WebResponse
 			this.buffer = filter(buffer);
 
 		}
+	}
+
+	/**
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return buffer.toString();
 	}
 }

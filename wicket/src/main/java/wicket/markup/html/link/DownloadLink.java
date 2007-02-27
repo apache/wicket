@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebResponse;
 import wicket.util.string.Strings;
 
@@ -120,7 +121,7 @@ public class DownloadLink extends Link
 				}
 				catch (Exception e)
 				{
-					throw new RuntimeException(e);
+					throw new WicketRuntimeException(e);
 				}
 			}
 		});

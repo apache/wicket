@@ -24,20 +24,20 @@ import wicket.markup.html.basic.Label;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class AutolinkPage_1 extends WebPage 
+public class AutolinkPage_1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public AutolinkPage_1() 
+	public AutolinkPage_1()
 	{
-	    add(new Label("myLabel", "Home"));
-	    getSession().setStyle("myStyle");
-	    getSession().setLocale(Locale.GERMANY);
-    }
+		add(new Label("myLabel", "Home"));
+		getSession().setStyle("myStyle");
+		getSession().setLocale(Locale.GERMANY);
+	}
 }

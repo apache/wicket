@@ -19,7 +19,7 @@ package wicket.markup.html.link;
 import wicket.WicketTestCase;
 
 /**
- * Simple application that demonstrates the mock http application code (and
+ * Simple tester that demonstrates the mock http application code (and
  * checks that it is working)
  * 
  * @author Chris Turner
@@ -47,7 +47,7 @@ public class HrefTest extends WicketTestCase
 	public void testRenderHomePage_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
-	    executeTest(Href_1.class, "HrefExpectedResult_1.html");
+		executeTest(Href_1.class, "HrefExpectedResult_1.html");
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class HrefTest extends WicketTestCase
 	public void testRenderHomePage_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(Href_1.class, "HrefExpectedResult_1-1.html");
+		executeTest(Href_1.class, "HrefExpectedResult_1-1.html");
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class HrefTest extends WicketTestCase
 	public void testRenderHomePage_2a() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(Href_2.class, "HrefExpectedResult_2.html");
+		executeTest(Href_2.class, "HrefExpectedResult_2.html");
 	}
 
 	/**
@@ -79,6 +79,6 @@ public class HrefTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-	    executeTest(Href_3.class, "HrefExpectedResult_3.html");
+		executeTest(Href_3.class, "HrefExpectedResult_3.html");
 	}
 }

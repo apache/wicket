@@ -63,6 +63,10 @@ import wicket.util.string.Strings;
  * }
  * </pre>
  * 
+ * <b>Note:</b> When trying to hack urls in the browser an exception might be
+ * caught while decoding the URL. By default, for safety reasons a very simple
+ * WicketRuntimeException is thrown. The original stack trace is only logged.
+ * 
  * @author Juergen Donnerstag
  */
 public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrategy
@@ -274,7 +278,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	protected String onError(final Exception ex)
 	{
-		log.error(ex);
+		log.error("Invalid URL", ex);
 
 		throw new HackAttackException("Invalid URL");
 	}

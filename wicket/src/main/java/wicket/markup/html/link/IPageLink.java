@@ -51,9 +51,9 @@ public interface IPageLink extends Serializable
 
 	/**
 	 * Gets the class of the destination page, which serves as a form of
-	 * identity that can be used to determine if a link is on the same
-	 * Page that it links to.  When Pages are parameterized, the
-	 * Link.linksTo() method should be overridden instead.
+	 * identity that can be used to determine if a link is on the same Page that
+	 * it links to. When Pages are parameterized, the Link.linksTo() method
+	 * should be overridden instead.
 	 * <p>
 	 * A page's identity is important because links which are on the same page
 	 * that they link to often need to be displayed in a different way to
@@ -68,7 +68,7 @@ public interface IPageLink extends Serializable
 	 * 
 	 * public boolean linksTo(final Page page)
 	 * {
-	 *	   return page.getClass() == pageLink.getPageIdentity();
+	 * 	return page.getClass() == pageLink.getPageIdentity();
 	 * }
 	 * </pre>
 	 * 

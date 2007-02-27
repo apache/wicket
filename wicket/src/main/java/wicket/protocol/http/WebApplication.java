@@ -138,7 +138,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 	}
 
-
 	/**
 	 * @see wicket.Application#getApplicationKey()
 	 */

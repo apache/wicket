@@ -58,7 +58,7 @@ public class WebResponse extends Response
 	/** The underlying response object. */
 	private final HttpServletResponse httpServletResponse;
 
-	/**  */
+	/** Is the request an ajax request? */
 	private boolean ajax;
 
 	/**
