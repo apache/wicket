@@ -31,7 +31,6 @@ import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
-import wicket.util.io.Streams;
 
 /**
  * Request target that is not a Wicket resource. For example, such a resource
@@ -86,23 +85,10 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 			{
 				// TODO check can this really by done by any kind of url??
 				// Is this class really only used internally with a relative url to a resource in the servlet context.
-				// Set content type. 
-				String contentType = context.getMimeType(url);
-				if(contentType != null)
-				{
-					webResponse.setContentType(contentType);
-				}				
-				try
-				{
-					// Copy resource input stream to servlet output stream
-					Streams.copy(in, webResponse.getHttpServletResponse().getOutputStream());
-				}
-				finally
-				{
-					// NOTE: We only close the InputStream. The servlet
-					// container should close the output stream.
-					in.close();
-				}
+				webResponse.write(in);
+				// Set content type
+				webResponse.detectContentType(requestCycle, url);
+				// FIXME do we need to call webResponse.setContentLength()?
 			}
 			else
 			{
