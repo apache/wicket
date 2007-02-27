@@ -113,7 +113,7 @@ public class MockServletContext implements ServletContext
 		// Set ServletContext temp dir
 		setAttribute("javax.servlet.context.tempdir", createTempDir("wicket" + UUID.randomUUID()));
 	}
-	
+
 	/**
 	 * Creates a temp directory
 	 * 
@@ -162,7 +162,6 @@ public class MockServletContext implements ServletContext
 
 		return dir;
 	}
-
 
 	/**
 	 * Add an init parameter.

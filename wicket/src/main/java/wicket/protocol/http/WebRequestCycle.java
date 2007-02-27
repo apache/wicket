@@ -289,6 +289,4 @@ public class WebRequestCycle extends RequestCycle
 			return super.getRedirect();
 		}
 	}
-
-
 }

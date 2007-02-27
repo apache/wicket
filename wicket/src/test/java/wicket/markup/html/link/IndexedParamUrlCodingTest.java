@@ -46,10 +46,12 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 	 */
 	public void testIndexedLink() throws Exception
 	{
-		tester.getApplication().mount(new IndexedParamUrlCodingStrategy("/test1",
-				BookmarkableHomePageLinksPage.class, null));
-		tester.getApplication().mount(new IndexedParamUrlCodingStrategy("/test2",
-				BookmarkableHomePageLinksPage.class, "mypagemap"));
+		tester.getApplication().mount(
+				new IndexedParamUrlCodingStrategy("/test1", BookmarkableHomePageLinksPage.class,
+						null));
+		tester.getApplication().mount(
+				new IndexedParamUrlCodingStrategy("/test2", BookmarkableHomePageLinksPage.class,
+						"mypagemap"));
 
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
@@ -61,11 +63,13 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		String url1 = cycle.urlFor(
 				new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class, parameters))
 				.toString();
-		assertEquals(url1, "/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test1/Integer0/Integer1");
+		assertEquals(url1,
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test1/Integer0/Integer1");
 		String url2 = cycle.urlFor(
 				new BookmarkablePageRequestTarget("mypagemap", BookmarkableHomePageLinksPage.class,
 						parameters)).toString();
-		assertEquals(url2,
+		assertEquals(
+				url2,
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test2/Integer0/Integer1/wicket:pageMapName/mypagemap");
 
 		tester.setupRequestAndResponse();
@@ -96,7 +100,7 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 
 		if (target2 instanceof BookmarkablePageRequestTarget)
 		{
-			assertEquals(((BookmarkablePageRequestTarget)target2).getPageMapName(), "mypagemap");
+			assertEquals("mypagemap", ((BookmarkablePageRequestTarget)target2).getPageMapName());
 		}
 		else
 		{

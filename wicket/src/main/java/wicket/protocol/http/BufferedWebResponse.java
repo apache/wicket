@@ -85,7 +85,7 @@ public class BufferedWebResponse extends WebResponse
 		redirectURL = null;
 		buffer.clear();
 	}
-	
+
 	/**
 	 * Saves url to redirect to when buffered response is flushed.
 	 * Implementations should encode the URL to make sure cookie-less operation
@@ -129,7 +129,7 @@ public class BufferedWebResponse extends WebResponse
 
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @see java.lang.Object#toString()
