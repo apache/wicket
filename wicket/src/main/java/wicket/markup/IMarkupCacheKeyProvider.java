@@ -19,7 +19,7 @@ package wicket.markup;
 import wicket.MarkupContainer;
 
 /**
- * To be implemented by MarkupContainers which whish to implement there own
+ * To be implemented by MarkupContainers which whish to implement their own
  * algorithms for the markup cache key.
  * 
  * @author Juergen Donnerstag
