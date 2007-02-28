@@ -16,13 +16,17 @@
  */
 package wicket.util.value;
 
+import java.io.Serializable;
+
 /**
  * A class for counting things.
  * 
  * @author Jonathan Locke
  */
-public final class Count
+public final class Count implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The count */
 	private int count = 0;
 
