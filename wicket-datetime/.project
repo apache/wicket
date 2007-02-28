@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>wicket-datetime-2.0</name>
+	<name>wicket-datetime</name>
 	<comment>Date/Time components and utilities for Wicket</comment>
 	<projects>
 	</projects>
