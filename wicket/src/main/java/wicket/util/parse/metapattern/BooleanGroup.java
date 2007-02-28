@@ -25,6 +25,8 @@ import java.util.regex.Matcher;
  */
 public final class BooleanGroup extends Group
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs an IntegerGroup that parses Strings that match the INTEGER
 	 * pattern in base 10.

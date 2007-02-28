@@ -26,6 +26,8 @@ import java.util.regex.Matcher;
  */
 public final class IntegerGroup extends Group
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The radix to use when converting Strings captured by this group. */
 	private final int radix;
 

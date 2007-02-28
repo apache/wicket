@@ -25,6 +25,8 @@ import java.util.regex.Matcher;
  */
 public final class FloatingPointGroup extends Group
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs an FloatingPointGroup that parses Strings that match the
 	 * FLOATING_POINT_NUMBER pattern.
