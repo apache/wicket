@@ -29,6 +29,8 @@ import java.util.regex.Matcher;
  */
 public class Group extends MetaPattern
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The capturing group that this Group is bound to. */
 	private int group = -1;
 
