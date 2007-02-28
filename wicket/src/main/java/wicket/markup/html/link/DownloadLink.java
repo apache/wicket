@@ -115,9 +115,11 @@ public class DownloadLink extends Link
 
 				try
 				{
-					r.write(new FileInputStream(file));
+					// NOTE headers must be written before the body
 					r.setContentLength(file.length());
+					// Set content type
 					r.detectContentType(requestCycle, fileName);
+					r.write(new FileInputStream(file));
 				}
 				catch (Exception e)
 				{

@@ -83,10 +83,11 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 			final InputStream in = context.getResourceAsStream(url);
 			if (in != null)
 			{
-				webResponse.write(in);
+				// NOTE headers must be written before the body
 				// Set content type
 				webResponse.detectContentType(requestCycle, url);
 				// FIXME do we need to call webResponse.setContentLength()?
+				webResponse.write(in);
 			}
 			else
 			{
