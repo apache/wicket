@@ -17,6 +17,7 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
 import wicket.threadtest.tester.CommandRunner.CommandRunnerObserver;
+import wicket.util.time.Duration;
 
 /**
  * @author eelcohillenius
@@ -219,7 +220,8 @@ public final class Tester implements CommandRunnerObserver {
 			}
 
 			long end = System.currentTimeMillis();
-			log.info("\n******** finished in " + (end - start) + " miliseconds\n");
+			long time = end - start;
+			log.info("\n******** finished in " + Duration.milliseconds(time) + " (" + time + " milis)");
 
 		} finally {
 			MultiThreadedHttpConnectionManager.shutdownAll();
