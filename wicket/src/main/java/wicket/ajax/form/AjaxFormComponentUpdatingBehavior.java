@@ -68,7 +68,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		if (!(getComponent() instanceof FormComponent))
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName()
-					+ " can only be added to an isntance of a FormComponent");
+					+ " can only be added to an instance of a FormComponent");
 		}
 	}
 
