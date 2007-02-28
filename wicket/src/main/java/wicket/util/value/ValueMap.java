@@ -52,7 +52,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class ValueMap extends HashMap
+public class ValueMap extends HashMap implements IValueMap
 {
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
@@ -476,9 +476,10 @@ public class ValueMap extends HashMap
 	 * method, any attempt to modify this map will result in a runtime exception
 	 * being thrown by the collections classes.
 	 */
-	public final void makeImmutable()
+	public final IValueMap makeImmutable()
 	{
 		this.immutable = true;
+		return this;
 	}
 
 	/**
