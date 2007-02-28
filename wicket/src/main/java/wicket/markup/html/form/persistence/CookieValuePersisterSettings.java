@@ -16,14 +16,18 @@
  */
 package wicket.markup.html.form.persistence;
 
+import java.io.Serializable;
+
 /**
  * This class provides default values that are used by the CookieValuePersister
  * class when it creates cookies.
  * 
  * @author Juergen Donnerstag
  */
-public class CookieValuePersisterSettings
+public class CookieValuePersisterSettings implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Max age that the component will be persisted in seconds. */
 	private int maxAge = 3600 * 24 * 30; // 30 days
 
