@@ -27,6 +27,8 @@ import java.util.List;
  */
 public final class OptionalMetaPattern extends MetaPattern
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 * 

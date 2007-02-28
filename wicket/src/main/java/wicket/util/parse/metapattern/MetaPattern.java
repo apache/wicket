@@ -16,6 +16,7 @@
  */
 package wicket.util.parse.metapattern;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -40,8 +41,10 @@ import java.util.regex.Pattern;
  * 
  * @author Jonathan Locke
  */
-public class MetaPattern
+public class MetaPattern implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Compiled regular expression pattern, or null if patterns variable is
 	 * valid instead
