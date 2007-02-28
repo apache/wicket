@@ -35,8 +35,6 @@ import wicket.model.Model;
  * for contributions to the body tag's onload event handler.
  * 
  * @author jcompagner
- * 
- * TODO Post 1.2: Change the name. It is not derived from MarkupContainer
  */
 public final class BodyContainer implements Serializable
 {
