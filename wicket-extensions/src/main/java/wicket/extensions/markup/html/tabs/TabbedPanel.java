@@ -138,7 +138,7 @@ public class TabbedPanel extends Panel<Integer>
 			protected void populateItem(LoopItem item)
 			{
 				final int index = item.getIteration();
-				final ITab tab = ((ITab)TabbedPanel.this.tabs.get(index));
+				final ITab tab = (TabbedPanel.this.tabs.get(index));
 				final int selected = getSelectedTab();
 
 				final WebMarkupContainer titleLink = newLink(item, "link", index);
@@ -245,7 +245,7 @@ public class TabbedPanel extends Panel<Integer>
 
 		setModelObject(new Integer(index));
 
-		ITab tab = (ITab)tabs.get(index);
+		ITab tab = tabs.get(index);
 
 		Panel panel = tab.getPanel(this, TAB_PANEL_ID);
 
@@ -273,7 +273,7 @@ public class TabbedPanel extends Panel<Integer>
 	 */
 	public final int getSelectedTab()
 	{
-		return ((Integer)getModelObject()).intValue();
+		return (getModelObject()).intValue();
 	}
 
 }

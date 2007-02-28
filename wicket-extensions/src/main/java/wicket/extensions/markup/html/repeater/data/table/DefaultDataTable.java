@@ -64,7 +64,7 @@ public class DefaultDataTable<T> extends DataTable<T>
 	public DefaultDataTable(MarkupContainer parent, final String id, final List<IColumn<T>> columns,
 			SortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
-		this(parent, id, (IColumn<T>[])columns.toArray(new IColumn[columns.size()]), dataProvider,
+		this(parent, id, columns.toArray(new IColumn[columns.size()]), dataProvider,
 				rowsPerPage);
 	}
 
