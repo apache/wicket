@@ -16,6 +16,8 @@
  */
 package wicket.util.lang;
 
+import java.io.Serializable;
+
 /**
  * A type-safe package name class since Package is unreliable (it's not a
  * Package object, but rather a sometimes-available holder for versioning
@@ -23,8 +25,10 @@ package wicket.util.lang;
  * 
  * @author Jonathan Locke
  */
-public class PackageName
+public class PackageName implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	// The name of this package
 	private final String name;
 
