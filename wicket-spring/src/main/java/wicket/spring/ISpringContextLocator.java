@@ -16,9 +16,9 @@
  */
 package wicket.spring;
 
-import java.io.Serializable;
-
 import org.springframework.context.ApplicationContext;
+
+import wicket.IClusterable;
 
 /**
  * Interface representing object that can locate a spring context. The
@@ -47,7 +47,7 @@ import org.springframework.context.ApplicationContext;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ISpringContextLocator extends Serializable
+public interface ISpringContextLocator extends IClusterable
 {
 	/**
 	 * Getter for spring application context
