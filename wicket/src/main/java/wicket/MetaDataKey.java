@@ -30,7 +30,7 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public abstract class MetaDataKey implements Serializable
+public abstract class MetaDataKey implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 	

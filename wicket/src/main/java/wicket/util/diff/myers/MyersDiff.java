@@ -59,6 +59,7 @@ package wicket.util.diff.myers;
 
 import wicket.util.diff.Chunk;
 import wicket.util.diff.Delta;
+import wicket.util.diff.Diff;
 import wicket.util.diff.DiffAlgorithm;
 import wicket.util.diff.DifferentiationFailedException;
 import wicket.util.diff.Revision;

@@ -16,11 +16,11 @@
  */
 package wicket.markup.html.image.resource;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.IResourceFactory;
 import wicket.IResourceListener;
 import wicket.MarkupContainer;
@@ -71,7 +71,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  */
-public final class LocalizedImageResource implements Serializable, IResourceListener
+public final class LocalizedImageResource implements IClusterable, IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 	

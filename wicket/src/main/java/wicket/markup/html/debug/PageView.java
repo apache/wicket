@@ -16,13 +16,13 @@
  */
 package wicket.markup.html.debug;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.Page;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -163,7 +163,7 @@ public final class PageView extends Panel
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	private class ComponentData implements Serializable
+	private class ComponentData implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		

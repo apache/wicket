@@ -20,7 +20,7 @@
   26nov2000  dl               Created, based on ConcurrentReaderHashMap
   12jan2001  dl               public release
   17nov2001  dl               Minor tunings
-  24oct2003  dl               Segment implements Serializable
+  24oct2003  dl               Segment implements IClusterable
 */
 
 package wicket.util.concurrent;
@@ -36,6 +36,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
+import wicket.IClusterable;
 
 
 /**
@@ -177,7 +179,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * local count of the number of elements in its region. However, the main
 	 * use of a Segment is for its lock.
 	 */
-	protected final static class Segment implements Serializable
+	protected final static class Segment implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		

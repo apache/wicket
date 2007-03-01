@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.AttributeModifier;
+import wicket.IClusterable;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.html.WebComponent;
@@ -62,7 +63,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * Holds properties of the client.
 	 */
-	public static class ClientPropertiesBean implements Serializable
+	public static class ClientPropertiesBean implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

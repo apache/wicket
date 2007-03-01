@@ -16,7 +16,7 @@
  */
 package wicket.markup.html.form.persistence;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * This class provides default values that are used by the CookieValuePersister
@@ -24,7 +24,7 @@ import java.io.Serializable;
  * 
  * @author Juergen Donnerstag
  */
-public class CookieValuePersisterSettings implements Serializable
+public class CookieValuePersisterSettings implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

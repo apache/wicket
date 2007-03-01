@@ -16,10 +16,10 @@
  */
 package wicket.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import wicket.Component;
+import wicket.IClusterable;
 
 /**
  * A compound property model that supports type conversions and property
@@ -45,7 +45,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * 
 	 * @author Jonathan Locke
 	 */
-	private class Binding implements Serializable
+	private class Binding implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

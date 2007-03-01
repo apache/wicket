@@ -16,7 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
@@ -46,7 +45,7 @@ import wicket.util.collections.ArrayListStack;
  * 
  * @author Jonathan Locke
  */
-public class AccessStackPageMap extends PageMap implements Serializable
+public class AccessStackPageMap extends PageMap implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +62,7 @@ public class AccessStackPageMap extends PageMap implements Serializable
 	 * 
 	 * @author Jonathan
 	 */
-	public static class Access implements Serializable
+	public static class Access implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
