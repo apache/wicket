@@ -1764,17 +1764,20 @@ public abstract class Component implements Serializable
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		// Ask all behaviors if they have something to contribute to the
-		// header or body onLoad tag.
-		if (this.behaviors != null)
+		if (isVisible())
 		{
-			final Iterator iter = this.behaviors.iterator();
-			while (iter.hasNext())
+			// Ask all behaviors if they have something to contribute to the
+			// header or body onLoad tag.
+			if (this.behaviors != null)
 			{
-				IBehavior behavior = (IBehavior)iter.next();
-				if (behavior instanceof IHeaderContributor)
+				final Iterator iter = this.behaviors.iterator();
+				while (iter.hasNext())
 				{
-					((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
+					IBehavior behavior = (IBehavior)iter.next();
+					if (behavior instanceof IHeaderContributor)
+					{
+						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
+					}
 				}
 			}
 		}
@@ -2259,8 +2262,8 @@ public abstract class Component implements Serializable
 	}
 
 	/**
-	 * Gets a URL for the listener interface on a behaviour
-	 * (e.g. IBehaviorListener on AjaxPagingNavigationBehavior).
+	 * Gets a URL for the listener interface on a behaviour (e.g.
+	 * IBehaviorListener on AjaxPagingNavigationBehavior).
 	 * 
 	 * @param behaviour
 	 *            The behaviour that the URL should point to
@@ -2268,7 +2271,8 @@ public abstract class Component implements Serializable
 	 *            The listener interface that the URL should call
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final IBehavior behaviour, final RequestListenerInterface listener)
+	public final CharSequence urlFor(final IBehavior behaviour,
+			final RequestListenerInterface listener)
 	{
 		return getRequestCycle().urlFor(this, behaviour, listener);
 	}
