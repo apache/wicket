@@ -16,8 +16,7 @@
  */
 package wicket.markup.html.form.persistence;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.markup.html.form.FormComponent;
 
 /**
@@ -32,7 +31,7 @@ import wicket.markup.html.form.FormComponent;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public interface IValuePersister extends Serializable
+public interface IValuePersister extends IClusterable
 {
 	/**
 	 * Saves the current value of the given form component

@@ -16,9 +16,8 @@
  */
 package wicket.markup.resolver;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -47,7 +46,7 @@ import wicket.markup.MarkupStream;
  * 
  * @author Juergen Donnerstag
  */
-public interface IComponentResolver extends Serializable
+public interface IComponentResolver extends IClusterable
 {
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container

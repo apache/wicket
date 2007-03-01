@@ -16,7 +16,7 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * An interface to be implemented by components which are able to render the
@@ -24,7 +24,7 @@ import java.io.Serializable;
  * 
  * @author Juergen Donnerstag
  */
-public interface IHeaderContributor extends Serializable
+public interface IHeaderContributor extends IClusterable
 {
 	/**
 	 * Render to the web response whatever the component wants to contribute to

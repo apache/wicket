@@ -16,7 +16,7 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Renders one choice. Seperates the 'id' values used for internal
@@ -28,7 +28,7 @@ import java.io.Serializable;
  * 
  * @author jcompagner
  */
-public interface IChoiceRenderer<T> extends Serializable
+public interface IChoiceRenderer<T> extends IClusterable
 {
 	/**
 	 * Get the value for displaying to an end user.

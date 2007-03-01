@@ -16,9 +16,8 @@
  */
 package wicket.authorization.strategies.action;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.authorization.Action;
 
 /**
@@ -27,7 +26,7 @@ import wicket.authorization.Action;
  * @author Jonathan Locke
  * @since 1.2
  */
-public interface IActionAuthorizer extends Serializable
+public interface IActionAuthorizer extends IClusterable
 {
 	/**
 	 * Gets the action that this authorizer authorizes.

@@ -16,9 +16,8 @@
  */
 package wicket.version;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.Page;
 import wicket.version.undo.Change;
 
@@ -46,7 +45,7 @@ import wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  */
-public interface IPageVersionManager<T> extends Serializable
+public interface IPageVersionManager<T> extends IClusterable
 {
 	/**
 	 * Called when changes are immediately impending to the Page being managed.

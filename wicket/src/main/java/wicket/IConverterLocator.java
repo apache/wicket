@@ -31,7 +31,7 @@ import wicket.util.convert.IConverter;
  * @see Session
  * @see ConverterLocator
  */
-public interface IConverterLocator extends Serializable
+public interface IConverterLocator extends IClusterable
 {
 
 	/**

@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * @author jcompagner
  */
-public interface IComponentBorder extends Serializable
+public interface IComponentBorder extends IClusterable
 {
 	/**
 	 * @param component

@@ -30,7 +30,7 @@ import java.io.Serializable;
  * dont see the need for extra indirection. Consinder the same for
  * {@link ISessionFactory}.
  */
-public interface IRequestCycleFactory extends Serializable
+public interface IRequestCycleFactory extends IClusterable
 {
 	/**
 	 * Creates a new RequestCycle object.

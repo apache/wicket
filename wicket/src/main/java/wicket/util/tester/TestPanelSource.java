@@ -16,8 +16,7 @@
  */
 package wicket.util.tester;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 
 /**
@@ -25,7 +24,7 @@ import wicket.MarkupContainer;
  * 
  * @author Ingram Chen
  */
-public interface TestPanelSource extends Serializable
+public interface TestPanelSource extends IClusterable
 {
 	/**
 	 * Define a panel instance source for WicketTester. note that testing

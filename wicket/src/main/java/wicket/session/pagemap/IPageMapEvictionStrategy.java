@@ -16,8 +16,7 @@
  */
 package wicket.session.pagemap;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.IPageMap;
 
 /**
@@ -26,7 +25,7 @@ import wicket.IPageMap;
  * 
  * @author Jonathan Locke
  */
-public interface IPageMapEvictionStrategy extends Serializable
+public interface IPageMapEvictionStrategy extends IClusterable
 {
 	/**
 	 * @param pageMap

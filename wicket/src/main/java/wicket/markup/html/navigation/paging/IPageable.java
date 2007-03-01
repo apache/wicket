@@ -16,7 +16,7 @@
  */
 package wicket.markup.html.navigation.paging;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Components that implement this interface will be pageable, they should return
@@ -29,7 +29,7 @@ import java.io.Serializable;
  * 
  * @author jcompagner
  */
-public interface IPageable extends Serializable
+public interface IPageable extends IClusterable
 {
 	/**
 	 * @return The current page that is or will be rendered rendered.

@@ -16,12 +16,11 @@
  */
 package wicket.markup.html.tree;
 
-import java.io.Serializable;
-
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
@@ -90,7 +89,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * 
 	 * @author Matej Knopp
 	 */
-	protected interface ILinkCallback extends Serializable
+	protected interface ILinkCallback extends IClusterable
 	{
 		/**
 		 * Called when the click is executed.

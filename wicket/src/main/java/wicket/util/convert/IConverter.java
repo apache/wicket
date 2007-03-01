@@ -16,8 +16,9 @@
  */
 package wicket.util.convert;
 
-import java.io.Serializable;
 import java.util.Locale;
+
+import wicket.IClusterable;
 
 /**
  * General purpose data type converter. An object that implements this interface
@@ -26,7 +27,7 @@ import java.util.Locale;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IConverter extends Serializable
+public interface IConverter extends IClusterable
 {
 	/**
 	 * Converts the given string value to class c.

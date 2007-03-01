@@ -16,9 +16,9 @@
  */
 package wicket.markup.repeater;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.model.IModel;
 
@@ -35,7 +35,7 @@ import wicket.model.IModel;
  * @param <T> 
  * 			Type of model object this component holds 
  */
-public interface IItemReuseStrategy<T> extends Serializable
+public interface IItemReuseStrategy<T> extends IClusterable
 {
 
 	/**

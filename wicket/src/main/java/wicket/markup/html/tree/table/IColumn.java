@@ -16,11 +16,10 @@
  */
 package wicket.markup.html.tree.table;
 
-import java.io.Serializable;
-
 import javax.swing.tree.TreeNode;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 
 /**
@@ -28,7 +27,7 @@ import wicket.MarkupContainer;
  * 
  * @author Matej Knopp
  */
-public interface IColumn extends Serializable
+public interface IColumn extends IClusterable
 {
 	/**
 	 * Returns a location of this column. Location specifies how is column
