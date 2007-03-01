@@ -16,14 +16,14 @@
  */
 package wicket.extensions.yui;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Just a trick to serve as a reference for YUI includes.
  * 
  * @author eelcohillenius
  */
-public final class YuiLib implements Serializable {
+public final class YuiLib implements IClusterable {
 
 	private static final long serialVersionUID = 1L;
 
