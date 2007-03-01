@@ -20,8 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+
+import wicket.IClusterable;
 
 /**
  * <p>
@@ -48,7 +49,7 @@ import java.io.UnsupportedEncodingException;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  */
-public interface FileItem extends Serializable
+public interface FileItem extends IClusterable
 {
 
 

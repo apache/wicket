@@ -16,8 +16,7 @@
  */
 package wicket.markup.html.link;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.Page;
 
 /**
@@ -40,7 +39,7 @@ import wicket.Page;
  * @see PageLink#linksTo(Page)
  * @author Jonathan Locke
  */
-public interface IPageLink extends Serializable
+public interface IPageLink extends IClusterable
 {
 	/**
 	 * Gets the page to go to.

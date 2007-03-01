@@ -16,9 +16,8 @@
  */
 package wicket.model;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 
 /**
  * Implementations of this interface compare model object.
@@ -31,7 +30,7 @@ import wicket.Component;
  * @author jcompagner
  * @author Jonathan Locke
  */
-public interface IModelComparator extends Serializable
+public interface IModelComparator extends IClusterable
 {
 	/**
 	 * @param component

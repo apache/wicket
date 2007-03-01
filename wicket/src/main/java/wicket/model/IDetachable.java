@@ -16,7 +16,7 @@
  */
 package wicket.model;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Interface to logic for detaching transient information from a detachable
@@ -26,7 +26,7 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public interface IDetachable extends Serializable
+public interface IDetachable extends IClusterable
 {
 	/**
 	 * Detaches model after use. This is generally used to null out transient

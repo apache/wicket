@@ -16,8 +16,9 @@
  */
 package wicket.util.convert;
 
-import java.io.Serializable;
 import java.util.Locale;
+
+import wicket.IClusterable;
 
 /**
  * Converter for a specific data type. The type of the conversion is implicit in
@@ -26,7 +27,7 @@ import java.util.Locale;
  * 
  * @author Jonathan Locke
  */
-public interface ITypeConverter extends Serializable
+public interface ITypeConverter extends IClusterable
 {
 	/**
 	 * Converts the given value
