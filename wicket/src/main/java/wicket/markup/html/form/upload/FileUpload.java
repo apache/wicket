@@ -47,7 +47,7 @@ public class FileUpload implements Serializable
 	 * @param item
 	 *            The uploaded file item
 	 */
-	FileUpload(final FileItem item)
+	public FileUpload(final FileItem item)
 	{
 		this.item = item;
 	}
