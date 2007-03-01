@@ -65,7 +65,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		if (!stopped)
 		{
 			if (RequestCycle.get().getRequestTarget() instanceof AjaxRequestTarget) {
-				response.renderJavascript(getJsTimeoutCall(updateInterval), getComponent().getMarkupId());
+				response.renderJavascript(getJsTimeoutCall(updateInterval), null);
 			}
 			else
 			{
