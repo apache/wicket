@@ -26,13 +26,13 @@ import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import wicket.IClusterable;
 import wicket.markup.html.image.resource.DynamicImageResource;
 import wicket.util.time.Time;
 
@@ -52,7 +52,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * be instance variables here. If anyone knows a better way to do this,
 	 * please let me know.
 	 */
-	private static final class CharAttributes implements Serializable
+	private static final class CharAttributes implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		private char c;

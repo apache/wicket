@@ -16,6 +16,12 @@
  */
 package wicket.extensions.ajax.markup.html.modal;
 
+import static wicket.extensions.ajax.markup.html.modal.ModalWindow.CSS_CLASS_BLUE;
+import static wicket.extensions.ajax.markup.html.modal.ModalWindow.CSS_CLASS_GRAY;
+import static wicket.extensions.ajax.markup.html.modal.ModalWindow.close;
+import static wicket.extensions.ajax.markup.html.modal.ModalWindow.MaskType.SEMI_TRANSPARENT;
+import static wicket.extensions.ajax.markup.html.modal.ModalWindow.MaskType.TRANSPARENT;
+
 import java.io.Serializable;
 
 import wicket.Application;

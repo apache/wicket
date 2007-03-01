@@ -27,6 +27,7 @@ import java.lang.reflect.Proxy;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import wicket.IClusterable;
 import wicket.model.IModel;
 
 /**
@@ -169,7 +170,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	static class ProxyReplacement implements Serializable
+	static class ProxyReplacement implements IClusterable
 	{
 		/**
 		 * 

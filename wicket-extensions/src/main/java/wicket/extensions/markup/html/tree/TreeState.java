@@ -16,7 +16,6 @@
  */
 package wicket.extensions.markup.html.tree;
 
-import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
@@ -30,6 +29,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import wicket.IClusterable;
 import wicket.util.collections.ArrayListStack;
 
 /**
@@ -45,12 +45,12 @@ import wicket.util.collections.ArrayListStack;
  * @author Eelco Hillenius
  * @author Scott Violet (Sun, FixedHeightLayoutCache)
  */
-public final class TreeState implements Serializable, TreeModelListener, RowMapper
+public final class TreeState implements IClusterable, TreeModelListener, RowMapper
 {
 	/**
 	 * Used as a placeholder when getting the path in FHTreeStateNodes.
 	 */
-	private final class SearchInfo implements Serializable
+	private final class SearchInfo implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

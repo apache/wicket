@@ -16,14 +16,14 @@
  */
 package wicket.extensions.markup.html.repeater.util;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Represents sorting information of a property
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public class SortParam implements Serializable
+public class SortParam implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
