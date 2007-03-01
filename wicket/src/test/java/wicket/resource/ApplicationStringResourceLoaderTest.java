@@ -52,7 +52,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	@Override
 	protected IStringResourceLoader createLoader()
 	{
-		return new ClassStringResourceLoader(application, application.getClass());
+		return new ClassStringResourceLoader(application.getClass());
 	}
 
 	/**

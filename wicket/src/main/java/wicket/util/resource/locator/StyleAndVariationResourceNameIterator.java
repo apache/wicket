@@ -16,7 +16,7 @@
  */
 package wicket.util.resource.locator;
 
-import java.util.Locale;
+import java.util.Iterator;
 
 /**
  * Contains the logic to build the various combinations of file path, style and
@@ -42,7 +42,7 @@ import java.util.Locale;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class StyleAndVariationResourceNameIterator implements IWicketResourceNameIterator
+public class StyleAndVariationResourceNameIterator implements Iterator<String>
 {
 	/** The base path */
 	private final String path;
@@ -71,14 +71,6 @@ public class StyleAndVariationResourceNameIterator implements IWicketResourceNam
 		this.path = path;
 		this.style = style;
 		this.variation = variation;
-	}
-
-	/**
-	 * @see wicket.util.resource.locator.IWicketResourceNameIterator#getLocale()
-	 */
-	public Locale getLocale()
-	{
-		return null;
 	}
 
 	/**

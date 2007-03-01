@@ -309,9 +309,8 @@ public final class Settings
 	public Settings(final Application application)
 	{
 		this.application = application;
-		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
-		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application
-				.getClass()));
+		stringResourceLoaders.add(new ComponentStringResourceLoader());
+		stringResourceLoaders.add(new ClassStringResourceLoader(this.application.getClass()));
 	}
 
 	/**
@@ -644,7 +643,7 @@ public final class Settings
 	{
 		if (propertiesFactory == null)
 		{
-			propertiesFactory = new PropertiesFactory(this.application);
+			propertiesFactory = new PropertiesFactory();
 		}
 		return propertiesFactory;
 	}

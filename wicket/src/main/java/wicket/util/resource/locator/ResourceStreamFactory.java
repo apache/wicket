@@ -17,7 +17,6 @@
 package wicket.util.resource.locator;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -111,31 +110,16 @@ public class ResourceStreamFactory implements IResourceStreamFactory
 	{
 		// Try the various combinations of style, locale and extension to find
 		// the resource.
-		
-		// Most outer loop are the styles and variations
-		Iterator<String> styleIter = new StyleAndVariationResourceNameIterator(path, style, null);
-		while (styleIter.hasNext())
+		ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, extension);
+		while (iter.hasNext())
 		{
-			String newPath = styleIter.next();
-
-			// next is the Locale
-			LocaleResourceNameIterator localeIter = new LocaleResourceNameIterator(newPath, locale);
-			while (localeIter.hasNext())
+			String newPath = iter.next();
+			
+			IResourceStream stream = newResourceStream(clazz, newPath);
+			if (stream != null)
 			{
-				newPath = localeIter.next();
-
-				// and than the possible resource extensions
-				Iterator<String> extIter = new ExtensionResourceNameIterator(newPath, extension);
-				while (extIter.hasNext())
-				{
-					newPath = extIter.next();
-					IResourceStream stream = newResourceStream(clazz, newPath);
-					if (stream != null)
-					{
-						stream.setLocale(localeIter.getLocale());
-						return stream;
-					}
-				}
+				stream.setLocale(iter.getLocale());
+				return stream;
 			}
 		}
 

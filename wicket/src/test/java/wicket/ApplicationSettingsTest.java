@@ -129,7 +129,7 @@ public class ApplicationSettingsTest extends TestCase
 		Settings settings = new Settings(dummy);
 		settings.addStringResourceLoader(new BundleStringResourceLoader(
 				"wicket.resource.DummyResources"));
-		settings.addStringResourceLoader(new ComponentStringResourceLoader(dummy));
+		settings.addStringResourceLoader(new ComponentStringResourceLoader());
 		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 2 overridden loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the bundle one",

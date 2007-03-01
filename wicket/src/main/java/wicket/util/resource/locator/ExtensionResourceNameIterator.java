@@ -16,7 +16,7 @@
  */
 package wicket.util.resource.locator;
 
-import java.util.Locale;
+import java.util.Iterator;
 
 import wicket.util.string.Strings;
 
@@ -44,7 +44,7 @@ import wicket.util.string.Strings;
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public class ExtensionResourceNameIterator implements IWicketResourceNameIterator
+public class ExtensionResourceNameIterator implements Iterator<String>
 {
 	/** The base path */
 	private final String path;
@@ -83,14 +83,6 @@ public class ExtensionResourceNameIterator implements IWicketResourceNameIterato
 		
 		this.path = path;
 		this.index = 0;
-	}
-
-	/**
-	 * @see wicket.util.resource.locator.IWicketResourceNameIterator#getLocale()
-	 */
-	public Locale getLocale()
-	{
-		return null;
 	}
 
 	/**

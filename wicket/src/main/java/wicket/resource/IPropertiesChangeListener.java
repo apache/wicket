@@ -14,32 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.resource.loader;
-
-import wicket.Application;
+package wicket.resource;
 
 /**
- * This string resource loader attempts to find a single resource bundle that
- * has the same name and location as the application. If this bundle is found
- * then strings are obtained from here. This implementation is fully aware of
- * both locale and style values when trying to obtain the appropriate bundle.
+ * To be implemented by listeners interested in PropertiesFactory events fired
+ * after a change to the properties has been detected
  * 
- * @author Chris Turner
  * @author Juergen Donnerstag
- * 
- * TODO Post 1.2: remove it. It doesn't provide any value compared to
- * ClassStringResourceLoader
  */
-public class ApplicationStringResourceLoader extends ClassStringResourceLoader
+public abstract interface IPropertiesChangeListener
 {
 	/**
-	 * Create and initialise the resource loader.
+	 * Fired after a properties file change has been detected
 	 * 
-	 * @param application
-	 *            The application that this resource loader is associated with
+	 * @param key
 	 */
-	public ApplicationStringResourceLoader(final Application application)
-	{
-		super(application, application.getClass());
-	}
+	void propertiesChanged(final String key);
 }

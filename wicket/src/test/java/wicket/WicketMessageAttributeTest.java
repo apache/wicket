@@ -16,13 +16,11 @@
  */
 package wicket;
 
-import java.util.Locale;
-
 import wicket.markup.IMarkupResourceStreamProvider;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
+import wicket.resource.IPropertiesChangeListener;
 import wicket.resource.IPropertiesFactory;
-import wicket.resource.IPropertiesReloadListener;
 import wicket.resource.Properties;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.StringResourceStream;
@@ -59,10 +57,9 @@ public class WicketMessageAttributeTest extends WicketTestCase
 			{
 				return "<span wicket:id='label' wicket:message='title:title-key,style:style-key'></span>";
 			}
-
 		};
+		
 		new Label(page, "label", "i am label");
-
 
 		tester.startPage(page);
 		TagTester tagTester = tester.getTagByWicketId("label");
@@ -86,8 +83,8 @@ public class WicketMessageAttributeTest extends WicketTestCase
 			{
 				return "<span wicket:id='label' width='100%' wicket:message='title:title-key,style:style-key,width:width-key'></span>";
 			}
-
 		};
+		
 		new Label(page, "label", "i am label");
 
 		tester.startPage(page);
@@ -111,8 +108,8 @@ public class WicketMessageAttributeTest extends WicketTestCase
 			{
 				return "<span wicket:message='title:title-key,style:style-key'/>";
 			}
-
 		};
+		
 		tester.startPage(page);
 		String response = tester.getServletResponse().getDocument();
 		assertTrue(response.contains("title=\"title-value\""));
@@ -135,8 +132,8 @@ public class WicketMessageAttributeTest extends WicketTestCase
 			{
 				return "<span wicket:message='title:title-key,style:style-key'><span wicket:id='label'></span></span>";
 			}
-
 		};
+		
 		new Label(page, "label", "[[SUCCESS]]");
 
 		tester.startPage(page);
@@ -153,7 +150,6 @@ public class WicketMessageAttributeTest extends WicketTestCase
 	 */
 	private static abstract class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-
 		protected abstract String getMarkupString();
 
 		public final IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -161,7 +157,6 @@ public class WicketMessageAttributeTest extends WicketTestCase
 		{
 			return new StringResourceStream("<html><body>" + getMarkupString() + "</body></html>");
 		}
-
 	}
 
 	/**
@@ -178,8 +173,7 @@ public class WicketMessageAttributeTest extends WicketTestCase
 		private static Properties PAGE = new Properties("key2", new ValueMap(
 				"title-key=title-value,style-key=style-value"));
 
-
-		public void addListener(IPropertiesReloadListener listener)
+		public void addListener(IPropertiesChangeListener listener)
 		{
 			// noop
 		}
@@ -189,18 +183,14 @@ public class WicketMessageAttributeTest extends WicketTestCase
 			// noop
 		}
 
-		public Properties get(Class clazz, String style, Locale locale)
+		public Properties load(Class clazz, String path)
 		{
 			if (Page.class.isAssignableFrom(clazz))
 			{
 				return PAGE;
 			}
-			else
-			{
-				return EMPTY;
-			}
+			return EMPTY;
 		}
-
 	}
 
 }

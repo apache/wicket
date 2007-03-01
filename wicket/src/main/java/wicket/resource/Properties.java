@@ -19,17 +19,18 @@ package wicket.resource;
 import wicket.util.value.ValueMap;
 
 /**
- * Reloadable properties. It is not a 100% replacement for java.util.Properties
- * as it does not provide the same interface. But is serves kind of the same
- * purpose with Wicket specific features.
+ * Kind of like java.util.Properties but based on Wicket's ValueMap and thus
+ * benefiting from all its nice build-in type converters and without parent
+ * properties.
  * 
  * @author Juergen Donnerstag
  */
 public final class Properties
 {
-	/** Log. */
-	// private static final Logger log = LoggerFactory.getLogger(Properties.class);
-	/** The resource key for the properties file */
+	/** Empty Properties */
+	public static final Properties EMPTY_PROPERTIES = new Properties("NULL", ValueMap.EMPTY_MAP);
+
+	/** A unique key for this specific group of properties. */
 	private final String key;
 
 	/** Property values */
@@ -50,7 +51,7 @@ public final class Properties
 	}
 
 	/**
-	 * Get all values from the properties file
+	 * Get direct access to all values from the properties file. 
 	 * 
 	 * @return map
 	 */
@@ -60,7 +61,7 @@ public final class Properties
 	}
 
 	/**
-	 * Get the property message identified by 'key'
+	 * Get the property value identified by its 'key'. 
 	 * 
 	 * @param key
 	 * @return property message
@@ -71,7 +72,6 @@ public final class Properties
 	}
 
 	/**
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
