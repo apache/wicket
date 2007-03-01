@@ -16,7 +16,7 @@
  */
 package wicket.ajax;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Interface used to decorate a wicket generated javascript that performs an
@@ -57,7 +57,7 @@ import java.io.Serializable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IAjaxCallDecorator extends Serializable
+public interface IAjaxCallDecorator extends IClusterable
 {
 	/**
 	 * Name of javascript variable that will be true if ajax call was made,

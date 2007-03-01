@@ -32,6 +32,6 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public interface IRequestListener extends Serializable
+public interface IRequestListener extends IClusterable
 {
 }

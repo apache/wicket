@@ -16,9 +16,8 @@
  */
 package wicket.behavior;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.markup.ComponentTag;
 
 /**
@@ -43,7 +42,7 @@ import wicket.markup.ComponentTag;
  * @author Ralf Ebert
  * @author Eelco Hillenius
  */
-public interface IBehavior extends Serializable
+public interface IBehavior extends IClusterable
 {
 	/**
 	 * Called when a component is about to render.

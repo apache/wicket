@@ -16,8 +16,7 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.markup.html.form.FormComponent;
 
 /**
@@ -34,7 +33,7 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  */
-public interface IValidator extends Serializable
+public interface IValidator extends IClusterable
 {
 	/**
 	 * <p>

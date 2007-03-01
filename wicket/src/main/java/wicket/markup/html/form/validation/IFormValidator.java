@@ -16,8 +16,7 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 
@@ -29,7 +28,7 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IFormValidator extends Serializable
+public interface IFormValidator extends IClusterable
 {
 	/**
 	 * @return array of {@link FormComponent}s that this validator depends on

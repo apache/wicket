@@ -16,8 +16,9 @@
  */
 package wicket.markup.repeater;
 
-import java.io.Serializable;
 import java.util.Iterator;
+
+import wicket.IClusterable;
 
 /**
  * Interface for item reuse strategies.
@@ -30,7 +31,7 @@ import java.util.Iterator;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IItemReuseStrategy extends Serializable
+public interface IItemReuseStrategy extends IClusterable
 {
 
 	/**

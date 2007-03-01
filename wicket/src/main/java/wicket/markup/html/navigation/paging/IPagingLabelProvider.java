@@ -16,7 +16,7 @@
  */
 package wicket.markup.html.navigation.paging;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * This interface is used by the PagingNavigator components to get the label of
@@ -25,7 +25,7 @@ import java.io.Serializable;
  * 
  * @author jcompagner
  */
-public interface IPagingLabelProvider extends Serializable
+public interface IPagingLabelProvider extends IClusterable
 {
 	/**
 	 * @param page

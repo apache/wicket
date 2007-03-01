@@ -24,7 +24,7 @@ import wicket.session.pagemap.IPageMapEntry;
  * @author eelcohillenius
  * @author Johan Compagner
  */
-public interface IPageMap extends Serializable
+public interface IPageMap extends IClusterable
 {
 	/**
 	 * @param id

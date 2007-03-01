@@ -23,7 +23,7 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public interface IRequestCycleFactory extends Serializable
+public interface IRequestCycleFactory extends IClusterable
 {
 	/**
 	 * Creates a new RequestCycle object.
