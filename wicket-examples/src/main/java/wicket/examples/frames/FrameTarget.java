@@ -17,14 +17,14 @@
  */
 package wicket.examples.frames;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Simple struct for holding the class of the right frame.
  * 
  * @author Eelco Hillenius
  */
-public final class FrameTarget implements Serializable
+public final class FrameTarget implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

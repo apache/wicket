@@ -16,8 +16,7 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
@@ -58,7 +57,7 @@ public class TextAreaPage extends WicketExamplePage
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
+	private static class Input implements IClusterable
 	{
 		/** some plain text. */
 		public String text = "line 1\nline 2\nline 3";

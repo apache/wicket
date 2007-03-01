@@ -16,8 +16,7 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -97,7 +96,7 @@ public class TextFieldPage extends WicketExamplePage
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
+	private static class Input implements IClusterable
 	{
 		// Normally we would have played nice and made it a proper JavaBean with
 		// getters and

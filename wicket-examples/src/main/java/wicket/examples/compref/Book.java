@@ -16,14 +16,14 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * A book.
  * 
  * @author Eelco Hillenius
  */
-public final class Book implements Serializable
+public final class Book implements IClusterable
 {
 	private String title;
 	private String author;

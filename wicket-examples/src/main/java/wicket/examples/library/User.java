@@ -17,16 +17,17 @@
  */
 package wicket.examples.library;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import wicket.IClusterable;
 
 /**
  * Trivial user model for example application
  * 
  * @author Jonathan Locke
  */
-public final class User implements Serializable
+public final class User implements IClusterable
 {
 	// The user's name
 	private String name;

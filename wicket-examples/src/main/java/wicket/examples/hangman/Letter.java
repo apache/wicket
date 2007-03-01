@@ -18,8 +18,8 @@
 package wicket.examples.hangman;
 
 import java.awt.Color;
-import java.io.Serializable;
 
+import wicket.IClusterable;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
@@ -30,7 +30,7 @@ import wicket.util.lang.Primitives;
  * 
  * @author Jonathan Locke
  */
-public class Letter implements Serializable
+public class Letter implements IClusterable
 {
 	/** True if the letter has been guessed */
 	private boolean guessed;

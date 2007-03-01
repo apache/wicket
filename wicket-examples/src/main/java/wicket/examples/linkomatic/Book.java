@@ -17,14 +17,14 @@
  */
 package wicket.examples.linkomatic;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Simple book model.
  * 
  * @author Jonathan Locke
  */
-public class Book implements Serializable
+public class Book implements IClusterable
 {
 	private String title;
 

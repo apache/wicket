@@ -16,10 +16,9 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
-
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -137,7 +136,7 @@ public class LinkPage extends WicketExamplePage
 	/**
 	 * Simple class to holds the number of clicks.
 	 */
-	private static class ClickCount implements Serializable
+	private static class ClickCount implements IClusterable
 	{
 		/** number of clicks. */
 		private int clicks = 0;

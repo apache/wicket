@@ -18,16 +18,17 @@
  */
 package wicket.examples.wizard;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+
+import wicket.IClusterable;
 
 /**
  * Domain class for the new user wizard example.
  * 
  * @author Eelco Hillenius
  */
-public final class User implements Serializable
+public final class User implements IClusterable
 {
 	private String department = "";
 	private String email;

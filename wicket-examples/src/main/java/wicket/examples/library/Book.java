@@ -18,7 +18,6 @@
 package wicket.examples.library;
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import wicket.IClusterable;
 import wicket.util.lang.EnumeratedType;
 
 /**
@@ -33,7 +33,7 @@ import wicket.util.lang.EnumeratedType;
  * 
  * @author Jonathan Locke
  */
-public final class Book implements Serializable
+public final class Book implements IClusterable
 {
 	/**
 	 * Value for fiction books.
