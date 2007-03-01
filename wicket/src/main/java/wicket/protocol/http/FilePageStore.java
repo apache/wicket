@@ -516,9 +516,12 @@ public class FilePageStore implements IPageStore
 		 */
 		public void stop()
 		{
-			System.err.println("Total time in saving: " + totalSavingTime);
-			System.err.println("Bytes saved: " + bytesSaved);
-			System.err.println("Pages saved: " + saved);
+			if ( log.isDebugEnabled())
+			{
+				log.debug("Total time in saving: " + totalSavingTime);
+				log.debug("Bytes saved: " + bytesSaved);
+				log.debug("Pages saved: " + saved);
+			}
 			stop = true;
 		}
 
@@ -637,9 +640,12 @@ public class FilePageStore implements IPageStore
 		 */
 		public void stop()
 		{
-			System.err.println("Total time in serialization: " + totalSerializationTime);
-			System.err.println("Total Pages serialized: " + serialized);
-			System.err.println("Pages serialized by thread: " + serializedInThread);
+			if ( log.isDebugEnabled())
+			{
+				log.debug("Total time in serialization: " + totalSerializationTime);
+				log.debug("Total Pages serialized: " + serialized);
+				log.debug("Pages serialized by thread: " + serializedInThread);
+			}
 			stop = true;
 		}
 
