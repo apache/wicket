@@ -67,6 +67,10 @@ public class UploadApplication extends WicketExampleApplication
 		uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
 		// Ensure folder exists
 		uploadFolder.mkdirs();
+
+		mountBookmarkablePage("/multi", MultiUploadPage.class);
+		mountBookmarkablePage("/single", UploadPage.class);
+
 	}
 
 	/**

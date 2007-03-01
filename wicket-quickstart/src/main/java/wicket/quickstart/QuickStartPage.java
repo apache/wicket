@@ -25,6 +25,7 @@ import wicket.markup.html.WebPage;
  */
 public abstract class QuickStartPage extends WebPage
 {
+
 	/**
 	 * Get downcast session object for easy access by subclasses
 	 * 

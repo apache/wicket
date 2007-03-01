@@ -16,16 +16,38 @@
  */
 package wicket.quickstart;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import wicket.PageParameters;
+import wicket.extensions.markup.html.form.MultiFileUpload;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.upload.FileUpload;
+import wicket.model.CompoundPropertyModel;
 
 /**
  * Basic bookmarkable index page.
  * 
- * NOTE: You can get session properties from QuickStartSession via getQuickStartSession()
+ * NOTE: You can get session properties from QuickStartSession via
+ * getQuickStartSession()
  */
-public class Index extends QuickStartPage 
+public class Index extends QuickStartPage
 {
-    // TODO Add any page properties or variables here
+	Collection uploads = new ArrayList();
+
+
+	public Collection getUploads()
+	{
+		return uploads;
+	}
+
+
+	public void setUploads(Collection uploads)
+	{
+		this.uploads = uploads;
+	}
+
 
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
@@ -33,8 +55,25 @@ public class Index extends QuickStartPage
 	 * @param parameters
 	 *            Page parameters
 	 */
-	public Index(final PageParameters parameters) 
-    {
-        // TODO Add your page's components here   
+	public Index(final PageParameters parameters)
+	{
+		Form form = new Form("form", new CompoundPropertyModel(this))
+		{
+			protected void onSubmit()
+			{
+				System.out.println("UPLOADED: " + uploads.size() + " FILES");
+				Iterator it = uploads.iterator();
+				while (it.hasNext())
+				{
+					FileUpload upload = (FileUpload)it.next();
+					System.out.println("UPLOAD: " + upload.getClientFileName() + " SIZE: "
+							+ upload.getSize());
+				}
+
+			}
+		};
+		add(form);
+
+		form.add(new MultiFileUpload("uploads", 2));
 	}
 }
