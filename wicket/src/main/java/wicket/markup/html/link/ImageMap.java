@@ -16,11 +16,11 @@
  */
 package wicket.markup.html.link;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -203,7 +203,7 @@ public final class ImageMap extends WebMarkupContainer
 	/**
 	 * Base class for shaped links.
 	 */
-	private static abstract class ShapeLink implements Serializable
+	private static abstract class ShapeLink implements IClusterable
 	{
 		/** The link. */
 		private final Link link;

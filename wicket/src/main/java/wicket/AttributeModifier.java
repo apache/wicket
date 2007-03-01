@@ -16,8 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
@@ -67,7 +65,7 @@ import wicket.util.value.ValueMap;
  * @author Martijn Dashorst
  * @author Ralf Ebert
  */
-public class AttributeModifier extends AbstractBehavior implements Serializable
+public class AttributeModifier extends AbstractBehavior implements IClusterable
 {
 	/** Marker value to have an attribute without a value added. */
 	public static final String VALUELESS_ATTRIBUTE_ADD = "VA_ADD";

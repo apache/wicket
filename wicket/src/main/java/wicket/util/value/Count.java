@@ -16,14 +16,14 @@
  */
 package wicket.util.value;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * A class for counting things.
  * 
  * @author Jonathan Locke
  */
-public final class Count implements Serializable
+public final class Count implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

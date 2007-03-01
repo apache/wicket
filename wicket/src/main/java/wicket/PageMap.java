@@ -16,7 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +26,7 @@ import wicket.util.lang.Objects;
 /**
  * @author jcompagner
  */
-public abstract class PageMap implements Serializable, IPageMap
+public abstract class PageMap implements IClusterable, IPageMap
 {
 	private static final long serialVersionUID = 1L;
 

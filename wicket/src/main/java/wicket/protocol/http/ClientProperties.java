@@ -16,10 +16,10 @@
  */
 package wicket.protocol.http;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.TimeZone;
 
+import wicket.IClusterable;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -37,7 +37,7 @@ import wicket.util.string.AppendingStringBuffer;
  * @see BrowserInfoPage
  * @author Frank Bille (frankbille)
  */
-public class ClientProperties implements Serializable
+public class ClientProperties implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

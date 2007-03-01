@@ -16,7 +16,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,9 +27,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.concurrent.ConcurrentHashMap;
-
 import wicket.Application;
+import wicket.IClusterable;
 import wicket.IPageMap;
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -39,6 +37,7 @@ import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
+import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Classes;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -479,7 +478,7 @@ public class RequestLogger implements IRequestLogger
 	 * 
 	 * @author jcompagner
 	 */
-	public static class SessionData implements Serializable, Comparable
+	public static class SessionData implements IClusterable, Comparable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -589,7 +588,7 @@ public class RequestLogger implements IRequestLogger
 	 * 
 	 * @author jcompagner
 	 */
-	public static class RequestData implements Serializable
+	public static class RequestData implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

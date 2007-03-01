@@ -221,7 +221,7 @@ import wicket.version.undo.Change;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component implements Serializable
+public abstract class Component implements IClusterable
 {
 	/**
 	 * Change record of a model.

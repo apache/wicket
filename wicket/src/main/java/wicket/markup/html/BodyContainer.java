@@ -16,10 +16,9 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
-
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.markup.html.body.BodyTagAttributeModifier;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -36,7 +35,7 @@ import wicket.model.Model;
  * 
  * @author jcompagner
  */
-public final class BodyContainer implements Serializable
+public final class BodyContainer implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

@@ -21,6 +21,7 @@ import java.util.List;
 import wicket.IResourceFactory;
 import wicket.Localizer;
 import wicket.markup.html.IPackageResourceGuard;
+import wicket.markup.html.JavascriptPackageResource;
 import wicket.markup.html.PackageResourceGuard;
 import wicket.model.IModel;
 import wicket.resource.IPropertiesFactory;

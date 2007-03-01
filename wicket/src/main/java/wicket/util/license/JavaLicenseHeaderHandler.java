@@ -20,9 +20,8 @@ import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import wicket.util.string.Strings;
-
 import junit.framework.Assert;
+import wicket.util.string.Strings;
 
 class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {

@@ -16,7 +16,7 @@
  */
 package wicket.util.lang;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * A type-safe package name class since Package is unreliable (it's not a
@@ -25,7 +25,7 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public class PackageName implements Serializable
+public class PackageName implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

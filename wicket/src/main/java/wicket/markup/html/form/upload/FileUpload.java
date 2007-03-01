@@ -19,11 +19,11 @@ package wicket.markup.html.form.upload;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.Session;
 import wicket.util.file.Files;
 import wicket.util.upload.FileItem;
@@ -33,7 +33,7 @@ import wicket.util.upload.FileItem;
  * 
  * @author Jonathan Locke
  */
-public class FileUpload implements Serializable
+public class FileUpload implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

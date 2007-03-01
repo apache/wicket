@@ -16,7 +16,6 @@
  */
 package wicket.feedback;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.string.StringList;
 
@@ -36,7 +36,7 @@ import wicket.util.string.StringList;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FeedbackMessages implements Serializable
+public final class FeedbackMessages implements IClusterable
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(FeedbackMessages.class);

@@ -18,6 +18,7 @@ package wicket.markup.repeater;
 
 import java.util.Iterator;
 
+import wicket.markup.repeater.util.ModelIteratorAdapter;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
 
