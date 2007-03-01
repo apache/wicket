@@ -16,15 +16,14 @@
  */
 package wicket.extensions.markup.html.form.select;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.model.IModel;
 
 /**
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IOptionRenderer extends Serializable
+public interface IOptionRenderer extends IClusterable
 {
 	/**
 	 * Get the value for displaying to the user.

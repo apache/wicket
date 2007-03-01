@@ -16,12 +16,11 @@
  */
 package wicket.extensions.markup.html.tree.table;
 
-import java.io.Serializable;
-
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.behavior.AbstractBehavior;
@@ -47,7 +46,7 @@ public class TreeTable extends DefaultAbstractTree
 	/**
 	 * Callback for rendering tree node text.
 	 */
-	public static interface IRenderNodeCallback extends Serializable
+	public static interface IRenderNodeCallback extends IClusterable
 	{
 		/**
 		 * Renders the tree node to text.

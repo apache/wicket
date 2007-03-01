@@ -16,7 +16,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Interface used by OrderByLink to interact with any object that keeps track of
@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ISortState extends Serializable
+public interface ISortState extends IClusterable
 {
 	/**
 	 * property state representing ascending sort order

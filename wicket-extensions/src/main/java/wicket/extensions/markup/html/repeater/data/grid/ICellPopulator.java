@@ -16,8 +16,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.grid;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.markup.repeater.Item;
 import wicket.model.IModel;
 
@@ -48,7 +47,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ICellPopulator extends Serializable
+public interface ICellPopulator extends IClusterable
 {
 	/**
 	 * Method used to populate a cell in the {@link DataGridView}

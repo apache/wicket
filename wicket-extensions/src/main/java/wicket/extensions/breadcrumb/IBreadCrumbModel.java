@@ -16,9 +16,9 @@
  */
 package wicket.extensions.breadcrumb;
 
-import java.io.Serializable;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 
 /**
@@ -69,7 +69,7 @@ import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
  * 
  * @author Eelco Hillenius
  */
-public interface IBreadCrumbModel extends Serializable
+public interface IBreadCrumbModel extends IClusterable
 {
 	/**
 	 * Adds a bread crumb model listener.

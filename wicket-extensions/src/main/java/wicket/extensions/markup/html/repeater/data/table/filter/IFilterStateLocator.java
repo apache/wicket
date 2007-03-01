@@ -16,7 +16,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Locator that locates the object that represents the state of the filter.
@@ -44,7 +44,7 @@ import java.io.Serializable;
  * @author igor
  * 
  */
-public interface IFilterStateLocator extends Serializable
+public interface IFilterStateLocator extends IClusterable
 {
 	/**
 	 * @return object that represents the state of the filter toolbar

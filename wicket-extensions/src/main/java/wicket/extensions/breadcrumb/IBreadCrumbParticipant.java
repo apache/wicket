@@ -16,9 +16,8 @@
  */
 package wicket.extensions.breadcrumb;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 
 /**
@@ -37,7 +36,7 @@ import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
  * 
  * @author Eelco Hillenius
  */
-public interface IBreadCrumbParticipant extends Serializable
+public interface IBreadCrumbParticipant extends IClusterable
 {
 	/**
 	 * Gets the participating component. Typically, this is a panel.

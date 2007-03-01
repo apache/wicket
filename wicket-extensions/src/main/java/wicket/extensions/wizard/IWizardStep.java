@@ -16,9 +16,8 @@
  */
 package wicket.extensions.wizard;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 
 /**
  * Models one step in a wizard, and is the equivalent of one panel in a wizard
@@ -36,7 +35,7 @@ import wicket.Component;
  * 
  * @author Eelco Hillenius
  */
-public interface IWizardStep extends Serializable
+public interface IWizardStep extends IClusterable
 {
 	/**
 	 * This method is called whenever the user presses next while this step is
