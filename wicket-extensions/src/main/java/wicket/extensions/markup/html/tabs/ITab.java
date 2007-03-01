@@ -16,8 +16,7 @@
  */
 package wicket.extensions.markup.html.tabs;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
@@ -31,7 +30,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ITab extends Serializable
+public interface ITab extends IClusterable
 {
 	/**
 	 * @return IModel used to represent the title of the tab. Must contain a

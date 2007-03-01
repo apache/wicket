@@ -16,9 +16,8 @@
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
-import java.io.Serializable;
-
 import wicket.AttributeModifier;
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.Model;
@@ -239,7 +238,7 @@ public class OrderByLink extends Link
 	 * 
 	 * @author igor
 	 */
-	public static interface ICssProvider extends Serializable
+	public static interface ICssProvider extends IClusterable
 	{
 		/**
 		 * @param state

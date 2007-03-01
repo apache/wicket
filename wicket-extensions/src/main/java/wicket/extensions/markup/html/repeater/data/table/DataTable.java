@@ -16,8 +16,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import wicket.markup.html.WebMarkupContainer;
@@ -91,7 +90,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * @author ivaynberg
 	 * 
 	 */
-	public static interface IToolbarFactory extends Serializable
+	public static interface IToolbarFactory extends IClusterable
 	{
 		/**
 		 * Used to create a new toolbar

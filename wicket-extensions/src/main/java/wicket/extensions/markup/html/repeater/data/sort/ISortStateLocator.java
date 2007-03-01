@@ -16,7 +16,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 
 /**
@@ -26,7 +26,7 @@ import java.io.Serializable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ISortStateLocator extends Serializable
+public interface ISortStateLocator extends IClusterable
 {
 	/**
 	 * @return ISortState object

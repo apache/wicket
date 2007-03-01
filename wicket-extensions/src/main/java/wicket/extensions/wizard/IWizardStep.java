@@ -16,9 +16,8 @@
  */
 package wicket.extensions.wizard;
 
-import java.io.Serializable;
-
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 
 /**
@@ -37,7 +36,7 @@ import wicket.MarkupContainer;
  * 
  * @author Eelco Hillenius
  */
-public interface IWizardStep extends Serializable
+public interface IWizardStep extends IClusterable
 {
 	/**
 	 * This method is called whenever the user presses next while this step is

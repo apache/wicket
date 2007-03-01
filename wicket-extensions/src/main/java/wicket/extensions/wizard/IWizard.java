@@ -16,7 +16,7 @@
  */
 package wicket.extensions.wizard;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Interface for the wizard component. This interface is here for ultimate
@@ -31,7 +31,7 @@ import java.io.Serializable;
  * 
  * @author Eelco Hillenius
  */
-public interface IWizard extends Serializable
+public interface IWizard extends IClusterable
 {
 	/**
 	 * Gets the model this wizard is using. This should never be null; a wizard

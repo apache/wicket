@@ -16,7 +16,7 @@
  */
 package wicket.extensions.proxy;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Interface the lazy init proxies implement to make identification of the proxy
@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ILazyInitProxy extends Serializable
+public interface ILazyInitProxy extends IClusterable
 {
 	/**
 	 * @return object locator the proxy carries

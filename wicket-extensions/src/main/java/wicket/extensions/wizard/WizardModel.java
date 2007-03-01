@@ -16,11 +16,11 @@
  */
 package wicket.extensions.wizard;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.util.collections.ArrayListStack;
 
 /**
@@ -43,7 +43,7 @@ public class WizardModel implements IWizardModel
 	/**
 	 * Interface for conditional displaying of wizard steps.
 	 */
-	public interface ICondition extends Serializable
+	public interface ICondition extends IClusterable
 	{
 		/**
 		 * Evaluates the current state and returns whether the step that is

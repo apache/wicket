@@ -16,8 +16,7 @@
  */
 package wicket.extensions.ajax.markup.html.autocomplete;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.Response;
 
 /**
@@ -52,7 +51,7 @@ import wicket.Response;
  * @author Janne Hietam&auml;ki (jannehietamaki)
  * 
  */
-public interface IAutoCompleteRenderer extends Serializable
+public interface IAutoCompleteRenderer extends IClusterable
 {
 	/**
 	 * Render the html fragment for the given completion object. Usually the

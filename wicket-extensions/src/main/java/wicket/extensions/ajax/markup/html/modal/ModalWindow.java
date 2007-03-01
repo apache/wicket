@@ -21,11 +21,9 @@ import static wicket.extensions.ajax.markup.html.modal.ModalWindow.CSS_CLASS_GRA
 import static wicket.extensions.ajax.markup.html.modal.ModalWindow.close;
 import static wicket.extensions.ajax.markup.html.modal.ModalWindow.MaskType.SEMI_TRANSPARENT;
 import static wicket.extensions.ajax.markup.html.modal.ModalWindow.MaskType.TRANSPARENT;
-
-import java.io.Serializable;
-
 import wicket.Application;
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.IPageMap;
 import wicket.MarkupContainer;
 import wicket.Page;
@@ -163,7 +161,7 @@ public class ModalWindow extends Panel<Object>
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface PageCreator extends Serializable
+	public static interface PageCreator extends IClusterable
 	{
 		/**
 		 * Creates a new instance of content page.
@@ -182,7 +180,7 @@ public class ModalWindow extends Panel<Object>
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface CloseButtonCallback extends Serializable
+	public static interface CloseButtonCallback extends IClusterable
 	{
 		/**
 		 * Methods invoked after the button has been clicked. The invokation is
@@ -207,7 +205,7 @@ public class ModalWindow extends Panel<Object>
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface WindowClosedCallback extends Serializable
+	public static interface WindowClosedCallback extends IClusterable
 	{
 		/**
 		 * Called after the window has been closed.

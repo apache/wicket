@@ -16,8 +16,7 @@
  */
 package wicket.extensions.breadcrumb.panel;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 
@@ -28,7 +27,7 @@ import wicket.extensions.breadcrumb.IBreadCrumbModel;
  * 
  * @author Eelco Hillenius
  */
-public interface IBreadCrumbPanelFactory extends Serializable
+public interface IBreadCrumbPanelFactory extends IClusterable
 {
 	/**
 	 * Creates a new {@link BreadCrumbPanel bread crumb panel} instance. The

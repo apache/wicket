@@ -16,8 +16,9 @@
  */
 package wicket.extensions.wizard;
 
-import java.io.Serializable;
 import java.util.Iterator;
+
+import wicket.IClusterable;
 
 
 /**
@@ -49,7 +50,7 @@ import java.util.Iterator;
  * 
  * @author Eelco Hillenius
  */
-public interface IWizardModel extends Serializable
+public interface IWizardModel extends IClusterable
 {
 	/**
 	 * Adds a wizard model listener.
