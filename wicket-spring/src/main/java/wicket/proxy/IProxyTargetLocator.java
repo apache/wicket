@@ -16,7 +16,7 @@
  */
 package wicket.proxy;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Represents a service locator for lazy init proxies. When the first method
@@ -49,7 +49,7 @@ import java.io.Serializable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IProxyTargetLocator extends Serializable
+public interface IProxyTargetLocator extends IClusterable
 {
 	/**
 	 * Returns the object that will be used as target object for a lazy init
