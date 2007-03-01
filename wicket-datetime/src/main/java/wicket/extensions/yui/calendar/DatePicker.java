@@ -88,11 +88,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		// component. Not as pretty as working with a panel etc, but works
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
-		response
-				.write("\n<span>&nbsp;<div style=\"display:none;z-index: 99999;position:absolute;\" id=\"");
+		response.write("\n<span>&nbsp;<div style=\"display:none;z-index: 99999;position:absolute;\" id=\"");
 		response.write(getCalendarMarkupId());
-		response
-				.write("\"></div><img style=\"cursor: pointer; border: none;\" id=\"");
+		response.write("\"></div><img style=\"");
+		response.write(getIconStyle());
+		response.write("\" id=\"");
 		response.write(getIconId());
 		response.write("\" src=\"");
 		CharSequence iconUrl = getIconUrl();
@@ -357,6 +357,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 */
 	protected final String getIconId() {
 		return component.getMarkupId() + "Icon";
+	}
+	
+	protected String getIconStyle()
+	{
+		return "cursor: pointer; border: none;position:absolute;";
 	}
 
 	/**
