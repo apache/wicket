@@ -16,8 +16,7 @@
  */
 package wicket.extensions.ajax.markup.html.form.upload;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.util.lang.Bytes;
 import wicket.util.time.Duration;
 
@@ -28,7 +27,7 @@ import wicket.util.time.Duration;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class UploadInfo implements Serializable
+public class UploadInfo implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
