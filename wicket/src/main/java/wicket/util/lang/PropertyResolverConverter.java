@@ -16,16 +16,16 @@
  */
 package wicket.util.lang;
 
-import java.io.Serializable;
 import java.util.Locale;
 
+import wicket.IClusterable;
 import wicket.IConverterLocator;
 import wicket.util.convert.IConverter;
 
 /**
  * @author jcompagner
  */
-public class PropertyResolverConverter implements Serializable
+public class PropertyResolverConverter implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

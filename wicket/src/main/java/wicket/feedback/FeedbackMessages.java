@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.util.string.StringList;
 
 /**
@@ -36,7 +37,7 @@ import wicket.util.string.StringList;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class FeedbackMessages implements Serializable
+public final class FeedbackMessages implements IClusterable
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(FeedbackMessages.class);

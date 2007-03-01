@@ -16,12 +16,11 @@
  */
 package wicket.markup.html.pages;
 
-import java.io.Serializable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.AttributeModifier;
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.RequestCycle;
@@ -63,7 +62,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * Holds properties of the client.
 	 */
-	public static class ClientPropertiesBean implements Serializable
+	public static class ClientPropertiesBean implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

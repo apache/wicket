@@ -16,9 +16,9 @@
  */
 package wicket.request;
 
-import java.io.Serializable;
 import java.util.Map;
 
+import wicket.IClusterable;
 import wicket.RequestListenerInterface;
 import wicket.markup.html.link.ILinkListener;
 
@@ -39,7 +39,7 @@ import wicket.markup.html.link.ILinkListener;
  * 
  * @author Eelco Hillenius
  */
-public class RequestParameters implements Serializable
+public class RequestParameters implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

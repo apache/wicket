@@ -16,7 +16,6 @@
  */
 package wicket.util.tester;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,6 +23,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.Page;
 import wicket.Component.IVisitor;
 import wicket.util.string.Strings;
@@ -38,7 +38,7 @@ public class WicketTesterHelper
 	/**
 	 * 
 	 */
-	public static class ComponentData implements Serializable
+	public static class ComponentData implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

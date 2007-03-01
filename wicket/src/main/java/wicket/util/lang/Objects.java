@@ -24,7 +24,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -40,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
@@ -107,7 +107,7 @@ public final class Objects
 
 	}
 
-	private static class ArrayInstanceHolder implements Serializable
+	private static class ArrayInstanceHolder implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -207,7 +207,7 @@ public final class Objects
 		}
 	}
 
-	private static class ObjectInstanceHashmapHolder implements Serializable
+	private static class ObjectInstanceHashmapHolder implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

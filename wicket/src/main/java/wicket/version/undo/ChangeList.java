@@ -16,7 +16,6 @@
  */
 package wicket.version.undo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.Component;
+import wicket.IClusterable;
 
 /**
  * A ChangeList is a sequence of changes that can be undone.
  * 
  * @author Jonathan Locke
  */
-class ChangeList implements Serializable
+class ChangeList implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

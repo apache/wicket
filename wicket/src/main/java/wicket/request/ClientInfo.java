@@ -16,14 +16,15 @@
  */
 package wicket.request;
 
-import java.io.Serializable;
+import wicket.IClusterable;
+
 
 /**
  * Encapsulates information about the request cycle agents' capabilities.
  * 
  * @author Eelco Hillenius
  */
-public abstract class ClientInfo implements Serializable
+public abstract class ClientInfo implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

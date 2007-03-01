@@ -120,7 +120,7 @@ import wicket.util.time.Duration;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements Serializable, IConverterLocator
+public abstract class Session implements IClusterable, IConverterLocator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -133,7 +133,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	/**
 	 * meta data for recording map map access.
 	 */
-	public static final class PageMapAccessMetaData implements Serializable
+	public static final class PageMapAccessMetaData implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

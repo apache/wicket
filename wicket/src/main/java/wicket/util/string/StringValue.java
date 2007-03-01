@@ -16,13 +16,13 @@
  */
 package wicket.util.string;
 
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+import wicket.IClusterable;
 import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
@@ -44,7 +44,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class StringValue implements Serializable
+public class StringValue implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

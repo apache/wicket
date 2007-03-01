@@ -17,12 +17,12 @@
 package wicket.protocol.http.request.urlcompressing;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.util.collections.IntHashMap;
 import wicket.util.collections.IntHashMap.Entry;
 
@@ -46,7 +46,7 @@ import wicket.util.collections.IntHashMap.Entry;
  * 
  * @author jcompagner
  */
-public class UrlCompressor implements Serializable
+public class UrlCompressor implements IClusterable
 {
 	/**
 	 * @author jcompagner

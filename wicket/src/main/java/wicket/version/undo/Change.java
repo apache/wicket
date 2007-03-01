@@ -16,14 +16,15 @@
  */
 package wicket.version.undo;
 
-import java.io.Serializable;
+import wicket.IClusterable;
+
 
 /**
  * Undo information for a change to the page.
  * 
  * @author Jonathan Locke
  */
-public abstract class Change implements Serializable
+public abstract class Change implements IClusterable
 {
 	/**
 	 * Undoes the given change.

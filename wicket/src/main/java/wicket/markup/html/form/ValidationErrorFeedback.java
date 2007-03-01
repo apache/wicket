@@ -19,6 +19,7 @@ package wicket.markup.html.form;
 import java.io.Serializable;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.validation.IValidationError;
 
 /**
@@ -31,7 +32,7 @@ import wicket.validation.IValidationError;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class ValidationErrorFeedback implements Serializable
+public class ValidationErrorFeedback implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

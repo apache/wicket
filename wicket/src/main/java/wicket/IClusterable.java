@@ -19,14 +19,14 @@ package wicket;
 import java.io.Serializable;
 
 /**
- * Class used for holding meta data entries.
+ * Wicket version of {@link Serializable}. All Wicket interfaces and base
+ * classes that should typically be clustered should implement this interface.
+ * This communicates their intent and also makes configuration for <a
+ * href="http://terracotta.org/">Terracotta</a> a lot easier.
  * 
- * @author Jonathan Locke
+ * @author eelcohillenius
  */
-class MetaDataEntry implements IClusterable
+public interface IClusterable extends Serializable
 {
-	private static final long serialVersionUID = 1L;
-
-	MetaDataKey<?> key;
-	Serializable object;
+	// nothing here, as it is a .... brrrr .... tagging interface!
 }

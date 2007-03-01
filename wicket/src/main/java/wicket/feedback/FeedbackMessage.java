@@ -19,6 +19,7 @@ package wicket.feedback;
 import java.io.Serializable;
 
 import wicket.Component;
+import wicket.IClusterable;
 
 /**
  * Represents a generic message meant for the end-user/ pages.
@@ -26,7 +27,7 @@ import wicket.Component;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class FeedbackMessage implements Serializable
+public class FeedbackMessage implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

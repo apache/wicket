@@ -16,11 +16,12 @@
  */
 package wicket.util.parse.metapattern;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import wicket.IClusterable;
 
 /**
  * Useful class for constructing readable and reusable regular expressions.
@@ -41,7 +42,7 @@ import java.util.regex.Pattern;
  * 
  * @author Jonathan Locke
  */
-public class MetaPattern implements Serializable
+public class MetaPattern implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

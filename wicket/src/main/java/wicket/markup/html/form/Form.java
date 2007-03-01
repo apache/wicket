@@ -39,6 +39,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
+import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.IFormValidator;
 import wicket.model.IModel;
 import wicket.model.Model;

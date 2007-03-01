@@ -16,8 +16,7 @@
  */
 package wicket.authorization;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.util.string.Strings;
 
 /**
@@ -34,7 +33,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @since 1.2
  */
-public class Action implements Serializable
+public class Action implements IClusterable
 {
 	private static final long serialVersionUID = -1L;
 

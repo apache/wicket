@@ -32,7 +32,7 @@ import java.io.Serializable;
  * 
  * @param <T>
  */
-public abstract class MetaDataKey<T extends Serializable> implements Serializable
+public abstract class MetaDataKey<T extends Serializable> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

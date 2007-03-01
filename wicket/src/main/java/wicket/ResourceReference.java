@@ -16,7 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import wicket.markup.html.PackageResource;
@@ -52,7 +51,7 @@ import wicket.util.lang.Objects;
  * 
  * @author Jonathan Locke
  */
-public class ResourceReference implements Serializable
+public class ResourceReference implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

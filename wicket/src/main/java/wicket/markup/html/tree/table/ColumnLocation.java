@@ -16,7 +16,8 @@
  */
 package wicket.markup.html.tree.table;
 
-import java.io.Serializable;
+import wicket.IClusterable;
+
 
 /**
  * This class represents location of a column in tree table.
@@ -44,7 +45,7 @@ import java.io.Serializable;
  * 
  * @author Matej Knopp
  */
-public class ColumnLocation implements Serializable
+public class ColumnLocation implements IClusterable
 {
 	/**
 	 * Alignment of the column.

@@ -16,12 +16,11 @@
  */
 package wicket.markup.html.link;
 
-import java.io.Serializable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.Component;
+import wicket.IClusterable;
 import wicket.IPageMap;
 import wicket.PageMap;
 
@@ -41,7 +40,7 @@ import wicket.PageMap;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class PopupSettings implements Serializable
+public class PopupSettings implements IClusterable
 {
 	/** The log. */
 	private static final Logger log = LoggerFactory.getLogger(PopupSettings.class);
