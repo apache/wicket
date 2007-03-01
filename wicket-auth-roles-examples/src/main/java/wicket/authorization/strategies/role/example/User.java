@@ -17,8 +17,7 @@
  */
 package wicket.authorization.strategies.role.example;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.authorization.strategies.role.Roles;
 
 /**
@@ -26,7 +25,7 @@ import wicket.authorization.strategies.role.Roles;
  * 
  * @author Eelco Hillenius
  */
-public class User implements Serializable
+public class User implements IClusterable
 {
 	private final String uid;
 	private final Roles roles;
