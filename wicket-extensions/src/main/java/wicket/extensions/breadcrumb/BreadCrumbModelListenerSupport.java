@@ -16,10 +16,11 @@
  */
 package wicket.extensions.breadcrumb;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import wicket.IClusterable;
 
 /**
  * Utility class for working with
@@ -27,7 +28,7 @@ import java.util.List;
  * 
  * @author Eelco Hillenius
  */
-public final class BreadCrumbModelListenerSupport implements Serializable
+public final class BreadCrumbModelListenerSupport implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

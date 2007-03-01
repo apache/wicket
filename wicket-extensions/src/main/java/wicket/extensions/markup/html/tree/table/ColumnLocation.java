@@ -16,8 +16,7 @@
  */
 package wicket.extensions.markup.html.tree.table;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.util.lang.EnumeratedType;
 
 /**
@@ -46,7 +45,7 @@ import wicket.util.lang.EnumeratedType;
  * 
  * @author Matej Knopp
  */
-public class ColumnLocation implements Serializable
+public class ColumnLocation implements IClusterable
 {
 	/**
 	 * Alignment of the column.
