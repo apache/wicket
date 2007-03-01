@@ -20,6 +20,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import wicket.Component;
+
 /**
  * Implementation of a string resource loader that sits on top of the ordinary
  * Java resource bundle mechanism. When created this loader must be given the
@@ -77,5 +79,21 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 		{
 			return null;
 		}
+	}
+	
+	/**
+	 * Get the requested string resource from the underlying resource bundle.
+	 * The bundle is selected by locale and the string obtained from the best
+	 * matching bundle.
+	 * 
+	 * @param component
+	 *            Used to get the locale
+	 * @param key
+	 *            The key to obtain the string for
+	 * @return The string resource value or null if resource not found
+	 */
+	public final String loadStringResource(final Component component, final String key)
+	{
+		return loadStringResource(null, key, component.getLocale(), null);
 	}
 }
