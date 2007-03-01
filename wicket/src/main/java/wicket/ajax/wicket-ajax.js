@@ -874,6 +874,8 @@ Wicket.Ajax.Call.prototype = {
 			Wicket.Log.info("Response processed successfully.");			
 			Wicket.Ajax.invokePostCallHandlers();
 			// retach the events to the new components (a bit blunt method...)
+			// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
+			// IE this will cause double events for everything.. (mostly because of the Function.prototype.bind(element))
 			Wicket.Focus.attachFocusEvent();
 			// set the focus to the last component
 			Wicket.Focus.requestFocus();	
@@ -1363,7 +1365,17 @@ Wicket.Focus = {
 
 	setFocus: function(event)
 	{ 
-		lastFocusId=event.target.id;
+		// IE doesn't pass event into the parameter
+		// don't think this is needed for us because of Function.prototype.bind(element)?
+	    if ( !event )
+	    {
+	        event = window.event;
+	    }
+	
+	    // IE doesn't have the property "target".
+	    // Use "srcElement" instead.
+	    var target = event.target ? event.target : event.srcElement;
+		lastFocusId=target.id;
 		Wicket.Log.info("focus set on " + lastFocusId);
 	},
 	
