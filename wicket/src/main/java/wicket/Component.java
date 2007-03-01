@@ -1766,6 +1766,11 @@ public abstract class Component implements Serializable
 	{
 		if (isVisible())
 		{
+			if (this instanceof IHeaderContributor)
+			{
+				((IHeaderContributor)this).renderHead(container.getHeaderResponse());
+			}
+
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
 			if (this.behaviors != null)
