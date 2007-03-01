@@ -16,14 +16,14 @@
  */
 package wicket.spring;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Mock spring bean
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class Bean implements Serializable
+public class Bean implements IClusterable
 {
 
 }

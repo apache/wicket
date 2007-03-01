@@ -17,7 +17,6 @@
 package wicket.spring.injection;
 
 import java.io.FileNotFoundException;
-import java.io.Serializable;
 
 import javax.servlet.ServletContext;
 
@@ -30,6 +29,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.Application;
+import wicket.IClusterable;
 import wicket.MetaDataKey;
 import wicket.Session;
 import wicket.application.IComponentInstantiationListener;
@@ -148,7 +148,7 @@ public class SpringComponentInjector extends ComponentInjector
 	 * This is a holder for the application context. The reason we need a holder
 	 * is that metadata only supports storing serializable objects but
 	 * application context is not. The holder acts as a serializable wrapper for
-	 * the context. Notice that although holder implements serializable it
+	 * the context. Notice that although holder implements IClusterable it
 	 * really is not because it has a reference to non serializable context -
 	 * but this is ok because metadata objects in application are never
 	 * serialized.
@@ -156,7 +156,7 @@ public class SpringComponentInjector extends ComponentInjector
 	 * @author ivaynberg
 	 * 
 	 */
-	private static class ApplicationContextHolder implements Serializable
+	private static class ApplicationContextHolder implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
