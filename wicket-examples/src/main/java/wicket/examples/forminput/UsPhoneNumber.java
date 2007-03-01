@@ -18,7 +18,7 @@
  */
 package wicket.examples.forminput;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Represents a US phone number. We use this instead of the direct string to
@@ -28,7 +28,7 @@ import java.io.Serializable;
  * 
  * @author Eelco Hillenius
  */
-public class UsPhoneNumber implements Serializable
+public class UsPhoneNumber implements IClusterable
 {
 	private String number;
 

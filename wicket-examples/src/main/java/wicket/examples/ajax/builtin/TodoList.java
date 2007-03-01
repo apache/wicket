@@ -1,10 +1,10 @@
 package wicket.examples.ajax.builtin;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -13,7 +13,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.CompoundPropertyModel;
@@ -29,11 +28,11 @@ public class TodoList extends BasePage
 	/**
 	 * The todo object.
 	 */
-	public static class TodoItem implements Serializable
+	public static class TodoItem implements IClusterable
 	{
 		/** Is the item done? */
 		private boolean checked;
-		
+
 		/** Description of the item. */
 		private String text;
 
@@ -213,7 +212,7 @@ public class TodoList extends BasePage
 				return linkVisible;
 			}
 		}
-		
+
 		/**
 		 * Displays a form which offers an edit field and two buttons: one for
 		 * adding the todo item, and one for canceling the addition. The
@@ -244,7 +243,7 @@ public class TodoList extends BasePage
 						onAdd(item, target);
 					}
 				});
-				
+
 				add(new AjaxSubmitButton("cancel", this)
 				{
 					public void onSubmit(AjaxRequestTarget target, Form form)

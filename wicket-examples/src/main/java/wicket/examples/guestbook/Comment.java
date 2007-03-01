@@ -17,15 +17,16 @@
  */
 package wicket.examples.guestbook;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import wicket.IClusterable;
 
 /**
  * Simple "POJO" bean for guestbook comments.
  * 
  * @author Jonathan Locke
  */
-public class Comment implements Serializable
+public class Comment implements IClusterable
 {
 	private String text;
 	private Date date = new Date();

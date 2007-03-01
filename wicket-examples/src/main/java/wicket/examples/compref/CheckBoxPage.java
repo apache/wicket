@@ -16,8 +16,7 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
@@ -66,7 +65,7 @@ public class CheckBoxPage extends WicketExamplePage
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
+	private static class Input implements IClusterable
 	{
 		/** a boolean. */
 		public Boolean bool = Boolean.TRUE;

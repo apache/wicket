@@ -16,12 +16,12 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * An address.
  */
-public class Address implements Serializable
+public class Address implements IClusterable
 {
 	private String address;
 	private String postcode;

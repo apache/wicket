@@ -1,7 +1,6 @@
 package wicket.examples.ajax.builtin;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.ResourceReference;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.extensions.rating.RatingPanel;
@@ -69,7 +68,7 @@ public class RatingsPage extends BasePage
 	 * Rating model for storing the ratings, typically this comes from a
 	 * database.
 	 */
-	public static class RatingModel implements Serializable
+	public static class RatingModel implements IClusterable
 	{
 		private int nrOfVotes = 0;
 		private int sumOfRatings = 0;

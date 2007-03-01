@@ -17,9 +17,10 @@
  */
 package wicket.examples.hangman;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import wicket.IClusterable;
 
 /**
  * Implementation of the actual hangman game model. The model holds the word
@@ -30,7 +31,7 @@ import java.util.List;
  * @author Chris Turner
  * @author Jonathan Locke
  */
-public class Game implements Serializable
+public class Game implements IClusterable
 {
 	/** Number of guesses allowed */
 	private int guessesAllowed;

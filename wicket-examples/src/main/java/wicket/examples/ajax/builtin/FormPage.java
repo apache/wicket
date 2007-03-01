@@ -18,8 +18,7 @@
  */
 package wicket.examples.ajax.builtin;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormValidatingBehavior;
 import wicket.ajax.markup.html.form.AjaxSubmitButton;
@@ -97,7 +96,7 @@ public class FormPage extends BasePage {
 	}
 
 	/** simple java bean. */
-	public static class Bean implements Serializable {
+	public static class Bean implements IClusterable {
 		private String name, email;
 
 		/**
