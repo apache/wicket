@@ -16,14 +16,14 @@
  */
 package wicket.extensions.wizard;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * Recieves notifications for wizard model state changes.
  * 
  * @author Eelco Hillenius
  */
-public interface IWizardModelListener extends Serializable
+public interface IWizardModelListener extends IClusterable
 {
 	/**
 	 * Called when the active step of this model changed.

@@ -16,10 +16,9 @@
  */
 package wicket.extensions.markup.html.tree.table;
 
-import java.io.Serializable;
-
 import javax.swing.tree.TreeNode;
 
+import wicket.IClusterable;
 import wicket.Response;
 
 /**
@@ -30,7 +29,7 @@ import wicket.Response;
  * 
  * @author Matej Knopp
  */
-public interface IRenderable extends Serializable
+public interface IRenderable extends IClusterable
 {
 
 	/**
