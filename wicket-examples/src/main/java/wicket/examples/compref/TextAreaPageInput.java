@@ -16,10 +16,10 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /** Simple data class that acts as a model for the input fields. */
-public class TextAreaPageInput implements Serializable
+public class TextAreaPageInput implements IClusterable
 {
 	/** some plain text. */
 	public String text = "line 1\nline 2\nline 3";

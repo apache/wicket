@@ -18,7 +18,7 @@
  */
 package wicket.examples.repeater;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /**
  * domain object for demonstrations.
@@ -26,7 +26,7 @@ import java.io.Serializable;
  * @author igor
  * 
  */
-public class Contact implements Serializable
+public class Contact implements IClusterable
 {
 	private long id;
 

@@ -18,12 +18,12 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.CheckBoxMultipleChoice;
 import wicket.markup.html.form.Form;
@@ -74,7 +74,7 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
+	private static class Input implements IClusterable
 	{
 		/** the selected sites. */
 		public List<String> sites = new ArrayList<String>();

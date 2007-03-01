@@ -19,13 +19,13 @@
 package wicket.examples.hangman;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import wicket.Application;
+import wicket.IClusterable;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -39,7 +39,7 @@ import wicket.util.resource.ResourceStreamNotFoundException;
  * @author Chris Turner
  * @version 1.0
  */
-public class WordGenerator implements Serializable
+public class WordGenerator implements IClusterable
 {
 	/** List of words */
 	private final List words;

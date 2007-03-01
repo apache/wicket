@@ -18,8 +18,7 @@
  */
 package wicket.examples.frames;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.Page;
 
 /**
@@ -27,7 +26,7 @@ import wicket.Page;
  * 
  * @author Eelco Hillenius
  */
-public final class FrameTarget implements Serializable
+public final class FrameTarget implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

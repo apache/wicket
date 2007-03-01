@@ -1,9 +1,9 @@
 package wicket.examples.ajax.builtin;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
@@ -267,7 +267,7 @@ public class TodoList extends BasePage
 	/**
 	 * The todo object.
 	 */
-	public static class TodoItem implements Serializable
+	public static class TodoItem implements IClusterable
 	{
 		/** Is the item done? */
 		private boolean checked;

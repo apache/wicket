@@ -18,8 +18,7 @@
  */
 package wicket.examples.stockquote;
 
-import java.io.Serializable;
-
+import wicket.IClusterable;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
@@ -73,7 +72,7 @@ public class StockQuotePage extends WicketExamplePage
 	/**
 	 * POJO to hold the symbol for the quote query.
 	 */
-	public static class Quote implements Serializable
+	public static class Quote implements IClusterable
 	{
 		private String symbol;
 

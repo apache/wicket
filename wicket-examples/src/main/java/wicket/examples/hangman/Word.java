@@ -17,16 +17,17 @@
  */
 package wicket.examples.hangman;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import wicket.IClusterable;
 
 /**
  * Model for a word in the game of Game.
  * 
  * @author Jonathan Locke
  */
-public class Word implements Serializable
+public class Word implements IClusterable
 {
 	/** The word */
 	final List<Letter> letters = new ArrayList<Letter>();

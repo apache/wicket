@@ -16,12 +16,13 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+import wicket.IClusterable;
+
 /** Simple data class that acts as a model for the input fields. */
-public class ListChoicePageInput implements Serializable
+public class ListChoicePageInput implements IClusterable
 {
 	/** available sites for selection. */
 	static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",

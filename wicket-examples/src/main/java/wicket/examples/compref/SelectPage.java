@@ -17,12 +17,12 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.IClusterable;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.form.select.IOptionRenderer;
 import wicket.extensions.markup.html.form.select.Select;
@@ -96,7 +96,7 @@ public class SelectPage extends WicketExamplePage
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
+	private static class Input implements IClusterable
 	{
 		/** the selected sites. */
 		public String site = new String("sd");

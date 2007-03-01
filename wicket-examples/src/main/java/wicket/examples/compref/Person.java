@@ -16,15 +16,16 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import wicket.IClusterable;
 
 /**
  * A person.
  * 
  * @author Eelco Hillenius
  */
-public class Person implements Serializable
+public class Person implements IClusterable
 {
 	private String name;
 	private String lastName;

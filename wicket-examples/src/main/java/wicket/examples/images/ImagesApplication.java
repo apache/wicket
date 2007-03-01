@@ -22,6 +22,7 @@ import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
+import wicket.protocol.http.request.urlcompressing.UrlCompressor;
 import wicket.request.IRequestCycleProcessor;
 
 /**

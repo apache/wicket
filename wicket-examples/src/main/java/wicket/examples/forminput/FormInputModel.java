@@ -18,7 +18,6 @@
  */
 package wicket.examples.forminput;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,17 +27,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import wicket.IClusterable;
+
 /**
  * Simple model object for FormInput example. Has a number of simple properties
  * that can be retrieved and set.
  */
-public final class FormInputModel implements Serializable
+public final class FormInputModel implements IClusterable
 {
 	/**
 	 * Represents a line of text. Hack to get around the fact that strings are
 	 * immutable.
 	 */
-	public final class Line implements Serializable
+	public final class Line implements IClusterable
 	{
 		private String text;
 

@@ -1,9 +1,9 @@
 package wicket.examples.compref;
 
-import java.io.Serializable;
+import wicket.IClusterable;
 
 /** Simple data class that acts as a model for the input fields. */
-public class TextFieldPageInput implements Serializable
+public class TextFieldPageInput implements IClusterable
 {
 	// Normally we would have played nice and made it a proper JavaBean with
 	// getters and

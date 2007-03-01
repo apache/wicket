@@ -19,17 +19,18 @@
 package wicket.examples.threadDump;
 
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import wicket.IClusterable;
+
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class ThreadDumpBean implements Serializable
+public class ThreadDumpBean implements IClusterable
 {
 	private final Map<Thread, StackTraceElement[]> traces;
 
