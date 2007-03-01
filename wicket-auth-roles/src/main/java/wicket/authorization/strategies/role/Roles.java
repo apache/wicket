@@ -16,9 +16,9 @@
  */
 package wicket.authorization.strategies.role;
 
-import java.io.Serializable;
 import java.util.HashSet;
 
+import wicket.IClusterable;
 import wicket.util.string.StringList;
 
 /**
@@ -27,7 +27,7 @@ import wicket.util.string.StringList;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class Roles extends HashSet<String> implements Serializable
+public final class Roles extends HashSet<String> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 	

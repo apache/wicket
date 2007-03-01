@@ -16,10 +16,10 @@
  */
 package wicket.authorization.strategies.role.metadata;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import wicket.IClusterable;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.Roles;
 
@@ -32,7 +32,7 @@ import wicket.authorization.strategies.role.Roles;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-final class ActionPermissions implements Serializable
+final class ActionPermissions implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
