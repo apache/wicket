@@ -177,7 +177,7 @@ public class FileUpload implements Serializable
 	 * If an exception is thrown when closing the input streams, we ignore it,
 	 * because the stream might have been closed already.
 	 */
-	void closeStreams()
+	public final void closeStreams()
 	{
 		if (inputStreams != null)
 		{
