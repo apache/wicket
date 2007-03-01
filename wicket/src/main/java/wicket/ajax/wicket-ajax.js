@@ -1410,11 +1410,10 @@ Wicket.Focus = {
 	{
 		for (var i=0; i< elements.length; i++)
 		{
-		// do it for all elements even without id. then those will set the focus
-		// but then the focus can't be set back (but also don't get set to the last one with id.
-//		    if ( typeof(elements[i].id) != "undefined")
+		    if ( typeof(elements[i].focusSet) == "undefined")
 		    {
 		         Wicket.Event.add(elements[i],'focus',Wicket.Focus.setFocus);
+		         elements[i].focusSet = true;
 		    }
 		}
 	},
