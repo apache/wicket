@@ -103,8 +103,8 @@ public abstract class AbstractDetachableModel implements IModel
 		}
 		catch (RuntimeException e)
 		{
-			throw new WicketRuntimeException("unable to get object, model: " + this
-					+ ", called with component " + component, e);
+			throw new WicketRuntimeException("unable to get object\nmodel: " + this
+					+ "\ncalled with component " + component, e);
 		}
 	}
 
@@ -130,8 +130,8 @@ public abstract class AbstractDetachableModel implements IModel
 		}
 		catch (RuntimeException e)
 		{
-			throw new WicketRuntimeException("unable to set object " + object + ", model: " + this
-					+ ", called with component " + component, e);
+			throw new WicketRuntimeException("unable to set object " + object + "\nmodel: " + this
+					+ "\ncalled with component " + component, e);
 		}
 	}
 
