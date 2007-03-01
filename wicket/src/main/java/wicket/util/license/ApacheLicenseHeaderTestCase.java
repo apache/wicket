@@ -99,9 +99,10 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				for (int i = 0; i < ignoreFiles.length; i++)
 				{
 					String ignorePath = ignoreFiles[i];
-                    // Will convert '/'s to '\\'s on Windows
-                    ignorePath = Strings.replaceAll(ignorePath, "/", System.getProperty("file.separator")).toString();
-                    File ignoreFile = new File(baseDirectory, ignorePath);
+					// Will convert '/'s to '\\'s on Windows
+					ignorePath = Strings.replaceAll(ignorePath, "/",
+							System.getProperty("file.separator")).toString();
+					File ignoreFile = new File(baseDirectory, ignorePath);
 
 					// Directory ignore
 					if (ignoreFile.isDirectory())
@@ -143,7 +144,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				relativePathname = Strings.replaceAll(relativePathname,
 						baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
 						.toString();
-				if (relativePathname.equals("target") == false) {
+				if (relativePathname.equals("target") == false)
+				{
 					boolean found = false;
 					for (int i = 0; i < ignoreDirectory.length; i++)
 					{
@@ -219,7 +221,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 								if (addHeaders == false
 										|| licenseHeaderHandler.addLicenseHeader(file) == false)
 								{
-									List/* <File> */files = (List)badFiles.get(licenseHeaderHandler);
+									List/* <File> */files = (List)badFiles
+											.get(licenseHeaderHandler);
 
 									if (files == null)
 									{
@@ -258,10 +261,10 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				{
 					File file = (File)iterator.next();
 					String filename = file.getAbsolutePath();
-					
+
 					// Find the license type
 					String licenseType = licenseHeaderHandler.getLicenseType(file);
-					
+
 					if (licenseType == null)
 					{
 						failString.append("NONE");
@@ -270,7 +273,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 					{
 						failString.append(licenseType);
 					}
-					
+
 					failString.append(" ").append(filename).append(LINE_ENDING);
 				}
 			}

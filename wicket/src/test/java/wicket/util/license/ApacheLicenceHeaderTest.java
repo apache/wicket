@@ -97,7 +97,8 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				/*
 				 * See NOTICE.txt
 				 */
-				"src/main/java/wicket/ajax/wicket-ajax-debug-drag.js"
+				"src/main/java/wicket/ajax/wicket-ajax-debug-drag.js",
+				"src/main/java/wicket/markup/html/form/upload/MultiFileUploadField.js"
 		};
 		
 		propertiesIgnore = new String[] {
