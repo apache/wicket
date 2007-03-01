@@ -19,7 +19,6 @@ package wicket.proxy;
 import java.lang.reflect.Proxy;
 
 import junit.framework.TestCase;
-
 import wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import wicket.proxy.util.ConcreteObject;
 import wicket.proxy.util.IInterface;
@@ -27,7 +26,6 @@ import wicket.proxy.util.IObjectMethodTester;
 import wicket.proxy.util.InterfaceObject;
 import wicket.proxy.util.ObjectMethodTester;
 import wicket.util.lang.Objects;
-import wicket.util.tester.WicketTester;
 
 /**
  * Tests lazy init proxy factory
