@@ -310,7 +310,9 @@ public class RequestParameters implements IClusterable
 
 
 	/**
-	 * Gets the only-process-if-path-active flag
+	 * Whether the page/version corresponding to the current request is
+	 * targetted for the page/version the browser is showing right now, ie
+	 * corresponds to the page/version on top of pagemap's access stack.
 	 * 
 	 * @see #onlyProcessIfPathActive
 	 * 
@@ -362,7 +364,7 @@ public class RequestParameters implements IClusterable
 			b.append(" resourceKey=").append(getResourceKey());
 		}
 		b.append(" onlyProcessIfPathActive=").append(isOnlyProcessIfPathActive());
-		
+
 		b.append("]");
 		return b.toString();
 	}
