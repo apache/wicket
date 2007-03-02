@@ -16,11 +16,22 @@
  */
 package wicket;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.SocketException;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.markup.ComponentTag;
+import wicket.protocol.http.WebApplication;
+import wicket.util.io.Streams;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.time.Time;
@@ -36,7 +47,9 @@ import wicket.util.time.Time;
  */
 public abstract class Response
 {
-    /** Default encoding of output stream */
+	private static final Log log = LogFactory.getLog(Response.class);
+
+	/** Default encoding of output stream */
     private String defaultEncoding;
 
 	/**
@@ -219,6 +232,76 @@ public abstract class Response
 	public abstract void write(final CharSequence string);
 
 	/**
+	 * Copies the given input stream to the servlet response
+	 * <p>
+	 * NOTE Content-Length is not set because it would require to buffer the
+	 * whole input stream
+	 * </p>
+	 * 
+	 * @param in
+	 *            input stream to copy, will be closed after copy
+	 */
+	public void write(InputStream in)
+	{
+		OutputStream out = getOutputStream();
+
+		try
+		{
+			// Copy resource input stream to servlet output stream
+			Streams.copy(in, out);
+		}
+		catch (Exception e)
+		{
+			Throwable throwable = e;
+			boolean ignoreException = false;
+			while (throwable != null)
+			{
+				if (throwable instanceof SocketException)
+				{
+					String message = throwable.getMessage();
+					ignoreException = message != null
+							&& (message.indexOf("Connection reset by peer") != -1 || message
+									.indexOf("Software caused connection abort") != -1);
+				}
+				else
+				{
+					ignoreException = throwable.getClass().getName()
+							.indexOf("ClientAbortException") >= 0;
+					if (ignoreException)
+					{
+						if (log.isDebugEnabled())
+						{
+							log.debug("Socket exception ignored for sending Resource "
+									+ "response to client (ClientAbort)", e);
+						}
+						break;
+					}
+				}
+				throwable = throwable.getCause();
+
+				if (!ignoreException)
+				{
+					throw new WicketRuntimeException("Unable to write response", e);
+				}
+			}
+		}
+		finally
+		{
+			// NOTE: We only close the InputStream. The servlet
+			// container should close the output stream.
+			try
+			{
+				in.close();
+				out.flush();
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+	}
+
+	/**
 	 * Writes the given string to the Response subclass output destination and
 	 * appends a cr/nl depending on the OS
 	 * 
@@ -228,5 +311,39 @@ public abstract class Response
 	{
 		write(string);
 		write(Strings.LINE_SEPARATOR);
+	}
+
+	/**
+	 * Sets the Content-Type header with servlet-context-defined content-types
+	 * (application's web.xml or servlet container's configuration), and fall
+	 * back to system or JVM-defined (FileNameMap) content types.
+	 * 
+	 * @param requestCycle
+	 * @param uri
+	 *            Resource name to be analyzed to detect MIME type
+	 * 
+	 * @see ServletContext#getMimeType(String)
+	 * @see URLConnection#getFileNameMap()
+	 */
+	public void detectContentType(RequestCycle requestCycle, String uri)
+	{
+		// Configure response with content type of resource
+		final ServletContext context = ((WebApplication)requestCycle.getApplication())
+				.getServletContext();
+		// First look for user defined content-type in web.xml
+		String contentType = context.getMimeType(uri);
+
+		// If not found, fall back to
+		// FileResourceStream.getContentType() that looks into
+		// system or JVM content types
+		if (contentType == null)
+		{
+			contentType = URLConnection.getFileNameMap().getContentTypeFor(uri);
+		}
+
+		if (contentType != null)
+		{
+			setContentType(contentType + "; charset=" + getCharacterEncoding());
+		}
 	}
 }
