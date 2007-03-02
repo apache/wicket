@@ -17,22 +17,17 @@
 package wicket.protocol.http;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLConnection;
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.RequestCycle;
 import wicket.Response;
 import wicket.WicketRuntimeException;
-import wicket.util.io.Streams;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.time.Time;
@@ -381,75 +376,5 @@ public class WebResponse extends Response
 	public void setAjax(boolean ajax)
 	{
 		this.ajax = ajax;
-	}
-
-	/**
-	 * Copies the given input stream to the servlet response
-	 * <p>
-	 * NOTE Content-Length is not set because it would require to buffer the
-	 * whole input stream
-	 * </p>
-	 * 
-	 * @param in
-	 *            input stream to copy, will be closed after copy
-	 */
-	public void write(InputStream in)
-	{
-		try
-		{
-			// Copy resource input stream to servlet output stream
-			Streams.copy(in, getHttpServletResponse().getOutputStream());
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		finally
-		{
-			// NOTE: We only close the InputStream. The servlet
-			// container should close the output stream.
-			try
-			{
-				in.close();
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
-		}
-	}
-
-	/**
-	 * Sets the Content-Type header with servlet-context-defined content-types
-	 * (application's web.xml or servlet container's configuration), and fall
-	 * back to system or JVM-defined (FileNameMap) content types.
-	 * 
-	 * @param requestCycle
-	 * @param uri
-	 *            Resource name to be analyzed to detect MIME type
-	 * 
-	 * @see ServletContext#getMimeType(String)
-	 * @see URLConnection#getFileNameMap()
-	 */
-	public void detectContentType(RequestCycle requestCycle, String uri)
-	{
-		// Configure response with content type of resource
-		final ServletContext context = ((WebApplication)requestCycle.getApplication())
-				.getServletContext();
-		// First look for user defined content-type in web.xml
-		String contentType = context.getMimeType(uri);
-
-		// If not found, fall back to
-		// FileResourceStream.getContentType() that looks into
-		// system or JVM content types
-		if (contentType == null)
-		{
-			contentType = URLConnection.getFileNameMap().getContentTypeFor(uri);
-		}
-
-		if (contentType != null)
-		{
-			setContentType(contentType);
-		}
 	}
 }
