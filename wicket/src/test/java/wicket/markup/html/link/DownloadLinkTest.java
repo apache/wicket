@@ -16,6 +16,9 @@
  */
 package wicket.markup.html.link;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.WicketTestCase;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockServletContext;
@@ -28,6 +31,7 @@ import wicket.protocol.http.MockServletContext;
 public class DownloadLinkTest extends WicketTestCase
 {
 	private static final String APPLICATION_X_CUSTOM = "application/x-custom";
+	private static final Log log = LogFactory.getLog(DownloadLinkTest.class);
 
 	public DownloadLinkTest(String name)
 	{
@@ -57,6 +61,7 @@ public class DownloadLinkTest extends WicketTestCase
 		((MockServletContext)tester.getApplication().getServletContext()).addMimeType("custom",
 				APPLICATION_X_CUSTOM);
 		tester.clickLink(DownloadPage.CUSTOM_DOWNLOAD_LINK);
+		log.debug("Content-Type: " + getContentType());
 		assertTrue(getContentType().startsWith(APPLICATION_X_CUSTOM));
 	}
 
