@@ -90,8 +90,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		response
 				.write("\n<span>&nbsp;<div style=\"display:none;z-index: 99999;position:absolute;\" id=\"");
 		response.write(getCalendarMarkupId());
-		response
-				.write("\"></div><img style=\"cursor: pointer; border: none;\" id=\"");
+		response.write("\"></div><img style=\"");
+		response.write(getIconStyle());
+		response.write("\" id=\"");
 		response.write(getIconId());
 		response.write("\" src=\"");
 		CharSequence iconUrl = getIconUrl();
@@ -352,6 +353,15 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 */
 	protected final String getIconId() {
 		return component.getMarkupId() + "Icon";
+	}
+
+	/**
+	 * Gets the style of the icon that triggers the popup.
+	 * 
+	 * @return The style of the icon, e.g. 'cursor: point' etc.
+	 */
+	protected String getIconStyle() {
+		return "cursor: pointer; border: none;";
 	}
 
 	/**
