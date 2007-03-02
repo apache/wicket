@@ -47,43 +47,6 @@ Wicket.Class = {
 }
 
 /**
- * Browser types
- */
-
-Wicket.Browser = { 
-	isKHTML: function() {
-		return /Konqueror|KHTML/.test(navigator.userAgent) && !/Apple/.test(navigator.userAgent);
-	},
-	
-	isSafari: function() {
-		return /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent);
-	},
-	
-	isOpera: function() {
-		return typeof(window.opera) != "undefined";
-	},
-
-	isIE: function() {
-		return typeof(document.all) != "undefined" && typeof(window.opera) == "undefined";
-	},
-	
-	isIEQuirks: function() {
-		// is the browser internet explorer in quirks mode (we could use document.compatMode too)		
-		return Wicket.Browser.isIE() && document.documentElement.clientHeight == 0;
-	},		
-	
-	isIE7: function() {
-		var index = navigator.userAgent.indexOf("MSIE");
-		var version = parseFloat(navigator.userAgent.substring(index + 5));
-		return Wicket.Browser.isIE() && version >= 7;
-	},
-	
-	isGecko: function() {
-		return /Gecko/.test(navigator.userAgent) && !Wicket.Browser.isSafari();
-	}
-};
-
-/**
  * Add a check for old Safari. It should not be our responsibility to check the 
  * browser's version, but it's a minor version that makes a difference here,
  * so we try to be at least user friendly.  
