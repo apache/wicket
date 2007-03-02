@@ -88,7 +88,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		// component. Not as pretty as working with a panel etc, but works
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
-		response.write("\n<span>&nbsp;<div style=\"display:none;z-index: 99999;position:absolute;\" id=\"");
+		response
+				.write("\n<span>&nbsp;<div style=\"display:none;z-index: 99999;position:absolute;\" id=\"");
 		response.write(getCalendarMarkupId());
 		response.write("\"></div><img style=\"");
 		response.write(getIconStyle());
@@ -358,10 +359,14 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	protected final String getIconId() {
 		return component.getMarkupId() + "Icon";
 	}
-	
-	protected String getIconStyle()
-	{
-		return "cursor: pointer; border: none;position:absolute;";
+
+	/**
+	 * Gets the style of the icon that triggers the popup.
+	 * 
+	 * @return The style of the icon, e.g. 'cursor: point' etc.
+	 */
+	protected String getIconStyle() {
+		return "cursor: pointer; border: none;";
 	}
 
 	/**
