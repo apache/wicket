@@ -620,7 +620,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			final IHeaderResponse headerResponse = new AjaxHeaderResponse(encodingResponse);
 			RequestCycle.get().setResponse(headerResponse.getResponse());
-			component.renderHead(headerResponse);
+			component.internalRenderHead(headerResponse);
 		}
 		finally
 		{

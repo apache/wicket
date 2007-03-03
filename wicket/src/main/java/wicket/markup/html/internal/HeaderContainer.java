@@ -75,7 +75,7 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	 */
 	protected final void renderHeaderSections(final Page page)
 	{
-		page.renderHead(new HeaderResponse(getResponse()));
+		page.internalRenderHead(new HeaderResponse(getResponse()));
 	}
 
 	/**

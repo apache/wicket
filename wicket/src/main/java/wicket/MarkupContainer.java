@@ -1429,18 +1429,18 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	}
 
 	/**
-	 * @see wicket.Component#renderHead(wicket.markup.html.IHeaderResponse)
+	 * @see wicket.Component#internalRenderHead(wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(final IHeaderResponse response)
+	public void internalRenderHead(final IHeaderResponse response)
 	{
 		if (isVisible())
 		{
-			super.renderHead(response);
+			super.internalRenderHead(response);
 
 			for (Component<?> child : this)
 			{
-				child.renderHead(response);
+				child.internalRenderHead(response);
 			}
 		}
 	}

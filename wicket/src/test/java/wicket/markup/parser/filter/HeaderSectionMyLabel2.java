@@ -17,6 +17,7 @@
 package wicket.markup.parser.filter;
 
 import wicket.MarkupContainer;
+import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.basic.Label;
 import wicket.model.Model;
@@ -27,7 +28,7 @@ import wicket.model.Model;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionMyLabel2 extends Label
+public class HeaderSectionMyLabel2 extends Label implements IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +47,6 @@ public class HeaderSectionMyLabel2 extends Label
 	/**
 	 * @param container
 	 */
-	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		response.getResponse().write("text added by contributor");

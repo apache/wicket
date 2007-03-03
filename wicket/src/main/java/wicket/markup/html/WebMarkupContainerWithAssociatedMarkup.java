@@ -85,16 +85,16 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	}
 
 	/**
-	 * @see wicket.Component#renderHead(wicket.markup.html.IHeaderResponse)
+	 * @see wicket.Component#internalRenderHead(wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	public void renderHead(final IHeaderResponse response)
+	public void internalRenderHead(final IHeaderResponse response)
 	{
 		if (isVisible())
 		{
 			renderHead(response, getAssociatedMarkup(true));
 
-			super.renderHead(response);
+			super.internalRenderHead(response);
 		}
 	}
 

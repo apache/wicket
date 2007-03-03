@@ -2003,6 +2003,9 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
 	 * Print to the web response what ever the component wants to contribute to
 	 * the head section. Make sure that all attached behaviors are asked as
 	 * well.
@@ -2010,10 +2013,16 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	 * @param response
 	 *            The response object to write the output to
 	 */
-	public void renderHead(final IHeaderResponse response)
+	public void internalRenderHead(final IHeaderResponse response)
 	{
 		if (isVisible())
 		{
+			// is this component also a IHeaderContributor
+			if (this instanceof IHeaderContributor) 
+			{
+				((IHeaderContributor)this).renderHead(response);
+			}
+			
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
 			if (this.behaviors != null)
