@@ -58,9 +58,9 @@ public class WorldClockPage extends BasePage
 		add(prague);
 		add(london);
 
-		// add the timer behavior to the la component and make it update all
+		// add the timer behavior to the page and make it update all
 		// other components as well
-		la.add(new AbstractAjaxTimerBehavior(Duration.seconds(5))
+		add(new AbstractAjaxTimerBehavior(Duration.seconds(1))
 		{
 			/**
 			 * @see wicket.ajax.AbstractAjaxTimerBehavior#onTimer(wicket.ajax.AjaxRequestTarget)
