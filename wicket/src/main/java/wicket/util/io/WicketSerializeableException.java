@@ -72,13 +72,12 @@ public class WicketSerializeableException extends NotSerializableException
 			}
 			asb.setLength(asb.length() - 2);
 		}
-		asb
-				.append("\nNOTE: if you feel Wicket is at fault with this exception")
-				.append(", please report to the mailing list. You can switch to ")
-				.append("JDK based serialization by calling: ")
-				.append(
-						"java.util.lang.Objects.setObjectStreamFactory(new IObjectStreamFactory.DefaultObjectStreamFactory()) ")
-				.append("e.g. in the init method of your application");
+		asb.append("\nNOTE: if you feel Wicket is at fault with this exception").append(
+				", please report to the mailing list. You can switch to ").append(
+				"JDK based serialization by calling: ").append(
+				"wicket.util.lang.Objects.setObjectStreamFactory(").append(
+				"new IObjectStreamFactory.DefaultObjectStreamFactory()) ").append(
+				"e.g. in the init method of your application");
 		return asb.toString();
 	}
 
