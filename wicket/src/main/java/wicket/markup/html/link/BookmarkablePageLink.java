@@ -159,7 +159,7 @@ public class BookmarkablePageLink extends Link<CharSequence>
 		if (pageMap != null)
 		{
 			this.pageMapName = pageMap.getName();
-			add(new AttributeModifier("target", false, new Model<String>(pageMapName)));
+			add(new AttributeModifier("target", true, new Model<String>(pageMapName)));
 		}
 		return this;
 	}
