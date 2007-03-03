@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wicket.IClusterable;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -59,7 +60,7 @@ import wicket.util.lang.Classes;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class AbstractValidator implements IValidator
+public abstract class AbstractValidator implements IValidator, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
