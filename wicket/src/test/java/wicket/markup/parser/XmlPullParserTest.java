@@ -118,6 +118,10 @@ public class XmlPullParserTest extends TestCase
 		assertTrue(closeTag.isClose());
 		assertEquals("ns", closeTag.getNamespace());
 		assertEquals("tag", closeTag.getName());
+		
+		parser.parse("<filter-mapping>");
+		tag = (XmlTag)parser.nextTag();
+		assertEquals("filter-mapping", tag.getName());
 	}
 
 	/**
