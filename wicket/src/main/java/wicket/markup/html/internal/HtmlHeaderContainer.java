@@ -297,9 +297,14 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * @param response
 	 * @return new header response
 	 */
-	protected IHeaderResponse newHeaderResponse(Response response)
+	protected IHeaderResponse newHeaderResponse()
 	{
-		return new HeaderResponse(response);
+		return new HeaderResponse() {
+			public Response getResponse()
+			{
+				return HtmlHeaderContainer.this.getResponse();
+			}
+		};
 	}
 
 	/**
@@ -311,7 +316,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	{
 		if (this.headerResponse == null)
 		{
-			headerResponse = newHeaderResponse(getResponse());
+			headerResponse = newHeaderResponse();
 		}
 		return headerResponse;
 	}
