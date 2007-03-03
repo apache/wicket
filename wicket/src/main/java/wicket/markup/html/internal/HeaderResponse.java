@@ -23,7 +23,6 @@ import java.util.Set;
 
 import wicket.RequestCycle;
 import wicket.ResourceReference;
-import wicket.Response;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WicketEventReference;
 import wicket.util.string.JavascriptUtils;
@@ -34,11 +33,9 @@ import wicket.util.string.JavascriptUtils;
  * @author Matej Knopp
  * @author Igor Vaynberg (ivaynberg)
  */
-public class HeaderResponse implements IHeaderResponse
+public abstract class HeaderResponse implements IHeaderResponse
 {
 	private static final long serialVersionUID = 1L;
-
-	private final Response response;
 
 	private final Set rendered = new HashSet();
 
@@ -48,9 +45,9 @@ public class HeaderResponse implements IHeaderResponse
 	 * @param response
 	 *            response used to write the head elements
 	 */
-	public HeaderResponse(Response response)
+	public HeaderResponse()
 	{
-		this.response = response;
+		
 	}
 
 	/**
@@ -64,7 +61,7 @@ public class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(wicket.markup.html.ResourceReference)
 	 */
-	public final void renderCSSReference(ResourceReference reference)
+	public void renderCSSReference(ResourceReference reference)
 	{
 		CharSequence url = RequestCycle.get().urlFor(reference);
 		renderCSSReference(url.toString(), null);
@@ -97,16 +94,16 @@ public class HeaderResponse implements IHeaderResponse
 		List token = Arrays.asList(new Object[] { "css", url, media });
 		if (wasRendered(token) == false)
 		{
-			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-			response.write(url);
-			response.write("\"");
+			getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+			getResponse().write(url);
+			getResponse().write("\"");
 			if (media != null)
 			{
-				response.write(" media=\"");
-				response.write(media);
-				response.write("\"");
+				getResponse().write(" media=\"");
+				getResponse().write(media);
+				getResponse().write("\"");
 			}
-			response.println(" />");
+			getResponse().println(" />");
 			markRendered(token);
 		}
 	}
@@ -114,7 +111,7 @@ public class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderJavascriptReference(wicket.markup.html.ResourceReference)
 	 */
-	public final void renderJavascriptReference(ResourceReference reference)
+	public void renderJavascriptReference(ResourceReference reference)
 	{
 		CharSequence url = RequestCycle.get().urlFor(reference);
 		renderJavascriptReference(url.toString());
@@ -123,7 +120,7 @@ public class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderJavascriptReference(java.lang.String)
 	 */
-	public final void renderJavascriptReference(String url)
+	public void renderJavascriptReference(String url)
 	{
 		List token = Arrays.asList(new Object[] { "javascript", url });
 		if (wasRendered(token) == false)
@@ -151,7 +148,7 @@ public class HeaderResponse implements IHeaderResponse
 	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderString(java.lang.CharSequence)
 	 */
-	public final void renderString(CharSequence string)
+	public void renderString(CharSequence string)
 	{
 		String token = string.toString();
 		if (wasRendered(token) == false)
@@ -170,21 +167,18 @@ public class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderResponse#getResponse()
-	 */
-	public final Response getResponse()
-	{
-		return response;
-	}
-
-	/**
 	 * @see wicket.markup.html.IHeaderResponse#renderOnDomReadyJavascript(java.lang.String)
 	 */
 	public void renderOnDomReadyJavascript(String javascript)
 	{
-		renderJavascriptReference(WicketEventReference.INSTANCE);
-		JavascriptUtils.writeJavascript(getResponse(),
-				"Wicket.Event.add(window, \"domready\", function() { " + javascript + ";});");
+		List token = Arrays.asList(new Object[] { "javascript-event", "domready", javascript });
+		if (wasRendered(token) == false)
+		{
+			renderJavascriptReference(WicketEventReference.INSTANCE);
+			JavascriptUtils.writeJavascript(getResponse(),
+					"Wicket.Event.add(window, \"domready\", function() { " + javascript + ";});");
+			markRendered(token);
+		}
 	}
 
 	/**
@@ -192,8 +186,14 @@ public class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnLoadJavascript(String javascript)
 	{
-		renderJavascriptReference(WicketEventReference.INSTANCE);
-		JavascriptUtils.writeJavascript(getResponse(),
-				"Wicket.Event.add(window, \"load\", function() { " + javascript + ";});");
+		List token = Arrays.asList(new Object[] { "javascript-event", "load", javascript });
+		if (wasRendered(token) == false)
+		{
+			renderJavascriptReference(WicketEventReference.INSTANCE);
+			JavascriptUtils.writeJavascript(getResponse(),
+					"Wicket.Event.add(window, \"load\", function() { " + javascript + ";});");
+			markRendered(token);
+		}
 	}
+
 }

@@ -18,6 +18,7 @@ package wicket.ajax;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -35,7 +36,9 @@ import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.ResourceReference;
 import wicket.Response;
+import wicket.WicketRuntimeException;
 import wicket.Component.IVisitor;
 import wicket.feedback.IFeedback;
 import wicket.markup.html.IHeaderResponse;
@@ -341,11 +344,11 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Sets the focus in the browser to the given component.
-	 * The markup id must be set.
+	 * Sets the focus in the browser to the given component. The markup id must
+	 * be set.
 	 * 
 	 * @param component
-	 * 			The component to get the focus.         
+	 *            The component to get the focus.
 	 */
 	public final void focusComponent(Component component)
 	{
@@ -361,7 +364,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 		appendJavascript("Wicket.Focus.setFocusOnId('" + component.getMarkupId() + "');");
 	}
-	
+
 
 	/**
 	 * Adds javascript that will be evaluated on the client side after
@@ -720,36 +723,135 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingBodyResponse.reset();
 	}
 
+	/**
+	 * Header response for an ajax request.
+	 * 
+	 * @author Matej Knopp
+	 */
 	private class AjaxHeaderResponse extends HeaderResponse
 	{
 
 		private static final long serialVersionUID = 1L;
+
+		private void checkHeaderRendering()
+		{
+			if (headerRendering == false)
+			{
+				throw new WicketRuntimeException(
+						"Only methods that can be called on IHeaderResponse outside renderHead() are renderOnLoadJavascript and renderOnDomReadyJavascript");
+			}
+		}
+
+		public void renderCSSReference(ResourceReference reference, String media)
+		{
+			checkHeaderRendering();
+			super.renderCSSReference(reference, media);
+		}
+
+		public void renderCSSReference(String url)
+		{
+			checkHeaderRendering();
+			super.renderCSSReference(url);
+		}
+
+		public void renderCSSReference(String url, String media)
+		{
+			checkHeaderRendering();
+			super.renderCSSReference(url, media);
+		}
+
+		public void renderJavascript(CharSequence javascript, String id)
+		{
+			checkHeaderRendering();
+			super.renderJavascript(javascript, id);
+		}
+
+		public void renderCSSReference(ResourceReference reference)
+		{
+			checkHeaderRendering();
+			super.renderCSSReference(reference);
+		}
+
+		public void renderJavascriptReference(ResourceReference reference)
+		{
+			checkHeaderRendering();
+			super.renderJavascriptReference(reference);
+		}
+
+		public void renderJavascriptReference(String url)
+		{
+			checkHeaderRendering();
+			super.renderJavascriptReference(url);
+		}
+
+		public void renderString(CharSequence string)
+		{
+			checkHeaderRendering();
+			super.renderString(string);
+		}
 
 		/**
 		 * Construct.
 		 * 
 		 * @param response
 		 */
-		public AjaxHeaderResponse(Response response)
+		public AjaxHeaderResponse()
 		{
-			super(response);
+
 		}
 
 		public void renderOnDomReadyJavascript(String javascript)
 		{
-			// execute the javascript as first javascript after component
-			// replacement
-			appendJavascripts.add(0, javascript);
+			List token = Arrays.asList(new Object[] { "javascript-event", "domready", javascript });
+			if (wasRendered(token) == false)
+			{
+				// execute the javascript as first javascript after component
+				// replacement
+				appendJavascripts.add(0, javascript);
+				markRendered(token);
+			}
 		}
 
 		public void renderOnLoadJavascript(String javascript)
 		{
-			// execute the javascript after all other scripts are executed
-			appendJavascripts.add(javascript);
+			List token = Arrays.asList(new Object[] { "javascript-event", "load", javascript });
+			if (wasRendered(token) == false)
+			{
+				// execute the javascript after all other scripts are executed
+				appendJavascripts.add(javascript);
+				markRendered(token);
+			}
+		}
+
+		public Response getResponse()
+		{
+			return RequestCycle.get().getResponse();
 		}
 	};
 
+	// whether a header contribution is being rendered
+	private boolean headerRendering = false;
 	private HtmlHeaderContainer header = null;
+
+	private IHeaderResponse headerResponse;
+
+	/**
+	 * Returns the header response associated with current AjaxRequestTarget.
+	 * 
+	 * Beware that only renderOnDomReadyJavascript and renderOnLoadJavascript
+	 * can be called outside the renderHeader(IHeaderResponse response) method.
+	 * Calls to other render** methods will result in an exception being thrown.
+	 * 
+	 * @return header response
+	 */
+	public IHeaderResponse getHeaderResponse()
+	{
+		if (headerResponse == null)
+		{
+			headerResponse = new AjaxHeaderResponse();
+		}
+		return headerResponse;
+	}
 
 	/**
 	 * 
@@ -758,19 +860,24 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondHeaderContribution(final Response response, final Component component)
 	{
+		headerRendering = true;
+
+		// create the htmlheadercontainer if needed
 		if (header == null)
 		{
 			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID)
 			{
 				private static final long serialVersionUID = 1L;
 
-				protected IHeaderResponse newHeaderResponse(Response response)
+				protected IHeaderResponse newHeaderResponse()
 				{
-					return new AjaxHeaderResponse(response);
+					return AjaxRequestTarget.this.getHeaderResponse();
 				}
 			};
 		}
 
+		// add or replace the container to page
+		
 		if (component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID) != null)
 		{
 			component.getPage().replace(header);
@@ -780,10 +887,13 @@ public class AjaxRequestTarget implements IRequestTarget
 			component.getPage().add(header);
 		}
 
+		// save old response, set new 
 		Response oldResponse = RequestCycle.get().setResponse(encodingHeaderResponse);
 
 		encodingHeaderResponse.reset();
 
+		// render the head of component and all it's children
+		
 		component.renderHead(header);
 
 		if (component instanceof MarkupContainer)
@@ -805,6 +915,8 @@ public class AjaxRequestTarget implements IRequestTarget
 			});
 		}
 
+		// revert to old response
+		
 		RequestCycle.get().setResponse(oldResponse);
 
 		if (encodingHeaderResponse.getContents().length() != 0)
@@ -829,6 +941,8 @@ public class AjaxRequestTarget implements IRequestTarget
 
 			response.write("</header-contribution>");
 		}
+
+		headerRendering = false;
 	}
 
 	/**

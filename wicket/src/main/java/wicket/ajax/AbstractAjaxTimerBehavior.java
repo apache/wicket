@@ -16,7 +16,6 @@
  */
 package wicket.ajax;
 
-import wicket.RequestCycle;
 import wicket.markup.html.IHeaderResponse;
 import wicket.util.time.Duration;
 
@@ -61,16 +60,9 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(response);
 
-
 		if (!stopped)
 		{
-			if (RequestCycle.get().getRequestTarget() instanceof AjaxRequestTarget) {
-				response.renderJavascript(getJsTimeoutCall(updateInterval), null);
-			}
-			else
-			{
-				response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
-			}
+			response.renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
 		}
 	}
 
@@ -93,6 +85,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);
+		
+		if (!stopped)
+		{
+			target.getHeaderResponse().renderOnLoadJavascript(getJsTimeoutCall(updateInterval));
+		}
 	}
 
 	/**
