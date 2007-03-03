@@ -29,6 +29,7 @@ import wicket.util.value.IValueMap;
  * @deprecated Use the {@link HeaderContributor#forCss(ResourceReference)} instead
  * @author Eelco Hillenius
  */
+@Deprecated
 public final class StyleSheetReference extends PackagedResourceReference
 {
 	private static final long serialVersionUID = 1L;

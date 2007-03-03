@@ -29,6 +29,7 @@ public class AbortException extends RuntimeException
 	/**
 	 * @see java.lang.Throwable#fillInStackTrace()
 	 */
+	@Override
 	public synchronized Throwable fillInStackTrace()
 	{
 		// we do not need a stack trace, so to speed things up just return null

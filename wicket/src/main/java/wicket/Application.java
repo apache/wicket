@@ -231,7 +231,7 @@ public abstract class Application
 		this.name = Classes.simpleName(getClass());
 
 		// Construct markup cache for this application
-		this.markupCache = new MarkupCache(this);
+		this.markupCache = new MarkupCache();
 
 		// Create shared resources repository
 		this.sharedResources = new SharedResources(this);
@@ -506,7 +506,9 @@ public abstract class Application
 		if (getRequestLoggerSettings().isRequestLoggerEnabled())
 		{
 			if (requestLogger == null)
+			{
 				requestLogger = newRequestLogger();
+			}
 		}
 		else
 		{

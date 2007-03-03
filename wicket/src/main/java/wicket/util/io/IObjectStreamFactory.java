@@ -58,6 +58,7 @@ public interface IObjectStreamFactory
 			final ObjectOutputStream oos = new ObjectOutputStream(out);
 			return new ObjectOutputStream()
 			{
+				@Override
 				protected void writeObjectOverride(final Object obj) throws IOException
 				{
 					try

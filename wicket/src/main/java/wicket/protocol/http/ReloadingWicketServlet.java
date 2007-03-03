@@ -54,6 +54,7 @@ public class ReloadingWicketServlet extends WicketServlet
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected WicketFilter newWicketFilter()
 	{
 		return new ReloadingWicketFilter();

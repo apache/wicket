@@ -40,6 +40,7 @@ public class PortletActionRequestCycleProcessor extends AbstractPortletRequestCy
 	/**
 	 * @see wicket.request.AbstractRequestCycleProcessor#respond(wicket.RequestCycle)
 	 */
+	@Override
 	public void respond(RequestCycle requestCycle)
 	{
 		PortletRequestCodingStrategy strategy = (PortletRequestCodingStrategy)requestCycle

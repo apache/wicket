@@ -473,9 +473,6 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
-	/** empty object[] array used for invoking listener methods */
-	private static final Object[] LISTENER_ARGS = new Object[] {};
-
 	/** meta data key for missing body tags logging. */
 	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>()
 	{
@@ -510,9 +507,6 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 
 	/** Flag for escaping HTML in model strings */
 	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Flag for Component holding root compound model */
-	private static final int NOT_USED_ANYMORE_FREE = 0x0004;
 
 	/** Ignore attribute modifiers */
 	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;

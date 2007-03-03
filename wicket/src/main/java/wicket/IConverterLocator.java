@@ -16,8 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-
 import wicket.util.convert.ConverterLocator;
 import wicket.util.convert.IConverter;
 

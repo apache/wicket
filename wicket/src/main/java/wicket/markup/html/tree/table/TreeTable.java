@@ -197,7 +197,9 @@ public class TreeTable extends DefaultAbstractTree
 	private boolean hasLeftColumn() {
 		for (int i = 0; i < columns.length; ++i) {
 			if (columns[i].getLocation().getAlignment().equals(Alignment.LEFT))
+			{
 				return true;
+			}
 		}
 		return false;
 	}

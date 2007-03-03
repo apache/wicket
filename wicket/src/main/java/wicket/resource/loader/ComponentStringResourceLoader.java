@@ -240,7 +240,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		// Walk the component hierarchy down from page to the component
 		for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
 		{
-			Class clazz = (Class)searchStack.get(i);
+			Class clazz = searchStack.get(i);
 
 			// First check if a property with the 'key' provided by the
 			// user is available.

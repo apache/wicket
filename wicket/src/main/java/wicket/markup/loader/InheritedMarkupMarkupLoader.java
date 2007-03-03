@@ -55,18 +55,13 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 	/** onunload attribute; according to XHTML all attrs are lowercase */
 	private static final String ONUNLOAD = "onunload";
 
-	/** The Wicket application */
-	private final Application application;
-
 	/**
 	 * Constructor.
 	 * 
-	 * @param application
 	 * @param cache
 	 */
-	public InheritedMarkupMarkupLoader(final Application application)
+	public InheritedMarkupMarkupLoader()
 	{
-		this.application = application;
 	}
 
 	/**
@@ -126,11 +121,13 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 	private MarkupFragment getBaseMarkup(final MarkupContainer container,
 			final MarkupFragment markup)
 	{
+		final Application application = Application.get();
+
 		// Get the super class to than retrieve the markup associated with it
 		final Class<? extends MarkupContainer> markupClass = (Class<? extends MarkupContainer>)markup
 				.getMarkup().getResource().getMarkupClass().getSuperclass();
 
-		final MarkupFragment baseMarkup = this.application.getMarkupCache().getMarkup(container,
+		final MarkupFragment baseMarkup = application.getMarkupCache().getMarkup(container,
 				markupClass);
 		if (baseMarkup == MarkupFragment.NO_MARKUP_FRAGMENT)
 		{
@@ -144,7 +141,7 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 		// Register an after-load listener for base markup. The listener
 		// implementation will remove the derived markup from the cache as
 		// reloading the base markup invalidates the derived markup as well
-		this.application.getMarkupCache().addAfterLoadListener(
+		application.getMarkupCache().addAfterLoadListener(
 				baseMarkup.getMarkup().getResource(), new IChangeListener()
 				{
 					public void onChange()

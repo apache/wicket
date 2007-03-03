@@ -66,7 +66,9 @@ public class ReloadingClassLoader extends URLClassLoader
             {
             	String rawpattern = (String) includesIterator.next();
             	if (rawpattern.length()<=1)
-            		continue;
+				{
+					continue;
+				}
             	boolean isInclude = rawpattern.substring(0, 1).equals("+");
             	String pattern = rawpattern.substring(1);
                 if (WildcardMatcherHelper.match(pattern, name) != null) {
@@ -202,6 +204,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 *
 	 * @param name of resource
 	 */
+	@Override
 	public final URL getResource(final String name)
 	{
 		URL resource = findResource(name);
@@ -227,6 +230,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @return    the resulting <code>Class</code> object
 	 * @exception ClassNotFoundException if the class could not be found
 	 */
+	@Override
 	public final Class loadClass(String name, boolean resolve) throws ClassNotFoundException
 	{
 		// First check if it's already loaded

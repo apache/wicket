@@ -153,6 +153,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	/**
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
 	 */
+	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
 	}

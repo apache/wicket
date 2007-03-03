@@ -16,8 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-
 /**
  * Base interface for all interfaces that listen for requests from the client
  * browser. All sub-interfaces of this interface must have a single method which

@@ -68,6 +68,7 @@ public class ReloadingWicketFilter extends WicketFilter
 	/**
 	 * @see wicket.protocol.http.WicketFilter#getClassLoader()
 	 */
+	@Override
 	protected ClassLoader getClassLoader()
 	{
 		return reloadingClassLoader;
@@ -76,6 +77,7 @@ public class ReloadingWicketFilter extends WicketFilter
 	/**
 	 * @see wicket.protocol.http.WicketFilter#init(javax.servlet.FilterConfig)
 	 */
+	@Override
 	public void init(final FilterConfig filterConfig) throws ServletException
 	{
 		reloadingClassLoader.setListener(new IChangeListener()

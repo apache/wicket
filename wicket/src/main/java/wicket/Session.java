@@ -740,7 +740,9 @@ public abstract class Session implements IClusterable, IConverterLocator
 	{
 		PageMapAccessMetaData pagemapMetaData = getMetaData(PAGEMAP_ACCESS_MDK);
 		if (pagemapMetaData != null)
+		{
 			pagemapMetaData.pageMapNames.remove(pageMap.getName());
+		}
 		usedPageMaps.remove(pageMap);
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 		dirty();

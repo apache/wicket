@@ -47,15 +47,6 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 
 	private static final long serialVersionUID = 1L;
 
-	/** True if body onLoad attribute modifiers have been attached */
-	private boolean checkedBody = false;
-
-	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
-	private boolean noMoreWicketHeadTagsAllowed = false;
-
-	/** True, if headers have been added */
-	private transient boolean headersInitialized;
-
 	/**
 	 * @see Component#Component(MarkupContainer,String)
 	 */

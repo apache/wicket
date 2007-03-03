@@ -18,7 +18,6 @@ package wicket.markup.loader;
 
 import java.io.IOException;
 
-import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupFragment;
@@ -34,17 +33,11 @@ import wicket.util.resource.ResourceStreamNotFoundException;
  */
 public class HeaderCleanupMarkupLoader extends AbstractMarkupLoader
 {
-	/** The Wicket application */
-	private final Application application;
-
 	/**
 	 * Constructor.
-	 * 
-	 * @param application
 	 */
-	public HeaderCleanupMarkupLoader(final Application application)
+	public HeaderCleanupMarkupLoader()
 	{
-		this.application = application;
 	}
 
 	/**

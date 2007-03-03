@@ -253,6 +253,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @see wicket.Request#mergeVersion()
 	 */
+	@Override
 	public boolean mergeVersion()
 	{
 		RequestListenerInterface intface = getRequestParameters().getInterface();

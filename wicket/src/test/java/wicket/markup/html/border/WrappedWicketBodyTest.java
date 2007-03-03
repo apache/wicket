@@ -200,6 +200,7 @@ public class WrappedWicketBodyTest extends WicketTestCase
 		 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class,
 		 *      java.lang.String)
 		 */
+		@Override
 		public MarkupContainer getAlternateParent(Class childClass, String childId)
 		{
 			return (getBodyContainer() != null && !"borderLabel".equals(childId) 

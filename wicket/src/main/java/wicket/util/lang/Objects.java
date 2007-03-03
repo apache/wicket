@@ -1382,11 +1382,6 @@ public final class Objects
 		return fieldList;
 	}
 
-	private static void logSerializationException(final Object object, Exception e)
-	{
-		log.error("Error serializing object " + object.getClass() + " [object=" + object + "]", e);
-	}
-
 	private static MiniMap<Field, Object> mapObject(final Object object, List<Object> addedObjects)
 	{
 		addedObjects.add(object);
@@ -1400,7 +1395,9 @@ public final class Objects
 				Object value = field.get(object);
 				Object analyzed = analyzeObject(value, addedObjects);
 				if (recursive == analyzed)
+				{
 					continue;
+				}
 				if (!Modifier.isFinal(field.getModifiers())
 						|| analyzed instanceof ArrayInstanceHolder
 						|| analyzed instanceof ObjectInstanceHashmapHolder)

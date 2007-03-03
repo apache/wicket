@@ -695,11 +695,11 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			// item
 			for (int i = parent.getChildren().size() - 2; i >= 0; --i)
 			{
-				TreeItem item = (TreeItem)parent.getChildren().get(i);
+				TreeItem item = parent.getChildren().get(i);
 
 				// invalidate the node and it's children, so that they are
 				// redrawn
-				invalidateNodeWithChildren((TreeNode)item.getModelObject());
+				invalidateNodeWithChildren(item.getModelObject());
 			}
 		}
 	}
@@ -846,11 +846,11 @@ public abstract class AbstractTree extends Panel<TreeModel>
 					}
 					else
 					{
-						previous = (TreeItem)parent.getChildren().get(index - 1);
+						previous = parent.getChildren().get(index - 1);
 						// get the last item of previous item subtree
 						while (previous.getChildren() != null && previous.getChildren().size() > 0)
 						{
-							previous = (TreeItem)previous.getChildren().get(
+							previous = previous.getChildren().get(
 									previous.getChildren().size() - 1);
 						}
 					}
@@ -1171,7 +1171,9 @@ public abstract class AbstractTree extends Panel<TreeModel>
 
 				dirtyItems.add(item);
 				if (createDOM)
+				{
 					dirtyItemsCreateDOM.add(item);
+				}
 			}
 		}
 	}
@@ -1380,6 +1382,6 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	 */
 	public Component getNodeComponent(TreeNode node)
 	{
-		return (Component)nodeToItemMap.get(node);
+		return nodeToItemMap.get(node);
 	}
 }

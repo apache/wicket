@@ -70,7 +70,9 @@ public final class FeedbackMessages implements IClusterable
 	public FeedbackMessages(List<FeedbackMessage> messagesList)
 	{
 		if (messagesList == null)
+		{
 			throw new IllegalArgumentException("messages list can't be null");
+		}
 		messages = messagesList;
 	}
 
@@ -99,7 +101,7 @@ public final class FeedbackMessages implements IClusterable
 	{
 		for(int i = messages.size() - 1; i >= 0; i--)
 		{
-			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
+			final FeedbackMessage msg = messages.get(i);
 			if (msg.isRendered())
 			{
 				messages.remove(i);

@@ -64,7 +64,9 @@ public abstract class DynamicWebResource extends WebResource
 		public Time lastModifiedTime()
 		{
 			if (lastModifiedTime == null)
+			{
 				lastModifiedTime = Time.now();
+			}
 			return lastModifiedTime;
 		}
 
@@ -133,6 +135,7 @@ public abstract class DynamicWebResource extends WebResource
 	/**
 	 * @see wicket.markup.html.WebResource#setHeaders(wicket.protocol.http.WebResponse)
 	 */
+	@Override
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
@@ -155,6 +158,7 @@ public abstract class DynamicWebResource extends WebResource
 	 * @return Gets the resource to attach to the component.
 	 */
 	// this method is deliberately non-final. some users depend on it
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

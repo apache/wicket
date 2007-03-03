@@ -16,8 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-
 import wicket.session.pagemap.IPageMapEntry;
 
 /**

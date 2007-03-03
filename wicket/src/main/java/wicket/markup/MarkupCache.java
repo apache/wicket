@@ -55,17 +55,11 @@ public class MarkupCache
 	 */
 	private final Watcher afterLoadListeners = new Watcher();
 
-	/** The Wicket application */
-	private final Application application;
-
 	/**
 	 * Constructor.
-	 * 
-	 * @param application
 	 */
-	public MarkupCache(final Application application)
+	public MarkupCache()
 	{
-		this.application = application;
 	}
 
 	/**
@@ -350,7 +344,7 @@ public class MarkupCache
 		if (markupResourceStream.getCacheKey() != null)
 		{
 			// Watch file in the future
-			final ModificationWatcher watcher = application.getResourceSettings()
+			final ModificationWatcher watcher = Application.get().getResourceSettings()
 					.getResourceWatcher(true);
 			if (watcher != null)
 			{

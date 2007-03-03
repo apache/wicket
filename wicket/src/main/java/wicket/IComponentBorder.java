@@ -16,8 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-
 /**
  * @author jcompagner
  */

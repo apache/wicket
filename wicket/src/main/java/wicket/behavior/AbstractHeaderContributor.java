@@ -47,6 +47,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	/**
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 	 */
+	@Override
 	public final void renderHead(final IHeaderResponse response)
 	{
 		IHeaderContributor[] contributors = getHeaderContributors();

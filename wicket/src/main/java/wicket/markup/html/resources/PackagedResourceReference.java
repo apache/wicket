@@ -30,6 +30,7 @@ import wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
+@Deprecated
 public class PackagedResourceReference extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;

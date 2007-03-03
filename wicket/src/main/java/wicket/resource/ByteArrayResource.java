@@ -130,6 +130,7 @@ public class ByteArrayResource extends WebResource
 	/**
 	 * @see wicket.markup.html.WebResource#setHeaders(wicket.protocol.http.WebResponse)
 	 */
+	@Override
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
@@ -142,6 +143,7 @@ public class ByteArrayResource extends WebResource
 	/**
 	 * @see wicket.Resource#getResourceStream()
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

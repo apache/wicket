@@ -115,6 +115,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 * @see wicket.request.IRequestCycleProcessor#respond(java.lang.RuntimeException,
 	 *      wicket.RequestCycle)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void respond(RuntimeException e, RequestCycle requestCycle)
 	{
@@ -179,6 +180,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	/**
 	 * @see wicket.request.AbstractRequestCycleProcessor#newRequestCodingStrategy()
 	 */
+	@Override
 	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
 		return new PortletRequestCodingStrategy();
@@ -200,6 +202,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 *            The exception
 	 * @return Any error page to redirect to
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected Page onRuntimeException(final Page page, final RuntimeException e)
 	{
@@ -215,6 +218,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
@@ -255,6 +259,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 *            the request parameters object
 	 * @return the home page as a request target
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
@@ -299,6 +304,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 * @param requestParameters
 	 * @return The RequestTarget that was resolved
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
 			final Page page, final String componentPath, final String interfaceName,
@@ -361,6 +367,7 @@ public abstract class AbstractPortletRequestCycleProcessor extends AbstractReque
 	 *            the request parameters object
 	 * @return the previously rendered page as a request target
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)

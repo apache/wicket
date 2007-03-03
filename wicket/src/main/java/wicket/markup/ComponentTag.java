@@ -70,7 +70,7 @@ public class ComponentTag extends MarkupElement
 	/** True if a href attribute is available and autolinking is on */
 	private boolean autolink = false;
 
-	/** The component's id identified by wicket:id="xxx" */
+	/** The component's id, usually the same as wicket:id="xxx" */
 	private String id;
 
 	/** True, if attributes have been modified or added */
@@ -81,7 +81,6 @@ public class ComponentTag extends MarkupElement
 	 * and the information about the tags origin is lost. In some cases like
 	 * wicket:head and wicket:link this information however is required.
 	 */
-	// TODO remove when no longer needed
 	private Class markupClass;
 
 	/**
@@ -90,18 +89,16 @@ public class ComponentTag extends MarkupElement
 	 */
 	private boolean hasNoCloseTag = false;
 
-	/** True if a Wicket tag such as <wicket:panel> * */
+	/** True if a Wicket tag such as <wicket:panel> */
 	private boolean wicketTag = false;
 
 	/**
-	 * True if the tag has not wicket namespace and no wicket:id. E.g. <head> or
+	 * True if the tag has no wicket namespace and no wicket:id. E.g. <head> or
 	 * <body>
 	 */
 	private boolean internalTag = false;
 
-	/**
-	 * added behaviors
-	 */
+	/** added behaviors */
 	private Collection<IBehavior> behaviors;
 
 	/**

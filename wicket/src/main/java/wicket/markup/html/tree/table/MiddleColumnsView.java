@@ -218,9 +218,13 @@ final class MiddleColumnsView extends WebMarkupContainer
 			
 			// determine whether we should render the left border
 			if (!treeHasLeftColumn && i == 0)
+			{
 				response.write("<span class=\"d_\">");
+			}
 			else
+			{
 				response.write("<span class=\"c_\">");
+			}
 
 
 			if (component != null) // is there a component for current column?

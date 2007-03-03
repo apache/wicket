@@ -59,6 +59,7 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 	/**
 	 * @see wicket.protocol.http.WebRequestCycleProcessor#newRequestCodingStrategy()
 	 */
+	@Override
 	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
 		return new UrlCompressingWebCodingStrategy();

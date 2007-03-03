@@ -352,6 +352,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 *             {@link WebApplication#newSession(Request)}.
 	 */
 	// FIXME remove this method after 2.0.0
+	@Deprecated
 	public final Session newSession()
 	{
 		throw new UnsupportedOperationException("this method is replaced by Application#newSession");

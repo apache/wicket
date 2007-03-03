@@ -255,6 +255,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	/**
 	 * Common code executed by constructors.
 	 */
+	@Override
 	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
 		// Create a body container, assuming that all HTML pages require a
@@ -338,9 +339,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		/** The unload model for deleting the pagemap cookie */
-		private Model onUnLoadModel;
-
 		private final WebPage webPage;
 
 		/**
@@ -356,6 +354,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
+		@Override
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
 			Response response = headResponse.getResponse();
@@ -375,7 +374,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 
 			Session session = Session.get();
 
-			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session
+			Session.PageMapAccessMetaData meta = session
 					.getMetaData(Session.PAGEMAP_ACCESS_MDK);
 			if (meta == null)
 			{

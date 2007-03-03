@@ -50,6 +50,7 @@ public class PortletRenderRequestCycleProcessor extends AbstractPortletRequestCy
 	/**
 	 * Process only PortletMode and WindowState changes in the RenderRequests
 	 */
+	@Override
 	public void processEvents(final RequestCycle requestCycle)
 	{
 		PortletPage<?> page = (PortletPage<?>)requestCycle.getRequest().getPage();
@@ -64,6 +65,7 @@ public class PortletRenderRequestCycleProcessor extends AbstractPortletRequestCy
 	/**
 	 * @see wicket.request.AbstractRequestCycleProcessor#respond(wicket.RequestCycle)
 	 */
+	@Override
 	public void respond(RequestCycle requestCycle)
 	{
 		IRequestTarget requestTarget = requestCycle.getRequestTarget();

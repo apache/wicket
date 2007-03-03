@@ -148,24 +148,6 @@ public class ModelToStringTest extends WicketTestCase
 		assertEquals(expected, pojoProperty.toString());
 	}
 
-	/**
-	 * Test stub for testing AbstractReadOnlyModel.toString()
-	 */
-	private static class MyAbstractReadOnlyModel extends AbstractReadOnlyModel
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * @see AbstractReadOnlyModel#getObject()
-		 */
-		@Override
-		public Object getObject()
-		{
-			return "FOO";
-		}
-	}
-
-
 	private static final class MyLoadableDetachableModel extends LoadableDetachableModel
 	{
 		private static final long serialVersionUID = 1L;

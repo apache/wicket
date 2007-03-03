@@ -53,8 +53,6 @@ public class AttributeModifierComponentPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			private transient String text = null;
-
 			@Override
 			protected String load()
 			{

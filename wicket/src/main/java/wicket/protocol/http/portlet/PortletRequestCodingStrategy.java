@@ -585,23 +585,6 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 	}
 
 
-	/**
-	 * @param requestCycle
-	 * @return the PortletURL instance for portlet render URL
-	 */
-	private PortletURL getRenderURL(RequestCycle requestCycle)
-	{
-		PortletRequestCycle portletRequestCycle = (PortletRequestCycle)requestCycle;
-		PortletResponse response = portletRequestCycle.getPortletResponse().getPortletResponse();
-		if (!(response instanceof RenderResponse))
-		{
-			throw new WicketRuntimeException("Unable to render URL while not in RenderResponse");
-		}
-
-		RenderResponse resp = (RenderResponse)response;
-		return resp.createRenderURL();
-	}
-
 	private ActionResponse getActionResponse(RequestCycle requestCycle)
 	{
 		PortletRequestCycle portletRequestCycle = (PortletRequestCycle)requestCycle;

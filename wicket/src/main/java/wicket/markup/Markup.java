@@ -46,9 +46,6 @@ public class Markup implements IMarkup
 	/** Wicket namespace: <html xmlns:wicket="http://wicket.sourceforge.net"> */
 	private String wicketNamespace;
 
-	/** == wicketNamespace + ":id" */
-	private String wicketId;
-
 	/**
 	 * Constructor
 	 */
@@ -111,8 +108,6 @@ public class Markup implements IMarkup
 	public final void setWicketNamespace(final String wicketNamespace)
 	{
 		this.wicketNamespace = wicketNamespace;
-		this.wicketId = wicketNamespace + ":id";
-
 		if (!ComponentTag.DEFAULT_WICKET_NAMESPACE.equals(wicketNamespace))
 		{
 			log.info("You are using a non-standard component name: " + wicketNamespace);

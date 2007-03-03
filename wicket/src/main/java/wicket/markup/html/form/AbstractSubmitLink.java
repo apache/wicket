@@ -151,9 +151,13 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 	public Form getForm()
 	{
 		if (form != null)
+		{
 			return form;
+		}
 		else
+		{
 			return findParent(Form.class);
+		}
 	}
 
 	/**

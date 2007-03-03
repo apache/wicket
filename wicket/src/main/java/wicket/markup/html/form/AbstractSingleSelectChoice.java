@@ -34,9 +34,6 @@ import wicket.util.string.AppendingStringBuffer;
  */
 abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 {
-	/** String to display when the selected value is null and nullValid is false. */
-	private static final String CHOOSE_ONE = "Choose One";
-
 	private static final String NO_SELECTION_VALUE = "-1";
 
 	private static final String EMPTY_STRING = "";

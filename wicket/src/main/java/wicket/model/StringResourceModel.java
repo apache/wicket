@@ -384,7 +384,9 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		// of the get operation
 		String s = localizer.getString(getResourceKey(), component, model);
 		if (s == null)
+		{
 			s = defaultValue;
+		}
 
 		if (s != null)
 		{

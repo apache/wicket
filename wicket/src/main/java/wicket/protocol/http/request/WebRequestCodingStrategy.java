@@ -68,9 +68,6 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	/** cached url prefix. */
 	private CharSequence urlPrefix;
 
-	/** settings for the coding strategy */
-	private final Settings settings;
-
 	/**
 	 * Various settings used to configure this strategy
 	 * 
@@ -120,7 +117,6 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	 */
 	public WebRequestCodingStrategy(Settings settings)
 	{
-		this.settings = settings;
 		mountsOnPath = new MountsMap(settings.areMountsCaseSensitive());
 	}
 
@@ -153,7 +149,9 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 				// special check if the prefix ends on '/' because a mount always
 				// starts with '/'
 				if (prefix.charAt(prefix.length() - 1) == '/')
+				{
 					prefix = prefix.subSequence(0, prefix.length() - 1);
+				}
 			}
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
 					+ path.length());

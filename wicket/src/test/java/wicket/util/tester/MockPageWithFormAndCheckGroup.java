@@ -55,6 +55,7 @@ public class MockPageWithFormAndCheckGroup extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
 			}

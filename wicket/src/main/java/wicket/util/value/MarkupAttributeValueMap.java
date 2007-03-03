@@ -151,6 +151,7 @@ public final class MarkupAttributeValueMap implements IValueMap, Serializable
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object o)
 	{
 		return baseMap.equals(o);
@@ -301,6 +302,7 @@ public final class MarkupAttributeValueMap implements IValueMap, Serializable
 		return baseMap.getTime(key);
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return baseMap.hashCode();

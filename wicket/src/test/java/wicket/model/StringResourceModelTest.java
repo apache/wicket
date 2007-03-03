@@ -212,8 +212,6 @@ public class StringResourceModelTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			private transient WeatherStation station;
-
 			@Override
 			protected WeatherStation load()
 			{

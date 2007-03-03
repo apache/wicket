@@ -371,7 +371,9 @@ public class FormTester
 					if (Strings.isEmpty(formComponent.getValue()))
 					{
 						if (fillBlankString)
+						{
 							setFormComponentValue(formComponent, "");
+						}
 					}
 					else
 					{
@@ -402,7 +404,9 @@ public class FormTester
 	{
 		Component c = getForm().get(id);
 		if (c instanceof AbstractTextComponent)
+		{
 			return ((AbstractTextComponent)c).getValue();
+		}
 		return null;
 	}
 

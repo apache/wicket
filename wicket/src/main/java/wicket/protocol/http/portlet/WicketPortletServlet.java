@@ -38,6 +38,7 @@ import wicket.protocol.http.WicketServlet;
  * @deprecated use WicketPortletFilter instead
  * @author Janne Hietam&auml;ki
  */
+@Deprecated
 @SuppressWarnings("deprecation")
 public class WicketPortletServlet extends WicketServlet
 {

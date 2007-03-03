@@ -35,6 +35,7 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		super(ignoreFiles);
 	}
 	
+	@Override
 	public boolean addLicenseHeader(File file)
 	{
 		boolean added = false;

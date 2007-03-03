@@ -104,9 +104,6 @@ public final class AutoLinkResolver implements IComponentResolver
 				Class clazz = markupStream.getContainerClass();
 
 				ComponentTag tag = markupStream.getTag();
-				// However if the markup stream is a merged markup stream
-				// (inheritance), than we need the class of the markup file
-				// which contained the tag.
 				if (tag.getMarkupClass() != null)
 				{
 					clazz = tag.getMarkupClass();

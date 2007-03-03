@@ -118,9 +118,6 @@ public class MockWebApplication
 	/** Request cycle factory. */
 	private IRequestCycleFactory requestCycleFactory;
 
-	/** The homepage */
-	private Class<? extends Page> homePage;
-
 	/** The tester object */
 	private final WebApplication application;
 

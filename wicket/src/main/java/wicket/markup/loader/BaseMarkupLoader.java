@@ -20,10 +20,10 @@ import java.io.IOException;
 
 import wicket.Application;
 import wicket.MarkupContainer;
+import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupParser;
 import wicket.markup.MarkupResourceStream;
-import wicket.settings.IMarkupSettings;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
@@ -49,16 +49,9 @@ public class BaseMarkupLoader implements IMarkupLoader
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException
 	{
-		// Create a Markup parser
-		final IMarkupSettings settings = Application.get().getMarkupSettings();
-		final MarkupParser parser = settings.getMarkupParserFactory().newMarkupParser(markupResourceStream);
-		
-		parser.setCompressWhitespace(settings.getCompressWhitespace());
-		parser.setStripComments(settings.getStripComments());
-		parser.setDefaultMarkupEncoding(settings.getDefaultMarkupEncoding());
-
-		// read and parse the markup
-		MarkupFragment markup = parser.readAndParse();
-		return markup;
+		final IMarkupParserFactory fac = Application.get().getMarkupSettings()
+				.getMarkupParserFactory();
+		final MarkupParser parser = fac.newMarkupParser(markupResourceStream);
+		return parser.readAndParse();
 	}
 }

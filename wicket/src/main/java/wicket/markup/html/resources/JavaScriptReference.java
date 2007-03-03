@@ -29,6 +29,7 @@ import wicket.util.value.IValueMap;
  * @deprecated Use the {@link HeaderContributor#forJavaScript(ResourceReference)} instead
  * @author Eelco Hillenius
  */
+@Deprecated
 public class JavaScriptReference extends PackagedResourceReference
 {
 	private static final long serialVersionUID = 1L;

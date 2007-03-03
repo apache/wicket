@@ -976,6 +976,7 @@ public class ClientProperties implements IClusterable
 		this.utcOffset = utcOffset;
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer();

@@ -180,7 +180,9 @@ public class RequestLogger implements IRequestLogger
 	{
 		liveSessions.put(sessionId, new SessionData(sessionId));
 		if (liveSessions.size() > peakSessions)
+		{
 			peakSessions = liveSessions.size();
+		}
 		totalCreatedSessions++;
 	}
 

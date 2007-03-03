@@ -1240,6 +1240,7 @@ public class WicketTester extends MockWebApplication
 
 		form.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
+			@Override
 			public void onFormComponent(FormComponent formComponent)
 			{
 				if (!(formComponent instanceof Button) && !(formComponent instanceof RadioGroup)

@@ -106,6 +106,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
@@ -148,6 +149,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	@SuppressWarnings("unchecked")
 	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
 	{

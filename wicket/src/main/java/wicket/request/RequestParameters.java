@@ -67,9 +67,6 @@ public class RequestParameters implements IClusterable
 	/** any bookmarkable page class. */
 	private String bookmarkablePageClass;
 
-	/** bookmarkable form name */
-	private String bookmarkableFormName;
-
 	/** free-to-use map of non-reserved parameters. */
 	private Map<String, ? extends Object> parameters;
 

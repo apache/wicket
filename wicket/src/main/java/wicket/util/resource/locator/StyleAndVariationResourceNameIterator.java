@@ -56,9 +56,6 @@ public class StyleAndVariationResourceNameIterator implements Iterator<String>
 	/** Internal state */
 	private int state = 0;
 
-	/** Internal: used to compare with previous path to avoid duplicates */
-	private String currentPath;
-
 	/**
 	 * Construct.
 	 * 

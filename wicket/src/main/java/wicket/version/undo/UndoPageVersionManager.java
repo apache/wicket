@@ -128,7 +128,7 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 		{
 			if (changeListStack.size() > 0)
 			{
-				ChangeList previous = (ChangeList)changeListStack.peek();
+				ChangeList previous = changeListStack.peek();
 				previous.add(changeList);
 			}
 			else

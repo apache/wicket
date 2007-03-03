@@ -149,7 +149,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	private void onError(AjaxRequestTarget target, RuntimeException e)
 	{
-		if (e != null) throw e;
+		if (e != null)
+		{
+			throw e;
+		}
 	}
 
 	/**

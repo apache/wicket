@@ -336,14 +336,12 @@ public class MarkupParserPerformanceTest
 
 		int i = 0;
 		int failures = 0;
-		File markupFile = null;
 		MarkupCache cache = this.application.getMarkupCache();
 		DummyPage page = new DummyPage();
 		DummyContainer container = new DummyContainer(page);
 
 		for (final File file : this.files)
 		{
-			markupFile = file;
 			container.setMarkupFile(file);
 
 			try

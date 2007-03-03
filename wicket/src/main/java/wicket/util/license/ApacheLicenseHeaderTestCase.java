@@ -49,11 +49,6 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		private String[] suffixes;
 		private String[] ignoreFiles;
 
-		private SuffixAndIgnoreFileFilter(String[] suffixes)
-		{
-			this(suffixes, null);
-		}
-
 		private SuffixAndIgnoreFileFilter(String[] suffixes, String[] ignoreFiles)
 		{
 			this.suffixes = suffixes;

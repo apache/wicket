@@ -25,6 +25,7 @@ import java.util.Map;
  * 
  * @deprecated since 2.0 use ValueMap instead
  */
+@Deprecated
 public final class AttributeMap extends ValueMap
 {
 	private static final long serialVersionUID = 1L;

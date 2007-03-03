@@ -18,7 +18,6 @@ package wicket.markup.loader;
 
 import java.io.IOException;
 
-import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupResourceStream;
@@ -49,10 +48,8 @@ public class DefaultMarkupLoader extends AbstractMarkupLoader
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException
 	{
-		final Application application = Application.get();
-
-		IMarkupLoader loader = new InheritedMarkupMarkupLoader(application)
-				.setParent(new HeaderCleanupMarkupLoader(application)
+		IMarkupLoader loader = new InheritedMarkupMarkupLoader()
+				.setParent(new HeaderCleanupMarkupLoader()
 						.setParent(new BaseMarkupLoader()));
 
 		return loader.loadMarkup(container, markupResourceStream);

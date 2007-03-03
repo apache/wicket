@@ -33,8 +33,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	/** The update interval */
 	private final Duration updateInterval;
 
-	private boolean attachedBodyOnLoadModifier = false;
-
 	private boolean stopped = false;
 
 	/**

@@ -16,8 +16,6 @@
  */
 package wicket;
 
-import java.io.Serializable;
-
 /**
  * Factory for creating request cycles for a session.
  * 

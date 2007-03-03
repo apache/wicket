@@ -83,22 +83,27 @@ public final class SerializableChecker extends ObjectOutputStream
 	 */
 	private static class NoopOutputStream extends OutputStream
 	{
+		@Override
 		public void close()
 		{
 		}
 
+		@Override
 		public void flush()
 		{
 		}
 
+		@Override
 		public void write(byte[] b)
 		{
 		}
 
+		@Override
 		public void write(byte[] b, int i, int l)
 		{
 		}
 
+		@Override
 		public void write(int b)
 		{
 		}
@@ -186,6 +191,7 @@ public final class SerializableChecker extends ObjectOutputStream
 			this.fieldDescription = fieldDescription;
 		}
 
+		@Override
 		public String toString()
 		{
 			return object.getClass() + " - " + fieldDescription;
@@ -308,6 +314,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#reset()
 	 */
+	@Override
 	public void reset() throws IOException
 	{
 		root = null;
@@ -448,6 +455,7 @@ public final class SerializableChecker extends ObjectOutputStream
 						enableReplaceObject(true);
 					}
 
+					@Override
 					protected Object replaceObject(Object streamObj) throws IOException
 					{
 						if (streamObj == obj)
@@ -643,6 +651,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	/**
 	 * @see java.io.ObjectOutputStream#writeObjectOverride(java.lang.Object)
 	 */
+	@Override
 	protected final void writeObjectOverride(Object obj) throws IOException
 	{
 		if (!available)

@@ -149,6 +149,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 	/**
 	 * @see wicket.request.AbstractRequestCycleProcessor#newRequestCodingStrategy()
 	 */
+	@Override
 	protected IRequestCodingStrategy newRequestCodingStrategy()
 	{
 		return new WebRequestCodingStrategy();

@@ -33,6 +33,7 @@ public class Person
 	/** */
 	public Address address2;
 
+	/** Should ot be removed by any kid of cleanup programme */
 	private Address privateAddress;
 	
 	private Country country;

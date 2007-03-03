@@ -16,9 +16,6 @@
  */
 package wicket.behavior;
 
-import static wicket.behavior.HeaderContributor.forCss;
-import static wicket.behavior.HeaderContributor.forJavaScript;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -253,6 +253,7 @@ public abstract class AbstractValidator<T> implements IValidator<T>
 	 * FIXME 2.0: remove asap
 	 * 
 	 */
+	@Deprecated
 	protected final String resourceKey(final FormComponent formComponent)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
@@ -279,6 +280,7 @@ public abstract class AbstractValidator<T> implements IValidator<T>
 	 * 
 	 * FIXME 2.0: remove asap
 	 */
+	@Deprecated
 	public final void validate(final FormComponent component)
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
