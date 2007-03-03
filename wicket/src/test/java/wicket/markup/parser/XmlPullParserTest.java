@@ -118,10 +118,6 @@ public class XmlPullParserTest extends TestCase
 		assertTrue(closeTag.isClose());
 		assertEquals("ns", closeTag.getNamespace());
 		assertEquals("tag", closeTag.getName());
-		
-		parser.parse("<filter-mapping>");
-		tag = (XmlTag)parser.nextTag();
-		assertEquals("filter-mapping", tag.getName());
 	}
 
 	/**
@@ -330,5 +326,24 @@ public class XmlPullParserTest extends TestCase
 		assertEquals("a", tag.getName());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
+	}
+
+	public final void testNames() throws Exception
+	{
+		final XmlPullParser parser = new XmlPullParser();
+		parser.parse("<filter-mapping>");
+		XmlTag tag = (XmlTag)parser.nextTag();
+		assertTrue(tag.isOpen());
+		assertEquals("filter-mapping", tag.getName());
+
+		parser.parse("<filter.mapping>");
+		tag = (XmlTag)parser.nextTag();
+		assertTrue(tag.isOpen());
+		assertEquals("filter.mapping", tag.getName());
+
+		parser.parse("<filter_mapping>");
+		tag = (XmlTag)parser.nextTag();
+		assertTrue(tag.isOpen());
+		assertEquals("filter_mapping", tag.getName());
 	}
 }
