@@ -19,6 +19,7 @@ package wicket.validation.validator;
 import java.util.HashMap;
 import java.util.Map;
 
+import wicket.IClusterable;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.lang.Classes;
 import wicket.validation.IValidatable;
@@ -45,7 +46,7 @@ import wicket.validation.ValidationError;
  * @author Igor Vaynberg (ivaynbeg)
  * 
  */
-public abstract class AbstractValidator<T> implements IValidator<T>
+public abstract class AbstractValidator<T> implements IValidator<T>, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
