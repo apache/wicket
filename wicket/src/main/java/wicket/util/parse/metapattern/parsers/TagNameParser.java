@@ -35,7 +35,7 @@ public final class TagNameParser extends MetaPatternParser
 	private static final Group namespaceGroup = new Group(MetaPattern.VARIABLE_NAME);
 
 	/** Tag names must comply with variable name guidelines */
-	private static final Group nameGroup = new Group(MetaPattern.VARIABLE_NAME);
+	private static final Group nameGroup = new Group(MetaPattern.XML_ELEMENT_NAME);
 
 	/** Pattern for tag names with optional namespace: (namespace:)?name */
 	private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
