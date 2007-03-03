@@ -65,7 +65,7 @@ public class MetaPattern implements IClusterable
 			+ _SINGLE_QUOTED_STRING + ")";
 	private static final String _OPTIONAL_STRING = _STRING + "?";
 	private static final String _VARIABLE_NAME = "[A-Za-z_][A-Za-z0-9_]*";
-	private static final String _XML_NAME = "[A-Za-z_][A-Za-z0-9_-]*";
+	private static final String _XML_NAME = "[A-Za-z_][A-Za-z0-9_.-]*";
 
 	// Delimiters and punctuation
 	/** Constant for whitespace. */
@@ -165,7 +165,8 @@ public class MetaPattern implements IClusterable
 	public static final MetaPattern INTEGER = new MetaPattern("-?\\d+");
 
 	/** Constant for a floating point number. */
-	public static final MetaPattern FLOATING_POINT_NUMBER = new MetaPattern("-?\\d+\\.?\\d*|-?\\.\\d+");
+	public static final MetaPattern FLOATING_POINT_NUMBER = new MetaPattern(
+			"-?\\d+\\.?\\d*|-?\\.\\d+");
 
 	/** Constant for a positive integer. */
 	public static final MetaPattern POSITIVE_INTEGER = new MetaPattern("\\d+");
@@ -191,10 +192,10 @@ public class MetaPattern implements IClusterable
 	/** Constant for a variable name. */
 	public static final MetaPattern VARIABLE_NAME = new MetaPattern(_VARIABLE_NAME);
 
-	/** Constant for a variable name. */
+	/** Constant for an XML element name. */
 	public static final MetaPattern XML_ELEMENT_NAME = new MetaPattern(_XML_NAME);
 
-	/** Constant for a xml attribute name. */
+	/** Constant for an XML attribute name. */
 	public static final MetaPattern XML_ATTRIBUTE_NAME = new MetaPattern(_XML_NAME);
 
 	/** Constant for perl interpolation. */
