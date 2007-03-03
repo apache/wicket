@@ -148,7 +148,7 @@ public class BookmarkablePageLink extends Link
 		if (pageMap != null)
 		{
 			this.pageMapName = pageMap.getName();
-			add(new AttributeModifier("target", false, new Model(pageMapName)));
+			add(new AttributeModifier("target", true, new Model(pageMapName)));
 		}
 		return this;
 	}
