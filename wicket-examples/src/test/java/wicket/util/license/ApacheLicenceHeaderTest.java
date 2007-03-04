@@ -56,7 +56,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 				 */
 				"src/main/java/wicket/examples/preview/behaviour.js",
 				/*
-				 * DOJO???? Needs testing if it's legal to include.
+				 * DOJO is dual licensed. We use the BSD license. See NOTICE.
 				 */
 				"src/main/java/wicket/examples/preview/dojo.js"
 		};
