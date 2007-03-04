@@ -683,15 +683,14 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 			}
 		}
 		// Bordered pages might implement the interface to allow to redirect
-		// to another parent without the need to change to code of adding a
+		// to another parent without the need to change the code of adding a
 		// component. Another use case is where you want the parent to
-		// automatically
-		// add a container in between the parent and new component.
+		// automatically add a container in between the parent and new component.
 		else if (parent instanceof IAlternateParentProvider)
 		{
 			while (parent instanceof IAlternateParentProvider)
 			{
-				MarkupContainer oldParent = parent;
+				MarkupContainer<?> oldParent = parent;
 				parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
 				if (parent == oldParent)
 				{

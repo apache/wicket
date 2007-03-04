@@ -782,8 +782,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	}
 
 	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
+	 * Gets the immuatable markup for this class.
 	 * 
 	 * @param throwException
 	 *            If true, throw an exception, if markup could not be found
@@ -801,8 +800,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			catch (MarkupException ex)
 			{
 				// re-throw it. The exception contains already all the
-				// information
-				// required.
+				// information required.
 				throw ex;
 			}
 			catch (WicketRuntimeException ex)
