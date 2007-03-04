@@ -27,7 +27,6 @@
                 <include>LICENSE*</include>
                 <include>NOTICE*</include>
                 <include>pom.xml</include>
-                <include>project.xml</include>
             </includes>
         </fileSet>
         <fileSet>
@@ -58,13 +57,6 @@
         <fileSet>
             <directory>src</directory>
             <outputDirectory>src</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>target/site</directory>
-            <outputDirectory>docs</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
