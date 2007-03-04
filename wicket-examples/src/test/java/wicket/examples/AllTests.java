@@ -20,7 +20,6 @@ package wicket.examples;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import nl.openedge.util.jetty.JettyDecorator;
 import wicket.examples.ajax.prototype.AjaxTest;
 import wicket.examples.compref.ComprefTest;
 import wicket.examples.encodings.EncodingTest;
@@ -37,6 +36,7 @@ import wicket.examples.panels.signin.CookieTest;
 import wicket.examples.repeater.RepeaterTest;
 import wicket.examples.signin2.Signin2Test;
 import wicket.examples.template.TemplateTest;
+import wicket.examples.test.jetty.JettyDecorator;
 
 import com.meterware.httpunit.HttpUnitOptions;
 

@@ -21,7 +21,6 @@ package wicket.examples;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.sourceforge.jwebunit.WebTestCase;
-import nl.openedge.util.jetty.JettyDecorator;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -29,6 +28,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import wicket.examples.test.jetty.JettyDecorator;
 
 import com.meterware.httpunit.HttpUnitOptions;
 

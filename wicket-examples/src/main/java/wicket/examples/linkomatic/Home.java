@@ -83,7 +83,7 @@ public class Home extends WicketExamplePage
 		new Label(this, "onClickLinkClickCount", new PropertyModel(this, "onClickLinkClickCount"));
 
 		// Link to Page1 is a simple external page link
-		new BookmarkablePageLink(this, "page1Link", Page1.class);
+		new BookmarkablePageLink(this, "page1Link", Page1.class).setPageMap(PageMap.forName("test"));
 
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
