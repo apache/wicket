@@ -19,7 +19,6 @@ package wicket.examples;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.sourceforge.jwebunit.junit.WebTestCase;
-import nl.openedge.util.jetty.JettyDecorator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +26,8 @@ import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
+
+import wicket.examples.test.jetty.JettyDecorator;
 
 import com.meterware.httpunit.HttpUnitOptions;
 

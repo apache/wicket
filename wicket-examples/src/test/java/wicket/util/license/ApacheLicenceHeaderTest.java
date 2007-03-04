@@ -78,10 +78,6 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 		
 		javaIgnore = new String[] {
 				/*
-				 * JettyHelper??? License ok???
-				 */
-				"src/test/java/nl/openedge/util/jetty",
-				/*
 				 * MIT style license. See NOTICE
 				 */
 				"src/test/java/com/meterware/httpunit/ParsedHTML.java"
