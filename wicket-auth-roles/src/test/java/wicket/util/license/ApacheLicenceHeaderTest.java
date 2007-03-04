@@ -32,15 +32,16 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 //		addHeaders = true;
 		
-		xmlIgnore = new String[] {
-				"src/assembly/bin.xml",
-				"src/assembly/build.xml"
-		};
-		
+		/*
+		 * License header in test files lower the visibility of the test.
+		 */
 		htmlIgnore = new String[] {
 				"src/test/java"
 		};
 		
+		/*
+		 * Low level configuration files for logging. No license needed.
+		 */
 		propertiesIgnore = new String[] {
 				"src/test/java"
 		};
