@@ -144,9 +144,12 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * @return The class loader
+	 */
 	protected ClassLoader getClassLoader()
 	{
-		return getClass().getClassLoader();
+		return Thread.currentThread().getContextClassLoader();
 	}
 	
 	/**
