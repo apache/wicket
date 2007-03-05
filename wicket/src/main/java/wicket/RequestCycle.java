@@ -208,7 +208,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return Request cycle for calling thread
 	 */
-	public final static RequestCycle get()
+	public static RequestCycle get()
 	{
 		return (RequestCycle)current.get();
 	}
