@@ -60,7 +60,7 @@ public final class XmlReader extends Reader
 	 * @param inputStream
 	 *            The InputStream to read the xml data from
 	 * @param defaultEncoding
-	 *            Apply 'null' for JVM default
+	 *            Default character encoding to use when not specified in XML declaration, specify null to use JVM default
 	 * @throws IOException
 	 *             In case something went wrong while reading the data
 	 */
@@ -84,7 +84,7 @@ public final class XmlReader extends Reader
 	/**
 	 * Return the encoding used while reading the markup file.
 	 * 
-	 * @return if null, than JVM default
+	 * @return if null, then JVM default
 	 */
 	public String getEncoding()
 	{
