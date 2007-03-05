@@ -501,10 +501,26 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	}
 
 	/**
-	 * Reads and parses markup from a resource such as file.
+	 * Reads and parses markup from an input stream, using UTF-8 encoding by
+	 * default when not specified in XML declaration.
+	 * 
+	 * @param in
+	 *            The input stream to read and parse
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void parse(final InputStream in) throws IOException,
+			ResourceStreamNotFoundException
+	{
+		// When XML declaration does not specify encoding, it defaults to UTF-8
+		parse(in, "UTF-8");
+	}
+
+	/**
+	 * Reads and parses markup from an input stream
 	 * 
 	 * @param inputStream
-	 *            The resource to read and parse
+	 *            The input stream to read and parse
 	 * @param encoding
 	 *            The default character encoding of the input
 	 * @throws IOException

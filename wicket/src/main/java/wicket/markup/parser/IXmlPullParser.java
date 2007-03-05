@@ -99,8 +99,23 @@ public interface IXmlPullParser extends IMarkupFilter
 	void parse(final CharSequence string) throws IOException, ResourceStreamNotFoundException;
 
 	/**
-	 * Reads and parses markup from a resource like file. Use nextTag() to
-	 * access the tags contained, one after another.
+	 * Reads and parses markup from an input stream, using UTF-8 encoding by
+	 * default when not specified in XML declaration. Use nextTag() to access
+	 * the tags contained, one after another.
+	 * 
+	 * @param inputStream
+	 *            The input stream to read and parse
+	 * @throws IOException
+	 *             Error while reading the resource
+	 * @throws ResourceStreamNotFoundException
+	 *             Resource not found
+	 */
+	public abstract void parse(final InputStream inputStream) throws IOException,
+			ResourceStreamNotFoundException;
+
+	/**
+	 * Reads and parses markup from an input stream. Use nextTag() to access the
+	 * tags contained, one after another.
 	 * 
 	 * @param inputStream
 	 *            A resource like e.g. a file
