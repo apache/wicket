@@ -67,6 +67,13 @@ public class StartExamples
 		try
 		{
 			server.start();
+			System.out.println(">>> PRESS ANY KEY TO SHUTDOWN THE SERVER");
+			while (System.in.available() == 0)
+			{
+				Thread.sleep(2000);
+			}
+			System.out.println(">>> SHUTTING DOWN SERVER");
+			server.stop();
 			server.join();
 		}
 		catch (Exception e)
