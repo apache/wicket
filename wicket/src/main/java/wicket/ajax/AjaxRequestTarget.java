@@ -142,7 +142,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private final class EncodingResponse extends Response
+	private final class EncodingResponse extends WebResponse
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 
@@ -157,7 +157,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		 */
 		public EncodingResponse(Response originalResponse)
 		{
+			super(((WebResponse)originalResponse).getHttpServletResponse());
 			this.originalResponse = originalResponse;
+			setAjax(true);
 		}
 
 		/**
@@ -439,8 +441,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
-		try
-		{
 			final Application app = Application.get();
 
 			// Determine encoding
@@ -461,6 +461,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
+			// invoke onbeforerespond event on listeners
 			fireOnBeforeRespondListeners();
 
 			// normal behavior
@@ -483,17 +484,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondInvocation(response, js);
 			}
 
-
 			response.write("</ajax-response>");
-		}
-		catch (RuntimeException ex)
-		{
-			// log the error but output nothing in the response, parse
-			// failure
-			// of response will cause any javascript failureHandler to be
-			// invoked
-			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
-		}
 	}
 
 	private void fireOnBeforeRespondListeners()
@@ -633,7 +624,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		return str.replaceAll("]", "]^");
 	}
 
-
 	/**
 	 * @return name of encoding used to possibly encode the contents of the
 	 *         CDATA blocks
@@ -700,6 +690,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		page.startComponentRender(component);
 		component.renderComponent();
 
+		// render any associated headers of the component
 		respondHeaderContribution(response, component);
 
 		page.endComponentRender(component);
