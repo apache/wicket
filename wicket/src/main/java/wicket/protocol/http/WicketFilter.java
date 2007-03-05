@@ -62,18 +62,18 @@ public class WicketFilter implements Filter
 	 */
 	public static final String FILTER_PATH_PARAM = "filterPath";
 
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(WicketFilter.class);
+
+	/** The URL path prefix expected for (so called) resources (not html pages). */
+	private static final String RESOURCES_PATH_PREFIX = "/resources/";
+
 	/**
 	 * The servlet path holder when the WicketSerlvet is used. So that the
 	 * filter path will be computed with the first request. Note: This variable
 	 * is by purpose package protected. See WicketServlet
 	 */
 	static final String SERVLET_PATH_HOLDER = "<servlet>";
-
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(WicketFilter.class);
-
-	/** The URL path prefix expected for (so called) resources (not html pages). */
-	private static final String RESOURCES_PATH_PREFIX = "/resources/";
 
 	/** See javax.servlet.FilterConfig */
 	private FilterConfig filterConfig;
@@ -145,14 +145,6 @@ public class WicketFilter implements Filter
 	}
 
 	/**
-	 * @return The class loader
-	 */
-	protected ClassLoader getClassLoader()
-	{
-		return Thread.currentThread().getContextClassLoader();
-	}
-	
-	/**
 	 * Handles servlet page requests.
 	 * 
 	 * @param servletRequest
@@ -172,19 +164,25 @@ public class WicketFilter implements Filter
 		{
 			Thread.currentThread().setContextClassLoader(getClassLoader());
 
-			// If the request does not provide information about the encoding of its
+			// If the request does not provide information about the encoding of
+			// its
 			// body (which includes POST parameters), than assume the default
-			// encoding as defined by the wicket application. Bear in mind that the
-			// encoding of the request usually is equal to the previous response.
+			// encoding as defined by the wicket application. Bear in mind that
+			// the
+			// encoding of the request usually is equal to the previous
+			// response.
 			// However it is a known bug of IE that it does not provide this
-			// information. Please see the wiki for more details and why all other
+			// information. Please see the wiki for more details and why all
+			// other
 			// browser deliberately copied that bug.
 			if (servletRequest.getCharacterEncoding() == null)
 			{
 				try
 				{
-					// The encoding defined by the wicket settings is used to encode
-					// the responses. Thus, it is reasonable to assume the request
+					// The encoding defined by the wicket settings is used to
+					// encode
+					// the responses. Thus, it is reasonable to assume the
+					// request
 					// has the same encoding. This is especially important for
 					// forms and form parameters.
 					servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
@@ -195,10 +193,10 @@ public class WicketFilter implements Filter
 					throw new WicketRuntimeException(ex.getMessage());
 				}
 			}
-	
+
 			// Create a new webrequest
 			final WebRequest request = webApplication.newWebRequest(servletRequest);
-	
+
 			// Are we using REDIRECT_TO_BUFFER?
 			if (webApplication.getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER)
 			{
@@ -212,7 +210,7 @@ public class WicketFilter implements Filter
 					{
 						BufferedHttpServletResponse bufferedResponse = webApplication
 								.popBufferedResponse(sessionId, queryString);
-	
+
 						if (bufferedResponse != null)
 						{
 							bufferedResponse.writeTo(servletResponse);
@@ -223,20 +221,20 @@ public class WicketFilter implements Filter
 					}
 				}
 			}
-	
+
 			// First, set the webapplication for this thread
 			Application.set(webApplication);
-	
+
 			// Get session for request
 			final WebSession session = webApplication.getSession(request);
-	
+
 			// Create a response object and set the output encoding according to
 			// wicket's application setttings.
 			final WebResponse response = webApplication.newWebResponse(servletResponse);
 			response.setAjax(request.isAjax());
 			response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 					.getResponseRequestEncoding());
-	
+
 			try
 			{
 				RequestCycle cycle = session.newRequestCycle(request, response);
@@ -254,10 +252,10 @@ public class WicketFilter implements Filter
 			{
 				// Close response
 				response.close();
-	
+
 				// Clean up thread local session
 				Session.unset();
-	
+
 				// Clean up thread local application
 				Application.unset();
 			}
@@ -311,7 +309,8 @@ public class WicketFilter implements Filter
 
 			rootPath = path;
 
-			if (filterPath != null) {
+			if (filterPath != null)
+			{
 				if (!path.endsWith("/"))
 				{
 					rootPath = rootPath + "/" + filterPath;
@@ -340,18 +339,19 @@ public class WicketFilter implements Filter
 			Thread.currentThread().setContextClassLoader(getClassLoader());
 
 			IWebApplicationFactory factory = getApplicationFactory();
-	
+
 			// Construct WebApplication subclass
 			this.webApplication = factory.createApplication(this);
-	
+
 			// Set this WicketServlet as the servlet for the web application
 			this.webApplication.setWicketFilter(this);
-	
-			// Store instance of this application object in servlet context to make
+
+			// Store instance of this application object in servlet context to
+			// make
 			// integration with outside world easier
 			String contextKey = "wicket:" + filterConfig.getFilterName();
 			filterConfig.getServletContext().setAttribute(contextKey, this.webApplication);
-	
+
 			filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
 
 			Application.set(webApplication);
@@ -377,123 +377,6 @@ public class WicketFilter implements Filter
 			Application.unset();
 			Thread.currentThread().setContextClassLoader(previousClassLoader);
 		}
-	}
-
-	/**
-	 * Creates the web application factory instance.
-	 * 
-	 * If no APP_FACT_PARAM is specified in web.xml
-	 * ContextParamWebApplicationFactory will be used by default.
-	 * 
-	 * @see ContextParamWebApplicationFactory
-	 * 
-	 * @return application factory instance
-	 */
-	protected IWebApplicationFactory getApplicationFactory()
-	{
-		final String appFactoryClassName = filterConfig.getInitParameter(APP_FACT_PARAM);
-
-		if (appFactoryClassName == null)
-		{
-			// If no context param was specified we return the default factory
-			return new ContextParamWebApplicationFactory();
-		}
-		else
-		{
-			try
-			{
-				// Try to find the specified factory class
-				final Class factoryClass = Thread.currentThread().getContextClassLoader().loadClass(
-						appFactoryClassName);
-
-				// Instantiate the factory
-				return (IWebApplicationFactory)factoryClass.newInstance();
-			}
-			catch (ClassCastException e)
-			{
-				throw new WicketRuntimeException("Application factory class " + appFactoryClassName
-						+ " must implement IWebApplicationFactory");
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (InstantiationException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (SecurityException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-		}
-	}
-
-	/**
-	 * Gets the last modified time stamp for the given request.
-	 * 
-	 * @param servletRequest
-	 * @return The last modified time stamp
-	 */
-	long getLastModified(final HttpServletRequest servletRequest)
-	{
-		final String pathInfo = servletRequest.getRequestURI();
-
-		int rootPathLength = getRootPath(servletRequest).length();
-		if (pathInfo.length() > rootPathLength
-				&& pathInfo.substring(rootPathLength).startsWith(RESOURCES_PATH_PREFIX))
-		{
-			final String resourceReferenceKey = pathInfo.substring(rootPathLength
-					+ RESOURCES_PATH_PREFIX.length());
-
-			// Try to find shared resource
-			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
-
-			// If resource found and it is cacheable
-			if ((resource != null) && resource.isCacheable())
-			{
-				try
-				{
-					Application.set(webApplication);
-
-					final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
-
-					// Set parameters from servlet request
-					resource.setParameters(webRequest.getParameterMap());
-
-					// Get resource stream
-					IResourceStream stream = resource.getResourceStream();
-
-					// Get last modified time from stream
-					Time time = stream.lastModifiedTime();
-
-					try
-					{
-						stream.close();
-					}
-					catch (IOException e)
-					{
-						// ignore
-					}
-
-					return time != null ? time.getMilliseconds() : -1;
-				}
-				catch (AbortException e)
-				{
-					return -1;
-				}
-				finally
-				{
-					resource.setParameters(null);
-					Application.unset();
-				}
-			}
-		}
-		return -1;
 	}
 
 	/**
@@ -571,5 +454,130 @@ public class WicketFilter implements Filter
 		{
 			resp.setDateHeader("Last-Modified", lastModified);
 		}
+	}
+
+	/**
+	 * Creates the web application factory instance.
+	 * 
+	 * If no APP_FACT_PARAM is specified in web.xml
+	 * ContextParamWebApplicationFactory will be used by default.
+	 * 
+	 * @see ContextParamWebApplicationFactory
+	 * 
+	 * @return application factory instance
+	 */
+	protected IWebApplicationFactory getApplicationFactory()
+	{
+		final String appFactoryClassName = filterConfig.getInitParameter(APP_FACT_PARAM);
+
+		if (appFactoryClassName == null)
+		{
+			// If no context param was specified we return the default factory
+			return new ContextParamWebApplicationFactory();
+		}
+		else
+		{
+			try
+			{
+				// Try to find the specified factory class
+				final Class factoryClass = Thread.currentThread().getContextClassLoader()
+						.loadClass(appFactoryClassName);
+
+				// Instantiate the factory
+				return (IWebApplicationFactory)factoryClass.newInstance();
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Application factory class " + appFactoryClassName
+						+ " must implement IWebApplicationFactory");
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+			catch (SecurityException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+		}
+	}
+
+	/**
+	 * @return The class loader
+	 */
+	protected ClassLoader getClassLoader()
+	{
+		return Thread.currentThread().getContextClassLoader();
+	}
+
+	/**
+	 * Gets the last modified time stamp for the given request.
+	 * 
+	 * @param servletRequest
+	 * @return The last modified time stamp
+	 */
+	long getLastModified(final HttpServletRequest servletRequest)
+	{
+		final String pathInfo = servletRequest.getRequestURI();
+
+		int rootPathLength = getRootPath(servletRequest).length();
+		if (pathInfo.length() > rootPathLength
+				&& pathInfo.substring(rootPathLength).startsWith(RESOURCES_PATH_PREFIX))
+		{
+			final String resourceReferenceKey = pathInfo.substring(rootPathLength
+					+ RESOURCES_PATH_PREFIX.length());
+
+			// Try to find shared resource
+			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
+
+			// If resource found and it is cacheable
+			if ((resource != null) && resource.isCacheable())
+			{
+				try
+				{
+					Application.set(webApplication);
+
+					final WebRequest webRequest = webApplication.newWebRequest(servletRequest);
+
+					// Set parameters from servlet request
+					resource.setParameters(webRequest.getParameterMap());
+
+					// Get resource stream
+					IResourceStream stream = resource.getResourceStream();
+
+					// Get last modified time from stream
+					Time time = stream.lastModifiedTime();
+
+					try
+					{
+						stream.close();
+					}
+					catch (IOException e)
+					{
+						// ignore
+					}
+
+					return time != null ? time.getMilliseconds() : -1;
+				}
+				catch (AbortException e)
+				{
+					return -1;
+				}
+				finally
+				{
+					resource.setParameters(null);
+					Application.unset();
+				}
+			}
+		}
+		return -1;
 	}
 }
