@@ -69,15 +69,15 @@ public class WicketFilter implements Filter
 	 */
 	public static final String FILTER_MAPPING_PARAM = "filterMappingUrlPattern";
 
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WicketFilter.class);
+
 	/**
 	 * The servlet path holder when the WicketSerlvet is used. So that the
 	 * filter path will be computed with the first request. Note: This variable
 	 * is by purpose package protected. See WicketServlet
 	 */
 	static final String SERVLET_PATH_HOLDER = "<servlet>";
-
-	/** Log. */
-	private static final Log log = LogFactory.getLog(WicketFilter.class);
 
 	/** See javax.servlet.FilterConfig */
 	private FilterConfig filterConfig;
@@ -285,6 +285,51 @@ public class WicketFilter implements Filter
 	}
 
 	/**
+	 * Returns a relative path from an HttpServletRequest Use this to resolve a
+	 * Wicket request.
+	 * 
+	 * @param request
+	 * @return Path requested, minus query string, context path, and filterPath.
+	 *         Relative, no leading '/'.
+	 */
+	public String getRelativePath(HttpServletRequest request) {
+		String path = request.getServletPath();
+		if (servletMode)
+		{
+			path = request.getPathInfo();
+			// No path info => root.
+			if (path == null)
+			{
+				path = "";
+			}
+		}
+		filterPath = getFilterPath(request);
+		
+		if (path.length() > 0)
+		{
+			path = path.substring(1);
+		}
+		
+		// We should always be under the rootPath, except
+		// for the special case of someone landing on the
+		// home page without a trailing slash.
+		if (!path.startsWith(filterPath))
+		{
+			if (filterPath.equals(path + "/"))
+			{
+				path += "/";
+			}
+		}
+		if (path.startsWith(filterPath))
+		{
+			path = path.substring(filterPath.length());
+		}
+
+		return path;
+
+	}
+
+	/**
 	 * 
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
@@ -363,246 +408,6 @@ public class WicketFilter implements Filter
 		}
 	}
 
-	/**
-	 * Creates the web application factory instance.
-	 * 
-	 * If no APP_FACT_PARAM is specified in web.xml
-	 * ContextParamWebApplicationFactory will be used by default.
-	 * 
-	 * @see ContextParamWebApplicationFactory
-	 * 
-	 * @return application factory instance
-	 */
-	protected IWebApplicationFactory getApplicationFactory()
-	{
-		final String appFactoryClassName = filterConfig.getInitParameter(APP_FACT_PARAM);
-
-		if (appFactoryClassName == null)
-		{
-			// If no context param was specified we return the default factory
-			return new ContextParamWebApplicationFactory();
-		}
-		else
-		{
-			try
-			{
-				// Try to find the specified factory class
-				final Class factoryClass = Thread.currentThread().getContextClassLoader()
-						.loadClass(appFactoryClassName);
-
-				// Instantiate the factory
-				return (IWebApplicationFactory)factoryClass.newInstance();
-			}
-			catch (ClassCastException e)
-			{
-				throw new WicketRuntimeException("Application factory class " + appFactoryClassName
-						+ " must implement IWebApplicationFactory");
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (InstantiationException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (SecurityException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-		}
-	}
-
-	/**
-	 * @return The class loader
-	 */
-	protected ClassLoader getClassLoader()
-	{
-		return Thread.currentThread().getContextClassLoader();
-	}
-
-	/**
-	 * Gets the last modified time stamp for the given request.
-	 * 
-	 * @param request
-	 * @return The last modified time stamp
-	 */
-	long getLastModified(final HttpServletRequest request)
-	{
-		final String pathInfo = getRelativePath(request);
-		
-		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
-			
-			final String resourceReferenceKey = pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
-
-			// Try to find shared resource
-			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
-
-			// If resource found and it is cacheable
-			if ((resource != null) && resource.isCacheable())
-			{
-				try
-				{
-					Application.set(webApplication);
-
-					final WebRequest webRequest = webApplication.newWebRequest(request);
-
-					// Set parameters from servlet request
-					resource.setParameters(webRequest.getParameterMap());
-
-					// Get resource stream
-					IResourceStream stream = resource.getResourceStream();
-
-					// Get last modified time from stream
-					Time time = stream.lastModifiedTime();
-
-					try
-					{
-						stream.close();
-					}
-					catch (IOException e)
-					{
-						// ignore
-					}
-
-					return time != null ? time.getMilliseconds() : -1;
-				}
-				catch (AbortException e)
-				{
-					return -1;
-				}
-				finally
-				{
-					resource.setParameters(null);
-					Application.unset();
-				}
-			}
-		}
-		return -1;
-	}
-
-	/**
-	 * Is this a Wicket request?
-	 * 
-	 * @param relativePath
-	 *            The relativePath
-	 * @return True if this is a Wicket request
-	 */
-	private boolean isWicketRequest(String relativePath)
-	{
-		// Special case home page
-		if (relativePath.equals("")) {
-			return true;
-		}
-				
-		// Resources
-		if (relativePath.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
-			return true;
-		}
-		
-		// Mounted page
-		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath) != null;
-	}
-	
-	/**
-	 * Returns a relative path from an HttpServletRequest Use this to resolve a
-	 * Wicket request.
-	 * 
-	 * @param request
-	 * @return Path requested, minus query string, context path, and filterPath.
-	 *         Relative, no leading '/'.
-	 */
-	public String getRelativePath(HttpServletRequest request) {
-		String path = request.getServletPath();
-		if (servletMode)
-		{
-			path = request.getPathInfo();
-			// No path info => root.
-			if (path == null)
-			{
-				path = "";
-			}
-		}
-		filterPath = getFilterPath(request);
-		
-		if (path.length() > 0)
-		{
-			path = path.substring(1);
-		}
-		
-		// We should always be under the rootPath, except
-		// for the special case of someone landing on the
-		// home page without a trailing slash.
-		if (!path.startsWith(filterPath))
-		{
-			if (filterPath.equals(path + "/"))
-			{
-				path += "/";
-			}
-		}
-		if (path.startsWith(filterPath))
-		{
-			path = path.substring(filterPath.length());
-		}
-
-		return path;
-
-	}
-	
-	protected String getFilterPath(HttpServletRequest request)
-	{
-		if (filterPath != null)
-		{
-			return filterPath;
-		}
-		if (servletMode)
-		{
-			return filterPath = request.getServletPath();
-		}
-		String result;
-		// Legacy migration check. TODO: Remove this after 1.3 is released and everyone's upgraded.
-		if (filterConfig.getInitParameter("filterPath") != null)
-		{
-			throw new WicketRuntimeException("\nThe filterPath init-param for WicketFilter has been removed.\n" +
-					"Please use a param called " + FILTER_MAPPING_PARAM + " with a value that exactly\n" +
-					"matches that in the <url-pattern> element of your <filter-mapping> (e.g. \"/app/*\").");
-		}
-		
-		result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
-		if (result == null || result.equals("/*"))
-		{
-			return "";
-		}
-		else if (!result.startsWith("/") || !result.endsWith("/*"))
-		{
-			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM + " must start with \"/\" and end with \"/*\". It is: " + result);
-		}
-		return filterPath = result.substring(1, result.length() - 2);
-	}
-
-	/**
-	 * If the response has not already a 'lastModified' header set and if
-	 * 'lastModified' >= 0 than set the response header accordingly.
-	 * 
-	 * @param resp
-	 * @param lastModified
-	 */
-	private void maybeSetLastModified(final HttpServletResponse resp, final long lastModified)
-	{
-		if (resp.containsHeader("Last-Modified"))
-		{
-			return;
-		}
-		if (lastModified >= 0)
-		{
-			resp.setDateHeader("Last-Modified", lastModified);
-		}
-	}
-	
 	private String getFilterPath(String filterName, InputStream is) throws ServletException
 	{
 		/*
@@ -680,5 +485,200 @@ public class WicketFilter implements Filter
 		{
 			throw new ServletException("Error finding filter " + filterName + " in web.xml", e);
 		}
+	}
+
+	/**
+	 * Is this a Wicket request?
+	 * 
+	 * @param relativePath
+	 *            The relativePath
+	 * @return True if this is a Wicket request
+	 */
+	private boolean isWicketRequest(String relativePath)
+	{
+		// Special case home page
+		if (relativePath.equals("")) {
+			return true;
+		}
+				
+		// Resources
+		if (relativePath.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
+			return true;
+		}
+		
+		// Mounted page
+		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath) != null;
+	}
+
+	/**
+	 * If the response has not already a 'lastModified' header set and if
+	 * 'lastModified' >= 0 than set the response header accordingly.
+	 * 
+	 * @param resp
+	 * @param lastModified
+	 */
+	private void maybeSetLastModified(final HttpServletResponse resp, final long lastModified)
+	{
+		if (resp.containsHeader("Last-Modified"))
+		{
+			return;
+		}
+		if (lastModified >= 0)
+		{
+			resp.setDateHeader("Last-Modified", lastModified);
+		}
+	}
+	
+	/**
+	 * Creates the web application factory instance.
+	 * 
+	 * If no APP_FACT_PARAM is specified in web.xml
+	 * ContextParamWebApplicationFactory will be used by default.
+	 * 
+	 * @see ContextParamWebApplicationFactory
+	 * 
+	 * @return application factory instance
+	 */
+	protected IWebApplicationFactory getApplicationFactory()
+	{
+		final String appFactoryClassName = filterConfig.getInitParameter(APP_FACT_PARAM);
+
+		if (appFactoryClassName == null)
+		{
+			// If no context param was specified we return the default factory
+			return new ContextParamWebApplicationFactory();
+		}
+		else
+		{
+			try
+			{
+				// Try to find the specified factory class
+				final Class factoryClass = Thread.currentThread().getContextClassLoader()
+						.loadClass(appFactoryClassName);
+
+				// Instantiate the factory
+				return (IWebApplicationFactory)factoryClass.newInstance();
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Application factory class " + appFactoryClassName
+						+ " must implement IWebApplicationFactory");
+			}
+			catch (ClassNotFoundException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+			catch (SecurityException e)
+			{
+				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
+			}
+		}
+	}
+	
+	/**
+	 * @return The class loader
+	 */
+	protected ClassLoader getClassLoader()
+	{
+		return Thread.currentThread().getContextClassLoader();
+	}
+
+	protected String getFilterPath(HttpServletRequest request)
+	{
+		if (filterPath != null)
+		{
+			return filterPath;
+		}
+		if (servletMode)
+		{
+			return filterPath = request.getServletPath();
+		}
+		String result;
+		// Legacy migration check. TODO: Remove this after 1.3 is released and everyone's upgraded.
+		if (filterConfig.getInitParameter("filterPath") != null)
+		{
+			throw new WicketRuntimeException("\nThe filterPath init-param for WicketFilter has been removed.\n" +
+					"Please use a param called " + FILTER_MAPPING_PARAM + " with a value that exactly\n" +
+					"matches that in the <url-pattern> element of your <filter-mapping> (e.g. \"/app/*\").");
+		}
+		
+		result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
+		if (result == null || result.equals("/*"))
+		{
+			return "";
+		}
+		else if (!result.startsWith("/") || !result.endsWith("/*"))
+		{
+			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM + " must start with \"/\" and end with \"/*\". It is: " + result);
+		}
+		return filterPath = result.substring(1, result.length() - 2);
+	}
+	
+	/**
+	 * Gets the last modified time stamp for the given request.
+	 * 
+	 * @param request
+	 * @return The last modified time stamp
+	 */
+	long getLastModified(final HttpServletRequest request)
+	{
+		final String pathInfo = getRelativePath(request);
+		
+		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
+			
+			final String resourceReferenceKey = pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
+
+			// Try to find shared resource
+			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
+
+			// If resource found and it is cacheable
+			if ((resource != null) && resource.isCacheable())
+			{
+				try
+				{
+					Application.set(webApplication);
+
+					final WebRequest webRequest = webApplication.newWebRequest(request);
+
+					// Set parameters from servlet request
+					resource.setParameters(webRequest.getParameterMap());
+
+					// Get resource stream
+					IResourceStream stream = resource.getResourceStream();
+
+					// Get last modified time from stream
+					Time time = stream.lastModifiedTime();
+
+					try
+					{
+						stream.close();
+					}
+					catch (IOException e)
+					{
+						// ignore
+					}
+
+					return time != null ? time.getMilliseconds() : -1;
+				}
+				catch (AbortException e)
+				{
+					return -1;
+				}
+				finally
+				{
+					resource.setParameters(null);
+					Application.unset();
+				}
+			}
+		}
+		return -1;
 	}
 }
