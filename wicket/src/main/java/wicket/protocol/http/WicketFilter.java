@@ -43,6 +43,8 @@ import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.markup.parser.XmlPullParser;
+import wicket.markup.parser.XmlTag;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.session.ISessionStore;
 import wicket.settings.IRequestCycleSettings;
@@ -356,10 +358,10 @@ public class WicketFilter implements Filter
 					try
 					{
 						filterPath = getFilterPath(filterConfig.getFilterName(), is);
-						is.close();
 					}
 					catch (Exception e)
 					{
+						log.debug("Error parsing web.xml", e);
 						// Swallow IOException or SecurityException or similar, and log.info below.
 					}
 				}
@@ -419,43 +421,35 @@ public class WicketFilter implements Filter
 		try
 		{
 			ArrayList urlPatterns = new ArrayList();
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
-			is.close();
-			NodeList filterMappings = doc.getElementsByTagName("filter-mapping");
-			for (int i = 0; i < filterMappings.getLength(); i++)
-			{
-				Node filterMapping = filterMappings.item(i);
-				NodeList mappingElements = filterMapping.getChildNodes();
-
-				// We might have filter-name and url-pattern in the
-				// wrong order, even though it's a DTD-violation -
-				// many containers don't use strict parsing, so we
-				// have to deal with this.
-				String urlPattern = null;
-				boolean add = false;
-				for (int j = 0; j < mappingElements.getLength(); j++)
-				{
-					Node mappingElement = mappingElements.item(j);
-					if (mappingElement.getNodeType() != Node.ELEMENT_NODE)
-					{
-						continue;
+			XmlPullParser parser = new XmlPullParser();
+			parser.parse(is);
+			
+			while (true) {
+				XmlTag elem;
+				do {
+					elem = (XmlTag)parser.nextTag();
+				} while (elem != null && (! (elem.getName().equals("filter-mapping") && elem.isOpen())));
+				
+				if (elem == null)
+					break;
+	
+				String encounteredFilterName = null, urlPattern = null;
+	
+				do {
+					elem = (XmlTag)parser.nextTag();
+					if (elem.isOpen()) {
+						parser.setPositionMarker();
+					} else if (elem.isClose() && elem.getName().equals("filter-name")) {
+						encounteredFilterName = parser.getInputFromPositionMarker(elem.getPos()).toString();
+					} else if (elem.isClose() && elem.getName().equals("url-pattern")) {
+						urlPattern = parser.getInputFromPositionMarker(elem.getPos()).toString();
 					}
-					if (mappingElement.getNodeName().equals("filter-name")
-							&& mappingElement.getFirstChild().getNodeValue().equals(filterName))
-					{
-						add = true;
-					}
-					if (mappingElement.getNodeName().equals("url-pattern"))
-					{
-						urlPattern = mappingElement.getFirstChild().getNodeValue();
-					}
-				}
-				if (add)
-				{
-					add = false;
+				} while (urlPattern == null || encounteredFilterName == null);
+				
+				if (filterName.equals(encounteredFilterName))
 					urlPatterns.add(urlPattern);
-				}
 			}
+
 			// By the time we get here, we have a list of urlPatterns we match
 			// this filter against.
 			// In all likelihood, we will only have one. If we have none, we

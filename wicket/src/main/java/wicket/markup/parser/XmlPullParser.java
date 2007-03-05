@@ -18,6 +18,7 @@ package wicket.markup.parser;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 
 import wicket.markup.MarkupElement;
@@ -370,7 +371,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * @param resource
 	 *            The resource to read and parse
 	 * @param encoding
-	 *            The default character encoding of the input
+	 *            Default character encoding to use when not specified in XML declaration, specify null to use JVM default
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
@@ -386,6 +387,31 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		finally
 		{
 			resource.close();
+			if(this.xmlReader != null) this.xmlReader.close();
+		}
+	}
+
+	/**
+	 * Reads and parses markup from an input stream
+	 * 
+	 * @param in
+	 *            The input stream to read and parse
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void parse(final InputStream in) throws IOException,
+			ResourceStreamNotFoundException
+	{
+		try
+		{
+			// When XML declaration does not specify encoding, it defaults to UTF-8
+			this.xmlReader = new XmlReader(
+					new BufferedInputStream(in, 4000), "UTF-8");
+			this.input = new FullyBufferedReader(this.xmlReader);
+		}
+		finally
+		{
+			in.close();
 			if(this.xmlReader != null) this.xmlReader.close();
 		}
 	}
