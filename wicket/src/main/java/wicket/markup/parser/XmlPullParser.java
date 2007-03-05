@@ -374,6 +374,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 *            Default character encoding to use when not specified in XML declaration, specify null to use JVM default
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
+	 * 
+	 * @deprecated Removed in 2.0
 	 */
 	public void parse(final IResourceStream resource, final String encoding) throws IOException,
 			ResourceStreamNotFoundException
@@ -392,7 +394,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	}
 
 	/**
-	 * Reads and parses markup from an input stream
+	 * Reads and parses markup from an input stream, using UTF-8 encoding by
+	 * default when not specified in XML declaration.
 	 * 
 	 * @param in
 	 *            The input stream to read and parse
@@ -402,16 +405,32 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	public void parse(final InputStream in) throws IOException,
 			ResourceStreamNotFoundException
 	{
+		// When XML declaration does not specify encoding, it defaults to UTF-8
+		parse(in, "UTF-8");
+	}
+
+	/**
+	 * Reads and parses markup from an input stream
+	 * 
+	 * @param inputStream
+	 *            The input stream to read and parse
+	 * @param encoding
+	 *            The default character encoding of the input
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 */
+	public void parse(final InputStream inputStream, final String encoding) throws IOException,
+			ResourceStreamNotFoundException
+	{
 		try
 		{
-			// When XML declaration does not specify encoding, it defaults to UTF-8
 			this.xmlReader = new XmlReader(
-					new BufferedInputStream(in, 4000), "UTF-8");
+					new BufferedInputStream(inputStream, 4000), encoding);
 			this.input = new FullyBufferedReader(this.xmlReader);
 		}
 		finally
 		{
-			in.close();
+			inputStream.close();
 			if(this.xmlReader != null) this.xmlReader.close();
 		}
 	}
