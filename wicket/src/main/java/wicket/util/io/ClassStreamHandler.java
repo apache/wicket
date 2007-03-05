@@ -445,7 +445,7 @@ public final class ClassStreamHandler
 	 */
 	public boolean invokeWriteMethod(WicketObjectOutputStream woos, Object obj)
 	{
-		if (writeObjectMethods.size() > 0)
+		if ((writeObjectMethods != null) && writeObjectMethods.size() > 0)
 		{
 			for (int i = writeObjectMethods.size(); --i >= 0;)
 			{
@@ -479,7 +479,7 @@ public final class ClassStreamHandler
 	 */
 	public boolean invokeReadMethod(WicketObjectInputStream wois, Object obj)
 	{
-		if (readObjectMethods.size() > 0)
+		if ((readObjectMethods != null) && readObjectMethods.size() > 0)
 		{
 			for (int i = readObjectMethods.size(); --i >= 0;)
 			{
