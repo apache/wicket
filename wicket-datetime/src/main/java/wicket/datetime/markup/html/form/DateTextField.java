@@ -207,8 +207,9 @@ public class DateTextField extends TextField implements ITextFormatProvider {
 
 	/**
 	 * @return The specialized converter.
+	 * @see wicket.Component#getConverter(java.lang.Class)
 	 */
-	public final IConverter getConverter() {
+	public final IConverter getConverter(Class clazz) {
 		return converter;
 	}
 
