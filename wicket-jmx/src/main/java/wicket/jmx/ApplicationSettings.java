@@ -64,9 +64,9 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	/**
 	 * @see wicket.jmx.ApplicationSettingsMBean#getConverterFactory()
 	 */
-	public String getConverterFactory()
+	public String getConverterLocatorFactory()
 	{
-		return Stringz.className(application.getApplicationSettings().getConverterFactory());
+		return Stringz.className(application.getApplicationSettings().getConverterLocatorFactory());
 	}
 
 	/**
