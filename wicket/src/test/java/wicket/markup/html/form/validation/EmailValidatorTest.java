@@ -48,7 +48,7 @@ public class EmailValidatorTest extends TestCase
 	{
 		EmailAddressPatternValidator test = new EmailAddressPatternValidator();
 		String[] emails = new String[] { "b.blaat@topicus.nl", "blaat@hotmail.com",
-				"1.2.3.4@5.6.7.nl", "m@m.nl" };
+				"1.2.3.4@5.6.7.nl", "m@m.nl", "M@M.NL" };
 		for (int i = 0; i < emails.length; i++)
 		{
 			assertTrue(emails[i] + " should be valid", test.getPattern().matcher(emails[i])
