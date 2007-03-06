@@ -26,12 +26,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import wicket.Application;
+import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.crypt.ICrypt;
-import wicket.util.string.IStringIterator;
-import wicket.util.string.StringList;
 import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
@@ -77,7 +76,8 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 			this.queryString = rebuildUrl(queryString);
 
 			// extract parameter key/value pairs from the query string
-			this.parameters = analyzeQueryString(this.queryString);
+			this.parameters = new PageParameters();
+			RequestUtils.decodeParameters(this.queryString, this.parameters);
 		}
 		else
 		{
@@ -180,67 +180,6 @@ public class WebRequestWithCryptedUrl extends ServletWebRequest
 				WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=");
 
 		return queryString.toString();
-	}
-
-	/**
-	 * Extract key/value pairs from query string
-	 * 
-	 * @param queryString
-	 *            The query string
-	 * @return A map of query string parameter keys and values
-	 */
-	private ValueMap analyzeQueryString(final String queryString)
-	{
-		final ValueMap params = new ValueMap();
-
-		// Get a list of strings separated by the delimiter
-		final StringList pairs = StringList.tokenize(queryString, "&");
-
-		// Go through each string in the list
-		for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
-		{
-			// Get the next key value pair
-			final String pair = iterator.next();
-
-			// separate key and value
-			final int pos = pair.indexOf("=");
-			if (pos < 0)
-			{
-				String[] prevValue = (String[])params.get(pair);
-				if (prevValue != null)
-				{
-					String[] newValue = new String[prevValue.length + 1];
-					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
-					newValue[prevValue.length] = "";
-					params.put(pair, newValue);
-				}
-				else
-				{
-					// Parameter without value
-					params.put(pair, new String[] { "" });
-				}
-			}
-			else
-			{
-				final String key = pair.substring(0, pos);
-				final String value = pair.substring(pos + 1);
-				String[] prevValue = (String[])params.get(key);
-				if (prevValue != null)
-				{
-					String[] newValue = new String[prevValue.length + 1];
-					System.arraycopy(prevValue, 0, newValue, 0, prevValue.length);
-					newValue[prevValue.length] = value;
-					params.put(key, newValue);
-				}
-				else
-				{
-					// Parameter without value
-					params.put(key, new String[] { value });
-				}
-			}
-		}
-
-		return params;
 	}
 
 	/**

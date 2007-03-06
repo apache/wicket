@@ -38,9 +38,9 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
+import wicket.protocol.http.RequestUtils;
 import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
-import wicket.util.value.ValueMap;
 
 /**
  * The AutoLinkResolver is responsible to handle automatic link resolution. Tags
@@ -255,7 +255,8 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (queryStringPos != -1)
 			{
 				final String queryString = reference.substring(queryStringPos + 1);
-				pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+				pageParameters = new PageParameters();
+				RequestUtils.decodeParameters(queryString, pageParameters);
 				infoPath = reference.substring(0, queryStringPos);
 			}
 			else

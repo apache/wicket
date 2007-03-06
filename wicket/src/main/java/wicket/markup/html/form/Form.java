@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +41,7 @@ import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.IFormValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.protocol.http.RequestUtils;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.request.IRequestCycleProcessor;
@@ -53,6 +53,7 @@ import wicket.util.string.Strings;
 import wicket.util.string.interpolator.MapVariableInterpolator;
 import wicket.util.upload.FileUploadException;
 import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
+import wicket.util.value.ValueMap;
 
 /**
  * Base class for forms. To implement a form, subclass this class, add
@@ -1280,7 +1281,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		private final String url;
 
-		private final Map params = new HashMap(4);
+		private final ValueMap params = new ValueMap();
 
 		/**
 		 * Construct.
@@ -1293,23 +1294,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			this.realRequest = realRequest;
 			this.url = realRequest.decodeURL(url);
 
-			String queryPart = this.url.substring(this.url.indexOf("?") + 1);
-			StringTokenizer paramsSt = new StringTokenizer(queryPart, "&");
-			while (paramsSt.hasMoreTokens())
-			{
-				String param = paramsSt.nextToken();
-				int equalsSign = param.indexOf("=");
-				if (equalsSign >= 0)
-				{
-					String paramName = param.substring(0, equalsSign);
-					String value = param.substring(equalsSign + 1);
-					params.put(paramName, value);
-				}
-				else
-				{
-					params.put(param, "");
-				}
-			}
+			String queryString = this.url.substring(this.url.indexOf("?") + 1);
+			RequestUtils.decodeParameters(queryString, params);
 		}
 
 		/**
