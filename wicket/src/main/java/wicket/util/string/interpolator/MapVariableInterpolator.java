@@ -18,6 +18,8 @@ package wicket.util.string.interpolator;
 
 import java.util.Map;
 
+import wicket.util.string.Strings;
+
 /**
  * Interpolates variables into a string from a Map.
  * 
@@ -42,7 +44,6 @@ public class MapVariableInterpolator extends VariableInterpolator
 		this.variables = variables;
 	}
 
-
 	/**
 	 * Constructor
 	 * 
@@ -62,7 +63,6 @@ public class MapVariableInterpolator extends VariableInterpolator
 		super(string, exceptionOnNullVarValue);
 		this.variables = variables;
 	}
-
 
 	/**
 	 * Accessor to set variables
@@ -85,7 +85,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	@Override
 	protected final String getValue(final String variableName)
 	{
-		return variables.get(variableName).toString();
+		return Strings.toString(variables.get(variableName));
 	}
 
 	/**

@@ -65,7 +65,6 @@ public abstract class VariableInterpolator
 		this.exceptionOnNullVarValue = exceptionOnNullVarValue;
 	}
 
-
 	/**
 	 * Gets a value for a variable name during interpolation
 	 * 
