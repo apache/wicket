@@ -60,7 +60,7 @@ public interface ApplicationSettingsMBean
 	 * 
 	 * @return the converter factory
 	 */
-	String getConverterFactory();
+	String getConverterLocatorFactory();
 
 	/**
 	 * Gets internal error page class.
