@@ -118,8 +118,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				if (autoLink.resourceReference != null)
 				{
 					// if the resource reference is null, it means that it the
-					// reference
-					// was not found as a pcakge resource
+					// reference was not found as a package resource
 					return autoLink;
 				}
 			}
