@@ -38,6 +38,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
+import wicket.protocol.http.RequestUtils;
 import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
 
@@ -254,7 +255,8 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (queryStringPos != -1)
 			{
 				final String queryString = reference.substring(queryStringPos + 1);
-				pageParameters = new PageParameters(queryString, "&");
+				pageParameters = new PageParameters();
+				RequestUtils.decodeParameters(queryString, pageParameters);
 				infoPath = reference.substring(0, queryStringPos);
 			}
 			else
@@ -371,7 +373,6 @@ public final class AutoLinkResolver implements IComponentResolver
 		 */
 		public AnchorResolverDelegate()
 		{
-
 			// Initialize supported list of file name extension which'll create
 			// bookmarkable pages
 			supportedPageExtensions.add("html");

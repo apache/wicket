@@ -88,7 +88,8 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor. NOTE: Please use RequestUtils.decodeParameters() if you wish
+	 * to properly decode a request URL.
 	 * 
 	 * @param keyValuePairs
 	 *            List of key value pairs separated by commas. For example,
@@ -100,7 +101,8 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor. NOTE: Please use RequestUtils.decodeParameters() if you wish
+	 * to properly decode a request URL.
 	 * 
 	 * @param keyValuePairs
 	 *            List of key value pairs separated by a given delimiter. For

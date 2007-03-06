@@ -29,16 +29,17 @@ import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
-import wicket.PageParameters;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.RequestUtils;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.util.crypt.ICrypt;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 
 /**
  * This is a request coding strategy which encrypts the URL and hence makes it
@@ -407,7 +408,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			}
 
 			// Add ALL of the params from the decoded 'x' param
-			PageParameters params = new PageParameters(decodedParamReplacement, "&");
+			ValueMap params = new ValueMap();
+			RequestUtils.decodeParameters(decodedParamReplacement, params);
 			this.parameterMap.putAll(params);
 
 			// Rebuild the URL with the 'x' param removed

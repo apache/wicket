@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.text.DateFormat;
@@ -36,7 +35,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -1131,17 +1129,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			path = url.substring(0, index);
 
 			String queryString = url.substring(index + 1);
-			StringTokenizer st = new StringTokenizer(queryString, "&");
-			while (st.hasMoreTokens())
-			{
-				String token = st.nextToken();
-				int tmp = token.indexOf("=");
-				if (tmp != -1)
-				{
-					setParameter(token.substring(0, tmp), token.substring(tmp + 1));
-				}
-			}
-
+			RequestUtils.decodeParameters(queryString, parameters);
 		}
 	}
 
@@ -1276,24 +1264,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		parameters.clear();
 
-		final String paramPart = redirect.substring(redirect.indexOf('?') + 1);
-		final String[] paramTuples = paramPart.split("&");
-		for (String element : paramTuples)
-		{
-			final String[] bits = element.split("=");
-			if (bits.length == 2)
-			{
-				try
-				{
-					parameters.put(URLDecoder.decode(bits[0], "UTF-8"), URLDecoder.decode(bits[1],
-							"UTF-8"));
-				}
-				catch (UnsupportedEncodingException e)
-				{
-					// Should never happen
-				}
-			}
-		}
+		final String queryString = redirect.substring(redirect.indexOf('?') + 1);
+		RequestUtils.decodeParameters(queryString, parameters);
 	}
 
 	/**
