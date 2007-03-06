@@ -59,18 +59,19 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		PageParameters parameters = new PageParameters();
 		parameters.add("0", "Integer0");
 		parameters.add("1", "Integer1");
+		parameters.add("2", "a:b");
 
 		String url1 = cycle.urlFor(
 				new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class, parameters))
 				.toString();
-		assertEquals(url1,
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test1/Integer0/Integer1");
 		String url2 = cycle.urlFor(
 				new BookmarkablePageRequestTarget("mypagemap", BookmarkableHomePageLinksPage.class,
 						parameters)).toString();
+		assertEquals(url1,
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test1/Integer0/Integer1/a%3Ab");
 		assertEquals(
 				url2,
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test2/Integer0/Integer1/wicket:pageMapName/mypagemap");
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test2/Integer0/Integer1/a%3Ab/wicket:pageMapName/mypagemap");
 
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(url1);
@@ -88,6 +89,10 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		{
 			fail("url: " + url1 + " wasn't resolved to a bookmarkable target: " + target1);
 		}
+		PageParameters params = ((BookmarkablePageRequestTarget)target1).getPageParameters();
+		assertEquals("Integer0", params.getString("0"));
+		assertEquals("Integer1", params.getString("1"));
+		assertEquals("a:b", params.getString("2"));
 
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(url2);
