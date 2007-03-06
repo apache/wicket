@@ -18,6 +18,13 @@ package wicket.protocol.http;
 
 import junit.framework.TestCase;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import wicket.ajax.AjaxEventBehavior;
+import wicket.ajax.markup.html.AjaxLink;
+import wicket.util.tester.WicketTester;
+
 /**
  * 
  * 
@@ -25,6 +32,8 @@ import junit.framework.TestCase;
  */
 public class WebResponseTest extends TestCase
 {
+	private static final Logger log = LoggerFactory.getLogger(WebResponseTest.class);
+
 	/**
 	 * Test that redirect works correctly when not using ajax
 	 */
@@ -54,5 +63,42 @@ public class WebResponseTest extends TestCase
 
 		assertNull(mockResponse.getRedirectLocation());
 		assertTrue(mockResponse.containsHeader("Ajax-Location"));
+	}
+
+	public void testErrorPage()
+	{
+		WicketTester tester = new WicketTester();
+		tester.startPage(TestPage.class);
+		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
+
+		// Cannot use executeAjaxEvent or onClick because WicketTester creates
+		// an AjaxRequestTarget from scratch
+		// tester.executeAjaxEvent(link, "onclick");
+		// tester.clickLink("link");
+
+		// FIXME should not be needed
+		tester.createRequestCycle();
+
+		// Invoke the call back URL of the ajax event behavior
+		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
+				.toString();
+		tester.setupRequestAndResponse();
+		// Fake an Ajax request
+		((MockHttpServletRequest)tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");
+		tester.getServletRequest().setURL(callbackUrl);
+
+		// Do not call tester.processRequestCycle() because it throws an
+		// exception when getting an error page
+		WebRequestCycle cycle = tester.createRequestCycle();
+		cycle.request();
+
+		assertNull(((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
+				.getRedirectLocation());
+		String ajaxLocation = ((MockHttpServletResponse)tester.getWicketResponse()
+				.getHttpServletResponse()).getHeader("Ajax-Location");
+		log.debug(ajaxLocation);
+		assertNotNull(ajaxLocation);
+
+		tester.destroy();
 	}
 }

@@ -297,8 +297,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	public final void respond(final RequestCycle requestCycle)
 	{
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
-		try
-		{
+		response.setAjax(true);
 			final Application app = Application.get();
 
 			// Determine encoding
@@ -338,18 +337,6 @@ public class AjaxRequestTarget implements IRequestTarget
 			}
 
 			response.write("</ajax-response>");
-		}
-		catch (RuntimeException ex)
-		{
-			// log the error but output nothing in the response, parse failure
-			// of response will cause any javascript failureHandler to be
-			// invoked
-			Log.error("Error while responding to an AJAX request: " + toString(), ex);
-		}
-		finally
-		{
-			requestCycle.setResponse(response);
-		}
 	}
 
 	private void fireOnBeforeRespondListeners()
