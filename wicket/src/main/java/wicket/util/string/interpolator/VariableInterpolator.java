@@ -35,6 +35,8 @@ public abstract class VariableInterpolator
 	/** The string to interpolate within */
 	protected final String string;
 
+	private boolean exceptionOnNullVarValue = false;
+
 	/**
 	 * Constructor
 	 * 
@@ -44,6 +46,23 @@ public abstract class VariableInterpolator
 	public VariableInterpolator(final String string)
 	{
 		this.string = string;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param string
+	 *            String to interpolate with variable values
+	 * @param exceptionOnNullVarValue
+	 *            if true an {@link IllegalStateException} will be thrown if a
+	 *            {@link #getValue(String)} returns null, otherwise the
+	 *            ${varname} string will be left in the <code>string</code> so
+	 *            multiple interpolators can be chained
+	 */
+	public VariableInterpolator(final String string, boolean exceptionOnNullVarValue)
+	{
+		this.string = string;
+		this.exceptionOnNullVarValue = exceptionOnNullVarValue;
 	}
 
 	/**
@@ -93,10 +112,18 @@ public abstract class VariableInterpolator
 				// If there's no value
 				if (value == null)
 				{
-					// Leave variable uninterpolated, allowing multiple
-					// interpolators to
-					// do their work on the same string
-					buffer.append("${" + variableName + "}");
+					if (exceptionOnNullVarValue)
+					{
+						throw new IllegalArgumentException("Value of variable [[" + variableName
+								+ "]] could not be resolved while interpolating [[" + string + "]]");
+					}
+					else
+					{
+						// Leave variable uninterpolated, allowing multiple
+						// interpolators to
+						// do their work on the same string
+						buffer.append("${" + variableName + "}");
+					}
 				}
 				else
 				{
