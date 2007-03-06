@@ -20,8 +20,11 @@ import java.util.Iterator;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.repeater.IItemFactory;
 import wicket.markup.repeater.Item;
 import wicket.markup.repeater.RepeatingView;
+import wicket.model.IModel;
 import wicket.version.undo.Change;
 
 /**
@@ -33,13 +36,13 @@ import wicket.version.undo.Change;
  * Example
  * 
  * <pre>
- *     &lt;tbody&gt;
- *       &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
- *         &lt;td wicket:id=&quot;cols&quot;&gt;
- *           &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
- *         &lt;/td&gt;
- *       &lt;/tr&gt;
- *     &lt;/tbody&gt;  
+ *        &lt;tbody&gt;
+ *          &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
+ *            &lt;td wicket:id=&quot;cols&quot;&gt;
+ *              &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
+ *            &lt;/td&gt;
+ *          &lt;/tr&gt;
+ *        &lt;/tbody&gt;  
  * </pre>
  * 
  * and in java:
@@ -51,8 +54,8 @@ import wicket.version.undo.Change;
  * @author Igor Vaynberg
  * @author Christian Essl
  * 
- * @param <T> 
- * 			Type of model object this component holds 
+ * @param <T>
+ *            Type of model object this component holds
  */
 public abstract class GridView<T> extends DataViewBase<T>
 {
@@ -202,10 +205,32 @@ public abstract class GridView<T> extends DataViewBase<T>
 
 	}
 
-
 	@Override
-	protected void addItems(Iterator<Item<T>> items)
+	protected void populate()
 	{
+		Iterator<Item<T>> items = new ItemsIterator<T>(iterator());
+
+		WebMarkupContainer fake1 = new WebMarkupContainer(this, newChildId());
+		final WebMarkupContainer fake2 = new RepeatingView(fake1, "cols");
+
+		IItemFactory<T> itemFactory = new IItemFactory<T>()
+		{
+
+			public Item<T> newItem(int index, IModel<T> model)
+			{
+				String id = GridView.this.newChildId();
+				Item<T> item = GridView.this.newItem(fake2, id, index, model);
+				GridView.this.populateItem(item);
+				return item;
+			}
+
+		};
+
+
+		items = getItemReuseStrategy().getItems(itemFactory, getItemModels(), items);
+
+		removeAll();
+
 		if (items.hasNext())
 		{
 			final int cols = getColumns();
@@ -216,7 +241,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 			{
 				// Build a row
 				Item<T> rowItem = newRowItem(newChildId(), row);
-				new RepeatingView<T>(rowItem, "cols");
+				RepeatingView rowRepeater = new RepeatingView<T>(rowItem, "cols");
 
 				// Populate the row
 				for (int index = 0; index < cols; index++)
@@ -225,12 +250,14 @@ public abstract class GridView<T> extends DataViewBase<T>
 					if (items.hasNext())
 					{
 						cellItem = items.next();
+						cellItem.reparent(rowRepeater);
 					}
 					else
 					{
-						cellItem = newEmptyItem(newChildId(), index);
+						cellItem = newEmptyItem(rowRepeater, newChildId(), index);
 						populateEmptyItem(cellItem);
 					}
+
 				}
 
 				// increase row
@@ -239,8 +266,8 @@ public abstract class GridView<T> extends DataViewBase<T>
 			}
 			while (items.hasNext());
 		}
-
 	}
+
 
 	/**
 	 * @return data provider
@@ -250,14 +277,6 @@ public abstract class GridView<T> extends DataViewBase<T>
 		return internalGetDataProvider();
 	}
 
-	/**
-	 * @see wicket.markup.repeater.PageableRefreshingView#getItems()
-	 */
-	@Override
-	public Iterator<Item<T>> getItems()
-	{
-		return new ItemsIterator<T>(iterator());
-	}
 
 	/**
 	 * Add component to an Item for which there is no model anymore and is shown
@@ -272,13 +291,16 @@ public abstract class GridView<T> extends DataViewBase<T>
 	 * Create a Item which represents an empty cell (there is no model for it in
 	 * the DataProvider)
 	 * 
+	 * @param parent
+	 *            parent
+	 * 
 	 * @param id
 	 * @param index
 	 * @return created item
 	 */
-	protected Item<T> newEmptyItem(final String id, int index)
+	protected Item<T> newEmptyItem(WebMarkupContainer<?> parent, final String id, int index)
 	{
-		return new Item<T>(this, id, index, null);
+		return new Item<T>(parent, id, index, null);
 	}
 
 	/**
@@ -296,10 +318,10 @@ public abstract class GridView<T> extends DataViewBase<T>
 	/**
 	 * Iterator that iterats over all items in the cells
 	 * 
-	 * @author igor
-	 *
-	 * @param <T> 
-	 * 		Type of model object this component holds 
+	 * @author ivaynberg
+	 * 
+	 * @param <T>
+	 *            Type of model object this component holds
 	 */
 	private static class ItemsIterator<T> implements Iterator<Item<T>>
 	{

@@ -88,32 +88,45 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 	@Override
 	protected void onAttach()
 	{
-		super.onAttach();
-
 		if (isVisibleInHierarchy())
 		{
-
-			IItemFactory<T> itemFactory = new IItemFactory<T>()
-			{
-
-				public Item<T> newItem(MarkupContainer<?> parent, int index, IModel<T> model)
-				{
-					String id = RefreshingView.this.newChildId();
-					Item<T> item = RefreshingView.this.newItem(parent, id, index, model);
-					RefreshingView.this.populateItem(item);
-					item.attach();
-					return item;
-				}
-
-			};
-
-			Iterator<IModel<T>> models = getItemModels();
-			Iterator<Item<T>> items = getItemReuseStrategy().getItems(RefreshingView.this,
-					itemFactory, models, getItems());
-			removeAll();
-			addItems(items);
+			populate();
 		}
 
+		super.onAttach();
+	}
+
+	/**
+	 * Populates the repeater with items
+	 */
+	protected void populate()
+	{
+
+		IItemFactory<T> itemFactory = new IItemFactory<T>()
+		{
+
+			public Item<T> newItem(int index, IModel<T> model)
+			{
+				String id = RefreshingView.this.newChildId();
+				Item<T> item = RefreshingView.this.newItem(RefreshingView.this, id, index, model);
+				RefreshingView.this.populateItem(item);
+				return item;
+			}
+
+		};
+
+		Iterator<IModel<T>> models = getItemModels();
+
+		Iterator<Item<T>> items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
+
+		removeAll();
+		// we need to iterate over the strategy-returned iterator so that it
+		// creates all the items, and we also reattach them in case they
+		// have been detached by removeAll() and reused
+		while (items.hasNext())
+		{
+			items.next().reAttach();
+		}
 	}
 
 	/**
@@ -172,7 +185,7 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 	/**
 	 * @return iterator over item instances that exist as children of this view
 	 */
-	public Iterator<Item<T>> getItems()
+	private Iterator<Item<T>> getItems()
 	{
 		final Iterator<Component<?>> iterator = iterator();
 		return new Iterator<Item<T>>()
@@ -192,21 +205,6 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 				iterator.remove();
 			}
 		};
-	}
-
-	/**
-	 * Add items to the view. Prior to this all items were removed so every
-	 * request this function starts from a clean slate.
-	 * 
-	 * @param items
-	 *            item instances to be added to this view
-	 */
-	protected void addItems(Iterator<Item<T>> items)
-	{
-		while (items.hasNext())
-		{
-			items.next().reAttach();
-		}
 	}
 
 	// /////////////////////////////////////////////////////////////////////////

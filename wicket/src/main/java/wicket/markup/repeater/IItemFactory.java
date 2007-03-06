@@ -16,7 +16,6 @@
  */
 package wicket.markup.repeater;
 
-import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -42,8 +41,8 @@ public interface IItemFactory<T>
 	 * @param model
 	 *            the model for the new data item
 	 * 
-	 * @return DataItem new DataItem
+	 * @return  new Item
 	 */
-	Item<T> newItem(MarkupContainer<?> parent, int index, IModel<T> model);
+	Item<T> newItem(int index, IModel<T> model);
 
 }

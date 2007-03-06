@@ -25,15 +25,15 @@ import wicket.model.IModel;
 /**
  * Interface for item reuse strategies.
  * <p>
- * <u>Notice:</u> Child items will be rendered in the order they are provided
- * by the returned iterator, so it is important that the strategy preserve this
- * order
+ * <u>Note:</u> Child items will be rendered in the order they are provided by
+ * the returned iterator, so it is important that the returned iterator
+ * preserves the order of the <code>models</code> iterator.
  * </p>
  * 
  * @author Igor Vaynberg (ivaynberg)
- *
- * @param <T> 
- * 			Type of model object this component holds 
+ * 
+ * @param <T>
+ *            Type of model object this component holds
  */
 public interface IItemReuseStrategy<T> extends IClusterable
 {
@@ -42,19 +42,24 @@ public interface IItemReuseStrategy<T> extends IClusterable
 	 * Returns an iterator over items that will be added to the view. The
 	 * iterator needs to return all the items because the old ones are removed
 	 * prior to the new ones added.
+	 * <p>
+	 * <u>Note:</u> Child items will be rendered in the order they are provided
+	 * by the returned iterator, so it is important that the returned iterator
+	 * preserves the order of the <code>models</code> iterator.
+	 * </p>
 	 * 
 	 * @param parent
 	 *            parent for returned item components
 	 * 
 	 * @param factory
 	 *            implementation of IItemFactory
-	 * @param newModels
+	 * @param models
 	 *            iterator over models for items
 	 * @param existingItems
-	 *            iterator over child items
+	 *            iterator over child items from the previous request
 	 * @return iterator over items that will be added after all the old items
-	 *         are moved.
+	 *         are removed.
 	 */
-	Iterator<Item<T>> getItems(MarkupContainer<?> parent, IItemFactory<T> factory, Iterator<IModel<T>> newModels,
-			Iterator<Item<T>> existingItems);
+	Iterator<Item<T>> getItems(IItemFactory<T> factory,
+			Iterator<IModel<T>> models, Iterator<Item<T>> existingItems);
 }

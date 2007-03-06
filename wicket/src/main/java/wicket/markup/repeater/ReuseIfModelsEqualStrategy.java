@@ -55,7 +55,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 	 * @see wicket.markup.repeater.IItemReuseStrategy#getItems(MarkupContainer, wicket.markup.repeater.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterator getItems(final MarkupContainer parent, final IItemFactory factory, final Iterator newModels,
+	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
 			Iterator existingItems)
 	{
 		final Map<IModel< ? >, Item> modelToItem = new HashMap<IModel< ? >, Item>();
@@ -82,12 +82,13 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 				final Item item;
 				if (oldItem == null)
 				{
-					item = factory.newItem(parent, index, model);
+					item = factory.newItem(index, model);
 				}
 				else
 				{
 					oldItem.setIndex(index);
 					item = oldItem;
+					oldItem.reAttach();
 				}
 				index++;
 

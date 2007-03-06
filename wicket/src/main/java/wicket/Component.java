@@ -708,6 +708,24 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		return parent;
 	}
 
+	public final Component reparent(MarkupContainer<?> parent)
+	{
+		this.parent = getRealParent(parent, id);
+		if (id.startsWith(AUTO_COMPONENT_PREFIX) == false)
+		{
+			this.markupFragment = getMarkupFragment();
+		}
+		else
+		{
+			setAuto(true);
+		}
+		this.parent.add(this);
+		setFlag(FLAG_REMOVED_FROM_PARENT, false);
+
+		return this;
+	}
+
+
 	/**
 	 * Gets the markup fragment associated with the component. Except for Pages,
 	 * Panels and Borders, it is assumed that the first markup element of the
@@ -2017,11 +2035,11 @@ public abstract class Component<T> implements IClusterable, IConverterLocator
 		if (isVisible())
 		{
 			// is this component also a IHeaderContributor
-			if (this instanceof IHeaderContributor) 
+			if (this instanceof IHeaderContributor)
 			{
 				((IHeaderContributor)this).renderHead(response);
 			}
-			
+
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
 			if (this.behaviors != null)

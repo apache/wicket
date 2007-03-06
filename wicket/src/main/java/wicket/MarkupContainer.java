@@ -180,21 +180,27 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 
 		// Add to map
 		Component<?> replaced = put(child);
-		if (replaced != null)
+		// guard against the component.reparent(component.getparent()) case
+		if (replaced != child)
 		{
-			replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true);
-			removedComponent(replaced);
-			// The position of the associated markup remains the same
-			child.markupIndex = replaced.markupIndex;
+			if (replaced != null)
+			{
+				replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true);
+				removedComponent(replaced);
+				// The position of the associated markup remains the same
+				child.markupIndex = replaced.markupIndex;
 
 
-			// The generated markup id remains the same
-			String replacedId = (replaced.hasMarkupIdMetaData()) ? replaced.getMarkupId() : null;
-			child.setMarkupIdMetaData(replacedId);
+				// The generated markup id remains the same
+				String replacedId = (replaced.hasMarkupIdMetaData())
+						? replaced.getMarkupId()
+						: null;
+				child.setMarkupIdMetaData(replacedId);
+			}
+
+			// now call addedComponent (after removedComponent)
+			addedComponent(child);
 		}
-		// now call addedComponent (after removedComponent)
-		addedComponent(child);
-
 		return this;
 	}
 
@@ -505,6 +511,13 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 */
 	public final void removeAll()
 	{
+		Iterator<Component<?>> children = iterator();
+		while (children.hasNext())
+		{
+			children.next().setFlag(FLAG_REMOVED_FROM_PARENT, true);
+		}
+
+
 		if (children != null)
 		{
 			addStateChange(new Change()

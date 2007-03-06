@@ -51,7 +51,7 @@ public class DefaultItemReuseStrategy<T> implements IItemReuseStrategy<T>
 	 * @see wicket.markup.repeater.IItemReuseStrategy#getItems(MarkupContainer, wicket.markup.repeater.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterator<Item<T>> getItems(final MarkupContainer<?> parent, final IItemFactory<T> factory, final Iterator<IModel<T>> newModels,
+	public Iterator<Item<T>> getItems(final IItemFactory<T> factory, final Iterator<IModel<T>> newModels,
 			final Iterator<Item<T>> existingItems)
 	{
 		return new Iterator<Item<T>>()
@@ -72,7 +72,7 @@ public class DefaultItemReuseStrategy<T> implements IItemReuseStrategy<T>
 			{
 				final IModel<T> model = newModels.next();
 
-				Item<T> item = factory.newItem(parent, index, model);
+				Item<T> item = factory.newItem(index, model);
 				index++;
 
 				return item;

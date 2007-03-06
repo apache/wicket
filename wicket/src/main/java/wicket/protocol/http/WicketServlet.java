@@ -116,7 +116,8 @@ public class WicketServlet extends HttpServlet
 	public WicketServlet() {
 		// log warning
 		log.info("********************************************");
-		log.info("DEPRECATED! Please use WicketFilter instead.");
+		log.info("IF YOUR SERVLET CONTAINER SUPPORTS FILTERS");
+		log.info("YOU SHOULD USE WicketFilter INSTEAD");
 		log.info("********************************************");
 	}
 
