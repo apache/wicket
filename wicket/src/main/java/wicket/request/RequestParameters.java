@@ -21,6 +21,7 @@ import java.util.Map;
 import wicket.IClusterable;
 import wicket.RequestListenerInterface;
 import wicket.markup.html.link.ILinkListener;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 
 /**
  * <p>
@@ -52,10 +53,6 @@ public class RequestParameters implements IClusterable
 	/** any version number; 0 for no version. */
 	private int versionNumber;
 
-	/**
-	 * tells wicket this request should only be processed if the page + version
-	 * specified are pointing to the last page the user accessed
-	 */
 	private boolean onlyProcessIfPathActive = false;
 
 	/** any callable interface name (e.g. {@link ILinkListener}). */
@@ -310,11 +307,10 @@ public class RequestParameters implements IClusterable
 
 
 	/**
-	 * Whether the page/version corresponding to the current request is
-	 * targetted for the page/version the browser is showing right now, ie
-	 * corresponds to the page/version on top of pagemap's access stack.
+	 * Tells wicket whether this request should only be processed if the page + version
+	 * specified are pointing to the last page the user accessed.
 	 * 
-	 * @see #onlyProcessIfPathActive
+	 * @see WebRequestCodingStrategy#IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME
 	 * 
 	 * @return the only-process-if-path-active flag
 	 */
@@ -328,8 +324,7 @@ public class RequestParameters implements IClusterable
 	 * 
 	 * @param onlyProcessIfPathActive
 	 * 
-	 * @see #onlyProcessIfPathActive
-	 * 
+	 * @see #isOnlyProcessIfPathActive()
 	 */
 	public void setOnlyProcessIfPathActive(boolean onlyProcessIfPathActive)
 	{
