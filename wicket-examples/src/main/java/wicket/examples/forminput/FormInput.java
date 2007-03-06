@@ -170,16 +170,11 @@ public class FormInput extends WicketExamplePage
 			// TextField using a custom converter.
 			add(new TextField("urlProperty", URL.class)
 			{
-				public IConverter getConverter()
+				public IConverter getConverter(final Class type)
 				{
 					return new SimpleConverterAdapter()
 					{
-						public String toString(Object value)
-						{
-							return value != null ? value.toString() : null;
-						}
-
-						public Object toObject(String value)
+						public Object toObject(final String value)
 						{
 							try
 							{
@@ -190,6 +185,11 @@ public class FormInput extends WicketExamplePage
 								throw new ConversionException("'" + value + "' is not a valid URL");
 							}
 						}
+
+						public String toString(final Object value)
+						{
+							return value != null ? value.toString() : null;
+						}
 					};
 				}
 			});
@@ -197,7 +197,7 @@ public class FormInput extends WicketExamplePage
 			// TextField using a mask converter
 			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
 			{
-				public IConverter getConverter()
+				public IConverter getConverter(final Class/*<?>*/ type)
 				{
 					// US telephone number mask
 					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
