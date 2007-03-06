@@ -16,13 +16,14 @@
  */
 package wicket.extensions.yui.calendar;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
+
+import org.joda.time.DateTime;
 
 import wicket.Component;
 import wicket.RequestCycle;
@@ -37,9 +38,7 @@ import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.markup.html.resources.JavascriptResourceReference;
-import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
-import wicket.util.convert.ITypeConverter;
 import wicket.util.convert.converters.DateConverter;
 import wicket.util.string.JavascriptUtils;
 import wicket.util.string.Strings;
@@ -259,19 +258,13 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 			return;
 		}
 
-		IConverter converter = component.getConverter();
-		if (converter instanceof Converter) {
-			ITypeConverter typeConverter = ((Converter) converter)
-					.get(Date.class);
-			if (typeConverter instanceof DateConverter) {
-				DateConverter dateConverter = (DateConverter) typeConverter;
-				DateFormat df = dateConverter.getDateFormat(component
-						.getLocale());
-				if (df instanceof SimpleDateFormat) {
-					// not as nice as IDatePatternProvider, but it'll do
-					return;
-				}
-			}
+		IConverter converter = component.getConverter(DateTime.class);
+		if (converter == null) {
+			converter = component.getConverter(Date.class);
+		}
+		if (converter instanceof DateConverter) {
+
+			return; // This is ok
 		}
 		throw new WicketRuntimeException(
 				"this behavior can only be added to components that either implement "
@@ -344,10 +337,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 			return ((ITextFormatProvider) component).getTextFormat();
 		} else {
 			// cast from hell, but we checked before whether we could
-			DateConverter dateConverter = (DateConverter) ((Converter) component
-					.getConverter()).get(Date.class);
-			return ((SimpleDateFormat) dateConverter.getDateFormat(component
-					.getLocale())).toPattern();
+			IConverter converter = component.getConverter(DateTime.class);
+			if (converter == null) {
+				converter = component.getConverter(Date.class);
+			}
+			return ((SimpleDateFormat) ((DateConverter) converter)
+					.getDateFormat(component.getLocale())).toPattern();
 		}
 	}
 
