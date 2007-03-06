@@ -113,11 +113,11 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
 			{
 				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP, parts[i]);
+				params.put(WebRequestCodingStrategy.PAGEMAP, urlDecode(parts[i]));
 			}
 			else
 			{
-				params.put(String.valueOf(i), parts[i]);
+				params.put(String.valueOf(i), urlDecode(parts[i]));
 			}
 		}
 		return params;
