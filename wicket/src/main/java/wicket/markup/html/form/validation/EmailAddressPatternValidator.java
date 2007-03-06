@@ -30,26 +30,26 @@ import wicket.markup.html.form.FormComponent;
 public class EmailAddressPatternValidator extends PatternValidator
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Singleton instance */
-	private static final EmailAddressPatternValidator instance = new EmailAddressPatternValidator();
-	
-	
+	private static final EmailAddressPatternValidator INSTANCE = new EmailAddressPatternValidator();
+
 	/**
 	 * @return Instance of emailadress validator
-	 */	
-	public static  EmailAddressPatternValidator getInstance()
+	 */
+	public static EmailAddressPatternValidator getInstance()
 	{
-		return instance;
+		return INSTANCE;
 	}
-	
+
 	/**
 	 * Protected constructor to force use of static singleton accessor method.
 	 * Or override it to implement resourceKey(Component)
 	 */
 	protected EmailAddressPatternValidator()
 	{
-		super("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)", Pattern.CASE_INSENSITIVE);
+		super("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
+				Pattern.CASE_INSENSITIVE);
 	}
 
 	/**
