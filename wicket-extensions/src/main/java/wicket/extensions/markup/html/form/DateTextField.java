@@ -16,6 +16,7 @@
  */
 package wicket.extensions.markup.html.form;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,9 +24,9 @@ import java.util.Locale;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import wicket.model.IModel;
-import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.converters.AbstractConverter;
+import wicket.util.convert.converters.DateConverter;
 
 /**
  * A TextField that is mapped to a <code>java.util.Date</code> object.
@@ -43,112 +44,12 @@ import wicket.util.convert.converters.AbstractConverter;
 public class DateTextField extends TextField implements ITextFormatProvider
 {
 
-	/**
-	 * Converts <code>String</code> to <code>java.util.Date</code> and back
-	 * via the datePattern in the inner class
-	 * 
-	 * @author Stefan Kanev, s.kanev@spider.bg
-	 * 
-	 */
-	public class DateTextFieldConverter extends Converter
-	{
-
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Creates an instance, setting
-		 * <code>DateToStringPatternConverter</code> and
-		 * <code>StringPatternToDateConverter</code> as it is appropriate.
-		 */
-		private DateTextFieldConverter()
-		{
-			super(getSession().getLocale());
-
-			set(String.class, new DateToStringPatternConverter());
-			set(Date.class, new StringPatternToDateConverter());
-		}
-
-	}
-
-	/**
-	 * Converts a <code>java.util.Date</code> to <code>String</code> using
-	 * the the pattern in <code>DateTextField</code>
-	 * 
-	 * @author Stefan Kanev
-	 * 
-	 */
-	public final class DateToStringPatternConverter extends AbstractConverter
-	{
-
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Converts a <code>java.util.Date</code> to <code>String</code>
-		 * using the the pattern in <code>DateTextField</code>
-		 * 
-		 * @param value
-		 *            A <code>java.util.Date</code> object to parse
-		 * @param locale
-		 *            The user locale (unused)
-		 * @return The given value as string
-		 */
-		public Object convert(Object value, Locale locale)
-		{
-			if (!(value instanceof Date))
-				return null;
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-			String result = dateFormat.format((Date)value);
-
-			return result;
-		}
-
-		protected Class getTargetType()
-		{
-			return String.class;
-		}
-
-	}
-
-	/**
-	 * Parses a <code>java.util.Date</code> from a <code>String</code>
-	 * 
-	 * @author Stefan Kanev, s.kanev@spider.bg
-	 * 
-	 */
-	public final class StringPatternToDateConverter extends AbstractConverter
-	{
-
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Parses a <code>java.util.Date</code> from a <code>String</code>
-		 * 
-		 * @param value
-		 *            A date to parse
-		 * @param locale
-		 *            User locale (rather unused)
-		 * @return The date formatted as string according to the set pattern
-		 */
-		public Object convert(Object value, Locale locale)
-		{
-			SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-
-			return parse(dateFormat, value);
-		}
-
-		protected Class getTargetType()
-		{
-			return Date.class;
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The date pattern of the text field
 	 */
-	private String datePattern = null;
+	private SimpleDateFormat dateFormat = null;
 
 	/**
 	 * The converter for the TextField
@@ -200,9 +101,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 */
 	public DateTextField(String id, IModel object, String datePattern)
 	{
-		super(id, object, Date.class);
-		this.datePattern = datePattern;
-		this.converter = new DateTextFieldConverter();
+		this(id, datePattern);
+		setModel(object);
 	}
 
 	/**
@@ -219,8 +119,19 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	public DateTextField(String id, String datePattern)
 	{
 		super(id, Date.class);
-		this.datePattern = datePattern;
-		this.converter = new DateTextFieldConverter();
+		this.dateFormat = new SimpleDateFormat(datePattern);
+		this.converter = new DateConverter()
+		{
+			private static final long serialVersionUID = 1L;
+
+			/**
+			 * @see wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
+			 */
+			public DateFormat getDateFormat(Locale locale)
+			{
+				return dateFormat;
+			}
+		};
 	}
 
 	/**
@@ -231,11 +142,11 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public IConverter getConverter()
+	public IConverter getConverter(Class type)
 	{
 		if (converter == null)
 		{
-			return super.getConverter();
+			return super.getConverter(type);
 		}
 		else
 		{
@@ -250,6 +161,6 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 */
 	public String getTextFormat()
 	{
-		return datePattern;
+		return dateFormat.toPattern();
 	}
 }
