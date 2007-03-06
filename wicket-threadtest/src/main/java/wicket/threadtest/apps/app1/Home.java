@@ -139,7 +139,7 @@ public class Home extends WebPage {
 			add(new ListMultipleChoice("siteSelection", SITES));
 
 			add(new TextField("urlProperty", URL.class) {
-				public IConverter getConverter() {
+				public IConverter getConverter(Class clazz) {
 					return new SimpleConverterAdapter() {
 						public Object toObject(String value) {
 							try {
@@ -157,7 +157,7 @@ public class Home extends WebPage {
 			});
 
 			add(new TextField("phoneNumberUS", UsPhoneNumber.class) {
-				public IConverter getConverter() {
+				public IConverter getConverter(Class clazz) {
 					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
 				}
 			});

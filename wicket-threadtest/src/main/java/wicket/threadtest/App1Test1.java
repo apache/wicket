@@ -34,9 +34,9 @@ public class App1Test1 {
 		// Thread.sleep(5000);
 
 		Objects.setObjectStreamFactory(new WicketObjectStreamFactory());
-		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 100);
+		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 10);
 		// getCmd.setPrintResponse(true);
-		Tester tester = new Tester(getCmd, 10, true);
+		Tester tester = new Tester(getCmd, 1000, true);
 		tester.run();
 	}
 }
