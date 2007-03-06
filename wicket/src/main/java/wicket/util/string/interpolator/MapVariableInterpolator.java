@@ -18,6 +18,8 @@ package wicket.util.string.interpolator;
 
 import java.util.Map;
 
+import wicket.util.string.Strings;
+
 /**
  * Interpolates variables into a string from a Map.
  * 
@@ -43,6 +45,26 @@ public class MapVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
+	 * Constructor
+	 * 
+	 * @param string
+	 *            The string to interpolate into
+	 * @param variables
+	 *            The variables to substitute
+	 * @param exceptionOnNullVarValue
+	 *            if true an {@link IllegalStateException} will be thrown if a
+	 *            {@link #getValue(String)} returns null, otherwise the
+	 *            ${varname} string will be left in the <code>string</code> so
+	 *            multiple interpolators can be chained
+	 */
+	public MapVariableInterpolator(String string, final Map variables,
+			boolean exceptionOnNullVarValue)
+	{
+		super(string, exceptionOnNullVarValue);
+		this.variables = variables;
+	}
+
+	/**
 	 * Accessor to set variables
 	 * 
 	 * @param variables
@@ -62,12 +84,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 */
 	protected final String getValue(final String variableName)
 	{
-		final Object value = variables.get(variableName);
-		if (value != null)
-		{
-			return value.toString();
-		}
-		throw new IllegalStateException("Interpolated variable '" + variableName + "' not found.");
+		return Strings.toString(variables.get(variableName));
 	}
 
 	/**
