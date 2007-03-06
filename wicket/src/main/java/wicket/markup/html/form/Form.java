@@ -713,7 +713,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 	}
 
-
 	/**
 	 * Mark each form component on this form valid.
 	 */
@@ -870,7 +869,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 	}
 
-
 	/**
 	 * Process the form. Though you can override this method to provide your
 	 * whole own algorithm, it is not recommended to do so.
@@ -933,7 +931,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			}
 		});
 	}
-
 
 	/**
 	 * Clears the input from the form's nested children of type
