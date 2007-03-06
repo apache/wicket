@@ -308,7 +308,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.setCharacterEncoding(encoding);
 			response.setContentType("text/xml; charset=" + encoding);
 
-			// Make sure it is not cached by a
+			// Make sure it is not cached by a client
 			response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 			response.setHeader("Cache-Control", "no-cache, must-revalidate");
 			response.setHeader("Pragma", "no-cache");
@@ -327,6 +327,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondInvocation(response, js);
 			}
 
+			// process added components
 			respondComponents(response);
 
 			fireOnAfterRespondListeners(response);
@@ -367,6 +368,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	private void fireOnAfterRespondListeners(final WebResponse response)
 	{
+		// invoke onafterresponse event on listeners
 		if (listeners != null)
 		{
 			final Map<String, Component> components = Collections
