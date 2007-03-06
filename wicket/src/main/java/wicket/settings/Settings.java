@@ -51,8 +51,8 @@ import wicket.resource.loader.IStringResourceLoader;
 import wicket.session.DefaultPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
-import wicket.util.convert.ConverterFactory;
-import wicket.util.convert.IConverterFactory;
+import wicket.util.convert.ConverterLocatorFactory;
+import wicket.util.convert.IConverterLocatorFactory;
 import wicket.util.crypt.CachingSunJceCryptFactory;
 import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
@@ -130,11 +130,7 @@ public final class Settings
 	/** The context path that should be used for url prefixing */
 	private String contextPath;
 
-	/**
-	 * Factory for the converter instance; default to the non localized factory
-	 * {@link ConverterFactory}.
-	 */
-	private IConverterFactory converterFactory = new ConverterFactory();
+	private IConverterLocatorFactory converterLocatorFactory;
 
 	/** Default values for persistence of form data (by means of cookies) */
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
@@ -458,11 +454,15 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#getConverterFactory()
+	 * @see wicket.settings.IApplicationSettings#getConverterLocatorFactory()
 	 */
-	public IConverterFactory getConverterFactory()
+	public IConverterLocatorFactory getConverterLocatorFactory()
 	{
-		return converterFactory;
+		if (converterLocatorFactory == null)
+		{
+			converterLocatorFactory = new ConverterLocatorFactory();
+		}
+		return converterLocatorFactory;
 	}
 
 	/**
@@ -895,15 +895,15 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
+	 * @see wicket.settings.IApplicationSettings#setConverterLocatorFactory(wicket.util.convert.IConverterLocatorFactory)
 	 */
-	public void setConverterFactory(IConverterFactory factory)
+	public void setConverterLocatorFactory(IConverterLocatorFactory factory)
 	{
 		if (factory == null)
 		{
 			throw new IllegalArgumentException("converter factory cannot be set to null");
 		}
-		this.converterFactory = factory;
+		this.converterLocatorFactory = factory;
 	}
 
 	/**

@@ -21,14 +21,14 @@ import java.text.ParsePosition;
 import java.util.Locale;
 
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.IConverter;
 
 /**
  * Base class for locale aware type converters.
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractConverter implements ITypeConverter
+public abstract class AbstractConverter implements IConverter
 {
 	/**
 	 * Parses a value using one of the java.util.text format classes.
@@ -37,11 +37,13 @@ public abstract class AbstractConverter implements ITypeConverter
 	 *            The format to use
 	 * @param value
 	 *            The object to parse
+	 * @param locale
+	 *            The locale to use to parse.
 	 * @return The object
 	 * @throws ConversionException
 	 *             Thrown if parsing fails
 	 */
-	protected Object parse(final Format format, final Object value)
+	protected Object parse(final Format format, final Object value, Locale locale)
 	{
 		final ParsePosition position = new ParsePosition(0);
 		final String stringValue = value.toString();
@@ -49,7 +51,7 @@ public abstract class AbstractConverter implements ITypeConverter
 		if (position.getIndex() != stringValue.length())
 		{
 			throw newConversionException("Cannot parse '" + value + "' using format " + format,
-					value, null).setFormat(format);
+					value, locale).setFormat(format);
 		}
 		return result;
 	}
@@ -66,14 +68,28 @@ public abstract class AbstractConverter implements ITypeConverter
 	 * @return The ConversionException
 	 */
 	protected ConversionException newConversionException(final String message, final Object value,
-			final Locale locale)
+			Locale locale)
 	{
 		return new ConversionException(message).setSourceValue(value)
-				.setTargetType(getTargetType()).setTypeConverter(this).setLocale(locale);
+				.setTargetType(getTargetType()).setConverter(this).setLocale(locale);
 	}
 
 	/**
 	 * @return The target type of this type converter
 	 */
 	protected abstract Class getTargetType();
+
+	/**
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      Locale)
+	 */
+	public String convertToString(Object value, Locale locale)
+	{
+		if (value == null)
+		{
+			return null;
+		}
+		return value.toString();
+	}
+
 }

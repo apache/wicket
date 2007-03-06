@@ -361,9 +361,11 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 			// Get next choice
 			final Object choice = choices.get(index);
 
+			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
+			Class objectClass = displayValue == null ? null : displayValue.getClass();
 			// Get label for choice
-			final String label = (String)getConverter().convert(
-					getChoiceRenderer().getDisplayValue(choice), String.class);
+			final String label = getConverter(objectClass).convertToString(displayValue,
+					getLocale());
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know

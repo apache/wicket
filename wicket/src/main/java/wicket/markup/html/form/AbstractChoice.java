@@ -351,8 +351,10 @@ abstract class AbstractChoice extends FormComponent
 	protected void appendOptionHtml(AppendingStringBuffer buffer, Object choice, int index,
 			String selected)
 	{
-		final String displayValue = (String)getConverter().convert(
-				renderer.getDisplayValue(choice), String.class);
+		Object objectValue = renderer.getDisplayValue(choice);
+		Class objectClass = objectValue == null ? null : objectValue.getClass();
+		final String displayValue = getConverter(objectClass).convertToString(objectValue,
+				getLocale());
 		buffer.append("\n<option ");
 		if (isSelected(choice, index, selected))
 		{

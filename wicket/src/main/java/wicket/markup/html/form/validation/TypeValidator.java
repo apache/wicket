@@ -105,10 +105,10 @@ public class TypeValidator extends StringValidator
 		if (!Strings.isEmpty(value))
 		{
 			// Check value by attempting to convert it
-			final IConverter converter = formComponent.getConverter();
+			final IConverter converter = formComponent.getConverter(type);
 			try
 			{
-				converter.convert(value, type);
+				converter.convertToObject(value, formComponent.getLocale());
 			}
 			catch (Exception e)
 			{

@@ -17,7 +17,9 @@
 package wicket.model;
 
 import wicket.Component;
+import wicket.Session;
 import wicket.util.lang.PropertyResolver;
+import wicket.util.lang.PropertyResolverConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -173,12 +175,14 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 					if (propertyType != null)
 					{
 						// convert the String to the right type
-						object = component.getConverter().convert(string, propertyType);
+						object = component.getConverter(propertyType).convertToObject(string, Session.get().getLocale());
 					}
 				}
 			}
 
-			PropertyResolver.setValue(expression, modelObject, object, component==null ? null:component.getConverter());
+			PropertyResolverConverter prc = null;
+			prc = new PropertyResolverConverter(Session.get(), Session.get().getLocale());
+			PropertyResolver.setValue(expression, modelObject, object, prc);
 		}
 	}
 

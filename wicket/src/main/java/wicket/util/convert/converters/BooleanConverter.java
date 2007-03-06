@@ -18,7 +18,7 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
-import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.IConverter;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
@@ -35,20 +35,20 @@ public final class BooleanConverter extends AbstractConverter
 	/**
 	 * The singleton instance for a boolean converter
 	 */
-	public static final ITypeConverter INSTANCE = new BooleanConverter();
+	public static final IConverter INSTANCE = new BooleanConverter();
 
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convert(final Object value, final Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
 		try
 		{
-			return Strings.toBoolean(value.toString());
+			return Strings.toBoolean(value);
 		}
 		catch (StringValueConversionException e)
 		{
-			throw newConversionException("Cannot convert '" + value + "' to Boolean", value,locale);
+			throw newConversionException("Cannot convert '" + value + "' to Boolean", value, locale);
 		}
 	}
 
@@ -59,4 +59,5 @@ public final class BooleanConverter extends AbstractConverter
 	{
 		return Boolean.class;
 	}
+
 }

@@ -112,7 +112,7 @@ public final class PropertyResolver
 	 *            type.
 	 */
 	public final static void setValue(final String expression, final Object object, Object value,
-			IConverter converter)
+			PropertyResolverConverter converter)
 	{
 		if (expression == null || expression.equals(""))
 		{
@@ -131,7 +131,8 @@ public final class PropertyResolver
 			throw new WicketRuntimeException("Null object returned for expression: " + expression
 					+ " for setting value: " + value + " on: " + object);
 		}
-		setter.setValue(value, converter == null ? Session.get().getConverter() : converter);
+		setter.setValue(value, converter == null ? new PropertyResolverConverter(Session.get(),
+				Session.get().getLocale()) : converter);
 	}
 
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
@@ -453,7 +454,7 @@ public final class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public void setValue(Object value, IConverter converter)
+		public void setValue(Object value, PropertyResolverConverter converter)
 		{
 			getAndSetter.setValue(this.value, value, converter);
 		}
@@ -493,7 +494,7 @@ public final class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public void setValue(final Object object, final Object value, IConverter converter);
+		public void setValue(final Object object, final Object value, PropertyResolverConverter converter);
 
 	}
 
@@ -518,7 +519,7 @@ public final class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			((Map)object).put(key, value);
 		}
@@ -555,7 +556,7 @@ public final class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			List lst = (List)object;
 
@@ -609,7 +610,7 @@ public final class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			value = converter.convert(value, object.getClass().getComponentType());
 			Array.set(object, index, value);
@@ -654,7 +655,7 @@ public final class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			throw new WicketRuntimeException("Cant set the length on an array");
 		}
@@ -722,7 +723,7 @@ public final class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			if (setMethod == null)
 			{
@@ -828,7 +829,7 @@ public final class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public final void setValue(final Object object, final Object value, IConverter converter)
+		public final void setValue(final Object object, final Object value, PropertyResolverConverter converter)
 		{
 			if (setMethod == null)
 			{
@@ -990,7 +991,7 @@ public final class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			value = converter.convert(value, field.getType());
 			try

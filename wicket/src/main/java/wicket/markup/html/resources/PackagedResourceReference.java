@@ -20,6 +20,7 @@ import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
+import wicket.Session;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -102,8 +103,8 @@ public class PackagedResourceReference extends WebMarkupContainer
 					throw new IllegalArgumentException(
 							"The model must provide an instance of String");
 				}
-				String f = (String)component.getConverter().convert(file.getObject(component),
-						String.class);
+				String f = (String)component.getConverter(String.class).convertToString(file.getObject(component),
+						component.getLocale());
 				ResourceReference ref = createPackageResourceReference(Application.get(), referer,
 						f);
 				return getRequestCycle().urlFor(ref);

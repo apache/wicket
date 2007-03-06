@@ -16,6 +16,8 @@
  */
 package wicket.util.convert;
 
+import java.util.Locale;
+
 import wicket.Component;
 
 /**
@@ -28,17 +30,9 @@ import wicket.Component;
  * null).
  * <p>
  * Note, this class is specifically meant for providing custom converters per
- * component by overriding {@link Component#getConverter()}. It is less usefull
- * for application scoped converters; registering {@link ITypeConverter}s with
- * an instance of {@link Converter} is a better choice for that.
- * </p>
- * <p>
- * <strong>WARNING. Due to a current limitation as a result of how
- * {@link IConverter} works, classes that extend this adapter will not be much
- * use with string values. If you want to use a custom converter for string
- * values, consider wrapping the values in another class so that conversion will
- * be triggered. See the form input example of wicket-examples for how this can
- * be done. </strong>
+ * component by overriding {@link Component#getConverter(Object)}. It is less
+ * usefull for application scoped converters; registering {@link ITypeConverter}s
+ * with an instance of {@link ConverterLocator} is a better choice for that.
  * </p>
  * <p>
  * An example of the use of this class is the following:
@@ -80,41 +74,24 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * If class c is a string type (or more precise, assignable from
-	 * {@link CharSequence}), this method will delegate type conversion to
-	 * {@link #toString(Object)}. Otherwise, it will delegate type conversion
-	 * to {@link #toObject(String)} using the object's {@link Object#toString()}
-	 * value to convert it to a string first (or passing in null in case the
-	 * value is null).
-	 * 
-	 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
-	 *      java.lang.Class)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
 	 */
-	public final Object convert(Object value, Class c)
+	public Object convertToObject(String value, Locale locale)
 	{
-		if (String.class.isAssignableFrom(c))
-		{
-			return toString(value);
-		}
-		else if (value instanceof CharSequence)
-		{
-			return toObject((value instanceof String) ? (String)value : value.toString());
-		}
-		else if (value != null && (!c.isAssignableFrom(value.getClass())))
-		{
-			throw new IllegalArgumentException("unable to convert " + value + " to type " + c);
-		}
-		return value; // null
+		setLocale(locale);
+		return toObject(value);
 	}
 
 	/**
-	 * Convert the given value to a string.
-	 * 
-	 * @param value
-	 *            The value to convert, may be null
-	 * @return The value as a string
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      java.util.Locale)
 	 */
-	public abstract String toString(Object value);
+	public String convertToString(Object value, Locale locale)
+	{
+		setLocale(locale);
+		return toString(value);
+	}
 
 	/**
 	 * Convert the given string to an object of choice.
@@ -124,4 +101,13 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 	 * @return The string value converted to an object of choice
 	 */
 	public abstract Object toObject(String value);
+
+	/**
+	 * Convert the given value to a string.
+	 * 
+	 * @param value
+	 *            The value to convert, may be null
+	 * @return The value as a string
+	 */
+	public abstract String toString(Object value);
 }

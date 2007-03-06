@@ -17,11 +17,9 @@
 package wicket.util.convert;
 
 import java.text.ParseException;
+import java.util.Locale;
 
 import javax.swing.text.MaskFormatter;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.WicketRuntimeException;
@@ -29,8 +27,8 @@ import wicket.WicketRuntimeException;
 /**
  * A converter that takes a mask into account. It is specifically meant for
  * overrides on individual components, that provide their own converter by
- * returning it from {@link Component#getConverter()}. It uses an instance of
- * {@link MaskFormatter} to delegate the masking and unmasking to.
+ * returning it from {@link Component#getConverter(Object)}. It uses an
+ * instance of {@link MaskFormatter} to delegate the masking and unmasking to.
  * <p>
  * The following characters can be specified (adopted from the MaskFormatter
  * documentation):
@@ -92,56 +90,15 @@ import wicket.WicketRuntimeException;
  * 
  * @author Eelco Hillenius
  */
-public class MaskConverter extends SimpleConverterAdapter
+public class MaskConverter implements IConverter
 {
 	private static final long serialVersionUID = 1L;
-
-	/** Log. */
-	private static final Log log = LogFactory.getLog(MaskConverter.class);
 
 	/** Object that knows all about masks. */
 	private final MaskFormatter maskFormatter;
 
 	/**
 	 * Construct.
-	 * 
-	 * @param mask
-	 *            The mask to use for this converter instance
-	 * @param type
-	 *            The type to convert string values to. WARNING: adding anything
-	 *            that implements charsequence here will probably not have the
-	 *            desired effect as then only {@link #toString(Object)} will be
-	 *            called. Consider wrapping your string value in a custom class
-	 *            so that conversion will be triggered properly. That class
-	 *            should have a public constructor with a single string
-	 *            argument. That constructor will be used by
-	 *            {@link MaskFormatter} to construct instances.
-	 * @see MaskFormatter
-	 */
-	public MaskConverter(String mask, Class type)
-	{
-		try
-		{
-			maskFormatter = new MaskFormatter(mask);
-			maskFormatter.setValueClass(type);
-			maskFormatter.setAllowsInvalid(true);
-			maskFormatter.setValueContainsLiteralCharacters(true);
-		}
-		catch (ParseException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-	}
-
-	/**
-	 * Construct. WARNING: setting {@link MaskFormatter#setValueClass(Class)} to
-	 * anything that implements charsequence, or not setting that class at all,
-	 * which has the effect that String will be used will probably not have the
-	 * desired effect as then only {@link #toString(Object)} will be called.
-	 * Consider wrapping your string value in a custom class so that conversion
-	 * will be triggered properly. That class should have a public constructor
-	 * with a single string argument. That constructor will be used by
-	 * {@link MaskFormatter} to construct instances.
 	 * 
 	 * @param maskFormatter
 	 *            The mask formatter to use for masking and unmasking values
@@ -157,16 +114,53 @@ public class MaskConverter extends SimpleConverterAdapter
 	}
 
 	/**
-	 * Converts the value to a string using
-	 * {@link MaskFormatter#valueToString(Object)}.
+	 * Construct; converts to Strings.
 	 * 
-	 * @see wicket.util.convert.SimpleConverterAdapter#toString(java.lang.Object)
+	 * @param mask
+	 *            The mask to use for this converter instance
+	 * @see MaskFormatter
 	 */
-	public String toString(Object value)
+	public MaskConverter(String mask)
+	{
+		this(mask, String.class);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param mask
+	 *            The mask to use for this converter instance
+	 * @param type
+	 *            The type to convert string values to.
+	 * @see MaskFormatter
+	 */
+	public MaskConverter(String mask, Class/*<?>*/ type)
 	{
 		try
 		{
-			return maskFormatter.valueToString(value);
+			maskFormatter = new MaskFormatter(mask);
+			maskFormatter.setValueClass(type);
+			maskFormatter.setAllowsInvalid(true);
+			maskFormatter.setValueContainsLiteralCharacters(true);
+		}
+		catch (ParseException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
+
+	/**
+	 * Converts a string to an object using
+	 * {@link MaskFormatter#stringToValue(String)}.
+	 * 
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      Locale)
+	 */
+	public Object convertToObject(String value, Locale locale)
+	{
+		try
+		{
+			return maskFormatter.stringToValue(value);
 		}
 		catch (ParseException e)
 		{
@@ -175,16 +169,17 @@ public class MaskConverter extends SimpleConverterAdapter
 	}
 
 	/**
-	 * Converts a string to an object using
-	 * {@link MaskFormatter#stringToValue(String)}.
+	 * Converts the value to a string using
+	 * {@link MaskFormatter#valueToString(Object)}.
 	 * 
-	 * @see wicket.util.convert.SimpleConverterAdapter#toObject(java.lang.String)
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      Locale)
 	 */
-	public Object toObject(String value)
+	public String convertToString(Object value, Locale locale)
 	{
 		try
 		{
-			return maskFormatter.stringToValue(value);
+			return maskFormatter.valueToString(value);
 		}
 		catch (ParseException e)
 		{

@@ -29,10 +29,11 @@ import wicket.util.convert.ConversionException;
 public abstract class AbstractNumberConverter extends AbstractConverter
 {
 	/**
-	 * @param locale 
+	 * @param locale
 	 * @return Returns the numberFormat.
 	 */
 	public abstract NumberFormat getNumberFormat(Locale locale);
+
 
 	/**
 	 * Parses a value as a String and returns a Number.
@@ -43,7 +44,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	 *            The minimum allowed value
 	 * @param max
 	 *            The maximum allowed value
-	 * @param locale 
+	 * @param locale
 	 * @return The number
 	 * @throws ConversionException
 	 *             if value is unparsable or out of range
@@ -57,15 +58,16 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 
 		final NumberFormat numberFormat = getNumberFormat(locale);
 
-		if(value instanceof String)
+		if (value instanceof String)
 		{
-		    // Convert spaces to no-break space (U+00A0) to fix problems with broser conversions. 
-		    // Space is not valid thousands-separator, but no-br space is.
-		    String v = (String)value;
-		    value = v.replace(' ' , '\u00A0');
+			// Convert spaces to no-break space (U+00A0) to fix problems with
+			// broser conversions.
+			// Space is not valid thousands-separator, but no-br space is.
+			String v = (String)value;
+			value = v.replace(' ', '\u00A0');
 		}
 
-		final Number number = (Number)parse(numberFormat, value);
+		final Number number = (Number)parse(numberFormat, value, locale);
 
 		if (number == null)
 		{
@@ -74,16 +76,31 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 
 		if (number.doubleValue() < min)
 		{
-			throw newConversionException("Value cannot be less than " + min, value,locale).setFormat(
-					numberFormat);
+			throw newConversionException("Value cannot be less than " + min, value, locale)
+					.setFormat(numberFormat);
 		}
 
 		if (number.doubleValue() > max)
 		{
-			throw newConversionException("Value cannot be greater than " + max, value,locale).setFormat(
-					numberFormat);
+			throw newConversionException("Value cannot be greater than " + max, value, locale)
+					.setFormat(numberFormat);
 		}
 
 		return number;
 	}
+
+	/**
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      Locale)
+	 */
+	public String convertToString(final Object value, Locale locale)
+	{
+		NumberFormat fmt = getNumberFormat(locale);
+		if (fmt != null)
+		{
+			return fmt.format(value);
+		}
+		return value.toString();
+	}
+
 }

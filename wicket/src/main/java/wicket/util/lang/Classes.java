@@ -83,8 +83,8 @@ public final class Classes
 		try
 		{
 			final IConverter converter = Application.get().getApplicationSettings()
-					.getConverterFactory().newConverter(locale);
-			final Object param = converter.convert(value, paramClass);
+			.getConverterLocatorFactory().newConverterLocator().getConverter(paramClass);
+			final Object param = converter.convertToObject(value, locale);
 			if (param == null)
 			{
 				throw new MarkupException("Unable to convert value '" + value + "' into "
