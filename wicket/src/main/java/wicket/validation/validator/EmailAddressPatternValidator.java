@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
  * @author Chris Turner
  * @author Jonathan Locke
  * @author Martijn Dashorst
- * 
  */
 public class EmailAddressPatternValidator extends PatternValidator
 {
@@ -32,7 +31,6 @@ public class EmailAddressPatternValidator extends PatternValidator
 
 	/** Singleton instance */
 	private static final EmailAddressPatternValidator INSTANCE = new EmailAddressPatternValidator();
-
 
 	/**
 	 * @return Instance of emailadress validator
@@ -48,7 +46,7 @@ public class EmailAddressPatternValidator extends PatternValidator
 	 */
 	protected EmailAddressPatternValidator()
 	{
-		super("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$",
+		super("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
 				Pattern.CASE_INSENSITIVE);
 	}
 
