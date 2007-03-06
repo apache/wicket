@@ -68,8 +68,9 @@ public abstract class AbstractOptions extends FormComponent
 		{
 			final Object choice = options.next();
 			String id = renderer.getIdValue(choice, 0);
-			String value = (String)getConverter().convert(renderer.getDisplayValue(choice),
-					String.class);
+			Object displayValue = renderer.getDisplayValue(choice);
+			Class displayClass = displayValue == null ? null : displayValue.getClass();
+			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
 			value = getLocalizer().getString(id + "." + value, this, value);
 
 			buffer.append("\n<option value=\"").append(id).append("\">").append(value).append(

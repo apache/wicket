@@ -93,8 +93,7 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 			{
 				locale = Session.get().getLocale();
 			}
-			converter.setLocale(locale);
-			return (String)converter.convert(result, String.class);
+			return converter.convertToString(result, locale);
 		}
 		else
 		{
