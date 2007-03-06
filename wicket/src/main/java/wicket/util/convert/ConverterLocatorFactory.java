@@ -16,22 +16,22 @@
  */
 package wicket.util.convert;
 
-import java.util.Locale;
+import wicket.IConverterLocator;
 
 /**
- * Implementation of {@link wicket.util.convert.IConverterFactory}which creates
- * an instance of Converter in order to fulfill the IConverter contract.
+ * Implementation of {@link IConverterLocatorFactory}which creates
+ * an instance of {@link IConverterLocator}.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class ConverterFactory implements IConverterFactory
+public final class ConverterLocatorFactory implements IConverterLocatorFactory
 {
 	/**
-	 * @see wicket.util.convert.IConverterFactory#newConverter(Locale)
+	 * @see wicket.util.convert.IConverterLocatorFactory#newConverterLocator()
 	 */
-	public IConverter newConverter(final Locale locale)
+	public IConverterLocator newConverterLocator()
 	{
-		return new Converter(locale);
+		return new ConverterLocator();
 	}
 }

@@ -20,7 +20,7 @@ import wicket.Application;
 import wicket.application.IClassResolver;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
-import wicket.util.convert.IConverterFactory;
+import wicket.util.convert.IConverterLocatorFactory;
 
 /**
  * Settings interface for application settings.
@@ -71,11 +71,11 @@ public interface IApplicationSettings
 	String getContextPath();
 
 	/**
-	 * Gets the converter factory.
+	 * Gets the converter locator factory.
 	 * 
-	 * @return the converter factory
+	 * @return the converter locator factory
 	 */
-	IConverterFactory getConverterFactory();
+	IConverterLocatorFactory getConverterLocatorFactory();
 
 	/**
 	 * Gets internal error page class.
@@ -131,12 +131,11 @@ public interface IApplicationSettings
 	void setContextPath(String contextPath);
 
 	/**
-	 * Sets converter factory
+	 * Sets the CoverterLocatorFactory
 	 * 
 	 * @param factory
-	 *            new factory
 	 */
-	void setConverterFactory(IConverterFactory factory);
+	public void setConverterLocatorFactory(IConverterLocatorFactory factory);
 
 	/**
 	 * Sets internal error page class. The class must be bookmarkable and must

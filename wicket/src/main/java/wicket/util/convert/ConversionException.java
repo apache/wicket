@@ -24,10 +24,6 @@ import wicket.WicketRuntimeException;
 /**
  * Thrown for conversion exceptions.
  * 
- * If it is desirable to override the default resource key used to construct the
- * error message (<code>TypeValidator</code>), users should call
- * {@link #setResourceKey(String)}
- * 
  * @author Eelco Hillenius
  */
 public class ConversionException extends WicketRuntimeException
@@ -47,15 +43,9 @@ public class ConversionException extends WicketRuntimeException
 	private Object sourceValue;
 
 	/** Target type for the failed conversion. */
-	private Class targetType;
-
-	/** The type converter that was used */
-	private ITypeConverter typeConverter;
-
-	/**
-	 * Resource key that will be used to construct an error message. If this
-	 * field is not set the default "TypeValidator" key will be used.
-	 */
+	private Class/*<?>*/ targetType;
+	
+	/** Resource key for the message that should be displayed */
 	private String resourceKey;
 
 	/**
@@ -68,30 +58,6 @@ public class ConversionException extends WicketRuntimeException
 	{
 		super(message);
 	}
-
-
-	/**
-	 * Gets resourceKey
-	 * 
-	 * @return resourceKey
-	 */
-	public String getResourceKey()
-	{
-		return resourceKey;
-	}
-
-
-	/**
-	 * Sets resourceKey.
-	 * 
-	 * @param resourceKey
-	 *            resourceKey
-	 */
-	public void setResourceKey(String resourceKey)
-	{
-		this.resourceKey = resourceKey;
-	}
-
 
 	/**
 	 * Construct exception with message and cause.
@@ -128,22 +94,6 @@ public class ConversionException extends WicketRuntimeException
 	}
 
 	/**
-	 * @return Locale
-	 */
-	public final Locale getLocale()
-	{
-		if (locale != null)
-		{
-			return locale;
-		}
-		if (converter != null)
-		{
-			return converter.getLocale();
-		}
-		return null;
-	}
-
-	/**
 	 * Get the used format.
 	 * 
 	 * @return the used format
@@ -151,6 +101,16 @@ public class ConversionException extends WicketRuntimeException
 	public final Format getFormat()
 	{
 		return format;
+	}
+
+	/**
+	 * Get the used locale.
+	 * 
+	 * @return the used locale
+	 */
+	public final Locale getLocale()
+	{
+		return locale;
 	}
 
 	/**
@@ -168,17 +128,9 @@ public class ConversionException extends WicketRuntimeException
 	 * 
 	 * @return the target property type.
 	 */
-	public final Class getTargetType()
+	public final Class/*<?>*/ getTargetType()
 	{
 		return targetType;
-	}
-
-	/**
-	 * @return Returns the typeConverter.
-	 */
-	public ITypeConverter getTypeConverter()
-	{
-		return typeConverter;
 	}
 
 	/**
@@ -240,20 +192,36 @@ public class ConversionException extends WicketRuntimeException
 	 *            sets the target property type
 	 * @return This
 	 */
-	public final ConversionException setTargetType(Class targetType)
+	public final ConversionException setTargetType(Class/*?*/ targetType)
 	{
 		this.targetType = targetType;
 		return this;
 	}
 
+
+	
+
 	/**
-	 * @param typeConverter
-	 *            The typeConverter to set.
+	 * @return The resource key for the message that should be displayed
+	 */
+	public String getResourceKey()
+	{
+		return resourceKey;
+	}
+
+
+	/**
+	 * Set the resource key for the message that should be displayed.
+	 * 
+	 * @param resourceKey
+	 * 				sets the resource key
 	 * @return This
 	 */
-	public ConversionException setTypeConverter(ITypeConverter typeConverter)
+	public ConversionException setResourceKey(String resourceKey)
 	{
-		this.typeConverter = typeConverter;
+		this.resourceKey = resourceKey;
 		return this;
 	}
+
+
 }

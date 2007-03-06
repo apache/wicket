@@ -120,7 +120,7 @@ import wicket.util.time.Duration;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements IClusterable
+public abstract class Session implements IClusterable, IConverterLocator
 {
 
 	private static final long serialVersionUID = 1L;
@@ -181,7 +181,7 @@ public abstract class Session implements IClusterable
 	private ClientInfo clientInfo;
 
 	/** The converter instance. */
-	private transient IConverter converter;
+	private transient IConverterLocator converterSupplier;
 
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
@@ -775,7 +775,6 @@ public abstract class Session implements IClusterable
 			throw new IllegalArgumentException("Parameter 'locale' must not be null");
 		}
 		this.locale = locale;
-		this.converter = null;
 		dirty();
 	}
 
@@ -906,17 +905,20 @@ public abstract class Session implements IClusterable
 	 * cleared and the converter will be recreated for the new locale on a next
 	 * request.
 	 * 
+	 * @param type
+	 *            TODO
+	 * 
 	 * @return the converter
 	 */
-	public final IConverter getConverter()
+	public final IConverter getConverter(Class/*<?>*/ type)
 	{
-		if (converter == null)
+		if (converterSupplier == null)
 		{
 			// Let the factory create a new converter
-			converter = getApplication().getApplicationSettings().getConverterFactory()
-					.newConverter(getLocale());
+			converterSupplier = getApplication().getApplicationSettings()
+					.getConverterLocatorFactory().newConverterLocator();
 		}
-		return converter;
+		return converterSupplier.getConverter(type);
 	}
 
 	/**

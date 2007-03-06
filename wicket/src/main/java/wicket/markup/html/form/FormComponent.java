@@ -896,10 +896,10 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		}
 		else if (!Strings.isEmpty(getInput()))
 		{
-			final IConverter converter = getConverter();
+			final IConverter converter = getConverter(type);
 			try
 			{
-				convertedInput = converter.convert(getInput(), type);
+				convertedInput = converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{

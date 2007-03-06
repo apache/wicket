@@ -17,7 +17,9 @@
 package wicket.util.convert.converters;
 
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Base class for all number converters.
@@ -26,13 +28,33 @@ import java.util.Locale;
  */
 public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
+	/** The date format to use */
+	private Map/*<Locale, NumberFormat>*/ numberFormats = new HashMap/*<Locale, NumberFormat>*/();
+
+
 	/**
 	 * @param locale
-	 *            The locale
 	 * @return Returns the numberFormat.
 	 */
-	public final NumberFormat getNumberFormat(Locale locale)
+	public NumberFormat getNumberFormat(Locale locale)
 	{
-		return NumberFormat.getInstance(locale);
+		NumberFormat numberFormat = (NumberFormat)numberFormats.get(locale);
+		if (numberFormat == null)
+		{
+			numberFormat = NumberFormat.getInstance(locale);
+			numberFormats.put(locale, numberFormat);
+		}
+		return numberFormat;
+	}
+
+	/**
+	 * @param locale
+	 *            The Locale that was used for this NumberFormat
+	 * @param numberFormat
+	 *            The numberFormat to set.
+	 */
+	public final void setNumberFormat(final Locale locale, final NumberFormat numberFormat)
+	{
+		numberFormats.put(locale, numberFormat);
 	}
 }

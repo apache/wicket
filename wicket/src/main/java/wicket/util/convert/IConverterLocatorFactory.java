@@ -14,48 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.convert.converters;
+package wicket.util.convert;
 
-import java.util.Locale;
-
-import wicket.util.convert.IConverter;
-
+import wicket.IConverterLocator;
 
 /**
- * Converts from Object to Byte.
+ * Factory that creates and configures instances of {@link IConverterLocator}.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class ByteConverter extends AbstractIntegerConverter
+public interface IConverterLocatorFactory
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
-	 * The singleton instance for a byte converter
+	 * Creates and returns a new instance of {@link IConverterLocator}.
+	 * 
+	 * @return A new {@link IConverterLocator} instance
 	 */
-	public static final IConverter INSTANCE = new ByteConverter();
-
-	/**
-	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
-	 */
-	public Object convertToObject(final String value, Locale locale)
-	{
-		final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE, locale);
-
-		if (number == null)
-		{
-			return null;
-		}
-
-		return new Byte(number.byteValue());
-	}
-
-	/**
-	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
-	 */
-	protected Class getTargetType()
-	{
-		return Byte.class;
-	}
+	IConverterLocator newConverterLocator();
 }

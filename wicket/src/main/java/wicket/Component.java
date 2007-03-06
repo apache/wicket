@@ -775,11 +775,14 @@ public abstract class Component implements IClusterable
 	/**
 	 * Gets the converter that should be used by this component.
 	 * 
+	 * @param type
+	 *            The type to convert to
+	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public IConverter getConverter()
+	public IConverter getConverter(Class/*<?>*/ type)
 	{
-		return getSession().getConverter();
+		return getSession().getConverter(type);
 	}
 
 	/**
@@ -957,10 +960,10 @@ public abstract class Component implements IClusterable
 		if (modelObject != null)
 		{
 			// Get converter
-			final IConverter converter = getConverter();
+			final IConverter converter = getConverter(modelObject.getClass());
 
 			// Model string from property
-			final String modelString = (String)converter.convert(modelObject, String.class);
+			final String modelString = converter.convertToString(modelObject, getLocale());
 
 			if (modelString != null)
 			{

@@ -16,25 +16,39 @@
  */
 package wicket.util.convert;
 
-import java.io.Serializable;
+import java.util.Locale;
+
+import wicket.IClusterable;
 
 /**
- * General purpose data type converter.  An object that implements this
- * interface can convert objects from one class to another.
+ * General purpose data type converter. An object that implements this interface
+ * can convert objects from one class to another.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IConverter extends ILocalizable, Serializable
+public interface IConverter extends IClusterable
 {
 	/**
-	 * Converts the given value to class c.
+	 * Converts the given string value to class c.
+	 * 
+	 * @param value
+	 *            The string value to convert
+	 * @param locale
+	 *            The locale used to convert the value
+	 * @return The converted value
+	 */
+	Object convertToObject(String value, Locale locale);
+
+	/**
+	 * Converts the given value to a string.
 	 * 
 	 * @param value
 	 *            The value to convert
-	 * @param c
-	 *            The class of object to convert to
-	 * @return The converted value
+	 * @param locale
+	 *            TODO
+	 * 
+	 * @return The converted string value
 	 */
-	Object convert(Object value, Class c);
+	String convertToString(Object value, Locale locale);
 }
