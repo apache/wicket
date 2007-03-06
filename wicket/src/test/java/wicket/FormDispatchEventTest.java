@@ -16,46 +16,13 @@
  */
 package wicket;
 
-import java.util.ArrayList;
-
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.IOnChangeListener;
-import wicket.model.Model;
+import wicket.util.tester.FormTester;
 
 /**
  * @author jcompagner
  */
 public class FormDispatchEventTest extends WicketTestCase
 {
-	private final class MyForm extends Form
-	{
-		private static final long serialVersionUID = 1L;
-
-		private MyForm(MarkupContainer parent, String id)
-		{
-			super(parent, id);
-		}
-
-		@Override
-		protected void onSubmit()
-		{
-			submit = true;
-		}
-
-		/**
-		 * @param name
-		 * @return The hidden field id of the form
-		 */
-		public String getHiddenField(String name)
-		{
-			return getHiddenFieldId(name);
-		}
-	}
-
-	private boolean selection;
-	private boolean submit;
-
 	/**
 	 * Construct.
 	 * 
@@ -71,45 +38,18 @@ public class FormDispatchEventTest extends WicketTestCase
 	 */
 	public void testDropDownEvent() throws Exception
 	{
-		MockPageWithFormAndDropdown page = new MockPageWithFormAndDropdown();
-		MyForm form = new MyForm(page, "form");
+		tester.startPage(MockPageWithForm.class);
 
-		DropDownChoice<String> dropDown = new DropDownChoice<String>(form, "dropdown", new Model<String>(), new ArrayList<String>())
-		{
-			private static final long serialVersionUID = 1L;
+		// FIXME should not be needed
+		tester.createRequestCycle();
 
-			@Override
-			protected void onSelectionChanged(String newSelection)
-			{
-				selection = true;
-			}
+		FormTester formTester = tester.newFormTester("form");
+		formTester.select("dropdown", 0);
+		formTester.submit();
 
-			/**
-			 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-			 */
-			@Override
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-		};
+		MockPageWithForm page = (MockPageWithForm)tester.getLastRenderedPage();
 
-
-		tester.setupRequestAndResponse();
-		RequestCycle cycle = tester.createRequestCycle();
-
-		page.urlFor(IRedirectListener.INTERFACE);
-		cycle.getSession().touch(page);
-		cycle.getSession().update();
-
-		form.onFormSubmitted();
-		assertTrue("form should should set value ", submit);
-
-		tester.getServletRequest().setParameter(
-				form.getHiddenField(Form.HIDDEN_FIELD_FAKE_SUBMIT),
-				dropDown.urlFor(IOnChangeListener.INTERFACE).toString());
-
-		form.onFormSubmitted();
-		assertTrue("Selection should be called", selection);
+		assertTrue("Form.onSubmit() should have been called", page.isSubmitted());
+		assertTrue("DropDownChoice.onSelectionChanged() should have been called", page.isSelected());
 	}
 }

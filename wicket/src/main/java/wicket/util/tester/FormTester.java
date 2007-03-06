@@ -48,7 +48,7 @@ import wicket.util.string.Strings;
 import wicket.util.upload.FileUploadException;
 
 /**
- * A helper for testing validaiton and submission of Form component.
+ * A helper for testing validation and submission of Form component.
  * 
  * @author Ingram Chen
  * @author Frank Bille (frankbille)
@@ -425,9 +425,27 @@ public class FormTester
 	public void select(String formComponentId, int index)
 	{
 		checkClosed();
-		ChoiceSelector choiceSelector = choiceSelectorFactory.create((FormComponent)workingForm
-				.get(formComponentId));
+		FormComponent component = (FormComponent)workingForm
+		.get(formComponentId);
+
+		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
+		if (component instanceof DropDownChoice) {
+			Method wantOnSelectionChangedNotificationsMethod;
+			try
+			{
+				wantOnSelectionChangedNotificationsMethod = component.getClass().getDeclaredMethod("wantOnSelectionChangedNotifications", new Class[0]);
+				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
+				boolean wantOnSelectionChangedNotifications = ((Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component, new Object[0])).booleanValue();
+				if (wantOnSelectionChangedNotifications) {
+					((DropDownChoice)component).onSelectionChanged();
+				}
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	/**
