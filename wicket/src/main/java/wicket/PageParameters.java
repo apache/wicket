@@ -18,6 +18,7 @@ package wicket;
 
 import java.util.Map;
 
+import wicket.protocol.http.RequestUtils;
 import wicket.util.string.IStringIterator;
 import wicket.util.string.StringList;
 import wicket.util.value.ValueMap;
@@ -84,6 +85,11 @@ public final class PageParameters extends ValueMap
 	 * @param delimiter
 	 *            Delimiter string used to separate key/value pairs
 	 * @see ValueMap#ValueMap(String)
+	 * 
+	 * @deprecated Please use
+	 *             {@link RequestUtils#decodeParameters(String, ValueMap)} to
+	 *             decode a request URL, or
+	 *             {@link ValueMap#ValueMap(String, String)} for other usecases.
 	 */
 	public PageParameters(final String keyValuePairs, final String delimiter)
 	{

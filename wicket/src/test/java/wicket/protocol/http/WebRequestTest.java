@@ -16,6 +16,7 @@
  */
 package wicket.protocol.http;
 
+import wicket.WicketTestCase;
 import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.util.tester.WicketTester;
 import junit.framework.TestCase;
@@ -25,7 +26,7 @@ import junit.framework.TestCase;
  * 
  * @author Frank Bille (billen)
  */
-public class WebRequestTest extends TestCase
+public class WebRequestTest extends WicketTestCase
 {
 	/**
 	 * Test that ajax is true when the ajax header is present in the request
@@ -34,7 +35,7 @@ public class WebRequestTest extends TestCase
 	{
 		assertWithHeader("Wicket-Ajax", "true", true);
 	}
-	
+
 	/**
 	 * Test that it also works when there are other "positive" values than true.
 	 */
@@ -45,7 +46,7 @@ public class WebRequestTest extends TestCase
 		assertWithHeader("Wicket-Ajax", "on", true);
 		assertWithHeader("Wicket-Ajax", "y", true);
 	}
-	
+
 	/**
 	 * Test that it's not ajax.
 	 */
@@ -64,11 +65,40 @@ public class WebRequestTest extends TestCase
 
 	private void assertWithHeader(String header, String value, boolean isAjax)
 	{
-		MockHttpServletRequest mockRequest = new WicketTester().getServletRequest();
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
 		mockRequest.addHeader(header, value);
 
 		WebRequest webRequest = new ServletWebRequest(mockRequest);
 
 		assertEquals(isAjax, webRequest.isAjax());
+	}
+
+	public void testStringArray()
+	{
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
+		mockRequest.setRequestToRedirectString("?a=1&a=2");
+		Object obj = mockRequest.getParameterMap().get("a");
+		assertTrue("Expected " + new String[0].getClass() + ", got " + obj.getClass(),
+				obj instanceof String[]);
+	}
+
+	public void testStringEncoding()
+	{
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
+		mockRequest.setRequestToRedirectString("?a=%20");
+		String value = mockRequest.getParameter("a");
+		assertEquals(" ", value);
+	}
+
+	public void testEmptyParam()
+	{
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
+		mockRequest.setRequestToRedirectString("?a=");
+		String value = mockRequest.getParameter("a");
+		assertEquals("", value);
+
+		mockRequest.setRequestToRedirectString("?a");
+		value = mockRequest.getParameter("a");
+		assertEquals("", value);
 	}
 }
