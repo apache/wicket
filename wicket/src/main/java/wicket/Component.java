@@ -773,6 +773,17 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
+	 * @return nothing, will always throw an exception. Use
+	 *         {@link #getConverter(Class)} instead.
+	 * @deprecated To be removed. Please use/ override
+	 *             {@link #getConverter(Class)} instead.
+	 */
+	public final IConverter getConverter()
+	{
+		throw new UnsupportedOperationException("use #getConverter(Class) instead");
+	}
+
+	/**
 	 * Gets the converter that should be used by this component.
 	 * 
 	 * @param type
@@ -780,7 +791,7 @@ public abstract class Component implements IClusterable
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public IConverter getConverter(Class/*<?>*/ type)
+	public IConverter getConverter(Class/* <?> */type)
 	{
 		return getSession().getConverter(type);
 	}
