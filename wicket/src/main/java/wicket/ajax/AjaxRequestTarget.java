@@ -298,45 +298,45 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
 		response.setAjax(true);
-			final Application app = Application.get();
+		final Application app = Application.get();
 
-			// Determine encoding
-			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
+		// Determine encoding
+		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
-			// Set content type based on markup type for page
-			response.setCharacterEncoding(encoding);
-			response.setContentType("text/xml; charset=" + encoding);
+		// Set content type based on markup type for page
+		response.setCharacterEncoding(encoding);
+		response.setContentType("text/xml; charset=" + encoding);
 
-			// Make sure it is not cached by a client
-			response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
-			response.setHeader("Cache-Control", "no-cache, must-revalidate");
-			response.setHeader("Pragma", "no-cache");
+		// Make sure it is not cached by a client
+		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+		response.setHeader("Cache-Control", "no-cache, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
 
-			response.write("<?xml version=\"1.0\" encoding=\"");
-			response.write(encoding);
-			response.write("\"?>");
-			response.write("<ajax-response>");
+		response.write("<?xml version=\"1.0\" encoding=\"");
+		response.write(encoding);
+		response.write("\"?>");
+		response.write("<ajax-response>");
 
-			// invoke onbeforerespond event on listeners
-			fireOnBeforeRespondListeners();
+		// invoke onbeforerespond event on listeners
+		fireOnBeforeRespondListeners();
 
-			// normal behavior
-			for (String js : prependJavascripts)
-			{
-				respondInvocation(response, js);
-			}
+		// normal behavior
+		for (String js : prependJavascripts)
+		{
+			respondInvocation(response, js);
+		}
 
-			// process added components
-			respondComponents(response);
+		// process added components
+		respondComponents(response);
 
-			fireOnAfterRespondListeners(response);
+		fireOnAfterRespondListeners(response);
 
-			for (String js : appendJavascripts)
-			{
-				respondInvocation(response, js);
-			}
+		for (String js : appendJavascripts)
+		{
+			respondInvocation(response, js);
+		}
 
-			response.write("</ajax-response>");
+		response.write("</ajax-response>");
 	}
 
 	private void fireOnBeforeRespondListeners()
@@ -568,12 +568,14 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("]]></component>");
 	}
 
-	private class AjaxHeaderResponse extends HeaderResponse {
+	private class AjaxHeaderResponse extends HeaderResponse
+	{
 
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
+		 * 
 		 * @param response
 		 */
 		public AjaxHeaderResponse(Response response)
@@ -584,10 +586,11 @@ public class AjaxRequestTarget implements IRequestTarget
 		@Override
 		public void renderOnDomReadyJavascript(String javascript)
 		{
-			// execute the javascript as first javascript after component replacement
+			// execute the javascript as first javascript after component
+			// replacement
 			appendJavascripts.add(0, javascript);
 		}
-		
+
 		@Override
 		public void renderOnLoadJavascript(String javascript)
 		{
@@ -595,7 +598,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			appendJavascripts.add(javascript);
 		}
 	};
-	
+
 	/**
 	 * 
 	 * @param response
