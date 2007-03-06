@@ -431,10 +431,9 @@ public class FormTester
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
 		if (component instanceof DropDownChoice) {
-			Method wantOnSelectionChangedNotificationsMethod;
 			try
 			{
-				wantOnSelectionChangedNotificationsMethod = component.getClass().getDeclaredMethod("wantOnSelectionChangedNotifications", new Class[0]);
+				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class.getDeclaredMethod("wantOnSelectionChangedNotifications", new Class[0]);
 				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
 				boolean wantOnSelectionChangedNotifications = ((Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component, new Object[0])).booleanValue();
 				if (wantOnSelectionChangedNotifications) {
