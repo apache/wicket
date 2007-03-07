@@ -342,8 +342,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 				else
 				{
+					// this is the root form
+					Form formToProcess = this;
+
+					// find out whether it was a nested form that was submitted
+					if (submittingButton != null)
+					{
+						formToProcess = submittingButton.getForm();
+					}
 					// process the form for this request
-					if (process())
+					if (formToProcess.process())
 					{
 						// let clients handle further processing
 						delegateSubmit(submittingButton);
@@ -796,42 +804,56 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		checkComponentTag(tag, "form");
 		super.onComponentTag(tag);
+		if (isRootForm())
+		{
+			checkComponentTag(tag, "form");
 
-		// If the javascriptid is already generated then use that on even it was
-		// before the first render. Bbecause there could be a component which
-		// already uses it to submit the forum. This should be fixed when we
-		// pre parse the markup so that we know the id is at front.
-		if (!Strings.isEmpty(javascriptId))
-		{
-			tag.put("id", javascriptId);
-		}
-		else
-		{
-			javascriptId = (String)tag.getAttributes().get("id");
-			if (Strings.isEmpty(javascriptId))
+			// If the javascriptid is already generated then use that on even it
+			// was before the first render. Because there could be a component
+			// which already uses it to submit the forum. This should be fixed
+			// when we pre parse the markup so that we know the id is at front.
+			if (!Strings.isEmpty(javascriptId))
 			{
-				javascriptId = getJavascriptId();
 				tag.put("id", javascriptId);
 			}
-		}
-		tag.put("method", getMethod());
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
-		if (multiPart)
-		{
-			tag.put("enctype", "multipart/form-data");
+			else
+			{
+				javascriptId = (String)tag.getAttributes().get("id");
+				if (Strings.isEmpty(javascriptId))
+				{
+					javascriptId = getJavascriptId();
+					tag.put("id", javascriptId);
+				}
+			}
+			
+			tag.put("method", getMethod());
+			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
+					"&amp;"));
+			
+			if (multiPart)
+			{
+				tag.put("enctype", "multipart/form-data");
+			}
+			else
+			{
+				// sanity check
+				String enctype = (String)tag.getAttributes().get("enctype");
+				if ("multipart/form-data".equalsIgnoreCase(enctype))
+				{
+					// though not set explicitly in Java, this is a multipart
+					// form
+					setMultiPart(true);
+				}
+			}
 		}
 		else
 		{
-			// sanity check
-			String enctype = (String)tag.getAttributes().get("enctype");
-			if ("multipart/form-data".equalsIgnoreCase(enctype))
-			{
-				// though not set explicitly in Java, this is a multipart form
-				setMultiPart(true);
-			}
-		}
+			tag.setName("div");
+			tag.remove("method");
+			tag.remove("action");
+			tag.remove("enctype");
+		}		
 	}
 
 	/**
@@ -1488,5 +1510,35 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public final void error(String error, Map args)
 	{
 		error(new MapVariableInterpolator(error, args).toString());
+	}
+	
+	/**
+	 * Returns whether the form is a root form, which means that there's no
+	 * other form in it's parent hierarchy.
+	 * 
+	 * @return true if form is a root form, false otherwise
+	 */
+	public boolean isRootForm()
+	{
+		return findParent(Form.class) == null;
+	}
+
+	/**
+	 * Returns the root form or this, if this is the root form.
+	 * 
+	 * @return root form or this form
+	 */
+	public Form getRootForm()
+	{
+		Form form;
+		Form parent = this;
+		do
+		{
+			form = parent;
+			parent = (Form) form.findParent(Form.class);
+		}
+		while (parent != null);
+
+		return form;
 	}
 }
