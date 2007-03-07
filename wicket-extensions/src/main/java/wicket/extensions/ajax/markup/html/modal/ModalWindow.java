@@ -937,7 +937,7 @@ public class ModalWindow extends Panel
 					+ "};\n");
 		}
 
-		if (isCustomComponent() == false || windowClosedCallback != null) 
+		if ((isCustomComponent() == false && deletePageMap) || windowClosedCallback != null) 
 		{
 			WindowClosedBehavior behavior = (WindowClosedBehavior)getBehaviors(
 					WindowClosedBehavior.class).get(0);
