@@ -27,8 +27,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
 
-import wicket.examples.test.jetty.JettyDecorator;
-
 import com.meterware.httpunit.HttpUnitOptions;
 
 /**
@@ -57,16 +55,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 		
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(clazz);
-		JettyDecorator deco = new JettyDecorator(suite);
-		deco.setPort(8098);
-		String basedir = System.getProperty("basedir");
-		logger.debug("basedir="+basedir);
-		String path = "";
-		if (basedir != null)
-			path = basedir + "/";
-		path += "src/main/webapp";
-		deco.setWebappContextRoot(path);
-		deco.setContextPath("/wicket-examples");
+		JettyTestCaseDecorator deco = new JettyTestCaseDecorator(suite);
 
 		return deco;
 	}
