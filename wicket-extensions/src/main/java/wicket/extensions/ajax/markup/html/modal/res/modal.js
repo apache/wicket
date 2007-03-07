@@ -435,7 +435,15 @@ Wicket.Window.prototype = {
 		
 			title: null, /* window title. if null and window content is iframe, title of iframe document will be used. */
 		
-			onCloseButton: function() { this.close(); }.bind(this), /* called when close button is clicked */
+			onCloseButton: function() {
+				/* On firefox on Linux, at least, we need to blur() textfields, etc.
+				 * to get it to update its DOM model. Otherwise you'll lose any changes
+				 * made to the current form component you're editing.
+				 */ 
+				this.caption.getElementsByTagName("a")[0].focus();
+				this.caption.getElementsByTagName("a")[0].blur();
+				this.close();
+			}.bind(this), /* called when close button is clicked */
 			
 			onClose: function() { }, /* called when window is closed */
 		
