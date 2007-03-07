@@ -778,21 +778,23 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		// get the hidden field id
-		String nameAndId = getHiddenFieldId();
-
-
-		// render the hidden field
-		AppendingStringBuffer buffer = new AppendingStringBuffer(
-				"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
-				.append("\" id=\"").append(nameAndId).append("\" /></div>");
-		getResponse().write(buffer);
-
-		// if a default button was set, handle the rendering of that
-		if (defaultButton != null && defaultButton.isVisibleInHierarchy()
-				&& defaultButton.isEnabled())
+		if (isRootForm()) 
 		{
-			appendDefaultButtonField(markupStream, openTag);
+			// get the hidden field id
+			String nameAndId = getHiddenFieldId();
+	
+			// render the hidden field
+			AppendingStringBuffer buffer = new AppendingStringBuffer(
+					"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
+					.append("\" id=\"").append(nameAndId).append("\" /></div>");
+			getResponse().write(buffer);
+	
+			// if a default button was set, handle the rendering of that
+			if (defaultButton != null && defaultButton.isVisibleInHierarchy()
+					&& defaultButton.isEnabled())
+			{
+				appendDefaultButtonField(markupStream, openTag);
+			}
 		}
 
 		// do the rest of the processing
