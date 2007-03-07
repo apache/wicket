@@ -937,6 +937,8 @@ public class ModalWindow extends Panel
 					+ "};\n");
 		}
 
+		// in case user is interested in window close callback or we have a pagemap to clean
+		// attach notification request
 		if ((isCustomComponent() == false && deletePageMap) || windowClosedCallback != null) 
 		{
 			WindowClosedBehavior behavior = (WindowClosedBehavior)getBehaviors(
