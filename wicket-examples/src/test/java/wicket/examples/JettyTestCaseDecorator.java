@@ -71,6 +71,7 @@ public class JettyTestCaseDecorator extends TestSetup
 	{
 		super.tearDown();
 		server.stop();
+		server.join();
 	}
 
 }
