@@ -57,8 +57,6 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	{
 		super(id);
 
-		form.setOutputMarkupId(true);
-
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
 
