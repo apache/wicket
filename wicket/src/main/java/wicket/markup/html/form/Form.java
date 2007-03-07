@@ -796,6 +796,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				appendDefaultButtonField(markupStream, openTag);
 			}
 		}
+		else
+		{
+			getResponse().write("<!-- wicket-nested-form -->");
+		}
 
 		// do the rest of the processing
 		super.onComponentTagBody(markupStream, openTag);
@@ -807,28 +811,29 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		if (isRootForm())
-		{
-			checkComponentTag(tag, "form");
+		
+		checkComponentTag(tag, "form");
 
-			// If the javascriptid is already generated then use that on even it
-			// was before the first render. Because there could be a component
-			// which already uses it to submit the forum. This should be fixed
-			// when we pre parse the markup so that we know the id is at front.
-			if (!Strings.isEmpty(javascriptId))
+		// If the javascriptid is already generated then use that on even it
+		// was before the first render. Because there could be a component
+		// which already uses it to submit the forum. This should be fixed
+		// when we pre parse the markup so that we know the id is at front.
+		if (!Strings.isEmpty(javascriptId))
+		{
+			tag.put("id", javascriptId);
+		}
+		else
+		{
+			javascriptId = (String)tag.getAttributes().get("id");
+			if (Strings.isEmpty(javascriptId))
 			{
+				javascriptId = getJavascriptId();
 				tag.put("id", javascriptId);
 			}
-			else
-			{
-				javascriptId = (String)tag.getAttributes().get("id");
-				if (Strings.isEmpty(javascriptId))
-				{
-					javascriptId = getJavascriptId();
-					tag.put("id", javascriptId);
-				}
-			}
-			
+		}
+		
+		if (isRootForm())
+		{			
 			tag.put("method", getMethod());
 			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
 					"&amp;"));
