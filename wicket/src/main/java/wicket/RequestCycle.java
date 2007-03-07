@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.behavior.IBehavior;
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.protocol.http.IRequestLogger;
+import wicket.protocol.http.PageExpiredException;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
@@ -1070,8 +1071,13 @@ public abstract class RequestCycle
 			// set step manually to handle exception
 			currentStep = HANDLE_EXCEPTION;
 
-			// probably our last chance the exception can be logged
-			log.error(e.getMessage(), e);
+			// probably our last chance the exception can be logged.
+			// Note that a PageExpiredException should not be logged, because
+			// it's not an internal error
+			if (! (e instanceof PageExpiredException))
+			{
+				log.error(e.getMessage(), e);
+			}
 
 			// try to play nicely and let the request processor handle the
 			// exception response. If that doesn't work, any runtime exception

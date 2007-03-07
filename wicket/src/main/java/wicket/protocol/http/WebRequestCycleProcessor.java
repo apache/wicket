@@ -29,7 +29,6 @@ import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.AbstractRequestCycleProcessor;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.target.basic.EmptyRequestTarget;
 import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.string.Strings;
@@ -133,7 +132,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			}
 			else
 			{
-				return EmptyRequestTarget.getInstance();
+				throw new PageExpiredException("Request cannot be processed");
 			}
 		}
 		// See whether this request points to a shared resource

@@ -64,36 +64,4 @@ public class WebResponseTest extends TestCase
 		assertNull(mockResponse.getRedirectLocation());
 		assertTrue(mockResponse.containsHeader("Ajax-Location"));
 	}
-
-	public void testErrorPage()
-	{
-		WicketTester tester = new WicketTester();
-		tester.startPage(TestPage.class);
-		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
-		
-		// Cannot use executeAjaxEvent or onClick because WicketTester creates an AjaxRequestTarget from scratch
-		//tester.executeAjaxEvent(link, "onclick");
-		//tester.clickLink("link");
-
-		// FIXME should not be needed
-		tester.createRequestCycle();
-
-		// Invoke the call back URL of the ajax event behavior
-		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl().toString();
-		tester.setupRequestAndResponse();
-		// Fake an Ajax request
-		((MockHttpServletRequest)tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");
-		tester.getServletRequest().setURL(callbackUrl);
-
-		// Do not call tester.processRequestCycle() because it throws an exception when getting an error page
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.request();
-
-		assertNull(((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse()).getRedirectLocation());
-		String ajaxLocation = ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse()).getHeader("Ajax-Location");
-		log.debug(ajaxLocation);
-		assertNotNull(ajaxLocation);
-
-		tester.destroy();
-	}
 }
