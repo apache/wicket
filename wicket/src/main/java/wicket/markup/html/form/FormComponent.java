@@ -472,7 +472,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || c instanceof Form || c instanceof Page)
+			if (c == null || (c instanceof Form && ((Form)c).isRootForm()) || c instanceof Page)
 			{
 				break;
 			}
