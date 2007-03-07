@@ -284,12 +284,13 @@ Wicket.Form.serializeElement = function(e) {
     }
 }
 
-Wicket.Form.serialize = function(form) {
+Wicket.Form.serialize = function(element) {
     var result = "";
-    for (var i = 0; i < form.elements.length; ++i) {
-        var e = form.elements[i];
+    result += Wicket.Form.serializeElement(element);
+    for (var i = 0; i < element.childNodes.length; ++i) {
+        var e = element.childNodes[i];
         if (e.name && e.name != "" && !e.disabled) {
-            result += Wicket.Form.serializeElement(e);
+			result += Wicket.Form.serialize(e);
         }
     }
     return result;
