@@ -34,7 +34,6 @@ import wicket.examples.panels.signin.CookieTest;
 import wicket.examples.repeater.RepeaterTest;
 import wicket.examples.signin2.Signin2Test;
 import wicket.examples.template.TemplateTest;
-import wicket.examples.test.jetty.JettyDecorator;
 
 import com.meterware.httpunit.HttpUnitOptions;
 
@@ -111,10 +110,7 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(RepeaterTest.class);
 		suite.addTestSuite(ImagesTest.class);
 		suite.addTestSuite(LibraryTest.class);
-		JettyDecorator deco = new JettyDecorator(suite);
-		deco.setPort(8098);
-		deco.setWebappContextRoot("src/main/webapp");
-		deco.setContextPath("/wicket-examples");
+		JettyTestCaseDecorator deco = new JettyTestCaseDecorator(suite);
 		return deco;
 	}
 }
