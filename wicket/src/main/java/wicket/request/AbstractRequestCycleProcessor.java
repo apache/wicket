@@ -35,12 +35,12 @@ import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
 import wicket.markup.html.INewBrowserWindowListener;
 import wicket.markup.html.pages.ExceptionErrorPage;
+import wicket.protocol.http.PageExpiredException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.target.IEventProcessor;
 import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
-import wicket.request.target.component.ExpiredPageClassRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
@@ -130,6 +130,11 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 					.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
+		}
+		else if (e instanceof PageExpiredException)
+		{
+			Class pageExpiredErrorPageClass = application.getApplicationSettings().getPageExpiredErrorPage();
+			throw new RestartResponseException(pageExpiredErrorPageClass);
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
@@ -434,7 +439,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		{
 			// Page was expired from session, probably because backtracking
 			// limit was reached
-			return new ExpiredPageClassRequestTarget();
+			throw new PageExpiredException("Cannot find the rendered page in session");
 		}
 	}
 

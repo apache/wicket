@@ -16,42 +16,22 @@
  */
 package wicket.protocol.http;
 
-import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.markup.html.AjaxLink;
-import wicket.markup.MarkupStream;
-import wicket.markup.html.WebPage;
+import wicket.WicketRuntimeException;
 
-public class TestPage extends WebPage
+/**
+ * Thrown when the {@link wicket.protocol.http.WebRequestCycleProcessor} could not
+ * process the request or {@link wicket.request.AbstractRequestCycleProcessor} could not
+ * resolve the rendered page.
+ */
+public class PageExpiredException extends WicketRuntimeException
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 * @see WicketRuntimeException#WicketRuntimeException(java.lang.String)
 	 */
-	private static final long serialVersionUID = 1L;
-	private boolean clicked = false;
-
-	public TestPage()
+	public PageExpiredException(final String message)
 	{
-
-		add(new AjaxLink("link")
-		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public void onClick(AjaxRequestTarget target)
-			{
-				clicked = true;
-				target.addComponent(this);
-			}
-
-			protected void onAfterRender()
-			{
-				if (clicked)
-					throw new IllegalStateException("Intentional error");
-			}
-		});
+		super(message);
 	}
-
 }
