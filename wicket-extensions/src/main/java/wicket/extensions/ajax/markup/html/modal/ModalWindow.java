@@ -762,6 +762,7 @@ public class ModalWindow extends Panel
 			throw new WicketRuntimeException("Modal window content id is wrong.");
 		}
 		replace(component);
+		shown = false;
 	}
 
 	/**
@@ -936,9 +937,12 @@ public class ModalWindow extends Panel
 					+ "};\n");
 		}
 
-		WindowClosedBehavior behavior = (WindowClosedBehavior)getBehaviors(
-				WindowClosedBehavior.class).get(0);
-		buffer.append("settings.onClose = function() { " + behavior.getCallbackScript() + " };\n");
+		if (isCustomComponent() == false || windowClosedCallback != null) 
+		{
+			WindowClosedBehavior behavior = (WindowClosedBehavior)getBehaviors(
+					WindowClosedBehavior.class).get(0);
+			buffer.append("settings.onClose = function() { " + behavior.getCallbackScript() + " };\n");
+		}
 
 		buffer.append("Wicket.Window.create(settings).show();\n");
 
