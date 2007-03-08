@@ -22,6 +22,7 @@ import java.util.List;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Check;
+import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.CheckBoxMultipleChoice;
 import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.ChoiceRenderer;
@@ -47,22 +48,34 @@ public class ChoicePage extends WebPage
 
 	/** test DropDownChoice */
 	public Book dropDownChoice;
-	
+
 	/** test ListChoice */
 	public Book listChoice;
-	
+
 	/** test RadioChoice */
 	public Book radioChoice;
 
 	/** test RadioChoice */
 	public Book radioGroup;
 
+	/** test CheckBox initial value */
+	public boolean checkBox;
+
+	/** test CheckGroup initial value */
+	public final List initialCheckGroup = new ArrayList();
+
+	/** test ListMultipleChoice initial values */
+	public final List initialListMultipleChoice = new ArrayList();
+
+	/** test CheckBoxMultipleChoice initial values */
+	public List initialCheckBoxMultipleChoice = new ArrayList();
+
 	/** test CheckBoxMultipleChoice */
 	public List checkBoxMultipleChoice = new ArrayList();
 
 	/** test CheckGroup */
 	public List checkGroup = new ArrayList();
-	
+
 	/** test ListMultipleChoice */
 	public List listMultipleChoice = new ArrayList();
 
@@ -83,18 +96,34 @@ public class ChoicePage extends WebPage
 
 		form.setModel(new CompoundPropertyModel(this));
 
+		// setting initial values
+		dropDownChoice = (Book) candidateChoices.get(1);
+		listChoice = (Book) candidateChoices.get(3);
+		radioChoice = (Book) candidateChoices.get(2);
+		checkBox = true;
+		initialListMultipleChoice.add(candidateChoices.get(1));
+		initialListMultipleChoice.add(candidateChoices.get(2));
+		initialCheckBoxMultipleChoice.add(candidateChoices.get(0));
+		initialCheckBoxMultipleChoice.add(candidateChoices.get(3));
+		initialCheckGroup.add(candidateChoices.get(2));
+		initialCheckGroup.add(candidateChoices.get(3));
+
 		// single select family
 		form.add(new DropDownChoice("dropDownChoice", candidateChoices, bookChoiceRenderer));
 		form.add(new ListChoice("listChoice", candidateChoices, bookChoiceRenderer).setMaxRows(4));
 		form.add(new RadioChoice("radioChoice", candidateChoices, bookChoiceRenderer));
+		form.add(new CheckBox("checkBox"));
 		form.add(newRadioGroup(candidateChoices));
 
-		// mulitple select family
+		// multiple select family
+		form.add(new ListMultipleChoice("initialListMultipleChoice", candidateChoices, bookChoiceRenderer));
+		form.add(new CheckBoxMultipleChoice("initialCheckBoxMultipleChoice", candidateChoices, bookChoiceRenderer));
+		form.add(newCheckGroup("initialCheckGroup", candidateChoices));
 		form.add(new ListMultipleChoice("listMultipleChoice", candidateChoices, bookChoiceRenderer)
 				.setMaxRows(4));
 		form.add(new CheckBoxMultipleChoice("checkBoxMultipleChoice", candidateChoices,
 				bookChoiceRenderer));
-		form.add(newCheckGroup(candidateChoices));
+		form.add(newCheckGroup("checkGroup", candidateChoices));
 		form.add(new Button("anotherButton")
 		{
 			private static final long serialVersionUID = 1L;
@@ -106,9 +135,9 @@ public class ChoicePage extends WebPage
 		});
 	}
 
-	private CheckGroup newCheckGroup(List candidateChoices)
+	private CheckGroup newCheckGroup(final String id, List candidateChoices)
 	{
-		CheckGroup checkGroupComponent = new CheckGroup("checkGroup");
+		CheckGroup checkGroupComponent = new CheckGroup(id);
 		ListView listView = new ListView("loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;
