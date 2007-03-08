@@ -1,4 +1,4 @@
-Wicket 1.2
+Wicket 1.3
 ==========
 
 This is the readme file for the Wicket core project. 
@@ -11,7 +11,7 @@ Contents
  - Java/Application server requirements
  - Getting started
  - Building Wicket from source
- - Migrating from 1.1
+ - Migrating from 1.2
  - Getting help
 
 License
@@ -53,29 +53,24 @@ Now if you do with to do so, you can build Wicket using Ant or Maven 2. Support 
 Maven 1 is limited to downloading the artifacts from the Ibiblio repository and the
 conversion of the pom.xml file is done automatically by the Maven project.
 
-Building using ant:
- - ant jar
-     creates wicket.jar in target/ subdirectory.
-
-Building using maven (2):
+Building using maven 2:
  - mvn package
      creates wicket-x.y.z.jar in target/ subdirectory.
  - mvn install
      creates wicket-x.y.z.jar in target/ subdirectory and installs the file into your
      local repository for use in other projects.
      
-Migrating from 1.1
+Migrating from 1.2
 ------------------
-
 There is a migration guide available on our Wiki:
-    http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2
+    http://cwiki.apache.org/WICKET/migrate-13.html
     
 Getting help
 ------------
 
  - Read the supplied documentation in the docs/ directory
- - Read the online documentation available on our Wiki (http://www.wicket-wiki.org.uk/wiki/index.php)
- - Read the migration guide (http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2)
+ - Read the online documentation available on our Wiki (http://cwiki.apache.org/WICKET)
+ - Read the migration guide (http://cwiki.apache.org/WICKET/migrate-13.html)
  - Read the mailing archives available on nabble, gmane and sourceforge
  - Send a complete message containing your problem, stacktrace and problem you're trying
    to solve to the user list (wicket-user@lists.sourceforge.net)
