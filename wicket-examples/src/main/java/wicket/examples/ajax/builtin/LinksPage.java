@@ -181,7 +181,15 @@ public class LinksPage extends BasePage
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
-				setResponsePage(LinksPage.class);
+				setResponsePage(new LinksPage());
+			}
+		});
+		
+		add(new AjaxLink("exception")
+		{
+			public void onClick(AjaxRequestTarget target)
+			{
+				throw new RuntimeException("test whether the exception handling works");
 			}
 		});
 	}
