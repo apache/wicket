@@ -31,15 +31,11 @@ import wicket.util.lang.EnumeratedType;
  * mark characters (e.g. "??missingKey??")
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
- * @deprecated will be removed in 2.0. See methods for details
  */
 public interface IExceptionSettings
 {
 	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
-	 * 
-	 * @deprecated will be moved to {@link IApplicationSettings} in 2.0
 	 */
 	public static final class UnexpectedExceptionDisplay extends EnumeratedType
 	{
@@ -82,7 +78,6 @@ public interface IExceptionSettings
 
 	/**
 	 * @return Returns the unexpectedExceptionDisplay.
-	 * @deprecated will be moved to {@link IApplicationSettings} in 2.0
 	 */
 	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
 
@@ -117,8 +112,6 @@ public interface IExceptionSettings
 	 * 
 	 * @param unexpectedExceptionDisplay
 	 *            The unexpectedExceptionDisplay to set.
-	 * 
-	 * @deprecated will be moved to {@link IApplicationSettings} in 2.0
 	 */
 	void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay);
 }
