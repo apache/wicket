@@ -115,6 +115,17 @@ import wicket.util.value.ValueMap;
  * To get form components to persist their values for users via cookies, simply
  * call setPersistent(true) on each component.
  * </p>
+ * <p>
+ * Forms can be nested. You can put a form in another form. Since HTML doesn't
+ * allow nested &lt;form&gt; tags, the inner forms will be rendered using the
+ * &lt;div&gt; tag. You have to submit the inner forms using explicit components
+ * (like Button or SubmitLink), you can't rely on implicit submit behavior (by
+ * using just &lt;input type="submit"&gt; that is not attached to a component).
+ * </p>
+ * <p>
+ * When a nested form is submitted, the user entered values in outer (parent)
+ * forms are preserved and only the fields in the submitted form are validated.
+ * </b>
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -259,13 +270,23 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 'default' button in a form is ill defined in the standards, and of course
 	 * IE has it's own way of doing things.
 	 * </p>
+	 * There can be only one default button per form hierarchy. So if you want
+	 * to get the default button on a nested form, it will actually delegate the
+	 * call to root form. </b>
 	 * 
 	 * @return The button to set as the default button, or null when you want to
 	 *         'unset' any previously set default button
 	 */
 	public final Button getDefaultButton()
 	{
-		return defaultButton;
+		if (isRootForm())
+		{
+			return defaultButton;
+		}
+		else
+		{
+			return getRootForm().getDefaultButton();
+		}
 	}
 
 	/**
@@ -435,6 +456,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 'default' button in a form is ill defined in the standards, and of course
 	 * IE has it's own way of doing things.
 	 * </p>
+	 * There can be only one default button per form hierarchy. So if you set
+	 * default button on a nested form, it will actually delegate the call to
+	 * root form. </b>
 	 * 
 	 * @param button
 	 *            The button to set as the default button, or null when you want
@@ -442,7 +466,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final void setDefaultButton(Button button)
 	{
-		this.defaultButton = button;
+		if (isRootForm())
+		{
+			this.defaultButton = button;
+		}
+		else
+		{
+			getRootForm().setDefaultButton(button);
+		}
 	}
 
 	/**
@@ -652,6 +683,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			return getDefaultButton();
 		}
 
+
 		return submit;
 	}
 
@@ -794,10 +826,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			{
 				appendDefaultButtonField(markupStream, openTag);
 			}
-		}
-		else
-		{
-			getResponse().write("<!-- wicket-nested-form -->");
 		}
 
 		// do the rest of the processing
