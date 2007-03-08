@@ -652,7 +652,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			return getDefaultButton();
 		}
 
-
 		return submit;
 	}
 
@@ -778,17 +777,17 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		if (isRootForm()) 
+		if (isRootForm())
 		{
 			// get the hidden field id
 			String nameAndId = getHiddenFieldId();
-	
+
 			// render the hidden field
 			AppendingStringBuffer buffer = new AppendingStringBuffer(
 					"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
 					.append("\" id=\"").append(nameAndId).append("\" /></div>");
 			getResponse().write(buffer);
-	
+
 			// if a default button was set, handle the rendering of that
 			if (defaultButton != null && defaultButton.isVisibleInHierarchy()
 					&& defaultButton.isEnabled())
@@ -811,7 +810,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		
+
 		checkComponentTag(tag, "form");
 
 		// If the javascriptid is already generated then use that on even it
@@ -831,13 +830,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				tag.put("id", javascriptId);
 			}
 		}
-		
+
 		if (isRootForm())
-		{			
+		{
 			tag.put("method", getMethod());
 			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
 					"&amp;"));
-			
+
 			if (multiPart)
 			{
 				tag.put("enctype", "multipart/form-data");
@@ -860,7 +859,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			tag.remove("method");
 			tag.remove("action");
 			tag.remove("enctype");
-		}		
+		}
 	}
 
 	/**
@@ -1518,7 +1517,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		error(new MapVariableInterpolator(error, args).toString());
 	}
-	
+
 	/**
 	 * Returns whether the form is a root form, which means that there's no
 	 * other form in it's parent hierarchy.
@@ -1542,7 +1541,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		do
 		{
 			form = parent;
-			parent = (Form) form.findParent(Form.class);
+			parent = (Form)form.findParent(Form.class);
 		}
 		while (parent != null);
 
