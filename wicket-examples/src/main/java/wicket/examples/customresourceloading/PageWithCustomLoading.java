@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.customresourceloading;
 
@@ -35,7 +35,8 @@ import wicket.util.resource.UrlResourceStream;
  */
 public class PageWithCustomLoading extends WicketExamplePage
 		implements
-			IMarkupResourceStreamProvider
+			IMarkupResourceStreamProvider,
+			IMarkupCacheKeyProvider
 {
 	/**
 	 * Constructor
@@ -70,6 +71,21 @@ public class PageWithCustomLoading extends WicketExamplePage
 		}
 
 		// no resource was not found
+		return null;
+	}
+
+	/**
+	 * Prevent the markup from ever be cached. This is optionally - components
+	 * that don't implement {@link IMarkupCacheKeyProvider} will just have their
+	 * markup cached - but is useful when markup varies. If you don't need such
+	 * dynamic loading, it is advisible to not implement
+	 * {@link IMarkupCacheKeyProvider}.
+	 * 
+	 * @see wicket.markup.IMarkupCacheKeyProvider#getCacheKey(wicket.MarkupContainer,
+	 *      java.lang.Class)
+	 */
+	public CharSequence getCacheKey(MarkupContainer container, Class containerClass)
+	{
 		return null;
 	}
 }
