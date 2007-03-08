@@ -22,6 +22,7 @@ import java.util.List;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Check;
+import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.CheckBoxMultipleChoice;
 import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.ChoiceRenderer;
@@ -58,6 +59,18 @@ public class ChoicePage<T> extends WebPage<T>
 	/** test RadioChoice */
 	public Book radioGroup;
 
+	/** test CheckBox initial value */
+	public boolean checkBox;
+
+	/** test CheckGroup initial value */
+	public final List initialCheckGroup = new ArrayList();
+
+	/** test ListMultipleChoice initial values */
+	public final List initialListMultipleChoice = new ArrayList();
+
+	/** test CheckBoxMultipleChoice initial values */
+	public List initialCheckBoxMultipleChoice = new ArrayList();
+
 	/** test CheckBoxMultipleChoice */
 	public List<String> checkBoxMultipleChoice = new ArrayList<String>();
 
@@ -83,19 +96,35 @@ public class ChoicePage<T> extends WebPage<T>
 
 		form.setModel(new CompoundPropertyModel<ChoicePage>(this));
 
+		// setting initial values
+		dropDownChoice = (Book) candidateChoices.get(1);
+		listChoice = (Book) candidateChoices.get(3);
+		radioChoice = (Book) candidateChoices.get(2);
+		checkBox = true;
+		initialListMultipleChoice.add(candidateChoices.get(1));
+		initialListMultipleChoice.add(candidateChoices.get(2));
+		initialCheckBoxMultipleChoice.add(candidateChoices.get(0));
+		initialCheckBoxMultipleChoice.add(candidateChoices.get(3));
+		initialCheckGroup.add(candidateChoices.get(2));
+		initialCheckGroup.add(candidateChoices.get(3));
+
 		// single select family
 		new DropDownChoice<Book>(form, "dropDownChoice", candidateChoices, bookChoiceRenderer);
 		new ListChoice<Book>(form, "listChoice", candidateChoices, bookChoiceRenderer)
 				.setMaxRows(4);
 		new RadioChoice<Book>(form, "radioChoice", candidateChoices, bookChoiceRenderer);
+		new CheckBox(form, "checkBox");
 		newRadioGroup(form, candidateChoices);
 
-		// mulitple select family
-		new ListMultipleChoice<Book>(form, "listMultipleChoice", candidateChoices,
-				bookChoiceRenderer).setMaxRows(4);
-		new CheckBoxMultipleChoice<Book>(form, "checkBoxMultipleChoice", candidateChoices,
+		// multiple select family
+		new ListMultipleChoice(form, "initialListMultipleChoice", candidateChoices, bookChoiceRenderer);
+		new CheckBoxMultipleChoice(form, "initialCheckBoxMultipleChoice", candidateChoices, bookChoiceRenderer);
+		newCheckGroup(form, "initialCheckGroup", candidateChoices);
+		new ListMultipleChoice(form, "listMultipleChoice", candidateChoices, bookChoiceRenderer)
+				.setMaxRows(4);
+		new CheckBoxMultipleChoice(form, "checkBoxMultipleChoice", candidateChoices,
 				bookChoiceRenderer);
-		newCheckGroup(form, candidateChoices);
+		newCheckGroup(form, "checkGroup", candidateChoices);
 		new Button(form, "anotherButton")
 		{
 			private static final long serialVersionUID = 1L;
@@ -108,9 +137,9 @@ public class ChoicePage<T> extends WebPage<T>
 		};
 	}
 
-	private CheckGroup newCheckGroup(Form parent, List<Book> candidateChoices)
+	private CheckGroup newCheckGroup(Form parent, String id, List<Book> candidateChoices)
 	{
-		CheckGroup checkGroupComponent = new CheckGroup(parent, "checkGroup");
+		CheckGroup checkGroupComponent = new CheckGroup(parent, id);
 		new ListView<Book>(checkGroupComponent, "loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;

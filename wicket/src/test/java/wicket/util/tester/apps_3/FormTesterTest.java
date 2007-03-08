@@ -72,6 +72,10 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testSingleChoice() throws Exception
 	{
+		assertSame(books[1], choicePage.dropDownChoice);
+		assertSame(books[3], choicePage.listChoice);
+		assertSame(books[2], choicePage.radioChoice);
+		assertSame(null, choicePage.radioGroup);
 		formTester.select("dropDownChoice", 0);
 		formTester.select("listChoice", 2);
 		formTester.select("radioChoice", 1);
@@ -88,6 +92,8 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testSingleChoice_toggle() throws Exception
 	{
+		assertSame(books[1], choicePage.dropDownChoice);
+		assertSame(null, choicePage.radioGroup);
 		formTester.select("dropDownChoice", 0);
 		formTester.select("dropDownChoice", 1);// toggle to 1
 		formTester.select("radioGroup", 3);
@@ -126,6 +132,9 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testSelectMultiple() throws Exception
 	{
+		assertBooksEquals(new Book[0], choicePage.listMultipleChoice);
+		assertBooksEquals(new Book[0], choicePage.checkBoxMultipleChoice);
+		assertBooksEquals(new Book[0], choicePage.checkGroup);
 		formTester.selectMultiple("listMultipleChoice", new int[] { 0, 3 });
 		formTester.selectMultiple("checkBoxMultipleChoice", new int[] { 1, 0, 3 });
 		formTester.selectMultiple("checkGroup", new int[] { 0, 1, 2, 3 });
@@ -142,6 +151,8 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testMultipleChoiceComponent_cumulate() throws Exception
 	{
+		assertBooksEquals(new Book[0], choicePage.listMultipleChoice);
+		assertBooksEquals(new Book[0], choicePage.checkGroup);
 		formTester.select("listMultipleChoice", 0);
 		formTester.selectMultiple("listMultipleChoice", new int[] { 0, 3 });
 		formTester.selectMultiple("listMultipleChoice", new int[] { 1 });
@@ -173,5 +184,21 @@ public class FormTesterTest extends WicketTestCase
 		formTester = tester.newFormTester("choiceForm");
 		formTester.submit("anotherButton");
 		assertTrue(choicePage.anotherButtonPressed);
+	}
+
+	public void testInitialValues()
+	{
+		assertInitialValues();
+		formTester.submit();
+		assertInitialValues();
+	}
+	private void assertInitialValues() {
+		assertSame(books[1], choicePage.dropDownChoice);
+		assertSame(books[3], choicePage.listChoice);
+		assertSame(books[2], choicePage.radioChoice);
+		assertEquals(true, choicePage.checkBox);
+		assertBooksEquals(new Book[]{books[2], books[1]}, choicePage.initialListMultipleChoice);
+		assertBooksEquals(new Book[]{books[3], books[0]}, choicePage.initialCheckBoxMultipleChoice);
+		assertBooksEquals(new Book[]{books[3], books[2]}, choicePage.initialCheckGroup);
 	}
 }

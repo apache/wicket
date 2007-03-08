@@ -19,6 +19,7 @@ package wicket.util.tester;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +31,7 @@ import wicket.WicketRuntimeException;
 import wicket.Component.IVisitor;
 import wicket.markup.html.form.AbstractTextComponent;
 import wicket.markup.html.form.Check;
+import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -356,7 +358,7 @@ public class FormTester
 		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
 			@Override
-			public void onFormComponent(FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())
@@ -379,6 +381,35 @@ public class FormTester
 					{
 						setFormComponentValue(formComponent, formComponent.getValue());
 					}
+				}
+				else if ( (formComponent instanceof DropDownChoice) ||
+						  (formComponent instanceof RadioChoice) ||
+						  (formComponent instanceof CheckBox))
+				{
+					setFormComponentValue(formComponent, formComponent.getValue());
+				}
+				else if (formComponent instanceof ListMultipleChoice)
+				{
+					final String[] modelValues = formComponent.getValue().split(FormComponent.VALUE_SEPARATOR);
+					for (int i = 0; i < modelValues.length; i++)
+					{
+						addFormComponentValue(formComponent, modelValues[i]);
+					}
+				}
+				else if (formComponent instanceof CheckGroup)
+				{
+					final Collection checkGroupValues = (Collection) formComponent.getModelObject();
+					formComponent.visitChildren(Check.class, new IVisitor()
+					{
+						public Object component(Component component)
+						{
+							if (checkGroupValues.contains(component.getModelObject()))
+							{
+								addFormComponentValue(formComponent, ((Check) component).getValue());
+							}
+							return CONTINUE_TRAVERSAL;
+						}
+					});
 				}
 			}
 
