@@ -20,6 +20,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import wicket.util.convert.IConverter;
+
 /**
  * Converts from Object to Date.
  * 
@@ -30,11 +32,9 @@ public class DateConverter extends AbstractConverter
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * The singleton instance for a character converter
 	 */
-	public DateConverter()
-	{
-	}
+	public static final IConverter INSTANCE = new DateConverter();
 
 	/**
 	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
