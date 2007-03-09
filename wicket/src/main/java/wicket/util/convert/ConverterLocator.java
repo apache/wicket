@@ -16,7 +16,6 @@
  */
 package wicket.util.convert;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -162,7 +161,8 @@ public class ConverterLocator implements IConverterLocator
 		// TODO convert to string will go fine, but what about to object? It
 		// will make a java.util.Date
 		set(java.sql.Date.class, DateConverter.INSTANCE);
-		set(Timestamp.class, DateConverter.INSTANCE);
+		set(java.sql.Time.class, DateConverter.INSTANCE);
+		set(java.sql.Timestamp.class, DateConverter.INSTANCE);
 	}
 
 	/**
