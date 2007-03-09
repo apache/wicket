@@ -31,6 +31,9 @@ import wicket.util.convert.converters.FloatConverter;
 import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
+import wicket.util.convert.converters.SqlDateConverter;
+import wicket.util.convert.converters.SqlTimeConverter;
+import wicket.util.convert.converters.SqlTimestampConverter;
 import wicket.util.lang.Objects;
 
 /**
@@ -157,12 +160,10 @@ public class ConverterLocator implements IConverterLocator
 		set(Long.class, LongConverter.INSTANCE);
 		set(Short.TYPE, ShortConverter.INSTANCE);
 		set(Short.class, ShortConverter.INSTANCE);
-		set(Date.class, DateConverter.INSTANCE);
-		// TODO convert to string will go fine, but what about to object? It
-		// will make a java.util.Date
-		set(java.sql.Date.class, DateConverter.INSTANCE);
-		set(java.sql.Time.class, DateConverter.INSTANCE);
-		set(java.sql.Timestamp.class, DateConverter.INSTANCE);
+		set(Date.class, new DateConverter());
+		set(java.sql.Date.class, new SqlDateConverter());
+		set(java.sql.Time.class, new SqlTimeConverter());
+		set(java.sql.Timestamp.class, new SqlTimestampConverter());
 	}
 
 	/**
