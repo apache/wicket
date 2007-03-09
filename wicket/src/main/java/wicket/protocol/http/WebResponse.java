@@ -348,7 +348,7 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Convinience method for setting the content-disposition:attachment header.
+	 * Convenience method for setting the content-disposition:attachment header.
 	 * This header is used if the response should prompt the user to download it
 	 * as a file instead of opening in a browser.
 	 * 
