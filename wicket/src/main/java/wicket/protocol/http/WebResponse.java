@@ -208,6 +208,11 @@ public class WebResponse extends Response
 
 					if (isAjax())
 					{
+						/*
+						 * By reaching this point, make sure the HTTP response
+						 * status code is set to 200, otherwise wicket-ajax.js
+						 * will not process the Ajax-Location header
+						 */
 						httpServletResponse.addHeader("Ajax-Location", url);
 
 						// safari chokes on empty response. but perhaps this is
@@ -383,7 +388,7 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Convinience method for setting the content-disposition:attachment header.
+	 * Convenience method for setting the content-disposition:attachment header.
 	 * This header is used if the response should prompt the user to download it
 	 * as a file instead of opening in a browser.
 	 * 
@@ -415,75 +420,5 @@ public class WebResponse extends Response
 	public void setAjax(boolean ajax)
 	{
 		this.ajax = ajax;
-	}
-
-	/**
-	 * Copies the given input stream to the servlet response
-	 * <p>
-	 * NOTE Content-Length is not set because it would require to buffer the
-	 * whole input stream
-	 * </p>
-	 * 
-	 * @param in
-	 *            input stream to copy, will be closed after copy
-	 */
-	public void write(InputStream in)
-	{
-		try
-		{
-			// Copy resource input stream to servlet output stream
-			Streams.copy(in, getHttpServletResponse().getOutputStream());
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		finally
-		{
-			// NOTE: We only close the InputStream. The servlet
-			// container should close the output stream.
-			try
-			{
-				in.close();
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
-		}
-	}
-
-	/**
-	 * Sets the Content-Type header with servlet-context-defined content-types
-	 * (application's web.xml or servlet container's configuration), and fall
-	 * back to system or JVM-defined (FileNameMap) content types.
-	 * 
-	 * @param requestCycle
-	 * @param uri
-	 *            Resource name to be analyzed to detect MIME type
-	 * 
-	 * @see ServletContext#getMimeType(String)
-	 * @see URLConnection#getFileNameMap()
-	 */
-	public void detectContentType(RequestCycle requestCycle, String uri)
-	{
-		// Configure response with content type of resource
-		final ServletContext context = ((WebApplication)requestCycle.getApplication())
-				.getServletContext();
-		// First look for user defined content-type in web.xml
-		String contentType = context.getMimeType(uri);
-
-		// If not found, fall back to
-		// FileResourceStream.getContentType() that looks into
-		// system or JVM content types
-		if (contentType == null)
-		{
-			contentType = URLConnection.getFileNameMap().getContentTypeFor(uri);
-		}
-
-		if (contentType != null)
-		{
-			setContentType(contentType);
-		}
 	}
 }
