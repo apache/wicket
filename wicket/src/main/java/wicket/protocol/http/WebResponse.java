@@ -192,6 +192,10 @@ public class WebResponse extends Response
 
 					if (isAjax())
 					{
+						// Reset the HTTP response status code to 200, otherwise
+						// wicket-ajax.js does not process the Ajax-Location
+						// header
+						httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 						httpServletResponse.addHeader("Ajax-Location", url);
 
 						// safari chokes on empty response. but perhaps this is

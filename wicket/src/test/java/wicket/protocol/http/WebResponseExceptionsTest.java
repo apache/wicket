@@ -22,6 +22,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.WicketTestCase;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.markup.html.AjaxLink;
+import wicket.settings.IExceptionSettings;
+import wicket.settings.IRequestCycleSettings;
 import wicket.util.tester.WicketTester;
 
 /**
@@ -33,7 +35,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 {
 	private static final Log log = LogFactory.getLog(WebResponseExceptionsTest.class);
 
-	public void testErrorPage()
+	public void testInternalErrorPage()
 	{
 		tester.startPage(TestErrorPage.class);
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
@@ -57,6 +59,17 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		cycle.request();
 
 		assertAjaxLocation(tester);
+	}
+
+	public void testBufferedExceptionErrorPage() {
+		tester.getApplication().getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_BUFFER);
+		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+		testInternalErrorPage();
+	}
+
+	public void testExceptionErrorPage() {
+		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+		testInternalErrorPage();
 	}
 
 	public void testExpirePage()
@@ -97,5 +110,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		String ajaxLocation = ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse()).getHeader("Ajax-Location");
 		log.debug(ajaxLocation);
 		assertNotNull("Ajax-Location header should be present when using Ajax", ajaxLocation);
+		int statusCode = ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse()).getStatus();
+		assertEquals(200, statusCode);
 	}
 }
