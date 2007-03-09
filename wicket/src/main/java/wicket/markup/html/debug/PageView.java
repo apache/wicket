@@ -51,8 +51,37 @@ import wicket.util.string.Strings;
  */
 public final class PageView extends Panel
 {
+	/**
+	 * El cheapo data holder.
+	 * 
+	 * @author Juergen Donnerstag
+	 */
+	private static class ComponentData implements IClusterable
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** Component path. */
+		public final String path;
+
+		/** Component type. */
+		public final String type;
+
+		/** Component value. */
+		public String value;
+
+		/** Size of component in bytes */
+		public final long size;
+
+		ComponentData(String path, String type, long size)
+		{
+			this.path = path;
+			this.type = type;
+			this.size = size;
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -65,7 +94,7 @@ public final class PageView extends Panel
 	public PageView(final String id, final Page page)
 	{
 		super(id);
-		
+
 		// Create an empty list. It'll be filled later
 		final List data = new ArrayList();
 
@@ -85,12 +114,12 @@ public final class PageView extends Panel
 				return ((ComponentData)o1).path.compareTo(((ComponentData)o2).path);
 			}
 		});
-		
+
 		// Create the table containing the list the components
 		add(new ListView("components", data)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			/**
 			 * Populate the table with Wicket elements
 			 */
@@ -122,24 +151,24 @@ public final class PageView extends Panel
 		{
 			public Object component(final Component component)
 			{
-			    if (!component.getPath().startsWith(PageView.this.getPath()))
-			    {
-					final ComponentData componentData = new ComponentData();
-	
+				if (!component.getPath().startsWith(PageView.this.getPath()))
+				{
+					final ComponentData componentData;
+
 					// anonymous class? Get the parent's class name
 					String name = component.getClass().getName();
 					if (name.indexOf("$") > 0)
 					{
 						name = component.getClass().getSuperclass().getName();
 					}
-	
+
 					// remove the path component
 					name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
-	
-					componentData.path = component.getPageRelativePath();
-					componentData.size = component.getSizeInBytes();
-					componentData.type = name;
-					try 
+
+					componentData = new ComponentData(component.getPageRelativePath(), name,
+							component.getSizeInBytes());
+
+					try
 					{
 						componentData.value = component.getModelObjectAsString();
 					}
@@ -147,36 +176,14 @@ public final class PageView extends Panel
 					{
 						componentData.value = e.getMessage();
 					}
-						
+
 					data.add(componentData);
-			    }
-			    
+				}
+
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
 
 		return data;
-	}
-
-	/**
-	 * El cheapo data holder.
-	 * 
-	 * @author Juergen Donnerstag
-	 */
-	private class ComponentData implements IClusterable
-	{
-		private static final long serialVersionUID = 1L;
-		
-		/** Component path. */
-		public String path;
-
-		/** Component type. */
-		public String type;
-
-		/** Component value. */
-		public String value;
-		
-		/** Size of component in bytes */
-		public long size;
 	}
 }
