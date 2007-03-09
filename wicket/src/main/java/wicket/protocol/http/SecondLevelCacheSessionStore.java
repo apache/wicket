@@ -37,28 +37,43 @@ import wicket.version.undo.Change;
 public class SecondLevelCacheSessionStore extends HttpSessionStore
 {
 	/**
-	 * This interface is used by the SecondLevelCacheSessionStore
-	 * so that pages can be stored to a persistent layer.
-	 * Implemenation should store the page that it gets under the
-	 * id and versionnumber. So that every page version can be 
-	 * reconstructed when asked for.
-	 *    
+	 * This interface is used by the SecondLevelCacheSessionStore so that pages
+	 * can be stored to a persistent layer. Implemenation should store the page
+	 * that it gets under the id and versionnumber. So that every page version
+	 * can be reconstructed when asked for.
+	 * 
 	 * @see FilePageStore as default implementation.
 	 */
 	public static interface IPageStore
 	{
 
 		/**
+		 * 
+		 */
+		void destroy();
+
+		/**
 		 * Restores a page version from the persistent layer
 		 * 
 		 * @param sessionId
-		 * @param pagemap 
+		 * @param pagemap
 		 * @param id
 		 * @param versionNumber
-		 * @param ajaxVersionNumber 
+		 * @param ajaxVersionNumber
 		 * @return The page
 		 */
-		Page getPage(String sessionId, String pagemap, int id, int versionNumber, int ajaxVersionNumber);
+		Page getPage(String sessionId, String pagemap, int id, int versionNumber,
+				int ajaxVersionNumber);
+
+		/**
+		 * This method is called when the page is accessed. A IPageStore
+		 * implemenation can block until a save of that page version is done. So
+		 * that a specifiek page version is always restoreable.
+		 * 
+		 * @param sessionId
+		 * @param page
+		 */
+		void pageAccessed(String sessionId, Page page);
 
 		/**
 		 * Removes a page from the persistent layer.
@@ -79,44 +94,103 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		/**
 		 * The pagestore should cleanup all the pages for that sessionid.
-		 *  
+		 * 
 		 * @param sessionId
 		 */
 		void unbind(String sessionId);
-		
-		/**
-		 * This method is called when the page is accessed. A IPageStore 
-		 * implemenation can block until a save of that page version is 
-		 * done. So that a specifiek page version is always restoreable.
-		 * 
-		 * @param sessionId 
-		 * @param page 
-		 */
-		void pageAccessed(String sessionId, Page page);
-
-		/**
-		 * 
-		 */
-		void destroy();
 
 	}
-	
+
+	private static final class SecondLevelCachePageMap extends PageMap
+	{
+		private static final long serialVersionUID = 1L;
+
+		private Page lastPage = null;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param name
+		 * @param session
+		 */
+		private SecondLevelCachePageMap(String name, Session session)
+		{
+			super(name, session);
+		}
+
+		public Page get(int id, int versionNumber)
+		{
+			String sessionId = getSession().getId();
+			if (lastPage != null && lastPage.getNumericId() == id)
+			{
+				Page page = lastPage.getVersion(versionNumber);
+				if (page != null)
+				{
+					// ask the page store if it is ready saving the page.
+					getStore().pageAccessed(sessionId, page);
+					return page;
+				}
+			}
+			if (sessionId != null)
+			{
+				// this is really a page request for a default page. (so without
+				// an ajax version)
+				return getStore().getPage(sessionId, getName(), id, versionNumber, 0);
+			}
+			return null;
+		}
+
+		public void put(Page page)
+		{
+			if (!page.isPageStateless())
+			{
+				String sessionId = getSession().getId();
+				if (sessionId != null)
+				{
+					if (lastPage != page && page.getCurrentVersionNumber() == 0)
+					{
+						// we have to save a new page directly to the file store
+						// so that this version is also recoverable.
+						getStore().storePage(sessionId, page);
+					}
+					lastPage = page;
+					dirty();
+				}
+			}
+		}
+
+		public void removeEntry(IPageMapEntry entry)
+		{
+			String sessionId = getSession().getId();
+			if (sessionId != null)
+			{
+				getStore().removePage(sessionId, entry.getPage());
+			}
+		}
+
+		private IPageStore getStore()
+		{
+			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
+		}
+	}
+
 	private static final class SecondLevelCachePageVersionManager implements IPageVersionManager
 	{
 		private static final long serialVersionUID = 1L;
 
 		private short currentVersionNumber;
-		
+
 		private short currentAjaxVersionNumber;
-		
+
 		private short lastAjaxVersionNumber;
 
 		private Page page;
-		
+
 		private transient boolean versionStarted;
-		
+
 		/**
 		 * Construct.
+		 * 
 		 * @param page
 		 */
 		public SecondLevelCachePageVersionManager(Page page)
@@ -129,11 +203,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 */
 		public void beginVersion(boolean mergeVersion)
 		{
-			// this is an hack.. when object is read in. It must ignore the first version bump.
-			if(versionStarted) return;
-			
+			// this is an hack.. when object is read in. It must ignore the
+			// first version bump.
+			if (versionStarted)
+				return;
+
 			versionStarted = true;
-			if(!mergeVersion)
+			if (!mergeVersion)
 			{
 				currentVersionNumber++;
 				lastAjaxVersionNumber = currentAjaxVersionNumber;
@@ -145,16 +221,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 		}
 
-		/**
-		 * @see wicket.version.IPageVersionManager#ignoreVersionMerge()
-		 */
-		public void ignoreVersionMerge()
-		{
-			currentVersionNumber++;
-			lastAjaxVersionNumber = currentAjaxVersionNumber;
-			currentAjaxVersionNumber = 0;
-		}
-		
 		/**
 		 * @see wicket.version.IPageVersionManager#componentAdded(wicket.Component)
 		 */
@@ -190,9 +256,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			versionStarted = false;
 			String sessionId = page.getSession().getId();
-			if (sessionId != null) 
+			if (sessionId != null)
 			{
-				IPageStore store = ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
+				IPageStore store = ((SecondLevelCacheSessionStore)Application.get()
+						.getSessionStore()).getStore();
 				store.storePage(sessionId, page);
 			}
 		}
@@ -205,14 +272,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 
 		/**
-		 * @see wicket.version.IPageVersionManager#getCurrentVersionNumber()
-		 */
-		public int getCurrentVersionNumber()
-		{
-			return currentVersionNumber;
-		}
-		
-		/**
 		 * @see wicket.version.IPageVersionManager#getAjaxVersionNumber()
 		 */
 		public int getAjaxVersionNumber()
@@ -221,61 +280,22 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 
 		/**
+		 * @see wicket.version.IPageVersionManager#getCurrentVersionNumber()
+		 */
+		public int getCurrentVersionNumber()
+		{
+			return currentVersionNumber;
+		}
+
+		/**
 		 * @see wicket.version.IPageVersionManager#getVersion(int)
 		 */
 		public Page getVersion(int versionNumber)
 		{
-			if(currentVersionNumber == versionNumber)
+			if (currentVersionNumber == versionNumber)
 			{
 				return page;
 			}
-			return null;
-		}
-		
-		private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
-		{
-			s.defaultReadObject();
-			// this is an hack.. when object is read in. It must ignore the first version bump.
-			versionStarted = true;
-		}
-		/**
-		 * @see wicket.version.IPageVersionManager#rollbackPage(int)
-		 */
-		public Page rollbackPage(int numberOfVersions)
-		{
-			String sessionId = page.getSession().getId();
-			if (sessionId != null) 
-			{
-				int versionNumber = currentVersionNumber;
-				int ajaxNumber = currentAjaxVersionNumber;
-				if (versionStarted)
-				{
-					versionNumber--;
-					ajaxNumber--;
-				}
-				
-				IPageStore store = ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
-				// if the number of versions to rollback can be done inside the current page version.
-				if ( ajaxNumber >= numberOfVersions)
-				{
-					return store.getPage(sessionId, page.getPageMap().getName(), page.getNumericId(), versionNumber, ajaxNumber-numberOfVersions);
-				}
-				else
-				{
-					// else go one page version down.
-					versionNumber--;
-					// then calculate the previous ajax version by looking at the last ajax number of the previous version.
-					ajaxNumber = lastAjaxVersionNumber - (numberOfVersions-ajaxNumber);
-					if (ajaxNumber < 0)
-					{
-						// currently it is not supported to jump over 2 pages....
-						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
-						return null;
-					}
-					return store.getPage(sessionId, page.getPageMap().getName(), page.getNumericId(), versionNumber, ajaxNumber);
-				}
-			}
-
 			return null;
 		}
 
@@ -286,83 +306,78 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			return 0;
 		}
-		
-	}
-
-	private static final class SecondLevelCachePageMap extends PageMap
-	{
-		private static final long serialVersionUID = 1L;
-
-		private Page lastPage = null;
 
 		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 * @param session
+		 * @see wicket.version.IPageVersionManager#ignoreVersionMerge()
 		 */
-		private SecondLevelCachePageMap(String name, Session session)
+		public void ignoreVersionMerge()
 		{
-			super(name, session);
+			currentVersionNumber++;
+			lastAjaxVersionNumber = currentAjaxVersionNumber;
+			currentAjaxVersionNumber = 0;
 		}
 
-		public Page get(int id, int versionNumber)
+		/**
+		 * @see wicket.version.IPageVersionManager#rollbackPage(int)
+		 */
+		public Page rollbackPage(int numberOfVersions)
 		{
-			String sessionId = getSession().getId();
-			if (lastPage != null && lastPage.getNumericId() == id)
-			{
-				Page page = lastPage.getVersion(versionNumber);
-				if (page != null)
-				{
-					// ask the page store if it is ready saving the page.
-					getStore().pageAccessed(sessionId, page);
-					return page;
-				}
-			}
+			String sessionId = page.getSession().getId();
 			if (sessionId != null)
 			{
-				// this is really a page request for a default page. (so without an ajax version)
-				return getStore().getPage(sessionId,getName(), id, versionNumber,0);
+				int versionNumber = currentVersionNumber;
+				int ajaxNumber = currentAjaxVersionNumber;
+				if (versionStarted)
+				{
+					versionNumber--;
+					ajaxNumber--;
+				}
+
+				IPageStore store = ((SecondLevelCacheSessionStore)Application.get()
+						.getSessionStore()).getStore();
+				// if the number of versions to rollback can be done inside the
+				// current page version.
+				if (ajaxNumber >= numberOfVersions)
+				{
+					return store.getPage(sessionId, page.getPageMap().getName(), page
+							.getNumericId(), versionNumber, ajaxNumber - numberOfVersions);
+				}
+				else
+				{
+					// else go one page version down.
+					versionNumber--;
+					// then calculate the previous ajax version by looking at
+					// the last ajax number of the previous version.
+					ajaxNumber = lastAjaxVersionNumber - (numberOfVersions - ajaxNumber);
+					if (ajaxNumber < 0)
+					{
+						// currently it is not supported to jump over 2
+						// pages....
+						log
+								.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
+						return null;
+					}
+					return store.getPage(sessionId, page.getPageMap().getName(), page
+							.getNumericId(), versionNumber, ajaxNumber);
+				}
 			}
+
 			return null;
 		}
 
-		public void put(Page page)
+		private void readObject(java.io.ObjectInputStream s) throws IOException,
+				ClassNotFoundException
 		{
-			if (!page.isPageStateless())
-			{
-				String sessionId = getSession().getId();
-				if (sessionId != null)
-				{
-					if(lastPage != page && page.getCurrentVersionNumber() == 0)
-					{
-						// we have to save a new page directly to the file store
-						// so that this version is also recoverable.
-						getStore().storePage(sessionId, page);
-					}
-					lastPage = page;
-					dirty();
-				}
-			}
+			s.defaultReadObject();
+			// this is an hack.. when object is read in. It must ignore the
+			// first version bump.
+			versionStarted = true;
 		}
 
-		public void removeEntry(IPageMapEntry entry)
-		{
-			String sessionId = getSession().getId();
-			if (sessionId != null)
-			{
-				getStore().removePage(sessionId, entry.getPage());
-			}
-		}
-
-		private IPageStore getStore()
-		{
-			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
-		}
 	}
 
 	private IPageStore pageStore;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -371,6 +386,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	public SecondLevelCacheSessionStore(final IPageStore pageStore)
 	{
 		this.pageStore = pageStore;
+
+		// turn automatic multiwindow support off by default, as we don't really
+		// need to be afraid to run out of history with this implementation.
+		// note that the session store is created before Application#init is
+		// called, so if users set this setting explicitly, it'll be overriden
+		// (and that's exactly what we want: provide a better default, but not
+		// forcing people to do away with this feature).
+		Application.get().getPageSettings().setAutomaticMultiWindowSupport(false);
 	}
 
 	/**
@@ -381,13 +404,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 		return new SecondLevelCachePageMap(name, session);
 	}
-	
+
 	/**
-	 * @see wicket.protocol.http.HttpSessionStore#newVersionManager(wicket.Page)
+	 * @see wicket.protocol.http.AbstractHttpSessionStore#destroy()
 	 */
-	public IPageVersionManager newVersionManager(Page page)
+	public void destroy()
 	{
-		return new SecondLevelCachePageVersionManager(page);
+		super.destroy();
+		getStore().destroy();
 	}
 
 	/**
@@ -396,6 +420,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	public IPageStore getStore()
 	{
 		return pageStore;
+	}
+
+	/**
+	 * @see wicket.protocol.http.HttpSessionStore#newVersionManager(wicket.Page)
+	 */
+	public IPageVersionManager newVersionManager(Page page)
+	{
+		return new SecondLevelCachePageVersionManager(page);
 	}
 
 	/**
@@ -417,14 +449,5 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	protected void onUnbind(String sessionId)
 	{
 		getStore().unbind(sessionId);
-	}
-	
-	/**
-	 * @see wicket.protocol.http.AbstractHttpSessionStore#destroy()
-	 */
-	public void destroy()
-	{
-		super.destroy();
-		getStore().destroy();
 	}
 }
