@@ -54,8 +54,8 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/** cookies list */
 	private List cookies;
 
-	/** status list */
-	private List status;
+	/** status code */
+	private int status = -1;
 
 	/** headers map */
 	private Map headers;
@@ -283,23 +283,20 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setStatus(int)
 	 */
-	public void setStatus(int sc)
+	public void setStatus(int statusCode)
 	{
-		if (status == null)
-		{
-			status = new ArrayList(2);
-		}
-		status.add(new Integer(sc));
+		status = statusCode;
 	}
 
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setStatus(int,
 	 *      java.lang.String)
-	 * @deprecated
+	 * @deprecated use setStatus(int) instead
 	 */
 	public void setStatus(int sc, String sm)
 	{
-		throw new UnsupportedOperationException("not supported in tbe bufferd http response, use setStatus");
+		throw new UnsupportedOperationException(
+				"not supported in the buffered http response, use setStatus(int)");
 	}
 
 	/**
@@ -512,13 +509,9 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 */
 	public void writeTo(HttpServletResponse servletResponse) throws IOException
 	{
-		if (status != null)
+		if (status != -1)
 		{
-			Iterator it = status.iterator();
-			while (it.hasNext())
-			{
-				servletResponse.setStatus( ((Integer)it.next()).intValue());
-			}
+			servletResponse.setStatus(status);
 		}
 		if (headers != null)
 		{
