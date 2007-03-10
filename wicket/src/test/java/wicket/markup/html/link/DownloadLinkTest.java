@@ -38,7 +38,8 @@ public class DownloadLinkTest extends WicketTestCase
 	{
 		tester.startPage(DownloadPage.class);
 		tester.clickLink(DownloadPage.TEXT_DOWNLOAD_LINK);
-		assertEquals("text/plain", getContentType());
+		assertTrue(getContentType().startsWith("text/plain"));
+		assertTrue(getContentDisposition().startsWith("attachment; filename="));
 		assertEquals(0, getContentLength());
 	}
 
@@ -46,7 +47,7 @@ public class DownloadLinkTest extends WicketTestCase
 	{
 		tester.startPage(DownloadPage.class);
 		tester.clickLink(DownloadPage.PDF_DOWNLOAD_LINK);
-		assertEquals("application/pdf", getContentType());
+		assertTrue(getContentType().startsWith("application/pdf"));
 		assertEquals(DownloadPage.HELLO_WORLD.length(), getContentLength());
 	}
 
@@ -56,7 +57,7 @@ public class DownloadLinkTest extends WicketTestCase
 		((MockServletContext)tester.getApplication().getServletContext()).addMimeType("custom",
 				APPLICATION_X_CUSTOM);
 		tester.clickLink(DownloadPage.CUSTOM_DOWNLOAD_LINK);
-		assertEquals(APPLICATION_X_CUSTOM, getContentType());
+		assertTrue(getContentType().startsWith(APPLICATION_X_CUSTOM));
 	}
 
 	private String getContentType()
@@ -69,5 +70,11 @@ public class DownloadLinkTest extends WicketTestCase
 	{
 		return Integer.parseInt(((MockHttpServletResponse)tester.getWicketResponse()
 				.getHttpServletResponse()).getHeader("Content-Length"));
+	}
+
+	private String getContentDisposition()
+	{
+		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
+				.getHeader("Content-Disposition");
 	}
 }
