@@ -321,7 +321,7 @@ public class PortletSessionStore implements ISessionStore
 	public IPageVersionManager newVersionManager(Page page)
 	{
 		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
-		return new UndoPageVersionManager(page, settings.getMaxPageVersions());
+		return new UndoPageVersionManager(page, 20);
 	}
 
 	/**

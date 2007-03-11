@@ -59,7 +59,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
-	 * there.
+	 * there. This instance will be set as the current one for this thread.
 	 * 
 	 * @param session
 	 *            The session
@@ -207,8 +207,9 @@ public class WebRequestCycle extends RequestCycle
 
 			// Redirect page can touch its models already (via for example the
 			// constructors)
-			// this can be removed i guess because this page will be detached in the page target
-			//page.internalDetach();
+			// this can be removed i guess because this page will be detached in
+			// the page target
+			// page.internalDetach();
 		}
 
 		if (redirectUrl == null)

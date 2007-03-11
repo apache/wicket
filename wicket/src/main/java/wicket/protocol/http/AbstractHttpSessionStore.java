@@ -146,16 +146,17 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		String id = null;
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = webRequest.getHttpServletRequest().getSession(false);
-		if(httpSession != null)
+		if (httpSession != null)
 		{
 			id = httpSession.getId();
 		}
-		else if(create)
+		else if (create)
 		{
 			httpSession = webRequest.getHttpServletRequest().getSession(true);
 			id = httpSession.getId();
 			IRequestLogger logger = Application.get().getRequestLogger();
-			if(logger != null) logger.sessionCreated(id);
+			if (logger != null)
+				logger.sessionCreated(id);
 		}
 		return id;
 	}
@@ -294,9 +295,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	public IPageVersionManager newVersionManager(Page page)
 	{
 		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
-		return new UndoPageVersionManager(page, settings.getMaxPageVersions());
+		return new UndoPageVersionManager(page, 20);
 	}
-	
+
 	/**
 	 * @see wicket.session.ISessionStore#destroy()
 	 */
