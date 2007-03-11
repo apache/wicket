@@ -168,9 +168,6 @@ public final class Settings
 	/** To help prevent denial of service attacks */
 	private int maxPageMaps = 5;
 
-	/** The maximum number of versions of a page to track */
-	private int maxPageVersions = Integer.MAX_VALUE;
-
 	/** Map to look up resource factories by name */
 	private Map nameToResourceFactory = new HashMap();
 
@@ -280,9 +277,12 @@ public final class Settings
 
 	private boolean requestLoggerEnabled;
 
-	/** Whether the comments and whitespaces will be stripped from javascript resources */
+	/**
+	 * Whether the comments and whitespaces will be stripped from javascript
+	 * resources
+	 */
 	private boolean stripJavascriptCommentsAndWhitespace;
-	
+
 	/**
 	 * Create the application settings, carrying out any necessary
 	 * initialisations.
@@ -551,14 +551,6 @@ public final class Settings
 	public final int getMaxPageMaps()
 	{
 		return maxPageMaps;
-	}
-
-	/**
-	 * @see wicket.settings.IPageSettings#getMaxPageVersions()
-	 */
-	public int getMaxPageVersions()
-	{
-		return maxPageVersions;
 	}
 
 	/**
@@ -995,18 +987,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IPageSettings#setMaxPageVersions(int)
-	 */
-	public void setMaxPageVersions(int maxPageVersions)
-	{
-		if (maxPageVersions < 0)
-		{
-			throw new IllegalArgumentException("Value for maxPageVersions must be >= 0");
-		}
-		this.maxPageVersions = maxPageVersions;
-	}
-
-	/**
 	 * @see wicket.settings.IResourceSettings#setPackageResourceGuard(wicket.markup.html.IPackageResourceGuard)
 	 */
 	public void setPackageResourceGuard(IPackageResourceGuard packageResourceGuard)
@@ -1245,7 +1225,7 @@ public final class Settings
 	{
 		requestsWindowSize = size;
 	}
-	
+
 	/**
 	 * @see wicket.settings.IResourceSettings#getStripJavascriptCommentsAndWhitespace()
 	 */
@@ -1253,12 +1233,12 @@ public final class Settings
 	{
 		return stripJavascriptCommentsAndWhitespace;
 	}
-	
+
 	/**
 	 * @see wicket.settings.IResourceSettings#setStripJavascriptCommentsAndWhitespace(boolean)
 	 */
 	public void setStripJavascriptCommentsAndWhitespace(boolean value)
 	{
 		stripJavascriptCommentsAndWhitespace = value;
-	}	
+	}
 }
