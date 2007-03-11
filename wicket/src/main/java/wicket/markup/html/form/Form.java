@@ -653,8 +653,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
-		IFormSubmittingComponent submit = (IFormSubmittingComponent)getPage().visitChildren(
-				IFormSubmittingComponent.class, new IVisitor()
+		IFormSubmittingComponent submittingButton = (IFormSubmittingComponent)getPage()
+				.visitChildren(IFormSubmittingComponent.class, new IVisitor()
 				{
 					public Object component(final Component component)
 					{
@@ -678,13 +678,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					}
 				});
 
-		if (getDefaultButton() != null)
-		{
-			return getDefaultButton();
-		}
-
-
-		return submit;
+		return submittingButton;
 	}
 
 	/**
