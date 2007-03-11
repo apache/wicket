@@ -45,14 +45,6 @@ public class PageSettings implements PageSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.PageSettingsMBean#getMaxPageVersions()
-	 */
-	public int getMaxPageVersions()
-	{
-		return application.getPageSettings().getMaxPageVersions();
-	}
-
-	/**
 	 * @see wicket.jmx.PageSettingsMBean#getVersionPagesByDefault()
 	 */
 	public boolean getVersionPagesByDefault()
@@ -66,14 +58,6 @@ public class PageSettings implements PageSettingsMBean
 	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
 	{
 		application.getPageSettings().setAutomaticMultiWindowSupport(automaticMultiWindowSupport);
-	}
-
-	/**
-	 * @see wicket.jmx.PageSettingsMBean#setMaxPageVersions(int)
-	 */
-	public void setMaxPageVersions(int maxPageVersions)
-	{
-		application.getPageSettings().setMaxPageVersions(maxPageVersions);
 	}
 
 	/**

@@ -23,8 +23,7 @@ import wicket.markup.html.WebPage;
  * 
  * @author eelcohillenius
  */
-public interface PageSettingsMBean
-{
+public interface PageSettingsMBean {
 	/**
 	 * Gets whether Wicket should try to support opening multiple windows for
 	 * the same session transparently. If this is true - the default setting -,
@@ -46,11 +45,6 @@ public interface PageSettingsMBean
 	 *         transparently
 	 */
 	boolean getAutomaticMultiWindowSupport();
-
-	/**
-	 * @return Returns the maxPageVersions.
-	 */
-	int getMaxPageVersions();
 
 	/**
 	 * @return Returns the pagesVersionedByDefault.
@@ -79,12 +73,6 @@ public interface PageSettingsMBean
 	 *            transparently
 	 */
 	void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport);
-
-	/**
-	 * @param maxPageVersions
-	 *            The maxPageVersion to set.
-	 */
-	void setMaxPageVersions(int maxPageVersions);
 
 	/**
 	 * @param pagesVersionedByDefault
