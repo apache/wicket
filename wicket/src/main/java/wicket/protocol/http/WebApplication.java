@@ -310,6 +310,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 *            pagemap this mount is for
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
+	 * @deprecated You won't be able to use this mount. Use
+	 *             {@link #mountBookmarkablePage(String, String, Class)} instead
 	 */
 	public final void mountBookmarkablePage(final String path, final PageMap pageMap,
 			final Class bookmarkablePageClass)
@@ -317,6 +319,24 @@ public abstract class WebApplication extends Application implements ISessionFact
 		checkMountPath(path);
 		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
 				pageMap.getName()));
+	}
+
+	/**
+	 * Mounts a bookmarkable page class to the given pagemap and path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param pageMapName
+	 *            name of the pagemap this mount is for
+	 * @param bookmarkablePageClass
+	 *            the bookmarkable page class to mount
+	 */
+	public final void mountBookmarkablePage(final String path, final String pageMapName,
+			final Class bookmarkablePageClass)
+	{
+		checkMountPath(path);
+		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
+				pageMapName));
 	}
 
 	/**
