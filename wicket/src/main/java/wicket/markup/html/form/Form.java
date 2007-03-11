@@ -598,7 +598,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// append the button
 		buffer.append("<input type=\"submit\" value=\"").append(value).append("\" name=\"").append(
 				defaultButton.getInputName()).append("\"");
-		buffer.append("style=\"width: 0px; height: 0px; position: absolute; left;-10px;\"");
+		buffer.append("style=\"width: 0px; height: 0px; position: absolute; left:-100px;\"");
 		buffer.append(" />");
 		getResponse().write(buffer);
 	}
