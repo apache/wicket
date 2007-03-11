@@ -1,18 +1,40 @@
-Wicket 1.3
-==========
+Apache Wicket 1.3
+=================
 
 This is the readme file for the Wicket core project. 
 
-Wicket is an open source, java, component based, web application framework.
+Apache Wicket is an open source, java, component based, web application framework.
+With proper mark-up/logic separation, a POJO data model, and a refreshing lack of XML, 
+Apache Wicket makes developing web-apps simple and enjoyable again. Swap the boilerplate, 
+complex debugging and brittle code for powerful, reusable components written with plain Java 
+and HTML.
 
 Contents
 --------
+ - Incubation
  - License
  - Java/Application server requirements
  - Getting started
  - Building Wicket from source
  - Migrating from 1.2
  - Getting help
+
+Incubation
+----------
+
+The Wicket project is an effort undergoing incubation at the Apache Software
+Foundation (ASF), sponsored by the Incubator PMC. Incubation is required of all 
+newly accepted projects until a further review indicates that the 
+infrastructure, communications, and decision making process have stabilized in 
+a manner consistent with other successful ASF projects. While incubation 
+status is not necessarily a reflection of the completeness or stability of the 
+code, it does indicate that the project has yet to be fully endorsed by the 
+ASF.
+
+For more information about the incubation status of the Wicket project you
+can go to the following page:
+
+http://incubator.apache.org/projects/wicket.html
 
 License
 -------
@@ -68,8 +90,7 @@ There is a migration guide available on our Wiki:
 Getting help
 ------------
 
- - Read the supplied documentation in the docs/ directory
- - Read the online documentation available on our Wiki (http://cwiki.apache.org/WICKET)
+ - Read the online documentation available on our website (http://incubator.apache.org/wicket)
  - Read the migration guide (http://cwiki.apache.org/WICKET/migrate-13.html)
  - Read the mailing archives available on nabble, gmane and sourceforge
  - Send a complete message containing your problem, stacktrace and problem you're trying
