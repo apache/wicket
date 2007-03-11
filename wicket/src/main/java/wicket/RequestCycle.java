@@ -214,6 +214,21 @@ public abstract class RequestCycle
 		return (RequestCycle)current.get();
 	}
 
+	/**
+	 * Sets the request cycle for the calling thread. You typically DO NOT NEED
+	 * to call this method, as the request cycle is set to current for you in
+	 * the constructor. However, if you have a <a
+	 * href="http://issues.apache.org/jira/browse/WICKET-366">very special need</a>
+	 * to set it to something else, you can expose this method.
+	 * 
+	 * @param cycle
+	 *            The request cycle to set current
+	 */
+	protected static void set(RequestCycle cycle)
+	{
+		current.set(cycle);
+	}
+
 	/** The application object. */
 	protected final Application application;
 
@@ -252,7 +267,8 @@ public abstract class RequestCycle
 	private boolean updateSession;
 
 	/**
-	 * Constructor.
+	 * Constructor. This instance will be set as the current one for this
+	 * thread.
 	 * 
 	 * @param session
 	 *            The session
@@ -273,6 +289,7 @@ public abstract class RequestCycle
 		// Set this RequestCycle into ThreadLocal variable
 		current.set(this);
 	}
+
 
 	/**
 	 * Gets the application object.
@@ -1074,7 +1091,7 @@ public abstract class RequestCycle
 			// probably our last chance the exception can be logged.
 			// Note that a PageExpiredException should not be logged, because
 			// it's not an internal error
-			if (! (e instanceof PageExpiredException))
+			if (!(e instanceof PageExpiredException))
 			{
 				log.error(e.getMessage(), e);
 			}
