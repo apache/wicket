@@ -108,8 +108,13 @@
 		</developer>
 		<developer>
 			<name>Eelco Hillenius</name>
-			<id>eelco12</id>
-			<email>eelco12 at users.sourceforge.net</email>
+			<id>ehillenius</id>
+			<email>ehillenius@apache.org</email>
+			<organization>ASF</organization>
+			<roles>
+				<role>PMC Member</role>
+			</roles>
+			<timezone>-8</timezone>
 		</developer>
 		<developer>
 			<name>Johan Compagner</name>
