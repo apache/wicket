@@ -1,0 +1,213 @@
+html{
+	height:100%;
+}
+
+body{
+	background:#787878 url('background.gif');
+	margin:0px;
+	padding:0px;
+	font-family: "Lucida Sans Regular", "Lucida Grande", "Tahoma", Verdana;
+	font-size: 76%;
+	color:#4a4a4a;
+	height:100%;
+}	
+
+a, a:visited {
+	text-decoration : none;
+	color : #eb5a0a;
+}
+a:hover {
+	text-decoration : underline;
+}
+
+/* Containers */
+#container{
+	background:url('bg_container.png');
+	/* De aloude <ie7 fix */	
+	/* filter:progid:DXimageTransform.Microsoft.AlphaimageLoader(src='bg_container.png', sizingMethod='scale'); */
+	width:927px;
+	min-height:100%;
+	margin-left:auto;
+	margin-right:auto;
+	padding-left:28px;
+}
+
+#header{
+	background:#e8590a url('logo.png');
+	width:899px;
+	height:108px;
+}
+
+#content{
+	width:899px;
+	height:auto;
+}
+
+p, table, h1, h2, h3, h4, h5, h6, h7, div.code {
+	padding-left:25px;
+	padding-right : 1em;
+}
+
+#navigation {
+	background:#ffffff url('bg_menu.png') no-repeat 0px -2px;
+	width:172px;
+	min-height:200px;
+	height:auto;
+	float:left;
+	padding-right:50px;
+	padding-top:20px;
+	padding-left : 0px;
+	overflow : hidden;
+	text-align:right;
+}
+
+#navigation h5{
+	color:#eb5a0a;
+	font-weight:bold;
+	display:block;
+	background:transparent url('menuknop.png') no-repeat left top;
+	overflow : hidden;
+	vertical-align:baseline;
+	white-space : nowrap;
+	width:120px;
+	height:26px;
+	padding-right:24px;
+	padding-left : 0px;
+	font-size:1.2em;
+	margin-top:1em;
+	margin-bottom:0px;
+	float:right;
+}
+
+#navigation ul{
+	text-align:right;
+	display:block;
+	float:right;
+	margin:0px;
+	padding-right:24px;
+	list-style:none;
+	line-height:1.5em;
+	font-weight:bold;
+}
+
+#navigation a{
+	text-decoration:none;
+	color:#4a4a4a;
+}
+
+#contentbody {
+	background:#ffffff;
+	width:668px;
+	padding-top:20px;
+	height:auto;
+	float:left
+}
+
+h1, h2, .blogHeading {
+	color:#eb5a0a;
+	font-weight:bold;
+	font-size:1.2em;
+	background:#ffffff;
+	height:1.5em;
+	display:block;
+	text-decoration : none;
+}
+
+h1 {
+	background:#ffffff url('wicket.png') no-repeat left bottom;
+	min-height : 20px;
+	height : 20px;
+}
+
+.blogSurtitle, a.blogDate {
+	color:#4a4a4a;
+	font-size : 90%;
+}
+a.blogDate {
+	padding-left:25px;
+}
+.endsection {
+	display : none;
+}
+
+#logo span, #incubator span {
+	display : none;
+}
+
+#logo {
+	background: #ffffff url('logo.png') no-repeat left bottom;
+	height : 108px;
+	width : 300px;
+	position : absolute;
+	//top : -9px;
+	margin-top : 0px;
+}
+
+#incubator {
+	background: #ffffff url('nowincubating.png') no-repeat left bottom;
+	height : 97px;
+	width : 139px;
+	padding-top : 4em;
+}
+
+#footer{
+	background:#ffffff url('footer.png');
+	height:34px;
+	width:899px;
+	margin-top:15px;
+	padding-top:20px;
+}
+
+#clearer{
+	clear:both;
+	height:1px;
+}
+
+#footer span{
+	margin-left:450px;
+	font-size:90%;
+}
+
+.blogSurtitle img, .rendericon {
+	display : none;
+}
+
+div.code {
+	margin-right : 25px;
+	margin-left : 25px;
+	padding-left : 25px;
+	padding-right : 25px;
+	border : thin solid black;
+}
+.confluenceTable {
+	width : 100%;
+}
+
+.confluenceTable div.code {
+	margin-right : 0;
+	margin-left : 0;
+	padding-left : 0;
+	padding-right : 0;
+	border : thin solid black;
+}
+.confluenceTd {
+	vertical-align : top;
+}
+
+pre {
+	font-family: "Lucida Sans Regular", "Lucida Grande", "Tahoma", Verdana;
+	font-size : 120%;
+}
+
+span.code-keyword {
+	font-weight : bold;
+}
+span.code-tag {
+	font-weight : bold;
+}
+
+div.section {
+	padding : 0;
+	margin: 0;
+	display : inline;
+}

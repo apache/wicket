@@ -1,0 +1,16 @@
+#container{
+	background-image:none;
+	filter:progid:DXimageTransform.Microsoft.AlphaimageLoader(src='style/bg_container.png', sizingMethod='scale');
+}
+
+#navigation h5{
+	background-image:none;
+	filter:progid:DXimageTransform.Microsoft.AlphaimageLoader(src='style/menuknop.png', sizingMethod='scale');
+}
+#navigation, #contentbody {
+	position:relative;
+	z-index : 1;
+}
+#logo {
+	top : 0px;
+}
