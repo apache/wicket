@@ -315,6 +315,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		}
+		// If multi part did fail check if an error is registered and call
+		// onError
+		else if (hasError())
+		{
+			onError();
+		}
 	}
 
 	/**
