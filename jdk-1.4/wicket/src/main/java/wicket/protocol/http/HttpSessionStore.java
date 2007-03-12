@@ -44,6 +44,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		return new AccessStackPageMap(name, session);
 	}
 
+
 	/**
 	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request,
 	 *      java.lang.String)
@@ -88,6 +89,12 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 */
 	public void removeAttribute(Request request, String name)
 	{
+		// ignore call if the session was marked invalid
+		if (!isSessionValid())
+		{
+			return;
+		}
+
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
@@ -112,6 +119,12 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 */
 	public void setAttribute(Request request, String name, Object value)
 	{
+		// ignore call if the session was marked invalid
+		if (!isSessionValid())
+		{
+			return;
+		}
+
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
@@ -146,5 +159,23 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	private String getSessionAttributePrefix(final WebRequest request)
 	{
 		return application.getSessionAttributePrefix(request);
+	}
+
+	/**
+	 * @return Whether the session was marked invalid during this request
+	 *         (afterwards, we shouldn't even come here as there is no session)
+	 */
+	private boolean isSessionValid()
+	{
+		if (Session.exists())
+		{
+			Session session = Session.get();
+			if (session instanceof WebSession)
+			{
+				return !((WebSession)session).isSessionInvalidated();
+			}
+		}
+		return true; // we simply don't know, so play safe and rely on
+		// servlet container's code to check availability
 	}
 }

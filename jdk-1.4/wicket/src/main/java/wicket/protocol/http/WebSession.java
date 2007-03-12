@@ -96,7 +96,22 @@ public class WebSession extends Session
 	 */
 	public void invalidateNow()
 	{
+		sessionInvalidated = true; // set this for isSessionInvalidated
 		getSessionStore().invalidate(RequestCycle.get().getRequest());
+	}
+
+	/**
+	 * Whether the session is invalid now, or will be invalidated by the end of
+	 * the request. Clients should rarely need to use this method if ever.
+	 * 
+	 * @return Whether the session is invalid when the current request is done
+	 * 
+	 * @see #invalidate()
+	 * @see #invalidateNow()
+	 */
+	public final boolean isSessionInvalidated()
+	{
+		return sessionInvalidated;
 	}
 
 	/**
