@@ -138,7 +138,7 @@ public class TabbedPanel extends Panel
 
 				final WebMarkupContainer titleLink = newLink("link", index);
 
-				titleLink.add(new Label("title", tab.getTitle()));
+				titleLink.add(newTitle("title", tab.getTitle(), index));
 				item.add(titleLink);
 
 				item.add(new SimpleAttributeModifier("class", "selected")
@@ -173,6 +173,24 @@ public class TabbedPanel extends Panel
 	{
 		return tabs;
 	}
+
+	/**
+	 * Factory method for tab titles. Returned component can be anything that
+	 * can attach to span tags such as a fragment, panel, or a label
+	 * 
+	 * @param titleId
+	 *            id of title component
+	 * @param titleModel
+	 *            model containing tab title
+	 * @param index
+	 *            index of tab
+	 * @return title component
+	 */
+	protected Component newTitle(String titleId, IModel titleModel, int index)
+	{
+		return new Label(titleId, titleModel);
+	}
+
 
 	/**
 	 * Factory method for links used to switch between tabs.
