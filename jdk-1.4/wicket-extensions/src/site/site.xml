@@ -16,11 +16,11 @@
    limitations under the License.
 -->
 <project name="Wicket Extensions">
-		<skin>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-site-skin</artifactId>
-			<version>1.0-incubating-SNAPSHOT</version>
-		</skin>
+	<skin>
+		<groupId>org.apache.wicket</groupId>
+		<artifactId>wicket-site-skin</artifactId>
+		<version>1.0-incubating-SNAPSHOT</version>
+	</skin>
 	<body>
 		<menu name="Wicket Extensions">
 			<item name="About" href="/index.html" />
