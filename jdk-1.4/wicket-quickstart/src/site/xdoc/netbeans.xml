@@ -23,6 +23,9 @@
 	<body>
 		<section name="NetBeans QuickStart Guide">
 			<p>
+				<strong>This section may be out of date. It will be revised before the final release of Apache Wicket</strong>
+			</p>
+			<p>
 				This quickstart is a small guide to get you up and running to start using Wicket
 				within minutes. This project is meant to be a starting point for your first project.
 				If you are looking for examples, please look at the example projects.

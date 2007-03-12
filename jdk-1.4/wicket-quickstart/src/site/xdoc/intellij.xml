@@ -17,11 +17,14 @@
 -->
 <document>
 	<properties>
-		<title>IntelliJ IDEA Kick Start Guide</title>
+		<title>IntelliJ IDEA QuickStart Guide</title>
 	</properties>
 	<meta name="keyword" content="wicket, web, j2ee, java, intellij, idea" />
 	<body>
 		<section name="IntelliJ IDEA QuickStart Guide">
+			<p>
+				<strong>This section may be out of date. It will be revised before the final release of Apache Wicket</strong>
+			</p>
 			<p>
 				This quickstart is a small guide to get you up and running to start using Wicket
 				within minutes. This project is meant to be a starting point for your first project.

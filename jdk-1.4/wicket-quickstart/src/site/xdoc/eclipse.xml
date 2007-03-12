@@ -17,11 +17,14 @@
 -->
 <document>
 	<properties>
-		<title>Eclipse Kick Start Guide</title>
+		<title>Eclipse QuickStart Guide</title>
 	</properties>
 	<meta name="keyword" content="wicket, web, j2ee, java, eclipse" />
 	<body>
 		<section name="Eclipse QuickStart Guide">
+			<p>
+				<strong>This section may be out of date. It will be revised before the final release of Apache Wicket</strong>
+			</p>
 			<p>
 				This quickstart is a small guide to get you up and running to start using Wicket
 				within minutes. This project is meant to be a starting point for your first project.
@@ -92,14 +95,12 @@
 			</subsection>
 			<subsection name="The QuickStart Project">
 				<p>
-					Next you need to download the quickstart distribution project from our
-					sourceforge site.
+					Next you need to download the quickstart distribution from one of the Apache mirrors.
 				</p>
 				<ul>
 					<li>
 						Download the
-						<a
-							href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850">
+						<a href="http://www.apache.org/dyn/closer.cgi/wicket/binaries/wicket-quickstart-1.3.0-bin.zip">
 							wicket-quickstart distribution
 						</a>
 					</li>
