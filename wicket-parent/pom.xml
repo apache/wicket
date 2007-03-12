@@ -401,6 +401,25 @@
 				<module>../wicket-auth-roles-examples</module> 
 			</modules> 
 		</profile> 
+		<profile> 
+			<id>all</id> 
+			<modules>
+				<module>../wicket</module>
+				<module>../wicket-extensions</module>
+				<module>../wicket-examples</module>
+				<module>../wicket-new-examples</module>
+				<module>../wicket-spring</module>
+				<module>../wicket-spring-examples</module>
+				<module>../wicket-quickstart</module>
+				<module>../wicket-portlet-examples</module>
+				<module>../wicket-datetime</module>
+				<module>../wicket-jmx</module>
+				<module>../wicket-spring-annot</module>
+				<module>../wicket-spring-annot-examples</module>
+				<module>../wicket-auth-roles</module> 
+				<module>../wicket-auth-roles-examples</module> 
+			</modules> 
+		</profile> 
 	</profiles> 
 
 	<build>
@@ -527,11 +546,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>2.0-beta-5</version>
-					<configuration>
-						<templateDirectory>${basedir}/src/site/template/</templateDirectory>
-						<template>wicket-site.vm</template>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

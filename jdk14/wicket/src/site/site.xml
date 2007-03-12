@@ -16,24 +16,23 @@
    limitations under the License.
 -->
 <project name="Wicket">
-<skin>
-	<groupId>org.apache.wicket</groupId>
-	<artifactId>wicket-site-skin</artifactId>
-	<version>1.0-incubating-SNAPSHOT</version>
-</skin>
+	<skin>
+		<groupId>org.apache.wicket</groupId>
+		<artifactId>wicket-site-skin</artifactId>
+		<version>1.0-incubating-SNAPSHOT</version>
+	</skin>
 <body>
-	<menu name="Wicket Parent">
-		<item name="Home" href="/index.html" />
-	</menu>
-	<menu name="Project Info">
-		<item name="Mailing Lists" href="/mail-lists.html" />
-		<item name="SourceForge" href="/SourceForge.html" />
-		<item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783" />
+	<menu name="Apache Wicket">
+		<item name="About" href="/index.html" />
+		<item name="Apache Wicket" href="http://incubator.apache.org/wicket" />
 		<item name="License" href="/license.html" />
 	</menu>
-	<menu name="Development">
-		<item name="Developers" href="/team-list.html" />
+	<menu name="Project Info">
+        <item name="Dependencies" href="/dependencies.html"/>
+		<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
+		<item name="Mailing Lists" href="/mail-lists.html" />
+		<item name="Issue Tracker" href="http://issues.apache.org/jira/browse/WICKET" />
 		<item name="SVN Access" href="/source-repository.html" />
 	</menu>
-  </body>
+</body>
 </project>
