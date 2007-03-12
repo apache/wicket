@@ -120,6 +120,14 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 				}
 			}
 
+			if (component == null)
+			{
+				// still null? that's not right
+				throw new WicketRuntimeException("cannot resolve component with path '"
+						+ pageRelativeComponentPath + "', listener " + listener + " on page "
+						+ page);
+			}
+
 			if (!component.isEnableAllowed())
 			{
 				throw new UnauthorizedActionException(component, Component.ENABLE);
