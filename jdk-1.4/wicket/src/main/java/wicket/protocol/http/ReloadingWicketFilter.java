@@ -25,27 +25,57 @@ import wicket.util.listener.IChangeListener;
 /**
  * Custom WicketFilter that reloads the web applications when classes are
  * modified. In order to reload your own classes, use include and exclude
- * patterns using wildcards. And in web.xml, point to the reloading wicket
- * filter instead of the original one.
+ * patterns using wildcards. And in web.xml, point to your custom reloading
+ * wicket filter instead of the original wicket filter.
  * 
  * <p>
- * <b>Example denoting the built-in patterns:</b>
+ * The built-in patterns are:
+ * </p>
  * 
  * <pre>
- * public class MyFilter extends ReloadingWicketFilter
+ * ReloadingClassLoader.excludePattern(&quot;wicket.*&quot;);
+ * ReloadingClassLoader.includePattern(&quot;wicket.examples.*&quot;);
+ * </pre>
+ * 
+ * <p>
+ * <b>Example. </b> Defining custom patterns
+ * </p>
+ * 
+ * <pre>
+ * public class MyReloadingFilter extends ReloadingWicketFilter
  * {
- * 	static
- * 	{
- * 		ReloadingClassLoader.excludePattern(&quot;wicket.*&quot;);
- * 		ReloadingClassLoader.includePattern(&quot;wicket.examples.*&quot;);
- * 	}
+ *   static
+ *   {
+ *     ReloadingClassLoader.includePattern(&quot;com.company.*&quot;);
+ *     ReloadingClassLoader.excludePattern(&quot;com.company.spring.beans.*&quot;);
+ *     ReloadingClassLoader.includePattern(&quot;some.other.package.with.wicket.components.*&quot;);
+ *   }
  * }
  * </pre>
  * 
  * <p>
- * It is also possible to add an URL to watch for changes using
- * <tt>ReloadingClassLoader.addLocation()</tt>. By default, all the URL
- * locations we can find for the provided class loader are registered.
+ * <b>Note. </b>
+ * The order of including and excluding patterns is significant.
+ * </p>
+ * 
+ * <p>
+ * <b>WARNING. </b> Be careful that when using Spring or other component
+ * managers, you will get <tt>ClassCastException</tt> if a given class is loaded
+ * two times, one time by the normal classloader, and another time by the
+ * reloading classloader. You need to ensure that your Spring beans are properly
+ * excluded from the reloading class loader and only keep the Wicket components
+ * included. When getting a cryptic error with regard to class loading, class
+ * instantiation or class comparison, first <b>disable the reloading class
+ * loader</b> to rule out the possibility of a classloader conflict. Please keep
+ * in mind that two classes are equal if and only if they have the same name
+ * <b>and are loaded in the same classloader</b>.
+ * </p>
+ * 
+ * 
+ * <p>
+ * It is also possible to add an extra URL to watch for changes using
+ * <tt>ReloadingClassLoader.addLocation()</tt> .  By default, all the URL
+ * returned by the provided class loader are registered.
  * </p>
  * 
  * @see WicketFilter
