@@ -1,23 +1,24 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AttributeAppender;
@@ -143,7 +144,7 @@ public class TabbedPanel extends Panel<Integer>
 
 				final WebMarkupContainer titleLink = newLink(item, "link", index);
 
-				new Label(titleLink, "title", tab.getTitle());
+				newTabLabel(titleLink, "title", tab.getTitle());
 
 				item.add(new SimpleAttributeModifier("class", "selected")
 				{
@@ -177,6 +178,25 @@ public class TabbedPanel extends Panel<Integer>
 	public final List<? extends ITab> getTabs()
 	{
 		return tabs;
+	}
+
+	/**
+	 * Factory method for tab-title components. This component can be anything
+	 * that can be attached to span tags such as a panel, fragment, or by
+	 * default a label
+	 * 
+	 * @param parent
+	 *            label's parent
+	 * @param id
+	 *            label's id
+	 * @param title
+	 *            tab's title
+	 * @return created component
+	 * 
+	 */
+	private Component newTabLabel(final WebMarkupContainer parent, String id, IModel<String> title)
+	{
+		return new Label(parent, "title", title);
 	}
 
 	/**
