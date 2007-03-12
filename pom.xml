@@ -32,6 +32,7 @@
 	<modules>
 		<module>jdk-1.4</module>
 		<module>jdk-1.5</module>
+		<module>testing/wicket-threadtest</module>
 	</modules>
 
 	<url>http://incubator.apache.org/wicket/${project.artifactId}</url>

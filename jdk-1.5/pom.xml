@@ -39,7 +39,6 @@
 		<module>wicket-objectssizeof-agent</module>
 		<module>wicket-spring-annot</module>
 		<module>wicket-spring-annot-examples</module>
-		<module>wicket-threadtest</module>
 	</modules>
 	<build>
 		<plugins>
