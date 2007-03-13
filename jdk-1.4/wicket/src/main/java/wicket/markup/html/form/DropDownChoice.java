@@ -178,7 +178,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 			}
 			else
 			{
-				tag.put("onchange", "window.location.href='" + url + "&" + getInputName()
+				tag.put("onchange", "window.location.href='" + url + "&amp;" + getInputName()
 						+ "=' + this.options[this.selectedIndex].value;");
 			}
 		}
