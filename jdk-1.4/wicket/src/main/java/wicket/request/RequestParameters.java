@@ -16,7 +16,9 @@
  */
 package wicket.request;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import wicket.IClusterable;
 import wicket.RequestListenerInterface;
@@ -307,8 +309,8 @@ public class RequestParameters implements IClusterable
 
 
 	/**
-	 * Tells wicket whether this request should only be processed if the page + version
-	 * specified are pointing to the last page the user accessed.
+	 * Tells wicket whether this request should only be processed if the page +
+	 * version specified are pointing to the last page the user accessed.
 	 * 
 	 * @see WebRequestCodingStrategy#IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME
 	 * 
@@ -352,7 +354,17 @@ public class RequestParameters implements IClusterable
 		}
 		if (getParameters() != null)
 		{
-			b.append(" parameters=").append(getParameters());
+			b.append(" parameters={");
+			for (Iterator i = getParameters().entrySet().iterator(); i.hasNext();)
+			{
+				Entry entry = (Entry)i.next();
+				b.append(entry.getKey()).append("=").append(entry.getValue());
+				if (i.hasNext())
+				{
+					b.append(",");
+				}
+			}
+			b.append("}");
 		}
 		if (getResourceKey() != null)
 		{
