@@ -472,7 +472,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
 						buffer.append(" onclick=\"window.location.href='").append(url).append(
-								"&" + getInputName()).append("=").append(id).append("';\"");
+								"&amp;" + getInputName()).append("=").append(id).append("';\"");
 					}
 				}
 
