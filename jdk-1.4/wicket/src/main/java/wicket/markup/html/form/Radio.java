@@ -143,7 +143,7 @@ public class Radio extends WebMarkupContainer
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "window.location.href='" + url + "&" + group.getInputName()
+				tag.put("onclick", "window.location.href='" + url + "&amp;" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}
