@@ -29,11 +29,29 @@
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
 
-	<modules>
-		<module>jdk-1.4</module>
-		<module>jdk-1.5</module>
-		<module>testing/wicket-threadtest</module>
-	</modules>
+	<profiles>
+		<profile>
+			<id>jdk-1.4</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<jdk>1.4</jdk>
+			</activation>
+			<modules>
+				<module>jdk-1.4</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>all</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>jdk-1.4</module>
+				<module>jdk-1.5</module>
+				<module>testing/wicket-threadtest</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<url>http://incubator.apache.org/wicket/${project.artifactId}</url>
 	<inceptionYear>2004</inceptionYear>
@@ -456,6 +474,7 @@
 				<reportSets>
 					<reportSet>
 						<reports>
+							<report>index</report>
 							<report>dependencies</report>
 							<report>mailing-list</report>
 							<report>issue-tracking</report>
@@ -470,6 +489,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
+<!--
 			<plugin>
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -482,20 +502,21 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+-->
 		</plugins>
 	</reporting>
 	<distributionManagement>
 		<site>
-			<id>wicket-site</id>
-			<url>scpexe://people.apache.org/${project.artifactId}</url>
+			<id>people.apache.org</id>
+			<url>scpexe://people.apache.org/home/dashorst/public_html/${project.groupId}/sites/${project.version}</url>
 		</site>
 		<repository>
-			<id>wicket-repo</id>
-			<url>scpexe://hover/home/almaw/wicket-release/repo/</url>
+			<id>people.apache.org</id>
+			<url>scpexe://people.apache.org/home/dashorst/public_html/${project.groupId}/repository/releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>wicket-snapshot-repo</id>
-			<url>scpexe://hover/home/almaw/wicket-release/repo/</url>
+			<id>people.apache.org</id>
+			<url>scpexe://people.apache.org/home/dashorst/public_html/${project.groupId}/repository/snapshots</url>
 			<uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
 	</distributionManagement>
