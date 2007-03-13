@@ -47,13 +47,6 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	private final IResourceStream resourceStream;
 
 	/**
-	 * the response type, eg 'text/html'.
-	 * 
-	 * @deprecated Removed in 2.0
-	 */
-	private final String responseType;
-
-	/**
 	 * Construct.
 	 * 
 	 * @param resourceStream
@@ -61,28 +54,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 */
 	public ResourceStreamRequestTarget(IResourceStream resourceStream)
 	{
-		this(resourceStream, null);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param resourceStream
-	 *            the resource stream for the response
-	 * @param responseType
-	 *            the response type, eg 'text/html'
-	 * @deprecated Will be removed in 2.0. Response type can be determined from
-	 *             resource stream
-	 */
-	public ResourceStreamRequestTarget(IResourceStream resourceStream, String responseType)
-	{
-		if (resourceStream == null)
-		{
-			throw new IllegalArgumentException("Argument resourceStream must be not null");
-		}
-
 		this.resourceStream = resourceStream;
-		this.responseType = responseType;
 	}
 
 	/**
@@ -126,18 +98,6 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Gets the response type, eg 'text/html'.
-	 * 
-	 * @return the response type, eg 'text/html'
-	 * @deprecated Will be removed in 2.0. Response type can be determined by
-	 *             looking at the resource stream
-	 */
-	public final String getResponseType()
-	{
-		return responseType;
-	}
-
-	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode()
@@ -158,7 +118,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		// Get servlet response to use when responding with resource
 		final Response response = requestCycle.getResponse();
 
-		configure(response, resourceStream);
+		configure(requestCycle, response, resourceStream);
 
 		try
 		{
@@ -196,20 +156,27 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 * Configures the response, default by setting the content type and length
 	 * and content disposition (in case the fileName property was set).
 	 * 
+	 * @param requestCycle
 	 * @param response
 	 *            the response
 	 * @param resourceStream
 	 *            the resource stream that will be rendered
 	 */
-	protected void configure(final Response response, final IResourceStream resourceStream)
+	protected void configure(final RequestCycle requestCycle, final Response response, final IResourceStream resourceStream)
 	{
-		// Configure response with content type of resource
+		// Configure response with content type of resource, if available
 		String responseType = resourceStream.getContentType();
-		if (responseType == null)
-		{
-			responseType = this.responseType;
+		if (responseType != null) {
+			response.setContentType(responseType + "; charset=" + response.getCharacterEncoding());
 		}
-		response.setContentType(responseType + ";charset=" + response.getCharacterEncoding());
+		else
+		{
+			// otherwise detect content-type automatically
+			if (getFileName() != null)
+				response.detectContentType(requestCycle, getFileName());
+			else
+				response.detectContentType(requestCycle, requestCycle.getRequest().getRelativeURL());
+		}
 
 		// and the content length
 		response.setContentLength((int)resourceStream.length());

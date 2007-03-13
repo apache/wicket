@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Locale;
 
+import wicket.protocol.http.WebResponse;
+import wicket.request.target.resource.ResourceStreamRequestTarget;
 import wicket.util.watch.IModifiable;
 
 /**
@@ -44,7 +46,10 @@ public interface IResourceStream extends IModifiable, Serializable
 	 * Gets the mime type of this resource
 	 * 
 	 * @return The mime type of this resource, such as "image/jpeg" or
-	 *         "text/html"
+	 *         "text/html". Return null to let
+	 *         {@link ResourceStreamRequestTarget} handle the Content-Type
+	 *         automatically
+	 * @see WebResponse#detectContentType()
 	 */
 	String getContentType();
 

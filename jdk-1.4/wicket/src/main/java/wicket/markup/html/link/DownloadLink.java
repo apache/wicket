@@ -17,12 +17,10 @@
 package wicket.markup.html.link;
 
 import java.io.File;
-import java.io.FileInputStream;
 
-import wicket.IRequestTarget;
-import wicket.RequestCycle;
-import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebResponse;
+import wicket.request.target.resource.ResourceStreamRequestTarget;
+import wicket.util.resource.FileResourceStream;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
 /**
@@ -101,32 +99,12 @@ public class DownloadLink extends Link
 	 */
 	public void onClick()
 	{
-		getRequestCycle().setRequestTarget(new IRequestTarget()
-		{
-
-			public void detach(RequestCycle requestCycle)
+		IResourceStream resourceStream = new FileResourceStream(new wicket.util.file.File(file));
+		getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(resourceStream) {
+			public String getFileName()
 			{
-			}
-
-			public void respond(RequestCycle requestCycle)
-			{
-				WebResponse r = (WebResponse)requestCycle.getResponse();
-				r.setAttachmentHeader(fileName);
-
-				try
-				{
-					// NOTE headers must be written before the body
-					r.setContentLength(file.length());
-					// Set content type
-					r.detectContentType(requestCycle, fileName);
-					r.write(new FileInputStream(file));
-				}
-				catch (Exception e)
-				{
-					throw new WicketRuntimeException(e);
-				}
+				return fileName;
 			}
 		});
 	}
-
 }
