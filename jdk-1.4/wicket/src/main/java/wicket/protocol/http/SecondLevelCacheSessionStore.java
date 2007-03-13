@@ -434,7 +434,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @see wicket.session.ISessionStore#setAttribute(wicket.Request,
 	 *      java.lang.String, java.lang.Object)
 	 */
-	public final void setAttribute(Request request, String name, Object value)
+	public void setAttribute(Request request, String name, Object value)
 	{
 		// ignore all pages, they are stored through the pagemap
 		if (!(value instanceof Page))
