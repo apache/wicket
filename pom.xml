@@ -41,6 +41,16 @@
 			</modules>
 		</profile>
 		<profile>
+			<id>jdk-1.5</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<jdk>1.5</jdk>
+			</activation>
+			<modules>
+				<module>jdk-1.5</module>
+			</modules>
+		</profile>
+		<profile>
 			<id>all</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
