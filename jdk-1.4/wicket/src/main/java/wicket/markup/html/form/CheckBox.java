@@ -170,7 +170,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "window.location.href='" + url + "&" + getInputName()
+				tag.put("onclick", "window.location.href='" + url + "&amp;" + getInputName()
 						+ "=' + this.checked;");
 			}
 
