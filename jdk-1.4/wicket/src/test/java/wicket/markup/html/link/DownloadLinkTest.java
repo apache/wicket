@@ -64,22 +64,4 @@ public class DownloadLinkTest extends WicketTestCase
 		log.debug("Content-Type: " + getContentType());
 		assertTrue(getContentType().startsWith(APPLICATION_X_CUSTOM));
 	}
-
-	private String getContentType()
-	{
-		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Type");
-	}
-
-	private int getContentLength()
-	{
-		return Integer.parseInt(((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getHeader("Content-Length"));
-	}
-
-	private String getContentDisposition()
-	{
-		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Disposition");
-	}
 }

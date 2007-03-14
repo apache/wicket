@@ -16,15 +16,11 @@
  */
 package wicket.protocol.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.settings.IExceptionSettings;
 import wicket.settings.IRequestCycleSettings;
-import wicket.util.tester.WicketTester;
 
 /**
  * Test exceptions thrown during request
@@ -33,8 +29,6 @@ import wicket.util.tester.WicketTester;
  */
 public class WebResponseExceptionsTest extends WicketTestCase
 {
-	private static final Log log = LogFactory.getLog(WebResponseExceptionsTest.class);
-
 	public void testInternalErrorPage()
 	{
 		tester.startPage(TestErrorPage.class);
@@ -58,7 +52,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.request();
 
-		assertAjaxLocation(tester);
+		assertAjaxLocation();
 	}
 
 	public void testBufferedExceptionErrorPage() {
@@ -102,15 +96,6 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.request();
 
-		assertAjaxLocation(tester);
-	}
-
-	private void assertAjaxLocation(WicketTester tester) {
-		assertNull("Location header should *not* be present when using Ajax", ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse()).getRedirectLocation());
-		String ajaxLocation = ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse()).getHeader("Ajax-Location");
-		log.debug(ajaxLocation);
-		assertNotNull("Ajax-Location header should be present when using Ajax", ajaxLocation);
-		int statusCode = ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse()).getStatus();
-		assertEquals(200, statusCode);
+		assertAjaxLocation();
 	}
 }

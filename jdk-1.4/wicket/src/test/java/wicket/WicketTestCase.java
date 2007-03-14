@@ -18,6 +18,7 @@ package wicket;
 
 import junit.framework.TestCase;
 import wicket.behavior.AbstractAjaxBehavior;
+import wicket.protocol.http.MockHttpServletResponse;
 import wicket.util.tester.WicketTester;
 
 /**
@@ -54,6 +55,7 @@ public abstract class WicketTestCase extends TestCase
 	{
 		tester = new WicketTester();
 	}
+
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
@@ -67,8 +69,7 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Class pageClass, final String filename)
-			throws Exception
+	protected void executeTest(final Class pageClass, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
@@ -112,5 +113,45 @@ public abstract class WicketTestCase extends TestCase
 
 		tester.executeBehavior(behavior);
 		tester.assertResultPage(pageClass, filename);
+	}
+
+	protected String getContentType()
+	{
+		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
+				.getHeader("Content-Type");
+	}
+
+	protected int getContentLength()
+	{
+		String contentLength = ((MockHttpServletResponse)tester.getWicketResponse()
+				.getHttpServletResponse()).getHeader("Content-Length");
+		if (contentLength == null)
+			throw new WicketRuntimeException("No Content-Length header found");
+		return Integer.parseInt(contentLength);
+	}
+
+	protected String getLastModified()
+	{
+		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
+				.getHeader("Last-Modified");
+	}
+
+	protected String getContentDisposition()
+	{
+		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
+				.getHeader("Content-Disposition");
+	}
+
+	protected void assertAjaxLocation()
+	{
+		assertNull("Location header should *not* be present when using Ajax",
+				((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
+						.getRedirectLocation());
+		String ajaxLocation = ((MockHttpServletResponse)tester.getWicketResponse()
+				.getHttpServletResponse()).getHeader("Ajax-Location");
+		assertNotNull("Ajax-Location header should be present when using Ajax", ajaxLocation);
+		int statusCode = ((MockHttpServletResponse)tester.getWicketResponse()
+				.getHttpServletResponse()).getStatus();
+		assertEquals(200, statusCode);
 	}
 }
