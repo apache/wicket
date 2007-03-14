@@ -293,11 +293,10 @@ Wicket.Form.serialize = function(element) {
 	}
 
     for (var i = 0; i < element.childNodes.length; ++i) {
-        var e = element.childNodes[i] {
-        	if (e.tagName != null) {
-				result += Wicket.Form.serialize(e);
-			}
-        }
+        var e = element.childNodes[i];
+       	if (e.tagName != null) {
+			result += Wicket.Form.serialize(e);
+		}
     }
     return result;
 }
