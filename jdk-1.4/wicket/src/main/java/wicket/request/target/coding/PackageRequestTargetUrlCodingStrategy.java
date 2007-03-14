@@ -16,6 +16,9 @@
  */
 package wicket.request.target.coding;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.IRequestTarget;
 import wicket.PageParameters;
 import wicket.Session;
@@ -35,6 +38,7 @@ import wicket.util.string.AppendingStringBuffer;
  */
 public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
 {
+	private static final Log log = LogFactory.getLog(PackageRequestTargetUrlCodingStrategy.class);
 	/** package for this mount. */
 	private final PackageName packageName;
 
@@ -57,7 +61,9 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	 */
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
+		log.debug("path="+requestParameters.getPath());
 		String remainder = requestParameters.getPath().substring(getMountPath().length());
+		log.debug("remainder="+remainder);
 		final String parametersFragment;
 		int ix = remainder.indexOf('/', 1);
 		if (ix == -1)
@@ -75,7 +81,14 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 			remainder = remainder.substring(1);
 			ix--;
 		}
+		else
+		{
+			// There is nothing after the mount path!
+			return null;
+		}
 
+		log.debug("remainder="+remainder);
+		log.debug("parametersFragment="+parametersFragment);
 		final String bookmarkablePageClassName = packageName + "." + remainder.substring(0, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);

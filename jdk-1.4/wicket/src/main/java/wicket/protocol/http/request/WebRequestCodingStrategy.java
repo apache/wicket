@@ -968,7 +968,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				final String key = (String)entry.getKey();
 				if (path.startsWith(key))
 				{
-					return (IRequestTargetUrlCodingStrategy)entry.getValue();
+					/*
+					 * We need to match /mount/point or
+					 * /mount/point/with/extra/path, but not /mount/pointXXX
+					 */
+					String remainder = path.substring(key.length());
+					if (remainder.length() == 0 || remainder.startsWith("/"))
+						return (IRequestTargetUrlCodingStrategy)entry.getValue();
 				}
 			}
 			return null;
