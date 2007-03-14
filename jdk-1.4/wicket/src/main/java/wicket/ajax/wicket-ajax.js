@@ -286,11 +286,17 @@ Wicket.Form.serializeElement = function(e) {
 
 Wicket.Form.serialize = function(element) {
     var result = "";
-    result += Wicket.Form.serializeElement(element);
+    var tag = element.tagName.toLowerCase();
+
+	if (tag !="form" && element.name && element.name != "" && !element.disabled)  {
+	    result += Wicket.Form.serializeElement(element);
+	}
+
     for (var i = 0; i < element.childNodes.length; ++i) {
-        var e = element.childNodes[i];
-        if (e.name && e.name != "" && !e.disabled) {
-			result += Wicket.Form.serialize(e);
+        var e = element.childNodes[i] {
+        	if (e.tagName != null) {
+				result += Wicket.Form.serialize(e);
+			}
         }
     }
     return result;
