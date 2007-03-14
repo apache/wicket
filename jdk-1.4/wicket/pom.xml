@@ -39,4 +39,15 @@
 		component model backed by POJO data beans that can easily be 
 		persisted using your favorite technology.
 	</description>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clover-plugin</artifactId>
+				<configuration>
+					<licenseLocation>${basedir}/lib/clover.license</licenseLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
