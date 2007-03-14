@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketException;
 import java.net.URLConnection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -251,37 +252,46 @@ public abstract class Response
 		}
 		catch (Exception e)
 		{
+			// FIXME this doesn't catch all. For instance, Jetty (6/ NIO) on
+			// Unix like platforms will not be recogninzed as exceptions
+			// that should be ignored
+
 			Throwable throwable = e;
 			boolean ignoreException = false;
 			while (throwable != null)
 			{
-				if (throwable instanceof SocketException)
+				if (throwable instanceof SQLException)
+				{
+					break; // leave false and quit loop
+				}
+				else if (throwable instanceof SocketException)
 				{
 					String message = throwable.getMessage();
 					ignoreException = message != null
-							&& (message.indexOf("Connection reset by peer") != -1 || message
-									.indexOf("Software caused connection abort") != -1);
+							&& (message.indexOf("Connection reset") != -1
+									|| message.indexOf("Broken pipe") != -1
+									|| message.indexOf("Socket closed") != -1
+									|| message.indexOf("connection abort") != -1);
 				}
 				else
 				{
 					ignoreException = throwable.getClass().getName()
 							.indexOf("ClientAbortException") >= 0;
-					if (ignoreException)
+				}
+				if (ignoreException)
+				{
+					if (log.isDebugEnabled())
 					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Socket exception ignored for sending Resource "
-									+ "response to client (ClientAbort)", e);
-						}
-						break;
+						log.debug("Socket exception ignored for sending Resource "
+								+ "response to client (ClientAbort)", e);
 					}
+					break;
 				}
 				throwable = throwable.getCause();
-
-				if (!ignoreException)
-				{
-					throw new WicketRuntimeException("Unable to write response", e);
-				}
+			}
+			if (!ignoreException)
+			{
+				throw new WicketRuntimeException("Unable to write the response", e);
 			}
 		}
 		finally

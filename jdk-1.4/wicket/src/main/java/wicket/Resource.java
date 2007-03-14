@@ -16,15 +16,12 @@
  */
 package wicket;
 
-import java.io.OutputStream;
-import java.net.SocketException;
-import java.sql.SQLException;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.io.Streams;
+import wicket.request.target.resource.ResourceStreamRequestTarget;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
 import wicket.util.value.ValueMap;
@@ -115,14 +112,9 @@ public abstract class Resource implements IResourceListener
 			// Get servlet response to use when responding with resource
 			final Response response = cycle.getResponse();
 
-			// Configure response with content type of resource
-			response.setContentType(resourceStream.getContentType());
-			response.setContentLength((int)resourceStream.length());
-
+			// FIXME WICKET-385 Move HTTP caching features out of wicket.Resource
 			if (isCacheable())
 			{
-				// Don't set this above setContentLength call above.
-				// The call above could create and set the last modified time.
 				response.setLastModifiedTime(resourceStream.lastModifiedTime());
 			}
 			else
@@ -131,13 +123,11 @@ public abstract class Resource implements IResourceListener
 			}
 			configureResponse(response);
 
-			// Respond with resource
-			respond(resourceStream, response);
+			cycle.setRequestTarget(new ResourceStreamRequestTarget(resourceStream));
 		}
 		finally
 		{
-			// Really really really make sure parameters are cleared to appease
-			// Johan
+			// Really really really make sure parameters are cleared
 			parameters.set(null);
 		}
 	}
@@ -220,75 +210,5 @@ public abstract class Resource implements IResourceListener
 			throw new WicketRuntimeException("Could not get resource stream");
 		}
 		return stream;
-	}
-
-	/**
-	 * Respond with resource
-	 * 
-	 * @param resourceStream
-	 *            The current resourcestream of the resource
-	 * @param response
-	 *            The response to write to
-	 */
-	private final void respond(final IResourceStream resourceStream, final Response response)
-	{
-		try
-		{
-			final OutputStream out = response.getOutputStream();
-			try
-			{
-				Streams.copy(resourceStream.getInputStream(), out);
-			}
-			finally
-			{
-				resourceStream.close();
-				out.flush();
-			}
-		}
-		catch (Exception e)
-		{
-			// FIXME this doesn't catch all. For instance, Jetty (6/ NIO) on
-			// Unix like platforms will not be recogninzed as exceptions
-			// that should be ignored
-
-			Throwable throwable = e;
-			boolean ignoreException = false;
-			while (throwable != null)
-			{
-				if (throwable instanceof SQLException)
-				{
-					break; // leave false and quit loop
-				}
-				else if (throwable instanceof SocketException)
-				{
-					String message = throwable.getMessage();
-					ignoreException = message != null
-							&& (message.indexOf("Connection reset") != -1
-									|| message.indexOf("Broken pipe") != -1
-									|| message.indexOf("Socket closed") != -1
-									|| message.indexOf("connection abort") != -1);
-				}
-				else
-				{
-					ignoreException = throwable.getClass().getName()
-							.indexOf("ClientAbortException") >= 0;
-				}
-				if (ignoreException)
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("Socket exception ignored for sending Resource "
-								+ "response to client (ClientAbort)", e);
-					}
-					break;
-				}
-				throwable = throwable.getCause();
-			}
-			if (!ignoreException)
-			{
-				throw new WicketRuntimeException("Unable to render resource stream "
-						+ resourceStream, e);
-			}
-		}
 	}
 }
