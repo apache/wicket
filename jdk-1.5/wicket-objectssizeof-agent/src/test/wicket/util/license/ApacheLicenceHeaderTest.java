@@ -30,17 +30,5 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 	 */
 	public ApacheLicenceHeaderTest() {
 
-		// addHeaders = true;
-
-		xmlIgnore = new String[] { "src/assembly/bin.xml",
-				"src/assembly/build.xml" };
-
-		cssIgnore = new String[] { "src/main/java/wicket/extensions/yui/calendar/assets/calendar.css" };
-
-		javaScriptIgnore = new String[] {
-				"src/main/java/wicket/extensions/yui/yahoo.js",
-				"src/main/java/wicket/extensions/yui/event.js",
-				"src/main/java/wicket/extensions/yui/dom.js",
-				"src/main/java/wicket/extensions/yui/calendar/calendar.js" };
 	}
 }
