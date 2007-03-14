@@ -22,11 +22,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -587,9 +590,82 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 */
 	public void setDateHeader(final String name, final long l)
 	{
-		DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
-		setHeader(name, df.format(new Date(l)));
+        setHeader(name, formatDate(l));
 	}
+
+	public static String formatDate(long l) {
+        StringBuffer _dateBuffer = new StringBuffer(32);
+        Calendar _calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+        _calendar.setTimeInMillis(l);
+        formatDate(_dateBuffer, _calendar, false);
+        return _dateBuffer.toString();
+	}
+	
+	/* BEGIN: This code comes from Jetty 6.1.1 */
+    private static String[] DAYS =
+    { "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    private static String[] MONTHS =
+    { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan"};
+
+	/**
+     * Format HTTP date "EEE, dd MMM yyyy HH:mm:ss 'GMT'" or "EEE, dd-MMM-yy HH:mm:ss 'GMT'"for
+     * cookies
+     */
+    public static void formatDate(StringBuffer buf, Calendar calendar, boolean cookie)
+    {
+        // "EEE, dd MMM yyyy HH:mm:ss 'GMT'"
+        // "EEE, dd-MMM-yy HH:mm:ss 'GMT'", cookie
+
+        int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
+        int day_of_month = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int century = year / 100;
+        year = year % 100;
+
+        int epoch = (int) ((calendar.getTimeInMillis() / 1000) % (60 * 60 * 24));
+        int seconds = epoch % 60;
+        epoch = epoch / 60;
+        int minutes = epoch % 60;
+        int hours = epoch / 60;
+
+        buf.append(DAYS[day_of_week]);
+        buf.append(',');
+        buf.append(' ');
+        append2digits(buf, day_of_month);
+
+        if (cookie)
+        {
+            buf.append('-');
+            buf.append(MONTHS[month]);
+            buf.append('-');
+            append2digits(buf, year);
+        }
+        else
+        {
+            buf.append(' ');
+            buf.append(MONTHS[month]);
+            buf.append(' ');
+            append2digits(buf, century);
+            append2digits(buf, year);
+        }
+        buf.append(' ');
+        append2digits(buf, hours);
+        buf.append(':');
+        append2digits(buf, minutes);
+        buf.append(':');
+        append2digits(buf, seconds);
+        buf.append(" GMT");
+    }
+    public static void append2digits(StringBuffer buf,int i)
+    {
+        if (i<100)
+        {
+            buf.append((char)(i/10+'0'));
+            buf.append((char)(i%10+'0'));
+        }
+    }
+	/* END: This code comes from Jetty 6.1.1 */
 
 	/**
 	 * Set the given header value.
