@@ -14,24 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.examples.portlet;
-
-import wicket.protocol.http.portlet.PortletApplication;
+package wicket.util.license;
 
 /**
- * Application class of the example.
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Janne Hietam&auml;ki
+ * @author Frank Bille Jensen (frankbille)
  */
-public class ExamplePortletApplication extends PortletApplication
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
-	 * Gets the home page.
-	 * 
-	 * @return The home page
+	 * Construct.
 	 */
-	public Class getHomePage()
+	public ApacheLicenceHeaderTest()
 	{
-		return ExamplePortlet.class;
+		htmlIgnore = new String[] {
+		/*
+		 * This is an example project. Therefore we'd rather not have license
+		 * headers in html files, because it removes the focus away from what
+		 * the example is about.
+		 */
+		"src"};
+
+		propertiesIgnore = new String[] {
+		/*
+		 * Configuration files with no "intelligent" content
+		 */
+		"src/main/java/commons-logging.properties", "src/main/java/log4j.properties"};
 	}
 }
