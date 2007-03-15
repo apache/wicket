@@ -96,10 +96,10 @@ public class AjaxEditableLabel extends Panel
 		{
 			super.onComponentTag(tag);
 			final String saveCall = "{wicketAjaxGet('" + getCallbackUrl()
-					+ "&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
+					+ "&save=true&'+this.name+'='+wicketEncode(this.value)); return false;}";
 
 			final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl()
-					+ "&save=false'); return false;}";
+					+ "&save=false'); return true;}";
 
 
 			final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall
