@@ -19,23 +19,29 @@ package wicket.markup.html.form;
 import wicket.model.IModel;
 
 /**
- * TextField doesn't permit the html <input type='hidden'> so this is a simple subclass to allow this
+ * TextField doesn't permit the html <input type='hidden'> so this is a simple
+ * subclass to allow this
  * 
- * A HiddenField is useful when you have a javascript based component that updates the form state.
- * Either 
+ * A HiddenField is useful when you have a javascript based component that
+ * updates the form state. Either
  * 
- * 1) add a AttributeModified to set the id attribute, then use document.getElementById(id), or
- * 2) lookup the field name=getPath() within the form  
+ * <ul>
+ * <li> add a AttributeModified to set the id attribute, then use
+ * document.getElementById(id) </li>
+ * <li> lookup the field name=getPath() within the form </li>
+ * </ul>
  * 
  * @author Cameron Braid
  */
 public class HiddenField extends TextField
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
-	 * @param id component id
+	 * 
+	 * @param id
+	 *            component id
 	 */
 	public HiddenField(String id)
 	{
@@ -44,8 +50,11 @@ public class HiddenField extends TextField
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param type the type to use when updating the model for this text field
+	 * 
+	 * @param id
+	 *            component id
+	 * @param type
+	 *            the type to use when updating the model for this text field
 	 */
 	public HiddenField(String id, Class type)
 	{
@@ -53,9 +62,25 @@ public class HiddenField extends TextField
 	}
 
 	/**
-	 * @param id component id
-	 * @param model the model
-	 * @param type the type to use when updating the model for this text field
+	 * Construct.
+	 * 
+	 * @param id
+	 *            see Component
+	 * @param model
+	 *            the model
+	 */
+	public HiddenField(String id, IModel model)
+	{
+		super(id, model);
+	}
+
+	/**
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            the model
+	 * @param type
+	 *            the type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
 	public HiddenField(String id, IModel model, Class type)
@@ -64,16 +89,8 @@ public class HiddenField extends TextField
 	}
 
 	/**
-	 * Construct.
-	 * @param id see Component
-	 * @param model the model
+	 * @see wicket.markup.html.form.TextField#getInputType()
 	 */
-	public HiddenField(String id, IModel model)
-	{
-		super(id, model);
-	}
-
-
 	protected String getInputType()
 	{
 		return "hidden";
