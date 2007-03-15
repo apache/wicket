@@ -29,13 +29,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import wicket.AbortException;
 import wicket.Application;
@@ -95,7 +91,7 @@ public class WicketFilter implements Filter
 	private WebApplication webApplication;
 
 	private boolean servletMode = false;
-	
+
 	/**
 	 * Servlet cleanup.
 	 */
@@ -104,7 +100,7 @@ public class WicketFilter implements Filter
 		this.webApplication.internalDestroy();
 		this.webApplication = null;
 	}
-	
+
 	/**
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
@@ -114,7 +110,7 @@ public class WicketFilter implements Filter
 	{
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		String relativePath = getRelativePath(httpServletRequest);
-				
+
 		if (isWicketRequest(relativePath))
 		{
 			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
@@ -164,7 +160,8 @@ public class WicketFilter implements Filter
 	{
 		String relativePath = getRelativePath(servletRequest);
 		// Special-case for home page - we redirect to add a trailing slash.
-		if (relativePath.length() == 0 && !Strings.stripJSessionId(servletRequest.getRequestURI()).endsWith("/"))
+		if (relativePath.length() == 0
+				&& !Strings.stripJSessionId(servletRequest.getRequestURI()).endsWith("/"))
 		{
 			String foo = servletRequest.getRequestURI() + "/";
 			servletResponse.sendRedirect(foo);
@@ -177,26 +174,21 @@ public class WicketFilter implements Filter
 			Thread.currentThread().setContextClassLoader(getClassLoader());
 
 			// If the request does not provide information about the encoding of
-			// its
-			// body (which includes POST parameters), than assume the default
-			// encoding as defined by the wicket application. Bear in mind that
-			// the
-			// encoding of the request usually is equal to the previous
-			// response.
+			// its body (which includes POST parameters), than assume the
+			// default encoding as defined by the wicket application. Bear in
+			// mind that the encoding of the request usually is equal to the
+			// previous response.
 			// However it is a known bug of IE that it does not provide this
 			// information. Please see the wiki for more details and why all
-			// other
-			// browser deliberately copied that bug.
+			// other browser deliberately copied that bug.
 			if (servletRequest.getCharacterEncoding() == null)
 			{
 				try
 				{
 					// The encoding defined by the wicket settings is used to
-					// encode
-					// the responses. Thus, it is reasonable to assume the
-					// request
-					// has the same encoding. This is especially important for
-					// forms and form parameters.
+					// encode the responses. Thus, it is reasonable to assume
+					// the request has the same encoding. This is especially
+					// important for forms and form parameters.
 					servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
 							.getResponseRequestEncoding());
 				}
@@ -294,7 +286,8 @@ public class WicketFilter implements Filter
 	 * @return Path requested, minus query string, context path, and filterPath.
 	 *         Relative, no leading '/'.
 	 */
-	public String getRelativePath(HttpServletRequest request) {
+	public String getRelativePath(HttpServletRequest request)
+	{
 		String path = request.getServletPath();
 		if (servletMode)
 		{
@@ -306,12 +299,12 @@ public class WicketFilter implements Filter
 			}
 		}
 		filterPath = getFilterPath(request);
-		
+
 		if (path.length() > 0)
 		{
 			path = path.substring(1);
 		}
-		
+
 		// We should always be under the rootPath, except
 		// for the special case of someone landing on the
 		// home page without a trailing slash.
@@ -338,21 +331,23 @@ public class WicketFilter implements Filter
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
-		
+
 		if (SERVLET_PATH_HOLDER.equals(filterConfig.getInitParameter(FILTER_MAPPING_PARAM)))
 		{
 			servletMode = true;
 		}
-		
+
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
 			Thread.currentThread().setContextClassLoader(getClassLoader());
-			
-			// Try to configure filterPath from web.xml if it's not specified as an init-param.
+
+			// Try to configure filterPath from web.xml if it's not specified as
+			// an init-param.
 			if (filterConfig.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM) == null)
 			{
-				InputStream is = filterConfig.getServletContext().getResourceAsStream("/WEB-INF/web.xml");
+				InputStream is = filterConfig.getServletContext().getResourceAsStream(
+						"/WEB-INF/web.xml");
 				if (is != null)
 				{
 					try
@@ -362,13 +357,15 @@ public class WicketFilter implements Filter
 					catch (Exception e)
 					{
 						log.debug("Error parsing web.xml", e);
-						// Swallow IOException or SecurityException or similar, and log.info below.
+						// Swallow IOException or SecurityException or similar,
+						// and log.info below.
 					}
 				}
 				if (filterPath == null)
 				{
-					log.info("Unable to parse filter mapping web.xml for " + filterConfig.getFilterName() + ". " +
-							"Configure with init-param " + FILTER_MAPPING_PARAM + " if it is not \"/*\".");
+					log.info("Unable to parse filter mapping web.xml for "
+							+ filterConfig.getFilterName() + ". " + "Configure with init-param "
+							+ FILTER_MAPPING_PARAM + " if it is not \"/*\".");
 				}
 			}
 
@@ -412,40 +409,51 @@ public class WicketFilter implements Filter
 
 	private String getFilterPath(String filterName, InputStream is) throws ServletException
 	{
-		/*
-		 * Filter mappings look like this:
-		 * 
-		 * <filter-mapping> <filter-name>WicketFilter</filter-name>
-		 * <url-pattern>/*</url-pattern> <...> <filter-mapping>
-		 */
+
+		// Filter mappings look like this:
+		//		  
+		// <filter-mapping> <filter-name>WicketFilter</filter-name>
+		// <url-pattern>/*</url-pattern> <...> <filter-mapping>
 		try
 		{
 			ArrayList urlPatterns = new ArrayList();
 			XmlPullParser parser = new XmlPullParser();
 			parser.parse(is);
-			
-			while (true) {
+
+			while (true)
+			{
 				XmlTag elem;
-				do {
+				do
+				{
 					elem = (XmlTag)parser.nextTag();
-				} while (elem != null && (! (elem.getName().equals("filter-mapping") && elem.isOpen())));
-				
+				}
+				while (elem != null
+						&& (!(elem.getName().equals("filter-mapping") && elem.isOpen())));
+
 				if (elem == null)
 					break;
-	
+
 				String encounteredFilterName = null, urlPattern = null;
-	
-				do {
+
+				do
+				{
 					elem = (XmlTag)parser.nextTag();
-					if (elem.isOpen()) {
+					if (elem.isOpen())
+					{
 						parser.setPositionMarker();
-					} else if (elem.isClose() && elem.getName().equals("filter-name")) {
-						encounteredFilterName = parser.getInputFromPositionMarker(elem.getPos()).toString();
-					} else if (elem.isClose() && elem.getName().equals("url-pattern")) {
+					}
+					else if (elem.isClose() && elem.getName().equals("filter-name"))
+					{
+						encounteredFilterName = parser.getInputFromPositionMarker(elem.getPos())
+								.toString();
+					}
+					else if (elem.isClose() && elem.getName().equals("url-pattern"))
+					{
 						urlPattern = parser.getInputFromPositionMarker(elem.getPos()).toString();
 					}
-				} while (urlPattern == null || encounteredFilterName == null);
-				
+				}
+				while (urlPattern == null || encounteredFilterName == null);
+
 				if (filterName.equals(encounteredFilterName))
 					urlPatterns.add(urlPattern);
 			}
@@ -455,8 +463,7 @@ public class WicketFilter implements Filter
 			// In all likelihood, we will only have one. If we have none, we
 			// have an error.
 			// If we have more than one, we pick the first one to use for any
-			// 302 redirects that
-			// require absolute URLs.
+			// 302 redirects that require absolute URLs.
 			if (urlPatterns.size() == 0)
 			{
 				throw new ServletException(
@@ -491,17 +498,20 @@ public class WicketFilter implements Filter
 	private boolean isWicketRequest(String relativePath)
 	{
 		// Special case home page
-		if (relativePath.equals("")) {
+		if (relativePath.equals(""))
+		{
 			return true;
 		}
-				
+
 		// Resources
-		if (relativePath.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
+		if (relativePath.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX))
+		{
 			return true;
 		}
-		
+
 		// Mounted page
-		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath) != null;
+		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy()
+				.urlCodingStrategyForPath(relativePath) != null;
 	}
 
 	/**
@@ -522,7 +532,7 @@ public class WicketFilter implements Filter
 			resp.setDateHeader("Last-Modified", lastModified);
 		}
 	}
-	
+
 	/**
 	 * Creates the web application factory instance.
 	 * 
@@ -576,7 +586,7 @@ public class WicketFilter implements Filter
 			}
 		}
 	}
-	
+
 	/**
 	 * @return The class loader
 	 */
@@ -596,14 +606,18 @@ public class WicketFilter implements Filter
 			return filterPath = request.getServletPath();
 		}
 		String result;
-		// Legacy migration check. TODO: Remove this after 1.3 is released and everyone's upgraded.
+		// Legacy migration check.
+		// TODO: Remove this after 1.3 is released and everyone's upgraded.
 		if (filterConfig.getInitParameter("filterPath") != null)
 		{
-			throw new WicketRuntimeException("\nThe filterPath init-param for WicketFilter has been removed.\n" +
-					"Please use a param called " + FILTER_MAPPING_PARAM + " with a value that exactly\n" +
-					"matches that in the <url-pattern> element of your <filter-mapping> (e.g. \"/app/*\").");
+			throw new WicketRuntimeException(
+					"\nThe filterPath init-param for WicketFilter has been removed.\n"
+							+ "Please use a param called "
+							+ FILTER_MAPPING_PARAM
+							+ " with a value that exactly\n"
+							+ "matches that in the <url-pattern> element of your <filter-mapping> (e.g. \"/app/*\").");
 		}
-		
+
 		result = filterConfig.getInitParameter(FILTER_MAPPING_PARAM);
 		if (result == null || result.equals("/*"))
 		{
@@ -611,11 +625,12 @@ public class WicketFilter implements Filter
 		}
 		else if (!result.startsWith("/") || !result.endsWith("/*"))
 		{
-			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM + " must start with \"/\" and end with \"/*\". It is: " + result);
+			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM
+					+ " must start with \"/\" and end with \"/*\". It is: " + result);
 		}
 		return filterPath = result.substring(1, result.length() - 2);
 	}
-	
+
 	/**
 	 * Gets the last modified time stamp for the given request.
 	 * 
@@ -625,10 +640,12 @@ public class WicketFilter implements Filter
 	long getLastModified(final HttpServletRequest request)
 	{
 		final String pathInfo = getRelativePath(request);
-		
-		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX)) {
-			
-			final String resourceReferenceKey = pathInfo.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
+
+		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX))
+		{
+
+			final String resourceReferenceKey = pathInfo
+					.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
 
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
