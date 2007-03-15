@@ -283,22 +283,46 @@ Wicket.Form.serializeElement = function(e) {
     	return "";
     }
 }
-
-Wicket.Form.serialize = function(element) {
+   
+   
+Wicket.Form.doSerialize = function(form) {
     var result = "";
-    var tag = element.tagName.toLowerCase();
-
-	if (tag !="form" && element.name && element.name != "" && !element.disabled)  {
-	    result += Wicket.Form.serializeElement(element);
-	}
-
-    for (var i = 0; i < element.childNodes.length; ++i) {
-        var e = element.childNodes[i];
-       	if (e.tagName != null) {
-			result += Wicket.Form.serialize(e);
-		}
+    for (var i = 0; i < form.elements.length; ++i) {
+        var e = form.elements[i];
+        if (e.name && e.name != "" && !e.disabled) {
+            result += Wicket.Form.serializeElement(e);
+        }
     }
     return result;
+}
+
+Wicket.Form.serialize = function(element) {
+	if (element.tagName.toLowerCase() == "form") {		
+		return Wicket.Form.doSerialize(element);
+	} else {
+		// try to find a form in DOM parents
+		var elementBck = element;
+		do {
+			element = element.parentNode;
+		} while(element.tagName.toLowerCase() != "form" && element.tagName.toLowerCase() != "body")
+		
+		if (element.tagName.toLowerCase() == "form"){
+			// We found a form : serialize it
+			return Wicket.Form.doSerialize(element);
+		} else {
+			// there is not form in dom hierarchy
+			// simulate it  
+			var form = document.createElement("form");
+			parent = elementBck.parentNode;
+			
+			parent.replaceChild(form, elementBck);
+			form.appendChild(elementBck);
+			var result = Wicket.Form.doSerialize(form);
+			parent.replaceChild(elementBck, form);
+			
+			return result
+		}
+	}
 }
 
 /**
