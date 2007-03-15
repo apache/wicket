@@ -381,7 +381,7 @@ Wicket.DOM.containsElement = function(element) {
  * one is being processed. The default behavior (stack) puts the all subsequent requests 
  * in a queue, while the drop behavior limits queue size to one, so only the most
  * recent of subsequent requests is executed.
- * The name of channel determines the policy. E.g. chanel with name foochannel|s is 
+ * The name of channel determines the policy. E.g. channel with name foochannel|s is 
  * a stack channel, while barchannel|d is a drop channel.
  *
  * The Channel class is supposed to be used through the ChannelManager.
@@ -403,7 +403,7 @@ Wicket.Channel.prototype = {
 			this.busy = true;			
 			return callback();
 		} else {
-			Wicket.Log.info("Chanel busy - postponing...");
+			Wicket.Log.info("Channel busy - postponing...");
 			if (this.type == 's') // stack 
 				this.callbacks.push(callback);
 			else /* drop */
@@ -487,7 +487,7 @@ Wicket.channelManager = new Wicket.ChannelManager();
 	getTransport: function() {
 		var t = Wicket.Ajax.transports;
 		for (var i = 0; i < t.length; ++i) {
-			if (t[i].readyState == 0 || t[i].readyState == 4) {
+			if (t[i].readyState == 0) {
 				return t[i];
 			}
 		}
@@ -714,6 +714,7 @@ Wicket.Ajax.Request.prototype = {
         		this.failure();
         	}    	
         	t.onreadystatechange = Wicket.emptyFunction;
+        	t.abort();
         	this.transport = null;       
         }        
 	}
