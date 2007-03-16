@@ -54,6 +54,7 @@ import wicket.spring.SpringBeanLocator;
  * @see SpringBeanLocator
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @author Istvan Devai
  * 
  */
 public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
@@ -87,7 +88,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 			SpringBeanLocator locator = new SpringBeanLocator(annot.name(),
 					field.getType(), contextLocator);
 
-			if (cache.containsKey(locator)) {
+			// only check the cache if the bean is a singleton
+			if (locator.isSingletonBean() && cache.containsKey(locator)) {
 				return cache.get(locator);
 			}
 
@@ -98,7 +100,10 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
 					locator);
-			cache.put(locator, proxy);
+			// only put the proxy into the cache if the bean is a singleton
+			if (locator.isSingletonBean()) {
+				cache.put(locator, proxy);
+			}
 			return proxy;
 		} else {
 			return null;
