@@ -40,6 +40,7 @@
 		<module>wicket-portlet-examples</module>
 		<module>wicket-extensions</module>
 		<module>wicket-spring</module>
+		<module>wicket-spring-examples</module>
 		<module>wicket-quickstart</module>
 		<module>wicket-datetime</module>
 	</modules>
