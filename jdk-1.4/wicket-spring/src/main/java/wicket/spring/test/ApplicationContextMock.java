@@ -18,6 +18,7 @@ package wicket.spring.test;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -192,7 +193,20 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 */
 	public String[] getBeanNamesForType(Class type)
 	{
-		throw new UnsupportedOperationException();
+		ArrayList names = new ArrayList();
+		Iterator entries = beans.entrySet().iterator();
+		while (entries.hasNext())
+		{
+			Entry entry = (Entry) entries.next();
+			Object bean = entry.getValue();
+
+			if (type.isAssignableFrom(bean.getClass()))
+			{
+				String name = (String) entry.getKey();
+				names.add(name);
+			}
+		}
+		return (String[]) names.toArray(new String[names.size()]);
 	}
 
 	/**
@@ -228,7 +242,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 */
 	public boolean isSingleton(String name) throws NoSuchBeanDefinitionException
 	{
-		throw new UnsupportedOperationException();
+		return true;
 	}
 
 	/**

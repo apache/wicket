@@ -41,7 +41,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 	private ISpringContextLocator springContextLocator;
 
-	private boolean singletonBean;
+	private Boolean singletonCache = null;
 
 	/**
 	 * Constructor
@@ -81,18 +81,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		this.beanTypeCache = beanType;
 		this.beanTypeName = beanType.getName();
 		this.springContextLocator = locator;
-
-		if (beanName == null || beanName.equals(""))
-		{
-			this.beanName = getBeanNameOfClass(locator.getSpringContext(), beanType);
-		}
-		else
-		{
-			this.beanName = beanName;
-		}
+		this.beanName = beanName;
 		this.springContextLocator = locator;
-
-		singletonBean = locator.getSpringContext().isSingleton(this.beanName);
 	}
 
 	/**
@@ -130,7 +120,12 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public boolean isSingletonBean()
 	{
-		return singletonBean;
+		if (singletonCache == null)
+		{
+			singletonCache = Boolean.valueOf(getSpringContext()
+					.isSingleton(getBeanName()));
+		}
+		return singletonCache.booleanValue();
 	}
 
 	/**
@@ -161,13 +156,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public Object locateProxyTarget()
 	{
-		final ApplicationContext context = springContextLocator.getSpringContext();
-
-		if (context == null)
-		{
-			throw new IllegalStateException(
-					"spring application context locator returned null");
-		}
+		final ApplicationContext context = getSpringContext();
 
 		if (beanName != null && beanName.length() > 0)
 		{
@@ -179,11 +168,28 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 	}
 
+	private ApplicationContext getSpringContext()
+	{
+		final ApplicationContext context = springContextLocator.getSpringContext();
+
+		if (context == null)
+		{
+			throw new IllegalStateException(
+					"spring application context locator returned null");
+		}
+		return context;
+	}
+
 	/**
 	 * @return bean name this locator is configured with
 	 */
 	public final String getBeanName()
 	{
+		if (beanName == null)
+		{
+			beanName = getBeanNameOfClass(getSpringContext(), getBeanType());
+
+		}
 		return beanName;
 	}
 
