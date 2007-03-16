@@ -16,16 +16,11 @@
  */
 package wicket.spring;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 import wicket.proxy.IProxyTargetLocator;
-import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 
 /**
@@ -34,7 +29,7 @@ import wicket.util.lang.Objects;
  * and type, if name is omitted only type is used.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @author Istvan Devai
  */
 public class SpringBeanLocator implements IProxyTargetLocator
 {
@@ -45,6 +40,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	private String beanName;
 
 	private ISpringContextLocator springContextLocator;
+
+	private boolean singletonBean;
 
 	/**
 	 * Constructor
@@ -83,8 +80,57 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 		this.beanTypeCache = beanType;
 		this.beanTypeName = beanType.getName();
-		this.beanName = beanName;
 		this.springContextLocator = locator;
+
+		if (beanName == null || beanName.equals(""))
+		{
+			this.beanName = getBeanNameOfClass(locator.getSpringContext(), beanType);
+		}
+		else
+		{
+			this.beanName = beanName;
+		}
+		this.springContextLocator = locator;
+
+		singletonBean = locator.getSpringContext().isSingleton(this.beanName);
+	}
+
+	/**
+	 * Returns the name of the Bean as registered to Spring. Throws IllegalState
+	 * exception if none or more then one beans are found.
+	 * 
+	 * @param ctx
+	 *            spring application context
+	 * @param clazz
+	 *            bean class
+	 * @throws IllegalStateException
+	 * @return spring name of the bean
+	 */
+	private final String getBeanNameOfClass(ApplicationContext ctx, Class clazz)
+	{
+		String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz);
+		if (names.length == 0)
+		{
+			throw new IllegalStateException("bean of type ["
+					+ clazz.getName() + "] not found");
+		}
+		if (names.length > 1)
+		{
+			throw new IllegalStateException(
+					"more then one bean of type ["
+							+ clazz.getName()
+							+ "] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict");
+		}
+		return names[0];
+	}
+
+	/**
+	 * @return returns whether the bean (the locator is supposed to istantiate)
+	 *         is a singleton or not
+	 */
+	public boolean isSingletonBean()
+	{
+		return singletonBean;
 	}
 
 	/**
@@ -163,49 +209,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	private final Object lookupSpringBean(ApplicationContext ctx, Class clazz)
 	{
-		Map beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx, clazz);
-		if (beans.size() == 0)
-		{
-			throw new IllegalStateException("bean of type ["
-					+ clazz.getName() + "] not found");
-		}
-		if (beans.size() > 1)
-		{
-			// there are more then one bean of this class found, try to default
-			// to the one with matching class name
-
-			final String defaultName = Classes.simpleName(clazz);
-			final Iterator entries = beans.entrySet().iterator();
-			while (entries.hasNext())
-			{
-				Map.Entry beanDef = (Entry) entries.next();
-				if (defaultName.equalsIgnoreCase((String) beanDef.getKey()))
-				{
-					return beanDef.getValue();
-				}
-			}
-
-			// no default could be found, error out
-
-			String msg = "more then one bean of type [["
-					+ clazz.getName()
-					+ "]] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict. Beans that match type [[";
-
-			Iterator beanNames = beans.keySet().iterator();
-			while (beanNames.hasNext())
-			{
-				String beanName = (String) beanNames.next();
-				msg += beanName;
-				if (beanNames.hasNext())
-				{
-					msg += ", ";
-				}
-			}
-
-			msg += "]]";
-			throw new IllegalStateException(msg);
-		}
-		return beans.values().iterator().next();
+		return lookupSpringBean(ctx, getBeanNameOfClass(ctx, clazz), clazz);
 	}
 
 	/**
