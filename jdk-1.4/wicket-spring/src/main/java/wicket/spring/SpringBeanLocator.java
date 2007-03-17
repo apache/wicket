@@ -185,7 +185,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public final String getBeanName()
 	{
-		if (beanName == null)
+		if (beanName == null || "".equals(beanName))
 		{
 			beanName = getBeanNameOfClass(getSpringContext(), getBeanType());
 
