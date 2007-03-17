@@ -37,11 +37,8 @@
 		<module>wicket-jmx</module>
 		<module>wicket-objectssizeof-agent</module>
 		<module>wicket-spring-annot</module>
-		<module>wicket-spring-annot-examples</module>
 		<module>wicket-examples</module>
-		<module>wicket-auth-roles-examples</module>
 		<module>wicket-portlet-examples</module>
-		<module>wicket-spring-examples</module>
 	</modules>
 	<build>
 		<plugins>

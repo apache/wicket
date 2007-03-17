@@ -42,8 +42,13 @@
       or "deployment". If no configuration is found, "deployment" is the default.
 -->
 	<context-param>
-	  <param-name>configuration</param-name>
-	  <param-value>deployment</param-value>
+		<param-name>configuration</param-name>
+		<param-value>deployment</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
 	</context-param>
 
 	<filter>
@@ -320,6 +325,33 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>RolesAuthApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wicket.authorization.strategies.role.example.RolesApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>MyAuthenticatedWebApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>wicket.authentication.example.MyAuthenticatedWebApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>SpringExample</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+            <param-name>applicationFactoryClassName</param-name>
+            <param-value>wicket.spring.SpringWebApplicationFactory</param-value>
+		</init-param>
+	</filter>
+
 	<filter-mapping>
 		<filter-name>AjaxApplication</filter-name>
 		<url-pattern>/ajax/*</url-pattern>
@@ -469,6 +501,25 @@
 		<filter-name>StatelessApplication</filter-name>
 		<url-pattern>/stateless/*</url-pattern>
 	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>RolesAuthApplication</filter-name>
+		<url-pattern>/authorization/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>MyAuthenticatedWebApplication</filter-name>
+		<url-pattern>/authentication/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>SpringExample</filter-name>
+        <url-pattern>/spring/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 
 	<session-config>
 		<session-timeout>5</session-timeout>
