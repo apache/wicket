@@ -381,7 +381,7 @@ public final class ClassStreamHandler
 		FieldAndIndex fai = null;
 		try
 		{
-			for (int i = 0; i < fields.size(); i++)
+			for (int i = 0; fields != null && i < fields.size(); i++)
 			{
 				fai = (FieldAndIndex)fields.get(i);
 				fai.writeField(obj, woos);
@@ -394,7 +394,9 @@ public final class ClassStreamHandler
 		}
 		catch (Exception ex)
 		{
-			throw new WicketSerializeableException("Error writing field: " + fai.field.getName() + " for object class: " + obj.getClass(), ex);
+			String field = fai == null || fai.field == null? "" : fai.field.getName();
+			String msg = "Error writing field: " + field + " for object class: " + obj.getClass();
+			throw new WicketSerializeableException(msg, ex);
 		}
 
 	}
