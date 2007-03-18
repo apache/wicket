@@ -184,12 +184,6 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>javax.portlet</groupId>
-				<artifactId>portlet-api</artifactId>
-				<version>1.0</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
 				<version>1.0.4</version>
@@ -279,11 +273,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.portlet</groupId>
-			<artifactId>portlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -385,7 +374,7 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>process</goal>
+							<goal>bundle</goal>
 						</goals>
 						<configuration>
 							<resourceBundles>
@@ -417,7 +406,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.2-SNAPSHOT</version>
 					<configuration>
 						<descriptors>
 							<descriptor>${basedir}/foobar.xml</descriptor>
