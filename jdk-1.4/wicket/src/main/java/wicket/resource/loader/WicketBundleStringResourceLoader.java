@@ -60,7 +60,7 @@ public class WicketBundleStringResourceLoader extends AbstractStringResourceLoad
 	 *            The application that this resource loader is associated with
 	 * @param clazz
 	 * 			
-	 * @depricated remove in 2.0, class is not used at all.
+	 * @deprecated removed in 2.0, class parameter is not used at all.
 	 */
 	public WicketBundleStringResourceLoader(final Application application, final Class clazz)
 	{
@@ -68,7 +68,7 @@ public class WicketBundleStringResourceLoader extends AbstractStringResourceLoad
 	}
 
 	/**
-	 * Create and initialise the resource loader.
+	 * Create and initialize the resource loader.
 	 * 
 	 * @param application
 	 *            The application that this resource loader is associated with
@@ -79,7 +79,6 @@ public class WicketBundleStringResourceLoader extends AbstractStringResourceLoad
 	}
 	
 	/**
-	 * 
 	 * @see wicket.resource.loader.ClassStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */

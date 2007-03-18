@@ -347,7 +347,7 @@ public class Localizer
 	}
 
 	/**
-	 * Helper method to handle preoprty variable substituion in strings.
+	 * Helper method to handle property variable substitution in strings.
 	 * 
 	 * @param component
 	 *            The component requesting a model value

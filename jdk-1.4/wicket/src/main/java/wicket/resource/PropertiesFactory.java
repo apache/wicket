@@ -41,7 +41,7 @@ import wicket.util.watch.ModificationWatcher;
  * Reloadable properties. It is not a 100% replacement for java.util.Properties
  * as it does not provide the same interface. But is serves kind of the same
  * purpose with Wicket specific features. PropertiesFactory actually loads and
- * reloads the Properties and mataince a cache. Hence properties files are
+ * reloads the Properties and maintains a cache. Hence properties files are
  * loaded just once.
  * <p>
  * 
