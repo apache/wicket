@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.wizard;
 
@@ -93,22 +93,6 @@ public class WizardStep extends Panel implements IWizardStep
 		{
 			Form form = (Form)WizardStep.this.findParent(Form.class);
 			form.add(formValidatorWrapper);
-		}
-	}
-
-	/**
-	 * @see wicket.Component#detachModel()
-	 */
-	protected void detachModel()
-	{
-		super.detachModel();
-		if (title != null)
-		{
-			title.detach();
-		}
-		if (summary != null)
-		{
-			summary.detach();
 		}
 	}
 
@@ -228,9 +212,12 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * Marks this step as being fully configured. Only when this is
-	 * <tt>true</tt> can the wizard progress.
+	 * <tt>true</tt> can the wizard progress. True by default as that works
+	 * best with normal forms. Clients can set this to false if some
+	 * intermediate step, like a file upload, needs to be completed before the
+	 * wizard may progress.
 	 */
-	private boolean complete;
+	private boolean complete = true;
 
 	private transient AddFormValidatorAction onAttachAction;
 
@@ -251,7 +238,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a
-	 * custom header by overiding {@link #getHeader(String, Component, Wizard)}.
+	 * custom header by overiding {@link #getHeader(String, Component, IWizard)}.
 	 */
 	public WizardStep()
 	{
@@ -344,12 +331,11 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public void applyState()
 	{
-		this.complete = true;
 	}
 
 	/**
 	 * @see wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
-	 *      wicket.Component, wicket.extensions.wizard.Wizard)
+	 *      wicket.Component, wicket.extensions.wizard.IWizard)
 	 */
 	public Component getHeader(String id, Component parent, IWizard wizard)
 	{
@@ -380,7 +366,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * @see wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
-	 *      wicket.Component, wicket.extensions.wizard.Wizard)
+	 *      wicket.Component, wicket.extensions.wizard.IWizard)
 	 */
 	public Component getView(String id, Component parent, IWizard wizard)
 	{
@@ -449,6 +435,22 @@ public class WizardStep extends Panel implements IWizardStep
 	public void setTitleModel(IModel title)
 	{
 		this.title = title;
+	}
+
+	/**
+	 * @see wicket.Component#detachModel()
+	 */
+	protected void detachModel()
+	{
+		super.detachModel();
+		if (title != null)
+		{
+			title.detach();
+		}
+		if (summary != null)
+		{
+			summary.detach();
+		}
 	}
 
 	/**

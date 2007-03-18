@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.wizard;
 
@@ -66,8 +66,6 @@ public class WizardModel implements IWizardModel
 		 * Always returns true.
 		 * 
 		 * @return True
-		 * 
-		 * @see ICondition#evaluate()
 		 */
 		public boolean evaluate()
 		{
@@ -201,7 +199,7 @@ public class WizardModel implements IWizardModel
 	 *         <tt>false</tt> otherwise.
 	 * @see #isLastVisible
 	 */
-	public final boolean isLastAvailable()
+	public boolean isLastAvailable()
 	{
 		return allStepsComplete() && !isLastStep(activeStep);
 	}
@@ -234,7 +232,7 @@ public class WizardModel implements IWizardModel
 	 * @return <tt>true</tt> if the next button should be enabled,
 	 *         <tt>false</tt> otherwise.
 	 */
-	public final boolean isNextAvailable()
+	public boolean isNextAvailable()
 	{
 		return activeStep.isComplete() && !isLastStep(activeStep);
 	}
@@ -245,7 +243,7 @@ public class WizardModel implements IWizardModel
 	 * @return <tt>true</tt> if the previous button should be enabled,
 	 *         <tt>false</tt> otherwise.
 	 */
-	public final boolean isPreviousAvailable()
+	public boolean isPreviousAvailable()
 	{
 		return !history.isEmpty();
 	}
