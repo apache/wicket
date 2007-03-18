@@ -37,7 +37,6 @@ import wicket.injection.ComponentInjector;
 import wicket.injection.web.InjectorHolder;
 import wicket.model.Model;
 import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.portlet.PortletApplication;
 import wicket.spring.ISpringContextLocator;
 
 /**
@@ -105,35 +104,6 @@ public class SpringComponentInjector extends ComponentInjector {
 
 		// store context in application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
-
-		// ... and create and register the annotation aware injector
-		InjectorHolder
-				.setInjector(new AnnotSpringInjector(new ContextLocator()));
-	}
-
-	/**
-	 * Constructor for portlet applications
-	 * 
-	 * @param portletapp
-	 */
-	public SpringComponentInjector(PortletApplication portletapp) {
-		GenericApplicationContext ctx = new GenericApplicationContext();
-
-		// locate spring's application context ...
-		String configLocation = portletapp.getWicketPortlet().getInitParameter(
-				"contextConfigLocation");
-		Resource resource = null;
-		try {
-			resource = new UrlResource(ResourceUtils.getURL(configLocation));
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-
-		new XmlBeanDefinitionReader(ctx).loadBeanDefinitions(resource);
-		ctx.refresh();
-
-		// ... store it in application's metadata ...
-		portletapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
 		InjectorHolder
