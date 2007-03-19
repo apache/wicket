@@ -16,6 +16,7 @@
  */
 package wicket.model;
 
+import wicket.Component;
 import wicket.Session;
 import wicket.util.lang.PropertyResolver;
 import wicket.util.lang.PropertyResolverConverter;
@@ -141,5 +142,19 @@ public abstract class AbstractPropertyModel implements IModel
 		sb.append(getClass().getName()).append("]");
 		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
+	}
+
+	// TODO remove these methods after a deprecation release
+	
+	/** @deprecated use {@link #setObject(object)} instead */
+	protected final void onSetObject(Component component, Object object)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/** @deprecated use {@link #getObject()} instead */
+	protected final Object onGetObject(Component component)
+	{
+		throw new UnsupportedOperationException();
 	}
 }
