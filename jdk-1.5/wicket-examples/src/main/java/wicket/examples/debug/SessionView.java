@@ -58,7 +58,7 @@ public final class SessionView extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component) 
+			public Object getObject() 
 			{
 				return Bytes.bytes(Objects.sizeof(session));
 			}
@@ -67,7 +67,7 @@ public final class SessionView extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component) 
+			public Object getObject() 
 			{
 				return Bytes.bytes(session.getSizeInBytes());
 			}

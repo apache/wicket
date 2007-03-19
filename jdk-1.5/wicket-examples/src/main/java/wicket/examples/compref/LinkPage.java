@@ -56,7 +56,7 @@ public class LinkPage extends WicketExamplePage
 		// of the link
 		link1.add(new Label("label1", new Model()
 		{
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return Integer.toString(count1.clicks);
 			}
@@ -113,7 +113,7 @@ public class LinkPage extends WicketExamplePage
 				count3 = new ClickCount();
 				add(new AttributeModifier("value", new Model()
 				{
-					public Object getObject(Component component)
+					public Object getObject()
 					{
 						// we just replace the whole string. You could use
 						// custom
@@ -161,7 +161,7 @@ public class LinkPage extends WicketExamplePage
 			// current number of clicks
 			super(id, new Model()
 			{
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 					return Integer.toString(clickCount.clicks);
 				}
@@ -193,7 +193,7 @@ public class LinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;link1.add(new Label(\"label1\", new Model() {\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Object getObject(Component component) {\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Object getObject() {\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Integer.toString(count1.clicks);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"

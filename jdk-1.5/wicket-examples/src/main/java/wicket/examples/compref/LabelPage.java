@@ -46,7 +46,7 @@ public class LabelPage extends WicketExamplePage
 		// that returns a new java.util.Date on each invocation
 		add(new Label("dynamicLabel", new Model()
 		{
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Date();
 			}

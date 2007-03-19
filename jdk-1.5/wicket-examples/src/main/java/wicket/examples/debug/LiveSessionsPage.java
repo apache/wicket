@@ -67,7 +67,7 @@ public class LiveSessionsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 			
-			public Object getObject(Component component) 
+			public Object getObject() 
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
 				IRequestLogger requestLogger = webApplication.getRequestLogger();
@@ -87,7 +87,7 @@ public class LiveSessionsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getTotalCreatedSessions());
 			}
@@ -96,7 +96,7 @@ public class LiveSessionsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 		
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getPeakSessions());
 			}
@@ -105,7 +105,7 @@ public class LiveSessionsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 		
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getPeakSessions());
 			}
@@ -115,7 +115,7 @@ public class LiveSessionsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 			
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return Arrays.asList(getRequestLogger().getLiveSessions());
 			}

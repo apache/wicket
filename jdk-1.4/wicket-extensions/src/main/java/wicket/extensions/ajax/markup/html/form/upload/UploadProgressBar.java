@@ -95,7 +95,7 @@ public class UploadProgressBar extends Panel
 			private static final long serialVersionUID = 1L;
 
 
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 

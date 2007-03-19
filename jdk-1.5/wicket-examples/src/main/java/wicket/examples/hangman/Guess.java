@@ -44,7 +44,7 @@ public class Guess extends HangmanPage
 		// Components for displaying the current word
 		add(new Label("word", new Model()
 		{
-			public Object getObject(wicket.Component component)
+			public Object getObject()
 			{
 				return getGame().getWord().asString(true);
 			}

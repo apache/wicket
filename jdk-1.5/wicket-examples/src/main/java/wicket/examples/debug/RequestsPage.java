@@ -80,7 +80,7 @@ public class RequestsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				List requests = getRequestLogger().getRequests();
 				if(sessionData != null)
