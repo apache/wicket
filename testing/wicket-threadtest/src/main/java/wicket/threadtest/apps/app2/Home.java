@@ -18,7 +18,6 @@
  */
 package wicket.threadtest.apps.app2;
 
-import wicket.Component;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
@@ -31,7 +30,7 @@ public class Home extends WebPage {
 		IModel model = new AbstractReadOnlyModel() {
 
 			@Override
-			public Object getObject(Component component) {
+			public Object getObject() {
 				return Pool.getConnection().getData();
 			}
 		};

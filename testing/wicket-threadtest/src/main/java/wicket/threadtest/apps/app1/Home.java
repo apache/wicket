@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Locale;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -42,7 +41,6 @@ import wicket.markup.html.form.Radio;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.NumberValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -61,6 +59,7 @@ import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.MaskConverter;
 import wicket.util.convert.SimpleConverterAdapter;
+import wicket.validation.validator.NumberValidator;
 
 public class Home extends WebPage {
 
@@ -285,7 +284,7 @@ public class Home extends WebPage {
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel() {
-					public Object getObject(Component component) {
+					public Object getObject() {
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
 				}));

@@ -17,10 +17,8 @@
  */
 package wicket.threadtest.apps.app1;
 
-import wicket.Component;
 import wicket.markup.repeater.IItemReuseStrategy;
-import wicket.model.AbstractReadOnlyDetachableModel;
-import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * detachable model for an instance of contact
@@ -28,23 +26,26 @@ import wicket.model.IModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends AbstractReadOnlyDetachableModel {
-	private transient Contact contact;
-
+public class DetachableContactModel extends LoadableDetachableModel {
 	private long id;
 
 	/**
 	 * @param c
 	 */
-	public DetachableContactModel(Contact c) {
-		this(c.getId());
-		contact = c;
+	public DetachableContactModel(final Contact c) {
+		super(c);
+		if (c == null) {
+			throw new IllegalArgumentException();
+
+		}
+		id = c.getId();
+
 	}
 
 	/**
 	 * @param id
 	 */
-	public DetachableContactModel(long id) {
+	public DetachableContactModel(final long id) {
 		if (id == 0) {
 			throw new IllegalArgumentException();
 		}
@@ -54,25 +55,21 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel {
 	/**
 	 * used for dataview with ReuseIfModelsEqualStrategy item reuse strategy
 	 * 
-	 * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#setItemReuseStrategy(IItemReuseStrategy)
-	 * @see wicket.extensions.markup.html.repeater.refreshing.ReuseIfModelsEqualStrategy
+	 * @see wicket.markup.repeater.PageableRefreshingView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see wicket.markup.repeater.ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof DetachableContactModel) {
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		} else if (obj == null) {
+			return false;
+		} else if (obj instanceof DetachableContactModel) {
 			DetachableContactModel other = (DetachableContactModel) obj;
 			return other.id == this.id;
 		}
 		return false;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-	 */
-	@Override
-	public IModel getNestedModel() {
-		return null;
 	}
 
 	/**
@@ -87,20 +84,12 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel {
 		return DatabaseLocator.getDatabase();
 	}
 
+	/**
+	 * @see wicket.model.LoadableDetachableModel#load()
+	 */
 	@Override
-	protected void onAttach() {
-		if (contact == null) {
-			contact = getContactsDB().get(id);
-		}
-	}
-
-	@Override
-	protected void onDetach() {
-		contact = null;
-	}
-
-	@Override
-	protected Object onGetObject(Component component) {
-		return contact;
+	protected Contact load() {
+		// loads contact from the database
+		return getContactsDB().get(id);
 	}
 }
