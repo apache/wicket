@@ -674,8 +674,7 @@ public class ModalWindow extends Panel
 
 			// if there is a pagemap name specified and multiwindow support is
 			// on
-			if (getPageMapName() != null
-					&& Application.get().getPageSettings().getAutomaticMultiWindowSupport() == true)
+			if (getPageMapName() != null)
 			{
 				// try to find out whether the pagemap already exists
 				Session session = Session.get();
