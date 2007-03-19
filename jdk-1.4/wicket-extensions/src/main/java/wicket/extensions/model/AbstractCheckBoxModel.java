@@ -30,6 +30,13 @@ public abstract class AbstractCheckBoxModel implements IModel
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Detach model.
+	 */
+	public void detach()
+	{
+	}
+
+	/**
 	 * @return true to indicate the checkbox should be selected, false otherwise
 	 */
 	public abstract boolean isSelected();
