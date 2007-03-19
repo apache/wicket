@@ -16,7 +16,6 @@
  */
 package wicket.extensions.ajax.markup.html.modal;
 
-import wicket.Application;
 import wicket.Component;
 import wicket.IClusterable;
 import wicket.IPageMap;
