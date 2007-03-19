@@ -16,6 +16,7 @@
  */
 package wicket.extensions.model;
 
+import wicket.Component;
 import wicket.model.IModel;
 
 /**
@@ -69,4 +70,27 @@ public abstract class AbstractCheckBoxModel implements IModel
 		}
 	}
 
+
+	// TODO Remove methods after deprecation release is done
+
+	/** @deprecated replaced by {@link #getObject()} */
+	public final Object getObject(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/** @deprecated replaced by {@link #isSelected()} */
+	public final boolean isSelected(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/** @deprecated replaced by {@link #setObject(Object)} */
+	public void setObject(Component component, Object object)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/** @deprecated replaced by {@link #select()} */
+	public abstract void setSelected(Component component, boolean sel);
 }
