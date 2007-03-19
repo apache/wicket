@@ -24,9 +24,8 @@ import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
-import wicket.model.AbstractModel;
 import wicket.model.CompoundPropertyModel;
-import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.string.Strings;
 
 /**
@@ -61,12 +60,12 @@ public class UnicodeConverter extends WicketExamplePage
 	 * {@link Component#getModelObject()} on the component that holds it, and we
 	 * would have a recent value.
 	 */
-	private final class ConverterModel extends AbstractModel
+	private final class ConverterModel extends Model
 	{
 		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 * @see wicket.model.IModel#getObject()
 		 */
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			String result;
 			if (TO_ESCAPED_UNICODE.equals(translationType))
@@ -81,25 +80,15 @@ public class UnicodeConverter extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.model.IModel#setObject(wicket.Component,
-		 *      java.lang.Object)
+		 * @see wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(Component component, Object object)
+		public void setObject(Object object)
 		{
 			// Ignore. We are not interested in updating any value,
 			// and we don't want to throw an exception like
 			// AbstractReadOnlyModel either. Alternatively, we
 			// could have overriden updateModel of FormInputComponent
 			// and ignore any input there.
-		}
-
-		/**
-		 * @see wicket.model.IModel#getNestedModel()
-		 */
-		public IModel getNestedModel()
-		{
-			// Return null as we never have to operate as part of a nested model
-			return null;
 		}
 	}
 

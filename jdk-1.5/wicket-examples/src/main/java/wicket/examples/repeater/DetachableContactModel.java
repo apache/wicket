@@ -16,9 +16,7 @@
  */
 package wicket.examples.repeater;
 
-import wicket.Component;
-import wicket.model.AbstractReadOnlyDetachableModel;
-import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * detachable model for an instance of contact
@@ -26,7 +24,7 @@ import wicket.model.IModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends AbstractReadOnlyDetachableModel
+public class DetachableContactModel extends LoadableDetachableModel
 {
 	private long id;
 	private transient Contact contact;
@@ -58,32 +56,6 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	protected void onAttach()
-	{
-		if (contact == null)
-		{
-			contact = getContactsDB().get(id);
-		}
-	}
-
-	protected void onDetach()
-	{
-		contact = null;
-	}
-
-	protected Object onGetObject(Component component)
-	{
-		return contact;
-	}
-
-	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode()
@@ -94,15 +66,33 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel
 	/**
 	 * used for dataview with ReuseIfModelsEqualStrategy item reuse strategy
 	 * 
+	 * @see wicket.markup.repeater.ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
-		if (obj instanceof DetachableContactModel)
+		if (obj == this)
+		{
+			return true;
+		}
+		else if (obj == null)
+		{
+			return false;
+		}
+		else if (obj instanceof DetachableContactModel)
 		{
 			DetachableContactModel other = (DetachableContactModel)obj;
 			return other.id == this.id;
 		}
 		return false;
+	}
+
+	/**
+	 * @see wicket.model.LoadableDetachableModel#load()
+	 */
+	protected Object load()
+	{
+		// loads contact from the database
+		return getContactsDB().get(id);
 	}
 }

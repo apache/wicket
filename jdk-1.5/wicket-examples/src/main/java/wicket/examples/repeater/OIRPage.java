@@ -97,7 +97,7 @@ public class OIRPage extends BasePage
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
-					public Object getObject(Component component)
+					public Object getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.repeater.Item;
@@ -76,7 +75,7 @@ public class RefreshingPage extends BasePage
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
-					public Object getObject(Component component)
+					public Object getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

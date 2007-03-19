@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.markup.html.form.DropDownChoice;
@@ -75,7 +74,7 @@ public class ChoicePage extends BasePage
 
 		IModel makeChoices = new AbstractReadOnlyModel()
 		{
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				Set keys = modelsMap.keySet();
 				List list = new ArrayList(keys);
@@ -86,7 +85,7 @@ public class ChoicePage extends BasePage
 
 		IModel modelChoices = new AbstractReadOnlyModel()
 		{
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				List models = (List)modelsMap.get(selectedMake);
 				if (models == null)

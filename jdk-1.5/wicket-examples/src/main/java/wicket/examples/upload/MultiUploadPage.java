@@ -28,11 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
-import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.upload.FileUpload;
-import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.upload.MultiFileUploadField;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -96,6 +94,10 @@ public class MultiUploadPage extends WicketExamplePage
 		// collection that will hold uploaded FileUpload objects
 		private final Collection uploads = new ArrayList();
 
+		/**
+		 * TODO
+		 * @return Collection
+		 */
 		public Collection getUploads()
 		{
 			return uploads;

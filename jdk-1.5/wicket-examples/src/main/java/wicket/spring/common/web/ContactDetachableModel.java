@@ -16,9 +16,7 @@
  */
 package wicket.spring.common.web;
 
-import wicket.Component;
-import wicket.model.AbstractDetachableModel;
-import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 import wicket.spring.common.Contact;
 import wicket.spring.common.ContactDao;
 
@@ -30,37 +28,25 @@ import wicket.spring.common.ContactDao;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class ContactDetachableModel extends AbstractDetachableModel {
+public abstract class ContactDetachableModel extends LoadableDetachableModel
+{
 
 	private long id;
 
-	private transient Contact contact;
-
-	public ContactDetachableModel(Contact contact) {
+	/**
+	 * @param contact
+	 */
+	public ContactDetachableModel(Contact contact)
+	{
+		super(contact);
 		this.id = contact.getId();
-		this.contact = contact;
-	}
-
-	public IModel getNestedModel() {
-		return null;
-	}
-
-	protected final void onAttach() {
-		contact = getContactDao().get(id);
-	}
-
-	protected void onDetach() {
-		contact = null;
-	}
-
-	protected Object onGetObject(Component component) {
-		return contact;
-	}
-
-	protected void onSetObject(Component component, Object object) {
-		throw new UnsupportedOperationException();
 	}
 
 	protected abstract ContactDao getContactDao();
 
+	@Override
+	protected Contact load()
+	{
+		return getContactDao().get(id);
+	}
 }

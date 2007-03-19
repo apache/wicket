@@ -19,7 +19,6 @@ package wicket.examples.frames;
 import java.io.Serializable;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.markup.html.WebComponent;
@@ -40,9 +39,9 @@ public class BodyFrame extends WebPage
 	private final class FrameModel extends Model
 	{
 		/**
-		 * @see wicket.model.Model#getObject(wicket.Component)
+		 * @see wicket.model.Model#getObject()
 		 */
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			return RequestCycle.get().urlFor(PageMap.forName(RIGHT_FRAME_NAME),
 					frameTarget.getFrameClass(), null);

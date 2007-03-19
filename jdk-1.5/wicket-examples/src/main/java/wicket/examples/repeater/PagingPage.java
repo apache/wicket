@@ -17,7 +17,6 @@
 package wicket.examples.repeater;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.markup.repeater.Item;
@@ -53,7 +52,7 @@ public class PagingPage extends BasePage
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
-					public Object getObject(Component component)
+					public Object getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

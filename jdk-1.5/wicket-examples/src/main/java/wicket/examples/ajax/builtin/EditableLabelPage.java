@@ -19,7 +19,6 @@ package wicket.examples.ajax.builtin;
 import java.util.Arrays;
 import java.util.List;
 
-import wicket.Component;
 import wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
@@ -57,7 +56,7 @@ public class EditableLabelPage extends BasePage
 
 		add(new Label("refresh-counter", new AbstractReadOnlyModel()
 		{
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return "" + refreshCounter;
 			}

@@ -17,7 +17,6 @@
 package wicket.examples.stateless;
 
 import wicket.Application;
-import wicket.Component;
 import wicket.RequestCycle;
 import wicket.model.AbstractReadOnlyModel;
 
@@ -30,9 +29,9 @@ import wicket.model.AbstractReadOnlyModel;
 public class SessionModel extends AbstractReadOnlyModel
 {
 	/**
-	 * @see wicket.model.AbstractReadOnlyModel#getObject(Component)
+	 * @see wicket.model.AbstractReadOnlyModel#getObject()
 	 */
-	public Object getObject(Component object)
+	public Object getObject()
 	{
 		final String msg;
 		String sessionId = Application.get().getSessionStore().getSessionId(
