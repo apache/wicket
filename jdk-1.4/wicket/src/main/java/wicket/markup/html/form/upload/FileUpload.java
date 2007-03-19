@@ -37,9 +37,9 @@ public class FileUpload implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	final FileItem item;
-	
-	private List/*<InputStream>*/ inputStreams;
+	private final FileItem item;
+
+	private List/* <InputStream> */inputStreams;
 
 	/**
 	 * Constructor
@@ -50,6 +50,39 @@ public class FileUpload implements IClusterable
 	public FileUpload(final FileItem item)
 	{
 		this.item = item;
+	}
+
+	/**
+	 * Close the streams which has been opened when getting the InputStream
+	 * using {@link #getInputStream()}. All the input streams are closed at the
+	 * end of the request. This is done when the FileUploadField, which is
+	 * associated with this FileUpload is detached.
+	 * <p>
+	 * If an exception is thrown when closing the input streams, we ignore it,
+	 * because the stream might have been closed already.
+	 */
+	public final void closeStreams()
+	{
+		if (inputStreams != null)
+		{
+			for (Iterator inputStreamsIterator = inputStreams.iterator(); inputStreamsIterator
+					.hasNext();)
+			{
+				InputStream inputStream = (InputStream)inputStreamsIterator.next();
+
+				try
+				{
+					inputStream.close();
+				}
+				catch (IOException e)
+				{
+					// We don't care aobut the exceptions thrown here.
+				}
+			}
+
+			// Reset the list
+			inputStreams = null;
+		}
 	}
 
 	/**
@@ -69,24 +102,6 @@ public class FileUpload implements IClusterable
 	}
 
 	/**
-	 * @return Content type for upload
-	 */
-	public String getContentType()
-	{
-		return item.getContentType();
-	}
-
-	/**
-	 * @return File object for client-side file that was uploaded.
-	 * @deprecated - this method was very counterintuitive. its been replaced by
-	 *             getClientFileName(). see bug 1372481.
-	 */
-	public File getFile()
-	{
-		return new File(item.getName());
-	}
-
-	/**
 	 * @since 1.2
 	 * @return name of uploaded client side file
 	 */
@@ -95,6 +110,13 @@ public class FileUpload implements IClusterable
 		return item.getName();
 	}
 
+	/**
+	 * @return Content type for upload
+	 */
+	public String getContentType()
+	{
+		return item.getContentType();
+	}
 
 	/**
 	 * Get an input stream for the file uploaded. Use this input stream if you
@@ -103,21 +125,23 @@ public class FileUpload implements IClusterable
 	 * persist it elsewhere, i.e. a database or external filesystem.
 	 * <p>
 	 * <b>PLEASE NOTE!</b><br>
-	 * The InputStream return will be closed be Wicket at the end of the request.
-	 * If you need it across a request you need to hold on to this FileUpload
-	 * instead.
+	 * The InputStream return will be closed be Wicket at the end of the
+	 * request. If you need it across a request you need to hold on to this
+	 * FileUpload instead.
+	 * 
 	 * @return Input stream with file contents.
 	 * @throws IOException
 	 */
 	public InputStream getInputStream() throws IOException
 	{
-		if (inputStreams == null) {
-			inputStreams = new ArrayList/*<InputStream>*/();
+		if (inputStreams == null)
+		{
+			inputStreams = new ArrayList/* <InputStream> */();
 		}
-		
+
 		InputStream is = item.getInputStream();
 		inputStreams.add(is);
-		
+
 		return is;
 	}
 
@@ -166,37 +190,5 @@ public class FileUpload implements IClusterable
 		File temp = File.createTempFile(Session.get().getId(), item.getFieldName());
 		writeTo(temp);
 		return temp;
-	}
-
-	/**
-	 * Close the streams which has been opened when getting the InputStream
-	 * using {@link #getInputStream()}. All the input streams are closed at the
-	 * end of the request. This is done when the FileUploadField, which is
-	 * associated with this FileUpload is detached.
-	 * <p>
-	 * If an exception is thrown when closing the input streams, we ignore it,
-	 * because the stream might have been closed already.
-	 */
-	public final void closeStreams()
-	{
-		if (inputStreams != null)
-		{
-			for (Iterator inputStreamsIterator = inputStreams.iterator(); inputStreamsIterator.hasNext();)
-			{
-				InputStream inputStream = (InputStream)inputStreamsIterator.next();
-
-				try
-				{
-					inputStream.close();
-				}
-				catch (IOException e)
-				{
-					// We don't care aobut the exceptions thrown here.
-				}
-			}
-			
-			// Reset the list
-			inputStreams = null;
-		}
 	}
 }
