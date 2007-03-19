@@ -25,7 +25,6 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import wicket.model.IModel;
 import wicket.util.convert.IConverter;
-import wicket.util.convert.converters.AbstractConverter;
 import wicket.util.convert.converters.DateConverter;
 
 /**
@@ -137,6 +136,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	/**
 	 * Returns the default converter if created without pattern; otherwise it
 	 * returns a pattern-specific converter.
+	 * 
+	 * @param type The type for which the convertor should work 
 	 * 
 	 * @return A pattern-specific converter
 	 * 

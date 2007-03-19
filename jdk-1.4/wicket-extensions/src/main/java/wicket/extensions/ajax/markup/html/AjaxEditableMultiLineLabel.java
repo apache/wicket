@@ -103,7 +103,7 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component c)
+			public Object getObject()
 			{
 				return new Integer(rows);
 			}
@@ -112,7 +112,7 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component c)
+			public Object getObject()
 			{
 				return new Integer(cols);
 			}

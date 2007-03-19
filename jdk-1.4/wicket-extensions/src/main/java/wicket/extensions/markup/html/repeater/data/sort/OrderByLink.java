@@ -20,8 +20,7 @@ import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.IClusterable;
 import wicket.markup.html.link.Link;
-import wicket.model.AbstractModel;
-import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.util.lang.Objects;
 import wicket.version.undo.Change;
 
@@ -192,23 +191,18 @@ public class OrderByLink extends Link
 		 */
 		public CssModifier(final OrderByLink link, final ICssProvider provider)
 		{
-			super("class", true, new AbstractModel()
+			super("class", true, new Model()
 			{
 				private static final long serialVersionUID = 1L;
 
-				public IModel getNestedModel()
-				{
-					return null;
-				}
-
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 
 					final ISortState sortState = link.stateLocator.getSortState();
 					return provider.getClassAttributeValue(sortState, link.property);
 				}
 
-				public void setObject(Component component, Object object)
+				public void setObject(Object object)
 				{
 					throw new UnsupportedOperationException();
 				}
@@ -221,7 +215,7 @@ public class OrderByLink extends Link
 		 */
 		public boolean isEnabled(Component component)
 		{
-			return getReplaceModel().getObject(null) != null;
+			return getReplaceModel().getObject() != null;
 		}
 	};
 

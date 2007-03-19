@@ -16,6 +16,8 @@
  */
 package wicket.extensions.ajax.markup.html;
 
+import java.io.Serializable;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.RequestCycle;
@@ -27,11 +29,10 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractModel;
 import wicket.model.IModel;
 import wicket.util.string.JavascriptUtils;
+import wicket.validation.IValidator;
 
 /**
  * An implementation of ajaxified edit-in-place component using a
@@ -157,32 +158,6 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
-	 * Model that allows other components to benefit of the compound model that
-	 * AjaxEditableLabel inherits.
-	 */
-	private final class PassThroughModel extends AbstractModel
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
-		 */
-		public Object getObject(Component component)
-		{
-			return getModel().getObject(AjaxEditableLabel.this);
-		}
-
-		/**
-		 * @see wicket.model.IModel#setObject(wicket.Component,
-		 *      java.lang.Object)
-		 */
-		public void setObject(Component component, Object object)
-		{
-			getModel().setObject(AjaxEditableLabel.this, object);
-		}
-	}
-
-	/**
 	 * Constructor
 	 * 
 	 * @param id
@@ -191,7 +166,8 @@ public class AjaxEditableLabel extends Panel
 	{
 		super(id);
 		setOutputMarkupId(true);
-		this.tempModel = new PassThroughModel();
+		IModel model = getParentModel();
+		this.tempModel = model;
 	}
 
 	/**
@@ -204,7 +180,11 @@ public class AjaxEditableLabel extends Panel
 	{
 		super(id, model);
 		setOutputMarkupId(true);
-		this.tempModel = (model != null) ? model : new PassThroughModel();
+		if (model == null)
+		{
+			model = getParentModel();
+		}
+		this.tempModel = model;
 	}
 
 	/**
@@ -401,10 +381,10 @@ public class AjaxEditableLabel extends Panel
 	 */
 	protected void onError(AjaxRequestTarget target)
 	{
-		String errorMessage = editor.getFeedbackMessage().getMessage();
-		if (errorMessage != null)
+		Serializable errorMessage = editor.getFeedbackMessage().getMessage();
+		if (errorMessage instanceof String)
 		{
-			target.appendJavascript("window.status='" + JavascriptUtils.escapeQuotes(errorMessage)
+			target.appendJavascript("window.status='" + JavascriptUtils.escapeQuotes((String)errorMessage)
 					+ "';");
 		}
 		String editorMarkupId = editor.getMarkupId();
@@ -441,6 +421,27 @@ public class AjaxEditableLabel extends Panel
 		add(label);
 		add(editor);
 		this.tempModel = null;
+	}
+	
+	/**
+	 * @return Gets the parent model in case no explicit model was specified.
+	 */
+	private IModel getParentModel()
+	{
+		// the #getModel() call below will resolve and assign any inheritable
+		// model this component can use. Set that directly to the label and
+		// editor so that those components work like this enclosing panel
+		// does not exist (must have that e.g. with CompoundPropertyModels
+		IModel m = getModel();
+
+		// check that a model was found
+		if (m == null)
+		{
+			throw new IllegalStateException(
+					"No model found for this component, either pass one explicitly or "
+							+ "make sure an inheritable model is available");
+		}
+		return m;
 	}
 
 	/**

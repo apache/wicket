@@ -16,7 +16,6 @@
  */
 package wicket.extensions.model;
 
-import wicket.Component;
 import wicket.model.IModel;
 
 /**
@@ -30,52 +29,44 @@ public abstract class AbstractCheckBoxModel implements IModel
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see wicket.model.IDetachable#detach()
-	 */
-	public void detach()
-	{
-	}
-
-	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
-	 * @see wicket.model.IModel#getObject(wicket.Component)
-	 */
-	public Object getObject(Component component)
-	{
-		return isSelected(component) ? Boolean.TRUE : Boolean.FALSE;
-	}
-
-	/**
-	 * Returns model's value
-	 * 
-	 * @param component
 	 * @return true to indicate the checkbox should be selected, false otherwise
 	 */
-	public abstract boolean isSelected(Component component);
+	public abstract boolean isSelected();
 
 	/**
-	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 * Called when checkbox has been selected
+	 * 
 	 */
-	public void setObject(Component component, Object object)
-	{
-		boolean sel = Boolean.TRUE.equals(object);
-		setSelected(component, sel);
+	public abstract void select();
 
+	/**
+	 * Called when checkbox is unselected
+	 * 
+	 */
+	public abstract void unselect();
+
+	/**
+	 * 
+	 * @see wicket.model.IModel#getObject()
+	 */
+	public final Object getObject()
+	{
+		return Boolean.valueOf(isSelected());
 	}
 
 	/**
-	 * Callback for setting the model's value to true or false
-	 * 
-	 * @param component
-	 * @param sel
-	 *            true if the checkbox is selected, false otherwise
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public abstract void setSelected(Component component, boolean sel);
+	public final void setObject(Object object)
+	{
+		if (Boolean.TRUE.equals(object))
+		{
+			select();
+		}
+		else
+		{
+			unselect();
+		}
+	}
+
 }

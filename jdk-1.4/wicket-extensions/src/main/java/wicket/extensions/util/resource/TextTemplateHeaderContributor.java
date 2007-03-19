@@ -18,10 +18,9 @@ package wicket.extensions.util.resource;
 
 import java.util.Map;
 
-import wicket.Component;
 import wicket.behavior.StringHeaderContributor;
-import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * A header contributor that will contribute the contents of the given template
@@ -37,7 +36,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * This model holds the template and returns the interpolation of the
 	 * template with of any of the
 	 */
-	private static final class TemplateModel extends AbstractReadOnlyDetachableModel
+	private static final class TemplateModel extends LoadableDetachableModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -71,41 +70,23 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 			this.template = template;
 			this.variablesModel = variablesModel;
 		}
-
 		/**
-		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
+		 * @see wicket.model.IModel#detach()
 		 */
-		public IModel getNestedModel()
-		{
-			return null;
-		}
-
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onAttach()
-		 */
-		protected void onAttach()
-		{
-		}
-
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onDetach()
-		 */
-		protected void onDetach()
+		public void detach()
 		{
 			if (variablesModel != null)
 			{
 				variablesModel.detach();
 			}
+			super.detach();
 		}
 
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
-		 */
-		protected Object onGetObject(Component component)
+		protected Object load()
 		{
 			if (variablesModel != null)
 			{
-				Map variables = (Map)variablesModel.getObject(component);
+				Map variables = (Map)variablesModel.getObject();
 				if (variables != null)
 				{
 					return template.asString(variables);

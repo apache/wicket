@@ -22,8 +22,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.HiddenField;
-import wicket.model.AbstractModel;
-import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
@@ -133,7 +131,7 @@ public class FilterForm extends Form
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class FilterStateModel extends AbstractModel
+	private static class FilterStateModel extends Model
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -156,26 +154,17 @@ public class FilterForm extends Form
 		}
 
 		/**
-		 * @see wicket.model.IModel#getNestedModel()
+		 * @see wicket.model.IModel#getObject()
 		 */
-		public IModel getNestedModel()
-		{
-			return null;
-		}
-
-		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
-		 */
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			return locator.getFilterState();
 		}
 
 		/**
-		 * @see wicket.model.IModel#setObject(wicket.Component,
-		 *      java.lang.Object)
+		 * @see wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(Component component, Object object)
+		public void setObject(Object object)
 		{
 			locator.setFilterState(object);
 		}

@@ -191,7 +191,7 @@ public class WizardStep extends Panel implements IWizardStep
 			{
 				private static final long serialVersionUID = 1L;
 
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 					return getTitle();
 				}
@@ -200,7 +200,7 @@ public class WizardStep extends Panel implements IWizardStep
 			{
 				private static final long serialVersionUID = 1L;
 
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 					return getSummary();
 				}
@@ -351,7 +351,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public String getSummary()
 	{
-		return (summary != null) ? (String)summary.getObject(this) : (String)null;
+		return (summary != null) ? (String)summary.getObject() : (String)null;
 	}
 
 	/**
@@ -361,7 +361,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public String getTitle()
 	{
-		return (title != null) ? (String)title.getObject(this) : (String)null;
+		return (title != null) ? (String)title.getObject() : (String)null;
 	}
 
 	/**

@@ -135,7 +135,7 @@ public abstract class RatingPanel extends Panel
 
 				public boolean isEnabled()
 				{
-					return !((Boolean)hasVoted.getObject(RatingPanel.this)).booleanValue();
+					return !((Boolean)hasVoted.getObject()).booleanValue();
 				}
 			};
 

@@ -99,7 +99,7 @@ public class Tree extends DefaultAbstractTree
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component c)
+			public Object getObject()
 			{
 				return renderNode(node);
 			}

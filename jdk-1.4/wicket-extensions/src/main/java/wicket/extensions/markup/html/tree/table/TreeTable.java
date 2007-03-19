@@ -97,9 +97,9 @@ public class TreeTable extends DefaultAbstractTree
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
+				 * @see wicket.model.AbstractReadOnlyModel#getObject()
 				 */
-				public Object getObject(Component c)
+				public Object getObject()
 				{
 					return renderNodeCallback.renderNode(node);
 				}

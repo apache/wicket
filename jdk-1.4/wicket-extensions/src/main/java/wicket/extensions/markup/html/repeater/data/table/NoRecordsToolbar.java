@@ -17,12 +17,11 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.model.ResourceModel;
 
 /**
  * A toolbar that displays a "no records found" message when the data table
@@ -40,17 +39,8 @@ public class NoRecordsToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final IModel DEFAULT_MESSAGE_MODEL = new AbstractReadOnlyModel()
-	{
-		private static final long serialVersionUID = 1L;
-
-		public Object getObject(Component component)
-		{
-			return component.getLocalizer().getString("datatable.no-records-found", component,
-					"No Records Found");
-		}
-	};
-
+	private static final IModel DEFAULT_MESSAGE_MODEL = new ResourceModel(
+			"datatable.no-records-found", "No Records Found");
 
 	/**
 	 * Constructor

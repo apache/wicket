@@ -16,9 +16,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
-import wicket.Component;
-import wicket.model.AbstractModel;
-import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * Model that wraps filter state locator to make its use transparent to wicket
@@ -37,7 +35,7 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-class FilterStateModel extends AbstractModel
+class FilterStateModel extends Model
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,25 +54,17 @@ class FilterStateModel extends AbstractModel
 	}
 
 	/**
-	 * @see wicket.model.IModel#getNestedModel()
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
-	 * @see wicket.model.IModel#getObject(wicket.Component)
-	 */
-	public Object getObject(Component component)
+	public Object getObject()
 	{
 		return locator.getFilterState();
 	}
 
 	/**
-	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(Component component, Object object)
+	public void setObject(Object object)
 	{
 		locator.setFilterState(object);
 	}

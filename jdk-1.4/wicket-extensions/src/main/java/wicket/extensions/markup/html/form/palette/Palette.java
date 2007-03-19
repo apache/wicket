@@ -401,7 +401,7 @@ public class Palette extends Panel
 	 */
 	public Collection getChoices()
 	{
-		return (Collection)choicesModel.getObject(this);
+		return (Collection)choicesModel.getObject();
 	}
 
 	/**

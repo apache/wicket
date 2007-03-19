@@ -119,7 +119,7 @@ public class TabbedPanel extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Integer(TabbedPanel.this.tabs.size());
 			}
