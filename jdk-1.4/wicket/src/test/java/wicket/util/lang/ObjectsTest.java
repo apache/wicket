@@ -108,7 +108,7 @@ public class ObjectsTest extends WicketTestCase
 		PropertyModel pm = new PropertyModel(new TextField("test", new Model("test")),
 				"modelObject");
 		PropertyModel pm2 = (PropertyModel)Objects.cloneModel(pm);
-		assertTrue(pm.getObject(null) == pm2.getObject(null));
+		assertTrue(pm.getObject() == pm2.getObject());
 	}
 
 	/**

@@ -22,6 +22,9 @@ import java.util.Map;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
+import wicket.validation.IValidatable;
+import wicket.validation.IValidationError;
+import wicket.validation.ValidationError;
 
 /**
  * Base class for {@link wicket.markup.html.form.validation.IFormValidator}s.
@@ -31,11 +34,120 @@ import wicket.util.lang.Classes;
 public abstract class AbstractFormValidator implements IFormValidator
 {
 	/**
+	 * DEPRECATED/UNSUPPORTED
+	 * 
+	 * Gets the default variables for interpolation.
+	 * 
+	 * @return a map with the variables for interpolation
+	 * 
+	 * @deprecated use {@link #variablesMap(IValidatable)} instead
+	 * @throws UnsupportedOperationException
+	 * 
+	 * FIXME 2.0: remove asap
+	 */
+	protected final Map messageModel()
+	{
+		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
+	}
+
+
+	/**
+	 * Reports an error against validatable using the map returned by
+	 * {@link #variablesMap(IValidatable)}for variable interpolations and
+	 * message key returned by {@link #resourceKey()}.
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * 
+	 */
+	public void error(FormComponent fc)
+	{
+		error(fc, resourceKey(), variablesMap());
+	}
+
+	/**
+	 * Reports an error against the validatalbe using the given resource key
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * @param resourceKey
+	 *            The message resource key to use
+	 */
+	public void error(FormComponent fc, final String resourceKey)
+	{
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("Argument [[resourceKey]] cannot be null");
+		}
+		error(fc, resourceKey, variablesMap());
+	}
+
+	/**
+	 * Reports an error against the validatalbe using the given map for variable
+	 * interpolations and message resource key provided by
+	 * {@link #resourceKey()}
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * @param vars
+	 *            variables for variable interpolation
+	 */
+	public void error(FormComponent fc, final Map vars)
+	{
+		if (vars == null)
+		{
+			throw new IllegalArgumentException("Argument [[vars]] cannot be null");
+		}
+		error(fc, resourceKey(), vars);
+	}
+
+	/**
+	 * Reports an error against the validatable using the specified resource key
+	 * and variable map
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * 
+	 * @param validatable
+	 *            validatble being validated
+	 * @param resourceKey
+	 *            The message resource key to use
+	 * @param vars
+	 *            The model for variable interpolation
+	 */
+	public void error(FormComponent fc, final String resourceKey, Map vars)
+	{
+		if (fc == null)
+		{
+			throw new IllegalArgumentException("Argument [[fc]] cannot be null");
+		}
+		if (vars == null)
+		{
+			throw new IllegalArgumentException("Argument [[vars]] cannot be null");
+		}
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("Argument [[resourceKey]] cannot be null");
+		}
+
+
+		ValidationError error = new ValidationError().addMessageKey(resourceKey);
+		final String defaultKey = Classes.simpleName(getClass());
+		if (!resourceKey.equals(defaultKey))
+		{
+			error.addMessageKey(defaultKey);
+		}
+
+		error.setVars(vars);
+		fc.error((IValidationError)error);
+	}
+
+	/**
 	 * Gets the default variables for interpolation. These are for every
 	 * component:
 	 * <ul>
 	 * <li>${input(n)}: the user's input</li>
-	 * <li>${name}: the name of the component</li>
+	 * <li>${name(n)}: the name of the component</li>
 	 * <li>${label(n)}: the label of the component - either comes from
 	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
 	 * that order</li>
@@ -43,7 +155,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map messageModel()
+	protected Map variablesMap()
 	{
 		FormComponent[] formComponents = getDependentFormComponents();
 
@@ -58,7 +170,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 				IModel label = formComponent.getLabel();
 				if (label != null)
 				{
-					args.put(arg, label.getObject(formComponent));
+					args.put(arg, label.getObject());
 				}
 				else
 				{
@@ -81,12 +193,9 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * Gets the resource key for validator's error message from the
 	 * ApplicationSettings class.
 	 * 
-	 * @param components
-	 *            form components being validated
-	 * 
 	 * @return the resource key based on the form component
 	 */
-	protected String resourceKey(FormComponent[] components)
+	protected String resourceKey()
 	{
 		return Classes.simpleName(getClass());
 	}

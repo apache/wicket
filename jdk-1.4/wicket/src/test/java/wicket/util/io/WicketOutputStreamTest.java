@@ -57,6 +57,23 @@ public class WicketOutputStreamTest extends TestCase
 		Assert.assertEquals(gc, gc2);
 		
 	}
+	
+	
+//	public void testNotSerializeable()  throws Exception
+//	{
+//		WebApplication app = new WebApplication()
+//		{
+//			public Class getHomePage()
+//			{
+//				return null;
+//			}
+//		};
+//		
+//		java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream(); 
+//		ObjectOutputStream oos = new ObjectOutputStream(baos);
+//		oos.writeObject(app);
+//		
+//	}
 
 	
 //	public void testStringsEqualsAfterSerialization() throws Exception

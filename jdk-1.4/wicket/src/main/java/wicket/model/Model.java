@@ -34,7 +34,7 @@ import wicket.WicketRuntimeException;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class Model extends AbstractModel
+public class Model implements IModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -80,17 +80,9 @@ public class Model extends AbstractModel
 	}
 
 	/**
-	 * @see wicket.model.IModel#getNestedModel()
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
-	 * @see wicket.model.IModel#getObject(wicket.Component)
-	 */
-	public Object getObject(final Component component)
+	public Object getObject()
 	{
 		return object;
 	}
@@ -101,9 +93,9 @@ public class Model extends AbstractModel
 	 * 
 	 * @param object
 	 *            the model object
-	 * @see wicket.model.IModel#setObject(Component, Object)
+	 * @see wicket.model.IModel#setObject(Object)
 	 */
-	public void setObject(final Component component, final Object object)
+	public void setObject(final Object object)
 	{
 		if (object != null)
 		{
@@ -127,14 +119,21 @@ public class Model extends AbstractModel
 	{
 		this.object = object;
 	}
+	
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer(super.toString());
-		sb.append(":nestedModel=[").append(getNestedModel()).append("]");
+		StringBuffer sb = new StringBuffer("Model:classname=[");
+		sb.append(getClass().getName()).append("]");
 		sb.append(":object=[").append(this.object).append("]");
 		return sb.toString();
 	}

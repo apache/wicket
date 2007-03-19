@@ -29,6 +29,9 @@ import wicket.util.string.interpolator.MapVariableInterpolator;
  */
 public class VariableInterpolatorTest extends TestCase
 {
+	/**
+	 * 
+	 */
 	public void testWithValue()
 	{
 		Map params = new HashMap();
@@ -37,6 +40,9 @@ public class VariableInterpolatorTest extends TestCase
 		assertEquals("value", in.toString());
 	}
 
+	/**
+	 * 
+	 */
 	public void testWithoutValue()
 	{
 		Map params = new HashMap();
@@ -44,6 +50,9 @@ public class VariableInterpolatorTest extends TestCase
 		assertEquals("${key}", in.toString());
 	}
 
+	/**
+	 * 
+	 */
 	public void testWithoutValueAndException()
 	{
 		Map params = new HashMap();

@@ -160,7 +160,7 @@ public class PropertyModel extends AbstractPropertyModel
 	/**
 	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
-	protected String propertyExpression(Component component)
+	protected String propertyExpression()
 	{
 		return expression;
 	}

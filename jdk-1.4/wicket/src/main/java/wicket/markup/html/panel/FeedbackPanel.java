@@ -86,9 +86,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				}
 			};
 
-			final Label label = new Label("message", message.getMessage());
-			label.setEscapeModelStrings(getEscapeMessages()
-					|| FeedbackPanel.this.getEscapeModelStrings());
+			final Component label = newMessageDisplayComponent("message", message);
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
@@ -317,7 +315,30 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected FeedbackMessagesModel newFeedbackMessagesModel()
 	{
-		return new FeedbackMessagesModel();
+		return new FeedbackMessagesModel(this);
 	}
 
+	/**
+	 * Generates a component that is used to display the message inside the
+	 * feedback panel. This component must handle being attached to
+	 * <code>span</code> tags.
+	 * 
+	 * By default a {@link Label} is used.
+	 * 
+	 * Note that the created component is expected to respect feedback panel's
+	 * {@link #getEscapeModelStrings()} value
+	 * 
+	 * @param id
+	 *            parent id
+	 * @param message
+	 *            feedback message
+	 * @return component used to display the message
+	 */
+	protected Component newMessageDisplayComponent(String id, FeedbackMessage message)
+	{
+		Label label = new Label(id, message.getMessage().toString());
+		label.setEscapeModelStrings(getEscapeMessages()
+				|| FeedbackPanel.this.getEscapeModelStrings());
+		return label;
+	}
 }

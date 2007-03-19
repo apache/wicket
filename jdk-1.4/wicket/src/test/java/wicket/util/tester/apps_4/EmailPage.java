@@ -19,8 +19,8 @@ package wicket.util.tester.apps_4;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.model.CompoundPropertyModel;
+import wicket.validation.validator.EmailAddressPatternValidator;
 
 /**
  * @author Juergen Donnerstag

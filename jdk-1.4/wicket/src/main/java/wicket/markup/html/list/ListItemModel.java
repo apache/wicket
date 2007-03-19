@@ -18,21 +18,15 @@ package wicket.markup.html.list;
 
 import java.util.List;
 
-import wicket.Component;
-import wicket.model.AbstractDetachableModel;
-import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 
 /**
  * Model for list items.
  */
-public class ListItemModel extends AbstractDetachableModel
+public class ListItemModel extends LoadableDetachableModel
 {
 	private static final long serialVersionUID = 1L;
 	
-	// It is easy and cheap to re-build it if necessary.
-	// Avoid synchronising it in a cluster
-	private transient Object object;
-
 	/** The ListView's list model */
 	private final ListView listView;
 
@@ -51,48 +45,13 @@ public class ListItemModel extends AbstractDetachableModel
 	{
 		this.listView = listView;
 		this.index = index;
-		attach();
 	}
-
-	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onAttach()
 	 */
-	protected void onAttach()
+	protected Object load()
 	{
 		// Re-attach the model object based on index and ListView model object
-		this.object = ((List)listView.getModelObject()).get(index);
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onDetach()
-	 */
-	protected void onDetach()
-	{
-		this.object = null;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
-	 */
-	protected Object onGetObject(final Component component)
-	{
-		return object;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
-	 *      java.lang.Object)
-	 */
-	protected void onSetObject(final Component component, final Object object)
-	{
-		this.object = object;
+		return ((List)listView.getModelObject()).get(index);
 	}
 }

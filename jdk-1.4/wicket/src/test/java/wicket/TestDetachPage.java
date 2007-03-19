@@ -58,17 +58,12 @@ public class TestDetachPage extends WebPage
 		/** for serialization. */
 		private static final long serialVersionUID = 1L;
 
-		public IModel getNestedModel()
-		{
-			return null;
-		}
-
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			return "body";
 		}
 
-		public void setObject(Component component, Object object)
+		public void setObject(Object object)
 		{
 		}
 

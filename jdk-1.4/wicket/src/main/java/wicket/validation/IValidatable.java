@@ -14,43 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.model;
+package wicket.validation;
+
 
 /**
- * AbstractModel is an adapter base class for implementing models which have no
- * detach logic.
+ * Represents any object that can be validated
  * 
- * @author Jonathan Locke
+ * 
+ * @author ivaynberg
+ * 
  */
-public abstract class AbstractModel implements IModel
+public interface IValidatable
 {
 	/**
-	 * @see wicket.model.IModel#detach()
+	 * @return the value to be validated
 	 */
-	public void detach()
-	{
-	}
+	Object getValue();
 
 	/**
-	 * @see Object#toString()
-	 */
-	public String toString()
-	{
-		StringBuffer sb = new StringBuffer("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		return sb.toString();
-	}
-
-	/**
-	 * This default implementation of getNestedModel unconditionally returns
-	 * null.
+	 * Reports an error against the validatable value. Multiple errors can be
+	 * reported by calling this method multiple times.
 	 * 
-	 * @see wicket.model.IModel#getNestedModel()
-	 * 
-	 * @return null
+	 * @param error
+	 *            reported error
 	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
+	void error(IValidationError error);
 }

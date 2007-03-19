@@ -53,6 +53,11 @@ public class File extends java.io.File implements IModifiable
 		super(parent, child);
 	}
 
+	/**
+	 * Construct.
+	 * @param parent
+	 * @param child
+	 */
 	public File(final java.io.File parent, final String child)
 	{
 		super(parent, child);

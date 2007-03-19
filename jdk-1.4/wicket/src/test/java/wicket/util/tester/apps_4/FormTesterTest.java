@@ -26,6 +26,7 @@ public class FormTesterTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public FormTesterTest(String name)
@@ -49,15 +50,16 @@ public class FormTesterTest extends WicketTestCase
 		EmailPage page = (EmailPage)tester.getLastRenderedPage();
 
 		FormTester formTester = tester.newFormTester("form");
-		
+
 		formTester.setValue("email", "a");
 		formTester.submit();
 
 		assertEquals(EmailPage.class, tester.getLastRenderedPage().getClass());
 		page = (EmailPage)tester.getLastRenderedPage();
-		
+
 		assertNull(page.getEmail());
 		assertTrue(page.getFeedbackMessages().hasMessageFor(page.get("form:email")));
-		assertEquals("wrong email address pattern for email", page.getFeedbackMessages().messageForComponent(page.get("form:email")).getMessage());
+		assertEquals("wrong email address pattern for email", page.getFeedbackMessages()
+				.messageForComponent(page.get("form:email")).getMessage().toString());
 	}
 }

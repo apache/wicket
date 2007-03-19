@@ -16,7 +16,6 @@
  */
 package wicket.model;
 
-import wicket.Component;
 
 /**
  * A IModel wraps the actual model Object used by a Component. IModel
@@ -38,28 +37,16 @@ import wicket.Component;
  * should generally extend {@link wicket.model.AbstractDetachableModel}instead
  * of implementing IModel directly.
  * 
- * <li><b>Nested Models </b>- IModels can be nested and the innermost model is
- * also known as the "root" model since it is the model on which the outer
- * models rely. The getNestedModel() method on IModel gets any nested model
- * within the given model. This allows Component.sameRootModel() to compare two
- * models to see if they both have the same root model (the same most nested
- * model).
- * <p>
- * For example, a Form might have a Person model and then a TextField might have
- * a PropertyModel which is the "name" property of the Person model. In this
- * case, PropertyModel will implement getNestedModel(), returning the Person
- * model which is the root model of the property model.
- * 
  * <li><b>Property Models </b>- The AbstractPropertyModel class provides
  * default functionality for property models. A property model provides access
  * to a particular property of its wrapped model.
  * 
  * <li><b>Compound Property Models </b>- The IModel interface is parameterized
  * by Component, allowing a model to be shared among several Components. When
- * the {@link IModel#getObject(Component)}method is called, the value returned
- * will depend on the Component which is asking for the value. Likewise, the
- * {@link IModel#setObject(Component, Object)}method sets a different property
- * depending on which Component is doing the setting. For more information on
+ * the {@link IModel#getObject()}method is called, the value returned will
+ * depend on the Component which is asking for the value. Likewise, the
+ * {@link IModel#setObject(Object)}method sets a different property depending
+ * on which Component is doing the setting. For more information on
  * CompoundPropertyModels and model inheritance, see
  * {@link wicket.model.CompoundPropertyModel}and {@link wicket.Page}.
  * </ul>
@@ -70,34 +57,23 @@ import wicket.Component;
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * 
+ * TODO 3.0: Vote on renaming get/setObject to get/setValue
  */
 public interface IModel extends IDetachable
 {
 	/**
-	 * Gets the nested model.
-	 * 
-	 * @return The nested model object.
-	 */
-	IModel getNestedModel();
-
-	/**
 	 * Gets the model object.
-	 * 
-	 * @param component
-	 *            The component which wants to get a model Object
 	 * 
 	 * @return The model object
 	 */
-	Object getObject(final Component component);
+	Object getObject();
 
 	/**
 	 * Sets the model object.
 	 * 
-	 * @param component
-	 *            The component which wants to set a new model Object
-	 * 
 	 * @param object
 	 *            The model object
 	 */
-	void setObject(final Component component, final Object object);
+	void setObject(final Object object);
 }

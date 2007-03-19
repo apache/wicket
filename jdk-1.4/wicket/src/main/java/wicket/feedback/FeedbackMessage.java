@@ -16,6 +16,8 @@
  */
 package wicket.feedback;
 
+import java.io.Serializable;
+
 import wicket.Component;
 import wicket.IClusterable;
 
@@ -63,7 +65,7 @@ public class FeedbackMessage implements IClusterable
 	private final int level;
 
 	/** The actual message. */
-	private final String message;
+	private final Serializable message;
 
 	/** The reporting component. */
 	private final Component reporter;
@@ -83,7 +85,7 @@ public class FeedbackMessage implements IClusterable
 	 * @param sessionStored
 	 *            Whether or not this message will be stored in session
 	 */
-	public FeedbackMessage(final Component reporter, final String message, final int level)
+	public FeedbackMessage(final Component reporter, final Serializable message, final int level)
 	{
 		this.reporter = reporter;
 		this.message = message;
@@ -137,7 +139,7 @@ public class FeedbackMessage implements IClusterable
 	 * 
 	 * @return the message.
 	 */
-	public final String getMessage()
+	public final Serializable getMessage()
 	{
 		return message;
 	}

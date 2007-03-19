@@ -18,9 +18,7 @@ package wicket.markup.html.resources;
 
 import wicket.Application;
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.ResourceReference;
-import wicket.Session;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -89,25 +87,20 @@ public class PackagedResourceReference extends WebMarkupContainer
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component)
+			public Object getObject()
 			{
-				Object o = file.getObject(component);
+				Object o = file.getObject();
 				if (o == null)
 				{
-					throw new IllegalArgumentException(
-							"The model must provide a non-null object (component == " + component
-									+ ")");
+					throw new IllegalArgumentException("The model must provide a non-null object");
 				}
-				if (!(o instanceof String))
+				if ( !( o instanceof String) )
 				{
-					throw new IllegalArgumentException(
-							"The model must provide an instance of String");
+					throw new IllegalArgumentException("The model must provide a string");
 				}
-				String f = (String)component.getConverter(String.class).convertToString(file.getObject(component),
-						component.getLocale());
-				ResourceReference ref = createPackageResourceReference(Application.get(), referer,
-						f);
-				return getRequestCycle().urlFor(ref);
+				String f = getConverter(String.class).convertToString(o, getLocale());
+				ResourceReference ref = new ResourceReference(referer, f);
+				return urlFor(ref);
 			}
 		};
 		add(new AttributeModifier(attributeToReplace, true, srcReplacement));
@@ -174,14 +167,13 @@ public class PackagedResourceReference extends WebMarkupContainer
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component)
+			public Object getObject()
 			{
-				Object o = resourceReference.getObject(component);
+				Object o = resourceReference.getObject();
 				if (o == null)
 				{
 					throw new IllegalArgumentException(
-							"The model must provide a non-null object (component == " + component
-									+ ")");
+							"The model must provide a non-null object");
 				}
 				if (!(o instanceof ResourceReference))
 				{

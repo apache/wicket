@@ -39,10 +39,11 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.model.CompoundPropertyModel;
-import wicket.model.ICompoundModel;
+import wicket.model.IAssignmentAwareModel;
+import wicket.model.IInheritableModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
+import wicket.model.IWrapModel;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
@@ -481,7 +482,7 @@ public abstract class Component implements IClusterable
 	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/** Flag for Component holding root compound model */
-	private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
+//	private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
 
 	/** Ignore attribute modifiers */
 	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
@@ -585,12 +586,13 @@ public abstract class Component implements IClusterable
 		setId(id);
 		getApplication().notifyComponentInstantiationListeners(this);
 
-		this.model = model;
-		// If a compound model is explicitly set on this component
-		if (model instanceof ICompoundModel)
+		if (model instanceof IAssignmentAwareModel)
 		{
-			// we need to remember this for getModelObject()
-			setFlag(FLAG_HAS_ROOT_MODEL, true);
+			this.model = ((IAssignmentAwareModel)model).wrapOnAssignment(this);
+		}
+		else
+		{
+			this.model = model;
 		}
 	}
 
@@ -669,7 +671,7 @@ public abstract class Component implements IClusterable
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void error(final String message)
+	public final void error(final Serializable message)
 	{
 		getPage().getFeedbackMessages().error(this, message);
 	}
@@ -943,16 +945,8 @@ public abstract class Component implements IClusterable
 		final IModel model = getModel();
 		if (model != null)
 		{
-			// If this component has the root model for a compound model
-			if (getFlag(FLAG_HAS_ROOT_MODEL))
-			{
-				// we need to return the root model and not a property of the
-				// model
-				return getRootModel(model).getObject(null);
-			}
-
-			// Get model value for this component
-			return model.getObject(this);
+			// Get model value for this component.
+			return model.getObject();
 		}
 		else
 		{
@@ -1950,18 +1944,28 @@ public abstract class Component implements IClusterable
 			this.model.detach();
 		}
 
-		// Change model
-		if (this.model != model)
+		IModel prevModel = this.model;
+		if (prevModel instanceof IWrapModel)
 		{
-			addStateChange(new ComponentModelChange(this.model));
-			this.model = model;
+			prevModel = ((IWrapModel)prevModel).getNestedModel();
 		}
 
-		// If a compound model is explicitly set on this component
-		if (model instanceof ICompoundModel)
+		// Change model
+		if (prevModel != model)
 		{
-			// we need to remember this for getModelObject()
-			setFlag(FLAG_HAS_ROOT_MODEL, true);
+			if (prevModel != null)
+			{
+				addStateChange(new ComponentModelChange(prevModel));
+			}
+
+			if (model instanceof IAssignmentAwareModel)
+			{
+				this.model = ((IAssignmentAwareModel)model).wrapOnAssignment(this);
+			}
+			else
+			{
+				this.model = model;
+			}
 		}
 
 		modelChanged();
@@ -1998,15 +2002,7 @@ public abstract class Component implements IClusterable
 		if (!getModelComparator().compare(this, object))
 		{
 			modelChanging();
-
-			if (getFlag(FLAG_HAS_ROOT_MODEL))
-			{
-				getRootModel(model).setObject(null, object);
-			}
-			else
-			{
-				model.setObject(this, object);
-			}
+			model.setObject(object);
 			modelChanged();
 		}
 
@@ -2390,19 +2386,9 @@ public abstract class Component implements IClusterable
 	 */
 	protected void detachModel()
 	{
-		// If the model is compound and it's not the root model, then it can
-		// be reconstituted via initModel() after replication
-		if (model instanceof CompoundPropertyModel && !getFlag(FLAG_HAS_ROOT_MODEL))
+		if (model != null)
 		{
-			// Get rid of model which can be lazy-initialized again
-			this.model = null;
-		}
-		else
-		{
-			if (model != null)
-			{
-				model.detach();
-			}
+			model.detach();
 		}
 	}
 
@@ -2531,15 +2517,22 @@ public abstract class Component implements IClusterable
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			final IModel model = current.getModel();
-			if (model instanceof ICompoundModel)
+			IModel model = current.getModel();
+
+			if (model instanceof IWrapModel)
+			{
+				model = ((IWrapModel)model).getNestedModel();
+			}
+
+			if (model instanceof IInheritableModel)
 			{
 				// we turn off versioning as we share the model with another
 				// component that is the owner of the model (that component
 				// has to decide whether to version or not
 				setVersioned(false);
 
-				// return the shared compound model
+				// return the shared inherited
+				model = ((IInheritableModel)model).wrapOnInheritance(this);
 				return model;
 			}
 		}
@@ -3091,22 +3084,17 @@ public abstract class Component implements IClusterable
 	 */
 	private final IModel getRootModel(final IModel model)
 	{
-		IModel nestedModelObject = model;
-		while (true)
+		IModel nested = model;
+		while (nested != null && nested instanceof IWrapModel)
 		{
-			final IModel next = nestedModelObject.getNestedModel();
-			if (next == null)
+			final IModel next = ((IWrapModel)nested).getNestedModel();
+			if (nested == next)
 			{
-				break;
+				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
 			}
-			if (nestedModelObject == next)
-			{
-				throw new WicketRuntimeException("Model for " + nestedModelObject
-						+ " is self-referential");
-			}
-			nestedModelObject = next;
+			nested = next;
 		}
-		return nestedModelObject;
+		return nested;
 	}
 
 	/**

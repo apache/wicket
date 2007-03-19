@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.validation.validator;
 
 import java.util.Map;
 
-import wicket.markup.html.form.FormComponent;
-import wicket.util.string.Strings;
+import wicket.validation.IValidatable;
 
 /**
+ * FIXME 2.0: ivaynberg: look over javadoc
+ * 
  * A validator for strings that can be used for subclassing or use one of the
  * static factory methods to get the default string validators as range, maximum
  * or minimum.
@@ -115,7 +116,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a String exact length validator to check if a string length is exactly the same as the given value
+	 * Gets a String exact length validator to check if a string length is
+	 * exactly the same as the given value
 	 * 
 	 * If that is not the case then an error message will be generated with the
 	 * key "StringValidator.exact" and the messages keys that can be used are:
@@ -138,25 +140,6 @@ public abstract class StringValidator extends AbstractValidator
 	{
 		return new ExactLengthValidator(length);
 	}
-	
-	/**
-	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
-	 */
-	public void validate(final FormComponent formComponent)
-	{
-		onValidate(formComponent, (String)formComponent.getConvertedInput());
-	}
-
-	/**
-	 * Subclasses should override this method to validate the string value for a
-	 * component.
-	 * 
-	 * @param formComponent
-	 *            form component
-	 * @param value
-	 *            The string value to validate
-	 */
-	public abstract void onValidate(FormComponent formComponent, String value);
 
 	private static class LengthBetweenValidator extends StringValidator
 	{
@@ -171,36 +154,31 @@ public abstract class StringValidator extends AbstractValidator
 
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      java.lang.String)
-		 */
-		public void onValidate(FormComponent formComponent, String value)
+		protected Map variablesMap(IValidatable validatable)
 		{
-			if (!Strings.isEmpty(value))
-			{
-				if (value.length() < minimum || value.length() > maximum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		protected Map messageModel(FormComponent formComponent)
-		{
-			final Map map = super.messageModel(formComponent);
+			final Map map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
 			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
 			return map;
 		}
 
 		/**
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "StringValidator.range";
+		}
+
+		protected void onValidate(IValidatable validatable)
+		{
+			final String value = (String)validatable.getValue();
+			if (value.length() < minimum || value.length() > maximum)
+			{
+				error(validatable);
+			}
+
 		}
 
 	}
@@ -215,35 +193,28 @@ public abstract class StringValidator extends AbstractValidator
 			this.minimum = minimum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      java.lang.String)
-		 */
-		public void onValidate(FormComponent formComponent, String value)
+		protected Map variablesMap(IValidatable validatable)
 		{
-			if (!Strings.isEmpty(value))
-			{
-				if (value.length() < minimum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		protected Map messageModel(FormComponent formComponent)
-		{
-			final Map map = super.messageModel(formComponent);
+			final Map map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
-			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
 			return map;
 		}
 
 		/**
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "StringValidator.minimum";
+		}
+
+		protected void onValidate(IValidatable validatable)
+		{
+			if (((String)validatable.getValue()).length() < minimum)
+			{
+				error(validatable);
+			}
 		}
 
 	}
@@ -258,39 +229,32 @@ public abstract class StringValidator extends AbstractValidator
 			this.length = length;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      java.lang.String)
-		 */
-		public void onValidate(FormComponent formComponent, String value)
+		protected Map variablesMap(IValidatable validatable)
 		{
-			if (!Strings.isEmpty(value))
-			{
-				if (value.length() != length)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		protected Map messageModel(FormComponent formComponent)
-		{
-			final Map map = super.messageModel(formComponent);
-			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
-			map.put("exact", ""+this.length);
+			final Map map = super.variablesMap(validatable);
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			map.put("exact", new Integer(this.length));
 			return map;
 		}
 
 		/**
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "StringValidator.exact";
 		}
 
+		protected void onValidate(IValidatable validatable)
+		{
+			if (((String)validatable.getValue()).length() != length)
+			{
+				error(validatable);
+			}
+		}
+
 	}
-	
+
 	private static class MaximumLengthValidator extends StringValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -301,35 +265,28 @@ public abstract class StringValidator extends AbstractValidator
 			this.maximum = maximum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      java.lang.String)
-		 */
-		public void onValidate(FormComponent formComponent, String value)
+		protected Map variablesMap(IValidatable validatable)
 		{
-			if (!Strings.isEmpty(value))
-			{
-				if (value.length() > maximum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		protected Map messageModel(FormComponent formComponent)
-		{
-			final Map map = super.messageModel(formComponent);
+			final Map map = super.variablesMap(validatable);
 			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
 			return map;
 		}
 
 		/**
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "StringValidator.maximum";
+		}
+
+		protected void onValidate(IValidatable validatable)
+		{
+			if (((String)validatable.getValue()).length() > maximum)
+			{
+				error(validatable);
+			}
 		}
 	}
 }

@@ -16,6 +16,7 @@
  */
 package wicket.feedback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -130,7 +131,7 @@ public final class FeedbackMessages implements IClusterable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void error(Component reporter, String message)
+	public final void error(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
 	}

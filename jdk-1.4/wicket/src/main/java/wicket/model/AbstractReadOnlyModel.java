@@ -16,7 +16,6 @@
  */
 package wicket.model;
 
-import wicket.Component;
 
 /**
  * AbstractReadOnlyModel is an adapter base class for implementing models which have no
@@ -24,13 +23,13 @@ import wicket.Component;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public abstract class AbstractReadOnlyModel extends AbstractModel
+public abstract class AbstractReadOnlyModel implements IModel
 {
 
 	/**
-	 * @see IModel#getObject(Component)
+	 * @see IModel#getObject()
 	 */
-	public abstract Object getObject(Component component);
+	public abstract Object getObject();
 
 	/**
 	 * This default implementation of setObject unconditionally throws an
@@ -43,7 +42,7 @@ public abstract class AbstractReadOnlyModel extends AbstractModel
 	 *            The object to set into the model
 	 * @throws UnsupportedOperationException
 	 */
-	public final void setObject(final Component component, final Object object)
+	public final void setObject(final Object object)
 	{
 		throw new UnsupportedOperationException("Model " + getClass()
 				+ " does not support setObject(Object)");
@@ -54,6 +53,15 @@ public abstract class AbstractReadOnlyModel extends AbstractModel
 	 */
 	public String toString()
 	{
-		return super.toString();
+		StringBuffer sb = new StringBuffer("Model:classname=[");
+		sb.append(getClass().getName()).append("]");
+		return sb.toString();
+	}
+	
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
 	}
 }

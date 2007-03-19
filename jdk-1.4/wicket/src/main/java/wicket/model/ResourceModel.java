@@ -16,6 +16,7 @@
  */
 package wicket.model;
 
+import wicket.Application;
 import wicket.Component;
 
 /**
@@ -26,7 +27,7 @@ import wicket.Component;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ResourceModel extends AbstractReadOnlyModel
+public class ResourceModel extends AbstractReadOnlyModel implements IAssignmentAwareModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,11 +62,61 @@ public class ResourceModel extends AbstractReadOnlyModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
+	 * @see wicket.model.AbstractReadOnlyModel#getObject()
 	 */
-	public Object getObject(Component component)
+	public Object getObject()
 	{
-		return component.getLocalizer().getString(resourceKey, component, defaultValue);
+		// this shouldn't be called always wrapped!
+		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
+				(Component)null, defaultValue);
 	}
 
+
+	/**
+	 * @see wicket.model.IAssignmentAwareModel#wrapOnAssignment(wicket.Component)
+	 */
+	public IWrapModel wrapOnAssignment(final Component component)
+	{
+		return new AssignmentWrapper(resourceKey, defaultValue, component);
+	}
+
+	/**
+	 * 
+	 */
+	private class AssignmentWrapper extends ResourceModel implements IWrapModel
+	{
+		private static final long serialVersionUID = 1L;
+
+		private Component component;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param resourceKey
+		 * @param defaultValue
+		 * @param component
+		 */
+		public AssignmentWrapper(String resourceKey, String defaultValue, Component component)
+		{
+			super(resourceKey, defaultValue);
+			this.component = component;
+		}
+
+		/**
+		 * @see wicket.model.IWrapModel#getNestedModel()
+		 */
+		public IModel getNestedModel()
+		{
+			return ResourceModel.this;
+		}
+
+		/**
+		 * @see wicket.model.AbstractReadOnlyModel#getObject()
+		 */
+		public Object getObject()
+		{
+			return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
+					component, defaultValue);
+		}
+	}
 }

@@ -17,7 +17,6 @@
 package wicket.markup.html.form.validation;
 
 import wicket.markup.html.form.FormComponent;
-import wicket.util.lang.Classes;
 
 /**
  * Validates that the input of two form components is identical. Errors are
@@ -51,13 +50,4 @@ public class EqualPasswordInputValidator extends EqualInputValidator
 	{
 		super(formComponent1, formComponent2);
 	}
-
-	/**
-	 * @see wicket.markup.html.form.validation.AbstractFormValidator#resourceKey(wicket.markup.html.form.FormComponent[])
-	 */
-	protected String resourceKey(FormComponent[] components)
-	{
-		return Classes.simpleName(getClass());
-	}
-
 }

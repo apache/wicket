@@ -84,7 +84,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.IDetachable#detach()
 	 */
-	public final void detach()
+	public void detach()
 	{
 		if (attached)
 		{
@@ -101,9 +101,9 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	}
 
 	/**
-	 * @see wicket.model.IModel#getObject(wicket.Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public Object getObject(Component component)
+	public Object getObject()
 	{
 		if (!attached)
 		{

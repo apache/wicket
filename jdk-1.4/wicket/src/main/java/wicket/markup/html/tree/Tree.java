@@ -39,7 +39,6 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.Loop;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.resources.CompressedResourceReference;
-import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
 
 /**
@@ -208,7 +207,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Model for the paths of the tree.
 	 */
-	private final class TreePathsModel extends AbstractReadOnlyDetachableModel
+	private final class TreePathsModel implements IModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -218,50 +217,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/** tree paths. */
 		private List paths = new ArrayList();
 
-		/**
-		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-		 */
-		public IModel getNestedModel()
-		{
-			// TODO General: Check calls to this method; original: return paths;
-			return null;
-		}
-
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onAttach()
-		 */
-		protected void onAttach()
-		{
-			if (dirty)
-			{
-				paths.clear();
-				TreeModel model = getTreeState().getModel();
-				DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
-				Enumeration e = rootNode.preorderEnumeration();
-				while (e.hasMoreElements())
-				{
-					DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
-					// TreePath path = new TreePath(treeNode.getPath());
-					paths.add(treeNode);
-				}
-				dirty = false;
-			}
-		}
-
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onDetach()
-		 */
-		protected void onDetach()
-		{
-		}
-
-		/**
-		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
-		 */
-		protected Object onGetObject(Component component)
-		{
-			return paths;
-		}
+		private transient boolean attached = false;
 
 		/**
 		 * Inserts the given node in the path list with the given index.
@@ -297,6 +253,37 @@ public class Tree extends AbstractTree implements TreeModelListener
 		void remove(DefaultMutableTreeNode node)
 		{
 			paths.remove(node);
+		}
+
+
+		public Object getObject()
+		{
+			if (dirty && !attached)
+			{
+				paths.clear();
+				TreeModel model = getTreeState().getModel();
+				DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)model.getRoot();
+				Enumeration e = rootNode.preorderEnumeration();
+				while (e.hasMoreElements())
+				{
+					DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)e.nextElement();
+					// TreePath path = new TreePath(treeNode.getPath());
+					paths.add(treeNode);
+				}
+				dirty = false;
+			}
+			attached = true;
+			return paths;
+		}
+
+		public void setObject(Object object)
+		{
+			throw new UnsupportedOperationException("This is a read-only model");
+		}
+
+		public void detach()
+		{
+			attached = false;
 		}
 	}
 

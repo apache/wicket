@@ -23,7 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.model.AbstractDetachableModel;
+import wicket.Page;
 import wicket.model.IModel;
 
 /**
@@ -31,7 +31,7 @@ import wicket.model.IModel;
  * 
  * @author Eelco Hillenius
  */
-public class FeedbackMessagesModel extends AbstractDetachableModel
+public class FeedbackMessagesModel implements IModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,11 +44,23 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	/** Comparator used for sorting the messages. */
 	private Comparator sortingComparator;
 
+	/** the page of component this model is attached to */
+	private final Component component;
+
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
+	 * 
+	 * @param component
+	 *            The component where the page will be get from for which messages will be displayed 
+	 *            usually the same page as the one feedbackpanel is attached to
 	 */
-	public FeedbackMessagesModel()
+	public FeedbackMessagesModel(Component component)
 	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("Argument [[page]] cannot be null");
+		}
+		this.component = component;
 	}
 
 	/**
@@ -57,9 +69,14 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	 * 
 	 * @param filter
 	 *            The filter to apply
+	 * @param page
+	 *            Page for which messages will be displayed - usually the same
+	 *            page as the one feedbackpanel is attached to
+	 * 
 	 */
-	public FeedbackMessagesModel(IFeedbackMessageFilter filter)
+	public FeedbackMessagesModel(Page page, IFeedbackMessageFilter filter)
 	{
+		this(page);
 		setFilter(filter);
 	}
 
@@ -70,15 +87,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	{
 		return filter;
 	}
-
-	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	public final IModel getNestedModel()
-	{
-		return null;
-	}
-
+	
 	/**
 	 * @return The current sorting comparator
 	 */
@@ -88,9 +97,9 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public final Object onGetObject(final Component component)
+	public final Object getObject()
 	{
 		if (messages == null)
 		{
@@ -144,29 +153,6 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onAttach()
-	 */
-	protected void onAttach()
-	{
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onDetach()
-	 */
-	protected void onDetach()
-	{
-		messages = null;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
-	 *      java.lang.Object)
-	 */
-	protected void onSetObject(Component component, Object object)
-	{
-	}
-
-	/**
 	 * Override this method to post process to the FeedbackMessage list.
 	 * 
 	 * @param messages
@@ -177,5 +163,22 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	protected List processMessages(final List messages)
 	{
 		return messages;
+	}
+	
+	/**
+	 * 
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
+	 */
+	public void setObject(Object object)
+	{
+	}
+	
+	/**
+	 * 
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+		messages = null;
 	}
 }

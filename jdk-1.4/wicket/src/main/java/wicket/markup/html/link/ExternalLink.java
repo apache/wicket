@@ -146,7 +146,7 @@ public class ExternalLink extends WebMarkupContainer
 	{
 		if (href != null)
 		{
-			Object hrefValue = href.getObject(this);
+			Object hrefValue = href.getObject();
 			if (hrefValue != null)
 			{
 				String url = hrefValue.toString();
@@ -206,9 +206,9 @@ public class ExternalLink extends WebMarkupContainer
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		this.checkComponentTag(openTag, "a");
-		if ((label != null) && (label.getObject(this) != null))
+		if ((label != null) && (label.getObject() != null))
 		{
-			replaceComponentTagBody(markupStream, openTag, label.getObject(this).toString());
+			replaceComponentTagBody(markupStream, openTag, label.getObject().toString());
 		}
 		else
 		{

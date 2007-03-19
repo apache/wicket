@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.validation.validator;
 
-import wicket.markup.html.form.FormComponent;
+import wicket.validation.IValidatable;
 
 /**
  * Performs the so called "mod 10" algorithm to check the validity of credit
@@ -32,11 +32,11 @@ public class CreditCardValidator extends AbstractValidator
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
+	 * @see wicket.validation.validator.AbstractValidator#onValidate(wicket.validation.IValidatable)
 	 */
-	public void validate(FormComponent component)
+	protected void onValidate(IValidatable validatable)
 	{
-		String numberToCheck = component.getValue();
+		String numberToCheck = (String)validatable.getValue();
 		int nulOffset = '0';
 		int sum = 0;
 		for (int i = 1; i <= numberToCheck.length(); i++)
@@ -55,14 +55,14 @@ public class CreditCardValidator extends AbstractValidator
 		}
 		if (!((sum % 10) == 0))
 		{
-			error(component);
+			error(validatable);
 		}
 	}
 
 	/**
-	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
+	 * @see wicket.validation.validator.AbstractValidator#resourceKey()
 	 */
-	protected String resourceKey(FormComponent formComponent)
+	protected String resourceKey()
 	{
 		return "CreditCardValidator";
 	}

@@ -18,6 +18,7 @@ package wicket.model;
 
 import wicket.Component;
 import wicket.markup.html.form.FormComponent;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A simple compound model which uses the component's name as the property
@@ -29,10 +30,12 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel extends AbstractPropertyModel implements ICompoundModel
+public class CompoundPropertyModel implements IInheritableModel
 {
 	private static final long serialVersionUID = 1L;
 
+	private Object target;
+	
 	/**
 	 * Constructor
 	 * 
@@ -41,32 +44,119 @@ public class CompoundPropertyModel extends AbstractPropertyModel implements ICom
 	 */
 	public CompoundPropertyModel(final Object model)
 	{
-		super(model);
+		target = model;
+	}
+	/**
+	 * @see wicket.model.IModel#getObject()
+	 */
+	public Object getObject()
+	{
+		if (target instanceof IModel)
+		{
+			return ((IModel)target).getObject();
+		}
+		return target;
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	protected String propertyExpression(final Component component)
+	public void setObject(Object object)
 	{
-		if (component == null)
+		this.target = object;
+	}
+
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+		if (target != null && target instanceof IModel)
 		{
-		    return null;
+			((IModel)target).detach();
 		}
-		
+	}
+
+	/**
+	 * Returns the property expression that should be used against the target
+	 * object
+	 * 
+	 * @param component
+	 * @return property expression that should be used against the target object
+	 */
+	protected String propertyExpression(Component component)
+	{
 		return component.getId();
 	}
+	
+	/**
+	 * @see wicket.model.IInheritableModel#wrapOnInheritance(wicket.Component)
+	 */
+	public IWrapModel wrapOnInheritance(Component component)
+	{
+		return new AttachedCompoundPropertyModel(component);
+	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
+	 * Component aware variation of the {@link CompoundPropertyModel} that
+	 * components that inherit the model get
+	 * 
+	 * @author ivaynberg
 	 */
-	protected Class propertyType(final Component component)
+	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
+			implements
+				IWrapModel,
+				IInheritableModel
 	{
-		if (component instanceof FormComponent)
+		private static final long serialVersionUID = 1L;
+
+		private final Component owner;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param owner
+		 *            component that this model has been attached to
+		 */
+		public AttachedCompoundPropertyModel(Component owner)
 		{
-			return ((FormComponent)component).getType();
+			super(CompoundPropertyModel.this);
+			this.owner = owner;
 		}
-		return null;
+
+		/**
+		 * @see wicket.model.AbstractPropertyModel#propertyExpression()
+		 */
+		protected String propertyExpression()
+		{
+			return CompoundPropertyModel.this.propertyExpression(owner);
+		}
+
+		/**
+		 * @see wicket.model.IWrapModel#getNestedModel()
+		 */
+		public IModel getNestedModel()
+		{
+			return CompoundPropertyModel.this;
+		}
+		
+		/**
+		 * @see wicket.model.IInheritableModel#wrapOnInheritance(wicket.Component)
+		 */
+		public IWrapModel wrapOnInheritance(Component component)
+		{
+			return new AttachedCompoundPropertyModel(component);
+		};
+
+		/**
+		 * @see wicket.model.AbstractPropertyModel#detach()
+		 */
+		public void detach()
+		{
+			super.detach();
+			CompoundPropertyModel.this.detach();
+		}
+
 	}
 
 	/**
@@ -74,6 +164,8 @@ public class CompoundPropertyModel extends AbstractPropertyModel implements ICom
 	 */
 	public String toString()
 	{
-		return new StringBuffer(super.toString()).toString();
+		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=[" + getClass().getName() + "]");
+		sb.append(":nestedModel=[").append(target).append("]");
+		return sb.toString();
 	}
 }

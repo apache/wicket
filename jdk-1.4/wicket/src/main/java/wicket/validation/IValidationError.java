@@ -14,17 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.form.validation;
-
+package wicket.validation;
 
 /**
- * A validator for strings designed for subclassing. A subclass implements
- * onValidate() to validate the component and its string value.
+ * A validation error
  * 
- * @author Jonathan Locke
- * 
- * @deprecated Users should use {@link StringValidator} directly 
+ * @author ivaynberg
  */
-public abstract class CustomValidator extends StringValidator
+public interface IValidationError
 {
+	/**
+	 * Retrieves error message (usually user-facing)
+	 * 
+	 * @param messageSource
+	 * @return error message
+	 */
+	String getErrorMessage(IMessageSource messageSource);
 }

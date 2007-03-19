@@ -907,7 +907,12 @@ public class WicketTester extends MockWebApplication
 	public void assertErrorMessages(String[] expectedErrorMessages)
 	{
 		List actualMessages = getMessages(FeedbackMessage.ERROR);
-		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), actualMessages);
+		List msgs = new ArrayList();
+		for (Iterator iterator = actualMessages.iterator(); iterator.hasNext();)
+		{
+			msgs.add(iterator.next().toString());
+		}
+		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), msgs);
 	}
 
 	/**

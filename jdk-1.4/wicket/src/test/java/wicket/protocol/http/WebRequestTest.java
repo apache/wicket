@@ -18,8 +18,6 @@ package wicket.protocol.http;
 
 import wicket.WicketTestCase;
 import wicket.protocol.http.servlet.ServletWebRequest;
-import wicket.util.tester.WicketTester;
-import junit.framework.TestCase;
 
 /**
  * Test of WebRequest.

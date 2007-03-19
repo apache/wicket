@@ -14,23 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.model;
+package wicket.validation;
+
+import java.io.Serializable;
 
 /**
- * This is a marker interface for models that can be used as a shared/compound
- * model for multiply components.
+ * A validator that can validate a {@link IValidatable} object.
  * 
- * If a model implements this interface then you can give the parent container
- * this model and all the child components will also get and then set that model
- * as there own.
  * 
- * <pre>
- * Form form = new Form(&quot;form&quot;, new ModelImplementingICompoundModel());
- * form.add(new TextField(&quot;textfield&quot;));
- * </pre>
- * 
- * @author jcompagner
+ * @author Jonathan Locke
+ * @author Igor Vaynberg (ivaynberg)
  */
-public interface ICompoundModel extends IModel
+public interface IValidator extends Serializable
 {
+	/**
+	 * Validates the <code>validatable</code> object. Validation errors should
+	 * be reported using {@link IValidatable#error(IValidationError)} method.
+	 * 
+	 * @param validatable
+	 */
+	void validate(IValidatable validatable);
 }

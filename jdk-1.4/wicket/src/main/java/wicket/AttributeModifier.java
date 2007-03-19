@@ -321,7 +321,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	/* gets replacement with null check. */
 	private Object getReplacementOrNull(final Component component)
 	{
-		return (replaceModel != null) ? replaceModel.getObject(component) : null;
+		return (replaceModel != null) ? replaceModel.getObject() : null;
 	}
 
 	/* gets replacement as a string with null check. */

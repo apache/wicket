@@ -18,8 +18,7 @@ package wicket;
 
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.model.AbstractDetachableModel;
-import wicket.model.IModel;
+import wicket.model.LoadableDetachableModel;
 import wicket.model.Model;
 
 /**
@@ -52,37 +51,18 @@ public class AttributeModifierComponentPage extends WebPage
 
 		// Label with attribute inserter
 		Label label3 = new Label("label3", new Model("Label 3"));
-		label3.add(new AttributeModifier("class", true, new AbstractDetachableModel()
+		label3.add(new AttributeModifier("class", true, new LoadableDetachableModel()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			private transient String text = null;
 
-			public void onDetach()
+			protected Object load()
 			{
-				text = null;
+				return "insertLabel";
 			}
 
-			public void onAttach()
-			{
-				text = "insertLabel";
-			}
 
-			public Object onGetObject(final Component component)
-			{
-				return text;
-			}
-
-			public void onSetObject(final Component component, final Object object)
-			{
-				text = object.toString();
-			}
-
-			public IModel getNestedModel()
-			{
-				// TODO General: Remove return text
-				return null;
-			}
 		}));
 		add(label3);
 	}

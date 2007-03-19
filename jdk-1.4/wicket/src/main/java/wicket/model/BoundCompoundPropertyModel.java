@@ -134,11 +134,11 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * @see wicket.model.CompoundPropertyModel#onDetach()
+	 * @see wicket.model.CompoundPropertyModel#detach()
 	 */
-	protected void onDetach()
+	public void detach()
 	{
-		super.onDetach();
+		super.detach();
 
 		// Minimize the size of the bindings list
 		bindings.trimToSize();
@@ -162,6 +162,8 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
+	 * @param component 
+	 * @return 
 	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
 	 */
 	protected Class propertyType(final Component component)

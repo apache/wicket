@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.validation.validator;
 
 import java.util.regex.Pattern;
-
-import wicket.markup.html.form.FormComponent;
 
 /**
  * Validator for checking the form/pattern of email addresses.
@@ -52,10 +50,7 @@ public class EmailAddressPatternValidator extends PatternValidator
 				Pattern.CASE_INSENSITIVE);
 	}
 
-	/**
-	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
-	 */
-	protected String resourceKey(FormComponent formComponent)
+	protected String resourceKey()
 	{
 		return "EmailAddressPatternValidator";
 	}

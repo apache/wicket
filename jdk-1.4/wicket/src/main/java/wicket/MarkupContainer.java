@@ -34,8 +34,9 @@ import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.model.ICompoundModel;
+import wicket.model.IInheritableModel;
 import wicket.model.IModel;
+import wicket.model.IWrapModel;
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
@@ -633,14 +634,17 @@ public abstract class MarkupContainer extends Component
 	{
 		final IModel previous = getModel();
 		super.setModel(model);
-		if (previous instanceof ICompoundModel)
+		if (previous instanceof IInheritableModel)
 		{
 			visitChildren(new IVisitor()
 			{
-
 				public Object component(Component component)
 				{
 					IModel compModel = component.getModel();
+					if (compModel instanceof IWrapModel)
+					{
+						compModel = ((IWrapModel)compModel).getNestedModel();
+					}
 					if (compModel == previous)
 					{
 						component.setModel(null);

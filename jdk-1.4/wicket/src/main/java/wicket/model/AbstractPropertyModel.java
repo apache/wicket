@@ -16,7 +16,6 @@
  */
 package wicket.model;
 
-import wicket.Component;
 import wicket.Session;
 import wicket.util.lang.PropertyResolver;
 import wicket.util.lang.PropertyResolverConverter;
@@ -31,10 +30,10 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel extends AbstractDetachableModel
+public abstract class AbstractPropertyModel implements IModel
 {
 	/** Any model object (which may or may not implement IModel) */
-	private Object nestedModel;
+	private Object target;
 
 	/**
 	 * Constructor
@@ -49,42 +48,16 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 			throw new IllegalArgumentException("Parameter modelObject cannot be null");
 		}
 
-		this.nestedModel = modelObject;
+		this.target = modelObject;
 	}
 
-	/**
-	 * Gets the nested model.
-	 * 
-	 * @return The nested model, <code>null</code> when this is the final
-	 *         model in the hierarchy
-	 */
-	public final IModel getNestedModel()
+	protected Object getTarget()
 	{
-		if (nestedModel instanceof IModel)
+		if (target instanceof IModel)
 		{
-			return ((IModel)nestedModel);
+			return ((IModel)target).getObject();
 		}
-		return null;
-	}
-
-	/**
-	 * @param component
-	 *            The component to get the model object for
-	 * @return The model for this property
-	 */
-	protected Object modelObject(final Component component)
-	{
-		if (nestedModel instanceof IModel)
-		{
-			final IModel model=(IModel)nestedModel;
-			if (model instanceof ICompoundModel) {
-				return model.getObject(null);
-			} else {
-				return model.getObject(component);
-			}
-			
-		}
-		return nestedModel;
+		return target;
 	}
 
 	/**
@@ -92,45 +65,38 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 *            The component to get a property expression for
 	 * @return The property expression for the component
 	 */
-	protected abstract String propertyExpression(Component component);
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onAttach()
-	 */
-	protected void onAttach()
-	{
-	}
+	protected abstract String propertyExpression();
 
 	/**
 	 * Unsets this property model's instance variables and detaches the model.
 	 * 
 	 * @see AbstractDetachableModel#onDetach()
 	 */
-	protected void onDetach()
+	public void detach()
 	{
 		// Detach nested object if it's an IModel
-		if (nestedModel instanceof IModel)
+		if (target instanceof IModel)
 		{
-			((IModel)nestedModel).detach();
+			((IModel)target).detach();
 		}
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
-	protected Object onGetObject(final Component component)
+	public Object getObject()
 	{
-		final String expression = propertyExpression(component);
+		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			return modelObject(component);
+			return getTarget();
 		}
 
-		final Object modelObject = modelObject(component);
-		if (modelObject != null)
+		final Object target = getTarget();
+		if (target != null)
 		{
-			return PropertyResolver.getValue(expression, modelObject);
+			return PropertyResolver.getValue(expression, target);
 		}
 		return null;
 	}
@@ -142,64 +108,38 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 * @param object
 	 *            The object that will be used when setting a value on the model
 	 *            object
-	 * @see AbstractDetachableModel#onSetObject(Component, Object)
+	 * @see IModel#setObject(Object)
 	 */
-	protected void onSetObject(final Component component, Object object)
+	public void setObject(Object object)
 	{
-		final String expression = propertyExpression(component);
+		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
 		{
-			if (nestedModel instanceof IModel)
+			if (target instanceof IModel)
 			{
-				((IModel)nestedModel).setObject(null, object);
+				((IModel)target).setObject(object);
 			}
 			else
 			{
-				nestedModel = object;
+				target = object;
 			}
 		}
 		else
 		{
-			// Get the real object
-			Object modelObject = modelObject(component);
-
-			// If the object is a String
-			if (object instanceof String)
-			{
-				// and that String is not empty
-				final String string = (String)object;
-				if (!Strings.isEmpty(string))
-				{
-					// and there is a non-null property type for the component
-					final Class propertyType = propertyType(component);
-					if (propertyType != null)
-					{
-						// convert the String to the right type
-						object = component.getConverter(propertyType).convertToObject(string, Session.get().getLocale());
-					}
-				}
-			}
-
 			PropertyResolverConverter prc = null;
 			prc = new PropertyResolverConverter(Session.get(), Session.get().getLocale());
-			PropertyResolver.setValue(expression, modelObject, object, prc);
+			PropertyResolver.setValue(expression, getTarget(), object, prc);
 		}
 	}
-
-	/**
-	 * @param component
-	 *            The component
-	 * @return The property type
-	 */
-	protected abstract Class propertyType(Component component);
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		StringBuffer sb = new StringBuffer(super.toString());
-		sb.append(":nestedModel=[").append(nestedModel).append("]");
+		StringBuffer sb = new StringBuffer("Model:classname=[");
+		sb.append(getClass().getName()).append("]");
+		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
 	}
 }

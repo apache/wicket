@@ -21,8 +21,15 @@ import java.net.URLDecoder;
 
 import wicket.util.value.ValueMap;
 
+/**
+ * TODO
+ */
 public class RequestUtils
 {
+	/**
+	 * @param queryString
+	 * @param params
+	 */
 	public static void decodeParameters(String queryString, ValueMap params)
 	{
 		final String[] paramTuples = queryString.split("&");

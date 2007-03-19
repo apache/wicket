@@ -221,7 +221,7 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * 
  * @author Chris Turner
  */
-public class StringResourceModel extends AbstractReadOnlyDetachableModel
+public class StringResourceModel extends LoadableDetachableModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -365,16 +365,6 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	}
 
 	/**
-	 * Gets the model used for property substitutions.
-	 * 
-	 * @return The model
-	 */
-	public final IModel getNestedModel()
-	{
-		return model;
-	}
-
-	/**
 	 * Gets the string currently represented by this string resource model. The
 	 * string that is returned may vary for each call to this method depending
 	 * on the values contained in the model and an the parameters that were
@@ -414,12 +404,12 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 				{
 					if (parameters[i] instanceof IModel)
 					{
-						realParams[i] = ((IModel)parameters[i]).getObject(component);
+						realParams[i] = ((IModel)parameters[i]).getObject();
 					}
 					else if (model != null && parameters[i] instanceof String)
 					{
 						realParams[i] = PropertyVariableInterpolator.interpolate((String)parameters[i],
-								model.getObject(component));
+								model.getObject());
 					}
 					else
 					{
@@ -485,18 +475,21 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 		if (model != null)
 		{
 			return PropertyVariableInterpolator
-					.interpolate(resourceKey, model.getObject(component));
+					.interpolate(resourceKey, model.getObject());
 		}
 		else
 		{
 			return resourceKey;
 		}
 	}
-
+	
 	/**
-	 * Attaches to the given session.
+	 * Gets the string that this string resource model currently represents. The
+	 * string is returned as an object to allow it to be used generically within
+	 * components.
+	 * 
 	 */
-	protected final void onAttach()
+	protected Object load()
 	{
 		// Initialise information that we need to work successfully
 		final Session session = Session.get();
@@ -510,6 +503,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 			throw new WicketRuntimeException(
 					"Cannot attach a string resource model without a Session context because that is required to get a Localizer");
 		}
+		return getString();
 	}
 
 	/**
@@ -526,21 +520,5 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 		// Null out references
 		this.localizer = null;
 		this.locale = null;
-	}
-
-	/**
-	 * Gets the string that this string resource model currently represents. The
-	 * string is returned as an object to allow it to be used generically within
-	 * components.
-	 * 
-	 * @see AbstractDetachableModel#onGetObject(Component)
-	 */
-	protected final Object onGetObject(final Component component)
-	{
-		if (this.component == null)
-		{
-			this.component = component;
-		}
-		return getString();
 	}
 }

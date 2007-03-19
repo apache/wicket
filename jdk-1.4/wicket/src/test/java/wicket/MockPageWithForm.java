@@ -75,10 +75,16 @@ public class MockPageWithForm extends WebPage
 			submitted = true;
 		}
 	}
+	/**
+	 * @return
+	 */
 	public boolean isSelected()
 	{
 		return selected;
 	}
+	/**
+	 * @return
+	 */
 	public boolean isSubmitted()
 	{
 		return submitted;

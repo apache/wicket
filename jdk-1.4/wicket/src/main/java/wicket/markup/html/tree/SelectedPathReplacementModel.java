@@ -19,7 +19,6 @@ package wicket.markup.html.tree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import wicket.Component;
 import wicket.model.AbstractReadOnlyModel;
 
 /**
@@ -53,9 +52,9 @@ public final class SelectedPathReplacementModel extends AbstractReadOnlyModel
 	}
 
 	/**
-	 * @see wicket.model.IModel#getObject(Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public Object getObject(final Component component)
+	public Object getObject()
 	{
 		TreePath path = new TreePath(node.getPath());
 		TreePath selectedPath = tree.getTreeState().getSelectedPath();

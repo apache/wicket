@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import wicket.Component;
 import wicket.Request;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
@@ -34,7 +33,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponentPanel;
-import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
@@ -371,9 +369,9 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
+		 * @see wicket.model.AbstractReadOnlyModel#getObject()
 		 */
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			if (max == UNLIMITED)
 			{
