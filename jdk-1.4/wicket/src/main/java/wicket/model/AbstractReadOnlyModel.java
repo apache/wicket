@@ -16,6 +16,8 @@
  */
 package wicket.model;
 
+import wicket.Component;
+
 
 /**
  * AbstractReadOnlyModel is an adapter base class for implementing models which have no
@@ -64,4 +66,8 @@ public abstract class AbstractReadOnlyModel implements IModel
 	public void detach()
 	{
 	}
+
+	// TODO This method is for helping people upgrade. Remove after deprecation release.
+	/** @deprecated replace by {@link IModel#getObject()}. */
+	public final Object getObject(Component component) { throw new UnsupportedOperationException(); }
 }

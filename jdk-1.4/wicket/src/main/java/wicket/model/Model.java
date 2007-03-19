@@ -137,4 +137,11 @@ public class Model implements IModel
 		sb.append(":object=[").append(this.object).append("]");
 		return sb.toString();
 	}
+
+	// TODO These methods are for helping people upgrade. Remove after deprecation release.
+	/** @deprecated replace by {@link IModel#getObject()}. */
+	public final Object getObject(Component component) { throw new UnsupportedOperationException(); }
+
+	/** @deprecated replace by {@link IModel#setObject(Object)}. */
+	public final void setObject(Component component, Object object) { throw new UnsupportedOperationException(); }
 }
