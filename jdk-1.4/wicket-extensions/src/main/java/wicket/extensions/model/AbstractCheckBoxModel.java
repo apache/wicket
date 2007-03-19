@@ -93,11 +93,14 @@ public abstract class AbstractCheckBoxModel implements IModel
 	}
 
 	/** @deprecated replaced by {@link #setObject(Object)} */
-	public void setObject(Component component, Object object)
+	public final void setObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/** @deprecated replaced by {@link #select()} */
-	public abstract void setSelected(Component component, boolean sel);
+	public final void setSelected(Component component, boolean sel)
+	{
+		throw new UnsupportedOperationException();
+	}
 }
