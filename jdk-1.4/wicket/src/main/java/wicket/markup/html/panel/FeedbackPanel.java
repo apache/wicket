@@ -78,9 +78,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 				 * 'feedbackPanelERROR'. This is used as the class of the li /
 				 * span elements.
 				 * 
-				 * @see wicket.model.IModel#getObject(Component)
+				 * @see wicket.model.IModel#getObject()
 				 */
-				public Object getObject(final Component component)
+				public Object getObject()
 				{
 					return getCSSClass(message);
 				}
