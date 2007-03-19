@@ -20,9 +20,7 @@ package wicket.validation;
 /**
  * Represents any object that can be validated
  * 
- * 
- * @author ivaynberg
- * 
+ * @author Igor Vaynberg (ivaynberg)
  */
 public interface IValidatable
 {
@@ -39,4 +37,12 @@ public interface IValidatable
 	 *            reported error
 	 */
 	void error(IValidationError error);
+
+	/**
+	 * Queries the current state of the validatable object. Validatables should
+	 * assume they are valid until {@link #error(IValidationError)} is called.
+	 * 
+	 * @return true if the object is in a valid state, false otherwise.
+	 */
+	boolean isValid();
 }

@@ -254,7 +254,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		rawInput = NO_RAW_INPUT;
 	}
 
- 	/**
+	/**
 	 * Reports a validation error against this form component.
 	 * 
 	 * The actual error is reported by creating a
@@ -266,22 +266,22 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 *            validation error
 	 */
 	public void error(IValidationError error)
- 	{
+	{
 		if (error == null)
- 		{
+		{
 			throw new IllegalArgumentException("Argument [[error]] cannot be null");
- 		}
+		}
 		String message = error.getErrorMessage(new MessageSource());
- 
+
 		if (message == null)
- 		{
+		{
 			// XXX maybe make message source remember tried resource keys so a
 			// more detailederror message can be created - like show which keys
 			// were tried
 			message = "Could not locate error message for error: " + error.toString();
- 		}
+		}
 		error(new ValidationErrorFeedback(error, message));
- 	}
+	}
 
 	/**
 	 * @return value of input converted into appropriate type if any was set
@@ -1140,6 +1140,11 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 			return FormComponent.this.getConvertedInput();
 		}
 
+		public boolean isValid()
+		{
+			return FormComponent.this.isValid();
+		}
+
 	}
 
 	/**
@@ -1263,8 +1268,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		 * @see wicket.validation.IMessageSource#substitute(java.lang.String,
 		 *      java.util.Map)
 		 */
-		public String substitute(String string, Map vars)
-				throws IllegalStateException
+		public String substitute(String string, Map vars) throws IllegalStateException
 		{
 			return new MapVariableInterpolator(string, addDefaultVars(vars), true).toString();
 		}
