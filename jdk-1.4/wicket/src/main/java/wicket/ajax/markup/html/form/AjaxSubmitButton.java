@@ -72,6 +72,10 @@ public abstract class AjaxSubmitButton extends Button
 	{
 		super(id);
 		this.form = form;
+		
+		if (form != null) {
+			form.setOutputMarkupId(true);
+		}
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
