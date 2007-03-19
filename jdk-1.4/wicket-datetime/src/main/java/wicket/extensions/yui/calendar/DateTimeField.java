@@ -29,12 +29,12 @@ import wicket.datetime.markup.html.form.DateTextField;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.FormComponentPanel;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.NumberValidator;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
 import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
 import wicket.util.lang.EnumeratedType;
+import wicket.validation.validator.NumberValidator;
 
 /**
  * Works on a {@link java.util.Date} object. Displays a date field and a date
