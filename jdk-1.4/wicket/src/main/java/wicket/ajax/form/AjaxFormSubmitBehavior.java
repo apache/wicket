@@ -74,6 +74,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 		super(event);
 		this.form = form;
+		
+		if (form != null) {
+			form.setOutputMarkupId(true);
+		}
 	}
 
 	private Form getForm()
