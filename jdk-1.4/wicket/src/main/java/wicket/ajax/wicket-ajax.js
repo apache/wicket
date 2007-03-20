@@ -296,15 +296,18 @@ Wicket.Form.doSerialize = function(form) {
     return result;
 }
 
-Wicket.Form.serialize = function(element) {
+Wicket.Form.serialize = function(element, dontTryToFindRootForm) {
 	if (element.tagName.toLowerCase() == "form") {		
 		return Wicket.Form.doSerialize(element);
 	} else {
 		// try to find a form in DOM parents
 		var elementBck = element;
-		do {
-			element = element.parentNode;
-		} while(element.tagName.toLowerCase() != "form" && element.tagName.toLowerCase() != "body")
+		
+		if (dontTryToFindRootForm != true) {
+			do {
+				element = element.parentNode;
+			} while(element.tagName.toLowerCase() != "form" && element.tagName.toLowerCase() != "body")
+		}
 		
 		if (element.tagName.toLowerCase() == "form"){
 			// We found a form : serialize it
