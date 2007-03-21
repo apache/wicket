@@ -39,7 +39,7 @@ public class FileUpload implements IClusterable
 
 	private final FileItem item;
 
-	private List/* <InputStream> */inputStreams;
+	private transient List/* <InputStream> */inputStreamsToClose;
 
 	/**
 	 * Constructor
@@ -63,9 +63,9 @@ public class FileUpload implements IClusterable
 	 */
 	public final void closeStreams()
 	{
-		if (inputStreams != null)
+		if (inputStreamsToClose != null)
 		{
-			for (Iterator inputStreamsIterator = inputStreams.iterator(); inputStreamsIterator
+			for (Iterator inputStreamsIterator = inputStreamsToClose.iterator(); inputStreamsIterator
 					.hasNext();)
 			{
 				InputStream inputStream = (InputStream)inputStreamsIterator.next();
@@ -81,7 +81,7 @@ public class FileUpload implements IClusterable
 			}
 
 			// Reset the list
-			inputStreams = null;
+			inputStreamsToClose = null;
 		}
 	}
 
@@ -134,13 +134,13 @@ public class FileUpload implements IClusterable
 	 */
 	public InputStream getInputStream() throws IOException
 	{
-		if (inputStreams == null)
+		if (inputStreamsToClose == null)
 		{
-			inputStreams = new ArrayList/* <InputStream> */();
+			inputStreamsToClose = new ArrayList/* <InputStream> */();
 		}
 
 		InputStream is = item.getInputStream();
-		inputStreams.add(is);
+		inputStreamsToClose.add(is);
 
 		return is;
 	}
