@@ -371,7 +371,12 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			s.defaultReadObject();
 			// this is an hack.. when object is read in. It must ignore the
 			// first version bump.
-			versionStarted = true;
+			
+			// (matej_k) for now, I'm commenting it out. It causes serious trouble with back
+			// button, where new versions are not created as they should be
+			// johan promised to look at it soon
+			
+			//versionStarted = true;
 		}
 
 	}
