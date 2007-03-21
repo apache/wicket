@@ -54,7 +54,7 @@ public class FileUploadTest extends WicketTestCase
 		fileItem.getOutputStream();
 		
 		// Get the internal list out
-		Field inputStreamsField = FileUpload.class.getDeclaredField("inputStreams");
+		Field inputStreamsField = FileUpload.class.getDeclaredField("inputStreamsToClose");
 		inputStreamsField.setAccessible(true);
 		
 		FileUpload fileUpload = new FileUpload(fileItem);
