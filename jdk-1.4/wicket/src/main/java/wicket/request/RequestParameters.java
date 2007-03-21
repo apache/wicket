@@ -90,6 +90,16 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
+	 * Gets the component registration id of any behavior.
+	 * 
+	 * @return behaviorId the id
+	 */
+	public String getBehaviorId()
+	{
+		return behaviorId;
+	}
+
+	/**
 	 * Gets any bookmarkable page class.
 	 * 
 	 * @return any bookmarkable page class
@@ -97,17 +107,6 @@ public class RequestParameters implements IClusterable
 	public String getBookmarkablePageClass()
 	{
 		return bookmarkablePageClass;
-	}
-
-	/**
-	 * Sets any bookmarkable page class.
-	 * 
-	 * @param bookmarkablePageClass
-	 *            any bookmarkable page class
-	 */
-	public void setBookmarkablePageClass(String bookmarkablePageClass)
-	{
-		this.bookmarkablePageClass = bookmarkablePageClass;
 	}
 
 	/**
@@ -121,17 +120,6 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
-	 * Sets any id of a non-page target component.
-	 * 
-	 * @param componentId
-	 *            any id of a non-page target component
-	 */
-	public void setComponentId(String componentId)
-	{
-		this.componentId = componentId;
-	}
-
-	/**
 	 * Gets the full path to a component (might be just the page)..
 	 * 
 	 * @return the full path to a component (might be just the page).
@@ -139,17 +127,6 @@ public class RequestParameters implements IClusterable
 	public String getComponentPath()
 	{
 		return componentPath;
-	}
-
-	/**
-	 * Sets the full path to a component (might be just the page)..
-	 * 
-	 * @param componentPath
-	 *            the full path to a component (might be just the page).
-	 */
-	public void setComponentPath(String componentPath)
-	{
-		this.componentPath = componentPath;
 	}
 
 	/**
@@ -171,17 +148,6 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
-	 * Sets any callable interface name (e.g. {@link ILinkListener}).
-	 * 
-	 * @param interfaceName
-	 *            any callable interface name (e.g. {@link ILinkListener})
-	 */
-	public void setInterfaceName(String interfaceName)
-	{
-		this.interfaceName = interfaceName;
-	}
-
-	/**
 	 * Gets any name of the page map.
 	 * 
 	 * @return any name of the page map
@@ -189,17 +155,6 @@ public class RequestParameters implements IClusterable
 	public String getPageMapName()
 	{
 		return pageMapName;
-	}
-
-	/**
-	 * Sets any name of the page map.
-	 * 
-	 * @param pageMapName
-	 *            any name of the page map
-	 */
-	public void setPageMapName(String pageMapName)
-	{
-		this.pageMapName = pageMapName;
 	}
 
 	/**
@@ -213,14 +168,13 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
-	 * Sets free-to-use map of non-reserved parameters.
+	 * Gets path info.
 	 * 
-	 * @param parameters
-	 *            free-to-use map of non-reserved parameters
+	 * @return path info
 	 */
-	public void setParameters(Map parameters)
+	public String getPath()
 	{
-		this.parameters = parameters;
+		return path;
 	}
 
 	/**
@@ -234,17 +188,6 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
-	 * Sets any resource key.
-	 * 
-	 * @param resourceKey
-	 *            any resource key
-	 */
-	public void setResourceKey(String resourceKey)
-	{
-		this.resourceKey = resourceKey;
-	}
-
-	/**
 	 * Gets any version information string.
 	 * 
 	 * @return any version information string
@@ -253,60 +196,6 @@ public class RequestParameters implements IClusterable
 	{
 		return versionNumber;
 	}
-
-	/**
-	 * Sets any version information string.
-	 * 
-	 * @param versionNumber
-	 *            any version information string
-	 */
-	public void setVersionNumber(int versionNumber)
-	{
-		this.versionNumber = versionNumber;
-	}
-
-	/**
-	 * Gets path info.
-	 * 
-	 * @return path info
-	 */
-	public String getPath()
-	{
-		return path;
-	}
-
-	/**
-	 * Sets path info.
-	 * 
-	 * @param pathInfo
-	 *            path info
-	 */
-	public void setPath(String pathInfo)
-	{
-		this.path = pathInfo;
-	}
-
-	/**
-	 * Gets the component registration id of any behavior.
-	 * 
-	 * @return behaviorId the id
-	 */
-	public String getBehaviorId()
-	{
-		return behaviorId;
-	}
-
-	/**
-	 * Sets the component registration id of any behavior.
-	 * 
-	 * @param behaviorId
-	 *            the id
-	 */
-	public void setBehaviorId(String behaviorId)
-	{
-		this.behaviorId = behaviorId;
-	}
-
 
 	/**
 	 * Tells wicket whether this request should only be processed if the page +
@@ -322,6 +211,61 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
+	 * Sets the component registration id of any behavior.
+	 * 
+	 * @param behaviorId
+	 *            the id
+	 */
+	public void setBehaviorId(String behaviorId)
+	{
+		this.behaviorId = behaviorId;
+	}
+
+	/**
+	 * Sets any bookmarkable page class.
+	 * 
+	 * @param bookmarkablePageClass
+	 *            any bookmarkable page class
+	 */
+	public void setBookmarkablePageClass(String bookmarkablePageClass)
+	{
+		this.bookmarkablePageClass = bookmarkablePageClass;
+	}
+
+	/**
+	 * Sets any id of a non-page target component.
+	 * 
+	 * @param componentId
+	 *            any id of a non-page target component
+	 */
+	public void setComponentId(String componentId)
+	{
+		this.componentId = componentId;
+	}
+
+	/**
+	 * Sets the full path to a component (might be just the page)..
+	 * 
+	 * @param componentPath
+	 *            the full path to a component (might be just the page).
+	 */
+	public void setComponentPath(String componentPath)
+	{
+		this.componentPath = componentPath;
+	}
+
+	/**
+	 * Sets any callable interface name (e.g. {@link ILinkListener}).
+	 * 
+	 * @param interfaceName
+	 *            any callable interface name (e.g. {@link ILinkListener})
+	 */
+	public void setInterfaceName(String interfaceName)
+	{
+		this.interfaceName = interfaceName;
+	}
+
+	/**
 	 * Sets the only-process-if-path-active flag
 	 * 
 	 * @param onlyProcessIfPathActive
@@ -331,6 +275,62 @@ public class RequestParameters implements IClusterable
 	public void setOnlyProcessIfPathActive(boolean onlyProcessIfPathActive)
 	{
 		this.onlyProcessIfPathActive = onlyProcessIfPathActive;
+	}
+
+	/**
+	 * Sets any name of the page map.
+	 * 
+	 * @param pageMapName
+	 *            any name of the page map
+	 */
+	public void setPageMapName(String pageMapName)
+	{
+		this.pageMapName = pageMapName;
+	}
+
+	/**
+	 * Sets free-to-use map of non-reserved parameters.
+	 * 
+	 * @param parameters
+	 *            free-to-use map of non-reserved parameters
+	 */
+	public void setParameters(Map parameters)
+	{
+		this.parameters = parameters;
+	}
+
+	/**
+	 * Sets path info.
+	 * 
+	 * @param pathInfo
+	 *            path info
+	 */
+	public void setPath(String pathInfo)
+	{
+		this.path = pathInfo;
+	}
+
+
+	/**
+	 * Sets any resource key.
+	 * 
+	 * @param resourceKey
+	 *            any resource key
+	 */
+	public void setResourceKey(String resourceKey)
+	{
+		this.resourceKey = resourceKey;
+	}
+
+	/**
+	 * Sets any version information string.
+	 * 
+	 * @param versionNumber
+	 *            any version information string
+	 */
+	public void setVersionNumber(int versionNumber)
+	{
+		this.versionNumber = versionNumber;
 	}
 
 	/**
@@ -358,7 +358,33 @@ public class RequestParameters implements IClusterable
 			for (Iterator i = getParameters().entrySet().iterator(); i.hasNext();)
 			{
 				Entry entry = (Entry)i.next();
-				b.append(entry.getKey()).append("=").append(entry.getValue());
+				Object value = entry.getValue();
+				b.append(entry.getKey()).append("=");
+				if (value != null && value instanceof Object[])
+				{
+					Object[] values = (Object[])value;
+					if (values.length > 1)
+					{
+						b.append("{");
+						for (int j = 0; j < values.length; j++)
+						{
+							b.append(values[j]);
+							if (j < values.length)
+							{
+								b.append(",");
+							}
+						}
+						b.append("}");
+					}
+					else
+					{
+						b.append((values.length == 1) ? values[0] : "");
+					}
+				}
+				else
+				{
+					b.append(value);
+				}
 				if (i.hasNext())
 				{
 					b.append(",");
