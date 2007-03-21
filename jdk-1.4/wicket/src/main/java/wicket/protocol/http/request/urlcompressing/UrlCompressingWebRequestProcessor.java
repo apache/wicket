@@ -87,6 +87,8 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 			}
 		}
 
+		requestParameters.setInterfaceName(interfaceName);
+		
 		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
