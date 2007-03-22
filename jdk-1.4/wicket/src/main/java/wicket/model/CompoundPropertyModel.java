@@ -17,17 +17,16 @@
 package wicket.model;
 
 import wicket.Component;
-import wicket.markup.html.form.FormComponent;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A simple compound model which uses the component's name as the property
  * expression to retrieve properties on the nested model object.
- * 
+ *
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.AbstractDetachableModel
- * 
+ *
  * @author Jonathan Locke
  */
 public class CompoundPropertyModel implements IInheritableModel
@@ -35,10 +34,10 @@ public class CompoundPropertyModel implements IInheritableModel
 	private static final long serialVersionUID = 1L;
 
 	private Object target;
-	
+
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
@@ -80,7 +79,7 @@ public class CompoundPropertyModel implements IInheritableModel
 	/**
 	 * Returns the property expression that should be used against the target
 	 * object
-	 * 
+	 *
 	 * @param component
 	 * @return property expression that should be used against the target object
 	 */
@@ -88,7 +87,7 @@ public class CompoundPropertyModel implements IInheritableModel
 	{
 		return component.getId();
 	}
-	
+
 	/**
 	 * @see wicket.model.IInheritableModel#wrapOnInheritance(wicket.Component)
 	 */
@@ -100,7 +99,7 @@ public class CompoundPropertyModel implements IInheritableModel
 	/**
 	 * Component aware variation of the {@link CompoundPropertyModel} that
 	 * components that inherit the model get
-	 * 
+	 *
 	 * @author ivaynberg
 	 */
 	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
@@ -114,7 +113,7 @@ public class CompoundPropertyModel implements IInheritableModel
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
@@ -139,7 +138,7 @@ public class CompoundPropertyModel implements IInheritableModel
 		{
 			return CompoundPropertyModel.this;
 		}
-		
+
 		/**
 		 * @see wicket.model.IInheritableModel#wrapOnInheritance(wicket.Component)
 		 */
@@ -168,7 +167,7 @@ public class CompoundPropertyModel implements IInheritableModel
 		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
 	}
-	
+
 	// TODO These methods are for helping people upgrade. Remove after deprecation release.
 	/** @deprecated replace by {@link IModel#getObject()}. */
 	public final Object getObject(Component component) { throw new UnsupportedOperationException(); }

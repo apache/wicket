@@ -22,11 +22,11 @@ import java.util.Locale;
 public class SqlDateConverter extends DateConverter {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public Object convertToObject(String value, Locale locale) {
 		return new java.sql.Date(((Date)super.convertToObject(value, locale)).getTime());
 	}
-	
+
 	protected Class getTargetType() {
 		return java.sql.Date.class;
 	}

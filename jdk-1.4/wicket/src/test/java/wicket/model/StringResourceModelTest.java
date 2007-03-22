@@ -22,7 +22,6 @@ import java.util.Calendar;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.Component;
 import wicket.RequestCycle;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
@@ -69,7 +68,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public void testGetSimpleResource()
@@ -81,7 +80,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public void testNullResourceKey()
@@ -98,7 +97,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public void testGetSimpleResourceWithKeySubstitution()
@@ -113,7 +112,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public void testGetPropertySubstitutedResource()
@@ -127,7 +126,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public void testSubstitutionParametersResource()
@@ -152,7 +151,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public void testUninitialisedLocalizer()
@@ -170,7 +169,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testSetObject()
 	{

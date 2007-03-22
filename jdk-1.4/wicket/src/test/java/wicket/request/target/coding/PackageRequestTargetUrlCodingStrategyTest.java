@@ -16,11 +16,8 @@
  */
 package wicket.request.target.coding;
 
-import javax.servlet.http.HttpServletResponse;
-
 import junit.framework.TestCase;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.lang.PackageName;
 import wicket.util.tester.WicketTester;
 
@@ -33,30 +30,36 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 		tester.getApplication().mount("/mount/point", PackageName.forClass(TestPage.class));
 		tester.setupRequestAndResponse();
 	}
+
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
+
 	public void test1() {
 		tester.getServletRequest().setPath("/mount/XXXpoint");
 		assertNull(getRequestCodingStrategy());
 	}
+
 	public void test2() {
 		tester.getServletRequest().setPath("/mount/pointXXX");
 		assertNull(getRequestCodingStrategy());
 	}
+
 	public void test3() {
 		tester.getServletRequest().setPath("/mount/point");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
 		assertNotNull(ucs);
 		assertNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
 	}
+
 	public void test4() {
 		tester.getServletRequest().setPath("/mount/point/TestPage");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
 		assertNotNull(ucs);
 		assertNotNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
 	}
+
 	public void test5() {
 		tester.getServletRequest().setPath("/mount/point/nonexistent.TestPage");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
@@ -68,6 +71,7 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 			assertEquals("Unable to load class with name: wicket.request.target.coding.nonexistent.TestPage", e.getMessage());
 		}
 	}
+
 	IRequestTargetUrlCodingStrategy getRequestCodingStrategy() {
 		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(tester.getServletRequest());
 		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath);

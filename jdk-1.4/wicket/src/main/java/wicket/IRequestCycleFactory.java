@@ -16,18 +16,17 @@
  */
 package wicket;
 
-import java.io.Serializable;
 
 /**
  * Factory for creating request cycles for a session.
- * 
+ *
  * @author Jonathan Locke
  */
 public interface IRequestCycleFactory extends IClusterable
 {
 	/**
 	 * Creates a new RequestCycle object.
-	 * 
+	 *
 	 * @param session
 	 *            The session
 	 * @param request

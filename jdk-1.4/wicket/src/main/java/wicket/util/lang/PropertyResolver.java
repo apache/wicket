@@ -30,7 +30,6 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -54,7 +53,7 @@ import wicket.util.string.Strings;
  * <p>
  * Index or map properties can also be written as: "property[index]" or
  * "property[key]" <p/>
- * 
+ *
  * @author jcompagner
  */
 public final class PropertyResolver
@@ -68,7 +67,7 @@ public final class PropertyResolver
 	 * Looksup the value from the object with the given expression. If the
 	 * expresion, the object itself or one property evalutes to null then a null
 	 * will be returned.
-	 * 
+	 *
 	 * @param expression
 	 *            The expression string with the property to be lookup.
 	 * @param object
@@ -97,10 +96,10 @@ public final class PropertyResolver
 	 * can't be evaluated then a WicketRuntimeException will be thrown. If a
 	 * null object is encounted then it will try to generate it by calling the
 	 * default constructor and set it on the object.
-	 * 
+	 *
 	 * The value will be tried to convert to the right type with the given
 	 * converter.
-	 * 
+	 *
 	 * @param expression
 	 *            The expression string with the property to be set.
 	 * @param object
@@ -295,7 +294,7 @@ public final class PropertyResolver
 								String propertyIndex = exp.substring(index + 1);
 								try
 								{
-	
+
 									int parsedIndex = Integer.parseInt(propertyIndex);
 									// if so then it could be a
 									// getPropertyIndex(int)
@@ -304,7 +303,7 @@ public final class PropertyResolver
 											+ propertyName.substring(1);
 									method = clz.getMethod("get" + name, new Class[] { int.class });
 									getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
-	
+
 								}
 								catch (Exception e)
 								{
@@ -432,7 +431,7 @@ public final class PropertyResolver
 
 	/**
 	 * @author jcompagner
-	 * 
+	 *
 	 */
 	private final static class ObjectAndGetSetter
 	{
@@ -475,7 +474,7 @@ public final class PropertyResolver
 		/**
 		 * @param object
 		 *            The object where the value must be taken from.
-		 * 
+		 *
 		 * @return The value of this property
 		 */
 		public Object getValue(final Object object);
@@ -483,7 +482,7 @@ public final class PropertyResolver
 		/**
 		 * @param object
 		 *            The object where the new value must be set on.
-		 * 
+		 *
 		 * @return The new value for the property that is set back on that
 		 *         object.
 		 */
@@ -942,7 +941,7 @@ public final class PropertyResolver
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param field
 		 */
 		public FieldGetAndSetter(Field field)

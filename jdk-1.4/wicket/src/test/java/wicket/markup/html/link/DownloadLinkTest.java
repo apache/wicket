@@ -20,12 +20,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketTestCase;
-import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockServletContext;
 
 /**
  * Tests DownloadLink
- * 
+ *
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class DownloadLinkTest extends WicketTestCase

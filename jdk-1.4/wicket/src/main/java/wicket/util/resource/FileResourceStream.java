@@ -21,14 +21,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import wicket.protocol.http.WebResponse;
-import wicket.request.target.resource.ResourceStreamRequestTarget;
 import wicket.util.file.File;
 import wicket.util.time.Time;
 
 /**
  * A FileResourceStream is an IResource implementation for files.
- * 
+ *
  * @see wicket.util.resource.IResourceStream
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
@@ -45,7 +43,7 @@ public class FileResourceStream extends AbstractResourceStream
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param file
 	 *            File containing resource
 	 */
@@ -56,7 +54,7 @@ public class FileResourceStream extends AbstractResourceStream
 
 	/**
 	 * Closes this resource.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void close() throws IOException
@@ -89,7 +87,7 @@ public class FileResourceStream extends AbstractResourceStream
 	 * @return A readable input stream for this resource. The same input stream
 	 *         is returned until <tt>FileResourceStream.close()</tt> is
 	 *         invoked.
-	 * 
+	 *
 	 * @throws ResourceStreamNotFoundException
 	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException

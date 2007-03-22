@@ -17,7 +17,6 @@
 package wicket.markup.html.basic;
 
 import junit.framework.TestCase;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.diff.DiffUtil;
 import wicket.util.tester.WicketTester;
 

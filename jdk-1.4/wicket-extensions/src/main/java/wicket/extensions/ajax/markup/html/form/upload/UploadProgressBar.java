@@ -18,7 +18,6 @@ package wicket.extensions.ajax.markup.html.form.upload;
 
 import wicket.Application;
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.IInitializer;
 import wicket.ResourceReference;
 import wicket.behavior.HeaderContributor;
@@ -29,7 +28,7 @@ import wicket.model.Model;
 
 /**
  * ProgressbarPanel
- * 
+ *
  * @author Andrew Lombardi
  */
 public class UploadProgressBar extends Panel
@@ -75,7 +74,7 @@ public class UploadProgressBar extends Panel
 		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
-		
+
 		add(HeaderContributor.forJavaScript(JS_PROGRESSBAR));
 
 		final WebMarkupContainer barDiv = new WebMarkupContainer("bar");
@@ -90,7 +89,7 @@ public class UploadProgressBar extends Panel
 		{
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 

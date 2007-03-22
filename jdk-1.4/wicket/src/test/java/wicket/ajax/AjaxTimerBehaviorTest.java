@@ -31,7 +31,6 @@ import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.util.string.Strings;
 import wicket.util.tester.ITestPageSource;
 import wicket.util.time.Duration;
 
@@ -39,7 +38,7 @@ import wicket.util.time.Duration;
  * Tests that an AbstractAjaxTimerBehavior injects itself into the markup once
  * and only once. Also tests the callback URL to make sure the timer reinjects
  * itself
- * 
+ *
  * @author Jim McLaughlin
  */
 public class AjaxTimerBehaviorTest extends WicketTestCase
@@ -48,7 +47,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param name
 	 */
 	public AjaxTimerBehaviorTest(String name)
@@ -132,9 +131,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	/**
 	 * Validates the reponse, then makes sure the timer injects itself again
 	 * when called.
-	 * 
+	 *
 	 * @param timer
-	 * @param inBodyOnLoad 
+	 * @param inBodyOnLoad
 	 */
 	private void validate(MyAjaxSelfUpdatingTimerBehavior timer, boolean inBodyOnLoad)
 	{
@@ -143,11 +142,11 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		String updateScript = timer.getUpdateScript();
 		String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function() { " + updateScript + ";});";
 
-		if (inBodyOnLoad) 
+		if (inBodyOnLoad)
 		{
 			validateTimerScript(document, bodyOnLoadUpdateScript);
 		}
-		else 
+		else
 		{
 			validateTimerScript(document, updateScript);
 		}
@@ -167,7 +166,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 	/**
 	 * Checks that the timer javascript is in the document once and only once
-	 * 
+	 *
 	 * @param document
 	 *            the response from the Application
 	 * @param updateScript
@@ -215,7 +214,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	{
 
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 1L;
 		private Duration duration;
