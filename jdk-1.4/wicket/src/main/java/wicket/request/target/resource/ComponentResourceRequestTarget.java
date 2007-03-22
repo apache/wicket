@@ -95,7 +95,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
-		page.internalDetach();
+		page.detach();
 	}
 
 	/**

@@ -294,8 +294,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
 	/** Blank image. */
-	private static final ResourceReference BLANK = new ResourceReference(Tree.class,
-			"blank.gif");
+	private static final ResourceReference BLANK = new ResourceReference(Tree.class, "blank.gif");
 
 	/**
 	 * Reference to the css file.
@@ -304,12 +303,10 @@ public class Tree extends AbstractTree implements TreeModelListener
 			"tree.css");
 
 	/** Minus sign image. */
-	private static final ResourceReference MINUS = new ResourceReference(Tree.class,
-			"minus.gif");
+	private static final ResourceReference MINUS = new ResourceReference(Tree.class, "minus.gif");
 
 	/** Plus sign image. */
-	private static final ResourceReference PLUS = new ResourceReference(Tree.class,
-			"plus.gif");
+	private static final ResourceReference PLUS = new ResourceReference(Tree.class, "plus.gif");
 
 	private static final long serialVersionUID = 1L;
 
@@ -686,10 +683,11 @@ public class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * @see wicket.Component#internalOnAttach()
+	 * @see wicket.Component#onAttach()
 	 */
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
 		// if we don't optimize, rebuild the paths on every request
 		if (!getOptimizeItemRemoval())
 		{

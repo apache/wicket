@@ -189,8 +189,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
-	private transient boolean attached = false;
-
 	/**
 	 * Constructor.
 	 */
@@ -284,27 +282,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 	}
 
-	/**
-	 * @see wicket.MarkupContainer#internalDetach()
-	 */
-	public void internalDetach()
-	{
-		super.internalDetach();
-		endVersion();
-		attached = false;
-	}
-
-	/**
-	 * @see wicket.MarkupContainer#internalAttach()
-	 */
-	public void internalAttach()
-	{
-		if (!attached)
-		{
-			super.internalAttach();
-			attached = true;
-		}
-	}
 
 	/**
 	 * Detaches any attached models referenced by this page.
@@ -372,7 +349,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			public Object component(Component component)
 			{
 				((IFeedback)component).updateFeedback();
-				component.internalAttach();
+				component.attach();
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
@@ -383,7 +360,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		// Now, do the initialization for the other components
-		internalAttach();
+		attach();
 
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
@@ -941,12 +918,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * @see wicket.Component#internalOnDetach()
+	 * @see wicket.Component#onDetach()
 	 */
-	protected final void internalOnDetach()
+	protected void onDetach()
 	{
 		if (log.isDebugEnabled())
 		{
@@ -954,6 +928,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		detachModels();
+		
+		endVersion();
+		
+		super.onDetach();
 	}
 
 	/**

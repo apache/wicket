@@ -327,10 +327,11 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
-	 * @see wicket.Component#internalOnAttach()
+	 * @see wicket.Component#onAttach()
 	 */
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
 		// if tempModel - set on construction - is not-null, the label and
 		// editor components have not yet been set.
 		if (tempModel != null)

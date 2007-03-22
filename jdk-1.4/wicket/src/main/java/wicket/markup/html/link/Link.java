@@ -448,10 +448,12 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * @see wicket.Component#internalOnAttach()
+	 * @see wicket.Component#onAttach()
 	 */
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
+
 		// Set default for before/after link text
 		if (beforeDisabledLink == null)
 		{
@@ -534,7 +536,8 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 					tag.put("onclick", popupSettings.getPopupJavaScript());
 				}
 			}
-			else if (tag.getName().equalsIgnoreCase("script") || tag.getName().equalsIgnoreCase("style"))
+			else if (tag.getName().equalsIgnoreCase("script")
+					|| tag.getName().equalsIgnoreCase("style"))
 			{
 				tag.put("src", Strings.replaceAll(url, "&", "&amp;"));
 			}

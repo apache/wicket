@@ -574,7 +574,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			while (it.hasNext())
 			{
 				final Component component = (Component)((Entry)it.next()).getValue();
-				component.internalAttach();
+				component.attach();
 			}
 
 			// process component markup
@@ -596,7 +596,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			if (it.hasNext())
 			{
 				final Component component = (Component)((Entry)it.next()).getValue();
-				component.getPage().internalDetach();
+				component.getPage().detach();
 			}
 		}
 	}

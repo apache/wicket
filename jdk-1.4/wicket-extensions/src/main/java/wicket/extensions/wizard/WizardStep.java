@@ -460,6 +460,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	protected void onAttach()
 	{
+		super.onAttach();
 		if (onAttachAction != null)
 		{
 			onAttachAction.execute();

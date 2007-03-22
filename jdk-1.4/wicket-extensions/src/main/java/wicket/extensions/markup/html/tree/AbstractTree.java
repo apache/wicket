@@ -223,12 +223,13 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		{
 			setFlag(FLAG_RENDER_CHILDREN, value);
 		}
-		
+
 		protected void onDetach()
 		{
 			super.onDetach();
 			Object object = getModelObject();
-			if(object instanceof IDetachable) {
+			if (object instanceof IDetachable)
+			{
 				((IDetachable)object).detach();
 			}
 		}
@@ -454,22 +455,23 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * This method is called before the onAttach is called. Code here gets
-	 * executed before the items have been populated. 
+	 * executed before the items have been populated.
 	 */
-	protected void onBeforeAttach() 
-	{	
+	protected void onBeforeAttach()
+	{
 	}
-	
+
 	/**
 	 * Called at the beginning of the request (not ajax request, unless we are
 	 * rendering the entire component)
 	 */
-	public void internalAttach()
+	public void onAttach()
 	{
+		super.onAttach();
 		if (attached == false)
 		{
 			onBeforeAttach();
-			
+
 			checkModel();
 
 			// Do we have to rebuld the whole tree?
@@ -507,16 +509,15 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			attached = true;
 		}
 
-		super.internalAttach();
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#internalDetach()
+	 * @see wicket.MarkupContainer#onDetach()
 	 */
-	public void internalDetach()
+	public void onDetach()
 	{
-		super.internalDetach();
 		attached = false;
+		super.onDetach();
 	}
 
 	/**
@@ -632,14 +633,14 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				}
 		}
 	};
-	
+
 	/**
-	 * Marks the last but one visible child node of the given item as dirty,
-	 * if give child is the last item of parent.
+	 * Marks the last but one visible child node of the given item as dirty, if
+	 * give child is the last item of parent.
 	 * 
-	 * We need this to refresh the previous visible item in case the 
-	 * inserted / deleteditem was last. The reason is that  the line 
-	 * shape of previous item chages from L to |- .
+	 * We need this to refresh the previous visible item in case the inserted /
+	 * deleteditem was last. The reason is that the line shape of previous item
+	 * chages from L to |- .
 	 * 
 	 * @param parent
 	 * @param child
@@ -654,13 +655,14 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			{
 				TreeItem item = (TreeItem)parent.getChildren().get(i);
 
-				// invalidate the node and it's children, so that they are redrawn
+				// invalidate the node and it's children, so that they are
+				// redrawn
 				invalidateNodeWithChildren((TreeNode)item.getModelObject());
-					
+
 			}
 		}
 	}
-	
+
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesInserted(javax.swing.event.TreeModelEvent)
 	 */
@@ -668,7 +670,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		// get the parent node of inserted nodes
 		TreeNode parent = (TreeNode)e.getTreePath().getLastPathComponent();
-		
+
 		if (isNodeVisible(parent) && isNodeExpanded(parent))
 		{
 			TreeItem parentItem = (TreeItem)nodeToItemMap.get(parent);
@@ -679,8 +681,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				TreeItem item = newTreeItem(node, parentItem.getLevel() + 1);
 				itemContainer.add(item);
 				parentItem.getChildren().add(index, item);
-				
-				markTheLastButOneChildDirty(parentItem, item);				
+
+				markTheLastButOneChildDirty(parentItem, item);
 
 				dirtyItems.add(item);
 				dirtyItemsCreateDOM.add(item);
@@ -708,7 +710,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				if (item != null)
 				{
 					markTheLastButOneChildDirty(parentItem, item);
-					
+
 					parentItem.getChildren().remove(item);
 
 					// go though item children and remove every one of them
@@ -721,7 +723,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 							// unselect the node
 							getTreeState().selectNode((TreeNode)item.getModelObject(), false);
 						}
-					});										
+					});
 
 					removeItem(item);
 				}
@@ -784,10 +786,14 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				target.prependJavascript(js);
 			}
 
-			// We have to repeat this as long as there are any dirty items to be created.
-			// The reason why we can't do this in one pass is that some of the items
-			// may need to be inserted after items that has not been inserted yet, so we have
-			// to detect those and wait until the items they depend on are inserted.
+			// We have to repeat this as long as there are any dirty items to be
+			// created.
+			// The reason why we can't do this in one pass is that some of the
+			// items
+			// may need to be inserted after items that has not been inserted
+			// yet, so we have
+			// to detect those and wait until the items they depend on are
+			// inserted.
 			while (dirtyItemsCreateDOM.isEmpty() == false)
 			{
 				for (Iterator i = dirtyItemsCreateDOM.iterator(); i.hasNext();)
@@ -797,7 +803,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					int index = parent.getChildren().indexOf(item);
 					TreeItem previous;
 					// we need item before this (in dom structure)
-					
+
 					if (index == 0)
 					{
 						previous = parent;
@@ -815,17 +821,20 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					// check if the previous item isn't waiting to be inserted
 					if (dirtyItemsCreateDOM.contains(previous) == false)
 					{
-						// it's already in dom, so we can use it as point of insertion
-						target.prependJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId()
-								+ "\"," + "\"" + previous.getMarkupId() + "\")");
-						
+						// it's already in dom, so we can use it as point of
+						// insertion
+						target.prependJavascript("Wicket.Tree.createElement(\""
+								+ item.getMarkupId() + "\"," + "\"" + previous.getMarkupId()
+								+ "\")");
+
 						// remove the item so we don't process it again
 						i.remove();
 					}
 					else
 					{
-						// we don't do anything here, inserting this item will have to wait 
-						// until the previous item gets inserted 
+						// we don't do anything here, inserting this item will
+						// have to wait
+						// until the previous item gets inserted
 					}
 				}
 			}
@@ -1056,8 +1065,9 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		return item.getMarkupId().substring(skip);
 	}
 
-	private final static ResourceReference JAVASCRIPT = new JavascriptResourceReference(AbstractTree.class, "res/tree.js");
-	
+	private final static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
+			AbstractTree.class, "res/tree.js");
+
 	/**
 	 * Initialize the component.
 	 */
@@ -1093,32 +1103,32 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			if (item != null)
 			{
 				boolean createDOM = false;
-				
+
 				if (forceRebuild)
 				{
 					// recreate the item
 					int level = item.getLevel();
 					List children = item.getChildren();
 					String id = item.getId();
-	
+
 					// store the parent of old item
 					TreeItem parent = item.getParentItem();
-	
+
 					// if the old item has a parent, store it's index
 					int index = parent != null ? parent.getChildren().indexOf(item) : -1;
-					
+
 					createDOM = dirtyItemsCreateDOM.contains(item);
-					
+
 					dirtyItems.remove(item);
 					dirtyItemsCreateDOM.remove(item);
-					
+
 					item.remove();
-	
+
 					item = newTreeItem(node, level, id);
 					itemContainer.add(item);
-	
+
 					item.setChildren(children);
-	
+
 					// was the item an root item?
 					if (parent == null)
 					{
@@ -1129,7 +1139,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 						parent.getChildren().set(index, item);
 					}
 				}
-				
+
 				dirtyItems.add(item);
 				if (createDOM)
 					dirtyItemsCreateDOM.add(item);
@@ -1267,13 +1277,14 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		// if the item was about to be created
 		if (dirtyItemsCreateDOM.contains(item))
-		{		
+		{
 			// we needed to create DOM element, we no longer do
 			dirtyItemsCreateDOM.remove(item);
 		}
 		else
 		{
-			// add items id (it's short version) to ids of DOM elements that will be
+			// add items id (it's short version) to ids of DOM elements that
+			// will be
 			// removed
 			deleteIds.append(getShortItemId(item));
 			deleteIds.append(",");
@@ -1342,6 +1353,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	public Component getNodeComponent(TreeNode node)
 	{
-		return (Component) nodeToItemMap.get(node);
+		return (Component)nodeToItemMap.get(node);
 	}
 }

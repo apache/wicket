@@ -94,14 +94,14 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 				}
 
 				// attach
-				component.internalAttach();
+				component.attach();
 
 				// Render the component
 				component.renderComponent();
 			}
 			finally
 			{
-				component.getPage().internalDetach();
+				component.getPage().detach();
 			}
 		}
 

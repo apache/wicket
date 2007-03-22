@@ -452,6 +452,11 @@ public abstract class Component implements IClusterable
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
+	private static final int FLAG_ATTACHED = 0x20000000;
+	private static final int FLAG_ATTACHING = 0x40000000;
+	private static final int FLAG_DETACHING = 0x80000000;
+
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -482,8 +487,7 @@ public abstract class Component implements IClusterable
 	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/** Flag for Component holding root compound model */
-//	private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
-
+	// private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
 	/** Ignore attribute modifiers */
 	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
@@ -2546,34 +2550,10 @@ public abstract class Component implements IClusterable
 	 * OVERRIDE.
 	 * 
 	 * Called when a request begins.
-	 */
-	public void internalAttach()
-	{
-		onBeginRequest();
-		onAttach();
-		internalOnAttach();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
 	 * 
-	 * Called when a request ends.
+	 * @Deprecated use {@link #onAttach()} instead
 	 */
-	public void internalDetach()
-	{
-		internalOnDetach();
-		onDetach();
-		onEndRequest();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called when a request begins.
-	 */
-	protected void internalOnAttach()
+	protected final void internalOnAttach()
 	{
 	}
 
@@ -2582,8 +2562,11 @@ public abstract class Component implements IClusterable
 	 * OVERRIDE.
 	 * 
 	 * Called when a request ends.
+	 * 
+	 * @Deprecated use {@link #onAttach()} instead
+	 * 
 	 */
-	protected void internalOnDetach()
+	protected final void internalOnDetach()
 	{
 	}
 
@@ -2671,14 +2654,105 @@ public abstract class Component implements IClusterable
 	{
 	}
 
+
 	/**
-	 * Called to allow a component to attach resources for use. The semantics of
-	 * this will be tightened in Wicket 1.3 when we will add the guarantee that
-	 * onAttach() be called before any framework use of a Component (in the
-	 * implementation of request targets).
+	 * Attaches any child components
+	 * 
+	 * This method is here only for {@link MarkupContainer}. It is broken out
+	 * of {@link #onAttach()} so we can guarantee that it executes as the last
+	 * in onAttach() chain no matter where user places the
+	 * <code>super.onAttach()</code> call
+	 */
+	void attachChildren()
+	{
+		// noop
+	}
+
+	/**
+	 * @deprecated
+	 * 
+	 */
+	private void internalAttach()
+	{
+
+	}
+
+	/**
+	 * @deprecated
+	 * 
+	 */
+	private void internalDetach()
+	{
+
+	}
+
+
+	/**
+	 * Attaches the component.
+	 */
+	public final void attach()
+	{
+		if (!getFlag(FLAG_ATTACHED))
+		{
+			setFlag(FLAG_ATTACHING, true);
+			onAttach();
+			if (getFlag(FLAG_ATTACHING))
+			{
+				throw new IllegalStateException(Component.class.getName()
+						+ " has not been properly attached. Something in the hierarchy of "
+						+ getClass().getName()
+						+ " has not called super.onAtach() in the override of onAttach() method");
+			}
+			setFlag(FLAG_ATTACHED, true);
+		}
+
+		attachChildren();
+	}
+
+	/**
+	 * Detaches any child components
+	 * 
+	 * @see {@link #attachChildren()}
+	 */
+	void detachChildren()
+	{
+
+	}
+
+	/**
+	 * Detaches the component.
+	 */
+	public final void detach()
+	{
+		if (getFlag(FLAG_ATTACHED))
+		{
+			setFlag(FLAG_DETACHING, true);
+			onDetach();
+			if (getFlag(FLAG_DETACHING))
+			{
+				throw new IllegalStateException(Component.class.getName()
+						+ " has not been properly detached. Something in the hierarchy of "
+						+ getClass().getName()
+						+ " has not called super.onDetach() in the override of onDetach() method");
+			}
+			setFlag(FLAG_ATTACHED, false);
+		}
+
+		detachChildren();
+	}
+
+
+	/**
+	 * Called to allow a component to attach resources for use.
+	 * 
+	 * Overrides of this method MUST call the super implementation, the most
+	 * logical place to do this is the first line of the override method.
+	 * 
 	 */
 	protected void onAttach()
 	{
+		setFlag(FLAG_ATTACHING, false);
+
 	}
 
 	/**
@@ -2724,13 +2798,17 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * Called to allow a component to detach resources after use. The semantics
-	 * of this will be tightened in Wicket 1.3 when we will add the guarantee
-	 * that onDetach() be called after all framework use of a Component (in the
-	 * implementation of request targets).
+	 * Called to allow a component to detach resources after use.
+	 * 
+	 * Overrides of this method MUST call the super implementation, the most
+	 * logical place to do this is the last line of the override method.
+	 * 
+	 * 
 	 */
 	protected void onDetach()
 	{
+		setFlag(FLAG_DETACHING, false);
+
 	}
 
 	/**

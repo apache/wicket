@@ -29,8 +29,7 @@ import wicket.util.upload.FileItem;
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
  * When a FileInput component is nested in a
  * {@link wicket.markup.html.form.Form}, that has multipart == true, its model
- * is updated with the {@link wicket.util.upload.FileItem}for this
- * component.
+ * is updated with the {@link wicket.util.upload.FileItem}for this component.
  * 
  * @author Eelco Hillenius
  */
@@ -40,7 +39,7 @@ public class FileUploadField extends FormComponent
 
 	/** True if a model has been set explicitly */
 	private boolean hasExplicitModel;
-	
+
 	private transient FileUpload fileUpload;
 
 	/**
@@ -70,7 +69,7 @@ public class FileUploadField extends FormComponent
 	{
 		// Get request
 		final Request request = getRequest();
-		
+
 		// If we successfully installed a multipart request
 		if (request instanceof IMultipartWebRequest)
 		{
@@ -81,16 +80,17 @@ public class FileUploadField extends FormComponent
 			// bytes)
 			if (item != null && item.getSize() > 0)
 			{
-				if (fileUpload == null) {
+				if (fileUpload == null)
+				{
 					fileUpload = new FileUpload(item);
 				}
-				
+
 				return fileUpload;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
@@ -111,17 +111,19 @@ public class FileUploadField extends FormComponent
 			setModelObject(getFileUpload());
 		}
 	}
-	
-	
+
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#getInputAsArray()
 	 */
 	public String[] getInputAsArray()
 	{
 		FileUpload fu = getFileUpload();
-		if(fu != null) return new String[] {fu.getClientFileName()};
+		if (fu != null)
+			return new String[] { fu.getClientFileName() };
 		return null;
 	}
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#isMultiPart()
 	 */
@@ -129,7 +131,7 @@ public class FileUploadField extends FormComponent
 	{
 		return true;
 	}
-	
+
 	/**
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
@@ -156,22 +158,18 @@ public class FileUploadField extends FormComponent
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
 	 * Clean up at the end of the request. This means closing all inputstreams
 	 * which might have been opened from the fileUpload.
 	 * 
-	 * @see wicket.Component#internalOnDetach()
+	 * @see wicket.Component#onDetach()
 	 */
-	protected void internalOnDetach()
+	protected void onDetach()
 	{
-		super.internalOnDetach();
-		
 		if (fileUpload != null)
 		{
 			fileUpload.closeStreams();
 			fileUpload = null;
 		}
+		super.onDetach();
 	}
 }

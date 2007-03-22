@@ -80,7 +80,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
-		page.internalDetach();
+		page.detach();
 	}
 
 	/**

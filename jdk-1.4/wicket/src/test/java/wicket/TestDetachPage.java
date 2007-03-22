@@ -86,7 +86,7 @@ public class TestDetachPage extends WebPage
 			public void internalDetach()
 			{
 				nrComponentInternalDetachCalls++;
-				super.internalDetach();
+				super.detach();
 			}
 
 			protected void onDetach()
@@ -131,7 +131,7 @@ public class TestDetachPage extends WebPage
 	public void internalDetach()
 	{
 		nrPageInternalDetachCalls++;
-		super.internalDetach();
+		super.detach();
 	}
 
 	protected void onDetach()

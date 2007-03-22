@@ -181,11 +181,11 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	}
 
 	/**
-	 * @see wicket.Component#internalOnAttach()
+	 * @see wicket.Component#onAttach()
 	 */
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
-		super.internalOnAttach();
+		super.onAttach();
 
 		// auto toggle form's multipart property
 		Form form = (Form)findParent(Form.class);
@@ -329,9 +329,9 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	}
 
 	/**
-	 * @see wicket.Component#internalOnDetach()
+	 * @see wicket.Component#onDetach()
 	 */
-	protected void internalOnDetach()
+	protected void onDetach()
 	{
 		// cleanup any opened filestreams
 		Collection uploads = (Collection)getConvertedInput();
@@ -355,7 +355,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 			((Collection)modelObject).clear();
 		}
 
-		super.internalOnDetach();
+		super.onDetach();
 	}
 
 	/**

@@ -700,6 +700,7 @@ public class ModalWindow extends Panel
 	 */
 	protected void onAttach()
 	{
+		super.onAttach();
 		getContent().setOutputMarkupId(true);
 		getContent().setVisible(shown);
 	}

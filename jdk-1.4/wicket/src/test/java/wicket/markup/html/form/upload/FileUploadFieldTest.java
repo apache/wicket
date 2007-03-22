@@ -110,7 +110,7 @@ public class FileUploadFieldTest extends WicketTestCase
 			// We should be able to read a byte
 			assertTrue(is.read() != -1);
 			
-			field.internalOnDetach();
+			field.detach();
 			
 			// The input stream should be closed so we shouldn't be able to read any more bytes
 			try 

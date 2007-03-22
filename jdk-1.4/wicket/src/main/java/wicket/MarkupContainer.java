@@ -188,7 +188,7 @@ public abstract class MarkupContainer extends Component
 		}
 		component.setAuto(true);
 		add(component);
-		component.internalAttach();
+		component.attach();
 		component.render();
 		return true;
 	}
@@ -324,19 +324,12 @@ public abstract class MarkupContainer extends Component
 		put(child);
 	}
 
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called when a request begins.
-	 */
-	public void internalAttach()
+
+	void attachChildren()
 	{
-		// Handle begin request for the container itself
+		super.attachChildren();
 		try
 		{
-			super.internalAttach();
-
 			// Loop through child components
 			final int size = children_size();
 			for (int i = 0; i < size; i++)
@@ -348,7 +341,7 @@ public abstract class MarkupContainer extends Component
 				if (!(child instanceof IFeedback))
 				{
 					// Call begin request on the child
-					child.internalAttach();
+					child.attach();
 				}
 			}
 		}
@@ -362,17 +355,9 @@ public abstract class MarkupContainer extends Component
 		}
 	}
 
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called when a request ends.
-	 */
-	public void internalDetach()
-	{
-		// Handle end request for the container itself
-		super.internalDetach();
 
+	void detachChildren()
+	{
 		// Loop through child components
 		final Iterator iter = iterator();
 		while (iter.hasNext())
@@ -381,8 +366,9 @@ public abstract class MarkupContainer extends Component
 			final Component child = (Component)iter.next();
 
 			// Call end request on the child
-			child.internalDetach();
+			child.detach();
 		}
+		super.detachChildren();
 	}
 
 	/**
@@ -853,10 +839,13 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to Wicket 1.3
+	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to
+	 * Wicket 1.3
+	 * 
 	 * @param containerClass
 	 * @return nothing
-	 * @throws always throws an {@link IllegalStateException}
+	 * @throws always
+	 *             throws an {@link IllegalStateException}
 	 */
 	// TODO remove after release 1.3.0
 	public final IResourceStream newMarkupResourceStream(Class containerClass)

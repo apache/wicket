@@ -106,10 +106,12 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.Component#internalOnAttach()
+	 * @see wicket.Component#onAttach()
 	 */
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
+		
 		// Remove any previous loop contents
 		removeAll();
 

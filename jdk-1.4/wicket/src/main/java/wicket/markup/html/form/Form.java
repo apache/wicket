@@ -400,12 +400,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * @see wicket.Component#internalOnDetach()
+	 * @see wicket.Component#onDetach()
 	 */
-	protected void internalOnDetach()
+	protected void onDetach()
 	{
 		super.internalOnDetach();
 		setFlag(FLAG_SUBMITTED, false);
+		
+		super.onDetach();
 	}
 
 	/**

@@ -88,9 +88,9 @@ public abstract class RefreshingView extends RepeatingView
 	 * Refresh the items in the view. Delegates the creation of items to the
 	 * selected item reuse strategy
 	 */
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
-		super.internalOnAttach();
+		super.onAttach();
 
 		if (isVisibleInHierarchy())
 		{

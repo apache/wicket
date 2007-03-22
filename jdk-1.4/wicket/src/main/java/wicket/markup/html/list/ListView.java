@@ -280,6 +280,7 @@ public abstract class ListView extends WebMarkupContainer
 			 */
 			protected void onAttach()
 			{
+				super.onAttach();
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
 				{
@@ -336,6 +337,7 @@ public abstract class ListView extends WebMarkupContainer
 			 */
 			protected void onAttach()
 			{
+				super.onAttach();
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == 0)
 				{
@@ -551,10 +553,12 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#internalOnAttach()
+	 * @see wicket.MarkupContainer#onAttach()
 	 */
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
+
 		if (isVisibleInHierarchy())
 		{
 			// Get number of items to be displayed
@@ -585,23 +589,23 @@ public abstract class ListView extends WebMarkupContainer
 					// list view
 					removeAll();
 				}
-	
+
 				// Loop through the markup in this container for each item
 				for (int i = 0; i < size; i++)
 				{
 					// Get index
 					final int index = firstIndex + i;
-	
+
 					// If this component does not already exist, populate it
 					ListItem item = (ListItem)get(Integer.toString(index));
 					if (item == null)
 					{
 						// Create item for index
 						item = newItem(index);
-	
+
 						// Add list item
 						add(item);
-	
+
 						// Populate the list item
 						onBeginPopulateItem(item);
 						populateItem(item);

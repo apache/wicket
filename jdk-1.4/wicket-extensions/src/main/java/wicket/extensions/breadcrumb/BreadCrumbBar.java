@@ -107,10 +107,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		}
 
 		/**
-		 * @see wicket.markup.html.list.ListView#internalOnAttach()
+		 * @see wicket.markup.html.list.ListView#onAttach()
 		 */
-		protected void internalOnAttach()
+		protected void onAttach()
 		{
+			super.onAttach();
 			if (dirty)
 			{
 				super.internalOnAttach();

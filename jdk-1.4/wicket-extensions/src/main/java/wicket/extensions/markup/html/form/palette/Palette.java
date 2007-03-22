@@ -96,7 +96,7 @@ public class Palette extends Panel
 	/** reference to the palette's javascript resource */
 	private static final ResourceReference JAVASCRIPT = new ResourceReference(Palette.class,
 			"palette.js");
-	
+
 	/** reference to the palette's css resource */
 	private static final ResourceReference CSS = new ResourceReference(Palette.class, "palette.css");
 
@@ -183,10 +183,10 @@ public class Palette extends Panel
 			add(HeaderContributor.forCss(css));
 		}
 	}
-	
+
 	/**
-	 * Returns the resource reference of the default stylesheet.
-	 * You may return null to avoid using any stylesheet.
+	 * Returns the resource reference of the default stylesheet. You may return
+	 * null to avoid using any stylesheet.
 	 * 
 	 * @return A resource reference
 	 */
@@ -194,12 +194,14 @@ public class Palette extends Panel
 	{
 		return CSS;
 	}
-	
+
 	/**
 	 * Can be overriden by clients for custom style sheet
+	 * 
 	 * @return the style sheet reference
 	 */
-	protected StyleSheetReference getStyleSheet() {
+	protected StyleSheetReference getStyleSheet()
+	{
 		return new StyleSheetReference("paletteCSS", getClass(), "palette.css");
 	}
 
@@ -512,13 +514,14 @@ public class Palette extends Panel
 		return buildJSCall("paletteMoveDown");
 	}
 
-	protected void internalOnDetach()
+	protected void onDetach()
 	{
-		super.internalOnDetach();
 		// we need to manually detach the choices model since it is not attached
 		// to a component
 		// an alternative might be to attach it to one of the subcomponents
 		choicesModel.detach();
+
+		super.onDetach();
 	}
 
 	private class PaletteButton extends WebMarkupContainer
