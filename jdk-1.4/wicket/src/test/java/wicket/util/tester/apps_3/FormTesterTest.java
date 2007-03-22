@@ -19,8 +19,8 @@ package wicket.util.tester.apps_3;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.AssertionFailedError;
 import wicket.Page;
+import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.util.tester.FormTester;
 import wicket.util.tester.ITestPageSource;
@@ -39,7 +39,7 @@ public class FormTesterTest extends WicketTestCase
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param name
 	 */
 	public FormTesterTest(String name)
@@ -110,18 +110,18 @@ public class FormTesterTest extends WicketTestCase
 		try
 		{
 			formTester.selectMultiple("dropDownChoice", new int[] { 0 });
-			throw new RuntimeException("AssertionFailedError expected");
+			throw new RuntimeException("WicketRuntimeException expected");
 		}
-		catch (AssertionFailedError expected)
+		catch (WicketRuntimeException expected)
 		{
 		}
 
 		try
 		{
 			formTester.selectMultiple("radioGroup", new int[] { 2, 1 });
-			throw new RuntimeException("AssertionFailedError expected");
+			throw new RuntimeException("WicketRuntimeException expected");
 		}
-		catch (AssertionFailedError expected)
+		catch (WicketRuntimeException expected)
 		{
 		}
 	}

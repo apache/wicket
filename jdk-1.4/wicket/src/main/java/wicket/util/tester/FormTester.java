@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
 import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.Component.IVisitor;
@@ -51,7 +50,7 @@ import wicket.util.upload.FileUploadException;
 
 /**
  * A helper for testing validation and submission of Form component.
- * 
+ *
  * @author Ingram Chen
  * @author Frank Bille (frankbille)
  */
@@ -60,7 +59,7 @@ public class FormTester
 	/**
 	 * A selector template for selecting seletable form component via index of
 	 * option, support RadioGroup, CheckGroup, and AbstractChoice family.
-	 * 
+	 *
 	 */
 	protected abstract class ChoiceSelector
 	{
@@ -100,7 +99,7 @@ public class FormTester
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param formComponent
 		 */
 		protected ChoiceSelector(FormComponent formComponent)
@@ -110,14 +109,14 @@ public class FormTester
 
 		/**
 		 * implement whether toggle or cumulate selection
-		 * 
+		 *
 		 * @param formComponent
 		 * @param value
 		 */
 		protected abstract void assignValueToFormComponent(FormComponent formComponent, String value);
 
 		/**
-		 * 
+		 *
 		 * @param index
 		 */
 		protected final void doSelect(final int index)
@@ -128,7 +127,7 @@ public class FormTester
 						new SearchOptionByIndexVisitor(index));
 				if (foundRadio == null)
 				{
-					Assert.fail("RadioGroup " + formComponent.getPath() + " does not has index:"
+					fail("RadioGroup " + formComponent.getPath() + " does not has index:"
 							+ index);
 				}
 				assignValueToFormComponent(formComponent, foundRadio.getValue());
@@ -139,7 +138,7 @@ public class FormTester
 						new SearchOptionByIndexVisitor(index));
 				if (foundCheck == null)
 				{
-					Assert.fail("CheckGroup " + formComponent.getPath() + " does not have index:"
+					fail("CheckGroup " + formComponent.getPath() + " does not have index:"
 							+ index);
 				}
 
@@ -150,7 +149,7 @@ public class FormTester
 				String idValue = selectAbstractChoice(formComponent, index);
 				if (idValue == null)
 				{
-					Assert.fail(formComponent.getPath() + " is not selectable component.");
+					fail(formComponent.getPath() + " is not selectable component.");
 				}
 				else
 				{
@@ -209,13 +208,13 @@ public class FormTester
 	private class ChoiceSelectorFactory
 	{
 		/**
-		 * 
+		 *
 		 */
 		private final class MultipleChoiceSelector extends ChoiceSelector
 		{
 			/**
 			 * Construct.
-			 * 
+			 *
 			 * @param formComponent
 			 */
 			protected MultipleChoiceSelector(FormComponent formComponent)
@@ -223,13 +222,13 @@ public class FormTester
 				super(formComponent);
 				if (!allowMultipleChoice(formComponent))
 				{
-					Assert.fail("Component:'" + formComponent.getPath()
-							+ "' Not support multiple selection.");
+					fail("Component:'" + formComponent.getPath()
+							+ "' Does not support multiple selection.");
 				}
 			}
 
 			/**
-			 * 
+			 *
 			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
@@ -241,13 +240,13 @@ public class FormTester
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		private final class SingleChoiceSelector extends ChoiceSelector
 		{
 			/**
 			 * Construct.
-			 * 
+			 *
 			 * @param formComponent
 			 */
 			protected SingleChoiceSelector(FormComponent formComponent)
@@ -256,7 +255,7 @@ public class FormTester
 			}
 
 			/**
-			 * 
+			 *
 			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
@@ -268,7 +267,7 @@ public class FormTester
 		}
 
 		/**
-		 * 
+		 *
 		 * @param formComponent
 		 * @return ChoiceSelector
 		 */
@@ -285,14 +284,14 @@ public class FormTester
 			}
 			else
 			{
-				Assert.fail("Selecting on the component:'" + formComponent.getPath()
+				fail("Selecting on the component:'" + formComponent.getPath()
 						+ "' is not supported.");
 				return null;
 			}
 		}
 
 		/**
-		 * 
+		 *
 		 * @param formComponent
 		 * @return ChoiceSelector
 		 */
@@ -302,14 +301,14 @@ public class FormTester
 		}
 
 		/**
-		 * 
+		 *
 		 * @param formComponent
 		 * @return boolean
 		 */
 		private boolean allowMultipleChoice(FormComponent formComponent)
 		{
 			return formComponent instanceof CheckGroup
-					|| formComponent instanceof ListMultipleChoice;
+			|| formComponent instanceof ListMultipleChoice;
 		}
 	}
 
@@ -332,7 +331,7 @@ public class FormTester
 
 	/**
 	 * @see WicketTester#newFormTester(String)
-	 * 
+	 *
 	 * @param path
 	 *            path to form component
 	 * @param workingForm
@@ -379,8 +378,8 @@ public class FormTester
 					}
 				}
 				else if ( (formComponent instanceof DropDownChoice) ||
-						  (formComponent instanceof RadioChoice) ||
-						  (formComponent instanceof CheckBox))
+						(formComponent instanceof RadioChoice) ||
+						(formComponent instanceof CheckBox))
 				{
 					setFormComponentValue(formComponent, formComponent.getValue());
 				}
@@ -422,7 +421,7 @@ public class FormTester
 
 	/**
 	 * Gets value for text component with provided id.
-	 * 
+	 *
 	 * @param id
 	 *            Component's id
 	 * @return value text component
@@ -443,7 +442,7 @@ public class FormTester
 	 * to interacting on the browser: For single choice, such as Radio or
 	 * DropDownList, the selection will toggle each other. For multiple choice,
 	 * such as Checkbox or ListMultipleChoice, the selection will cumulate.
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from form) to selectable formComponent
 	 * @param index
@@ -477,9 +476,9 @@ public class FormTester
 	/**
 	 * A convenient method to select multiple options for the form component.
 	 * The method only support multiple selectable form component.
-	 * 
+	 *
 	 * @see #select(String, int)
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from form) to selectable formComponent
 	 * @param indexes
@@ -490,7 +489,7 @@ public class FormTester
 		checkClosed();
 
 		ChoiceSelector choiceSelector = choiceSelectorFactory
-				.createForMultiple((FormComponent)workingForm.get(formComponentId));
+		.createForMultiple((FormComponent)workingForm.get(formComponentId));
 
 		for (int i = 0; i < indexes.length; i++)
 		{
@@ -500,7 +499,7 @@ public class FormTester
 
 	/**
 	 * simulate filling a field of a Form.
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from form) to formComponent
 	 * @param value
@@ -516,7 +515,7 @@ public class FormTester
 
 	/**
 	 * Set the file on a {@link FileUploadField}.
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from form) to formComponent. The form component
 	 *            must be of a type FileUploadField.
@@ -574,15 +573,15 @@ public class FormTester
 
 	/**
 	 * A convenient method to submit form with alternative button.
-	 * 
+	 *
 	 * Note that if the button associates with a model, it's better to use
 	 * setValue() instead:
-	 * 
+	 *
 	 * <pre>
 	 * formTester.setValue(&quot;to:my:button&quot;, &quot;value on the button&quot;);
 	 * formTester.submit();
 	 * </pre>
-	 * 
+	 *
 	 * @param buttonComponentId
 	 *            relative path (from form) to the button
 	 */
@@ -595,7 +594,7 @@ public class FormTester
 	/**
 	 * add additional formComponent's value into request parameter, this method
 	 * retain exist parameters but remove any duplicated parameters.
-	 * 
+	 *
 	 * @param formComponent
 	 * @param value
 	 */
@@ -633,7 +632,7 @@ public class FormTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param formComponent
 	 * @return Boolean
 	 */
@@ -647,7 +646,7 @@ public class FormTester
 	/**
 	 * set formComponent's value into request parameter, this method overwrites
 	 * exist parameters.
-	 * 
+	 *
 	 * @param formComponent
 	 * @param value
 	 */
@@ -655,4 +654,46 @@ public class FormTester
 	{
 		wicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
 	}
+
+
+	private Result isTrue(String message, boolean condition)
+	{
+		if (condition)
+		{
+			return Result.pass();
+		}
+		return Result.fail(message);
+	}
+
+	private Result isEqual(Object expected, Object actual)
+	{
+		if (expected == null && actual == null)
+		{
+			return Result.pass();
+		}
+		if (expected != null && expected.equals(actual))
+		{
+			return Result.pass();
+		}
+		String message = "expected:<" + expected + "> but was:<" + actual + ">";
+		return Result.fail(message);
+	}
+
+	private void notNull(String message, Object object)
+	{
+		if (object == null) {
+			fail(message);
+		}
+	}
+
+	private void fail(String message)
+	{
+		throw new WicketRuntimeException(message);
+	}
+
+	private void fail(String message, Throwable t)
+	{
+		throw new WicketRuntimeException(message, t);
+	}
+
 }

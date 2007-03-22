@@ -40,7 +40,7 @@ import wicket.util.tester.apps_1.SuccessPage;
 import wicket.util.tester.apps_1.ViewBook;
 
 /**
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class WicketTesterTest extends TestCase
@@ -60,7 +60,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testViewBook() throws Exception
@@ -85,7 +85,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testCreateBook_validateFail() throws Exception
@@ -106,7 +106,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testCreateBook_validatePass() throws Exception
@@ -170,7 +170,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testAssertComponentOnAjaxResponse()
 	{
@@ -303,7 +303,7 @@ public class WicketTesterTest extends TestCase
 				+ MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
 
 		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form" + Component.PATH_SEPARATOR + "name")).getValue());
-		
+
 		// The name of the pojo should still be the same. If the
 		// executeAjaxEvent weren't submitting the form the name would have been
 		// reset to null, because the form would have been updated but there
@@ -313,7 +313,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void testRedirectWithPageParameters()
 	{
@@ -333,7 +333,7 @@ public class WicketTesterTest extends TestCase
 	/**
 	 * Test that clickLink on a ResourceLink with a ResourceReference on it
 	 * works.
-	 * 
+	 *
 	 * <p>See also WICKET-280 Allow to access html resources</p>
 	 */
 	public void testClickResourceLink()
@@ -345,9 +345,9 @@ public class WicketTesterTest extends TestCase
 		}
 		catch(PackageResourceBlockedException e)
 		{
-			
+
 		}
-		
+
 		tester.startPage(MockResourceLinkPage.class);
 		tester.clickLink("link");
 		assertNull(getRequestCodingStrategy());
