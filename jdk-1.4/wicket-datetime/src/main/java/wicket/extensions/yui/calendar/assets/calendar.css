@@ -7,167 +7,168 @@ Version 0.12
 
 .yui-calcontainer {
 	position:relative;
-	padding:5px;
+	padding:5px !important;
 	background-color:#F7F9FB;
-	border:1px solid #7B9EBD;
-	float:left;
-	overflow:hidden;
+	border:1px solid #7B9EBD !important;
+	float:left !important;
+	overflow:hidden !important;
 }
 
 .yui-calcontainer iframe {
-	position:absolute;
-	border:none;
-	margin:0;padding:0;
-	left:-1px;
-	top:-1px;
-	z-index:0;
-	width:50em;
-	height:50em;
+	position:absolute !important;
+	border:none !important;
+	margin:0 !important;padding:0 !important;
+	left:-1px !important;
+	top:-1px !important;
+	z-index:0 !important;
+	width:50em !important;
+	height:50em !important;
 }
 
 .yui-calcontainer.multi {
-	padding:0;
+	padding:0 !important;
 }
 
 .yui-calcontainer.multi .groupcal {
-	padding:5px;
+	padding:5px !important;
 	background-color:transparent;
-	z-index:1;
-	float:left;
-	position:relative;
-	border:none;
+	z-index:1 !important;
+	float:left !important;
+	position:relative !important;
+	border:none !important;
 }
 
 .yui-calcontainer .title {
-	font:100% sans-serif;
-	color:#000;
-	font-weight:bold;
-	margin-bottom:5px;
-	height:25px;
-	position:absolute;
-	top:3px;left:5px;
-	z-index:1;
+	font:100% sans-serif !important;
+	color:#000 !important;
+	font-weight:bold !important;
+	margin-bottom:5px !important;
+	height:25px !important;
+	position:absolute !important;
+	top:3px;left:5px !important;
+	z-index:1 !important;
 }
 
 .yui-calcontainer .close-icon {
-	position:absolute;
-	right:3px;
-	top:3px;
-	border:none;
-	z-index:1;
+	position:absolute !important;
+	right:3px !important;
+	top:3px !important;
+	border:none !important;
+	z-index:1 !important;
 }
 
 /* Calendar element styles */
 
 .yui-calendar {
-	font:100% sans-serif;
-	text-align:center;
-	border-spacing:0;
+	font:100% sans-serif !important;
+	text-align:center !important;
+	border-spacing:0 !important;
 	border-collapse:separate;
-	position:relative;
+	position:relative !important;
 }
 
 .yui-calcontainer.withtitle {
-	padding-top:1.5em;
+	padding-top:1.5em !important;
 }
 
 .yui-calendar .calnavleft {
-	position:absolute;
+	position:absolute !important;
 	background-repeat:no-repeat;
-	cursor:pointer;
-	top:2px;
-	bottom:0;
-	width:9px;
-	height:12px;   
-	left:2px;
-	z-index:1;
+	cursor:pointer !important;
+	top:2px !important;
+	bottom:0 !important;
+	width:9px !important;
+	height:12px !important;   
+	left:2px !important;
+	z-index:1 !important;
 }
 
 .yui-calendar .calnavright {
-	position:absolute;
+	position:absolute !important;
 	background-repeat:no-repeat;
-	cursor:pointer;
-	top:2px;
-	bottom:0;
-	width:9px;
-	height:12px;  
-	right:2px;
-	z-index:1;
+	cursor:pointer !important;
+	top:2px !important;
+	bottom:0 !important;
+	width:9px !important;
+	height:12px !important;  
+	right:2px !important;
+	z-index:1 !important;
 }
 
 .yui-calendar td.calcell {
-	padding:.1em .2em;
-	border:1px solid #E0E0E0;
-	text-align:center;
+	padding:.1em .2em !important;
+	border:1px solid #E0E0E0 !important;
+	text-align:center !important;
 }
 
 .yui-calendar td.calcell a {
-	color:#003DB8;
-	text-decoration:none;
+	color:#003DB8 !important;
+	text-decoration:none !important;
 }
 
 .yui-calendar td.calcell.today {
-	border:1px solid #000;
+	border:1px solid #000 !important;
 }
 
 .yui-calendar td.calcell.oom {
-	cursor:default;
-	color:#999;
+	cursor:default !important;
+	color:#999 !important;
 	background-color:#EEE;
-	border:1px solid #E0E0E0;
+	border:1px solid #E0E0E0 !important;
 }
 
 .yui-calendar td.calcell.selected {
-	color:#003DB8;
+	color:#003DB8 !important;
 	background-color:#FFF19F;
-	border:1px solid #FF9900;
+	border:1px solid #FF9900 !important;
 }
 
 .yui-calendar td.calcell.calcellhover {
-	cursor:pointer;
-	color:#FFF;
+	cursor:pointer !important;
+	color:#FFF !important;
 	background-color:#FF9900;
-	border:1px solid #FF9900;
+	border:1px solid #FF9900 !important;
 }
 
 .yui-calendar td.calcell.calcellhover a {
-	color:#FFF;
+	color:#FFF !important;
 }
 
 .yui-calendar td.calcell.restricted {
-	text-decoration:line-through;
+	text-decoration:line-through !important;
 }
 
 .yui-calendar td.calcell.previous {
-	color:#CCC;
+	color:#CCC !important;
 }
 
-.yui-calendar td.calcell.highlight1 { background-color:#CCFF99; }
-.yui-calendar td.calcell.highlight2 { background-color:#99CCFF; }
-.yui-calendar td.calcell.highlight3 { background-color:#FFCCCC; }
-.yui-calendar td.calcell.highlight4 { background-color:#CCFF99; }
+.yui-calendar td.calcell.highlight1 { background-color:#CCFF99 ; }
+.yui-calendar td.calcell.highlight2 { background-color:#99CCFF ; }
+.yui-calendar td.calcell.highlight3 { background-color:#FFCCCC ; }
+.yui-calendar td.calcell.highlight4 { background-color:#CCFF99 ; }
 
 .yui-calendar .calhead {
-	border:1px solid #E0E0E0;
-	vertical-align:middle;
+	border:1px solid #E0E0E0 !important;
+	vertical-align:middle !important;
 	background-color:#FFF;
+	color: black !important;
 }
 
 .yui-calendar .calheader {
-	position:relative;
-	width:100%;
-	text-align:center;
+	position:relative !important;
+	width:100% !important;
+	text-align:center !important;
 }
 
 .yui-calendar .calheader img {
-	border:none;
+	border:none !important;
 }
 
 .yui-calendar .calweekdaycell {
-	color:#666;
-	font-weight:normal;
-	text-align:center;
-	width:1.5em;
+	color:#666 !important;
+	font-weight:normal !important;
+	text-align:center !important;
+	width:1.5em !important;
 }
 
 .yui-calendar .calfoot {
@@ -175,17 +176,17 @@ Version 0.12
 }
 
 .yui-calendar .calrowhead, .yui-calendar .calrowfoot {
-	color:#666;
-	font-size:9px;
-	font-style:italic;
-	font-weight:normal;
-	width:15px;
+	color:#666 !important;
+	font-size:9px !important;
+	font-style:italic !important;
+	font-weight:normal !important;
+	width:15px !important;
 }
 
 .yui-calendar .calrowhead {
-	border-right-width:2px;
+	border-right-width:2px !important;
 }
 
 /*Specific changes for calendar running under fonts/reset */
 .yui-calendar a:hover {background:inherit;}
-p#clear {clear:left; padding-top:10px;}
+p#clear {clear:left !important; padding-top:10px !important;}
