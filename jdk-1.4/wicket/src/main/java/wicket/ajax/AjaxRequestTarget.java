@@ -868,8 +868,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		// add or replace the container to page
+		Component oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID); 
 		
-		if (component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID) != null)
+		if (oldHeader != null)
 		{
 			component.getPage().replace(header);
 		}
@@ -934,6 +935,11 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		headerRendering = false;
+		
+		if (oldHeader == null)
+			component.getPage().remove(header);
+		else
+			component.getPage().replace(oldHeader);
 	}
 
 	/**
