@@ -38,7 +38,7 @@ public class Lose extends HangmanPage
 			public void onClick()
 			{
 				getGame().newGame();
-				setResponsePage(new Guess());
+				setResponsePage(Guess.class);
 			}
 		});
 	}

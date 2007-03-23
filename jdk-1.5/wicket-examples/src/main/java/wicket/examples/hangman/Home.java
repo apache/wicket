@@ -17,7 +17,7 @@
 package wicket.examples.hangman;
 
 import wicket.PageParameters;
-import wicket.markup.html.link.PageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 
 /**
  * The home page for the hangman application. Contains just a single hyperlink
@@ -45,6 +45,6 @@ public class Home extends HangmanPage
 		{
 			getGame().newGame(5, new WordGenerator(new String[] { word }));
 		}
-		add(new PageLink("start", Guess.class));
+		add(new BookmarkablePageLink("start", Guess.class));
 	}
 }
