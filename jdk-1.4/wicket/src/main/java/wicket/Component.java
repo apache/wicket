@@ -39,6 +39,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.parser.XmlTag;
 import wicket.model.IAssignmentAwareModel;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
@@ -379,6 +380,7 @@ public abstract class Component implements IClusterable
 		}
 	}
 
+
 	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * is allowed to be enabled.
@@ -518,6 +520,13 @@ public abstract class Component implements IClusterable
 
 	/** Visibility boolean */
 	private static final int FLAG_VISIBLE = 0x0010;
+
+	/**
+	 * Ouput a placeholder tag if the component is not visible. This is useful
+	 * in ajax mode to go to visible(false) to visible(true) without the
+	 * overhead of repaiting a visible parent container
+	 */
+	private static final int FLAG_PLACEHOLDER = 0x8000;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Component.class);
@@ -1537,6 +1546,19 @@ public abstract class Component implements IClusterable
 		}
 		else
 		{
+			if (getFlag(FLAG_PLACEHOLDER))
+			{
+				// write out a placeholder tag into the markup
+				final ComponentTag tag = markupStream.getTag();
+
+				getResponse().write("<");
+				getResponse().write(tag.getName());
+				getResponse().write(" id=\"");
+				getResponse().write(getMarkupId());
+				getResponse().write("\" style=\"display:none\"></");
+				getResponse().write(tag.getName());
+				getResponse().write(">");
+			}
 			markupStream.skipComponent();
 		}
 	}
@@ -2131,6 +2153,42 @@ public abstract class Component implements IClusterable
 
 			// Change visibility
 			setFlag(FLAG_VISIBLE, visible);
+		}
+		return this;
+	}
+
+
+	/**
+	 * Render a placeholder tag when the component is not visible. The tag is of
+	 * form: &lt;componenttag style="display:none;" id="componentid"/&gt;. This
+	 * method will also call <code>setOutputMarkupId(true)</code>.
+	 * 
+	 * This is useful, for example, in ajax situations where the component
+	 * starts out invisible and then becomes visible through an ajax update.
+	 * With a placeholder tag already in the markup you do not need to repaint
+	 * this component's parent, instead you can repaint the component directly.
+	 * 
+	 * When this method is called with parameter <code>false</code> the
+	 * outputmarkupid flag is not reverted to false.
+	 * 
+	 * @param outputTag
+	 * @return this for chaining
+	 */
+	public final Component setOutputMarkupPlaceholderTag(final boolean outputTag)
+	{
+		if (outputTag != getFlag(FLAG_PLACEHOLDER))
+		{
+			if (outputTag)
+			{
+				setOutputMarkupId(true);
+				setFlag(FLAG_PLACEHOLDER, true);
+			}
+			else
+			{
+				setFlag(FLAG_PLACEHOLDER, false);
+				// I think it's better to not setOutputMarkupId to false...
+				// user can do it if we want
+			}
 		}
 		return this;
 	}
