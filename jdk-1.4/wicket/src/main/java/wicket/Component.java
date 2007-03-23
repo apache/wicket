@@ -2669,25 +2669,6 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * @deprecated
-	 * 
-	 */
-	private void internalAttach()
-	{
-
-	}
-
-	/**
-	 * @deprecated
-	 * 
-	 */
-	private void internalDetach()
-	{
-
-	}
-
-
-	/**
 	 * Attaches the component.
 	 */
 	public final void attach()
@@ -3184,4 +3165,22 @@ public abstract class Component implements IClusterable
 		private static final long serialVersionUID = 1L;
 
 	};
+	
+	/**
+	 * @deprecated
+	 */
+	// TODO remove after deprecation release
+	public final void internalAttach()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	// TODO remove after deprecation release
+	public final void internalDetach()
+	{
+		throw new UnsupportedOperationException();
+	}
 }

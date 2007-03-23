@@ -32,12 +32,10 @@ public class TestDetachPage extends WebPage
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
 
-	private int nrPageInternalDetachCalls = 0;
 	private int nrPageOnDetachCalls = 0;
 	private int nrPageDetachModelCalls = 0;
 	private int nrPageDetachModelsCalls = 0;
 
-	private int nrComponentInternalDetachCalls = 0;
 	private int nrComponentOnDetachCalls = 0;
 	private int nrComponentDetachModelCalls = 0;
 	private int nrComponentDetachModelsCalls = 0;
@@ -83,12 +81,6 @@ public class TestDetachPage extends WebPage
 			/** For serialization */
 			private static final long serialVersionUID = 1L;
 
-			public void internalDetach()
-			{
-				nrComponentInternalDetachCalls++;
-				super.detach();
-			}
-
 			protected void onDetach()
 			{
 				nrComponentOnDetachCalls++;
@@ -128,12 +120,6 @@ public class TestDetachPage extends WebPage
 		add(label);
 	}
 
-	public void internalDetach()
-	{
-		nrPageInternalDetachCalls++;
-		super.detach();
-	}
-
 	protected void onDetach()
 	{
 		nrPageOnDetachCalls++;
@@ -169,14 +155,6 @@ public class TestDetachPage extends WebPage
 	}
 
 	/**
-	 * @return nrComponentInternalDetachCalls
-	 */
-	public int getNrComponentInternalDetachCalls()
-	{
-		return nrComponentInternalDetachCalls;
-	}
-
-	/**
 	 * @return nrComponentOnDetachCalls
 	 */
 	public int getNrComponentOnDetachCalls()
@@ -198,14 +176,6 @@ public class TestDetachPage extends WebPage
 	public int getNrPageDetachModelsCalls()
 	{
 		return nrPageDetachModelsCalls;
-	}
-
-	/**
-	 * @return nrPageInternalDetachCalls
-	 */
-	public int getNrPageInternalDetachCalls()
-	{
-		return nrPageInternalDetachCalls;
 	}
 
 	/**

@@ -36,14 +36,6 @@ public class ComponentTest extends WicketTestCase
 	}
 
 	/**
-	 * @throws Exception
-	 */
-	public void testRenderHomePage_1() throws Exception
-	{
-		executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
-	}
-
-	/**
 	 * Tests the number of detach calls on a Page, Component, Behavior and Model
 	 * during a normal request.
 	 * 
@@ -55,11 +47,9 @@ public class ComponentTest extends WicketTestCase
 		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
 		assertEquals(1, page.getNrComponentDetachModelCalls());
 		assertEquals(1, page.getNrComponentDetachModelsCalls());
-		assertEquals(1, page.getNrComponentInternalDetachCalls());
 		assertEquals(1, page.getNrComponentOnDetachCalls());
 		assertEquals(1, page.getNrPageDetachModelCalls());
 		assertEquals(1, page.getNrPageDetachModelsCalls());
-		assertEquals(1, page.getNrPageInternalDetachCalls());
 		assertEquals(1, page.getNrPageOnDetachCalls());
 		assertEquals(1, page.getNrModelDetachCalls());
 		assertEquals(1, page.getNrAjaxBehaviorDetachModelCalls());
@@ -78,26 +68,30 @@ public class ComponentTest extends WicketTestCase
 
 		assertEquals(1, page.getNrComponentDetachModelCalls());
 		assertEquals(1, page.getNrComponentDetachModelsCalls());
-		assertEquals(1, page.getNrComponentInternalDetachCalls());
 		assertEquals(1, page.getNrComponentOnDetachCalls());
 		assertEquals(1, page.getNrPageDetachModelCalls());
 		assertEquals(1, page.getNrPageDetachModelsCalls());
-		assertEquals(1, page.getNrPageInternalDetachCalls());
 		assertEquals(1, page.getNrPageOnDetachCalls());
 		assertEquals(1, page.getNrModelDetachCalls());
 		assertEquals(1, page.getNrAjaxBehaviorDetachModelCalls());
 
 		AjaxEventBehavior behavior = page.getAjaxBehavior();
 		executedBehavior(TestDetachPage.class, behavior, "TestDetachPageAjaxResult.html");
-		assertTrue(1<page.getNrComponentDetachModelCalls());
-		assertTrue(1<page.getNrComponentDetachModelsCalls());
-		assertTrue(1<page.getNrComponentInternalDetachCalls());
-		assertTrue(1<page.getNrComponentOnDetachCalls());
-		assertTrue(1<page.getNrPageDetachModelCalls());
-		assertTrue(1<page.getNrPageDetachModelsCalls());
-		assertTrue(1<page.getNrPageInternalDetachCalls());
-		assertTrue(1<page.getNrPageOnDetachCalls());
-		assertTrue(1<page.getNrModelDetachCalls());
-		assertTrue(1<page.getNrAjaxBehaviorDetachModelCalls());
+		assertTrue(1 < page.getNrComponentDetachModelCalls());
+		assertTrue(1 < page.getNrComponentDetachModelsCalls());
+		assertTrue(1 < page.getNrComponentOnDetachCalls());
+		assertTrue(1 < page.getNrPageDetachModelCalls());
+		assertTrue(1 < page.getNrPageDetachModelsCalls());
+		assertTrue(1 < page.getNrPageOnDetachCalls());
+		assertTrue(1 < page.getNrModelDetachCalls());
+		assertTrue(1 < page.getNrAjaxBehaviorDetachModelCalls());
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_1() throws Exception
+	{
+		executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
 	}
 }
