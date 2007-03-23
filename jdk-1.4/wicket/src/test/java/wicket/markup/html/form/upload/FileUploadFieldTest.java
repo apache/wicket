@@ -98,6 +98,9 @@ public class FileUploadFieldTest extends WicketTestCase
 			servletRequest.addFile("upload", tmp, "text/plain");
 	
 			requestCycle.setRequest(new MultipartServletWebRequest(servletRequest, Bytes.MAX));
+
+			// attach manually for the test
+			field.attach();
 			
 			// Get the file upload
 			FileUpload fileUpload = field.getFileUpload();
