@@ -78,8 +78,13 @@ public class SelectOptions extends RepeatingView
 		return this;
 	}
 
-	protected void onBeginRequest()
+	/**
+	 * @see wicket.Component#onAttach()
+	 */
+	protected void onAttach()
 	{
+		super.onAttach();
+
 		if (size() == 0 || recreateChoices)
 		{
 			// populate this repeating view with SelectOption components
