@@ -98,14 +98,13 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		CharSequence iconUrl = getIconUrl();
 		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl
 				.toString() : ""));
-		response.write("\" /></span>");
+		response.write("\" /></span><input type=\"hidden\"/>");
 	}
 
 	/**
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.IHeaderResponse)
 	 */
-	public void renderHead(IHeaderResponse response) {
-
+	public void renderHead(IHeaderResponse response) {			
 		// add YUI contributions
 		// NOTE JavascriptResourceReference takes care of stripping comments
 		// when in deployment (production) mode
