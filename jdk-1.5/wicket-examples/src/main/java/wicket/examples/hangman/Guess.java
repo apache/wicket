@@ -58,8 +58,10 @@ public class Guess extends HangmanPage
 				final Letter letter = (Letter)listItem.getModelObject();
 				final Link link = new Link("letter")
 				{
-					protected void onBeginRequest()
+					@Override
+					protected void onAttach()
 					{
+						super.onAttach();
 						// Set enable state of link
 						setAutoEnable(false);
 						setEnabled(!letter.isGuessed());
