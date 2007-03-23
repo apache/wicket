@@ -36,11 +36,13 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
     var KEY_CTRL=17;
     var KEY_ALT=18;
 
-    var selected=-1;
-    var elementCount=0;
-    var visible=0;
-    var mouseactive=0;
+    var selected=-1; 	// index of the currently selected item
+    var elementCount=0; // number of items on the auto complete list
+    var visible=0;		// is the list visible
+    var mouseactive=0;	// is mouse selection active
+	var	hidingautocomplete=0;		// are we hiding the autocomplete list
 
+	// pointers of the browser events
    	var objonkeydown;
 	var objonblur;
 	var objonkeyup;
@@ -50,13 +52,13 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
     function initialize(){
         var obj=wicketGet(elementId);
 
-		objonkeydown = obj.onkeydown;
-		objonblur = obj.onblur;
-		objonkeyup = obj.onkeyup;
-		objonkeypress = obj.onkeypress;
-		objonchange = obj.onchange;
+        objonkeydown = obj.onkeydown;
+        objonblur = obj.onblur;
+        objonkeyup = obj.onkeyup;
+        objonkeypress = obj.onkeypress;
+        objonchange = obj.onchange;
 
-        obj.onblur=function(event){
+      	obj.onblur=function(event){
     		if(mouseactive==1)return false;
           	hideAutoComplete();
         }
@@ -92,6 +94,7 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
 	                if(selected>-1){
     	                obj.value=getSelectedValue();
  			            hideAutoComplete();
+          		        hidingAutocomplete=1;
 					}
 
 		            if(typeof objonkeydown == "function")objonkeydown();
@@ -129,7 +132,10 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
 
         obj.onkeypress=function(event){
             if(wicketKeyCode(getEvent(event))==KEY_ENTER){
-                return killEvent(event);
+                if(selected>-1 || hidingAutocomplete==1){
+			        hidingAutocomplete=0;
+	                return killEvent(event);
+                }
             }
 			if(typeof objonkeypress == "function")objonkeypress();
         }
@@ -209,6 +215,7 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
     }
 
     function hideAutoComplete(){
+        hidingAutocomplete=1;
         visible=0;
         selected=-1;
         getAutocompleteMenu().hide();
