@@ -77,14 +77,14 @@ public class ComponentTest extends WicketTestCase
 
 		AjaxEventBehavior behavior = page.getAjaxBehavior();
 		executedBehavior(TestDetachPage.class, behavior, "TestDetachPageAjaxResult.html");
-		assertTrue(1 < page.getNrComponentDetachModelCalls());
-		assertTrue(1 < page.getNrComponentDetachModelsCalls());
-		assertTrue(1 < page.getNrComponentOnDetachCalls());
-		assertTrue(1 < page.getNrPageDetachModelCalls());
-		assertTrue(1 < page.getNrPageDetachModelsCalls());
-		assertTrue(1 < page.getNrPageOnDetachCalls());
-		assertTrue(1 < page.getNrModelDetachCalls());
-		assertTrue(1 < page.getNrAjaxBehaviorDetachModelCalls());
+		assertTrue(1 <= page.getNrComponentDetachModelCalls());
+		assertTrue(1 <= page.getNrComponentDetachModelsCalls());
+		assertTrue(1 <= page.getNrComponentOnDetachCalls());
+		assertTrue(1 <= page.getNrPageDetachModelCalls());
+		assertTrue(1 <= page.getNrPageDetachModelsCalls());
+		assertTrue(1 <= page.getNrPageOnDetachCalls());
+		assertTrue(1 <= page.getNrModelDetachCalls());
+		assertTrue(1 <= page.getNrAjaxBehaviorDetachModelCalls());
 	}
 
 	/**
