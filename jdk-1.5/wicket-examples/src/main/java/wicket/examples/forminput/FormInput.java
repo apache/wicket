@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.forminput;
 
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.yui.calendar.DateTimeField;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Check;
@@ -59,43 +60,6 @@ import wicket.validation.validator.NumberValidator;
  */
 public class FormInput extends WicketExamplePage
 {
-	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
-			new Locale("nl"), Locale.GERMAN, new Locale("pt", "BR"), new Locale("da", "DK") });
-
-	/** available numbers for the radio selection. */
-	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
-
-	/** available sites for the multiple select. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
-
-	/**
-	 * Constructor
-	 */
-	public FormInput()
-	{
-		// Construct form and feedback panel and hook them up
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(feedback);
-		add(new InputForm("inputForm"));
-	}
-
-	/**
-	 * Sets locale for the user's session (getLocale() is inherited from
-	 * Component)
-	 * 
-	 * @param locale
-	 *            The new locale
-	 */
-	public void setLocale(Locale locale)
-	{
-		if (locale != null)
-		{
-			getSession().setLocale(locale);
-		}
-	}
-
 	/**
 	 * Form for collecting input.
 	 */
@@ -131,6 +95,10 @@ public class FormInput extends WicketExamplePage
 					Integer.class);
 			add(integerTextField.add(NumberValidator.POSITIVE));
 			add(new RequiredTextField("doubleProperty", Double.class));
+
+			add(new DateTimeField("dateProperty"));
+			// add(DateTextField.forShortStyle("dateProperty").add(new DatePicker()));
+
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
 					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
@@ -197,7 +165,7 @@ public class FormInput extends WicketExamplePage
 			// TextField using a mask converter
 			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
 			{
-				public IConverter getConverter(final Class/*<?>*/ type)
+				public IConverter getConverter(final Class/* <?> */type)
 				{
 					// US telephone number mask
 					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
@@ -230,46 +198,28 @@ public class FormInput extends WicketExamplePage
 		}
 	}
 
-	/**
-	 * Dropdown with Locales.
-	 */
-	private final class LocaleDropDownChoice extends DropDownChoice
+	/** list view to be nested in the form. */
+	private static final class LinesListView extends ListView
 	{
+
 		/**
 		 * Construct.
 		 * 
 		 * @param id
-		 *            component id
 		 */
-		public LocaleDropDownChoice(String id)
+		public LinesListView(String id)
 		{
-			super(id, LOCALES, new LocaleChoiceRenderer());
-
-			// set the model that gets the current locale, and that is used for
-			// updating the current locale to property 'locale' of FormInput
-			setModel(new PropertyModel(FormInput.this, "locale"));
+			super(id);
+			// always do this in forms!
+			setReuseItems(true);
 		}
 
-		/**
-		 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-		 */
-		protected boolean wantOnSelectionChangedNotifications()
+		protected void populateItem(ListItem item)
 		{
-			// we want roundtrips when a the user selects another item
-			return true;
-		}
-
-		/**
-		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
-		public void onSelectionChanged(Object newSelection)
-		{
-			// note that we don't have to do anything here, as our property
-			// model allready calls FormInput.setLocale when the model is
-			// updated
-
-			// force re-render
-			getForm().modelChanged();
+			// add a text field that works on each list item model (returns
+			// objects of
+			// type FormInputModel.Line) using property text.
+			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
 		}
 	}
 
@@ -296,28 +246,83 @@ public class FormInput extends WicketExamplePage
 		}
 	}
 
-	/** list view to be nested in the form. */
-	private static final class LinesListView extends ListView
+	/**
+	 * Dropdown with Locales.
+	 */
+	private final class LocaleDropDownChoice extends DropDownChoice
 	{
-
 		/**
 		 * Construct.
 		 * 
 		 * @param id
+		 *            component id
 		 */
-		public LinesListView(String id)
+		public LocaleDropDownChoice(String id)
 		{
-			super(id);
-			// always do this in forms!
-			setReuseItems(true);
+			super(id, LOCALES, new LocaleChoiceRenderer());
+
+			// set the model that gets the current locale, and that is used for
+			// updating the current locale to property 'locale' of FormInput
+			setModel(new PropertyModel(FormInput.this, "locale"));
 		}
 
-		protected void populateItem(ListItem item)
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
+		 */
+		public void onSelectionChanged(Object newSelection)
 		{
-			// add a text field that works on each list item model (returns
-			// objects of
-			// type FormInputModel.Line) using property text.
-			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
+			// note that we don't have to do anything here, as our property
+			// model allready calls FormInput.setLocale when the model is
+			// updated
+
+			// force re-render
+			getForm().modelChanged();
+		}
+
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
+		 */
+		protected boolean wantOnSelectionChangedNotifications()
+		{
+			// we want roundtrips when a the user selects another item
+			return true;
+		}
+	}
+
+	/** Relevant locales wrapped in a list. */
+	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
+			new Locale("nl"), Locale.GERMAN, new Locale("pt", "BR"), new Locale("da", "DK") });
+
+	/** available sites for the multiple select. */
+	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+			"Java.Net" });
+
+	/** available numbers for the radio selection. */
+	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
+
+	/**
+	 * Constructor
+	 */
+	public FormInput()
+	{
+		// Construct form and feedback panel and hook them up
+		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		add(feedback);
+		add(new InputForm("inputForm"));
+	}
+
+	/**
+	 * Sets locale for the user's session (getLocale() is inherited from
+	 * Component)
+	 * 
+	 * @param locale
+	 *            The new locale
+	 */
+	public void setLocale(Locale locale)
+	{
+		if (locale != null)
+		{
+			getSession().setLocale(locale);
 		}
 	}
 }
