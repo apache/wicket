@@ -2802,15 +2802,6 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * Called when a request begins.
-	 * 
-	 * @deprecated use onAttach() instead. This method will be removed in 1.3
-	 */
-	protected void onBeginRequest()
-	{
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -2851,21 +2842,6 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * Called when a request ends.
-	 * 
-	 * @deprecated This method will be removed in Wicket 1.3. It will PROBABLY
-	 *             be replaced by onEndRender or afterRender with different
-	 *             semantics. Instead of calling it after a request is done like
-	 *             is currently the case, that new method will be called after
-	 *             this component is rendered, which is a more precise scope.
-	 *             This semantical change shouldn't have a noticable impact on
-	 *             it's use I believe.
-	 */
-	protected void onEndRequest()
-	{
-	}
-
-	/**
 	 * Called anytime a model is changed after the change has occurred
 	 */
 	protected void onModelChanged()
@@ -2877,17 +2853,6 @@ public abstract class Component implements IClusterable
 	 */
 	protected void onModelChanging()
 	{
-	}
-
-	/**
-	 * Implementation that renders this component.
-	 * 
-	 * @deprecated since 1.2 Please implement onRender(MarkupStream) instead
-	 */
-	// TODO Post 1.2: Remove this method?
-	protected final void onRender()
-	{
-		onRender(findMarkupStream());
 	}
 
 	/**
@@ -3238,6 +3203,24 @@ public abstract class Component implements IClusterable
 	 */
 	// TODO remove after deprecation release
 	public final void internalDetach()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated use onAttach() instead
+	 */
+	// TODO remove after the deprecation release
+	protected final void onBeginRequest()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated use onDetach() instead
+	 */
+	// TODO remove after the deprecation release
+	protected final void onEndRequest()
 	{
 		throw new UnsupportedOperationException();
 	}
