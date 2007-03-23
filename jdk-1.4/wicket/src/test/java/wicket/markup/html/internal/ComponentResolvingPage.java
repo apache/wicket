@@ -32,7 +32,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	private static final long serialVersionUID = 1L;
 
 	/** onEndRequestWasCalledOnAutoAddedComponent */
-	public boolean onEndRequestWasCalledOnAutoAddedComponent = false;
+	public boolean onDetachWasCalledOnAutoAddedComponent = false;
 
 	/**
 	 * Construct.
@@ -42,7 +42,6 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	}
 
 	/**
-	 * 
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupStream, wicket.markup.ComponentTag)
 	 */
@@ -55,9 +54,10 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 			{
 				private static final long serialVersionUID = 1L;
 
-				protected void onEndRequest()
+				protected void onDetach()
 				{
-					onEndRequestWasCalledOnAutoAddedComponent = true;
+					onDetachWasCalledOnAutoAddedComponent = true;
+					super.onDetach();
 				}
 			});
 			return true;

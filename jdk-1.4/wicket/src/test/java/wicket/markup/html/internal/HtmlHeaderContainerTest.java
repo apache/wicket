@@ -45,7 +45,7 @@ public class HtmlHeaderContainerTest extends WicketTestCase
 		// onEndRequest() of auto added component was not called in
 		// MarkupContainer#internalEndRequest() using an iterator
 		ComponentResolvingPage page = (ComponentResolvingPage)tester.getLastRenderedPage();
-		assertTrue("onEndRequest() should be called",
-				page.onEndRequestWasCalledOnAutoAddedComponent);
+		assertTrue("onDetach() should have been called",
+				page.onDetachWasCalledOnAutoAddedComponent);
 	}
 }
