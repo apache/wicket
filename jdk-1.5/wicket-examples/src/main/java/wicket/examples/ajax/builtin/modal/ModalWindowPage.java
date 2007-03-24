@@ -75,15 +75,6 @@ public class ModalWindowPage extends BasePage
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
-				try
-				{
-					Thread.sleep(500);
-				}
-				catch (InterruptedException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				modal1.show(target);
 			}
 		});
