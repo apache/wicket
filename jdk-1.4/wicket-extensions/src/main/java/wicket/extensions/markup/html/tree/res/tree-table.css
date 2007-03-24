@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 /**
  * a_   columns
  * b_   column
@@ -226,4 +227,6 @@ div.wicket-tree-table div.header {
 	background-color: #eee;
 }
 
-
+div.wicket-tree-table div.wicket-tree-table-body {
+	background-color: white;
+}
