@@ -275,20 +275,36 @@ public class ModalWindow extends Panel
 	 */
 	public void show(AjaxRequestTarget target)
 	{
-		target.addComponent(this);
-		target.appendJavascript(getWindowOpenJavascript());
-		shown = true;
+		if (shown == false) {
+			target.addComponent(this);
+			target.appendJavascript(getWindowOpenJavascript());
+			shown = true;
+		}
 	}
 
 	/**
-	 * Hides the modal window.
+	 * Hides the modal window. 
+	 * This can be called from within the modal window, however, the
+	 * modal window must have configured WindowClosedCallback. Otherwise
+	 * use the {@link #close(AjaxRequestTarget)} method.
 	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public static final void close(AjaxRequestTarget target)
+	public static final void closeCurrent(AjaxRequestTarget target)
 	{
 		target.appendJavascript(getCloseJavacript());
+	}
+	
+	/**
+	 * Closes the modal window.
+	 * 
+	 * @param target
+	 *            Request target associated with current ajax request.
+	 */
+	public void close(AjaxRequestTarget target) {
+		target.appendJavascript(getCloseJavacript());
+		shown = false;
 	}
 
 	/**
