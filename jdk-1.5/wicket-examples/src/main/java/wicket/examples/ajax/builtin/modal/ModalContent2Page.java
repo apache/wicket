@@ -28,14 +28,14 @@ import wicket.markup.html.WebPage;
 public class ModalContent2Page extends WebPage {
 
 	/**
-	 * 
+	 * @param window
 	 */
-	public ModalContent2Page() 
+	public ModalContent2Page(final ModalWindow window) 
 	{
 		add(new AjaxLink("close")
 		{
 			public void onClick(AjaxRequestTarget target) {
-				ModalWindow.close(target);
+				window.close(target);
 			}
 		});
 

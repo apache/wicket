@@ -30,23 +30,17 @@ public class ModalContent1Page extends WebPage {
  
 	/**
 	 * 
-	 */
-	public ModalContent1Page() {
-		this(null);
-	}
-
-	/**
-	 * 
 	 * @param modalWindowPage
+	 * @param window
 	 */
-	public ModalContent1Page(final ModalWindowPage modalWindowPage) 
+	public ModalContent1Page(final ModalWindowPage modalWindowPage, final ModalWindow window) 
 	{
 		add(new AjaxLink("closeOK") 
 		{
 			public void onClick(AjaxRequestTarget target) {
 				if (modalWindowPage != null)
 				modalWindowPage.setResult("Modal window 1 - close link OK");
-				ModalWindow.close(target);
+				window.close(target);
 			}
 		});
 
@@ -56,7 +50,7 @@ public class ModalContent1Page extends WebPage {
 			{
 				if (modalWindowPage != null)
 					modalWindowPage.setResult("Modal window 1 - close link Cancel");
-				ModalWindow.close(target);
+				window.close(target);
 			}
 		});
 
@@ -76,7 +70,7 @@ public class ModalContent1Page extends WebPage {
 
 		modal.setPageCreator(new ModalWindow.PageCreator() {
 			public Page createPage() {
-				return new ModalContent2Page();
+				return new ModalContent2Page(modal);
 			}
 		});
 
