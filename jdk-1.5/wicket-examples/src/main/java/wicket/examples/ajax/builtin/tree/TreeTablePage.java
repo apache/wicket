@@ -40,8 +40,8 @@ public class TreeTablePage extends BaseTreePage
 	public TreeTablePage()	
 	{
 		IColumn columns[] = new IColumn[] {
-			new PropertyTreeColumn(new ColumnLocation(Alignment.LEFT, 18, Unit.EM), "Tree Column", "userObject.property1"),
-			new PropertyRenderableColumn(new ColumnLocation(Alignment.LEFT, 12, Unit.EM), "L2", "userObject.property2"),
+			new PropertyTreeColumn(new ColumnLocation(Alignment.MIDDLE, 8, Unit.PROPORTIONAL), "Tree Column (middle)", "userObject.property1"),
+			new PropertyRenderableColumn(new ColumnLocation(Alignment.LEFT, 7, Unit.EM), "L2", "userObject.property2"),
 			new PropertyRenderableColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M1", "userObject.property3"),
 			new PropertyRenderableColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M2", "userObject.property4"),
 			new PropertyRenderableColumn(new ColumnLocation(Alignment.MIDDLE, 3, Unit.PROPORTIONAL), "M3", "userObject.property5"),
