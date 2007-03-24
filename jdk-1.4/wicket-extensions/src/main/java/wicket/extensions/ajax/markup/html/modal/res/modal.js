@@ -595,6 +595,17 @@ Wicket.Window.prototype = {
 		
 		this.caption.getElementsByTagName("a")[0].onclick = null;
 	},
+	
+	/**
+	 * Returns the content document
+	 */
+	getContentDocument: function() {
+		if (this.isIframe() == true) {
+			return this.content.contentWindow.document;
+		} else {
+			return document;
+		}
+	},
 
 	/**
 	 * Places the window to the center of the viewport.
@@ -705,7 +716,7 @@ Wicket.Window.prototype = {
 	/**
 	 * Shows the window. 
 	 */
-	show: function() {							
+	show: function() {
 		// create the DOM elements
 		this.createDOM();						
 		
@@ -808,7 +819,6 @@ Wicket.Window.prototype = {
 			}				
 		}
 
-		
 		// create the mask that covers the background		
 		this.createMask();				
 	},
@@ -1320,7 +1330,15 @@ Wicket.Window.Mask.prototype = {
 			// mask is already shown - don't hide it
 			this.dontHide = true; 			
 		}
-	
+		
+		var doc = document;
+		var old = Wicket.Window.current.oldWindow;
+		if (typeof(old) != "undefined") {
+			doc = old.getContentDocument();
+		}
+		
+		this.document = doc;
+		
 		// disable user interaction
 		this.hideSelectBoxes();						
 		this.disableTabs();
@@ -1355,6 +1373,8 @@ Wicket.Window.Mask.prototype = {
 		
 		// revert onfocus handlers
 		this.enableFocus();
+		
+		this.document = null;
 
 	},
 	
@@ -1406,7 +1426,7 @@ Wicket.Window.Mask.prototype = {
 			var win = Wicket.Window.current;					
 			
 			this.boxes = new Array();
-			var selects = document.getElementsByTagName("select");
+			var selects = this.document.getElementsByTagName("select");
 			for (var i = 0; i < selects.length; i++) {				
 				var element = selects[i];
 				
@@ -1463,7 +1483,7 @@ Wicket.Window.Mask.prototype = {
 		// plus in IE this causes problems because it scrolls document		);
 		if (Wicket.Browser.isIE() == false) {			
 			this.focusRevertList = new Array();			
-			var body = document.getElementsByTagName("body")[0];			
+			var body = this.document.getElementsByTagName("body")[0];			
 			for (var i = 0; i < body.childNodes.length; ++i) {		
 				this.disableFocusElement(body.childNodes[i], this.focusRevertList);
 			}
@@ -1494,7 +1514,7 @@ Wicket.Window.Mask.prototype = {
 			var i = 0;			
 			this.tabIndexes = new Array();
 			for (var j = 0; j < this.tabbableTags.length; j++) {
-				var tagElements = document.getElementsByTagName(this.tabbableTags[j]);
+				var tagElements = this.document.getElementsByTagName(this.tabbableTags[j]);
 				for (var k = 0 ; k < tagElements.length; k++) {
 					
 					// if this is not an iframe window and the element is child of window content,
@@ -1516,7 +1536,7 @@ Wicket.Window.Mask.prototype = {
 		if (typeof(this.tabIndexes) != 'undefined') {
 			var i = 0;
 			for (var j = 0; j < this.tabbableTags.length; j++) {
-				var tagElements = document.getElementsByTagName(this.tabbableTags[j]);
+				var tagElements = this.document.getElementsByTagName(this.tabbableTags[j]);
 				for (var k = 0 ; k < tagElements.length; k++) {
 					tagElements[k].tabIndex = this.tabIndexes[i];
 					tagElements[k].tabEnabled = true;
@@ -1546,7 +1566,7 @@ Wicket.Window.getViewportHeight = function() {
 }
 
 /**
- * Returns thewidth of visible area.
+ * Returns the width of visible area.
  */
 Wicket.Window.getViewportWidth =  function() {
 	if (window.innerWidth != window.undefined) 

@@ -830,7 +830,7 @@ public class ModalWindow extends Panel
 			if (closeButtonCallback == null
 					|| closeButtonCallback.onCloseButtonClicked(target) == true)
 			{
-				target.appendJavascript("Wicket.Window.get().close();");
+				close(target);
 			}
 		}
 
@@ -944,13 +944,8 @@ public class ModalWindow extends Panel
 			buffer.append("settings.mask=\"semi-transparent\";\n");
 		}
 
-		if (closeButtonCallback != null)
-		{
-			CloseButtonBehavior behavior = (CloseButtonBehavior)getBehaviors(
-					CloseButtonBehavior.class).get(0);
-			buffer.append("settings.onCloseButton = function() { " + behavior.getCallbackScript()
-					+ "};\n");
-		}
+		// set true if we set a windowclosedcallback
+		boolean haveCloseCallback = false;
 
 		// in case user is interested in window close callback or we have a pagemap to clean
 		// attach notification request
@@ -959,8 +954,20 @@ public class ModalWindow extends Panel
 			WindowClosedBehavior behavior = (WindowClosedBehavior)getBehaviors(
 					WindowClosedBehavior.class).get(0);
 			buffer.append("settings.onClose = function() { " + behavior.getCallbackScript() + " };\n");
+			
+			haveCloseCallback = true;
 		}
 
+		// in case we didn't set windowclosecallback, we need at least callback on close button,
+		// to close window property (thus cleaning the shown flag) 
+		if (closeButtonCallback != null || haveCloseCallback == false)
+		{
+			CloseButtonBehavior behavior = (CloseButtonBehavior)getBehaviors(
+					CloseButtonBehavior.class).get(0);
+			buffer.append("settings.onCloseButton = function() { " + behavior.getCallbackScript()
+					+ "};\n");
+		}
+		
 		buffer.append("Wicket.Window.create(settings).show();\n");
 
 		return buffer.toString();
