@@ -23,19 +23,17 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.settings.IResourceSettings;
+import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.listener.IChangeListener;
-import wicket.util.resource.IFixedLocationResourceStream;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.locator.ResourceStreamLocator;
-import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 import wicket.util.watch.ModificationWatcher;
 
@@ -193,27 +191,27 @@ public class PropertiesFactory implements IPropertiesFactory
 							.getInputStream());
 					
 					// Determine if resource is a XML File
-					boolean loadAsXml = false;
-					if (resourceStream instanceof IFixedLocationResourceStream)
-					{
-						String location = ((IFixedLocationResourceStream)resourceStream)
-								.locationAsString();
-						if (location != null)
-						{
-							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
-							if ("xml".equals(ext))
-							{
-								loadAsXml = true;
-							}
-						}
-					}
-
-					// Load the properties
-					if (loadAsXml)
-					{
-						properties.loadFromXML(in);
-					}
-					else
+//					boolean loadAsXml = false;
+//					if (resourceStream instanceof IFixedLocationResourceStream)
+//					{
+//						String location = ((IFixedLocationResourceStream)resourceStream)
+//								.locationAsString();
+//						if (location != null)
+//						{
+//							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
+//							if ("xml".equals(ext))
+//							{
+//								loadAsXml = true;
+//							}
+//						}
+//					}
+//
+//					// Load the properties
+//					if (loadAsXml)
+//					{
+//						properties.loadFromXML(in);
+//					}
+//					else
 					{
 						properties.load(in);
 					}

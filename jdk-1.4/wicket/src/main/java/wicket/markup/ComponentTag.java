@@ -51,6 +51,9 @@ public class ComponentTag extends MarkupElement
 	 */
 	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
 
+	/** an empty list */
+	private static final List EMPTY_LIST = new LinkedList();
+
 	/**
 	 * Assuming this is a open (or open-close) tag, 'closes' refers to the
 	 * ComponentTag which closes it.
@@ -151,7 +154,7 @@ public class ComponentTag extends MarkupElement
 	{
 		if (behaviors == null)
 		{
-			List empty = Collections.emptyList();
+			List empty = EMPTY_LIST;
 			return empty.iterator();
 		}
 		
