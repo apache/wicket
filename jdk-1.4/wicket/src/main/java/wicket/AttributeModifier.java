@@ -20,7 +20,7 @@ import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.IModel;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * This class allows a tag attribute of a component to be modified dynamically
@@ -234,7 +234,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	{
 		if (isEnabled(component))
 		{
-			final ValueMap attributes = tag.getAttributes();
+			final IValueMap attributes = tag.getAttributes();
 			final Object replacementValue = getReplacementOrNull(component);
 
 			if (VALUELESS_ATTRIBUTE_ADD.equals(replacementValue))

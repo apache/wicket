@@ -23,7 +23,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
 import wicket.util.string.Strings;
-import wicket.util.value.AttributeMap;
+import wicket.util.value.IValueMap;
 
 /**
  * Tag tester is used to test that a generated markup tag contains the correct
@@ -110,7 +110,7 @@ public class TagTester
 	{
 		String value = null;
 
-		AttributeMap attributeMap = openTag.getAttributes();
+		IValueMap attributeMap = openTag.getAttributes();
 
 		if (attributeMap != null) 
 		{
@@ -359,7 +359,7 @@ public class TagTester
 
 						if (openTag == null)
 						{
-							AttributeMap attributeMap = xmlTag.getAttributes();
+							IValueMap attributeMap = xmlTag.getAttributes();
 
 							for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();)
 							{

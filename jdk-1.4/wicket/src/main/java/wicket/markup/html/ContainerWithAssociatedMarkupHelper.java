@@ -30,7 +30,7 @@ import wicket.markup.WicketTag;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.response.NullResponse;
 import wicket.util.lang.Classes;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * A Wicket internal helper class to handle wicket:head tags.
@@ -165,7 +165,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				final ComponentTag tag = (ComponentTag)iter.next();
 				if (TagUtils.isBodyTag(tag))
 				{
-					ValueMap attributes = tag.getAttributes();
+					IValueMap attributes = tag.getAttributes();
 					final String onLoad = attributes.getString(attributes.getKey("onload"));
 					if (onLoad != null)
 					{

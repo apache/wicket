@@ -24,7 +24,8 @@ import wicket.util.lang.EnumeratedType;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
-import wicket.util.value.AttributeMap;
+import wicket.util.value.IValueMap;
+import wicket.util.value.ValueMap;
 
 /**
  * A subclass of MarkupElement which represents a tag including namespace and
@@ -44,7 +45,7 @@ public class XmlTag extends MarkupElement
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	private AttributeMap attributes;
+	private IValueMap attributes;
 
 	/** Column number. */
 	int columnNumber;
@@ -65,7 +66,7 @@ public class XmlTag extends MarkupElement
 	int pos;
 
 	/** Full text of tag. */
-	String text;
+	CharSequence text;
 
 	/** The tag type (OPEN, CLOSE or OPEN_CLOSE). */
 	Type type;
@@ -125,22 +126,30 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return The tag's attributes
 	 */
-	public AttributeMap getAttributes()
+	public IValueMap getAttributes()
 	{
 		if (attributes == null)
 		{
-			if (copyOf == this)
+			if ((copyOf == this) || (copyOf == null) || (copyOf.attributes == null)) 
 			{
-				attributes = new AttributeMap();
+				attributes = new ValueMap();
 			}
 			else
 			{
-				attributes = new AttributeMap(copyOf.attributes);
+				attributes = new ValueMap(copyOf.attributes);
 			}
 		}
 		return attributes;
 	}
 
+	/**
+	 * @return true if there 1 or more attributes.
+	 */
+	public boolean hasAttributes()
+	{
+		return attributes != null && attributes.size() > 0;
+	}
+	
 	/**
 	 * Get the column number.
 	 * 
@@ -172,7 +181,8 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets the name of the tag, for example the tag <code>&lt;b&gt;</code>'s name would be 'b'.
+	 * Gets the name of the tag, for example the tag <code>&lt;b&gt;</code>'s
+	 * name would be 'b'.
 	 * 
 	 * @return The tag's name
 	 */
@@ -192,7 +202,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Namespace of the tag, if available.	For example, &lt;wicket:link&gt;.
+	 * Namespace of the tag, if available. For example, &lt;wicket:link&gt;.
 	 * 
 	 * @return The tag's namespace
 	 */
@@ -286,7 +296,7 @@ public class XmlTag extends MarkupElement
 	 * Compare tag name including namespace
 	 * 
 	 * @param tag
-	 * @return true if name and namespace are equal 
+	 * @return true if name and namespace are equal
 	 */
 	public boolean hasEqualTagName(final XmlTag tag)
 	{
@@ -321,6 +331,7 @@ public class XmlTag extends MarkupElement
 			if (attributes != null)
 			{
 				attributes.makeImmutable();
+				text = null;
 			}
 		}
 	}
@@ -351,7 +362,10 @@ public class XmlTag extends MarkupElement
 			tag.isMutable = true;
 			tag.closes = closes;
 			tag.copyOf = copyOf;
-
+			if (attributes != null)
+			{
+				tag.attributes = new ValueMap(attributes);
+			}
 			return tag;
 		}
 	}
@@ -364,9 +378,9 @@ public class XmlTag extends MarkupElement
 	 * @param value
 	 *			  The value
 	 * @return previous value associated with specified key, or null if there
-	 *		   was no mapping for key. A null return can also indicate that the
-	 *		   map previously associated null with the specified key, if the
-	 *		   implementation supports null values.
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
 	public Object put(final String key, final boolean value)
 	{
@@ -381,9 +395,9 @@ public class XmlTag extends MarkupElement
 	 * @param value
 	 *			  The value
 	 * @return previous value associated with specified key, or null if there
-	 *		   was no mapping for key. A null return can also indicate that the
-	 *		   map previously associated null with the specified key, if the
-	 *		   implementation supports null values.
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
 	public Object put(final String key, final int value)
 	{
@@ -398,9 +412,9 @@ public class XmlTag extends MarkupElement
 	 * @param value
 	 *			  The value
 	 * @return previous value associated with specified key, or null if there
-	 *		   was no mapping for key. A null return can also indicate that the
-	 *		   map previously associated null with the specified key, if the
-	 *		   implementation supports null values.
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
 	public Object put(final String key, final CharSequence value)
 	{
@@ -415,9 +429,9 @@ public class XmlTag extends MarkupElement
 	 * @param value
 	 *			  The value
 	 * @return previous value associated with specified key, or null if there
-	 *		   was no mapping for key. A null return can also indicate that the
-	 *		   map previously associated null with the specified key, if the
-	 *		   implementation supports null values.
+	 *         was no mapping for key. A null return can also indicate that the
+	 *         map previously associated null with the specified key, if the
+	 *         implementation supports null values.
 	 */
 	public Object put(final String key, final StringValue value)
 	{
@@ -590,15 +604,16 @@ public class XmlTag extends MarkupElement
 
 		buffer.append(name);
 
-		final AttributeMap attributes = getAttributes();
+		final IValueMap attributes = getAttributes();
 		if (attributes.size() > 0)
 		{
 			final Iterator iterator = attributes.keySet().iterator();
 			for (; iterator.hasNext();)
 			{
 				final String key = (String)iterator.next();
-				if ((key != null) && ((attributeToBeIgnored == null) || 
-						!key.equalsIgnoreCase(attributeToBeIgnored)))
+				if ((key != null)
+						&& ((attributeToBeIgnored == null) || !key
+								.equalsIgnoreCase(attributeToBeIgnored)))
 				{
 					buffer.append(" ");
 					buffer.append(key);

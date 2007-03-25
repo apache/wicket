@@ -31,7 +31,7 @@ import wicket.markup.parser.filter.HtmlHandler;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * A subclass of MarkupElement which represents a "significant" markup tag, such
@@ -195,7 +195,7 @@ public class ComponentTag extends MarkupElement
 	 * @see wicket.markup.parser.XmlTag#getAttributes()
 	 * @return The tag#s attributes
 	 */
-	public final ValueMap getAttributes()
+	public final IValueMap getAttributes()
 	{
 		return xmlTag.getAttributes();
 	}
