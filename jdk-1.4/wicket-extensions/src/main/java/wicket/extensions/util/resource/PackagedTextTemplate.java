@@ -26,7 +26,8 @@ import wicket.util.io.Streams;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
@@ -43,7 +44,7 @@ public class PackagedTextTemplate extends TextTemplate
 	private static final Log log = LogFactory.getLog(PackagedTextTemplate.class);
 
 	/** class loader stream locator. */
-	private static final ClassLoaderResourceStreamLocator streamLocator = new ClassLoaderResourceStreamLocator();
+	private static final IResourceStreamLocator streamLocator = new ResourceStreamLocator();
 
 	/** contents */
 	private StringBuffer buffer = new StringBuffer();
