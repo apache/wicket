@@ -67,7 +67,7 @@ public class LocalizerTest extends WicketTestCase
 	public void testGetStringValidString()
 	{
 		Assert.assertEquals("Expected string should be returned", "This is a test", localizer
-				.getString("test.string", null, null, null, null, "DEFAULT"));
+				.getString("test.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class LocalizerTest extends WicketTestCase
 	{
 		settings.setUseDefaultOnMissingResource(true);
 		Assert.assertEquals("Default string should be returned", "DEFAULT", localizer.getString(
-				"unknown.string", null, null, null, null, "DEFAULT"));
+				"unknown.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class LocalizerTest extends WicketTestCase
 
 		Assert.assertEquals("Wrapped key should be returned on no default",
 				"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
-						"unknown.string", null, null, null, null, null));
+						"unknown.string", null, null, null));
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class LocalizerTest extends WicketTestCase
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
 				"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
-						"unknown.string", null, null, null, null, "DEFAULT"));
+						"unknown.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class LocalizerTest extends WicketTestCase
 		settings.setThrowExceptionOnMissingResource(true);
 		try
 		{
-			localizer.getString("unknown.string", null, null, null, null, "DEFAULT");
+			localizer.getString("unknown.string", null, null, "DEFAULT");
 			Assert.fail("MissingResourceException expected");
 		}
 		catch (MissingResourceException e)
@@ -132,7 +132,7 @@ public class LocalizerTest extends WicketTestCase
 		vm.put("user", "John Doe");
 		Model model = new Model(vm);
 		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe", localizer
-				.getString("test.substitute", null, model, null, null, null));
+				.getString("test.substitute", null, model, null));
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class LocalizerTest extends WicketTestCase
 		Session.get().setLocale(Locale.ENGLISH);
 		MyMockPage page = new MyMockPage();
 		Application.get().getResourceSettings().addStringResourceLoader(
-				new ComponentStringResourceLoader(Application.get()));
+				new ComponentStringResourceLoader());
 
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 		String drop1 = localizer.getString("null", page.drop1);

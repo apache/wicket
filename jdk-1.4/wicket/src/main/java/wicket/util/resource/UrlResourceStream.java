@@ -39,7 +39,7 @@ import wicket.util.time.Time;
  * @see wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public class UrlResourceStream extends AbstractResourceStream
+public class UrlResourceStream extends AbstractResourceStream implements IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -306,5 +306,13 @@ public class UrlResourceStream extends AbstractResourceStream
 	public long length()
 	{
 		return contentLength;
+	}
+
+	/**
+	 * @see wicket.util.resource.IFixedLocationResourceStream#locationAsString()
+	 */
+	public String locationAsString()
+	{
+		return url.toExternalForm();
 	}
 }

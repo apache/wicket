@@ -132,11 +132,7 @@ public class MarkupParser
 			final ContainerInfo containerInfo = resource.getContainerInfo();
 			if (containerInfo != null)
 			{
-				if (WicketMessageTagHandler.enable)
-				{
-					appendMarkupFilter(new WicketMessageTagHandler(containerInfo));
-				}
-
+				appendMarkupFilter(new WicketMessageTagHandler());
 				appendMarkupFilter(new BodyOnLoadHandler());
 
 				// Pages require additional handlers

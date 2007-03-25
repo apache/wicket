@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
-import wicket.Session;
 import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
@@ -69,7 +68,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 
 			String txt = Application.get().getResourceSettings().getLocalizer().getString(
 					"ServerAndClientTimeFilter.statustext", null, Model.valueOf(map),
-					Session.get().getLocale(), Session.get().getStyle(), defaultValue.toString());
+					defaultValue.toString());
 			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
 			endScript.append("\n").append(JavascriptUtils.SCRIPT_OPEN_TAG);
 			endScript.append("\nwindow.defaultStatus='");

@@ -46,7 +46,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	 */
 	protected IStringResourceLoader createLoader()
 	{
-		return new ClassStringResourceLoader(application, application.getClass());
+		return new ClassStringResourceLoader(application.getClass());
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	{
 		WicketTester tester = new WicketTester();
 		WebApplication app = tester.getApplication();
-		IStringResourceLoader loader = new ClassStringResourceLoader(app, app.getClass());
+		IStringResourceLoader loader = new ClassStringResourceLoader(app.getClass());
 		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component.getClass(),
 				"test.string", Locale.getDefault(), null));
 		tester.destroy();

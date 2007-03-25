@@ -16,10 +16,15 @@
  */
 package wicket.markup;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import wicket.Response;
+import wicket.behavior.IBehavior;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.XmlTag.Type;
 import wicket.markup.parser.filter.HtmlHandler;
@@ -80,11 +85,8 @@ public class ComponentTag extends MarkupElement
 	 */
 	private boolean hasNoCloseTag = false;
 
-	/**
-	 * True if the tag has not wicket namespace and no wicket:id. E.g. <head> or
-	 * <body>
-	 */
-	private boolean internalTag = false;
+	/** added behaviors */
+	private Collection behaviors;
 
 	/**
 	 * Automatically create a XmlTag, assign the name and the type, and
@@ -113,6 +115,48 @@ public class ComponentTag extends MarkupElement
 	{
 		super();
 		xmlTag = tag;
+	}
+
+	/**
+	 * Adds a behavior to this component tag.
+	 * 
+	 * @param behavior
+	 */
+	public final void addBehavior(final IBehavior behavior)
+	{
+		if (behavior == null)
+		{
+			throw new IllegalArgumentException("Argument [behavior] cannot be null");
+		}
+
+		if (behaviors == null)
+		{
+			behaviors = new LinkedList();
+		}
+		behaviors.add(behavior);
+	}
+
+	/**
+	 * @return true if this tag has any behaviors added, false otherwise
+	 */
+	public final boolean hasBehaviors()
+	{
+		return behaviors != null;
+	}
+
+	/**
+	 * @return read only iterator over added behaviors
+	 */
+	public final Iterator getBehaviors()
+	{
+		if (behaviors == null)
+		{
+			List empty = Collections.emptyList();
+			return empty.iterator();
+		}
+		
+		Collection locked = Collections.unmodifiableCollection(behaviors);
+		return locked.iterator();
 	}
 
 	/**
@@ -444,16 +488,6 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @param flag
-	 *            True if the tag has not wicket namespace and no wicket:id.
-	 *            E.g. &lt;head&gt; or &lt;body&gt;
-	 */
-	public void setInternalTag(final boolean flag)
-	{
-		this.internalTag = flag;
-	}
-
-	/**
 	 * @see wicket.markup.parser.XmlTag#setName(String)
 	 * @param name
 	 *            New tag name
@@ -576,7 +610,7 @@ public class ComponentTag extends MarkupElement
 				{
 					continue;
 				}
-				
+
 				if ((namespacePrefix == null) || (key.startsWith(namespacePrefix) == false))
 				{
 					response.write(" ");

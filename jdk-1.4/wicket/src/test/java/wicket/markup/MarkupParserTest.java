@@ -32,8 +32,8 @@ import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.StringValueConversionException;
 
 
@@ -202,7 +202,7 @@ public final class MarkupParserTest extends WicketTestCase
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.setWicketNamespace("wcn");
 
-		IResourceStreamLocator locator = new ClassLoaderResourceStreamLocator();
+		IResourceStreamLocator locator = new ResourceStreamLocator();
 
 		MarkupResourceStream resource = newMarkupResourceStream(locator, this.getClass(), "1",
 				null, "html");

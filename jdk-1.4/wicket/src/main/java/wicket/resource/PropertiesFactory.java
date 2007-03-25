@@ -19,31 +19,34 @@ package wicket.resource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.Component;
+import wicket.settings.IResourceSettings;
 import wicket.util.listener.IChangeListener;
+import wicket.util.resource.IFixedLocationResourceStream;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.string.AppendingStringBuffer;
+import wicket.util.resource.locator.ResourceStreamLocator;
+import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 import wicket.util.watch.ModificationWatcher;
 
 /**
  * Reloadable properties. It is not a 100% replacement for java.util.Properties
  * as it does not provide the same interface. But is serves kind of the same
- * purpose with Wicket specific features. PropertiesFactory actually loads and
- * reloads the Properties and maintains a cache. Hence properties files are
- * loaded just once.
- * <p>
+ * purpose with Wicket specific features as it take Locale, style and variations
+ * into account. PropertiesFactory loads and reloads the Properties and
+ * maintaines a cache. Hence property files are loaded just once, but are
+ * reloaded if a change to a property file has been detected (actually the cache
+ * gets cleared which forces a reload on demand).
  * 
  * @see wicket.settings.IResourceSettings#getPropertiesFactory()
  * 
@@ -54,23 +57,40 @@ public class PropertiesFactory implements IPropertiesFactory
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PropertiesFactory.class);
 
-	/** Cache for all properties files loaded */
-	private final Map propertiesCache = new HashMap();
+	/** Cache for all property files loaded */
+	private final Map propertiesCache = new ConcurrentHashMap();
 
-	/** Listeners will be invoked after properties have been reloaded */
+	/**
+	 * Listeners will be invoked after changes to property file have been
+	 * detected
+	 */
 	private final List afterReloadListeners = new ArrayList();
+
+	/** Resource Settings */
+	private final IResourceSettings resourceSettings;
 
 	/**
 	 * Construct.
 	 */
 	public PropertiesFactory()
 	{
+		this.resourceSettings = Application.get().getResourceSettings();
 	}
 
 	/**
-	 * @see wicket.resource.IPropertiesFactory#addListener(wicket.resource.IPropertiesReloadListener)
+	 * Little helper
+	 * 
+	 * @return The properties factory registered with the application
 	 */
-	public void addListener(final IPropertiesReloadListener listener)
+	public static IPropertiesFactory get()
+	{
+		return Application.get().getResourceSettings().getPropertiesFactory();
+	}
+
+	/**
+	 * @see wicket.resource.IPropertiesFactory#addListener(wicket.resource.IPropertiesChangeListener)
+	 */
+	public void addListener(final IPropertiesChangeListener listener)
 	{
 		// Make sure listeners are added only once
 		if (afterReloadListeners.contains(listener) == false)
@@ -80,33 +100,39 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * @see wicket.resource.IPropertiesFactory#get(wicket.Application,
-	 *      java.lang.Class, java.lang.String, java.util.Locale)
+	 * 
+	 * @see wicket.resource.IPropertiesFactory#load(java.lang.Class, java.lang.String)
 	 */
-	public Properties get(final Application application, final Class clazz, final String style,
-			final Locale locale)
+	public Properties load(final Class clazz, final String path)
 	{
-		final String key = createResourceKey(clazz, locale, style);
-		Properties props = (Properties)propertiesCache.get(key);
-		if ((props == null) && (propertiesCache.containsKey(key) == false))
+		// Check the cache
+		Properties properties = (Properties) propertiesCache.get(path);
+		if (properties != null)
 		{
-			final IResourceStream resource = application.getResourceSettings()
-					.getResourceStreamLocator().locate(clazz, clazz.getName().replace('.', '/'),
-							style, locale, "properties");
-
-			if (resource != null)
+			// Return null, if no resource stream was found
+			if (properties == Properties.EMPTY_PROPERTIES)
 			{
-				props = loadPropertiesFileAndWatchForChanges(key, resource, clazz, style, locale);
+				properties = null;
 			}
+			return properties;
+		}
 
-			// add the markup to the cache
-			synchronized (propertiesCache)
+		// If not in the cache than try to load the resource stream
+		IResourceStream stream = ResourceStreamLocator.get().locate(clazz, path);
+		if (stream != null)
+		{
+			// Load the properties from the stream
+			properties = loadPropertiesFileAndWatchForChanges(path, stream);
+			if (properties != null)
 			{
-				propertiesCache.put(key, props);
+				this.propertiesCache.put(path, properties);
+				return properties;
 			}
 		}
 
-		return props;
+		// Add a placeholder to the cache. Null is not a valid value to add.
+		this.propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
+		return null;
 	}
 
 	/**
@@ -128,73 +154,20 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * Create a unique key to identify the properties file in the cache
-	 * 
-	 * @param componentClass
-	 *            The class that resources are bring loaded for
-	 * @param locale
-	 *            The locale to load reosurces for
-	 * @param style
-	 *            The style to load resources for (see {@link wicket.Session})
-	 * @return The resource key
-	 */
-	public final String createResourceKey(final Class componentClass, final Locale locale,
-			final String style)
-	{
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(80);
-		if (componentClass != null)
-		{
-			buffer.append(componentClass.getName());
-		}
-		if (style != null)
-		{
-			buffer.append(Component.PATH_SEPARATOR);
-			buffer.append(style);
-		}
-		if (locale != null)
-		{
-			buffer.append(Component.PATH_SEPARATOR);
-			boolean l = locale.getLanguage().length() != 0;
-			boolean c = locale.getCountry().length() != 0;
-			boolean v = locale.getVariant().length() != 0;
-			buffer.append(locale.getLanguage());
-			if (c || (l && v))
-			{
-				// This may just append '_'
-				buffer.append('_').append(locale.getCountry());
-			}
-			if (v && (l || c))
-			{
-				buffer.append('_').append(locale.getVariant());
-			}
-		}
-
-		final String id = buffer.toString();
-		return id;
-	}
-
-	/**
 	 * Helper method to do the actual loading of resources if required.
 	 * 
 	 * @param key
 	 *            The key for the resource
 	 * @param resourceStream
 	 *            The properties file stream to load and begin to watch
-	 * @param componentClass
-	 *            The class that resources are bring loaded for
-	 * @param style
-	 *            The style to load resources for (see {@link wicket.Session})
-	 * @param locale
-	 *            The locale to load reosurces for
 	 * @return The map of loaded resources
 	 */
 	private synchronized Properties loadPropertiesFile(final String key,
-			final IResourceStream resourceStream, final Class componentClass, final String style,
-			final Locale locale)
+			final IResourceStream resourceStream)
 	{
 		// Make sure someone else didn't load our resources while we were
 		// waiting for the synchronized lock on the method
-		Properties props = (Properties)propertiesCache.get(key);
+		Properties props = (Properties) propertiesCache.get(key);
 		if (props != null)
 		{
 			return props;
@@ -209,14 +182,50 @@ public class PropertiesFactory implements IPropertiesFactory
 		}
 		else
 		{
-			ValueMap strings = ValueMap.EMPTY_MAP;
+			ValueMap strings = null;
 
 			try
 			{
 				try
 				{
-					properties.load(new BufferedInputStream(resourceStream.getInputStream()));
-					strings = new ValueMap(properties);
+					// Get the InputStream 
+					BufferedInputStream in = new BufferedInputStream(resourceStream
+							.getInputStream());
+					
+					// Determine if resource is a XML File
+					boolean loadAsXml = false;
+					if (resourceStream instanceof IFixedLocationResourceStream)
+					{
+						String location = ((IFixedLocationResourceStream)resourceStream)
+								.locationAsString();
+						if (location != null)
+						{
+							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
+							if ("xml".equals(ext))
+							{
+								loadAsXml = true;
+							}
+						}
+					}
+
+					// Load the properties
+					if (loadAsXml)
+					{
+						properties.loadFromXML(in);
+					}
+					else
+					{
+						properties.load(in);
+					}
+
+					// Copy the properties into the ValueMap
+					strings = new ValueMap();
+					Enumeration enumeration = properties.propertyNames();
+					while (enumeration.hasMoreElements())
+					{
+						String property = (String)enumeration.nextElement();
+						strings.put(property, properties.getProperty(property));
+					}
 				}
 				finally
 				{
@@ -249,21 +258,13 @@ public class PropertiesFactory implements IPropertiesFactory
 	 *            The key for the resource
 	 * @param resourceStream
 	 *            The properties file stream to load and begin to watch
-	 * @param componentClass
-	 *            The class that resources are bring loaded for
-	 * @param style
-	 *            The style to load resources for (see {@link wicket.Session})
-	 * @param locale
-	 *            The locale to load reosurces for
 	 * @return The map of loaded resources
 	 */
 	private final Properties loadPropertiesFileAndWatchForChanges(final String key,
-			final IResourceStream resourceStream, final Class componentClass, final String style,
-			final Locale locale)
+			final IResourceStream resourceStream)
 	{
 		// Watch file modifications
-		final ModificationWatcher watcher = Application.get().getResourceSettings()
-				.getResourceWatcher(true);
+		final ModificationWatcher watcher = resourceSettings.getResourceWatcher(true);
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()
@@ -274,22 +275,21 @@ public class PropertiesFactory implements IPropertiesFactory
 							+ "from the cache. Resource: " + resourceStream);
 
 					// Clear the whole cache as associated localized files may
-					// be affected and may need reloading as well. We make it
-					// easy. Usually the watcher is activ in dev mode only
-					// anyway.
+					// be affected and may need reloading as well. 
 					clearCache();
 
 					// Inform all listeners
-					for (Iterator iter = afterReloadListeners.iterator(); iter.hasNext();)
+					Iterator iter = afterReloadListeners.iterator();
+					while (iter.hasNext())
 					{
-						IPropertiesReloadListener listener = (IPropertiesReloadListener)iter.next();
+						IPropertiesChangeListener listener = (IPropertiesChangeListener)iter.next();
 						try
 						{
-							listener.propertiesLoaded(key);
+							listener.propertiesChanged(key);
 						}
 						catch (Throwable ex)
 						{
-							log.error("PropertiesReloadListener throw an exception: "
+							log.error("PropertiesReloadListener has thrown an exception: "
 									+ ex.getMessage());
 						}
 					}
@@ -298,6 +298,6 @@ public class PropertiesFactory implements IPropertiesFactory
 		}
 
 		log.info("Loading properties files from " + resourceStream);
-		return loadPropertiesFile(key, resourceStream, componentClass, style, locale);
+		return loadPropertiesFile(key, resourceStream);
 	}
 }

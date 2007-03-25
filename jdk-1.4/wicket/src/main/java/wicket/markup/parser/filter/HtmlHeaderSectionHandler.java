@@ -18,6 +18,7 @@ package wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
@@ -42,7 +43,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	private static final String HEAD = "head";
 
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
-	public static final String HEADER_ID = "<auto>_header";
+	public static final String HEADER_ID = Component.AUTO_COMPONENT_PREFIX + "header";
 
 	/** True if <head> has been found already */
 	private boolean foundHead = false;
@@ -103,12 +104,6 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 					tag.setId(HEADER_ID);
 				}
 	
-				// Usually <head> is not a wicket special tag. But because we want
-				// transparent header support we insert it automatically if missing
-				// and while rendering its content all child components are asked if
-				// they want to contribute something to the header. Thus we have to
-				// handle <head> accordingly.
-				tag.setInternalTag(true);
 				return tag;
 			}
 			else 

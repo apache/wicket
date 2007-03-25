@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
-import wicket.Session;
 import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
@@ -107,8 +106,7 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 		defaultValue.append(((double)timeTaken) / 1000);
 		defaultValue.append("s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 		String txt = Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-				null, Model.valueOf(map), Session.get().getLocale(), Session.get().getStyle(),
-				defaultValue.toString());
+				null, Model.valueOf(map), defaultValue.toString());
 		return txt;
 	}
 }

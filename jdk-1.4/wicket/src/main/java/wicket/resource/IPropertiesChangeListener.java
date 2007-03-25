@@ -14,41 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.file;
-
-import java.net.URL;
+package wicket.resource;
 
 /**
- * Path for working with OSGi bundles.
+ * To be implemented by listeners interested in PropertiesFactory events fired
+ * after a change to the properties has been detected
  * 
- * @author Timur Mehrvarz
+ * @author Juergen Donnerstag
  */
-public final class OsgiPath implements IResourceFinder
+public abstract interface IPropertiesChangeListener
 {
-	/** ClassLoader to be used for locating resources. */
-	final ClassLoader classLoader;
-
 	/**
-	 * Constructor.
+	 * Fired after a properties file change has been detected
 	 * 
-	 * @param classLoader
-	 *            class loader to be used for locating resources
+	 * @param key
 	 */
-	public OsgiPath(ClassLoader classLoader)
-	{
-		this.classLoader = classLoader;
-	}
-
-	/**
-	 * Looks for a given pathname along this path in the OSGi (jar) bundle.
-	 * 
-	 * @param pathname
-	 *            The filename with possible path
-	 * @return The url located on the path
-	 */
-	public URL find(final String pathname)
-	{
-		String resourcePathName = "/" + pathname;
-		return classLoader.getResource(resourcePathName);
-	}
+	void propertiesChanged(final String key);
 }

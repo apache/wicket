@@ -16,39 +16,39 @@
  */
 package wicket.resource;
 
-import java.util.Locale;
-
-import wicket.Application;
 
 /**
- * Interface to be implemented by properties loaders
+ * IPropertyiesFactory is not a 100% replacement for java.util.Properties as it
+ * does not provide the same interface. But it serves kind of the same purpose
+ * with Wicket specific features. E.g. besides Locale it take 'styles' and
+ * 'variations' into account as well, it allows to register listeners which get
+ * called when a property resource has changed and it allows to clear the
+ * locally cached properties.
+ * 
+ * @see wicket.resource.Properties
  * 
  * @author Juergen Donnerstag
  */
 public interface IPropertiesFactory
 {
 	/**
-	 * Add a listener which will be called after properties have been reloaded
+	 * Add a listener which will be called when a change to the underlying
+	 * resource stream (e.g. properties file) has been detected
 	 * 
 	 * @param listener
 	 */
-	void addListener(final IPropertiesReloadListener listener);
+	void addListener(final IPropertiesChangeListener listener);
 
 	/**
-	 * Get the properties for ...
+	 * Load the properties associated with the path
 	 * 
-	 * @param application
-	 *            The application object
 	 * @param clazz
-	 *            The class that resources are bring loaded for
-	 * @param style
-	 *            The style to load resources for (see {@link wicket.Session})
-	 * @param locale
-	 *            The locale to load reosurces for
+	 *            The class requesting the properties
+	 * @param path
+	 *            The path to identify the resource
 	 * @return The properties
 	 */
-	Properties get(final Application application, final Class clazz, final String style,
-			final Locale locale);
+	Properties load(final Class clazz, final String path);
 
 	/**
 	 * Remove all cached properties

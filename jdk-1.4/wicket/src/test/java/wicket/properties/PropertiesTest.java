@@ -20,7 +20,6 @@ import java.util.Locale;
 
 import wicket.WicketTestCase;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.resource.loader.WicketBundleStringResourceLoader;
 import wicket.util.tester.WicketTester;
 
 /**
@@ -54,11 +53,6 @@ public class PropertiesTest extends WicketTestCase
 	 */
 	public void test_1()
 	{
-		// Add the string resource loader with the special Bundle like
-		// behavior
-		tester.getApplication().getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(tester.getApplication()));
-
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
 		TestPage page = new TestPage();
@@ -77,11 +71,6 @@ public class PropertiesTest extends WicketTestCase
 	 */
 	public void test_2()
 	{
-		// Add the string resource loader with the special Bundle like
-		// behavior
-		tester.getApplication().getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(tester.getApplication()));
-
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.getSession().setLocale(Locale.GERMANY);

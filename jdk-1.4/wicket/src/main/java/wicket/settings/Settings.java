@@ -58,8 +58,8 @@ import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
-import wicket.util.resource.locator.CompoundResourceStreamLocator;
 import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
@@ -294,9 +294,8 @@ public final class Settings
 	{
 		this.application = application;
 		this.markupParserFactory = new MarkupParserFactory(application);
-		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
-		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application
-				.getClass()));
+		stringResourceLoaders.add(new ComponentStringResourceLoader());
+		stringResourceLoaders.add(new ClassStringResourceLoader(this.application.getClass()));
 	}
 
 	/**
@@ -532,7 +531,7 @@ public final class Settings
 	{
 		if (localizer == null)
 		{
-			this.localizer = new Localizer(application);
+			this.localizer = new Localizer();
 		}
 		return localizer;
 	}
@@ -638,7 +637,7 @@ public final class Settings
 		{
 			// Create compound resource locator using source path from
 			// application settings
-			resourceStreamLocator = new CompoundResourceStreamLocator(getResourceFinder());
+			resourceStreamLocator = new ResourceStreamLocator(getResourceFinder());
 		}
 		return resourceStreamLocator;
 	}

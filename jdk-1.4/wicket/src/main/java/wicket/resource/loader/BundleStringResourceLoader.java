@@ -20,6 +20,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import wicket.Component;
+
 /**
  * Implementation of a string resource loader that sits on top of the ordinary
  * Java resource bundle mechanism. When created this loader must be given the
@@ -31,51 +33,67 @@ import java.util.ResourceBundle;
  */
 public class BundleStringResourceLoader implements IStringResourceLoader
 {
-    /** The name of the underlying resource bundle. */
-    private String bundleName;
+	/** The name of the underlying resource bundle. */
+	private String bundleName;
 
-    /**
-     * Create the loader with the name of the given Java resource bundle.
-     * 
-     * @param bundleName
-     *            The name of the resource bundle
-     */
-    public BundleStringResourceLoader(final String bundleName)
-    {
-        this.bundleName = bundleName;
-    }
+	/**
+	 * Create the loader with the name of the given Java resource bundle.
+	 * 
+	 * @param bundleName
+	 *            The name of the resource bundle
+	 */
+	public BundleStringResourceLoader(final String bundleName)
+	{
+		this.bundleName = bundleName;
+	}
 
-    /**
-     * Get the requested string resource from the underlying resource bundle.
-     * The bundle is selected by locale and the string obtained from the best
-     * matching bundle.
-     * 
-     * @param clazz
-     *            Not used for this implementstion
-     * @param key
-     *            The key to obtain the string for
-     * @param locale
-     *            The locale identifying the resource set to select the strings
-     *            from
-     * @param style
-     *            Not used for this implementation (see {@link wicket.Session})
-     * @return The string resource value or null if resource not found
-     */
-    public final String loadStringResource(final Class clazz, final String key,
-            Locale locale, final String style)
-    {
-        if (locale == null)
-        {
-            locale = Locale.getDefault();
-        }
-        try
-        {
-            final ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
-            return bundle.getString(key);
-        }
-        catch (MissingResourceException e)
-        {
-            return null;
-        }
-    }
+	/**
+	 * Get the requested string resource from the underlying resource bundle.
+	 * The bundle is selected by locale and the string obtained from the best
+	 * matching bundle.
+	 * 
+	 * @param clazz
+	 *            Not used for this implementstion
+	 * @param key
+	 *            The key to obtain the string for
+	 * @param locale
+	 *            The locale identifying the resource set to select the strings
+	 *            from
+	 * @param style
+	 *            Not used for this implementation (see {@link wicket.Session})
+	 * @return The string resource value or null if resource not found
+	 */
+	public final String loadStringResource(final Class clazz, final String key, Locale locale,
+			final String style)
+	{
+		if (locale == null)
+		{
+			locale = Locale.getDefault();
+		}
+		try
+		{
+			final ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
+			return bundle.getString(key);
+		}
+		catch (MissingResourceException e)
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * Get the requested string resource from the underlying resource bundle.
+	 * The bundle is selected by locale and the string obtained from the best
+	 * matching bundle.
+	 * 
+	 * @param component
+	 *            Used to get the locale
+	 * @param key
+	 *            The key to obtain the string for
+	 * @return The string resource value or null if resource not found
+	 */
+	public final String loadStringResource(final Component component, final String key)
+	{
+		return loadStringResource(null, key, component.getLocale(), null);
+	}
 }

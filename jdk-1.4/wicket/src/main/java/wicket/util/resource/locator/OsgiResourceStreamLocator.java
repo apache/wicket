@@ -14,20 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.resource;
+package wicket.util.resource.locator;
+
+import wicket.util.file.IResourceFinder;
+import wicket.util.resource.IResourceStream;
 
 /**
- * To be implemented by listeners interested in PropertiesFactory events fired
- * after a new properties files has been loaded
+ * OSGI specific resource stream factory
  * 
- * @author Juergen Donnerstag
+ * @author Juergen Donnerstah
  */
-public abstract interface IPropertiesReloadListener
+public class OsgiResourceStreamLocator extends ResourceStreamLocator
 {
 	/**
-	 * Fired after a new properties files has been loaded
-	 * 
-	 * @param key
+	 * Construct.
 	 */
-	void propertiesLoaded(final String key);
+	public OsgiResourceStreamLocator()
+	{
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param finder
+	 */
+	public OsgiResourceStreamLocator(final IResourceFinder finder)
+	{
+		super(finder);
+	}
+
+	/**
+	 * 
+	 * @see wicket.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class, java.lang.String)
+	 */
+	public IResourceStream locate(final Class clazz, final String path)
+	{
+		return super.locate(clazz, "/" + path);
+	}
 }

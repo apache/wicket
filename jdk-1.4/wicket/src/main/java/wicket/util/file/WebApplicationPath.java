@@ -16,8 +16,6 @@
  */
 package wicket.util.file;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,21 +23,31 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.util.resource.FileResourceStream;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.UrlResourceStream;
 import wicket.util.string.StringList;
 
 /**
- * Mantains a list of folders as a path.
+ * Maintain a list of paths which might either be ordinary folders of the
+ * filesystem or relative paths to the web application's servlet context.
  * 
  * @author Johan Compagner
  */
 public final class WebApplicationPath implements IResourcePath
 {
+	private final static Log log = LogFactory.getLog(WebApplicationPath.class);
+
 	/** The list of urls in the path */
 	private final List webappPaths = new ArrayList();
 
 	/** The list of folders in the path */
 	private final List folders = new ArrayList();
 
+	/** The web apps servlet context */
 	private final ServletContext servletContext;
 
 	/**
@@ -49,70 +57,69 @@ public final class WebApplicationPath implements IResourcePath
 	 *            The webapplication context where the resources must be loaded
 	 *            from
 	 */
-	public WebApplicationPath(ServletContext servletContext)
+	public WebApplicationPath(final ServletContext servletContext)
 	{
 		this.servletContext = servletContext;
 	}
 
 	/**
-	 * @param folder
+	 * @param path
 	 *            add a path that is lookup through the servlet context
 	 */
-	public void add(String folder)
+	public void add(String path)
 	{
-		final Folder f = new Folder(folder);
-		if (f.exists())
+		final Folder folder = new Folder(path);
+		if (folder.exists())
 		{
-			folders.add(f);			
+			folders.add(folder);
 		}
 		else
 		{
-			if (!folder.startsWith("/"))
+			if (!path.startsWith("/"))
 			{
-				folder = "/" + folder;
+				path = "/" + path;
 			}
-			if (!folder.endsWith("/"))
+			if (!path.endsWith("/"))
 			{
-				folder += "/";
+				path += "/";
 			}
-			webappPaths.add(folder);
+			webappPaths.add(path);
 		}
 	}
 
 	/**
-	 * Looks for a given pathname along this path
 	 * 
-	 * @param pathname
-	 *            The filename with possible path
-	 * @return The file located on the path
+	 * @see wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public URL find(final String pathname)
+	public IResourceStream find(final Class clazz, final String pathname)
 	{
-		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
+		Iterator iter = folders.iterator();
+		while (iter.hasNext())
 		{
-			Folder folder = (Folder)iterator.next();
-			File file = new File(folder, pathname);
+			Folder folder = (Folder) iter.next();
+			final File file = new File(folder, pathname);
 			if (file.exists())
 			{
-				try
-				{
-					return file.toURI().toURL();
-				}
-				catch (MalformedURLException ex)
-				{
-					// ignore
-				}
+				return new FileResourceStream(file);
 			}
 		}
-		for (final Iterator iterator = webappPaths.iterator(); iterator.hasNext();)
+
+		iter = webappPaths.iterator();
+		while (iter.hasNext())
 		{
-			final String path = (String)iterator.next();
+			String path = (String) iter.next();
 			try
 			{
-				final URL file = servletContext.getResource(path + pathname);
-				if (file != null)
+				final URL url = servletContext.getResource(path + pathname);
+				if (url != null)
 				{
-					return file;
+					IResourceStream stream = new UrlResourceStream(url);
+					if (stream == null)
+					{
+						log.error("ClassLoader problem: found the URL, but was unable to load it. URL="
+										+ url.toExternalForm());
+					}
+					return stream;
 				}
 			}
 			catch (Exception ex)

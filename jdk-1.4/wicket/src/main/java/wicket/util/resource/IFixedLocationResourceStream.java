@@ -14,25 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.file;
-
-import wicket.util.resource.IResourceStream;
+package wicket.util.resource;
 
 /**
- * Knows how to find resources.
+ * Non-dynamic resource streams point to fixed locations, like a file or a url.
+ * Such resources should implement this interface and provide clients with
+ * information about the resource location, such that the client is able to
+ * deduct e.g. an extension or URL schema.
  * 
- * @author jcompagner
+ * @author eelcohillenius
  */
-public interface IResourceFinder
+public interface IFixedLocationResourceStream
 {
 	/**
-	 * Looks for a given pathname along this path
-	 * 
-	 * @param clazz
-	 *            The class requesting the resource stream
-	 * @param pathname
-	 *            The filename with possible path
-	 * @return The resource stream
+	 * @return The fixed location as a string, e.g. the file name or the URL
 	 */
-	IResourceStream find(final Class clazz, final String pathname);
+	String locationAsString();
 }

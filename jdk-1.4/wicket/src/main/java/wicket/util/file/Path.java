@@ -16,12 +16,11 @@
  */
 package wicket.util.file;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import wicket.util.resource.FileResourceStream;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.StringList;
 
 /**
@@ -60,9 +59,12 @@ public final class Path implements IResourcePath
 	 */
 	public Path(final Folder[] folders)
 	{
-		for (int i = 0; i < folders.length; i++)
+		if (folders != null)
 		{
-			add(folders[i]);
+			for (int i=0; i < folders.length; i++)
+			{
+				add(folders[i]);
+			}
 		}
 	}
 
@@ -91,29 +93,19 @@ public final class Path implements IResourcePath
 	}
 
 	/**
-	 * Looks for a given pathname along this path
 	 * 
-	 * @param pathname
-	 *            The filename with possible path
-	 * @return The url located on the path
+	 * @see wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public URL find(final String pathname)
+	public IResourceStream find(final Class clazz, final String pathname)
 	{
-		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
+		for (int i=0; i < folders.size(); i++)
 		{
-			final Folder folder = (Folder)iterator.next();
+			Folder folder = (Folder) folders.get(i);
 			final File file = new File(folder, pathname);
 
 			if (file.exists())
 			{
-				try
-				{
-					return file.toURI().toURL();
-				}
-				catch (MalformedURLException ex)
-				{
-					// ignore
-				}
+				return new FileResourceStream(file);
 			}
 		}
 
