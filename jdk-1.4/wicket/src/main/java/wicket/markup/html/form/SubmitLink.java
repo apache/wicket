@@ -17,7 +17,6 @@
 package wicket.markup.html.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.link.ILinkListener;
 import wicket.model.IModel;
 
 /**
@@ -66,11 +65,9 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public class SubmitLink extends Button
+public abstract class SubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
-
-	private Form form;
 
 	/**
 	 * With this constructor the SubmitLink must be inside a Form.
@@ -100,8 +97,7 @@ public class SubmitLink extends Button
 	 */
 	public SubmitLink(String id, Form form)
 	{
-		super(id);
-		this.form = form;
+		super(id, form);
 	}
 
 
@@ -139,22 +135,7 @@ public class SubmitLink extends Button
 	 */
 	public SubmitLink(String id, IModel model, Form form)
 	{
-		super(id, model);
-		this.form = form;
-	}
-
-	/**
-	 * @return the Form for which this submit link submits. Null if there is no
-	 *         form.
-	 */
-	public final Form getForm()
-	{
-		if (form == null)
-		{
-			// Look for parent form
-			form = (Form)findParent(Form.class);
-		}
-		return form;
+		super(id, model, form);
 	}
 
 	/**
@@ -175,22 +156,9 @@ public class SubmitLink extends Button
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// If we're disabled
-		if (!isEnabled())
+		if (!isLinkEnabled())
 		{
-			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a"))
-			{
-				// Change anchor link to span tag
-				tag.setName("span");
-
-				// Remove any href from the old link
-				tag.remove("href");
-			}
-			else
-			{
-				// Remove any onclick design time code
-				tag.remove("onclick");
-			}
+			disableLink(tag);
 		}
 		else
 		{
@@ -215,36 +183,44 @@ public class SubmitLink extends Button
 	}
 
 	/**
-	 * The javascript which trigges this link
+	 * The javascript which trigges this link.
+	 * 
+	 * TODO: This is a copy & paste from Button
 	 * 
 	 * @return The javascript
 	 */
-	private String getTriggerJavaScript()
+	protected final String getTriggerJavaScript()
 	{
-		Form form = getForm();
-		if (form != null)
-		{
+		if (getForm() != null) {
+			// find the root form - the one we are really going to submit
+			Form root = getForm().getRootForm();
 			StringBuffer sb = new StringBuffer(100);
 			sb.append("var e=document.getElementById('");
-			sb.append(form.getHiddenFieldId());
+			sb.append(root.getHiddenFieldId());
 			sb.append("'); e.name=\'");
 			sb.append(getInputName());
-			sb.append("'; e.value='x';");
+			sb.append("'; e.value='x';");			
 			sb.append("var f=document.getElementById('");
-			sb.append(form.getJavascriptId());
+			sb.append(root.getMarkupId());
 			sb.append("');");
 			if (shouldInvokeJavascriptFormOnsubmit())
 			{
-				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
+				if (getForm() != root)
+				{
+					sb.append("var ff=document.getElementById('");
+					sb.append(getForm().getMarkupId());
+					sb.append("');");
+				}
+				else
+				{
+					sb.append("var ff=f;");
+				}
+				sb.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
 			}
 			sb.append("f.submit();e.value='';e.name='';return false;");
 			return sb.toString();
+		} else {
+			return null;
 		}
-		else
-		{
-			// if we didn't find a parent form, fall back on normal link
-			// behavior
-			return "window.location.href='" + urlFor(ILinkListener.INTERFACE).toString() + "';";
-		}
-	}
+	}	
 }

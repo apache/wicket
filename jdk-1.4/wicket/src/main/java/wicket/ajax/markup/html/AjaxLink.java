@@ -21,7 +21,7 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.link.AbstractLink;
 import wicket.model.IModel;
 
 /**
@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
+public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -70,18 +70,35 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 				return new CancelEventIfNoAjaxDecorator(AjaxLink.this.getAjaxCallDecorator());
 			}
 
+			protected void onComponentTag(ComponentTag tag)
+			{
+				// add the onclick handler only if link is enabled 
+				if (isLinkEnabled())
+				{
+					super.onComponentTag(tag);
+				}
+			}
 		});
 	}
 
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		// disable any href attr in markup
-		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
-				|| tag.getName().equalsIgnoreCase("area"))
+		
+		if (isLinkEnabled()) 
 		{
-			tag.put("href", "#");
+			// disable any href attr in markup
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+					|| tag.getName().equalsIgnoreCase("area"))
+			{
+				tag.put("href", "#");
+			}
+		} 
+		else 
+		{
+			disableLink(tag);
 		}
+		
 	}
 
 	/**

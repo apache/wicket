@@ -16,15 +16,12 @@
  */
 package wicket.markup.html.link;
 
-import wicket.Application;
 import wicket.Component;
 import wicket.IPageMap;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
@@ -77,7 +74,7 @@ import wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Link extends WebMarkupContainer implements ILinkListener
+public abstract class Link extends AbstractLink implements ILinkListener
 {
 	/** Change record for when an anchor is changed. */
 	private final class AnchorChange extends Change
@@ -106,12 +103,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Simple insertion string to allow disabled links to look like <i>Disabled
-	 * link </i>.
-	 */
-	private String afterDisabledLink;
-
-	/**
 	 * An anchor (form 'http://server/app/etc#someAnchor') will be appended to
 	 * the link so that after this link executes, it will jump to the provided
 	 * anchor component's position. The provided anchor must either have the
@@ -126,12 +117,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 * false by default.
 	 */
 	private boolean autoEnable = false;
-
-	/**
-	 * Simple insertion string to allow disabled links to look like <i>Disabled
-	 * link </i>.
-	 */
-	private String beforeDisabledLink;
 
 	/**
 	 * The popup specification. If not-null, a javascript on-click event handler
@@ -156,17 +141,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * Gets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
-	 * 
-	 * @return The insertion string
-	 */
-	public String getAfterDisabledLink()
-	{
-		return afterDisabledLink;
-	}
-
-	/**
 	 * Gets any anchor component.
 	 * 
 	 * @return Any anchor component to jump to, might be null
@@ -186,17 +160,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	public final boolean getAutoEnable()
 	{
 		return autoEnable;
-	}
-
-	/**
-	 * Gets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
-	 * 
-	 * @return The insertion string
-	 */
-	public String getBeforeDisabledLink()
-	{
-		return beforeDisabledLink;
 	}
 
 	/**
@@ -259,22 +222,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		onClick();
 	}
 
-	/**
-	 * Sets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
-	 * 
-	 * @param afterDisabledLink
-	 *            The insertion string
-	 */
-	public void setAfterDisabledLink(final String afterDisabledLink)
-	{
-		if (afterDisabledLink == null)
-		{
-			throw new IllegalArgumentException(
-					"Value cannot be null.  For no text, specify an empty String instead.");
-		}
-		this.afterDisabledLink = afterDisabledLink;
-	}
 
 	/**
 	 * Sets an anchor component. An anchor (form
@@ -307,23 +254,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	{
 		this.autoEnable = autoEnable;
 		return this;
-	}
-
-	/**
-	 * Sets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
-	 * 
-	 * @param beforeDisabledLink
-	 *            The insertion string
-	 */
-	public void setBeforeDisabledLink(final String beforeDisabledLink)
-	{
-		if (beforeDisabledLink == null)
-		{
-			throw new IllegalArgumentException(
-					"Value cannot be null.  For no text, specify an empty String instead.");
-		}
-		this.beforeDisabledLink = beforeDisabledLink;
 	}
 
 	/**
@@ -448,22 +378,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * @see wicket.Component#onAttach()
-	 */
-	protected void onAttach()
-	{
-		super.onAttach();
-
-		// Set default for before/after link text
-		if (beforeDisabledLink == null)
-		{
-			final Application app = getApplication();
-			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
-			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
-		}
-	}
-
-	/**
 	 * Whether this link refers to the given page.
 	 * 
 	 * @param page
@@ -496,28 +410,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		// If we're disabled
 		if (!isEnabled())
 		{
-			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
-					|| tag.getName().equalsIgnoreCase("area"))
-			{
-				// Change anchor link to span tag
-				tag.setName("span");
-
-				// Remove any href from the old link
-				tag.remove("href");
-
-				// if it generates a popupscript, remove the design time JS
-				// handler
-				if (popupSettings != null)
-				{
-					tag.remove("onclick");
-				}
-			}
-			else
-			{
-				// Remove any onclick design time code
-				tag.remove("onclick");
-			}
+			disableLink(tag);
 		}
 		else
 		{
@@ -556,50 +449,24 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 					tag.put("onclick", "window.location.href='" + url + "';return false;");
 				}
 			}
-		}
-
-		// If the subclass specified javascript, use that
-		final CharSequence onClickJavaScript = getOnClickScript(url);
-		if (onClickJavaScript != null)
-		{
-			tag.put("onclick", onClickJavaScript);
-		}
-
-		if (popupSettings != null)
-		{
-			IPageMap popupPageMap = popupSettings.getPageMap(this);
-			if (popupPageMap != null)
+			
+			// If the subclass specified javascript, use that
+			final CharSequence onClickJavaScript = getOnClickScript(url);
+			if (onClickJavaScript != null)
 			{
-				tag.put("target", popupPageMap.getName());
+				tag.put("onclick", onClickJavaScript);
+			}
+
+			if (popupSettings != null)
+			{
+				IPageMap popupPageMap = popupSettings.getPageMap(this);
+				if (popupPageMap != null)
+				{
+					tag.put("target", popupPageMap.getName());
+				}
 			}
 		}
+
 	}
 
-	/**
-	 * Renders this link's body.
-	 * 
-	 * @param markupStream
-	 *            the markup stream
-	 * @param openTag
-	 *            the open part of this tag
-	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
-	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
-	{
-		// Draw anything before the body?
-		if (!isEnabled() && getBeforeDisabledLink() != null)
-		{
-			getResponse().write(getBeforeDisabledLink());
-		}
-
-		// Render the body of the link
-		renderComponentTagBody(markupStream, openTag);
-
-		// Draw anything after the body?
-		if (!isEnabled() && getAfterDisabledLink() != null)
-		{
-			getResponse().write(getAfterDisabledLink());
-		}
-	}
 }

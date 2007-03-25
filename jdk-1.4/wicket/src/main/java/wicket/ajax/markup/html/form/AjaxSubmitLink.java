@@ -20,7 +20,7 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.form.AbstractSubmitLink;
 import wicket.markup.html.form.Form;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -33,7 +33,7 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AjaxSubmitLink extends WebMarkupContainer
+public abstract class AjaxSubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -81,6 +81,15 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 			{
 				return AjaxSubmitLink.this.getAjaxCallDecorator();
 			}
+			
+			protected void onComponentTag(ComponentTag tag)
+			{
+				// write the onclick handler only if link is enabled
+				if (isLinkEnabled())
+				{					
+					super.onComponentTag(tag);
+				}
+			}
 		});
 
 	}
@@ -101,8 +110,26 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		checkComponentTag(tag, "a");
-		tag.put("href", "#");
+		
+		if (isLinkEnabled()) 
+		{
+			checkComponentTag(tag, "a");
+			tag.put("href", "#");
+		}
+		else
+		{
+			disableLink(tag);
+		}
+	}
+	
+	/**
+	 * Final implementation of the Button's onSubmit. AjaxSubmitLinks have
+	 * there own onSubmit which is called.
+	 * 
+	 * @see wicket.markup.html.form.Button#onSubmit()
+	 */
+	public final void onSubmit()
+	{
 	}
 
 	/**

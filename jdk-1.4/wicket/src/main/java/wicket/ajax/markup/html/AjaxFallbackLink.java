@@ -20,6 +20,7 @@ import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import wicket.markup.ComponentTag;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 
@@ -71,7 +72,15 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 				return new CancelEventIfNoAjaxDecorator(AjaxFallbackLink.this
 						.getAjaxCallDecorator());
 			}
-
+			
+			protected void onComponentTag(ComponentTag tag)
+			{
+				// only render handler if link is enabled
+				if (isLinkEnabled())
+				{
+					super.onComponentTag(tag);
+				}
+			}
 		});
 	}
 
