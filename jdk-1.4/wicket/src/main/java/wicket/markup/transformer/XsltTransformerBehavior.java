@@ -18,7 +18,6 @@ package wicket.markup.transformer;
 
 import wicket.Component;
 import wicket.markup.ComponentTag;
-import wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
  * An IBehavior which can be added to any component except ListView. It allows
@@ -59,15 +58,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	}
 
 	/**
-	 * Instead of using the default mechanism to determine the associated XSL
-	 * file, it is given by the user.
-	 * 
-	 * @param xslFilePath
-	 *            XSL input file path relative to the component's package. If
-	 *            the path does not end with <tt>.xsl</tt>, then it is
-	 *            considered as a basename and will be passed as-is to
-	 *            {@link IResourceStreamLocator#locate(Class, String, String, java.util.Locale, String)}.
-	 *            All stylesheets must have the <tt>.xsl</tt> extension.
+	 * @see XsltTransformer#XsltTransformer(String)
 	 */
 	public XsltTransformerBehavior(final String xslFilePath)
 	{
