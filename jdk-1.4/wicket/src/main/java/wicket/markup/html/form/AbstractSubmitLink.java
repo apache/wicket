@@ -173,5 +173,5 @@ public abstract class AbstractSubmitLink extends AbstractLink
 			id = c.getId();
 		}
 		return inputName.toString();
-	}
+	}	
 }

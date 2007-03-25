@@ -65,7 +65,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public abstract class SubmitLink extends AbstractSubmitLink
+public class SubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -223,4 +223,12 @@ public abstract class SubmitLink extends AbstractSubmitLink
 			return null;
 		}
 	}	
+	
+	/**
+	 * @see wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
+	 */
+	public void onSubmit()
+	{
+	}
+
 }
