@@ -51,22 +51,21 @@ import wicket.util.string.JavascriptUtils;
  */
 // TODO provide localization strings (base them on the messages of
 // JsDatePicker?)
-public abstract class AbstractCalendar extends WebComponent {
-	private static final long serialVersionUID = 1L;
-	
+public abstract class AbstractCalendar extends WebComponent
+{
 	/**
 	 * Format to be used when configuring YUI calendar. Can be used when using
 	 * the &quot;selected&quot; property.
 	 */
-	public static final DateFormat FORMAT_DATE = new SimpleDateFormat(
-			"MM/dd/yyyy");
+	public static final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
+
 	/**
 	 * For specifying which page (month/year) to show in the calendar, use this
 	 * format for the date. This is to be used together with the property
 	 * &quot;pagedate&quot;
 	 */
-	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat(
-			"MM/yyyy");
+	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct. Contributes packaged dependencies.
@@ -74,7 +73,8 @@ public abstract class AbstractCalendar extends WebComponent {
 	 * @param id
 	 *            The component id
 	 */
-	public AbstractCalendar(String id) {
+	public AbstractCalendar(String id)
+	{
 		this(id, true);
 	}
 
@@ -98,19 +98,23 @@ public abstract class AbstractCalendar extends WebComponent {
 	 * 	 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;calendar.css&quot; /&gt; 
 	 * </pre>
 	 */
-	public AbstractCalendar(String id, boolean contributeDependencies) {
+	public AbstractCalendar(String id, boolean contributeDependencies)
+	{
 
 		super(id);
 		setOutputMarkupId(true);
-		if (contributeDependencies) {
+		if (contributeDependencies)
+		{
 			contributeDependencies();
 		}
 
-		add(new StringHeaderContributor(new LoadableDetachableModel() {
+		add(new StringHeaderContributor(new LoadableDetachableModel()
+		{
 
 			private static final long serialVersionUID = 1L;
 
-			protected Object load() {
+			protected Object load()
+			{
 
 				// not pretty to look at, but cheaper than using a template
 				String markupId = AbstractCalendar.this.getMarkupId();
@@ -135,20 +139,42 @@ public abstract class AbstractCalendar extends WebComponent {
 				Properties p = new Properties();
 				configureWidgetProperties(p);
 				b.append("\", { ");
-				for (Iterator i = p.entrySet().iterator(); i.hasNext();) {
-					Entry entry = (Entry) i.next();
+				for (Iterator i = p.entrySet().iterator(); i.hasNext();)
+				{
+					Entry entry = (Entry)i.next();
 					b.append(entry.getKey());
 					Object value = entry.getValue();
-					if (value instanceof CharSequence) {
+					if (value instanceof CharSequence)
+					{
 						b.append(":\"");
 						b.append(value);
 						b.append("\"");
-					} else {
+					}
+					else if (value instanceof CharSequence[])
+					{
+						b.append(":[");
+						CharSequence[] valueArray = (CharSequence[])value;
+						for (int j = 0; j < valueArray.length; j++)
+						{
+							CharSequence tmpValue = valueArray[j];
+							b.append("\"");
+							b.append(tmpValue);
+							b.append("\"");
+							if (j < valueArray.length - 1)
+							{
+								b.append(",");
+							}
+						}
+						b.append("]");
+					}
+					else
+					{
 						b.append(":");
 						b.append(value);
 					}
 					// TODO handle arrays
-					if (i.hasNext()) {
+					if (i.hasNext())
+					{
 						b.append(",");
 					}
 				}
@@ -185,7 +211,8 @@ public abstract class AbstractCalendar extends WebComponent {
 	 * @return The javascript id
 	 * @see #getJavascriptWidgetId()
 	 */
-	public final String getJavascriptId() {
+	public final String getJavascriptId()
+	{
 		return getMarkupId() + "Js";
 	}
 
@@ -195,21 +222,21 @@ public abstract class AbstractCalendar extends WebComponent {
 	 * @return The widget id
 	 * @see #getJavascriptId()
 	 */
-	public final String getJavascriptWidgetId() {
+	public final String getJavascriptWidgetId()
+	{
 		return "YAHOO.wicket." + getJavascriptId();
 	}
 
 	/**
 	 * add header contributions for packaged resources.
 	 */
-	private void contributeDependencies() {
+	private void contributeDependencies()
+	{
 		add(HeaderContributor.forJavaScript(YuiLib.class, "yahoo.js"));
 		add(HeaderContributor.forJavaScript(YuiLib.class, "event.js"));
 		add(HeaderContributor.forJavaScript(YuiLib.class, "dom.js"));
-		add(HeaderContributor.forJavaScript(AbstractCalendar.class,
-				"calendar.js"));
-		add(HeaderContributor.forCss(AbstractCalendar.class,
-				"assets/calendar.css"));
+		add(HeaderContributor.forJavaScript(AbstractCalendar.class, "calendar.js"));
+		add(HeaderContributor.forCss(AbstractCalendar.class, "assets/calendar.css"));
 	}
 
 	/**
@@ -226,8 +253,9 @@ public abstract class AbstractCalendar extends WebComponent {
 	 * @param b
 	 *            the buffer to append the script to
 	 */
-	protected void appendToInit(String markupId, String javascriptId,
-			String javascriptWidgetId, StringBuffer b) {
+	protected void appendToInit(String markupId, String javascriptId, String javascriptWidgetId,
+			StringBuffer b)
+	{
 	}
 
 	/**
@@ -241,6 +269,7 @@ public abstract class AbstractCalendar extends WebComponent {
 	 * @param widgetProperties
 	 *            the current widget properties
 	 */
-	protected void configureWidgetProperties(Map widgetProperties) {
+	protected void configureWidgetProperties(Map widgetProperties)
+	{
 	}
 }

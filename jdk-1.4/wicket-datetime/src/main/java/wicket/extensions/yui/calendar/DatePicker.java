@@ -56,7 +56,8 @@ import wicket.util.string.Strings;
  * 
  * @author eelcohillenius
  */
-public class DatePicker extends AbstractBehavior implements IHeaderContributor {
+public class DatePicker extends AbstractBehavior implements IHeaderContributor
+{
 
 	private static final long serialVersionUID = 1L;
 
@@ -66,13 +67,15 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	/**
 	 * Construct.
 	 */
-	public DatePicker() {
+	public DatePicker()
+	{
 	}
 
 	/**
 	 * @see wicket.behavior.AbstractBehavior#bind(wicket.Component)
 	 */
-	public void bind(Component component) {
+	public void bind(Component component)
+	{
 		checkComponentProvidesDateFormat(component);
 		component.setOutputMarkupId(true);
 		this.component = component;
@@ -81,7 +84,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	/**
 	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
 	 */
-	public void onRendered(Component component) {
+	public void onRendered(Component component)
+	{
 		super.onRendered(component);
 		// Append the span and img icon right after the rendering of the
 		// component. Not as pretty as working with a panel etc, but works
@@ -96,28 +100,27 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		response.write(getIconId());
 		response.write("\" src=\"");
 		CharSequence iconUrl = getIconUrl();
-		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl
-				.toString() : ""));
+		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl.toString() : ""));
 		response.write("\" /></span><input type=\"hidden\"/>");
 	}
 
 	/**
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.IHeaderResponse)
 	 */
-	public void renderHead(IHeaderResponse response) {			
+	public void renderHead(IHeaderResponse response)
+	{
 		// add YUI contributions
 		// NOTE JavascriptResourceReference takes care of stripping comments
 		// when in deployment (production) mode
-		response.renderJavascriptReference(new JavascriptResourceReference(
-				YuiLib.class, "yahoo.js"));
-		response.renderJavascriptReference(new JavascriptResourceReference(
-				YuiLib.class, "event.js"));
-		response.renderJavascriptReference(new JavascriptResourceReference(
-				YuiLib.class, "dom.js"));
-		response.renderJavascriptReference(new JavascriptResourceReference(
-				DatePicker.class, "calendar.js"));
-		response.renderCSSReference(new CompressedResourceReference(
-				DatePicker.class, "assets/calendar.css"));
+		response
+				.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class, "yahoo.js"));
+		response
+				.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class, "event.js"));
+		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class, "dom.js"));
+		response.renderJavascriptReference(new JavascriptResourceReference(DatePicker.class,
+				"calendar.js"));
+		response.renderCSSReference(new CompressedResourceReference(DatePicker.class,
+				"assets/calendar.css"));
 
 		// not pretty to look at, but cheaper than using a template
 		String markupId = getCalendarMarkupId();
@@ -143,20 +146,42 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 		Properties p = new Properties();
 		configureWidgetProperties(p);
 		buffer.append("\", { ");
-		for (Iterator i = p.entrySet().iterator(); i.hasNext();) {
-			Entry entry = (Entry) i.next();
+		for (Iterator i = p.entrySet().iterator(); i.hasNext();)
+		{
+			Entry entry = (Entry)i.next();
 			buffer.append(entry.getKey());
 			Object value = entry.getValue();
-			if (value instanceof CharSequence) {
+			if (value instanceof CharSequence)
+			{
 				buffer.append(":\"");
 				buffer.append(value);
 				buffer.append("\"");
-			} else {
+			}
+			else if (value instanceof CharSequence[])
+			{
+				buffer.append(":[");
+				CharSequence[] valueArray = (CharSequence[])value;
+				for (int j = 0; j < valueArray.length; j++)
+				{
+					CharSequence tmpValue = valueArray[j];
+					buffer.append("\"");
+					buffer.append(tmpValue);
+					buffer.append("\"");
+					if (j < valueArray.length - 1)
+					{
+						buffer.append(",");
+					}
+				}
+				buffer.append("]");
+			}
+			else
+			{
 				buffer.append(":");
 				buffer.append(value);
 			}
 			// TODO handle arrays
-			if (i.hasNext()) {
+			if (i.hasNext())
+			{
 				buffer.append(",");
 			}
 		}
@@ -234,8 +259,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @param b
 	 *            the buffer to append the script to
 	 */
-	protected void appendToInit(String markupId, String javascriptId,
-			String javascriptWidgetId, StringBuffer b) {
+	protected void appendToInit(String markupId, String javascriptId, String javascriptWidgetId,
+			StringBuffer b)
+	{
 	}
 
 	/**
@@ -250,26 +276,29 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @throws WicketRuntimeException
 	 *             if the component is not support.
 	 */
-	protected void checkComponentProvidesDateFormat(Component component) {
+	protected void checkComponentProvidesDateFormat(Component component)
+	{
 
-		if (component instanceof ITextFormatProvider) {
+		if (component instanceof ITextFormatProvider)
+		{
 			// were ok
 			return;
 		}
 
 		IConverter converter = component.getConverter(DateTime.class);
-		if (converter == null) {
+		if (converter == null)
+		{
 			converter = component.getConverter(Date.class);
 		}
-		if (converter instanceof DateConverter) {
+		if (converter instanceof DateConverter)
+		{
 
 			return; // This is ok
 		}
 		throw new WicketRuntimeException(
 				"this behavior can only be added to components that either implement "
 						+ ITextFormatProvider.class.getName() + " or that use "
-						+ DateConverter.class.getName()
-						+ " configured with an instance of "
+						+ DateConverter.class.getName() + " configured with an instance of "
 						+ SimpleDateFormat.class.getName()
 						+ " (like Wicket's default configuration has)");
 	}
@@ -285,17 +314,17 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @param widgetProperties
 	 *            the current widget properties
 	 */
-	protected void configureWidgetProperties(Map widgetProperties) {
+	protected void configureWidgetProperties(Map widgetProperties)
+	{
 		widgetProperties.put("close", Boolean.TRUE);
 		// TODO localize
 		widgetProperties.put("title", "Select a date:");
 
-		Date date = (Date) component.getModelObject();
-		if (date != null) {
-			widgetProperties.put("selected", AbstractCalendar.FORMAT_DATE
-					.format(date));
-			widgetProperties.put("pagedate", AbstractCalendar.FORMAT_PAGEDATE
-					.format(date));
+		Date date = (Date)component.getModelObject();
+		if (date != null)
+		{
+			widgetProperties.put("selected", AbstractCalendar.FORMAT_DATE.format(date));
+			widgetProperties.put("pagedate", AbstractCalendar.FORMAT_PAGEDATE.format(date));
 		}
 	}
 
@@ -308,7 +337,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * @return The javascript id
 	 * @see #getJavascriptWidgetId()
 	 */
-	protected final String getCalendarJavascriptId() {
+	protected final String getCalendarJavascriptId()
+	{
 		return component.getMarkupId() + "DpJs";
 	}
 
@@ -317,7 +347,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * 
 	 * @return The markup id of the calendar widget
 	 */
-	protected final String getCalendarMarkupId() {
+	protected final String getCalendarMarkupId()
+	{
 		return component.getMarkupId() + "Dp";
 	}
 
@@ -330,18 +361,23 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * 
 	 * @return The date pattern
 	 */
-	protected String getDatePattern() {
+	protected String getDatePattern()
+	{
 
-		if (component instanceof ITextFormatProvider) {
-			return ((ITextFormatProvider) component).getTextFormat();
-		} else {
+		if (component instanceof ITextFormatProvider)
+		{
+			return ((ITextFormatProvider)component).getTextFormat();
+		}
+		else
+		{
 			// cast from hell, but we checked before whether we could
 			IConverter converter = component.getConverter(DateTime.class);
-			if (converter == null) {
+			if (converter == null)
+			{
 				converter = component.getConverter(Date.class);
 			}
-			return ((SimpleDateFormat) ((DateConverter) converter)
-					.getDateFormat(component.getLocale())).toPattern();
+			return ((SimpleDateFormat)((DateConverter)converter).getDateFormat(component
+					.getLocale())).toPattern();
 		}
 	}
 
@@ -350,7 +386,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * 
 	 * @return The id of the icon
 	 */
-	protected final String getIconId() {
+	protected final String getIconId()
+	{
 		return component.getMarkupId() + "Icon";
 	}
 
@@ -359,7 +396,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * 
 	 * @return The style of the icon, e.g. 'cursor: point' etc.
 	 */
-	protected String getIconStyle() {
+	protected String getIconStyle()
+	{
 		return "cursor: pointer; border: none;";
 	}
 
@@ -369,8 +407,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor {
 	 * 
 	 * @return the url to use for the popup button/ icon
 	 */
-	protected CharSequence getIconUrl() {
-		return RequestCycle.get().urlFor(
-				new ResourceReference(DatePicker.class, "icon1.gif"));
+	protected CharSequence getIconUrl()
+	{
+		return RequestCycle.get().urlFor(new ResourceReference(DatePicker.class, "icon1.gif"));
 	}
 }
