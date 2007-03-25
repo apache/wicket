@@ -26,7 +26,7 @@ import wicket.markup.html.border.Border;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.transformer.AbstractOutputTransformerContainer;
 import wicket.markup.transformer.NoopOutputTransformerContainer;
-import wicket.markup.transformer.XsltTransfomerBehavior;
+import wicket.markup.transformer.XsltTransformerBehavior;
 import wicket.model.Model;
 
 
@@ -88,6 +88,6 @@ public class Page_2 extends WebPage
 	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
 	    add(border2);
 	    
-	    border2.add(new XsltTransfomerBehavior());
+	    border2.add(new XsltTransformerBehavior());
     }
 }
