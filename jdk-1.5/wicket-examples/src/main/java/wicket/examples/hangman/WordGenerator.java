@@ -26,7 +26,7 @@ import wicket.IClusterable;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamLocator;
 
 /**
  * The word generator is responsible for reading in a list of words from a data
@@ -53,7 +53,7 @@ public class WordGenerator implements IClusterable
 	{
 		try
 		{
-			final IResourceStream resource = new ClassLoaderResourceStreamLocator().locate(null,
+			final IResourceStream resource = new ResourceStreamLocator().locate(null,
 					"wicket/examples/hangman/WordList", "", Locale.getDefault(), ".txt");
 			final String wordlist = Streams.readString(resource.getInputStream());
 			this.words = Arrays.asList(wordlist.split("\\s+"));
