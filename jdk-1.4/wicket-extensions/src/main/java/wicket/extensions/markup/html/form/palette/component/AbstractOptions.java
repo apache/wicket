@@ -24,7 +24,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.util.string.AppendingStringBuffer;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * Generats html option elements based on iterator specified by
@@ -82,12 +82,16 @@ public abstract class AbstractOptions extends FormComponent
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
+	/**
+	 * 
+	 * @param tag
+	 */
 	protected void onComponentTag(ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");
 
 		super.onComponentTag(tag);
-		ValueMap attrs = tag.getAttributes();
+		IValueMap attrs = tag.getAttributes();
 
 		attrs.put("multiple", null);
 		attrs.put("size", new Integer(getPalette().getRows()));
@@ -95,7 +99,6 @@ public abstract class AbstractOptions extends FormComponent
 		if (!palette.isPaletteEnabled()) {
 			attrs.put("disabled","disabled");
 		}
-
 	}
 
 	/**
@@ -104,5 +107,4 @@ public abstract class AbstractOptions extends FormComponent
 	public void updateModel()
 	{
 	}
-
 }

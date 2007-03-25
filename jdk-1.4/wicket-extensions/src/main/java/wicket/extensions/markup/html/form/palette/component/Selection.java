@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 import wicket.extensions.markup.html.form.palette.Palette;
 import wicket.markup.ComponentTag;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * select box containg selected choices of the palette
@@ -36,8 +36,10 @@ public class Selection extends AbstractOptions
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param id component id
-	 * @param palette parent palette
+	 * @param id
+	 *            component id
+	 * @param palette
+	 *            parent palette
 	 */
 	public Selection(String id, Palette palette)
 	{
@@ -47,19 +49,20 @@ public class Selection extends AbstractOptions
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		ValueMap attrs=tag.getAttributes();
-		
-		String onFocus=getPalette().getSelectionOnFocusJS();
-		if (onFocus!=null) {
+		IValueMap attrs = tag.getAttributes();
+
+		String onFocus = getPalette().getSelectionOnFocusJS();
+		if (onFocus != null)
+		{
 			attrs.put("onFocus", onFocus);
 		}
-		
-		tag.getAttributes().put("ondblclick", getPalette().getRemoveOnClickJS()); 
+
+		tag.getAttributes().put("ondblclick", getPalette().getRemoveOnClickJS());
 	}
-	
+
 	protected Iterator getOptionsIterator()
 	{
 		return getPalette().getSelectedChoices();
 	}
-	
+
 }
