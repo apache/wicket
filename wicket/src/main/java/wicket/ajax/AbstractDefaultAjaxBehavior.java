@@ -79,8 +79,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		final IDebugSettings settings = Application.get().getDebugSettings();
 
 
-		response.renderJavascriptReference(JAVASCRIPT);
 		response.renderJavascriptReference(WicketEventReference.INSTANCE);
+		response.renderJavascriptReference(JAVASCRIPT);
 		if (settings.isAjaxDebugModeEnabled())
 		{
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
