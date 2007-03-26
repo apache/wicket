@@ -233,6 +233,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				((IDetachable)object).detach();
 			}
 		}
+		
+		protected void onAttach()
+		{
+			AbstractTree.this.attach();
+			super.onAttach();
+		}
 	}
 
 	/**
