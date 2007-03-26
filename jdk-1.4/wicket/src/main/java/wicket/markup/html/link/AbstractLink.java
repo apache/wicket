@@ -153,7 +153,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 *            the open part of this tag
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
-	protected final void onComponentTagBody(final MarkupStream markupStream,
+	protected void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
 		// Draw anything before the body?
