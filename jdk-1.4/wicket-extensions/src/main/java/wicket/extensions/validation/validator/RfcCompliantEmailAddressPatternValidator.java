@@ -16,7 +16,7 @@
  */
 package wicket.extensions.validation.validator;
 
-import wicket.validation.validator.EmailAddressPatternValidator;
+import wicket.validation.validator.EmailAddressValidator;
 import wicket.validation.validator.PatternValidator;
 
 
@@ -30,7 +30,7 @@ import wicket.validation.validator.PatternValidator;
  * used is very big and generates a allocates 1-2Kb of memory per session.
  * 
  * <p>
- * Most users will be satisfied with the {@link EmailAddressPatternValidator}
+ * Most users will be satisfied with the {@link EmailAddressValidator}
  * 
  * @see <a href="http://www.ex-parrot.com/~pdw/Mail-RFC822-Address.html">Perl
  *      Regex implementation of RFC 822</a>
