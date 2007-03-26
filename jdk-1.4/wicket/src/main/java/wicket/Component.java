@@ -2769,19 +2769,16 @@ public abstract class Component implements IClusterable
 	 */
 	public final void detach()
 	{
-		if (getFlag(FLAG_ATTACHED))
+		setFlag(FLAG_DETACHING, true);
+		onDetach();
+		if (getFlag(FLAG_DETACHING))
 		{
-			setFlag(FLAG_DETACHING, true);
-			onDetach();
-			if (getFlag(FLAG_DETACHING))
-			{
-				throw new IllegalStateException(Component.class.getName()
-						+ " has not been properly detached. Something in the hierarchy of "
-						+ getClass().getName()
-						+ " has not called super.onDetach() in the override of onDetach() method");
-			}
-			setFlag(FLAG_ATTACHED, false);
+			throw new IllegalStateException(Component.class.getName()
+					+ " has not been properly detached. Something in the hierarchy of "
+					+ getClass().getName()
+					+ " has not called super.onDetach() in the override of onDetach() method");
 		}
+		setFlag(FLAG_ATTACHED, false);
 
 		detachChildren();
 	}
@@ -3194,7 +3191,7 @@ public abstract class Component implements IClusterable
 		private static final long serialVersionUID = 1L;
 
 	};
-	
+
 	/**
 	 * @deprecated
 	 */
