@@ -2769,17 +2769,29 @@ public abstract class Component implements IClusterable
 	 */
 	public final void detach()
 	{
-		setFlag(FLAG_DETACHING, true);
-		onDetach();
-		if (getFlag(FLAG_DETACHING))
+		if (getFlag(FLAG_ATTACHED))
 		{
-			throw new IllegalStateException(Component.class.getName()
-					+ " has not been properly detached. Something in the hierarchy of "
-					+ getClass().getName()
-					+ " has not called super.onDetach() in the override of onDetach() method");
+			// if the component has been previously attached via attach()
+			// detach it now
+			setFlag(FLAG_DETACHING, true);
+			onDetach();
+			if (getFlag(FLAG_DETACHING))
+			{
+				throw new IllegalStateException(Component.class.getName()
+						+ " has not been properly detached. Something in the hierarchy of "
+						+ getClass().getName()
+						+ " has not called super.onDetach() in the override of onDetach() method");
+			}
+			setFlag(FLAG_ATTACHED, false);
 		}
-		setFlag(FLAG_ATTACHED, false);
+		
+		// always detach models because they can be attached without the
+		// component. eg component has a compoundpropertymodel and one of its
+		// children component's getmodelobject is called
+		detachModels();
 
+		// always detach children because components can be attached
+		// independently of their parents
 		detachChildren();
 	}
 
