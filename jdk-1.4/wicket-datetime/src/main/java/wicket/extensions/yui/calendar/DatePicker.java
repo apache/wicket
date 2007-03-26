@@ -187,6 +187,22 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		}
 		buffer.append(" });\n");
 
+		buffer.append(" function showCalendar() {\n");
+		buffer.append(javascriptWidgetId);
+		buffer.append(".select(YAHOO.util.Dom.get(\"");
+		buffer.append(component.getMarkupId());
+		buffer.append("\").value);\n");
+		buffer.append("var firstDate = ");
+		buffer.append(javascriptWidgetId);
+		buffer.append(".getSelectedDates()[0];");
+		buffer.append(javascriptWidgetId);
+		buffer.append(".cfg.setProperty(\"pagedate\", (firstDate.getMonth()+1) + \"/\" + firstDate.getFullYear());");  
+		buffer.append(javascriptWidgetId);
+		buffer.append(".render();\n");
+		buffer.append(javascriptWidgetId);
+		buffer.append(".show();\n");
+		buffer.append(" }\n");
+		
 		// add a listener to the calendar widget that fills in the value
 		// of the passed in date text field when a selection is made,
 		// after which the widget is hidden again (it starts out hidden)
@@ -194,8 +210,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		String iconId = getIconId();
 		buffer.append(iconId);
 		buffer.append("\", \"click\", ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(".show, ");
+		buffer.append("showCalendar, ");
 		buffer.append(javascriptWidgetId);
 		buffer.append(", true);\n");
 		buffer.append("  function selectHandler(type, args, cal) {\n");

@@ -110,15 +110,21 @@ public class StyleDateConverter extends DateConverter {
 	 * @return datePattern
 	 */
 	public final String getDatePattern() {
-		return DateTimeFormat.patternForStyle(dateStyle, Session.get()
+		String str = DateTimeFormat.patternForStyle(dateStyle, Session.get()
 				.getLocale());
+		// a bit of a hack, but yy shouldn't be used then the datepicker will make from 1/1/07 -> 1/1/1907
+		if (str.indexOf("yyy") == -1)
+		{
+			str = str.replaceAll("yy", "yyyy");
+		}
+		return str;
 	}
 
 	/**
 	 * @return formatter The formatter for the current conversion
 	 */
 	protected DateTimeFormatter getFormat() {
-		return DateTimeFormat.forStyle(dateStyle).withLocale(
-				Session.get().getLocale());
+		DateTimeFormatter dtf = DateTimeFormat.forPattern(getDatePattern());
+		return dtf;
 	}
 }
