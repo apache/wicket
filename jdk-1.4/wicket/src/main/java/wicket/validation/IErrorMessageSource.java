@@ -25,7 +25,7 @@ import java.util.Map;
  * 
  * @author ivaynberg
  */
-public interface IMessageSource
+public interface IErrorMessageSource
 {
 	/**
 	 * Retrieves a message with the given <code>key</code>.

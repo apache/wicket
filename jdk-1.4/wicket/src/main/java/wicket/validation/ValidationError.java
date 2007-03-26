@@ -26,13 +26,13 @@ import java.util.Map;
 
 /**
  * A versatile implementation of {@link IValidationError} that supports message
- * resolution from {@link IMessageSource}, default message (if none of the keys
+ * resolution from {@link IErrorMessageSource}, default message (if none of the keys
  * matched), and variable substitution.
  * 
  * The final error message is constructed via the following process:
  * <ol>
  * <li>Try all keys added by calls to {@link #addMessageKey(String)} via
- * provided {@link IMessageSource}</li>
+ * provided {@link IErrorMessageSource}</li>
  * <li>If none of the keys yielded a message, use the message set by
  * {@link #setMessage(String)} if any</li>
  * <li>Perform variable subsitution on the message if any</li>
@@ -45,7 +45,7 @@ public class ValidationError implements IValidationError, Serializable
 	private static final long serialVersionUID = 1L;
 
 	// XXX 2.0: optimization - keys can be null by default until a key is added
-	/** List of message keys to try against the {@link IMessageSource} */
+	/** List of message keys to try against the {@link IErrorMessageSource} */
 	private List keys = new ArrayList(1);
 
 	/** Variable map to use in variable substitution */
@@ -64,7 +64,7 @@ public class ValidationError implements IValidationError, Serializable
 
 	/**
 	 * Adds a key to the list of keys that will be tried against
-	 * {@link IMessageSource} to locate the error message string
+	 * {@link IErrorMessageSource} to locate the error message string
 	 * 
 	 * @param key
 	 * @return this for chaining
@@ -88,7 +88,7 @@ public class ValidationError implements IValidationError, Serializable
 	 *            variable value
 	 * @return this for chaining
 	 */
-	public ValidationError setVar(String name, Object value)
+	public ValidationError setVariable(String name, Object value)
 	{
 		if (name == null || name.trim().length() == 0)
 		{
@@ -101,7 +101,7 @@ public class ValidationError implements IValidationError, Serializable
 					"Argument [[value]] cannot be null or an empty string");
 		}
 
-		getVars().put(name, value);
+		getVariables().put(name, value);
 
 		return this;
 	}
@@ -112,7 +112,7 @@ public class ValidationError implements IValidationError, Serializable
 	 * 
 	 * @return map of variables for this error
 	 */
-	public final Map getVars()
+	public final Map getVariables()
 	{
 		if (vars == null)
 		{
@@ -128,7 +128,7 @@ public class ValidationError implements IValidationError, Serializable
 	 *            variable map
 	 * @return this for chaining
 	 */
-	public final ValidationError setVars(Map vars)
+	public final ValidationError setVariables(Map vars)
 	{
 		if (vars == null)
 		{
@@ -139,9 +139,9 @@ public class ValidationError implements IValidationError, Serializable
 	}
 
 	/**
-	 * @see wicket.validation.IValidationError#getErrorMessage(wicket.validation.IMessageSource)
+	 * @see wicket.validation.IValidationError#getErrorMessage(wicket.validation.IErrorMessageSource)
 	 */
-	public final String getErrorMessage(IMessageSource messageSource)
+	public final String getErrorMessage(IErrorMessageSource messageSource)
 	{
 		String errorMessage = null;
 

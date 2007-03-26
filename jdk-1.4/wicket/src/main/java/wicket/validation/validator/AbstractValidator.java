@@ -170,7 +170,7 @@ public abstract class AbstractValidator implements IValidator, IClusterable
 			error.addMessageKey(defaultKey);
 		}
 
-		error.setVars(vars);
+		error.setVariables(vars);
 		validatable.error(error);
 	}
 

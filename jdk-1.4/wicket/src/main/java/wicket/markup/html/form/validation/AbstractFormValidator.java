@@ -138,7 +138,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 			error.addMessageKey(defaultKey);
 		}
 
-		error.setVars(vars);
+		error.setVariables(vars);
 		fc.error((IValidationError)error);
 	}
 

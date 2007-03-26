@@ -29,5 +29,5 @@ public interface IValidationError
 	 * @param messageSource
 	 * @return error message
 	 */
-	String getErrorMessage(IMessageSource messageSource);
+	String getErrorMessage(IErrorMessageSource messageSource);
 }

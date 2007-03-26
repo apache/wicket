@@ -20,7 +20,7 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.model.CompoundPropertyModel;
-import wicket.validation.validator.EmailAddressPatternValidator;
+import wicket.validation.validator.EmailAddressValidator;
 
 /**
  * @author Juergen Donnerstag
@@ -42,7 +42,7 @@ public class EmailPage extends WebPage
 		add(form);
 
 		TextField email = new TextField("email");
-		email.add(EmailAddressPatternValidator.getInstance());
+		email.add(EmailAddressValidator.getInstance());
 		form.add(email);
 	}
 

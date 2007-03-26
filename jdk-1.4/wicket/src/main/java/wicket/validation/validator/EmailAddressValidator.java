@@ -25,17 +25,17 @@ import java.util.regex.Pattern;
  * @author Jonathan Locke
  * @author Martijn Dashorst
  */
-public class EmailAddressPatternValidator extends PatternValidator
+public class EmailAddressValidator extends PatternValidator
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Singleton instance */
-	private static final EmailAddressPatternValidator INSTANCE = new EmailAddressPatternValidator();
+	private static final EmailAddressValidator INSTANCE = new EmailAddressValidator();
 
 	/**
 	 * @return Instance of emailadress validator
 	 */
-	public static EmailAddressPatternValidator getInstance()
+	public static EmailAddressValidator getInstance()
 	{
 		return INSTANCE;
 	}
@@ -44,7 +44,7 @@ public class EmailAddressPatternValidator extends PatternValidator
 	 * Protected constructor to force use of static singleton accessor method.
 	 * Or override it to implement resourceKey(Component)
 	 */
-	protected EmailAddressPatternValidator()
+	protected EmailAddressValidator()
 	{
 		super("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
 				Pattern.CASE_INSENSITIVE);

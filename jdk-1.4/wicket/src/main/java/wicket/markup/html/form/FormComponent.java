@@ -39,7 +39,7 @@ import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
 import wicket.util.string.interpolator.MapVariableInterpolator;
-import wicket.validation.IMessageSource;
+import wicket.validation.IErrorMessageSource;
 import wicket.validation.IValidatable;
 import wicket.validation.IValidationError;
 import wicket.validation.IValidator;
@@ -771,13 +771,13 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{
-					error.setVar("locale", locale);
+					error.setVariable("locale", locale);
 				}
-				error.setVar("exception", e);
+				error.setVariable("exception", e);
 				Format format = e.getFormat();
 				if (format instanceof SimpleDateFormat)
 				{
-					error.setVar("format", ((SimpleDateFormat)format).toLocalizedPattern());
+					error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
 				error((IValidationError)error);
@@ -801,17 +801,17 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 				error.addMessageKey("TypeValidator");
 
 
-				error.setVar("type", Classes.simpleName(type));
+				error.setVariable("type", Classes.simpleName(type));
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{
-					error.setVar("locale", locale);
+					error.setVariable("locale", locale);
 				}
-				error.setVar("exception", e);
+				error.setVariable("exception", e);
 				Format format = e.getFormat();
 				if (format instanceof SimpleDateFormat)
 				{
-					error.setVar("format", ((SimpleDateFormat)format).toLocalizedPattern());
+					error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
 				error((IValidationError)error);
@@ -1145,16 +1145,16 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	}
 
 	/**
-	 * {@link IMessageSource} used for error messags against this form
+	 * {@link IErrorMessageSource} used for error messags against this form
 	 * components.
 	 *
 	 * @author ivaynberg
 	 */
-	private class MessageSource implements IMessageSource
+	private class MessageSource implements IErrorMessageSource
 	{
 
 		/**
-		 * @see wicket.validation.IMessageSource#getMessage(java.lang.String)
+		 * @see wicket.validation.IErrorMessageSource#getMessage(java.lang.String)
 		 */
 		public String getMessage(String key)
 		{
@@ -1262,7 +1262,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 
 		/**
-		 * @see wicket.validation.IMessageSource#substitute(java.lang.String,
+		 * @see wicket.validation.IErrorMessageSource#substitute(java.lang.String,
 		 *      java.util.Map)
 		 */
 		public String substitute(String string, Map vars) throws IllegalStateException
