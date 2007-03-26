@@ -39,7 +39,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.markup.parser.XmlTag;
 import wicket.model.IAssignmentAwareModel;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
@@ -2740,6 +2739,7 @@ public abstract class Component implements IClusterable
 		if (!getFlag(FLAG_ATTACHED))
 		{
 			setFlag(FLAG_ATTACHING, true);
+			setFlag(FLAG_ATTACHED, true);
 			onAttach();
 			if (getFlag(FLAG_ATTACHING))
 			{
@@ -2748,7 +2748,6 @@ public abstract class Component implements IClusterable
 						+ getClass().getName()
 						+ " has not called super.onAtach() in the override of onAttach() method");
 			}
-			setFlag(FLAG_ATTACHED, true);
 		}
 
 		attachChildren();
