@@ -38,7 +38,7 @@ import wicket.model.ResourceModel;
 import wicket.model.StringResourceModel;
 import wicket.validation.IValidationError;
 import wicket.validation.ValidationError;
-import wicket.validation.validator.EmailAddressPatternValidator;
+import wicket.validation.validator.EmailAddressValidator;
 
 /**
  * This wizard shows some basic form use. It uses custom panels for the form
@@ -100,7 +100,7 @@ public class NewUserWizard extends Wizard
 		{
 			super(new ResourceModel("username.title"), new ResourceModel("username.summary"));
 			add(new RequiredTextField("user.userName"));
-			add(new RequiredTextField("user.email").add(EmailAddressPatternValidator.getInstance()));
+			add(new RequiredTextField("user.email").add(EmailAddressValidator.getInstance()));
 		}
 	}
 

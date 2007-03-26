@@ -28,7 +28,7 @@ import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ResourceModel;
 import wicket.util.time.Duration;
-import wicket.validation.validator.EmailAddressPatternValidator;
+import wicket.validation.validator.EmailAddressValidator;
 import wicket.validation.validator.StringValidator;
 
 /**
@@ -67,7 +67,7 @@ public class FormPage extends BasePage {
 		form.add(new SimpleFormComponentLabel("name-label", fc));
 
 		fc = new RequiredTextField("email");
-		fc.add(EmailAddressPatternValidator.getInstance());
+		fc.add(EmailAddressValidator.getInstance());
 		fc.setLabel(new ResourceModel("label.email"));
 
 		form.add(fc);
