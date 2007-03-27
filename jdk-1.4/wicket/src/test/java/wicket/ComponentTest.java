@@ -45,14 +45,14 @@ public class ComponentTest extends WicketTestCase
 	{
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
 		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
-		assertEquals(1, page.getNrComponentDetachModelCalls());
-		assertEquals(1, page.getNrComponentDetachModelsCalls());
-		assertEquals(1, page.getNrComponentOnDetachCalls());
-		assertEquals(1, page.getNrPageDetachModelCalls());
-		assertEquals(1, page.getNrPageDetachModelsCalls());
-		assertEquals(1, page.getNrPageOnDetachCalls());
-		assertEquals(1, page.getNrModelDetachCalls());
-		assertEquals(1, page.getNrAjaxBehaviorDetachModelCalls());
+		assertTrue(page.getNrComponentDetachModelCalls() > 0);
+		assertTrue(page.getNrComponentDetachModelsCalls() > 0);
+		assertTrue(page.getNrComponentOnDetachCalls() > 0);
+		assertTrue(page.getNrPageDetachModelCalls() > 0);
+		assertTrue(page.getNrPageDetachModelsCalls() > 0);
+		assertTrue(page.getNrPageOnDetachCalls() > 0);
+		assertTrue(page.getNrModelDetachCalls() > 0);
+		assertTrue(page.getNrAjaxBehaviorDetachModelCalls() > 0);
 	}
 
 	/**
@@ -66,14 +66,14 @@ public class ComponentTest extends WicketTestCase
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
 		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
 
-		assertEquals(1, page.getNrComponentDetachModelCalls());
-		assertEquals(1, page.getNrComponentDetachModelsCalls());
-		assertEquals(1, page.getNrComponentOnDetachCalls());
-		assertEquals(1, page.getNrPageDetachModelCalls());
-		assertEquals(1, page.getNrPageDetachModelsCalls());
-		assertEquals(1, page.getNrPageOnDetachCalls());
-		assertEquals(1, page.getNrModelDetachCalls());
-		assertEquals(1, page.getNrAjaxBehaviorDetachModelCalls());
+		assertTrue(page.getNrComponentDetachModelCalls() > 0);
+		assertTrue(page.getNrComponentDetachModelsCalls() > 0);
+		assertTrue(page.getNrComponentOnDetachCalls() > 0);
+		assertTrue(page.getNrPageDetachModelCalls() > 0);
+		assertTrue(page.getNrPageDetachModelsCalls() > 0);
+		assertTrue(page.getNrPageOnDetachCalls() > 0);
+		assertTrue(page.getNrModelDetachCalls() > 0);
+		assertTrue(page.getNrAjaxBehaviorDetachModelCalls() > 0);
 
 		AjaxEventBehavior behavior = page.getAjaxBehavior();
 		executedBehavior(TestDetachPage.class, behavior, "TestDetachPageAjaxResult.html");
