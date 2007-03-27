@@ -195,11 +195,7 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
     }
 
     function processValue(param) {
-        var browserName = navigator.appName;
-        if (browserName != "Microsoft Internet Explorer"){
-            return param;
-        }
-        return encodeURIComponent(param);
+        return (encodeURIComponent)?encodeURIComponent(param):escape(param);
     }
 
     function showAutoComplete(){
