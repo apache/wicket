@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 /**
  * @author almaw
  */
-public class MiniMapTest extends TestCase
+public class MicroMapTest extends TestCase
 {
 	private static final Object FOO = new Object();
 	private static final Object BAR = new Object();
@@ -35,9 +35,9 @@ public class MiniMapTest extends TestCase
 	/**
 	 * Basic test for keySet(), entrySet() and values().
 	 */
-	public void testMiniMap()
+	public void testMicroMap()
 	{
-		MiniMap m = new MiniMap(3);
+		MicroMap m = new MicroMap();
 		m.put(FOO, BAR);
 
 		// Test .keySet();
