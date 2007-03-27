@@ -188,10 +188,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append(" });\n");
 
 		buffer.append(" function showCalendar() {\n");
+		buffer.append("var dateValue = YAHOO.util.Dom.get(\""); 
+		buffer.append(component.getMarkupId()); 
+		buffer.append("\").value;\n");
+		buffer.append("if (dateValue) {\n");
 		buffer.append(javascriptWidgetId);
-		buffer.append(".select(YAHOO.util.Dom.get(\"");
-		buffer.append(component.getMarkupId());
-		buffer.append("\").value);\n");
+		buffer.append(".select(dateValue);\n");
 		buffer.append("var firstDate = ");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".getSelectedDates()[0];");
@@ -199,6 +201,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append(".cfg.setProperty(\"pagedate\", (firstDate.getMonth()+1) + \"/\" + firstDate.getFullYear());");  
 		buffer.append(javascriptWidgetId);
 		buffer.append(".render();\n");
+		buffer.append("}\n");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".show();\n");
 		buffer.append(" }\n");
