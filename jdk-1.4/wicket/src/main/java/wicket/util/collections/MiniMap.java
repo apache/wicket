@@ -229,18 +229,18 @@ public final class MiniMap implements Map, Serializable
 				{
 					public boolean hasNext()
 					{
-						return i < size;
+						return i < size - 1;
 					}
 
 					public Object next()
 					{
-						// Find next key
-						i = nextKey(nextIndex(i));
-
 						// Just in case... (WICKET-428)
 						if (!hasNext()) {
 							throw new NoSuchElementException();
 						}
+						
+						// Find next key
+						i = nextKey(nextIndex(i));
 						
 						// Get key
 						return keys[i];
@@ -273,6 +273,9 @@ public final class MiniMap implements Map, Serializable
 		{
 			public Object get(final int index)
 			{
+				if (index > size - 1) {
+					throw new IndexOutOfBoundsException();
+				}
 				int keyIndex = nextKey(0);
 
 				for (int i = 0; i < index; i++)
