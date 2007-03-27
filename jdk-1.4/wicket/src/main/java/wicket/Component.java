@@ -1818,7 +1818,7 @@ public abstract class Component implements IClusterable
 				while (iter.hasNext())
 				{
 					IBehavior behavior = (IBehavior)iter.next();
-					if (behavior instanceof IHeaderContributor)
+					if (behavior instanceof IHeaderContributor && behavior.isEnabled(this))
 					{
 						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
 					}
