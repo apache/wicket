@@ -235,13 +235,14 @@ public final class MiniMap implements Map, Serializable
 					public Object next()
 					{
 						// Just in case... (WICKET-428)
-						if (!hasNext()) {
+						if (!hasNext())
+						{
 							throw new NoSuchElementException();
 						}
-						
+
 						// Find next key
 						i = nextKey(nextIndex(i));
-						
+
 						// Get key
 						return keys[i];
 					}
@@ -273,7 +274,8 @@ public final class MiniMap implements Map, Serializable
 		{
 			public Object get(final int index)
 			{
-				if (index > size - 1) {
+				if (index > size - 1)
+				{
 					throw new IndexOutOfBoundsException();
 				}
 				int keyIndex = nextKey(0);
@@ -311,12 +313,13 @@ public final class MiniMap implements Map, Serializable
 
 					public Object next()
 					{
-						if (!hasNext()) {
+						if (!hasNext())
+						{
 							throw new NoSuchElementException();
 						}
-						
+
 						keyIndex = nextKey(nextIndex(keyIndex));
-						
+
 						index++;
 
 						return new Map.Entry()
