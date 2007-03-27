@@ -20,10 +20,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 
 import junit.framework.Assert;
-import wicket.util.io.Streams;
 import wicket.util.string.Strings;
 
 
@@ -35,7 +35,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param ignoreFiles
 	 */
 	public AbstractLicenseHeaderHandler(String[] ignoreFiles)
@@ -65,24 +65,35 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	{
 		if (Strings.isEmpty(licenseHeader))
 		{
+			String header = "";
+			LineNumberReader lineNumberReader = null;
+			InputStream inputStream = null;
+			InputStreamReader inputStreamReader = null;
+
 			try
 			{
-				InputStream in = ApacheLicenseHeaderTestCase.class
-						.getResourceAsStream(getLicenseHeaderFilename());
-				try
+				inputStream = ApacheLicenseHeaderTestCase.class.getResourceAsStream(getLicenseHeaderFilename());
+				inputStreamReader = new InputStreamReader(inputStream);
+				lineNumberReader = new LineNumberReader(inputStreamReader);
+
+				String line = lineNumberReader.readLine();
+				while (line != null)
 				{
-					licenseHeader = Streams.readString(in);
+					header += line + LINE_ENDING;
+					line = lineNumberReader.readLine();
 				}
-				finally
-				{
-					in.close();
-				}
-				licenseHeader = licenseHeader.trim();
+
+				licenseHeader = header.trim();
 			}
 			catch (Exception e)
 			{
 				Assert.fail(e.getMessage());
-
+			}
+			finally
+			{
+				if (lineNumberReader != null)  try { lineNumberReader.close(); }  catch (Exception e) { /* Ignore */ };
+				if (inputStream != null)       try { inputStream.close(); }	  catch (Exception e) { /* Ignore */ };
+				if (inputStreamReader != null) try { inputStreamReader.close(); } catch (Exception e) { /* Ignore */ };
 			}
 		}
 
@@ -129,7 +140,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	/**
 	 * Add the license header to the start of the file without caring about
 	 * existing license headers.
-	 * 
+	 *
 	 * @param file
 	 *            The file to add the license header to.
 	 */
