@@ -22,6 +22,7 @@ import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -236,6 +237,11 @@ public final class MiniMap implements Map, Serializable
 						// Find next key
 						i = nextKey(nextIndex(i));
 
+						// Just in case... (WICKET-428)
+						if (!hasNext()) {
+							throw new NoSuchElementException();
+						}
+						
 						// Get key
 						return keys[i];
 					}
@@ -302,7 +308,12 @@ public final class MiniMap implements Map, Serializable
 
 					public Object next()
 					{
+						if (!hasNext()) {
+							throw new NoSuchElementException();
+						}
+						
 						keyIndex = nextKey(nextIndex(keyIndex));
+						
 						index++;
 
 						return new Map.Entry()
