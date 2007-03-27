@@ -31,59 +31,65 @@ public class MiniMapTest extends TestCase
 {
 	private static final Object FOO = new Object();
 	private static final Object BAR = new Object();
-	
+
 	/**
-	 * Basic test for keySet(), entrySet() and values(). 
+	 * Basic test for keySet(), entrySet() and values().
 	 */
-	public void testMiniMap() {
+	public void testMiniMap()
+	{
 		MiniMap m = new MiniMap(3);
 		m.put(FOO, BAR);
-		
+
 		// Test .keySet();
 		Set s = m.keySet();
 		assertEquals(1, m.size());
-		
+
 		Iterator i = s.iterator();
 		assertTrue(i.hasNext());
 		Object key = i.next();
 		assertEquals(FOO, key);
 		assertFalse(i.hasNext());
-		try {
+		try
+		{
 			i.next();
 			fail("Expected i.next() to fail with NoSuchElementException");
 		}
-		catch (NoSuchElementException e) {
+		catch (NoSuchElementException e)
+		{
 			// Swallow this.
 		}
-		
+
 		// Do approx the same again with the .entrySet()
 		s = m.entrySet();
 		assertEquals(1, m.size());
-		
+
 		i = s.iterator();
 		assertTrue(i.hasNext());
 		Map.Entry entry = (Map.Entry)i.next();
 		assertEquals(FOO, entry.getKey());
 		assertEquals(BAR, entry.getValue());
 		assertFalse(i.hasNext());
-		try {
+		try
+		{
 			i.next();
 			fail("Expected i.next() to fail with NoSuchElementException");
 		}
-		catch (NoSuchElementException e) {
+		catch (NoSuchElementException e)
+		{
 			// Swallow this.
 		}
-		
+
 		// Do approx the same again with the .values()
 		Collection v = m.values();
 		assertEquals(1, m.size());
-		
+
 		i = v.iterator();
 		assertTrue(i.hasNext());
 		Object value = i.next();
 		assertEquals(BAR, value);
 		assertFalse(i.hasNext());
-		try {
+		try
+		{
 			Object wibble = i.next();
 			wibble = i.next();
 			wibble = i.next();
@@ -91,7 +97,8 @@ public class MiniMapTest extends TestCase
 			wibble = i.next();
 			fail("Expected i.next() to fail with NoSuchElementException");
 		}
-		catch (NoSuchElementException e) {
+		catch (NoSuchElementException e)
+		{
 			// Swallow this.
 		}
 	}
