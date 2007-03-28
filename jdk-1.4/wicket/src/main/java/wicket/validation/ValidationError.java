@@ -23,11 +23,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A versatile implementation of {@link IValidationError} that supports message
- * resolution from {@link IErrorMessageSource}, default message (if none of the keys
- * matched), and variable substitution.
+ * resolution from {@link IErrorMessageSource}, default message (if none of the
+ * keys matched), and variable substitution.
  * 
  * The final error message is constructed via the following process:
  * <ol>
@@ -206,9 +207,53 @@ public class ValidationError implements IValidationError, Serializable
 	 */
 	public String toString()
 	{
-		// FIXME 2.0: ivaynberg: implement this - specifically show resource
-		// keys
-		return super.toString();
+		StringBuffer tostring = new StringBuffer();
+		tostring.append("[").append(getClass().getName());
+
+		tostring.append(" message=[").append(message);
+
+		tostring.append("], keys=[");
+		if (keys != null)
+		{
+			Iterator i = keys.iterator();
+			while (i.hasNext())
+			{
+				tostring.append(i.next());
+				if (i.hasNext())
+				{
+					tostring.append(", ");
+				}
+			}
+		}
+		else
+		{
+			tostring.append("null");
+		}
+		tostring.append("], variables=[");
+
+		if (vars != null)
+		{
+			Iterator i = vars.entrySet().iterator();
+			while (i.hasNext())
+			{
+				final Map.Entry e = (Entry)i.next();
+				tostring.append("[").append(e.getKey()).append("=").append(e.getValue())
+						.append("]");
+				if (i.hasNext())
+				{
+					tostring.append(",");
+				}
+			}
+		}
+		else
+		{
+			tostring.append("null");
+		}
+		tostring.append("]");
+
+		tostring.append("]");
+
+		return tostring.toString();
 	}
 
 }
