@@ -249,7 +249,7 @@ public final class ClassStreamHandler
 				cons = getSerializableConstructor(clz);
 				if (cons == null)
 				{
-					throw new WicketSerializeableException("No serializeable constructor found for " + cls);
+					throw new WicketSerializeableException("No Serializable constructor found for " + cls);
 				}
 		    }
 		    else
