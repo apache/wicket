@@ -18,6 +18,7 @@ package wicket.markup.repeater;
 
 import java.util.Iterator;
 
+import wicket.WicketRuntimeException;
 import wicket.model.IModel;
 
 /**
@@ -66,7 +67,10 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 
 			public Object next()
 			{
-				final IModel model = (IModel)newModels.next();
+				Object next = newModels.next();
+				if (! (next instanceof IModel))
+					throw new WicketRuntimeException("Expecting an instance of " + IModel.class.getName() + ", got " + next.getClass().getName());
+				final IModel model = (IModel)next;
 
 				Item item = factory.newItem(index, model);
 				index++;
