@@ -143,6 +143,14 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
+	 * @return true if &lt;wicket:enclsoure&gt;
+	 */
+	public final boolean isEnclosureTag()
+	{
+		return "enclosure".equalsIgnoreCase(getName());
+	}
+
+	/**
 	 * @return True if <wicket:panel>, <wicket:border>, <wicket:ex
 	 */
 	public final boolean isMajorWicketComponentTag()

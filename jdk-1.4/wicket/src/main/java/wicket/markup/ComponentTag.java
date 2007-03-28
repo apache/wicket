@@ -74,7 +74,7 @@ public class ComponentTag extends MarkupElement
 
 	/** True, if attributes have been modified or added */
 	private boolean modified = false;
-	
+
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged
 	 * and the information about the tags origin is lost. In some cases like
@@ -87,6 +87,7 @@ public class ComponentTag extends MarkupElement
 	 * some HTML tags like 'br' for example
 	 */
 	private boolean hasNoCloseTag = false;
+
 
 	/** added behaviors */
 	private Collection behaviors;
@@ -157,7 +158,7 @@ public class ComponentTag extends MarkupElement
 			List empty = EMPTY_LIST;
 			return empty.iterator();
 		}
-		
+
 		Collection locked = Collections.unmodifiableCollection(behaviors);
 		return locked.iterator();
 	}
@@ -550,7 +551,7 @@ public class ComponentTag extends MarkupElement
 
 		return buf;
 	}
-	
+
 	/**
 	 * @see wicket.markup.MarkupElement#toCharSequence()
 	 */
@@ -596,7 +597,7 @@ public class ComponentTag extends MarkupElement
 		}
 
 		response.write(getName());
-		
+
 		String namespacePrefix = null;
 		if (stripWicketAttributes == true)
 		{
@@ -670,6 +671,7 @@ public class ComponentTag extends MarkupElement
 		this.modified = modified;
 	}
 
+
 	/**
 	 * 
 	 * @return True, if the component tag has been marked modified
@@ -712,7 +714,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * True if the HTML tag (e.g. br) has no close tag
 	 * 
-	 * @param hasNoCloseTag 
+	 * @param hasNoCloseTag
 	 */
 	public void setHasNoCloseTag(boolean hasNoCloseTag)
 	{
@@ -741,4 +743,5 @@ public class ComponentTag extends MarkupElement
 	{
 		this.markupClass = wicketHeaderClass;
 	}
+
 }

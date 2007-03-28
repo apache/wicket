@@ -1,0 +1,32 @@
+<html xmlns:wicket>
+<body>
+  <wicket:enclosure>
+    <table><tr><span wicket:id="label1">Test</span></tr></table>
+  </wicket:enclosure>
+  
+  <wicket:enclosure child="label2">
+    <table><tr><span wicket:id="label2">Test</span></tr></table>
+  </wicket:enclosure>
+  
+  <wicket:enclosure>
+    <table><tr><span wicket:id="label3">Test</span></tr></table>
+  </wicket:enclosure>
+  
+  <wicket:enclosure child="label6">
+    <table><tr><span wicket:id="label4">Test</span></tr></table>
+    <table><tr><span wicket:id="label5">Test</span></tr></table>
+    <table><tr><span wicket:id="label6">Test</span></tr></table>
+    <table><tr><span wicket:id="label7">Test</span></tr></table>
+  </wicket:enclosure>
+  
+  <wicket:enclosure child="container:label8">
+    <span wicket:id="container">
+      <span wicket:id="label8">Test</span>
+    </span>
+  </wicket:enclosure>
+  
+  <wicket:enclosure>
+    <span wicket:id="label9">Test</span><p>
+  </wicket:enclosure>
+</body>
+</html>

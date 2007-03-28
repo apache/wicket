@@ -19,6 +19,7 @@ package wicket.markup;
 import wicket.Application;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlPullParser;
+import wicket.markup.parser.filter.EnclosureHandler;
 import wicket.markup.parser.filter.PrependContextPathHandler;
 
 /**
@@ -29,6 +30,10 @@ import wicket.markup.parser.filter.PrependContextPathHandler;
 public class MarkupParserFactory implements IMarkupParserFactory
 {
 	private IMarkupFilter[] filters;
+
+	// FIXME right now we add the two default filters in 3 places, refactor so
+	// it is done in a single place
+
 	/**
 	 * Construct.
 	 * 
@@ -37,7 +42,8 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application)
 	{
-		this.filters = new IMarkupFilter[] { new PrependContextPathHandler(application) };
+		this.filters = new IMarkupFilter[] { new PrependContextPathHandler(application),
+				new EnclosureHandler() };
 	}
 
 	/**
@@ -50,9 +56,10 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application, IMarkupFilter[] filters)
 	{
-		this.filters = new IMarkupFilter[filters.length+1];
+		this.filters = new IMarkupFilter[filters.length + 2];
 		System.arraycopy(filters, 0, this.filters, 0, filters.length);
-		this.filters[filters.length] = new PrependContextPathHandler(application);
+		this.filters[filters.length - 1] = new PrependContextPathHandler(application);
+		this.filters[filters.length] = new EnclosureHandler();
 	}
 
 	/**
@@ -65,7 +72,8 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	public MarkupParserFactory(final Application application, IMarkupFilter filter)
 	{
-		this.filters = new IMarkupFilter[] { filter, new PrependContextPathHandler(application) };
+		this.filters = new IMarkupFilter[] { filter, new PrependContextPathHandler(application),
+				new EnclosureHandler() };
 	}
 
 	/**
