@@ -19,6 +19,9 @@ package wicket.protocol.http;
 import java.lang.ref.SoftReference;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.IPageMap;
 import wicket.Page;
@@ -35,6 +38,8 @@ import wicket.util.concurrent.ConcurrentHashMap;
  */
 public class SecondLevelCacheSessionStore extends HttpSessionStore
 {
+	private static final Log log = LogFactory.getLog(SecondLevelCacheSessionStore.class);
+
 	private static final class SecondLevelCachePageMap extends PageMap
 	{
 		private static final long serialVersionUID = 1L;
@@ -59,6 +64,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				getStore().removePage(sessionId, entry.getPage());
 			}
+		}
+
+		protected void houstonWeHaveAProblem()
+		{
+			log.error("Problem encountered: pagemap of different session found. Previous active page: "
+							+ lastPage);
+			lastPage = null;
 		}
 
 		public void put(Page page)

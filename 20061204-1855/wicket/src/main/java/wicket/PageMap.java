@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Objects;
 
@@ -31,6 +34,7 @@ public abstract class PageMap implements Serializable, IPageMap
 {
 	private static final long serialVersionUID = 1L;
 
+	private static Log log = LogFactory.getLog(PageMap.class);
 
 	/** Name of default pagemap */
 	public static final String DEFAULT_NAME = null;
@@ -92,7 +96,7 @@ public abstract class PageMap implements Serializable, IPageMap
 		{
 			throw new IllegalArgumentException("session must be not null");
 		}
-		this.session = session;
+		this.setSession(session);
 	}
 
 
@@ -101,7 +105,7 @@ public abstract class PageMap implements Serializable, IPageMap
 	 */
 	public final IPageMapEntry getEntry(final int id)
 	{
-		return (IPageMapEntry)session.getAttribute(attributeForId(id));
+		return (IPageMapEntry)getSession().getAttribute(attributeForId(id));
 	}
 
 	/**
@@ -117,7 +121,22 @@ public abstract class PageMap implements Serializable, IPageMap
 	 */
 	public final Session getSession()
 	{
+		Session threadSession = Session.get();
+		if (threadSession != session && session != null)
+		{
+			// now we have big shit
+			log.error("Session stored in pagemap (" + session.getId()
+					+ ") is not equal to request session (" + threadSession.getId() + ")");
+			// fixing the session
+			session = threadSession;
+			// clear the current page.
+			houstonWeHaveAProblem();
+		}
 		return session;
+	}
+
+	protected void houstonWeHaveAProblem() 
+	{
 	}
 
 	/**
@@ -139,7 +158,7 @@ public abstract class PageMap implements Serializable, IPageMap
 
 	protected final void dirty()
 	{
-		session.dirtyPageMap(this);
+		getSession().dirtyPageMap(this);
 	}
 
 	/**
@@ -231,8 +250,8 @@ public abstract class PageMap implements Serializable, IPageMap
 		cycle.setRedirect(true);
 		cycle.setResponsePage(page);
 	}
-	
-    /**
+
+	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
 	 * current request's URL is saved exactly as it was requested for future use
 	 * by continueToOriginalDestination(); Only use this method when you plan to
@@ -253,12 +272,12 @@ public abstract class PageMap implements Serializable, IPageMap
 		interceptContinuationURL = cycle.getRequest().getURL();
 
 		// Page map is dirty
-		session.dirtyPageMap(this);
+		getSession().dirtyPageMap(this);
 
 		// Redirect to the page
 		cycle.setRedirect(true);
 		cycle.setResponsePage(pageClazz);
-	}	
+	}
 
 	/**
 	 * @see wicket.IPageMap#clear()
@@ -289,13 +308,13 @@ public abstract class PageMap implements Serializable, IPageMap
 	 */
 	protected final void visitEntries(final IVisitor visitor)
 	{
-		final List attributes = session.getAttributeNames();
+		final List attributes = getSession().getAttributeNames();
 		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
 		{
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
-				visitor.entry((IPageMapEntry)session.getAttribute(attribute));
+				visitor.entry((IPageMapEntry)getSession().getAttribute(attribute));
 			}
 		}
 	}
@@ -309,7 +328,7 @@ public abstract class PageMap implements Serializable, IPageMap
 		clear();
 
 		// Then remove the pagemap itself
-		session.removePageMap(this);
+		getSession().removePageMap(this);
 	}
 
 	/**
@@ -344,7 +363,7 @@ public abstract class PageMap implements Serializable, IPageMap
 	{
 		long size = Objects.sizeof(this);
 		Iterator it = getEntries().iterator();
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			IPageMapEntry entry = (IPageMapEntry)it.next();
 			if (entry instanceof Page)
@@ -364,14 +383,14 @@ public abstract class PageMap implements Serializable, IPageMap
 	 */
 	private final List getEntries()
 	{
-		final List attributes = session.getAttributeNames();
+		final List attributes = getSession().getAttributeNames();
 		final List list = new ArrayList();
 		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
 		{
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(attributePrefix()))
 			{
-				list.add(session.getAttribute(attribute));
+				list.add(getSession().getAttribute(attribute));
 			}
 		}
 		return list;
