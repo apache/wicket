@@ -44,37 +44,38 @@ import wicket.util.listener.IChangeListener;
  * <pre>
  * public class MyReloadingFilter extends ReloadingWicketFilter
  * {
- *   static
- *   {
- *     ReloadingClassLoader.includePattern(&quot;com.company.*&quot;);
- *     ReloadingClassLoader.excludePattern(&quot;com.company.spring.beans.*&quot;);
- *     ReloadingClassLoader.includePattern(&quot;some.other.package.with.wicket.components.*&quot;);
- *   }
+ * 	static
+ * 	{
+ * 		ReloadingClassLoader.includePattern(&quot;com.company.*&quot;);
+ * 		ReloadingClassLoader.excludePattern(&quot;com.company.spring.beans.*&quot;);
+ * 		ReloadingClassLoader.includePattern(&quot;some.other.package.with.wicket.components.*&quot;);
+ * 	}
  * }
  * </pre>
  * 
  * <p>
- * <b>Note. </b>
- * The order of including and excluding patterns is significant.
+ * <b>Note. </b> The order of including and excluding patterns is significant.
  * </p>
  * 
  * <p>
  * <b>WARNING. </b> Be careful that when using Spring or other component
- * managers, you will get <tt>ClassCastException</tt> if a given class is loaded
- * two times, one time by the normal classloader, and another time by the
+ * managers, you will get <tt>ClassCastException</tt> if a given class is
+ * loaded two times, one time by the normal classloader, and another time by the
  * reloading classloader. You need to ensure that your Spring beans are properly
  * excluded from the reloading class loader and only keep the Wicket components
  * included. When getting a cryptic error with regard to class loading, class
  * instantiation or class comparison, first <b>disable the reloading class
- * loader</b> to rule out the possibility of a classloader conflict. Please keep
- * in mind that two classes are equal if and only if they have the same name
- * <b>and are loaded in the same classloader</b>.
+ * loader</b> to rule out the possibility of a classloader conflict. Please
+ * keep in mind that two classes are equal if and only if they have the same
+ * name <b>and are loaded in the same classloader</b>. Same goes for errors
+ * like <tt>LinkageError: Class FooBar violates loader constraints</tt>,
+ * better be safe and disable the reloading feature.
  * </p>
  * 
  * 
  * <p>
  * It is also possible to add an extra URL to watch for changes using
- * <tt>ReloadingClassLoader.addLocation()</tt> .  By default, all the URL
+ * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URL
  * returned by the provided class loader are registered.
  * </p>
  * 
