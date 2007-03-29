@@ -211,7 +211,7 @@ public class WebResponse extends Response
 				}
 				catch (IOException e)
 				{
-					log.warn("redirect to " + url + " failed: " + e.getMessage(), e);
+					log.warn("redirect to " + url + " failed: " + e.getMessage());
 				}
 			}
 		}
