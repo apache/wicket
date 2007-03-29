@@ -43,7 +43,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	private static final String HEAD = "head";
 
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
-	public static final String HEADER_ID = Component.AUTO_COMPONENT_PREFIX + "header";
+	public static final String HEADER_ID = "-header";
 
 	/** True if <head> has been found already */
 	private boolean foundHead = false;

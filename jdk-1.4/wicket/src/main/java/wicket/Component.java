@@ -408,12 +408,6 @@ public abstract class Component implements IClusterable
 	public static final char PATH_SEPARATOR = ':';
 
 	/**
-	 * This prefix should be used when making auto add components. Use isAuto()
-	 * to check if auto component. Don't check the id.
-	 */
-	public static final String AUTO_COMPONENT_PREFIX = "<auto>-";
-
-	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * and its children are allowed to be rendered.
 	 * <p>
