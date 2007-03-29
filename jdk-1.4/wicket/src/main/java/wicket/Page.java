@@ -288,23 +288,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public void detachModels()
 	{
-		// visit all this page's children to detach the models
-		visitChildren(new IVisitor()
-		{
-			public Object component(Component component)
-			{
-				try
-				{
-					// detach any models of the component
-					component.detachModels();
-				}
-				catch (Exception e) // catch anything; we MUST detach all models
-				{
-					log.error("detaching models of component " + component + " failed:", e);
-				}
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
+//		// visit all this page's children to detach the models
+//		visitChildren(new IVisitor()
+//		{
+//			public Object component(Component component)
+//			{
+//				try
+//				{
+//					// detach any models of the component
+//					component.detachModels();
+//				}
+//				catch (Exception e) // catch anything; we MUST detach all models
+//				{
+//					log.error("detaching models of component " + component + " failed:", e);
+//				}
+//				return IVisitor.CONTINUE_TRAVERSAL;
+//			}
+//		});
 
 		super.detachModels();
 	}
@@ -927,8 +927,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			log.debug("ending request for page " + this + ", request " + getRequest());
 		}
 
-		detachModels();
-		
 		endVersion();
 		
 		super.onDetach();
