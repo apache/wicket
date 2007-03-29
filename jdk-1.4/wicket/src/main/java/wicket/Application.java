@@ -40,6 +40,7 @@ import wicket.markup.resolver.FragmentResolver;
 import wicket.markup.resolver.HtmlHeaderResolver;
 import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
+import wicket.markup.resolver.WicketContainerResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
 import wicket.protocol.http.IRequestLogger;
@@ -877,6 +878,7 @@ public abstract class Application
 		pageSettings.addComponentResolver(new WicketMessageResolver());
 		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new EnclosureResolver());
+		pageSettings.addComponentResolver(new WicketContainerResolver());
 		
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
