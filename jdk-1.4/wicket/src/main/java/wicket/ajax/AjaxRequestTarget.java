@@ -540,64 +540,50 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		Iterator it;
 
-		try
+		// process feedback
+		it = markupIdToComponent.entrySet().iterator();
+		while (it.hasNext())
 		{
-			// process feedback
-			it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
+			final Component component = (Component)((Entry)it.next()).getValue();
+
+			if (component instanceof MarkupContainer)
 			{
-				final Component component = (Component)((Entry)it.next()).getValue();
+				MarkupContainer container = (MarkupContainer)component;
 
-				if (component instanceof MarkupContainer)
+				// collect feedback
+				container.visitChildren(IFeedback.class, new IVisitor()
 				{
-					MarkupContainer container = (MarkupContainer)component;
-
-					// collect feedback
-					container.visitChildren(IFeedback.class, new IVisitor()
+					public Object component(Component component)
 					{
-						public Object component(Component component)
-						{
-							((IFeedback)component).updateFeedback();
-							return IVisitor.CONTINUE_TRAVERSAL;
-						}
-					});
-				}
-
-				if (component instanceof IFeedback)
-				{
-					((IFeedback)component).updateFeedback();
-				}
+						((IFeedback)component).updateFeedback();
+						return IVisitor.CONTINUE_TRAVERSAL;
+					}
+				});
 			}
 
-			// attach components
-			it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
+			if (component instanceof IFeedback)
 			{
-				final Component component = (Component)((Entry)it.next()).getValue();
-				component.attach();
+				((IFeedback)component).updateFeedback();
 			}
-
-			// process component markup
-			it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
-			{
-				final Map.Entry entry = (Entry)it.next();
-				final Component component = (Component)entry.getValue();
-				final String markupId = (String)entry.getKey();
-
-				respondComponent(response, markupId, component);
-			}
-
 		}
-		finally
+
+		// attach components
+		it = markupIdToComponent.entrySet().iterator();
+		while (it.hasNext())
 		{
-			// detach
-			it = markupIdToComponent.entrySet().iterator();
-			if (it.hasNext())
-			{
-				final Component component = (Component)((Entry)it.next()).getValue();
-				component.getPage().detach();
-			}
+			final Component component = (Component)((Entry)it.next()).getValue();
+			component.attach();
+		}
+
+		// process component markup
+		it = markupIdToComponent.entrySet().iterator();
+		while (it.hasNext())
+		{
+			final Map.Entry entry = (Entry)it.next();
+			final Component component = (Component)entry.getValue();
+			final String markupId = (String)entry.getKey();
+
+			respondComponent(response, markupId, component);
 		}
 	}
 
