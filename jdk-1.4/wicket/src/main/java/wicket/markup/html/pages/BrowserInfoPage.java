@@ -25,6 +25,7 @@ import wicket.AttributeModifier;
 import wicket.IClusterable;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.Response;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
@@ -595,7 +596,9 @@ public class BrowserInfoPage extends WebPage
 		// want a second redirect to occur automatically
 		requestCycle.setRedirect(false);
 		// Redirect there
-		requestCycle.getResponse().redirect(continueTo);
+		Response response = requestCycle.getResponse();
+		response.reset();
+		response.redirect(continueTo);
 	}
 
 	/**

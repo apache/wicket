@@ -18,6 +18,7 @@ package wicket.request.target.basic;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.Response;
 import wicket.markup.html.pages.RedirectPage;
 
 /**
@@ -57,7 +58,9 @@ public class RedirectRequestTarget implements IRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		requestCycle.getResponse().redirect(redirectUrl);
+		Response response = requestCycle.getResponse();
+		response.reset();
+		response.redirect(redirectUrl);
 	}
 
 }

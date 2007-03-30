@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.request.target.basic.RedirectRequestTarget;
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Objects;
 
@@ -172,21 +173,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 		// If there's a place to go to
 		if (interceptContinuationURL != null)
 		{
-			cycle.setRequestTarget(new IRequestTarget()
-			{
-				final String responseUrl = interceptContinuationURL;
-
-				public void detach(RequestCycle requestCycle)
-				{
-				}
-
-				public void respond(RequestCycle requestCycle)
-				{
-					// Redirect there
-					cycle.getResponse().redirect(responseUrl);
-				}
-
-			});
+			cycle.setRequestTarget(new RedirectRequestTarget(interceptContinuationURL));
 
 			// Reset interception URL
 			interceptContinuationURL = null;
