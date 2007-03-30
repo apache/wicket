@@ -16,16 +16,12 @@
  */
 package wicket.behavior;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedResourceReference;
-import wicket.markup.html.resources.JavascriptResourceReference;
 import wicket.protocol.http.WebRequestCycle;
 
 /**
@@ -45,98 +41,21 @@ import wicket.protocol.http.WebRequestCycle;
  */
 public class HeaderContributor extends AbstractHeaderContributor
 {
-	// adds the context path on the front of the location, if it's not
-	// a fully-qualified URL.
-	private static final String returnLocationWithContextPath(String location)
-	{
-
-		// WICKET-59 allow external URLs.
-		if (location.startsWith("http://") || location.startsWith("https://"))
-		{
-			return location;
-		}
-		else
-		{
-			StringBuffer b = new StringBuffer();
-			String contextPath = Application.get().getApplicationSettings().getContextPath();
-			if (contextPath == null)
-			{
-				contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-						.getContextPath();
-				if (contextPath == null)
-				{
-					contextPath = "";
-				}
-			}
-			b.append(contextPath);
-			if (!contextPath.endsWith("/") && !location.startsWith("/"))
-			{
-				b.append("/");
-			}
-			b.append(location);
-			return b.toString();
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path.
-	 * 
-	 * @param location
-	 *            The location of the css file relative to the context path
-	 * @param media
-	 *            The media type for this CSS ("print", "screen", etc.)
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final String location, final String media)
-	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(returnLocationWithContextPath(location), media);
-			}
-		});
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path.
-	 * 
-	 * @param location
-	 *            The location of the css file relative to the context path
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final String location)
-	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(returnLocationWithContextPath(location));
-			}
-		});
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
 	 * 
-	 * @param reference
-	 * @param media
-	 *            The media type for this CSS ("print", "screen", etc.)
+	 * @param scope
+	 *            The scope of the package resource (typically the class of the
+	 *            caller, or a class that lives in the package where the
+	 *            resource lives).
+	 * @param path
+	 *            The path
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final ResourceReference reference,
-			final String media)
+	public static final HeaderContributor forCss(final Class scope, final String path)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -144,50 +63,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				response.renderCSSReference(reference, media);
-			}
-		});
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in a package.
-	 * 
-	 * @param reference
-	 * 
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final ResourceReference reference)
-	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(reference);
-			}
-		});
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a JavaScript file that lives in the web
-	 * application directory and that is addressed relative to the context path.
-	 * 
-	 * @param location
-	 *            The location of the css file relative to the context path
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forJavaScript(final String location)
-	{
-		return new HeaderContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderJavascriptReference(returnLocationWithContextPath(location));
+				response.renderCSSReference(new CompressedResourceReference(scope, path));
 			}
 		});
 	}
@@ -224,15 +100,11 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
 	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param path
-	 *            The path
+	 * @param reference
+	 * 
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(final Class scope, final String path)
+	public static final HeaderContributor forCss(final ResourceReference reference)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -240,7 +112,76 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				response.renderCSSReference(new CompressedResourceReference(scope, path));
+				response.renderCSSReference(reference);
+			}
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in a package.
+	 * 
+	 * @param reference
+	 * @param media
+	 *            The media type for this CSS ("print", "screen", etc.)
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final ResourceReference reference,
+			final String media)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(reference, media);
+			}
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in the web application
+	 * directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final String location)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(returnLocationWithContextPath(location));
+			}
+		});
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in the web application
+	 * directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @param media
+	 *            The media type for this CSS ("print", "screen", etc.)
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final String location, final String media)
+	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderCSSReference(returnLocationWithContextPath(location), media);
 			}
 		});
 	}
@@ -292,112 +233,77 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * set of resource references to contribute.
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a JavaScript file that lives in the web
+	 * application directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @return the new header contributor instance
 	 */
-	private List headerContributors = null;
-
-	/**
-	 * Construct.
-	 */
-	public HeaderContributor()
+	public static final HeaderContributor forJavaScript(final String location)
 	{
+		return new HeaderContributor(new IHeaderContributor()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void renderHead(IHeaderResponse response)
+			{
+				response.renderJavascriptReference(returnLocationWithContextPath(location));
+			}
+		});
+	}
+
+	// adds the context path on the front of the location, if it's not
+	// a fully-qualified URL.
+	private static final String returnLocationWithContextPath(String location)
+	{
+		// WICKET-59 allow external URLs.
+		if (location.startsWith("http://") || location.startsWith("https://"))
+		{
+			return location;
+		}
+		else
+		{
+			StringBuffer b = new StringBuffer();
+			String contextPath = Application.get().getApplicationSettings().getContextPath();
+			if (contextPath == null)
+			{
+				contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+						.getContextPath();
+				if (contextPath == null)
+				{
+					contextPath = "";
+				}
+			}
+			b.append(contextPath);
+			if (!contextPath.endsWith("/") && !location.startsWith("/"))
+			{
+				b.append("/");
+			}
+			b.append(location);
+			return b.toString();
+		}
 	}
 
 	/**
-	 * Construct with a single header contributor.
+	 * Resource reference to contribute.
+	 */
+	private IHeaderContributor headerContributor = null;
+
+	/**
+	 * Construct.
 	 * 
 	 * @param headerContributor
 	 *            the header contributor
 	 */
-	public HeaderContributor(IHeaderContributor headerContributor)
+	protected HeaderContributor(IHeaderContributor headerContributor)
 	{
-		headerContributors = new ArrayList(1);
-		headerContributors.add(headerContributor);
-	}
-
-	/**
-	 * Adds a custom header contributor.
-	 * 
-	 * @param headerContributor
-	 *            instance of {@link IHeaderContributor}
-	 */
-	public final void addContributor(final IHeaderContributor headerContributor)
-	{
-		checkHeaderContributors();
-		if (!headerContributors.contains(headerContributor))
+		if (headerContributor == null)
 		{
-			headerContributors.add(headerContributor);
+			throw new IllegalArgumentException("header contributor may not be null");
 		}
-	}
-
-	/**
-	 * Adds a custom header contributor at the given position.
-	 * 
-	 * @param index
-	 *            the position where the contributor should be added (e.g. 0 to
-	 *            put it in front of the rest).
-	 * @param headerContributor
-	 *            instance of {@link IHeaderContributor}
-	 * 
-	 * @throws IndexOutOfBoundsException
-	 *             if the index is out of range (index &lt; 0 || index &gt;
-	 *             size()).
-	 */
-	public final void addContributor(final int index, final IHeaderContributor headerContributor)
-	{
-		checkHeaderContributors();
-		if (!headerContributors.contains(headerContributor))
-		{
-			headerContributors.add(index, headerContributor);
-		}
-	}
-
-	/**
-	 * Adds a reference to a css file that should be contributed to the page
-	 * header.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param path
-	 *            The path
-	 */
-	public final void addCssReference(final Class scope, final String path)
-	{
-		addContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderCSSReference(new CompressedResourceReference(scope, path));
-			}
-		});
-	}
-
-	/**
-	 * Adds a reference to a javascript file that should be contributed to the
-	 * page header.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param path
-	 *            The path
-	 */
-	public final void addJavaScriptReference(final Class scope, final String path)
-	{
-		addContributor(new IHeaderContributor()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void renderHead(IHeaderResponse response)
-			{
-				response.renderJavascriptReference(new JavascriptResourceReference(scope, path));
-			}
-		});
+		this.headerContributor = headerContributor;
 	}
 
 	/**
@@ -405,22 +311,6 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final IHeaderContributor[] getHeaderContributors()
 	{
-		if (headerContributors != null)
-		{
-			return (IHeaderContributor[])headerContributors
-					.toArray(new IHeaderContributor[headerContributors.size()]);
-		}
-		return null;
-	}
-
-	/**
-	 * Create lazily to save memory.
-	 */
-	private void checkHeaderContributors()
-	{
-		if (headerContributors == null)
-		{
-			headerContributors = new ArrayList(1);
-		}
+		return new IHeaderContributor[] { headerContributor };
 	}
 }
