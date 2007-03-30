@@ -297,7 +297,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @param headerContributor
 	 *            the header contributor
 	 */
-	protected HeaderContributor(IHeaderContributor headerContributor)
+	public HeaderContributor(IHeaderContributor headerContributor)
 	{
 		if (headerContributor == null)
 		{
