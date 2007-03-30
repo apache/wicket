@@ -66,7 +66,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 		this.populators = populators;
 	}
-
+	
 	/**
 	 * Returns iterator over ICellPopulator elements in the populators array.
 	 * This method caches the iterator implemenation in a transient member
@@ -95,75 +95,11 @@ public abstract class AbstractDataGridView extends DataViewBase
 		return populatorsIteratorCache;
 	}
 
-
-	protected final void populateItem(Item item)
-	{
-		final IModel rowModel = item.getModel();
-
-		// TODO Post 1.2: General: Does this need to be a refreshing view? since the rows
-		// is a refreshing view this will be recreated anyways. maybe can se
-		// orderedrepeatingview instead to simplify.
-		item.add(new RefreshingView(CELL_REPEATER_ID)
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected Iterator getItemModels()
-			{
-				return getPopulatorsIterator();
-			}
-
-			protected void populateItem(Item item)
-			{
-				final ICellPopulator populator = (ICellPopulator)item.getModelObject();
-				populator.populateItem(item, CELL_ITEM_ID, rowModel);
-
-				if (item.get("cell") == null)
-				{
-					throw new WicketRuntimeException(populator.getClass().getName()
-							+ ".populateItem() failed to add a component with id [" + CELL_ITEM_ID
-							+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
-				}
-
-			}
-
-			protected Item newItem(String id, int index, IModel model)
-			{
-				return newCellItem(id, index, model);
-			}
-
-		});
-	}
-
 	protected final ICellPopulator[] internalGetPopulators()
 	{
 		return populators;
 	}
 
-	protected final Item newItem(String id, int index, IModel model)
-	{
-		return newRowItem(id, index, model);
-	}
-
-
-	/**
-	 * Factory method for Item container that represents a row.
-	 * 
-	 * @see Item
-	 * @see RefreshingView#newItem(String, int, IModel)
-	 * 
-	 * @param id
-	 *            component id for the new data item
-	 * @param index
-	 *            the index of the new data item
-	 * @param model
-	 *            the model for the new data item.
-	 * 
-	 * @return DataItem created DataItem
-	 */
-	protected Item newRowItem(final String id, int index, final IModel model)
-	{
-		return new Item(id, index, model);
-	}
 
 	/**
 	 * Factory method for Item container that represents a cell.
@@ -185,4 +121,82 @@ public abstract class AbstractDataGridView extends DataViewBase
 		return new Item(id, index, model);
 	}
 
+	protected final Item newItem(String id, int index, IModel model)
+	{
+		return newRowItem(id, index, model);
+	}
+
+	/**
+	 * Factory method for Item container that represents a row.
+	 * 
+	 * @see Item
+	 * @see RefreshingView#newItem(String, int, IModel)
+	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item.
+	 * 
+	 * @return DataItem created DataItem
+	 */
+	protected Item newRowItem(final String id, int index, final IModel model)
+	{
+		return new Item(id, index, model);
+	}
+
+
+	/**
+	 * @see wicket.markup.repeater.data.DataViewBase#onDetach()
+	 */
+	protected void onDetach()
+	{
+		super.onDetach();
+		if (populators != null)
+		{
+			for (int i = 0; i < populators.length; i++)
+			{
+				populators[i].detach();
+			}
+		}
+	}
+
+	protected final void populateItem(Item item)
+	{
+		final IModel rowModel = item.getModel();
+
+		// TODO Post 1.2: General: Does this need to be a refreshing view? since the rows
+		// is a refreshing view this will be recreated anyways. maybe can se
+		// orderedrepeatingview instead to simplify.
+		item.add(new RefreshingView(CELL_REPEATER_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected Iterator getItemModels()
+			{
+				return getPopulatorsIterator();
+			}
+
+			protected Item newItem(String id, int index, IModel model)
+			{
+				return newCellItem(id, index, model);
+			}
+
+			protected void populateItem(Item item)
+			{
+				final ICellPopulator populator = (ICellPopulator)item.getModelObject();
+				populator.populateItem(item, CELL_ITEM_ID, rowModel);
+
+				if (item.get("cell") == null)
+				{
+					throw new WicketRuntimeException(populator.getClass().getName()
+							+ ".populateItem() failed to add a component with id [" + CELL_ITEM_ID
+							+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
+				}
+
+			}
+
+		});
+	}
 }

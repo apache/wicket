@@ -18,6 +18,7 @@ package wicket.extensions.markup.html.repeater.data.grid;
 
 import wicket.IClusterable;
 import wicket.markup.repeater.Item;
+import wicket.model.IDetachable;
 import wicket.model.IModel;
 
 /**
@@ -47,7 +48,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ICellPopulator extends IClusterable
+public interface ICellPopulator extends IClusterable, IDetachable
 {
 	/**
 	 * Method used to populate a cell in the {@link DataGridView}

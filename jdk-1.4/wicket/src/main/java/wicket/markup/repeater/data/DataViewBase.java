@@ -134,6 +134,9 @@ public abstract class DataViewBase extends AbstractPageableView
 		return internalGetDataProvider().size();
 	}
 
+	/**
+	 * @see wicket.markup.repeater.AbstractPageableView#onDetach()
+	 */
 	protected void onDetach()
 	{
 		super.onDetach();

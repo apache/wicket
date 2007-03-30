@@ -57,6 +57,13 @@ public class PropertyPopulator implements ICellPopulator
 	}
 
 	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{	
+	}
+
+	/**
 	 * @see wicket.extensions.markup.html.repeater.data.grid.ICellPopulator#populateItem(wicket.markup.repeater.Item,
 	 *      java.lang.String, wicket.model.IModel)
 	 */
@@ -64,5 +71,4 @@ public class PropertyPopulator implements ICellPopulator
 	{
 		cellItem.add(new Label(componentId, new PropertyModel(rowModel, property)));
 	}
-
 }

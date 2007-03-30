@@ -63,6 +63,18 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	}
 
 	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{	
+		super.detach();
+		if (filterChoices != null)
+		{
+			filterChoices.detach();
+		}
+	}
+
+	/**
 	 * @see wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
@@ -112,5 +124,4 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	{
 		return null;
 	}
-
 }

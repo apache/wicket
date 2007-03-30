@@ -103,14 +103,14 @@ public class DataTable extends Panel implements IPageable
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected Item newRowItem(String id, int index, IModel model)
-			{
-				return DataTable.this.newRowItem(id, index, model);
-			}
-
 			protected Item newCellItem(String id, int index, IModel model)
 			{
 				return DataTable.this.newCellItem(id, index, model);
+			}
+
+			protected Item newRowItem(String id, int index, IModel model)
+			{
+				return DataTable.this.newRowItem(id, index, model);
 			}
 		};
 		datagrid.setRowsPerPage(rowsPerPage);
@@ -143,11 +143,16 @@ public class DataTable extends Panel implements IPageable
 	}
 
 	/**
-	 * @return array of column objects this table displays
+	 * Adds a toolbar to the datatable that will be displayed after the data
+	 * 
+	 * @param toolbar
+	 *            toolbar to be added
+	 * 
+	 * @see AbstractToolbar
 	 */
-	public final IColumn[] getColumns()
+	public void addBottomToolbar(AbstractToolbar toolbar)
 	{
-		return columns;
+		addToolbar(toolbar, bottomToolbars);
 	}
 
 	/**
@@ -164,16 +169,82 @@ public class DataTable extends Panel implements IPageable
 	}
 
 	/**
-	 * Adds a toolbar to the datatable that will be displayed after the data
-	 * 
-	 * @param toolbar
-	 *            toolbar to be added
-	 * 
-	 * @see AbstractToolbar
+	 * @return array of column objects this table displays
 	 */
-	public void addBottomToolbar(AbstractToolbar toolbar)
+	public final IColumn[] getColumns()
 	{
-		addToolbar(toolbar, bottomToolbars);
+		return columns;
+	}
+
+	/**
+	 * @see wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
+	 */
+	public final int getCurrentPage()
+	{
+		return datagrid.getCurrentPage();
+	}
+
+	/**
+	 * @see wicket.markup.html.navigation.paging.IPageable#getPageCount()
+	 */
+	public final int getPageCount()
+	{
+		return datagrid.getPageCount();
+	}
+
+	/**
+	 * @return total number of rows in this table
+	 */
+	public final int getRowCount()
+	{
+		return datagrid.getRowCount();
+	}
+
+	/**
+	 * @return number of rows per page
+	 */
+	public final int getRowsPerPage()
+	{
+		return datagrid.getRowsPerPage();
+	}
+
+	/**
+	 * @see wicket.markup.html.navigation.paging.IPageable#setCurrentPage(int)
+	 */
+	public final void setCurrentPage(int page)
+	{
+		datagrid.setCurrentPage(page);
+		onPageChanged();
+	}
+
+
+	/**
+	 * Sets the item reuse strategy. This strategy controls the creation of
+	 * {@link Item}s.
+	 * 
+	 * @see RefreshingView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see IItemReuseStrategy
+	 * 
+	 * @param strategy
+	 *            item reuse strategy
+	 * @return this for chaining
+	 */
+	public final DataTable setItemReuseStrategy(IItemReuseStrategy strategy)
+	{
+		datagrid.setItemReuseStrategy(strategy);
+		return this;
+	}
+
+	/**
+	 * Sets the number of items to be displayed per page
+	 * 
+	 * @param items
+	 *            number of items to display per page
+	 * 
+	 */
+	public void setRowsPerPage(int items)
+	{
+		datagrid.setRowsPerPage(items);
 	}
 
 	private void addToolbar(AbstractToolbar toolbar, RepeatingView container)
@@ -200,65 +271,23 @@ public class DataTable extends Panel implements IPageable
 	}
 
 	/**
-	 * @see wicket.markup.html.navigation.paging.IPageable#getCurrentPage()
-	 */
-	public final int getCurrentPage()
-	{
-		return datagrid.getCurrentPage();
-	}
-
-	/**
-	 * @see wicket.markup.html.navigation.paging.IPageable#setCurrentPage(int)
-	 */
-	public final void setCurrentPage(int page)
-	{
-		datagrid.setCurrentPage(page);
-		onPageChanged();
-	}
-
-	/**
-	 * Event listener for page-changed event
-	 */
-	protected void onPageChanged()
-	{
-		// noop
-	}
-
-
-	/**
-	 * @see wicket.markup.html.navigation.paging.IPageable#getPageCount()
-	 */
-	public final int getPageCount()
-	{
-		return datagrid.getPageCount();
-	}
-
-	/**
-	 * @return total number of rows in this table
-	 */
-	public final int getRowCount()
-	{
-		return datagrid.getRowCount();
-	}
-
-	/**
-	 * Sets the number of items to be displayed per page
+	 * Factory method for Item container that represents a cell in the
+	 * underlying DataGridView
 	 * 
-	 * @param items
-	 *            number of items to display per page
+	 * @see Item
 	 * 
+	 * @param id
+	 *            component id for the new data item
+	 * @param index
+	 *            the index of the new data item
+	 * @param model
+	 *            the model for the new data item
+	 * 
+	 * @return DataItem created DataItem
 	 */
-	public void setRowsPerPage(int items)
+	protected Item newCellItem(final String id, int index, final IModel model)
 	{
-		datagrid.setRowsPerPage(items);
-	}
-
-	/**
-	 * @return number of rows per page
-	 */
-	public final int getRowsPerPage()
-	{
-		return datagrid.getRowsPerPage();
+		return new Item(id, index, model);
 	}
 
 	/**
@@ -282,40 +311,26 @@ public class DataTable extends Panel implements IPageable
 	}
 
 	/**
-	 * Factory method for Item container that represents a cell in the
-	 * underlying DataGridView
-	 * 
-	 * @see Item
-	 * 
-	 * @param id
-	 *            component id for the new data item
-	 * @param index
-	 *            the index of the new data item
-	 * @param model
-	 *            the model for the new data item
-	 * 
-	 * @return DataItem created DataItem
+	 * @see wicket.Component#onDetach()
 	 */
-	protected Item newCellItem(final String id, int index, final IModel model)
+	protected void onDetach()
 	{
-		return new Item(id, index, model);
+		super.onDetach();
+		if (columns != null)
+		{
+			for (int i = 0; i < columns.length; i++)
+			{
+				columns[i].detach();
+			}
+		}
 	}
 
 	/**
-	 * Sets the item reuse strategy. This strategy controls the creation of
-	 * {@link Item}s.
-	 * 
-	 * @see RefreshingView#setItemReuseStrategy(IItemReuseStrategy)
-	 * @see IItemReuseStrategy
-	 * 
-	 * @param strategy
-	 *            item reuse strategy
-	 * @return this for chaining
+	 * Event listener for page-changed event
 	 */
-	public final DataTable setItemReuseStrategy(IItemReuseStrategy strategy)
+	protected void onPageChanged()
 	{
-		datagrid.setItemReuseStrategy(strategy);
-		return this;
+		// noop
 	}
 
 }

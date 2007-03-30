@@ -83,5 +83,14 @@ public abstract class AbstractColumn implements IColumn
 		return new Label(componentId, getDisplayModel());
 	}
 
-
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{	
+		if (displayModel != null)
+		{
+			displayModel.detach();
+		}
+	}
 }
