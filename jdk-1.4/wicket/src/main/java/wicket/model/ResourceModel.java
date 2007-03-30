@@ -23,6 +23,11 @@ import wicket.Component;
  * A model that represents a localized resource string. This is a lightweight
  * version of the {@link StringResourceModel}. It lacks parameter
  * substitutions, but is generaly easier to use.
+ * <p>
+ * If you don't use this model as primary component model (you don't specify it
+ * in component constructor and don't assign it to component using
+ * {@link Component#setModel(IModel)}), you will need to connect the model
+ * with a component using {@link #wrapOnAssignment(Component)}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
