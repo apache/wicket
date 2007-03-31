@@ -157,6 +157,33 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Replaces a child component of this container with another or just adds it
+	 * in case no child with the same id existed yet.
+	 * 
+	 * @param child
+	 *            The child
+	 * @return This
+	 */
+	public final MarkupContainer addOrReplace(final Component child)
+	{
+		if (child == null)
+		{
+			throw new IllegalArgumentException("argument child must be not null");
+		}
+
+		if (get(child.getId()) == null)
+		{
+			add(child);
+		}
+		else
+		{
+			replace(child);
+		}
+
+		return this;
+	}
+
+	/**
 	 * This method allows a component to be added by an auto-resolver such as
 	 * AutoComponentResolver or AutoLinkResolver. While the component is being
 	 * added, the component's FLAG_AUTO boolean is set. The isAuto() method of
@@ -286,6 +313,52 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * Gets a fresh markup stream that contains the (immutable) markup resource
+	 * for this class.
+	 * 
+	 * @param throwException
+	 *            If true, throw an exception, if markup could not be found
+	 * @return A stream of MarkupElement elements
+	 */
+	public final MarkupStream getAssociatedMarkupStream(final boolean throwException)
+	{
+		try
+		{
+			return getApplication().getMarkupCache().getMarkupStream(this, throwException);
+		}
+		catch (MarkupException ex)
+		{
+			// re-throw it. The exception contains already all the information
+			// required.
+			throw ex;
+		}
+		catch (WicketRuntimeException ex)
+		{
+			// throw exception since there is no associated markup
+			throw new MarkupNotFoundException(
+					exceptionMessage("Markup of type '"
+							+ getMarkupType()
+							+ "' for component '"
+							+ getClass().getName()
+							+ "' not found."
+							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
+					ex);
+		}
+	}
+
+
+	/**
+	 * Get the markup stream set on this container.
+	 * 
+	 * @return Returns the markup stream set on this container.
+	 */
+	public final MarkupStream getMarkupStream()
+	{
+		return markupStream;
+	}
+
+
+	/**
 	 * Get the type of associated markup for this component.
 	 * 
 	 * @return The type of associated markup for this component (for example,
@@ -324,51 +397,19 @@ public abstract class MarkupContainer extends Component
 		put(child);
 	}
 
-
-	void attachChildren()
+	/**
+	 * Some MarkupContainers (e.g. HtmlHeaderContainer, BodyOnLoadContainer)
+	 * have to be transparent with respect to there child components. A
+	 * transparent container gets its children from its parent container.
+	 * <p>
+	 * 
+	 * @see wicket.markup.resolver.ParentResolver
+	 * 
+	 * @return false. By default a MarkupContainer is not transparent.
+	 */
+	public boolean isTransparentResolver()
 	{
-		super.attachChildren();
-		try
-		{
-			// Loop through child components
-			final int size = children_size();
-			for (int i = 0; i < size; i++)
-			{
-				// Get next child
-				final Component child = children_get(i);
-
-				// Ignore feedback as that was done in Page
-				if (!(child instanceof IFeedback))
-				{
-					// Call begin request on the child
-					child.attach();
-				}
-			}
-		}
-		catch (RuntimeException ex)
-		{
-			if (ex instanceof WicketRuntimeException)
-				throw ex;
-			else
-				throw new WicketRuntimeException("Error attaching this container for rendering: "
-						+ this, ex);
-		}
-	}
-
-
-	void detachChildren()
-	{
-		// Loop through child components
-		final Iterator iter = iterator();
-		while (iter.hasNext())
-		{
-			// Get next child
-			final Component child = (Component)iter.next();
-
-			// Call end request on the child
-			child.detach();
-		}
-		super.detachChildren();
+		return false;
 	}
 
 	/**
@@ -428,6 +469,22 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
+	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to
+	 * Wicket 1.3
+	 * 
+	 * @param containerClass
+	 * @return nothing
+	 * @throws always
+	 *             throws an {@link IllegalStateException}
+	 */
+	// TODO remove after release 1.3.0
+	public final IResourceStream newMarkupResourceStream(Class containerClass)
+	{
+		throw new IllegalStateException(
+				"this method is not used any more (and shouldn't be called by clients anyway)");
+	}
+
+	/**
 	 * @param component
 	 *            Component to remove from this container
 	 */
@@ -483,6 +540,12 @@ public abstract class MarkupContainer extends Component
 
 				final Object removedChildren = MarkupContainer.this.children;
 
+				public String toString()
+				{
+					return "RemoveAllChange[component: " + getPath() + ", removed Children: "
+							+ removedChildren + "]";
+				}
+
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
@@ -493,12 +556,6 @@ public abstract class MarkupContainer extends Component
 						final Component child = children_get(i);
 						child.setParent(MarkupContainer.this);
 					}
-				}
-
-				public String toString()
-				{
-					return "RemoveAllChange[component: " + getPath() + ", removed Children: "
-							+ removedChildren + "]";
 				}
 			});
 
@@ -774,200 +831,6 @@ public abstract class MarkupContainer extends Component
 	public final Object visitChildren(final IVisitor visitor)
 	{
 		return visitChildren(null, visitor);
-	}
-
-	/**
-	 * Get the markup stream for this component.
-	 * 
-	 * @return The markup stream for this component, or if it doesn't have one,
-	 *         the markup stream for the nearest parent which does have one
-	 */
-	protected final MarkupStream findMarkupStream()
-	{
-		// Start here
-		MarkupContainer c = this;
-
-		// Walk up hierarchy until markup found
-		while (c.getMarkupStream() == null)
-		{
-			// Check parent
-			c = c.getParent();
-
-			// Are we at the top of the hierarchy?
-			if (c == null)
-			{
-				// Failed to find markup stream
-				throw new WicketRuntimeException(exceptionMessage("No markup found"));
-			}
-		}
-
-		return c.getMarkupStream();
-	}
-
-	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
-	 * 
-	 * @param throwException
-	 *            If true, throw an exception, if markup could not be found
-	 * @return A stream of MarkupElement elements
-	 */
-	public final MarkupStream getAssociatedMarkupStream(final boolean throwException)
-	{
-		try
-		{
-			return getApplication().getMarkupCache().getMarkupStream(this, throwException);
-		}
-		catch (MarkupException ex)
-		{
-			// re-throw it. The exception contains already all the information
-			// required.
-			throw ex;
-		}
-		catch (WicketRuntimeException ex)
-		{
-			// throw exception since there is no associated markup
-			throw new MarkupNotFoundException(
-					exceptionMessage("Markup of type '"
-							+ getMarkupType()
-							+ "' for component '"
-							+ getClass().getName()
-							+ "' not found."
-							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
-					ex);
-		}
-	}
-
-	/**
-	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to
-	 * Wicket 1.3
-	 * 
-	 * @param containerClass
-	 * @return nothing
-	 * @throws always
-	 *             throws an {@link IllegalStateException}
-	 */
-	// TODO remove after release 1.3.0
-	public final IResourceStream newMarkupResourceStream(Class containerClass)
-	{
-		throw new IllegalStateException(
-				"this method is not used any more (and shouldn't be called by clients anyway)");
-	}
-
-	/**
-	 * Get the markup stream set on this container.
-	 * 
-	 * @return Returns the markup stream set on this container.
-	 */
-	public final MarkupStream getMarkupStream()
-	{
-		return markupStream;
-	}
-
-	/**
-	 * Handle the container's body. If your override of this method does not
-	 * advance the markup stream to the close tag for the openTag, a runtime
-	 * exception will be thrown by the framework.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag for the body
-	 */
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		renderComponentTagBody(markupStream, openTag);
-	}
-
-	/**
-	 * Renders this component. This implementation just calls renderComponent.
-	 * 
-	 * @param markupStream
-	 */
-	protected void onRender(final MarkupStream markupStream)
-	{
-		renderComponent(markupStream);
-	}
-
-	/**
-	 * Renders this component and all sub-components using the given markup
-	 * stream.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 */
-	protected void renderAll(final MarkupStream markupStream)
-	{
-		// Loop through the markup in this container
-		while (markupStream.hasMore())
-		{
-			// Element rendering is responsible for advancing markup stream!
-			final int index = markupStream.getCurrentIndex();
-			renderNext(markupStream);
-			if (index == markupStream.getCurrentIndex())
-			{
-				markupStream.throwMarkupException("Component at markup stream index " + index
-						+ " failed to advance the markup stream");
-			}
-		}
-	}
-
-	/**
-	 * Renders markup for the body of a ComponentTag from the current position
-	 * in the given markup stream. If the open tag passed in does not require a
-	 * close tag, nothing happens. Markup is rendered until the closing tag for
-	 * openTag is reached.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag
-	 */
-	protected final void renderComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
-	{
-		// If the open tag requires a close tag
-		boolean render = openTag.requiresCloseTag();
-		if (render == false)
-		{
-			// Tags like <p> do not require a close tag, but they may have.
-			render = !openTag.hasNoCloseTag();
-		}
-		if (render == true)
-		{
-			// Loop through the markup in this container
-			while (markupStream.hasMore() && !markupStream.get().closes(openTag))
-			{
-				// Render markup element. Doing so must advance the markup
-				// stream
-				final int index = markupStream.getCurrentIndex();
-				renderNext(markupStream);
-				if (index == markupStream.getCurrentIndex())
-				{
-					markupStream.throwMarkupException("Markup element at index " + index
-							+ " failed to advance the markup stream");
-				}
-			}
-		}
-	}
-
-	/**
-	 * Set markup stream for this container.
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 */
-	protected final void setMarkupStream(final MarkupStream markupStream)
-	{
-		this.markupStream = markupStream;
-	}
-
-	/**
-	 * @return True if this markup container has associated markup
-	 */
-	final boolean hasAssociatedMarkup()
-	{
-		return getApplication().getMarkupCache().hasAssociatedMarkup(this);
 	}
 
 	/**
@@ -1359,17 +1222,181 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Some MarkupContainers (e.g. HtmlHeaderContainer, BodyOnLoadContainer)
-	 * have to be transparent with respect to there child components. A
-	 * transparent container gets its children from its parent container.
-	 * <p>
+	 * Get the markup stream for this component.
 	 * 
-	 * @see wicket.markup.resolver.ParentResolver
-	 * 
-	 * @return false. By default a MarkupContainer is not transparent.
+	 * @return The markup stream for this component, or if it doesn't have one,
+	 *         the markup stream for the nearest parent which does have one
 	 */
-	public boolean isTransparentResolver()
+	protected final MarkupStream findMarkupStream()
 	{
-		return false;
+		// Start here
+		MarkupContainer c = this;
+
+		// Walk up hierarchy until markup found
+		while (c.getMarkupStream() == null)
+		{
+			// Check parent
+			c = c.getParent();
+
+			// Are we at the top of the hierarchy?
+			if (c == null)
+			{
+				// Failed to find markup stream
+				throw new WicketRuntimeException(exceptionMessage("No markup found"));
+			}
+		}
+
+		return c.getMarkupStream();
+	}
+
+	/**
+	 * Handle the container's body. If your override of this method does not
+	 * advance the markup stream to the close tag for the openTag, a runtime
+	 * exception will be thrown by the framework.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		renderComponentTagBody(markupStream, openTag);
+	}
+
+	/**
+	 * Renders this component. This implementation just calls renderComponent.
+	 * 
+	 * @param markupStream
+	 */
+	protected void onRender(final MarkupStream markupStream)
+	{
+		renderComponent(markupStream);
+	}
+
+	/**
+	 * Renders this component and all sub-components using the given markup
+	 * stream.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 */
+	protected void renderAll(final MarkupStream markupStream)
+	{
+		// Loop through the markup in this container
+		while (markupStream.hasMore())
+		{
+			// Element rendering is responsible for advancing markup stream!
+			final int index = markupStream.getCurrentIndex();
+			renderNext(markupStream);
+			if (index == markupStream.getCurrentIndex())
+			{
+				markupStream.throwMarkupException("Component at markup stream index " + index
+						+ " failed to advance the markup stream");
+			}
+		}
+	}
+
+	/**
+	 * Renders markup for the body of a ComponentTag from the current position
+	 * in the given markup stream. If the open tag passed in does not require a
+	 * close tag, nothing happens. Markup is rendered until the closing tag for
+	 * openTag is reached.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag
+	 */
+	protected final void renderComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
+		// If the open tag requires a close tag
+		boolean render = openTag.requiresCloseTag();
+		if (render == false)
+		{
+			// Tags like <p> do not require a close tag, but they may have.
+			render = !openTag.hasNoCloseTag();
+		}
+		if (render == true)
+		{
+			// Loop through the markup in this container
+			while (markupStream.hasMore() && !markupStream.get().closes(openTag))
+			{
+				// Render markup element. Doing so must advance the markup
+				// stream
+				final int index = markupStream.getCurrentIndex();
+				renderNext(markupStream);
+				if (index == markupStream.getCurrentIndex())
+				{
+					markupStream.throwMarkupException("Markup element at index " + index
+							+ " failed to advance the markup stream");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Set markup stream for this container.
+	 * 
+	 * @param markupStream
+	 *            The markup stream
+	 */
+	protected final void setMarkupStream(final MarkupStream markupStream)
+	{
+		this.markupStream = markupStream;
+	}
+
+	void attachChildren()
+	{
+		super.attachChildren();
+		try
+		{
+			// Loop through child components
+			final int size = children_size();
+			for (int i = 0; i < size; i++)
+			{
+				// Get next child
+				final Component child = children_get(i);
+
+				// Ignore feedback as that was done in Page
+				if (!(child instanceof IFeedback))
+				{
+					// Call begin request on the child
+					child.attach();
+				}
+			}
+		}
+		catch (RuntimeException ex)
+		{
+			if (ex instanceof WicketRuntimeException)
+				throw ex;
+			else
+				throw new WicketRuntimeException("Error attaching this container for rendering: "
+						+ this, ex);
+		}
+	}
+
+	void detachChildren()
+	{
+		// Loop through child components
+		final Iterator iter = iterator();
+		while (iter.hasNext())
+		{
+			// Get next child
+			final Component child = (Component)iter.next();
+
+			// Call end request on the child
+			child.detach();
+		}
+		super.detachChildren();
+	}
+
+	/**
+	 * @return True if this markup container has associated markup
+	 */
+	final boolean hasAssociatedMarkup()
+	{
+		return getApplication().getMarkupCache().hasAssociatedMarkup(this);
 	}
 }
