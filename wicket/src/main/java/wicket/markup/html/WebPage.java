@@ -278,11 +278,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		{
 			add(new PageMapChecker());
 		}
-
-		// TODO Post 1.2: If the concept proofs valuable we could add the header
-		// container the same way instead of using a resolver. The advantages
-		// would be that the header container be available at build time already
-		// and not only at render time.
 	}
 
 	/**
