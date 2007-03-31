@@ -115,22 +115,6 @@ public abstract class AjaxSubmitButton extends Button
 		return null;
 	}
 
-	protected void onComponentTag(ComponentTag tag)
-	{
-		checkComponentTag(tag, "input");
-
-		final String type = tag.getAttributes().getString("type");
-		if (!"button".equals(type) && !"image".equals(type) && !"submit".equals(type))
-		{
-			findMarkupStream().throwMarkupException(
-					"Component " + getId() + " must be applied to a tag with 'type'"
-							+ " attribute matching 'submit', 'button' or 'image', not '" + type
-							+ "'");
-		}
-
-		super.onComponentTag(tag);
-	}
-
 	/**
 	 * Listener method invoked on form submit with no errors
 	 * 
