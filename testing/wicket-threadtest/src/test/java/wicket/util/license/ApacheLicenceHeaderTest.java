@@ -14,58 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.threadtest.apps.app1;
-
-import java.io.Serializable;
+package wicket.util.license;
 
 /**
- * Represents a US phone number. We use this instead of the direct string to
- * trigger conversion to and from string. Conversion in general may be
- * re-evaluated in Wicket 1.3, hopefully making this a hack from the past by
- * then.
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Eelco Hillenius
+ * @author Frank Bille Jensen (frankbille)
  */
-public class UsPhoneNumber implements Serializable
-{
-	private String number;
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 
 	/**
 	 * Construct.
-	 * 
-	 * @param number
 	 */
-	public UsPhoneNumber(String number)
-	{
-		this.number = number;
-	}
+	public ApacheLicenceHeaderTest() {
 
-	/**
-	 * Gets text.
-	 * 
-	 * @return text
-	 */
-	public String getNumber()
-	{
-		return number;
-	}
-
-	/**
-	 * Sets text.
-	 * 
-	 * @param number
-	 *            text
-	 */
-	public void setNumber(String number)
-	{
-		this.number = number;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		return number;
+//		 addHeaders = true;
 	}
 }
