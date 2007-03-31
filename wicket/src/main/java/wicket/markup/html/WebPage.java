@@ -165,13 +165,16 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		this((IModel)null);
 	}
 
-	protected void onAttach()
+	/**
+	 * @see wicket.Component#internalOnAttach()
+	 */
+	protected void internalOnAttach()
 	{
-		super.onAttach();
+		super.internalOnAttach();
 		// initialize body container
 		getBodyContainer();
 	}
-
+	
 	/**
 	 * Get a facade to the body container for adding onLoad javascript to the
 	 * body tag.
