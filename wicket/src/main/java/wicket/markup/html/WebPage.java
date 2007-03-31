@@ -165,6 +165,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		this((IModel)null);
 	}
 
+	protected void onAttach()
+	{
+		super.onAttach();
+		// initialize body container
+		getBodyContainer();
+	}
+
 	/**
 	 * Get a facade to the body container for adding onLoad javascript to the
 	 * body tag.
@@ -173,6 +180,42 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	public BodyContainer getBodyContainer()
 	{
+		if (bodyContainer == null)
+		{
+			// Add a Body container if the associated markup contains a <body>
+			// tag
+			// get markup stream gracefully
+			MarkupStream markupStream = getAssociatedMarkupStream(false);
+			if (markupStream != null)
+			{
+				// The default <body> container. It can be accessed, replaced
+				// and attribute modifiers can be attached. <body> tags without
+				// wicket:id get automatically a wicket:id="body" assigned.
+				// find the body tag
+				while (markupStream.hasMore())
+				{
+					final MarkupElement element = markupStream.next();
+					if (element instanceof ComponentTag)
+					{
+						final ComponentTag tag = (ComponentTag)element;
+						if (tag.isOpen() && TagUtils.isBodyTag(tag))
+						{
+							// Add a default container if the tag has the
+							// default
+							// name
+							if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
+							{
+								add(new HtmlBodyContainer(tag.getId()));
+							}
+							// remember the id of the tag
+							bodyContainer = new BodyContainer(this, tag.getId());
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		return bodyContainer;
 	}
 
@@ -230,37 +273,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	private void commonInit()
 	{
-		// Add a Body container if the associated markup contains a <body> tag
-		// get markup stream gracefully
-		MarkupStream markupStream = getAssociatedMarkupStream(false);
-		if (markupStream != null)
-		{
-			// The default <body> container. It can be accessed, replaced
-			// and attribute modifiers can be attached. <body> tags without
-			// wicket:id get automatically a wicket:id="body" assigned.
-			// find the body tag
-			while (markupStream.hasMore())
-			{
-				final MarkupElement element = markupStream.next();
-				if (element instanceof ComponentTag)
-				{
-					final ComponentTag tag = (ComponentTag)element;
-					if (tag.isOpen() && TagUtils.isBodyTag(tag))
-					{
-						// Add a default container if the tag has the default
-						// name
-						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
-						{
-							add(new HtmlBodyContainer(tag.getId()));
-						}
-						// remember the id of the tag
-						bodyContainer = new BodyContainer(this, tag.getId());
-						break;
-					}
-				}
-			}
-		}
-
 		// if automatic multi window support is on, add a page checker instance
 		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
 		{
