@@ -1141,7 +1141,7 @@ public abstract class Component implements IClusterable
 	 */
 	public final String getString(final String key)
 	{
-		return getString(key, getModel());
+		return getString(key, null);
 	}
 
 	/**
