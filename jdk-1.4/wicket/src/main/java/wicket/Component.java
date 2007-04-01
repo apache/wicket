@@ -2899,6 +2899,17 @@ public abstract class Component implements IClusterable
 				}
 			}
 
+			// apply behaviors that are attached to the component tag.
+			if (tag.hasBehaviors())
+			{
+				Iterator behaviors = tag.getBehaviors();
+				while (behaviors.hasNext())
+				{
+					final IBehavior behavior = (IBehavior)behaviors.next();
+					behavior.onComponentTag(this, tag);
+				}
+			}
+
 			// Write the tag
 			tag.writeOutput(getResponse(), stripWicketTags, this.findMarkupStream()
 					.getWicketNamespace());

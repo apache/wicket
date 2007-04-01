@@ -16,6 +16,7 @@
  */
 package wicket.markup;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -90,6 +91,12 @@ public class ComponentTag extends MarkupElement
 
 
 	/** added behaviors */
+	// FIXME these behaviors here are merely for wicket:message attributes on
+	// tags that are also wicket components. since this addition behavors have
+	// gained a significantly more sophisticated lifecycle and so managing
+	// behaviors attached to markup tags like this is much harder. this should
+	// be refactored into some interface that only has oncomponenttag method
+	// because a full behavior is not supported nor desired imho.
 	private Collection behaviors;
 
 	/**
@@ -390,6 +397,11 @@ public class ComponentTag extends MarkupElement
 			tag.setMarkupClass(this.markupClass);
 			tag.setHasNoCloseTag(this.hasNoCloseTag);
 			tag.setPath(this.path);
+			if (behaviors != null)
+			{
+				tag.behaviors = new ArrayList(behaviors.size());
+				tag.behaviors.addAll(behaviors);
+			}
 			return tag;
 		}
 	}

@@ -19,27 +19,41 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
 import wicket.behavior.IBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.WebComponent;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.AbstractMarkupFilter;
+import wicket.markup.resolver.IComponentResolver;
 import wicket.util.string.Strings;
 
 /**
- * This is a markup inline filter. It identifies wicket:message attributes and
- * adds an attribute modifier to the component tag that can localize
+ * This is a markup inline filter and a component resolver. It identifies
+ * wicket:message attributes and adds an attribute modifier to the component tag
+ * that can localize
  * wicket:message="attr-name:i18n-key,attr-name-2:i18n-key-2,..." expressions,
  * replacing values of attributes specified by attr-name with a localizer lookup
  * with key i18n-key. If an attribute being localized has a set value that value
- * will be used as the default value for the localization lookup.
+ * will be used as the default value for the localization lookup. This handler
+ * also resolves and localizes raw markup with wicket:message attribute.
  * 
  * @author Juergen Donnerstag
  * @author Igor Vaynberg
  */
 public final class WicketMessageTagHandler extends AbstractMarkupFilter
+		implements
+			IComponentResolver
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** TODO Post 1.2: General: Namespace should not be a constant */
 	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 
@@ -111,7 +125,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private static class AttributeLocalizer extends AbstractBehavior
+	public static class AttributeLocalizer extends AbstractBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -158,5 +172,29 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				}
 			}
 		}
+	}
+
+	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
+	{
+		// localize any raw markup that has wicket:message attrs
+
+		if (WICKET_MESSAGE_CONTAINER_ID.equals(tag.getId()))
+		{
+			Component wc = null;
+			if (tag.isOpenClose())
+			{
+				wc = new WebComponent(WICKET_MESSAGE_CONTAINER_ID
+						+ container.getPage().getAutoIndex());
+			}
+			else
+			{
+				wc = new WebMarkupContainer(WICKET_MESSAGE_CONTAINER_ID
+						+ container.getPage().getAutoIndex());
+			}
+			wc.add(new AttributeLocalizer());
+			container.autoAdd(wc);
+			return true;
+		}
+		return false;
 	}
 }

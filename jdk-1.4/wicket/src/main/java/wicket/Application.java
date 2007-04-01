@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.application.IComponentInstantiationListener;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
+import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.EnclosureResolver;
 import wicket.markup.resolver.FragmentResolver;
@@ -876,10 +877,11 @@ public abstract class Application
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());
 		pageSettings.addComponentResolver(new WicketLinkResolver());
 		pageSettings.addComponentResolver(new WicketMessageResolver());
+		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new EnclosureResolver());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
-		
+
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
 				new DefaultButtonImageResourceFactory());
