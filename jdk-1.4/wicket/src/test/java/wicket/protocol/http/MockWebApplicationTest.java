@@ -22,6 +22,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.Session;
 import wicket.feedback.FeedbackMessage;
+import wicket.feedback.FeedbackMessages;
 import wicket.markup.html.link.Link;
 import wicket.util.diff.DiffUtil;
 import wicket.util.tester.WicketTester;
@@ -81,15 +82,16 @@ public class MockWebApplicationTest extends TestCase
 		Session session = Session.get();
 		session.info("Message");
 		session.info("Not rendered");
-		Iterator iterator = session.getFeedbackMessages().iterator();
+		FeedbackMessages feedbackMessages = session.getFeedbackMessages();
+		Iterator iterator = feedbackMessages.iterator();
 		FeedbackMessage message = (FeedbackMessage)iterator.next();
 		message.markRendered();
-		session.getFeedbackMessages().clearRendered();
-		assertEquals(1, session.getFeedbackMessages().size());
+		feedbackMessages.clearRendered();
+		assertEquals(1, feedbackMessages.size());
 		message = (FeedbackMessage)iterator.next();
 		message.markRendered();
-		session.getFeedbackMessages().clearRendered();
-		assertEquals(0, session.getFeedbackMessages().size());
+		feedbackMessages.clearRendered();
+		assertEquals(0, feedbackMessages.size());
 	}
 	/**
 	 * @throws Exception

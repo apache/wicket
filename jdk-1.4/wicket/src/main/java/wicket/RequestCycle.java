@@ -886,7 +886,7 @@ public abstract class RequestCycle
 		// remove any rendered feedback messages from the session
 		try
 		{
-			session.cleanupFeedbackMessages();
+			session.cleanupRenderedFeedbackMessages();
 		}
 		catch (RuntimeException re)
 		{

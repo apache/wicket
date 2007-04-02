@@ -31,6 +31,7 @@ import wicket.Component;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
@@ -814,7 +815,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public List getMessages(final int level)
 	{
-		FeedbackMessages feedbackMessages = getLastRenderedPage().getFeedbackMessages();
+		FeedbackMessages feedbackMessages = Session.get().getFeedbackMessages();
 		List allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
 		{
 			private static final long serialVersionUID = 1L;

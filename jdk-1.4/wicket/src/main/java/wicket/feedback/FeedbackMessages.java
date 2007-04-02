@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.IClusterable;
+import wicket.Page;
 import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.string.StringList;
 
@@ -58,24 +59,37 @@ public final class FeedbackMessages implements IClusterable
 	 */
 	public FeedbackMessages()
 	{
-		messages = new ArrayList();
+		messages = new CopyOnWriteArrayList();
 	}
 
 	/**
-	 * Call this constructor if you want to replace the internal
-	 * store with another implemention then the default (ArrayList). 
-	 * This could be a {@link CopyOnWriteArrayList} if this feedbackmessages 
-	 * instance is used by multiply threads.
+	 * Call this constructor if you want to replace the internal store with
+	 * another implemention then the default (ArrayList). This could be a
+	 * {@link CopyOnWriteArrayList} if this feedbackmessages instance is used by
+	 * multiply threads.
 	 * 
-	 * @param messagesList 
+	 * @param messagesList
 	 * 
 	 */
 	public FeedbackMessages(List messagesList)
 	{
-		if(messagesList == null) throw new IllegalArgumentException("messages list can't be null");
+		if (messagesList == null)
+			throw new IllegalArgumentException("messages list can't be null");
 		messages = messagesList;
 	}
-	
+
+	/**
+	 * Adds a message
+	 * 
+	 * @param reporter
+	 * @param message
+	 * @param level
+	 */
+	public final void add(Component reporter, String message, int level)
+	{
+		add(new FeedbackMessage(reporter, message, level));
+	}
+
 	/**
 	 * Clears any existing messages
 	 */
@@ -85,13 +99,50 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
-	 * Gets the number of messages
-	 * 
-	 * @return the number of messages
+	 * Clears any messages specifically for components. This is an aggressive
+	 * cleanup to ensure there won't be a memory leak in session.
 	 */
-	public final int size()
+	public final void clearComponentSpecific()
 	{
-		return messages.size();
+		for (int i = messages.size() - 1; i >= 0; i--)
+		{
+			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
+			Component reporter = msg.getReporter();
+			if (reporter != null)
+			{
+				messages.remove(i);
+			}
+		}
+		trimToSize();
+	}
+
+	/**
+	 * Clears any messages specifically for components on the provided page.
+	 * 
+	 * @param page
+	 *            The page to clear messages for
+	 */
+	public final void clearPageSpecific(Page page)
+	{
+		if (page == null)
+		{
+			return;
+		}
+
+		for (int i = messages.size() - 1; i >= 0; i--)
+		{
+			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
+			Component reporter = msg.getReporter();
+			if (reporter != null)
+			{
+				Page reporterPage = (Page)reporter.findParent(Page.class);
+				if (reporterPage != null && reporterPage.equals(page))
+				{
+					messages.remove(i);
+				}
+			}
+		}
+		trimToSize();
 	}
 
 	/**
@@ -99,7 +150,7 @@ public final class FeedbackMessages implements IClusterable
 	 */
 	public final void clearRendered()
 	{
-		for(int i = messages.size() - 1; i >= 0; i--)
+		for (int i = messages.size() - 1; i >= 0; i--)
 		{
 			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
 			if (msg.isRendered())
@@ -226,6 +277,16 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
+	 * Gets an iterator over stored messages
+	 * 
+	 * @return iterator over stored messages
+	 */
+	public final Iterator iterator()
+	{
+		return messages.iterator();
+	}
+
+	/**
 	 * Looks up a message for the given component.
 	 * 
 	 * @param component
@@ -275,11 +336,32 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
+	 * Gets the number of messages
+	 * 
+	 * @return the number of messages
+	 */
+	public final int size()
+	{
+		return messages.size();
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
 		return "[feedbackMessages = " + StringList.valueOf(messages) + "]";
+	}
+
+	/**
+	 * Frees any unnecessary internal storage
+	 */
+	public final void trimToSize()
+	{
+		if (messages instanceof ArrayList)
+		{
+			((ArrayList)messages).trimToSize();
+		}
 	}
 
 	/**
@@ -296,16 +378,6 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
-	 * Adds a message
-	 * @param reporter
-	 * @param message
-	 * @param level
-	 */
-	public final void add(Component reporter, String message, int level) {
-		add(new FeedbackMessage(reporter, message, level));
-	}
-	
-	/**
 	 * Adds a message.
 	 * 
 	 * @param message
@@ -318,26 +390,5 @@ public final class FeedbackMessages implements IClusterable
 			log.debug("Adding feedback message " + message);
 		}
 		messages.add(message);
-	}
-
-	/**
-	 * Gets an iterator over stored messages
-	 * 
-	 * @return iterator over stored messages
-	 */
-	public final Iterator iterator()
-	{
-		return messages.iterator();
-	}
-
-	/**
-	 * Frees any unnecessary internal storage
-	 */
-	public final void trimToSize()
-	{
-		if(messages instanceof ArrayList)
-		{
-			((ArrayList)messages).trimToSize();
-		}
 	}
 }

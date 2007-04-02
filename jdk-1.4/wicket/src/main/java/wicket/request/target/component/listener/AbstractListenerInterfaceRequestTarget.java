@@ -21,6 +21,7 @@ import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.Session;
 import wicket.request.RequestParameters;
 import wicket.request.target.IEventProcessor;
 import wicket.request.target.component.PageRequestTarget;
@@ -189,7 +190,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		requestCycle.setUpdateSession(true);
 
 		// Clear all feedback messages if it isn't a redirect
-		getPage().getFeedbackMessages().clear();
+		Session.get().cleanupFeedbackMessages(getPage());
 
 		getPage().startComponentRender(getTarget());
 

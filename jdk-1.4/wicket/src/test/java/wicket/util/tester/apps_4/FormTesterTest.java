@@ -16,6 +16,7 @@
  */
 package wicket.util.tester.apps_4;
 
+import wicket.Session;
 import wicket.WicketTestCase;
 import wicket.util.tester.FormTester;
 
@@ -58,8 +59,8 @@ public class FormTesterTest extends WicketTestCase
 		page = (EmailPage)tester.getLastRenderedPage();
 
 		assertNull(page.getEmail());
-		assertTrue(page.getFeedbackMessages().hasMessageFor(page.get("form:email")));
-		assertEquals("wrong email address pattern for email", page.getFeedbackMessages()
+		assertTrue(Session.get().getFeedbackMessages().hasMessageFor(page.get("form:email")));
+		assertEquals("wrong email address pattern for email", Session.get().getFeedbackMessages()
 				.messageForComponent(page.get("form:email")).getMessage().toString());
 	}
 }

@@ -16,6 +16,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.Session;
 import wicket.feedback.ContainerFeedbackMessageFilter;
 import wicket.feedback.IFeedback;
 import wicket.feedback.IFeedbackMessageFilter;
@@ -87,7 +88,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	public void updateFeedback()
 	{
 		// Get the messages for the current page
-		visible = getPage().getFeedbackMessages().messages(getMessagesFilter()).size() != 0;
+		visible = Session.get().getFeedbackMessages().messages(getMessagesFilter()).size() != 0;
 	}
 
 	/**

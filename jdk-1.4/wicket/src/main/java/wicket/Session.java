@@ -37,7 +37,6 @@ import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
-import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
@@ -167,7 +166,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 
 	/** A store for touched pages for one request */
 	private static final ThreadLocal touchedPages = new ThreadLocal();
-	
+
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
@@ -199,7 +198,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	private String style;
 
 	/** feedback messages */
-	private FeedbackMessages feedbackMessages = new FeedbackMessages(new CopyOnWriteArrayList());
+	private FeedbackMessages feedbackMessages = new FeedbackMessages();
 
 	private transient Map pageMapsUsedInRequest;
 
@@ -827,7 +826,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 		// to the pagemap when the session does it update/detaches.
 		// all the pages are then detached
 		List lst = (List)touchedPages.get();
-		if(lst == null)
+		if (lst == null)
 		{
 			lst = new ArrayList();
 			touchedPages.set(lst);
@@ -910,7 +909,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * 
 	 * @return the converter
 	 */
-	public final IConverter getConverter(Class/*<?>*/ type)
+	public final IConverter getConverter(Class/* <?> */type)
 	{
 		if (converterSupplier == null)
 		{
@@ -1060,7 +1059,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	protected void update()
 	{
 		List lst = (List)touchedPages.get();
-		if(lst != null)
+		if (lst != null)
 		{
 			for (int i = 0; i < lst.size(); i++)
 			{
@@ -1069,7 +1068,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 			}
 			touchedPages.set(null);
 		}
-		
+
 		// If state is dirty
 		if (dirty)
 		{
@@ -1133,7 +1132,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * Removes any rendered feedback messages as well as compacts memory. This
 	 * method is usually called at the end of the request cycle processing.
 	 */
-	final void cleanupFeedbackMessages()
+	final void cleanupRenderedFeedbackMessages()
 	{
 		int size = feedbackMessages.size();
 		feedbackMessages.clearRendered();
@@ -1143,6 +1142,26 @@ public abstract class Session implements IClusterable, IConverterLocator
 		{
 			dirty();
 		}
+	}
+
+	/**
+	 * Cleans up any unrendered, dangling feedback messages there may be. This
+	 * implementation calls {@link FeedbackMessages#clearComponentSpecific()} to
+	 * aggresively ensure there won't be memory leaks. Clients can override this
+	 * method to e.g. call {@link FeedbackMessages#clearPageSpecific(Page)}.
+	 * <p>
+	 * This method should be called from by the framework right before a even
+	 * handler is called. There is no need for clients to call this method
+	 * directly
+	 * </p>
+	 * 
+	 * @param page
+	 *            any current page (the page on which the event handler is that
+	 *            is about to be processed)
+	 */
+	public void cleanupFeedbackMessages(Page page)
+	{
+		feedbackMessages.clearComponentSpecific();
 	}
 
 	/**
