@@ -132,7 +132,7 @@ public class ConverterLocator implements IConverterLocator
 		{
 			if (value == null || "".equals(value))
 			{
-				return null;
+				return "";
 			}
 
 			return (String)Objects.convertValue(value, String.class);
