@@ -22,6 +22,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -39,6 +40,8 @@ public class ExternalLink extends WebMarkupContainer
 
 	/** this links' label. */
 	private final IModel label;
+	
+	private boolean contextRelative = false;
 
 	/**
 	 * The popup specification. If not-null, a javascript on-click event handler
@@ -150,6 +153,30 @@ public class ExternalLink extends WebMarkupContainer
 			if (hrefValue != null)
 			{
 				String url = hrefValue.toString();
+				
+				if (contextRelative)
+				{
+					if (url.length() > 0 && url.charAt(0) == '/')
+					{
+						url = url.substring(1);
+					}
+					PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
+					String relativeUrl = getRequest().getRelativeURL();
+					
+					for (int i = 0; i < relativeUrl.length(); i++)
+					{
+						if (relativeUrl.charAt(i) == '?')
+						{
+							break;
+						}
+						if (relativeUrl.charAt(i) == '/')
+						{
+							prepender.prepend("../");
+						}
+					}
+					url = prepender.toString();
+				}
+				
 				// if the tag is an anchor proper
 				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
 						|| tag.getName().equalsIgnoreCase("area"))
@@ -214,5 +241,22 @@ public class ExternalLink extends WebMarkupContainer
 		{
 			super.onComponentTagBody(markupStream, openTag);
 		}
+	}
+
+	/**
+	 * @return True if this link is automatically prepended with ../ to make it relative to the context root.
+	 */
+	public boolean isContextRelative()
+	{
+		return contextRelative;
+	}
+
+	/**
+	 * Set to true if this link should be automatically prepended with ../ to make it relative to the context root.
+	 * @param contextRelative
+	 */
+	public void setContextRelative(boolean contextRelative)
+	{
+		this.contextRelative = contextRelative;
 	}
 }
