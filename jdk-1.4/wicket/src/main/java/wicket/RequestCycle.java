@@ -229,21 +229,6 @@ public abstract class RequestCycle
 		current.set(cycle);
 	}
 
-	/** The application object. */
-	protected final Application application;
-
-	/** The processor for this request. */
-	protected final IRequestCycleProcessor processor;
-
-	/** The current request. */
-	protected Request request;
-
-	/** The current response. */
-	protected Response response;
-
-	/** The session object. */
-	protected final Session session;
-
 	/** The current stage of event processing. */
 	private int currentStep = NOT_STARTED;
 
@@ -256,7 +241,6 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
-
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
 
@@ -265,6 +249,22 @@ public abstract class RequestCycle
 
 	/** True if the session should be updated (for clusterf purposes). */
 	private boolean updateSession;
+
+	/** The application object. */
+	protected final Application application;
+
+	/** The processor for this request. */
+	protected final IRequestCycleProcessor processor;
+
+
+	/** The current request. */
+	protected Request request;
+
+	/** The current response. */
+	protected Response response;
+
+	/** The session object. */
+	protected final Session session;
 
 	/**
 	 * Constructor. This instance will be set as the current one for this
@@ -657,6 +657,40 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Returns a URL that references a given interface on a given behaviour of a
+	 * component. When the URL is requested from the server at a later time, the
+	 * interface on the behaviour will be called. A URL returned by this method
+	 * will not be stable across sessions and cannot be bookmarked by a user.
+	 * 
+	 * @param component
+	 *            The component to reference
+	 * @param behaviour
+	 *            The behaviour to reference
+	 * @param listener
+	 *            The listener interface on the component
+	 * @return A URL that encodes a page, component, behaviour and interface to
+	 *         call
+	 */
+	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
+			final RequestListenerInterface listener)
+	{
+		int index = component.getBehaviors().indexOf(behaviour);
+		if (index == -1)
+		{
+			throw new IllegalArgumentException("Behavior " + this
+					+ " was not registered with this component: " + component.toString());
+		}
+		RequestParameters params = new RequestParameters();
+		params.setBehaviorId(String.valueOf(index));
+
+		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,
+				listener, params);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
+	}
+
+	/**
 	 * Returns a URL that references a given interface on a component. When the
 	 * URL is requested from the server at a later time, the interface will be
 	 * called. A URL returned by this method will not be stable across sessions
@@ -699,34 +733,25 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Returns a URL that references a given interface on a given behaviour of a
-	 * component. When the URL is requested from the server at a later time, the
-	 * interface on the behaviour will be called. A URL returned by this method
-	 * will not be stable across sessions and cannot be bookmarked by a user.
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
 	 * 
-	 * @param component
-	 *            The component to reference
-	 * @param behaviour
-	 *            The behaviour to reference
-	 * @param listener
-	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component, behaviour and interface to
-	 *         call
+	 * @param pageMap
+	 *            Pagemap to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
-			final RequestListenerInterface listener)
+	public final CharSequence urlFor(final IPageMap pageMap, final Class pageClass,
+			final PageParameters parameters)
 	{
-		int index = component.getBehaviors().indexOf(behaviour);
-		if (index == -1)
-		{
-			throw new IllegalArgumentException("Behavior " + this
-					+ " was not registered with this component: " + component.toString());
-		}
-		RequestParameters params = new RequestParameters();
-		params.setBehaviorId(String.valueOf(index));
-
-		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,
-				listener, params);
+		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
+				? PageMap.DEFAULT_NAME
+				: pageMap.getName(), pageClass, parameters);
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
@@ -763,31 +788,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageMap
-	 *            Pagemap to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public final CharSequence urlFor(final IPageMap pageMap, final Class pageClass,
-			final PageParameters parameters)
-	{
-		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
-				? PageMap.DEFAULT_NAME
-				: pageMap.getName(), pageClass, parameters);
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
-	}
-
-	/**
 	 * Returns a URL that references a shared resource through the provided
 	 * resource reference.
 	 * 
@@ -818,31 +818,6 @@ public abstract class RequestCycle
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
 				new SharedResourceRequestTarget(requestParameters));
 		return url;
-	}
-
-	/**
-	 * Creates a new agent info object based on this request. Typically, this
-	 * method is called once by the session and the returned object will be
-	 * cached in the session after that call; we can expect the client to stay
-	 * the same for the whole session, and implementations of
-	 * {@link #newClientInfo()} might be relatively expensive.
-	 * 
-	 * @return the agent info object based on this request
-	 */
-	protected abstract ClientInfo newClientInfo();
-
-	/**
-	 * Called when the request cycle object is beginning its response
-	 */
-	protected void onBeginRequest()
-	{
-	}
-
-	/**
-	 * Called when the request cycle object has finished its response
-	 */
-	protected void onEndRequest()
-	{
 	}
 
 	/**
@@ -1093,7 +1068,7 @@ public abstract class RequestCycle
 			// it's not an internal error
 			if (!(e instanceof PageExpiredException))
 			{
-				log.error(e.getMessage(), e);
+				logRuntimeException(e);
 			}
 
 			// try to play nicely and let the request processor handle the
@@ -1181,5 +1156,44 @@ public abstract class RequestCycle
 		// Clear ThreadLocal reference; makes sense as this object should not be
 		// reused
 		current.set(null);
+	}
+
+	/**
+	 * Called when an unrecoverable runtime exception during request cycle
+	 * handling occured. Clients can override this method in case they want to
+	 * customize logging. NOT called for
+	 * {@link PageExpiredException page expired exceptions}.
+	 * 
+	 * @param e
+	 *            the runtime exception
+	 */
+	protected void logRuntimeException(RuntimeException e)
+	{
+		log.error(e.getMessage(), e);
+	}
+
+	/**
+	 * Creates a new agent info object based on this request. Typically, this
+	 * method is called once by the session and the returned object will be
+	 * cached in the session after that call; we can expect the client to stay
+	 * the same for the whole session, and implementations of
+	 * {@link #newClientInfo()} might be relatively expensive.
+	 * 
+	 * @return the agent info object based on this request
+	 */
+	protected abstract ClientInfo newClientInfo();
+
+	/**
+	 * Called when the request cycle object is beginning its response
+	 */
+	protected void onBeginRequest()
+	{
+	}
+
+	/**
+	 * Called when the request cycle object has finished its response
+	 */
+	protected void onEndRequest()
+	{
 	}
 }
