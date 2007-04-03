@@ -255,8 +255,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * Set to true if this link should be automatically prepended with ../ to make it relative to the context root.
 	 * @param contextRelative
 	 */
-	public void setContextRelative(boolean contextRelative)
+	public ExternalLink setContextRelative(boolean contextRelative)
 	{
 		this.contextRelative = contextRelative;
+		return this;
 	}
 }
