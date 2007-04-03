@@ -151,6 +151,16 @@ public abstract class Response
 	 * wishes to write output to a file or is part of a testing harness, there
 	 * may be no meaning to redirection.
 	 * </p>
+	 * <p>
+	 * Framework users who want to redirect should use a construction like
+	 * <code>
+	 * RequestCycle.get().setRequestTarget(new RedirectRequestTarget(...));
+	 * </code>
+	 * or
+	 * <code>
+	 * setResponsePage(new RedirectPage(...));
+	 * </code>
+	 * </p>
 	 * 
 	 * @param url
 	 *            The URL to redirect to
