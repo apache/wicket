@@ -16,13 +16,15 @@
  */
 package wicket.examples.ajax.builtin.tree;
 
+import java.io.Serializable;
+
 /**
  * Bean that is set to every node of tree as user object.
  * This bean has properties that are used to hold values for the cells.
  *  
  * @author Matej Knopp
  */
-public class ModelBean
+public class ModelBean implements Serializable
 {
 	private String property1;
 	private String property2;
