@@ -232,6 +232,56 @@ public abstract class Response
 	public abstract void write(final CharSequence string);
 
 	/**
+	 * Either throws the exception wrapped as {@link WicketRuntimeException} or
+	 * silently ignores it. This method should ignore IO related exceptions like
+	 * connection reset by peer or broken pipe.
+	 * 
+	 * @param e
+	 */
+	private void handleException(Exception e) {
+		// FIXME this doesn't catch all. For instance, Jetty (6/ NIO) on
+		// Unix like platforms will not be recogninzed as exceptions
+		// that should be ignored
+		Throwable throwable = e;
+		boolean ignoreException = false;
+		while (throwable != null)
+		{
+			if (throwable instanceof SQLException)
+			{
+				break; // leave false and quit loop
+			}
+			else if (throwable instanceof SocketException)
+			{
+				String message = throwable.getMessage();
+				ignoreException = message != null
+						&& (message.indexOf("Connection reset") != -1
+								|| message.indexOf("Broken pipe") != -1
+								|| message.indexOf("Socket closed") != -1 
+								|| message.indexOf("connection abort") != -1);
+			}
+			else
+			{
+				ignoreException = throwable.getClass().getName().indexOf("ClientAbortException") >= 0
+						|| throwable.getClass().getName().indexOf("EofException") >= 0;
+			}
+			if (ignoreException)
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("Socket exception ignored for sending Resource "
+							+ "response to client (ClientAbort)", e);
+				}
+				break;
+			}
+			throwable = throwable.getCause();
+		}
+		if (!ignoreException)
+		{
+			throw new WicketRuntimeException("Unable to write the response", e);
+		}		
+	}
+	 
+	/**
 	 * Copies the given input stream to the servlet response
 	 * <p>
 	 * NOTE Content-Length is not set because it would require to buffer the
@@ -252,47 +302,7 @@ public abstract class Response
 		}
 		catch (Exception e)
 		{
-			// FIXME this doesn't catch all. For instance, Jetty (6/ NIO) on
-			// Unix like platforms will not be recogninzed as exceptions
-			// that should be ignored
-
-			Throwable throwable = e;
-			boolean ignoreException = false;
-			while (throwable != null)
-			{
-				if (throwable instanceof SQLException)
-				{
-					break; // leave false and quit loop
-				}
-				else if (throwable instanceof SocketException)
-				{
-					String message = throwable.getMessage();
-					ignoreException = message != null
-							&& (message.indexOf("Connection reset") != -1
-									|| message.indexOf("Broken pipe") != -1
-									|| message.indexOf("Socket closed") != -1
-									|| message.indexOf("connection abort") != -1);
-				}
-				else
-				{
-					ignoreException = throwable.getClass().getName()
-							.indexOf("ClientAbortException") >= 0;
-				}
-				if (ignoreException)
-				{
-					if (log.isDebugEnabled())
-					{
-						log.debug("Socket exception ignored for sending Resource "
-								+ "response to client (ClientAbort)", e);
-					}
-					break;
-				}
-				throwable = throwable.getCause();
-			}
-			if (!ignoreException)
-			{
-				throw new WicketRuntimeException("Unable to write the response", e);
-			}
+			handleException(e);
 		}
 		finally
 		{
@@ -305,7 +315,8 @@ public abstract class Response
 			}
 			catch (IOException e)
 			{
-				throw new WicketRuntimeException(e);
+				// jetty 6 throws broken pipe exception here too
+				handleException(e);
 			}
 		}
 	}
