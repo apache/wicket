@@ -33,7 +33,7 @@ import wicket.Page;
 public class PageLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The delayed linking Page source. */
 	private final IPageLink pageLink;
 
@@ -74,34 +74,6 @@ public class PageLink extends Link
 	}
 
 	/**
-	 * This constructor is ideal if a Page object was passed in from a previous
-	 * Page. Construct a link to the Page.
-	 *
-	 * @param id  See component
-	 * @param page The page
-	 */
-	public PageLink(final String id, final Page page)
-	{
-	    super(id);
-
-		this.pageLink = new IPageLink()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getPage()
-			{
-				// Create page using page factory
-				return page;
-			}
-
-			public Class getPageIdentity()
-			{
-				return page.getClass();
-			}
-		};
-	}
-
-	/**
 	 * This constructor is ideal for constructing pages lazily.
 	 * 
 	 * Constructs a link which invokes the getPage() method of the IPageLink
@@ -119,6 +91,42 @@ public class PageLink extends Link
 	{
 		super(id);
 		this.pageLink = pageLink;
+	}
+
+	/**
+	 * This constructor is ideal if a Page object was passed in from a previous
+	 * Page. Construct a link to the Page. Warning: DO NOT use this for
+	 * constructing links to pages you didn't already have an instance of. This
+	 * constructor is strongly discouraged for anything other than linking back
+	 * to the same page.
+	 * 
+	 * @param id
+	 *            See component
+	 * @param page
+	 *            The page
+	 * @deprecated rather than using this class/ constructor, use normal
+	 *             {@link Link links} and call setResponsePage in their
+	 *             {@link Link#onClick() onClick} methods.
+	 */
+	public PageLink(final String id, final Page page)
+	{
+		super(id);
+
+		this.pageLink = new IPageLink()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Page getPage()
+			{
+				// Create page using page factory
+				return page;
+			}
+
+			public Class getPageIdentity()
+			{
+				return page.getClass();
+			}
+		};
 	}
 
 	/**
