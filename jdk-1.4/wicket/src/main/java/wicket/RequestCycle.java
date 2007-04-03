@@ -1160,8 +1160,9 @@ public abstract class RequestCycle
 
 	/**
 	 * Called when an unrecoverable runtime exception during request cycle
-	 * handling occured. Clients can override this method in case they want to
-	 * customize logging. NOT called for
+	 * handling occured, which will result in displaying a user facing error
+	 * page. Clients can override this method in case they want to customize
+	 * logging. NOT called for
 	 * {@link PageExpiredException page expired exceptions}.
 	 * 
 	 * @param e
