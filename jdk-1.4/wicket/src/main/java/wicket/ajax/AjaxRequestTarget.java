@@ -831,6 +831,33 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * Header container component for ajax header contributions
+	 * @author Matej Knopp
+	 */
+	private static class AjaxHtmlHeaderContainer extends HtmlHeaderContainer 
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * @param id
+		 * @param target
+		 */
+		public AjaxHtmlHeaderContainer(String id, AjaxRequestTarget target) 
+		{
+			super(id);
+			this.target = target;
+		}
+		
+		protected IHeaderResponse newHeaderResponse()
+		{
+			return target.getHeaderResponse();
+		}
+		
+		private transient AjaxRequestTarget target;
+	};
+	
+	/**
 	 * 
 	 * @param response
 	 * @param component
@@ -842,15 +869,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		// create the htmlheadercontainer if needed
 		if (header == null)
 		{
-			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID)
-			{
-				private static final long serialVersionUID = 1L;
-
-				protected IHeaderResponse newHeaderResponse()
-				{
-					return AjaxRequestTarget.this.getHeaderResponse();
-				}
-			};
+			header = new AjaxHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID, this);
 		}
 
 		// add or replace the container to page
