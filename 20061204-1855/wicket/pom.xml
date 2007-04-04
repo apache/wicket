@@ -23,11 +23,12 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>1.3-incubating-SNAPSHOT</version>
+		<version>1.3-incubating-20061204.173039</version>
 		<relativePath>../wicket-parent</relativePath>
 	</parent>
 
 	<artifactId>wicket</artifactId>
+	<version>1.3-20061204-fix4</version>
 	<packaging>jar</packaging>
 	<name>Wicket</name>
 	<url>http://wicketframework.org/${project.artifactId}-1.3</url>
@@ -39,8 +40,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.4</source>
-					<target>1.4</target>
+					<source>1.5</source>
+					<target>1.5</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -93,4 +94,20 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<distributionManagement>
+		<site>
+			<id>wicket-site</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/</url>
+		</site>
+		<repository>
+			<id>test.topicus.nl</id>
+			<url>scpexe://test.topicus.nl/home/topicus/site/maven</url>
+			<layout>legacy</layout>
+		</repository>
+		<snapshotRepository>
+			<id>81.17.46.170</id>
+			<url>file:///home/wicket/maven/</url>
+			<uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+	</distributionManagement>
 </project>
