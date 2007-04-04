@@ -155,6 +155,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 */
 	protected void onComponentTag(ComponentTag tag)
 	{
+		super.onComponentTag(tag);
 		// If we're disabled
 		if (!isLinkEnabled())
 		{
