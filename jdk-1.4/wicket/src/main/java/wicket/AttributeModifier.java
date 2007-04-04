@@ -19,6 +19,7 @@ package wicket;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
+import wicket.model.IComponentAssignedModel;
 import wicket.model.IModel;
 import wicket.util.value.IValueMap;
 
@@ -321,7 +322,12 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	/* gets replacement with null check. */
 	private Object getReplacementOrNull(final Component component)
 	{
-		return (replaceModel != null) ? replaceModel.getObject() : null;
+		IModel model = replaceModel;
+		if (model instanceof IComponentAssignedModel)
+		{
+			model = ((IComponentAssignedModel)model).wrapOnAssignment(component);
+		}
+		return (model != null) ? model.getObject() : null;
 	}
 
 	/* gets replacement as a string with null check. */
