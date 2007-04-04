@@ -521,6 +521,15 @@ public abstract class Session implements Serializable
 					pageMapsUsedInRequest.remove(pageMap);
 					pageMapsUsedInRequest.notifyAll();
 				}
+				else
+				{
+					IPageMap paginaMap = page.getPageMap();
+					if(paginaMap != pageMap) 
+					{
+						log.error("Pagemap " + paginaMap + 
+								"of page " + page + " is not equal to the current pagemap " + pageMap);
+					}
+				}
 				return page;
 			}
 		}

@@ -63,7 +63,9 @@ public abstract class PageMap implements Serializable, IPageMap
 	public static IPageMap forName(final String pageMapName)
 	{
 		Session session = Session.get();
-		return (session != null) ? session.pageMapForName(pageMapName, true) : null;
+		IPageMap map = (session != null) ? session.pageMapForName(pageMapName, true) : null;
+		if  (map != null) map.getSession(); 
+		return map;
 	}
 
 	/**
@@ -124,9 +126,10 @@ public abstract class PageMap implements Serializable, IPageMap
 		Session threadSession = Session.get();
 		if (threadSession != session && session != null)
 		{
+			
 			// now we have big shit
 			log.error("Session stored in pagemap (" + session.getId()
-					+ ") is not equal to request session (" + threadSession.getId() + ")");
+					+ ") is not equal to request session (" + threadSession.getId() + ")", new Exception());
 			// fixing the session
 			session = threadSession;
 			// clear the current page.
@@ -402,6 +405,7 @@ public abstract class PageMap implements Serializable, IPageMap
 	 */
 	public String toString()
 	{
-		return "[PageMap name=" + name + "]";
+		return "[PageMap " + super.toString() + 
+				" name=" + name + "]";
 	}
 }
