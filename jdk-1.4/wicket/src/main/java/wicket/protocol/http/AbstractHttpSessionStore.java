@@ -46,9 +46,6 @@ import wicket.version.undo.UndoPageVersionManager;
 public abstract class AbstractHttpSessionStore implements ISessionStore
 {
 
-	/** log. */
-	protected static Log log = LogFactory.getLog(AbstractHttpSessionStore.class);
-
 	/**
 	 * Reacts on unbinding from the session by cleaning up the session related
 	 * application data.
@@ -65,6 +62,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 
 		/** The unique key of the application within this web application. */
 		private final String applicationKey;
+
+		/** Whether it is already unbound. */
+		private boolean unbound = false;
 
 		/**
 		 * Construct.
@@ -93,72 +93,43 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		 */
 		public void valueUnbound(HttpSessionBindingEvent evt)
 		{
-			Application application = Application.get(applicationKey);
-			if (application != null)
+			if (!unbound)
 			{
-				application.getSessionStore().unbind(sessionId);
+				unbound = true;
+				Application application = Application.get(applicationKey);
+				if (application != null)
+				{
+					application.getSessionStore().unbind(sessionId);
+				}
 			}
 		}
 	}
 
+	/** log. */
+	protected static Log log = LogFactory.getLog(AbstractHttpSessionStore.class);
+
+	/** The web application for this store. Is never null. */
 	protected final WebApplication application;
 
 	/**
 	 * Construct.
+	 * 
+	 * @param application
+	 *            The application to construct this store for
 	 */
-	public AbstractHttpSessionStore()
+	public AbstractHttpSessionStore(Application application)
 	{
+		if (application == null)
+		{
+			throw new IllegalArgumentException("the application object must be provided");
+		}
 		// sanity check
-		Application app = Application.get();
-		if (!(app instanceof WebApplication))
+		if (!(application instanceof WebApplication))
 		{
 			throw new IllegalStateException(getClass().getName()
 					+ " can only operate in the context of web applications");
 		}
-		this.application = (WebApplication)app;
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#invalidate(Request)
-	 */
-	public final void invalidate(Request request)
-	{
-		WebRequest webRequest = toWebRequest(request);
-		HttpSession httpSession = getHttpSession(webRequest);
-		if (httpSession != null)
-		{
-			try
-			{
-				httpSession.invalidate();
-			}
-			catch (IllegalStateException e)
-			{
-				// Ignore
-			}
-		}
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request, boolean)
-	 */
-	public final String getSessionId(Request request, boolean create)
-	{
-		String id = null;
-		WebRequest webRequest = toWebRequest(request);
-		HttpSession httpSession = webRequest.getHttpServletRequest().getSession(false);
-		if (httpSession != null)
-		{
-			id = httpSession.getId();
-		}
-		else if (create)
-		{
-			httpSession = webRequest.getHttpServletRequest().getSession(true);
-			id = httpSession.getId();
-			IRequestLogger logger = Application.get().getRequestLogger();
-			if (logger != null)
-				logger.sessionCreated(id);
-		}
-		return id;
+		this.application = (WebApplication)application;
 	}
 
 	/**
@@ -182,12 +153,67 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#unbind(java.lang.String)
+	 * @see wicket.session.ISessionStore#destroy()
 	 */
-	public final void unbind(String sessionId)
+	public void destroy()
 	{
-		application.sessionDestroyed(sessionId);
-		onUnbind(sessionId);
+		// nop
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request, boolean)
+	 */
+	public final String getSessionId(Request request, boolean create)
+	{
+		String id = null;
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = webRequest.getHttpServletRequest().getSession(false);
+		if (httpSession != null)
+		{
+			id = httpSession.getId();
+		}
+		else if (create)
+		{
+			httpSession = webRequest.getHttpServletRequest().getSession(true);
+			id = httpSession.getId();
+			IRequestLogger logger = application.getRequestLogger();
+			if (logger != null)
+				logger.sessionCreated(id);
+		}
+		return id;
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#invalidate(Request)
+	 */
+	public final void invalidate(Request request)
+	{
+		WebRequest webRequest = toWebRequest(request);
+		HttpSession httpSession = getHttpSession(webRequest);
+		if (httpSession != null)
+		{
+			String applicationKey = application.getApplicationKey();
+			try
+			{
+				SessionBindingListener l = (SessionBindingListener)httpSession
+						.getAttribute("Wicket:SessionUnbindingListener-" + applicationKey);
+				if (l != null)
+				{
+					l.unbound = true;
+				}
+
+				// call unbind
+				unbind(httpSession.getId());
+
+				// tell the app server the session is no longer valid
+				httpSession.invalidate();
+			}
+			catch (IllegalStateException e)
+			{
+				// can safely be ignored
+			}
+
+		}
 	}
 
 	/**
@@ -205,24 +231,39 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * Cast {@link Request} to {@link WebRequest}.
-	 * 
-	 * @param request
-	 *            The request to cast
-	 * @return The web request
+	 * @see wicket.session.ISessionStore#newVersionManager(Page)
 	 */
-	protected final WebRequest toWebRequest(Request request)
+	public IPageVersionManager newVersionManager(Page page)
 	{
-		if (request == null)
-		{
-			return null;
-		}
-		if (!(request instanceof WebRequest))
-		{
-			throw new IllegalArgumentException(getClass().getName()
-					+ " can only work with WebRequests");
-		}
-		return (WebRequest)request;
+		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
+		return new UndoPageVersionManager(page, 20);
+	}
+
+	/**
+	 * Noop implementation. Clients can override this method.
+	 * 
+	 * @see wicket.session.ISessionStore#onBeginRequest(wicket.Request)
+	 */
+	public void onBeginRequest(Request request)
+	{
+	}
+
+	/**
+	 * Noop implementation. Clients can override this method.
+	 * 
+	 * @see wicket.session.ISessionStore#onEndRequest(wicket.Request)
+	 */
+	public void onEndRequest(Request request)
+	{
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#unbind(java.lang.String)
+	 */
+	public final void unbind(String sessionId)
+	{
+		onUnbind(sessionId);
+		application.sessionDestroyed(sessionId);
 	}
 
 	/**
@@ -272,37 +313,23 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * Noop implementation. Clients can override this method.
+	 * Cast {@link Request} to {@link WebRequest}.
 	 * 
-	 * @see wicket.session.ISessionStore#onBeginRequest(wicket.Request)
+	 * @param request
+	 *            The request to cast
+	 * @return The web request
 	 */
-	public void onBeginRequest(Request request)
+	protected final WebRequest toWebRequest(Request request)
 	{
-	}
-
-	/**
-	 * Noop implementation. Clients can override this method.
-	 * 
-	 * @see wicket.session.ISessionStore#onEndRequest(wicket.Request)
-	 */
-	public void onEndRequest(Request request)
-	{
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#newVersionManager(Page)
-	 */
-	public IPageVersionManager newVersionManager(Page page)
-	{
-		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
-		return new UndoPageVersionManager(page, 20);
-	}
-
-	/**
-	 * @see wicket.session.ISessionStore#destroy()
-	 */
-	public void destroy()
-	{
-		// nop
+		if (request == null)
+		{
+			return null;
+		}
+		if (!(request instanceof WebRequest))
+		{
+			throw new IllegalArgumentException(getClass().getName()
+					+ " can only work with WebRequests");
+		}
+		return (WebRequest)request;
 	}
 }

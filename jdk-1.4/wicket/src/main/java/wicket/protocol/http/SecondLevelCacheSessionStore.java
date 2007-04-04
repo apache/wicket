@@ -371,12 +371,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			s.defaultReadObject();
 			// this is an hack.. when object is read in. It must ignore the
 			// first version bump.
-			
-			// (matej_k) for now, I'm commenting it out. It causes serious trouble with back
+
+			// (matej_k) for now, I'm commenting it out. It causes serious
+			// trouble with back
 			// button, where new versions are not created as they should be
 			// johan promised to look at it soon
-			
-			//versionStarted = true;
+
+			// versionStarted = true;
 		}
 
 	}
@@ -386,10 +387,16 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * Construct.
 	 * 
+	 * @param application
+	 *            The application for this store
+	 * 
 	 * @param pageStore
+	 *            Page store for keeping page versions
 	 */
-	public SecondLevelCacheSessionStore(final IPageStore pageStore)
+	public SecondLevelCacheSessionStore(Application application, final IPageStore pageStore)
 	{
+		super(application);
+
 		this.pageStore = pageStore;
 
 		// turn automatic multiwindow support off by default, as we don't really

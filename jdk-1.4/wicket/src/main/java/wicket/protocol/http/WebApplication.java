@@ -595,7 +595,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	protected ISessionStore newSessionStore()
 	{
-		return new SecondLevelCacheSessionStore(new FilePageStore());
+		return new SecondLevelCacheSessionStore(this, new FilePageStore());
 	}
 
 	/**
@@ -671,12 +671,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			// Create session using session factory
 			session = getSessionFactory().newSession(request);
-
-			if (sessionStore.getSessionId(request, false) != null)
-			{
-				// Bind the session to the session store
-				sessionStore.bind(request, session);
-			}
 		}
 
 		WebSession webSession;

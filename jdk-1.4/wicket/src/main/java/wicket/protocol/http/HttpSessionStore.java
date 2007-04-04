@@ -23,6 +23,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import wicket.AccessStackPageMap;
+import wicket.Application;
 import wicket.IPageMap;
 import wicket.Request;
 import wicket.Session;
@@ -35,6 +36,17 @@ import wicket.Session;
  */
 public class HttpSessionStore extends AbstractHttpSessionStore
 {
+	/**
+	 * Construct.
+	 * 
+	 * @param application
+	 *            The application to construct this store for
+	 */
+	public HttpSessionStore(Application application)
+	{
+		super(application);
+	}
+
 	/**
 	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
 	 *      wicket.Session)
