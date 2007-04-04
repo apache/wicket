@@ -18,6 +18,7 @@ package wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -122,14 +123,19 @@ import wicket.util.time.Duration;
 public abstract class Session implements IClusterable, IConverterLocator
 {
 
-	private static final long serialVersionUID = 1L;
-
-	/** meta data key for missing body tags logging. */
-	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
-			PageMapAccessMetaData.class)
+	/**
+	 * Visitor interface for visiting page maps
+	 * 
+	 * @author Jonathan Locke
+	 */
+	public static interface IPageMapVisitor
 	{
-		private static final long serialVersionUID = 1L;
-	};
+		/**
+		 * @param pageMap
+		 *            The page map
+		 */
+		public void pageMap(final IPageMap pageMap);
+	}
 
 	/**
 	 * meta data for recording map map access.
@@ -152,11 +158,17 @@ public abstract class Session implements IClusterable, IConverterLocator
 		}
 	}
 
+	/** meta data key for missing body tags logging. */
+	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
+			PageMapAccessMetaData.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
-	/** Prefix for attributes holding page map entries */
-	static final String pageMapEntryAttributePrefix = "p:";
+	private static final long serialVersionUID = 1L;
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
@@ -172,6 +184,70 @@ public abstract class Session implements IClusterable, IConverterLocator
 
 	/** Attribute prefix for page maps stored in the session */
 	private static final String pageMapAttributePrefix = "m:";
+
+	/** Prefix for attributes holding page map entries */
+	static final String pageMapEntryAttributePrefix = "p:";
+
+	/**
+	 * Checks if the <code>Session</code> threadlocal is set in this thread
+	 * 
+	 * @return true if {@link Session#get()} can return the instance of session,
+	 *         false otherwise
+	 */
+	public static boolean exists()
+	{
+		return current.get() != null;
+	}
+
+	/**
+	 * Get the session for the calling thread.
+	 * 
+	 * @return Session for calling thread
+	 */
+	public static Session get()
+	{
+		final Session session = (Session)current.get();
+		if (session == null)
+		{
+			throw new WicketRuntimeException("there is no session attached to current thread "
+					+ Thread.currentThread().getName());
+		}
+		return session;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Sets session for calling thread.
+	 * 
+	 * @param session
+	 *            The session
+	 */
+	public static void set(final Session session)
+	{
+		if (session == null)
+		{
+			throw new IllegalArgumentException("Argument session can not be null");
+		}
+		current.set(session);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Clears the session for calling thread.
+	 * 
+	 */
+	public static void unset()
+	{
+		current.set(null);
+	}
+
+	/**
+	 * Holds attributes for sessions that are still temporary/ not bound to a
+	 * session store. Only used when {@link #isTemporary()} is true.
+	 */
+	private transient Map temporarySessionAttributes;
 
 	/**
 	 * Cached instance of agent info which is typically designated by calling
@@ -215,75 +291,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	private MetaDataEntry[] metaData;
 
 	/**
-	 * Visitor interface for visiting page maps
-	 * 
-	 * @author Jonathan Locke
-	 */
-	public static interface IPageMapVisitor
-	{
-		/**
-		 * @param pageMap
-		 *            The page map
-		 */
-		public void pageMap(final IPageMap pageMap);
-	}
-
-	/**
-	 * Get the session for the calling thread.
-	 * 
-	 * @return Session for calling thread
-	 */
-	public static Session get()
-	{
-		final Session session = (Session)current.get();
-		if (session == null)
-		{
-			throw new WicketRuntimeException("there is no session attached to current thread "
-					+ Thread.currentThread().getName());
-		}
-		return session;
-	}
-
-	/**
-	 * Checks if the <code>Session</code> threadlocal is set in this thread
-	 * 
-	 * @return true if {@link Session#get()} can return the instance of session,
-	 *         false otherwise
-	 */
-	public static boolean exists()
-	{
-		return current.get() != null;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Sets session for calling thread.
-	 * 
-	 * @param session
-	 *            The session
-	 */
-	public static void set(final Session session)
-	{
-		if (session == null)
-		{
-			throw new IllegalArgumentException("Argument session can not be null");
-		}
-		current.set(session);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Clears the session for calling thread.
-	 * 
-	 */
-	public static void unset()
-	{
-		current.set(null);
-	}
-
-	/**
 	 * Constructor.
 	 * 
 	 * @param application
@@ -303,43 +310,75 @@ public abstract class Session implements IClusterable, IConverterLocator
 
 	/**
 	 * Force binding this session to the application's
-	 * {@link ISessionStore session store}. A Wicket application can operate in
-	 * a session-less mode as long as stateless pages are used. Session objects
-	 * will be then created for each request, but they will only live for that
-	 * request. You can recognize temporary sessions by calling
-	 * {@link #isTemporary()} which basically checks whether the session's id is
-	 * null. Hence, temporary sessions have no session id.
+	 * {@link ISessionStore session store} if not already done so.
+	 * <p>
+	 * A Wicket application can operate in a session-less mode as long as
+	 * stateless pages are used. Session objects will be then created for each
+	 * request, but they will only live for that request. You can recognize
+	 * temporary sessions by calling {@link #isTemporary()} which basically
+	 * checks whether the session's id is null. Hence, temporary sessions have
+	 * no session id.
+	 * </p>
 	 * <p>
 	 * By calling this method, the session will be bound (made not-temporary) if
 	 * it was not bound yet. It is useful for cases where you want to be
 	 * absolutely sure this session object will be available in next requests.
+	 * </p>
+	 * <p>
+	 * This method should not typically be called by clients
 	 * </p>
 	 */
 	public final void bind()
 	{
 		ISessionStore store = getSessionStore();
 		Request request = RequestCycle.get().getRequest();
-		if (store.getSessionId(request, false) == null)
+		if (store.lookup(request) == null)
 		{
-			// explicitly create a session
-			this.id = store.getSessionId(request, true);
-			// bind it
-			store.bind(request, this);
+			synchronized (this)
+			{
+				// explicitly create a session
+				this.id = store.getSessionId(request, true);
+				// bind it
+				store.bind(request, this);
+
+				if (temporarySessionAttributes != null)
+				{
+					for (Iterator i = temporarySessionAttributes.entrySet().iterator(); i.hasNext();)
+					{
+						Entry entry = (Entry)i.next();
+						store.setAttribute(request, String.valueOf(entry.getKey()), entry
+								.getValue());
+					}
+					temporarySessionAttributes = null;
+				}
+
+				RequestCycle.get().setUpdateSession(true);
+			}
 		}
-		RequestCycle.get().setUpdateSession(true);
+		else
+		{
+			log.warn("trying to bind an already bound and non-temporary session");
+		}
 	}
 
 	/**
-	 * Whether this session is temporary. A Wicket application can operate in a
-	 * session-less mode as long as stateless pages are used. If this session
-	 * object is temporary, it will not be available on a next request.
+	 * Cleans up any unrendered, dangling feedback messages there may be. This
+	 * implementation calls {@link FeedbackMessages#clearComponentSpecific()} to
+	 * aggresively ensure there won't be memory leaks. Clients can override this
+	 * method to e.g. call {@link FeedbackMessages#clearPageSpecific(Page)}.
+	 * <p>
+	 * This method should be called from by the framework right before a even
+	 * handler is called. There is no need for clients to call this method
+	 * directly
+	 * </p>
 	 * 
-	 * @return Whether this session is temporary (which is the same as it's id
-	 *         being null)
+	 * @param page
+	 *            any current page (the page on which the event handler is that
+	 *            is about to be processed)
 	 */
-	public final boolean isTemporary()
+	public void cleanupFeedbackMessages(Page page)
 	{
-		return getId() == null;
+		feedbackMessages.clearComponentSpecific();
 	}
 
 	/**
@@ -355,6 +394,49 @@ public abstract class Session implements IClusterable, IConverterLocator
 				pageMap.clear();
 			}
 		});
+	}
+
+	/**
+	 * Automatically creates a page map, giving it a session unique name.
+	 * 
+	 * @return Created PageMap
+	 */
+	public synchronized final IPageMap createAutoPageMap()
+	{
+		return newPageMap(createAutoPageMapName());
+	}
+
+	/**
+	 * With this call you can create a pagemap name but not create the pagemap
+	 * itself already. It will give the first pagemap name where it couldn't
+	 * find a current pagemap for.
+	 * 
+	 * It will return the same name if you call it 2 times in a row.
+	 * 
+	 * @return The created pagemap name
+	 */
+	public synchronized final String createAutoPageMapName()
+	{
+		String name = "wicket-" + autoCreatePageMapCounter;
+		IPageMap pm = pageMapForName(name, false);
+		while (pm != null)
+		{
+			autoCreatePageMapCounter++;
+			name = "wicket-" + autoCreatePageMapCounter;
+			pm = pageMapForName(name, false);
+		}
+		return name;
+	}
+
+	/**
+	 * Registers an error feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void error(final String message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.ERROR);
 	}
 
 	/**
@@ -404,11 +486,43 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Gets the converter instance. This method returns the cached converter for
+	 * the current locale. Whenever the locale is changed, the cached value is
+	 * cleared and the converter will be recreated for the new locale on a next
+	 * request.
+	 * 
+	 * @param type
+	 *            TODO
+	 * 
+	 * @return the converter
+	 */
+	public final IConverter getConverter(Class/* <?> */type)
+	{
+		if (converterSupplier == null)
+		{
+			// Let the factory create a new converter
+			converterSupplier = getApplication().getApplicationSettings()
+					.getConverterLocatorFactory().newConverterLocator();
+		}
+		return converterSupplier.getConverter(type);
+	}
+
+	/**
 	 * @return The default page map
 	 */
 	public final IPageMap getDefaultPageMap()
 	{
 		return pageMapForName(PageMap.DEFAULT_NAME, true);
+	}
+
+	/**
+	 * Gets feedback messages stored in session
+	 * 
+	 * @return unmodifiable list of feedback messages
+	 */
+	public final FeedbackMessages getFeedbackMessages()
+	{
+		return feedbackMessages;
 	}
 
 	/**
@@ -560,58 +674,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets a page map for the given name, automatically creating it if need be.
-	 * 
-	 * @param pageMapName
-	 *            Name of page map, or null for default page map
-	 * @param autoCreate
-	 *            True if the page map should be automatically created if it
-	 *            does not exist
-	 * @return PageMap for name
-	 */
-	public final IPageMap pageMapForName(String pageMapName, final boolean autoCreate)
-	{
-		IPageMap pageMap = (IPageMap)getAttribute(attributeForPageMapName(pageMapName));
-		if (pageMap == null && autoCreate)
-		{
-			pageMap = newPageMap(pageMapName);
-		}
-		return pageMap;
-	}
-
-	/**
-	 * Automatically creates a page map, giving it a session unique name.
-	 * 
-	 * @return Created PageMap
-	 */
-	public synchronized final IPageMap createAutoPageMap()
-	{
-		return newPageMap(createAutoPageMapName());
-	}
-
-	/**
-	 * With this call you can create a pagemap name but not create the pagemap
-	 * itself already. It will give the first pagemap name where it couldn't
-	 * find a current pagemap for.
-	 * 
-	 * It will return the same name if you call it 2 times in a row.
-	 * 
-	 * @return The created pagemap name
-	 */
-	public synchronized final String createAutoPageMapName()
-	{
-		String name = "wicket-" + autoCreatePageMapCounter;
-		IPageMap pm = pageMapForName(name, false);
-		while (pm != null)
-		{
-			autoCreatePageMapCounter++;
-			name = "wicket-" + autoCreatePageMapCounter;
-			pm = pageMapForName(name, false);
-		}
-		return name;
-	}
-
-	/**
 	 * @return A list of all PageMaps in this session.
 	 */
 	public final List getPageMaps()
@@ -653,6 +715,17 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Registers an informational feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void info(final String message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.INFO);
+	}
+
+	/**
 	 * Set the session for each PageMap
 	 */
 	public final void init()
@@ -677,6 +750,19 @@ public abstract class Session implements IClusterable, IConverterLocator
 	public void invalidate()
 	{
 		getSessionStore().invalidate(RequestCycle.get().getRequest());
+	}
+
+	/**
+	 * Whether this session is temporary. A Wicket application can operate in a
+	 * session-less mode as long as stateless pages are used. If this session
+	 * object is temporary, it will not be available on a next request.
+	 * 
+	 * @return Whether this session is temporary (which is the same as it's id
+	 *         being null)
+	 */
+	public final boolean isTemporary()
+	{
+		return getId() == null;
 	}
 
 	/**
@@ -721,6 +807,26 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Gets a page map for the given name, automatically creating it if need be.
+	 * 
+	 * @param pageMapName
+	 *            Name of page map, or null for default page map
+	 * @param autoCreate
+	 *            True if the page map should be automatically created if it
+	 *            does not exist
+	 * @return PageMap for name
+	 */
+	public final IPageMap pageMapForName(String pageMapName, final boolean autoCreate)
+	{
+		IPageMap pageMap = (IPageMap)getAttribute(attributeForPageMapName(pageMapName));
+		if (pageMap == null && autoCreate)
+		{
+			pageMap = newPageMap(pageMapName);
+		}
+		return pageMap;
+	}
+
+	/**
 	 * @param pageMap
 	 *            Page map to remove
 	 */
@@ -760,6 +866,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 		this.clientInfo = clientInfo;
 		dirty();
 	}
+
 
 	/**
 	 * Set the locale for this session.
@@ -854,18 +961,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 		}
 	}
 
-
-	/**
-	 * Registers an informational feedback message for this session
-	 * 
-	 * @param message
-	 *            The feedback message
-	 */
-	public final void info(final String message)
-	{
-		addFeedbackMessage(message, FeedbackMessage.INFO);
-	}
-
 	/**
 	 * Registers a warning feedback message for this session
 	 * 
@@ -875,49 +970,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	public final void warn(final String message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.WARNING);
-	}
-
-	/**
-	 * Registers an error feedback message for this session
-	 * 
-	 * @param message
-	 *            The feedback message
-	 */
-	public final void error(final String message)
-	{
-		addFeedbackMessage(message, FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Gets feedback messages stored in session
-	 * 
-	 * @return unmodifiable list of feedback messages
-	 */
-	public final FeedbackMessages getFeedbackMessages()
-	{
-		return feedbackMessages;
-	}
-
-	/**
-	 * Gets the converter instance. This method returns the cached converter for
-	 * the current locale. Whenever the locale is changed, the cached value is
-	 * cleared and the converter will be recreated for the new locale on a next
-	 * request.
-	 * 
-	 * @param type
-	 *            TODO
-	 * 
-	 * @return the converter
-	 */
-	public final IConverter getConverter(Class/* <?> */type)
-	{
-		if (converterSupplier == null)
-		{
-			// Let the factory create a new converter
-			converterSupplier = getApplication().getApplicationSettings()
-					.getConverterLocatorFactory().newConverterLocator();
-		}
-		return converterSupplier.getConverter(type);
 	}
 
 	/**
@@ -931,6 +983,16 @@ public abstract class Session implements IClusterable, IConverterLocator
 	{
 		getFeedbackMessages().add(null, message, level);
 		dirty();
+	}
+
+	/**
+	 * @param pageMapName
+	 *            Name of page map
+	 * @return Session attribute holding page map
+	 */
+	private final String attributeForPageMapName(final String pageMapName)
+	{
+		return pageMapAttributePrefix + pageMapName;
 	}
 
 	/**
@@ -959,10 +1021,20 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	protected final Object getAttribute(final String name)
 	{
-		RequestCycle cycle = RequestCycle.get();
-		if (cycle != null)
+		if (!isTemporary())
 		{
-			return getSessionStore().getAttribute(cycle.getRequest(), name);
+			RequestCycle cycle = RequestCycle.get();
+			if (cycle != null)
+			{
+				return getSessionStore().getAttribute(cycle.getRequest(), name);
+			}
+		}
+		else
+		{
+			if (temporarySessionAttributes != null)
+			{
+				return temporarySessionAttributes.get(name);
+			}
 		}
 		return null;
 	}
@@ -972,12 +1044,22 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	protected final List getAttributeNames()
 	{
-		RequestCycle cycle = RequestCycle.get();
-		if (cycle != null)
+		if (!isTemporary())
 		{
-			return getSessionStore().getAttributeNames(cycle.getRequest());
+			RequestCycle cycle = RequestCycle.get();
+			if (cycle != null)
+			{
+				return getSessionStore().getAttributeNames(cycle.getRequest());
+			}
 		}
-		return null;
+		else
+		{
+			if (temporarySessionAttributes != null)
+			{
+				return new ArrayList(temporarySessionAttributes.keySet());
+			}
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 	/**
@@ -1007,10 +1089,20 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	protected final void removeAttribute(String name)
 	{
-		RequestCycle cycle = RequestCycle.get();
-		if (cycle != null)
+		if (!isTemporary())
 		{
-			getSessionStore().removeAttribute(cycle.getRequest(), name);
+			RequestCycle cycle = RequestCycle.get();
+			if (cycle != null)
+			{
+				getSessionStore().removeAttribute(cycle.getRequest(), name);
+			}
+		}
+		else
+		{
+			if (temporarySessionAttributes != null)
+			{
+				temporarySessionAttributes.remove(name);
+			}
 		}
 	}
 
@@ -1024,33 +1116,47 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	protected final void setAttribute(String name, Object value)
 	{
-		RequestCycle cycle = RequestCycle.get();
-		if (cycle == null)
+		if (!isTemporary())
 		{
-			throw new WicketRuntimeException("Can not set the attribute. No RequestCycle available");
-		}
-
-		ISessionStore store = getSessionStore();
-		Request request = cycle.getRequest();
-
-		// extra check on session binding event
-		if (value == this)
-		{
-			Object current = store.getAttribute(request, name);
-			if (current == null)
+			RequestCycle cycle = RequestCycle.get();
+			if (cycle == null)
 			{
-				String id = store.getSessionId(request, false);
-				if (id != null)
+				throw new IllegalStateException(
+						"Cannot set the attribute: no RequestCycle available");
+			}
+
+			ISessionStore store = getSessionStore();
+			Request request = cycle.getRequest();
+
+			// extra check on session binding event
+			if (value == this)
+			{
+				Object current = store.getAttribute(request, name);
+				if (current == null)
 				{
-					// this is a new instance. wherever it came from, bind the
-					// session now
-					store.bind(request, (Session)value);
+					String id = store.getSessionId(request, false);
+					if (id != null)
+					{
+						// this is a new instance. wherever it came from, bind
+						// the session now
+						store.bind(request, (Session)value);
+					}
 				}
 			}
-		}
 
-		// Set the actual attribute
-		store.setAttribute(request, name, value);
+			// Set the actual attribute
+			store.setAttribute(request, name, value);
+		}
+		else
+		{
+			// we don't have to synchronize, as it is impossible a temporary
+			// session instance gets shared across threads
+			if (temporarySessionAttributes == null)
+			{
+				temporarySessionAttributes = new HashMap(3);
+			}
+			temporarySessionAttributes.put(name, value);
+		}
 	}
 
 	/**
@@ -1145,26 +1251,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Cleans up any unrendered, dangling feedback messages there may be. This
-	 * implementation calls {@link FeedbackMessages#clearComponentSpecific()} to
-	 * aggresively ensure there won't be memory leaks. Clients can override this
-	 * method to e.g. call {@link FeedbackMessages#clearPageSpecific(Page)}.
-	 * <p>
-	 * This method should be called from by the framework right before a even
-	 * handler is called. There is no need for clients to call this method
-	 * directly
-	 * </p>
-	 * 
-	 * @param page
-	 *            any current page (the page on which the event handler is that
-	 *            is about to be processed)
-	 */
-	public void cleanupFeedbackMessages(Page page)
-	{
-		feedbackMessages.clearComponentSpecific();
-	}
-
-	/**
 	 * @param page
 	 *            The page to add to dirty objects list
 	 */
@@ -1175,6 +1261,39 @@ public abstract class Session implements IClusterable, IConverterLocator
 		{
 			dirtyObjects.add(page);
 		}
+	}
+
+
+	/**
+	 * @param map
+	 *            The page map to add to dirty objects list
+	 */
+	void dirtyPageMap(final IPageMap map)
+	{
+		if (!map.isDefault())
+		{
+			usedPageMaps.remove(map);
+			usedPageMaps.addLast(map);
+		}
+		List dirtyObjects = getDirtyObjectsList();
+		if (!dirtyObjects.contains(map))
+		{
+			dirtyObjects.add(map);
+		}
+	}
+
+	/**
+	 * @return The current thread dirty objects list
+	 */
+	List getDirtyObjectsList()
+	{
+		List list = (List)dirtyObjects.get();
+		if (list == null)
+		{
+			list = new ArrayList(4);
+			dirtyObjects.set(list);
+		}
+		return list;
 	}
 
 	/**
@@ -1200,48 +1319,5 @@ public abstract class Session implements IClusterable, IConverterLocator
 				pageMapsUsedInRequest.notifyAll();
 			}
 		}
-	}
-
-
-	/**
-	 * @param map
-	 *            The page map to add to dirty objects list
-	 */
-	void dirtyPageMap(final IPageMap map)
-	{
-		if (!map.isDefault())
-		{
-			usedPageMaps.remove(map);
-			usedPageMaps.addLast(map);
-		}
-		List dirtyObjects = getDirtyObjectsList();
-		if (!dirtyObjects.contains(map))
-		{
-			dirtyObjects.add(map);
-		}
-	}
-
-	/**
-	 * @param pageMapName
-	 *            Name of page map
-	 * @return Session attribute holding page map
-	 */
-	private final String attributeForPageMapName(final String pageMapName)
-	{
-		return pageMapAttributePrefix + pageMapName;
-	}
-
-	/**
-	 * @return The current thread dirty objects list
-	 */
-	List getDirtyObjectsList()
-	{
-		List list = (List)dirtyObjects.get();
-		if (list == null)
-		{
-			list = new ArrayList(4);
-			dirtyObjects.set(list);
-		}
-		return list;
 	}
 }

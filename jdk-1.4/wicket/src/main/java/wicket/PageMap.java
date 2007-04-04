@@ -29,23 +29,25 @@ import wicket.util.lang.Objects;
  */
 public abstract class PageMap implements IClusterable, IPageMap
 {
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Visitor interface for visiting entries in this map
+	 * 
+	 * @author Jonathan Locke
+	 */
+	static interface IVisitor
+	{
+		/**
+		 * @param entry
+		 *            The page map entry
+		 */
+		public void entry(final IPageMapEntry entry);
+	}
 
 
 	/** Name of default pagemap */
 	public static final String DEFAULT_NAME = null;
 
-	/** URL to continue to after a given page. */
-	private String interceptContinuationURL;
-
-	/** Name of this page map */
-	private final String name;
-
-	/** Next available page identifier in this page map. */
-	private int pageId = 0;
-
-	/** The session where this PageMap resides */
-	private transient Session session;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Gets a page map for a page map name, automatically creating the page map
@@ -62,19 +64,17 @@ public abstract class PageMap implements IClusterable, IPageMap
 		return (session != null) ? session.pageMapForName(pageMapName, true) : null;
 	}
 
-	/**
-	 * Visitor interface for visiting entries in this map
-	 * 
-	 * @author Jonathan Locke
-	 */
-	static interface IVisitor
-	{
-		/**
-		 * @param entry
-		 *            The page map entry
-		 */
-		public void entry(final IPageMapEntry entry);
-	}
+	/** URL to continue to after a given page. */
+	private String interceptContinuationURL;
+
+	/** Name of this page map */
+	private final String name;
+
+	/** Next available page identifier in this page map. */
+	private int pageId = 0;
+
+	/** The session where this PageMap resides */
+	private transient Session session;
 
 
 	/**
@@ -97,52 +97,6 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 
 	/**
-	 * @see wicket.IPageMap#getEntry(int)
-	 */
-	public final IPageMapEntry getEntry(final int id)
-	{
-		return (IPageMapEntry)session.getAttribute(attributeForId(id));
-	}
-
-	/**
-	 * @see wicket.IPageMap#getName()
-	 */
-	public final String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @see wicket.IPageMap#getSession()
-	 */
-	public final Session getSession()
-	{
-		return session;
-	}
-
-	/**
-	 * @see wicket.IPageMap#isDefault()
-	 */
-	public final boolean isDefault()
-	{
-		return name == PageMap.DEFAULT_NAME;
-	}
-
-	/**
-	 * @see wicket.IPageMap#nextId()
-	 */
-	public final int nextId()
-	{
-		dirty();
-		return this.pageId++;
-	}
-
-	protected final void dirty()
-	{
-		session.dirtyPageMap(this);
-	}
-
-	/**
 	 * @see wicket.IPageMap#attributeForId(int)
 	 */
 	public final String attributeForId(final int id)
@@ -151,11 +105,18 @@ public abstract class PageMap implements IClusterable, IPageMap
 	}
 
 	/**
-	 * @return The attribute prefix for this page map
+	 * @see wicket.IPageMap#clear()
 	 */
-	final String attributePrefix()
+	public void clear()
 	{
-		return Session.pageMapEntryAttributePrefix + name + ":";
+		// Remove all entries
+		visitEntries(new IVisitor()
+		{
+			public void entry(IPageMapEntry entry)
+			{
+				removeEntry(entry);
+			}
+		});
 	}
 
 	/**
@@ -186,34 +147,79 @@ public abstract class PageMap implements IClusterable, IPageMap
 	}
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's URL is saved exactly as it was requested for future use
-	 * by continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current URL at some later time; otherwise just use
-	 * setResponsePage or, when you are in a constructor, redirectTo.
-	 * 
-	 * @param page
-	 *            The page to temporarily redirect to
+	 * @see wicket.IPageMap#get(int, int)
 	 */
-	public final void redirectToInterceptPage(final Page page)
+	public abstract Page get(final int id, int versionNumber);
+
+	/**
+	 * @see wicket.IPageMap#getEntry(int)
+	 */
+	public final IPageMapEntry getEntry(final int id)
 	{
-		Session.get().bind();
-		// Get the request cycle
-		final RequestCycle cycle = RequestCycle.get();
-
-		// The intercept continuation URL should be saved exactly as the
-		// original request specified.
-		interceptContinuationURL = cycle.getRequest().getURL();
-
-		// Page map is dirty
-		dirty();
-
-		// Redirect to the page
-		cycle.setRedirect(true);
-		cycle.setResponsePage(page);
+		return (IPageMapEntry)session.getAttribute(attributeForId(id));
 	}
-	
-    /**
+
+	/**
+	 * @see wicket.IPageMap#getName()
+	 */
+	public final String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * @see wicket.IPageMap#getSession()
+	 */
+	public final Session getSession()
+	{
+		return session;
+	}
+
+	/**
+	 * @see wicket.IPageMap#getSizeInBytes()
+	 */
+	public final long getSizeInBytes()
+	{
+		long size = Objects.sizeof(this);
+		Iterator it = getEntries().iterator();
+		while (it.hasNext())
+		{
+			IPageMapEntry entry = (IPageMapEntry)it.next();
+			if (entry instanceof Page)
+			{
+				size += ((Page)entry).getSizeInBytes();
+			}
+			else
+			{
+				size += Objects.sizeof(entry);
+			}
+		}
+		return size;
+	}
+
+	/**
+	 * @see wicket.IPageMap#isDefault()
+	 */
+	public final boolean isDefault()
+	{
+		return name == PageMap.DEFAULT_NAME;
+	}
+
+	/**
+	 * @see wicket.IPageMap#nextId()
+	 */
+	public final int nextId()
+	{
+		dirty();
+		return this.pageId++;
+	}
+
+	/**
+	 * @see wicket.IPageMap#put(wicket.Page)
+	 */
+	public abstract void put(final Page page);
+
+	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
 	 * current request's URL is saved exactly as it was requested for future use
 	 * by continueToOriginalDestination(); Only use this method when you plan to
@@ -225,7 +231,11 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 */
 	public final void redirectToInterceptPage(final Class pageClazz)
 	{
-		Session.get().bind();
+		Session session = Session.get();
+		if (session.isTemporary())
+		{
+			session.bind();
+		}
 		// Get the request cycle
 		final RequestCycle cycle = RequestCycle.get();
 
@@ -239,46 +249,38 @@ public abstract class PageMap implements IClusterable, IPageMap
 		// Redirect to the page
 		cycle.setRedirect(true);
 		cycle.setResponsePage(pageClazz);
-	}	
-
-	/**
-	 * @see wicket.IPageMap#clear()
-	 */
-	public void clear()
-	{
-		// Remove all entries
-		visitEntries(new IVisitor()
-		{
-			public void entry(IPageMapEntry entry)
-			{
-				removeEntry(entry);
-			}
-		});
 	}
 
 	/**
-	 * @see wicket.IPageMap#setSession(wicket.Session)
+	 * Redirects browser to an intermediate page such as a sign-in page. The
+	 * current request's URL is saved exactly as it was requested for future use
+	 * by continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current URL at some later time; otherwise just use
+	 * setResponsePage or, when you are in a constructor, redirectTo.
+	 * 
+	 * @param page
+	 *            The page to temporarily redirect to
 	 */
-	public final void setSession(final Session session)
+	public final void redirectToInterceptPage(final Page page)
 	{
-		this.session = session;
-	}
-
-	/**
-	 * @param visitor
-	 *            The visitor to call at each Page in this PageMap.
-	 */
-	protected final void visitEntries(final IVisitor visitor)
-	{
-		final List attributes = session.getAttributeNames();
-		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		Session session = Session.get();
+		if (session.isTemporary())
 		{
-			final String attribute = (String)iterator.next();
-			if (attribute.startsWith(attributePrefix()))
-			{
-				visitor.entry((IPageMapEntry)session.getAttribute(attribute));
-			}
+			session.bind();
 		}
+		// Get the request cycle
+		final RequestCycle cycle = RequestCycle.get();
+
+		// The intercept continuation URL should be saved exactly as the
+		// original request specified.
+		interceptContinuationURL = cycle.getRequest().getURL();
+
+		// Page map is dirty
+		dirty();
+
+		// Redirect to the page
+		cycle.setRedirect(true);
+		cycle.setResponsePage(page);
 	}
 
 	/**
@@ -308,37 +310,21 @@ public abstract class PageMap implements IClusterable, IPageMap
 	public abstract void removeEntry(final IPageMapEntry entry);
 
 	/**
-	 * @see wicket.IPageMap#put(wicket.Page)
+	 * @see wicket.IPageMap#setSession(wicket.Session)
 	 */
-	public abstract void put(final Page page);
-
-
-	/**
-	 * @see wicket.IPageMap#get(int, int)
-	 */
-	public abstract Page get(final int id, int versionNumber);
-
-	/**
-	 * @see wicket.IPageMap#getSizeInBytes()
-	 */
-	public final long getSizeInBytes()
+	public final void setSession(final Session session)
 	{
-		long size = Objects.sizeof(this);
-		Iterator it = getEntries().iterator();
-		while(it.hasNext())
-		{
-			IPageMapEntry entry = (IPageMapEntry)it.next();
-			if (entry instanceof Page)
-			{
-				size += ((Page)entry).getSizeInBytes();
-			}
-			else
-			{
-				size += Objects.sizeof(entry);
-			}
-		}
-		return size;
+		this.session = session;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "[PageMap name=" + name + "]";
+	}
+
 
 	/**
 	 * @return List of entries in this page map
@@ -358,12 +344,34 @@ public abstract class PageMap implements IClusterable, IPageMap
 		return list;
 	}
 
+	protected final void dirty()
+	{
+		session.dirtyPageMap(this);
+	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * @param visitor
+	 *            The visitor to call at each Page in this PageMap.
 	 */
-	public String toString()
+	protected final void visitEntries(final IVisitor visitor)
 	{
-		return "[PageMap name=" + name + "]";
+		final List attributes = session.getAttributeNames();
+		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(attributePrefix()))
+			{
+				visitor.entry((IPageMapEntry)session.getAttribute(attribute));
+			}
+		}
+	}
+
+
+	/**
+	 * @return The attribute prefix for this page map
+	 */
+	final String attributePrefix()
+	{
+		return Session.pageMapEntryAttributePrefix + name + ":";
 	}
 }

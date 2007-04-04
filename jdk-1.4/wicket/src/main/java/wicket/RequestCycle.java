@@ -716,13 +716,14 @@ public abstract class RequestCycle
 		}
 		else
 		{
-			if (listener == IRedirectListener.INTERFACE)
-			{
-				page.setPageStateless(Boolean.FALSE);
-			}
 
-			// trigger creation of the actual session in case it was deferred
-			session.getSessionStore().getSessionId(request, true);
+			page.setPageStateless(Boolean.FALSE);
+			// make session non-volatile if not already so
+			Session session = Session.get();
+			if (session.isTemporary())
+			{
+				session.bind();
+			}
 
 			// Get the listener interface name
 			target = new ListenerInterfaceRequestTarget(page, component, listener);
