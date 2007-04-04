@@ -29,7 +29,7 @@ import wicket.util.string.AppendingStringBuffer;
  *
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel implements IInheritableModel
+public class CompoundPropertyModel implements IComponentInheritedModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -54,6 +54,11 @@ public class CompoundPropertyModel implements IInheritableModel
 		{
 			return ((IModel)target).getObject();
 		}
+		return target;
+	}
+	
+	public Object getTarget() 
+	{
 		return target;
 	}
 
@@ -89,9 +94,9 @@ public class CompoundPropertyModel implements IInheritableModel
 	}
 
 	/**
-	 * @see wicket.model.IInheritableModel#wrapOnInheritance(wicket.Component)
+	 * @see wicket.model.IComponentInheritedModel#wrapOnInheritance(wicket.Component)
 	 */
-	public IWrapModel wrapOnInheritance(Component component)
+	public IModelWrapper wrapOnInheritance(Component component)
 	{
 		return new AttachedCompoundPropertyModel(component);
 	}
@@ -104,8 +109,8 @@ public class CompoundPropertyModel implements IInheritableModel
 	 */
 	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
 			implements
-				IWrapModel,
-				IInheritableModel
+				IModelWrapper,
+				IComponentInheritedModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -132,7 +137,7 @@ public class CompoundPropertyModel implements IInheritableModel
 		}
 
 		/**
-		 * @see wicket.model.IWrapModel#getNestedModel()
+		 * @see wicket.model.IModelWrapper#getNestedModel()
 		 */
 		public IModel getNestedModel()
 		{
@@ -140,9 +145,9 @@ public class CompoundPropertyModel implements IInheritableModel
 		}
 
 		/**
-		 * @see wicket.model.IInheritableModel#wrapOnInheritance(wicket.Component)
+		 * @see wicket.model.IComponentInheritedModel#wrapOnInheritance(wicket.Component)
 		 */
-		public IWrapModel wrapOnInheritance(Component component)
+		public IModelWrapper wrapOnInheritance(Component component)
 		{
 			return new AttachedCompoundPropertyModel(component);
 		};
@@ -155,7 +160,6 @@ public class CompoundPropertyModel implements IInheritableModel
 			super.detach();
 			CompoundPropertyModel.this.detach();
 		}
-
 	}
 
 	/**

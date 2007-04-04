@@ -31,7 +31,7 @@ import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.model.IAssignmentAwareModel;
+import wicket.model.IComponentAssignedModel;
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
@@ -613,9 +613,9 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 */
 	public FormComponent setLabel(IModel labelModel)
 	{
-		if (labelModel instanceof IAssignmentAwareModel) 
+		if (labelModel instanceof IComponentAssignedModel) 
 		{
-			labelModel = ((IAssignmentAwareModel)labelModel).wrapOnAssignment(this);
+			labelModel = ((IComponentAssignedModel)labelModel).wrapOnAssignment(this);
 		}
 		this.labelModel = labelModel;
 		return this;

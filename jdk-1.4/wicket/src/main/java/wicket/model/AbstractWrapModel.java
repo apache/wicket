@@ -17,13 +17,13 @@
 package wicket.model;
 
 /**
- * Simple base class for IWrapModel objects see {@link IAssignmentAwareModel}
- * or {@link IInheritableModel} so that you don't have to have empty methods
+ * Simple base class for IModelWrapper objects see {@link IComponentAssignedModel}
+ * or {@link IComponentInheritedModel} so that you don't have to have empty methods
  * like detach or setObject() when not used in the wrapper. 
  * 
  * @author jcompagner
  */
-public abstract class AbstractWrapModel implements IWrapModel
+public abstract class AbstractWrapModel implements IModelWrapper
 {
 	/**
 	 * @see wicket.model.IModel#getObject()

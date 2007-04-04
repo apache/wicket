@@ -19,7 +19,7 @@ package wicket.model;
 /**
  * A marker interface that represents a model that serves as a wrapper for
  * another. Typically these models are produced by the following methods:
- * {@link IAssignmentAwareModel#wrapOnAssignment(wicket.Component)} and
+ * {@link IComponentAssignedModel#wrapOnAssignment(wicket.Component)} and
  * {@link IInheritanceAware#wrapOnInheritance(wicket.Component)}
  * 
  * <b>Nested Models </b>- IModels can be nested and the innermost model is also
@@ -36,7 +36,7 @@ package wicket.model;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IWrapModel extends IModel
+public interface IModelWrapper extends IModel
 {
 	/**
 	 * Gets the nested model.
@@ -44,5 +44,4 @@ public interface IWrapModel extends IModel
 	 * @return The nested model object.
 	 */
 	IModel getNestedModel();
-
 }

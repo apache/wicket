@@ -32,7 +32,7 @@ import wicket.Component;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ResourceModel extends AbstractReadOnlyModel implements IAssignmentAwareModel
+public class ResourceModel extends AbstractReadOnlyModel implements IComponentAssignedModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -78,9 +78,9 @@ public class ResourceModel extends AbstractReadOnlyModel implements IAssignmentA
 
 
 	/**
-	 * @see wicket.model.IAssignmentAwareModel#wrapOnAssignment(wicket.Component)
+	 * @see wicket.model.IComponentAssignedModel#wrapOnAssignment(wicket.Component)
 	 */
-	public IWrapModel wrapOnAssignment(final Component component)
+	public IModelWrapper wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(resourceKey, defaultValue, component);
 	}
@@ -88,7 +88,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IAssignmentA
 	/**
 	 * 
 	 */
-	private class AssignmentWrapper extends ResourceModel implements IWrapModel
+	private class AssignmentWrapper extends ResourceModel implements IModelWrapper
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -108,7 +108,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IAssignmentA
 		}
 
 		/**
-		 * @see wicket.model.IWrapModel#getNestedModel()
+		 * @see wicket.model.IModelWrapper#getNestedModel()
 		 */
 		public IModel getNestedModel()
 		{

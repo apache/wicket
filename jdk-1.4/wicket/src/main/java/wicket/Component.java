@@ -39,11 +39,11 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.model.IAssignmentAwareModel;
-import wicket.model.IInheritableModel;
+import wicket.model.IComponentAssignedModel;
+import wicket.model.IComponentInheritedModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
-import wicket.model.IWrapModel;
+import wicket.model.IModelWrapper;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
@@ -597,15 +597,7 @@ public abstract class Component implements IClusterable
 	{
 		setId(id);
 		getApplication().notifyComponentInstantiationListeners(this);
-
-		if (model instanceof IAssignmentAwareModel)
-		{
-			this.model = ((IAssignmentAwareModel)model).wrapOnAssignment(this);
-		}
-		else
-		{
-			this.model = model;
-		}
+		this.model = wrap(model);
 	}
 
 	/**
@@ -1970,9 +1962,9 @@ public abstract class Component implements IClusterable
 		}
 
 		IModel prevModel = this.model;
-		if (prevModel instanceof IWrapModel)
+		if (prevModel instanceof IModelWrapper)
 		{
-			prevModel = ((IWrapModel)prevModel).getNestedModel();
+			prevModel = ((IModelWrapper)prevModel).getNestedModel();
 		}
 
 		// Change model
@@ -1983,14 +1975,7 @@ public abstract class Component implements IClusterable
 				addStateChange(new ComponentModelChange(prevModel));
 			}
 
-			if (model instanceof IAssignmentAwareModel)
-			{
-				this.model = ((IAssignmentAwareModel)model).wrapOnAssignment(this);
-			}
-			else
-			{
-				this.model = model;
-			}
+			this.model = wrap(model);
 		}
 
 		modelChanged();
@@ -2580,12 +2565,12 @@ public abstract class Component implements IClusterable
 			// Get model
 			IModel model = current.getModel();
 
-			if (model instanceof IWrapModel)
+			if (model instanceof IModelWrapper)
 			{
-				model = ((IWrapModel)model).getNestedModel();
+				model = ((IModelWrapper)model).getNestedModel();
 			}
 
-			if (model instanceof IInheritableModel)
+			if (model instanceof IComponentInheritedModel)
 			{
 				// we turn off versioning as we share the model with another
 				// component that is the owner of the model (that component
@@ -2593,7 +2578,7 @@ public abstract class Component implements IClusterable
 				setVersioned(false);
 
 				// return the shared inherited
-				model = ((IInheritableModel)model).wrapOnInheritance(this);
+				model = ((IComponentInheritedModel)model).wrapOnInheritance(this);
 				return model;
 			}
 		}
@@ -3129,6 +3114,22 @@ public abstract class Component implements IClusterable
 	{
 		setFlag(FLAG_AUTO, auto);
 	}
+	
+	/**
+	 * @param model The model to wrap if need be
+	 * @return The wrapped model
+	 */
+	protected final IModel wrap(final IModel model) 
+	{
+		if (model instanceof IComponentAssignedModel)
+		{
+			return ((IComponentAssignedModel)model).wrapOnAssignment(this);
+		}
+		else
+		{
+			return model;
+		}
+	}
 
 	/**
 	 * Sets the id of this component. This method is private because the only
@@ -3180,12 +3181,12 @@ public abstract class Component implements IClusterable
 	 *            The model
 	 * @return The root object
 	 */
-	private final IModel getRootModel(final IModel model)
+	protected final IModel getRootModel(final IModel model)
 	{
 		IModel nested = model;
-		while (nested != null && nested instanceof IWrapModel)
+		while (nested != null && nested instanceof IModelWrapper)
 		{
-			final IModel next = ((IWrapModel)nested).getNestedModel();
+			final IModel next = ((IModelWrapper)nested).getNestedModel();
 			if (nested == next)
 			{
 				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
@@ -3193,6 +3194,14 @@ public abstract class Component implements IClusterable
 			nested = next;
 		}
 		return nested;
+	}
+
+	/**
+	 * @return Root model for this component
+	 */
+	public final IModel getRootModel()
+	{
+		return getRootModel(getModel());
 	}
 
 	/**

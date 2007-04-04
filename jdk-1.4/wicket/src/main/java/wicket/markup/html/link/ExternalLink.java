@@ -94,8 +94,8 @@ public class ExternalLink extends WebMarkupContainer
 	{
 		super(id);
 
-		this.href = href;
-		this.label = label;
+		this.href = wrap(href);
+		this.label = wrap(label);
 	}
 
 	/**

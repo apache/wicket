@@ -19,26 +19,38 @@ package wicket.model;
 import wicket.Component;
 
 /**
- * This is a marker interface for models that can be inherited from components
- * higher in the hierarchy.
+ * Models that wish to substitute themselves with a wrapper when they are bound
+ * to a component (either through IModel parameter in a constructor or via a
+ * call to {@link Component#setModel(IModel)}) should implement this interface.
+ * One reason for a model to want to do this is if it needs to be aware of the
+ * component it is bound to.
  * 
- * If a model implements this interface then you can give the parent container
- * this model and all the child (recursively) components will also get and then
- * set that model on their own if they are created with a null model
+ * The algorithm wicket employes is similar to this:
  * 
  * <pre>
- * Form form = new Form(getPage(), &quot;form&quot;, new ModelImplementingIInheritableModel());
- * new TextField(form, &quot;textfield&quot;); // notice textfield is created with a null model
+ * void Component.setModel(IModel model) 
+ * {
+ *     if (model instanceof IComponentAssignedModel) 
+ *     {
+ *        this.model = ((IComponentAssignedModel)model).wrapOnAssignment(this);
+ *     } 
+ *     else 
+ *     {
+ *        this.model = model;
+ *     }
+ * }
  * </pre>
+ * 
+ * For an example see {@link ResourceModel}
  * 
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IInheritableModel extends IModel
+public interface IComponentAssignedModel extends IModel
 {
 	/**
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
-	IWrapModel wrapOnInheritance(Component component);
+	IModelWrapper wrapOnAssignment(Component component);
 }
