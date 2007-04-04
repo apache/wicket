@@ -18,6 +18,7 @@ package wicket.util.lang;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -73,5 +74,29 @@ public abstract class EnumeratedType extends StringValue
 		}
 
 		return valueList;
+	}
+	
+	/**
+	 * Method to ensure that == works after deserialization
+	 * @return object instance
+	 * @throws java.io.ObjectStreamException
+	 */
+	public Object readResolve() throws java.io.ObjectStreamException 
+	{
+		EnumeratedType result = this;
+		List values = getValues(getClass());
+		if (values != null)
+		{
+			for (Iterator i = values.iterator(); i.hasNext(); )
+			{
+				EnumeratedType type = (EnumeratedType) i.next();
+				if (type.toString() != null && type.toString().equals(this.toString()))
+				{
+					result = type;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 }
