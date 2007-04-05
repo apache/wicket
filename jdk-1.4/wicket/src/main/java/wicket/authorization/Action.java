@@ -16,7 +16,7 @@
  */
 package wicket.authorization;
 
-import wicket.IClusterable;
+import wicket.util.lang.EnumeratedType;
 import wicket.util.string.Strings;
 
 /**
@@ -33,10 +33,8 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @since 1.2
  */
-public class Action implements IClusterable
+public class Action extends EnumeratedType
 {
-	private static final long serialVersionUID = -1L;
-
 	/**
 	 * RENDER action name (for consistent name and use in annotations).
 	 * <p>
@@ -75,6 +73,8 @@ public class Action implements IClusterable
 	 */
 	public static final String ENABLE = "ENABLE";
 
+	private static final long serialVersionUID = -1L;
+
 	/** The name of this action. */
 	private final String name;
 
@@ -86,6 +86,7 @@ public class Action implements IClusterable
 	 */
 	public Action(final String name)
 	{
+		super(name);
 		if (Strings.isEmpty(name))
 		{
 			throw new IllegalArgumentException(
@@ -96,40 +97,9 @@ public class Action implements IClusterable
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(final Object obj)
-	{
-		if (obj instanceof Action)
-		{
-			final Action that = (Action)obj;
-			return name.equals(that.name);
-		}
-		return false;
-	}
-
-	/**
 	 * @return The name of this action
 	 */
 	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode()
-	{
-		int result = "Action".hashCode();
-		result += name.hashCode();
-		return 17 * result;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
 	{
 		return name;
 	}
