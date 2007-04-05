@@ -65,7 +65,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	/**
 	 * Wrapper used when assigning a ComponentPropertyModel to a component.
 	 */
-	static private class AssignmentWrapper extends AbstractReadOnlyModel
+	private class AssignmentWrapper extends AbstractReadOnlyModel
 			implements
 				INestedModelContainer
 	{
@@ -86,7 +86,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 		 */
 		public IModel getNestedModel()
 		{
-			return component.getModel();
+			return ComponentPropertyModel.this;
 		}
 
 		protected String propertyExpression()
@@ -96,7 +96,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 
 		public Object getObject()
 		{
-			return PropertyResolver.getValue(propertyName, component.getInnermostModel()
+			return PropertyResolver.getValue(propertyName, component.getParent().getInnermostModel()
 					.getObject());
 		}
 	}
