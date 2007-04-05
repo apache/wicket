@@ -230,7 +230,6 @@ public class StringResourceModelTest extends TestCase
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...
-		//Assert.assertNull(model.getNestedModel().getObject());
 		Assert.assertNull(model.getLocalizer());
 	}
 
