@@ -49,7 +49,6 @@ import wicket.protocol.http.WebRequest;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.MaskConverter;
-import wicket.util.convert.SimpleConverterAdapter;
 import wicket.validation.validator.NumberValidator;
 
 /**
@@ -97,7 +96,8 @@ public class FormInput extends WicketExamplePage
 			add(new RequiredTextField("doubleProperty", Double.class));
 
 			add(new DateTimeField("dateProperty"));
-			// add(DateTextField.forShortStyle("dateProperty").add(new DatePicker()));
+			// add(DateTextField.forShortStyle("dateProperty").add(new
+			// DatePicker()));
 
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
 					.range(0, 100)));
@@ -140,9 +140,9 @@ public class FormInput extends WicketExamplePage
 			{
 				public IConverter getConverter(final Class type)
 				{
-					return new SimpleConverterAdapter()
+					return new IConverter()
 					{
-						public Object toObject(final String value)
+						public Object convertToObject(String value, Locale locale)
 						{
 							try
 							{
@@ -154,7 +154,7 @@ public class FormInput extends WicketExamplePage
 							}
 						}
 
-						public String toString(final Object value)
+						public String convertToString(Object value, Locale locale)
 						{
 							return value != null ? value.toString() : null;
 						}
