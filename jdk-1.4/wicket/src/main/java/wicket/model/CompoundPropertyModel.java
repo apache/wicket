@@ -22,11 +22,11 @@ import wicket.util.string.AppendingStringBuffer;
 /**
  * A simple compound model which uses the component's name as the property
  * expression to retrieve properties on the nested model object.
- *
+ * 
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.AbstractDetachableModel
- *
+ * 
  * @author Jonathan Locke
  */
 public class CompoundPropertyModel implements IComponentInheritedModel
@@ -37,7 +37,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
@@ -45,6 +45,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	{
 		target = model;
 	}
+
 	/**
 	 * @see wicket.model.IModel#getObject()
 	 */
@@ -56,8 +57,8 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 		}
 		return target;
 	}
-	
-	public Object getTarget() 
+
+	public Object getTarget()
 	{
 		return target;
 	}
@@ -84,7 +85,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	/**
 	 * Returns the property expression that should be used against the target
 	 * object
-	 *
+	 * 
 	 * @param component
 	 * @return property expression that should be used against the target object
 	 */
@@ -104,7 +105,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	/**
 	 * Component aware variation of the {@link CompoundPropertyModel} that
 	 * components that inherit the model get
-	 *
+	 * 
 	 * @author ivaynberg
 	 */
 	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
@@ -118,7 +119,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 
 		/**
 		 * Constructor
-		 *
+		 * 
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
@@ -167,16 +168,32 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	 */
 	public String toString()
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=[" + getClass().getName() + "]");
+		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=["
+				+ getClass().getName() + "]");
 		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
 	}
 
-	// TODO These methods are for helping people upgrade. Remove after deprecation release.
-	/** @deprecated replace by {@link IModel#getObject()}. */
-	public final Object getObject(Component component) { throw new UnsupportedOperationException(); }
+	// TODO These methods are for helping people upgrade. Remove after
+	// deprecation release.
+	/**
+	 * @param component
+	 * @return
+	 * @deprecated replace by {@link IModel#getObject()}.
+	 */
+	public final Object getObject(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
 
-	/** @deprecated replace by {@link IModel#setObject(Object)}. */
-	public final void setObject(Component component, Object object) { throw new UnsupportedOperationException(); }
+	/**
+	 * @param component
+	 * @param object
+	 * @deprecated replace by {@link IModel#setObject(Object)}.
+	 */
+	public final void setObject(Component component, Object object)
+	{
+		throw new UnsupportedOperationException();
+	}
 
 }
