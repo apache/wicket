@@ -16,13 +16,25 @@
  */
 package wicket.util.convert;
 
+import java.util.Date;
 import java.util.Locale;
 
 import wicket.IClusterable;
 
 /**
- * General purpose data type converter. An object that implements this interface
- * can convert objects from one class to another.
+ * Converts input to output and vice versa. Converters are needed in web
+ * applications because we have to switch between Java objects on the server and
+ * Strings in the browser output and input.
+ * <p>
+ * Output conversion, which is handled by
+ * {@link #convertToString(Object, Locale)}, is typically used by components
+ * when they render, so that a date can be displayed as '12/12/2007'. Input
+ * conversion, handled by {@link #convertToObject(String, Locale)}, is
+ * typically used by form components to interpret incoming values Such values
+ * are strings as they are send as request parameters from browsers. An incoming
+ * value could be the string '12/12/2007' which could be translated to a
+ * corresponding {@link Date} object.
+ * </p>
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -46,7 +58,7 @@ public interface IConverter extends IClusterable
 	 * @param value
 	 *            The value to convert
 	 * @param locale
-	 *            TODO
+	 *            The locale used to convert the value
 	 * 
 	 * @return The converted string value
 	 */

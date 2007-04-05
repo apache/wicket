@@ -37,33 +37,9 @@ import wicket.util.convert.converters.SqlTimestampConverter;
 import wicket.util.lang.Objects;
 
 /**
- * Implementation of IConverter interface, which converts objects from one class
- * to another. This class allows specific type converters implementing the
- * ITypeConverter interface to be registered as conversion operations for
- * specific types. By default this class registers type converters for Date,
- * String and all Java primitive types and their wrapper classes.
- * <p>
- * To convert from a Double value to a String value you can use the generalized
- * converter interface:
- * 
- * <pre>
- * final IConverter converter = new CoverterLocatorFactory().newConverter();
- * converter.setLocale(Locale.US);
- * converter.convert(new Double(7.1), String.class);
- * </pre>
- * 
- * Or this can be accomplished by directly using the StringConverter type
- * conversion class (which is registered as a type converter on the IConverter
- * returned by the converter factory above).
- * 
- * <pre>
- * final StringConverter converter = new StringConverter(Locale.US);
- * converter.convert(new Double(7.1));
- * </pre>
- * 
- * When using Wicket, you should rarely need to use any of the conversion
- * classes directly. There are convenient validators and conversion features
- * built into Wicket that you can use directly.
+ * Implementation of {@link IConverterLocator} interface, which locates
+ * converters for a given type. It serves as a registry for {@link IConverter}
+ * instances stored by type, and is the default locator for Wicket.
  * 
  * @see IConverterLocatorFactory
  * @author Eelco Hillenius
@@ -71,29 +47,24 @@ import wicket.util.lang.Objects;
  */
 public class ConverterLocator implements IConverterLocator
 {
-	private static final long serialVersionUID = 1L;
-
-	/** Maps Classes to ITypeConverters. */
-	private final Map/*Class<?>, IConverter*/ classToConverter = new HashMap/*Class<?>, IConverter*/();
-
 	/**
 	 * CoverterLocator that is to be used when no registered converter is found.
 	 */
 	private class DefaultConverter implements IConverter
 	{
-		private Class/*?*/ type;
+		private static final long serialVersionUID = 1L;
+
+		private Class/* ? */type;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param type
 		 */
-		public DefaultConverter(Class/*?*/ type)
+		public DefaultConverter(Class/* ? */type)
 		{
 			this.type = type;
 		}
-
-		private static final long serialVersionUID = 1L;
 
 		/**
 		 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
@@ -137,7 +108,15 @@ public class ConverterLocator implements IConverterLocator
 
 			return (String)Objects.convertValue(value, String.class);
 		}
-	};
+	}
+
+	private static final long serialVersionUID = 1L;
+
+	/** Maps Classes to ITypeConverters. */
+	private final Map/* Class<?>, IConverter */classToConverter = new HashMap/*
+																				 * Class<?>,
+																				 * IConverter
+																				 */();;
 
 	/**
 	 * Constructor
@@ -164,6 +143,19 @@ public class ConverterLocator implements IConverterLocator
 		set(java.sql.Date.class, new SqlDateConverter());
 		set(java.sql.Time.class, new SqlTimeConverter());
 		set(java.sql.Timestamp.class, new SqlTimestampConverter());
+	}
+
+	/**
+	 * Gets the type converter that is registered for class c.
+	 * 
+	 * @param c
+	 *            The class to get the type converter for
+	 * @return The type converter that is registered for class c or null if no
+	 *         type converter was registered for class c
+	 */
+	public final IConverter get(Class/* ? */c)
+	{
+		return (IConverter)classToConverter.get(c);
 	}
 
 	/**
@@ -196,19 +188,6 @@ public class ConverterLocator implements IConverterLocator
 	}
 
 	/**
-	 * Gets the type converter that is registered for class c.
-	 * 
-	 * @param c
-	 *            The class to get the type converter for
-	 * @return The type converter that is registered for class c or null if no
-	 *         type converter was registered for class c
-	 */
-	public final IConverter get(Class/*?*/ c)
-	{
-		return (IConverter)classToConverter.get(c);
-	}
-
-	/**
 	 * Removes the type converter currently registered for class c.
 	 * 
 	 * @param c
@@ -217,7 +196,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The converter that was registered for class c before removal or
 	 *         null if none was registered
 	 */
-	public final IConverter remove(Class/*?*/ c)
+	public final IConverter remove(Class/* ? */c)
 	{
 		return (IConverter)classToConverter.remove(c);
 	}
@@ -232,7 +211,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The previous registered converter for class c or null if none was
 	 *         registered yet for class c
 	 */
-	public final IConverter set(final Class/*?*/ c, final IConverter converter)
+	public final IConverter set(final Class/* ? */c, final IConverter converter)
 	{
 		if (converter == null)
 		{

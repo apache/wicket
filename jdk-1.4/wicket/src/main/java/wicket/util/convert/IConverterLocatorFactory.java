@@ -17,9 +17,14 @@
 package wicket.util.convert;
 
 import wicket.IConverterLocator;
+import wicket.settings.IApplicationSettings;
 
 /**
  * Factory that creates and configures instances of {@link IConverterLocator}.
+ * The actual instance to use can be configured using
+ * {@link IApplicationSettings#getConverterLocatorFactory()}.
+ * 
+ * @see ConverterLocatorFactory
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke

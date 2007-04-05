@@ -16,18 +16,21 @@
  */
 package wicket;
 
+import wicket.settings.IApplicationSettings;
 import wicket.util.convert.ConverterLocator;
 import wicket.util.convert.IConverter;
+import wicket.util.convert.IConverterLocatorFactory;
 
 /**
- * A Class who implement this interface must return the right converter for the
- * given class type.
+ * Locates the proper converter instance for a given type. Classes that
+ * implement this interface must return the right converter for the given class
+ * type. Instances are created by {@link IConverterLocatorFactory}, which can
+ * be configured using {@link IApplicationSettings#getConverterLocatorFactory()}.
+ * 
+ * @see ConverterLocator
+ * @see IConverterLocatorFactory
  * 
  * @author jcompagner
- * 
- * @see Component
- * @see Session
- * @see ConverterLocator
  */
 public interface IConverterLocator extends IClusterable
 {
@@ -38,5 +41,5 @@ public interface IConverterLocator extends IClusterable
 	 * @param type
 	 * @return The converter for the given type.
 	 */
-	public IConverter getConverter(Class/*<?>*/ type);
+	public IConverter getConverter(Class/* <?> */type);
 }

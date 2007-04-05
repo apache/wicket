@@ -19,8 +19,8 @@ package wicket.util.convert;
 import wicket.IConverterLocator;
 
 /**
- * Implementation of {@link IConverterLocatorFactory}which creates
- * an instance of {@link IConverterLocator}.
+ * Implementation of {@link IConverterLocatorFactory} which creates an instance
+ * of {@link IConverterLocator}.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
