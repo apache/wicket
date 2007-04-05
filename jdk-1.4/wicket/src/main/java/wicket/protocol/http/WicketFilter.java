@@ -229,15 +229,15 @@ public class WicketFilter implements Filter
 			// First, set the webapplication for this thread
 			Application.set(webApplication);
 
-			// Get session for request
-			final WebSession session = webApplication.getSession(request);
-
 			// Create a response object and set the output encoding according to
 			// wicket's application setttings.
 			final WebResponse response = webApplication.newWebResponse(servletResponse);
 			response.setAjax(request.isAjax());
 			response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 					.getResponseRequestEncoding());
+
+			// Get session for request
+			final WebSession session = webApplication.getSession(request, response);
 
 			try
 			{

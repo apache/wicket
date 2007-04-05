@@ -36,7 +36,6 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
 import wicket.markup.html.pages.ExceptionErrorPage;
-import wicket.protocol.http.servlet.ServletWebRequest;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
@@ -198,7 +197,7 @@ public class MockWebApplication
 		this.servletRequest = new MockHttpServletRequest(this.application, servletSession, context);
 		this.servletResponse = new MockHttpServletResponse();
 		this.wicketRequest = this.application.newWebRequest(servletRequest);
-		this.wicketSession = this.application.getSession(wicketRequest);
+		this.wicketSession = this.application.getSession(wicketRequest, wicketResponse);
 		this.requestCycleFactory = this.wicketSession.getRequestCycleFactory();
 
 		// set the default context path
@@ -399,7 +398,7 @@ public class MockWebApplication
 					servletSession, this.application.getServletContext());
 			newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
 			wicketRequest = this.application.newWebRequest(newHttpRequest);
-			wicketSession = this.application.getSession(wicketRequest);
+			wicketSession = this.application.getSession(wicketRequest, wicketResponse);
 
 			cycle = createRequestCycle();
 			cycle.request();
@@ -482,10 +481,10 @@ public class MockWebApplication
 		servletResponse.initialize();
 		servletRequest.setParameters(parametersForNextRequest);
 		parametersForNextRequest.clear();
-		wicketRequest = new ServletWebRequest(servletRequest);
-		wicketSession = this.application.getSession(wicketRequest);
-		this.application.getSessionStore().bind(wicketRequest, wicketSession);
-		wicketResponse = new WebResponse(servletResponse);
+        this.wicketRequest = this.application.newWebRequest(servletRequest); 
+        this.wicketResponse = this.application.newWebResponse(servletResponse); 
+        this.wicketSession = this.application.getSession(wicketRequest, wicketResponse); 
+        this.application.getSessionStore().bind(wicketRequest, wicketSession); 
 		wicketResponse.setAjax(wicketRequest.isAjax());
 	}
 

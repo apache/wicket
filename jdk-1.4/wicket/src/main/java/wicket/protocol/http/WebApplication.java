@@ -364,9 +364,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @see wicket.ISessionFactory#newSession(wicket.Request)
+	 * @see wicket.ISessionFactory#newSession(wicket.Request, wicket.Response)
 	 */
-	public Session newSession(Request request)
+	public Session newSession(Request request, Response response)
 	{
 		return new WebSession(WebApplication.this, request);
 	}
@@ -659,10 +659,12 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * if it doesn't already exist.
 	 * 
 	 * @param request
-	 *            The http request object
+	 *            The web request
+	 * @param response
+	 *            The web response
 	 * @return The session object
 	 */
-	final WebSession getSession(final WebRequest request)
+	final WebSession getSession(final WebRequest request, final WebResponse response)
 	{
 		ISessionStore sessionStore = getSessionStore();
 		Session session = sessionStore.lookup(request);
@@ -670,7 +672,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 		if (session == null)
 		{
 			// Create session using session factory
-			session = getSessionFactory().newSession(request);
+			session = getSessionFactory().newSession(request, response);
 		}
 
 		WebSession webSession;

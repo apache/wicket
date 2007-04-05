@@ -16,7 +16,6 @@
  */
 package wicket;
 
-
 /**
  * A factory interface used by Applications to create Sessions.
  * 
@@ -30,10 +29,15 @@ public interface ISessionFactory
 	 * 
 	 * @param request
 	 *            The request that will create this session.
+	 * @param response
+	 *            The response to initialize, for example with cookies. This is
+	 *            important to use cases involving unit testing because those
+	 *            use cases might want to be able to sign a user in
+	 *            automatically when the session is created.
 	 * 
 	 * @return The session
 	 * 
 	 * @since 1.3
 	 */
-	Session newSession(Request request);
+	Session newSession(Request request, Response response);
 }

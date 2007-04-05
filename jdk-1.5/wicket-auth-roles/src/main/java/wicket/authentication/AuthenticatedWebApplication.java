@@ -19,6 +19,7 @@ package wicket.authentication;
 import wicket.Component;
 import wicket.Page;
 import wicket.Request;
+import wicket.Response;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.WicketRuntimeException;
@@ -89,10 +90,10 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
+	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request, wicket.Response)
 	 */
 	@Override
-	public Session newSession(Request request) {
+	public Session newSession(final Request request, final Response response) {
 		try {
 			return webSessionClass.getDeclaredConstructor(
 					AuthenticatedWebApplication.class, Request.class)
