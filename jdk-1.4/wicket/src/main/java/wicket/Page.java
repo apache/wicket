@@ -1192,7 +1192,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			public Object component(final Component component)
 			{
 				// If form component is using form model
-				if (component.sameRootModel(Page.this))
+				if (component.sameInnermostModel(Page.this))
 				{
 					component.modelChanged();
 				}

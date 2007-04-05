@@ -722,7 +722,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			public void onFormComponent(final FormComponent formComponent)
 			{
 				// If form component is using form model
-				if (formComponent.sameRootModel(Form.this))
+				if (formComponent.sameInnermostModel(Form.this))
 				{
 					formComponent.modelChanged();
 				}

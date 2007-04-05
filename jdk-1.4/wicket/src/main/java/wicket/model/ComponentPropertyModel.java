@@ -20,8 +20,9 @@ import wicket.Component;
 import wicket.util.lang.PropertyResolver;
 
 /**
- * A model that references a property by name on the current root model of the
- * component it is bound to.
+ * A model that references a property by name on the current model of the
+ * component it is bound to. This enables direct usage of inherited models such
+ * as compound property models.
  * 
  * @author Jonathan Locke
  */
@@ -56,7 +57,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.IComponentAssignedModel#wrapOnAssignment(wicket.Component)
 	 */
-	public IModelWrapper wrapOnAssignment(final Component component)
+	public INestedModelContainer wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(component, propertyName);
 	}
@@ -64,7 +65,9 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	/**
 	 * Wrapper used when assigning a ComponentPropertyModel to a component.
 	 */
-	static private class AssignmentWrapper extends AbstractReadOnlyModel implements IModelWrapper
+	static private class AssignmentWrapper extends AbstractReadOnlyModel
+			implements
+				INestedModelContainer
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -79,7 +82,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 		}
 
 		/**
-		 * @see wicket.model.IModelWrapper#getNestedModel()
+		 * @see wicket.model.INestedModelContainer#getNestedModel()
 		 */
 		public IModel getNestedModel()
 		{
@@ -93,7 +96,8 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 
 		public Object getObject()
 		{
-			return PropertyResolver.getValue(propertyName, component.getRootModel().getObject());
+			return PropertyResolver.getValue(propertyName, component.getInnermostModel()
+					.getObject());
 		}
 	}
 }

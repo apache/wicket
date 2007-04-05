@@ -42,7 +42,7 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	 * @param string
 	 *            The string to interpolate into
 	 * @param model
-	 *            The root model to apply property expressions to
+	 *            The model to apply property expressions to
 	 */
 	private PropertyVariableInterpolator(final String string, final Object model)
 	{

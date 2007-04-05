@@ -51,8 +51,8 @@ package wicket.model;
  * {@link wicket.model.CompoundPropertyModel}and {@link wicket.Page}.
  * </ul>
  * 
- * @see wicket.Component#sameRootModel(wicket.Component)
- * @see wicket.Component#sameRootModel(IModel)
+ * @see wicket.Component#sameInnermostModel(wicket.Component)
+ * @see wicket.Component#sameInnermostModel(IModel)
  * 
  * @author Chris Turner
  * @author Eelco Hillenius

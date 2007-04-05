@@ -52,5 +52,5 @@ public interface IComponentAssignedModel extends IModel
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
-	IModelWrapper wrapOnAssignment(Component component);
+	INestedModelContainer wrapOnAssignment(Component component);
 }

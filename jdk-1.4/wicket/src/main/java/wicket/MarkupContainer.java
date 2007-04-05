@@ -36,7 +36,7 @@ import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IComponentInheritedModel;
 import wicket.model.IModel;
-import wicket.model.IModelWrapper;
+import wicket.model.INestedModelContainer;
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
@@ -684,9 +684,9 @@ public abstract class MarkupContainer extends Component
 				public Object component(Component component)
 				{
 					IModel compModel = component.getModel();
-					if (compModel instanceof IModelWrapper)
+					if (compModel instanceof INestedModelContainer)
 					{
-						compModel = ((IModelWrapper)compModel).getNestedModel();
+						compModel = ((INestedModelContainer)compModel).getNestedModel();
 					}
 					if (compModel == previous)
 					{

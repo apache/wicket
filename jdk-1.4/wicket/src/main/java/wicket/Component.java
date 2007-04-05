@@ -43,7 +43,7 @@ import wicket.model.IComponentAssignedModel;
 import wicket.model.IComponentInheritedModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
-import wicket.model.IModelWrapper;
+import wicket.model.INestedModelContainer;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
@@ -487,8 +487,6 @@ public abstract class Component implements IClusterable
 	/** Flag for escaping HTML in model strings */
 	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
-	/** Flag for Component holding root compound model */
-	// private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
 	/** Ignore attribute modifiers */
 	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
@@ -1851,9 +1849,9 @@ public abstract class Component implements IClusterable
 	 * @return True if the given component's model is the same as this
 	 *         component's model.
 	 */
-	public final boolean sameRootModel(final Component component)
+	public final boolean sameInnermostModel(final Component component)
 	{
-		return sameRootModel(component.getModel());
+		return sameInnermostModel(component.getModel());
 	}
 
 	/**
@@ -1862,7 +1860,7 @@ public abstract class Component implements IClusterable
 	 * @return True if the given component's model is the same as this
 	 *         component's model.
 	 */
-	public final boolean sameRootModel(final IModel model)
+	public final boolean sameInnermostModel(final IModel model)
 	{
 		// Get the two models
 		IModel thisModel = getModel();
@@ -1871,7 +1869,7 @@ public abstract class Component implements IClusterable
 		// If both models are non-null they could be the same
 		if (thisModel != null && thatModel != null)
 		{
-			return getRootModel(thisModel) == getRootModel(thatModel);
+			return getInnermostModel(thisModel) == getInnermostModel(thatModel);
 		}
 
 		return false;
@@ -1962,9 +1960,9 @@ public abstract class Component implements IClusterable
 		}
 
 		IModel prevModel = this.model;
-		if (prevModel instanceof IModelWrapper)
+		if (prevModel instanceof INestedModelContainer)
 		{
-			prevModel = ((IModelWrapper)prevModel).getNestedModel();
+			prevModel = ((INestedModelContainer)prevModel).getNestedModel();
 		}
 
 		// Change model
@@ -2565,9 +2563,9 @@ public abstract class Component implements IClusterable
 			// Get model
 			IModel model = current.getModel();
 
-			if (model instanceof IModelWrapper)
+			if (model instanceof INestedModelContainer)
 			{
-				model = ((IModelWrapper)model).getNestedModel();
+				model = ((INestedModelContainer)model).getNestedModel();
 			}
 
 			if (model instanceof IComponentInheritedModel)
@@ -3175,18 +3173,19 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * Finds the root object for an IModel
+	 * Finds the innermost IModel object for an IModel that might contain 
+	 * nested IModel(s).
 	 * 
 	 * @param model
 	 *            The model
-	 * @return The root object
+	 * @return The innermost (most nested) model
 	 */
-	protected final IModel getRootModel(final IModel model)
+	protected final IModel getInnermostModel(final IModel model)
 	{
 		IModel nested = model;
-		while (nested != null && nested instanceof IModelWrapper)
+		while (nested != null && nested instanceof INestedModelContainer)
 		{
-			final IModel next = ((IModelWrapper)nested).getNestedModel();
+			final IModel next = ((INestedModelContainer)nested).getNestedModel();
 			if (nested == next)
 			{
 				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
@@ -3197,11 +3196,11 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * @return Root model for this component
+	 * @return Innermost model for this component
 	 */
-	public final IModel getRootModel()
+	public final IModel getInnermostModel()
 	{
-		return getRootModel(getModel());
+		return getInnermostModel(getModel());
 	}
 
 	/**
