@@ -57,7 +57,7 @@ public class TestApp1 extends WebApplication {
 
 	@Override
 	protected ISessionStore newSessionStore() {
-		return new SecondLevelCacheSessionStore(new FilePageStore());
+		return new SecondLevelCacheSessionStore(this, new FilePageStore());
 		//return new HttpSessionStore();
 	}
 }
