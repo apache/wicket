@@ -28,15 +28,6 @@ import wicket.markup.html.basic.Label;
 public class ModelToStringTest extends WicketTestCase
 {
 	/**
-	 * Construct.
-	 * @param name
-	 */
-	public ModelToStringTest(String name)
-	{
-		super(name);
-	}
-
-	/**
 	 * Used for models in testing.
 	 */
 	private static class InnerPOJO
@@ -48,72 +39,49 @@ public class ModelToStringTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests the Model.toString() method.
+	 * Test stub for testing AbstractReadOnlyModel.toString()
 	 */
-	public void testModel()
+	private static class MyAbstractReadOnlyModel extends AbstractReadOnlyModel
 	{
-		Model emptyModel = new Model();
-		String expected = "Model:classname=[wicket.model.Model]:object=[null]";
-		assertEquals(expected, emptyModel.toString());
+		private static final long serialVersionUID = 1L;
 
-		Model stringModel = new Model("foo");
-		expected = "Model:classname=[wicket.model.Model]:object=[foo]";
-		assertEquals(expected, stringModel.toString());
+		/**
+		 * @see AbstractReadOnlyModel#getObject()
+		 */
+		public Object getObject()
+		{
+			return "FOO";
+		}
+	}
+
+	private static final class MyLoadableDetachableModel extends LoadableDetachableModel
+	{
+		private static final long serialVersionUID = 1L;
+
+		protected Object load()
+		{
+			return "foo";
+		}
 	}
 
 	/**
-	 * Tests the PropertyModel.toString() method.
+	 * Construct.
+	 * 
+	 * @param name
 	 */
-	public void testPropertyModel()
+	public ModelToStringTest(String name)
 	{
-		PropertyModel emptyModel = new PropertyModel("", null);
-		String expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[]:expression=[null]:propertyType=[null]";
-		assertEquals(expected, emptyModel.toString());
-
-		Properties properties = new Properties();
-		properties.put("name", "foo");
-		PropertyModel stringProperty = new PropertyModel(properties, "name");
-
-		expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[{name=foo}]:expression=[name]:propertyType=[null]";
-		assertEquals(expected, stringProperty.toString());
-
-		stringProperty.getObject();
-		expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[{name=foo}]:expression=[name]:propertyType=[null]";
-		assertEquals(expected, stringProperty.toString());
-
-		InnerPOJO innerPOJO = new InnerPOJO();
-		PropertyModel pojoProperty = new PropertyModel(innerPOJO, "pojo", Integer.class);
-
-		expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[pojo]:expression=[pojo]:propertyType=[class java.lang.Integer]";
-		assertEquals(expected, pojoProperty.toString());
+		super(name);
 	}
 
 	/**
-	 * Tests the CompoundPropertyModel.toString() method.
+	 * Tests AbstractReadOnlyModel.toString().
 	 */
-	public void testCompoundPropertyModel()
+	public void testAbstractReadOnlyModel()
 	{
-		CompoundPropertyModel emptyModel = new CompoundPropertyModel("");
-		String expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=[]";
-		assertEquals(expected, emptyModel.toString());
-
-		Properties properties = new Properties();
-		properties.put("name", "foo");
-		CompoundPropertyModel stringProperty = new CompoundPropertyModel(properties);
-
-		expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=[{name=foo}]";
-		assertEquals(expected, stringProperty.toString());
-
-		stringProperty.getObject();
-		expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=[{name=foo}]";
-		assertEquals(expected, stringProperty.toString());
-
-		InnerPOJO innerPOJO = new InnerPOJO();
-		CompoundPropertyModel pojoProperty = new CompoundPropertyModel(innerPOJO);
-
-		expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=["
-				+ innerPOJO + "]";
-		assertEquals(expected, pojoProperty.toString());
+		AbstractReadOnlyModel model = new MyAbstractReadOnlyModel();
+		String expected = "Model:classname=[" + model.getClass().getName() + "]";
+		assertEquals(expected, model.toString());
 	}
 
 	/**
@@ -143,50 +111,39 @@ public class ModelToStringTest extends WicketTestCase
 				+ innerPOJO + "]:bindings=[]";
 		assertEquals(expected, pojoProperty.toString());
 
-		Component component1 = pojoProperty.bind(new Label("label"), Integer.class);
+		Component component1 = pojoProperty.bind(new Label("label"));
 		expected = "Model:classname=[wicket.model.BoundCompoundPropertyModel]:nestedModel=["
-				+ innerPOJO
-				+ "]:bindings=[Binding(:component=["
-				+ component1
-				+ "]:expression=[label]:type=[class java.lang.Integer])]";
+				+ innerPOJO + "]:bindings=[Binding(:component=[" + component1
+				+ "]:expression=[label])]";
 		assertEquals(expected, pojoProperty.toString());
 	}
 
 	/**
-	 * Test stub for testing AbstractReadOnlyModel.toString()
+	 * Tests the CompoundPropertyModel.toString() method.
 	 */
-	private static class MyAbstractReadOnlyModel extends AbstractReadOnlyModel
+	public void testCompoundPropertyModel()
 	{
-		private static final long serialVersionUID = 1L;
+		CompoundPropertyModel emptyModel = new CompoundPropertyModel("");
+		String expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=[]";
+		assertEquals(expected, emptyModel.toString());
 
-		/**
-		 * @see AbstractReadOnlyModel#getObject()
-		 */
-		public Object getObject()
-		{
-			return "FOO";
-		}
-	}
+		Properties properties = new Properties();
+		properties.put("name", "foo");
+		CompoundPropertyModel stringProperty = new CompoundPropertyModel(properties);
 
-	/**
-	 * Tests AbstractReadOnlyModel.toString().
-	 */
-	public void testAbstractReadOnlyModel()
-	{
-		AbstractReadOnlyModel model = new MyAbstractReadOnlyModel();
-		String expected = "Model:classname=[" + model.getClass().getName() + "]";
-		assertEquals(expected, model.toString());
-	}
+		expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=[{name=foo}]";
+		assertEquals(expected, stringProperty.toString());
 
+		stringProperty.getObject();
+		expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=[{name=foo}]";
+		assertEquals(expected, stringProperty.toString());
 
-	private static final class MyLoadableDetachableModel extends LoadableDetachableModel
-	{
-		private static final long serialVersionUID = 1L;
+		InnerPOJO innerPOJO = new InnerPOJO();
+		CompoundPropertyModel pojoProperty = new CompoundPropertyModel(innerPOJO);
 
-		protected Object load()
-		{
-			return "foo";
-		}
+		expected = "Model:classname=[wicket.model.CompoundPropertyModel]:nestedModel=[" + innerPOJO
+				+ "]";
+		assertEquals(expected, pojoProperty.toString());
 	}
 
 	/**
@@ -208,5 +165,47 @@ public class ModelToStringTest extends WicketTestCase
 		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=false"
 				+ ":tempModelObject=[null]";
 		assertEquals(expected, model.toString());
+	}
+
+
+	/**
+	 * Tests the Model.toString() method.
+	 */
+	public void testModel()
+	{
+		Model emptyModel = new Model();
+		String expected = "Model:classname=[wicket.model.Model]:object=[null]";
+		assertEquals(expected, emptyModel.toString());
+
+		Model stringModel = new Model("foo");
+		expected = "Model:classname=[wicket.model.Model]:object=[foo]";
+		assertEquals(expected, stringModel.toString());
+	}
+
+	/**
+	 * Tests the PropertyModel.toString() method.
+	 */
+	public void testPropertyModel()
+	{
+		PropertyModel emptyModel = new PropertyModel("", null);
+		String expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[]:expression=[null]";
+		assertEquals(expected, emptyModel.toString());
+
+		Properties properties = new Properties();
+		properties.put("name", "foo");
+		PropertyModel stringProperty = new PropertyModel(properties, "name");
+
+		expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[{name=foo}]:expression=[name]";
+		assertEquals(expected, stringProperty.toString());
+
+		stringProperty.getObject();
+		expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[{name=foo}]:expression=[name]";
+		assertEquals(expected, stringProperty.toString());
+
+		InnerPOJO innerPOJO = new InnerPOJO();
+		PropertyModel pojoProperty = new PropertyModel(innerPOJO, "pojo");
+
+		expected = "Model:classname=[wicket.model.PropertyModel]:nestedModel=[pojo]:expression=[pojo]";
+		assertEquals(expected, pojoProperty.toString());
 	}
 }

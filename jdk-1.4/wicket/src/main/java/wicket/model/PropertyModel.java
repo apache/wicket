@@ -16,7 +16,6 @@
  */
 package wicket.model;
 
-import wicket.Component;
 import wicket.util.lang.PropertyResolver;
 
 /**
@@ -93,18 +92,6 @@ public class PropertyModel extends AbstractPropertyModel
 	private final String expression;
 
 	/**
-	 * If this is set, this type is used for conversion instead of the type that
-	 * is figured out by the property expression code. This can be especially
-	 * useful for when you have a generic property (like Serializable myProp)
-	 * that you want to be converted to a narrower type (e.g. an Integer). The
-	 * property expression code sees an incoming string being compatible with
-	 * the target property, and will then bypass the converter. Hence, to force
-	 * myProp being converted to and from an integer, propertyType should be set
-	 * to Integer.
-	 */
-	private final Class propertyType;
-
-	/**
 	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
 	 * property expression that works on the given model. Additional formatting
 	 * will be used depending on the configuration setting.
@@ -116,34 +103,8 @@ public class PropertyModel extends AbstractPropertyModel
 	 */
 	public PropertyModel(final Object modelObject, final String expression)
 	{
-		this(modelObject, expression, null);
-	}
-
-	/**
-	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
-	 * property expression that works on the given model. Additional formatting
-	 * will be used depending on the configuration setting.
-	 * 
-	 * @param modelObject
-	 *            The model object, which may or may not implement IModel
-	 * @param expression
-	 *            Property expression for property access
-	 * @param propertyType
-	 *            The type to be used for conversion instead of the type that is
-	 *            figured out by the property expression code. This can be
-	 *            especially useful for when you have a generic property (like
-	 *            Serializable myProp) that you want to be converted to a
-	 *            narrower type (e.g. an Integer). The property expression code
-	 *            sees an incoming string being compatible with the target
-	 *            property, and will then bypass the converter. Hence, to force
-	 *            myProp being converted to and from an integer, propertyType
-	 *            should be set to Integer.
-	 */
-	public PropertyModel(final Object modelObject, final String expression, Class propertyType)
-	{
 		super(modelObject);
 		this.expression = expression;
-		this.propertyType = propertyType;
 	}
 
 	/**
@@ -153,7 +114,6 @@ public class PropertyModel extends AbstractPropertyModel
 	{
 		StringBuffer sb = new StringBuffer(super.toString());
 		sb.append(":expression=[").append(expression).append("]");
-		sb.append(":propertyType=[").append(propertyType).append("]");
 		return sb.toString();
 	}
 
@@ -163,10 +123,5 @@ public class PropertyModel extends AbstractPropertyModel
 	protected String propertyExpression()
 	{
 		return expression;
-	}
-
-	protected Class propertyType(Component component)
-	{
-		return propertyType;
 	}
 }

@@ -29,17 +29,6 @@ import wicket.IClusterable;
  */
 public class BoundCompoundPropertyModel extends CompoundPropertyModel
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * List of Bindings. Although a Map would be a more natural implementation
-	 * here, a List is much more compact in terms of space. Although it may take
-	 * longer to find a component binding in theory, in practice it's unlikely
-	 * that any BoundCompoundPropertyModel will really have enough bindings to
-	 * matter.
-	 */
-	private final ArrayList bindings = new ArrayList(1);
-
 	/**
 	 * Internal binding representation.
 	 * 
@@ -51,13 +40,11 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 
 		private final Component component;
 		private final String propertyExpression;
-		private final Class type;
 
-		private Binding(final Component component, final String propertyExpression, final Class type)
+		private Binding(final Component component, final String propertyExpression)
 		{
 			this.component = component;
 			this.propertyExpression = propertyExpression;
-			this.type = type;
 		}
 
 		/**
@@ -68,11 +55,21 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 			StringBuffer sb = new StringBuffer("Binding(");
 			sb.append(":component=[").append(component).append("]");
 			sb.append(":expression=[").append(propertyExpression).append("]");
-			sb.append(":type=[").append(type).append("]");
 			sb.append(")");
 			return sb.toString();
 		}
 	}
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * List of Bindings. Although a Map would be a more natural implementation
+	 * here, a List is much more compact in terms of space. Although it may take
+	 * longer to find a component binding in theory, in practice it's unlikely
+	 * that any BoundCompoundPropertyModel will really have enough bindings to
+	 * matter.
+	 */
+	private final ArrayList bindings = new ArrayList(1);
 
 	/**
 	 * Constructor
@@ -86,6 +83,25 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
+	 * Adds a property binding, using the component's id as the property
+	 * expression.
+	 * 
+	 * @param component
+	 *            The component to bind
+	 * @return The component, for convenience in adding components
+	 */
+	public Component bind(final Component component)
+	{
+		if (component == null)
+		{
+			throw new IllegalArgumentException("component must be not null");
+		}
+
+		bindings.add(new Binding(component, component.getId()));
+		return component;
+	}
+
+	/**
 	 * Adds a property binding.
 	 * 
 	 * @param component
@@ -96,40 +112,16 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 */
 	public Component bind(final Component component, final String propertyExpression)
 	{
-		bind(component, propertyExpression, null);
-		return component;
-	}
+		if (component == null)
+		{
+			throw new IllegalArgumentException("component must be not null");
+		}
+		if (propertyExpression == null)
+		{
+			throw new IllegalArgumentException("propertyExpression must be not null");
+		}
 
-	/**
-	 * Adds a type conversion binding.
-	 * 
-	 * @param component
-	 *            The component to bind
-	 * @param type
-	 *            The type of the property
-	 * @return The component, for convenience in adding components
-	 */
-	public Component bind(final Component component, final Class type)
-	{
-		bind(component, component.getId(), type);
-		return component;
-	}
-
-	/**
-	 * Adds a property and type conversion binding.
-	 * 
-	 * @param component
-	 *            The component to bind
-	 * @param propertyExpression
-	 *            A property expression pointing to the property in this model
-	 * @param type
-	 *            The type of the property
-	 * @return The component, for convenience in adding components
-	 */
-	public Component bind(final Component component, final String propertyExpression, final Class type)
-	{
-		// Add new binding
-		bindings.add(new Binding(component, propertyExpression, type));
+		bindings.add(new Binding(component, propertyExpression));
 		return component;
 	}
 
@@ -145,31 +137,22 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
+	 * @see wicket.model.AbstractDetachableModel#toString()
 	 */
-	protected String propertyExpression(final Component component)
+	public String toString()
 	{
-		final Binding binding = getBinding(component);
-		if (binding != null)
+		StringBuffer sb = new StringBuffer(super.toString());
+		sb.append(":bindings=[");
+		for (int i = 0, size = this.bindings.size(); i < size; i++)
 		{
-			return binding.propertyExpression;
+			if (i > 0)
+			{
+				sb.append(",");
+			}
+			sb.append(bindings.get(i));
 		}
-		else if (component != null)
-		{
-			return component.getId();
-		}
-		return null;
-	}
-
-	/**
-	 * @param component 
-	 * @return 
-	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
-	 */
-	protected Class propertyType(final Component component)
-	{
-		final Binding binding = getBinding(component);
-		return (binding != null) ? binding.type : null;
+		sb.append("]");
+		return sb.toString();
 	}
 
 	/**
@@ -191,21 +174,19 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#toString()
+	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
-	public String toString()
+	protected String propertyExpression(final Component component)
 	{
-		StringBuffer sb = new StringBuffer(super.toString());
-		sb.append(":bindings=[");
-		for (int i = 0, size = this.bindings.size(); i < size; i++)
+		final Binding binding = getBinding(component);
+		if (binding != null)
 		{
-			if (i > 0)
-			{
-				sb.append(",");
-			}
-			sb.append(bindings.get(i));
+			return binding.propertyExpression;
 		}
-		sb.append("]");
-		return sb.toString();
+		else if (component != null)
+		{
+			return component.getId();
+		}
+		return null;
 	}
 }
