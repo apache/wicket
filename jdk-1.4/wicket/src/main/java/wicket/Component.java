@@ -1489,6 +1489,7 @@ public abstract class Component implements IClusterable
 			{
 				// Call implementation to render component
 				onBeforeRender();
+				notifyBehaviorsComponentBeforeRender();
 				try
 				{
 					onRender(markupStream);
@@ -2723,7 +2724,7 @@ public abstract class Component implements IClusterable
 				throw new IllegalStateException(Component.class.getName()
 						+ " has not been properly attached. Something in the hierarchy of "
 						+ getClass().getName()
-						+ " has not called super.onAtach() in the override of onAttach() method");
+						+ " has not called super.onAttach() in the override of onAttach() method");
 			}
 		}
 
