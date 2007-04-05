@@ -57,7 +57,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.IComponentAssignedModel#wrapOnAssignment(wicket.Component)
 	 */
-	public INestedModelContainer wrapOnAssignment(final Component component)
+	public IWrapModel wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(component, propertyName);
 	}
@@ -67,7 +67,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	 */
 	private class AssignmentWrapper extends AbstractReadOnlyModel
 			implements
-				INestedModelContainer
+				IWrapModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -82,9 +82,9 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 		}
 
 		/**
-		 * @see wicket.model.INestedModelContainer#getNestedModel()
+		 * @see wicket.model.IWrapModel#getWrappedModel()
 		 */
-		public IModel getNestedModel()
+		public IModel getWrappedModel()
 		{
 			return ComponentPropertyModel.this;
 		}

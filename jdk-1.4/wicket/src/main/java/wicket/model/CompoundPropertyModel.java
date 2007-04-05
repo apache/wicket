@@ -96,7 +96,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	/**
 	 * @see wicket.model.IComponentInheritedModel#wrapOnInheritance(wicket.Component)
 	 */
-	public INestedModelContainer wrapOnInheritance(Component component)
+	public IWrapModel wrapOnInheritance(Component component)
 	{
 		return new AttachedCompoundPropertyModel(component);
 	}
@@ -109,7 +109,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	 */
 	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
 			implements
-				INestedModelContainer,
+				IWrapModel,
 				IComponentInheritedModel
 	{
 		private static final long serialVersionUID = 1L;
@@ -137,9 +137,9 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 		}
 
 		/**
-		 * @see wicket.model.INestedModelContainer#getNestedModel()
+		 * @see wicket.model.IWrapModel#getWrappedModel()
 		 */
-		public IModel getNestedModel()
+		public IModel getWrappedModel()
 		{
 			return CompoundPropertyModel.this;
 		}
@@ -147,7 +147,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 		/**
 		 * @see wicket.model.IComponentInheritedModel#wrapOnInheritance(wicket.Component)
 		 */
-		public INestedModelContainer wrapOnInheritance(Component component)
+		public IWrapModel wrapOnInheritance(Component component)
 		{
 			return new AttachedCompoundPropertyModel(component);
 		};

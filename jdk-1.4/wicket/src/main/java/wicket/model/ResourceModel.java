@@ -80,7 +80,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 	/**
 	 * @see wicket.model.IComponentAssignedModel#wrapOnAssignment(wicket.Component)
 	 */
-	public INestedModelContainer wrapOnAssignment(final Component component)
+	public IWrapModel wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(resourceKey, defaultValue, component);
 	}
@@ -88,7 +88,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 	/**
 	 * 
 	 */
-	private class AssignmentWrapper extends ResourceModel implements INestedModelContainer
+	private class AssignmentWrapper extends ResourceModel implements IWrapModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -108,9 +108,9 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 		}
 
 		/**
-		 * @see wicket.model.INestedModelContainer#getNestedModel()
+		 * @see wicket.model.IWrapModel#getWrappedModel()
 		 */
-		public IModel getNestedModel()
+		public IModel getWrappedModel()
 		{
 			return ResourceModel.this;
 		}

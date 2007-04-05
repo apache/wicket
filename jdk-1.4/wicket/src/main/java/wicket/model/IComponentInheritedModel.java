@@ -40,5 +40,5 @@ public interface IComponentInheritedModel extends IModel
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
-	INestedModelContainer wrapOnInheritance(Component component);
+	IWrapModel wrapOnInheritance(Component component);
 }

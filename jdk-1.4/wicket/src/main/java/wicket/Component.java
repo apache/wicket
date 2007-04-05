@@ -43,7 +43,7 @@ import wicket.model.IComponentAssignedModel;
 import wicket.model.IComponentInheritedModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
-import wicket.model.INestedModelContainer;
+import wicket.model.IWrapModel;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
@@ -1960,9 +1960,9 @@ public abstract class Component implements IClusterable
 		}
 
 		IModel prevModel = this.model;
-		if (prevModel instanceof INestedModelContainer)
+		if (prevModel instanceof IWrapModel)
 		{
-			prevModel = ((INestedModelContainer)prevModel).getNestedModel();
+			prevModel = ((IWrapModel)prevModel).getWrappedModel();
 		}
 
 		// Change model
@@ -2563,9 +2563,9 @@ public abstract class Component implements IClusterable
 			// Get model
 			IModel model = current.getModel();
 
-			if (model instanceof INestedModelContainer)
+			if (model instanceof IWrapModel)
 			{
-				model = ((INestedModelContainer)model).getNestedModel();
+				model = ((IWrapModel)model).getWrappedModel();
 			}
 
 			if (model instanceof IComponentInheritedModel)
@@ -3183,9 +3183,9 @@ public abstract class Component implements IClusterable
 	protected final IModel getInnermostModel(final IModel model)
 	{
 		IModel nested = model;
-		while (nested != null && nested instanceof INestedModelContainer)
+		while (nested != null && nested instanceof IWrapModel)
 		{
-			final IModel next = ((INestedModelContainer)nested).getNestedModel();
+			final IModel next = ((IWrapModel)nested).getWrappedModel();
 			if (nested == next)
 			{
 				throw new WicketRuntimeException("Model for " + nested + " is self-referential");

@@ -37,12 +37,12 @@ package wicket.model;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface INestedModelContainer extends IModel
+public interface IWrapModel extends IModel
 {
 	/**
-	 * Gets the nested model.
+	 * Gets the wrapped model.
 	 * 
-	 * @return The nested model object.
+	 * @return The wrapped model
 	 */
-	IModel getNestedModel();
+	IModel getWrappedModel();
 }
