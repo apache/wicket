@@ -17,6 +17,7 @@
 package wicket.datetime.util;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.joda.time.DateTime;
@@ -27,7 +28,7 @@ import org.joda.time.format.DateTimeFormatter;
 import wicket.Session;
 import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
-import wicket.util.convert.SimpleConverterAdapter;
+import wicket.util.convert.IConverter;
 
 /**
  * Base class for Joda Time based date converters. It contains the logic to
@@ -39,8 +40,8 @@ import wicket.util.convert.SimpleConverterAdapter;
  * 
  * @author eelcohillenius
  */
-public abstract class DateConverter extends SimpleConverterAdapter {
-
+public abstract class DateConverter implements IConverter
+{
 	/**
 	 * Whether to apply the time zone difference when interpreting dates.
 	 */
@@ -62,8 +63,61 @@ public abstract class DateConverter extends SimpleConverterAdapter {
 	 *            whether to apply the difference in time zones between client
 	 *            and server
 	 */
-	public DateConverter(boolean applyTimeZoneDifference) {
+	public DateConverter(boolean applyTimeZoneDifference)
+	{
 		this.applyTimeZoneDifference = applyTimeZoneDifference;
+	}
+
+	/**
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
+	 */
+	public Object convertToObject(String value, Locale locale)
+	{
+		DateTimeFormatter format = getFormat();
+
+		if (applyTimeZoneDifference)
+		{
+			TimeZone zone = getClientTimeZone();
+			// instantiate now/ current time
+			MutableDateTime dt = new MutableDateTime();
+			if (zone != null)
+			{
+				// set time zone for client
+				format = format.withZone(DateTimeZone.forTimeZone(zone));
+				dt.setZone(DateTimeZone.forTimeZone(zone));
+			}
+			// parse date retaining the time of the submission
+			format.parseInto(dt, value, 0);
+			// apply the server time zone to the parsed value
+			dt.setZone(getTimeZone());
+			return dt.toDate();
+		}
+		else
+		{
+			return format.parseDateTime(value).toDate();
+		}
+	}
+
+	/**
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      java.util.Locale)
+	 */
+	public String convertToString(Object value, Locale locale)
+	{
+		DateTime dt = new DateTime(((Date)value).getTime(), getTimeZone());
+		DateTimeFormatter format = getFormat();
+
+		if (applyTimeZoneDifference)
+		{
+			TimeZone zone = getClientTimeZone();
+			if (zone != null)
+			{
+				// apply time zone to formatter
+				format = format.withZone(DateTimeZone.forTimeZone(zone));
+			}
+		}
+		return format.print(dt);
 	}
 
 	/**
@@ -82,7 +136,8 @@ public abstract class DateConverter extends SimpleConverterAdapter {
 	 * @return whether to apply the difference in time zones between client and
 	 *         server
 	 */
-	public final boolean getApplyTimeZoneDifference() {
+	public final boolean getApplyTimeZoneDifference()
+	{
 		return applyTimeZoneDifference;
 	}
 
@@ -92,58 +147,16 @@ public abstract class DateConverter extends SimpleConverterAdapter {
 	public abstract String getDatePattern();
 
 	/**
-	 * @see wicket.util.convert.SimpleConverterAdapter#toObject(java.lang.String)
-	 */
-	public final Object toObject(String value) {
-
-		DateTimeFormatter format = getFormat();
-
-		if (applyTimeZoneDifference) {
-			TimeZone zone = getClientTimeZone();
-			// instantiate now/ current time
-			MutableDateTime dt = new MutableDateTime();
-			if (zone != null) {
-				// set time zone for client
-				format = format.withZone(DateTimeZone.forTimeZone(zone));
-				dt.setZone(DateTimeZone.forTimeZone(zone));
-			}
-			// parse date retaining the time of the submission
-			format.parseInto(dt, value, 0);
-			// apply the server time zone to the parsed value
-			dt.setZone(getTimeZone());
-			return dt.toDate();
-		} else {
-			return format.parseDateTime(value).toDate();
-		}
-	}
-
-	/**
-	 * @see wicket.util.convert.SimpleConverterAdapter#toString(java.lang.Object)
-	 */
-	public final String toString(Object value) {
-
-		DateTime dt = new DateTime(((Date) value).getTime(), getTimeZone());
-		DateTimeFormatter format = getFormat();
-
-		if (applyTimeZoneDifference) {
-			TimeZone zone = getClientTimeZone();
-			if (zone != null) {
-				// apply time zone to formatter
-				format = format.withZone(DateTimeZone.forTimeZone(zone));
-			}
-		}
-		return format.print(dt);
-	}
-
-	/**
 	 * Gets the client's time zone.
 	 * 
 	 * @return The client's time zone or null
 	 */
-	protected TimeZone getClientTimeZone() {
+	protected TimeZone getClientTimeZone()
+	{
 		ClientInfo info = Session.get().getClientInfo();
-		if (info instanceof WebClientInfo) {
-			return ((WebClientInfo) info).getProperties().getTimeZone();
+		if (info instanceof WebClientInfo)
+		{
+			return ((WebClientInfo)info).getProperties().getTimeZone();
 		}
 		return null;
 	}
@@ -159,7 +172,8 @@ public abstract class DateConverter extends SimpleConverterAdapter {
 	 * 
 	 * @return The server time zone
 	 */
-	protected DateTimeZone getTimeZone() {
+	protected DateTimeZone getTimeZone()
+	{
 		return DateTimeZone.getDefault();
 	}
 }
