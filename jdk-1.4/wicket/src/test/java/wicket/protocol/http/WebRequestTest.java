@@ -27,6 +27,21 @@ import wicket.protocol.http.servlet.ServletWebRequest;
 public class WebRequestTest extends WicketTestCase
 {
 	/**
+	 * Tests passing in an empty parameter.
+	 */
+	public void testEmptyParam()
+	{
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
+		mockRequest.setRequestToRedirectString("?a=");
+		String value = mockRequest.getParameter("a");
+		assertEquals("", value);
+
+		mockRequest.setRequestToRedirectString("?a");
+		value = mockRequest.getParameter("a");
+		assertEquals("", value);
+	}
+
+	/**
 	 * Test that ajax is true when the ajax header is present in the request
 	 */
 	public void testIsAjax_1()
@@ -61,16 +76,9 @@ public class WebRequestTest extends WicketTestCase
 		assertWithHeader("wicketajax", "true", false);
 	}
 
-	private void assertWithHeader(String header, String value, boolean isAjax)
-	{
-		MockHttpServletRequest mockRequest = tester.getServletRequest();
-		mockRequest.addHeader(header, value);
-
-		WebRequest webRequest = new ServletWebRequest(mockRequest);
-
-		assertEquals(isAjax, webRequest.isAjax());
-	}
-
+	/**
+	 * Tests passing in a string array.
+	 */
 	public void testStringArray()
 	{
 		MockHttpServletRequest mockRequest = tester.getServletRequest();
@@ -80,6 +88,9 @@ public class WebRequestTest extends WicketTestCase
 				obj instanceof String[]);
 	}
 
+	/**
+	 * Tests encoded string.
+	 */
 	public void testStringEncoding()
 	{
 		MockHttpServletRequest mockRequest = tester.getServletRequest();
@@ -88,15 +99,13 @@ public class WebRequestTest extends WicketTestCase
 		assertEquals(" ", value);
 	}
 
-	public void testEmptyParam()
+	private void assertWithHeader(String header, String value, boolean isAjax)
 	{
 		MockHttpServletRequest mockRequest = tester.getServletRequest();
-		mockRequest.setRequestToRedirectString("?a=");
-		String value = mockRequest.getParameter("a");
-		assertEquals("", value);
+		mockRequest.addHeader(header, value);
 
-		mockRequest.setRequestToRedirectString("?a");
-		value = mockRequest.getParameter("a");
-		assertEquals("", value);
+		WebRequest webRequest = new ServletWebRequest(mockRequest);
+
+		assertEquals(isAjax, webRequest.isAjax());
 	}
 }

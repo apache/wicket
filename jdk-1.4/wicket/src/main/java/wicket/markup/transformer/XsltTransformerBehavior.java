@@ -58,6 +58,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	}
 
 	/**
+	 * @param xslFilePath
 	 * @see XsltTransformer#XsltTransformer(String)
 	 */
 	public XsltTransformerBehavior(final String xslFilePath)

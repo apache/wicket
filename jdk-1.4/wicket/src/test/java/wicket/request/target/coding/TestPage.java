@@ -18,12 +18,11 @@ package wicket.request.target.coding;
 
 import wicket.markup.html.WebPage;
 
+/**
+ * Simple dummy page.
+ */
 public class TestPage extends WebPage
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 }

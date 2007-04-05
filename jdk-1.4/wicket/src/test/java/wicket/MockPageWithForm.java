@@ -24,22 +24,40 @@ import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.model.Model;
 
+/**
+ * Tests drop down choice.
+ */
 public class MockPageWithForm extends WebPage
 {
+	private final class MyForm extends Form
+	{
+		private static final long serialVersionUID = 1L;
+
+		private MyForm(String id)
+		{
+			super(id);
+		}
+
+		protected void onSubmit()
+		{
+			submitted = true;
+		}
+	}
+	private static final long serialVersionUID = 1L;
+
 	private boolean selected;
+
 	private boolean submitted;
 
 	/**
-	 * 
+	 * Construct.
 	 */
-	private static final long serialVersionUID = 1L;
-
 	public MockPageWithForm()
 	{
 		List list = new ArrayList();
 		list.add("Select me");
 		MyForm form = new MyForm("form");
-		DropDownChoice dropDown = new DropDownChoice("dropdown",new Model(), list)
+		DropDownChoice dropDown = new DropDownChoice("dropdown", new Model(), list)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -61,20 +79,7 @@ public class MockPageWithForm extends WebPage
 		form.add(dropDown);
 		add(form);
 	}
-	private final class MyForm extends Form
-	{
-		private static final long serialVersionUID = 1L;
 
-		private MyForm(String id)
-		{
-			super(id);
-		}
-
-		protected void onSubmit()
-		{
-			submitted = true;
-		}
-	}
 	/**
 	 * @return
 	 */
@@ -82,6 +87,7 @@ public class MockPageWithForm extends WebPage
 	{
 		return selected;
 	}
+
 	/**
 	 * @return
 	 */

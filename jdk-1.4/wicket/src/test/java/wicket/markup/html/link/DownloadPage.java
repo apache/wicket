@@ -22,18 +22,24 @@ import java.io.IOException;
 
 import wicket.markup.html.WebPage;
 
+/**
+ * test page with various downloads.
+ */
 public class DownloadPage extends WebPage
 {
-	public static final String HELLO_WORLD = "Hello, World!";
-	public static final String TEXT_DOWNLOAD_LINK = "textDownload";
-	public static final String PDF_DOWNLOAD_LINK = "pdfDownload";
-	public static final String CUSTOM_DOWNLOAD_LINK = "customDownload";
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	static final String HELLO_WORLD = "Hello, World!";
+	static final String TEXT_DOWNLOAD_LINK = "textDownload";
+	static final String PDF_DOWNLOAD_LINK = "pdfDownload";
+
+	static final String CUSTOM_DOWNLOAD_LINK = "customDownload";
+
+	/**
+	 * Construct.
+	 * 
+	 * @throws IOException
+	 */
 	public DownloadPage() throws IOException
 	{
 		File textFile = File.createTempFile("Download", ".txt");

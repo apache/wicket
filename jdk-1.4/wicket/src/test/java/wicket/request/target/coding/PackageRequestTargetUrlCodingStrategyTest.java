@@ -21,9 +21,74 @@ import wicket.WicketRuntimeException;
 import wicket.util.lang.PackageName;
 import wicket.util.tester.WicketTester;
 
+/**
+ * Tests package resources.
+ */
 public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 {
 	WicketTester tester;
+
+	/**
+	 * Tests mounting.
+	 */
+	public void test1()
+	{
+		tester.getServletRequest().setPath("/mount/XXXpoint");
+		assertNull(getRequestCodingStrategy());
+	}
+
+	/**
+	 * Tests mounting.
+	 */
+	public void test2()
+	{
+		tester.getServletRequest().setPath("/mount/pointXXX");
+		assertNull(getRequestCodingStrategy());
+	}
+
+	/**
+	 * Tests mounting.
+	 */
+	public void test3()
+	{
+		tester.getServletRequest().setPath("/mount/point");
+		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
+		assertNotNull(ucs);
+		assertNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
+	}
+
+	/**
+	 * Tests mounting.
+	 */
+	public void test4()
+	{
+		tester.getServletRequest().setPath("/mount/point/TestPage");
+		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
+		assertNotNull(ucs);
+		assertNotNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
+	}
+
+	/**
+	 * Tests mounting.
+	 */
+	public void test5()
+	{
+		tester.getServletRequest().setPath("/mount/point/nonexistent.TestPage");
+		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
+		assertNotNull(ucs);
+		try
+		{
+			ucs.decode(tester.getWicketRequest().getRequestParameters());
+			fail("decode() should have raised a WicketRuntimeException!");
+		}
+		catch (WicketRuntimeException e)
+		{
+			assertEquals(
+					"Unable to load class with name: wicket.request.target.coding.nonexistent.TestPage",
+					e.getMessage());
+		}
+	}
+
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
@@ -36,44 +101,11 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 		tester.destroy();
 	}
 
-	public void test1() {
-		tester.getServletRequest().setPath("/mount/XXXpoint");
-		assertNull(getRequestCodingStrategy());
-	}
-
-	public void test2() {
-		tester.getServletRequest().setPath("/mount/pointXXX");
-		assertNull(getRequestCodingStrategy());
-	}
-
-	public void test3() {
-		tester.getServletRequest().setPath("/mount/point");
-		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
-		assertNotNull(ucs);
-		assertNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
-	}
-
-	public void test4() {
-		tester.getServletRequest().setPath("/mount/point/TestPage");
-		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
-		assertNotNull(ucs);
-		assertNotNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
-	}
-
-	public void test5() {
-		tester.getServletRequest().setPath("/mount/point/nonexistent.TestPage");
-		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
-		assertNotNull(ucs);
-		try {
-			ucs.decode(tester.getWicketRequest().getRequestParameters());
-			fail("decode() should have raised a WicketRuntimeException!");
-		} catch (WicketRuntimeException e) {
-			assertEquals("Unable to load class with name: wicket.request.target.coding.nonexistent.TestPage", e.getMessage());
-		}
-	}
-
-	IRequestTargetUrlCodingStrategy getRequestCodingStrategy() {
-		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(tester.getServletRequest());
-		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath);
+	IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
+	{
+		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
+				tester.getServletRequest());
+		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy()
+				.urlCodingStrategyForPath(relativePath);
 	}
 }

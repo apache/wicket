@@ -40,7 +40,7 @@ public class ExternalLink extends WebMarkupContainer
 
 	/** this links' label. */
 	private final IModel label;
-	
+
 	private boolean contextRelative = false;
 
 	/**
@@ -153,7 +153,7 @@ public class ExternalLink extends WebMarkupContainer
 			if (hrefValue != null)
 			{
 				String url = hrefValue.toString();
-				
+
 				if (contextRelative)
 				{
 					if (url.length() > 0 && url.charAt(0) == '/')
@@ -162,7 +162,7 @@ public class ExternalLink extends WebMarkupContainer
 					}
 					PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
 					String relativeUrl = getRequest().getRelativeURL();
-					
+
 					for (int i = 0; i < relativeUrl.length(); i++)
 					{
 						if (relativeUrl.charAt(i) == '?')
@@ -176,7 +176,7 @@ public class ExternalLink extends WebMarkupContainer
 					}
 					url = prepender.toString();
 				}
-				
+
 				// if the tag is an anchor proper
 				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
 						|| tag.getName().equalsIgnoreCase("area"))
@@ -208,7 +208,7 @@ public class ExternalLink extends WebMarkupContainer
 					}
 				}
 			}
-			
+
 			if (popupSettings != null)
 			{
 				IPageMap popupPageMap = popupSettings.getPageMap(this);
@@ -244,7 +244,8 @@ public class ExternalLink extends WebMarkupContainer
 	}
 
 	/**
-	 * @return True if this link is automatically prepended with ../ to make it relative to the context root.
+	 * @return True if this link is automatically prepended with ../ to make it
+	 *         relative to the context root.
 	 */
 	public boolean isContextRelative()
 	{
@@ -252,8 +253,11 @@ public class ExternalLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Set to true if this link should be automatically prepended with ../ to make it relative to the context root.
+	 * Set to true if this link should be automatically prepended with ../ to
+	 * make it relative to the context root.
+	 * 
 	 * @param contextRelative
+	 * @return This for chaining
 	 */
 	public ExternalLink setContextRelative(boolean contextRelative)
 	{

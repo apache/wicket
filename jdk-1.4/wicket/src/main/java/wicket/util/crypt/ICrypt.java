@@ -22,32 +22,22 @@ package wicket.util.crypt;
  * passwords etc.. It depends on the implementation itself which algorithms are
  * used to en-/decrypt the data.
  * <p>
- * If you value the privacy of your websites users, then please consider using
- * a one-way encryption algorithm instead of the Wicket provided ICrypt 
- * implementations. The intention of these encryption facilities is to keep 
- * passwords private when stored in cookies or in the session.The implementation 
- * of the encryption algorithm may change between releases. As such, this 
+ * If you value the privacy of your websites users, then please consider using a
+ * one-way encryption algorithm instead of the Wicket provided ICrypt
+ * implementations. The intention of these encryption facilities is to keep
+ * passwords private when stored in cookies or in the session.The implementation
+ * of the encryption algorithm may change between releases. As such, this
  * interface and its implementations are not intended and should not be used as
  * an encryption facility for persistent values.
  * <p>
  * As of Wicket 1.2 the methods encrypt and decrypt are deprecated. Consider
- * changing your persistent encryption strategy to be based on a one-way 
+ * changing your persistent encryption strategy to be based on a one-way
  * encryption such as a SHA1 hash, not depending on Wicket classes.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public interface ICrypt
 {
-	/**
-	 * Decrypts a string.
-	 * 
-	 * @param text
-	 *            the text to decrypt
-	 * @return the decrypted string.
-	 * @deprecated
-	 */
-	String decrypt(final String text);
-
 	/**
 	 * Decrypts a string using URL and filename safe Base64 decoding.
 	 * 
@@ -57,15 +47,6 @@ public interface ICrypt
 	 * @since 1.2
 	 */
 	String decryptUrlSafe(final String text);
-
-	/**
-	 * Encrypts a string.
-	 * 
-	 * @param plainText
-	 * @return encrypted string
-	 * @deprecated
-	 */
-	String encrypt(final String plainText);
 
 	/**
 	 * Encrypts a string using URL and filename safe Base64 encoding.

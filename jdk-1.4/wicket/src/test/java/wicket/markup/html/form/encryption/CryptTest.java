@@ -26,28 +26,14 @@ import wicket.util.crypt.SunJceCrypt;
  */
 public class CryptTest extends WicketTestCase
 {
-    /**
-     * Construct.
-     * 
-     * @param name
-     */
-    public CryptTest(String name)
-    {
-	super(name);
-    }
-
 	/**
+	 * Construct.
 	 * 
+	 * @param name
 	 */
-	public void testNoCrypt()
+	public CryptTest(String name)
 	{
-		// The NoCrypt implementation does not modify the string at all
-		final ICrypt crypt = new NoCrypt();
-
-		assertEquals("test", crypt.encrypt("test"));
-		assertEquals("test", crypt.decrypt("test"));
-		assertEquals("test", crypt.encryptUrlSafe("test"));
-		assertEquals("test", crypt.decryptUrlSafe("test"));
+		super(name);
 	}
 
 	/**
@@ -60,22 +46,31 @@ public class CryptTest extends WicketTestCase
 
 		try
 		{
-			if (crypt.encrypt("test") != null)
+			if (crypt.encryptUrlSafe("test") != null)
 			{
 				final String text = "abcdefghijkABC: A test which creates a '/' and/or a '+'";
-				final String expectedDefaultEncrypted = "g+N/AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd+go0P+0kuIe6UvAYP7dlzx+9mfmPaMQ5lCk=";
 				final String expectedUrlSafeEncrypted = "g*N-AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd*go0P*0kuIe6UvAYP7dlzx*9mfmPaMQ5lCk";
-				
-				assertEquals(expectedDefaultEncrypted, crypt.encrypt(text));
-				assertEquals(text, crypt.decrypt(expectedDefaultEncrypted));
+
 				assertEquals(expectedUrlSafeEncrypted, crypt.encryptUrlSafe(text));
-				assertEquals(text, crypt.decrypt(expectedUrlSafeEncrypted));
+				assertEquals(text, crypt.decryptUrlSafe(expectedUrlSafeEncrypted));
 			}
 		}
 		catch (Exception ex)
 		{
-		    // fails on JVMs without security provider (e.g. seems to be on
+			// fails on JVMs without security provider (e.g. seems to be on
 			// MAC in US)
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void testNoCrypt()
+	{
+		// The NoCrypt implementation does not modify the string at all
+		final ICrypt crypt = new NoCrypt();
+
+		assertEquals("test", crypt.encryptUrlSafe("test"));
+		assertEquals("test", crypt.decryptUrlSafe("test"));
 	}
 }

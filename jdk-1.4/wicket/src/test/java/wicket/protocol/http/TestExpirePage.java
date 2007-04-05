@@ -20,22 +20,21 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
 
+/**
+ * Test page for session expiry (/ page not found).
+ */
 public class TestExpirePage extends WebPage
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public TestExpirePage()
 	{
 
 		add(new AjaxLink("link")
 		{
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			public void onClick(AjaxRequestTarget target)

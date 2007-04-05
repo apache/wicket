@@ -119,7 +119,7 @@ public class Model implements IModel
 	{
 		this.object = object;
 	}
-	
+
 	/**
 	 * @see wicket.model.IDetachable#detach()
 	 */
@@ -138,10 +138,25 @@ public class Model implements IModel
 		return sb.toString();
 	}
 
-	// TODO These methods are for helping people upgrade. Remove after deprecation release.
-	/** @deprecated replace by {@link IModel#getObject()}. */
-	public final Object getObject(Component component) { throw new UnsupportedOperationException(); }
+	// TODO These methods are for helping people upgrade. Remove after
+	// deprecation release.
+	/**
+	 * @param component
+	 * @return
+	 * @deprecated replace by {@link IModel#getObject()}.
+	 */
+	public final Object getObject(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
 
-	/** @deprecated replace by {@link IModel#setObject(Object)}. */
-	public final void setObject(Component component, Object object) { throw new UnsupportedOperationException(); }
+	/**
+	 * @param component
+	 * @param object
+	 * @deprecated replace by {@link IModel#setObject(Object)}.
+	 */
+	public final void setObject(Component component, Object object)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

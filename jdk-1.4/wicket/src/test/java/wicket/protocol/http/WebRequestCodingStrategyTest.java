@@ -24,27 +24,36 @@ import wicket.util.tester.WicketTester;
 
 /**
  * Tests for WebRequestCodingStrategy
- *
+ * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class WebRequestCodingStrategyTest extends TestCase
 {
-	public void testDummy() {}
-
 	/**
 	 * WICKET-65 Handle String array in PageParameters
 	 */
-	public void bugTestEncodeStringArray() {
+	public void bugTestEncodeStringArray()
+	{
 		WebRequestCodingStrategy wrcs = new WebRequestCodingStrategy();
 		WicketTester app = new WicketTester();
 		app.startPage(MockPage.class);
 		PageParameters params = new PageParameters();
 		params.add("a", "1");
 		params.add("a", "2");
-		BookmarkablePageRequestTarget requestTarget = new BookmarkablePageRequestTarget(MockPage.class, params);
+		BookmarkablePageRequestTarget requestTarget = new BookmarkablePageRequestTarget(
+				MockPage.class, params);
 		app.setupRequestAndResponse();
 		CharSequence cs = wrcs.encode(app.createRequestCycle(), requestTarget);
 		assertEquals("?a=1&a=2", cs.toString());
 		app.destroy();
+	}
+
+	/**
+	 * Dummy test method. This can be removed and
+	 * {@link #bugTestEncodeStringArray()} renamed to testX when WICKET-65 is
+	 * handled.
+	 */
+	public void testDummy()
+	{
 	}
 }

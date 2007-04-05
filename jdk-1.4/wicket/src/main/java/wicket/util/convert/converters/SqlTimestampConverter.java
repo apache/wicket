@@ -20,16 +20,29 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Locale;
 
-public class SqlTimestampConverter extends DateConverter {
-
+/**
+ * Converts to {@link Timestamp}.
+ * 
+ * @author eelcohillenius
+ */
+public class SqlTimestampConverter extends DateConverter
+{
 	private static final long serialVersionUID = 1L;
-	
-	public Object convertToObject(String value, Locale locale) {
+
+	/**
+	 * @see wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
+	 */
+	public Object convertToObject(String value, Locale locale)
+	{
 		return new Timestamp(((Date)super.convertToObject(value, locale)).getTime());
 	}
-	
-	protected Class getTargetType() {
+
+	/**
+	 * @see wicket.util.convert.converters.DateConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
 		return Timestamp.class;
 	}
-
 }

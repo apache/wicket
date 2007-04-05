@@ -20,8 +20,8 @@ import wicket.Component;
 
 
 /**
- * AbstractReadOnlyModel is an adapter base class for implementing models which have no
- * detach logic and are read-only.
+ * AbstractReadOnlyModel is an adapter base class for implementing models which
+ * have no detach logic and are read-only.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
@@ -59,7 +59,7 @@ public abstract class AbstractReadOnlyModel implements IModel
 		sb.append(getClass().getName()).append("]");
 		return sb.toString();
 	}
-	
+
 	/**
 	 * @see wicket.model.IDetachable#detach()
 	 */
@@ -67,7 +67,15 @@ public abstract class AbstractReadOnlyModel implements IModel
 	{
 	}
 
-	// TODO This method is for helping people upgrade. Remove after deprecation release.
-	/** @deprecated replace by {@link IModel#getObject()}. */
-	public final Object getObject(Component component) { throw new UnsupportedOperationException(); }
+	// TODO This method is for helping people upgrade. Remove after deprecation
+	// release.
+	/**
+	 * @param component
+	 * @return
+	 * @deprecated replace by {@link IModel#getObject()}.
+	 */
+	public final Object getObject(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

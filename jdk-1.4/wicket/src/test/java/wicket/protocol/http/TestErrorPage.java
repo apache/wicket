@@ -20,23 +20,23 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
 
+/**
+ * Tests that an error page is displayed on runtime errors during ajax requests.
+ */
 public class TestErrorPage extends WebPage
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	private boolean clicked = false;
 
+	/**
+	 * Construct.
+	 */
 	public TestErrorPage()
 	{
 
 		add(new AjaxLink("link")
 		{
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			public void onClick(AjaxRequestTarget target)

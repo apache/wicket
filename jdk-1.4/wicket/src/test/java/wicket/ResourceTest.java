@@ -29,12 +29,19 @@ import wicket.protocol.http.WebRequestCycle;
 import wicket.util.resource.FileResourceStream;
 import wicket.util.resource.IResourceStream;
 
+/**
+ * Tests resources.
+ */
 public class ResourceTest extends WicketTestCase
 {
 	private static final Log log = LogFactory.getLog(ResourceTest.class);
 	private static final String TEST_STRING = "Hello, World!";
 
-	public void testCacheableResource() {
+	/**
+	 * Tests a resource that should be marked as being cacheable.
+	 */
+	public void testCacheableResource()
+	{
 		String testFileLastModified;
 		final File testFile;
 		try
@@ -51,10 +58,9 @@ public class ResourceTest extends WicketTestCase
 		testFileLastModified = MockHttpServletResponse.formatDate(testFile.lastModified());
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
-		Resource resource = new Resource() {
-			/**
-			 * 
-			 */
+		Resource resource = new Resource()
+		{
+
 			private static final long serialVersionUID = 1L;
 
 			public IResourceStream getResourceStream()
@@ -69,7 +75,12 @@ public class ResourceTest extends WicketTestCase
 		assertEquals(testFileLastModified, getLastModified());
 		assertEquals(TEST_STRING.length(), getContentLength());
 	}
-	public void testNonCacheableResource() {
+
+	/**
+	 * tests a resource that is not cacheable.
+	 */
+	public void testNonCacheableResource()
+	{
 		String testFileLastModified;
 		final File testFile;
 		try
@@ -86,7 +97,8 @@ public class ResourceTest extends WicketTestCase
 		testFileLastModified = MockHttpServletResponse.formatDate(testFile.lastModified());
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
-		Resource resource = new Resource() {
+		Resource resource = new Resource()
+		{
 			/**
 			 * 
 			 */

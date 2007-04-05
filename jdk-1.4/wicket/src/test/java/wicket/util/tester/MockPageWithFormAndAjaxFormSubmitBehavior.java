@@ -33,7 +33,7 @@ import wicket.model.CompoundPropertyModel;
  */
 public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 {
-	public static final String EVENT_COMPONENT = "eventComponent";
+	static final String EVENT_COMPONENT = "eventComponent";
 
 	private static final long serialVersionUID = 1L;
 

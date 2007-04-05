@@ -29,60 +29,50 @@ import wicket.settings.IRequestCycleSettings;
  */
 public class WebResponseExceptionsTest extends WicketTestCase
 {
-	public void testInternalErrorPage()
+	/**
+	 * Tests buffered exception error page.
+	 */
+	public void testBufferedExceptionErrorPage()
 	{
-		tester.startPage(TestErrorPage.class);
-		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
-		
-		// Cannot use executeAjaxEvent or onClick because WicketTester creates an AjaxRequestTarget from scratch
-		//tester.executeAjaxEvent(link, "onclick");
-		//tester.clickLink("link");
-
-		// FIXME should not be needed
-		tester.createRequestCycle();
-
-		// Invoke the call back URL of the ajax event behavior
-		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl().toString();
-		tester.setupRequestAndResponse();
-		// Fake an Ajax request
-		((MockHttpServletRequest)tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");
-		tester.getServletRequest().setURL(callbackUrl);
-
-		// Do not call tester.processRequestCycle() because it throws an exception when getting an error page
-		WebRequestCycle cycle = tester.createRequestCycle();
-		cycle.request();
-
-		assertAjaxLocation();
-	}
-
-	public void testBufferedExceptionErrorPage() {
-		tester.getApplication().getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_BUFFER);
-		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+		tester.getApplication().getRequestCycleSettings().setRenderStrategy(
+				IRequestCycleSettings.REDIRECT_TO_BUFFER);
+		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(
+				IExceptionSettings.SHOW_EXCEPTION_PAGE);
 		testInternalErrorPage();
 	}
 
-	public void testExceptionErrorPage() {
-		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+	/**
+	 * Tests exception error page.
+	 */
+	public void testExceptionErrorPage()
+	{
+		tester.getApplication().getExceptionSettings().setUnexpectedExceptionDisplay(
+				IExceptionSettings.SHOW_EXCEPTION_PAGE);
 		testInternalErrorPage();
 	}
 
+	/**
+	 * Tests page expired.
+	 */
 	public void testExpirePage()
 	{
 		tester.startPage(TestExpirePage.class);
 		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
-		
-		// Cannot use executeAjaxEvent or onClick because WicketTester creates an AjaxRequestTarget from scratch
-		//tester.executeAjaxEvent(link, "onclick");
-		//tester.clickLink("link");
+
+		// Cannot use executeAjaxEvent or onClick because WicketTester creates
+		// an AjaxRequestTarget from scratch
+		// tester.executeAjaxEvent(link, "onclick");
+		// tester.clickLink("link");
 
 		// FIXME should not be needed
 		tester.createRequestCycle();
-		
+
 		// Clear the session to remove the pages
 		tester.getWicketSession().invalidateNow();
 
 		// Invoke the call back URL of the ajax event behavior
-		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl().toString();
+		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
+				.toString();
 		tester.setupRequestAndResponse();
 
 		// Fake an Ajax request
@@ -92,7 +82,40 @@ public class WebResponseExceptionsTest extends WicketTestCase
 
 		tester.getServletRequest().setURL(callbackUrl);
 
-		// Do not call tester.processRequestCycle() because it throws an exception when getting an error page
+		// Do not call tester.processRequestCycle() because it throws an
+		// exception when getting an error page
+		WebRequestCycle cycle = tester.createRequestCycle();
+		cycle.request();
+
+		assertAjaxLocation();
+	}
+
+	/**
+	 * Tests internal error page.
+	 */
+	public void testInternalErrorPage()
+	{
+		tester.startPage(TestErrorPage.class);
+		AjaxLink link = (AjaxLink)tester.getComponentFromLastRenderedPage("link");
+
+		// Cannot use executeAjaxEvent or onClick because WicketTester creates
+		// an AjaxRequestTarget from scratch
+		// tester.executeAjaxEvent(link, "onclick");
+		// tester.clickLink("link");
+
+		// FIXME should not be needed
+		tester.createRequestCycle();
+
+		// Invoke the call back URL of the ajax event behavior
+		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
+				.toString();
+		tester.setupRequestAndResponse();
+		// Fake an Ajax request
+		((MockHttpServletRequest)tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");
+		tester.getServletRequest().setURL(callbackUrl);
+
+		// Do not call tester.processRequestCycle() because it throws an
+		// exception when getting an error page
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.request();
 

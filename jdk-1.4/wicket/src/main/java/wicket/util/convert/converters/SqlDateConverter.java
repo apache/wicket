@@ -19,15 +19,27 @@ package wicket.util.convert.converters;
 import java.util.Date;
 import java.util.Locale;
 
-public class SqlDateConverter extends DateConverter {
-
+/**
+ * Converts to {@link java.sql.Date}.
+ */
+public class SqlDateConverter extends DateConverter
+{
 	private static final long serialVersionUID = 1L;
 
-	public Object convertToObject(String value, Locale locale) {
+	/**
+	 * @see wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
+	 */
+	public Object convertToObject(String value, Locale locale)
+	{
 		return new java.sql.Date(((Date)super.convertToObject(value, locale)).getTime());
 	}
 
-	protected Class getTargetType() {
+	/**
+	 * @see wicket.util.convert.converters.DateConverter#getTargetType()
+	 */
+	protected Class getTargetType()
+	{
 		return java.sql.Date.class;
 	}
 

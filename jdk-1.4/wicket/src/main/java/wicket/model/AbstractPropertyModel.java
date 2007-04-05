@@ -145,14 +145,22 @@ public abstract class AbstractPropertyModel implements IModel
 	}
 
 	// TODO remove these methods after a deprecation release
-	
-	/** @deprecated use {@link #setObject(object)} instead */
+
+	/**
+	 * @param component
+	 * @param object
+	 * @deprecated use {@link #setObject(object)} instead
+	 */
 	protected final void onSetObject(Component component, Object object)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	/** @deprecated use {@link #getObject()} instead */
+	/**
+	 * @param component
+	 * @return
+	 * @deprecated use {@link #getObject()} instead
+	 */
 	protected final Object onGetObject(Component component)
 	{
 		throw new UnsupportedOperationException();

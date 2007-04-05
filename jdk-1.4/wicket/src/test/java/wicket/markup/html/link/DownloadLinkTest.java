@@ -24,7 +24,7 @@ import wicket.protocol.http.MockServletContext;
 
 /**
  * Tests DownloadLink
- *
+ * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class DownloadLinkTest extends WicketTestCase
@@ -32,28 +32,19 @@ public class DownloadLinkTest extends WicketTestCase
 	private static final String APPLICATION_X_CUSTOM = "application/x-custom";
 	private static final Log log = LogFactory.getLog(DownloadLinkTest.class);
 
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
 	public DownloadLinkTest(String name)
 	{
 		super(name);
 	}
 
-	public void testTextDownloadLink()
-	{
-		tester.startPage(DownloadPage.class);
-		tester.clickLink(DownloadPage.TEXT_DOWNLOAD_LINK);
-		assertTrue(getContentType().startsWith("text/plain"));
-		assertTrue(getContentDisposition().startsWith("attachment; filename="));
-		assertEquals(0, getContentLength());
-	}
-
-	public void testPdfDownloadLink()
-	{
-		tester.startPage(DownloadPage.class);
-		tester.clickLink(DownloadPage.PDF_DOWNLOAD_LINK);
-		assertTrue(getContentType().startsWith("application/pdf"));
-		assertEquals(DownloadPage.HELLO_WORLD.length(), getContentLength());
-	}
-
+	/**
+	 * Tests custom type download.
+	 */
 	public void testCustomTypeDownloadLink()
 	{
 		tester.startPage(DownloadPage.class);
@@ -62,5 +53,28 @@ public class DownloadLinkTest extends WicketTestCase
 		tester.clickLink(DownloadPage.CUSTOM_DOWNLOAD_LINK);
 		log.debug("Content-Type: " + getContentType());
 		assertTrue(getContentType().startsWith(APPLICATION_X_CUSTOM));
+	}
+
+	/**
+	 * Tests pdf download.
+	 */
+	public void testPdfDownloadLink()
+	{
+		tester.startPage(DownloadPage.class);
+		tester.clickLink(DownloadPage.PDF_DOWNLOAD_LINK);
+		assertTrue(getContentType().startsWith("application/pdf"));
+		assertEquals(DownloadPage.HELLO_WORLD.length(), getContentLength());
+	}
+
+	/**
+	 * Tests text download.
+	 */
+	public void testTextDownloadLink()
+	{
+		tester.startPage(DownloadPage.class);
+		tester.clickLink(DownloadPage.TEXT_DOWNLOAD_LINK);
+		assertTrue(getContentType().startsWith("text/plain"));
+		assertTrue(getContentDisposition().startsWith("attachment; filename="));
+		assertEquals(0, getContentLength());
 	}
 }

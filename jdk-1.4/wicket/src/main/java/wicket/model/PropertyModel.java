@@ -165,9 +165,6 @@ public class PropertyModel extends AbstractPropertyModel
 		return expression;
 	}
 
-	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
-	 */
 	protected Class propertyType(Component component)
 	{
 		return propertyType;

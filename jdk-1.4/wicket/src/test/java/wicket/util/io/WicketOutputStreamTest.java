@@ -32,84 +32,89 @@ public class WicketOutputStreamTest extends TestCase
 	WicketObjectOutputStream woos;
 
 	/**
+	 * Tests serialization of a big int.
+	 * 
+	 * @throws Exception
+	 */
+	public void testBigInteger() throws Exception
+	{
+		BigInteger bi = new BigInteger("102312302132130123230021301023");
+		woos.writeObject(bi);
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
+		BigInteger bi2 = (BigInteger)wois.readObject();
+
+		Assert.assertEquals(bi, bi2);
+
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testGregorianCalendar() throws Exception
+	{
+		GregorianCalendar gc = new GregorianCalendar(2005, 10, 10);
+
+		woos.writeObject(gc);
+		woos.close();
+
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
+		GregorianCalendar gc2 = (GregorianCalendar)wois.readObject();
+
+		Assert.assertEquals(gc, gc2);
+
+	}
+
+
+	// public void testNotSerializeable() throws Exception
+	// {
+	// WebApplication app = new WebApplication()
+	// {
+	// public Class getHomePage()
+	// {
+	// return null;
+	// }
+	// };
+	//		
+	// java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+	// ObjectOutputStream oos = new ObjectOutputStream(baos);
+	// oos.writeObject(app);
+	//		
+	// }
+
+
+	// public void testStringsEqualsAfterSerialization() throws Exception
+	// {
+	// String[] strings = new String[2];
+	// strings[0] = new String("wicket");
+	// strings[1] = "wicket";
+	//		
+	// assertEquals(false, strings[0] == strings[1]);
+	//		
+	// woos.writeObject(strings);
+	// woos.close();
+	//		
+	// ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+	//		
+	// WicketObjectInputStream wois = new WicketObjectInputStream(bais);
+	// String[] strings2 = (String[])wois.readObject();
+	//		
+	// Assert.assertEquals(strings[0], strings[1]);
+	//		
+	// Assert.assertSame(strings[0], strings[1]);
+	//
+	//		
+	// }
+
+	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception
 	{
 		baos = new ByteArrayOutputStream();
 		woos = new WicketObjectOutputStream(baos);
-	}
-	/**
-	 * @throws Exception
-	 */
-	public void testGregorianCalendar() throws Exception
-	{
-		GregorianCalendar gc = new GregorianCalendar(2005,10,10);
-		
-		woos.writeObject(gc);
-		woos.close();
-		
-		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-		
-		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
-		GregorianCalendar gc2 = (GregorianCalendar)wois.readObject();
-		
-		Assert.assertEquals(gc, gc2);
-		
-	}
-	
-	
-//	public void testNotSerializeable()  throws Exception
-//	{
-//		WebApplication app = new WebApplication()
-//		{
-//			public Class getHomePage()
-//			{
-//				return null;
-//			}
-//		};
-//		
-//		java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream(); 
-//		ObjectOutputStream oos = new ObjectOutputStream(baos);
-//		oos.writeObject(app);
-//		
-//	}
-
-	
-//	public void testStringsEqualsAfterSerialization() throws Exception
-//	{
-//		String[] strings = new String[2];
-//		strings[0] = new String("wicket");
-//		strings[1] = "wicket";
-//		
-//		assertEquals(false, strings[0] == strings[1]);
-//		
-//		woos.writeObject(strings);
-//		woos.close();
-//		
-//		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-//		
-//		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
-//		String[] strings2 = (String[])wois.readObject();
-//		
-//		Assert.assertEquals(strings[0], strings[1]);
-//		
-//		Assert.assertSame(strings[0], strings[1]);
-//
-//		
-//	}
-	
-	
-	public void testBigInteger() throws Exception
-	{
-		BigInteger bi = new BigInteger("102312302132130123230021301023");
-		woos.writeObject(bi);
-		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-		
-		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
-		BigInteger bi2 = (BigInteger)wois.readObject();
-		
-		Assert.assertEquals(bi, bi2);
-		
 	}
 }
