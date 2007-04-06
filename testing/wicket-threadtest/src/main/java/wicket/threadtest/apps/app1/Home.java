@@ -56,7 +56,6 @@ import wicket.protocol.http.WebRequest;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.MaskConverter;
-import wicket.util.convert.SimpleConverterAdapter;
 import wicket.validation.validator.NumberValidator;
 
 public class Home extends WebPage {
@@ -137,8 +136,11 @@ public class Home extends WebPage {
 
 			add(new TextField("urlProperty", URL.class) {
 				public IConverter getConverter(Class clazz) {
-					return new SimpleConverterAdapter() {
-						public Object toObject(String value) {
+					return new IConverter() {
+						/**
+						 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
+						 */
+						public Object convertToObject(String value, Locale locale) {
 							try {
 								return new URL(value.toString());
 							} catch (MalformedURLException e) {
@@ -146,7 +148,10 @@ public class Home extends WebPage {
 							}
 						}
 
-						public String toString(Object value) {
+						/**
+						 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, java.util.Locale)
+						 */
+						public String convertToString(Object value, Locale locale) {
 							return value != null ? value.toString() : null;
 						}
 					};
