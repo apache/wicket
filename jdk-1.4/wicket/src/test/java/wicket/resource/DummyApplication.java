@@ -16,7 +16,10 @@
  */
 package wicket.resource;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebResponse;
 
 /**
  * Dummy application used for resource loader testing.
@@ -28,5 +31,10 @@ public class DummyApplication extends WebApplication
 	public Class getHomePage()
 	{
 		return null;
+	}
+
+	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
+	{
+		return new WebResponse(servletResponse);
 	}
 }

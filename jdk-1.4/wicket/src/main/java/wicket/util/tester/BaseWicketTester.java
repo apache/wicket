@@ -232,7 +232,6 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final Page startPage(Class pageClass)
 	{
-		setupRequestAndResponse();
 		processRequestCycle(pageClass);
 		return getLastRenderedPage();
 	}

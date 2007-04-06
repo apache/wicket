@@ -148,7 +148,7 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @see wicket.ISessionFactory#newSession(Request, Response)
 		 */
-		public Session newSession(Request request, Response response)
+		public Session newSession(Request request, Response resposne)
 		{
 			return new MySession(this, request);
 		}

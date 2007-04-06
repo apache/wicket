@@ -122,7 +122,6 @@ public class BufferedWebResponse extends WebResponse
 		if (redirectURL == null && buffer.length() != 0)
 		{
 			this.buffer = filter(buffer);
-
 		}
 	}
 
