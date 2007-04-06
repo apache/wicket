@@ -150,12 +150,28 @@ public class WicketTester extends BaseWicketTester
 	private static final Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
+	 * @author frankbille
+	 */
+	public static class DummyWebApplication extends WebApplication
+	{
+		public Class getHomePage()
+		{
+			return DummyHomePage.class;
+		}
+
+		protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
+		{
+			return new WebResponse(servletResponse);
+		}
+	}
+	
+	/**
 	 * Create WicketTester and automatically create a WebApplication, but the
 	 * tester will have no home page.
 	 */
 	public WicketTester()
 	{
-		this(DummyHomePage.class);
+		this(new DummyWebApplication());
 	}
 
 	/**
@@ -179,7 +195,7 @@ public class WicketTester extends BaseWicketTester
 			{
 				return new WebResponse(servletResponse);
 			}
-		}, null);
+		});
 	}
 
 	/**
