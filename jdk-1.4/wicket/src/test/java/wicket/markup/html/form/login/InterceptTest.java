@@ -16,6 +16,8 @@
  */
 package wicket.markup.html.form.login;
 
+import javax.servlet.http.HttpServletResponse;
+
 import junit.framework.TestCase;
 import wicket.Component;
 import wicket.ISessionFactory;
@@ -27,6 +29,7 @@ import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.WebSession;
 import wicket.util.string.Strings;
 import wicket.util.tester.WicketTester;
@@ -151,6 +154,11 @@ public class InterceptTest extends TestCase
 		public Session newSession(Request request, Response resposne)
 		{
 			return new MySession(this, request);
+		}
+		
+		protected WebResponse newWebResponse(HttpServletResponse servletResponse)
+		{
+			return new WebResponse(servletResponse);
 		}
 	}
 
