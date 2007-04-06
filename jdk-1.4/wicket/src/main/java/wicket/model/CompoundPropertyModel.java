@@ -58,6 +58,13 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 		return target;
 	}
 
+	/**
+	 * TODO shouldn't this method be removed?
+	 * and getObject should just return target?
+	 * now it is a bit strange. setObject assigns target
+	 * but getObject doesn't return directly the target...
+	 * @return
+	 */
 	public Object getTarget()
 	{
 		return target;
@@ -100,6 +107,21 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	public IWrapModel wrapOnInheritance(Component component)
 	{
 		return new AttachedCompoundPropertyModel(component);
+	}
+	
+	/**
+	 * Binds this model to a special property by returning a model
+	 * that has this compound model as its nested/wrapped model and
+	 * the property which should be evaluted.
+	 * This can be used if the id of the Component isn't a valid property
+	 * for the data object. 
+	 * 
+	 * @param property
+	 * @return The IModel that is a wrapper around the current model and the property
+	 */
+	public IModel bind(String property)
+	{
+		return new PropertyModel(this,property);
 	}
 
 	/**
