@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
@@ -34,12 +36,13 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.list.ListView;
 import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebResponse;
 import wicket.util.diff.DiffUtil;
 
 /**
  * A helper to ease unit testing of Wicket applications without the need for a
  * servlet container. To start a test, either use startPage() or startPanel():
- *
+ * 
  * <pre>
  * // production page
  * public class MyPage extends WebPage
@@ -57,32 +60,30 @@ import wicket.util.diff.DiffUtil;
  * 	}
  * }
  * </pre>
- *
+ * 
  * <pre>
  * // test code
  * private WicketTester tester;
- *
+ * 
  * public void setUp()
  * {
  * 	tester = new WicketTester();
  * }
- *
+ * 
  * public void testRenderMyPage()
  * {
  * 	//start and render the test page
  * 	tester.startPage(MyPage.class);
- *
  * 	//assert rendered page class
  * 	tester.assertRenderedPage(MyPage.class);
- *
  * 	//assert rendered label component
  * 	tester.assertLabel(&quot;myMessage&quot;, &quot;Hello!&quot;);
  * }
  * </pre>
- *
+ * 
  * Above example is straight forward: start MyPage.class and assert Label it
  * rendered. Next, we try to navigate through link:
- *
+ * 
  * <pre>
  * // production page
  * public class YourPage extends WebPage
@@ -93,25 +94,23 @@ import wicket.util.diff.DiffUtil;
  * 		info(&quot;Wicket Rocks ;-)&quot;);
  * 	}
  * }
- *
+ * 
  * //test code
  * public void testLinkToYourPage()
  * {
  * 	tester.startPage(MyPage.class);
- *
  * 	//click link and render
  * 	tester.clickLink(&quot;toYourPage&quot;);
- *
  * 	tester.assertRenderedPage(YourPage.class);
  * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;Hi!&quot;);
  * }
  * </pre>
- *
+ * 
  * <code>tester.clickLink(path);</code> will simulate user click on the
  * component (in this case, it's a <code>Link</code>) and render the response
  * page <code>YourPage</code>. Ok, unit test of <code>MyPage</code> is
  * completed. Now we test <code>YourPage</code> standalone:
- *
+ * 
  * <pre>
  * //test code
  * public void testRenderYourPage()
@@ -124,15 +123,13 @@ import wicket.util.diff.DiffUtil;
  * 			return new YourPage(&quot;mock message&quot;);
  * 		}
  * 	});
- *
  * 	tester.assertRenderedPage(YourPage.class);
  * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;mock message&quot;);
- *
  * 	// assert feedback messages in INFO Level
  * 	tester.assertInfoMessages(new String[] { &quot;Wicket Rocks ;-)&quot; });
  * }
  * </pre>
- *
+ * 
  * Instead of <code>tester.startPage(pageClass)</code>, we define a
  * {@link wicket.util.tester.ITestPageSource} to provide testing page instance
  * for WicketTester. This is necessary because <code>YourPage</code> uses a
@@ -140,9 +137,9 @@ import wicket.util.diff.DiffUtil;
  * not be instantiated by reflection. Finally, we use
  * <code>assertInfoMessages</code> to assert there is a feedback message
  * "Wicket Rocks ;-)" in INFO level.
- *
+ * 
  * TODO General: Example usage of FormTester
- *
+ * 
  * @author Ingram Chen
  * @author Juergen Donnerstag
  * @author Frank Bille
@@ -153,28 +150,17 @@ public class WicketTester extends BaseWicketTester
 	private static final Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
-	 * @author frankbille
-	 */
-	public static class DummyWebApplication extends WebApplication
-	{
-		public Class getHomePage()
-		{
-			return DummyHomePage.class;
-		}
-	}
-
-	/**
 	 * Create WicketTester and automatically create a WebApplication, but the
 	 * tester will have no home page.
 	 */
 	public WicketTester()
 	{
-		this(new DummyWebApplication(), null);
+		this(DummyHomePage.class);
 	}
 
 	/**
 	 * Create WicketTester and automatically create a WebApplication.
-	 *
+	 * 
 	 * @param homePage
 	 */
 	public WicketTester(final Class homePage)
@@ -188,12 +174,17 @@ public class WicketTester extends BaseWicketTester
 			{
 				return homePage;
 			}
+
+			protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
+			{
+				return new WebResponse(servletResponse);
+			}
 		}, null);
 	}
 
 	/**
 	 * Create WicketTester
-	 *
+	 * 
 	 * @param application
 	 *            The wicket tester object
 	 */
@@ -204,13 +195,13 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Create WicketTester to help unit testing
-	 *
+	 * 
 	 * @param application
 	 *            The wicket tester object
 	 * @param path
 	 *            The absolute path on disk to the web application contents
 	 *            (e.g. war root) - may be null
-	 *
+	 * 
 	 * @see wicket.protocol.http.MockWebApplication#MockWebApplication(String)
 	 */
 	public WicketTester(final WebApplication application, final String path)
@@ -221,7 +212,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert the text of <code>Label</code> component.
-	 *
+	 * 
 	 * @param path
 	 *            path to <code>Label</code> component
 	 * @param expectedLabelText
@@ -235,7 +226,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert <code>PageLink</code> link to page class.
-	 *
+	 * 
 	 * @param path
 	 *            path to <code>PageLink</code> component
 	 * @param expectedPageClass
@@ -248,7 +239,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert component class
-	 *
+	 * 
 	 * @param path
 	 *            path to component
 	 * @param expectedComponentClass
@@ -261,7 +252,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert component visible.
-	 *
+	 * 
 	 * @param path
 	 *            path to component
 	 */
@@ -272,7 +263,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert component invisible.
-	 *
+	 * 
 	 * @param path
 	 *            path to component
 	 */
@@ -283,7 +274,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert the content of last rendered page contains(matches) regex pattern.
-	 *
+	 * 
 	 * @param pattern
 	 *            reqex pattern to match
 	 */
@@ -294,7 +285,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert the model of {@link ListView} use expectedList
-	 *
+	 * 
 	 * @param path
 	 *            path to {@link ListView} component
 	 * @param expectedList
@@ -310,7 +301,7 @@ public class WicketTester extends BaseWicketTester
 	 * create a {@link FormTester} for the form at path, and fill all child
 	 * {@link wicket.markup.html.form.FormComponent}s with blank String
 	 * initially.
-	 *
+	 * 
 	 * @param path
 	 *            path to {@link Form} component
 	 * @return FormTester A FormTester instance for testing form
@@ -323,7 +314,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * create a {@link FormTester} for the form at path.
-	 *
+	 * 
 	 * @param path
 	 *            path to {@link Form} component
 	 * @param fillBlankString
@@ -341,7 +332,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert last rendered Page class
-	 *
+	 * 
 	 * @param expectedRenderedPageClass
 	 *            expected class of last renered page
 	 */
@@ -356,7 +347,7 @@ public class WicketTester extends BaseWicketTester
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to
 	 * automatically replace the expected output file.
 	 * </p>
-	 *
+	 * 
 	 * @param pageClass
 	 *            Used to load the file (relative to clazz package)
 	 * @param filename
@@ -372,7 +363,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert last rendered Page against an expected HTML document as a String
-	 *
+	 * 
 	 * @param expectedDocument
 	 *            Expected output
 	 * @throws Exception
@@ -406,7 +397,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert error feedback messages
-	 *
+	 * 
 	 * @param expectedErrorMessages
 	 *            expected error messages
 	 */
@@ -423,7 +414,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert info feedback message
-	 *
+	 * 
 	 * @param expectedInfoMessages
 	 *            expected info messages
 	 */
@@ -441,7 +432,7 @@ public class WicketTester extends BaseWicketTester
 	 * PLEASE NOTE! This method doesn't actually insert the component in the
 	 * client DOM tree, using javascript. But it shouldn't be needed because you
 	 * have to trust that the Wicket Ajax Javascript just works.
-	 *
+	 * 
 	 * @param componentPath
 	 *            The component path to the component to test whether it's on
 	 *            the response.
@@ -459,7 +450,7 @@ public class WicketTester extends BaseWicketTester
 	 * PLEASE NOTE! This method doesn't actually insert the component in the
 	 * client DOM tree, using javascript. But it shouldn't be needed because you
 	 * have to trust that the Wicket Ajax Javascript just works.
-	 *
+	 * 
 	 * @param component
 	 *            The component to test whether it's on the response.
 	 */
@@ -471,7 +462,7 @@ public class WicketTester extends BaseWicketTester
 
 	private void assertResult(Result result)
 	{
-		if(result.wasFailed())
+		if (result.wasFailed())
 		{
 			throw new AssertionFailedError(result.getMessage());
 		}

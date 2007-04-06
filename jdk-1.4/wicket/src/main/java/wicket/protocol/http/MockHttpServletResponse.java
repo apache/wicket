@@ -349,10 +349,8 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 * Get the output stream for writing binary data from the servlet.
 	 *
 	 * @return The binary output stream.
-	 * @throws IOException
-	 *             If stream not available
 	 */
-	public ServletOutputStream getOutputStream() throws IOException
+	public ServletOutputStream getOutputStream()
 	{
 		if (mode == MODE_TEXT)
 		{

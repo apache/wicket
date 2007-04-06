@@ -122,7 +122,7 @@ public class MockWebApplication
 	/** The tester object */
 	private final WebApplication application;
 
-	private ServletContext context;
+	private final ServletContext context;
 
 	private WicketFilter filter;
 
@@ -140,7 +140,8 @@ public class MockWebApplication
 	{
 		this.application = application;
 
-		context = newServletContext(path);
+		this.context = newServletContext(path);
+		
 		filter = new WicketFilter()
 		{
 			protected IWebApplicationFactory getApplicationFactory()
@@ -193,14 +194,20 @@ public class MockWebApplication
 
 		Application.set(this.application);
 
-		this.servletSession = new MockHttpSession(context);
-		this.servletRequest = new MockHttpServletRequest(this.application, servletSession, context);
+		// Construct mock session, request and response 
+		this.servletSession = new MockHttpSession(this.context);
+		this.servletRequest = new MockHttpServletRequest(this.application, this.servletSession, this.context);
 		this.servletResponse = new MockHttpServletResponse();
-		this.wicketRequest = this.application.newWebRequest(servletRequest);
-		this.wicketSession = this.application.getSession(wicketRequest, wicketResponse);
+		
+		// Construct request, response and session using factories
+		this.wicketRequest = this.application.newWebRequest(this.servletRequest);
+		this.wicketResponse = this.application.newWebResponse(this.servletResponse);
+		this.wicketSession = this.application.getSession(this.wicketRequest, this.wicketResponse);
+		
+		// Get request cycle factory
 		this.requestCycleFactory = this.wicketSession.getRequestCycleFactory();
 
-		// set the default context path
+		// Set the default context path
 		this.application.getApplicationSettings().setContextPath(context.getServletContextName());
 
 		this.application.getRequestCycleSettings()
@@ -333,7 +340,7 @@ public class MockWebApplication
 	public void processRequestCycle(final Component component)
 	{
 		setupRequestAndResponse();
-		WebRequestCycle cycle = createRequestCycle();
+		final WebRequestCycle cycle = createRequestCycle();
 		cycle.request(component);
 
 		if (component instanceof Page)
@@ -351,7 +358,7 @@ public class MockWebApplication
 	public void processRequestCycle(final Class pageClass)
 	{
 		setupRequestAndResponse();
-		WebRequestCycle cycle = createRequestCycle();
+		final WebRequestCycle cycle = createRequestCycle();
 		cycle.request(new BookmarkablePageRequestTarget(pageClass));
 		postProcessRequestCycle(cycle);
 	}
@@ -481,7 +488,7 @@ public class MockWebApplication
 		servletResponse.initialize();
 		servletRequest.setParameters(parametersForNextRequest);
 		parametersForNextRequest.clear();
-        this.wicketRequest = this.application.newWebRequest(servletRequest); 
+        this.wicketRequest = this.application.newWebRequest(servletRequest);
         this.wicketResponse = this.application.newWebResponse(servletResponse); 
         this.wicketSession = this.application.getSession(wicketRequest, wicketResponse); 
         this.application.getSessionStore().bind(wicketRequest, wicketSession); 
