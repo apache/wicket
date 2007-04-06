@@ -354,11 +354,24 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * registered your own ISessionFactory with the Application.
 	 * 
 	 * @return The created session
-	 * @deprecated DO NOT CALL THIS METHOD, BUT RATHER
-	 *             {@link WebApplication#newSession(Request)}.
+	 * @deprecated see {@link WebApplication#newSession(Request, Response)}.
 	 */
 	// FIXME remove this method after 1.3.0
 	public final Session newSession()
+	{
+		throw new UnsupportedOperationException("this method is replaced by Application#newSession");
+	}
+
+	/**
+	 * Create new Wicket Session object. Note, this method is not called if you
+	 * registered your own ISessionFactory with the Application.
+	 * 
+	 * @param request
+	 * @return The created session
+	 * @deprecated {@link WebApplication#newSession(Request, Response)}.
+	 */
+	// FIXME remove this method after 1.3.0
+	public final Session newSession(Request request)
 	{
 		throw new UnsupportedOperationException("this method is replaced by Application#newSession");
 	}

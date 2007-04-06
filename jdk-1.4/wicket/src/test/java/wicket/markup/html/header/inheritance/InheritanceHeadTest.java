@@ -17,6 +17,7 @@
 package wicket.markup.html.header.inheritance;
 
 import wicket.Request;
+import wicket.Response;
 import wicket.Session;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
@@ -77,9 +78,9 @@ public class InheritanceHeadTest extends WicketTestCase
 		tester = new WicketTester(new WebApplication()
 		{
 			/**
-			 * @see wicket.protocol.http.WebApplication#newSession(Request)
+			 * @see wicket.protocol.http.WebApplication#newSession(Request, Response)
 			 */
-			public Session newSession(Request request)
+			public Session newSession(Request request, Response response)
 			{
 				return new WebSession(this, request).setStyle("myStyle");
 			}

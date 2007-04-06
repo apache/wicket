@@ -21,6 +21,7 @@ import java.util.List;
 
 import wicket.ISessionFactory;
 import wicket.Request;
+import wicket.Response;
 import wicket.Session;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
@@ -59,9 +60,9 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	}
 
 	/**
-	 * @see wicket.ISessionFactory#newSession(Request request)
+	 * @see wicket.ISessionFactory#newSession(Request, Response)
 	 */
-	public Session newSession(Request request)
+	public Session newSession(Request request, Response response)
 	{
 		return new RolesSession(this, request);
 	}

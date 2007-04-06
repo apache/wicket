@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Request;
+import wicket.Response;
 import wicket.Session;
 import wicket.protocol.http.WebApplication;
 
@@ -50,9 +51,10 @@ public class QuickStartApplication extends WebApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
+	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request,
+	 *      Response)
 	 */
-	public Session newSession(Request request)
+	public Session newSession(Request request, Response response)
 	{
 		return new QuickStartSession(QuickStartApplication.this, request);
 	}

@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.Request;
+import wicket.Response;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
@@ -145,9 +146,9 @@ public class InterceptTest extends TestCase
 
 		/**
 		 * 
-		 * @see wicket.ISessionFactory#newSession(Request)
+		 * @see wicket.ISessionFactory#newSession(Request, Response)
 		 */
-		public Session newSession(Request request)
+		public Session newSession(Request request, Response response)
 		{
 			return new MySession(this, request);
 		}
