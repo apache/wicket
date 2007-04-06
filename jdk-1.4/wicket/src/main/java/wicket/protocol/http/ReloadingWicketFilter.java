@@ -58,6 +58,19 @@ import wicket.util.listener.IChangeListener;
  * </p>
  * 
  * <p>
+ * Be sure to carefully read the following information if you also use Spring:
+ * </p>
+ * 
+ * <p>
+ * When using Spring, the application must not be a Spring bean itself,
+ * otherwise the reloading mechanism won't be able to reload the application. In
+ * particular, make sure <b>not</b> to use
+ * wicket.spring.SpringWebApplicationFactory in web.xml. To inject dependencies
+ * in your application, use SpringComponentInjector or
+ * DefaultListableBeanFactory.autowireBeanProperties() in the init() method.
+ * </p>
+ * 
+ * <p>
  * <b>WARNING. </b> Be careful that when using Spring or other component
  * managers, you will get <tt>ClassCastException</tt> if a given class is
  * loaded two times, one time by the normal classloader, and another time by the

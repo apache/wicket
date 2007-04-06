@@ -37,13 +37,8 @@ package wicket.protocol.http;
  * }
  * </pre>
  * 
- * <p>
- * It is also possible to add an URL to watch for changes using
- * <tt>ReloadingClassLoader.addLocation()</tt>. By default, all the URL
- * locations we can find for the provided class loader are registered.
- * </p>
- * 
- * @see ReloadingWicketFilter
+ * @see ReloadingWicketFilter for complete documentation, and for proper
+ *      integration with Spring
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
