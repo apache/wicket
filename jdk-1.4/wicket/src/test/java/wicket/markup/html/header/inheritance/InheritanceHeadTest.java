@@ -16,12 +16,15 @@
  */
 package wicket.markup.html.header.inheritance;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.Request;
 import wicket.Response;
 import wicket.Session;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
 import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.WebSession;
 import wicket.util.tester.WicketTester;
 
@@ -88,6 +91,11 @@ public class InheritanceHeadTest extends WicketTestCase
 			public Class getHomePage()
 			{
 				return ConcretePage2.class;
+			}
+			
+			protected WebResponse newWebResponse(HttpServletResponse servletResponse)
+			{
+				return new WebResponse(servletResponse);
 			}
 		});
 		
