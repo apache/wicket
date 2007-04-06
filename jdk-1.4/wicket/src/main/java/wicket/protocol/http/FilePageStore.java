@@ -58,7 +58,7 @@ public class FilePageStore implements IPageStore
 	private final PageSerializingThread serThread;
 	private final ConcurrentHashMap pagesToBeSerialized;
 
-	
+
 	private final PageSavingThread saveThread;
 	private final ConcurrentHashMap pagesToBeSaved;
 
@@ -85,8 +85,9 @@ public class FilePageStore implements IPageStore
 	 */
 	public FilePageStore(File dir)
 	{
-		defaultWorkDir = new File(dir,"sessions/");
+		defaultWorkDir = new File(dir, "sessions/");
 		defaultWorkDir.mkdirs();
+
 		pagesToBeSerialized = new ConcurrentHashMap();
 		pagesToBeSaved = new ConcurrentHashMap();
 		appName = Application.get().getApplicationKey();
@@ -102,6 +103,8 @@ public class FilePageStore implements IPageStore
 		t.setDaemon(true);
 		t.setPriority(Thread.NORM_PRIORITY);
 		t.start();
+
+		log.info("storing sessions in " + dir + "/sessions");
 	}
 
 	/**
@@ -240,7 +243,8 @@ public class FilePageStore implements IPageStore
 		}
 		List list = (List)pagesToBeSerialized.get(currentKey.sessionId);
 
-		if (list == null) return null;
+		if (list == null)
+			return null;
 
 		synchronized (list)
 		{
@@ -289,7 +293,7 @@ public class FilePageStore implements IPageStore
 		if (bytes != null)
 		{
 			currentKey.setObject(bytes);
-			pagesToBeSaved.put(currentKey,currentKey);
+			pagesToBeSaved.put(currentKey, currentKey);
 		}
 		return bytes;
 	}
@@ -339,7 +343,8 @@ public class FilePageStore implements IPageStore
 	{
 		List list = (List)pagesToBeSerialized.get(sessionId);
 
-		if (list == null) return;
+		if (list == null)
+			return;
 
 		synchronized (list)
 		{
@@ -411,8 +416,8 @@ public class FilePageStore implements IPageStore
 		if (log.isDebugEnabled())
 		{
 			log.debug("serializing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
-					+ "] size: " + bytes.length + " for session " + key.sessionId + " took " + (System.currentTimeMillis() - t1)
-					+ " miliseconds to serialize");
+					+ "] size: " + bytes.length + " for session " + key.sessionId + " took "
+					+ (System.currentTimeMillis() - t1) + " miliseconds to serialize");
 		}
 		return bytes;
 	}
@@ -462,7 +467,9 @@ public class FilePageStore implements IPageStore
 
 		/**
 		 * Sets the current object inside the SessionPageKey
-		 * @param o The object
+		 * 
+		 * @param o
+		 *            The object
 		 */
 		public void setObject(Object o)
 		{
@@ -516,7 +523,7 @@ public class FilePageStore implements IPageStore
 		 */
 		public void stop()
 		{
-			if ( log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("Total time in saving: " + totalSavingTime);
 				log.debug("Bytes saved: " + bytesSaved);
@@ -540,21 +547,21 @@ public class FilePageStore implements IPageStore
 						if (stop)
 							return;
 					}
-//					if ( pagesToBeSaved.size() > 100)
-//					{
-//						System.err.println("max");
-//						Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-//					}
-//					else if ( pagesToBeSaved.size() > 25)
-//					{
-//						System.err.println("normal");
-//						Thread.currentThread().setPriority(Thread.NORM_PRIORITY);
-//					}
-//					else
-//					{
-//						System.err.println("min");
-//						Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-//					}
+					// if ( pagesToBeSaved.size() > 100)
+					// {
+					// System.err.println("max");
+					// Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+					// }
+					// else if ( pagesToBeSaved.size() > 25)
+					// {
+					// System.err.println("normal");
+					// Thread.currentThread().setPriority(Thread.NORM_PRIORITY);
+					// }
+					// else
+					// {
+					// System.err.println("min");
+					// Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+					// }
 					Iterator it = pagesToBeSaved.entrySet().iterator();
 					while (it.hasNext())
 					{
@@ -573,8 +580,8 @@ public class FilePageStore implements IPageStore
 				}
 			}
 		}
-		
-		
+
+
 		/**
 		 * @param sessionId
 		 * @param key
@@ -619,20 +626,20 @@ public class FilePageStore implements IPageStore
 			if (log.isDebugEnabled())
 			{
 				log.debug("storing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
-						+ "] size: " + length + " for session " + key.sessionId + " took " + (t3 - t1)
-						+ " miliseconds to save");
+						+ "] size: " + length + " for session " + key.sessionId + " took "
+						+ (t3 - t1) + " miliseconds to save");
 			}
 			totalSavingTime += (t3 - t1);
 			saved++;
 			bytesSaved += length;
 		}
-		
+
 	}
-	
+
 	private class PageSerializingThread implements Runnable
 	{
 		private volatile boolean stop = false;
-		
+
 		private int serializedInThread = 0;
 
 		/**
@@ -640,7 +647,7 @@ public class FilePageStore implements IPageStore
 		 */
 		public void stop()
 		{
-			if ( log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug("Total time in serialization: " + totalSerializationTime);
 				log.debug("Total Pages serialized: " + serialized);
@@ -664,7 +671,7 @@ public class FilePageStore implements IPageStore
 						if (stop)
 							return;
 					}
-					
+
 					Iterator it = pagesToBeSerialized.entrySet().iterator();
 					outer : while (it.hasNext())
 					{
@@ -694,14 +701,16 @@ public class FilePageStore implements IPageStore
 								// no key found in the current list.
 								if (key == null)
 								{
-									// the list is removed now! 
-									// but it could be that a request add something to the list now.
-									// thats why a request has to check it again.
+									// the list is removed now!
+									// but it could be that a request add
+									// something to the list now.
+									// thats why a request has to check it
+									// again.
 									pagesToBeSerialized.remove(entry.getKey());
 									continue outer;
 								}
 							}
-							
+
 							byte[] pageBytes = serializePage(key, page);
 							serializedInThread++;
 							synchronized (sessionList)
