@@ -38,34 +38,18 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	/**
 	 * Constructor
 	 * 
-	 * @param model
+	 * @param object
 	 *            The model object, which may or may not implement IModel
 	 */
-	public CompoundPropertyModel(final Object model)
+	public CompoundPropertyModel(final Object object)
 	{
-		target = model;
+		this.target = object;
 	}
 
 	/**
 	 * @see wicket.model.IModel#getObject()
 	 */
 	public Object getObject()
-	{
-		if (target instanceof IModel)
-		{
-			return ((IModel)target).getObject();
-		}
-		return target;
-	}
-
-	/**
-	 * TODO shouldn't this method be removed?
-	 * and getObject should just return target?
-	 * now it is a bit strange. setObject assigns target
-	 * but getObject doesn't return directly the target...
-	 * @return
-	 */
-	public Object getTarget()
 	{
 		return target;
 	}
@@ -131,9 +115,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	 * @author ivaynberg
 	 */
 	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
-			implements
-				IWrapModel,
-				IComponentInheritedModel
+			implements  IWrapModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -166,14 +148,6 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 		{
 			return CompoundPropertyModel.this;
 		}
-
-		/**
-		 * @see wicket.model.IComponentInheritedModel#wrapOnInheritance(wicket.Component)
-		 */
-		public IWrapModel wrapOnInheritance(Component component)
-		{
-			return new AttachedCompoundPropertyModel(component);
-		};
 
 		/**
 		 * @see wicket.model.AbstractPropertyModel#detach()

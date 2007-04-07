@@ -54,11 +54,12 @@ public abstract class AbstractPropertyModel implements IModel
 
 	protected Object getTarget()
 	{
-		if (target instanceof IModel)
+		Object object = target;
+		while (object instanceof IModel)
 		{
-			return ((IModel)target).getObject();
+			object = ((IModel)object).getObject();
 		}
-		return target;
+		return object;
 	}
 
 	/**
@@ -116,6 +117,8 @@ public abstract class AbstractPropertyModel implements IModel
 		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
 		{
+			// TODO check, really do this?
+			// why not just set the target to the object?
 			if (target instanceof IModel)
 			{
 				((IModel)target).setObject(object);

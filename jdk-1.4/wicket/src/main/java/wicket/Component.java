@@ -2562,7 +2562,9 @@ public abstract class Component implements IClusterable
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			IModel model = current.getModel();
+			// Dont call the getModel() that could initialize many inbetween completely useless models. 
+			//IModel model = current.getModel();
+			IModel model = current.model;
 
 			if (model instanceof IWrapModel)
 			{
@@ -2767,6 +2769,15 @@ public abstract class Component implements IClusterable
 		// always detach children because components can be attached
 		// independently of their parents
 		detachChildren();
+		
+		// reset the model to null when the current model is a IWrapModel and
+		// the model that created it/wrapped in it is a IComponentInheritedModel
+		// The model will be created next time.
+		if (model instanceof IWrapModel && 
+				((IWrapModel)model).getWrappedModel() instanceof IComponentInheritedModel)
+		{
+			model = null;
+		}
 	}
 
 
