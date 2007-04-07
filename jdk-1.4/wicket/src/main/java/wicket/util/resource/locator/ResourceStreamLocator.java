@@ -120,15 +120,15 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 */
 	public IResourceStream locate(final Class clazz, final String path)
 	{
-		// First search it on the resource on the classpath
-		IResourceStream stream = locateByClassLoader(clazz, path);
+		// First try with the resource finder registered with the application (allows for markup reloading)
+		IResourceStream stream = locateByResourceFinder(clazz, path);
 		if (stream != null)
 		{
 			return stream;
 		}
 
-		// Than try the resource finder registered with the application
-		stream = locateByResourceFinder(clazz, path);
+		// Then search the resource on the classpath
+		stream = locateByClassLoader(clazz, path);
 		if (stream != null)
 		{
 			return stream;
