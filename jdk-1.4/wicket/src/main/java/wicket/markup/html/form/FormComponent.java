@@ -1163,23 +1163,23 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		 */
 		public String getMessage(String key)
 		{
-			final FormComponent fc = FormComponent.this;
+			final FormComponent formComponent = FormComponent.this;
 
 			// retrieve prefix that will be used to construct message keys
-			String prefix = fc.getValidatorKeyPrefix();
+			String prefix = formComponent.getValidatorKeyPrefix();
 			if (Strings.isEmpty(prefix))
 			{
 				prefix = "";
 			}
 
-			final Localizer localizer = fc.getLocalizer();
+			final Localizer localizer = formComponent.getLocalizer();
 
 			String resource = prefix + getId() + "." + key;
 
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
 			// return a default string like "[Warning: String ..."
-			String message = localizer.getString(resource, fc.getParent(), "");
+			String message = localizer.getString(resource, formComponent, "");
 
 			// If not found, than ...
 			if (Strings.isEmpty(message))
@@ -1188,7 +1188,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 				resource = prefix + key;
 
-				message = localizer.getString(resource, fc.getParent(), "");
+				message = localizer.getString(resource, formComponent, "");
 			}
 
 			// convert empty string to null in case our default value of "" was
