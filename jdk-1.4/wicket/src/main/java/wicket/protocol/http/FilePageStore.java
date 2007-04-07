@@ -422,7 +422,10 @@ public class FilePageStore implements IPageStore
 		return bytes;
 	}
 
-	private class SessionPageKey
+	/**
+	 * Key based on session id, page id, version numbers, etc
+	 */
+	private static class SessionPageKey
 	{
 		private final String sessionId;
 		private final int id;
