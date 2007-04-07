@@ -1175,11 +1175,13 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 			final Localizer localizer = formComponent.getLocalizer();
 
 			String resource = prefix + getId() + "." + key;
-
+			
+			// First use the parent for resolving so that form1.textfield1.RequiredValidator can be used.
+			
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
 			// return a default string like "[Warning: String ..."
-			String message = localizer.getString(resource, formComponent, "");
+			String message = localizer.getString(resource, formComponent.getParent(), "");
 
 			// If not found, than ...
 			if (Strings.isEmpty(message))
@@ -1188,7 +1190,29 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 				resource = prefix + key;
 
+				message = localizer.getString(resource, formComponent.getParent(), "");
+			}
+
+			if (Strings.isEmpty(message))
+			{
+				// If still empty then use default
+				
+				resource = prefix + getId() + "." + key;
+	
+				// Note: It is important that the default value of "" is provided
+				// to getString() not to throw a MissingResourceException or to
+				// return a default string like "[Warning: String ..."
 				message = localizer.getString(resource, formComponent, "");
+	
+				// If not found, than ...
+				if (Strings.isEmpty(message))
+				{
+					// Try a variation of the resource key
+	
+					resource = prefix + key;
+	
+					message = localizer.getString(resource, formComponent, "");
+				}
 			}
 
 			// convert empty string to null in case our default value of "" was
