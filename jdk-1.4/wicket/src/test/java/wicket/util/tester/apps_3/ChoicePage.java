@@ -62,10 +62,10 @@ public class ChoicePage extends WebPage
 	public boolean checkBox;
 
 	/** test CheckGroup initial value */
-	public final List initialCheckGroup = new ArrayList();
+	public List initialCheckGroup = new ArrayList();
 
 	/** test ListMultipleChoice initial values */
-	public final List initialListMultipleChoice = new ArrayList();
+	public List initialListMultipleChoice = new ArrayList();
 
 	/** test CheckBoxMultipleChoice initial values */
 	public List initialCheckBoxMultipleChoice = new ArrayList();

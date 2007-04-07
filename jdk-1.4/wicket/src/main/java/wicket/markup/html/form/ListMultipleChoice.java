@@ -283,9 +283,6 @@ public class ListMultipleChoice extends AbstractChoice
 		Collection selectedValues = (Collection)getModelObject();
 		if (selectedValues != null)
 		{
-			if (getModelObject() != selectedValues)
-				throw new WicketRuntimeException(
-						"Updating a ListMultipleChoice works by modifying the underlying model object in-place, so please make sure that getObject() always returns the same Collection instance!");
 			modelChanging();
 			selectedValues.clear();
 			selectedValues.addAll((Collection)getConvertedInput());
