@@ -87,7 +87,6 @@ public final class Settings
 			IResourceSettings,
 			ISecuritySettings,
 			ISessionSettings,
-			IAjaxSettings,
 			IFrameworkSettings,
 			IRequestLoggerSettings
 {

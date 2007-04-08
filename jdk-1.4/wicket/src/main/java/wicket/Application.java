@@ -47,7 +47,6 @@ import wicket.markup.resolver.WicketMessageResolver;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
 import wicket.session.ISessionStore;
-import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
 import wicket.settings.IExceptionSettings;
@@ -403,17 +402,6 @@ public abstract class Application
 		{
 			getResourceSettings().addResourceFolder(resourceFolder);
 		}
-	}
-
-	/**
-	 * @return Application's ajax related settings
-	 * @see IAjaxSettings
-	 * @since 1.2
-	 * @deprecated use {@link #getDebugSettings()} instead
-	 */
-	public IAjaxSettings getAjaxSettings()
-	{
-		return getSettings();
 	}
 
 	/**
