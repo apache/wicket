@@ -28,6 +28,7 @@ package wicket.model;
  * when detach is called on them.
  * 
  * @author jcompagner
+ * @author Igor Vaynberg (ivaynberg)
  * 
  * @see CompoundPropertyModel
  * @see AbstractPropertyModel
