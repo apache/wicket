@@ -53,18 +53,18 @@ public abstract class AbstractPropertyModel implements IChainingModel
 	}
 	
 	/**
-	 * @see wicket.model.IChainingModel#getChainingModel()
+	 * @see wicket.model.IChainingModel#getChainedModel()
 	 */
-	public IModel getChainingModel()
+	public IModel getChainedModel()
 	{
 		if (target instanceof IModel) return (IModel)target;
 		return null;
 	}
 	
 	/**
-	 * @see wicket.model.IChainingModel#setChainingModel(wicket.model.IModel)
+	 * @see wicket.model.IChainingModel#setChainedModel(wicket.model.IModel)
 	 */
-	public void setChainingModel(IModel model)
+	public void setChainedModel(IModel model)
 	{
 		target = model;
 	}
