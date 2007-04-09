@@ -880,8 +880,7 @@ public abstract class Component implements IClusterable
 	 * such as javascript or an xslt transform.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent
-	 * have been added to the page. This will be relaxed in 2.0 where the page
-	 * is available on construction.
+	 * have been added to the page.
 	 * 
 	 * @return markup id of the component
 	 */
@@ -890,7 +889,15 @@ public abstract class Component implements IClusterable
 		String markupId = (String)getMetaData(MARKUP_ID_KEY);
 		if (markupId == null)
 		{
-			markupId = getId() + getPage().getAutoIndex();
+			Page page = findPage();
+			if (page == null)
+			{
+				throw new WicketRuntimeException(
+						"This component is not (yet) coupled to a page. It has to be able "
+								+ "to find the page it is supposed to operate in before you can call "
+								+ "this method (Component#getMarkupId)");
+			}
+			markupId = getId() + page.getAutoIndex();
 			setMetaData(MARKUP_ID_KEY, markupId);
 		}
 		return markupId;
@@ -2562,8 +2569,9 @@ public abstract class Component implements IClusterable
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			// Dont call the getModel() that could initialize many inbetween completely useless models. 
-			//IModel model = current.getModel();
+			// Dont call the getModel() that could initialize many inbetween
+			// completely useless models.
+			// IModel model = current.getModel();
 			IModel model = current.model;
 
 			if (model instanceof IWrapModel)
@@ -2769,12 +2777,12 @@ public abstract class Component implements IClusterable
 		// always detach children because components can be attached
 		// independently of their parents
 		detachChildren();
-		
+
 		// reset the model to null when the current model is a IWrapModel and
 		// the model that created it/wrapped in it is a IComponentInheritedModel
 		// The model will be created next time.
-		if (model instanceof IWrapModel && 
-				((IWrapModel)model).getWrappedModel() instanceof IComponentInheritedModel)
+		if (model instanceof IWrapModel
+				&& ((IWrapModel)model).getWrappedModel() instanceof IComponentInheritedModel)
 		{
 			model = null;
 		}
@@ -3124,12 +3132,13 @@ public abstract class Component implements IClusterable
 	{
 		setFlag(FLAG_AUTO, auto);
 	}
-	
+
 	/**
-	 * @param model The model to wrap if need be
+	 * @param model
+	 *            The model to wrap if need be
 	 * @return The wrapped model
 	 */
-	protected final IModel wrap(final IModel model) 
+	protected final IModel wrap(final IModel model)
 	{
 		if (model instanceof IComponentAssignedModel)
 		{
@@ -3185,8 +3194,8 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * Finds the innermost IModel object for an IModel that might contain 
-	 * nested IModel(s).
+	 * Finds the innermost IModel object for an IModel that might contain nested
+	 * IModel(s).
 	 * 
 	 * @param model
 	 *            The model
