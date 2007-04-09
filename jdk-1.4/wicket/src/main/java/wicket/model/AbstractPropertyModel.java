@@ -31,7 +31,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel implements IModel
+public abstract class AbstractPropertyModel implements IChainingModel
 {
 	/** Any model object (which may or may not implement IModel) */
 	private Object target;
@@ -50,6 +50,23 @@ public abstract class AbstractPropertyModel implements IModel
 		}
 
 		this.target = modelObject;
+	}
+	
+	/**
+	 * @see wicket.model.IChainingModel#getChainingModel()
+	 */
+	public IModel getChainingModel()
+	{
+		if (target instanceof IModel) return (IModel)target;
+		return null;
+	}
+	
+	/**
+	 * @see wicket.model.IChainingModel#setChainingModel(wicket.model.IModel)
+	 */
+	public void setChainingModel(IModel model)
+	{
+		target = model;
 	}
 
 	protected Object getTarget()

@@ -23,13 +23,17 @@ import wicket.util.string.AppendingStringBuffer;
  * A simple compound model which uses the component's name as the property
  * expression to retrieve properties on the nested model object.
  * 
+ * CompoundPropertyModel is a chaining model so it will call get/setobject
+ * on the given object if the object is an instanceof IModel itself.
+ * 
  * @see wicket.model.IModel
  * @see wicket.model.Model
  * @see wicket.model.AbstractDetachableModel
+ * @see IChainingModel
  * 
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel implements IComponentInheritedModel
+public class CompoundPropertyModel implements IComponentInheritedModel, IChainingModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,6 +55,10 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	 */
 	public Object getObject()
 	{
+		if (target instanceof IModel)
+		{
+			return ((IModel)target).getObject();
+		}
 		return target;
 	}
 
@@ -59,7 +67,34 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	 */
 	public void setObject(Object object)
 	{
-		this.target = object;
+		if (target instanceof IModel)
+		{
+			((IModel)target).setObject(object); 
+		}
+		else
+		{
+			this.target = object;
+		}
+	}
+	
+	/**
+	 * @see wicket.model.IChainingModel#getChainingModel()
+	 */
+	public IModel getChainingModel()
+	{
+		if (target instanceof IModel)
+		{
+			return (IModel)target;
+		}
+		return null;
+	}
+	
+	/**
+	 * @see wicket.model.IChainingModel#setChainingModel(wicket.model.IModel)
+	 */
+	public void setChainingModel(IModel model)
+	{
+		target = model;
 	}
 
 	/**
@@ -67,7 +102,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel
 	 */
 	public void detach()
 	{
-		if (target != null && target instanceof IModel)
+		if (target instanceof IModel)
 		{
 			((IModel)target).detach();
 		}
