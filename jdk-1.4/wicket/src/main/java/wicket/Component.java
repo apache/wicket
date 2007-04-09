@@ -429,33 +429,83 @@ public abstract class Component implements IClusterable
 	 */
 	public static final Action RENDER = new Action(Action.RENDER);
 
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED1 = 0x0100;
+	/** True when a component is being auto-added */
+	private static final int FLAG_AUTO						= 0x0001;
+
+	/** Flag for escaping HTML in model strings */
+	private static final int FLAG_ESCAPE_MODEL_STRINGS		= 0x0002;
+
+	/** Flag for escaping HTML in model strings */
+	private static final int FLAG_INHERITABLE_MODEL			= 0x0004;
+
+	/** Versioning boolean */
+	private static final int FLAG_VERSIONED					= 0x0008;
+
+	/** Visibility boolean */
+	private static final int FLAG_VISIBLE					= 0x0010;
+
+	/** Render tag boolean */
+	private static final int FLAG_RENDER_BODY_ONLY			= 0x0020;
+
+	/** Ignore attribute modifiers */
+	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER	= 0x0040;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final int FLAG_ENABLED 					= 0x0080;
+
+	/** Boolean whether this component was rendered once for tracking changes. */
+	private static final int FLAG_IS_RENDERED_ONCE 			= 0x1000;
+
+	/**
+	 * Internal indicator of whether this component may be rendered given the
+	 * current context's authorization. It overrides the visible flag in case
+	 * this is false. Authorization is done before trying to render any
+	 * component (otherwise we would end up with a half rendered page in the
+	 * buffer)
+	 */
+	private static final int FLAG_IS_RENDER_ALLOWED 		= 0x2000;
+
+	/**
+	 * Whether or not the component should print out its markup id into the id
+	 * attribute
+	 */
+	private static final int FLAG_OUTPUT_MARKUP_ID 			= 0x4000;
+
+	/**
+	 * Ouput a placeholder tag if the component is not visible. This is useful
+	 * in ajax mode to go to visible(false) to visible(true) without the
+	 * overhead of repaiting a visible parent container
+	 */
+
+	private static final int FLAG_PLACEHOLDER				= 0x8000;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED2 = 0x0200;
+	protected static final int FLAG_RESERVED1				= 0x0100;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED3 = 0x0400;
+	protected static final int FLAG_RESERVED2				= 0x0200;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED4 = 0x0800;
+	protected static final int FLAG_RESERVED3				= 0x0400;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED5 = 0x10000;
+	protected static final int FLAG_RESERVED4				= 0x0800;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED6 = 0x20000;
+	protected static final int FLAG_RESERVED5				= 0x10000;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED7 = 0x40000;
+	protected static final int FLAG_RESERVED6				= 0x20000;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED8 = 0x80000;
+	protected static final int FLAG_RESERVED7				= 0x40000;
 
-	private static final int FLAG_ATTACHED = 0x20000000;
-	private static final int FLAG_ATTACHING = 0x40000000;
-	private static final int FLAG_DETACHING = 0x80000000;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED8				= 0x80000;
+
+	private static final int FLAG_ATTACHED					= 0x20000000;
+	private static final int FLAG_ATTACHING					= 0x40000000;
+	private static final int FLAG_DETACHING					= 0x80000000;
 
 
 	/** Basic model IModelComparator implementation for normal object models */
@@ -477,53 +527,6 @@ public abstract class Component implements IClusterable
 			return a.equals(b);
 		}
 	};
-
-	/** True when a component is being auto-added */
-	private static final int FLAG_AUTO = 0x0001;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final int FLAG_ENABLED = 0x0080;
-
-	/** Flag for escaping HTML in model strings */
-	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Ignore attribute modifiers */
-	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/**
-	 * Internal indicator of whether this component may be rendered given the
-	 * current context's authorization. It overrides the visible flag in case
-	 * this is false. Authorization is done before trying to render any
-	 * component (otherwise we would end up with a half rendered page in the
-	 * buffer)
-	 */
-	private static final int FLAG_IS_RENDER_ALLOWED = 0x2000;
-
-	/** Boolean whether this component was rendered once for tracking changes. */
-	private static final int FLAG_IS_RENDERED_ONCE = 0x1000;
-
-	/**
-	 * Whether or not the component should print out its markup id into the id
-	 * attribute
-	 */
-	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
-
-	/** Render tag boolean */
-	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
-
-
-	/** Versioning boolean */
-	private static final int FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final int FLAG_VISIBLE = 0x0010;
-
-	/**
-	 * Ouput a placeholder tag if the component is not visible. This is useful
-	 * in ajax mode to go to visible(false) to visible(true) without the
-	 * overhead of repaiting a visible parent container
-	 */
-	private static final int FLAG_PLACEHOLDER = 0x8000;
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Component.class);
@@ -2584,10 +2587,12 @@ public abstract class Component implements IClusterable
 				// we turn off versioning as we share the model with another
 				// component that is the owner of the model (that component
 				// has to decide whether to version or not
+				// TODO can we really do this?? Model shouldn't versioned but all other things?? (add/remove)
 				setVersioned(false);
 
 				// return the shared inherited
 				model = ((IComponentInheritedModel)model).wrapOnInheritance(this);
+				setFlag(FLAG_INHERITABLE_MODEL,true);
 				return model;
 			}
 		}
@@ -2781,10 +2786,10 @@ public abstract class Component implements IClusterable
 		// reset the model to null when the current model is a IWrapModel and
 		// the model that created it/wrapped in it is a IComponentInheritedModel
 		// The model will be created next time.
-		if (model instanceof IWrapModel
-				&& ((IWrapModel)model).getWrappedModel() instanceof IComponentInheritedModel)
+		if (getFlag(FLAG_INHERITABLE_MODEL))
 		{
 			model = null;
+			setFlag(FLAG_INHERITABLE_MODEL,false);
 		}
 	}
 
