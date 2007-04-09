@@ -72,9 +72,6 @@ public class AjaxEditableLabel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	/** temporary model to lazily initialize the label and editor. */
-	private transient IModel tempModel;
-
 	/** editor component. */
 	private FormComponent editor;
 
@@ -166,8 +163,6 @@ public class AjaxEditableLabel extends Panel
 	{
 		super(id);
 		setOutputMarkupId(true);
-		IModel model = getParentModel();
-		this.tempModel = model;
 	}
 
 	/**
@@ -180,11 +175,10 @@ public class AjaxEditableLabel extends Panel
 	{
 		super(id, model);
 		setOutputMarkupId(true);
-		if (model == null)
+		if (model != null)
 		{
-			model = getParentModel();
+			initLabelAndEditor(model);
 		}
-		this.tempModel = model;
 	}
 
 	/**
@@ -311,7 +305,7 @@ public class AjaxEditableLabel extends Panel
 	{
 		if (editor == null)
 		{
-			initLabelAndEditor();
+			initLabelAndEditor(getParentModel());
 		}
 		return editor;
 	}
@@ -334,9 +328,9 @@ public class AjaxEditableLabel extends Panel
 		super.onAttach();
 		// if tempModel - set on construction - is not-null, the label and
 		// editor components have not yet been set.
-		if (tempModel != null)
+		if (editor == null)
 		{
-			initLabelAndEditor();
+			initLabelAndEditor(getParentModel());
 		}
 	}
 
@@ -414,14 +408,14 @@ public class AjaxEditableLabel extends Panel
 	/**
 	 * Lazy initialization of the label and editor components and set tempModel
 	 * to null.
+	 * @param model The model for the label and editor
 	 */
-	private void initLabelAndEditor()
+	private void initLabelAndEditor(IModel model)
 	{
-		editor = newEditor(this, "editor", tempModel);
-		label = newLabel(this, "label", tempModel);
+		editor = newEditor(this, "editor", model);
+		label = newLabel(this, "label", model);
 		add(label);
 		add(editor);
-		this.tempModel = null;
 	}
 	
 	/**
