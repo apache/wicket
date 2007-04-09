@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.	See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.	 You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<assembly>
+	<id>kitchensink</id>
+	<formats>
+		<format>tar.gz</format>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${basedir}</directory>
+			<outputDirectory>src</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<excludes>
+				<exclude>**/wicket-sandbox/**</exclude>
+				<exclude>**/wicket/target/**</exclude>
+				<exclude>**/wicket/target</exclude>
+				<exclude>**/wicket-*/target/**</exclude>
+				<exclude>**/wicket-*/target</exclude>
+				<exclude>**/*wicket*gz</exclude>
+				<exclude>**/*wicket*zip</exclude>
+				<exclude>**/archive-tmp</exclude>
+				<exclude>**/target/**/wicket*.pom*</exclude>
+				<exclude>target</exclude>
+				<exclude>target/**</exclude>
+				<exclude>target/**/*</exclude>
+				<exclude>**/sessions</exclude>
+				<exclude>**/sessions/*</exclude>
+				<exclude>${project.build.directory}</exclude>
+				<exclude>**/maven-shared-archive-resources</exclude>
+				<exclude>${basedir}/target</exclude>
+				<exclude>${basedir}/target/**</exclude>
+				<exclude>${basedir}/target/**/*</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>${basedir}</directory>
+			<outputDirectory></outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<includes>
+				<include>LICENSE.txt</include>
+				<include>NOTICE.txt</include>
+				<include>README.txt</include>
+				<include>DISCLAIMER.txt</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${basedir}/jdk-1.4/wicket/licenses</directory>
+			<outputDirectory>licenses</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+	</fileSets>
+	<moduleSets>
+		<moduleSet>
+			<includes>
+				<include>org.apache.wicket:wicket</include>
+				<include>org.apache.wicket:wicket-auth-roles</include>
+				<include>org.apache.wicket:wicket-datetime</include>
+				<include>org.apache.wicket:wicket-examples</include>
+				<include>org.apache.wicket:wicket-extensions</include>
+				<include>org.apache.wicket:wicket-jmx</include>
+				<include>org.apache.wicket:wicket-objectsizeof-agent</include>
+				<include>org.apache.wicket:wicket-spring</include>
+				<include>org.apache.wicket:wicket-spring-annot</include>
+			</includes>
+			<binaries>
+				<outputDirectory>lib</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+	</moduleSets>
+</assembly>
