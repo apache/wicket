@@ -44,9 +44,6 @@ public class MyMockPage extends WebPage
 		drop1 = new DropDownChoice("drop1", Arrays.asList(choices));
 		drop2 = new DropDownChoice("drop2", Arrays.asList(choices));
 
-		drop1.setNullValid(true);
-		drop2.setNullValid(true);
-
 		form.add(drop1);
 		form.add(drop2);
 	}

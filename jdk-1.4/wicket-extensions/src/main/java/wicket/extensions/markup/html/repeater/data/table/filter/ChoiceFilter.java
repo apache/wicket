@@ -103,7 +103,6 @@ public class ChoiceFilter extends AbstractFilter
 		super(id, form);
 
 		choice = new DropDownChoice("filter", model, choices, renderer);
-		choice.setNullValid(true);
 		
 		if (autoSubmit)
 		{

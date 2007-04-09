@@ -146,10 +146,11 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * 
 	 * @return <code>true</code> when the <code>null</code> value is
 	 *         allowed.
+	 * @deprecated use isRequired (note the inverse logic)
 	 */
-	public boolean isNullValid()
+	public final boolean isNullValid()
 	{
-		return nullValid;
+		return !isRequired();
 	}
 
 	/**
@@ -158,11 +159,11 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * @param nullValid
 	 *            whether null is a valid value
 	 * @return this for chaining
+	 * @deprecated use setRequired (note the inverse logic)
 	 */
-	public AbstractSingleSelectChoice setNullValid(boolean nullValid)
+	public final AbstractSingleSelectChoice setNullValid(boolean nullValid)
 	{
-		this.nullValid = nullValid;
-		return this;
+		return (AbstractSingleSelectChoice)setRequired(!nullValid);
 	}
 
 	/**
@@ -201,7 +202,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	protected CharSequence getDefaultChoice(final Object selected)
 	{
 		// Is null a valid selection value?
-		if (isNullValid())
+		if (!isRequired())
 		{
 			// Null is valid, so look up the value for it
 			final String option = getLocalizer().getString("nullValid", this, "");
