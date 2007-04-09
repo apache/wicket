@@ -189,6 +189,20 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	}
 
 	/**
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	public final void setUp() 
+	{
+		// setup the base directory for when running inside maven (building a release
+		// comes to mind).
+		String property = System.getProperty("basedir");
+		if(!Strings.isEmpty(property))
+		{
+			baseDirectory = new File(property).getAbsoluteFile();
+		}
+	}
+	/**
 	 * Test all the files in the project which has an associated
 	 * {@link ILicenseHeaderHandler}.
 	 */
