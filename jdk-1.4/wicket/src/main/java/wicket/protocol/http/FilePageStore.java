@@ -336,7 +336,9 @@ public class FilePageStore implements IPageStore
 		 */
 		public int hashCode()
 		{
-			return sessionId.hashCode() + id + versionNumber;
+			// TODO with Java 5, replace by .valueOf usage
+			return Objects.hashCode(new Object[] { new Integer(id), new Integer(versionNumber),
+					new Integer(ajaxVersionNumber), pageMap, sessionId });
 		}
 
 		/**

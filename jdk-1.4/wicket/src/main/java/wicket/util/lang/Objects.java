@@ -1183,6 +1183,29 @@ public final class Objects
 	}
 
 	/**
+	 * returns hashcode of the objects by calling obj.hashcode(). safe to use
+	 * when obj is null.
+	 * 
+	 * @param obj
+	 * @return hashcode of the object or 0 if obj is null
+	 */
+	// TODO when on Java 5, we can use Object... obj
+	public static int hashCode(final Object[] obj)
+	{
+		if (obj == null || obj.length == 0)
+		{
+			return 0;
+		}
+		int result = 37;
+		int len = obj.length;
+		for (int i = obj.length - 1; i > -1; i--)
+		{
+			result = 37 * result + (obj[i] != null ? obj[i].hashCode() : 0);
+		}
+		return result;
+	}
+
+	/**
 	 * Evaluates the given object as a String and trims it if the trim flag is
 	 * true.
 	 * 
