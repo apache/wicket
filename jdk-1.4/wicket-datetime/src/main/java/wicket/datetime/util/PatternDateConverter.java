@@ -44,7 +44,8 @@ import wicket.datetime.markup.html.form.DateTextField;
  * 
  * @author eelcohillenius
  */
-public class PatternDateConverter extends DateConverter {
+public class PatternDateConverter extends DateConverter
+{
 
 	private static final long serialVersionUID = 1L;
 
@@ -72,11 +73,12 @@ public class PatternDateConverter extends DateConverter {
 	 * @throws IllegalArgumentException
 	 *             in case the date pattern is null
 	 */
-	public PatternDateConverter(String datePattern,
-			boolean applyTimeZoneDifference) {
+	public PatternDateConverter(String datePattern, boolean applyTimeZoneDifference)
+	{
 
 		super(applyTimeZoneDifference);
-		if (datePattern == null) {
+		if (datePattern == null)
+		{
 			throw new IllegalArgumentException("datePattern must be not null");
 		}
 		this.datePattern = datePattern;
@@ -87,15 +89,17 @@ public class PatternDateConverter extends DateConverter {
 	 * 
 	 * @return datePattern
 	 */
-	public final String getDatePattern() {
+	public final String getDatePattern()
+	{
 		return datePattern;
 	}
 
 	/**
 	 * @return formatter The formatter for the current conversion
 	 */
-	protected DateTimeFormatter getFormat() {
-		return DateTimeFormat.forPattern(datePattern).withLocale(
-				Session.get().getLocale());
+	protected DateTimeFormatter getFormat()
+	{
+		return DateTimeFormat.forPattern(datePattern).withLocale(Session.get().getLocale())
+				.withPivotYear(2000);
 	}
 }

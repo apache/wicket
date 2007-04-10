@@ -40,7 +40,8 @@ import wicket.datetime.markup.html.form.DateTextField;
  * 
  * @author eelcohillenius
  */
-public class StyleDateConverter extends DateConverter {
+public class StyleDateConverter extends DateConverter
+{
 
 	private static final long serialVersionUID = 1L;
 
@@ -68,7 +69,8 @@ public class StyleDateConverter extends DateConverter {
 	 *            whether to apply the difference in time zones between client
 	 *            and server
 	 */
-	public StyleDateConverter(boolean applyTimeZoneDifference) {
+	public StyleDateConverter(boolean applyTimeZoneDifference)
+	{
 		this("S-", applyTimeZoneDifference);
 	}
 
@@ -96,9 +98,11 @@ public class StyleDateConverter extends DateConverter {
 	 * @throws IllegalArgumentException
 	 *             in case dateStyle is null
 	 */
-	public StyleDateConverter(String dateStyle, boolean applyTimeZoneDifference) {
+	public StyleDateConverter(String dateStyle, boolean applyTimeZoneDifference)
+	{
 		super(applyTimeZoneDifference);
-		if (dateStyle == null) {
+		if (dateStyle == null)
+		{
 			throw new IllegalArgumentException("dateStyle must be not null");
 		}
 		this.dateStyle = dateStyle;
@@ -109,22 +113,17 @@ public class StyleDateConverter extends DateConverter {
 	 * 
 	 * @return datePattern
 	 */
-	public final String getDatePattern() {
-		String str = DateTimeFormat.patternForStyle(dateStyle, Session.get()
-				.getLocale());
-		// a bit of a hack, but yy shouldn't be used then the datepicker will make from 1/1/07 -> 1/1/1907
-		if (str.indexOf("yyy") == -1)
-		{
-			str = str.replaceAll("yy", "yyyy");
-		}
-		return str;
+	public final String getDatePattern()
+	{
+		return DateTimeFormat.patternForStyle(dateStyle, Session.get().getLocale());
 	}
 
 	/**
 	 * @return formatter The formatter for the current conversion
 	 */
-	protected DateTimeFormatter getFormat() {
-		DateTimeFormatter dtf = DateTimeFormat.forPattern(getDatePattern());
+	protected DateTimeFormatter getFormat()
+	{
+		DateTimeFormatter dtf = DateTimeFormat.forPattern(getDatePattern()).withPivotYear(2000);
 		return dtf;
 	}
 }
