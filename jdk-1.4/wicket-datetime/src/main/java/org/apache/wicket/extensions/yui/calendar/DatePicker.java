@@ -130,7 +130,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		StringBuffer buffer = new StringBuffer();
 		// initialize org.apache.wicket namespace and register the init function
 		// for the YUI widget
-		buffer.append("YAHOO.namespace(\"org.apache.wicket\");\nfunction init");
+		buffer.append("YAHOO.namespace(\"wicket\");\nfunction init");
 		buffer.append(javascriptId);
 		buffer.append("() {\n");
 
