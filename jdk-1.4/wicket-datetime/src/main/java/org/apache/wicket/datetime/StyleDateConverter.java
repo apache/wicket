@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.datetime.util;
+package org.apache.wicket.datetime;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import wicket.Session;
-import wicket.datetime.markup.html.form.DateTextField;
 
 /**
  * Date converter that uses Joda Time and can be configured to take the time

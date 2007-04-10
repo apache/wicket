@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.yui.calendar;
+package org.apache.wicket.extensions.yui.calendar;
 
 import java.util.Date;
 
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.joda.time.MutableDateTime;
 
-import wicket.datetime.markup.html.form.DateTextField;
-import wicket.markup.html.form.FormComponentPanel;
-import wicket.model.IModel;
-import wicket.model.PropertyModel;
 
 /**
  * Works on a {@link java.util.Date} object. Displays a date field and a
@@ -80,7 +80,7 @@ public class DateField extends FormComponentPanel {
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	public void updateModel() {
 
@@ -106,7 +106,7 @@ public class DateField extends FormComponentPanel {
 	}
 
 	/**
-	 * @see wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onAttach()
 	 */
 	protected void onAttach() {
 

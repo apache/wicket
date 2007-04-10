@@ -14,21 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.datetime.util;
+package org.apache.wicket.datetime;
 
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.util.convert.IConverter;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormatter;
 
-import wicket.Session;
-import wicket.protocol.http.request.WebClientInfo;
-import wicket.request.ClientInfo;
-import wicket.util.convert.IConverter;
 
 /**
  * Base class for Joda Time based date converters. It contains the logic to
@@ -69,7 +69,7 @@ public abstract class DateConverter implements IConverter
 	}
 
 	/**
-	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 	 *      java.util.Locale)
 	 */
 	public Object convertToObject(String value, Locale locale)
@@ -100,7 +100,7 @@ public abstract class DateConverter implements IConverter
 	}
 
 	/**
-	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 	 *      java.util.Locale)
 	 */
 	public String convertToString(Object value, Locale locale)

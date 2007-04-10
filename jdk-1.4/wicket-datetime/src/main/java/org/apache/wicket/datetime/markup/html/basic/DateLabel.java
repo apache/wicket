@@ -14,22 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.datetime.markup.html.basic;
+package org.apache.wicket.datetime.markup.html.basic;
 
 import java.text.SimpleDateFormat;
 
+import org.apache.wicket.datetime.DateConverter;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.StyleDateConverter;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.IConverter;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
-import wicket.datetime.util.DateConverter;
-import wicket.datetime.util.PatternDateConverter;
-import wicket.datetime.util.StyleDateConverter;
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
-import wicket.markup.html.basic.Label;
-import wicket.model.IModel;
-import wicket.util.convert.IConverter;
 
 /**
  * A label that is mapped to a <code>java.util.Date</code> object and that
@@ -65,7 +65,7 @@ public class DateLabel extends Label
 	 *            The pattern to use. Must be not null. See
 	 *            {@link SimpleDateFormat} for available patterns.
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel forDatePattern(String id, IModel model, String datePattern)
 	{
@@ -81,7 +81,7 @@ public class DateLabel extends Label
 	 *            The pattern to use. Must be not null. See
 	 *            {@link SimpleDateFormat} for available patterns.
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel forDatePattern(String id, String datePattern)
 	{
@@ -100,7 +100,7 @@ public class DateLabel extends Label
 	 *            characters from the set {"S", "M", "L", "F", "-"}. Must be not
 	 *            null. See {@link DateTimeFormat#forStyle(String)} for options.
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel forDateStyle(String id, IModel model, String dateStyle)
 	{
@@ -117,7 +117,7 @@ public class DateLabel extends Label
 	 *            characters from the set {"S", "M", "L", "F", "-"}. Must be not
 	 *            null. See {@link DateTimeFormat#forStyle(String)} for options.
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel forDateStyle(String id, String dateStyle)
 	{
@@ -130,7 +130,7 @@ public class DateLabel extends Label
 	 * @param id
 	 *            The id of the text field
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel forShortStyle(String id)
 	{
@@ -145,7 +145,7 @@ public class DateLabel extends Label
 	 * @param model
 	 *            The model
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel forShortStyle(String id, IModel model)
 	{
@@ -160,7 +160,7 @@ public class DateLabel extends Label
 	 * @param converter
 	 *            the date converter
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel withConverter(String id, DateConverter converter)
 	{
@@ -177,7 +177,7 @@ public class DateLabel extends Label
 	 * @param converter
 	 *            the date converter
 	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	public static DateLabel withConverter(String id, IModel model, DateConverter converter)
 	{

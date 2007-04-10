@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.yui.calendar;
+package org.apache.wicket.extensions.yui.calendar;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,12 +23,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
-import wicket.behavior.HeaderContributor;
-import wicket.behavior.StringHeaderContributor;
-import wicket.extensions.yui.YuiLib;
-import wicket.markup.html.WebComponent;
-import wicket.model.LoadableDetachableModel;
-import wicket.util.string.JavascriptUtils;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.behavior.StringHeaderContributor;
+import org.apache.wicket.extensions.yui.YuiLib;
+import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.util.string.JavascriptUtils;
+
 
 /**
  * Abstract calendar component based on the YUI (Yahoo User Interface library)
@@ -122,9 +123,9 @@ public abstract class AbstractCalendar extends WebComponent
 				String javascriptWidgetId = getJavascriptWidgetId();
 				StringBuffer b = new StringBuffer();
 				b.append(JavascriptUtils.SCRIPT_OPEN_TAG);
-				// initialize wicket namespace and register the init function
+				// initialize org.apache.wicket namespace and register the init function
 				// for the YUI widget
-				b.append("YAHOO.namespace(\"wicket\");\nfunction init");
+				b.append("YAHOO.namespace(\"org.apache.wicket\");\nfunction init");
 				b.append(javascriptId);
 				b.append("() {\n");
 

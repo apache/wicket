@@ -14,27 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.yui.calendar;
+package org.apache.wicket.extensions.yui.calendar;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.util.lang.EnumeratedType;
+import org.apache.wicket.validation.validator.NumberValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
 
-import wicket.Session;
-import wicket.datetime.markup.html.form.DateTextField;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.FormComponentPanel;
-import wicket.markup.html.form.TextField;
-import wicket.model.IModel;
-import wicket.model.PropertyModel;
-import wicket.protocol.http.request.WebClientInfo;
-import wicket.request.ClientInfo;
-import wicket.util.lang.EnumeratedType;
-import wicket.validation.validator.NumberValidator;
 
 /**
  * Works on a {@link java.util.Date} object. Displays a date field and a date
@@ -185,7 +185,7 @@ public class DateTimeField extends FormComponentPanel {
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	public void updateModel() {
 
@@ -260,7 +260,7 @@ public class DateTimeField extends FormComponentPanel {
 	}
 
 	/**
-	 * @see wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onAttach()
 	 */
 	protected void onAttach() {
 

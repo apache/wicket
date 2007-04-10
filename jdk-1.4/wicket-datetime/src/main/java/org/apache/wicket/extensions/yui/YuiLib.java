@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.yui;
+package org.apache.wicket.extensions.yui;
 
-import wicket.IClusterable;
+import org.apache.wicket.IClusterable;
 
 /**
  * Just a trick to serve as a reference for YUI includes.

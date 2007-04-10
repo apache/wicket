@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.license;
+package org.apache.wicket.util.license;
+
+import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
 /**
  * Test that the license headers are in place in this project. The tests are run
@@ -36,17 +38,17 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 		 * YUI lib. See NOTICE
 		 */
 		cssIgnore = new String[] { 
-				"src/main/java/wicket/extensions/yui/calendar/assets/calendar.css" 
+				"src/main/java/org.apache.wicket/extensions/yui/calendar/assets/calendar.css" 
 		};
 		
 		/*
 		 * YUI lib. See NOTICE
 		 */
 		javaScriptIgnore = new String[] {
-				"src/main/java/wicket/extensions/yui/yahoo.js",
-				"src/main/java/wicket/extensions/yui/event.js",
-				"src/main/java/wicket/extensions/yui/dom.js",
-				"src/main/java/wicket/extensions/yui/calendar/calendar.js" 
+				"src/main/java/org.apache.wicket/extensions/yui/yahoo.js",
+				"src/main/java/org.apache.wicket/extensions/yui/event.js",
+				"src/main/java/org.apache.wicket/extensions/yui/dom.js",
+				"src/main/java/org.apache.wicket/extensions/yui/calendar/calendar.js" 
 		};
 	}
 }

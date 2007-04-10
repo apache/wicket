@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.extensions.yui.calendar;
+package org.apache.wicket.extensions.yui.calendar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,25 +23,25 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.ResourceReference;
+import org.apache.wicket.Response;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.extensions.yui.YuiLib;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.markup.html.resources.CompressedResourceReference;
+import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.converters.DateConverter;
+import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.Strings;
 import org.joda.time.DateTime;
 
-import wicket.Component;
-import wicket.RequestCycle;
-import wicket.ResourceReference;
-import wicket.Response;
-import wicket.WicketRuntimeException;
-import wicket.behavior.AbstractBehavior;
-import wicket.datetime.markup.html.form.DateTextField;
-import wicket.extensions.yui.YuiLib;
-import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
-import wicket.markup.html.resources.CompressedResourceReference;
-import wicket.markup.html.resources.JavascriptResourceReference;
-import wicket.util.convert.IConverter;
-import wicket.util.convert.converters.DateConverter;
-import wicket.util.string.JavascriptUtils;
-import wicket.util.string.Strings;
 
 /**
  * Pops up a YUI calendar component so that the user can select a date. On
@@ -72,7 +72,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * @see wicket.behavior.AbstractBehavior#bind(wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
 	 */
 	public void bind(Component component)
 	{
@@ -82,7 +82,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
 	public void onRendered(Component component)
 	{
@@ -105,7 +105,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.markup.html.IHeaderResponse)
+	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
@@ -128,9 +128,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		String javascriptWidgetId = "YAHOO.wicket." + getCalendarJavascriptId();
 
 		StringBuffer buffer = new StringBuffer();
-		// initialize wicket namespace and register the init function
+		// initialize org.apache.wicket namespace and register the init function
 		// for the YUI widget
-		buffer.append("YAHOO.namespace(\"wicket\");\nfunction init");
+		buffer.append("YAHOO.namespace(\"org.apache.wicket\");\nfunction init");
 		buffer.append(javascriptId);
 		buffer.append("() {\n");
 
