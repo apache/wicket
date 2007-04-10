@@ -247,14 +247,17 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		return "";
 	}
 
-
-	/*
+	/**
 	 * Gets whether the given value represents the current selection.
 	 * 
 	 * 
-	 * aram object The object to check @param index The index of the object in
-	 * the collection @param selected The current selected id value @return
-	 * Whether the given value represents the current selection
+	 * aram object The object to check
+	 * 
+	 * @param index
+	 *            The index of the object in the collection
+	 * @param selected
+	 *            The current selected id value
+	 * @return Whether the given value represents the current selection
 	 */
 	protected boolean isSelected(final Object object, int index, String selected)
 	{
