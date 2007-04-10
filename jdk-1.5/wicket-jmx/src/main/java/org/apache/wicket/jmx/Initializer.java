@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -31,18 +31,18 @@ import javax.management.ObjectName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.IDestroyer;
+import org.apache.wicket.IInitializer;
+import org.apache.wicket.WicketRuntimeException;
 
-import wicket.IDestroyer;
-import wicket.IInitializer;
-import wicket.WicketRuntimeException;
 
 /**
  * Registers Wicket's MBeans.
  * <p>
  * Users can specify the MBeanServer implementation in which to register the
- * MBeans by setting the <code>wicket.mbean.server.agentid</code> property to
+ * MBeans by setting the <code>org.apache.wicket.mbean.server.agentid</code> property to
  * the agent id of the MBeanServer implementation they want, or by setting
- * <code>wicket.mbean.server.class</code> to the mbean server class they want
+ * <code>org.apache.wicket.mbean.server.class</code> to the mbean server class they want
  * (if both are provided, and the agent id returns a server, that one is used).
  * This initializer will log an error when no mbean server with the provided
  * agent id can be found, and will then fall back to use the platform mbean
@@ -65,9 +65,9 @@ public class Initializer implements IInitializer, IDestroyer
 	private List<ObjectName> registered = new ArrayList<ObjectName>();
 
 	/**
-	 * @see wicket.IDestroyer#destroy(wicket.Application)
+	 * @see org.apache.wicket.IDestroyer#destroy(org.apache.wicket.Application)
 	 */
-	public void destroy(wicket.Application application)
+	public void destroy(org.apache.wicket.Application application)
 	{
 		for (ObjectName objectName : registered)
 		{
@@ -87,16 +87,16 @@ public class Initializer implements IInitializer, IDestroyer
 	}
 
 	/**
-	 * @see wicket.IInitializer#init(wicket.Application)
+	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
 	 */
 	@SuppressWarnings("unchecked")
-	public void init(wicket.Application application)
+	public void init(org.apache.wicket.Application application)
 	{
 		try
 		{
 			String name = application.getName();
 
-			String agentId = System.getProperty("wicket.mbean.server.agentid");
+			String agentId = System.getProperty("org.apache.wicket.mbean.server.agentid");
 			if (agentId != null)
 			{
 				ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
@@ -112,7 +112,7 @@ public class Initializer implements IInitializer, IDestroyer
 			}
 			if (mbeanServer == null)
 			{
-				String impl = System.getProperty("wicket.mbean.server.class");
+				String impl = System.getProperty("org.apache.wicket.mbean.server.class");
 				if (impl != null)
 				{
 					ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
@@ -145,7 +145,7 @@ public class Initializer implements IInitializer, IDestroyer
 			// register top level application object, but first check whether
 			// multiple instances of the same application (name) are running and
 			// if so adjust the name
-			String domain = "wicket.app." + name;
+			String domain = "org.apache.wicket.app." + name;
 			ObjectName appBeanName = new ObjectName(domain + ":type=Application");
 			String tempDomain = domain;
 			int i = 0;

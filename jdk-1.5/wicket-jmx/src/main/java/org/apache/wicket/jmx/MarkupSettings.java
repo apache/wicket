@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 
 /**
@@ -24,20 +24,20 @@ package wicket.jmx;
  */
 public class MarkupSettings implements MarkupSettingsMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public MarkupSettings(wicket.Application application)
+	public MarkupSettings(org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getAutomaticLinking()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getAutomaticLinking()
 	 */
 	public boolean getAutomaticLinking()
 	{
@@ -45,7 +45,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getCompressWhitespace()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getCompressWhitespace()
 	 */
 	public boolean getCompressWhitespace()
 	{
@@ -53,7 +53,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getDefaultAfterDisabledLink()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultAfterDisabledLink()
 	 */
 	public String getDefaultAfterDisabledLink()
 	{
@@ -61,7 +61,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getDefaultBeforeDisabledLink()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultBeforeDisabledLink()
 	 */
 	public String getDefaultBeforeDisabledLink()
 	{
@@ -69,7 +69,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getDefaultMarkupEncoding()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getDefaultMarkupEncoding()
 	 */
 	public String getDefaultMarkupEncoding()
 	{
@@ -77,7 +77,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getMarkupParserFactory()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getMarkupParserFactory()
 	 */
 	public String getMarkupParserFactory()
 	{
@@ -85,7 +85,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getStripComments()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getStripComments()
 	 */
 	public boolean getStripComments()
 	{
@@ -93,7 +93,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getStripWicketTags()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getStripWicketTags()
 	 */
 	public boolean getStripWicketTags()
 	{
@@ -101,7 +101,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#getStripXmlDeclarationFromOutput()
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#getStripXmlDeclarationFromOutput()
 	 */
 	public boolean getStripXmlDeclarationFromOutput()
 	{
@@ -109,7 +109,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setAutomaticLinking(boolean)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setAutomaticLinking(boolean)
 	 */
 	public void setAutomaticLinking(boolean automaticLinking)
 	{
@@ -117,7 +117,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setCompressWhitespace(boolean)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setCompressWhitespace(boolean)
 	 */
 	public void setCompressWhitespace(boolean compressWhitespace)
 	{
@@ -125,7 +125,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setDefaultAfterDisabledLink(java.lang.String)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultAfterDisabledLink(java.lang.String)
 	 */
 	public void setDefaultAfterDisabledLink(String defaultAfterDisabledLink)
 	{
@@ -133,7 +133,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setDefaultBeforeDisabledLink(java.lang.String)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultBeforeDisabledLink(java.lang.String)
 	 */
 	public void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink)
 	{
@@ -141,7 +141,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setDefaultMarkupEncoding(java.lang.String)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setDefaultMarkupEncoding(java.lang.String)
 	 */
 	public void setDefaultMarkupEncoding(String encoding)
 	{
@@ -149,7 +149,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setStripComments(boolean)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripComments(boolean)
 	 */
 	public void setStripComments(boolean stripComments)
 	{
@@ -157,7 +157,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setStripWicketTags(boolean)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripWicketTags(boolean)
 	 */
 	public void setStripWicketTags(boolean stripWicketTags)
 	{
@@ -165,7 +165,7 @@ public class MarkupSettings implements MarkupSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.MarkupSettingsMBean#setStripXmlDeclarationFromOutput(boolean)
+	 * @see org.apache.wicket.jmx.MarkupSettingsMBean#setStripXmlDeclarationFromOutput(boolean)
 	 */
 	public void setStripXmlDeclarationFromOutput(boolean strip)
 	{

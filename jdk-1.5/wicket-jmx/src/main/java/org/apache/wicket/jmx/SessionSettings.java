@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 /**
  * Exposes Application related functionality for JMX.
@@ -23,20 +23,20 @@ package wicket.jmx;
  */
 public class SessionSettings implements SessionSettingsMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public SessionSettings(wicket.Application application)
+	public SessionSettings(org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.SessionSettingsMBean#getMaxPageMaps()
+	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getMaxPageMaps()
 	 */
 	public int getMaxPageMaps()
 	{
@@ -44,7 +44,7 @@ public class SessionSettings implements SessionSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.SessionSettingsMBean#getPageFactory()
+	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getPageFactory()
 	 */
 	public String getPageFactory()
 	{
@@ -52,7 +52,7 @@ public class SessionSettings implements SessionSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.SessionSettingsMBean#getPageMapEvictionStrategy()
+	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getPageMapEvictionStrategy()
 	 */
 	public String getPageMapEvictionStrategy()
 	{
@@ -60,7 +60,7 @@ public class SessionSettings implements SessionSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.SessionSettingsMBean#getSessionStore()
+	 * @see org.apache.wicket.jmx.SessionSettingsMBean#getSessionStore()
 	 */
 	public String getSessionStore()
 	{
@@ -68,7 +68,7 @@ public class SessionSettings implements SessionSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.SessionSettingsMBean#setMaxPageMaps(int)
+	 * @see org.apache.wicket.jmx.SessionSettingsMBean#setMaxPageMaps(int)
 	 */
 	public void setMaxPageMaps(int maxPageMaps)
 	{

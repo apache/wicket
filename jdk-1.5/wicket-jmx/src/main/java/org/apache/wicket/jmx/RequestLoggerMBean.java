@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 import java.io.IOException;
 
-import wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebApplication;
+
 
 /**
  * Interface for exposing the request logger.

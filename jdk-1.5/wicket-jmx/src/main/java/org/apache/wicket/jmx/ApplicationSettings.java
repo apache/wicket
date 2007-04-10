@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
-import wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * Exposes Application related functionality for JMX.
@@ -25,20 +25,20 @@ import wicket.util.lang.Classes;
  */
 public class ApplicationSettings implements ApplicationSettingsMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public ApplicationSettings(wicket.Application application)
+	public ApplicationSettings(org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationSettingsMBean#getAccessDeniedPage()
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getAccessDeniedPage()
 	 */
 	public String getAccessDeniedPage()
 	{
@@ -46,7 +46,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationSettingsMBean#getClassResolver()
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getClassResolver()
 	 */
 	public String getClassResolver()
 	{
@@ -54,7 +54,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationSettingsMBean#getContextPath()
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getContextPath()
 	 */
 	public String getContextPath()
 	{
@@ -62,7 +62,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationSettingsMBean#getConverterFactory()
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getConverterFactory()
 	 */
 	public String getConverterLocatorFactory()
 	{
@@ -70,7 +70,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationSettingsMBean#getInternalErrorPage()
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getInternalErrorPage()
 	 */
 	public String getInternalErrorPage()
 	{
@@ -78,7 +78,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationSettingsMBean#getPageExpiredErrorPage()
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getPageExpiredErrorPage()
 	 */
 	public String getPageExpiredErrorPage()
 	{
@@ -86,7 +86,7 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationSettingsMBean#getUnexpectedExceptionDisplay()
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getUnexpectedExceptionDisplay()
 	 */
 	@SuppressWarnings("deprecation")
 	public String getUnexpectedExceptionDisplay()

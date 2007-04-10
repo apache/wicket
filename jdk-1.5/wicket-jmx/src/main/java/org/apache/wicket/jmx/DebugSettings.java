@@ -14,49 +14,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 /**
  * Exposes Application related functionality for JMX.
  * 
  * @author eelcohillenius
  */
-public class SecuritySettings implements SecuritySettingsMBean
-{
-	private final wicket.Application application;
+public class DebugSettings implements DebugSettingsMBean {
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public SecuritySettings(wicket.Application application)
-	{
+	public DebugSettings(org.apache.wicket.Application application) {
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.SecuritySettingsMBean#getAuthorizationStrategy()
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#getComponentUseCheck()
 	 */
-	public String getAuthorizationStrategy()
-	{
-		return Stringz.className(application.getSecuritySettings().getAuthorizationStrategy());
+	public boolean getComponentUseCheck() {
+		return application.getDebugSettings().getComponentUseCheck();
 	}
 
 	/**
-	 * @see wicket.jmx.SecuritySettingsMBean#getCryptFactory()
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isAjaxDebugModeEnabled()
 	 */
-	public String getCryptFactory()
-	{
-		return Stringz.className(application.getSecuritySettings().getCryptFactory());
+	public boolean isAjaxDebugModeEnabled() {
+		return application.getDebugSettings().isAjaxDebugModeEnabled();
 	}
 
 	/**
-	 * @see wicket.jmx.SecuritySettingsMBean#getUnauthorizedComponentInstantiationListener()
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setAjaxDebugModeEnabled(boolean)
 	 */
-	public String getUnauthorizedComponentInstantiationListener()
-	{
-		return Stringz.className(application.getSecuritySettings()
-				.getUnauthorizedComponentInstantiationListener());
+	public void setAjaxDebugModeEnabled(boolean enable) {
+		application.getDebugSettings().setAjaxDebugModeEnabled(enable);
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setComponentUseCheck(boolean)
+	 */
+	public void setComponentUseCheck(boolean check) {
+		application.getDebugSettings().setComponentUseCheck(check);
 	}
 }

@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
-import wicket.markup.html.PackageResourceGuard;
-import wicket.settings.IResourceSettings;
-import wicket.util.file.IResourceFinder;
-import wicket.util.time.Duration;
+import org.apache.wicket.markup.html.PackageResourceGuard;
+import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.file.IResourceFinder;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * Resource settings.
@@ -74,7 +74,7 @@ public interface ResourceSettingsMBean
 	String[] getStringResourceLoaders();
 
 	/**
-	 * @see wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()
+	 * @see org.apache.wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()
 	 * 
 	 * @return boolean
 	 */
@@ -87,7 +87,7 @@ public interface ResourceSettingsMBean
 	boolean getUseDefaultOnMissingResource();
 
 	/**
-	 * @see wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
+	 * @see org.apache.wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
 	 * 
 	 * @param throwExceptionOnMissingResource
 	 */

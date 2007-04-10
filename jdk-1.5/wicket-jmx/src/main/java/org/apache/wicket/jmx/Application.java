@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 import java.io.IOException;
 
-import wicket.protocol.http.WebApplication;
-import wicket.request.IRequestCodingStrategy;
-import wicket.request.IRequestTargetMountsInfo;
-import wicket.request.target.coding.IMountableRequestTargetUrlCodingStrategy;
-import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestCodingStrategy;
+import org.apache.wicket.request.IRequestTargetMountsInfo;
+import org.apache.wicket.request.target.coding.IMountableRequestTargetUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+
 
 /**
  * Exposes Application related functionality for JMX.
@@ -31,7 +32,7 @@ import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
  */
 public class Application implements ApplicationMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	private final WebApplication webApplication;
 
@@ -40,7 +41,7 @@ public class Application implements ApplicationMBean
 	 * 
 	 * @param application
 	 */
-	public Application(wicket.Application application)
+	public Application(org.apache.wicket.Application application)
 	{
 		this.application = application;
 
@@ -56,7 +57,7 @@ public class Application implements ApplicationMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationMBean#clearMarkupCache()
+	 * @see org.apache.wicket.jmx.ApplicationMBean#clearMarkupCache()
 	 */
 	public void clearMarkupCache() throws IOException
 	{
@@ -64,7 +65,7 @@ public class Application implements ApplicationMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationMBean#getApplicationClass()
+	 * @see org.apache.wicket.jmx.ApplicationMBean#getApplicationClass()
 	 */
 	public String getApplicationClass() throws IOException
 	{
@@ -72,7 +73,7 @@ public class Application implements ApplicationMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationMBean#getConfigurationType()
+	 * @see org.apache.wicket.jmx.ApplicationMBean#getConfigurationType()
 	 */
 	public String getConfigurationType()
 	{
@@ -80,7 +81,7 @@ public class Application implements ApplicationMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationMBean#getHomePageClass()
+	 * @see org.apache.wicket.jmx.ApplicationMBean#getHomePageClass()
 	 */
 	public String getHomePageClass() throws IOException
 	{
@@ -88,7 +89,7 @@ public class Application implements ApplicationMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationMBean#getMarkupCacheSize()
+	 * @see org.apache.wicket.jmx.ApplicationMBean#getMarkupCacheSize()
 	 */
 	public int getMarkupCacheSize() throws IOException
 	{
@@ -96,7 +97,7 @@ public class Application implements ApplicationMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationMBean#getMounts()
+	 * @see org.apache.wicket.jmx.ApplicationMBean#getMounts()
 	 */
 	public String[] getMounts() throws IOException
 	{
@@ -131,7 +132,7 @@ public class Application implements ApplicationMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ApplicationMBean#getWicketVersion()
+	 * @see org.apache.wicket.jmx.ApplicationMBean#getWicketVersion()
 	 */
 	public String getWicketVersion() throws IOException
 	{

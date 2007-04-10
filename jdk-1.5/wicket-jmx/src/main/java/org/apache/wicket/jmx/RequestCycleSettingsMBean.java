@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
-import wicket.markup.html.pages.BrowserInfoPage;
-import wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.markup.html.pages.BrowserInfoPage;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 
 /**
  * Request cycle settings.

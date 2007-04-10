@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 
 /**
@@ -24,20 +24,20 @@ package wicket.jmx;
  */
 public class RequestCycleSettings implements RequestCycleSettingsMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public RequestCycleSettings(wicket.Application application)
+	public RequestCycleSettings(org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.RequestCycleSettingsMBean#getBufferResponse()
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getBufferResponse()
 	 */
 	public boolean getBufferResponse()
 	{
@@ -45,7 +45,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestCycleSettingsMBean#getGatherExtendedBrowserInfo()
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getGatherExtendedBrowserInfo()
 	 */
 	public boolean getGatherExtendedBrowserInfo()
 	{
@@ -53,7 +53,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestCycleSettingsMBean#getResponseRequestEncoding()
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getResponseRequestEncoding()
 	 */
 	public String getResponseRequestEncoding()
 	{
@@ -61,7 +61,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestCycleSettingsMBean#setBufferResponse(boolean)
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setBufferResponse(boolean)
 	 */
 	public void setBufferResponse(boolean bufferResponse)
 	{
@@ -69,7 +69,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestCycleSettingsMBean#setGatherExtendedBrowserInfo(boolean)
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setGatherExtendedBrowserInfo(boolean)
 	 */
 	public void setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo)
 	{
@@ -78,7 +78,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestCycleSettingsMBean#setResponseRequestEncoding(java.lang.String)
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setResponseRequestEncoding(java.lang.String)
 	 */
 	public void setResponseRequestEncoding(String responseRequestEncoding)
 	{

@@ -14,20 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 import java.io.IOException;
 
-import wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebApplication;
+
 
 /**
- * Exposes {@link wicket.protocol.http.RequestLogger} for JMX.
+ * Exposes {@link org.apache.wicket.protocol.http.RequestLogger} for JMX.
  * 
  * @author eelcohillenius
  */
 public class RequestLogger implements RequestLoggerMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	private final WebApplication webApplication;
 
@@ -37,7 +38,7 @@ public class RequestLogger implements RequestLoggerMBean
 	 * @param application
 	 *            The application
 	 */
-	public RequestLogger(wicket.Application application)
+	public RequestLogger(org.apache.wicket.Application application)
 	{
 		this.application = application;
 
@@ -53,11 +54,11 @@ public class RequestLogger implements RequestLoggerMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestLoggerMBean#getNumberOfCreatedSessions()
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getNumberOfCreatedSessions()
 	 */
 	public Integer getNumberOfCreatedSessions() throws IOException
 	{
-		wicket.protocol.http.IRequestLogger logger = getRequestLogger();
+		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
 			return Integer.valueOf(logger.getTotalCreatedSessions());
@@ -66,11 +67,11 @@ public class RequestLogger implements RequestLoggerMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestLoggerMBean#getNumberOfLiveSessions()
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getNumberOfLiveSessions()
 	 */
 	public Integer getNumberOfLiveSessions() throws IOException
 	{
-		wicket.protocol.http.IRequestLogger logger = getRequestLogger();
+		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
 			return Integer.valueOf(logger.getLiveSessions().length);
@@ -79,11 +80,11 @@ public class RequestLogger implements RequestLoggerMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestLoggerMBean#getPeakNumberOfSessions()
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#getPeakNumberOfSessions()
 	 */
 	public Integer getPeakNumberOfSessions() throws IOException
 	{
-		wicket.protocol.http.IRequestLogger logger = getRequestLogger();
+		org.apache.wicket.protocol.http.IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
 			return Integer.valueOf(logger.getPeakSessions());
@@ -92,7 +93,7 @@ public class RequestLogger implements RequestLoggerMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestLoggerMBean#restart()
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#restart()
 	 */
 	public void restart() throws IOException
 	{
@@ -105,7 +106,7 @@ public class RequestLogger implements RequestLoggerMBean
 	}
 
 	/**
-	 * @see wicket.jmx.RequestLoggerMBean#stop()
+	 * @see org.apache.wicket.jmx.RequestLoggerMBean#stop()
 	 */
 	public void stop() throws IOException
 	{
@@ -121,7 +122,7 @@ public class RequestLogger implements RequestLoggerMBean
 	 * @return The request logger or null if no request is active, or if this is
 	 *         not a web application
 	 */
-	protected wicket.protocol.http.IRequestLogger getRequestLogger()
+	protected org.apache.wicket.protocol.http.IRequestLogger getRequestLogger()
 	{
 		if (application instanceof WebApplication)
 		{

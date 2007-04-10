@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 /**
  * Exposes Application related functionality for JMX.
@@ -23,20 +23,20 @@ package wicket.jmx;
  */
 public class CookieValuePersisterSettings implements CookieValuePersisterSettingsMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public CookieValuePersisterSettings(wicket.Application application)
+	public CookieValuePersisterSettings(org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#getComment()
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#getComment()
 	 */
 	public String getComment()
 	{
@@ -44,7 +44,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#getDomain()
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#getDomain()
 	 */
 	public String getDomain()
 	{
@@ -52,7 +52,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#getMaxAge()
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#getMaxAge()
 	 */
 	public int getMaxAge()
 	{
@@ -60,7 +60,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#getSecure()
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#getSecure()
 	 */
 	public boolean getSecure()
 	{
@@ -68,7 +68,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#getVersion()
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#getVersion()
 	 */
 	public int getVersion()
 	{
@@ -76,7 +76,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#setComment(java.lang.String)
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#setComment(java.lang.String)
 	 */
 	public void setComment(String comment)
 	{
@@ -84,7 +84,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#setDomain(java.lang.String)
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#setDomain(java.lang.String)
 	 */
 	public void setDomain(String domain)
 	{
@@ -92,7 +92,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#setMaxAge(int)
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#setMaxAge(int)
 	 */
 	public void setMaxAge(int maxAge)
 	{
@@ -100,7 +100,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#setSecure(boolean)
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#setSecure(boolean)
 	 */
 	public void setSecure(boolean secure)
 	{
@@ -108,7 +108,7 @@ public class CookieValuePersisterSettings implements CookieValuePersisterSetting
 	}
 
 	/**
-	 * @see wicket.jmx.CookieValuePersisterSettingsMBean#setVersion(int)
+	 * @see org.apache.wicket.jmx.CookieValuePersisterSettingsMBean#setVersion(int)
 	 */
 	public void setVersion(int version)
 	{

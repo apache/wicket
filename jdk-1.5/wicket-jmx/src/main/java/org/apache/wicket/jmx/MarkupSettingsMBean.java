@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
-import wicket.settings.IMarkupSettings;
+import org.apache.wicket.settings.IMarkupSettings;
 
 /**
  * Markup settings.
@@ -28,8 +28,8 @@ public interface MarkupSettingsMBean
 	/**
 	 * If true, automatic link resolution is enabled. Disabled by default.
 	 * 
-	 * @see wicket.markup.resolver.AutoLinkResolver
-	 * @see wicket.markup.parser.filter.WicketLinkTagHandler
+	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver
+	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler
 	 * @return Returns the automaticLinking.
 	 */
 	boolean getAutomaticLinking();
@@ -69,9 +69,9 @@ public interface MarkupSettingsMBean
 	boolean getStripComments();
 
 	/**
-	 * Gets whether to remove wicket tags from the output.
+	 * Gets whether to remove org.apache.wicket tags from the output.
 	 * 
-	 * @return whether to remove wicket tags from the output
+	 * @return whether to remove org.apache.wicket tags from the output
 	 */
 	boolean getStripWicketTags();
 
@@ -83,8 +83,8 @@ public interface MarkupSettingsMBean
 	/**
 	 * Application default for automatic link resolution. Please
 	 * 
-	 * @see wicket.markup.resolver.AutoLinkResolver and
-	 * @see wicket.markup.parser.filter.WicketLinkTagHandler for more details.
+	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver and
+	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler for more details.
 	 * 
 	 * @param automaticLinking
 	 *            The automaticLinking to set.
@@ -140,10 +140,10 @@ public interface MarkupSettingsMBean
 	void setStripComments(boolean stripComments);
 
 	/**
-	 * Sets whether to remove wicket tags from the output.
+	 * Sets whether to remove org.apache.wicket tags from the output.
 	 * 
 	 * @param stripWicketTags
-	 *            whether to remove wicket tags from the output
+	 *            whether to remove org.apache.wicket tags from the output
 	 */
 	void setStripWicketTags(boolean stripWicketTags);
 

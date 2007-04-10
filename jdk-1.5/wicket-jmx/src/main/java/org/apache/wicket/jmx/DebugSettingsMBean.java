@@ -14,32 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
-import wicket.authorization.IUnauthorizedComponentInstantiationListener;
+import org.apache.wicket.settings.IDebugSettings;
 
 /**
- * Security settings.
+ * Debug settings.
  * 
  * @author eelcohillenius
  */
-public interface SecuritySettingsMBean
+public interface DebugSettingsMBean
 {
 	/**
-	 * Gets the authorization strategy.
+	 * @return true if componentUseCheck is enabled
+	 */
+	boolean getComponentUseCheck();
+
+	/**
+	 * Returns status of ajax debug mode. See {@link IDebugSettings} for details
 	 * 
-	 * @return Returns the authorizationStrategy.
+	 * @return true if ajax debug mode is enabled, false otherwise
+	 * 
 	 */
-	String getAuthorizationStrategy();
+	boolean isAjaxDebugModeEnabled();
 
 	/**
-	 * @return crypt factory used to generate crypt objects
+	 * Enables or disables ajax debug mode. See {@link IDebugSettings} for
+	 * details
+	 * 
+	 * @param enable
+	 * 
 	 */
-	String getCryptFactory();
+	void setAjaxDebugModeEnabled(boolean enable);
 
 	/**
-	 * @return The listener
-	 * @see IUnauthorizedComponentInstantiationListener
+	 * Sets componentUseCheck debug settings
+	 * 
+	 * @param check
 	 */
-	String getUnauthorizedComponentInstantiationListener();
+	void setComponentUseCheck(boolean check);
 }

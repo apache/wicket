@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package org.apache.wicket.jmx;
 
 import java.util.List;
 
-import wicket.util.time.Duration;
+import org.apache.wicket.util.time.Duration;
+
 
 
 /**
@@ -28,20 +29,20 @@ import wicket.util.time.Duration;
  */
 public class ResourceSettings implements ResourceSettingsMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public ResourceSettings(wicket.Application application)
+	public ResourceSettings(org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getLocalizer()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getLocalizer()
 	 */
 	public String getLocalizer()
 	{
@@ -49,7 +50,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getPackageResourceGuard()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getPackageResourceGuard()
 	 */
 	public String getPackageResourceGuard()
 	{
@@ -57,7 +58,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getPropertiesFactory()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getPropertiesFactory()
 	 */
 	public String getPropertiesFactory()
 	{
@@ -65,7 +66,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getResourceFinder()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getResourceFinder()
 	 */
 	public String getResourceFinder()
 	{
@@ -73,7 +74,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getResourcePollFrequency()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getResourcePollFrequency()
 	 */
 	public String getResourcePollFrequency()
 	{
@@ -82,7 +83,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getResourceStreamLocator()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getResourceStreamLocator()
 	 */
 	public String getResourceStreamLocator()
 	{
@@ -90,7 +91,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getStringResourceLoaders()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getStringResourceLoaders()
 	 */
 	@SuppressWarnings("unchecked")
 	public String[] getStringResourceLoaders()
@@ -104,7 +105,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getThrowExceptionOnMissingResource()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getThrowExceptionOnMissingResource()
 	 */
 	public boolean getThrowExceptionOnMissingResource()
 	{
@@ -112,7 +113,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#getUseDefaultOnMissingResource()
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#getUseDefaultOnMissingResource()
 	 */
 	public boolean getUseDefaultOnMissingResource()
 	{
@@ -120,7 +121,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#setThrowExceptionOnMissingResource(boolean)
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#setThrowExceptionOnMissingResource(boolean)
 	 */
 	public void setThrowExceptionOnMissingResource(boolean throwExceptionOnMissingResource)
 	{
@@ -129,7 +130,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	}
 
 	/**
-	 * @see wicket.jmx.ResourceSettingsMBean#setUseDefaultOnMissingResource(boolean)
+	 * @see org.apache.wicket.jmx.ResourceSettingsMBean#setUseDefaultOnMissingResource(boolean)
 	 */
 	public void setUseDefaultOnMissingResource(boolean useDefaultOnMissingResource)
 	{

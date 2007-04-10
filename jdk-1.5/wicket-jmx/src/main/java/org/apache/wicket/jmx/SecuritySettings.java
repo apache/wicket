@@ -14,57 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
-
+package org.apache.wicket.jmx;
 
 /**
  * Exposes Application related functionality for JMX.
  * 
  * @author eelcohillenius
  */
-public class PageSettings implements PageSettingsMBean
+public class SecuritySettings implements SecuritySettingsMBean
 {
-	private final wicket.Application application;
+	private final org.apache.wicket.Application application;
 
 	/**
 	 * Create.
 	 * 
 	 * @param application
 	 */
-	public PageSettings(wicket.Application application)
+	public SecuritySettings(org.apache.wicket.Application application)
 	{
 		this.application = application;
 	}
 
 	/**
-	 * @see wicket.jmx.PageSettingsMBean#getAutomaticMultiWindowSupport()
+	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getAuthorizationStrategy()
 	 */
-	public boolean getAutomaticMultiWindowSupport()
+	public String getAuthorizationStrategy()
 	{
-		return application.getPageSettings().getAutomaticMultiWindowSupport();
+		return Stringz.className(application.getSecuritySettings().getAuthorizationStrategy());
 	}
 
 	/**
-	 * @see wicket.jmx.PageSettingsMBean#getVersionPagesByDefault()
+	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getCryptFactory()
 	 */
-	public boolean getVersionPagesByDefault()
+	public String getCryptFactory()
 	{
-		return application.getPageSettings().getVersionPagesByDefault();
+		return Stringz.className(application.getSecuritySettings().getCryptFactory());
 	}
 
 	/**
-	 * @see wicket.jmx.PageSettingsMBean#setAutomaticMultiWindowSupport(boolean)
+	 * @see org.apache.wicket.jmx.SecuritySettingsMBean#getUnauthorizedComponentInstantiationListener()
 	 */
-	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
+	public String getUnauthorizedComponentInstantiationListener()
 	{
-		application.getPageSettings().setAutomaticMultiWindowSupport(automaticMultiWindowSupport);
-	}
-
-	/**
-	 * @see wicket.jmx.PageSettingsMBean#setVersionPagesByDefault(boolean)
-	 */
-	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
-	{
-		application.getPageSettings().setVersionPagesByDefault(pagesVersionedByDefault);
+		return Stringz.className(application.getSecuritySettings()
+				.getUnauthorizedComponentInstantiationListener());
 	}
 }
