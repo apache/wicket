@@ -188,24 +188,38 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append(" });\n");
 
 		buffer.append(" function showCalendar() {\n");
-		buffer.append("var dateValue = YAHOO.util.Dom.get(\""); 
-		buffer.append(component.getMarkupId()); 
+		buffer.append("var dateValue = YAHOO.util.Dom.get(\"");
+		buffer.append(component.getMarkupId());
 		buffer.append("\").value;\n");
 		buffer.append("if (dateValue) {\n");
+		// TODO pivot year hack. kind of ugly, make a nicer fix sometime
+		buffer.append("  var dateArray = dateValue.split('/');\n");
+		buffer.append("  if (dateArray[2] != undefined) {");
+		buffer.append("    var year = dateArray[2];");
+		buffer.append("    if (year < 100) {");
+		buffer.append("      if (year < 50) {");
+		buffer.append("        year = year * 1 + 2000;");
+		buffer.append("      } else {");
+		buffer.append("        year = year * 1 + 1900;");
+		buffer.append("      }");
+		buffer.append("    dateValue = dateArray[0] + '/' + dateArray[1] + '/' + year;");
+		buffer.append("    }");
+		buffer.append("  }");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".select(dateValue);\n");
 		buffer.append("var firstDate = ");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".getSelectedDates()[0];");
 		buffer.append(javascriptWidgetId);
-		buffer.append(".cfg.setProperty(\"pagedate\", (firstDate.getMonth()+1) + \"/\" + firstDate.getFullYear());");  
+		buffer
+				.append(".cfg.setProperty(\"pagedate\", (firstDate.getMonth()+1) + \"/\" + firstDate.getFullYear());");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".render();\n");
 		buffer.append("}\n");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".show();\n");
 		buffer.append(" }\n");
-		
+
 		// add a listener to the calendar widget that fills in the value
 		// of the passed in date text field when a selection is made,
 		// after which the widget is hidden again (it starts out hidden)
@@ -221,7 +235,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append("    var yr = selDateArray[0];\n");
 		buffer.append("    var month = selDateArray[1];\n");
 		buffer.append("    var dt = selDateArray[2];\n");
-
 		buffer.append("    var val = '");
 		String datePattern = getDatePattern();
 		// use the target component's pattern to fill in the date
