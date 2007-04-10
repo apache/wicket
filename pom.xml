@@ -570,7 +570,7 @@
 								<resourceBundles>
 									<!-- don't use the generic apache resource bundle as it overwrites our local -->
 									<!-- notice files (only works for dependencies) -->
-									<!-- <resourceBundle>org.apache:apache-jar-resource-bundle:1.2</resourceBundle> -->
+									<resourceBundle>org.apache:apache-jar-resource-bundle:1.2</resourceBundle>
 									<resourceBundle>org.apache:apache-incubator-disclaimer-resource-bundle:1.1</resourceBundle>
 								</resourceBundles>
 							</configuration>

@@ -24,46 +24,74 @@
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
+			<directory>jdk-1.4</directory>
+			<outputDirectory>src/jdk-1.4</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<excludes>
+				<exclude>**/wicket/target</exclude>
+				<exclude>**/wicket-*/target</exclude>
+				<exclude>**/wicket/target/**</exclude>
+				<exclude>**/wicket-*/target/**</exclude>
+				<exclude>**/*gz</exclude>
+				<exclude>**/*zip</exclude>
+				<exclude>**/archive-tmp</exclude>
+				<exclude>**/sessions</exclude>
+				<exclude>${basedir}/target</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>jdk-1.5</directory>
+			<outputDirectory>src/jdk-1.5</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<excludes>
+				<exclude>**/wicket/target</exclude>
+				<exclude>**/wicket-*/target</exclude>
+				<exclude>**/wicket/target/**</exclude>
+				<exclude>**/wicket-*/target/**</exclude>
+				<exclude>**/*gz</exclude>
+				<exclude>**/*zip</exclude>
+				<exclude>**/archive-tmp</exclude>
+				<exclude>**/sessions</exclude>
+				<exclude>${basedir}/target</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>testing</directory>
+			<outputDirectory>src/testing</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<excludes>
+				<exclude>**/wicket/target</exclude>
+				<exclude>**/wicket-*/target</exclude>
+				<exclude>**/wicket/target/**</exclude>
+				<exclude>**/wicket-*/target/**</exclude>
+				<exclude>**/*gz</exclude>
+				<exclude>**/*zip</exclude>
+				<exclude>**/archive-tmp</exclude>
+				<exclude>**/sessions</exclude>
+				<exclude>**/sessions/*</exclude>
+				<exclude>${basedir}/target</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
 			<directory>${basedir}</directory>
 			<outputDirectory>src</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
-			<excludes>
-				<exclude>**/wicket-sandbox/**</exclude>
-				<exclude>**/wicket/target/**</exclude>
-				<exclude>**/wicket/target</exclude>
-				<exclude>**/wicket-*/target/**</exclude>
-				<exclude>**/wicket-*/target</exclude>
-				<exclude>**/*wicket*gz</exclude>
-				<exclude>**/*wicket*zip</exclude>
-				<exclude>**/archive-tmp</exclude>
-				<exclude>**/target/**/wicket*.pom*</exclude>
-				<exclude>target</exclude>
-				<exclude>target/**</exclude>
-				<exclude>target/**/*</exclude>
-				<exclude>**/sessions</exclude>
-				<exclude>**/sessions/*</exclude>
-				<exclude>${project.build.directory}</exclude>
-				<exclude>**/maven-shared-archive-resources</exclude>
-				<exclude>${basedir}/target</exclude>
-				<exclude>${basedir}/target/**</exclude>
-				<exclude>${basedir}/target/**/*</exclude>
-			</excludes>
+			<includes>
+				<include>*.xml</include>
+				<include>eclipse.sh</include>
+			</includes>
 		</fileSet>
 		<fileSet>
 			<directory>${basedir}</directory>
 			<outputDirectory></outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
 			<includes>
-				<include>LICENSE.txt</include>
-				<include>NOTICE.txt</include>
-				<include>README.txt</include>
-				<include>DISCLAIMER.txt</include>
+				<include>LICENSE</include>
+				<include>NOTICE</include>
+				<include>README</include>
+				<include>DISCLAIMER</include>
+				<include>licenses/**</include>
 			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>${basedir}/jdk-1.4/wicket/licenses</directory>
-			<outputDirectory>licenses</outputDirectory>
-			<useDefaultExcludes>true</useDefaultExcludes>
 		</fileSet>
 	</fileSets>
 	<moduleSets>

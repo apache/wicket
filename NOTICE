@@ -12,7 +12,7 @@ NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
     AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
 
 ---------------------------------------------------------------------------
-src/jdk-1.4/wicket/NOTICE.txt
+src/jdk-1.4/wicket
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2006 The Apache Software Foundation
@@ -77,7 +77,7 @@ src/jdk-1.4/wicket/NOTICE.txt
    [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
 
 ---------------------------------------------------------------------------
-src/jdk-1.4/wicket-datetime/NOTICE.txt
+src/jdk-1.4/wicket-datetime
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -91,7 +91,7 @@ src/jdk-1.4/wicket-datetime/NOTICE.txt
    Copyright (c) 2006, Yahoo!
 
 ---------------------------------------------------------------------------
-src/jdk-1.4/wicket-extensions/NOTICE.txt
+src/jdk-1.4/wicket-extensions
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -104,7 +104,7 @@ src/jdk-1.4/wicket-extensions/NOTICE.txt
    (c) 2001-2005
 
 ---------------------------------------------------------------------------
-src/jdk-1.4/wicket-quickstart/NOTICE.txt
+src/jdk-1.4/wicket-quickstart/NOTICE
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -113,7 +113,7 @@ src/jdk-1.4/wicket-quickstart/NOTICE.txt
    The Apache Software Foundation (http://www.apache.org/).
 
 ---------------------------------------------------------------------------
-src/jdk-1.4/wicket-spring/NOTICE.txt
+src/jdk-1.4/wicket-spring
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -122,7 +122,7 @@ src/jdk-1.4/wicket-spring/NOTICE.txt
    The Apache Software Foundation (http://www.apache.org/).
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-auth-roles/NOTICE.txt
+src/jdk-1.5/wicket-auth-roles
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -131,7 +131,7 @@ src/jdk-1.5/wicket-auth-roles/NOTICE.txt
    The Apache Software Foundation (http://www.apache.org/).
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-examples/NOTICE.txt
+src/jdk-1.5/wicket-examples
 ---------------------------------------------------------------------------
    Apache Wicket Examples
    Copyright 2007 The Apache Software Foundation
@@ -159,7 +159,7 @@ src/jdk-1.5/wicket-examples/NOTICE.txt
    Copyright (c) 2004-2005, The Dojo Foundation
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-jmx/NOTICE.txt
+src/jdk-1.5/wicket-jmx
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -168,7 +168,7 @@ src/jdk-1.5/wicket-jmx/NOTICE.txt
    The Apache Software Foundation (http://www.apache.org/).
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-objectssizeof-agent/NOTICE.txt
+src/jdk-1.5/wicket-objectssizeof-agent
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -178,7 +178,7 @@ src/jdk-1.5/wicket-objectssizeof-agent/NOTICE.txt
 
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-spring-annot/NOTICE.txt
+src/jdk-1.5/wicket-spring-annot
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation

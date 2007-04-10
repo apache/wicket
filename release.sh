@@ -28,29 +28,30 @@ read passphrase
 stty $stty_orig
 
 # Clear the current NOTICE.txt file
-> NOTICE.txt; 
-echo "Apache Wicket" >> NOTICE.txt
-echo "Copyright 2006 The Apache Software Foundation" >> NOTICE.txt
-echo "" >> NOTICE.txt
-echo "This product includes software developed at" >> NOTICE.txt
-echo "The Apache Software Foundation (http://www.apache.org/)." >> NOTICE.txt
-echo "" >> NOTICE.txt
-echo "This is an aggregated NOTICE file for the Apache Wicket projects included" >> NOTICE.txt
-echo "in this distribution." >> NOTICE.txt
-echo "" >> NOTICE.txt
-echo "NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE" >> NOTICE.txt
-echo "    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL" >> NOTICE.txt
-echo "    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE." >> NOTICE.txt
-echo "" >> NOTICE.txt
+NOTICE=NOTICE
+> $NOTICE 
+echo "Apache Wicket" >> $NOTICE
+echo "Copyright 2006 The Apache Software Foundation" >> $NOTICE
+echo "" >> $NOTICE
+echo "This product includes software developed at" >> $NOTICE
+echo "The Apache Software Foundation (http://www.apache.org/)." >> $NOTICE
+echo "" >> $NOTICE
+echo "This is an aggregated NOTICE file for the Apache Wicket projects included" >> $NOTICE
+echo "in this distribution." >> $NOTICE
+echo "" >> $NOTICE
+echo "NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE" >> $NOTICE
+echo "    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL" >> $NOTICE
+echo "    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE." >> $NOTICE
+echo "" >> $NOTICE
 
 # next concatenate all NOTICE files from sub projects to the root file
-for i in `find jdk* -name "NOTICE.txt" -not -regex ".*/target/.*"`
-do 
-	echo "---------------------------------------------------------------------------" >> NOTICE.txt
-	echo "src/"$i >> NOTICE.txt
-	echo "---------------------------------------------------------------------------" >> NOTICE.txt
-	cat $i >> NOTICE.txt 
-	echo >> NOTICE.txt
+for i in `find jdk* -name "NOTICE" -not -regex ".*/target/.*"`
+do
+	echo "---------------------------------------------------------------------------" >> $NOTICE
+	echo "src/"$i | sed -e "s/\/src.*//g" >> $NOTICE
+	echo "---------------------------------------------------------------------------" >> $NOTICE
+	cat $i >> $NOTICE
+	echo >> $NOTICE
 done
 
 # clean all projects
