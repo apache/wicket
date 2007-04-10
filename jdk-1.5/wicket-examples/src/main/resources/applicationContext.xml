@@ -21,9 +21,9 @@
 	<!--
 		setup contact dao
 	-->
-	<bean id="contactDao" class="wicket.spring.common.ContactDaoImpl"/>
+	<bean id="contactDao" class="org.apache.wicket.spring.common.ContactDaoImpl"/>
 	
 	<!-- setup wicket application -->
-	<bean id="wicketApplication" class="wicket.spring.common.web.ExampleApplication"/>
+	<bean id="wicketApplication" class="org.apache.wicket.spring.common.web.ExampleApplication"/>
 
 </beans>

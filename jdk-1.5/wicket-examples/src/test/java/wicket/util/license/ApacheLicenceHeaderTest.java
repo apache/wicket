@@ -16,6 +16,8 @@
  */
 package wicket.util.license;
 
+import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+
 /**
  * Test that the license headers are in place in this project. The tests are run
  * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
@@ -54,18 +56,18 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 				/*
 				 * Behaviour, released under BSD. See NOTICE
 				 */
-				"src/main/java/wicket/examples/preview/behaviour.js",
+				"src/main/java/org.apache.wicket/examples/preview/behaviour.js",
 				/*
 				 * DOJO is dual licensed. We use the BSD license. See NOTICE.
 				 */
-				"src/main/java/wicket/examples/preview/dojo.js"
+				"src/main/java/org.apache.wicket/examples/preview/dojo.js"
 		};
 		
 		xmlIgnore = new String[] {
 				/*
 				 * Part of an example
 				 */
-				"src/main/java/wicket/examples/compref/XmlPage.xml"
+				"src/main/java/org.apache.wicket/examples/compref/XmlPage.xml"
 		};
 		
 		propertiesIgnore = new String[] {

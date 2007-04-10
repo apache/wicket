@@ -53,190 +53,190 @@
 
 	<filter>
 		<filter-name>AjaxPrototypeApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.ajax.prototype.PrototypeApplication</param-value>
+		  <param-value>org.apache.wicket.examples.ajax.prototype.PrototypeApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>AjaxApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>wicket.examples.ajax.builtin.AjaxApplication</param-value>
+			<param-value>org.apache.wicket.examples.ajax.builtin.AjaxApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>HelloWorldApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.helloworld.HelloWorldApplication</param-value>
+		  <param-value>org.apache.wicket.examples.helloworld.HelloWorldApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>EchoApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.echo.EchoApplication</param-value>
+		  <param-value>org.apache.wicket.examples.echo.EchoApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>UnicodeConverterApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
+		  <param-value>org.apache.wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>HelloBrowserApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.hellobrowser.HelloBrowserApplication</param-value>
+		  <param-value>org.apache.wicket.examples.hellobrowser.HelloBrowserApplication</param-value>
 		</init-param>
 	</filter>
 
     <filter>
         <filter-name>StockQuoteApplication</filter-name>
-        <filter-class>wicket.protocol.http.WicketFilter</filter-class>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
             <param-name>applicationClassName</param-name>
-            <param-value>wicket.examples.stockquote.StockQuoteApplication</param-value>
+            <param-value>org.apache.wicket.examples.stockquote.StockQuoteApplication</param-value>
         </init-param>
     </filter>
     
 	<filter>
 		<filter-name>HangmanApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.hangman.HangmanApplication</param-value>
+		  <param-value>org.apache.wicket.examples.hangman.HangmanApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>FormInputApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.forminput.FormInputApplication</param-value>
+		  <param-value>org.apache.wicket.examples.forminput.FormInputApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>NestedApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.nested.NestedApplication</param-value>
+		  <param-value>org.apache.wicket.examples.nested.NestedApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>GuestBookApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.guestbook.GuestBookApplication</param-value>
+		  <param-value>org.apache.wicket.examples.guestbook.GuestBookApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>ImagesApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.images.ImagesApplication</param-value>
+		  <param-value>org.apache.wicket.examples.images.ImagesApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>LibraryApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.library.LibraryApplication</param-value>
+		  <param-value>org.apache.wicket.examples.library.LibraryApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>LinkomaticApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.linkomatic.LinkomaticApplication</param-value>
+		  <param-value>org.apache.wicket.examples.linkomatic.LinkomaticApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>NavomaticApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.navomatic.NavomaticApplication</param-value>
+		  <param-value>org.apache.wicket.examples.navomatic.NavomaticApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>PubApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.pub.PubApplication</param-value>
+		  <param-value>org.apache.wicket.examples.pub.PubApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>SignInApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.signin.SignInApplication</param-value>
+		  <param-value>org.apache.wicket.examples.signin.SignInApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>SignIn2Application</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.signin2.SignIn2Application</param-value>
+		  <param-value>org.apache.wicket.examples.signin2.SignIn2Application</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>UploadApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.upload.UploadApplication</param-value>
+		  <param-value>org.apache.wicket.examples.upload.UploadApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>EncodingsApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.encodings.EncodingsApplication</param-value>
+		  <param-value>org.apache.wicket.examples.encodings.EncodingsApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>TemplateApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.template.TemplateApplication</param-value>
+		  <param-value>org.apache.wicket.examples.template.TemplateApplication</param-value>
 		</init-param>
 		<init-param>
 		  <param-name>configuration</param-name>
@@ -246,109 +246,109 @@
 
 	<filter>
 		<filter-name>ComponentReferenceApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.compref.ComponentReferenceApplication</param-value>
+		  <param-value>org.apache.wicket.examples.compref.ComponentReferenceApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>RepeaterExamplesApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>wicket.examples.repeater.RepeaterApplication</param-value>
+			<param-value>org.apache.wicket.examples.repeater.RepeaterApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>NiceUrlApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.niceurl.NiceUrlApplication</param-value>
+		  <param-value>org.apache.wicket.examples.niceurl.NiceUrlApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>FramesApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.frames.FramesApplication</param-value>
+		  <param-value>org.apache.wicket.examples.frames.FramesApplication</param-value>
 		</init-param>
 	</filter>
 	
 	<filter>
 		<filter-name>CustomResourceLoadingApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.customresourceloading.CustomResourceLoadingApplication</param-value>
+		  <param-value>org.apache.wicket.examples.customresourceloading.CustomResourceLoadingApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>WizardApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.wizard.WizardApplication</param-value>
+		  <param-value>org.apache.wicket.examples.wizard.WizardApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>CaptchaApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.captcha.CaptchaApplication</param-value>
+		  <param-value>org.apache.wicket.examples.captcha.CaptchaApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>BreadCrumbApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
+		  <param-value>org.apache.wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>StatelessApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.stateless.StatelessApplication</param-value>
+		  <param-value>org.apache.wicket.examples.stateless.StatelessApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>RolesAuthApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>wicket.authorization.strategies.role.example.RolesApplication</param-value>
+			<param-value>org.apache.wicket.authorization.strategies.role.example.RolesApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>MyAuthenticatedWebApplication</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>wicket.authentication.example.MyAuthenticatedWebApplication</param-value>
+			<param-value>org.apache.wicket.authentication.example.MyAuthenticatedWebApplication</param-value>
 		</init-param>
 	</filter>
 
 	<filter>
 		<filter-name>SpringExample</filter-name>
-		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
             <param-name>applicationFactoryClassName</param-name>
-            <param-value>wicket.spring.SpringWebApplicationFactory</param-value>
+            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
 		</init-param>
 	</filter>
 
