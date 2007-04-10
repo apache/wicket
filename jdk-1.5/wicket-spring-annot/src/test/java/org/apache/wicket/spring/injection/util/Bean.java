@@ -14,22 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.license;
+package org.apache.wicket.spring.injection.util;
 
 /**
- * Test that the license headers are in place in this project. The tests are run
- * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
- * tests here if needed.
+ * Mock spring bean
  * 
- * @author Frank Bille Jensen (frankbille)
+ * @author Igor Vaynberg (ivaynberg)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+public class Bean
 {
-	/**
-	 * Construct.
-	 */
-	public ApacheLicenceHeaderTest()
-	{
-//		addHeaders = true;
-	}
+
 }

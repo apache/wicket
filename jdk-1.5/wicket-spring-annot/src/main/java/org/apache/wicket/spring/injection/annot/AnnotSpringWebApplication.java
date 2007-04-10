@@ -14,39 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.util;
+package org.apache.wicket.spring.injection.annot;
 
-import wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.injection.ComponentInjector;
+import org.apache.wicket.injection.web.InjectorHolder;
+import org.apache.wicket.spring.SpringWebApplication;
 
 
 /**
- * Mock for an object with some SpringBean annotations
+ * Convinience subclass of {@link SpringWebApplication} that puts an instance of
+ * {@link AnnotSpringInjector} into the {@link InjectorHolder} when the
+ * application is initialized.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @deprecated instead in application.init() do
+ *             <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
+ *
+ * TODO remove post 1.3
  */
-public class Injectable
-{
-	private Bean nobean;
+public abstract class AnnotSpringWebApplication extends SpringWebApplication {
 
-	@SpringBean
-	private Bean beanByClass;
-
-	@SpringBean(name = "somebean")
-	private Bean2 beanByName;
-
-	public Bean getBeanByClass() {
-		return beanByClass;
+	protected void internalInit() {
+		super.internalInit();
+		InjectorHolder.setInjector(new AnnotSpringInjector(
+				getSpringContextLocator()));
+		addComponentInstantiationListener(new ComponentInjector());
 	}
-
-	public Bean2 getBeanByName() {
-		return beanByName;
-	}
-
-	public Bean getNobean() {
-		return nobean;
-	}
-	
-	
 
 }

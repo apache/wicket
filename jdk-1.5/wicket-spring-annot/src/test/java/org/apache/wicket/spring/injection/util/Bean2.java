@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.util;
+package org.apache.wicket.spring.injection.util;
 
 /**
  * Mock spring bean

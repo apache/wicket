@@ -14,12 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.annot;
+package org.apache.wicket.spring.injection.annot;
 
 import java.io.FileNotFoundException;
 
 import javax.servlet.ServletContext;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.IClusterable;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Session;
+import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.injection.ComponentInjector;
+import org.apache.wicket.injection.web.InjectorHolder;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.ISpringContextLocator;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -28,16 +38,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import wicket.Application;
-import wicket.IClusterable;
-import wicket.MetaDataKey;
-import wicket.Session;
-import wicket.application.IComponentInstantiationListener;
-import wicket.injection.ComponentInjector;
-import wicket.injection.web.InjectorHolder;
-import wicket.model.Model;
-import wicket.protocol.http.WebApplication;
-import wicket.spring.ISpringContextLocator;
 
 /**
  * {@link IComponentInstantiationListener} that injects component properties
@@ -46,7 +46,7 @@ import wicket.spring.ISpringContextLocator;
  * To install in yourapplication.init() call
  * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
  * 
- * Non-wicket components such as {@link Session}, {@link Model}, and any other
+ * Non-org.apache.wicket components such as {@link Session}, {@link Model}, and any other
  * pojo can be injected by calling
  * <code>InjectorHolder.getInjector().inject(this)</code> in their
  * constructor.
@@ -74,7 +74,7 @@ public class SpringComponentInjector extends ComponentInjector {
 	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
 	 * 
 	 * @param webapp
-	 *            wicket web application
+	 *            org.apache.wicket web application
 	 */
 	public SpringComponentInjector(WebApplication webapp) {
 		// locate application context through spring's default location
@@ -87,7 +87,7 @@ public class SpringComponentInjector extends ComponentInjector {
 	 * Constructor
 	 * 
 	 * @param webapp
-	 *            wicket web application
+	 *            org.apache.wicket web application
 	 * @param ctx
 	 *            spring's application context
 	 */

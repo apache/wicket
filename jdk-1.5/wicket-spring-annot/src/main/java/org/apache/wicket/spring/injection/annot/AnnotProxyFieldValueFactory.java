@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.annot;
+package org.apache.wicket.spring.injection.annot;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 
-import wicket.injection.IFieldValueFactory;
-import wicket.proxy.LazyInitProxyFactory;
-import wicket.spring.ISpringContextLocator;
-import wicket.spring.SpringBeanLocator;
+import org.apache.wicket.injection.IFieldValueFactory;
+import org.apache.wicket.proxy.LazyInitProxyFactory;
+import org.apache.wicket.spring.ISpringContextLocator;
+import org.apache.wicket.spring.SpringBeanLocator;
+
 
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create
@@ -78,7 +79,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 	}
 
 	/**
-	 * @see wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
+	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
 	 *      java.lang.Object)
 	 */
 	public Object getFieldValue(Field field, Object fieldOwner) {
@@ -136,7 +137,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 	}
 
 	/**
-	 * @see wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
+	 * @see org.apache.wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
 	 */
 	public boolean supportsField(Field field) {
 		return field.isAnnotationPresent(SpringBean.class);

@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.annot.test;
+package org.apache.wicket.spring.injection.annot.test;
 
-import wicket.injection.web.InjectorHolder;
-import wicket.spring.injection.annot.AnnotSpringInjector;
-import wicket.spring.test.ApplicationContextMock;
-import wicket.spring.test.SpringContextLocatorMock;
+import org.apache.wicket.injection.web.InjectorHolder;
+import org.apache.wicket.spring.injection.annot.AnnotSpringInjector;
+import org.apache.wicket.spring.test.ApplicationContextMock;
+import org.apache.wicket.spring.test.SpringContextLocatorMock;
+
 
 /**
  * Spring application context mock that does all the initialization required to

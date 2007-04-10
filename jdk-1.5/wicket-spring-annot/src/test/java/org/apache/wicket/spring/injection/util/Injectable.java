@@ -14,14 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.util;
+package org.apache.wicket.spring.injection.util;
+
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 
 /**
- * Mock spring bean
+ * Mock for an object with some SpringBean annotations
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
-public class Bean
+public class Injectable
 {
+	private Bean nobean;
+
+	@SpringBean
+	private Bean beanByClass;
+
+	@SpringBean(name = "somebean")
+	private Bean2 beanByName;
+
+	public Bean getBeanByClass() {
+		return beanByClass;
+	}
+
+	public Bean2 getBeanByName() {
+		return beanByName;
+	}
+
+	public Bean getNobean() {
+		return nobean;
+	}
+	
+	
 
 }

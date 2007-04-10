@@ -14,29 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.annot;
+package org.apache.wicket.spring.injection.annot;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.wicket.injection.ConfigurableInjector;
+import org.apache.wicket.injection.IFieldValueFactory;
+import org.apache.wicket.spring.ISpringContextLocator;
 
 
 /**
- * Annotation used to tag a field as a placeholder for a spring bean.
+ * Injector that injects classes based on {@link SpringBean} annotation
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target( {/* ElementType.METHOD, */ElementType.FIELD})
-@Documented
-public @interface SpringBean {
+public class AnnotSpringInjector extends ConfigurableInjector
+{
+
+	IFieldValueFactory factory;
+
 	/**
-	 * Optional attribute for specifying the name of the bean. If not specified,
-	 * the bean will be looked up by the type of the field with the annotation.
+	 * Constructor
 	 * 
-	 * @return name attr
+	 * @param locator
+	 *            spring context locator
 	 */
-	String name() default "";
+	public AnnotSpringInjector(ISpringContextLocator locator)
+	{
+		initFactory(locator);
+	}
+
+	private void initFactory(ISpringContextLocator locator)
+	{
+		factory = new AnnotProxyFieldValueFactory(locator);
+	}
+
+	@Override
+	protected IFieldValueFactory getFieldValueFactory()
+	{
+		return factory;
+	}
+
 }

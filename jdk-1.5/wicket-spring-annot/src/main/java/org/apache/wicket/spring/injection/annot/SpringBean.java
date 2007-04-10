@@ -14,31 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.annot;
+package org.apache.wicket.spring.injection.annot;
 
-import wicket.injection.ComponentInjector;
-import wicket.injection.web.InjectorHolder;
-import wicket.spring.SpringWebApplication;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 
 /**
- * Convinience subclass of {@link SpringWebApplication} that puts an instance of
- * {@link AnnotSpringInjector} into the {@link InjectorHolder} when the
- * application is initialized.
+ * Annotation used to tag a field as a placeholder for a spring bean.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
- * @deprecated instead in application.init() do
- *             <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
- *
- * TODO remove post 1.3
  */
-public abstract class AnnotSpringWebApplication extends SpringWebApplication {
-
-	protected void internalInit() {
-		super.internalInit();
-		InjectorHolder.setInjector(new AnnotSpringInjector(
-				getSpringContextLocator()));
-		addComponentInstantiationListener(new ComponentInjector());
-	}
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target( {/* ElementType.METHOD, */ElementType.FIELD})
+@Documented
+public @interface SpringBean {
+	/**
+	 * Optional attribute for specifying the name of the bean. If not specified,
+	 * the bean will be looked up by the type of the field with the annotation.
+	 * 
+	 * @return name attr
+	 */
+	String name() default "";
 }
