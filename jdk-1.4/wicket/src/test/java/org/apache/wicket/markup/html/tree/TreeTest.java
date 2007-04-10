@@ -75,7 +75,7 @@ public class TreeTest extends WicketTestCase
 
 	/**
 	 * Test Tree put on a plain page with a html head section, but without a
-	 * org.apache.wicket:head tag. Tests first render, and render after a node click.
+	 * wicket:head tag. Tests first render, and render after a node click.
 	 * 
 	 * @throws Exception
 	 */

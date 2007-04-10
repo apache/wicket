@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html.header.inheritance;
 
 /**
- * Test page for org.apache.wicket:head in markup inheritance strategies.
+ * Test page for wicket:head in markup inheritance strategies.
  */
 public class ConcretePage extends AbstractPage
 {

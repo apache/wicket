@@ -78,7 +78,7 @@ public class PanelTest extends WicketTestCase
 			hit = true;
 
 			assertNotNull(mex.getMarkupStream());
-			assertTrue(mex.getMessage().indexOf("has to contain part '<org.apache.wicket:panel>'") != -1);
+			assertTrue(mex.getMessage().indexOf("has to contain part '<wicket:panel>'") != -1);
 			assertTrue(mex.getMessage().indexOf("SimplePanel_2.html") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);

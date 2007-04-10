@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.header.inheritance;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * Panel for testing org.apache.wicket:head in markup inheritance strategies.
+ * Panel for testing wicket:head in markup inheritance strategies.
  * 
  * @author Martijn Dashorst
  */

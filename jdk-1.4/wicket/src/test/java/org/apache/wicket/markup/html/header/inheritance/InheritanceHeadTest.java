@@ -30,7 +30,7 @@ import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
- * Tests the inclusion of the org.apache.wicket:head section from a panel in a subclassed
+ * Tests the inclusion of the wicket:head section from a panel in a subclassed
  * page.
  * 
  * @author Martijn Dashorst
@@ -56,7 +56,7 @@ public class InheritanceHeadTest extends WicketTestCase
 		try
 		{
 			executeTest(ConcretePage.class, "ExpectedResult.html");
-			fail("Expected an exception: <org.apache.wicket:head> are not allowed after <body> tags");
+			fail("Expected an exception: <wicket:head> are not allowed after <body> tags");
 		}
 		catch (MarkupException ex)
 		{

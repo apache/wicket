@@ -266,7 +266,7 @@ public final class MarkupParserTest extends WicketTestCase
 	}
 
 	/**
-	 * Test &lt;org.apache.wicket: .
+	 * Test &lt;wicket: .
 	 * 
 	 * @throws ParseException
 	 * @throws ResourceStreamNotFoundException
@@ -287,13 +287,13 @@ public final class MarkupParserTest extends WicketTestCase
 		parser.parse("This is a test <span wicket:id=\"test\">Body</span>");
 		parser.parse("<a wicket:id=\"[autolink]\" href=\"test.html\">Home</a>");
 
-		parser.parse("<org.apache.wicket:body/>");
-		parser.parse("<org.apache.wicket:border/>");
-		parser.parse("<org.apache.wicket:panel/>");
+		parser.parse("<wicket:body/>");
+		parser.parse("<wicket:border/>");
+		parser.parse("<wicket:panel/>");
 
 		try
 		{
-			parser.parse("<org.apache.wicket:remove/>");
+			parser.parse("<wicket:remove/>");
 			assertTrue("Should have thrown an exception", false);
 		}
 		catch (MarkupException ex)
@@ -301,20 +301,20 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		Markup markup = parser.parse("<org.apache.wicket:remove>  </org.apache.wicket:remove>");
+		Markup markup = parser.parse("<wicket:remove>  </wicket:remove>");
 		assertEquals(0, markup.size());
 
-		markup = parser.parse("<org.apache.wicket:remove> <span id=\"test\"/> </org.apache.wicket:remove>");
+		markup = parser.parse("<wicket:remove> <span id=\"test\"/> </wicket:remove>");
 		assertEquals(0, markup.size());
 
-		markup = parser.parse("<div><org.apache.wicket:remove> <span id=\"test\"/> </org.apache.wicket:remove></div>");
+		markup = parser.parse("<div><wicket:remove> <span id=\"test\"/> </wicket:remove></div>");
 		assertEquals(2, markup.size());
 		assertEquals("<div>", ((RawMarkup)markup.get(0)).toString());
 		assertEquals("</div>", ((RawMarkup)markup.get(1)).toString());
 
 		try
 		{
-			parser.parse("<org.apache.wicket:remove> <org.apache.wicket:remove> </org.apache.wicket:remove> </org.apache.wicket:remove>");
+			parser.parse("<wicket:remove> <wicket:remove> </wicket:remove> </wicket:remove>");
 			assertTrue(
 					"Should have thrown an exception: remove regions must not contain org.apache.wicket-components",
 					false);
@@ -324,14 +324,14 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		parser.parse("<org.apache.wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
-		parser.parse("<org.apache.wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </org.apache.wicket:component>");
-		parser.parse("<org.apache.wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></org.apache.wicket:component>");
-		parser.parse("<org.apache.wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></org.apache.wicket:panel>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
+		parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
 	}
 
 	/**
-	 * Test &lt;org.apache.wicket: .
+	 * Test &lt;wicket: .
 	 * 
 	 * @throws ParseException
 	 * @throws ResourceStreamNotFoundException
@@ -355,7 +355,7 @@ public final class MarkupParserTest extends WicketTestCase
 	}
 
 	/**
-	 * Test &lt;org.apache.wicket: .
+	 * Test &lt;wicket: .
 	 * 
 	 * @throws ParseException
 	 * @throws ResourceStreamNotFoundException

@@ -34,9 +34,9 @@ public class ComponentCreateTag_4 extends WebPage
 	 */
 	public ComponentCreateTag_4() 
 	{
-	    // <org.apache.wicket:component> are treated as anonymous because they not
+	    // <wicket:component> are treated as anonymous because they not
 	    // accessible nor available right now. Thus you do not add
-	    // the label contained in <org.apache.wicket:component> to that specific
+	    // the label contained in <wicket:component> to that specific
 	    // component. You rather add it to its parent, which in this
 	    // case is the page.
 	    add(new Label("txt1", "Demo 1"));

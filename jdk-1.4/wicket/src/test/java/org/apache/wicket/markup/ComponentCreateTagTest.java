@@ -74,7 +74,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	}
 
 	/**
-	 * A Border inside another Border (nested <org.apache.wicket:components>)
+	 * A Border inside another Border (nested <wicket:components>)
 	 * 
 	 * @throws Exception
 	 */

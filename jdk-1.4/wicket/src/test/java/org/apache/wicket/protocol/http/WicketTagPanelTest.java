@@ -85,7 +85,7 @@ public class WicketTagPanelTest extends TestCase
 		body.addExpectedChild(new TextContent("\\s+"));
 		Tag span = new Tag("span");
 		body.addExpectedChild(span);
-		Tag wicket = new Tag("org.apache.wicket:panel");
+		Tag wicket = new Tag("wicket:panel");
 		span.addExpectedChild(wicket);
 
 		wicket.addExpectedChild(new TextContent("\\s*Panel Content"));

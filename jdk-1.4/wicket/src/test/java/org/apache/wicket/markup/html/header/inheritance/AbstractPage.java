@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.header.inheritance;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
- * Test page for org.apache.wicket:head inclusion.
+ * Test page for wicket:head inclusion.
  */
 public abstract class AbstractPage extends WebPage
 {

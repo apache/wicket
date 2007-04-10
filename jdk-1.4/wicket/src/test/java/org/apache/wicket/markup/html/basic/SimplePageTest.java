@@ -77,7 +77,7 @@ public class SimplePageTest extends WicketTestCase
 		tester.processRequestCycle(panel);
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
-		assertEquals("<org.apache.wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></org.apache.wicket:panel>", document);
+		assertEquals("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>", document);
 		
 	    label = (Label)tester.getLastRenderedPage().get("myPanel:label");
 	    assertNotNull(label);
@@ -93,7 +93,7 @@ public class SimplePageTest extends WicketTestCase
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<org.apache.wicket:border>before body - <org.apache.wicket:body>border</org.apache.wicket:body> - after body</org.apache.wicket:border>", document);
+		assertEquals("<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>", document);
 		
 	    border = (Border)tester.getLastRenderedPage().get("myBorder2");
 	    assertNotNull(border);
@@ -101,7 +101,7 @@ public class SimplePageTest extends WicketTestCase
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><org.apache.wicket:border>before body - <org.apache.wicket:body>border</org.apache.wicket:body> - after body</org.apache.wicket:border></span>", document);
+		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
 
 		// do the same test twice. Igor reported a problem with that, so we have to test it.
 	    border = (Border)tester.getLastRenderedPage().get("myBorder2");
@@ -110,7 +110,7 @@ public class SimplePageTest extends WicketTestCase
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><org.apache.wicket:border>before body - <org.apache.wicket:body>border</org.apache.wicket:body> - after body</org.apache.wicket:border></span>", document);
+		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
 		
 	    WebMarkupContainer container = (WebMarkupContainer)tester.getLastRenderedPage().get("test");
 	    assertNotNull(container);
@@ -149,7 +149,7 @@ public class SimplePageTest extends WicketTestCase
 		tester.processRequestCycle(panel);
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
-		assertEquals("<org.apache.wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></org.apache.wicket:panel>", document);
+		assertEquals("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>", document);
 		
 	    label = (Label)page.get("myPanel:label");
 	    assertNotNull(label);
@@ -165,7 +165,7 @@ public class SimplePageTest extends WicketTestCase
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<org.apache.wicket:border>before body - <org.apache.wicket:body>border</org.apache.wicket:body> - after body</org.apache.wicket:border>", document);
+		assertEquals("<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>", document);
 		
 	    border = (Border)page.get("myBorder2");
 	    assertNotNull(border);
@@ -173,7 +173,7 @@ public class SimplePageTest extends WicketTestCase
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><org.apache.wicket:border>before body - <org.apache.wicket:body>border</org.apache.wicket:body> - after body</org.apache.wicket:border></span>", document);
+		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
 
 		// do the same test twice. Igor reported a problem with that, so we have to test it.
 	    border = (Border)page.get("myBorder2");
@@ -182,7 +182,7 @@ public class SimplePageTest extends WicketTestCase
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><org.apache.wicket:border>before body - <org.apache.wicket:body>border</org.apache.wicket:body> - after body</org.apache.wicket:border></span>", document);
+		assertEquals("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>", document);
 		
 	    WebMarkupContainer container = (WebMarkupContainer)page.get("test");
 	    assertNotNull(container);
@@ -375,7 +375,7 @@ public class SimplePageTest extends WicketTestCase
 		tester.processRequestCycle(panel);
 		String document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
-		assertEquals("<org.apache.wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></org.apache.wicket:panel>", document);
+		assertEquals("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>", document);
 	}
 
 	/**
