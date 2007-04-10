@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.quickstart;
+package org.apache.wicket.quickstart;
 
-import wicket.Request;
-import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.WebSession;
+import org.apache.wicket.Request;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebSession;
 
 /**
  * Subclass of WebSession for QuickStartApplication to allow easy and typesafe

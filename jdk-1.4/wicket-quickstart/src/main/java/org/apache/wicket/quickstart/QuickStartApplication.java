@@ -14,21 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.quickstart;
+package org.apache.wicket.quickstart;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.WebApplication;
 
-import wicket.Request;
-import wicket.Response;
-import wicket.Session;
-import wicket.protocol.http.WebApplication;
 
 /**
  * Application object for your web application. If you want to run this
  * application without deploying, run the Start class.
  * 
- * @see wicket.quickstart.Start#main(String[])
+ * @see org.apache.wicket.quickstart.Start#main(String[])
  */
 public class QuickStartApplication extends WebApplication
 {
@@ -43,7 +43,7 @@ public class QuickStartApplication extends WebApplication
 	}
 
 	/**
-	 * @see wicket.Application#getHomePage()
+	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	public Class getHomePage()
 	{
@@ -51,7 +51,7 @@ public class QuickStartApplication extends WebApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request,
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
 	 *      Response)
 	 */
 	public Session newSession(Request request, Response response)
@@ -60,7 +60,7 @@ public class QuickStartApplication extends WebApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#init()
+	 * @see org.apache.wicket.protocol.http.WebApplication#init()
 	 */
 	protected void init()
 	{

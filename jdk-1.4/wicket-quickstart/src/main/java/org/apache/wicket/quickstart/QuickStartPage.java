@@ -14,26 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.quickstart;
+package org.apache.wicket.quickstart;
 
-import wicket.PageParameters;
+import org.apache.wicket.markup.html.WebPage;
 
 /**
- * Basic bookmarkable index page.
- * 
- * NOTE: You can get session properties from QuickStartSession via
- * getQuickStartSession()
+ * Base class for all pages in the QuickStart application. Any page which
+ * subclasses this page can get session properties from QuickStartSession via
+ * getQuickStartSession().
  */
-public class Index extends QuickStartPage
+public abstract class QuickStartPage extends WebPage
 {
 
 	/**
-	 * Constructor that is invoked when page is invoked without a session.
+	 * Get downcast session object for easy access by subclasses
 	 * 
-	 * @param parameters
-	 *            Page parameters
+	 * @return The session
 	 */
-	public Index(final PageParameters parameters)
+	public QuickStartSession getQuickStartSession()
 	{
+		return (QuickStartSession)getSession();
 	}
 }
