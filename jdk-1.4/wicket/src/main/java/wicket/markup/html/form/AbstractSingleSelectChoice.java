@@ -37,15 +37,13 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 
 	private static final String EMPTY_STRING = "";
 
-	/** Is the null value a valid value? */
-	private boolean nullValid = false;
-
 	/**
 	 * @see AbstractChoice#AbstractChoice(String)
 	 */
 	public AbstractSingleSelectChoice(final String id)
 	{
 		super(id);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -54,6 +52,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(final String id, final List choices)
 	{
 		super(id, choices);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -66,6 +65,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			final IChoiceRenderer renderer)
 	{
 		super(id, data, renderer);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -74,6 +74,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(final String id, IModel model, final List data)
 	{
 		super(id, model, data);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -87,6 +88,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			final IChoiceRenderer renderer)
 	{
 		super(id, model, data, renderer);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -96,6 +98,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(String id, IModel choices)
 	{
 		super(id, choices);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -105,6 +108,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(String id, IModel model, IModel choices)
 	{
 		super(id, model, choices);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -114,6 +118,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(String id, IModel choices, IChoiceRenderer renderer)
 	{
 		super(id, choices, renderer);
+		setRequired(true); // force choice by default
 	}
 
 
@@ -125,6 +130,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			IChoiceRenderer renderer)
 	{
 		super(id, model, choices, renderer);
+		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -171,7 +177,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 */
 	protected final Object convertValue(final String[] value)
 	{
-		String tmp = value != null && value.length > 0?value[0]:null;
+		String tmp = value != null && value.length > 0 ? value[0] : null;
 		List choices = getChoices();
 		for (int index = 0; index < choices.size(); index++)
 		{
@@ -186,16 +192,18 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * The localizer will be ask for the property to display
-	 * Depending on if null is allowed or not it will ask for:
+	 * The localizer will be ask for the property to display Depending on if
+	 * null is allowed or not it will ask for:
 	 * 
 	 * <ul>
-	 * <li>nullValid: when null is valid and by default it will show an empty string as a choice.</li>
-	 * <li>null: when null is not a valid choice and it will make a choice with "Choose One"</li>
+	 * <li>nullValid: when null is valid and by default it will show an empty
+	 * string as a choice.</li>
+	 * <li>null: when null is not a valid choice and it will make a choice with
+	 * "Choose One"</li>
 	 * </ul>
 	 * 
-	 * The choice for null is valid will always be returned. The choice when null is not valid
-	 * will only be returned if the selected object is null.
+	 * The choice for null is valid will always be returned. The choice when
+	 * null is not valid will only be returned if the selected object is null.
 	 * 
 	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
@@ -232,8 +240,8 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			{
 				// Force the user to pick a non-null value
 				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
-				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">").append(option).append(
-						"</option>");
+				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">")
+						.append(option).append("</option>");
 			}
 		}
 		return "";
