@@ -64,7 +64,7 @@ public class UploadApplication extends WicketExampleApplication
 	{
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 
-		uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "org.apache.wicket-uploads");
+		uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
 		// Ensure folder exists
 		uploadFolder.mkdirs();
 

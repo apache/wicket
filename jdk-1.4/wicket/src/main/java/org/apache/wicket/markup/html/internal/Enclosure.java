@@ -30,7 +30,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * An Enclosure are automatically created by Wicket. Do not create it yourself.
- * An Enclosure container is created if &lt;org.apache.wicket:enclosure&gt; is found in the
+ * An Enclosure container is created if &lt;wicket:enclosure&gt; is found in the
  * markup. It is meant to solve the following situation. Instead of
  * 
  * <pre>
@@ -50,9 +50,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * with Enclosure you are able to do the following:
  * 
  * <pre>
- *    &lt;org.apache.wicket:enclosure&gt; 
+ *    &lt;wicket:enclosure&gt; 
  *      &lt;table class=&quot;notify&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id=&quot;label&quot;&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
- *    &lt;/org.apache.wicket:enclosure&gt;
+ *    &lt;/wicket:enclosure&gt;
  * 
  *    add(new Label(&quot;label&quot;, notificationModel)) 
  *    {
@@ -130,7 +130,7 @@ public class Enclosure extends WebMarkupContainer
 		final Component child = parent.get(childId.toString());
 		if (child == null)
 		{
-			throw new MarkupException("Didn't find child component of <org.apache.wicket:enclosure> with id='"
+			throw new MarkupException("Didn't find child component of <wicket:enclosure> with id='"
 					+ childId + "'. Component: " + this.toString());
 		}
 

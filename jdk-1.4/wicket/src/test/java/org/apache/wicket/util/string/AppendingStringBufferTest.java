@@ -27,7 +27,8 @@ public class AppendingStringBufferTest extends TestCase
 {
 
 	/**
-	 * Test method for 'org.apache.wicket.util.string.AppendingStringBuffer.append(String)'
+	 * Test method for
+	 * 'org.apache.wicket.util.string.AppendingStringBuffer.append(String)'
 	 */
 	public void testAppend()
 	{
@@ -39,7 +40,7 @@ public class AppendingStringBufferTest extends TestCase
 		asb.append("test4");
 		assertEquals("test1test2test3test4", asb.toString());
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
@@ -58,62 +59,62 @@ public class AppendingStringBufferTest extends TestCase
 		asb.append('0');
 		assertEquals("1234567890", asb.toString());
 	}
-	
+
 	/**
-	 *  @throws Exception
+	 * @throws Exception
 	 */
-	public void testEqualsToAppeningBuffer()  throws Exception
+	public void testEqualsToAppeningBuffer() throws Exception
 	{
 		AppendingStringBuffer asb1 = new AppendingStringBuffer("123456789");
 		AppendingStringBuffer asb2 = new AppendingStringBuffer("123456789");
 		assertEquals(asb1, asb2);
 	}
-	
+
 	/**
-	 *  @throws Exception
+	 * @throws Exception
 	 */
-	public void testEqualsToCharSequence()  throws Exception
+	public void testEqualsToCharSequence() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
 		StringBuffer sb = new StringBuffer("123456789");
 		assertEquals(asb, sb);
 		assertEquals(asb, "123456789");
-		
+
 		sb = new StringBuffer("01234567890");
 		assertFalse(asb.equals(sb));
 		assertFalse(asb.equals("01234567890"));
 	}
 
 	/**
-	 *  @throws Exception
+	 * @throws Exception
 	 */
-	public void testStartsWidth()  throws Exception
+	public void testStartsWidth() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
 		StringBuffer sb = new StringBuffer("1234");
 		assertTrue(asb.startsWith(sb));
 		assertTrue(asb.startsWith("1234"));
 		assertTrue(asb.startsWith(asb));
-		
+
 		sb = new StringBuffer("01234");
 		assertFalse(asb.startsWith(sb));
 		assertFalse(asb.startsWith("01234"));
-	}	
-	
+	}
+
 	/**
-	 *  @throws Exception
+	 * @throws Exception
 	 */
-	public void testEndsWidth()  throws Exception
+	public void testEndsWidth() throws Exception
 	{
 		AppendingStringBuffer asb = new AppendingStringBuffer("123456789");
 		StringBuffer sb = new StringBuffer("6789");
 		assertTrue(asb.endsWith(sb));
 		assertTrue(asb.endsWith("6789"));
 		assertTrue(asb.endsWith(asb));
-		
+
 		sb = new StringBuffer("67890");
 		assertFalse(asb.endsWith(sb));
 		assertFalse(asb.endsWith("67890"));
-	}	
-	
+	}
+
 }

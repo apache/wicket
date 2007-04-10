@@ -93,7 +93,7 @@ public class Page_1 extends WebPage
 	    xsltContainer.add(border2);
 
 	    MarkupContainer xsltContainer2 = new XsltOutputTransformerContainer("test5", null, 
-	    		"org.apache.wicket/markup/outputTransformer/anyName.xsl");
+	    		"org/apache/wicket/markup/outputTransformer/anyName.xsl");
 	    add(xsltContainer2);
 	    
 	    Border border3 = new SimpleBorder("myBorder3");

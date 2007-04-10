@@ -40,8 +40,8 @@ import org.apache.wicket.version.undo.Change;
  * <pre>
  *             &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
  *            
- *             &lt;org.apache.wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/org.apache.wicket:fragment&gt;
- *             &lt;org.apache.wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/org.apache.wicket:fragment&gt;
+ *             &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *             &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
  *             add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);

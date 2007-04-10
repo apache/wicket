@@ -58,8 +58,8 @@ public class Signin2Test extends WicketWebTestCase
 		beginAt("/signin2");
 		assertTitleEquals("Wicket Examples - signin2");
 
-		this.setFormElement("username", "org.apache.wicket");
-		this.setFormElement("password", "org.apache.wicket");
+		this.setFormElement("username", "wicket");
+		this.setFormElement("password", "wicket");
 		this.checkCheckbox("rememberMeRow:rememberMe");
 		log.debug("Submit Login screen");
 		this.submit("submit");

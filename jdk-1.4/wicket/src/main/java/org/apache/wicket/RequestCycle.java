@@ -95,7 +95,7 @@ import org.apache.wicket.util.value.ValueMap;
  * session-relative number:
  * <p>
  * <ul>
- * /[Application]?org.apache.wicket:interface=[pageMapName]:[pageId]: ...
+ * /[Application]?wicket:interface=[pageMapName]:[pageId]: ...
  * </ul>
  * <p>
  * Often, the reason to access an existing session page is due to some kind of
@@ -104,13 +104,13 @@ import org.apache.wicket.util.value.ValueMap;
  * registered listener is dispatched like so:
  * <p>
  * <ul>
- * /[Application]?org.apache.wicket:interface=[pageMapName]:[pageId]:[componentPath]:[version]:[interfaceName]
+ * /[Application]?wicket:interface=[pageMapName]:[pageId]:[componentPath]:[version]:[interfaceName]
  * </ul>
  * <p>
  * For example:
  * <p>
  * <ul>
- * /[Application]?org.apache.wicket:interface=:3:signInForm:submit::IFormSubmitListener
+ * /[Application]?wicket:interface=:3:signInForm:submit::IFormSubmitListener
  * </ul>
  * </td>
  * </tr>

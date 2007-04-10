@@ -55,7 +55,7 @@ public class Markup
 	/** The encoding as found in <?xml ... encoding="" ?>. Null, else */
 	private String encoding;
 
-	/** Wicket namespace: <html xmlns:org.apache.wicket="http://org.apache.wicket.sourceforge.net"> */
+	/** Wicket namespace: <html xmlns:wicket="http://wicket.apache.org"> */
 	private String wicketNamespace;
 
 	/** == wicketNamespace + ":id" */
@@ -404,7 +404,7 @@ public class Markup
 		}
 		else if (tag.isClose() && (this.currentPath != null))
 		{
-			// For example <org.apache.wicket:message> does not have an id
+			// For example <wicket:message> does not have an id
 			if ((tag.getOpenTag() == null) || tag.getOpenTag().getAttributes().containsKey(wicketId))
 			{
 				// Remove the last element from the component path

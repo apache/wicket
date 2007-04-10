@@ -34,7 +34,7 @@ import org.apache.wicket.markup.parser.XmlTag;
  * for Wicket.
  * <p>
  * <ul>
- * <li>All tags with Wicket namespace, e.g. &lt;org.apache.wicket:remove&gt;</li>
+ * <li>All tags with Wicket namespace, e.g. &lt;wicket:remove&gt;</li>
  * <li>All tags with an attribute like wicket:id="myLabel" </li>
  * </ul>
  * 
@@ -89,7 +89,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		ComponentTag tag;
 		if (namespace.equalsIgnoreCase(xmlTag.getNamespace()))
 		{
-			// It is <org.apache.wicket:...>
+			// It is <wicket:...>
 			tag = new WicketTag(xmlTag);
 
 			// Make it a org.apache.wicket component. Otherwise it would be RawMarkup

@@ -50,7 +50,7 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 	public boolean authenticate(final String username, final String password)
 	{
 		// Check username and password
-		return username.equals("org.apache.wicket") && password.equals("org.apache.wicket");
+		return username.equals("wicket") && password.equals("wicket");
 	}
 
 	/**

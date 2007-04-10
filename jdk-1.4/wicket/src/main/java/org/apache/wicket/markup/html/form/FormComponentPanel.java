@@ -27,7 +27,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 
 /**
- * Panel (has it's own markup, defined between <org.apache.wicket:panel> tags), that can
+ * Panel (has it's own markup, defined between <wicket:panel> tags), that can
  * act as a form component. It typically wouldn't receive any input yourself,
  * and often you can get by with nesting form components in panels proper.
  * However, using this panel can help you with building components act to the
@@ -81,9 +81,9 @@ import org.apache.wicket.model.IModel;
  * With this markup:
  * 
  * <pre>
- *   &lt;org.apache.wicket:panel&gt;
+ *   &lt;wicket:panel&gt;
  *     &lt;input type=&quot;text&quot; wicket:id=&quot;left&quot; size=&quot;2&quot; /&gt; * &lt;input type=&quot;text&quot; wicket:id=&quot;right&quot; size=&quot;2&quot; /&gt;
- *   &lt;/org.apache.wicket:panel&gt;
+ *   &lt;/wicket:panel&gt;
  * </pre>
  * 
  * Which could be used, for example as:
@@ -190,7 +190,7 @@ public class FormComponentPanel extends FormComponent implements IHeaderPartCont
 	{
 		// Render the associated markup
 		renderAssociatedMarkup("panel",
-				"Markup for a panel component has to contain part '<org.apache.wicket:panel>'");
+				"Markup for a panel component has to contain part '<wicket:panel>'");
 
 		if (this.wasOpenCloseTag == false)
 		{

@@ -28,8 +28,9 @@ import org.apache.wicket.markup.ComponentTag;
  * The containers tag will be the root element of the xml data applied for
  * transformation to ensure the xml data are well formed (single root element).
  * In addition the attribute
- * <code>xmlns:org.apache.wicket="http://org.apache.wicket.sourceforge.net"</code> is added to the
- * root element to allow the XSL processor to handle the org.apache.wicket namespace.
+ * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to
+ * the root element to allow the XSL processor to handle the org.apache.wicket
+ * namespace.
  * <p>
  * The reason why the transformer can not be used to XSLT the ListViews output
  * is because of the ListViews markup being reused for each ListItem. Please use
@@ -72,9 +73,10 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	 */
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
-		tag.put("xmlns:org.apache.wicket", "http://org.apache.wicket.sourceforge.net");
+		tag.put("xmlns:wicket", "http://wicket.apache.org");
 
-		// Make the XSLT processor happy and allow it to handle the org.apache.wicket
+		// Make the XSLT processor happy and allow it to handle the
+		// org.apache.wicket
 		// tags and attributes that are in the org.apache.wicket namespace
 		super.onComponentTag(component, tag);
 	}

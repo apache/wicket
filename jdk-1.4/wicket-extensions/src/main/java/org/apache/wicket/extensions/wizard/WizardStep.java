@@ -58,18 +58,18 @@ import org.apache.wicket.model.Model;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *                        &lt;org.apache.wicket:panel&gt;
+ *                        &lt;wicket:panel&gt;
  *                         &lt;table&gt;
  *                          &lt;tr&gt;
- *                           &lt;td&gt;&lt;org.apache.wicket:message key=&quot;username&quot;&gt;Username&lt;/org.apache.wicket:message&gt;&lt;/td&gt;
+ *                           &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
  *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
  *                          &lt;/tr&gt;
  *                          &lt;tr&gt;
- *                           &lt;td&gt;&lt;org.apache.wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/org.apache.wicket:message&gt;&lt;/td&gt;
+ *                           &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
  *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
  *                          &lt;/tr&gt;
  *                         &lt;/table&gt;
- *                        &lt;/org.apache.wicket:panel&gt;
+ *                        &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>

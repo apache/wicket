@@ -930,7 +930,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			// we need to write response as CDATA and parse it on client,
 			// because
 			// konqueror crashes when there is a <script> element
-			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
+			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
 
 			response.write(encodingHeaderResponse.getContents());
 

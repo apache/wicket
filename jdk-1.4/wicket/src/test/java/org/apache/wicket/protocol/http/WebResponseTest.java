@@ -41,9 +41,9 @@ public class WebResponseTest extends TestCase
 
 		WebResponse webResponse = new WebResponse(mockResponse);
 
-		webResponse.redirect("/?org.apache.wicket:interface=:4::");
+		webResponse.redirect("/?wicket:interface=:4::");
 
-		assertEquals("/?org.apache.wicket:interface=:4::", mockResponse.getRedirectLocation());
+		assertEquals("/?wicket:interface=:4::", mockResponse.getRedirectLocation());
 		assertFalse(mockResponse.containsHeader("Ajax-Location"));
 	}
 
@@ -57,7 +57,7 @@ public class WebResponseTest extends TestCase
 		WebResponse webResponse = new WebResponse(mockResponse);
 		webResponse.setAjax(true);
 
-		webResponse.redirect("/?org.apache.wicket:interface=:4::");
+		webResponse.redirect("/?wicket:interface=:4::");
 
 		assertNull(mockResponse.getRedirectLocation());
 		assertTrue(mockResponse.containsHeader("Ajax-Location"));

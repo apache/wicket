@@ -96,7 +96,7 @@ public class Initializer implements IInitializer, IDestroyer
 		{
 			String name = application.getName();
 
-			String agentId = System.getProperty("org.apache.wicket.mbean.server.agentid");
+			String agentId = System.getProperty("wicket.mbean.server.agentid");
 			if (agentId != null)
 			{
 				ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
@@ -112,7 +112,7 @@ public class Initializer implements IInitializer, IDestroyer
 			}
 			if (mbeanServer == null)
 			{
-				String impl = System.getProperty("org.apache.wicket.mbean.server.class");
+				String impl = System.getProperty("wicket.mbean.server.class");
 				if (impl != null)
 				{
 					ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory

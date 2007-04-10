@@ -35,13 +35,13 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * This is a markup inline filter and a component resolver. It identifies
- * org.apache.wicket:message attributes and adds an attribute modifier to the component tag
+ * wicket:message attributes and adds an attribute modifier to the component tag
  * that can localize
- * org.apache.wicket:message="attr-name:i18n-key,attr-name-2:i18n-key-2,..." expressions,
+ * wicket:message="attr-name:i18n-key,attr-name-2:i18n-key-2,..." expressions,
  * replacing values of attributes specified by attr-name with a localizer lookup
  * with key i18n-key. If an attribute being localized has a set value that value
  * will be used as the default value for the localization lookup. This handler
- * also resolves and localizes raw markup with org.apache.wicket:message attribute.
+ * also resolves and localizes raw markup with wicket:message attribute.
  * 
  * @author Juergen Donnerstag
  * @author Igor Vaynberg
@@ -56,10 +56,10 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	private static final long serialVersionUID = 1L;
 
 	/** TODO Post 1.2: General: Namespace should not be a constant */
-	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "org.apache.wicket:message";
+	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 
 	/**
-	 * The id automatically assigned to tags with org.apache.wicket:message attribute but
+	 * The id automatically assigned to tags with wicket:message attribute but
 	 * without id
 	 */
 	public final static String WICKET_MESSAGE_CONTAINER_ID = "-message_attr";
@@ -151,7 +151,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 					if (attrAndKey.length() < 3 || colon < 1 || colon > attrAndKey.length() - 2)
 					{
 						throw new WicketRuntimeException(
-								"org.apache.wicket:message attribute contains an invalid value [[" + expr
+								"wicket:message attribute contains an invalid value [[" + expr
 										+ "]], must be of form (attr:key)+");
 					}
 
@@ -177,7 +177,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
-		// localize any raw markup that has org.apache.wicket:message attrs
+		// localize any raw markup that has wicket:message attrs
 
 		if (WICKET_MESSAGE_CONTAINER_ID.equals(tag.getId()))
 		{

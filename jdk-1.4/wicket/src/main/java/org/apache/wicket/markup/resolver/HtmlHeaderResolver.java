@@ -30,7 +30,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * This is a tag resolver which handles &lt;head&gt; and
- * &lt;org.apache.wicket:head&gt;tags. It must be registered (with the application) and
+ * &lt;wicket:head&gt;tags. It must be registered (with the application) and
  * assumes that a ComponentTag respectively a WicketTag has already been created
  * (see HtmlheaderSectionHandler and WicketTagIdentifier).
  * <p>
@@ -39,7 +39,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  * rendered. Please see the javadoc for HtmlHeaderContainer on how it treats the
  * tag.
  * <p>
- * In case of &lt;org.apache.wicket:head&gt; a simple WebMarkupContainer handles the tag.
+ * In case of &lt;wicket:head&gt; a simple WebMarkupContainer handles the tag.
  * 
  * @author Juergen Donnerstag
  */
@@ -49,7 +49,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 	static
 	{
-		// register "org.apache.wicket:head"
+		// register "wicket:head"
 		WicketTagIdentifier.registerWellKnownTagName("head");
 	}
 
@@ -85,8 +85,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 		}
 		else if ((tag instanceof WicketTag) && ((WicketTag)tag).isHeadTag())
 		{
-		    // If we found <org.apache.wicket:head> without surrounding <head> on a Page,
-		    // than we have to add org.apache.wicket:head into a automatically generated
+		    // If we found <wicket:head> without surrounding <head> on a Page,
+		    // than we have to add wicket:head into a automatically generated
 		    // head first.
 		    if (container instanceof WebPage)
 		    {
@@ -94,7 +94,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// input the <head> from 'contributors'.
 				final MarkupContainer header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
 				
-				// It is <org.apache.wicket:head>. Because they do not provide any additional
+				// It is <wicket:head>. Because they do not provide any additional
 				// functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
@@ -116,7 +116,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		    }
 		    else if (container instanceof HtmlHeaderContainer)
 		    {
-				// It is <org.apache.wicket:head>. Because they do not provide any additional
+				// It is <wicket:head>. Because they do not provide any additional
 				// functionality there are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
@@ -147,7 +147,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		    else
 		    {
 		    	throw new MarkupException(
-		    			"Mis-placed <org.apache.wicket:head>. <org.apache.wicket:head> must be outside of <org.apache.wicket:panel> and <org.apache.wicket:border>");
+		    			"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel> and <wicket:border>");
 		    }
 		    
 			// Yes, we handled the tag

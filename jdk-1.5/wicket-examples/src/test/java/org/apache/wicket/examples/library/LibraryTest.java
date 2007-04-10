@@ -56,8 +56,8 @@ public class LibraryTest extends WicketWebTestCase
 		assertTitleEquals("Wicket Examples - library");
 		assertTextPresent("Username and password are both");
 
-		this.setFormElement("username", "org.apache.wicket");
-		this.setFormElement("password", "org.apache.wicket");
+		this.setFormElement("username", "wicket");
+		this.setFormElement("password", "wicket");
 		this.submit("submit");
 		// this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - library");

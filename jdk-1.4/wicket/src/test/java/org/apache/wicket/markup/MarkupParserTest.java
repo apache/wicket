@@ -316,7 +316,7 @@ public final class MarkupParserTest extends WicketTestCase
 		{
 			parser.parse("<wicket:remove> <wicket:remove> </wicket:remove> </wicket:remove>");
 			assertTrue(
-					"Should have thrown an exception: remove regions must not contain org.apache.wicket-components",
+					"Should have thrown an exception: remove regions must not contain wicket-components",
 					false);
 		}
 		catch (MarkupException ex)

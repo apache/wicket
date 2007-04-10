@@ -35,7 +35,7 @@ import org.apache.wicket.request.target.component.listener.RedirectPageRequestTa
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Use this processor to minimize the org.apache.wicket:interface urls. The component path
+ * Use this processor to minimize the wicket:interface urls. The component path
  * and the interface name will be removed from the url and only an uid will be
  * inserted into the url.
  * 

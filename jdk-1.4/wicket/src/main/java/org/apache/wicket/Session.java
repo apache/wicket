@@ -417,12 +417,12 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	public synchronized final String createAutoPageMapName()
 	{
-		String name = "org.apache.wicket-" + autoCreatePageMapCounter;
+		String name = "wicket-" + autoCreatePageMapCounter;
 		IPageMap pm = pageMapForName(name, false);
 		while (pm != null)
 		{
 			autoCreatePageMapCounter++;
-			name = "org.apache.wicket-" + autoCreatePageMapCounter;
+			name = "wicket-" + autoCreatePageMapCounter;
 			pm = pageMapForName(name, false);
 		}
 		return name;

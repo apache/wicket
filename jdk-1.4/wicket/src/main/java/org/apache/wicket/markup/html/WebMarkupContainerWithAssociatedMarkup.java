@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.model.IModel;
 
 /**
- * WebMarkupContainer with it's own markup and possibly <org.apache.wicket:head> tag.
+ * WebMarkupContainer with it's own markup and possibly <wicket:head> tag.
  * 
  * @author Juergen Donnerstag
  */
@@ -52,7 +52,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 
 	/**
 	 * Called by components like Panel and Border which have associated Markup
-	 * and which may have a &lt;org.apache.wicket:head&gt; tag.
+	 * and which may have a &lt;wicket:head&gt; tag.
 	 * <p>
 	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer
 	 * parameter has been added to the Page as a container for all headers any

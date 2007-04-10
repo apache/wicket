@@ -60,7 +60,7 @@ public class XmlTag extends MarkupElement
 	/** Name of tag, such as "img" or "input". */
 	String name;
 
-	/** Namespace of the tag, if available, such as &lt;org.apache.wicket:link ...&gt; */
+	/** Namespace of the tag, if available, such as &lt;wicket:link ...&gt; */
 	String namespace;
 
 	/** Position of this tag in the input that was parsed. */
@@ -203,7 +203,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Namespace of the tag, if available. For example, &lt;org.apache.wicket:link&gt;.
+	 * Namespace of the tag, if available. For example, &lt;wicket:link&gt;.
 	 * 
 	 * @return The tag's namespace
 	 */

@@ -42,10 +42,10 @@ import org.apache.wicket.model.IModel;
  *  &lt;span wicket:id=&quot;mypanel&quot;/&gt;
  * 
  *  TestPanel.html
- *  &lt;org.apache.wicket:panel&gt;
+ *  &lt;wicket:panel&gt;
  *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
  *    ....
- *  &lt;/org.apache.wicket:panel&gt;
+ *  &lt;/wicket:panel&gt;
  * </pre>
  * 
  * @author Jonathan Locke
@@ -57,7 +57,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 
 	static
 	{
-		// register "org.apache.wicket:fragement"
+		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("panel");
 	}
 	
@@ -105,7 +105,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
     {
         // Render the associated markup
         renderAssociatedMarkup("panel",
-                "Markup for a panel component has to contain part '<org.apache.wicket:panel>'");
+                "Markup for a panel component has to contain part '<wicket:panel>'");
 
         if (this.wasOpenCloseTag == false)
         {

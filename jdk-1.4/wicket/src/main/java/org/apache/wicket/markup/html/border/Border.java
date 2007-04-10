@@ -34,9 +34,9 @@ import org.apache.wicket.response.NullResponse;
  * placement of any markup and/or components nested within the border component.
  * <p>
  * The portion of the border's associated markup file which is to be used in
- * rendering the border is denoted by a &lt;org.apache.wicket:border&gt; tag. The children
+ * rendering the border is denoted by a &lt;wicket:border&gt; tag. The children
  * of the border component instance are then inserted into this markup,
- * replacing the first &lt;org.apache.wicket:body&gt; tag in the border's associated
+ * replacing the first &lt;wicket:body&gt; tag in the border's associated
  * markup.
  * <p>
  * For example, if a border's associated markup looked like this:
@@ -44,9 +44,9 @@ import org.apache.wicket.response.NullResponse;
  * <pre>
  *              &lt;html&gt;
  *              &lt;body&gt;
- *                &lt;org.apache.wicket:border&gt;
- *                    First &lt;org.apache.wicket:body/&gt; Last
- *                &lt;/org.apache.wicket:border&gt;
+ *                &lt;wicket:border&gt;
+ *                    First &lt;wicket:body/&gt; Last
+ *                &lt;/wicket:border&gt;
  *              &lt;/body&gt;
  *              &lt;/html&gt;
  * </pre>
@@ -75,12 +75,12 @@ import org.apache.wicket.response.NullResponse;
  * 
  * In other words, the body of the myBorder component is substituted into the
  * border's associated markup at the position indicated by the
- * &lt;org.apache.wicket:body&gt; tag.
+ * &lt;wicket:body&gt; tag.
  * <p>
- * Regarding &lt;org.apache.wicket:body/&gt; you have two options. Either use
- * &lt;org.apache.wicket:body/&gt; (open-close tag) which will automatically be expanded to
- * &lt;org.apache.wicket:body&gt;body content&lt;/org.apache.wicket:body&gt; or use
- * &lt;org.apache.wicket:body&gt;preview region&lt;/org.apache.wicket:body&gt; in your border's
+ * Regarding &lt;wicket:body/&gt; you have two options. Either use
+ * &lt;wicket:body/&gt; (open-close tag) which will automatically be expanded to
+ * &lt;wicket:body&gt;body content&lt;/wicket:body&gt; or use
+ * &lt;wicket:body&gt;preview region&lt;/wicket:body&gt; in your border's
  * markup. The preview region (everything in between the open and close tag)
  * will automatically be removed.
  * 
@@ -96,12 +96,12 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 	static
 	{
-		// register "org.apache.wicket:fragement"
+		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName(BORDER);
 		WicketTagIdentifier.registerWellKnownTagName(BODY);
 	}
 	
-	/** Will be true, once the first <org.apache.wicket:body> has been seen */
+	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
 
 	/** The open tag for this border component. */
@@ -110,7 +110,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/** Should be true for bordered pages */
 	private boolean transparentResolver = false;
 
-	/** If false, the content of <org.apache.wicket:body> will not be printed */
+	/** If false, the content of <wicket:body> will not be printed */
 	private boolean bodyVisible = true;
 
 	/**
@@ -165,14 +165,14 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * Border makes use of a &lt;org.apache.wicket:body&gt; tag to identify the position to
-	 * insert within the border's body. As &lt;org.apache.wicket:body&gt; is a special tag
+	 * Border makes use of a &lt;wicket:body&gt; tag to identify the position to
+	 * insert within the border's body. As &lt;wicket:body&gt; is a special tag
 	 * and MarkupContainer is not able to handle it, we do that here.
 	 * <p>
-	 * You have two options. Either use &lt;org.apache.wicket:body/&gt; (open-close tag)
-	 * which will automatically be expanded to &lt;org.apache.wicket:body&gt;body
-	 * content&lt;/org.apache.wicket:body&gt; or use &lt;org.apache.wicket:body&gt;preview
-	 * region&lt;/org.apache.wicket:body&gt; in your border's markup. The preview region
+	 * You have two options. Either use &lt;wicket:body/&gt; (open-close tag)
+	 * which will automatically be expanded to &lt;wicket:body&gt;body
+	 * content&lt;/wicket:body&gt; or use &lt;wicket:body&gt;preview
+	 * region&lt;/wicket:body&gt; in your border's markup. The preview region
 	 * (everything in between the open and close tag) will automatically be
 	 * removed.
 	 * 
@@ -190,7 +190,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// Determine if tag is a <org.apache.wicket:body> tag
+		// Determine if tag is a <wicket:body> tag
 		if (!(tag instanceof WicketTag))
 		{
 			return false;
@@ -244,13 +244,13 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 		// Render the associated markup
 		renderAssociatedMarkup("border",
-				"Markup for a border component must begin a tag like '<org.apache.wicket:border>'");
+				"Markup for a border component must begin a tag like '<wicket:border>'");
 
 		// There shall exactly only one body tag per border
 		if (haveSeenBodyTag == false)
 		{
 			markupStream.throwMarkupException(
-					"Didn't find <org.apache.wicket:body/> tag for the border compoment.");
+					"Didn't find <wicket:body/> tag for the border compoment.");
 		}
 	}
 
@@ -265,16 +265,16 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * Render the org.apache.wicket:body and all what is in it.
+	 * Render the wicket:body and all what is in it.
 	 * 
 	 * @param markupStream
 	 *            The associated markup stream
 	 * @param wtag
-	 *            The org.apache.wicket:body tag
+	 *            The wicket:body tag
 	 */
 	public void renderBodyComponent(final MarkupStream markupStream, final WicketTag wtag)
 	{
-		// Ok, it is a org.apache.wicket:body tag. Now render its body
+		// Ok, it is a wicket:body tag. Now render its body
 		final ComponentTag bodyTag = renderBodyComponentTag(markupStream, wtag);
 
 		// If markup stream is null, that indicates we already recursed into
@@ -304,7 +304,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		// Restore border markup so it can continue rendering
 		border.setMarkupStream(borderMarkup);
 
-		// Render body close tag: </org.apache.wicket:body>
+		// Render body close tag: </wicket:body>
 		if (wtag.isOpenClose())
 		{
 			markupStream.next();
@@ -316,19 +316,19 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		if (border.haveSeenBodyTag == true)
 		{
 			markupStream
-					.throwMarkupException("There must be exactly one <org.apache.wicket:body> tag for each border compoment.");
+					.throwMarkupException("There must be exactly one <wicket:body> tag for each border compoment.");
 		}
 
 		border.haveSeenBodyTag = true;
 	}
 
 	/**
-	 * Render the org.apache.wicket:body tag
+	 * Render the wicket:body tag
 	 * 
 	 * @param markupStream
 	 *            The associated markup stream
 	 * @param tag
-	 *            The org.apache.wicket:body tag
+	 *            The wicket:body tag
 	 */
 	public void renderBodyComponentTagBody(final MarkupStream markupStream, final ComponentTag tag)
 	{
@@ -336,10 +336,10 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * Render the org.apache.wicket:body tag
+	 * Render the wicket:body tag
 	 * 
 	 * @param tag
-	 *            The org.apache.wicket:body tag
+	 *            The wicket:body tag
 	 * @param markupStream
 	 *            The associated markup stream
 	 * @return the body tag. May be its type has been changed
@@ -349,7 +349,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	{
 		ComponentTag bodyTag = tag;
 
-		// Ok, it is a org.apache.wicket:body tag. Now render its body
+		// Ok, it is a wicket:body tag. Now render its body
 		if (tag.isOpen())
 		{
 			// It is open-preview-close already.
@@ -360,8 +360,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		}
 		else if (tag.isOpenClose())
 		{
-			// Automatically expand <org.apache.wicket:body/> to
-			// <org.apache.wicket:body>...</org.apache.wicket:body>
+			// Automatically expand <wicket:body/> to
+			// <wicket:body>...</wicket:body>
 			// in order for the html to look right: insert the body in between
 			// the org.apache.wicket tags instead of behind the open-close tag.
 			bodyTag = tag.mutable();
@@ -370,7 +370,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		else
 		{
 			markupStream
-					.throwMarkupException("A <org.apache.wicket:body> tag must be an open or open-close tag.");
+					.throwMarkupException("A <wicket:body> tag must be an open or open-close tag.");
 		}
 
 		renderComponentTag(bodyTag);

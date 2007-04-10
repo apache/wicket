@@ -68,7 +68,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_1a() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 
 		byte[] s = new Base64().encode(input.getBytes());
 
@@ -83,7 +83,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_1b() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
 
 		byte[] s = new Base64().encode(input.getBytes());
 
@@ -98,7 +98,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_1c() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
 
 		byte[] s = new Base64().encode(input.getBytes());
 
@@ -113,7 +113,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_1d() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
 
 		byte[] s = new Base64().encode(input.getBytes());
 
@@ -140,7 +140,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_3() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY)
 				.newCrypt();
 		String s = crypt.encryptUrlSafe(input);
@@ -172,7 +172,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_UrlSafe_1a() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
 
@@ -187,7 +187,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_UrlSafe_1b() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
 
@@ -202,7 +202,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_UrlSafe_1c() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
 
@@ -217,7 +217,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_UrlSafe_1d() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
 
@@ -244,7 +244,7 @@ public class Base64Test extends TestCase
 	 */
 	public void test_UrlSafe_3() throws IOException
 	{
-		String input = "org.apache.wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
+		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY)
 				.newCrypt();
 		String s = crypt.encryptUrlSafe(input);

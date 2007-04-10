@@ -92,7 +92,7 @@ public final class DiffUtil
 			// correct. It'll replace the current reference files. Thus change
 			// it only for one test-run.
 			// -Dwicket.replace.expected.results=true
-			if (Boolean.getBoolean("org.apache.wicket.replace.expected.results"))
+			if (Boolean.getBoolean("wicket.replace.expected.results"))
 			{
 				in.close();
 				in = null;

@@ -37,11 +37,11 @@ import org.apache.wicket.util.value.IValueMap;
  * the href and assign a BookmarkablePageLink to it (automatically).
  * <p>
  * An application setting is used as default value, which might be modified for
- * specific regions. These regions are identified by &lt;org.apache.wicket:link&gt; tags
+ * specific regions. These regions are identified by &lt;wicket:link&gt; tags
  * with an optional 'autolink' attribute. The default value for the attribute is
- * true, thus enabling autolinking. An open-close &lt;org.apache.wicket:link/&gt tag will
+ * true, thus enabling autolinking. An open-close &lt;wicket:link/&gt tag will
  * change the autolink status until the end of the markup document or the next
- * &lt;org.apache.wicket:link&gt; tag respectively. &lt;org.apache.wicket:link&gt; regions may be
+ * &lt;wicket:link&gt; tag respectively. &lt;wicket:link&gt; regions may be
  * nested.
  * 
  * @author Juergen Donnerstag
@@ -53,7 +53,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 	static
 	{
-		// register "org.apache.wicket:fragement"
+		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("link");
 	}
 
@@ -117,7 +117,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
-		// For all <org.apache.wicket:link ..> tags which probably change the
+		// For all <wicket:link ..> tags which probably change the
 		// current autolink status.
 		if (tag instanceof WicketTag)
 		{

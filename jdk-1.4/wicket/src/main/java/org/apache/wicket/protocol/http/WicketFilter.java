@@ -379,7 +379,7 @@ public class WicketFilter implements Filter
 
 			// Store instance of this application object in servlet context to
 			// make integration with outside world easier
-			String contextKey = "org.apache.wicket:" + filterConfig.getFilterName();
+			String contextKey = "wicket:" + filterConfig.getFilterName();
 			filterConfig.getServletContext().setAttribute(contextKey, this.webApplication);
 
 			Application.set(webApplication);

@@ -614,7 +614,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				// Get key and value using attribute pattern
 				String value = attributeParser.getValue();
 
-				// In case like <html xmlns:org.apache.wicket> will the value be null
+				// In case like <html xmlns:wicket> will the value be null
 				if (value == null)
 				{
 					value = "";

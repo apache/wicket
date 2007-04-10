@@ -24,7 +24,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
- * This is a tag resolver which handles &lt;org.apache.wicket:link&gt; tags. Because
+ * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because
  * autolinks are already detected and handled, the only task of this
  * resolver will be to add a "transparent" WebMarkupContainer to 
  * transparently handling child components. 

@@ -27,7 +27,7 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 /**
  * This is a markup inline filter. It identifies preview regions useful for HTML
  * designers to design the page. But they must be removed prior to sending the
- * markup to the client. Preview regions are enclosed by &lt;org.apache.wicket:remove&gt;
+ * markup to the client. Preview regions are enclosed by &lt;wicket:remove&gt;
  * tags.
  * 
  * @author Juergen Donnerstag
@@ -39,7 +39,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 
 	static
 	{
-		// register "org.apache.wicket:fragement"
+		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("remove");
 	}
 
@@ -51,7 +51,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Removes preview regions enclosed by &lt;org.apache.wicket:remove&gt; tags. Note that
+	 * Removes preview regions enclosed by &lt;wicket:remove&gt; tags. Note that
 	 * for obvious reasons, nested components are not allowed.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()

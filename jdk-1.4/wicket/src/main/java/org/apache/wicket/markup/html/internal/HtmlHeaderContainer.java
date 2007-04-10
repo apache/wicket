@@ -46,7 +46,7 @@ import org.apache.wicket.response.StringResponse;
  * &lt;head&gt; regions may contain additional org.apache.wicket components, which can be
  * added by means of add(Component) as usual.
  * <p>
- * &lt;org.apache.wicket:head&gt; tags are handled by simple WebMarkupContainers also
+ * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
  * created by a HtmlHeaderResolver.
  * <p>
  * <ul>
@@ -56,13 +56,13 @@ import org.apache.wicket.response.StringResponse;
  * <li> &lt;head&gt; is supported by panels, borders and inherited markup, but
  * is <b>not</b> copied to the output. They are for previewability only (except
  * on Pages)</li>
- * <li> &lt;org.apache.wicket:head&gt; does not make sense in page markup (but does in
+ * <li> &lt;wicket:head&gt; does not make sense in page markup (but does in
  * inherited page markup)</li>
- * <li> &lt;org.apache.wicket:head&gt; makes sense in Panels, Borders and inherited markup
+ * <li> &lt;wicket:head&gt; makes sense in Panels, Borders and inherited markup
  * (of Panels, Borders and Pages)</li>
- * <li> components within &lt;org.apache.wicket:head&gt; must be added by means of add(),
+ * <li> components within &lt;wicket:head&gt; must be added by means of add(),
  * like allways with Wicket. No difference.</li>
- * <li> &lt;org.apache.wicket:head&gt; and it's content is copied to the output. Components
+ * <li> &lt;wicket:head&gt; and it's content is copied to the output. Components
  * contained in &lt;org.apache.wicket.head&gt; are rendered as usual</li>
  * </ul>
  * 
@@ -73,10 +73,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * org.apache.wicket:head tags (components) must only be added once. To allow for a
-	 * little bit more control, each org.apache.wicket:head has an associated scope which
+	 * wicket:head tags (components) must only be added once. To allow for a
+	 * little bit more control, each wicket:head has an associated scope which
 	 * by default is equal to the java class name directly associated with the
-	 * markup which contains the org.apache.wicket:head. It can be modified by means of the
+	 * markup which contains the wicket:head. It can be modified by means of the
 	 * scope attribute.
 	 */
 	private transient Map renderedComponentsPerScope;
@@ -99,7 +99,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		// We will render the tags manually, because if no component asked to
 		// contribute to the header, the tags will not be printed either.
 		// No contribution usually only happens if none of the components
-		// including the page does have a <head> or <org.apache.wicket:head> tag.
+		// including the page does have a <head> or <wicket:head> tag.
 		setRenderBodyOnly(true);
 
 		setAuto(true);

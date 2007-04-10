@@ -88,7 +88,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	 */
 	protected String getSpanClass()
 	{
-		return "org.apache.wicket-ajax-indicator";
+		return "wicket-ajax-indicator";
 	}
 
 	/**

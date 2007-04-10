@@ -149,7 +149,7 @@ public class MarkupCache
 
 	/**
 	 * The markup has just been loaded and now we check if markup inheritance
-	 * applies, which is if <org.apache.wicket:extend> is found in the markup. If yes, than
+	 * applies, which is if <wicket:extend> is found in the markup. If yes, than
 	 * load the base markups and merge the markup elements to create an updated
 	 * (merged) list of markup elements.
 	 * 
@@ -161,7 +161,7 @@ public class MarkupCache
 	 */
 	private Markup checkForMarkupInheritance(final MarkupContainer container, final Markup markup)
 	{
-		// Check if markup contains <org.apache.wicket:extend> which tells us that
+		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
 		int extendIndex = requiresBaseMarkup(markup);
 		if (extendIndex == -1)
@@ -344,7 +344,7 @@ public class MarkupCache
 			Markup markup = application.getMarkupSettings().getMarkupParserFactory()
 					.newMarkupParser().readAndParse(markupResourceStream);
 
-			// Check for markup inheritance. If it contains <org.apache.wicket:extend>
+			// Check for markup inheritance. If it contains <wicket:extend>
 			// the two markups get merged.
 			markup = checkForMarkupInheritance(container, markup);
 
@@ -447,12 +447,12 @@ public class MarkupCache
 	}
 
 	/**
-	 * Check if markup contains &lt;org.apache.wicket:extend&gt; which tells us that we
-	 * need to read the inherited markup as well. &lt;org.apache.wicket:extend&gt; MUST BE
+	 * Check if markup contains &lt;wicket:extend&gt; which tells us that we
+	 * need to read the inherited markup as well. &lt;wicket:extend&gt; MUST BE
 	 * the first org.apache.wicket tag in the markup. Skip raw markup
 	 * 
 	 * @param markup
-	 * @return == 0, if no org.apache.wicket:extend was found
+	 * @return == 0, if no wicket:extend was found
 	 */
 	private int requiresBaseMarkup(final Markup markup)
 	{

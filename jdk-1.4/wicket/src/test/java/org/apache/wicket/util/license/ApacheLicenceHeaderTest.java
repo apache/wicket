@@ -43,7 +43,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				/*
 				 * See NOTICE.txt
 				 */
-				"src/main/java/org.apache.wicket/util/diff",				
+				"src/main/java/org/apache/wicket/util/diff",				
 		};
 		
 		cssIgnore = new String[] {
@@ -63,29 +63,29 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				/*
 				 * ASL1.1. Taken from Maven JRCS. See NOTICE.txt
 				 */
-				"src/main/java/org.apache.wicket/util/diff/AddDelta.java",
-				"src/main/java/org.apache.wicket/util/diff/ChangeDelta.java",
-				"src/main/java/org.apache.wicket/util/diff/Chunk.java",
-				"src/main/java/org.apache.wicket/util/diff/DeleteDelta.java",
-				"src/main/java/org.apache.wicket/util/diff/Delta.java",
-				"src/main/java/org.apache.wicket/util/diff/Diff.java",
-				"src/main/java/org.apache.wicket/util/diff/DiffAlgorithm.java",
-				"src/main/java/org.apache.wicket/util/diff/DifferentiationFailedException.java",
-				"src/main/java/org.apache.wicket/util/diff/DiffException.java",
-				"src/main/java/org.apache.wicket/util/diff/PatchFailedException.java",
-				"src/main/java/org.apache.wicket/util/diff/Revision.java",
-				"src/main/java/org.apache.wicket/util/diff/RevisionVisitor.java",
-				"src/main/java/org.apache.wicket/util/diff/ToString.java",
-				"src/main/java/org.apache.wicket/util/diff/myers/DiffNode.java",
-				"src/main/java/org.apache.wicket/util/diff/myers/MyersDiff.java",
-				"src/main/java/org.apache.wicket/util/diff/myers/PathNode.java",
-				"src/main/java/org.apache.wicket/util/diff/myers/Snake.java",
+				"src/main/java/org/apache/wicket/util/diff/AddDelta.java",
+				"src/main/java/org/apache/wicket/util/diff/ChangeDelta.java",
+				"src/main/java/org/apache/wicket/util/diff/Chunk.java",
+				"src/main/java/org/apache/wicket/util/diff/DeleteDelta.java",
+				"src/main/java/org/apache/wicket/util/diff/Delta.java",
+				"src/main/java/org/apache/wicket/util/diff/Diff.java",
+				"src/main/java/org/apache/wicket/util/diff/DiffAlgorithm.java",
+				"src/main/java/org/apache/wicket/util/diff/DifferentiationFailedException.java",
+				"src/main/java/org/apache/wicket/util/diff/DiffException.java",
+				"src/main/java/org/apache/wicket/util/diff/PatchFailedException.java",
+				"src/main/java/org/apache/wicket/util/diff/Revision.java",
+				"src/main/java/org/apache/wicket/util/diff/RevisionVisitor.java",
+				"src/main/java/org/apache/wicket/util/diff/ToString.java",
+				"src/main/java/org/apache/wicket/util/diff/myers/DiffNode.java",
+				"src/main/java/org/apache/wicket/util/diff/myers/MyersDiff.java",
+				"src/main/java/org/apache/wicket/util/diff/myers/PathNode.java",
+				"src/main/java/org/apache/wicket/util/diff/myers/Snake.java",
 				/*
 				 * Needs to be resolved (rewritten or NOTICE)
 				 */
-				"src/main/java/org.apache.wicket/util/concurrent/ConcurrentReaderHashMap.java",
-				"src/main/java/org.apache.wicket/util/concurrent/ConcurrentHashMap.java",
-				"src/main/java/org.apache.wicket/util/concurrent/CopyOnWriteArrayList.java"
+				"src/main/java/org/apache/wicket/util/concurrent/ConcurrentReaderHashMap.java",
+				"src/main/java/org/apache/wicket/util/concurrent/ConcurrentHashMap.java",
+				"src/main/java/org/apache/wicket/util/concurrent/CopyOnWriteArrayList.java"
 		};
 		
 		javaScriptIgnore = new String[] { 
@@ -99,8 +99,8 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				/*
 				 * See NOTICE.txt
 				 */
-				"src/main/java/org.apache.wicket/ajax/org.apache.wicket-ajax-debug-drag.js",
-				"src/main/java/org.apache.wicket/markup/html/form/upload/MultiFileUploadField.js"
+				"src/main/java/org/apache/wicket/ajax/org.apache.wicket-ajax-debug-drag.js",
+				"src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js"
 		};
 		
 		propertiesIgnore = new String[] {

@@ -75,7 +75,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	};
 
 	/** Special role string for denying access to all */
-	public static final String NO_ROLE = "org.apache.wicket:NO_ROLE";
+	public static final String NO_ROLE = "wicket:NO_ROLE";
 
 	/**
 	 * Authorizes the given role to create component instances of type

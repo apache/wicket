@@ -22,8 +22,8 @@ import org.apache.wicket.util.parse.metapattern.OptionalMetaPattern;
 
 /**
  * Parses key value assignment statements like "foo=bar" but also supporting
- * namespaces like "org.apache.wicket:foo=bar". However the 'key' value returned will
- * contain "org.apache.wicket:foo". It does not separate namespace and name.
+ * namespaces like "wicket:foo=bar". However the 'key' value returned will
+ * contain "wicket:foo". It does not separate namespace and name.
  * 
  * @author Jonathan Locke
  */

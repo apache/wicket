@@ -21,13 +21,13 @@ import org.apache.wicket.markup.parser.XmlTag;
 /**
  * WicketTag extends ComponentTag and will be created by a MarkupParser whenever
  * it parses a tag in the org.apache.wicket namespace. By default, this namespace is
- * "org.apache.wicket", so org.apache.wicket tags are then of the form &lt;org.apache.wicket:*&gt;
+ * "wicket", so org.apache.wicket tags are then of the form &lt;wicket:*&gt;
  * <p>
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
- * xmlns:org.apache.wicket&gt; to create a XHTML conformant namespace for such tags.
+ * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
  * Note 2: The namespace name is configurable. E.g. &lt;html
- * xmlns:wcn="http://org.apache.wicket.sourcefourge.net"&gt;
+ * xmlns:wcn="http://org.apache.wicket"&gt;
  * 
  * @author Juergen Donnerstag
  */
@@ -45,7 +45,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * Get the tag's name attribute: e.g. &lt;org.apache.wicket:region name=panel&gt;
+	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
 	 * 
 	 * @return The tag's name attribute
 	 */
@@ -55,7 +55,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:component'
+	 * @return True, if tag name equals 'wicket:component'
 	 */
 	public final boolean isComponentTag()
 	{
@@ -63,7 +63,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:link'
+	 * @return True, if tag name equals 'wicket:link'
 	 */
 	public final boolean isLinkTag()
 	{
@@ -71,7 +71,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:remove'
+	 * @return True, if tag name equals 'wicket:remove'
 	 */
 	public final boolean isRemoveTag()
 	{
@@ -79,7 +79,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:body'
+	 * @return True, if tag name equals 'wicket:body'
 	 */
 	public final boolean isBodyTag()
 	{
@@ -87,7 +87,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:container'
+	 * @return True, if tag name equals 'wicket:container'
 	 */
 	public final boolean isContainerTag()
 	{
@@ -95,7 +95,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:child'
+	 * @return True, if tag name equals 'wicket:child'
 	 */
 	public final boolean isChildTag()
 	{
@@ -103,7 +103,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:extend'
+	 * @return True, if tag name equals 'wicket:extend'
 	 */
 	public final boolean isExtendTag()
 	{
@@ -111,7 +111,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:extend'
+	 * @return True, if tag name equals 'wicket:extend'
 	 */
 	public final boolean isHeadTag()
 	{
@@ -119,7 +119,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:message'
+	 * @return True, if tag name equals 'wicket:message'
 	 */
 	public final boolean isMessageTag()
 	{
@@ -127,7 +127,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:panel'
+	 * @return True, if tag name equals 'wicket:panel'
 	 */
 	public final boolean isPanelTag()
 	{
@@ -135,7 +135,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'org.apache.wicket:border'
+	 * @return True, if tag name equals 'wicket:border'
 	 */
 	public final boolean isBorderTag()
 	{
@@ -143,7 +143,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True if &lt;org.apache.wicket:fragment&gt;
+	 * @return True if &lt;wicket:fragment&gt;
 	 */
 	public final boolean isFragementTag()
 	{
@@ -151,7 +151,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return true if &lt;org.apache.wicket:enclsoure&gt;
+	 * @return true if &lt;wicket:enclsoure&gt;
 	 */
 	public final boolean isEnclosureTag()
 	{
@@ -159,7 +159,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True if <org.apache.wicket:panel>, <org.apache.wicket:border>, <org.apache.wicket:ex
+	 * @return True if <wicket:panel>, <wicket:border>, <wicket:ex
 	 */
 	public final boolean isMajorWicketComponentTag()
 	{

@@ -34,7 +34,7 @@ import org.apache.wicket.util.lang.Classes;
 
 
 /**
- * &lt;org.apache.wicket:component class="myApp.MyTable" key=value&gt; tags may be used to add 
+ * &lt;wicket:component class="myApp.MyTable" key=value&gt; tags may be used to add 
  * Wicket components (e.g. a specialized PageableListView) and pass parameters (e.g. the number
  * of rows per list view page). The object is automatically instantiated, initialized
  * and added to the page's component hierarchy.
@@ -52,16 +52,16 @@ public final class AutoComponentResolver implements IComponentResolver
 
 	static
 	{
-		// register "org.apache.wicket:fragement"
+		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("component");
 	}
 
     /** 
      * Temporary storage for containers currently being rendered. Thus child
-     * components can be re-parented. Remember: <org.apache.wicket:component> are an 
+     * components can be re-parented. Remember: <wicket:component> are an 
      * exception to the rule. Though the markup of the children are nested
-     * inside <org.apache.wicket:component>, their respective Java components are not.
-     * They must be added to the parent container of <org.apache.wicket:component>.
+     * inside <wicket:component>, their respective Java components are not.
+     * They must be added to the parent container of <wicket:component>.
      */ 
     private final Map nestedComponents = new HashMap();
     
@@ -80,10 +80,10 @@ public final class AutoComponentResolver implements IComponentResolver
     public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
             final ComponentTag tag)
     {
-        // It must be <org.apache.wicket:...>
+        // It must be <wicket:...>
         if (tag instanceof WicketTag)
         {
-            // It must be <org.apache.wicket:component...>
+            // It must be <wicket:component...>
             final WicketTag wicketTag = (WicketTag)tag;
             if (wicketTag.isComponentTag())
             {
@@ -110,12 +110,12 @@ public final class AutoComponentResolver implements IComponentResolver
             }
         }
         
-        // Re-parent children of <org.apache.wicket:component>. 
+        // Re-parent children of <wicket:component>. 
         if ((tag.getId() != null) && nestedComponents.containsKey(container))
         {
             MarkupContainer parent = container.getParent();
             
-            // Take care of nested <org.apache.wicket:component>
+            // Take care of nested <wicket:component>
             while ((parent != null) && nestedComponents.containsKey(parent))
             {
                 parent = parent.getParent();
@@ -158,7 +158,7 @@ public final class AutoComponentResolver implements IComponentResolver
         final String classname = tag.getAttributes().getString("class");
         if ((classname == null) || (classname.trim().length() == 0))
         {
-            throw new MarkupException("Tag <org.apache.wicket:component> must have attribute 'class'");
+            throw new MarkupException("Tag <wicket:component> must have attribute 'class'");
         }
 
         // Load the class. In case a Groovy Class Resolver has been provided,

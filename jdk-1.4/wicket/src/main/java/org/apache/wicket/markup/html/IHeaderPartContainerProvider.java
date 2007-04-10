@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html;
 
 /**
  * WebMarkupContainers that implement this know how to provide header parts for
- * org.apache.wicket:head fragments.
+ * wicket:head fragments.
  * 
  * @author eelcohillenius
  */

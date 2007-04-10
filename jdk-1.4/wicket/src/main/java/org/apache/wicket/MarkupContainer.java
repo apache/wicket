@@ -287,7 +287,7 @@ public abstract class MarkupContainer extends Component
 
 		// If the container is transparent, than ask its parent.
 		// ParentResolver does something quite similar, but because of <head>,
-		// <body>, <org.apache.wicket:panel> etc. it is quite common to have transparent
+		// <body>, <wicket:panel> etc. it is quite common to have transparent
 		// components. Hence, this is little short cut for a tiny performance
 		// optimization.
 		if ((child == null) && isTransparentResolver() && (getParent() != null))
@@ -1141,7 +1141,7 @@ public abstract class MarkupContainer extends Component
 		// Get the current markup element
 		final MarkupElement element = markupStream.get();
 
-		// If it a tag like <org.apache.wicket..> or <span wicket:id="..." >
+		// If it a tag like <wicket..> or <span wicket:id="..." >
 		if ((element instanceof ComponentTag) && !markupStream.atCloseTag())
 		{
 			// Get element as tag
@@ -1194,7 +1194,7 @@ public abstract class MarkupContainer extends Component
 					if (((WicketTag)tag).isChildTag())
 					{
 						markupStream.throwMarkupException("Found " + tag.toString()
-								+ " but no <org.apache.wicket:extend>");
+								+ " but no <wicket:extend>");
 					}
 					else
 					{

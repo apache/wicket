@@ -24,7 +24,7 @@ import org.apache.wicket.util.diff.DiffUtil;
 
 
 /**
- * Test [ 1470093 ] <org.apache.wicket:link> does not accept numeric param names
+ * Test [ 1470093 ] <wicket:link> does not accept numeric param names
  * 
  * @author Juergen Donnerstag
  * @author Blake Day 

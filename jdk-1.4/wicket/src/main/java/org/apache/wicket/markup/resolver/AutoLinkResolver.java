@@ -96,7 +96,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				// Href is relative. Create a resource reference pointing at
 				// this file
 
-				// <org.apache.wicket:head> components are handled differently. We can
+				// <wicket:head> components are handled differently. We can
 				// not use the container, because it is the container the
 				// header has been added to (e.g. the Page). What we need
 				// however, is the component (e.g. a Panel) which

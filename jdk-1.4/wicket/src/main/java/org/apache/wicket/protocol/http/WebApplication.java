@@ -222,7 +222,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 			{
 				throw new WicketRuntimeException("unable to retrieve servlet path");
 			}
-			sessionAttributePrefix = "org.apache.wicket:" + servletPath + ":";
+			sessionAttributePrefix = "wicket:" + servletPath + ":";
 		}
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
@@ -557,7 +557,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 		String configuration = null;
 		try
 		{
-			configuration = System.getProperty("org.apache.wicket." + Application.CONFIGURATION);
+			configuration = System.getProperty("wicket." + Application.CONFIGURATION);
 		}
 		catch (SecurityException e)
 		{

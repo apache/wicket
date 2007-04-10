@@ -25,7 +25,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 
 /**
- * This is a tag resolver which handles &lt;org.apache.wicket:container&gt;
+ * This is a tag resolver which handles &lt;wicket:container&gt;
  * 
  * Sometimes adding components in certain ways may lead to output of invalid
  * markup. For example, lets pretend we output table rows two at a time using a
@@ -46,10 +46,10 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  * 
  * <code>
  * 	<table>
- * 		<org.apache.wicket:container wicket:id="repeater">
+ * 		<wicket:container wicket:id="repeater">
  * 			<tr><td>...</td></tr>
  * 			<tr><td>...</td></tr>
- * 		</org.apache.wicket:container>
+ * 		</wicket:container>
  * 	</table>
  * </code>
  * 
@@ -63,7 +63,7 @@ public class WicketContainerResolver implements IComponentResolver
 
 	static
 	{
-		// register "org.apache.wicket:container"
+		// register "wicket:container"
 		WicketTagIdentifier.registerWellKnownTagName("container");
 	}
 
@@ -88,7 +88,7 @@ public class WicketContainerResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// this is only here so we register org.apache.wicket:container tag, this resolver
+		// this is only here so we register wicket:container tag, this resolver
 		// does not actually do anything special to the tag
 		return false;
 	}

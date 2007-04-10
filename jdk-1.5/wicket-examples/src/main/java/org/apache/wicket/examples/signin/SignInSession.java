@@ -58,7 +58,7 @@ public final class SignInSession extends WebSession
 		if (user == null)
 		{
 			// Trivial password "db"
-			if ("org.apache.wicket".equalsIgnoreCase(username) && "org.apache.wicket".equalsIgnoreCase(password))
+			if ("wicket".equalsIgnoreCase(username) && "wicket".equalsIgnoreCase(password))
 			{
 				user = username;
 			}

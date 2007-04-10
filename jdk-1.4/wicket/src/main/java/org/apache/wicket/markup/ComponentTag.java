@@ -49,7 +49,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * Standard component id attribute always available for components
 	 * regardless of user ApplicationSettings for id attribute; value ==
-	 * 'org.apache.wicket'.
+	 * 'wicket'.
 	 */
 	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
 

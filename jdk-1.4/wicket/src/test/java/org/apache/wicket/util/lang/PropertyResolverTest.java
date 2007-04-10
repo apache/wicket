@@ -57,9 +57,9 @@ public class PropertyResolverTest extends TestCase
 		String name = (String)PropertyResolver.getValue("name", person);
 		assertNull(name);
 
-		PropertyResolver.setValue("name", person, "org.apache.wicket", CONVERTER);
+		PropertyResolver.setValue("name", person, "wicket", CONVERTER);
 		name = (String)PropertyResolver.getValue("name", person);
-		assertEquals(name, "org.apache.wicket");
+		assertEquals(name, "wicket");
 	}
 
 	/**
@@ -91,9 +91,9 @@ public class PropertyResolverTest extends TestCase
 	public void testPathExpression() throws Exception
 	{
 		person.setAddress(new Address());
-		PropertyResolver.setValue("address.street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("address.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("address.street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 
 	}
 
@@ -111,9 +111,9 @@ public class PropertyResolverTest extends TestCase
 	 */
 	public void testNullCreation() throws Exception
 	{
-		PropertyResolver.setValue("address.street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("address.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("address.street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 
 		try
 		{
@@ -172,9 +172,9 @@ public class PropertyResolverTest extends TestCase
 		Address address = new Address();
 		PropertyResolver.setValue("addressMap", person, new HashMap(), CONVERTER);
 		PropertyResolver.setValue("addressMap.address", person, address, CONVERTER);
-		PropertyResolver.setValue("addressMap.address.street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressMap.address.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressMap.address.street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 	}
 
 	/**
@@ -186,12 +186,12 @@ public class PropertyResolverTest extends TestCase
 		PropertyResolver.setValue("addressList.0", person, new Address(), CONVERTER);
 		PropertyResolver.setValue("addressList.10", person, new Address(), CONVERTER);
 		PropertyResolver.setValue("addressList.1", person, new Address(), CONVERTER);
-		PropertyResolver.setValue("addressList.1.street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressList.1.street", person, "wicket-street", CONVERTER);
 
 		String street = (String)PropertyResolver.getValue("addressList.0.street", person);
 		assertNull(street);
 		street = (String)PropertyResolver.getValue("addressList.1.street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 	}
 
 	/**
@@ -201,13 +201,13 @@ public class PropertyResolverTest extends TestCase
 	{
 		PropertyResolver.setValue("addressArray", person, new Address[] { new Address(), null },
 				CONVERTER);
-		PropertyResolver.setValue("addressArray.0.street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressArray.0.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressArray.0.street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 
-		PropertyResolver.setValue("addressArray.1.street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressArray.1.street", person, "wicket-street", CONVERTER);
 		street = (String)PropertyResolver.getValue("addressArray.1.street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 	}
 
 	/**
@@ -217,13 +217,13 @@ public class PropertyResolverTest extends TestCase
 	{
 		PropertyResolver.setValue("addressArray", person, new Address[] { new Address(), null },
 				CONVERTER);
-		PropertyResolver.setValue("addressArray[0].street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressArray[0].street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressArray[0].street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 
-		PropertyResolver.setValue("addressArray[1].street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressArray[1].street", person, "wicket-street", CONVERTER);
 		street = (String)PropertyResolver.getValue("addressArray[1].street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 	}
 
 	/**
@@ -232,9 +232,9 @@ public class PropertyResolverTest extends TestCase
 	public void testPropertyByIndexLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressAt.0", person, new Address(), CONVERTER);
-		PropertyResolver.setValue("addressAt.0.street", person, "org.apache.wicket-street", CONVERTER);
+		PropertyResolver.setValue("addressAt.0.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressAt.0.street", person);
-		assertEquals(street, "org.apache.wicket-street");
+		assertEquals(street, "wicket-street");
 	}
 
 	/**

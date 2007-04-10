@@ -42,7 +42,7 @@ public class FragmentResolver implements IComponentResolver
 
 	static
 	{
-		// register "org.apache.wicket:fragement"
+		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("fragment");
 	}
 	
@@ -61,12 +61,12 @@ public class FragmentResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// If <org.apache.wicket:...>
+		// If <wicket:...>
 		if (tag instanceof WicketTag)
 		{
 			final WicketTag wTag = (WicketTag)tag;
 
-			// If <org.apache.wicket:fragment ...>
+			// If <wicket:fragment ...>
 			if (wTag.isFragementTag())
 			{
 				// skip the markup associated with the tag

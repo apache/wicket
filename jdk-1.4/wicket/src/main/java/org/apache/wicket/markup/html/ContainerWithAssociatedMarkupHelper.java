@@ -34,7 +34,7 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * A Wicket internal helper class to handle org.apache.wicket:head tags.
+ * A Wicket internal helper class to handle wicket:head tags.
  * 
  * @author Juergen Donnerstag
  */
@@ -45,7 +45,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	/** True if body onLoad attribute modifiers have been attached */
 	private boolean checkedBody = false;
 
-	/** <org.apache.wicket:head> is only allowed before <body>, </head>, <org.apache.wicket:panel> etc. */
+	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
 	private boolean noMoreWicketHeadTagsAllowed = false;
 
 	/** The markup container the helper is associated with */
@@ -61,7 +61,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 
 	/**
 	 * Called by components like Panel and Border which have associated Markup
-	 * and which may have a &lt;org.apache.wicket:head&gt; tag.
+	 * and which may have a &lt;wicket:head&gt; tag.
 	 * <p>
 	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer
 	 * parameter has been added to the Page as a container for all headers any
@@ -133,7 +133,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				}
 			}
 
-			// Position the stream after <org.apache.wicket:head>
+			// Position the stream after <wicket:head>
 			markupStream.skipComponent();
 		}
 	}
@@ -196,9 +196,9 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * @param index
 	 *            A unique index
 	 * @param markupClass
-	 *            The java class the org.apache.wicket:head tag is directly associated with
+	 *            The java class the wicket:head tag is directly associated with
 	 * @return the header part for this panel/border or null if it doesn't have
-	 *         a org.apache.wicket:head tag.
+	 *         a wicket:head tag.
 	 */
 	private final HeaderPartContainer getHeaderPart(final Class markupClass, final int index)
 	{
@@ -216,7 +216,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			final WicketTag wTag = (WicketTag)element;
 			if ((wTag.isHeadTag() == true) && (wTag.getNamespace() != null))
 			{
-				// found <org.apache.wicket:head>
+				// found <wicket:head>
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
 				final String headerId = "_" + Classes.simpleName(markupClass)
@@ -254,7 +254,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			return -1;
 		}
 
-		// Scan the markup for <org.apache.wicket:head>.
+		// Scan the markup for <wicket:head>.
 		MarkupElement elem = associatedMarkupStream.get();
 		while (elem != null)
 		{
@@ -266,11 +266,11 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 					if (this.noMoreWicketHeadTagsAllowed == true)
 					{
 						throw new MarkupException(
-								"<org.apache.wicket:head> tags are only allowed before <body>, </head>, <org.apache.wicket:panel> etc. tag");
+								"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag");
 					}
 					return associatedMarkupStream.getCurrentIndex();
 				}
-				// org.apache.wicket:head must be before border, panel or extend
+				// wicket:head must be before border, panel or extend
 				else if (tag.isOpen()
 						&& (tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
 				{
@@ -280,12 +280,12 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			else if (elem instanceof ComponentTag)
 			{
 				ComponentTag tag = (ComponentTag)elem;
-				// org.apache.wicket:head must be before </head>
+				// wicket:head must be before </head>
 				if (tag.isClose() && TagUtils.isHeadTag(tag))
 				{
 					this.noMoreWicketHeadTagsAllowed = true;
 				}
-				// org.apache.wicket:head must be before <body>
+				// wicket:head must be before <body>
 				else if (tag.isOpen() && TagUtils.isBodyTag(tag))
 				{
 					this.noMoreWicketHeadTagsAllowed = true;
@@ -294,7 +294,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			elem = associatedMarkupStream.next();
 		}
 
-		// No (more) org.apache.wicket:head found
+		// No (more) wicket:head found
 		return -1;
 	}
 }

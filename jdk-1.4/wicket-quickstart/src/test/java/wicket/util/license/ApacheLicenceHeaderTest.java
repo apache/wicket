@@ -37,7 +37,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		htmlIgnore = new String[] {
 				// This is a quickstart project, so too much information in the HTML file
 				// will confuse.
-				"src/main/java/org.apache.wicket/quickstart/Index.html",
+				"src/main/java/org/apache/wicket/quickstart/Index.html",
 				// Small redirect file with no clever content.
 				"src/main/webapp/index.html"
 		};

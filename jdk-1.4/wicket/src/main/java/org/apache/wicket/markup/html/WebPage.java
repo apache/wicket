@@ -158,8 +158,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * Gets the markup type for a WebPage, which is "html" by default. Support
 	 * for pages in another markup language, such as VXML, would require the
 	 * creation of a different Page subclass in an appropriate package under
-	 * org.apache.wicket.markup. To support VXML (voice markup), one might create the
-	 * package org.apache.wicket.markup.vxml and a subclass of Page called VoicePage.
+	 * org.apache.wicket.markup. To support VXML (voice markup), one might
+	 * create the package org.apache.wicket.markup.vxml and a subclass of Page
+	 * called VoicePage.
 	 * 
 	 * @return Markup type for HTML
 	 */
@@ -355,7 +356,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			String name = pageMap.getName();
 			if (name == null)
 			{
-				name = "org.apache.wicket:default";
+				name = "wicket:default";
 			}
 			else
 			{
@@ -378,7 +379,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				// this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
 				response
-						.write("if (window.name=='' || window.name.indexOf('org.apache.wicket') > -1) { window.name=\"");
+						.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
 				response.write(name);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
@@ -406,7 +407,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				}
 				JavascriptUtils.writeOpenTag(response);
 				response
-						.write("if (window.name=='' || (window.name.indexOf('org.apache.wicket') > -1 && window.name!='"
+						.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='"
 								+ name + "')) { window.location=\"");
 				response.write(url);
 				response.write("\"; }");

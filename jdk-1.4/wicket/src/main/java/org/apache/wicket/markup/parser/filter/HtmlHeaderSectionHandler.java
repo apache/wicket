@@ -28,7 +28,7 @@ import org.apache.wicket.markup.parser.XmlTag;
 
 /**
  * This is a markup inline filter. It assumes that WicketTagIdentifier has been
- * called first and search for a &lt;head&gt; tag (note: not org.apache.wicket:head).
+ * called first and search for a &lt;head&gt; tag (note: not wicket:head).
  * Provided the markup contains a &lt;body&gt; tag it will automatically prepend
  * a &lt;head&gt; tag if missing.
  * <p>
@@ -109,7 +109,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			}
 			else 
 			{
-				// we found <org.apache.wicket:head>
+				// we found <wicket:head>
 				foundHead = true;
 			}
 		}

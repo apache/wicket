@@ -31,9 +31,9 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 
 /**
- * This is a tag resolver which handles &lt;org.apache.wicket:message
- * attr="myKey"&gt;Default Text&lt;/org.apache.wicket:message&gt;. The resolver will
- * replace the whole tag with the message found in the properties file
+ * This is a tag resolver which handles &lt;wicket:message
+ * attr="myKey"&gt;Default Text&lt;/wicket:message&gt;. The resolver
+ * will replace the whole tag with the message found in the properties file
  * associated with the Page. If no message is found, the default body text will
  * remain.
  * 
@@ -42,14 +42,14 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 public class WicketMessageResolver implements IComponentResolver
 {
 	private static final Log log = LogFactory.getLog(WicketMessageResolver.class);
-	
+
 	static
 	{
-		// register "org.apache.wicket:message"
+		// register "wicket:message"
 		WicketTagIdentifier.registerWellKnownTagName("message");
 	}
 
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -80,11 +80,11 @@ public class WicketMessageResolver implements IComponentResolver
 				if ((messageKey == null) || (messageKey.trim().length() == 0))
 				{
 					throw new MarkupException(
-							"Wrong format of <org.apache.wicket:message key='xxx'>: attribute 'key' is missing");
+							"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
-				final String value = container.getApplication().getResourceSettings().getLocalizer()
-						.getString(messageKey, container, "");
+				final String value = container.getApplication().getResourceSettings()
+						.getLocalizer().getString(messageKey, container, "");
 
 				final String id = "_message_" + container.getPage().getAutoIndex();
 				Component component = null;
@@ -137,8 +137,8 @@ public class WicketMessageResolver implements IComponentResolver
 		 */
 		protected void onComponentTag(ComponentTag tag)
 		{
-			// Convert <org.apache.wicket:message /> into
-			// <org.apache.wicket:message>...</org.apache.wicket:message>
+			// Convert <wicket:message /> into
+			// <wicket:message>...</wicket:message>
 			if (tag.isOpenClose())
 			{
 				tag.setType(XmlTag.OPEN);

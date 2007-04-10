@@ -25,7 +25,7 @@ import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 
 /**
  * This is a tag resolver which automatically adds a Enclosure container for
- * each &lt;org.apache.wicket:enclosure&gt; tag. As this is no default resolver, it must be
+ * each &lt;wicket:enclosure&gt; tag. As this is no default resolver, it must be
  * added manually:
  * 
  * @see EnclosureHandler

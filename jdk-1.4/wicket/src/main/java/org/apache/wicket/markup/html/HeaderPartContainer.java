@@ -23,7 +23,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 
 /**
- * For each org.apache.wicket:head tag a HeaderPartContainer is created and added to
+ * For each wicket:head tag a HeaderPartContainer is created and added to
  * the HtmlHeaderContainer which has been added to the Page.
  * 
  * @author Juergen Donnerstag
@@ -37,7 +37,7 @@ public final class HeaderPartContainer extends WebMarkupContainer
 	/** The panel or bordered page the header part is associated with */
 	private final MarkupContainer container;
 
-	/** <org.apache.wicket:head scope="...">. A kind of namespace */
+	/** <wicket:head scope="...">. A kind of namespace */
 	private final String scope;
 
 	/**
@@ -47,7 +47,7 @@ public final class HeaderPartContainer extends WebMarkupContainer
 	 *            The Panel (or bordered page) the header part is associated
 	 *            with
 	 * @param scope
-	 *            The scope of the org.apache.wicket:head tag
+	 *            The scope of the wicket:head tag
 	 */
 	public HeaderPartContainer(final String id, final MarkupContainer container,
 			final String scope)

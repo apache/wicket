@@ -35,7 +35,7 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
  * completely self-contained components. No changes to the Pages will be
  * necessary to use the component.
  * <p>
- * Note: The markup must contain a &lt;org.apache.wicket:head&gt; tag which contains the
+ * Note: The markup must contain a &lt;wicket:head&gt; tag which contains the
  * javascript and/or CSS to be copied to the Page's header.
  * <p>
  * Note: this handler is not relevant for Pages

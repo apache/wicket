@@ -1188,8 +1188,9 @@ public final class Strings
 
 	/**
 	 * Outputs the throwable and its stacktrace to the stringbuffer. If
-	 * stopAtWicketSerlvet is true then the output will stop when the org.apache.wicket
-	 * servlet is reached. sun.reflect. packages are filtered out.
+	 * stopAtWicketSerlvet is true then the output will stop when the
+	 * org.apache.wicket servlet is reached. sun.reflect. packages are filtered
+	 * out.
 	 * 
 	 * @param cause
 	 * @param sb

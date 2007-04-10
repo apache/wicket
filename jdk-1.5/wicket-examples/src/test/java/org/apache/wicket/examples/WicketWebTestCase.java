@@ -51,7 +51,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 		// exception just because they can not handle it.
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 
-		System.setProperty("org.apache.wicket.configuration", "deployment");
+		System.setProperty("wicket.configuration", "deployment");
 		
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(clazz);
@@ -83,7 +83,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 	 */
 	public void setUp() throws Exception
 	{
-		getTestContext().setBaseUrl("http://localhost:8098/org.apache.wicket-examples");
+		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 	}
 
 	/**

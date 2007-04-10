@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
- * Detect &lt;org.apache.wicket:extend&gt; and &lt;org.apache.wicket:child&gt; tags,
+ * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags,
  * which are silently ignored, because they have already been processed.
  * 
  * @author Juergen Donnerstag
@@ -35,7 +35,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 
 	static
 	{
-		// register "org.apache.wicket:fragement"
+		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("extend");
 		WicketTagIdentifier.registerWellKnownTagName("child");
 	}
@@ -54,19 +54,19 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <org.apache.wicket:...>
+		// It must be <wicket:...>
 		if (tag instanceof WicketTag)
 		{
 			final WicketTag wicketTag = (WicketTag)tag;
 			
-			// It must be <org.apache.wicket:extend...>
+			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
 				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()));
 			    return true;
 			}
 			
-			// It must be <org.apache.wicket:child...>
+			// It must be <wicket:child...>
 			if (wicketTag.isChildTag())
 			{
 				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()));

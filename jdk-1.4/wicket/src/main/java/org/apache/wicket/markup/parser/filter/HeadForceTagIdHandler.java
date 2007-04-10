@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * Handler that sets unique tag id for every inline script and style element in
- * &lt;org.apache.wicket:head&gt;, unless the element already has one. <br/> This is needed
+ * &lt;wicket:head&gt;, unless the element already has one. <br/> This is needed
  * to be able to dedect multiple ajax header contribution. Tags that are not
  * inline (stript with src attribute set and link with href attribute set) do
  * not require id, because the detection is done by comparing URLs.
@@ -46,7 +46,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	/** Unique value per markup file */
 	private int counter = 0;
 
-	/** we are in org.apache.wicket:head */
+	/** we are in wicket:head */
 	private boolean inHead = false;
 
 	/**
@@ -80,12 +80,12 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 
 		if (tag != null)
 		{
-			// is it a <org.apache.wicket:head> tag?
+			// is it a <wicket:head> tag?
 			if (tag instanceof WicketTag && ((WicketTag)tag).isHeadTag())
 			{
 				this.inHead = tag.isOpen();
 			}
-			// no, it's not. Are we in <org.apache.wicket:head> ?
+			// no, it's not. Are we in <wicket:head> ?
 			else if (this.inHead == true)
 			{
 				// is the tag open and has empty wicket:id?

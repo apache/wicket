@@ -30,7 +30,7 @@ import org.apache.wicket.model.Model;
  * The containers tag will be the root element of the xml data applied for
  * transformation to ensure the xml data are well formed (single root element).
  * In addition the attribute
- * <code>xmlns:org.apache.wicket="http://org.apache.wicket.sourceforge.net"</code> is added to the
+ * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to the
  * root element to allow the XSL processor to handle the org.apache.wicket namespace.
  * <p>
  * Similar to this container, a <code>IBehavior</code> is available which does
@@ -71,7 +71,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 
 		// Make the XSLT processor happy and allow him to handle the org.apache.wicket
 		// tags and attributes which are in the org.apache.wicket namespace
-		add(new AttributeModifier("xmlns:org.apache.wicket", true, new Model("http://org.apache.wicket.sourceforge.net")));
+		add(new AttributeModifier("xmlns:wicket", true, new Model("http://wicket.apache.org")));
 	}
 
 	/**

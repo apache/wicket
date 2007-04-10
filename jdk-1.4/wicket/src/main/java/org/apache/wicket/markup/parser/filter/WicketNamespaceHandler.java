@@ -30,8 +30,8 @@ import org.apache.wicket.util.value.IValueMap;
 
 /**
  * This is a markup inline filter. It determines the Wicket namespace name from
- * the markup Examples are xmlns:org.apache.wicket or
- * xmlns:org.apache.wicket="http://org.apache.wicket.sourceforge.net".
+ * the markup Examples are xmlns:wicket or
+ * xmlns:wicket="http://wicket.apache.org".
  * 
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
@@ -39,14 +39,14 @@ import org.apache.wicket.util.value.IValueMap;
 public final class WicketNamespaceHandler extends AbstractMarkupFilter
 {
 	/** Wicket URI */
-	private static final String WICKET_URI = "http://org.apache.wicket.sourceforge.net";
+	private static final String WICKET_URI = "http://wicket.apache.org";
 
 	/** The markup created by reading the markup file */
 	private final Markup markup;
 
 	/**
 	 * namespace prefix: e.g. <html
-	 * xmlns:org.apache.wicket="http://org.apache.wicket.sourceforge.net">
+	 * xmlns:wicket="http://wicket.apache.org">
 	 */
 	private static final String XMLNS = "xmlns:";
 
@@ -92,8 +92,8 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Determine org.apache.wicket namespace from xmlns:org.apache.wicket or
-	 * xmlns:org.apache.wicket="http://org.apache.wicket.sourceforge.net"
+	 * Determine org.apache.wicket namespace from xmlns:wicket or
+	 * xmlns:wicket="http://wicket.apache.org"
 	 * 
 	 * @param tag
 	 * @return Wicket namespace

@@ -105,7 +105,7 @@ public final class FormInputModel implements IClusterable
 	{
 		try
 		{
-			urlProperty = new URL("http://org.apache.wicket.sourceforge.net");
+			urlProperty = new URL("http://wicket.apache.org");
 		}
 		catch (MalformedURLException e)
 		{

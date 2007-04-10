@@ -32,7 +32,7 @@ import org.apache.wicket.model.IModel;
  * An attribute modifier specifically for body tags.
  * <p>
  * Panels have associated markup files and if they contain
- * <code>&lt;org.apache.wicket:head&gt;</code> and <code>&lt;body onLoad="..."&gt;</code>
+ * <code>&lt;wicket:head&gt;</code> and <code>&lt;body onLoad="..."&gt;</code>
  * then the body's <code>onLoad</code> attribute will be appended to the page's
  * onLoad attribute. That appendation happens by means of an AttributeModifier
  * which the Panel adds to the body container. In the case where the Panel is

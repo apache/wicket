@@ -27,12 +27,12 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 
 
 /**
- * This is a markup inline filter. It identifies &lt;org.apache.wicket:enclosure&gt; tags.
+ * This is a markup inline filter. It identifies &lt;wicket:enclosure&gt; tags.
  * If the 'child' attribute is empty it determines the wicket:id of the child
  * component automatically by analysing the org.apache.wicket component (in this case on
  * one org.apache.wicket component is allowed) in between the open and close tags. If the
  * enclosure tag has a 'child' attribute like
- * <code>&lt;org.apache.wicket:enclosure child="xxx"&gt;</code> than more than just one
+ * <code>&lt;wicket:enclosure child="xxx"&gt;</code> than more than just one
  * org.apache.wicket component inside the enclosure tags are allowed and the child
  * component which determines the visibility of the enclosure is identified by
  * the 'child' attribute value which must be equal to the relative child id
@@ -50,11 +50,11 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 
 	static
 	{
-		// register "org.apache.wicket:enclosure"
+		// register "wicket:enclosure"
 		WicketTagIdentifier.registerWellKnownTagName("enclosure");
 	}
 
-	/** Stack of <org.apache.wicket:enclosure> tags */
+	/** Stack of <wicket:enclosure> tags */
 	private Stack/* <ComponentTag> */stack;
 
 	/** The id of the first org.apache.wicket tag inside the enclosure */
@@ -83,7 +83,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 		final boolean isWicketTag = tag instanceof WicketTag;
 		final boolean isEnclosureTag = isWicketTag && ((WicketTag)tag).isEnclosureTag();
 
-		// If org.apache.wicket:enclosure
+		// If wicket:enclosure
 		if (isEnclosureTag)
 		{
 			// If open tag, than put the tag onto the stack
@@ -128,7 +128,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 						+ tag.toString(), tag.getPos());
 			}
 		}
-		// Are we inside a org.apache.wicket:enclosure tag?
+		// Are we inside a wicket:enclosure tag?
 		else if ((tag.getId() != null) && (isWicketTag == false) && (stack != null))
 		{
 			ComponentTag lastEnclosure = (ComponentTag)this.stack.lastElement();
@@ -143,7 +143,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 				if (this.childId != null)
 				{
 					throw new ParseException(
-							"Use <org.apache.wicket:enclosure child='xxx'> to name the child component", tag
+							"Use <wicket:enclosure child='xxx'> to name the child component", tag
 									.getPos());
 				}
 				// Remember the child id. The open tag will be updated

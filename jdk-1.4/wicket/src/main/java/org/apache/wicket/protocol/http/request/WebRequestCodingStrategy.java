@@ -335,7 +335,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			else if (url.length() > 0 && url.charAt(0) == '?')
 			{
 				// Keep the last part of mounted pages for resource/interface links.
-				// E.g. if we generate app/Clients we want links like "Clients?org.apache.wicket:interface[...]"
+				// E.g. if we generate app/Clients we want links like "Clients?wicket:interface[...]"
 				prepender.prepend(relativeUrl.substring(relativeUrl.lastIndexOf("/") + 1));
 			}
 			// Fix for the special case where we're linking to the home page; make the link "./" not "".

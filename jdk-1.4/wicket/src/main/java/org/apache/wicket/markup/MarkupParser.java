@@ -89,7 +89,7 @@ public class MarkupParser
 	}
 
 	/**
-	 * In case you want to analyze markup which BY DEFAULT does not use "org.apache.wicket"
+	 * In case you want to analyze markup which BY DEFAULT does not use "wicket"
 	 * to find relevant tags.
 	 * 
 	 * @param namespace
