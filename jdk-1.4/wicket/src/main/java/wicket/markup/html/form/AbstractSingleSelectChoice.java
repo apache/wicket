@@ -37,13 +37,15 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 
 	private static final String EMPTY_STRING = "";
 
+	/** Is the null value a valid value? */
+	private boolean nullValid = false;
+
 	/**
 	 * @see AbstractChoice#AbstractChoice(String)
 	 */
 	public AbstractSingleSelectChoice(final String id)
 	{
 		super(id);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -52,7 +54,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(final String id, final List choices)
 	{
 		super(id, choices);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -65,7 +66,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			final IChoiceRenderer renderer)
 	{
 		super(id, data, renderer);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -74,7 +74,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(final String id, IModel model, final List data)
 	{
 		super(id, model, data);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -88,7 +87,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			final IChoiceRenderer renderer)
 	{
 		super(id, model, data, renderer);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -98,7 +96,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(String id, IModel choices)
 	{
 		super(id, choices);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -108,7 +105,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(String id, IModel model, IModel choices)
 	{
 		super(id, model, choices);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -118,7 +114,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	public AbstractSingleSelectChoice(String id, IModel choices, IChoiceRenderer renderer)
 	{
 		super(id, choices, renderer);
-		setRequired(true); // force choice by default
 	}
 
 
@@ -130,7 +125,6 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			IChoiceRenderer renderer)
 	{
 		super(id, model, choices, renderer);
-		setRequired(true); // force choice by default
 	}
 
 	/**
@@ -148,28 +142,35 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value?
+	 * Is the <code>null</code> value a valid value? If it is, it means that
+	 * the null value will be displayed, typically to the user as 'choose one'
+	 * or something similar. Note that this doesn't say anything about whether a
+	 * null value (not selecting a value) is permitted; use
+	 * {@link #setRequired(boolean)} for that.
 	 * 
 	 * @return <code>true</code> when the <code>null</code> value is
 	 *         allowed.
-	 * @deprecated use isRequired (note the inverse logic)
 	 */
-	public final boolean isNullValid()
+	public boolean isNullValid()
 	{
-		return !isRequired();
+		return nullValid;
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value?
+	 * Is the <code>null</code> value a valid value? If it is, it means that
+	 * the null value will be displayed, typically to the user as 'choose one'
+	 * or something similar. Note that this doesn't say anything about whether a
+	 * null value (not selecting a value) is permitted; use
+	 * {@link #setRequired(boolean)} for that.
 	 * 
 	 * @param nullValid
 	 *            whether null is a valid value
 	 * @return this for chaining
-	 * @deprecated use setRequired (note the inverse logic)
 	 */
-	public final AbstractSingleSelectChoice setNullValid(boolean nullValid)
+	public AbstractSingleSelectChoice setNullValid(boolean nullValid)
 	{
-		return (AbstractSingleSelectChoice)setRequired(!nullValid);
+		this.nullValid = nullValid;
+		return this;
 	}
 
 	/**
@@ -210,7 +211,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	protected CharSequence getDefaultChoice(final Object selected)
 	{
 		// Is null a valid selection value?
-		if (!isRequired())
+		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
 			final String option = getLocalizer().getString("nullValid", this, "");
@@ -246,6 +247,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 		}
 		return "";
 	}
+
 
 	/**
 	 * Gets whether the given value represents the current selection.
