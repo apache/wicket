@@ -49,10 +49,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
 
 	/** reference to the default ajax debug support javascript file. */
-	private static final ResourceReference JAVASCRIPT_DEBUG_DRAG = new JavascriptResourceReference(
-			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug-drag.js");
-
-	/** reference to the default ajax debug support javascript file. */
 	private static final ResourceReference JAVASCRIPT_DEBUG = new JavascriptResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 
@@ -81,9 +77,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
-			response.renderJavascriptReference(JAVASCRIPT_DEBUG_DRAG);
 			response.renderJavascriptReference(JAVASCRIPT_DEBUG);
-
 		}
 	}
 

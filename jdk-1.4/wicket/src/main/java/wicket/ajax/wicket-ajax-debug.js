@@ -108,10 +108,25 @@ var WicketAjaxDebug = {
 												
 				
 				WicketAjaxDebug.addElement(html);
-            	WicketDrag.init(wicketGet(dwdhid), wicketGet(dwid));
+            	Wicket.Drag.init(wicketGet(dwdhid), function() {} , function() { }, WicketAjaxDebug.onDrag);
 			}
 
         }
+	},
+	
+	onDrag: function(element, deltaX, deltaY) {
+		var w = wicketGet(WicketAjaxDebug.debugWindowId);
+		
+		var x = parseInt(w.style.left, 10) + deltaX;
+		var y = parseInt(w.style.top, 10) + deltaY;
+		
+		if (x < 0)
+			x = 0;
+		if (y < 0)
+			y = 0;							
+			
+		w.style.left = x + "px";
+		w.style.top = y + "px";		
 	},
 	
 	addElement : function(html) {
