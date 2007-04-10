@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -34,6 +36,7 @@ import wicket.Application;
 import wicket.IPageMap;
 import wicket.IRequestTarget;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.Session;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
@@ -303,6 +306,35 @@ public class RequestLogger implements IRequestLogger
 			 asb.append("M,used=");
 			 asb.append(used);
 			 asb.append("M");
+			 try 
+			 {
+				 asb.append(",cookies=[");
+	
+				 Cookie[] cookies = ((WebRequest)RequestCycle.get().getRequest()).getCookies();
+				 String komma = "";
+				 for(int i = 0; cookies != null && i < cookies.length; i++) 
+				 {
+					 // Set-Cookie: RMID=732423sdfs73242; expires=Fri, 31-Dec-2010 23:59:59 GMT; path=/; domain=.example.net
+					Cookie cookie = cookies[i];
+					asb.append(komma);
+					asb.append(cookie.getName());
+					asb.append("=");
+					asb.append(cookie.getValue());
+					asb.append(";path=");
+					asb.append(cookie.getPath());
+					asb.append(";domain=");
+					asb.append(cookie.getDomain());
+					asb.append(";maxage=");
+					asb.append(cookie.getMaxAge());
+					asb.append(";secure=");
+					asb.append(cookie.getSecure());
+					komma = ",";
+				 }
+				 asb.append("]");
+			 }
+			 catch(Exception e) 
+			 {
+			 }
 			 log.info(asb.toString());
 		 }
 	}

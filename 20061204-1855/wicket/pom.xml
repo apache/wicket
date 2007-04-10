@@ -28,7 +28,7 @@
 	</parent>
 
 	<artifactId>wicket</artifactId>
-	<version>1.3-20061204-fix4</version>
+	<version>1.3-20061204-fix5</version>
 	<packaging>jar</packaging>
 	<name>Wicket</name>
 	<url>http://wicketframework.org/${project.artifactId}-1.3</url>

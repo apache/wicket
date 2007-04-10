@@ -203,7 +203,7 @@ public abstract class RequestCycle
 
 	/**
 	 * Gets request cycle for calling thread.
-	 *
+	 * 
 	 * @return Request cycle for calling thread
 	 */
 	public final static RequestCycle get()
@@ -341,7 +341,7 @@ public abstract class RequestCycle
 	 */
 	public final IRequestTarget getRequestTarget()
 	{
-		return (!requestTargets.isEmpty()) ? (IRequestTarget) requestTargets.peek() : null;
+		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
 	}
 
 	/**
@@ -533,7 +533,7 @@ public abstract class RequestCycle
 		{
 			if (!requestTargets.isEmpty())
 			{
-				IRequestTarget former = (IRequestTarget) requestTargets.peek();
+				IRequestTarget former = (IRequestTarget)requestTargets.peek();
 				log.debug("replacing request target " + former + " with " + requestTarget);
 			}
 			else
@@ -806,7 +806,9 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Clean up the request cycle.
+	 * Clean up the request cycle. This method swallows most exceptions as there
+	 * is no higher authority to handle them: the response was already sent to
+	 * the client and all we can do here is log the exceptions.
 	 */
 	private void detach()
 	{
@@ -834,11 +836,11 @@ public abstract class RequestCycle
 		{
 			session.cleanupFeedbackMessages();
 		}
-		catch(RuntimeException re)
+		catch (RuntimeException re)
 		{
 			log.error("there was an error cleaning up the feedback messages", re);
 		}
-		
+
 		if (updateSession)
 		{
 			// At the end of our response, we need to set any session
@@ -846,42 +848,49 @@ public abstract class RequestCycle
 			try
 			{
 				session.update();
-			} 
-			catch(RuntimeException re)
+			}
+			catch (RuntimeException re)
 			{
 				log.error("there was an error updating the session " + session + ".", re);
 			}
 		}
 
-		// clear the used pagemap for this thread, 
-		// maybe we can move this a few lines above to have a but more
-		// concurrency (session.update)
+		try
+		{
+			IRequestLogger requestLogger = getApplication().getRequestLogger();
+			if (requestLogger != null)
+			{
+				requestLogger.requestTime((System.currentTimeMillis() - startTime));
+			}
+		}
+		catch (RuntimeException re)
+		{
+			log.error("there was an error in the RequestLogger ending.", re);
+		}
+
+		// clear the used pagemap for this thread,
 		try
 		{
 			session.requestDetached();
 		}
-		catch(RuntimeException re)
+		catch (RuntimeException re)
 		{
-			log.error("there was an error detaching the request from the session " + session + ".", re);
+			log.error("there was an error detaching the request from the session " + session + ".",
+					re);
 		}
+
 		if (getResponse() instanceof BufferedWebResponse)
 		{
 			try
 			{
 				((BufferedWebResponse)getResponse()).filter();
 			}
-			catch(RuntimeException re)
+			catch (RuntimeException re)
 			{
 				log.error("there was an error filtering the response.", re);
 			}
 		}
 
-		IRequestLogger requestLogger = getApplication().getRequestLogger();
-		if (requestLogger != null)
-		{
-			requestLogger.requestTime((System.currentTimeMillis() - startTime));
-		}
-		
 		try
 		{
 			onEndRequest();
@@ -896,7 +905,7 @@ public abstract class RequestCycle
 		{
 			threadDetach();
 		}
-		catch(RuntimeException re)
+		catch (RuntimeException re)
 		{
 			log.error("Exception occurred during threadDetach", re);
 		}
