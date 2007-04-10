@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.instrument;
+package org.apache.wicket.util.instrument;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
 
-import wicket.util.lang.Objects.IObjectSizeOfStrategy;
+import org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy;
+
 
 /**
  * Object size of strategy that is based on instrumentation.
@@ -95,7 +96,7 @@ public class InstrumentationObjectSizeOfStrategy implements
 	 *            object to calculate size of
 	 * @return object size
 	 * 
-	 * @see wicket.util.lang.Objects.IObjectSizeOfStrategy#sizeOf(java.lang.Object)
+	 * @see org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy#sizeOf(java.lang.Object)
 	 */
 	public long sizeOf(Object obj) {
 		if (obj == null) {

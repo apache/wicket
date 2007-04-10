@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Premain-Class: wicket.util.instrument.ObjectSizeOfAgent
-Agent-Class: wicket.util.instrument.ObjectSizeOfAgent
+Premain-Class: org.apache.wicket.util.instrument.ObjectSizeOfAgent
+Agent-Class: org.apache.wicket.util.instrument.ObjectSizeOfAgent
 
