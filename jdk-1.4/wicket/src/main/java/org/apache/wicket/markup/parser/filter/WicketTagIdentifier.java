@@ -97,7 +97,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
 			{
-				throw new ParseException("Unkown tag name with Wicket namespace: '"
+				throw new ParseException("Unknown tag name with Wicket namespace: '"
 						+ xmlTag.getName()
 						+ "'. Might be you haven't installed the appropriate resolver?", tag
 						.getPos());
