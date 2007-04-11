@@ -20,9 +20,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -135,10 +137,19 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 		if (!parameterNamesToAdd.isEmpty())
 		{
 			boolean first = true;
-			for (Iterator iter = parameterNamesToAdd.iterator(); iter.hasNext();)
+			final Iterator iterator;
+			if (UnitTestSettings.getSortUrlParameters())
+			{
+				iterator = new TreeSet(parameterNamesToAdd).iterator();
+			}
+			else 
+			{
+				iterator = parameterNamesToAdd.iterator();
+			}
+			while (iterator.hasNext())
 			{
 				url.append(first ? '?' : '&');
-				String parameterName = (String)iter.next();
+				String parameterName = (String)iterator.next();
 				String value = (String)parameters.get(parameterName);
 				url.append(urlEncode(parameterName)).append("=").append(urlEncode(value));
 				first = false;

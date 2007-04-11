@@ -34,8 +34,10 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.diff.DiffUtil;
 
 
@@ -131,10 +133,10 @@ import org.apache.wicket.util.diff.DiffUtil;
  * </pre>
  * 
  * Instead of <code>tester.startPage(pageClass)</code>, we define a
- * {@link org.apache.wicket.util.tester.ITestPageSource} to provide testing page instance
- * for WicketTester. This is necessary because <code>YourPage</code> uses a
- * custom constructor, which is very common for transferring model data, but can
- * not be instantiated by reflection. Finally, we use
+ * {@link org.apache.wicket.util.tester.ITestPageSource} to provide testing page
+ * instance for WicketTester. This is necessary because <code>YourPage</code>
+ * uses a custom constructor, which is very common for transferring model data,
+ * but can not be instantiated by reflection. Finally, we use
  * <code>assertInfoMessages</code> to assert there is a feedback message
  * "Wicket Rocks ;-)" in INFO level.
  * 
@@ -164,7 +166,7 @@ public class WicketTester extends BaseWicketTester
 			return new WebResponse(servletResponse);
 		}
 	}
-	
+
 	/**
 	 * Create WicketTester and automatically create a WebApplication, but the
 	 * tester will have no home page.
@@ -223,6 +225,10 @@ public class WicketTester extends BaseWicketTester
 	public WicketTester(final WebApplication application, final String path)
 	{
 		super(application, path);
+
+		// We need to turn this on for unit testing so that url encoding will be
+		// done on sorted maps of parameters and they will string compare
+		UnitTestSettings.setSortUrlParameters(true);
 	}
 
 
@@ -315,8 +321,8 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * create a {@link FormTester} for the form at path, and fill all child
-	 * {@link org.apache.wicket.markup.html.form.FormComponent}s with blank String
-	 * initially.
+	 * {@link org.apache.wicket.markup.html.form.FormComponent}s with blank
+	 * String initially.
 	 * 
 	 * @param path
 	 *            path to {@link Form} component
@@ -335,8 +341,8 @@ public class WicketTester extends BaseWicketTester
 	 *            path to {@link Form} component
 	 * @param fillBlankString
 	 *            specify whether fill all child
-	 *            {@link org.apache.wicket.markup.html.form.FormComponent}s with
-	 *            blankString initially.
+	 *            {@link org.apache.wicket.markup.html.form.FormComponent}s
+	 *            with blankString initially.
 	 * @return FormTester A FormTester instance for testing form
 	 * @see FormTester
 	 */

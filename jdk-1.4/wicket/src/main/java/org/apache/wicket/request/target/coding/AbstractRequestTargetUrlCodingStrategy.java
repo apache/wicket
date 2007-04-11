@@ -21,11 +21,13 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -44,7 +46,6 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 {
 	/** log. */
 	private static final Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
-
 
 	/** mounted path. */
 	private final String mountPath;
@@ -66,6 +67,14 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
+	 * @see org.apache.wicket.request.target.coding.IMountableRequestTargetUrlCodingStrategy#getMountPath()
+	 */
+	public final String getMountPath()
+	{
+		return mountPath;
+	}
+
+	/**
 	 * Encodes Map into a url fragment and append that to the provided url
 	 * buffer.
 	 * 
@@ -79,7 +88,15 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	{
 		if (parameters != null && parameters.size() > 0)
 		{
-			Iterator entries = parameters.entrySet().iterator();
+			final Iterator entries;
+			if (UnitTestSettings.getSortUrlParameters())
+			{
+				entries = new TreeMap(parameters).entrySet().iterator();
+			}
+			else
+			{
+				entries = parameters.entrySet().iterator();
+			}
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
@@ -146,14 +163,6 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		}
 
 		return parameters;
-	}
-
-	/**
-	 * @see org.apache.wicket.request.target.coding.IMountableRequestTargetUrlCodingStrategy#getMountPath()
-	 */
-	public final String getMountPath()
-	{
-		return mountPath;
 	}
 
 	/**

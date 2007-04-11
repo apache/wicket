@@ -757,4 +757,16 @@ public class ComponentTag extends MarkupElement
 		this.markupClass = wicketHeaderClass;
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.MarkupElement#equalTo(org.apache.wicket.markup.MarkupElement)
+	 */
+	public boolean equalTo(final MarkupElement element)
+	{
+		if (element instanceof ComponentTag)
+		{
+			final ComponentTag that = (ComponentTag)element;
+			return getXmlTag().equalTo(that.getXmlTag());
+		}
+		return false;
+	}
 }

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.lang.EnumeratedType;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -122,6 +123,31 @@ public class XmlTag extends MarkupElement
 		return (closes == open) || (closes == open.copyOf);
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.MarkupElement#equalTo(org.apache.wicket.markup.MarkupElement)
+	 */
+	public final boolean equalTo(final MarkupElement element)
+	{
+		if (element instanceof XmlTag)
+		{
+			final XmlTag that = (XmlTag)element;
+			if (!Objects.equal(getNamespace(), that.getNamespace()))
+			{
+				return false;
+			}
+			if (!getName().equals(that.getName()))
+			{
+				return false;
+			}
+			if (!getAttributes().equals(that.getAttributes()))
+			{
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Gets a hashmap of this tag's attributes.
 	 * 

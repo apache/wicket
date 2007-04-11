@@ -89,11 +89,11 @@ public class Markup
 	{
 		// Reset
 		this.componentMap = null;
-		
+
 		if (markup != null)
 		{
 			// HTML tags like <img> may not have a close tag. But because that
-			// can only be detected until later on in the sequential markup 
+			// can only be detected until later on in the sequential markup
 			// reading loop, we only can do it now.
 			StringBuffer componentPath = null;
 			for (int i = 0; i < this.markup.size(); i++)
@@ -101,12 +101,13 @@ public class Markup
 				MarkupElement elem = this.markup.get(i);
 				if (elem instanceof ComponentTag)
 				{
-					ComponentTag tag = (ComponentTag) elem;
-					
-					// Set the tags components path 
+					ComponentTag tag = (ComponentTag)elem;
+
+					// Set the tags components path
 					componentPath = setComponentPathForTag(componentPath, tag);
-					
-					// and add it to the local cache to be found fast if required
+
+					// and add it to the local cache to be found fast if
+					// required
 					addToCache(i, tag);
 				}
 			}
@@ -115,6 +116,20 @@ public class Markup
 		// The variable is only needed while adding markup elements.
 		// initialize() is invoked after all elements have been added.
 		this.currentPath = null;
+	}
+
+	/**
+	 * @param that
+	 *            The markup to compare with
+	 * @return True if the two markups are equal
+	 */
+	public boolean equalTo(final Markup that)
+	{
+		final MarkupStream thisStream = new MarkupStream(this);
+		final MarkupStream thatStream = new MarkupStream(that);
+
+		// Compare the streams
+		return thisStream.equalTo(thatStream);
 	}
 
 	/**
@@ -142,8 +157,8 @@ public class Markup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the information
-	 * ...
+	 * protected. However to allow org.apache.wicket-bench easy access to the
+	 * information ...
 	 * 
 	 * @param index
 	 *            Index into markup list
@@ -166,8 +181,8 @@ public class Markup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the information
-	 * ...
+	 * protected. However to allow org.apache.wicket-bench easy access to the
+	 * information ...
 	 * 
 	 * @return Number of markup elements
 	 */
@@ -245,7 +260,7 @@ public class Markup
 			// not found
 			return -1;
 		}
-		
+
 		final Integer value = (Integer)this.componentMap.get(completePath);
 		if (value == null)
 		{
@@ -368,7 +383,8 @@ public class Markup
 	 * @param tag
 	 * @return componentPath
 	 */
-	private StringBuffer setComponentPathForTag(final StringBuffer componentPath, final ComponentTag tag)
+	private StringBuffer setComponentPathForTag(final StringBuffer componentPath,
+			final ComponentTag tag)
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(wicketId))
@@ -405,7 +421,8 @@ public class Markup
 		else if (tag.isClose() && (this.currentPath != null))
 		{
 			// For example <wicket:message> does not have an id
-			if ((tag.getOpenTag() == null) || tag.getOpenTag().getAttributes().containsKey(wicketId))
+			if ((tag.getOpenTag() == null)
+					|| tag.getOpenTag().getAttributes().containsKey(wicketId))
 			{
 				// Remove the last element from the component path
 				int index = this.currentPath.lastIndexOf(":");
@@ -419,7 +436,7 @@ public class Markup
 				}
 			}
 		}
-		
+
 		return this.currentPath;
 	}
 
@@ -430,7 +447,7 @@ public class Markup
 	{
 		this.markup.makeImmutable();
 
-		// We assume all markup elements have now been added. It is 
+		// We assume all markup elements have now been added. It is
 		// now time to initialize all remaining variables based
 		// on the markup loaded, which could not be initialized
 		// earlier on.
@@ -438,8 +455,8 @@ public class Markup
 	}
 
 	/**
-	 * Reset the markup to its defaults, except for the org.apache.wicket namespace which
-	 * remains unchanged.
+	 * Reset the markup to its defaults, except for the org.apache.wicket
+	 * namespace which remains unchanged.
 	 */
 	final void reset()
 	{

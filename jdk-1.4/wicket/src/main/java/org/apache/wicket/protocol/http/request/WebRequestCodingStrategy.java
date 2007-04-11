@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,10 +43,12 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
@@ -133,10 +136,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 	}
 
-
-	/** settings for the coding strategy */
-	private final Settings settings;
-
 	/** log. */
 	private static final Log log = LogFactory.getLog(WebRequestCodingStrategy.class);
 
@@ -158,9 +157,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	private final MountsMap mountsOnPath;
 
-	/** cached url prefix. */
-	private CharSequence urlPrefix;
-
 	/**
 	 * Construct.
 	 */
@@ -180,7 +176,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			throw new IllegalArgumentException("Argument [[settings]] cannot be null");
 		}
-		this.settings = settings;
 		mountsOnPath = new MountsMap(settings.areMountsCaseSensitive());
 	}
 
@@ -286,7 +281,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				{
 					servletPath = servletPath.substring(0, servletPath.length() - relativeUrl.length() - 1);
 				}
-				String foo = httpRequest.getPathInfo();
 				errorUrl = errorUrl.substring(httpRequest.getContextPath().length());
 				
 				if (!errorUrl.startsWith(servletPath))
@@ -702,10 +696,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)
 		{
-			Iterator it = parameters.keySet().iterator();
-			while (it.hasNext())
+			final Iterator iterator;
+			if (UnitTestSettings.getSortUrlParameters())
 			{
-				final String key = (String)it.next();
+				iterator = new TreeSet(parameters.keySet()).iterator();				
+			}
+			else
+			{
+				iterator = parameters.keySet().iterator();				
+			}
+			while (iterator.hasNext())
+			{
+				final String key = (String)iterator.next();
 				final String value = parameters.getString(key);
 				if (value != null)
 				{

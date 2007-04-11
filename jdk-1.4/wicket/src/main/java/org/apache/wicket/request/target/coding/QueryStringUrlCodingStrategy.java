@@ -18,9 +18,11 @@ package org.apache.wicket.request.target.coding;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.wicket.PageMap;
+import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -123,7 +125,15 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		if (parameters != null && parameters.size() > 0)
 		{
 			boolean firstParam = url.indexOf("?") < 0;
-			Iterator entries = parameters.entrySet().iterator();
+			final Iterator entries;
+			if (UnitTestSettings.getSortUrlParameters())
+			{
+				entries = new TreeMap(parameters).entrySet().iterator();
+			}
+			else
+			{
+				entries = parameters.entrySet().iterator();				
+			}
 
 			while (entries.hasNext())
 			{

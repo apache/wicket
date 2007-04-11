@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -92,11 +93,13 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			// It is <wicket:...>
 			tag = new WicketTag(xmlTag);
 
-			// Make it a org.apache.wicket component. Otherwise it would be RawMarkup
+			// Make it a Wicket component. Otherwise it would be RawMarkup
 			tag.setId("_" + tag.getName());
 
-			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
+			// If the tag is not a well-known wicket namespace tag
+			if (!isWellKnown(xmlTag))
 			{
+				// give up
 				throw new ParseException("Unknown tag name with Wicket namespace: '"
 						+ xmlTag.getName()
 						+ "'. Might be you haven't installed the appropriate resolver?", tag
@@ -119,7 +122,8 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 						"The wicket:id attribute value must not be empty. May be unmatched quotes?!?",
 						tag.getPos());
 			}
-			// Make it a org.apache.wicket component. Otherwise it would be RawMarkup
+			// Make it a org.apache.wicket component. Otherwise it would be
+			// RawMarkup
 			tag.setId(value);
 		}
 
@@ -142,5 +146,19 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		{
 			wellKnownTagNames.add(name);
 		}
+	}
+
+	private boolean isWellKnown(final XmlTag xmlTag)
+	{
+		final Iterator iterator = wellKnownTagNames.iterator();
+		while (iterator.hasNext())
+		{
+			final String name = (String)iterator.next();
+			if (xmlTag.getName().equalsIgnoreCase(name))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
