@@ -126,7 +126,7 @@ public class MarkupParser
 		appendMarkupFilter(new WicketLinkTagHandler());
 		appendMarkupFilter(new WicketNamespaceHandler(markup));
 
-		// Provided the org.apache.wicket component requesting the markup is known ...
+		// Provided the wicket component requesting the markup is known ...
 		final MarkupResourceStream resource = markup.getResource();
 		if (resource != null)
 		{
