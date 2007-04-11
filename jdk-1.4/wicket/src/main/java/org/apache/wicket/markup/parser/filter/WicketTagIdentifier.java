@@ -87,17 +87,15 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 		final String namespace = this.markup.getWicketNamespace();
 
-		// convert tags of form <tag wicket:id=":bar"> to <wicket:bar>
-		final String wicketidAttr = namespace + ":id";
-		final String wicketid = xmlTag.getAttributes().getString(wicketidAttr);
-		if (!Strings.isEmpty(wicketid) && ":".equals(wicketid.substring(0, 1)))
+		// convert tags of form <tag wicket:tag="bar"> to <wicket:bar>
+		final String wicketTagAttr = namespace + ":tag";
+		final String wicketTag = xmlTag.getAttributes().getString(wicketTagAttr);
+		if (!Strings.isEmpty(wicketTag))
 		{
 			xmlTag = xmlTag.mutable();
 			xmlTag.setNamespace(namespace);
-			xmlTag.setName(wicketid.substring(1));
-			xmlTag.getAttributes().remove(wicketidAttr);
+			xmlTag.setName(wicketTag);
 		}
-
 
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
