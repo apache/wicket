@@ -291,16 +291,20 @@ public abstract class Session implements IClusterable, IConverterLocator
 	private MetaDataEntry[] metaData;
 
 	/**
-	 * Constructor.
+	 * Constructor. Note that {@link RequestCycle} is not available until this
+	 * constructor returns.
 	 * 
 	 * @param application
 	 *            The application that this is a session of
 	 * @param request
-	 *            The current request (note that {@link RequestCycle} is not yet
-	 *            available)
+	 *            The current request
+	 * @param response
+	 *            The current response
 	 */
-	protected Session(Application application, Request request)
+	protected Session(Application application, Request request, Response response)
 	{
+		// Construct request cycle (which sets thread local)
+        getRequestCycleFactory().newRequestCycle(this, request, response);
 		this.locale = request.getLocale();
 		if (locale == null)
 		{

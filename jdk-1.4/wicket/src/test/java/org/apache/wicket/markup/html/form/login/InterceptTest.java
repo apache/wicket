@@ -152,9 +152,9 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @see org.apache.wicket.ISessionFactory#newSession(Request, Response)
 		 */
-		public Session newSession(Request request, Response resposne)
+		public Session newSession(Request request, Response response)
 		{
-			return new MySession(this, request);
+			return new MySession(this, request, response);
 		}
 		
 		protected WebResponse newWebResponse(HttpServletResponse servletResponse)
@@ -176,9 +176,9 @@ public class InterceptTest extends TestCase
 		 * @param application
 		 * @param request
 		 */
-		protected MySession(WebApplication application, Request request)
+		protected MySession(WebApplication application, Request request, Response response)
 		{
-			super(application, request);
+			super(application, request, response);
 		}
 
 		protected final String getUsername()

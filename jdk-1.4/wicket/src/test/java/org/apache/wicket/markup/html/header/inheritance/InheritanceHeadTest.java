@@ -86,7 +86,7 @@ public class InheritanceHeadTest extends WicketTestCase
 			 */
 			public Session newSession(Request request, Response response)
 			{
-				return new WebSession(this, request).setStyle("myStyle");
+				return new WebSession(this, request, response).setStyle("myStyle");
 			}
 			
 			public Class getHomePage()

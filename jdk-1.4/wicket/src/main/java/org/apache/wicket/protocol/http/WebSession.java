@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IRequestCycleFactory;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 
 /**
@@ -40,31 +41,35 @@ public class WebSession extends Session
 	private transient boolean sessionInvalidated = false;
 
 	/**
-	 * Constructor
+	 * Constructor. Note that {@link RequestCycle} is not available until this
+	 * constructor returns.
 	 * 
 	 * @param application
 	 *            The application
 	 * @param request
-	 *            The current request (note that {@link RequestCycle} is not yet
-	 *            available)
+	 *            The current request
+	 * @param response
+	 *            The current response
 	 */
-	public WebSession(final Application application, Request request)
+	public WebSession(final Application application, Request request, Response response)
 	{
-		super(application, request);
+		super(application, request, response);
 	}
 
 	/**
-	 * Constructor
+	 * Constructor. Note that {@link RequestCycle} is not available until this
+	 * constructor returns.
 	 * 
 	 * @param application
 	 *            The application
 	 * @param request
-	 *            The current request (note that {@link RequestCycle} is not yet
-	 *            available)
+	 *            The current request
+	 * @param response
+	 *            The current response
 	 */
-	public WebSession(final WebApplication application, Request request)
+	public WebSession(final WebApplication application, Request request, Response response)
 	{
-		super(application, request);
+		super(application, request, response);
 	}
 
 	/**
