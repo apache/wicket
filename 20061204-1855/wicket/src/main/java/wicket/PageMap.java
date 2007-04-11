@@ -128,18 +128,29 @@ public abstract class PageMap implements Serializable, IPageMap
 		{
 			
 			// now we have big shit
-			log.error("Session stored in pagemap (" + session.getId()
+			log.error("Session stored in pagemap '" + getName() + "'(" + session.getId()
 					+ ") is not equal to request session (" + threadSession.getId() + ")", new Exception());
 			// fixing the session
 			session = threadSession;
+			wrongPageMap = true;
 			// clear the current page.
 			houstonWeHaveAProblem();
+		}
+		else
+		{
+			wrongPageMap = false;
 		}
 		return session;
 	}
 
+	private boolean wrongPageMap = false;
 	protected void houstonWeHaveAProblem() 
 	{
+	}
+	
+	public boolean isWrongPageMap()
+	{
+		return wrongPageMap;
 	}
 
 	/**

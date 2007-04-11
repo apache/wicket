@@ -1071,6 +1071,7 @@ public abstract class Session implements Serializable
 
 		// Go through all dirty entries, replicating any dirty objects
 		List dirtyObjects = (List)Session.dirtyObjects.get();
+		Session.dirtyObjects.set(null);
 		if (dirtyObjects != null)
 		{
 			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
@@ -1097,12 +1098,23 @@ public abstract class Session implements Serializable
 				}
 				else if (object instanceof IPageMap)
 				{
-					attribute = attributeForPageMapName(((IPageMap)object).getName());
+					if (object instanceof PageMap && ((PageMap)object).getSession() != null && ((PageMap)object).isWrongPageMap())
+					{
+						PageMap pm = (PageMap)object;
+						log.error("Try to store wrong (others) pagemap '" + pm.getName() + " for sessionid: " + getId() , new Exception());
+						// set the session back to null so that it won't constantly bounch 
+						((PageMap)object).setSession(null);
+						// don't store it
+						continue;
+					}
+					else
+					{
+						attribute = attributeForPageMapName(((IPageMap)object).getName());
+					}
 				}
 
 				setAttribute(attribute, object);
 			}
-			Session.dirtyObjects.set(null);
 		}
 	}
 
@@ -1141,6 +1153,14 @@ public abstract class Session implements Serializable
 	 */
 	final void requestDetached()
 	{
+		// first set the dirty object to null.
+		List dirtyObjects = (List)Session.dirtyObjects.get();
+		Session.dirtyObjects.set(null);
+		if (dirtyObjects != null && dirtyObjects.size() > 0)
+		{
+			log.warn("There where still dirty objects in the request phase, session update wasn't called: " + dirtyObjects);
+		}
+		// release the pagemap if needed.
 		if (pageMapsUsedInRequest != null)
 		{
 			synchronized (pageMapsUsedInRequest)
