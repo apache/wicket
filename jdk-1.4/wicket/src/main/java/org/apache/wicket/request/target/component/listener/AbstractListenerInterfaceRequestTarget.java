@@ -21,7 +21,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.Session;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.IEventProcessor;
 import org.apache.wicket.request.target.component.PageRequestTarget;
@@ -185,13 +184,6 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 	 */
 	protected void onProcessEvents(final RequestCycle requestCycle)
 	{
-		// Assume cluster needs to be updated now, unless listener
-		// invocation changes this
-		requestCycle.setUpdateSession(true);
-
-		// Clear all feedback messages if it isn't a redirect
-		Session.get().cleanupFeedbackMessages(getPage());
-
 		getPage().startComponentRender(getTarget());
 
 		final Application application = requestCycle.getApplication();

@@ -200,7 +200,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	{
 		if (!requestCycle.getRedirect())
 		{
-			requestCycle.setUpdateSession(true);
 			page = getPage(requestCycle);
 		}
 	}

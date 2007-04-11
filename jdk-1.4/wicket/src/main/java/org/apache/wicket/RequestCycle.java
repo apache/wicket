@@ -247,9 +247,6 @@ public abstract class RequestCycle
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
 
-	/** True if the session should be updated (for clusterf purposes). */
-	private boolean updateSession;
-
 	/** The application object. */
 	protected final Application application;
 
@@ -432,9 +429,9 @@ public abstract class RequestCycle
 	/**
 	 * Template method that is called when a runtime exception is thrown, just
 	 * before the actual handling of the runtime exception. This is called by
-	 * {@link org.apache.wicket.request.compound.DefaultExceptionResponseStrategy}, hence
-	 * if that strategy is replaced by another one, there is no guarantee this
-	 * method is called.
+	 * {@link org.apache.wicket.request.compound.DefaultExceptionResponseStrategy},
+	 * hence if that strategy is replaced by another one, there is no guarantee
+	 * this method is called.
 	 * 
 	 * @param page
 	 *            Any page context where the exception was thrown
@@ -634,17 +631,6 @@ public abstract class RequestCycle
 	{
 		IRequestTarget target = new PageRequestTarget(page);
 		setRequestTarget(target);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
-	 * @param updateCluster
-	 *            The updateCluster to set.
-	 */
-	public void setUpdateSession(boolean updateCluster)
-	{
-		this.updateSession = updateCluster;
 	}
 
 	/**
@@ -859,28 +845,30 @@ public abstract class RequestCycle
 			}
 		}
 
-		// remove any rendered feedback messages from the session
+		// remove any rendered and otherwise obsolute feedback messages from the
+		// session
 		try
 		{
 			session.cleanupRenderedFeedbackMessages();
+			Page page = getResponsePage();
+			if (page != null)
+			{
+				session.cleanupFeedbackMessages(page);
+			}
 		}
 		catch (RuntimeException re)
 		{
 			log.error("there was an error cleaning up the feedback messages", re);
 		}
 
-		if (updateSession)
+		// At the end of our response, let the session do some book keeping
+		try
 		{
-			// At the end of our response, we need to set any session
-			// attributes that might be required to update the cluster
-			try
-			{
-				session.update();
-			}
-			catch (RuntimeException re)
-			{
-				log.error("there was an error updating the session " + session + ".", re);
-			}
+			session.update();
+		}
+		catch (RuntimeException re)
+		{
+			log.error("there was an error updating the session " + session + ".", re);
 		}
 
 		try

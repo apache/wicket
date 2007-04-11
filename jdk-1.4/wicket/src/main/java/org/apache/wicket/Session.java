@@ -354,7 +354,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 					temporarySessionAttributes = null;
 				}
 
-				RequestCycle.get().setUpdateSession(true);
 			}
 		}
 		else
@@ -1162,7 +1161,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Updates the session, e.g. for replication purposes.
+	 * Updates the session at the end of a request, e.g. for replication
+	 * purposes.
 	 */
 	protected void update()
 	{
@@ -1309,14 +1309,18 @@ public abstract class Session implements IClusterable, IConverterLocator
 		Session.touchedPages.set(null);
 		if (touchedPages != null && touchedPages.size() > 0)
 		{
-			log.warn("There where still touched pages in the request detach phase, session update wasn't called: " + touchedPages);
+			log
+					.warn("There where still touched pages in the request detach phase, session update wasn't called: "
+							+ touchedPages);
 		}
 
 		List dirtyObjects = (List)Session.dirtyObjects.get();
 		Session.dirtyObjects.set(null);
 		if (dirtyObjects != null && dirtyObjects.size() > 0)
 		{
-			log.warn("There where still dirty objects in the request detach phase, session update wasn't called: " + dirtyObjects);
+			log
+					.warn("There where still dirty objects in the request detach phase, session update wasn't called: "
+							+ dirtyObjects);
 		}
 
 		if (pageMapsUsedInRequest != null)

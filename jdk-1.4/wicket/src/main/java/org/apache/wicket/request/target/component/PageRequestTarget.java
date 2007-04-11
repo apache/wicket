@@ -60,8 +60,6 @@ public class PageRequestTarget implements IPageRequestTarget
 		}
 		else
 		{
-			requestCycle.setUpdateSession(true);
-
 			// Let page render itself
 			page.renderPage();
 		}
