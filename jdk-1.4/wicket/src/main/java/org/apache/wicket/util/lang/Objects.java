@@ -25,9 +25,12 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +38,9 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
 import org.apache.wicket.util.io.IObjectStreamFactory;
 import org.apache.wicket.util.io.WicketObjectStreamFactory;
@@ -416,8 +421,8 @@ public final class Objects
 	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The
 	 * object must be fully serializable to be cloned. This method will not
-	 * clone org.apache.wicket Components, it will just reuse those instances so that the
-	 * complete component tree is not copied over only the model data.
+	 * clone org.apache.wicket Components, it will just reuse those instances so
+	 * that the complete component tree is not copied over only the model data.
 	 * 
 	 * @param object
 	 *            The object to clone

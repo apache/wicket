@@ -16,13 +16,8 @@
  */
 package org.apache.wicket.util.lang;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Locale;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -33,86 +28,6 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class Classes
 {
-	/**
-	 * Invoke the setter method for 'name' on object and provide the 'value'
-	 * 
-	 * @param object
-	 * @param name
-	 * @param value
-	 * @param locale
-	 */
-	public static void invokeSetter(final Object object, final String name, final String value,
-			final Locale locale)
-	{
-		// Note: tag attributes are maintained in a LowerCaseKeyValueMap, thus
-		// 'name' will be all lowercase.
-
-		// Note: because the attributes are all lowercase, there is slight
-		// possibility of error due to naming issues.
-
-		// Note: all setters must start with "set"
-
-		// Get the setter for the attribute
-		final String methodName = "set" + name;
-		final Method[] methods = object.getClass().getMethods();
-		Method method = null;
-		for (int i = 0; i < methods.length; i++)
-		{
-			if (methods[i].getName().equalsIgnoreCase(methodName))
-			{
-				method = methods[i];
-			}
-		}
-
-		if (method == null)
-		{
-			throw new MarkupException("Unable to initialize Component. Method with name "
-					+ methodName + " not found");
-		}
-
-		// The method must have a single parameter
-		final Class[] parameterClasses = method.getParameterTypes();
-		if (parameterClasses.length != 1)
-		{
-			throw new MarkupException("Unable to initialize Component. Method with name "
-					+ methodName + " must have one and only one parameter");
-		}
-
-		// Convert the parameter if necessary, depending on the setter's
-		// attribute
-		final Class paramClass = parameterClasses[0];
-		try
-		{
-			final IConverter converter = Application.get().getApplicationSettings()
-			.getConverterLocatorFactory().newConverterLocator().getConverter(paramClass);
-			final Object param = converter.convertToObject(value, locale);
-			if (param == null)
-			{
-				throw new MarkupException("Unable to convert value '" + value + "' into "
-						+ paramClass + ". May be there is no converter for that type registered?");
-			}
-			method.invoke(object, new Object[] { param });
-		}
-		catch (IllegalAccessException ex)
-		{
-			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName
-							+ ". Cause: " + ex);
-		}
-		catch (InvocationTargetException ex)
-		{
-			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName
-							+ ". Cause: " + ex);
-		}
-		catch (NumberFormatException ex)
-		{
-			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName
-							+ ". Cause: " + ex);
-		}
-	}
-
 	/**
 	 * Gets the name of the given class or null if the class is null.
 	 * 
