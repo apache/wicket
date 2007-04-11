@@ -301,10 +301,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * @param response
 	 *            The current response
 	 */
-	protected Session(Application application, Request request, Response response)
+	protected Session(Application application, Request request)
 	{
-		// Construct request cycle (which sets thread local)
-        getRequestCycleFactory().newRequestCycle(this, request, response);
 		this.locale = request.getLocale();
 		if (locale == null)
 		{

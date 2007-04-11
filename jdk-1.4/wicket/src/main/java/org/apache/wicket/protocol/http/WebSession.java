@@ -20,7 +20,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IRequestCycleFactory;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 
 /**
@@ -48,12 +47,10 @@ public class WebSession extends Session
 	 *            The application
 	 * @param request
 	 *            The current request
-	 * @param response
-	 *            The current response
 	 */
-	public WebSession(final Application application, Request request, Response response)
+	public WebSession(final Application application, Request request)
 	{
-		super(application, request, response);
+		super(application, request);
 	}
 
 	/**
@@ -64,12 +61,10 @@ public class WebSession extends Session
 	 *            The application
 	 * @param request
 	 *            The current request
-	 * @param response
-	 *            The current response
 	 */
-	public WebSession(final WebApplication application, Request request, Response response)
+	public WebSession(final WebApplication application, Request request)
 	{
-		super(application, request, response);
+		super(application, request);
 	}
 
 	/**

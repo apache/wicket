@@ -154,7 +154,7 @@ public class InterceptTest extends TestCase
 		 */
 		public Session newSession(Request request, Response response)
 		{
-			return new MySession(this, request, response);
+			return new MySession(this, request);
 		}
 		
 		protected WebResponse newWebResponse(HttpServletResponse servletResponse)
@@ -176,9 +176,9 @@ public class InterceptTest extends TestCase
 		 * @param application
 		 * @param request
 		 */
-		protected MySession(WebApplication application, Request request, Response response)
+		protected MySession(WebApplication application, Request request)
 		{
-			super(application, request, response);
+			super(application, request);
 		}
 
 		protected final String getUsername()

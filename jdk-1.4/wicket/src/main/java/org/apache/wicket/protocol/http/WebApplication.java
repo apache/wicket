@@ -381,7 +381,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public Session newSession(Request request, Response response)
 	{
-		return new WebSession(WebApplication.this, request, response);
+		return new WebSession(WebApplication.this, request);
 	}
 
 	/**
