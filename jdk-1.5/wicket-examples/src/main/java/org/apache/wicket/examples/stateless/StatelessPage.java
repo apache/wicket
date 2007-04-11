@@ -53,6 +53,7 @@ public class StatelessPage extends WebPage
 			}
 		};
 		tf = new TextField("textfield", new Model());
+		tf.setRequired(true);
 		add(statelessForm);
 		statelessForm.add(tf);
 		add(new FeedbackPanel("feedback"));
