@@ -65,7 +65,7 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	 */
 	public Session newSession(Request request, Response response)
 	{
-		return new RolesSession(this, request, response);
+		return new RolesSession(this, request);
 	}
 
 	@Override

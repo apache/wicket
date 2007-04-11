@@ -54,7 +54,7 @@ public final class SignInApplication extends WicketExampleApplication
 	 */
 	public Session newSession(Request request, Response response)
 	{
-		return new SignInSession(SignInApplication.this, request, response);
+		return new SignInSession(SignInApplication.this, request);
 	}
 
 	/**

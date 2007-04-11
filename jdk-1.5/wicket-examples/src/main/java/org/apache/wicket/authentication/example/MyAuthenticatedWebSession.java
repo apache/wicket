@@ -17,7 +17,6 @@
 package org.apache.wicket.authentication.example;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.Response;
 import org.apache.wicket.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authorization.strategies.role.Roles;
@@ -37,12 +36,11 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 	 *            The application
 	 * @param request
 	 *            The current request object
-	 * @param response
 	 */
 	public MyAuthenticatedWebSession(final AuthenticatedWebApplication application,
-			Request request, Response response)
+			Request request)
 	{
-		super(application, request, response);
+		super(application, request);
 	}
 
 	/**

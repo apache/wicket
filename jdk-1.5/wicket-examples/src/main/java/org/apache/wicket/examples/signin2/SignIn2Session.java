@@ -38,11 +38,10 @@ public final class SignIn2Session extends WebSession
 	 *            The application
 	 * @param request
 	 *            The current request object
-	 * @param response
 	 */
-	protected SignIn2Session(final WebApplication application, Request request, Response response)
+	protected SignIn2Session(final WebApplication application, Request request)
 	{
-		super(application, request, response);
+		super(application, request);
 	}
 
 	/**

@@ -53,7 +53,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	 */
 	public Session newSession(Request request, Response response)
 	{
-		return new LibrarySession(LibraryApplication.this, request, response);
+		return new LibrarySession(LibraryApplication.this, request);
 	}
 
 	/**

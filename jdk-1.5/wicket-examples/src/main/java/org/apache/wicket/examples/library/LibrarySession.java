@@ -19,7 +19,6 @@ package org.apache.wicket.examples.library;
 import java.util.List;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
@@ -40,11 +39,10 @@ public final class LibrarySession extends WebSession
 	 *            The application
 	 * @param request
 	 *            The current request object
-	 * @param response
 	 */
-	protected LibrarySession(final WebApplication application, Request request, Response response)
+	protected LibrarySession(final WebApplication application, Request request)
 	{
-		super(application, request, response);
+		super(application, request);
 	}
 
 	/**
