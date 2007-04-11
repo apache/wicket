@@ -27,6 +27,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -85,6 +86,18 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		}
 
 		final String namespace = this.markup.getWicketNamespace();
+
+		// convert tags of form <tag wicket:id=":bar"> to <wicket:bar>
+		final String wicketidAttr = namespace + ":id";
+		final String wicketid = xmlTag.getAttributes().getString(wicketidAttr);
+		if (!Strings.isEmpty(wicketid) && ":".equals(wicketid.substring(0, 1)))
+		{
+			xmlTag = xmlTag.mutable();
+			xmlTag.setNamespace(namespace);
+			xmlTag.setName(wicketid.substring(1));
+			xmlTag.getAttributes().remove(wicketidAttr);
+		}
+
 
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
