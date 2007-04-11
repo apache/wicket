@@ -158,7 +158,7 @@ public class HangManTest extends WicketWebTestCase
 	public void testHangmanSuccessWebGame()
 	{
 		
-		getTestContext().setBaseUrl("http://localhost:8098/org.apache.wicket-examples");
+		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 		beginAt("/hangman/?word=hangman");
 
 		assertTitleEquals("Wicket Examples - hangman");
@@ -192,7 +192,7 @@ public class HangManTest extends WicketWebTestCase
 	 */
 	public void testHangmanFailureWebGame()
 	{
-		getTestContext().setBaseUrl("http://localhost:8098/org.apache.wicket-examples");
+		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 		beginAt("/hangman/?word=hangman");
 
 		assertTitleEquals("Wicket Examples - hangman");

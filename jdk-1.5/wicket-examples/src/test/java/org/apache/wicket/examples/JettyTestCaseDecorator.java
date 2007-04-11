@@ -51,7 +51,7 @@ public class JettyTestCaseDecorator extends TestSetup
 		server.setConnectors(new Connector[] { connector });
 
 		WebAppContext web = new WebAppContext();
-		web.setContextPath("/org.apache.wicket-examples");
+		web.setContextPath("/wicket-examples");
 
 		String basedir = System.getProperty("basedir");
 		String path = "";

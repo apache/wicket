@@ -20,12 +20,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.examples.hangman.Word;
-import org.apache.wicket.examples.hangman.WordGenerator;
+import org.apache.wicket.WicketTestCase;
 
 /**
  * Test case for the <code>WordGenerator</code> class.
@@ -33,7 +31,7 @@ import org.apache.wicket.examples.hangman.WordGenerator;
  * @author Chris Turner
  * @version 1.0
  */
-public class WordGeneratorTest extends TestCase
+public class WordGeneratorTest extends WicketTestCase
 {
 
 	private static final Log log = LogFactory.getLog(WordGeneratorTest.class);
