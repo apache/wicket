@@ -122,8 +122,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 						"The wicket:id attribute value must not be empty. May be unmatched quotes?!?",
 						tag.getPos());
 			}
-			// Make it a org.apache.wicket component. Otherwise it would be
-			// RawMarkup
+			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId(value);
 		}
 
