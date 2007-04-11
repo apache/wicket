@@ -51,12 +51,12 @@ public class QuickStartApplication extends WebApplication
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request,
 	 *      Response)
 	 */
 	public Session newSession(Request request, Response response)
 	{
-		return new QuickStartSession(QuickStartApplication.this, request);
+		return new QuickStartSession(QuickStartApplication.this, request, response);
 	}
 
 	/**
