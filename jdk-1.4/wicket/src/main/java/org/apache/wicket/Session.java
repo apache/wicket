@@ -1166,15 +1166,15 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	protected void update()
 	{
-		List lst = (List)touchedPages.get();
-		if (lst != null)
+		List touchedPages = (List)Session.touchedPages.get();
+		Session.touchedPages.set(null);
+		if (touchedPages != null)
 		{
-			for (int i = 0; i < lst.size(); i++)
+			for (int i = 0; i < touchedPages.size(); i++)
 			{
-				Page page = (Page)lst.get(i);
+				Page page = (Page)touchedPages.get(i);
 				page.getPageMap().put(page);
 			}
-			touchedPages.set(null);
 		}
 
 		// If state is dirty
@@ -1199,8 +1199,10 @@ public abstract class Session implements IClusterable, IConverterLocator
 			}
 		}
 
-		// Go through all dirty entries, replicating any dirty objects
 		List dirtyObjects = (List)Session.dirtyObjects.get();
+		Session.dirtyObjects.set(null);
+
+		// Go through all dirty entries, replicating any dirty objects
 		if (dirtyObjects != null)
 		{
 			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
@@ -1232,7 +1234,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 
 				setAttribute(attribute, object);
 			}
-			Session.dirtyObjects.set(null);
 		}
 	}
 
@@ -1304,6 +1305,20 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	final void requestDetached()
 	{
+		List touchedPages = (List)Session.touchedPages.get();
+		Session.touchedPages.set(null);
+		if (touchedPages != null && touchedPages.size() > 0)
+		{
+			log.warn("There where still touched pages in the request detach phase, session update wasn't called: " + touchedPages);
+		}
+
+		List dirtyObjects = (List)Session.dirtyObjects.get();
+		Session.dirtyObjects.set(null);
+		if (dirtyObjects != null && dirtyObjects.size() > 0)
+		{
+			log.warn("There where still dirty objects in the request detach phase, session update wasn't called: " + dirtyObjects);
+		}
+
 		if (pageMapsUsedInRequest != null)
 		{
 			synchronized (pageMapsUsedInRequest)
