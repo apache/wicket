@@ -18,13 +18,12 @@ package org.apache.wicket;
 
 import java.util.Map;
 
-import org.apache.wicket.AttributeModifier;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.Model;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Test case for the component tag attribute modifer test.

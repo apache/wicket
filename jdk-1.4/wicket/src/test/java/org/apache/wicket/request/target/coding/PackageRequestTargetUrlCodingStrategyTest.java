@@ -16,12 +16,11 @@
  */
 package org.apache.wicket.request.target.coding;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 /**
  * Tests package resources.

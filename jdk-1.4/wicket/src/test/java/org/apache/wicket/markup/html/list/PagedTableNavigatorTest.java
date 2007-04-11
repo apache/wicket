@@ -18,11 +18,11 @@ package org.apache.wicket.markup.html.list;
 
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 
 /**

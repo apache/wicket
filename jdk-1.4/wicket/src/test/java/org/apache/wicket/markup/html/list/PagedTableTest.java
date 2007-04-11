@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 
 /**

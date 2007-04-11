@@ -18,15 +18,14 @@ package org.apache.wicket;
 
 import java.util.List;
 
-import org.apache.wicket.Application;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Test cases for the <code>ApplicationSettings</code> class.

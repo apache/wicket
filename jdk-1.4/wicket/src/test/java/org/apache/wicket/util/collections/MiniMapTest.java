@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.wicket.util.collections.MiniMap;
-
 import junit.framework.TestCase;
 
 /**

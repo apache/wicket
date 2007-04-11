@@ -19,11 +19,11 @@ package org.apache.wicket.util.size;
 
 import java.util.Locale;
 
-import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.string.StringValueConversionException;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.string.StringValueConversionException;
 
 /**
  * Test cases for this object

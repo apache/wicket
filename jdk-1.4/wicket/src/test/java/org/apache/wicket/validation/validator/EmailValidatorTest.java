@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.validation.validator;
 
-import org.apache.wicket.validation.validator.EmailAddressValidator;
-
 import junit.framework.TestCase;
 
 /**

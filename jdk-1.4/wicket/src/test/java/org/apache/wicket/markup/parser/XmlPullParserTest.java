@@ -19,12 +19,10 @@ package org.apache.wicket.markup.parser;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
-import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.parser.XmlPullParser;
-import org.apache.wicket.markup.parser.XmlTag;
-import org.apache.wicket.util.resource.StringResourceStream;
-
 import junit.framework.TestCase;
+
+import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
  * Quite some tests are already with MarkupParser. 

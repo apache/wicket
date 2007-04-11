@@ -18,12 +18,12 @@ package org.apache.wicket.resource;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-
-import junit.framework.Assert;
 
 /**
  * Test case for the <code>ComponentStringResourceLoader</code> class.

@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 /**

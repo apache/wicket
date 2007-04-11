@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.value;
 
-import org.apache.wicket.util.value.ValueMap;
-
 import junit.framework.TestCase;
 
 /**

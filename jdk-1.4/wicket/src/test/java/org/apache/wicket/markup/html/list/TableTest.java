@@ -19,8 +19,6 @@ package org.apache.wicket.markup.html.list;
 import java.util.ArrayList;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.model.Model;
 
 

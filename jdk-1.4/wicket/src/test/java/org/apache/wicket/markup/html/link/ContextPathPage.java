@@ -17,9 +17,6 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.resource.ByteArrayResource;
 
 /**

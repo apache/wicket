@@ -48,7 +48,6 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
-import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;

@@ -18,6 +18,8 @@ package org.apache.wicket.util.tester;
 
 import java.util.Locale;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithOneComponent;
@@ -31,17 +33,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
-import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.ITestPageSource;
-import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
 import org.apache.wicket.util.tester.apps_1.Book;
 import org.apache.wicket.util.tester.apps_1.CreateBook;
 import org.apache.wicket.util.tester.apps_1.MyMockApplication;
 import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
-
-import junit.framework.TestCase;
 
 /**
  *

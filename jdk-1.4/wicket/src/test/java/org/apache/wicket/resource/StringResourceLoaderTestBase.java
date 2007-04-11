@@ -18,13 +18,13 @@ package org.apache.wicket.resource;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Abstract base class providing common test functionality to ensure that all loader

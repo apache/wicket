@@ -19,13 +19,12 @@ package org.apache.wicket.request.target.coding;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for {@link MixedParamUrlCodingStrategy}.

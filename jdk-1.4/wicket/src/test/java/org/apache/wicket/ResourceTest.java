@@ -23,7 +23,6 @@ import java.io.OutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.Resource;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.resource.FileResourceStream;

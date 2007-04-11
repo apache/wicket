@@ -20,8 +20,6 @@ package org.apache.wicket.util.time;
 import java.text.ParseException;
 import java.util.Calendar;
 
-import org.apache.wicket.util.time.Time;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

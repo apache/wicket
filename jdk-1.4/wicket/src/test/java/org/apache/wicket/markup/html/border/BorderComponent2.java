@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.border;
 
-import org.apache.wicket.markup.html.border.Border;
 
 
 /**

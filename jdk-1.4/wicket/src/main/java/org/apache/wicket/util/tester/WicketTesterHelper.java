@@ -21,13 +21,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.util.string.Strings;
-
-import junit.framework.Assert;
 
 /**
  * A WicketTester specific helper class

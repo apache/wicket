@@ -20,7 +20,6 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.value.IValueMap;
-import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Link to a packaged style sheet.

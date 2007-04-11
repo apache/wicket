@@ -17,9 +17,6 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
 
 /**
  * Test page for checking markup of radiogroups.

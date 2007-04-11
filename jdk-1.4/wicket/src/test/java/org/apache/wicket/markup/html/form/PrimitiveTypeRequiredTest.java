@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.form.TextField;
 
 
 /**

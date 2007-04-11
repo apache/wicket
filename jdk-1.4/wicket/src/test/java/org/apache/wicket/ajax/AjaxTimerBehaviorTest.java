@@ -25,8 +25,6 @@ import org.apache.wicket.MockPageWithLinkAndComponent;
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;

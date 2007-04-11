@@ -20,19 +20,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.ConverterLocator;
-import org.apache.wicket.util.convert.converters.BooleanConverter;
-import org.apache.wicket.util.convert.converters.ByteConverter;
-import org.apache.wicket.util.convert.converters.DateConverter;
-import org.apache.wicket.util.convert.converters.DoubleConverter;
-import org.apache.wicket.util.convert.converters.FloatConverter;
-import org.apache.wicket.util.convert.converters.IntegerConverter;
-import org.apache.wicket.util.convert.converters.LongConverter;
-import org.apache.wicket.util.convert.converters.ShortConverter;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for the base converters.

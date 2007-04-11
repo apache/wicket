@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.border.BoxBorder;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.image.Image;
 

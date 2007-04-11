@@ -20,20 +20,15 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Calendar;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.MockPage;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.

@@ -18,10 +18,10 @@ package org.apache.wicket.resource;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-
-import junit.framework.Assert;
 
 /**
  * Test case for the <code>BundleStringResourceLoader</code> class.

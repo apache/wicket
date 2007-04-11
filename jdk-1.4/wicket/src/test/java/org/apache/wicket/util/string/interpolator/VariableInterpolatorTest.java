@@ -19,8 +19,6 @@ package org.apache.wicket.util.string.interpolator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-
 import junit.framework.TestCase;
 
 /**

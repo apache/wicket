@@ -25,6 +25,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.parser.filter.EnclosureHandler;
+import org.apache.wicket.markup.resolver.EnclosureResolver;
 
 
 

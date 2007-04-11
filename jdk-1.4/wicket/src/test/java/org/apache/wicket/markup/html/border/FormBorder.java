@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.Form;
 
 

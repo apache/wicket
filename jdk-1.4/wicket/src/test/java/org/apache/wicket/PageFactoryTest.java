@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.session.DefaultPageFactory;
 
 

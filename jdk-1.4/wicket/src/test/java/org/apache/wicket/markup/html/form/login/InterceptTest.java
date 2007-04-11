@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html.form.login;
 
 import javax.servlet.http.HttpServletResponse;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ISessionFactory;
 import org.apache.wicket.Request;
@@ -32,8 +34,6 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 
 /**

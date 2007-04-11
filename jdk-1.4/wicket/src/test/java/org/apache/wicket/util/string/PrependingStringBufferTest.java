@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.string;
 
-import org.apache.wicket.util.string.PrependingStringBuffer;
-
 import junit.framework.TestCase;
 
 /**

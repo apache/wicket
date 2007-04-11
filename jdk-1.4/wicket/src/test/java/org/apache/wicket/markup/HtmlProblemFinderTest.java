@@ -18,7 +18,6 @@ package org.apache.wicket.markup;
 
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.filter.HtmlProblemFinder;
 

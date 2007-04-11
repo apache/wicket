@@ -18,15 +18,15 @@ package org.apache.wicket.protocol.http;
 
 import java.util.Iterator;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Simple application that demonstrates the mock http application code (and

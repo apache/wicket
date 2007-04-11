@@ -20,11 +20,10 @@ package org.apache.wicket.util.time;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.apache.wicket.util.string.StringValueConversionException;
-import org.apache.wicket.util.time.Duration;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.wicket.util.string.StringValueConversionException;
 
 /**
  * Test cases for this object

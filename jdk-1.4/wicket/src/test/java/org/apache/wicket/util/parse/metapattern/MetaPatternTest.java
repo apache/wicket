@@ -19,15 +19,12 @@ package org.apache.wicket.util.parse.metapattern;
 
 import java.util.regex.Matcher;
 
-import org.apache.wicket.util.parse.metapattern.Group;
-import org.apache.wicket.util.parse.metapattern.IntegerGroup;
-import org.apache.wicket.util.parse.metapattern.MetaPattern;
+import junit.framework.TestCase;
+
 import org.apache.wicket.util.parse.metapattern.parsers.CommaSeparatedVariableParser;
 import org.apache.wicket.util.parse.metapattern.parsers.IntegerVariableAssignmentParser;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-
-import junit.framework.TestCase;
 
 /**
  * Test cases for this object

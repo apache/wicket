@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.protocol.http.MockHttpServletRequest;

@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.util.string.Strings;
-
 import junit.framework.TestCase;
+
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Testcase used in the different org.apache.wicket projects for testing for the correct

@@ -16,14 +16,13 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.Page;
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 
 /**
  * @author jcompagner

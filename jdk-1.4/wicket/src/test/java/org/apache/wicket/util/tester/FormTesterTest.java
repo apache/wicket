@@ -19,7 +19,6 @@ package org.apache.wicket.util.tester;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
-import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.MockFormFileUploadPage.MockDomainObjectFileUpload;
 import org.apache.wicket.util.tester.MockFormPage.MockDomainObject;
 

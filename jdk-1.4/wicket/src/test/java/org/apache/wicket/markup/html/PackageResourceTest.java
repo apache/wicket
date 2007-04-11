@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.markup.html;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.SharedResources;
-import org.apache.wicket.markup.html.PackageResource;
-import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for package resources.

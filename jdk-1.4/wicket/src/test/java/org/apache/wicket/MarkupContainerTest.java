@@ -18,8 +18,6 @@ package org.apache.wicket;
 
 import java.util.Iterator;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 

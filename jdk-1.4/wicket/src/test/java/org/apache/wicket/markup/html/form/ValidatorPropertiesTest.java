@@ -18,13 +18,12 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.MissingResourceException;
 
-import org.apache.wicket.markup.html.form.Form;
+import junit.framework.TestCase;
+
 import org.apache.wicket.properties.MyTesterApplication;
 import org.apache.wicket.properties.TestPage;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 /**
  * 

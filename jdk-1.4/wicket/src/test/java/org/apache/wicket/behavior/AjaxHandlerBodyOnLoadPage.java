@@ -17,7 +17,6 @@
 package org.apache.wicket.behavior;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;

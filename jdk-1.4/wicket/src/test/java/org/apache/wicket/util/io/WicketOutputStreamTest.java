@@ -20,10 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 
-import org.apache.wicket.util.io.ByteArrayOutputStream;
-import org.apache.wicket.util.io.WicketObjectInputStream;
-import org.apache.wicket.util.io.WicketObjectOutputStream;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

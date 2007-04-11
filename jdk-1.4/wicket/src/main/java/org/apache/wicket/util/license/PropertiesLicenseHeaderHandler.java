@@ -18,10 +18,10 @@ package org.apache.wicket.util.license;
 
 import java.io.File;
 
+import junit.framework.Assert;
+
 import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.Revision;
-
-import junit.framework.Assert;
 
 class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {

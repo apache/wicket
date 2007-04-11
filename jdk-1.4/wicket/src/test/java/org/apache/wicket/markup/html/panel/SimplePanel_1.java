@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.panel;
 
-import org.apache.wicket.markup.html.panel.Panel;
 
 
 

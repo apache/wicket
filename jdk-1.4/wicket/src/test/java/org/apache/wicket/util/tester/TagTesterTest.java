@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.tester;
 
-import org.apache.wicket.util.tester.TagTester;
-
 import junit.framework.TestCase;
 
 /**

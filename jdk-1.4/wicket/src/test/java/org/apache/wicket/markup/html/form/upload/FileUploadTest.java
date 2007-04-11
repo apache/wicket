@@ -21,7 +21,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.upload.DiskFileItemFactory;
 import org.apache.wicket.util.upload.FileItem;
 

@@ -20,14 +20,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-import org.apache.wicket.settings.ISecuritySettings;
-import org.apache.wicket.util.crypt.Base64;
-import org.apache.wicket.util.crypt.Base64UrlSafe;
-import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.NoCrypt;
-
 import junit.framework.TestCase;
+
+import org.apache.wicket.settings.ISecuritySettings;
 
 /**
  * 

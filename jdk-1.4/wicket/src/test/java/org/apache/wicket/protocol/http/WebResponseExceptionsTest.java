@@ -19,8 +19,6 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IRequestCycleSettings;
 

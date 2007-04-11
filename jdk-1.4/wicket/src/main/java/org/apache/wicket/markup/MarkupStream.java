@@ -18,7 +18,6 @@ package org.apache.wicket.markup;
 
 import java.util.Iterator;
 
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 

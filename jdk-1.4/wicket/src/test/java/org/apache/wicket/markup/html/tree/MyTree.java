@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.image.Image;
-import org.apache.wicket.markup.html.tree.Tree;
 
 
 /**

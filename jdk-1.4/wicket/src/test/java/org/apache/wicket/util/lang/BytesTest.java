@@ -18,10 +18,9 @@ package org.apache.wicket.util.lang;
 
 import java.util.Locale;
 
-import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.string.StringValueConversionException;
-
 import junit.framework.TestCase;
+
+import org.apache.wicket.util.string.StringValueConversionException;
 
 /**
  * Tests the <code>Bytes</code> class.

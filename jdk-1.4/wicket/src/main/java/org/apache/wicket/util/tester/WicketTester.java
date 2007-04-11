@@ -37,7 +37,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.util.diff.DiffUtil;
 
 

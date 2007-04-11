@@ -21,12 +21,6 @@ import java.util.Properties;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.BoundCompoundPropertyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 
 
 /**

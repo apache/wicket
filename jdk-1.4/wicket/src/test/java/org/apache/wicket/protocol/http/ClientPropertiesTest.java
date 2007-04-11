@@ -18,8 +18,6 @@ package org.apache.wicket.protocol.http;
 
 import java.util.TimeZone;
 
-import org.apache.wicket.protocol.http.ClientProperties;
-
 import junit.framework.TestCase;
 
 /**

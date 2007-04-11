@@ -18,14 +18,10 @@ package org.apache.wicket.util.string;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.StringValueConversionException;
-import org.apache.wicket.util.string.Strings;
-
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Test cases for the <code>Strings</code> class.

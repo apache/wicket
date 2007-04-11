@@ -22,13 +22,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.ConverterLocator;
-import org.apache.wicket.util.lang.PropertyResolver;
-import org.apache.wicket.util.lang.PropertyResolverConverter;
-
-import junit.framework.TestCase;
 
 /**
  * @author jcompagner

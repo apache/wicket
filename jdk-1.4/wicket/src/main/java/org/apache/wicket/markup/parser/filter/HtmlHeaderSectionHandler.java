@@ -18,7 +18,6 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;

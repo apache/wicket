@@ -18,8 +18,6 @@ package org.apache.wicket.markup.html.list;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 
 
 

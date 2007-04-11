@@ -17,8 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 
 

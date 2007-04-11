@@ -16,13 +16,11 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
+import junit.framework.TestCase;
+
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 /**
  * Base class for tests which require comparing org.apache.wicket response with a file.

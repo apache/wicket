@@ -21,11 +21,6 @@ import java.text.ParseException;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.apache.wicket.util.time.Time;
-import org.apache.wicket.util.time.TimeFrame;
-import org.apache.wicket.util.time.TimeMap;
-import org.apache.wicket.util.time.TimeOfDay;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

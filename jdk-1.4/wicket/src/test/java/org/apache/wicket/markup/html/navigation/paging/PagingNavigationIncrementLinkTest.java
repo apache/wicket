@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
 
 
 /**

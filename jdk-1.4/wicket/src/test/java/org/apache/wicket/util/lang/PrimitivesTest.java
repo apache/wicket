@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.lang;
 
-import org.apache.wicket.util.lang.Primitives;
-
 import junit.framework.TestCase;
 
 /**

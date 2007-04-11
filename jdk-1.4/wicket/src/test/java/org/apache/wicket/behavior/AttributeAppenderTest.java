@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.behavior;
 
-import org.apache.wicket.behavior.AttributeAppender;
-
 import junit.framework.TestCase;
 
 /**

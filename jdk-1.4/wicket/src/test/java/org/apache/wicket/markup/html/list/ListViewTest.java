@@ -18,11 +18,9 @@ package org.apache.wicket.markup.html.list;
 
 import java.util.ArrayList;
 
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
-
 import junit.framework.TestCase;
+
+import org.apache.wicket.model.Model;
 
 /**
  * Test for ListView

@@ -23,9 +23,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 
-import org.apache.wicket.util.string.Strings;
-
 import junit.framework.Assert;
+
+import org.apache.wicket.util.string.Strings;
 
 
 abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler

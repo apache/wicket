@@ -18,8 +18,6 @@ package org.apache.wicket.util.io;
 
 import java.io.BufferedReader;
 
-import org.apache.wicket.util.io.XmlReader;
-
 import junit.framework.TestCase;
 
 /**

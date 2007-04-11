@@ -18,12 +18,12 @@ package org.apache.wicket.resource;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.Assert;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.

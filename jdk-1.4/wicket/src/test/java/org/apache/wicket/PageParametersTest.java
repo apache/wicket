@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.PageParameters;
-
 import junit.framework.TestCase;
 
 /**

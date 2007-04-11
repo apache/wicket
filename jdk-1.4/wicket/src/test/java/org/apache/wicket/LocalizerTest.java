@@ -19,10 +19,8 @@ package org.apache.wicket;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.Localizer;
-import org.apache.wicket.Session;
+import junit.framework.Assert;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.resource.DummyApplication;
@@ -30,8 +28,6 @@ import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
-
-import junit.framework.Assert;
 
 /**
  * Test cases for the <code>Localizer</code> class.

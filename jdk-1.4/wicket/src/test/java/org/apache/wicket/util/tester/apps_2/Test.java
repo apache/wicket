@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.util.tester.apps_2;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 /**
  * 

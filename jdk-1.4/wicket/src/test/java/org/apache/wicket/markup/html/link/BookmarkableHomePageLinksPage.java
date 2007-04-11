@@ -20,7 +20,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 /**
  * @author jcompagner

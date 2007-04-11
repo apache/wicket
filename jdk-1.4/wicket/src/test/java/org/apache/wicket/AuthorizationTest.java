@@ -18,8 +18,6 @@ package org.apache.wicket;
 
 import java.io.Serializable;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.authorization.IAuthorizationStrategy;

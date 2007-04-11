@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup;
 
+import junit.framework.TestCase;
+
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
-
-import junit.framework.TestCase;
 
 /**
  */

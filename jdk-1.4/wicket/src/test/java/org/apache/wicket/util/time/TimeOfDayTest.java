@@ -17,8 +17,6 @@
 package org.apache.wicket.util.time;
 
 
-import org.apache.wicket.util.time.TimeOfDay;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
