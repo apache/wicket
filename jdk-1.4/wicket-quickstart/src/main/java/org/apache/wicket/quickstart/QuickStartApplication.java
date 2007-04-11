@@ -56,7 +56,7 @@ public class QuickStartApplication extends WebApplication
 	 */
 	public Session newSession(Request request, Response response)
 	{
-		return new QuickStartSession(QuickStartApplication.this, request, response);
+		return new QuickStartSession(QuickStartApplication.this, request);
 	}
 
 	/**
