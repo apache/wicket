@@ -35,7 +35,7 @@ import org.apache.wicket.Session;
 /**
  * <p>
  * This filter can be used to make the Wicket
- * {@link org.apache.wicket.protocol.http.WebSession} instances available to non-org.apache.wicket
+ * {@link org.apache.wicket.protocol.http.WebSession} instances available to non-wicket
  * servlets.
  * </p>
  * <p>
