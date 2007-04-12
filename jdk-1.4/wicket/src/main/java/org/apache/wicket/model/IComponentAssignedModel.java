@@ -25,7 +25,7 @@ import org.apache.wicket.Component;
  * One reason for a model to want to do this is if it needs to be aware of the
  * component it is bound to.
  * 
- * The algorithm wicket employes is similar to this:
+ * The algorithm wicket employs is similar to this:
  * 
  * <pre>
  * void Component.setModel(IModel model) 
