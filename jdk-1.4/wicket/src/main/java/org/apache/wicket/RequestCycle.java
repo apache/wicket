@@ -533,6 +533,7 @@ public abstract class RequestCycle
 	 */
 	public void setAutomaticallyClearFeedbackMessages(boolean automaticallyClearFeedbackMessages)
 	{
+		// FIXME This method is a quick fix for a unit testing problem that should not exist
 		this.automaticallyClearFeedbackMessages = automaticallyClearFeedbackMessages;
 	}
 
