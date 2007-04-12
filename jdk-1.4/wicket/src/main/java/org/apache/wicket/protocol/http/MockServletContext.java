@@ -98,6 +98,12 @@ public class MockServletContext implements ServletContext
 			}
 		}
 
+		// assume we're running in maven or an eclipse project created by maven,
+		// so the sessions directory will be created inside the target directory,
+		// and will be cleaned up with a mvn clean
+
+		attributes.put("javax.servlet.context.tempdir", new File("target"));
+
 		mimeTypes.put("html", "text/html");
 		mimeTypes.put("htm", "text/html");
 		mimeTypes.put("css", "text/css");
