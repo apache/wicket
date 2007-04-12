@@ -141,7 +141,7 @@ public class MockWebApplication
 		this.application = application;
 
 		this.context = newServletContext(path);
-		
+
 		filter = new WicketFilter()
 		{
 			protected IWebApplicationFactory getApplicationFactory()
@@ -176,7 +176,8 @@ public class MockWebApplication
 					if (name.equals(WicketFilter.FILTER_MAPPING_PARAM))
 					{
 						return WicketFilter.SERVLET_PATH_HOLDER;
-						//return "/" + MockWebApplication.this.getName() + "/*";
+						// return "/" + MockWebApplication.this.getName() +
+						// "/*";
 					}
 					return null;
 				}
@@ -194,34 +195,35 @@ public class MockWebApplication
 
 		Application.set(this.application);
 
-		// Construct mock session, request and response 
+		// Construct mock session, request and response
 		this.servletSession = new MockHttpSession(this.context);
-		this.servletRequest = new MockHttpServletRequest(this.application, this.servletSession, this.context);
+		this.servletRequest = new MockHttpServletRequest(this.application, this.servletSession,
+				this.context);
 		this.servletResponse = new MockHttpServletResponse();
-		
+
 		// Construct request, response and session using factories
 		this.wicketRequest = this.application.newWebRequest(this.servletRequest);
 		this.wicketResponse = this.application.newWebResponse(this.servletResponse);
 		this.wicketSession = this.application.getSession(this.wicketRequest, this.wicketResponse);
-		
+
 		// Get request cycle factory
 		this.requestCycleFactory = this.wicketSession.getRequestCycleFactory();
 
 		// Set the default context path
 		this.application.getApplicationSettings().setContextPath(context.getServletContextName());
 
-		this.application.getRequestCycleSettings()
-				.setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
+		this.application.getRequestCycleSettings().setRenderStrategy(
+				IRequestCycleSettings.ONE_PASS_RENDER);
 		this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
 
-		// Since the purpose of MockWebApplication is singlethreaded 
+		// Since the purpose of MockWebApplication is singlethreaded
 		// programmatic testing it doesn't make much sense to have a
 		// modification watcher thread started to watch for changes in the
 		// markup.
-		// Disabling this also helps test suites with many test cases 
-		// (problems has been noticed with >~300 test cases). The problem 
-		// is that even if the wicket tester is GC'ed the modification 
+		// Disabling this also helps test suites with many test cases
+		// (problems has been noticed with >~300 test cases). The problem
+		// is that even if the wicket tester is GC'ed the modification
 		// watcher still runs, taking up file handles and memory, leading
 		// to "Too many files opened" or a regular OutOfMemoryException
 		this.application.getResourceSettings().setResourcePollFrequency(null);
@@ -241,7 +243,7 @@ public class MockWebApplication
 	{
 		return new MockServletContext(this.application, path);
 	}
-	
+
 	/**
 	 * Gets the application object.
 	 * 
@@ -359,7 +361,14 @@ public class MockWebApplication
 	{
 		setupRequestAndResponse();
 		final WebRequestCycle cycle = createRequestCycle();
-		cycle.request(new BookmarkablePageRequestTarget(pageClass));
+		try
+		{
+			cycle.request(new BookmarkablePageRequestTarget(pageClass));
+		}
+		finally
+		{
+			cycle.getResponse().close();
+		}
 		postProcessRequestCycle(cycle);
 	}
 
@@ -380,7 +389,14 @@ public class MockWebApplication
 	 */
 	public void processRequestCycle(WebRequestCycle cycle)
 	{
-		cycle.request();
+		try
+		{
+			cycle.request();
+		}
+		finally
+		{
+			cycle.getResponse().close();
+		}
 		postProcessRequestCycle(cycle);
 	}
 
@@ -474,7 +490,14 @@ public class MockWebApplication
 	 */
 	public WebRequestCycle createRequestCycle()
 	{
-		return (WebRequestCycle) requestCycleFactory.newRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		// Create a web request cycle using factory
+		final WebRequestCycle cycle = (WebRequestCycle)requestCycleFactory.newRequestCycle(
+				wicketSession, wicketRequest, wicketResponse);
+
+		// Set request cycle so it won't detach automatically and clear messages
+		// we want to check
+		cycle.setAutomaticallyClearFeedbackMessages(false);
+		return cycle;
 	}
 
 	/**
@@ -488,10 +511,10 @@ public class MockWebApplication
 		servletResponse.initialize();
 		servletRequest.setParameters(parametersForNextRequest);
 		parametersForNextRequest.clear();
-        this.wicketRequest = this.application.newWebRequest(servletRequest);
-        this.wicketResponse = this.application.newWebResponse(servletResponse); 
-        this.wicketSession = this.application.getSession(wicketRequest, wicketResponse); 
-        this.application.getSessionStore().bind(wicketRequest, wicketSession); 
+		this.wicketRequest = this.application.newWebRequest(servletRequest);
+		this.wicketResponse = this.application.newWebResponse(servletResponse);
+		this.wicketSession = this.application.getSession(wicketRequest, wicketResponse);
+		this.application.getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse.setAjax(wicketRequest.isAjax());
 	}
 
@@ -515,7 +538,7 @@ public class MockWebApplication
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
 	}
-	
+
 	/**
 	 * clears this mock application
 	 */
@@ -525,18 +548,18 @@ public class MockWebApplication
 		File dir = (File)context.getAttribute("javax.servlet.context.tempdir");
 		deleteDir(dir);
 	}
-	
+
 	private void deleteDir(File dir)
 	{
-		if(dir != null && dir.isDirectory())
+		if (dir != null && dir.isDirectory())
 		{
 			File[] files = dir.listFiles();
 			if (files != null)
 			{
-				for (int i=0; i<files.length; i++)
+				for (int i = 0; i < files.length; i++)
 				{
 					File element = files[i];
-					if(element.isDirectory())
+					if (element.isDirectory())
 					{
 						deleteDir(element);
 					}

@@ -29,10 +29,6 @@ import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
-import org.apache.wicket.Request;
-import org.apache.wicket.Response;
-import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -41,7 +37,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.util.diff.DiffUtil;
 
 
@@ -168,20 +163,6 @@ public class WicketTester extends BaseWicketTester
 		protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
 		{
 			return new WebResponse(servletResponse);
-		}
-
-		public Session newSession(Request request, Response response)
-		{
-			return new WebSession(this, request)
-			{
-				private static final long serialVersionUID = 1L;
-
-				public void cleanupFeedbackMessages(Page page)
-				{
-					// don't clean up so that we'll have them available for
-					// testing
-				}
-			};
 		}
 	}
 

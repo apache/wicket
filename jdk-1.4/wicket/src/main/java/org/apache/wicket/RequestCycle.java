@@ -205,6 +205,12 @@ public abstract class RequestCycle
 	private static final int RESPOND = 4;
 
 	/**
+	 * True if the request cycle should automatically clear feedback messages
+	 * after processing
+	 */
+	private boolean automaticallyClearFeedbackMessages;
+
+	/**
 	 * Gets request cycle for calling thread.
 	 * 
 	 * @return Request cycle for calling thread
@@ -515,6 +521,19 @@ public abstract class RequestCycle
 
 		// loop through steps
 		steps();
+	}
+
+	/**
+	 * Permit clients like testers to examine feedback messages after
+	 * processing.
+	 * 
+	 * @param automaticallyClearFeedbackMessages
+	 *            True to automatically detach request cycle at end of
+	 *            processing
+	 */
+	public void setAutomaticallyClearFeedbackMessages(boolean automaticallyClearFeedbackMessages)
+	{
+		this.automaticallyClearFeedbackMessages = automaticallyClearFeedbackMessages;
 	}
 
 	/**
@@ -845,20 +864,23 @@ public abstract class RequestCycle
 			}
 		}
 
-		// remove any rendered and otherwise obsolute feedback messages from the
-		// session
-		try
+		if (automaticallyClearFeedbackMessages)
 		{
-			session.cleanupRenderedFeedbackMessages();
-			Page page = getResponsePage();
-			if (page != null)
+			// remove any rendered and otherwise obsolute feedback messages from
+			// the session
+			try
 			{
-				session.cleanupFeedbackMessages(page);
+				session.cleanupRenderedFeedbackMessages();
+				final Page page = getResponsePage();
+				if (page != null)
+				{
+					session.cleanupFeedbackMessages(page);
+				}
 			}
-		}
-		catch (RuntimeException re)
-		{
-			log.error("there was an error cleaning up the feedback messages", re);
+			catch (RuntimeException re)
+			{
+				log.error("there was an error cleaning up the feedback messages", re);
+			}
 		}
 
 		// At the end of our response, let the session do some book keeping
@@ -926,6 +948,7 @@ public abstract class RequestCycle
 		{
 			log.error("Exception occurred during threadDetach", re);
 		}
+
 	}
 
 	/**

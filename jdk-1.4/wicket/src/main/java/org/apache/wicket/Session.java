@@ -1241,7 +1241,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * Removes any rendered feedback messages as well as compacts memory. This
 	 * method is usually called at the end of the request cycle processing.
 	 */
-	final void cleanupRenderedFeedbackMessages()
+	protected void cleanupRenderedFeedbackMessages()
 	{
 		int size = feedbackMessages.size();
 		feedbackMessages.clearRendered();

@@ -29,11 +29,18 @@ public class UnitTestSettings
 	 */
 	private static boolean sortUrlParameters = false;
 
+	/**
+	 * @return True if URL parameters should be sorted
+	 */
 	public static boolean getSortUrlParameters()
 	{
 		return UnitTestSettings.sortUrlParameters;
 	}
 
+	/**
+	 * @param sortUrlParameters
+	 *            True if URL parameters should be sorted
+	 */
 	public static void setSortUrlParameters(boolean sortUrlParameters)
 	{
 		UnitTestSettings.sortUrlParameters = sortUrlParameters;
