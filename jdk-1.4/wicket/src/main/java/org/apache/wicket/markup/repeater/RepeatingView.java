@@ -146,7 +146,7 @@ public class RepeatingView extends WebMarkupContainer
 	 * rendered.
 	 * 
 	 * Child component are rendered in the order they are in the iterator. Since
-	 * we use the iterator returned by org.apache.wicket's
+	 * we use the iterator returned by wicket's
 	 * <code>MarkupContainer#iterator()</code> method and that method does not
 	 * guarantee any kind of ordering neither do we. This method can be
 	 * overridden by subclasses to create an ordering scheme, see

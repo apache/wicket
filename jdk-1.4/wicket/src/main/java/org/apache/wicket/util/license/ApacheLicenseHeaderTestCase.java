@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Testcase used in the different org.apache.wicket projects for testing for the correct
+ * Testcase used in the different wicket projects for testing for the correct
  * ASL license headers. Doesn't really make sense outside org.apache.wicket.
  * 
  * @author Frank Bille Jensen (frankbille)

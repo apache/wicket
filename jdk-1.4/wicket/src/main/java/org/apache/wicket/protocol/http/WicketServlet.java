@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * Please use {@link WicketFilter} if you require advanced chaining of resources.
  * 
- * Servlet class for all org.apache.wicket applications. The specific application class to
+ * Servlet class for all wicket applications. The specific application class to
  * instantiate should be specified to the application server via an init-params
  * argument named "applicationClassName" in the servlet declaration, which is
  * typically in a <i>web.xml </i> file. The servlet declaration may vary from
@@ -72,7 +72,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * When GET/POST requests are made via HTTP, a WebRequestCycle object is
  * created from the request, response and session objects (after wrapping them
- * in the appropriate org.apache.wicket wrappers). The RequestCycle's render() method is
+ * in the appropriate wicket wrappers). The RequestCycle's render() method is
  * then called to produce a response to the HTTP request.
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
@@ -191,7 +191,7 @@ public class WicketServlet extends HttpServlet
 	}
 
 	/**
-	 * @return The org.apache.wicket filter 
+	 * @return The wicket filter 
 	 */
 	protected WicketFilter newWicketFilter()
 	{

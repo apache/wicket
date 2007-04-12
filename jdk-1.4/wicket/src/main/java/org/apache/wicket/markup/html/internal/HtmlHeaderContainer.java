@@ -43,7 +43,7 @@ import org.apache.wicket.response.StringResponse;
  * something to contribute to the &lt;head&gt; section of the html response. If
  * yes, it must <b>immediately</b> be rendered.
  * <p>
- * &lt;head&gt; regions may contain additional org.apache.wicket components, which can be
+ * &lt;head&gt; regions may contain additional wicket components, which can be
  * added by means of add(Component) as usual.
  * <p>
  * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
@@ -51,7 +51,7 @@ import org.apache.wicket.response.StringResponse;
  * <p>
  * <ul>
  * <li> &lt;head&gt; will be inserted in output automatically if required</li>
- * <li> &lt;head&gt; is <b>not</b> a org.apache.wicket specific tag and you must use add()
+ * <li> &lt;head&gt; is <b>not</b> a wicket specific tag and you must use add()
  * to add components referenced in body of the head tag</li>
  * <li> &lt;head&gt; is supported by panels, borders and inherited markup, but
  * is <b>not</b> copied to the output. They are for previewability only (except

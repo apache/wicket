@@ -27,7 +27,7 @@ import org.apache.wicket.util.listener.IChangeListener;
  * Custom WicketFilter that reloads the web applications when classes are
  * modified. In order to reload your own classes, use include and exclude
  * patterns using wildcards. And in web.xml, point to your custom reloading
- * org.apache.wicket filter instead of the original org.apache.wicket filter.
+ * wicket filter instead of the original wicket filter.
  * 
  * <p>
  * The built-in patterns are:

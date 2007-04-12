@@ -77,7 +77,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 
 		// Make the XSLT processor happy and allow it to handle the
 		// org.apache.wicket
-		// tags and attributes that are in the org.apache.wicket namespace
+		// tags and attributes that are in the wicket namespace
 		super.onComponentTag(component, tag);
 	}
 

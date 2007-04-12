@@ -449,7 +449,7 @@ public class MarkupCache
 	/**
 	 * Check if markup contains &lt;wicket:extend&gt; which tells us that we
 	 * need to read the inherited markup as well. &lt;wicket:extend&gt; MUST BE
-	 * the first org.apache.wicket tag in the markup. Skip raw markup
+	 * the first wicket tag in the markup. Skip raw markup
 	 * 
 	 * @param markup
 	 * @return == 0, if no wicket:extend was found

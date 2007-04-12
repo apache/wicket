@@ -17,7 +17,7 @@
 package org.apache.wicket;
 
 /**
- * Causes org.apache.wicket to interrupt current request processing and immediately respond
+ * Causes wicket to interrupt current request processing and immediately respond
  * with the specified page.
  * 
  * @author Igor Vaynberg (ivaynberg)

@@ -83,7 +83,7 @@ public class MarkupFragment
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the information
+	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
 	 * 
 	 * @param index
@@ -107,7 +107,7 @@ public class MarkupFragment
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the information
+	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
 	 * 
 	 * @return Number of markup elements
@@ -157,7 +157,7 @@ public class MarkupFragment
 	}
 
 	/**
-	 * Reset the markup to its defaults, except for the org.apache.wicket namespace which
+	 * Reset the markup to its defaults, except for the wicket namespace which
 	 * remains unchanged.
 	 */
 	final void reset()

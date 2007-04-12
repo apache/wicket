@@ -45,7 +45,7 @@ import org.apache.wicket.util.string.Strings;
 /**
  * The AutoLinkResolver is responsible to handle automatic link resolution. Tags
  * are marked "autolink" by the MarkupParser for all tags with href attribute,
- * such as anchor and link tags with no explicit org.apache.wicket id. E.g. &lt;a
+ * such as anchor and link tags with no explicit wicket id. E.g. &lt;a
  * href="Home.html"&gt;
  * <p>
  * If href points to a *.html file, a BookmarkablePageLink will automatically be

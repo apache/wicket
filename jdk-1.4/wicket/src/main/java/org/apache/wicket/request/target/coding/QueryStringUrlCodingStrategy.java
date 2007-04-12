@@ -176,7 +176,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * @param fragment
 	 *            contains the query string
 	 * @param passedParameters
-	 *            paremeters decoded by org.apache.wicket before this method - usually off
+	 *            paremeters decoded by wicket before this method - usually off
 	 *            the query string
 	 * 
 	 * @return Parameters

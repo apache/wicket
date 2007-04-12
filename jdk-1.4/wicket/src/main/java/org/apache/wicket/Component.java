@@ -903,7 +903,7 @@ public abstract class Component implements IClusterable
 	 * Retrieves id by which this component is represented within the markup.
 	 * <p>
 	 * The point of this function is to generate a unique id to make it easy to
-	 * locate this component in the generated markup for post-org.apache.wicket processing
+	 * locate this component in the generated markup for post-wicket processing
 	 * such as javascript or an xslt transform.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent

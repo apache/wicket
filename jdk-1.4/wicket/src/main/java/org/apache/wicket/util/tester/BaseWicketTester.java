@@ -122,7 +122,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * Create WicketTester
 	 *
 	 * @param application
-	 *            The org.apache.wicket tester object
+	 *            The wicket tester object
 	 */
 	public BaseWicketTester(final WebApplication application)
 	{
@@ -133,7 +133,7 @@ public class BaseWicketTester extends MockWebApplication
 	 * Create WicketTester to help unit testing
 	 *
 	 * @param application
-	 *            The org.apache.wicket tester object
+	 *            The wicket tester object
 	 * @param path
 	 *            The absolute path on disk to the web application contents
 	 *            (e.g. war root) - may be null

@@ -31,7 +31,7 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * It extends WebResponse and encodes (encrypt) org.apache.wicket's URL 
+ * It extends WebResponse and encodes (encrypt) wicket's URL 
  * query string. Thus it hides the details from the user.
  *  
  * @author Juergen Donnerstag

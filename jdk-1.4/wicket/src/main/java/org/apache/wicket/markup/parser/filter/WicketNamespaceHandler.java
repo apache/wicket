@@ -92,7 +92,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Determine org.apache.wicket namespace from xmlns:wicket or
+	 * Determine wicket namespace from xmlns:wicket or
 	 * xmlns:wicket="http://wicket.apache.org"
 	 * 
 	 * @param tag
@@ -117,7 +117,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 				if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0)
 						|| xmlnsUrl.startsWith(WICKET_URI))
 				{
-					// Set the Wicket namespace for org.apache.wicket tags (e.g.
+					// Set the Wicket namespace for wicket tags (e.g.
 					// <wicket:panel>) and attributes (e.g. wicket:id)
 					final String namespace = attributeName.substring(XMLNS.length());
 					if (Application.get().getMarkupSettings().getStripWicketTags())

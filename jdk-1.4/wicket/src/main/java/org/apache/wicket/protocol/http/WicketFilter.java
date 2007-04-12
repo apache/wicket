@@ -82,7 +82,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * This is the filter path that can be specified in the filter config. Or it
-	 * is the servlet path if the org.apache.wicket servlet it used. both are without any /
+	 * is the servlet path if the wicket servlet it used. both are without any /
 	 * (start or end)
 	 */
 	private String filterPath;
@@ -175,7 +175,7 @@ public class WicketFilter implements Filter
 
 			// If the request does not provide information about the encoding of
 			// its body (which includes POST parameters), than assume the
-			// default encoding as defined by the org.apache.wicket application. Bear in
+			// default encoding as defined by the wicket application. Bear in
 			// mind that the encoding of the request usually is equal to the
 			// previous response.
 			// However it is a known bug of IE that it does not provide this
@@ -185,7 +185,7 @@ public class WicketFilter implements Filter
 			{
 				try
 				{
-					// The encoding defined by the org.apache.wicket settings is used to
+					// The encoding defined by the wicket settings is used to
 					// encode the responses. Thus, it is reasonable to assume
 					// the request has the same encoding. This is especially
 					// important for forms and form parameters.
@@ -230,7 +230,7 @@ public class WicketFilter implements Filter
 			Application.set(webApplication);
 
 			// Create a response object and set the output encoding according to
-			// org.apache.wicket's application setttings.
+			// wicket's application setttings.
 			final WebResponse response = webApplication.newWebResponse(servletResponse);
 			response.setAjax(request.isAjax());
 			response.setCharacterEncoding(webApplication.getRequestCycleSettings()

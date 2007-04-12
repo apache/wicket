@@ -130,7 +130,7 @@ public class MockWebApplication
 	 * Create the mock http tester that can be used for testing.
 	 * 
 	 * @param application
-	 *            The org.apache.wicket application object
+	 *            The wicket application object
 	 * @param path
 	 *            The absolute path on disk to the web tester contents (e.g. war
 	 *            root) - may be null
@@ -221,7 +221,7 @@ public class MockWebApplication
 		// markup.
 		// Disabling this also helps test suites with many test cases 
 		// (problems has been noticed with >~300 test cases). The problem 
-		// is that even if the org.apache.wicket tester is GC'ed the modification 
+		// is that even if the wicket tester is GC'ed the modification 
 		// watcher still runs, taking up file handles and memory, leading
 		// to "Too many files opened" or a regular OutOfMemoryException
 		this.application.getResourceSettings().setResourcePollFrequency(null);
@@ -303,9 +303,9 @@ public class MockWebApplication
 	}
 
 	/**
-	 * Get the org.apache.wicket request object.
+	 * Get the wicket request object.
 	 * 
-	 * @return The org.apache.wicket request object
+	 * @return The wicket request object
 	 */
 	public WebRequest getWicketRequest()
 	{
@@ -313,9 +313,9 @@ public class MockWebApplication
 	}
 
 	/**
-	 * Get the org.apache.wicket response object.
+	 * Get the wicket response object.
 	 * 
-	 * @return The org.apache.wicket response object
+	 * @return The wicket response object
 	 */
 	public WebResponse getWicketResponse()
 	{
@@ -323,9 +323,9 @@ public class MockWebApplication
 	}
 
 	/**
-	 * Get the org.apache.wicket session.
+	 * Get the wicket session.
 	 * 
-	 * @return The org.apache.wicket session object
+	 * @return The wicket session object
 	 */
 	public WebSession getWicketSession()
 	{
@@ -479,7 +479,7 @@ public class MockWebApplication
 
 	/**
 	 * Reset the request and the response back to a starting state and recreate
-	 * the necessary org.apache.wicket request, response and session objects. The request
+	 * the necessary wicket request, response and session objects. The request
 	 * and response objects can be accessed and initialised at this point.
 	 */
 	public void setupRequestAndResponse()

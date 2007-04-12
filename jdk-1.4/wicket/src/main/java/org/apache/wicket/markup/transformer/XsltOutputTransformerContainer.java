@@ -31,7 +31,7 @@ import org.apache.wicket.model.Model;
  * transformation to ensure the xml data are well formed (single root element).
  * In addition the attribute
  * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to the
- * root element to allow the XSL processor to handle the org.apache.wicket namespace.
+ * root element to allow the XSL processor to handle the wicket namespace.
  * <p>
  * Similar to this container, a <code>IBehavior</code> is available which does
  * the same, but does not require an additional Container.
@@ -70,7 +70,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 		setTransformBodyOnly(false);
 
 		// Make the XSLT processor happy and allow him to handle the org.apache.wicket
-		// tags and attributes which are in the org.apache.wicket namespace
+		// tags and attributes which are in the wicket namespace
 		add(new AttributeModifier("xmlns:wicket", true, new Model("http://wicket.apache.org")));
 	}
 

@@ -45,7 +45,7 @@ public abstract interface IMarkup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the information
+	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
 	 * 
 	 * @param index
@@ -71,9 +71,9 @@ public abstract interface IMarkup
 	MarkupResourceStream getResource();
 
 	/**
-	 * Get the org.apache.wicket namespace valid for this specific markup
+	 * Get the wicket namespace valid for this specific markup
 	 * 
-	 * @return org.apache.wicket namespace
+	 * @return wicket namespace
 	 */
 	String getWicketNamespace();
 
@@ -86,7 +86,7 @@ public abstract interface IMarkup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the information
+	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
 	 * 
 	 * @return Number of markup elements

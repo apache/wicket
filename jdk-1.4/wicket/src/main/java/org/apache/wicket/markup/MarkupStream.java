@@ -290,9 +290,9 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Get the org.apache.wicket namespace valid for this specific markup
+	 * Get the wicket namespace valid for this specific markup
 	 * 
-	 * @return org.apache.wicket namespace
+	 * @return wicket namespace
 	 */
 	public final String getWicketNamespace()
 	{
@@ -399,11 +399,11 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Skips any markup at the current position until the org.apache.wicket tag
+	 * Skips any markup at the current position until the wicket tag
 	 * name is found.
 	 * 
 	 * @param wicketTagName
-	 *            org.apache.wicket tag name to seek
+	 *            wicket tag name to seek
 	 */
 	public void skipUntil(final String wicketTagName)
 	{

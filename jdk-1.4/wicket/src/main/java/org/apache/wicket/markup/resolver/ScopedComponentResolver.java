@@ -26,8 +26,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Implement a component resolver which walks up the component tree until a Page
- * or Panel and tries to find a component with a matching org.apache.wicket id, effectivly
- * providing something like scoping for org.apache.wicket id resolution.
+ * or Panel and tries to find a component with a matching wicket id, effectivly
+ * providing something like scoping for wicket id resolution.
  * <p>
  * Note: This resolver is not activated by default. It has to be added by means of
  * <code>Application.getComponentResolvers().add(new InheritComponentResolver())

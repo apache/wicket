@@ -89,8 +89,8 @@ public class WicketOutputStreamTest extends TestCase
 	// public void testStringsEqualsAfterSerialization() throws Exception
 	// {
 	// String[] strings = new String[2];
-	// strings[0] = new String("org.apache.wicket");
-	// strings[1] = "org.apache.wicket";
+	// strings[0] = new String("wicket");
+	// strings[1] = "wicket";
 	//		
 	// assertEquals(false, strings[0] == strings[1]);
 	//		

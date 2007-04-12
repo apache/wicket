@@ -49,7 +49,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	protected void onBind()
 	{
 		// add empty AbstractDefaultAjaxBehavior to the component, to force
-		// rendering org.apache.wicket-ajax.js reference if no other ajax behavior is on
+		// rendering wicket-ajax.js reference if no other ajax behavior is on
 		// page
 		getComponent().add(new AbstractDefaultAjaxBehavior()
 		{

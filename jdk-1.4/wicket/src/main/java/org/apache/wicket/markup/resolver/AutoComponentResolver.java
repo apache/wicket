@@ -188,37 +188,37 @@ public final class AutoComponentResolver implements IComponentResolver
 		catch (NoSuchMethodException e)
 		{
 			throw new MarkupException(
-					"Unable to create Component from org.apache.wicket tag: Cause: "
+					"Unable to create Component from wicket tag: Cause: "
 							+ e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
 			throw new MarkupException(
-					"Unable to create Component from org.apache.wicket tag: Cause: "
+					"Unable to create Component from wicket tag: Cause: "
 							+ e.getMessage());
 		}
 		catch (IllegalAccessException e)
 		{
 			throw new MarkupException(
-					"Unable to create Component from org.apache.wicket tag: Cause: "
+					"Unable to create Component from wicket tag: Cause: "
 							+ e.getMessage());
 		}
 		catch (InstantiationException e)
 		{
 			throw new MarkupException(
-					"Unable to create Component from org.apache.wicket tag: Cause: "
+					"Unable to create Component from wicket tag: Cause: "
 							+ e.getMessage());
 		}
 		catch (ClassCastException e)
 		{
 			throw new MarkupException(
-					"Unable to create Component from org.apache.wicket tag: Cause: "
+					"Unable to create Component from wicket tag: Cause: "
 							+ e.getMessage());
 		}
 		catch (SecurityException e)
 		{
 			throw new MarkupException(
-					"Unable to create Component from org.apache.wicket tag: Cause: "
+					"Unable to create Component from wicket tag: Cause: "
 							+ e.getMessage());
 		}
 

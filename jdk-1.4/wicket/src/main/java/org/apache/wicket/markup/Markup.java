@@ -157,7 +157,7 @@ public class Markup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the
+	 * protected. However to allow wicket-bench easy access to the
 	 * information ...
 	 * 
 	 * @param index
@@ -181,7 +181,7 @@ public class Markup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow org.apache.wicket-bench easy access to the
+	 * protected. However to allow wicket-bench easy access to the
 	 * information ...
 	 * 
 	 * @return Number of markup elements
@@ -214,9 +214,9 @@ public class Markup
 	}
 
 	/**
-	 * Get the org.apache.wicket namespace valid for this specific markup
+	 * Get the wicket namespace valid for this specific markup
 	 * 
-	 * @return org.apache.wicket namespace
+	 * @return wicket namespace
 	 */
 	public String getWicketNamespace()
 	{

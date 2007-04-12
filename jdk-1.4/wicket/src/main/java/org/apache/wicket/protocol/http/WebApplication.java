@@ -200,7 +200,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 			return wicketFilter.getFilterConfig().getServletContext();
 		}
 		throw new IllegalStateException("servletContext is not set yet. Any code in your"
-				+ " Application object that uses the org.apache.wicket filter instance should be put"
+				+ " Application object that uses the wicket filter instance should be put"
 				+ " in the init() method instead of your constructor");
 	}
 
@@ -412,7 +412,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @param wicketFilter
-	 *            The org.apache.wicket filter instance for this application
+	 *            The wicket filter instance for this application
 	 */
 	public final void setWicketFilter(final WicketFilter wicketFilter)
 	{
@@ -489,11 +489,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Initialize; if you need the org.apache.wicket servlet for initialization, e.g.
+	 * Initialize; if you need the wicket servlet for initialization, e.g.
 	 * because you want to read an initParameter from web.xml or you want to
 	 * read a resource from the servlet's context path, you can override this
 	 * method and provide custom initialization. This method is called right
-	 * after this application class is constructed, and the org.apache.wicket servlet is
+	 * after this application class is constructed, and the wicket servlet is
 	 * set. <strong>Use this method for any application setup instead of the
 	 * constructor.</strong>
 	 */
@@ -624,7 +624,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode org.apache.wicket's
+	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's
 	 * default URL and hide the details from the user. A appropriate WebRequest
 	 * must be implemented and configured to decode the encoded URL.
 	 * 

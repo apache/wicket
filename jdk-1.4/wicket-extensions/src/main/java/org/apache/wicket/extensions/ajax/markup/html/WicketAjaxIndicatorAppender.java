@@ -24,7 +24,7 @@ import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.behavior.AbstractBehavior;
 
 /**
- * A behavior that adds a span with org.apache.wicket's default indicator gif to the end of
+ * A behavior that adds a span with wicket's default indicator gif to the end of
  * the component's markup. This span can be used as an ajax busy indicator. For
  * an example usage see {@link IndicatingAjaxLink}
  * <p>

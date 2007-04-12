@@ -19,7 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.IClusterable;
 
 /**
- * Interface used to decorate a org.apache.wicket generated javascript that performs an
+ * Interface used to decorate a wicket generated javascript that performs an
  * ajax callback
  * <p>
  * The returned scripts are rendered in the HTML as follow:

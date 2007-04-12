@@ -23,7 +23,7 @@ import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
- * Base class for tests which require comparing org.apache.wicket response with a file.
+ * Base class for tests which require comparing wicket response with a file.
  * <p>
  * To create/replace the expected result file with the new content, define the
  * system property like -Dwicket.replace.expected.results=true

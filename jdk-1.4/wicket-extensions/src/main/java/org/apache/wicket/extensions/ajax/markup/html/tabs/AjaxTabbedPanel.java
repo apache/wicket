@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * Ajaxified version of the tabbed panel. Uses AjaxFallbackLink instead of
- * regular org.apache.wicket links so it can update itself inplace.
+ * regular wicket links so it can update itself inplace.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

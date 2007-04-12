@@ -222,7 +222,7 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * This method by default calls isAjax(), org.apache.wicket ajax request do have an
+	 * This method by default calls isAjax(), wicket ajax request do have an
 	 * header set. And for all the ajax request the versioning should be merged
 	 * with the previous one. And when it sees that the current request is a
 	 * redirect to page request the version will also be merged with the

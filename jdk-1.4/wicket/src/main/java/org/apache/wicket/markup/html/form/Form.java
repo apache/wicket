@@ -93,7 +93,7 @@ import org.apache.wicket.util.value.ValueMap;
  * </p>
  * 
  * Form for handling (file) uploads with multipart requests is supported by
- * callign setMultiPart(true) ( although org.apache.wicket will try to automatically detect
+ * callign setMultiPart(true) ( although wicket will try to automatically detect
  * this for you ). Use this with
  * {@link org.apache.wicket.markup.html.form.upload.FileUploadField} components. You can
  * attach mutliple FileUploadField components for muliple file uploads.

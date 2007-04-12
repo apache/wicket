@@ -191,7 +191,7 @@ public class MarkupParser
 		// Initialize the xml parser
 		this.xmlParser.parse(resource.getInputStream(), this.markupSettings.getDefaultMarkupEncoding());
 
-		// parse the xml markup and tokenize it into org.apache.wicket relevant markup
+		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
 		parseMarkup();
 
@@ -219,7 +219,7 @@ public class MarkupParser
 		// Initialize the xml parser
 		this.xmlParser.parse(string);
 
-		// parse the xml markup and tokenize it into org.apache.wicket relevant markup
+		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
 		parseMarkup();
 

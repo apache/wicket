@@ -43,7 +43,7 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
  * 
  * The purpose of the filter is to prepend the web apps context path to all href
  * and src attributes found in the markup which contain a relative URL like
- * "myDir/myPage.gif". It is applied to all non org.apache.wicket component tags (attributes).
+ * "myDir/myPage.gif". It is applied to all non wicket component tags (attributes).
  * 
  * @author Juergen Donnerstag
  */

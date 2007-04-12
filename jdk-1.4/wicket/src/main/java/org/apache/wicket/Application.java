@@ -291,7 +291,7 @@ public abstract class Application
 	 * Adds a component instantiation listener. This method should typicaly only
 	 * be called during application startup; it is not thread safe.
 	 * <p>
-	 * Note: org.apache.wicket does not guarantee the execution order of added listeners
+	 * Note: wicket does not guarantee the execution order of added listeners
 	 * 
 	 * @param listener
 	 *            the listener to add
@@ -341,9 +341,9 @@ public abstract class Application
 	 *            The configuration type. Must currently be either DEVELOPMENT
 	 *            or DEPLOYMENT. Currently, if the configuration type is
 	 *            DEVELOPMENT, resources are polled for changes, component usage
-	 *            is checked, org.apache.wicket tags are not stripped from ouput and a
+	 *            is checked, wicket tags are not stripped from ouput and a
 	 *            detailed exception page is used. If the type is DEPLOYMENT,
-	 *            component usage is not checked, org.apache.wicket tags are stripped from
+	 *            component usage is not checked, wicket tags are stripped from
 	 *            output and a non-detailed exception page is used to display
 	 *            errors.
 	 * @param resourceFinder
@@ -617,11 +617,11 @@ public abstract class Application
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * Initializes org.apache.wicket components.
+	 * Initializes wicket components.
 	 */
 	public final void initializeComponents()
 	{
-		// Load any org.apache.wicket properties files we can find
+		// Load any wicket properties files we can find
 		try
 		{
 			// Load properties files used by all libraries
@@ -816,7 +816,7 @@ public abstract class Application
 	}
 
 	/**
-	 * Called when org.apache.wicket servlet is destroyed. Overrides do not have to call
+	 * Called when wicket servlet is destroyed. Overrides do not have to call
 	 * super.
 	 */
 	protected void destroy()

@@ -207,7 +207,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			return true;
 		}
 
-		// Stop at all org.apache.wicket base classes
+		// Stop at all wicket base classes
 		return clazz.equals(Page.class) || clazz.equals(MarkupContainer.class)
 				|| clazz.equals(Component.class);
 	}

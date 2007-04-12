@@ -186,7 +186,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 
 
 		// if we get here, we have no regconized Wicket target, and thus
-		// regard this as a external (non-org.apache.wicket) resource request on
+		// regard this as a external (non-wicket) resource request on
 		// this server
 		return resolveExternalResource(requestCycle);
 	}

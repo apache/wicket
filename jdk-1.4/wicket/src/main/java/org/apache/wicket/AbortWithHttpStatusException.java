@@ -67,7 +67,7 @@ public class AbortWithHttpStatusException extends AbortException
 			if (!(r instanceof WebResponse))
 			{
 				throw new IllegalStateException(
-						"This exception can only be thrown when org.apache.wicket is processing an http request");
+						"This exception can only be thrown when wicket is processing an http request");
 			}
 
 			WebResponse wr = (WebResponse)r;

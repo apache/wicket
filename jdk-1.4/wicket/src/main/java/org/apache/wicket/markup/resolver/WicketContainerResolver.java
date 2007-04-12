@@ -53,7 +53,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  * 	</table>
  * </code>
  * 
- * The above is valid markup because org.apache.wicket namespaced tags are allowed anywhere
+ * The above is valid markup because wicket namespaced tags are allowed anywhere
  * 
  * @author Igor Vaynberg (ivaynberg)
  */

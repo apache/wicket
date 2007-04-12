@@ -25,7 +25,7 @@ import org.apache.wicket.model.PropertyModel;
 
 /**
  * A convinience implementation of column that adds a label to the cell whose
- * model is determined by the provided org.apache.wicket property expression (same as used
+ * model is determined by the provided wicket property expression (same as used
  * by {@link PropertyModel}) that is evaluated against the current row's model
  * object
  * <p>
@@ -57,7 +57,7 @@ public class PropertyColumn extends AbstractColumn
 	 * @param sortProperty
 	 *            sort property
 	 * @param propertyExpression
-	 *            org.apache.wicket property expression used by PropertyModel
+	 *            wicket property expression used by PropertyModel
 	 */
 	public PropertyColumn(IModel displayModel, String sortProperty, String propertyExpression)
 	{
@@ -71,7 +71,7 @@ public class PropertyColumn extends AbstractColumn
 	 * @param displayModel
 	 *            display model
 	 * @param propertyExpressions
-	 *            org.apache.wicket property expression
+	 *            wicket property expression
 	 * @see PropertyModel
 	 */
 	public PropertyColumn(IModel displayModel, String propertyExpressions)
@@ -98,7 +98,7 @@ public class PropertyColumn extends AbstractColumn
 	}
 
 	/**
-	 * @return org.apache.wicket property expression
+	 * @return wicket property expression
 	 */
 	public String getPropertyExpression()
 	{

@@ -115,7 +115,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
     }
 
     /**
-     * Check the associated markup file for a org.apache.wicket header tag
+     * Check the associated markup file for a wicket header tag
      * 
      * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
      */

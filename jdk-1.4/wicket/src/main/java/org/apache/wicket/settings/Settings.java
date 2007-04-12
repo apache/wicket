@@ -228,7 +228,7 @@ public final class Settings
 	private boolean stripComments = false;
 
 	/**
-	 * If true, org.apache.wicket tags ( <wicket: ..>) and wicket:id attributes we be
+	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
 	 * removed from output
 	 */
 	private boolean stripWicketTags = false;

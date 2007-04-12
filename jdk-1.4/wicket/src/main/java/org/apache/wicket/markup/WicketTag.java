@@ -20,14 +20,14 @@ import org.apache.wicket.markup.parser.XmlTag;
 
 /**
  * WicketTag extends ComponentTag and will be created by a MarkupParser whenever
- * it parses a tag in the org.apache.wicket namespace. By default, this namespace is
- * "wicket", so org.apache.wicket tags are then of the form &lt;wicket:*&gt;
+ * it parses a tag in the wicket namespace. By default, this namespace is
+ * "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
  * <p>
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
  * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
  * <p>
  * Note 2: The namespace name is configurable. E.g. &lt;html
- * xmlns:wcn="http://org.apache.wicket"&gt;
+ * xmlns:wcn="http://wicket"&gt;
  * 
  * @author Juergen Donnerstag
  */

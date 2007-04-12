@@ -59,7 +59,7 @@ import org.apache.wicket.util.string.Strings;
  * shown (method <code>{@link #show(AjaxRequestTarget)})</code>. In case the
  * content is another page, you can set the desired pagemap name using
  * <code>{@link #setPageMapName(String)}</code>. Setting pagemap is only
- * needed when org.apache.wicket multiwindow support is on.
+ * needed when wicket multiwindow support is on.
  * <p>
  * The window can be made visible from an ajax handler using
  * <code>{@link #show(AjaxRequestTarget)}</code>.
@@ -212,7 +212,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Sets the name of the page ma for the content page. This makes only sense
-	 * when the content is a page, not a component and if org.apache.wicket multiwindow
+	 * when the content is a page, not a component and if wicket multiwindow
 	 * support is turned on.
 	 * 
 	 * @param pageMapName

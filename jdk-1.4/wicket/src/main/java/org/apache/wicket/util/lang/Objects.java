@@ -421,7 +421,7 @@ public final class Objects
 	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The
 	 * object must be fully serializable to be cloned. This method will not
-	 * clone org.apache.wicket Components, it will just reuse those instances so
+	 * clone wicket Components, it will just reuse those instances so
 	 * that the complete component tree is not copied over only the model data.
 	 * 
 	 * @param object

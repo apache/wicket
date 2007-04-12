@@ -44,7 +44,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
-	/** List of well known org.apache.wicket tag namses */
+	/** List of well known wicket tag namses */
 	private static List wellKnownTagNames;
 
 	/** The current markup needed to get the markups namespace */
@@ -141,7 +141,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Register a new well known org.apache.wicket tag name (e.g. panel)
+	 * Register a new well known wicket tag name (e.g. panel)
 	 * 
 	 * @param name
 	 */

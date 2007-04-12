@@ -28,7 +28,7 @@ import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
  * <li> {@link #resolve(RequestCycle, RequestParameters)} is called to get the
  * request target. A request might refer to e.g. a bookmarkable page, a listener
  * interface call on a component on a previously rendered page, a shared
- * resource or e.g. a non-org.apache.wicket resource that resides in the web application
+ * resource or e.g. a non-wicket resource that resides in the web application
  * folder. </li>
  * <li> {@link #processEvents(RequestCycle)} is called after the target is
  * resolved. It is meant to handle/ distribute events like e.g. listener

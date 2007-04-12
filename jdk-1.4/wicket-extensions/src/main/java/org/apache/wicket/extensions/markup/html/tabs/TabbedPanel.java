@@ -70,7 +70,7 @@ import org.apache.wicket.model.Model;
  * </p>
  * 
  * <p>
- * For a complete example see the component references in org.apache.wicket-examples
+ * For a complete example see the component references in wicket-examples
  * project
  * </p>
  * 

@@ -98,7 +98,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			if (tag.getId() == null)
 			{
 				// if this is a raw tag we need to set the id to something so
-				// that org.apache.wicket will not merge this as raw markup and instead
+				// that wicket will not merge this as raw markup and instead
 				// pass it on to a resolver
 				tag.setId(WICKET_MESSAGE_CONTAINER_ID);
 

@@ -363,7 +363,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			// Automatically expand <wicket:body/> to
 			// <wicket:body>...</wicket:body>
 			// in order for the html to look right: insert the body in between
-			// the org.apache.wicket tags instead of behind the open-close tag.
+			// the wicket tags instead of behind the open-close tag.
 			bodyTag = tag.mutable();
 			bodyTag.setType(XmlTag.OPEN);
 		}

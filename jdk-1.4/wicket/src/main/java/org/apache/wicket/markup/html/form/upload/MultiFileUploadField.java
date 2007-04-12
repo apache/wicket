@@ -56,7 +56,7 @@ import org.apache.wicket.util.upload.FileItem;
  * For customizing caption text see {@link #RESOURCE_LIMITED} and
  * {@link #RESOURCE_UNLIMITED}
  * 
- * For an example of styling using CSS see the upload example in org.apache.wicket-examples
+ * For an example of styling using CSS see the upload example in wicket-examples
  * 
  * @author Igor Vaynberg (ivaynberg)
  */

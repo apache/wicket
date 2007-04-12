@@ -199,7 +199,7 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
-	 * Tells org.apache.wicket whether this request should only be processed if the page +
+	 * Tells wicket whether this request should only be processed if the page +
 	 * version specified are pointing to the last page the user accessed.
 	 * 
 	 * @see WebRequestCodingStrategy#IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME
