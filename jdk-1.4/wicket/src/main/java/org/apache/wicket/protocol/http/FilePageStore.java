@@ -651,7 +651,7 @@ public class FilePageStore implements IPageStore
 		byte[] bytes = Objects.objectToByteArray(page);
 		totalSerializationTime += (System.currentTimeMillis() - t1);
 		serialized++;
-		if (log.isDebugEnabled())
+		if (log.isDebugEnabled() && bytes != null)
 		{
 			log.debug("serializing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
 					+ "] size: " + bytes.length + " for session " + key.sessionId + " took "
