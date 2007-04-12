@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.tree.table;
+package org.apache.wicket.markup.html.tree.table;
 
 import java.util.Locale;
 
@@ -26,12 +26,12 @@ import org.apache.wicket.util.lang.PropertyResolver;
 
 
 /**
- * TreeColumn class that uses a property expression to get the value from the
+ * Lightweight column that uses a property expression to get the value from the
  * node.
  * 
  * @author Matej Knopp
  */
-public class PropertyTreeColumn extends AbstractTreeColumn
+public class PropertyRenderableColumn extends AbstractRenderableColumn
 {
 	private static final long serialVersionUID = 1L;
 
@@ -54,7 +54,8 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * @param propertyExpression
 	 *            Expression for property access
 	 */
-	public PropertyTreeColumn(ColumnLocation location, String header, String propertyExpression)
+	public PropertyRenderableColumn(ColumnLocation location, String header,
+			String propertyExpression)
 	{
 		super(location, header);
 		this.propertyExpression = propertyExpression;
@@ -63,7 +64,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	/**
 	 * Returns the converter or null if no converter is specified.
 	 * 
-	 * @return Any converter
+	 * @return The converter or null
 	 */
 	public IConverter getConverter()
 	{
@@ -73,7 +74,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	/**
 	 * Returns the locale or null if no locale is specified.
 	 * 
-	 * @return Any locale
+	 * @return The locale or null
 	 */
 	public Locale getLocale()
 	{
@@ -81,9 +82,9 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	}
 
 	/**
-	 * @see AbstractTreeColumn#renderNode(TreeNode)
+	 * @see AbstractRenderableColumn#getNodeValue(TreeNode)
 	 */
-	public String renderNode(TreeNode node)
+	public String getNodeValue(TreeNode node)
 	{
 		Object result = PropertyResolver.getValue(propertyExpression, node);
 		if (converter != null)
@@ -97,7 +98,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 		}
 		else
 		{
-			return result != null ? result.toString() : null;
+			return result != null ? result.toString() : "";
 		}
 	}
 
@@ -107,7 +108,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * can specify a custom converter.
 	 * 
 	 * @param converter
-	 *            Any converter
+	 *            any converter
 	 */
 	public void setConverter(IConverter converter)
 	{
@@ -119,10 +120,20 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * specified). If no locale is set, session locale is used.
 	 * 
 	 * @param locale
-	 *            The locale
+	 *            Any locale
 	 */
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
+	}
+
+	/**
+	 * Returns the property expression.
+	 * 
+	 * @return The property expression
+	 */
+	protected String getPropertyExpression()
+	{
+		return propertyExpression;
 	}
 }

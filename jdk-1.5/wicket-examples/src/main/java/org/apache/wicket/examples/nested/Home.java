@@ -28,10 +28,10 @@ import javax.swing.tree.TreeNode;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
-import org.apache.wicket.extensions.markup.html.tree.Tree;
-import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.tree.Tree;
+import org.apache.wicket.markup.html.tree.DefaultAbstractTree.LinkType;
 
 
 /**
@@ -75,15 +75,15 @@ public class Home extends WicketExamplePage
 		{
 			protected String renderNode(TreeNode node)
 			{
-				DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;				 
+				DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode)node;
 				Object userObject = treeNode.getUserObject();
-				return (userObject instanceof List) ? "<subtree>" : String
-						.valueOf(treeNode.getUserObject());
+				return (userObject instanceof List) ? "<subtree>" : String.valueOf(treeNode
+						.getUserObject());
 			}
 		};
 		// disable ajax links in this example
 		tree.setLinkType(LinkType.REGULAR);
-		
+
 		add(tree);
 		add(new Link("expandAll")
 		{
@@ -100,7 +100,7 @@ public class Home extends WicketExamplePage
 				tree.getTreeState().collapseAll();
 			}
 		});
-		
+
 		add(new BookmarkablePageLink("ajaxTreeLink", SimpleTreePage.class));
 	}
 

@@ -20,10 +20,10 @@ import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation;
-import org.apache.wicket.extensions.markup.html.tree.table.IColumn;
-import org.apache.wicket.extensions.markup.html.tree.table.IRenderable;
-import org.apache.wicket.extensions.markup.html.tree.table.PropertyRenderableColumn;
+import org.apache.wicket.markup.html.tree.table.ColumnLocation;
+import org.apache.wicket.markup.html.tree.table.IColumn;
+import org.apache.wicket.markup.html.tree.table.IRenderable;
+import org.apache.wicket.markup.html.tree.table.PropertyRenderableColumn;
 import org.apache.wicket.model.PropertyModel;
 
 

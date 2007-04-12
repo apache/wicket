@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.tree;
+package org.apache.wicket.markup.html.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	private final Set selectedNodes = new HashSet();
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#addTreeStateListener(org.apache.wicket.extensions.markup.html.tree.ITreeStateListener)
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#addTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
 	 */
 	public void addTreeStateListener(ITreeStateListener l)
 	{
@@ -68,7 +68,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#collapseAll()
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#collapseAll()
 	 */
 	public void collapseAll()
 	{
@@ -92,7 +92,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#collapseNode(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#collapseNode(javax.swing.tree.TreeNode)
 	 */
 	public void collapseNode(TreeNode node)
 	{
@@ -114,7 +114,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#expandAll()
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#expandAll()
 	 */
 	public void expandAll()
 	{
@@ -138,7 +138,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#expandNode(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#expandNode(javax.swing.tree.TreeNode)
 	 */
 	public void expandNode(TreeNode node)
 	{
@@ -160,7 +160,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#getSelectedNodes()
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#getSelectedNodes()
 	 */
 	public Collection getSelectedNodes()
 	{
@@ -168,7 +168,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#isAllowSelectMultiple()
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#isAllowSelectMultiple()
 	 */
 	public boolean isAllowSelectMultiple()
 	{
@@ -176,7 +176,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#isNodeExpanded(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#isNodeExpanded(javax.swing.tree.TreeNode)
 	 */
 	public boolean isNodeExpanded(TreeNode node)
 	{
@@ -191,7 +191,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#isNodeSelected(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#isNodeSelected(javax.swing.tree.TreeNode)
 	 */
 	public boolean isNodeSelected(TreeNode node)
 	{
@@ -199,7 +199,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#removeTreeStateListener(org.apache.wicket.extensions.markup.html.tree.ITreeStateListener)
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#removeTreeStateListener(org.apache.wicket.markup.html.tree.ITreeStateListener)
 	 */
 	public void removeTreeStateListener(ITreeStateListener l)
 	{
@@ -207,7 +207,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#selectNode(javax.swing.tree.TreeNode,
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#selectNode(javax.swing.tree.TreeNode,
 	 *      boolean)
 	 */
 	public void selectNode(TreeNode node, boolean selected)
@@ -249,7 +249,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeState#setAllowSelectMultiple(boolean)
+	 * @see org.apache.wicket.markup.html.tree.ITreeState#setAllowSelectMultiple(boolean)
 	 */
 	public void setAllowSelectMultiple(boolean value)
 	{

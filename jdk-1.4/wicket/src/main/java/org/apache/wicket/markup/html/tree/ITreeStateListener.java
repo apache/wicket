@@ -14,34 +14,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.tree.table;
+package org.apache.wicket.markup.html.tree;
 
 import javax.swing.tree.TreeNode;
 
-import org.apache.wicket.IClusterable;
-import org.apache.wicket.Response;
-
-
 /**
- * Interface for lightweight cell renderes. If you are concerned about server
- * state size, have larget trees with read-only cells, implementing this
- * interface and using it instead of e.g. Label can decrease the memory
- * footprint of tree table.
+ * Methods this interface are called when tree state is changing.
  * 
  * @author Matej Knopp
  */
-public interface IRenderable extends IClusterable
+public interface ITreeStateListener
 {
+	/**
+	 * Fired when all nodes are collapsed.
+	 */
+	void allNodesCollapsed();
 
 	/**
-	 * Renders the content of the cell to the response.
+	 * Fired when all nodes are expanded.
+	 */
+	void allNodesExpanded();
+
+	/**
+	 * Fired when given node is collapsed.
 	 * 
 	 * @param node
-	 *            The node for the row. Will be null for header
-	 * 
-	 * @param response
-	 *            Response where the renderer is supposed to write the content.
+	 *            The node that was collapsed
 	 */
-	public void render(TreeNode node, Response response);
+	void nodeCollapsed(TreeNode node);
 
+	/**
+	 * Fired when given node is expanded.
+	 * 
+	 * @param node
+	 */
+	void nodeExpanded(TreeNode node);
+
+	/**
+	 * Fired when given node gets selected.
+	 * 
+	 * @param node
+	 *            The node that was selected
+	 */
+	void nodeSelected(TreeNode node);
+
+	/**
+	 * Fired when given node gets unselected.
+	 * 
+	 * @param node
+	 *            The node that was unselected
+	 */
+	void nodeUnselected(TreeNode node);
 }

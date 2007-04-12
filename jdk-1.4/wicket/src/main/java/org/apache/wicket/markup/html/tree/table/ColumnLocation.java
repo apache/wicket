@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.tree.table;
+package org.apache.wicket.markup.html.tree.table;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;

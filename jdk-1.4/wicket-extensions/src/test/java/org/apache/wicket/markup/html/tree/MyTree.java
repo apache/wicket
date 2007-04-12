@@ -24,6 +24,7 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.apache.wicket.markup.html.image.Image;
 
 
@@ -57,7 +58,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see org.apache.wicket.extensions.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected void junctionLinkClicked(DefaultMutableTreeNode node)
 	{
@@ -66,7 +67,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see org.apache.wicket.extensions.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected void nodeLinkClicked(DefaultMutableTreeNode node)
 	{
@@ -107,7 +108,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.Tree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see org.apache.wicket.extensions.markup.html.tree.Tree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	protected String getNodeLabel(DefaultMutableTreeNode node)
 	{

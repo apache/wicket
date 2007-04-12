@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.tree;
+package org.apache.wicket.markup.html.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -545,7 +545,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	};
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeCollapsed(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeCollapsed(javax.swing.tree.TreeNode)
 	 */
 	public final void nodeCollapsed(TreeNode node)
 	{
@@ -556,7 +556,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeExpanded(javax.swing.tree.TreeNode)
 	 */
 	public final void nodeExpanded(TreeNode node)
 	{
@@ -567,7 +567,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeSelected(javax.swing.tree.TreeNode)
 	 */
 	public final void nodeSelected(TreeNode node)
 	{
@@ -578,7 +578,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.tree.ITreeStateListener#nodeUnselected(javax.swing.tree.TreeNode)
+	 * @see org.apache.wicket.markup.html.tree.ITreeStateListener#nodeUnselected(javax.swing.tree.TreeNode)
 	 */
 	public final void nodeUnselected(TreeNode node)
 	{
