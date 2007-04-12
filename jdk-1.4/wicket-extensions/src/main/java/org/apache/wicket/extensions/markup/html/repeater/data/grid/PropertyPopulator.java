@@ -45,7 +45,7 @@ public class PropertyPopulator implements ICellPopulator
 	 * 
 	 * @param property
 	 *            property whose value will be displayed in the cell. uses
-	 *            org.apache.wicket's {@link PropertyModel} notation.
+	 *            wicket's {@link PropertyModel} notation.
 	 */
 	public PropertyPopulator(String property)
 	{

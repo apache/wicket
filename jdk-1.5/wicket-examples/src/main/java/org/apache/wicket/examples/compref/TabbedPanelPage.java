@@ -29,7 +29,7 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * Reference page for TabbedPanel org.apache.wicket-extensions component
+ * Reference page for TabbedPanel wicket-extensions component
  * 
  * @see org.apache.wicket.extensions.markup.html.tabs.TabbedPanel
  * 

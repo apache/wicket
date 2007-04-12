@@ -30,7 +30,7 @@ import org.apache.wicket.authorization.strategies.role.Roles;
  * static <code>authorize</code> methods are for authorizing component actions
  * and component instantiation by role. This class is is the main entry point
  * for users wanting to use the roles-based authorization of the
- * org.apache.wicket-auth-roles package based on org.apache.wicket metadata.
+ * wicket-auth-roles package based on wicket metadata.
  * 
  * For instance, use like:
  * 

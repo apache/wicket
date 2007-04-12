@@ -64,7 +64,7 @@ public class Index extends WebPage
 			}
 		});
 
-		// pages that are proteced using org.apache.wicket meta data
+		// pages that are protected using wicket meta data
 		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkablePage.class));
 		add(new Link("adminInternalLink")
 		{

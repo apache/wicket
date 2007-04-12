@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.link.ILinkListener;
 
 /**
- * Initializer for components in org.apache.wicket core library.
+ * Initializer for components in wicket core library.
  * 
  * @author Jonathan Locke
  */

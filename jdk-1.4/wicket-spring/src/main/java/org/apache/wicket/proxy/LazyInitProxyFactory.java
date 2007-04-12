@@ -45,7 +45,7 @@ import net.sf.cglib.proxy.MethodProxy;
  * a concrete class.
  * <p>
  * The general use case for such a proxy is to represent a dependency that
- * should not be serialized with a org.apache.wicket page or {@link IModel}. The solution
+ * should not be serialized with a wicket page or {@link IModel}. The solution
  * is to serialize the proxy and the {@link IProxyTargetLocator} instead of the
  * dependency, and be able to look up the target object again when the proxy is
  * deserialized and accessed. A good strategy for achieving this is to have a

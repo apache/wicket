@@ -24,7 +24,7 @@ import org.apache.wicket.IClusterable;
  * retrieve the proxy target object that will receive the method invocation.
  * <p>
  * Generally implementations should be small when serialized because the main
- * purpose of lazy init proxies is to be stored in session when the org.apache.wicket pages
+ * purpose of lazy init proxies is to be stored in session when the wicket pages
  * are serialized, and when deserialized to be able to lookup the dependency
  * again. The smaller the implementation of IProxyTargetLocator the less the
  * drain on session size.

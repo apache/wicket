@@ -28,7 +28,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 /**
- * Base class for spring aware org.apache.wicket web application object. This class has
+ * Base class for spring aware wicket web application object. This class has
  * helper methods to create lazy init proxies based on spring beans, as well as
  * an implementation of {@link ISpringContextLocator}.
  * 

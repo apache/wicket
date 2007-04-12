@@ -46,7 +46,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * To install in yourapplication.init() call
  * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
  * 
- * Non-org.apache.wicket components such as {@link Session}, {@link Model}, and any other
+ * Non-wicket components such as {@link Session}, {@link Model}, and any other
  * pojo can be injected by calling
  * <code>InjectorHolder.getInjector().inject(this)</code> in their
  * constructor.
@@ -74,7 +74,7 @@ public class SpringComponentInjector extends ComponentInjector {
 	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
 	 * 
 	 * @param webapp
-	 *            org.apache.wicket web application
+	 *            wicket web application
 	 */
 	public SpringComponentInjector(WebApplication webapp) {
 		// locate application context through spring's default location
@@ -87,7 +87,7 @@ public class SpringComponentInjector extends ComponentInjector {
 	 * Constructor
 	 * 
 	 * @param webapp
-	 *            org.apache.wicket web application
+	 *            wicket web application
 	 * @param ctx
 	 *            spring's application context
 	 */

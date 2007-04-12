@@ -125,7 +125,7 @@ public class TodoList extends BasePage
 		{
 			super(id);
 
-			// let org.apache.wicket generate a markup-id so the contents can be
+			// let wicket generate a markup-id so the contents can be
 			// updated through an AJAX call.
 			setOutputMarkupId(true);
 
@@ -291,7 +291,7 @@ public class TodoList extends BasePage
 		public AddItemsContainer(String id)
 		{
 			super(id);
-			// let org.apache.wicket generate a markup-id so the contents can be
+			// let wicket generate a markup-id so the contents can be
 			// updated through an AJAX call.
 			setOutputMarkupId(true);
 			add(new AddTodoLink("link"));

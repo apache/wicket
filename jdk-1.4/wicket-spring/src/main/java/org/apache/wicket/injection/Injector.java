@@ -54,7 +54,7 @@ public class Injector
 	 * When the initializer traverses the hierarchy of the specified object it
 	 * will stop if it encounters a boundary class.
 	 * 
-	 * By default, more common org.apache.wicket classes are defined as boundaries so that
+	 * By default, more common wicket classes are defined as boundaries so that
 	 * the initializer does not waste time traversing them.
 	 * 
 	 * @param clazz

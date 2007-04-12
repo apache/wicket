@@ -69,9 +69,9 @@ public interface MarkupSettingsMBean
 	boolean getStripComments();
 
 	/**
-	 * Gets whether to remove org.apache.wicket tags from the output.
+	 * Gets whether to remove wicket tags from the output.
 	 * 
-	 * @return whether to remove org.apache.wicket tags from the output
+	 * @return whether to remove wicket tags from the output
 	 */
 	boolean getStripWicketTags();
 
@@ -140,10 +140,10 @@ public interface MarkupSettingsMBean
 	void setStripComments(boolean stripComments);
 
 	/**
-	 * Sets whether to remove org.apache.wicket tags from the output.
+	 * Sets whether to remove wicket tags from the output.
 	 * 
 	 * @param stripWicketTags
-	 *            whether to remove org.apache.wicket tags from the output
+	 *            whether to remove wicket tags from the output
 	 */
 	void setStripWicketTags(boolean stripWicketTags);
 

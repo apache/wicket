@@ -66,7 +66,7 @@ public class Signin2Test extends WicketWebTestCase
 
 		// this.dumpResponse(System.err);
 		assertTitleEquals("Wicket Examples - signin2");
-		// a) With org.apache.wicket submitting a form will result in a temporary redirect,
+		// a) With wicket submitting a form will result in a temporary redirect,
 		// with the redirect setting the Cookie.
 		// b) jWebUnits Cookie test methods are all using the http response
 		// object only

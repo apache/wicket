@@ -58,7 +58,7 @@ public class ContactDataProvider implements IDataProvider
 	}
 
 	/**
-	 * wraps retrieved contact pojo with a org.apache.wicket model
+	 * wraps retrieved contact pojo with a wicket model
 	 * 
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */

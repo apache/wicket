@@ -70,7 +70,7 @@ public final class Home extends AuthenticatedWebPage
 		// Note: checkAccess() (and thus login etc.) happen after the Page
 		// has been instantiated. Thus, you can not realy on user != null.
 		// Note2: In any case, all components must be associated with a
-		// org.apache.wicket tag.
+		// wicket tag.
 		User user = getLibrarySession().getUser();
 		if (user == null)
 		{
