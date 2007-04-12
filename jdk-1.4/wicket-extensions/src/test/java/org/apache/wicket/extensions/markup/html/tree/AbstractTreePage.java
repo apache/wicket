@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,22 +24,20 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
+import org.apache.wicket.markup.html.WebPage;
+
+
 /**
- * Examples that shows how you can display a tree like structure (in this case
- * nested lists with string elements) using nested panels and using a tree
- * component.
- * 
- * @author Eelco Hillenius
+ * Base page class for tree tests.
  */
-public class TreePageWithBorder extends BorderedPage
+public class AbstractTreePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Constructor.
 	 *  Page parameters
 	 */
-	public TreePageWithBorder()
+	public AbstractTreePage()
 	{
 		// create a list with sublists
 		List l1 = new ArrayList();

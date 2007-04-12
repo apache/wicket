@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
 
 /**
  */
-public class TreePageNoWicketHeadTag extends AbstractTreePage
+public class TreePageNoHtmlHead extends AbstractTreePage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class TreePageNoWicketHeadTag extends AbstractTreePage
 	 * Constructor.
 	 *  Page parameters
 	 */
-	public TreePageNoWicketHeadTag()
+	public TreePageNoHtmlHead()
 	{
 	}
 }

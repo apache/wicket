@@ -14,22 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
-import org.apache.wicket.markup.html.border.Border;
 
 /**
- * Border component.
  */
-public final class PageBorder extends Border
+public class TreePage extends AbstractTreePage
 {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Constructor.
-	 * @param id component naam
+	 *  Page parameters
 	 */
-	public PageBorder(final String id)
+	public TreePage()
 	{
-		super(id);
 	}
 }

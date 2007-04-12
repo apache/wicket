@@ -14,20 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree;
+package org.apache.wicket.extensions.markup.html.tree;
 
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.border.Border;
 
 /**
+ * Base page with norder.
  */
-public class TreePageNoHtmlHead extends AbstractTreePage
+public abstract class BorderedPage extends WebPage
 {
-	private static final long serialVersionUID = 1L;
+	/** Border. */
+	private Border border;
 
 	/**
 	 * Constructor.
-	 *  Page parameters
 	 */
-	public TreePageNoHtmlHead()
+	public BorderedPage()
 	{
+		border = new PageBorder("border");
+		border.setTransparentResolver(true);
+		super.add(border);
 	}
 }
