@@ -519,7 +519,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		}
 
 		/**
-		 * No stack trace. We don't won't to tell the hacker internals of org.apache.wicket
+		 * No stack trace. We won't tell the hackers about the internals of
+		 * wicket
 		 * 
 		 * @see java.lang.Throwable#getStackTrace()
 		 */
@@ -529,8 +530,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		}
 
 		/**
-		 * No additional information. We don't won't to tell the hacker
-		 * internals of org.apache.wicket
+		 * No additional information. We won't tell the hackers about the
+		 * internals of wicket
 		 * 
 		 * @see java.lang.Throwable#toString()
 		 */

@@ -455,7 +455,7 @@ public class Markup
 	}
 
 	/**
-	 * Reset the markup to its defaults, except for the org.apache.wicket
+	 * Reset the markup to its defaults, except for the wicket
 	 * namespace which remains unchanged.
 	 */
 	final void reset()

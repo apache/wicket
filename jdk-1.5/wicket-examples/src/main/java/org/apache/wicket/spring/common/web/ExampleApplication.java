@@ -29,7 +29,7 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 public class ExampleApplication extends SpringWebApplication {
 
 	/**
-	 * this field holds a contact dao proxy that is safe to use in org.apache.wicket
+	 * this field holds a contact dao proxy that is safe to use in wicket
 	 * components
 	 */
 	private ContactDao contactDaoProxy;

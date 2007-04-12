@@ -29,7 +29,7 @@ import org.apache.wicket.markup.ComponentTag;
  * transformation to ensure the xml data are well formed (single root element).
  * In addition the attribute
  * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to
- * the root element to allow the XSL processor to handle the org.apache.wicket
+ * the root element to allow the XSL processor to handle the wicket
  * namespace.
  * <p>
  * The reason why the transformer can not be used to XSLT the ListViews output
@@ -75,9 +75,8 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	{
 		tag.put("xmlns:wicket", "http://wicket.apache.org");
 
-		// Make the XSLT processor happy and allow it to handle the
-		// org.apache.wicket
-		// tags and attributes that are in the wicket namespace
+		// Make the XSLT processor happy and allow it to handle the wicket tags
+		// and attributes that are in the wicket namespace
 		super.onComponentTag(component, tag);
 	}
 

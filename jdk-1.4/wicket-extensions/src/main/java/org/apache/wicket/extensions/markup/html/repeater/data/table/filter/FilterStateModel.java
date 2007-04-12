@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import org.apache.wicket.model.Model;
 
 /**
- * Model that wraps filter state locator to make its use transparent to org.apache.wicket
+ * Model that wraps filter state locator to make its use transparent to wicket
  * components.
  * <p>
  * Example:

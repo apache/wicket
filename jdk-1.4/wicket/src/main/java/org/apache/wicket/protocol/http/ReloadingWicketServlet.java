@@ -20,7 +20,7 @@ package org.apache.wicket.protocol.http;
 /**
  * Custom WicketServlet that reloads the web applications when classes are
  * modified. In order to reload your own classes, use include and exclude
- * patterns using wildcards. And in web.xml, point to the reloading org.apache.wicket
+ * patterns using wildcards. And in web.xml, point to the reloading wicket
  * servlet instead of the original one.
  * 
  * <p>
