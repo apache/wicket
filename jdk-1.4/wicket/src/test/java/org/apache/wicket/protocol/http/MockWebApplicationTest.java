@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.apache.wicket.Session;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
@@ -36,8 +37,20 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class MockWebApplicationTest extends TestCase
 {
-
 	private WicketTester application;
+
+	/**
+	 * Filter that returns all rendered messages.
+	 */
+	private static final IFeedbackMessageFilter RENDERED_MESSAGES = new IFeedbackMessageFilter()
+	{
+		private static final long serialVersionUID = 1L;
+
+		public boolean accept(FeedbackMessage message)
+		{
+			return message.isRendered();
+		}
+	};
 
 	/**
 	 * Create the test.
@@ -56,6 +69,7 @@ public class MockWebApplicationTest extends TestCase
 		application = new WicketTester();
 		application.startPage(MockPage.class);
 	}
+
 	protected void tearDown() throws Exception
 	{
 		application.destroy();
@@ -76,9 +90,10 @@ public class MockWebApplicationTest extends TestCase
 	}
 
 	/**
-	 * Tests the clean up of flash messages put into the session when they are rendered.
+	 * Tests the clean up of flash messages put into the session when they are
+	 * rendered.
 	 */
-	public void testSessionFeedbackMessagesCleanUp() 
+	public void testSessionFeedbackMessagesCleanUp()
 	{
 		Session session = Session.get();
 		session.info("Message");
@@ -87,13 +102,14 @@ public class MockWebApplicationTest extends TestCase
 		Iterator iterator = feedbackMessages.iterator();
 		FeedbackMessage message = (FeedbackMessage)iterator.next();
 		message.markRendered();
-		feedbackMessages.clearRendered();
+		feedbackMessages.clear(RENDERED_MESSAGES);
 		assertEquals(1, feedbackMessages.size());
 		message = (FeedbackMessage)iterator.next();
 		message.markRendered();
-		feedbackMessages.clearRendered();
+		feedbackMessages.clear(RENDERED_MESSAGES);
 		assertEquals(0, feedbackMessages.size());
 	}
+
 	/**
 	 * @throws Exception
 	 */

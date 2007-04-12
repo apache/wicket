@@ -35,6 +35,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.convert.IConverter;
@@ -157,6 +158,34 @@ public abstract class Session implements IClusterable, IConverterLocator
 			return pageMapNames.add(pagemap.getName());
 		}
 	}
+
+	/**
+	 * Filter that returns all component scoped messages ({@link FeedbackMessage#getReporter()} !=
+	 * null).
+	 */
+	public static final IFeedbackMessageFilter MESSAGES_FOR_COMPONENTS = new IFeedbackMessageFilter()
+	{
+		private static final long serialVersionUID = 1L;
+
+		public boolean accept(FeedbackMessage message)
+		{
+			return message.getReporter() != null;
+		}
+	};
+
+	/**
+	 * Filter that returns all session scoped messages ({@link FeedbackMessage#getReporter()} ==
+	 * null).
+	 */
+	private static final IFeedbackMessageFilter RENDERED_SESSION_SCOPED_MESSAGES = new IFeedbackMessageFilter()
+	{
+		private static final long serialVersionUID = 1L;
+
+		public boolean accept(FeedbackMessage message)
+		{
+			return message.getReporter() == null && message.isRendered();
+		}
+	};
 
 	/** meta data key for missing body tags logging. */
 	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
@@ -363,15 +392,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Cleans up any unrendered, dangling feedback messages there may be. This
-	 * implementation calls {@link FeedbackMessages#clearComponentSpecific()} to
-	 * aggresively ensure there won't be memory leaks. Clients can override this
-	 * method to e.g. call {@link FeedbackMessages#clearPageSpecific(Page)}.
-	 * <p>
-	 * This method should be called from by the framework right before a even
-	 * handler is called. There is no need for clients to call this method
-	 * directly
-	 * </p>
+	 * Cleans up all rendered feedback messages and any unrendered, dangling
+	 * feedback messages there may be left after that.
 	 * 
 	 * @param page
 	 *            any current page (the page on which the event handler is that
@@ -379,7 +401,15 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	public void cleanupFeedbackMessages(Page page)
 	{
-		feedbackMessages.clearComponentSpecific();
+
+		// if session scoped, rendered messages got indeed cleaned up, mark the
+		// session as dirty
+		if (feedbackMessages.clear(RENDERED_SESSION_SCOPED_MESSAGES) > 0)
+		{
+			dirty();
+		}
+
+		feedbackMessages.clear(MESSAGES_FOR_COMPONENTS);
 	}
 
 	/**
@@ -1234,22 +1264,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 
 				setAttribute(attribute, object);
 			}
-		}
-	}
-
-	/**
-	 * Removes any rendered feedback messages as well as compacts memory. This
-	 * method is usually called at the end of the request cycle processing.
-	 */
-	protected void cleanupRenderedFeedbackMessages()
-	{
-		int size = feedbackMessages.size();
-		feedbackMessages.clearRendered();
-
-		// the session is dirty when the list of feedback messages was changed
-		if (size != feedbackMessages.size())
-		{
-			dirty();
 		}
 	}
 

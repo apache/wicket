@@ -26,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
-import org.apache.wicket.Page;
 import org.apache.wicket.util.concurrent.CopyOnWriteArrayList;
 import org.apache.wicket.util.string.StringList;
 
@@ -34,6 +33,9 @@ import org.apache.wicket.util.string.StringList;
 /**
  * Holds list of feedback messages. The list can be added to, cleared, queried
  * and filtered.
+ * <p>
+ * WARNING: This class should typically NOT be used directly.
+ * <p>
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -63,22 +65,6 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
-	 * Call this constructor if you want to replace the internal store with
-	 * another implemention then the default (ArrayList). This could be a
-	 * {@link CopyOnWriteArrayList} if this feedbackmessages instance is used by
-	 * multiply threads.
-	 * 
-	 * @param messagesList
-	 * 
-	 */
-	public FeedbackMessages(List messagesList)
-	{
-		if (messagesList == null)
-			throw new IllegalArgumentException("messages list can't be null");
-		messages = messagesList;
-	}
-
-	/**
 	 * Adds a message
 	 * 
 	 * @param reporter
@@ -91,74 +77,43 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
-	 * Clears any existing messages
-	 */
-	public final void clear()
-	{
-		messages.clear();
-	}
-
-	/**
-	 * Clears any messages specifically for components. This is an aggressive
-	 * cleanup to ensure there won't be a memory leak in session.
-	 */
-	public final void clearComponentSpecific()
-	{
-		for (int i = messages.size() - 1; i >= 0; i--)
-		{
-			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
-			Component reporter = msg.getReporter();
-			if (reporter != null)
-			{
-				messages.remove(i);
-			}
-		}
-		trimToSize();
-	}
-
-	/**
-	 * Clears any messages specifically for components on the provided page.
+	 * Clears any existing messages.
 	 * 
-	 * @param page
-	 *            The page to clear messages for
+	 * @return The number of messages deleted
 	 */
-	public final void clearPageSpecific(Page page)
+	public final int clear()
 	{
-		if (page == null)
-		{
-			return;
-		}
-
-		for (int i = messages.size() - 1; i >= 0; i--)
-		{
-			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
-			Component reporter = msg.getReporter();
-			if (reporter != null)
-			{
-				Page reporterPage = (Page)reporter.findParent(Page.class);
-				if (reporterPage != null && reporterPage.equals(page))
-				{
-					messages.remove(i);
-				}
-			}
-		}
-		trimToSize();
+		return clear(null);
 	}
 
 	/**
-	 * Removes messages that have been rendered
+	 * Clears all messsages that are accepted by the filter.
+	 * 
+	 * @param filter
+	 *            Filter for selecting messages. If null, all messages will be
+	 *            returned
+	 * @return The number of messages deleted
 	 */
-	public final void clearRendered()
+	public final int clear(final IFeedbackMessageFilter filter)
 	{
-		for (int i = messages.size() - 1; i >= 0; i--)
+		if (messages.size() == 0)
 		{
-			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
-			if (msg.isRendered())
+			return 0;
+		}
+
+		int count = 0;
+		for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+		{
+			final FeedbackMessage message = (FeedbackMessage)iterator.next();
+			if (filter == null || filter.accept(message))
 			{
-				messages.remove(i);
+				messages.remove(message);
+				count++;
 			}
 		}
+
 		trimToSize();
+		return count;
 	}
 
 	/**
@@ -311,7 +266,8 @@ public final class FeedbackMessages implements IClusterable
 	 * Gets a list of messages from the page using a filter.
 	 * 
 	 * @param filter
-	 *            Filter for selecting messages
+	 *            Filter for selecting messages. If null, all messages will be
+	 *            returned
 	 * @return The messages or an empty list if no messages are found
 	 */
 	public final List messages(final IFeedbackMessageFilter filter)
@@ -320,19 +276,17 @@ public final class FeedbackMessages implements IClusterable
 		{
 			return Collections.EMPTY_LIST;
 		}
-		else
+
+		final List list = new ArrayList();
+		for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
 		{
-			final List list = new ArrayList();
-			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+			final FeedbackMessage message = (FeedbackMessage)iterator.next();
+			if (filter == null || filter.accept(message))
 			{
-				final FeedbackMessage message = (FeedbackMessage)iterator.next();
-				if (filter == null || filter.accept(message))
-				{
-					list.add(message);
-				}
+				list.add(message);
 			}
-			return list;
 		}
+		return list;
 	}
 
 	/**

@@ -533,7 +533,8 @@ public abstract class RequestCycle
 	 */
 	public void setAutomaticallyClearFeedbackMessages(boolean automaticallyClearFeedbackMessages)
 	{
-		// FIXME This method is a quick fix for a unit testing problem that should not exist
+		// FIXME This method is a quick fix for a unit testing problem that
+		// should not exist
 		this.automaticallyClearFeedbackMessages = automaticallyClearFeedbackMessages;
 	}
 
@@ -871,7 +872,6 @@ public abstract class RequestCycle
 			// the session
 			try
 			{
-				session.cleanupRenderedFeedbackMessages();
 				final Page page = getResponsePage();
 				if (page != null)
 				{

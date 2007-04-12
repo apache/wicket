@@ -19,12 +19,25 @@ package org.apache.wicket.feedback;
 import org.apache.wicket.IClusterable;
 
 /**
- * Interface for filtering feedback messages
+ * Interface for filtering feedback messages.
  * 
  * @author Jonathan Locke
  */
 public interface IFeedbackMessageFilter extends IClusterable
 {
+	/**
+	 * Filter that returns simply all available messages.
+	 */
+	public static final IFeedbackMessageFilter ALL = new IFeedbackMessageFilter()
+	{
+		private static final long serialVersionUID = 1L;
+
+		public boolean accept(FeedbackMessage message)
+		{
+			return true;
+		}
+	};
+
 	/**
 	 * @param message
 	 *            The message to test for inclusion
