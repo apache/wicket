@@ -372,15 +372,6 @@
 		<resources>
 			<resource>
 				<filtering>false</filtering>
-				<directory>${basedir}</directory>
-				<targetPath>META-INF</targetPath>
-				<includes>
-					<include>NOTICE.txt</include>
-					<include>LICENSE.txt</include>
-				</includes>
-			</resource>
-			<resource>
-				<filtering>false</filtering>
 				<directory>${basedir}/src/main/java</directory>
 				<includes>
 					<include>**/*</include>
@@ -423,6 +414,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
+				<inherited>true</inherited>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<inherited>true</inherited>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
 			<plugin>
