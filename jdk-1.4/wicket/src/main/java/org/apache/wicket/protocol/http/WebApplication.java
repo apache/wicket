@@ -770,4 +770,15 @@ public abstract class WebApplication extends Application implements ISessionFact
 		}
 		return null;
 	}
+
+	// TODO remove after deprecation release
+
+	/**
+	 * @return
+	 * @deprecated Replaced by {@link #getRequestCycleFactory()}
+	 */
+	protected final IRequestCycleFactory getDefaultRequestCycleFactory()
+	{
+		throw new UnsupportedOperationException("obsolete method. see getRequestCycleFactory");
+	}
 }
