@@ -85,13 +85,13 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final CharSequence getEventHandler()
 	{
 		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
-				getCallbackUrl()).append(
+				getCallbackUrl(true, false)).append(
 				"', wicketSerialize(document.getElementById('" + getComponent().getMarkupId()
 						+ "'))"), null, null);
 	}
 
 	/**
-	 * @see wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
+	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
 	 */
 	protected void onCheckEvent(String event)
 	{
@@ -109,7 +109,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
 		final FormComponent formComponent = getFormComponent();
-		boolean callOnUpdate = true;
 
 		try
 		{
@@ -125,20 +124,14 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			{
 				formComponent.valid();
 				formComponent.updateModel();
+				onUpdate(target);
 			}
 		}
 		catch (RuntimeException e)
 		{
-			callOnUpdate = false;
 			onError(target, e);
 
 		}
-
-		if (callOnUpdate)
-		{
-			onUpdate(target);
-		}
-
 	}
 
 	/**
@@ -153,14 +146,14 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * Called to handle any error resulting from updating form component. Errors
 	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
 	 * 
-	 * The exception param can be null then it is an validate failure, if the 
-	 * Exception is not null then an exception did happen.
+	 * The RuntimeException will be null if it was just a validation or conversion 
+	 * error of the FormComponent
 	 * 
 	 * @param target
 	 * @param e
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{
-		throw e;
+		if(e != null) throw e;
 	}
 }
