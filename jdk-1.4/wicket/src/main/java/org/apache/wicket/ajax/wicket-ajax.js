@@ -137,6 +137,8 @@ Wicket.FunctionsExecuter.prototype = {
  * is similiar to calling element.outerHtml=text in internet explorer. However
  * this method also takes care of executing javascripts within the markup on
  * browsers that don't do that automatically.
+ * Also this method takes care of replacing table elements (tbody, tr, td, thead)
+ * on browser where it's not supported when using outerHTML (IE, Opera).
  */
 Wicket.replaceOuterHtml = function(element, text) {	
     if (element.outerHTML) { // internet explorer or opera support outerHtml
@@ -171,8 +173,6 @@ Wicket.replaceOuterHtml = function(element, text) {
 			
 			// we may have inserted multiple elements, so we need to take care of all of them
 			var tempParent = tempDiv.getElementsByTagName(tn).item(0).parentNode;
-
-
 
 			while(tempParent.childNodes.length > 0) {
 				var tempElement = tempParent.childNodes[0];
