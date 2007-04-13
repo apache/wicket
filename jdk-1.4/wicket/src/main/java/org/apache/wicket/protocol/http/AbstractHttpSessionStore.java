@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSessionBindingListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
+import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
@@ -32,7 +33,6 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.UndoPageVersionManager;
-
 
 
 /**
@@ -133,7 +133,8 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#bind(org.apache.wicket.Request, org.apache.wicket.Session)
+	 * @see org.apache.wicket.session.ISessionStore#bind(org.apache.wicket.Request,
+	 *      org.apache.wicket.Session)
 	 */
 	public final void bind(Request request, Session newSession)
 	{
@@ -161,7 +162,8 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.Request, boolean)
+	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.Request,
+	 *      boolean)
 	 */
 	public final String getSessionId(Request request, boolean create)
 	{
@@ -331,5 +333,19 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 					+ " can only work with WebRequests");
 		}
 		return (WebRequest)request;
+	}
+
+	// TODO remove after deprecation release
+
+	/**
+	 * DO NOT USE.
+	 * 
+	 * @param name
+	 * @param session
+	 * @return
+	 */
+	public final IPageMap createPageMap(String name, Session session)
+	{
+		throw new UnsupportedOperationException("obsolete method");
 	}
 }
