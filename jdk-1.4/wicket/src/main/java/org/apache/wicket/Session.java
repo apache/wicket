@@ -1324,7 +1324,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 		if (touchedPages != null && touchedPages.size() > 0)
 		{
 			log
-					.warn("There where still touched pages in the request detach phase, session update wasn't called: "
+					.warn("There were still touched pages in the request detach phase, session update wasn't called: "
 							+ touchedPages);
 		}
 
@@ -1333,7 +1333,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 		if (dirtyObjects != null && dirtyObjects.size() > 0)
 		{
 			log
-					.warn("There where still dirty objects in the request detach phase, session update wasn't called: "
+					.warn("There were still dirty objects in the request detach phase, session update wasn't called: "
 							+ dirtyObjects);
 		}
 
