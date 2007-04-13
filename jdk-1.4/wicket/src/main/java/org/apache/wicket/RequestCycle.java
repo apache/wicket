@@ -206,9 +206,9 @@ public abstract class RequestCycle
 
 	/**
 	 * True if the request cycle should automatically clear feedback messages
-	 * after processing
+	 * after processing. True by default.
 	 */
-	private boolean automaticallyClearFeedbackMessages;
+	private boolean automaticallyClearFeedbackMessages = true;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -872,11 +872,7 @@ public abstract class RequestCycle
 			// the session
 			try
 			{
-				final Page page = getResponsePage();
-				if (page != null)
-				{
-					session.cleanupFeedbackMessages(page);
-				}
+				session.cleanupFeedbackMessages();
 			}
 			catch (RuntimeException re)
 			{

@@ -394,12 +394,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 	/**
 	 * Cleans up all rendered feedback messages and any unrendered, dangling
 	 * feedback messages there may be left after that.
-	 * 
-	 * @param page
-	 *            any current page (the page on which the event handler is that
-	 *            is about to be processed)
 	 */
-	public void cleanupFeedbackMessages(Page page)
+	public void cleanupFeedbackMessages()
 	{
 
 		// if session scoped, rendered messages got indeed cleaned up, mark the
