@@ -39,6 +39,12 @@
 			<artifactId>wicket</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket</artifactId>
+			<classifier>tests</classifier>
+			<scope>tests</scope>
+		</dependency>
+		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 		</dependency>
