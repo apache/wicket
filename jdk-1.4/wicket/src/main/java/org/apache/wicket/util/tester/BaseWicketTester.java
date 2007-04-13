@@ -348,7 +348,7 @@ public class BaseWicketTester extends MockWebApplication
 		final Component component = getLastRenderedPage().get(path);
 		if (component == null)
 		{
-			fail("path: '" + path + "' does no exist for page: "
+			fail("path: '" + path + "' does not exist for page: "
 					+ Classes.simpleName(getLastRenderedPage().getClass()));
 			return component;
 		}
