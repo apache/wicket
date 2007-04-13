@@ -495,7 +495,7 @@ public class MockWebApplication
 				application, wicketRequest, wicketResponse);
 
 		// Construct session
-		this.wicketSession = this.application.getSession(this.wicketRequest, this.wicketResponse);
+		this.wicketSession = (WebSession)Session.findOrCreate();
 
 		// Set request cycle so it won't detach automatically and clear messages
 		// we want to check
@@ -517,7 +517,7 @@ public class MockWebApplication
 		this.wicketRequest = this.application.newWebRequest(servletRequest);
 		this.wicketResponse = this.application.newWebResponse(servletResponse);
 		createRequestCycle();
-		this.wicketSession = this.application.getSession(wicketRequest, wicketResponse);
+		this.wicketSession = (WebSession)Session.findOrCreate();
 		this.application.getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse.setAjax(wicketRequest.isAjax());
 	}

@@ -238,11 +238,45 @@ public abstract class Session implements IClusterable, IConverterLocator
 		Session session = (Session)current.get();
 		if (session == null)
 		{
-			final RequestCycle cycle = RequestCycle.get();
-			session = Application.get().getSessionFactory().newSession(cycle.getRequest(),
-					cycle.getResponse());
-			set(session);
+			session = findOrCreate();
 		}
+		return session;
+	}
+
+	/**
+	 * Locate the session for the client of this request in the
+	 * {@link ISessionStore} or create a new one and attach it when none could
+	 * be located and sets it as the current instance for this thread.
+	 * Typically, clients never touch this method, but rather use
+	 * {@link Session#get()}, which does the locating implicitly when not yet
+	 * set as a thread local.
+	 * 
+	 * @return The session for the client of this request or a new, unbound
+	 */
+	public static final Session findOrCreate()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle == null)
+		{
+			throw new IllegalStateException(
+					"you can only locate or create sessions in the context of a request cycle");
+		}
+		Application application = Application.get();
+		ISessionStore sessionStore = application.getSessionStore();
+		Session session = sessionStore.lookup(requestCycle.getRequest());
+
+		if (session == null)
+		{
+			// Create session using session factory
+			session = application.getSessionFactory().newSession(requestCycle.getRequest(),
+					requestCycle.getResponse());
+			// Set the current session
+			// execute any attach logic now
+			session.attach();
+		}
+
+		set(session);
+
 		return session;
 	}
 
@@ -985,6 +1019,16 @@ public abstract class Session implements IClusterable, IConverterLocator
 	private final String attributeForPageMapName(final String pageMapName)
 	{
 		return pageMapAttributePrefix + pageMapName;
+	}
+
+	/**
+	 * Any attach logic for session subclasses. Called when a session is set for
+	 * the thread. Note that this is done on demand (lazily): as long as the
+	 * session isn't being used, it is not located or created and this method is
+	 * not called.
+	 */
+	protected void attach()
+	{
 	}
 
 	/**

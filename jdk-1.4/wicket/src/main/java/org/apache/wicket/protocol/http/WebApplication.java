@@ -670,44 +670,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Gets a WebSession object from the HttpServletRequest, creating a new one
-	 * if it doesn't already exist.
-	 * 
-	 * @param request
-	 *            The web request
-	 * @param response
-	 *            The web response
-	 * @return The session object
-	 */
-	final WebSession getSession(final WebRequest request, final WebResponse response)
-	{
-		ISessionStore sessionStore = getSessionStore();
-		Session session = sessionStore.lookup(request);
-
-		if (session == null)
-		{
-			// Create session using session factory
-			session = getSessionFactory().newSession(request, response);
-		}
-
-		WebSession webSession;
-		if (session instanceof WebSession)
-		{
-			webSession = (WebSession)session;
-		}
-		else
-		{
-			throw new WicketRuntimeException("Session created by a WebApplication session factory "
-					+ "must be a subclass of WebSession");
-		}
-
-		// Set session attribute name and attach/reattach http servlet session
-		webSession.initForRequest();
-
-		return webSession;
-	}
-
-	/**
 	 * Log that this application is started.
 	 */
 	final void logStarted()
@@ -767,7 +729,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
-	
+
 	// TODO remove after deprecation release
 
 	/**

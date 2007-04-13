@@ -79,15 +79,15 @@ import org.apache.wicket.util.time.Duration;
  * override getHomePage() to provide this property value.
  * 
  * <li><b>Settings </b>- Application settings are partitioned into sets of
- * related settings using interfaces in the org.apache.wicket.settings package. These
- * interfaces are returned by the following methods, which should be used to
- * configure framework settings for your application: getApplicationSettings(),
- * getDebugSettings(), getExceptionSettings(), getMarkupSettings(),
- * getPageSettings(), getRequestCycleSettings(), getSecuritySettings and
- * getSessionSettings(). These settings are configured by default through the
- * constructor or internalInit methods. Default the application is configured
- * for DEVELOPMENT. You can configure this globally to DEPLOYMENT or override
- * specific settings by implementing the init() method.
+ * related settings using interfaces in the org.apache.wicket.settings package.
+ * These interfaces are returned by the following methods, which should be used
+ * to configure framework settings for your application:
+ * getApplicationSettings(), getDebugSettings(), getExceptionSettings(),
+ * getMarkupSettings(), getPageSettings(), getRequestCycleSettings(),
+ * getSecuritySettings and getSessionSettings(). These settings are configured
+ * by default through the constructor or internalInit methods. Default the
+ * application is configured for DEVELOPMENT. You can configure this globally to
+ * DEPLOYMENT or override specific settings by implementing the init() method.
  * 
  * <li><b>Shared Resources </b>- Resources added to an Application's
  * SharedResources have application-wide scope and can be referenced using a

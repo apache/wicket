@@ -64,17 +64,6 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Initializes this session for a request.
-	 */
-	public final void initForRequest()
-	{
-		// Set the current session
-		set(this);
-
-		attach();
-	}
-
-	/**
 	 * Invalidates this session at the end of the current request. If you need
 	 * to invalidate the session immediately, you can do this by calling
 	 * invalidateNow(), however this will remove all Wicket components from this
@@ -108,13 +97,6 @@ public class WebSession extends Session
 	public final boolean isSessionInvalidated()
 	{
 		return sessionInvalidated;
-	}
-
-	/**
-	 * Any attach logic for session subclasses.
-	 */
-	protected void attach()
-	{
 	}
 
 	/**
