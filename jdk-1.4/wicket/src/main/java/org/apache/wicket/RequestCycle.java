@@ -172,6 +172,8 @@ import org.apache.wicket.util.value.ValueMap;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
+// TODO if it were up to me (Eelco), we could get rid of the application and
+// session members and accessors. They can be accessed from the thread locals
 public abstract class RequestCycle
 {
 	/** Thread-local that holds the current request cycle. */

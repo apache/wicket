@@ -240,8 +240,7 @@ public class WicketFilter implements Filter
 			try
 			{
 				// Create request cycle
-				RequestCycle cycle = webApplication.newRequestCycle(webApplication, request,
-						response);
+				RequestCycle cycle = webApplication.newRequestCycle(request, response);
 
 				try
 				{

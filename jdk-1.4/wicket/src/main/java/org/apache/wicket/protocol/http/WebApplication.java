@@ -456,26 +456,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Creates a new RequestCycle for the given request and response using the
-	 * session's request cycle factory.
-	 * 
-	 * @param application
-	 *            The application
-	 * @param request
-	 *            The request
-	 * @param response
-	 *            The response
-	 * @return The new request cycle.
-	 */
-	public final RequestCycle newRequestCycle(final Application application, final Request request,
-			final Response response)
-	{
-		return getRequestCycleFactory().newRequestCycle(application, request, response);
-	}
-
-	/**
 	 * Create a request cycle factory which is used by default by WebSession.
 	 * You may provide your own default factory by subclassing WebApplication
 	 * and overriding this method or your may subclass WebSession to create a
@@ -771,6 +751,23 @@ public abstract class WebApplication extends Application implements ISessionFact
 		return null;
 	}
 
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Creates a new RequestCycle for the given request and response using the
+	 * application's request cycle factory.
+	 * 
+	 * @param request
+	 *            The request
+	 * @param response
+	 *            The response
+	 * @return The new request cycle.
+	 */
+	final RequestCycle newRequestCycle(final Request request, final Response response)
+	{
+		return getRequestCycleFactory().newRequestCycle(this, request, response);
+	}
+	
 	// TODO remove after deprecation release
 
 	/**
