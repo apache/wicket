@@ -19,14 +19,9 @@ package org.apache.wicket.threadtest.tester;
 import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.string.Strings;
 
-
 public abstract class AbstractGetCommand extends AbstractCommand {
-
-	private static final Log log = LogFactory.getLog(AbstractGetCommand.class);
 
 	/**
 	 * Construct.

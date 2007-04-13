@@ -18,12 +18,7 @@ package org.apache.wicket.threadtest.tester;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public abstract class AbstractCommand implements Command {
-
-	private static final Log log = LogFactory.getLog(AbstractCommand.class);
 
 	/** number of executions of the urls. */
 	private final int iterations;
