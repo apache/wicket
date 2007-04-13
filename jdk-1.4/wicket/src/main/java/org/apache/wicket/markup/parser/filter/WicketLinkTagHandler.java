@@ -53,7 +53,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 	static
 	{
-		// register "wicket:fragement"
+		// register "wicket:link"
 		WicketTagIdentifier.registerWellKnownTagName("link");
 	}
 

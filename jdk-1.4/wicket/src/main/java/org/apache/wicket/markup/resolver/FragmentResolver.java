@@ -42,7 +42,7 @@ public class FragmentResolver implements IComponentResolver
 
 	static
 	{
-		// register "wicket:fragement"
+		// register "wicket:fragment"
 		WicketTagIdentifier.registerWellKnownTagName("fragment");
 	}
 	
