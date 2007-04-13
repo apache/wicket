@@ -343,6 +343,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 * @param name
 	 * @param session
 	 * @return
+	 * @deprecated remove after deprecation release
 	 */
 	public final IPageMap createPageMap(String name, Session session)
 	{
