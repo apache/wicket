@@ -156,11 +156,7 @@ Wicket.replaceOuterHtml = function(element, text) {
        			break;       			
        		}
 		}
-		
-		// indicates whether we should manually invoke javascripts in the replaced content
-		// (not necessary for opera when replacing elements inside table)
-		var forceJavascriptExecution = true;
-	   
+			   
 		var tn = element.tagName;
 
 		// elements inside tables have to be treated special
@@ -171,20 +167,36 @@ Wicket.replaceOuterHtml = function(element, text) {
 			// this is a hack to get around the fact that internet explorer doesn't allow the
 			// outerHtml attribute on table elements				
 			var tempDiv = document.createElement("div");
-			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';			
-			element.parentNode.replaceChild(tempDiv.getElementsByTagName(tn).item(0), element);
-						
-			// this way opera already executes javascripts, so we don't want to execute javascripts later
-			if (Wicket.Browser.isOpera())
-				forceJavascriptExecution = false;				
+			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';	
+			
+			// we may have inserted multiple elements, so we need to take care of all of them
+			var tempParent = tempDiv.getElementsByTagName(tn).item(0).parentNode;
+
+
+
+			while(tempParent.childNodes.length > 0) {
+				var tempElement = tempParent.childNodes[0];
+				element.parentNode.insertBefore(tempElement, element);
+			}
+
+			//element.parentNode.replaceChild(tempDiv.getElementsByTagName(tn).item(0), element);
+			element.parentNode.removeChild(element);						
 		}
        
-	    if (forceJavascriptExecution) {
-			for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {	   		
-				// execute the javascript contained by the newly created elements
-				Wicket.Head.addJavascripts(parent.childNodes[j]);       
-			}
+	    // execute inserted javascripts
+	    
+    	var elements = new Array();
+    
+		for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {	   		
+			// add the inserted elements to array
+			elements.push(parent.childNodes[j]);
 		}
+			
+		// we need to execute the javascript in reverse order to be consistent with firefox 
+		for (i = elements.length - 1; i >= 0; --i) {
+			Wicket.Head.addJavascripts(elements[i]); 
+		}						
+		
 
     } else {
     	// create range and fragment
