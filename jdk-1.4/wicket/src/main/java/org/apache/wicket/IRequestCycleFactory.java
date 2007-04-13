@@ -19,22 +19,22 @@ package org.apache.wicket;
 
 /**
  * Factory for creating request cycles for a session.
- *
+ * 
  * @author Jonathan Locke
  */
 public interface IRequestCycleFactory extends IClusterable
 {
 	/**
 	 * Creates a new RequestCycle object.
-	 *
-	 * @param session
-	 *            The session
+	 * 
+	 * @param application
+	 *            The application
 	 * @param request
 	 *            The request
 	 * @param response
 	 *            The response
 	 * @return The cycle
 	 */
-	RequestCycle newRequestCycle(final Session session, final Request request,
+	RequestCycle newRequestCycle(final Application application, final Request request,
 			final Response response);
 }

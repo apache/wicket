@@ -24,8 +24,8 @@ import org.apache.wicket.request.target.basic.RedirectRequestTarget;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.lang.Objects;
 
-
 /**
+ * @author Jonathan Locke
  * @author jcompagner
  */
 public abstract class PageMap implements IClusterable, IPageMap
@@ -74,10 +74,6 @@ public abstract class PageMap implements IClusterable, IPageMap
 	/** Next available page identifier in this page map. */
 	private int pageId = 0;
 
-	/** The session where this PageMap resides */
-	private transient Session session;
-
-
 	/**
 	 * Constructor
 	 * 
@@ -86,16 +82,10 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * @param session
 	 *            The session holding this page map
 	 */
-	public PageMap(String name, Session session)
+	public PageMap(String name)
 	{
 		this.name = name;
-		if (session == null)
-		{
-			throw new IllegalArgumentException("session must be not null");
-		}
-		this.session = session;
 	}
-
 
 	/**
 	 * @see org.apache.wicket.IPageMap#attributeForId(int)
@@ -157,7 +147,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 */
 	public final IPageMapEntry getEntry(final int id)
 	{
-		return (IPageMapEntry)session.getAttribute(attributeForId(id));
+		return (IPageMapEntry)Session.get().getAttribute(attributeForId(id));
 	}
 
 	/**
@@ -169,11 +159,11 @@ public abstract class PageMap implements IClusterable, IPageMap
 	}
 
 	/**
-	 * @see org.apache.wicket.IPageMap#getSession()
+	 * @return Session this page map is in
 	 */
 	public final Session getSession()
 	{
-		return session;
+		return Session.get();
 	}
 
 	/**
@@ -293,7 +283,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 		clear();
 
 		// Then remove the pagemap itself
-		session.removePageMap(this);
+		Session.get().removePageMap(this);
 	}
 
 	/**
@@ -311,14 +301,6 @@ public abstract class PageMap implements IClusterable, IPageMap
 	public abstract void removeEntry(final IPageMapEntry entry);
 
 	/**
-	 * @see org.apache.wicket.IPageMap#setSession(org.apache.wicket.Session)
-	 */
-	public final void setSession(final Session session)
-	{
-		this.session = session;
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
@@ -326,12 +308,12 @@ public abstract class PageMap implements IClusterable, IPageMap
 		return "[PageMap name=" + name + "]";
 	}
 
-
 	/**
 	 * @return List of entries in this page map
 	 */
 	private final List getEntries()
 	{
+		final Session session = Session.get();
 		final List attributes = session.getAttributeNames();
 		final List list = new ArrayList();
 		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
@@ -347,7 +329,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 	protected final void dirty()
 	{
-		session.dirtyPageMap(this);
+		Session.get().dirtyPageMap(this);
 	}
 
 	/**
@@ -356,6 +338,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 */
 	protected final void visitEntries(final IVisitor visitor)
 	{
+		final Session session = Session.get();
 		final List attributes = session.getAttributeNames();
 		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
 		{
@@ -366,7 +349,6 @@ public abstract class PageMap implements IClusterable, IPageMap
 			}
 		}
 	}
-
 
 	/**
 	 * @return The attribute prefix for this page map

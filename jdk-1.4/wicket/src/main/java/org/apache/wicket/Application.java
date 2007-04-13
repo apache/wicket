@@ -536,6 +536,11 @@ public abstract class Application
 	}
 
 	/**
+	 * @return Request cycle factory for this kind of session.
+	 */
+	protected abstract IRequestCycleFactory getRequestCycleFactory();
+
+	/**
 	 * Gets the {@link RequestLogger}.
 	 * 
 	 * @return The RequestLogger

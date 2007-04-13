@@ -124,12 +124,10 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * 
 	 * @param name
 	 *            The name of this page map
-	 * @param session
-	 *            The session holding this page map
 	 */
-	public AccessStackPageMap(final String name, final Session session)
+	public AccessStackPageMap(final String name)
 	{
-		super(name, session);
+		super(name);
 	}
 
 	/**

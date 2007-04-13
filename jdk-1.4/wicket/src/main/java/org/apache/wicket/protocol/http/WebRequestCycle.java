@@ -32,7 +32,6 @@ import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
-
 /**
  * RequestCycle implementation for HTTP protocol. Holds the application,
  * session, request and response objects for a given HTTP request. Contains
@@ -61,17 +60,17 @@ public class WebRequestCycle extends RequestCycle
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there. This instance will be set as the current one for this thread.
 	 * 
-	 * @param session
-	 *            The session
+	 * @param application
+	 *            The applicaiton
 	 * @param request
 	 *            The request
 	 * @param response
 	 *            The response
 	 */
-	public WebRequestCycle(final WebSession session, final WebRequest request,
+	public WebRequestCycle(final WebApplication application, final WebRequest request,
 			final Response response)
 	{
-		super(session, request, response);
+		super(application, request, response);
 	}
 
 	/**
@@ -195,10 +194,10 @@ public class WebRequestCycle extends RequestCycle
 				setResponse(currentResponse);
 				if (ex instanceof AbortException)
 					throw ex;
-				
+
 				if (!(ex instanceof PageExpiredException))
 					logRuntimeException(ex);
-				
+
 				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);
 				return;

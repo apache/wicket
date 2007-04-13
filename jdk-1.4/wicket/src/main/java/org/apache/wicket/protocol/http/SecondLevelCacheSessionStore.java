@@ -24,7 +24,6 @@ import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.Request;
-import org.apache.wicket.Session;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.Change;
@@ -112,11 +111,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * Construct.
 		 * 
 		 * @param name
-		 * @param session
 		 */
-		private SecondLevelCachePageMap(String name, Session session)
+		private SecondLevelCachePageMap(String name)
 		{
-			super(name, session);
+			super(name);
 		}
 
 		public Page get(int id, int versionNumber)
@@ -413,9 +411,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @see org.apache.wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String,
 	 *      org.apache.wicket.Session)
 	 */
-	public IPageMap createPageMap(String name, Session session)
+	public IPageMap createPageMap(String name)
 	{
-		return new SecondLevelCachePageMap(name, session);
+		return new SecondLevelCachePageMap(name);
 	}
 
 	/**

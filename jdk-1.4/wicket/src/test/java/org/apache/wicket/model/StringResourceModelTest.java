@@ -32,12 +32,12 @@ import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
+ * 
  * @author Chris Turner
  */
 public class StringResourceModelTest extends TestCase
 {
-
-	private WicketTester application;
+	private WicketTester tester;
 
 	private WebPage page;
 
@@ -47,7 +47,9 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * Create the test case.
-	 * @param name The test name
+	 * 
+	 * @param name
+	 *            The test name
 	 */
 	public StringResourceModelTest(String name)
 	{
@@ -56,21 +58,22 @@ public class StringResourceModelTest extends TestCase
 
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester();
-		application.getApplication().getResourceSettings().addStringResourceLoader(
+		tester = new WicketTester();
+		tester.getApplication().getResourceSettings().addStringResourceLoader(
 				new BundleStringResourceLoader("org.apache.wicket.model.StringResourceModelTest"));
 		page = new MockPage();
 		ws = new WeatherStation();
 		wsModel = new Model(ws);
 	}
+
 	protected void tearDown() throws Exception
 	{
-		application.destroy();
+		tester.destroy();
 	}
 
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 */
 	public void testGetSimpleResource()
 	{
@@ -81,8 +84,8 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 */
 	public void testNullResourceKey()
 	{
@@ -98,8 +101,8 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 */
 	public void testGetSimpleResourceWithKeySubstitution()
 	{
@@ -113,8 +116,8 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 */
 	public void testGetPropertySubstitutedResource()
 	{
@@ -127,8 +130,8 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 */
 	public void testSubstitutionParametersResource()
 	{
@@ -138,22 +141,22 @@ public class StringResourceModelTest extends TestCase
 				"The report for {0,date,medium}, shows the temparature as {2,number,###.##} {3} and the weather to be {1}",
 				page.getLocale());
 		StringResourceModel model = new StringResourceModel("weather.detail", page, wsModel,
-				new Object[] {cal.getTime(), "${currentStatus}",
+				new Object[] { cal.getTime(), "${currentStatus}",
 						new PropertyModel(wsModel, "currentTemperature"),
-						new PropertyModel(wsModel, "units")});
-		String expected = format.format(new Object[] {cal.getTime(), "sunny", new Double(25.7),
-				"\u00B0C"});
+						new PropertyModel(wsModel, "units") });
+		String expected = format.format(new Object[] { cal.getTime(), "sunny", new Double(25.7),
+				"\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 		ws.setCurrentStatus("raining");
 		ws.setCurrentTemperature(11.568);
-		expected = format.format(new Object[] {cal.getTime(), "raining", new Double(11.568),
-				"\u00B0C"});
+		expected = format.format(new Object[] { cal.getTime(), "raining", new Double(11.568),
+				"\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 	}
 
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 */
 	public void testUninitialisedLocalizer()
 	{
@@ -170,7 +173,7 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void testSetObject()
 	{
@@ -196,9 +199,9 @@ public class StringResourceModelTest extends TestCase
 	public void testDetachAttachNormalModel() throws Exception
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
-		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
-				application.getWicketRequest(), application.getWicketResponse());
+		tester.setupRequestAndResponse();
+		RequestCycle cycle = new WebRequestCycle(tester.getApplication(),
+				tester.getWicketRequest(), tester.getWicketResponse());
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
@@ -224,9 +227,9 @@ public class StringResourceModelTest extends TestCase
 
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
-		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
-				application.getWicketRequest(), application.getWicketResponse());
+		tester.setupRequestAndResponse();
+		RequestCycle cycle = new WebRequestCycle(tester.getApplication(),
+				tester.getWicketRequest(), tester.getWicketResponse());
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();

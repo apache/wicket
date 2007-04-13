@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestCycleFactory;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
@@ -32,9 +31,6 @@ public class WebSession extends Session
 	/** log. careful, this log is used to trigger profiling too! */
 	// private static final Log log = LogFactory.getLog(WebSession.class);
 	private static final long serialVersionUID = 1L;
-
-	/** The request cycle factory for the session */
-	private transient IRequestCycleFactory requestCycleFactory;
 
 	/** True, if session has been invalidated */
 	private transient boolean sessionInvalidated = false;
@@ -133,20 +129,6 @@ public class WebSession extends Session
 		{
 			invalidateNow();
 		}
-	}
-
-	/**
-	 * @see org.apache.wicket.Session#getRequestCycleFactory()
-	 */
-	protected IRequestCycleFactory getRequestCycleFactory()
-	{
-		if (requestCycleFactory == null)
-		{
-			this.requestCycleFactory = ((WebApplication)getApplication())
-					.getDefaultRequestCycleFactory();
-		}
-
-		return this.requestCycleFactory;
 	}
 
 	/**

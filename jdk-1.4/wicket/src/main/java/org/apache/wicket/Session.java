@@ -235,11 +235,13 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	public static Session get()
 	{
-		final Session session = (Session)current.get();
+		Session session = (Session)current.get();
 		if (session == null)
 		{
-			throw new WicketRuntimeException("there is no session attached to current thread "
-					+ Thread.currentThread().getName());
+			final RequestCycle cycle = RequestCycle.get();
+			session = Application.get().getSessionFactory().newSession(cycle.getRequest(),
+					cycle.getResponse());
+			set(session);
 		}
 		return session;
 	}
@@ -397,8 +399,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	public void cleanupFeedbackMessages()
 	{
-
-		// if session scoped, rendered messages got indeed cleaned up, mark the
+		// If session scoped, rendered messages got indeed cleaned up, mark the
 		// session as dirty
 		if (feedbackMessages.clear(RENDERED_SESSION_SCOPED_MESSAGES) > 0)
 		{
@@ -753,25 +754,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Set the session for each PageMap
-	 */
-	public final void init()
-	{
-		// Set session on each page map
-		visitPageMaps(new IPageMapVisitor()
-		{
-			public void pageMap(IPageMap pageMap)
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
-				}
-				pageMap.setSession(Session.this);
-			}
-		});
-	}
-
-	/**
 	 * Invalidates this session.
 	 */
 	public void invalidate()
@@ -810,27 +792,10 @@ public abstract class Session implements IClusterable, IConverterLocator
 		}
 
 		// Create new page map
-		final IPageMap pageMap = getSessionStore().createPageMap(name, this);
+		final IPageMap pageMap = getSessionStore().createPageMap(name);
 		setAttribute(attributeForPageMapName(name), pageMap);
 		dirty();
 		return pageMap;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Creates a new RequestCycle for the given request and response using the
-	 * session's request cycle factory.
-	 * 
-	 * @param request
-	 *            The request
-	 * @param response
-	 *            The response
-	 * @return The new request cycle.
-	 */
-	public final RequestCycle newRequestCycle(final Request request, final Response response)
-	{
-		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
 
 	/**
@@ -1088,11 +1053,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 		}
 		return Collections.EMPTY_LIST;
 	}
-
-	/**
-	 * @return Request cycle factory for this kind of session.
-	 */
-	protected abstract IRequestCycleFactory getRequestCycleFactory();
 
 	/**
 	 * Gets the session store.

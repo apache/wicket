@@ -259,7 +259,6 @@ public abstract class RequestCycle
 	/** The processor for this request. */
 	protected final IRequestCycleProcessor processor;
 
-
 	/** The current request. */
 	protected Request request;
 
@@ -267,23 +266,23 @@ public abstract class RequestCycle
 	protected Response response;
 
 	/** The session object. */
-	protected final Session session;
+	protected Session session;
 
 	/**
 	 * Constructor. This instance will be set as the current one for this
 	 * thread.
 	 * 
-	 * @param session
-	 *            The session
+	 * @param application
+	 *            The application
 	 * @param request
 	 *            The request
 	 * @param response
 	 *            The response
 	 */
-	protected RequestCycle(final Session session, final Request request, final Response response)
+	protected RequestCycle(final Application application, final Request request,
+			final Response response)
 	{
-		this.application = session.getApplication();
-		this.session = session;
+		this.application = application;
 		this.request = request;
 		this.response = response;
 		this.originalResponse = response;
@@ -292,7 +291,6 @@ public abstract class RequestCycle
 		// Set this RequestCycle into ThreadLocal variable
 		current.set(this);
 	}
-
 
 	/**
 	 * Gets the application object.
@@ -415,12 +413,24 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * @return True if a session exists for the calling thread
+	 */
+	private boolean sessionExists()
+	{
+		return Session.exists();
+	}
+
+	/**
 	 * Gets the session.
 	 * 
 	 * @return Session object
 	 */
 	public final Session getSession()
 	{
+		if (session == null)
+		{
+			session = Session.get();
+		}
 		return session;
 	}
 
@@ -723,10 +733,10 @@ public abstract class RequestCycle
 		}
 		else
 		{
-
 			page.setPageStateless(Boolean.FALSE);
+
 			// make session non-volatile if not already so
-			Session session = Session.get();
+			final Session session = getSession();
 			if (session.isTemporary())
 			{
 				session.bind();
@@ -791,7 +801,7 @@ public abstract class RequestCycle
 	public final CharSequence urlFor(final Page page)
 	{
 		IRequestTarget target = new PageRequestTarget(page);
-		Session.get().touch(((IPageRequestTarget)target).getPage());
+		getSession().touch(((IPageRequestTarget)target).getPage());
 		return urlFor(target);
 	}
 
@@ -872,7 +882,10 @@ public abstract class RequestCycle
 			// the session
 			try
 			{
-				session.cleanupFeedbackMessages();
+				if (sessionExists())
+				{
+					getSession().cleanupFeedbackMessages();
+				}
 			}
 			catch (RuntimeException re)
 			{
@@ -881,13 +894,16 @@ public abstract class RequestCycle
 		}
 
 		// At the end of our response, let the session do some book keeping
-		try
+		if (sessionExists())
 		{
-			session.update();
-		}
-		catch (RuntimeException re)
-		{
-			log.error("there was an error updating the session " + session + ".", re);
+			try
+			{
+				getSession().update();
+			}
+			catch (RuntimeException re)
+			{
+				log.error("there was an error updating the session " + session + ".", re);
+			}
 		}
 
 		try
@@ -904,14 +920,17 @@ public abstract class RequestCycle
 		}
 
 		// clear the used pagemap for this thread,
-		try
+		if (sessionExists())
 		{
-			session.requestDetached();
-		}
-		catch (RuntimeException re)
-		{
-			log.error("there was an error detaching the request from the session " + session + ".",
-					re);
+			try
+			{
+				getSession().requestDetached();
+			}
+			catch (RuntimeException re)
+			{
+				log.error("there was an error detaching the request from the session " + session
+						+ ".", re);
+			}
 		}
 
 		if (getResponse() instanceof BufferedWebResponse)
@@ -953,9 +972,6 @@ public abstract class RequestCycle
 	 */
 	private void prepare()
 	{
-		// Prepare session for request
-		session.init();
-
 		// Event callback
 		onBeginRequest();
 	}
@@ -1153,7 +1169,10 @@ public abstract class RequestCycle
 	private final void threadDetach()
 	{
 		// Detach from session
-		session.detach();
+		if (sessionExists())
+		{
+			getSession().detach();
+		}
 
 		if (getRedirect())
 		{

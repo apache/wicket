@@ -201,13 +201,15 @@ public class MockWebApplication
 				this.context);
 		this.servletResponse = new MockHttpServletResponse();
 
-		// Construct request, response and session using factories
+		// Get request cycle factory
+		this.requestCycleFactory = this.application.getRequestCycleFactory();
+
+		// Construct request and response using factories
 		this.wicketRequest = this.application.newWebRequest(this.servletRequest);
 		this.wicketResponse = this.application.newWebResponse(this.servletResponse);
-		this.wicketSession = this.application.getSession(this.wicketRequest, this.wicketResponse);
 
-		// Get request cycle factory
-		this.requestCycleFactory = this.wicketSession.getRequestCycleFactory();
+		// Create request cycle
+		createRequestCycle();
 
 		// Set the default context path
 		this.application.getApplicationSettings().setContextPath(context.getServletContextName());
@@ -227,8 +229,6 @@ public class MockWebApplication
 		// watcher still runs, taking up file handles and memory, leading
 		// to "Too many files opened" or a regular OutOfMemoryException
 		this.application.getResourceSettings().setResourcePollFrequency(null);
-
-		createRequestCycle();
 	}
 
 	/**
@@ -421,7 +421,6 @@ public class MockWebApplication
 					servletSession, this.application.getServletContext());
 			newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
 			wicketRequest = this.application.newWebRequest(newHttpRequest);
-			wicketSession = this.application.getSession(wicketRequest, wicketResponse);
 
 			cycle = createRequestCycle();
 			cycle.request();
@@ -443,8 +442,8 @@ public class MockWebApplication
 	 */
 	private Page generateLastRenderedPage(WebRequestCycle cycle)
 	{
-		Page lastRenderedPage = cycle.getResponsePage();
-		if (lastRenderedPage == null)
+		Page newLastRenderedPage = cycle.getResponsePage();
+		if (newLastRenderedPage == null)
 		{
 			Class responseClass = cycle.getResponsePageClass();
 			if (responseClass != null)
@@ -453,7 +452,7 @@ public class MockWebApplication
 				IRequestTarget target = cycle.getRequestTarget();
 				if (target instanceof IPageRequestTarget)
 				{
-					lastRenderedPage = ((IPageRequestTarget)target).getPage();
+					newLastRenderedPage = ((IPageRequestTarget)target).getPage();
 				}
 				else if (target instanceof IBookmarkablePageRequestTarget)
 				{
@@ -464,22 +463,23 @@ public class MockWebApplication
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{
-						lastRenderedPage = new DefaultPageFactory().newPage(pageClass);
+						newLastRenderedPage = new DefaultPageFactory().newPage(pageClass);
 					}
 					else
 					{
-						lastRenderedPage = new DefaultPageFactory().newPage(pageClass, parameters);
+						newLastRenderedPage = new DefaultPageFactory().newPage(pageClass,
+								parameters);
 					}
 				}
 			}
 		}
 
-		if (lastRenderedPage == null)
+		if (newLastRenderedPage == null)
 		{
-			lastRenderedPage = this.lastRenderedPage;
+			newLastRenderedPage = this.lastRenderedPage;
 		}
 
-		return lastRenderedPage;
+		return newLastRenderedPage;
 	}
 
 	/**
@@ -492,7 +492,10 @@ public class MockWebApplication
 	{
 		// Create a web request cycle using factory
 		final WebRequestCycle cycle = (WebRequestCycle)requestCycleFactory.newRequestCycle(
-				wicketSession, wicketRequest, wicketResponse);
+				application, wicketRequest, wicketResponse);
+
+		// Construct session
+		this.wicketSession = this.application.getSession(this.wicketRequest, this.wicketResponse);
 
 		// Set request cycle so it won't detach automatically and clear messages
 		// we want to check
@@ -513,6 +516,7 @@ public class MockWebApplication
 		parametersForNextRequest.clear();
 		this.wicketRequest = this.application.newWebRequest(servletRequest);
 		this.wicketResponse = this.application.newWebResponse(servletResponse);
+		createRequestCycle();
 		this.wicketSession = this.application.getSession(wicketRequest, wicketResponse);
 		this.application.getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse.setAjax(wicketRequest.isAjax());

@@ -111,8 +111,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	public void respond(RuntimeException e, RequestCycle requestCycle)
 	{
 		// If application doesn't want debug info showing up for users
-		final Session session = requestCycle.getSession();
-		final Application application = session.getApplication();
+		final Application application = Application.get();
 		final IExceptionSettings settings = application.getExceptionSettings();
 		final Page responsePage = requestCycle.getResponsePage();
 

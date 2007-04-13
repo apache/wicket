@@ -159,12 +159,13 @@ public class WicketFilter implements Filter
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		String relativePath = getRelativePath(servletRequest);
+
 		// Special-case for home page - we redirect to add a trailing slash.
 		if (relativePath.length() == 0
 				&& !Strings.stripJSessionId(servletRequest.getRequestURI()).endsWith("/"))
 		{
-			String foo = servletRequest.getRequestURI() + "/";
-			servletResponse.sendRedirect(foo);
+			final String redirectUrl = servletRequest.getRequestURI() + "/";
+			servletResponse.sendRedirect(redirectUrl);
 			return;
 		}
 
@@ -236,12 +237,12 @@ public class WicketFilter implements Filter
 			response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 					.getResponseRequestEncoding());
 
-			// Get session for request
-			final WebSession session = webApplication.getSession(request, response);
-
 			try
 			{
-				RequestCycle cycle = session.newRequestCycle(request, response);
+				// Create request cycle
+				RequestCycle cycle = webApplication.newRequestCycle(webApplication, request,
+						response);
+
 				try
 				{
 					// Process request

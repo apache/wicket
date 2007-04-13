@@ -28,8 +28,8 @@ import org.apache.wicket.version.IPageVersionManager;
 
 
 /**
- * The actual store that is used by {@link org.apache.wicket.Session} to store its
- * attributes.
+ * The actual store that is used by {@link org.apache.wicket.Session} to store
+ * its attributes.
  * 
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -154,13 +154,13 @@ public interface ISessionStore
 
 	/**
 	 * @param name
-	 * @param session
-	 * @return The pagemap instances for the session
+	 * @return The pagemap instance
 	 */
-	IPageMap createPageMap(String name, Session session);
+	IPageMap createPageMap(String name);
 
 	/**
-	 * @param page The page for which this version manager must be created
+	 * @param page
+	 *            The page for which this version manager must be created
 	 * @return A instance of a IPageVersionManager that the page will use.
 	 */
 	IPageVersionManager newVersionManager(Page page);

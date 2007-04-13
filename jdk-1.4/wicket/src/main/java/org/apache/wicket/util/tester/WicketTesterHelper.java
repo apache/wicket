@@ -64,38 +64,40 @@ public class WicketTesterHelper
 	{
 		final List data = new ArrayList();
 
-		page.visitChildren(new IVisitor()
+		if (page != null)
 		{
-			public Object component(final Component component)
+			page.visitChildren(new IVisitor()
 			{
-				final ComponentData object = new ComponentData();
-
-				// anonymous class? Get the parent's class name
-				String name = component.getClass().getName();
-				if (name.indexOf("$") > 0)
+				public Object component(final Component component)
 				{
-					name = component.getClass().getSuperclass().getName();
+					final ComponentData object = new ComponentData();
+
+					// anonymous class? Get the parent's class name
+					String name = component.getClass().getName();
+					if (name.indexOf("$") > 0)
+					{
+						name = component.getClass().getSuperclass().getName();
+					}
+
+					// remove the path component
+					name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
+
+					object.path = component.getPageRelativePath();
+					object.type = name;
+					try
+					{
+						object.value = component.getModelObjectAsString();
+					}
+					catch (Exception e)
+					{
+						object.value = e.getMessage();
+					}
+
+					data.add(object);
+					return IVisitor.CONTINUE_TRAVERSAL;
 				}
-
-				// remove the path component
-				name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
-
-				object.path = component.getPageRelativePath();
-				object.type = name;
-				try
-				{
-					object.value = component.getModelObjectAsString();
-				}
-				catch (Exception e)
-				{
-					object.value = e.getMessage();
-				}
-
-				data.add(object);
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-
+			});
+		}
 		return data;
 	}
 

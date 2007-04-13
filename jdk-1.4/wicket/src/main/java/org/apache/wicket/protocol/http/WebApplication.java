@@ -377,7 +377,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @see org.apache.wicket.ISessionFactory#newSession(org.apache.wicket.Request, org.apache.wicket.Response)
+	 * @see org.apache.wicket.ISessionFactory#newSession(org.apache.wicket.Request,
+	 *      org.apache.wicket.Response)
 	 */
 	public Session newSession(Request request, Response response)
 	{
@@ -455,6 +456,26 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Creates a new RequestCycle for the given request and response using the
+	 * session's request cycle factory.
+	 * 
+	 * @param application
+	 *            The application
+	 * @param request
+	 *            The request
+	 * @param response
+	 *            The response
+	 * @return The new request cycle.
+	 */
+	public final RequestCycle newRequestCycle(final Application application, final Request request,
+			final Response response)
+	{
+		return getRequestCycleFactory().newRequestCycle(application, request, response);
+	}
+
+	/**
 	 * Create a request cycle factory which is used by default by WebSession.
 	 * You may provide your own default factory by subclassing WebApplication
 	 * and overriding this method or your may subclass WebSession to create a
@@ -465,16 +486,17 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @return Request cycle factory
 	 */
-	protected IRequestCycleFactory getDefaultRequestCycleFactory()
+	protected IRequestCycleFactory getRequestCycleFactory()
 	{
 		return new IRequestCycleFactory()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public RequestCycle newRequestCycle(Session session, Request request, Response response)
+			public RequestCycle newRequestCycle(final Application application,
+					final Request request, final Response response)
 			{
 				// Respond to request
-				return new WebRequestCycle((WebSession)session, (WebRequest)request,
+				return new WebRequestCycle((WebApplication)application, (WebRequest)request,
 						(WebResponse)response);
 			}
 		};

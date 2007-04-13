@@ -39,7 +39,6 @@ import org.apache.wicket.util.crypt.NoCryptFactory;
 import org.apache.wicket.util.tester.WicketTester;
 
 
-
 /**
  * Test cases for Cookie handling
  * 
@@ -49,7 +48,7 @@ public class CookieTest extends TestCase
 {
 	private static final Log log = LogFactory.getLog(CookieTest.class);
 
-	private WicketTester application;
+	private WicketTester tester;
 	private SignInPanel panel;
 	private Form form;
 	private Cookie cookieUsername;
@@ -73,10 +72,10 @@ public class CookieTest extends TestCase
 	{
 		super.setUp();
 
-		application = new WicketTester(MockPage.class);
-		application.setupRequestAndResponse();
+		tester = new WicketTester(MockPage.class);
+		tester.setupRequestAndResponse();
 
-		final ISecuritySettings settings = application.getApplication().getSecuritySettings();
+		final ISecuritySettings settings = tester.getApplication().getSecuritySettings();
 		settings.setCryptFactory(new NoCryptFactory());
 
 		this.panel = new SignInPanel("panel")
@@ -90,23 +89,24 @@ public class CookieTest extends TestCase
 		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
 
-		final ICrypt crypt = application.getApplication().getSecuritySettings().getCryptFactory().newCrypt();
+		final ICrypt crypt = tester.getApplication().getSecuritySettings().getCryptFactory()
+				.newCrypt();
 		final String encryptedPassword = crypt.encryptUrlSafe("test");
 		assertNotNull(encryptedPassword);
 		this.cookieUsername = new Cookie("panel:signInForm:username", "juergen");
 		this.cookiePassword = new Cookie("panel:signInForm:password", encryptedPassword);
 		this.cookies = new Cookie[] { cookieUsername, cookiePassword };
 
-		application.getServletRequest().setCookies(cookies);
+		tester.getServletRequest().setCookies(cookies);
 
-		cycle = new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(),
-				application.getWicketResponse());
+		cycle = new WebRequestCycle(tester.getApplication(), tester.getWicketRequest(), tester
+				.getWicketResponse());
 
 		this.page = new MockPage(null);
 		page.add(this.panel);
 
-		WebRequestCycle cycle = new WebRequestCycle(application.getWicketSession(), application
-				.getWicketRequest(), application.getWicketResponse());
+		WebRequestCycle cycle = new WebRequestCycle(tester.getApplication(), tester
+				.getWicketRequest(), tester.getWicketResponse());
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class CookieTest extends TestCase
 		this.form.onFormSubmitted();
 
 		// validate
-		Collection cookies = application.getServletResponse().getCookies();
+		Collection cookies = tester.getServletResponse().getCookies();
 		Iterator iter = cookies.iterator();
 		while (iter.hasNext())
 		{
@@ -165,7 +165,7 @@ public class CookieTest extends TestCase
 		this.form.onFormSubmitted();
 
 		// validate
-		Collection cookies = application.getServletResponse().getCookies();
+		Collection cookies = tester.getServletResponse().getCookies();
 		Assert.assertEquals(2, cookies.size());
 		Iterator iter = cookies.iterator();
 		while (iter.hasNext())
@@ -194,7 +194,7 @@ public class CookieTest extends TestCase
 		page.removePersistedFormData(SignInPanel.SignInForm.class, true);
 
 		// validate
-		Collection cookieCollection = application.getServletResponse().getCookies();
+		Collection cookieCollection = tester.getServletResponse().getCookies();
 		// Cookies are remove by setting maxAge == 0
 		Assert.assertEquals(2, cookieCollection.size());
 
@@ -203,13 +203,13 @@ public class CookieTest extends TestCase
 		final Cookie cookiePassword = new Cookie("panel:signInForm:password", "test");
 		final Cookie[] cookies = new Cookie[] { cookieUsername, cookiePassword };
 
-		application.getServletRequest().setCookies(cookies);
+		tester.getServletRequest().setCookies(cookies);
 
 		// test
 		page.removePersistedFormData(SignInPanel.SignInForm.class, true);
 
 		// validate
-		cookieCollection = application.getServletResponse().getCookies();
+		cookieCollection = tester.getServletResponse().getCookies();
 		Assert.assertEquals(4, cookieCollection.size());
 		Iterator iter = cookieCollection.iterator();
 		while (iter.hasNext())

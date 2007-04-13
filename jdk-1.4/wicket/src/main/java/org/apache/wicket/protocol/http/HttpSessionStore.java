@@ -49,14 +49,12 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#createPageMap(java.lang.String,
-	 *      org.apache.wicket.Session)
+	 * @see org.apache.wicket.session.ISessionStore#createPageMap(java.lang.String)
 	 */
-	public IPageMap createPageMap(String name, Session session)
+	public IPageMap createPageMap(String name)
 	{
-		return new AccessStackPageMap(name, session);
+		return new AccessStackPageMap(name);
 	}
-
 
 	/**
 	 * @see org.apache.wicket.session.ISessionStore#getAttribute(org.apache.wicket.Request,

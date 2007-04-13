@@ -72,11 +72,6 @@ public interface IPageMap extends IClusterable
 	String getName();
 
 	/**
-	 * @return The session that this PageMap is in.
-	 */
-	Session getSession();
-
-	/**
 	 * @return Size of this page map in bytes, including a sum of the sizes of
 	 *         all the pages it contains.
 	 */
@@ -143,11 +138,4 @@ public interface IPageMap extends IClusterable
 	 *            The entry to remove
 	 */
 	void removeEntry(final IPageMapEntry entry);
-
-	/**
-	 * @param session
-	 *            Session to set
-	 */
-	void setSession(final Session session);
-
 }
