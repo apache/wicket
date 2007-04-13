@@ -112,7 +112,7 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	public WebSession getWebSession()
 	{
-		return (WebSession)session;
+		return (WebSession)getSession();
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class WebRequestCycle extends RequestCycle
 
 		// Always touch the page again so that a redirect listener makes a page
 		// statefull and adds it to the pagemap
-		session.touch(page);
+		getSession().touch(page);
 
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);

@@ -268,7 +268,7 @@ public abstract class RequestCycle
 	protected Response response;
 
 	/** The session object. */
-	protected Session session;
+	private Session session;
 
 	/**
 	 * Constructor. This instance will be set as the current one for this
