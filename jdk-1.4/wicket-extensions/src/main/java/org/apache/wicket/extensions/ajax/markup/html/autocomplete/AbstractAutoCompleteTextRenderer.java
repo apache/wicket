@@ -20,11 +20,11 @@ import org.apache.wicket.Response;
 
 /**
  * Base for text renderers that simply want to show a string
- * 
- * @sicne 1.2
- * 
+ *
+ * @since 1.2
+ *
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
 public abstract class AbstractAutoCompleteTextRenderer extends AbstractAutoCompleteRenderer
 {
