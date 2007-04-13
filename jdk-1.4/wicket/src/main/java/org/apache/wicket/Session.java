@@ -123,6 +123,44 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class Session implements IClusterable, IConverterLocator
 {
+	/** True, if session has been invalidated */
+	private transient boolean sessionInvalidated = false;
+
+	/**
+	 * Invalidates this session at the end of the current request. If you need
+	 * to invalidate the session immediately, you can do this by calling
+	 * invalidateNow(), however this will remove all Wicket components from this
+	 * session, which means that you will no longer be able to work with them.
+	 */
+	public void invalidate()
+	{
+		sessionInvalidated = true;
+	}
+
+	/**
+	 * Invalidates this session immediately. Calling this method will remove all
+	 * Wicket components from this session, which means that you will no longer
+	 * be able to work with them.
+	 */
+	public void invalidateNow()
+	{
+		sessionInvalidated = true; // set this for isSessionInvalidated
+		getSessionStore().invalidate(RequestCycle.get().getRequest());
+	}
+
+	/**
+	 * Whether the session is invalid now, or will be invalidated by the end of
+	 * the request. Clients should rarely need to use this method if ever.
+	 * 
+	 * @return Whether the session is invalid when the current request is done
+	 * 
+	 * @see #invalidate()
+	 * @see #invalidateNow()
+	 */
+	public final boolean isSessionInvalidated()
+	{
+		return sessionInvalidated;
+	}
 
 	/**
 	 * Visitor interface for visiting page maps
@@ -788,14 +826,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Invalidates this session.
-	 */
-	public void invalidate()
-	{
-		getSessionStore().invalidate(RequestCycle.get().getRequest());
-	}
-
-	/**
 	 * Whether this session is temporary. A Wicket application can operate in a
 	 * session-less mode as long as stateless pages are used. If this session
 	 * object is temporary, it will not be available on a next request.
@@ -1038,6 +1068,10 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	protected void detach()
 	{
+		if (sessionInvalidated)
+		{
+			invalidateNow();
+		}
 	}
 
 	/**
@@ -1191,10 +1225,56 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Updates the session at the end of a request, e.g. for replication
-	 * purposes.
+	 * @param page
+	 *            The page to add to dirty objects list
 	 */
-	protected void update()
+	void dirtyPage(final Page page)
+	{
+		List dirtyObjects = getDirtyObjectsList();
+		if (!dirtyObjects.contains(page))
+		{
+			dirtyObjects.add(page);
+		}
+	}
+
+
+	/**
+	 * @param map
+	 *            The page map to add to dirty objects list
+	 */
+	void dirtyPageMap(final IPageMap map)
+	{
+		if (!map.isDefault())
+		{
+			usedPageMaps.remove(map);
+			usedPageMaps.addLast(map);
+		}
+		List dirtyObjects = getDirtyObjectsList();
+		if (!dirtyObjects.contains(map))
+		{
+			dirtyObjects.add(map);
+		}
+	}
+
+	/**
+	 * @return The current thread dirty objects list
+	 */
+	List getDirtyObjectsList()
+	{
+		List list = (List)dirtyObjects.get();
+		if (list == null)
+		{
+			list = new ArrayList(4);
+			dirtyObjects.set(list);
+		}
+		return list;
+	}
+
+	/**
+	 * INTERNAL API. The request cycle when detached will call this.
+	 * 
+	 */
+	final void requestDetached()
 	{
 		List touchedPages = (List)Session.touchedPages.get();
 		Session.touchedPages.set(null);
@@ -1265,77 +1345,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 				setAttribute(attribute, object);
 			}
 		}
-	}
-
-	/**
-	 * @param page
-	 *            The page to add to dirty objects list
-	 */
-	void dirtyPage(final Page page)
-	{
-		List dirtyObjects = getDirtyObjectsList();
-		if (!dirtyObjects.contains(page))
-		{
-			dirtyObjects.add(page);
-		}
-	}
-
-
-	/**
-	 * @param map
-	 *            The page map to add to dirty objects list
-	 */
-	void dirtyPageMap(final IPageMap map)
-	{
-		if (!map.isDefault())
-		{
-			usedPageMaps.remove(map);
-			usedPageMaps.addLast(map);
-		}
-		List dirtyObjects = getDirtyObjectsList();
-		if (!dirtyObjects.contains(map))
-		{
-			dirtyObjects.add(map);
-		}
-	}
-
-	/**
-	 * @return The current thread dirty objects list
-	 */
-	List getDirtyObjectsList()
-	{
-		List list = (List)dirtyObjects.get();
-		if (list == null)
-		{
-			list = new ArrayList(4);
-			dirtyObjects.set(list);
-		}
-		return list;
-	}
-
-	/**
-	 * INTERNAL API. The request cycle when detached will call this.
-	 * 
-	 */
-	final void requestDetached()
-	{
-		List touchedPages = (List)Session.touchedPages.get();
-		Session.touchedPages.set(null);
-		if (touchedPages != null && touchedPages.size() > 0)
-		{
-			log
-					.warn("There were still touched pages in the request detach phase, session update wasn't called: "
-							+ touchedPages);
-		}
-
-		List dirtyObjects = (List)Session.dirtyObjects.get();
-		Session.dirtyObjects.set(null);
-		if (dirtyObjects != null && dirtyObjects.size() > 0)
-		{
-			log
-					.warn("There were still dirty objects in the request detach phase, session update wasn't called: "
-							+ dirtyObjects);
-		}
 
 		if (pageMapsUsedInRequest != null)
 		{
@@ -1354,5 +1363,15 @@ public abstract class Session implements IClusterable, IConverterLocator
 				pageMapsUsedInRequest.notifyAll();
 			}
 		}
+	}
+
+	// TODO remove after deprecation release
+
+	/**
+	 * @deprecated obsolete method (was meant for internal book keeping really).
+	 *             Clients should use {@link #detach()} instead.
+	 */
+	protected final void update()
+	{
 	}
 }

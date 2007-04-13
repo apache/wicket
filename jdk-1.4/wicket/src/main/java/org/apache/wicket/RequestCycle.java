@@ -895,19 +895,7 @@ public abstract class RequestCycle
 			}
 		}
 
-		// At the end of our response, let the session do some book keeping
-		if (sessionExists())
-		{
-			try
-			{
-				getSession().update();
-			}
-			catch (RuntimeException re)
-			{
-				log.error("there was an error updating the session " + session + ".", re);
-			}
-		}
-
+		// if we have a request logger, update that now
 		try
 		{
 			IRequestLogger requestLogger = getApplication().getRequestLogger();
@@ -921,7 +909,7 @@ public abstract class RequestCycle
 			log.error("there was an error in the RequestLogger ending.", re);
 		}
 
-		// clear the used pagemap for this thread,
+		// let the session cleanup after a request, flushing changes etc.
 		if (sessionExists())
 		{
 			try
@@ -946,7 +934,6 @@ public abstract class RequestCycle
 				log.error("there was an error filtering the response.", re);
 			}
 		}
-
 
 		try
 		{

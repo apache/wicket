@@ -28,12 +28,7 @@ import org.apache.wicket.Session;
  */
 public class WebSession extends Session
 {
-	/** log. careful, this log is used to trigger profiling too! */
-	// private static final Log log = LogFactory.getLog(WebSession.class);
 	private static final long serialVersionUID = 1L;
-
-	/** True, if session has been invalidated */
-	private transient boolean sessionInvalidated = false;
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
@@ -61,66 +56,5 @@ public class WebSession extends Session
 	public WebSession(final WebApplication application, Request request)
 	{
 		super(application, request);
-	}
-
-	/**
-	 * Invalidates this session at the end of the current request. If you need
-	 * to invalidate the session immediately, you can do this by calling
-	 * invalidateNow(), however this will remove all Wicket components from this
-	 * session, which means that you will no longer be able to work with them.
-	 */
-	public void invalidate()
-	{
-		sessionInvalidated = true;
-	}
-
-	/**
-	 * Invalidates this session immediately. Calling this method will remove all
-	 * Wicket components from this session, which means that you will no longer
-	 * be able to work with them.
-	 */
-	public void invalidateNow()
-	{
-		sessionInvalidated = true; // set this for isSessionInvalidated
-		getSessionStore().invalidate(RequestCycle.get().getRequest());
-	}
-
-	/**
-	 * Whether the session is invalid now, or will be invalidated by the end of
-	 * the request. Clients should rarely need to use this method if ever.
-	 * 
-	 * @return Whether the session is invalid when the current request is done
-	 * 
-	 * @see #invalidate()
-	 * @see #invalidateNow()
-	 */
-	public final boolean isSessionInvalidated()
-	{
-		return sessionInvalidated;
-	}
-
-	/**
-	 * Called on the end of handling a request, when the RequestCycle is about
-	 * to be detached from the current thread.
-	 * 
-	 * @see org.apache.wicket.Session#detach()
-	 */
-	protected void detach()
-	{
-		if (sessionInvalidated)
-		{
-			invalidateNow();
-		}
-	}
-
-	/**
-	 * Updates the session, e.g. for replication purposes.
-	 */
-	protected void update()
-	{
-		if (sessionInvalidated == false)
-		{
-			super.update();
-		}
 	}
 }
