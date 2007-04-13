@@ -46,8 +46,8 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  * This page uses a form post right after the page has loaded in the browser,
  * using JavaScript or alternative means to detect and pass on settings to the
  * embedded form. The form submit method updates this session's
- * {@link org.apache.wicket.request.ClientInfo} object and then redirects to the original
- * location as was passed in as a URL argument in the constructor.
+ * {@link org.apache.wicket.request.ClientInfo} object and then redirects to the
+ * original location as was passed in as a URL argument in the constructor.
  * </p>
  * <p>
  * This page is being used by the default implementation of
@@ -234,8 +234,10 @@ public class BrowserInfoPage extends WebPage
 			properties.setNavigatorAppName(navigatorAppName);
 			properties.setNavigatorAppVersion(navigatorAppVersion);
 			properties.setNavigatorAppCodeName(navigatorAppCodeName);
-			properties.setCookiesEnabled(navigatorCookieEnabled.booleanValue());
-			properties.setJavaEnabled(navigatorJavaEnabled.booleanValue());
+			properties.setCookiesEnabled((navigatorCookieEnabled != null) ? navigatorCookieEnabled
+					.booleanValue() : false);
+			properties.setJavaEnabled((navigatorJavaEnabled != null) ? navigatorJavaEnabled
+					.booleanValue() : false);
 			properties.setNavigatorLanguage(navigatorLanguage);
 			properties.setNavigatorPlatform(navigatorPlatform);
 			properties.setNavigatorUserAgent(navigatorUserAgent);
