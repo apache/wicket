@@ -67,12 +67,12 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	}
 
 	/**
-	 * Not implemented, throws {@link NotImplementedException}
+	 * Not implemented, throws {@link WicketRuntimeException}
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	public long length()
 	{
-		throw new NotImplementedException();
+		throw new WicketRuntimeException("Not implemented");
 	}
 
 	public void close() throws IOException
