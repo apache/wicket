@@ -23,6 +23,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.wicket.util.io.Streams;
 
 public class SimpleGetCommand extends AbstractGetCommand {
 
@@ -86,7 +87,7 @@ public class SimpleGetCommand extends AbstractGetCommand {
 			int code = client.executeMethod(method);
 			if (code != 200) {
 				log.error("ERROR! code: " + code);
-				log.error(method.getResponseBodyAsString());
+				log.error(Streams.readString(method.getResponseBodyAsStream()));
 				// TODO rather than failing, just gather statistics
 				// throw new Exception(new String(method.getResponseBody()));
 			}
