@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -108,7 +107,7 @@ public class MockServletContext implements ServletContext
 		uniqueKey += "-";
 		uniqueKey += String.valueOf(Math.random()).substring(2);
 
-		File tempDir = createTempDir("wicket" + UUID.randomUUID());
+		File tempDir = createTempDir("wicket" + uniqueKey);
 		attributes.put("javax.servlet.context.tempdir", tempDir);
 
 		mimeTypes.put("html", "text/html");
