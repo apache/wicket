@@ -104,7 +104,11 @@ public class MockServletContext implements ServletContext
 		// directory,
 		// and will be cleaned up with a mvn clean
 
-		final File tempDir = createTempDir("wicket" + UUID.randomUUID());
+		String uniqueKey = "" + System.currentTimeMillis();
+		uniqueKey += "-";
+		uniqueKey += String.valueOf(Math.random()).substring(2);
+
+		File tempDir = createTempDir("wicket" + UUID.randomUUID());
 		attributes.put("javax.servlet.context.tempdir", tempDir);
 
 		mimeTypes.put("html", "text/html");
