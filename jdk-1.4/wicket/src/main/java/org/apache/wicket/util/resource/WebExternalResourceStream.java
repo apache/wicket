@@ -28,8 +28,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.time.Time;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 
 /**
  * An {@link IResourceStream} that reads data from a file in the web application
