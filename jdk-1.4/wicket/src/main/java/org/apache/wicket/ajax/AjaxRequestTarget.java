@@ -142,7 +142,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private final class EncodingResponse extends WebResponse
+	private final class AjaxResponse extends WebResponse
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 
@@ -155,7 +155,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * 
 		 * @param originalResponse
 		 */
-		public EncodingResponse(Response originalResponse)
+		public AjaxResponse(Response originalResponse)
 		{
 			super(((WebResponse)originalResponse).getHttpServletResponse());
 			this.originalResponse = originalResponse;
@@ -235,13 +235,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * Create a response for component body and javascript that will escape
 	 * output to make it safe to use inside a CDATA block
 	 */
-	private final EncodingResponse encodingBodyResponse;
+	private final AjaxResponse encodingBodyResponse;
 
 	/**
 	 * Response for header contributon that will escape output to make it safe
 	 * to use inside a CDATA block
 	 */
-	private final EncodingResponse encodingHeaderResponse;
+	private final AjaxResponse encodingHeaderResponse;
 
 
 	/** the component instances that will be rendered */
@@ -258,8 +258,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	public AjaxRequestTarget()
 	{
 		Response response = RequestCycle.get().getResponse();
-		encodingBodyResponse = new EncodingResponse(response);
-		encodingHeaderResponse = new EncodingResponse(response);
+		encodingBodyResponse = new AjaxResponse(response);
+		encodingHeaderResponse = new AjaxResponse(response);
 	}
 
 	/**
@@ -390,7 +390,12 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
-
+		// detach the page if it was updated
+		if (markupIdToComponent.size() > 0)
+		{
+			final Component component = (Component)markupIdToComponent.values().iterator().next();
+			component.getPage().detach();
+		}
 	}
 
 	/**
@@ -441,50 +446,50 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
-			final Application app = Application.get();
+		final Application app = Application.get();
 
-			// Determine encoding
-			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
+		// Determine encoding
+		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
-			// Set content type based on markup type for page
-			final WebResponse response = (WebResponse)requestCycle.getResponse();
-			response.setCharacterEncoding(encoding);
-			response.setContentType("text/xml; charset=" + encoding);
+		// Set content type based on markup type for page
+		final WebResponse response = (WebResponse)requestCycle.getResponse();
+		response.setCharacterEncoding(encoding);
+		response.setContentType("text/xml; charset=" + encoding);
 
-			// Make sure it is not cached by a client
-			response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
-			response.setHeader("Cache-Control", "no-cache, must-revalidate");
-			response.setHeader("Pragma", "no-cache");
+		// Make sure it is not cached by a client
+		response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+		response.setHeader("Cache-Control", "no-cache, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
 
-			response.write("<?xml version=\"1.0\" encoding=\"");
-			response.write(encoding);
-			response.write("\"?>");
-			response.write("<ajax-response>");
+		response.write("<?xml version=\"1.0\" encoding=\"");
+		response.write(encoding);
+		response.write("\"?>");
+		response.write("<ajax-response>");
 
-			// invoke onbeforerespond event on listeners
-			fireOnBeforeRespondListeners();
+		// invoke onbeforerespond event on listeners
+		fireOnBeforeRespondListeners();
 
-			// normal behavior
-			Iterator it = prependJavascripts.iterator();
-			while (it.hasNext())
-			{
-				String js = (String)it.next();
-				respondInvocation(response, js);
-			}
+		// normal behavior
+		Iterator it = prependJavascripts.iterator();
+		while (it.hasNext())
+		{
+			String js = (String)it.next();
+			respondInvocation(response, js);
+		}
 
-			// process added components
-			respondComponents(response);
+		// process added components
+		respondComponents(response);
 
-			fireOnAfterRespondListeners(response);
+		fireOnAfterRespondListeners(response);
 
-			it = appendJavascripts.iterator();
-			while (it.hasNext())
-			{
-				String js = (String)it.next();
-				respondInvocation(response, js);
-			}
+		it = appendJavascripts.iterator();
+		while (it.hasNext())
+		{
+			String js = (String)it.next();
+			respondInvocation(response, js);
+		}
 
-			response.write("</ajax-response>");
+		response.write("</ajax-response>");
 	}
 
 	private void fireOnBeforeRespondListeners()
@@ -832,31 +837,33 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	/**
 	 * Header container component for ajax header contributions
+	 * 
 	 * @author Matej Knopp
 	 */
-	private static class AjaxHtmlHeaderContainer extends HtmlHeaderContainer 
+	private static class AjaxHtmlHeaderContainer extends HtmlHeaderContainer
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
+		 * 
 		 * @param id
 		 * @param target
 		 */
-		public AjaxHtmlHeaderContainer(String id, AjaxRequestTarget target) 
+		public AjaxHtmlHeaderContainer(String id, AjaxRequestTarget target)
 		{
 			super(id);
 			this.target = target;
 		}
-		
+
 		protected IHeaderResponse newHeaderResponse()
 		{
 			return target.getHeaderResponse();
 		}
-		
+
 		private transient AjaxRequestTarget target;
 	};
-	
+
 	/**
 	 * 
 	 * @param response
@@ -873,8 +880,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		// add or replace the container to page
-		Component oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID); 
-		
+		Component oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID);
+
 		if (oldHeader != null)
 		{
 			component.getPage().replace(header);
@@ -884,13 +891,13 @@ public class AjaxRequestTarget implements IRequestTarget
 			component.getPage().add(header);
 		}
 
-		// save old response, set new 
+		// save old response, set new
 		Response oldResponse = RequestCycle.get().setResponse(encodingHeaderResponse);
 
 		encodingHeaderResponse.reset();
 
 		// render the head of component and all it's children
-		
+
 		component.renderHead(header);
 
 		if (component instanceof MarkupContainer)
@@ -913,7 +920,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		// revert to old response
-		
+
 		RequestCycle.get().setResponse(oldResponse);
 
 		if (encodingHeaderResponse.getContents().length() != 0)
@@ -940,7 +947,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		headerRendering = false;
-		
+
 		if (oldHeader == null)
 			component.getPage().remove(header);
 		else
