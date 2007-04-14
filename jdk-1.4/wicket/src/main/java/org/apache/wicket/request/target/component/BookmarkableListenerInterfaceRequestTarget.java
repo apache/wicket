@@ -113,6 +113,10 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		}
 		RequestListenerInterface listenerInterface = RequestListenerInterface
 				.forName(interfaceName);
+		if (listenerInterface == null)
+		{
+			throw new WicketRuntimeException("unable to find listener interface " + interfaceName);
+		}
 		listenerInterface.invoke(page, component);
 	}
 
