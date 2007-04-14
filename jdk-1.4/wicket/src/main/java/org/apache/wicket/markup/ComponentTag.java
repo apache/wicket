@@ -394,16 +394,28 @@ public class ComponentTag extends MarkupElement
 		else
 		{
 			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
-			tag.id = id;
-			tag.setMarkupClass(this.markupClass);
-			tag.setHasNoCloseTag(this.hasNoCloseTag);
-			tag.setPath(this.path);
-			if (behaviors != null)
-			{
-				tag.behaviors = new ArrayList(behaviors.size());
-				tag.behaviors.addAll(behaviors);
-			}
+			copyPropertiesTo(tag);
 			return tag;
+		}
+	}
+	
+	/**
+	 * Copies all internal properties from this tag to <code>dest</code>.
+	 * This is basically cloning without instance creation.
+	 * 
+	 * @param dest
+	 *            tag whose properties will be set
+	 */
+	void copyPropertiesTo(ComponentTag dest)
+	{
+		dest.id = id;
+		dest.setMarkupClass(this.markupClass);
+		dest.setHasNoCloseTag(this.hasNoCloseTag);
+		dest.setPath(this.path);
+		if (behaviors != null)
+		{
+			dest.behaviors = new ArrayList(behaviors.size());
+			dest.behaviors.addAll(behaviors);
 		}
 	}
 

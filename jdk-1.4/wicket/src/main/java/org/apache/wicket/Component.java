@@ -958,7 +958,7 @@ public abstract class Component implements IClusterable
 	 * 
 	 * @return The model
 	 */
-	public IModel getModel()
+	public final IModel getModel()
 	{
 		// If model is null
 		if (model == null)

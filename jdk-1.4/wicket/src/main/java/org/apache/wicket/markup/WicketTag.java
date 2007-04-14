@@ -37,12 +37,25 @@ public class WicketTag extends ComponentTag
 	 * Constructor
 	 * 
 	 * @param tag
-	 *            The XML tag which this component tag is based upon.
+	 *            The XML tag which this wicket tag is based upon.
 	 */
 	public WicketTag(final XmlTag tag)
 	{
 		super(tag);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param tag
+	 *            The ComponentTag tag which this wicket tag is based upon.
+	 */
+	public WicketTag(final ComponentTag tag)
+	{
+		super(tag.getXmlTag());
+		tag.copyPropertiesTo(this);
+	}
+
 
 	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
