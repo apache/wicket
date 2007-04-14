@@ -92,7 +92,7 @@ public class SimpleGetCommand extends AbstractGetCommand {
 				// throw new Exception(new String(method.getResponseBody()));
 			}
 			if (getPrintResponse()) {
-				log.info("\n" + new String(method.getResponseBody()));
+				log.info("\n" + Streams.readString(method.getResponseBodyAsStream()));
 			}
 		} finally {
 			method.releaseConnection();
