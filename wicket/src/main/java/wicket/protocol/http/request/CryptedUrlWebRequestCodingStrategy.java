@@ -455,7 +455,26 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			{
 				return null;
 			}
-			return (String)this.parameterMap.get(key);
+
+			Object val = this.parameterMap.get(key);
+			if (val == null)
+			{
+				return null;
+			}
+			else if (val instanceof String[])
+			{
+				String[] arrayVal = (String[])val;
+				return arrayVal.length > 0 ? arrayVal[0] : null;
+			}
+			else if (val instanceof String)
+			{
+				return (String)val;
+			}
+			else
+			{
+				// never happens, just being defensive
+				return val.toString();
+			}
 		}
 
 		/**
@@ -477,7 +496,25 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			{
 				return null;
 			}
-			return (String[])this.parameterMap.get(key);
+
+			Object val = this.parameterMap.get(key);
+			if (val == null)
+			{
+				return null;
+			}
+			else if (val instanceof String[])
+			{
+				return (String[])val;
+			}
+			else if (val instanceof String)
+			{
+				return new String[] { (String)val };
+			}
+			else
+			{
+				// never happens, just being defensive
+				return new String[] { val.toString() };
+			}
 		}
 
 		/**
