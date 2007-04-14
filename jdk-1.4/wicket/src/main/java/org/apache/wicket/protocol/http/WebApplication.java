@@ -571,14 +571,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			configuration = getInitParameter(Application.CONFIGURATION);
 		}
-		// If no system parameter and not <init-param>, than check
+		// If no system parameter and no <init-param>, then check
 		// <context-param>
 		if (configuration == null)
 		{
 			configuration = getServletContext().getInitParameter(Application.CONFIGURATION);
 		}
 
-		// Development mode is default if not settings have been found
+		// Development mode is the default if no settings have been found
 		if (configuration != null)
 		{
 			configure(configuration, getInitParameter("sourceFolder"));
