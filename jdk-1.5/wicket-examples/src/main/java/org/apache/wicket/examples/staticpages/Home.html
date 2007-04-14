@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+	<head>
+		<title>Wicket Examples - stockquote</title>
+		<link rel="stylesheet" type="text/css" href="style.css"/>
+	</head>
+	<body>
+    <span wicket:id="mainNavigation"/>
+		<h1>Static Pages</h1>
+		<div style="border: 2px dotted #fc0; padding: 5px; margin-right: 25%;">
+			<p>These examples show how to serve files  (or more generally data
+			streams) by reusing the powerful Wicket concepts  like
+			<tt>IResourceStream</tt>, <tt>IRequestTarget</tt> and
+			<tt>IRequestTargetUrlCodingStrategy</tt>.</p>
+
+			<p>Static  pages are  stateless pages that do <b>not</b> make use of
+			Wicket Components, in fact those pages can  be also considered
+			dynamic if you take the example of an XSLT transform.</p>
+
+			<p>Here is an overview of the relevant classes:</p>
+
+			<ul>
+				<li><tt>URIRequestTargetUrlCodingStrategy</tt>: Request coding  strategy
+				that uses  a simple  URI, and allows for beautiful URLs.  This is
+				configured in the application's init method using
+				<tt>Application.mount()</tt>.</li>
+
+				<li><tt>XSLTResourceStream</tt>: IResourceStream that applies XSLT on an
+				IResourceStream</li>
+
+				<li><tt>WebExternalResourceStream</tt>: An IResourceStream that reads
+				data from a file in the web application</li>
+
+				<li><tt>PackageResourceStream</tt>: An IResourceStream that reads data
+				from a resource in the classpath</li>
+
+				<li><tt>FileResourceStream</tt>: if you serve files directly, be careful
+				to check that the requested file is below a given base directory
+				comparing the <tt>File.getCanonicalPath()</tt> of the requested file and
+				the base directory, otherwise your application will give read access to
+				the whole disk, and it can be easily exploited by malicious users who
+				forge the URL.</li>
+
+				<li>And all this made possible thanks to
+				<tt>ResourceStreamRequestTarget</tt> that is returned in
+				<tt>IRequestTargetUrlCodingStrategy.decode()</tt></li>
+			</ul>
+		</div>
+		<p><a wicket:id="hellostream">Hello World as a Static Page</a></p>
+		<p><a wicket:id="helloxslt">Hello World as a Static Page with XSLT
+			layout</a></p>
+
+		<p>NOTE: it is possible to serve any kind of content using this method, not
+		only HTML files.</p>
+	</body>
+</html>

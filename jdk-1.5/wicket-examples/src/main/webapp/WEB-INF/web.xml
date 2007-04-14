@@ -326,6 +326,15 @@
 	</filter>
 
 	<filter>
+		<filter-name>StaticPagesApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.staticpages.Application</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>RolesAuthApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -500,6 +509,11 @@
 	<filter-mapping>
 		<filter-name>StatelessApplication</filter-name>
 		<url-pattern>/stateless/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>StaticPagesApplication</filter-name>
+		<url-pattern>/staticpages/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
