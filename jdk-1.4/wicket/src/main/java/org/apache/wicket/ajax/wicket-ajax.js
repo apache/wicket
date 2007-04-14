@@ -888,7 +888,7 @@ Wicket.Ajax.Call.prototype = {
 			Wicket.Focus.attachFocusEvent();
 			// set the focus to the last component
 			
-//			window.setTimeout(function() { Wicket.Focus.requestFocus(); }, 0);	
+			Wicket.Focus.requestFocus();
 			this.request.done();
 			this.successHandler();
 			// continue to next step (which should make the processing stop, as success should be the final step)		
