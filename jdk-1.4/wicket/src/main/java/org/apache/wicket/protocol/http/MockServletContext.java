@@ -103,11 +103,10 @@ public class MockServletContext implements ServletContext
 		// directory,
 		// and will be cleaned up with a mvn clean
 
-		String uniqueKey = "" + System.currentTimeMillis();
-		uniqueKey += "-";
-		uniqueKey += String.valueOf(Math.random()).substring(2);
+		final String uniqueKey = String.valueOf(System.currentTimeMillis())
+				+ String.valueOf(Math.random()).substring(2);
 
-		File tempDir = createTempDir("wicket" + uniqueKey);
+		final File tempDir = createTempDir("wicket" + uniqueKey);
 		attributes.put("javax.servlet.context.tempdir", tempDir);
 
 		mimeTypes.put("html", "text/html");
