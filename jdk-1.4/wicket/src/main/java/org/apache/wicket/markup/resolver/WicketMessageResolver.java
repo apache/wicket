@@ -70,7 +70,6 @@ public class WicketMessageResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <body onload>
 		if (tag instanceof WicketTag)
 		{
 			WicketTag wtag = (WicketTag)tag;

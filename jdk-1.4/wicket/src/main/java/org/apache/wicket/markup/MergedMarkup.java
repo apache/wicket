@@ -88,66 +88,6 @@ public class MergedMarkup extends Markup
 	}
 
 	/**
-	 * Return the body onLoad attribute of the markup
-	 * 
-	 * @param markup
-	 * @return onLoad attribute
-	 */
-	private String getBodyOnLoadString(final Markup markup)
-	{
-		int i = 0;
-
-		// The markup must have a <wicket:head> region, else copying the
-		// body onLoad attributes doesn't make sense
-		for (; i < markup.size(); i++)
-		{
-			MarkupElement elem = markup.get(i);
-			if (elem instanceof WicketTag)
-			{
-				WicketTag tag = (WicketTag)elem;
-				if (tag.isClose() && tag.isHeadTag())
-				{
-					// Ok, we found <wicket:head>
-					break;
-				}
-				else if (tag.isMajorWicketComponentTag())
-				{
-					// Short cut: We found <wicket:panel> or <wicket:border>.
-					// There certainly will be no <wicket:head> later on.
-					return null;
-				}
-			}
-			else if (elem instanceof ComponentTag)
-			{
-				ComponentTag tag = (ComponentTag)elem;
-				if (TagUtils.isBodyTag(tag))
-				{
-					// Short cut: We found <body> but no <wicket:head>.
-					// There certainly will be no <wicket:head> later on.
-					return null;
-				}
-			}
-		}
-
-		// Found </wicket:head> => get body onLoad
-		for (; i < markup.size(); i++)
-		{
-			MarkupElement elem = markup.get(i);
-			if (elem instanceof ComponentTag)
-			{
-				ComponentTag tag = (ComponentTag)elem;
-				if (tag.isOpen() && TagUtils.isBodyTag(tag))
-				{
-					String onLoad = tag.getAttributes().getString("onload");
-					return onLoad;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Merge inherited and base markup.
 	 * 
 	 * @param markup
@@ -260,32 +200,6 @@ public class MergedMarkup extends Markup
 
 					// Add the <wicket:head> body from the derived markup.
 					copyWicketHead(markup, extendIndex);
-				}
-			}
-
-			// Make sure the body onLoad attribute from the extended markup is
-			// copied to the new markup
-			if (tag.isOpen() && TagUtils.isBodyTag(tag))
-			{
-				// Get the body onLoad attribute from derived markup
-				final String onLoad = getBodyOnLoadString(markup);
-
-				String onLoadBase = tag.getAttributes().getString("onload");
-				if (onLoadBase == null)
-				{
-					if (onLoad != null)
-					{
-						ComponentTag mutableTag = tag.mutable();
-						mutableTag.getAttributes().put("onload", onLoad);
-						element = mutableTag;
-					}
-				}
-				else if (onLoad != null)
-				{
-					onLoadBase += onLoad;
-					ComponentTag mutableTag = tag.mutable();
-					mutableTag.getAttributes().put("onload", onLoadBase);
-					element = mutableTag;
 				}
 			}
 

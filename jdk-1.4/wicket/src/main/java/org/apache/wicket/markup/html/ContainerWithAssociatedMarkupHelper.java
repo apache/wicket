@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.html;
 
-import java.util.Iterator;
-
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
@@ -30,7 +28,6 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.value.IValueMap;
 
 
 /**
@@ -41,9 +38,6 @@ import org.apache.wicket.util.value.IValueMap;
 public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 {
 	private static final long serialVersionUID = 1L;
-
-	/** True if body onLoad attribute modifiers have been attached */
-	private boolean checkedBody = false;
 
 	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
 	private boolean noMoreWicketHeadTagsAllowed = false;
@@ -104,15 +98,6 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				if (htmlContainer.okToRenderComponent(headerPart.getScope(), headerPart.getId()))
 				{
 					htmlContainer.autoAdd(headerPart);
-
-					// Check if the Panel/Border requires some <body
-					// onload=".."> attribute to be copied to the page's body
-					// tag.
-					if (checkedBody == false)
-					{
-						checkedBody = true;
-						checkBodyOnLoad();
-					}
 				}
 				else
 				{
@@ -135,57 +120,6 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 
 			// Position the stream after <wicket:head>
 			markupStream.skipComponent();
-		}
-	}
-
-	/**
-	 * Check if the Panel/Border requires some <body onload=".."> attribute to
-	 * be copied to the page's body tag.
-	 */
-	private void checkBodyOnLoad()
-	{
-		// Gracefully getAssociateMarkupStream. Throws no exception in case
-		// markup is not found
-		final MarkupStream associatedMarkupStream = container.getAssociatedMarkupStream(false);
-
-		// No associated markup => no body tag
-		if (associatedMarkupStream == null)
-		{
-			return;
-		}
-
-		// Remember the current position within markup, where we need to
-		// go back to, at the end.
-		int index = associatedMarkupStream.getCurrentIndex();
-
-		try
-		{
-			final Iterator iter = associatedMarkupStream.componentTagIterator();
-			while (iter.hasNext())
-			{
-				final ComponentTag tag = (ComponentTag)iter.next();
-				if (TagUtils.isBodyTag(tag))
-				{
-					IValueMap attributes = tag.getAttributes();
-					final String onLoad = attributes.getString(attributes.getKey("onload"));
-					if (onLoad != null)
-					{
-						// Attach an AttributeModifier to the body container
-						// which appends the new value to the onLoad
-						// attribute
-						container.getWebPage().getBodyContainer().addOnLoadModifier(onLoad,
-								container);
-					}
-
-					// There can only be one body tag
-					break;
-				}
-			}
-		}
-		finally
-		{
-			// Make sure we return to the orginal position in the markup
-			associatedMarkupStream.setCurrentIndex(index);
 		}
 	}
 

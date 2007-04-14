@@ -43,6 +43,9 @@ public class HtmlBodyContainer extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
+	/** The automatically assigned wicket:id to &gt;body&lt; tag */
+	public static final String BODY_ID = "_<body>";
+
 	/**
 	 * Construct
 	 * 

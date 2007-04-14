@@ -35,7 +35,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.html.internal.HtmlBodyContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.parser.filter.BodyOnLoadHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -80,14 +79,17 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
 			"cookies.js");
 
-	/** The body container */
-	private BodyContainer bodyContainer;
-
 	/**
 	 * The url compressor that will compress the urls by collapsing the
 	 * component path and listener interface
 	 */
 	private UrlCompressor compressor;
+
+	/**
+	 * Boolean flag that represents whether or not we have already added a
+	 * {@link HtmlBodyContainer} to this page or not
+	 */
+	private boolean bodyContainerAdded = false;
 
 	/**
 	 * Constructor. Having this constructor public means that your page is
@@ -144,17 +146,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * Get a facade to the body container for adding onLoad javascript to the
-	 * body tag.
-	 * 
-	 * @return The body container
-	 */
-	public BodyContainer getBodyContainer()
-	{
-		return bodyContainer;
-	}
-
-	/**
 	 * Gets the markup type for a WebPage, which is "html" by default. Support
 	 * for pages in another markup language, such as VXML, would require the
 	 * creation of a different Page subclass in an appropriate package under
@@ -206,47 +197,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	private void commonInit()
 	{
-		// Add a Body container if the associated markup contains a <body> tag
-		// get markup stream gracefully
-		MarkupStream markupStream = getAssociatedMarkupStream(false);
-		if (markupStream != null)
-		{
-			// The default <body> container. It can be accessed, replaced
-			// and attribute modifiers can be attached. <body> tags without
-			// wicket:id get automatically a wicket:id="body" assigned.
-			// find the body tag
-			while (markupStream.hasMore())
-			{
-				final MarkupElement element = markupStream.next();
-				if (element instanceof ComponentTag)
-				{
-					final ComponentTag tag = (ComponentTag)element;
-					if (tag.isOpen() && TagUtils.isBodyTag(tag))
-					{
-						// Add a default container if the tag has the default
-						// name
-						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
-						{
-							add(new HtmlBodyContainer(tag.getId()));
-						}
-						// remember the id of the tag
-						bodyContainer = new BodyContainer(this, tag.getId());
-						break;
-					}
-				}
-			}
-		}
-
 		// if automatic multi window support is on, add a page checker instance
 		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())
 		{
 			add(new PageMapChecker(this));
 		}
-
-		// TODO Post 1.2: If the concept proofs valuable we could add the header
-		// container the same way instead of using a resolver. The advantages
-		// would be that the header container be available at build time already
-		// and not only at render time.
 	}
 
 	/**
@@ -275,6 +230,46 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		}
 		return compressor;
 	}
+
+	protected void onAttach()
+	{
+		super.onAttach();
+
+		if (!bodyContainerAdded)
+		{
+			// Add a Body container if the associated markup contains a <body>
+			// tag get markup stream gracefully
+			MarkupStream markupStream = getAssociatedMarkupStream(false);
+			if (markupStream != null)
+			{
+				// The default <body> container. It can be accessed, replaced
+				// and attribute modifiers can be attached. <body> tags without
+				// wicket:id get automatically a wicket:id="body" assigned.
+				// find the body tag
+				while (markupStream.hasMore())
+				{
+					final MarkupElement element = markupStream.next();
+					if (element instanceof ComponentTag)
+					{
+						final ComponentTag tag = (ComponentTag)element;
+						if (tag.isOpen() && TagUtils.isBodyTag(tag))
+						{
+							// Add a default container if the tag has the
+							// default name
+							if (HtmlBodyContainer.BODY_ID.equals(tag.getId()))
+							{
+								add(new HtmlBodyContainer(tag.getId()));
+							}
+							bodyContainerAdded = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+	}
+
 
 	/**
 	 * 

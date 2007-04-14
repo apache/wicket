@@ -20,38 +20,23 @@ import java.text.ParseException;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.html.internal.HtmlBodyContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 
 
 /**
- * If you want to package and share ready-made components and if you want this
- * components to be easily pluggable than this component must have all the
- * relevant information. That includes javascript (inline or referenced file) as
- * well as CSS. With HTML these information have to be in the header of the
- * markup return to the browser. This is true for body onLoad attributes as
- * well. This markup inline filter detects &t;body&gt; tags with an 'onLoad'
- * attribute and which have <b>no</b> wicket:id attribute. The onLoad attribute
- * will be copied from the component's markup to the Page's markup to allow for
- * completely self-contained components. No changes to the Pages will be
- * necessary to use the component.
- * <p>
- * Note: The markup must contain a &lt;wicket:head&gt; tag which contains the
- * javascript and/or CSS to be copied to the Page's header.
- * <p>
- * Note: this handler is not relevant for Pages
+ * Marks the body tag with a special id so that HtmlBodyContainer can easily
+ * locate it and attach itself to it
  * 
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
  */
-public final class BodyOnLoadHandler extends AbstractMarkupFilter
+public final class BodyTagHandler extends AbstractMarkupFilter
 {
-	/** The automatically assigned wicket:id to &gt;body&lt; tag */
-	public static final String BODY_ID = "_<body>";
-
 	/**
 	 * Construct.
 	 */
-	public BodyOnLoadHandler()
+	public BodyTagHandler()
 	{
 	}
 
@@ -73,12 +58,12 @@ public final class BodyOnLoadHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
-		// must be <body onload="...">
+		// must be <body>
 		if (tag.isOpen() && "body".equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
 		{
 			if (tag.getId() == null)
 			{
-				tag.setId(BODY_ID);
+				tag.setId(HtmlBodyContainer.BODY_ID);
 			}
 		}
 

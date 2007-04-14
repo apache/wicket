@@ -25,7 +25,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
-import org.apache.wicket.markup.parser.filter.BodyOnLoadHandler;
+import org.apache.wicket.markup.parser.filter.BodyTagHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -134,7 +134,7 @@ public class MarkupParser
 			if (containerInfo != null)
 			{
 				appendMarkupFilter(new WicketMessageTagHandler());
-				appendMarkupFilter(new BodyOnLoadHandler());
+				appendMarkupFilter(new BodyTagHandler());
 
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
