@@ -82,7 +82,10 @@ public class WebResponse extends Response
 	 */
 	public void addCookie(final Cookie cookie)
 	{
-		getHttpServletResponse().addCookie(cookie);
+		if (httpServletResponse != null)
+		{
+			httpServletResponse.addCookie(cookie);
+		}
 	}
 
 	/**
@@ -94,9 +97,12 @@ public class WebResponse extends Response
 	 */
 	public void clearCookie(final Cookie cookie)
 	{
-		cookie.setMaxAge(0);
-		cookie.setValue(null);
-		addCookie(cookie);
+		if (httpServletResponse != null)
+		{
+			cookie.setMaxAge(0);
+			cookie.setValue(null);
+			addCookie(cookie);
+		}
 	}
 
 	/**
@@ -229,7 +235,10 @@ public class WebResponse extends Response
 	 */
 	public final void setContentType(final String mimeType)
 	{
-		httpServletResponse.setContentType(mimeType);
+		if (httpServletResponse != null)
+		{
+			httpServletResponse.setContentType(mimeType);
+		}
 	}
 
 	/**
@@ -237,7 +246,10 @@ public class WebResponse extends Response
 	 */
 	public void setContentLength(long length)
 	{
-		httpServletResponse.setContentLength((int)length);
+		if (httpServletResponse != null)
+		{
+			httpServletResponse.setContentLength((int)length);
+		}
 	}
 
 	/**
@@ -245,9 +257,12 @@ public class WebResponse extends Response
 	 */
 	public void setLastModifiedTime(Time time)
 	{
-		if (time != null && time.getMilliseconds() != -1)
+		if (httpServletResponse != null)
 		{
-			httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
+			if (time != null && time.getMilliseconds() != -1)
+			{
+				httpServletResponse.setDateHeader("Last-Modified", time.getMilliseconds());
+			}
 		}
 	}
 
@@ -265,7 +280,10 @@ public class WebResponse extends Response
 	 */
 	public final void setLocale(final Locale locale)
 	{
-		httpServletResponse.setLocale(locale);
+		if (httpServletResponse != null)
+		{
+			httpServletResponse.setLocale(locale);
+		}
 	}
 
 	/**
@@ -333,7 +351,10 @@ public class WebResponse extends Response
 	 */
 	public void setDateHeader(String header, long date)
 	{
-		httpServletResponse.setDateHeader(header, date);
+		if (httpServletResponse != null)
+		{
+			httpServletResponse.setDateHeader(header, date);
+		}
 	}
 
 
@@ -345,7 +366,10 @@ public class WebResponse extends Response
 	 */
 	public void setHeader(String header, String value)
 	{
-		httpServletResponse.setHeader(header, value);
+		if (httpServletResponse != null)
+		{
+			httpServletResponse.setHeader(header, value);
+		}
 	}
 
 	/**
