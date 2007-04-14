@@ -279,5 +279,7 @@ public class RequestListenerInterface
 
 		// Save this interface method by the non-qualified class name
 		interfaces.put(requestListenerInterface.getName(), requestListenerInterface);
+
+		log.info("registered listener interface " + this);
 	}
 }

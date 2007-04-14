@@ -631,7 +631,7 @@ public abstract class Application
 		{
 			// Load properties files used by all libraries
 			final Enumeration resources = getClass().getClassLoader().getResources(
-					"org.apache.wicket.properties");
+					"wicket.properties");
 			while (resources.hasMoreElements())
 			{
 				InputStream in = null;
