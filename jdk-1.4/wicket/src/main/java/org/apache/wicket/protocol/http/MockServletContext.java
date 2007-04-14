@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -99,10 +100,12 @@ public class MockServletContext implements ServletContext
 		}
 
 		// assume we're running in maven or an eclipse project created by maven,
-		// so the sessions directory will be created inside the target directory,
+		// so the sessions directory will be created inside the target
+		// directory,
 		// and will be cleaned up with a mvn clean
 
-		attributes.put("javax.servlet.context.tempdir", new File("target/work"));
+		final File tempDir = createTempDir("wicket" + UUID.randomUUID());
+		attributes.put("javax.servlet.context.tempdir", tempDir);
 
 		mimeTypes.put("html", "text/html");
 		mimeTypes.put("htm", "text/html");
@@ -560,5 +563,54 @@ public class MockServletContext implements ServletContext
 	public void setAttribute(final String name, final Object o)
 	{
 		attributes.put(name, o);
+	}
+
+	/**
+	 * Creates a temp directory
+	 * 
+	 * @param name
+	 * @return temp dir
+	 */
+	public static File createTempDir(String name)
+	{
+		String tempDir = System.getProperty("java.io.tmpdir");
+		if (tempDir == null || tempDir.trim().length() == 0)
+		{
+			throw new RuntimeException(
+					"Could not create a temporary directory. System's [[java.io.tmpdir]] property is not "
+							+ "properly set. Current value is [[" + tempDir
+							+ "]]. Set via [[java -Djava.io.tmpdir=/var/tmp]]");
+		}
+
+		if (!tempDir.endsWith(File.separator))
+		{
+			tempDir += File.separator;
+		}
+
+		tempDir += name;
+
+		File dir = new File(tempDir);
+
+		int counter = 0;
+		while (dir.exists())
+		{
+			dir = new File(dir.getAbsolutePath() + counter);
+			counter++;
+			if (counter > 100)
+			{
+				throw new RuntimeException("Could not create temporary directory [["
+						+ dir.getAbsolutePath() + "]] after attempting 100 tries");
+			}
+		}
+
+		if (!dir.mkdirs())
+		{
+			throw new RuntimeException("Could not create path for tempdir [["
+					+ dir.getAbsolutePath() + "]]");
+		}
+
+		dir.deleteOnExit();
+
+		return dir;
 	}
 }
