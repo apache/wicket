@@ -143,6 +143,14 @@ public final class AutoLinkResolver implements IComponentResolver
 
 		private final String anchor;
 
+		/** 
+		 * When using <wicket:link> to let Wicket lookup for pages and create 
+		 * the related links, it's not possible to change the "setAutoEnable"
+		 * property, which defaults to true. This affects the prototype 
+		 * because, sometimes designers _want_ links to be enabled.
+		 */
+		public static boolean autoEnable = true;
+		
 		/**
 		 * Construct
 		 * 
@@ -159,7 +167,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		{
 			super(id, pageClass, parameters);
 			this.anchor = anchor;
-			setAutoEnable(true);
+			setAutoEnable(autoEnable);
 		}
 
 		/**
