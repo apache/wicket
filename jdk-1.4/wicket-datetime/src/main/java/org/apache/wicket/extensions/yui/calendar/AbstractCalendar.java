@@ -225,7 +225,7 @@ public abstract class AbstractCalendar extends WebComponent
 	 */
 	public final String getJavascriptWidgetId()
 	{
-		return "YAHOO.org.apache.wicket." + getJavascriptId();
+		return "YAHOO.wicket." + getJavascriptId();
 	}
 
 	/**
