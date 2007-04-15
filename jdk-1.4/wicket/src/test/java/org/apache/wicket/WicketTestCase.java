@@ -118,8 +118,11 @@ public abstract class WicketTestCase extends TestCase
 
 	protected String getContentType()
 	{
-		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Type");
+		String contentType = ((MockHttpServletResponse)tester.getWicketResponse()
+				.getHttpServletResponse()).getHeader("Content-Type");
+		if (contentType == null)
+			throw new WicketRuntimeException("No Content-Type header found");
+		return contentType;
 	}
 
 	protected int getContentLength()
