@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.lang.PackageName;
@@ -87,21 +88,6 @@ public class UrlMountingTest extends TestCase
 	}
 
 	/**
-	 * Test direct access (with wicket parameters) to a mounted page including
-	 * (part of the) mount path.
-	 */
-	public void testDirectAccessToMountedPageWithExtraPath()
-	{
-		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/foo/bar/?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
-		tester.processRequestCycle();
-		tester.assertRenderedPage(TestPage.class);
-		
-		// NOTE: currently the resolve logic is to give priority
-	}
-
-	/**
 	 * Test direct access (with wicket parameters) to a mounted page that should
 	 * NOT be allowed due to the {@link ISecuritySettings#getEnforceMounts()}
 	 * setting being set to true.
@@ -126,6 +112,23 @@ public class UrlMountingTest extends TestCase
 		{
 			tester.getApplication().getSecuritySettings().setEnforceMounts(false);
 		}
+	}
+
+	/**
+	 * Test direct access (with wicket parameters) to a mounted page including
+	 * (part of the) mount path.
+	 * 
+	 * @see WebRequestCycleProcessor#resolve(org.apache.wicket.RequestCycle,
+	 *      org.apache.wicket.request.RequestParameters) for an explanation of
+	 *      this test
+	 */
+	public void testDirectAccessToMountedPageWithExtraPath()
+	{
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL(
+				"/foo/bar/?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
+		tester.processRequestCycle();
+		tester.assertRenderedPage(TestPage.class);
 	}
 
 	/**
