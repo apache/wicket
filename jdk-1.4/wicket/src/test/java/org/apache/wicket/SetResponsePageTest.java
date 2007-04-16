@@ -21,7 +21,7 @@ import org.apache.wicket.util.tester.WicketTester;
 
 public class SetResponsePageTest extends WicketTestCase
 {
-	// FIXME This test fails currently.  We need to fix this bug.
+	// FIXME This test fails currently. We need to fix this bug.
 	public void failing_testSetResponsePage()
 	{
 		WicketTester tester = new WicketTester(Page1.class);
@@ -31,6 +31,11 @@ public class SetResponsePageTest extends WicketTestCase
 		tester.processRequestCycle();
 		tester.assertRenderedPage(Page3.class);
 		tester.destroy();
+	}
+
+	public void testFoo()
+	{
+		// FIXME remove this when turning on the above test
 	}
 
 	public static class Page1 extends WebPage
