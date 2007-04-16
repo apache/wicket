@@ -156,9 +156,20 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		{
 			target = resolveHomePageTarget(requestCycle, requestParameters);
 		}
-		else
+
+		// NOTE we are doing the mount check as the last item, so that it will
+		// only be executed when everything else fails. This enables URLs like
+		// /foo/bar/?wicket:bookmarkablePage=my.Page to be resolved, where
+		// is either a valid mount or a non-valid mount. I (Eelco) am not
+		// absolutely sure this is a great way to go, but it seems to have been
+		// established as the default way of doing things. If we ever want to
+		// tighten the algorithm up, it should be combined by going back to
+		// mountless paths so that requests with Wicket parameters like
+		// 'bookmarkablePage' are always created and resolved in the same
+		// fashion. There is a test for this in UrlMountingTest.
+		if (target == null)
 		{
-			// check for a mount
+			// still null? check for a mount
 			IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
 
 			// If we've found a mount, only use it if the componentPath is null.
@@ -182,9 +193,10 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 				}
 			}
 		}
-
-		if (target != null)
+		else
 		{
+			// a target was found, but not by looking up a mount. check whether
+			// this is allowed
 			if (Application.get().getSecuritySettings().getEnforceMounts()
 					&& requestCodingStrategy.pathForTarget(target) != null)
 			{
@@ -195,15 +207,17 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 						+ ",session=" + Session.get() + "]");
 				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
 			}
-			return target;
 		}
-		else
+
+		if (target == null)
 		{
 			// if we get here, we have no regconized Wicket target, and thus
 			// regard this as a external (non-wicket) resource request on
 			// this server
 			return resolveExternalResource(requestCycle);
 		}
+
+		return target;
 	}
 
 	/**
