@@ -27,15 +27,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * It is transparent in the sense that all requests to access a child component
  * are forwarded to the parent (page) container.
  * <p>
- * Because this container is usually automatically created, it can accessed by
- * WebPage.getBodyContainer().
- * <p>
  * Though it is automatically created it may be replaced by adding you own
  * Component with id == BodyOnLoadHandler.BODY_ID to the Page.
- * <p>
- * Components and Behaviors which wish to modify e.g. the body onLoad attribute
- * may attach an AttributeModifier by means of <code>addOnLoadModifier()</code>
- * or <code>add(new AttributeModifier())</code>.
  * 
  * @author Juergen Donnerstag
  */
