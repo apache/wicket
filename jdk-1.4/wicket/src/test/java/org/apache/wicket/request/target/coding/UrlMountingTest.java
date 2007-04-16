@@ -29,7 +29,7 @@ import org.apache.wicket.util.tester.WicketTester;
 /**
  * Tests package resources.
  */
-public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
+public class UrlMountingTest extends TestCase
 {
 	private WicketTester tester;
 
@@ -74,17 +74,31 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 
 	/**
 	 * Test direct access (with wicket parameters) to a mounted page that should
-	 * be allowed.
+	 * be allowed. By default, enforcement is not turned on, so we don't set it
+	 * as a setting here.
 	 */
 	public void testDirectAccessToMountedPageAllowed()
 	{
-		tester.getApplication().getSecuritySettings().setEnforceMounts(false);
-
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
 				"?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
+	}
+
+	/**
+	 * Test direct access (with wicket parameters) to a mounted page including
+	 * (part of the) mount path.
+	 */
+	public void testDirectAccessToMountedPageWithExtraPath()
+	{
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL(
+				"/foo/bar/?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
+		tester.processRequestCycle();
+		tester.assertRenderedPage(TestPage.class);
+		
+		// NOTE: currently the resolve logic is to give priority
 	}
 
 	/**
@@ -107,6 +121,10 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 		catch (AbortWithWebErrorCodeException e)
 		{
 			assertEquals(e.getErrorCode(), HttpServletResponse.SC_FORBIDDEN);
+		}
+		finally
+		{
+			tester.getApplication().getSecuritySettings().setEnforceMounts(false);
 		}
 	}
 
