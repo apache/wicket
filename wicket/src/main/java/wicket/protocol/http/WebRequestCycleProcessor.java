@@ -27,8 +27,8 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Session;
-import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import wicket.request.AbstractRequestCycleProcessor;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
@@ -132,7 +132,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 				// : deny the request
 				log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target
 						+ ",session=" + Session.get() + "]");
-				target = new WebErrorCodeResponseTarget(HttpServletResponse.SC_FORBIDDEN, msg);
+				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
 			}
 			return target;
 		}
