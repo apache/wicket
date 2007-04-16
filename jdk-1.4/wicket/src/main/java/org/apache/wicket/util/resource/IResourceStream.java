@@ -57,7 +57,7 @@ public interface IResourceStream extends IModifiable, Serializable
 	/**
 	 * Gets the size of this resource
 	 * 
-	 * @return The size of this resource in the number of bytes
+	 * @return The size of this resource in the number of bytes, or -1 if unknown
 	 */
 	long length();
 

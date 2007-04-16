@@ -70,7 +70,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	 */
 	public long length()
 	{
-		throw new WicketRuntimeException("Not implemented");
+		return -1;
 	}
 
 	public void close() throws IOException
