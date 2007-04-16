@@ -1368,10 +1368,13 @@ public abstract class Session implements IClusterable, IConverterLocator
 	// TODO remove after deprecation release
 
 	/**
+	 * NOT TO BE CALLED BY FRAMEWORK USERS.
+	 * 
 	 * @deprecated obsolete method (was meant for internal book keeping really).
-	 *             Clients should use {@link #detach()} instead.
+	 *             Clients should override {@link #detach()} instead.
 	 */
 	protected final void update()
 	{
+		throw new UnsupportedOperationException();
 	}
 }
