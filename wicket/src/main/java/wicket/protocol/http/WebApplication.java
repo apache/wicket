@@ -270,12 +270,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
-		checkMountPath(encoder.getMountPath());
-
 		if (encoder == null)
 		{
 			throw new IllegalArgumentException("Encoder must be not null");
 		}
+		checkMountPath(encoder.getMountPath());
 
 		getRequestCycleProcessor().getRequestCodingStrategy().mount(encoder);
 	}
