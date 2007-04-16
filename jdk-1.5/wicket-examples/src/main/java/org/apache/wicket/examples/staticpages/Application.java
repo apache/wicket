@@ -44,7 +44,7 @@ public class Application extends WebApplication
 	protected void init()
 	{
 		// Hello World as a Static Page
-		mount("/docs", new URIRequestTargetUrlCodingStrategy("/docs")
+		mount(new URIRequestTargetUrlCodingStrategy("/docs")
 		{
 			@Override
 			public IRequestTarget decode(RequestParameters requestParameters)
@@ -55,13 +55,14 @@ public class Application extends WebApplication
 		});
 
 		// Hello World as a Static Page with XSLT layout
-		mount("/xsldocs", new URIRequestTargetUrlCodingStrategy("/xsldocs")
+		mount(new URIRequestTargetUrlCodingStrategy("/xsldocs")
 		{
 			@Override
 			public IRequestTarget decode(RequestParameters requestParameters)
 			{
 				String path = "/staticpages/" + getURI(requestParameters);
-				IResourceStream xslStream = new PackageResourceStream(Application.class, "layout.xsl");
+				IResourceStream xslStream = new PackageResourceStream(Application.class,
+						"layout.xsl");
 				IResourceStream docStream = new WebExternalResourceStream(path);
 				return new ResourceStreamRequestTarget(new XSLTResourceStream(xslStream, docStream));
 			}

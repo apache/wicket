@@ -115,6 +115,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	private final Map bufferedResponses = new HashMap();
 
+	/** the default request cycle processor implementation. */
+	private IRequestCycleProcessor requestCycleProcessor;
+
 	/**
 	 * the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
@@ -126,9 +129,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 
 	/** The WicketFilter that this application is attached to */
 	private WicketFilter wicketFilter;
-
-	/** the default request cycle processor implementation. */
-	private IRequestCycleProcessor requestCycleProcessor;
 
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
@@ -266,21 +266,17 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * Mounts an encoder at the given path.
 	 * 
-	 * @param path
-	 *            the path to mount the encoder on
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
+	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
-		checkMountPath(path);
-
 		if (encoder == null)
 		{
 			throw new IllegalArgumentException("Encoder must be not null");
 		}
 
-		getRequestCycleProcessor().getRequestCodingStrategy().mount(path, encoder);
+		getRequestCycleProcessor().getRequestCodingStrategy().mount(encoder);
 	}
 
 	/**
@@ -294,12 +290,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final void mount(final String path, final PackageName packageName)
 	{
-		checkMountPath(path);
 		if (packageName == null)
 		{
 			throw new IllegalArgumentException("PackageName cannot be null");
 		}
-		mount(path, new PackageRequestTargetUrlCodingStrategy(path, packageName));
+		mount(new PackageRequestTargetUrlCodingStrategy(path, packageName));
 	}
 
 	/**
@@ -312,9 +307,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final void mountBookmarkablePage(final String path, final Class bookmarkablePageClass)
 	{
-		checkMountPath(path);
-		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
-				null));
+		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass, null));
 	}
 
 	/**
@@ -330,8 +323,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	public final void mountBookmarkablePage(final String path, final String pageMapName,
 			final Class bookmarkablePageClass)
 	{
-		checkMountPath(path);
-		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
+		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
 				pageMapName));
 	}
 
@@ -345,8 +337,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final void mountSharedResource(final String path, final String resourceKey)
 	{
-		checkMountPath(path);
-		mount(path, new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
+		mount(new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
 	}
 
 	/**
@@ -429,30 +420,16 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final void unmount(String path)
 	{
-		checkMountPath(path);
 		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
 	}
 
 	/**
-	 * Checks mount path is valid.
-	 * 
-	 * @param path
-	 *            mount path
+	 * @return
+	 * @deprecated Replaced by {@link #getRequestCycleFactory()}
 	 */
-	private void checkMountPath(String path)
+	protected final IRequestCycleFactory getDefaultRequestCycleFactory()
 	{
-		if (path == null)
-		{
-			throw new IllegalArgumentException("Mount path cannot be null");
-		}
-		if (!path.startsWith("/"))
-		{
-			throw new IllegalArgumentException("Mount path has to start with '/'");
-		}
-		if (path.startsWith("/resources/") || path.equals("/resources"))
-		{
-			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
-		}
+		throw new UnsupportedOperationException("obsolete method. see getRequestCycleFactory");
 	}
 
 	/**
@@ -686,6 +663,25 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Creates a new RequestCycle for the given request and response using the
+	 * application's request cycle factory.
+	 * 
+	 * @param request
+	 *            The request
+	 * @param response
+	 *            The response
+	 * @return The new request cycle.
+	 */
+	final RequestCycle newRequestCycle(final Request request, final Response response)
+	{
+		return getRequestCycleFactory().newRequestCycle(this, request, response);
+	}
+
+	// TODO remove after deprecation release
+
+	/**
 	 * Returns the redirect map where the buffered render pages are stored in
 	 * and removes it immediately.
 	 * 
@@ -711,33 +707,5 @@ public abstract class WebApplication extends Application implements ISessionFact
 			return buffered;
 		}
 		return null;
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Creates a new RequestCycle for the given request and response using the
-	 * application's request cycle factory.
-	 * 
-	 * @param request
-	 *            The request
-	 * @param response
-	 *            The response
-	 * @return The new request cycle.
-	 */
-	final RequestCycle newRequestCycle(final Request request, final Response response)
-	{
-		return getRequestCycleFactory().newRequestCycle(this, request, response);
-	}
-
-	// TODO remove after deprecation release
-
-	/**
-	 * @return
-	 * @deprecated Replaced by {@link #getRequestCycleFactory()}
-	 */
-	protected final IRequestCycleFactory getDefaultRequestCycleFactory()
-	{
-		throw new UnsupportedOperationException("obsolete method. see getRequestCycleFactory");
 	}
 }

@@ -28,14 +28,12 @@ import org.apache.wicket.request.RequestParameters;
 public interface IRequestTargetUrlCodingStrategy
 {
 	/**
-	 * Gets the decoded request target.
+	 * Returns the path of the url where this request target is mounted on.
 	 * 
-	 * @param requestParameters
-	 *            the request parameters
-	 * @return the decoded request target
+	 * @return String The path of the url
 	 */
-	IRequestTarget decode(RequestParameters requestParameters);
-
+	String getMountPath();
+	
 	/**
 	 * Gets the encoded url for the provided request target. Typically, the
 	 * result will be prepended with a protocol specific prefix. In a servlet
@@ -48,6 +46,15 @@ public interface IRequestTargetUrlCodingStrategy
 	 * @return the encoded url
 	 */
 	CharSequence encode(IRequestTarget requestTarget);
+
+	/**
+	 * Gets the decoded request target.
+	 * 
+	 * @param requestParameters
+	 *            the request parameters
+	 * @return the decoded request target
+	 */
+	IRequestTarget decode(RequestParameters requestParameters);
 
 	/**
 	 * Gets whether this mounter is applicable for the provided request target.

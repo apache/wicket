@@ -48,11 +48,9 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 	public void testIndexedLink() throws Exception
 	{
 		tester.getApplication().mount(
-				"/test1",
 				new IndexedParamUrlCodingStrategy("/test1", BookmarkableHomePageLinksPage.class,
 						null));
 		tester.getApplication().mount(
-				"/test2",
 				new IndexedParamUrlCodingStrategy("/test2", BookmarkableHomePageLinksPage.class,
 						"mypagemap"));
 
