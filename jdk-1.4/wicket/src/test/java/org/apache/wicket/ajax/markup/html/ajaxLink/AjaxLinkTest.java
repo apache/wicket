@@ -39,6 +39,65 @@ public class AjaxLinkTest extends WicketTestCase
 	}
 
 	/**
+	 * If the AjaxLink is attached to an "a" tag the href value should be
+	 * replaced with "#" because we use the onclick to execute the javascript.
+	 */
+	public void testAnchorGetsHrefReplaced()
+	{
+		tester.startPage(AjaxLinkPage.class);
+
+		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
+
+		// It was a link to google in the markup, but should be replaced to "#"
+		assertTrue(ajaxLink.getAttributeIs("href", "#"));
+	}
+
+	/**
+	 * Tests setting the request target to a normal page request from an ajax
+	 * request.
+	 */
+	public void testFromAjaxRequestToNormalPage()
+	{
+		tester.startPage(AjaxLinkPageToNormalPage.class);
+		tester.assertRenderedPage(AjaxLinkPageToNormalPage.class);
+		Page page = tester.getLastRenderedPage();
+		Component ajaxLink = page.get("ajaxLink");
+		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
+		tester.executeBehavior(behavior);
+		tester.assertRenderedPage(NormalPage.class);
+	}
+
+	/**
+	 * Test that the onclick on ajax link has "return !wcall;" at the end. This
+	 * ensures that execution is not turned over to the href attribute, which
+	 * would then append # to the url.
+	 */
+	public void testJavascriptEndsWithReturn()
+	{
+		tester.startPage(AjaxLinkPage.class);
+
+		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
+
+		assertTrue(ajaxLink.getAttributeEndsWith("onclick", "return !wcall;"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testPage_2() throws Exception
+	{
+		executeTest(AjaxPage2.class, "AjaxPage2_ExpectedResult.html");
+
+		Page page = tester.getLastRenderedPage();
+		Component ajaxLink = page.get("ajaxLink");
+		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
+
+		executedBehavior(AjaxPage2.class, behavior, "AjaxPage2-1_ExpectedResult.html");
+	}
+
+
+	/**
 	 * 
 	 * @throws Exception
 	 */
@@ -60,48 +119,5 @@ public class AjaxLinkTest extends WicketTestCase
 		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
 
 		executedBehavior(AjaxPage2.class, behavior, "AjaxLinkWithBorderPage-1ExpectedResult.html");
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	public void testPage_2() throws Exception
-	{
-		executeTest(AjaxPage2.class, "AjaxPage2_ExpectedResult.html");
-
-		Page page = tester.getLastRenderedPage();
-		Component ajaxLink = page.get("ajaxLink");
-		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
-
-		executedBehavior(AjaxPage2.class, behavior, "AjaxPage2-1_ExpectedResult.html");
-	}
-
-	/**
-	 * Test that the onclick on ajax link has "return !wcall;" at the end. This
-	 * ensures that execution is not turned over to the href attribute, which
-	 * would then append # to the url.
-	 */
-	public void testJavascriptEndsWithReturn()
-	{
-		tester.startPage(AjaxLinkPage.class);
-
-		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
-
-		assertTrue(ajaxLink.getAttributeEndsWith("onclick", "return !wcall;"));
-	}
-
-	/**
-	 * If the AjaxLink is attached to an "a" tag the href value should be
-	 * replaced with "#" because we use the onclick to execute the javascript.
-	 */
-	public void testAnchorGetsHrefReplaced()
-	{
-		tester.startPage(AjaxLinkPage.class);
-
-		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
-
-		// It was a link to google in the markup, but should be replaced to "#"
-		assertTrue(ajaxLink.getAttributeIs("href", "#"));
 	}
 }
