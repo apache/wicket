@@ -26,7 +26,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.AccessStackPageMap.Access;
@@ -35,7 +34,6 @@ import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
-import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.Strings;
 
@@ -74,28 +72,14 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			if (mounted instanceof IBookmarkablePageRequestTarget)
 			{
 				IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
-				// the path was mounted, so return that directly
 				if (requestParameters.getComponentPath() != null
 						&& requestParameters.getInterfaceName() != null)
 				{
 					final String componentPath = requestParameters.getComponentPath();
 					final Page page = Session.get().getPage(requestParameters.getPageMapName(),
 							componentPath, requestParameters.getVersionNumber());
-
-					if (page != null && page.getClass() == bookmarkableTarget.getPageClass())
-					{
-						return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-								requestParameters.getInterfaceName(), requestParameters);
-					}
-					else
-					{
-						PageParameters params = new PageParameters(requestParameters
-								.getParameters());
-						return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-								.getPageMapName(), bookmarkableTarget.getPageClass(), params,
-								requestParameters.getComponentPath(), requestParameters
-										.getInterfaceName());
-					}
+					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+							requestParameters.getInterfaceName(), requestParameters);
 				}
 			}
 
