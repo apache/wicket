@@ -16,20 +16,11 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.util.resource.WebExternalResourceStream;
 
 
 /**
@@ -38,70 +29,32 @@ import org.apache.wicket.protocol.http.WebResponse;
  * Wicket servlet). NOTE: this target can only be used in a servlet environment
  * with {@link org.apache.wicket.protocol.http.WebRequestCycle}s.
  * 
+ * <p>
+ * <b>NOTE:</b> this class is a wrapper around
+ * {@link ResourceStreamRequestTarget#ResourceStreamRequestTarget(WebExternalResourceStream)},
+ * and kept for compatibility purposes.
+ * </p>
+ * 
  * @author Eelco Hillenius
  */
-public class WebExternalResourceRequestTarget implements IRequestTarget
+public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarget
 {
 	/** log. */
 	private static final Log log = LogFactory.getLog(WebExternalResourceRequestTarget.class);
 
 	/** the relative url of the external resource. */
-	private final String url;
+	private final String uri;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param url
+	 * @param uri
 	 *            the relative url of the external resource
 	 */
-	public WebExternalResourceRequestTarget(String url)
+	public WebExternalResourceRequestTarget(String uri)
 	{
-		if (url == null)
-		{
-			throw new IllegalArgumentException("Argument url must be not null");
-		}
-
-		this.url = url;
-	}
-
-	/**
-	 * Respond by trying to delegate getting the resource from the
-	 * {@link ServletContext} object and stream that to the client. If such a
-	 * resource is not found, a warning will be logged, and a 404 will be
-	 * issued.
-	 * 
-	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
-	 */
-	public void respond(RequestCycle requestCycle)
-	{
-		try
-		{
-			WebResponse webResponse = ((WebRequestCycle)requestCycle).getWebResponse();
-			final ServletContext context = ((WebApplication)requestCycle.getApplication())
-					.getServletContext();
-
-			final InputStream in = context.getResourceAsStream(url);
-			if (in != null)
-			{
-				// NOTE headers must be written before the body
-				// Set content type
-				webResponse.detectContentType(requestCycle, url);
-				// FIXME do we need to call webResponse.setContentLength()?
-				webResponse.write(in);
-			}
-			else
-			{
-				log.warn("the resource requested by request " + requestCycle.getRequest()
-						+ " was not found");
-				HttpServletResponse httpServletResponse = webResponse.getHttpServletResponse();
-				httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
-			}
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException("Cannot load static content for request "
-					+ requestCycle.getRequest(), e);
-		}
+		super(new WebExternalResourceStream(uri));
+		this.uri = uri;
 	}
 
 	/**
@@ -111,7 +64,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	 */
 	public final String getUrl()
 	{
-		return url;
+		return uri;
 	}
 
 	/**
@@ -129,7 +82,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 		if (obj instanceof WebExternalResourceRequestTarget)
 		{
 			WebExternalResourceRequestTarget that = (WebExternalResourceRequestTarget)obj;
-			return url.equals(that.url);
+			return uri.equals(that.uri);
 		}
 		return false;
 	}
@@ -140,7 +93,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	public int hashCode()
 	{
 		int result = "WebExternalResourceRequestTarget".hashCode();
-		result += url.hashCode();
+		result += uri.hashCode();
 		return 17 * result;
 	}
 
@@ -149,6 +102,6 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "[WebExternalResourceRequestTarget@" + hashCode() + " " + url + "]";
+		return "[WebExternalResourceRequestTarget@" + hashCode() + " " + uri + "]";
 	}
 }

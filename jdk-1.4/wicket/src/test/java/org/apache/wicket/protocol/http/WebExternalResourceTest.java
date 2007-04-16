@@ -25,6 +25,7 @@ import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 
@@ -46,18 +47,21 @@ public class WebExternalResourceTest extends WicketTestCase
 		in.close();
 		out.close();
 		tester = new WicketTester(new DummyWebApplication(), tempDir.getPath());
+		tester.setupRequestAndResponse();
+		// We fake the browser URL, otherwise Wicket doesn't know the requested URL and cannot guess the Content-Type
+		tester.getServletRequest().setPath("/index.html");
 	}
 
 	public void testWebExternalResourceRequestTarget() throws Exception
 	{
 		WebExternalResourceRequestTarget rt = new WebExternalResourceRequestTarget("/index.html");
-		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.setRequestTarget(rt);
 		tester.processRequestCycle(cycle);
 		assertTrue(getContentType().startsWith("text/html"));
 		// WebExternalResourceRequestTarget does not set Content-Length
 		// assertEquals(23, getContentLength());
+		tester.assertResultPage(WebExternalResourceTest.class, "index.html");
 	}
 
 	// FIXME WebExternalResourceStream does not implement length()
@@ -65,14 +69,12 @@ public class WebExternalResourceTest extends WicketTestCase
 	{
 		WebExternalResourceStream resource = new WebExternalResourceStream("/index.html");
 		ResourceStreamRequestTarget rt = new ResourceStreamRequestTarget(resource);
-		tester.setupRequestAndResponse();
-		// We fake the browser URL, otherwise Wicket doesn't know the requested URL and cannot guess the Content-Type
-		tester.getServletRequest().setPath("/index.html");
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.setRequestTarget(rt);
 		tester.processRequestCycle(cycle);
 		assertTrue(getContentType().startsWith("text/html"));
 		// WebExternalResourceStream does not set Content-Length
 		// assertEquals(23, getContentLength());
+		tester.assertResultPage(WebExternalResourceTest.class, "index.html");
 	}
 }
