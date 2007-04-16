@@ -63,28 +63,6 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		// First, see whether we can find any mount
 		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
 				.getRequestCodingStrategy();
-		IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
-
-		// If we've found a mount, only use it if the componentPath is null.
-		// Otherwise, we'll service it later with the components.
-		if (mounted != null)
-		{
-			if (mounted instanceof IBookmarkablePageRequestTarget)
-			{
-				IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
-				if (requestParameters.getComponentPath() != null
-						&& requestParameters.getInterfaceName() != null)
-				{
-					final String componentPath = requestParameters.getComponentPath();
-					final Page page = Session.get().getPage(requestParameters.getPageMapName(),
-							componentPath, requestParameters.getVersionNumber());
-					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-							requestParameters.getInterfaceName(), requestParameters);
-				}
-			}
-
-			return mounted;
-		}
 
 		final String path = requestParameters.getPath();
 		IRequestTarget target = null;
@@ -177,6 +155,32 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		else if (Strings.isEmpty(path) || ("/".equals(path)))
 		{
 			target = resolveHomePageTarget(requestCycle, requestParameters);
+		}
+		else
+		{
+			// check for a mount
+			IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
+
+			// If we've found a mount, only use it if the componentPath is null.
+			// Otherwise, we'll service it later with the components.
+			if (mounted != null)
+			{
+				target = mounted;
+
+				if (mounted instanceof IBookmarkablePageRequestTarget)
+				{
+					IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
+					if (requestParameters.getComponentPath() != null
+							&& requestParameters.getInterfaceName() != null)
+					{
+						final String componentPath = requestParameters.getComponentPath();
+						final Page page = Session.get().getPage(requestParameters.getPageMapName(),
+								componentPath, requestParameters.getVersionNumber());
+						target = resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+								requestParameters.getInterfaceName(), requestParameters);
+					}
+				}
+			}
 		}
 
 		if (target != null)
