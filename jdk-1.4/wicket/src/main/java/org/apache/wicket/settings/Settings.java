@@ -148,6 +148,14 @@ public final class Settings
 	private String defaultMarkupEncoding;
 
 	/**
+	 * Whether mounts should be enforced. If true, requests for mounted targets
+	 * have to done through the mounted paths. If, for instance, a bookmarkable
+	 * page is mounted to a path, a request to that same page via the
+	 * bookmarkablePage parameter will be denied.
+	 */
+	private boolean enforceMounts = false;
+
+	/**
 	 * Whether Wicket should try to get extensive client info by redirecting to
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
 	 * method is used by the default implementation of {@link #newClientInfo()},
@@ -506,6 +514,14 @@ public final class Settings
 	public String getDefaultMarkupEncoding()
 	{
 		return defaultMarkupEncoding;
+	}
+
+	/**
+	 * @see wicket.settings.ISecuritySettings#getEnforceMounts()
+	 */
+	public boolean getEnforceMounts()
+	{
+		return enforceMounts;
 	}
 
 	/**
@@ -940,6 +956,14 @@ public final class Settings
 	public void setDefaultMarkupEncoding(final String encoding)
 	{
 		this.defaultMarkupEncoding = encoding;
+	}
+
+	/**
+	 * @see wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
+	 */
+	public void setEnforceMounts(boolean enforce)
+	{
+		this.enforceMounts = enforce;
 	}
 
 	/**

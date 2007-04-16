@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.request.target.coding;
 
+import javax.servlet.http.HttpServletResponse;
+
 import junit.framework.TestCase;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.tester.WicketTester;
 
@@ -27,12 +31,12 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 {
-	WicketTester tester;
+	private WicketTester tester;
 
 	/**
 	 * Tests mounting.
 	 */
-	public void test1()
+	public void testBadRequest1()
 	{
 		tester.getServletRequest().setPath("/mount/XXXpoint");
 		assertNull(getRequestCodingStrategy());
@@ -41,7 +45,7 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 	/**
 	 * Tests mounting.
 	 */
-	public void test2()
+	public void testBadRequest2()
 	{
 		tester.getServletRequest().setPath("/mount/pointXXX");
 		assertNull(getRequestCodingStrategy());
@@ -50,29 +54,7 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 	/**
 	 * Tests mounting.
 	 */
-	public void test3()
-	{
-		tester.getServletRequest().setPath("/mount/point");
-		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
-		assertNotNull(ucs);
-		assertNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
-	}
-
-	/**
-	 * Tests mounting.
-	 */
-	public void test4()
-	{
-		tester.getServletRequest().setPath("/mount/point/TestPage");
-		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
-		assertNotNull(ucs);
-		assertNotNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
-	}
-
-	/**
-	 * Tests mounting.
-	 */
-	public void test5()
+	public void testBadRequest3()
 	{
 		tester.getServletRequest().setPath("/mount/point/nonexistent.TestPage");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
@@ -90,6 +72,93 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 		}
 	}
 
+	/**
+	 * Test direct access (with wicket parameters) to a mounted page that should
+	 * be allowed.
+	 */
+	public void testDirectAccessToMountedPageAllowed()
+	{
+		tester.getApplication().getSecuritySettings().setEnforceMounts(false);
+
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL(
+				"?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
+		tester.processRequestCycle();
+		tester.assertRenderedPage(TestPage.class);
+	}
+
+	/**
+	 * Test direct access (with wicket parameters) to a mounted page that should
+	 * NOT be allowed due to the {@link ISecuritySettings#getEnforceMounts()}
+	 * setting being set to true.
+	 */
+	public void testDirectAccessToMountedPageNotAllowed()
+	{
+		tester.getApplication().getSecuritySettings().setEnforceMounts(true);
+
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL(
+				"?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
+		try
+		{
+			tester.processRequestCycle();
+			fail("This request should not have been allowed");
+		}
+		catch (AbortWithWebErrorCodeException e)
+		{
+			assertEquals(e.getErrorCode(), HttpServletResponse.SC_FORBIDDEN);
+		}
+	}
+
+	/**
+	 * Test mount access to a mounted page that should be allowed.
+	 */
+	public void testMountAccessToMountedPageAllowed()
+	{
+		tester.getApplication().getSecuritySettings().setEnforceMounts(false);
+
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL("/mount/point/TestPage");
+		tester.processRequestCycle();
+		tester.assertRenderedPage(TestPage.class);
+	}
+
+	/**
+	 * Tests mounting.
+	 */
+	public void testValidMount1()
+	{
+		tester.getServletRequest().setPath("/mount/point");
+		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
+		assertNotNull(ucs);
+		assertNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
+	}
+
+	/**
+	 * Tests mounting.
+	 */
+	public void testValidMount2()
+	{
+		tester.getServletRequest().setPath("/mount/point/TestPage");
+		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
+		assertNotNull(ucs);
+		assertNotNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
+	}
+
+	/**
+	 * @return request coding strategy for this test.
+	 */
+	private IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
+	{
+		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
+				tester.getServletRequest());
+		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy()
+				.urlCodingStrategyForPath(relativePath);
+	}
+
+	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
@@ -97,16 +166,11 @@ public class PackageRequestTargetUrlCodingStrategyTest extends TestCase
 		tester.setupRequestAndResponse();
 	}
 
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
-	}
-
-	IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
-	{
-		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
-				tester.getServletRequest());
-		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy()
-				.urlCodingStrategyForPath(relativePath);
 	}
 }

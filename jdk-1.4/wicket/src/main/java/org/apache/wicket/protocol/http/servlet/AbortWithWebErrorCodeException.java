@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.AbortException;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
@@ -32,6 +34,8 @@ import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 public final class AbortWithWebErrorCodeException extends AbortException
 {
 	private static final long serialVersionUID = 1L;
+
+	private final int errorCode;
 
 	/**
 	 * Construct.
@@ -58,6 +62,18 @@ public final class AbortWithWebErrorCodeException extends AbortException
 	 */
 	public AbortWithWebErrorCodeException(int errorCode, String message)
 	{
+		this.errorCode = errorCode;
 		RequestCycle.get().setRequestTarget(new WebErrorCodeResponseTarget(errorCode, message));
+	}
+
+	/**
+	 * Gets the error code.
+	 * 
+	 * @return errorCode
+	 * @see HttpServletResponse
+	 */
+	public int getErrorCode()
+	{
+		return errorCode;
 	}
 }

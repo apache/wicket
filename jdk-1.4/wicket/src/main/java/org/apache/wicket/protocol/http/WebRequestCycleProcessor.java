@@ -16,7 +16,12 @@
  */
 package org.apache.wicket.protocol.http;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.AccessStackPageMap;
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
@@ -26,6 +31,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.AccessStackPageMap.Access;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
+import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
@@ -40,6 +46,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 {
+	private static final Log log = LogFactory.getLog(WebRequestCycleProcessor.class);
+
 	/**
 	 * Construct.
 	 */
@@ -54,11 +62,53 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 	public IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
+		// First, see whether we can find any mount
+		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+				.getRequestCodingStrategy();
+		IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
+
+		// If we've found a mount, only use it if the componentPath is null.
+		// Otherwise, we'll service it later with the components.
+		if (mounted != null)
+		{
+			if (mounted instanceof IBookmarkablePageRequestTarget)
+			{
+				IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
+				// the path was mounted, so return that directly
+				if (requestParameters.getComponentPath() != null
+						&& requestParameters.getInterfaceName() != null)
+				{
+					final String componentPath = requestParameters.getComponentPath();
+					final Page page = Session.get().getPage(requestParameters.getPageMapName(),
+							componentPath, requestParameters.getVersionNumber());
+
+					if (page != null && page.getClass() == bookmarkableTarget.getPageClass())
+					{
+						return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+								requestParameters.getInterfaceName(), requestParameters);
+					}
+					else
+					{
+						PageParameters params = new PageParameters(requestParameters
+								.getParameters());
+						return new BookmarkableListenerInterfaceRequestTarget(requestParameters
+								.getPageMapName(), bookmarkableTarget.getPageClass(), params,
+								requestParameters.getComponentPath(), requestParameters
+										.getInterfaceName());
+					}
+				}
+			}
+
+			return mounted;
+		}
+
 		final String path = requestParameters.getPath();
+		IRequestTarget target = null;
+
 		// See whether this request points to a bookmarkable page
 		if (requestParameters.getBookmarkablePageClass() != null)
 		{
-			return resolveBookmarkablePage(requestCycle, requestParameters);
+			target = resolveBookmarkablePage(requestCycle, requestParameters);
 		}
 		// See whether this request points to a rendered page
 		else if (requestParameters.getComponentPath() != null)
@@ -119,8 +169,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 					}
 					else
 					{
-						// TODO also this should work.. also forward port to
-						// 2.0!!!
+						// TODO also this should work..
 					}
 
 				}
@@ -128,7 +177,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			}
 			if (processRequest)
 			{
-				return resolveRenderedPage(requestCycle, requestParameters);
+				target = resolveRenderedPage(requestCycle, requestParameters);
 			}
 			else
 			{
@@ -138,57 +187,35 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		// See whether this request points to a shared resource
 		else if (requestParameters.getResourceKey() != null)
 		{
-			return resolveSharedResource(requestCycle, requestParameters);
+			target = resolveSharedResource(requestCycle, requestParameters);
 		}
 		// See whether this request points to the home page
 		else if (Strings.isEmpty(path) || ("/".equals(path)))
 		{
-			return resolveHomePageTarget(requestCycle, requestParameters);
+			target = resolveHomePageTarget(requestCycle, requestParameters);
 		}
 
-		// Lastly, see whether we can find any mount
-		IRequestTarget mounted = requestCycle.getProcessor().getRequestCodingStrategy()
-				.targetForRequest(requestParameters);
-
-		// If we've found a mount, only use it if the componentPath is null.
-		// Otherwise, we'll service it later with the components.
-		if (mounted != null)
+		if (target != null)
 		{
-			if (mounted instanceof IBookmarkablePageRequestTarget)
+			if (Application.get().getSecuritySettings().getEnforceMounts()
+					&& requestCodingStrategy.pathForTarget(target) != null)
 			{
-				IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
-				// the path was mounted, so return that directly
-				if (requestParameters.getComponentPath() != null
-						&& requestParameters.getInterfaceName() != null)
-				{
-					final String componentPath = requestParameters.getComponentPath();
-					final Page page = Session.get().getPage(requestParameters.getPageMapName(),
-							componentPath, requestParameters.getVersionNumber());
-
-					if (page != null && page.getClass() == bookmarkableTarget.getPageClass())
-					{
-						return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-								requestParameters.getInterfaceName(), requestParameters);
-					}
-					else
-					{
-						PageParameters params = new PageParameters(requestParameters
-								.getParameters());
-						return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-								.getPageMapName(), bookmarkableTarget.getPageClass(), params,
-								requestParameters.getComponentPath(), requestParameters
-										.getInterfaceName());
-					}
-				}
+				String msg = "Direct access not allowed for mounted targets";
+				// the target was mounted, but we got here via another path
+				// : deny the request
+				log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target
+						+ ",session=" + Session.get() + "]");
+				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
 			}
-			return mounted;
+			return target;
 		}
-
-
-		// if we get here, we have no regconized Wicket target, and thus
-		// regard this as a external (non-wicket) resource request on
-		// this server
-		return resolveExternalResource(requestCycle);
+		else
+		{
+			// if we get here, we have no regconized Wicket target, and thus
+			// regard this as a external (non-wicket) resource request on
+			// this server
+			return resolveExternalResource(requestCycle);
+		}
 	}
 
 	/**

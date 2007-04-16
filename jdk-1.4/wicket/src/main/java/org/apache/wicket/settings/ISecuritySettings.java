@@ -53,6 +53,16 @@ public interface ISecuritySettings
 	ICryptFactory getCryptFactory();
 
 	/**
+	 * Gets whether mounts should be enforced. If true, requests for mounted
+	 * targets have to done through the mounted paths. If, for instance, a
+	 * bookmarkable page is mounted to a path, a request to that same page via
+	 * the bookmarkablePage parameter will be denied.
+	 * 
+	 * @return Whether mounts should be enforced
+	 */
+	boolean getEnforceMounts();
+
+	/**
 	 * @return The listener
 	 * @see IUnauthorizedComponentInstantiationListener
 	 */
@@ -80,6 +90,17 @@ public interface ISecuritySettings
 	 * @param cryptFactory
 	 */
 	void setCryptFactory(ICryptFactory cryptFactory);
+
+	/**
+	 * Sets whether mounts should be enforced. If true, requests for mounted
+	 * targets have to done through the mounted paths. If, for instance, a
+	 * bookmarkable page is mounted to a path, a request to that same page via
+	 * the bookmarkablePage parameter will be denied.
+	 * 
+	 * @param enforce
+	 *            Whether mounts should be enforced
+	 */
+	void setEnforceMounts(boolean enforce);
 
 	/**
 	 * @param unauthorizedComponentInstantiationListener
