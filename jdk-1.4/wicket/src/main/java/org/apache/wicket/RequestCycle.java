@@ -1044,7 +1044,7 @@ public abstract class RequestCycle
 					// handle any events with that and generate a response in
 					// that same block
 					// NOTE: because of synchronization, we need to take the
-					// steps PROCESS_EVENS and RESPOND together
+					// steps PROCESS_EVENTS and RESPOND together
 					processEventsAndRespond();
 					break;
 				}
