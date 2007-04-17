@@ -573,10 +573,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		// attach components
-		it = markupIdToComponent.entrySet().iterator();
+		it = markupIdToComponent.values().iterator();
 		while (it.hasNext())
 		{
-			final Component component = (Component)((Entry)it.next()).getValue();
+			final Component component = (Component)it.next();
 			component.attach();
 		}
 
