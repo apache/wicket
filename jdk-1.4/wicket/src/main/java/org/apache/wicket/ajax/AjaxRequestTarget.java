@@ -546,10 +546,13 @@ public class AjaxRequestTarget implements IRequestTarget
 		Iterator it;
 
 		// process feedback
-		it = markupIdToComponent.entrySet().iterator();
+
+		// TODO do we need these special pre-attach feedback traversals all over
+		// the place?
+		it = markupIdToComponent.values().iterator();
 		while (it.hasNext())
 		{
-			final Component component = (Component)((Entry)it.next()).getValue();
+			final Component component = (Component)it.next();
 
 			if (component instanceof MarkupContainer)
 			{
@@ -571,6 +574,36 @@ public class AjaxRequestTarget implements IRequestTarget
 				((IFeedback)component).updateFeedback();
 			}
 		}
+
+		// we need to attach feedback components here because they are not
+		// attached in MarkupContainer#attachChildren()
+		it = markupIdToComponent.values().iterator();
+		while (it.hasNext())
+		{
+			final Component component = (Component)it.next();
+
+			if (component instanceof IFeedback)
+			{
+				component.attach();
+			}
+
+			if (component instanceof MarkupContainer)
+			{
+				MarkupContainer container = (MarkupContainer)component;
+
+				// collect feedback
+				container.visitChildren(IFeedback.class, new IVisitor()
+				{
+					public Object component(Component component)
+					{
+						component.attach();
+						return IVisitor.CONTINUE_TRAVERSAL;
+					}
+				});
+			}
+
+		}
+
 
 		// attach components
 		it = markupIdToComponent.values().iterator();
