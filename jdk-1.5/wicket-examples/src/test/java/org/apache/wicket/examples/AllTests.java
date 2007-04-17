@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.apache.wicket.examples.ajax.prototype.AjaxTest;
 import org.apache.wicket.examples.compref.ComprefTest;
 import org.apache.wicket.examples.encodings.EncodingTest;
@@ -33,8 +36,7 @@ import org.apache.wicket.examples.repeater.RepeaterTest;
 import org.apache.wicket.examples.signin2.Signin2Test;
 import org.apache.wicket.examples.template.TemplateTest;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import wicket.util.license.ApacheLicenceHeaderTest;
 
 import com.meterware.httpunit.HttpUnitOptions;
 
@@ -43,45 +45,6 @@ import com.meterware.httpunit.HttpUnitOptions;
  */
 public final class AllTests extends TestSuite
 {
-	/**
-	 * Construct.
-	 */
-	public AllTests()
-	{
-		super();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 * @param arg1
-	 */
-	public AllTests(Class arg0, String arg1)
-	{
-		super(arg0, arg1);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public AllTests(Class arg0)
-	{
-		super(arg0);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param arg0
-	 */
-	public AllTests(String arg0)
-	{
-		super(arg0);
-	}
-
 	/**
 	 * Suite method.
 	 * 
@@ -111,7 +74,47 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(RepeaterTest.class);
 		suite.addTestSuite(ImagesTest.class);
 		suite.addTestSuite(LibraryTest.class);
+		suite.addTestSuite(ApacheLicenceHeaderTest.class);
 		JettyTestCaseDecorator deco = new JettyTestCaseDecorator(suite);
 		return deco;
+	}
+
+	/**
+	 * Construct.
+	 */
+	public AllTests()
+	{
+		super();
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param arg0
+	 */
+	public AllTests(Class arg0)
+	{
+		super(arg0);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param arg0
+	 * @param arg1
+	 */
+	public AllTests(Class arg0, String arg1)
+	{
+		super(arg0, arg1);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param arg0
+	 */
+	public AllTests(String arg0)
+	{
+		super(arg0);
 	}
 }
