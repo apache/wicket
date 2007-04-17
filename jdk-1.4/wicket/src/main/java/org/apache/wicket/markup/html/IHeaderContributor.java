@@ -19,11 +19,26 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.IClusterable;
 
 /**
- * An interface to be implemented by components which are able to render the
- * header section associated with the markup. Default implementations are with
- * WebComponent and WebMarkupContainer.
+ * An interface to be implemented by components or behaviors that wish to
+ * contribute to the header section of the page.
+ * 
+ * Example:
+ * 
+ * <pre>
+ * class MyPanel extends Panel implements IHeaderContributor {
+ *    public MyPanel(String id) {
+ *      super(id);
+ *    }
+ *    
+ *    public void renderHead(IHeaderResponse response) {
+ *       response.renderOnLoadJavascript("alert('page loaded!');");
+ *    }
+ * } 
+ * </pre>
+ * 
  * 
  * @author Juergen Donnerstag
+ * @author Matej Knopp
  */
 public interface IHeaderContributor extends IClusterable
 {
