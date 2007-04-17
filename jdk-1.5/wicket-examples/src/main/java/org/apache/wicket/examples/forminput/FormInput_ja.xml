@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.TypeValidator">'${input}' は正しいURLではありません。</entry>
+	<entry key="inputForm.phoneNumberUS.TypeValidator">'${input}' は正しい電話番号ではありません。ุ</entry>
+	<entry key="use.locale">使用するロケール:</entry>
+	<entry key="default">standard</entry>
+	<entry key="input">input</entry>
+	<entry key="string">String</entry>
+	<entry key="integer">Integer</entry>
+	<entry key="double">Double</entry>
+	<entry key="date">Datum</entry>
+	<entry key="boolean">Boolean</entry>
+	<entry key="value.between.0.and.100">0から100の値</entry>
+	<entry key="valid.url">URL (有効なURLを入力してください)</entry>
+	<entry key="us.phone.number.mask">電話番号 (形式: '(###) ###-####')</entry>
+	<entry key="select.a.number">番号を選択してください</entry>
+	<entry key="select.one.or.more.numbers">1つ以上の番号を選択してください</entry>
+	<entry key="your.favorite.sites">お気に入り</entry>
+	<entry key="save">保存</entry>
+	<entry key="reset">リセット</entry>
+</properties>

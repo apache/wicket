@@ -22,6 +22,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringReader;
+import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.wicket.WicketRuntimeException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Utilities methods for working with input and output streams.
@@ -30,6 +47,12 @@ import java.io.Reader;
  */
 public final class Streams
 {
+	private static final String XML_PROPERTIES_DTD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<!-- DTD for properties -->" + "<!ELEMENT properties ( comment?, entry* ) >"
+			+ "<!ATTLIST properties" + " version CDATA #FIXED \"1.0\">"
+			+ "<!ELEMENT comment (#PCDATA) >" + "<!ELEMENT entry (#PCDATA) >" + "<!ATTLIST entry "
+			+ " key CDATA #REQUIRED>";
+
 	/**
 	 * Writes the input stream to the output stream. Input is done without a
 	 * Reader object, meaning that the input is copied in its raw form.
@@ -56,6 +79,100 @@ public final class Streams
 			bytesCopied += byteCount;
 		}
 		return bytesCopied;
+	}
+
+	/**
+	 * Loads properties from an XML input stream into the provided properties
+	 * object.
+	 * 
+	 * @param properties
+	 *            The object to load the properties into
+	 * @param inputStream
+	 * @throws IOException
+	 *             When the input stream could not be read from
+	 */
+	public static void loadFromXml(Properties properties, InputStream inputStream)
+			throws IOException
+	{
+		if (properties == null)
+		{
+			throw new IllegalArgumentException("properties must not be null");
+		}
+		if (inputStream == null)
+		{
+			throw new IllegalArgumentException("inputStream must not be null");
+		}
+
+		// TODO in a Wicket version that supports Java 5 (Wicket 2.0?), we can
+		// just use the loadFromXml method on java.util.Properties directly
+		// rather than manual as we do here
+
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setIgnoringElementContentWhitespace(true);
+		documentBuilderFactory.setValidating(true);
+		documentBuilderFactory.setCoalescing(true);
+		documentBuilderFactory.setIgnoringComments(true);
+		try
+		{
+			DocumentBuilder db = documentBuilderFactory.newDocumentBuilder();
+			db.setEntityResolver(new EntityResolver()
+			{
+				public InputSource resolveEntity(String publicId, String systemId)
+						throws SAXException
+				{
+					if (systemId.equals("http://java.sun.com/dtd/properties.dtd"))
+					{
+						InputSource inputSource;
+						inputSource = new InputSource(new StringReader(XML_PROPERTIES_DTD));
+						inputSource.setSystemId("http://java.sun.com/dtd/properties.dtd");
+						return inputSource;
+					}
+					else
+					{
+						throw new SAXException("Invalid system identifier: " + systemId);
+					}
+				}
+			});
+			db.setErrorHandler(new ErrorHandler()
+			{
+				public void error(SAXParseException e) throws SAXException
+				{
+					throw e;
+				}
+
+				public void fatalError(SAXParseException e) throws SAXException
+				{
+					throw e;
+				}
+
+				public void warning(SAXParseException e) throws SAXException
+				{
+					throw e;
+				}
+			});
+			InputSource is = new InputSource(inputStream);
+			Document doc = db.parse(is);
+			NodeList entries = ((Element)doc.getChildNodes().item(1)).getChildNodes();
+			int len = entries.getLength();
+			for (int i = (len > 0 && entries.item(0).getNodeName().equals("comment")) ? 1 : 0; i < len; i++)
+			{
+				Element entry = (Element)entries.item(i);
+				if (entry.hasAttribute("key"))
+				{
+					Node node = entry.getFirstChild();
+					String val = (node == null) ? "" : node.getNodeValue();
+					properties.setProperty(entry.getAttribute("key"), val);
+				}
+			}
+		}
+		catch (ParserConfigurationException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+		catch (SAXException e)
+		{
+			throw new WicketRuntimeException("invalid XML properties format", e);
+		}
 	}
 
 	/**

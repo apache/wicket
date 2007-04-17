@@ -29,10 +29,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
+import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.listener.IChangeListener;
+import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.util.watch.ModificationWatcher;
 
@@ -99,12 +102,13 @@ public class PropertiesFactory implements IPropertiesFactory
 
 	/**
 	 * 
-	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class, java.lang.String)
+	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class,
+	 *      java.lang.String)
 	 */
 	public Properties load(final Class clazz, final String path)
 	{
 		// Check the cache
-		Properties properties = (Properties) propertiesCache.get(path);
+		Properties properties = (Properties)propertiesCache.get(path);
 		if (properties != null)
 		{
 			// Return null, if no resource stream was found
@@ -165,14 +169,11 @@ public class PropertiesFactory implements IPropertiesFactory
 	{
 		// Make sure someone else didn't load our resources while we were
 		// waiting for the synchronized lock on the method
-		Properties props = (Properties) propertiesCache.get(key);
+		Properties props = (Properties)propertiesCache.get(key);
 		if (props != null)
 		{
 			return props;
 		}
-
-		// Do the resource load
-		final java.util.Properties properties = new java.util.Properties();
 
 		if (resourceStream == null)
 		{
@@ -186,32 +187,33 @@ public class PropertiesFactory implements IPropertiesFactory
 			{
 				try
 				{
-					// Get the InputStream 
+					// Get the InputStream
 					BufferedInputStream in = new BufferedInputStream(resourceStream
 							.getInputStream());
-					
+
 					// Determine if resource is a XML File
-//					boolean loadAsXml = false;
-//					if (resourceStream instanceof IFixedLocationResourceStream)
-//					{
-//						String location = ((IFixedLocationResourceStream)resourceStream)
-//								.locationAsString();
-//						if (location != null)
-//						{
-//							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
-//							if ("xml".equals(ext))
-//							{
-//								loadAsXml = true;
-//							}
-//						}
-//					}
-//
-//					// Load the properties
-//					if (loadAsXml)
-//					{
-//						properties.loadFromXML(in);
-//					}
-//					else
+					boolean loadAsXml = false;
+					if (resourceStream instanceof IFixedLocationResourceStream)
+					{
+						String location = ((IFixedLocationResourceStream)resourceStream)
+								.locationAsString();
+						if (location != null)
+						{
+							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
+							if ("xml".equals(ext))
+							{
+								loadAsXml = true;
+							}
+						}
+					}
+
+					// Load the properties
+					java.util.Properties properties = new java.util.Properties();
+					if (loadAsXml)
+					{
+						Streams.loadFromXml(properties, in);
+					}
+					else
 					{
 						properties.load(in);
 					}
@@ -273,7 +275,7 @@ public class PropertiesFactory implements IPropertiesFactory
 							+ "from the cache. Resource: " + resourceStream);
 
 					// Clear the whole cache as associated localized files may
-					// be affected and may need reloading as well. 
+					// be affected and may need reloading as well.
 					clearCache();
 
 					// Inform all listeners

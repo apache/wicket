@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.TypeValidator">'${input}' یک آدرس معتبر نمی باشد</entry>
+	<entry key="inputForm.phoneNumberUS.TypeValidator">'${input}' یک شماره معتبر در ایالات متحده نمی باشุ</entry>
+	<entry key="use.locale">استفاده از محلی سازی:</entry>
+	<entry key="default">standard</entry>
+				<entry key="input">فرم ورودی</entry>
+				<entry key="string">رشته</entry>
+				<entry key="integer">عدد صحیح</entry>
+				<entry key="double">اعشاری بزرگ</entry>
+				<entry key="date">تاریخ</entry>
+				<entry key="boolean">متغیر بولی</entry>
+				<entry key="value.between.0.and.100">عدد بین 0 تا 100</entry>
+				<entry key="valid.url">آدرس (باید یک آدرس معتبر باشد)</entry>
+				<entry key="us.phone.number.mask">شماره تلفن ایالات متحده (ماسک: '(###) ###-####')</entry>
+				<entry key="select.a.number">یک شماره انتخاب کنید</entry>
+				<entry key="select.one.or.more.numbers">یک یا چند شماره انتخاب کنید (انتخاب گروهی)</entry>
+				<entry key="your.favorite.sites">سایت های محبوب شما</entry>
+				<entry key="save">ذخيره</entry>
+				<entry key="reset">بازنشاني</entry>
+</properties>
