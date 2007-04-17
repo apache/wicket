@@ -133,7 +133,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		}
 		else if (e instanceof PageExpiredException)
 		{
-			Class pageExpiredErrorPageClass = application.getApplicationSettings().getPageExpiredErrorPage();
+			Class pageExpiredErrorPageClass = application.getApplicationSettings()
+					.getPageExpiredErrorPage();
 			throw new RestartResponseException(pageExpiredErrorPageClass);
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
@@ -346,6 +347,15 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			final Page page, final String componentPath, final String interfaceName,
 			final RequestParameters requestParameters)
 	{
+		if (page == null)
+		{
+			throw new IllegalArgumentException("page must not be null");
+		}
+		if (interfaceName == null)
+		{
+			throw new IllegalArgumentException("interfaceName must not be null");
+		}
+
 		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
