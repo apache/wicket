@@ -576,8 +576,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		it = markupIdToComponent.values().iterator();
 		while (it.hasNext())
 		{
-			final Component component = (Component)it.next();
-			component.attach();
+			((Component)it.next()).attach();
 		}
 
 		// process component markup
