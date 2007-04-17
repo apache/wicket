@@ -34,7 +34,6 @@ import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
-import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -82,8 +81,6 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 				// we need to check if this request has been flagged as
 				// process-only-if-path-is-active and if so make sure this
 				// condition is met
-
-
 				if (requestParameters.isOnlyProcessIfPathActive())
 				{
 					// this request has indeed been flagged as
@@ -133,9 +130,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 					{
 						// TODO also this should work..
 					}
-
 				}
-
 			}
 			if (processRequest)
 			{
@@ -170,28 +165,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		if (target == null)
 		{
 			// still null? check for a mount
-			IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
-
-			// If we've found a mount, only use it if the componentPath is null.
-			// Otherwise, we'll service it later with the components.
-			if (mounted != null)
-			{
-				target = mounted;
-
-				if (mounted instanceof IBookmarkablePageRequestTarget)
-				{
-					IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
-					if (requestParameters.getComponentPath() != null
-							&& requestParameters.getInterfaceName() != null)
-					{
-						final String componentPath = requestParameters.getComponentPath();
-						final Page page = Session.get().getPage(requestParameters.getPageMapName(),
-								componentPath, requestParameters.getVersionNumber());
-						target = resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-								requestParameters.getInterfaceName(), requestParameters);
-					}
-				}
-			}
+			target = requestCodingStrategy.targetForRequest(requestParameters);
 		}
 		else
 		{
