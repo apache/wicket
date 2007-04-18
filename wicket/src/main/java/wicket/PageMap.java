@@ -241,6 +241,11 @@ public final class PageMap implements Serializable
 	 */
 	public final Session getSession()
 	{
+		if (session != Session.get())
+		{
+			log.error("Session [" + session.getId() + "]in pagemap wasn't the current session [" + Session.get().getId()+ "]");
+			session = Session.get();
+		}
 		return session;
 	}
 

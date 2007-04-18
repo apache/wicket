@@ -978,42 +978,6 @@ public abstract class Session implements Serializable
 				log.debug("update: Session not dirty.");
 			}
 		}
-
-		// Go through all dirty entries, replicating any dirty objects
-		List dirtyObjects = (List)Session.dirtyObjects.get();
-		if (dirtyObjects != null)
-		{
-			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
-			{
-				String attribute = null;
-				Object object = iterator.next();
-				if (object instanceof Page)
-				{
-					final Page page = (Page)object;
-					if (page.isStateless())
-					{
-						// check, can it be that stateless pages where added to
-						// the session?
-						// and should be removed now?
-						continue;
-					}
-					attribute = page.getPageMap().attributeForId(page.getNumericId());
-					if (getAttribute(attribute) == null)
-					{
-						// page removed by another thread. don't add it again.
-						continue;
-					}
-					object = page.getPageMapEntry();
-				}
-				else if (object instanceof PageMap)
-				{
-					attribute = attributeForPageMapName(((PageMap)object).getName());
-				}
-
-				setAttribute(attribute, object);
-			}
-			Session.dirtyObjects.set(null);
-		}
 	}
 
 	/**
@@ -1051,6 +1015,41 @@ public abstract class Session implements Serializable
 	 */
 	final void requestDetached()
 	{
+		// Go through all dirty entries, replicating any dirty objects
+		List dirtyObjects = (List)Session.dirtyObjects.get();
+		if (dirtyObjects != null)
+		{
+			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
+			{
+				String attribute = null;
+				Object object = iterator.next();
+				if (object instanceof Page)
+				{
+					final Page page = (Page)object;
+					if (page.isStateless())
+					{
+						// check, can it be that stateless pages where added to
+						// the session?
+						// and should be removed now?
+						continue;
+					}
+					attribute = page.getPageMap().attributeForId(page.getNumericId());
+					if (getAttribute(attribute) == null)
+					{
+						// page removed by another thread. don't add it again.
+						continue;
+					}
+					object = page.getPageMapEntry();
+				}
+				else if (object instanceof PageMap)
+				{
+					attribute = attributeForPageMapName(((PageMap)object).getName());
+				}
+
+				setAttribute(attribute, object);
+			}
+			Session.dirtyObjects.set(null);
+		}
 		if (pageMapsUsedInRequest != null)
 		{
 			synchronized (pageMapsUsedInRequest)
