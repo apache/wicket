@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -277,7 +278,15 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
+	 * If the model object exists, it is assumed to be a Collection, and it is
+	 * modified in-place. Then {@link Model#setObject(Object)} is called with
+	 * the same instance: it allows the Model to be notified of changes even
+	 * when {@link Model#getObject()} returns a different {@link Collection} at
+	 * every invocation.
+	 * 
 	 * @see FormComponent#updateModel()
+	 * @throws UnsupportedOperationException
+	 *             if the model object Collection cannot be modified
 	 */
 	public void updateModel()
 	{
