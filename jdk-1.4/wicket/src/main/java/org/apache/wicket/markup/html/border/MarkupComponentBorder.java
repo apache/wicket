@@ -16,11 +16,24 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import java.util.Locale;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentBorder;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.markup.MarkupFragment;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.ContainerInfo;
+import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupResourceStream;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
  * @TODO Comment
@@ -38,48 +51,10 @@ public class MarkupComponentBorder implements IComponentBorder
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 * @see wicket.IComponentBorder#renderAfter(wicket.Component)
-	 */
-	public void renderAfter(Component component)
-	{
-		final String extension;
-		if (component instanceof MarkupContainer)
-		{
-			extension = ((MarkupContainer)component).getMarkupType();
-		}
-		else
-		{
-			extension = component.getParent().getMarkupId();
-		}
-/*		MarkupFragment markupFragment = findMarkup(extension);
-		MarkupFragment childFragment = markupFragment.getWicketFragment(Border.BORDER, true);
-		List allElementsFlat = childFragment.getAllElementsFlat();
-		Response response = component.getResponse();
-		boolean render = false;
-		for (MarkupElement markupElement : allElementsFlat)
-		{
-			if (markupElement instanceof ComponentTag)
-			{
-				ComponentTag tag = (ComponentTag)markupElement;
-				if (tag.isWicketBodyTag())
-				{
-					render = true;
-					continue;
-				}
-				else if (tag.isBorderTag())
-				{
-					continue;
-				}
-			}
-			if (render)
-			{
-				response.write(markupElement.toCharSequence());
-			}
-		}
-*/
-	}
+	// markup stream associated with this border. bonus of keeping a reference
+	// is that when renderAfter starts the stream will be very close to its
+	// needed position because renderBefore has executed
+	private transient MarkupStream markupStream;
 
 	/**
 	 * 
@@ -87,52 +62,139 @@ public class MarkupComponentBorder implements IComponentBorder
 	 */
 	public void renderBefore(Component component)
 	{
-		final String extension;
-		if (component instanceof MarkupContainer)
+		final MarkupStream stream = getMarkupStream(component);
+		final Response response = component.getResponse();
+		stream.setCurrentIndex(0);
+
+		boolean insideBorderMarkup = false;
+		while (stream.hasMore())
 		{
-			extension = ((MarkupContainer)component).getMarkupType();
-		}
-		else
-		{
-			extension = component.getParent().getMarkupId();
-		}
-/*		
-		MarkupFragment markupFragment = findMarkup(extension);
-		MarkupFragment childFragment = markupFragment.getWicketFragment(Border.BORDER, true);
-		
-		List allElementsFlat = childFragment.getAllElementsFlat();
-		Response response = component.getResponse();
-		
-		for (MarkupElement markupElement : allElementsFlat)
-		{
-			if (markupElement instanceof ComponentTag)
+			MarkupElement e = stream.next();
+			if (e instanceof WicketTag)
 			{
-				ComponentTag ct = (ComponentTag)markupElement;
-				if (ct.isWicketBodyTag())
+				WicketTag wt = (WicketTag)e;
+				if (!insideBorderMarkup)
 				{
-					break;
+					if (wt.isBorderTag() && wt.isOpen())
+					{
+						insideBorderMarkup = true;
+					}
+					else
+					{
+						throw new WicketRuntimeException(
+								"Unexpected tag encountered in markup of component border "
+										+ getClass().getName() + ". Tag: " + wt.toString()
+										+ ", expected tag: <wicket:border>");
+					}
 				}
-				else if (ct.isBorderTag())
+				else
 				{
-					continue;
+					if (wt.isBodyTag())
+					{
+						break;
+					}
+					else
+					{
+						throw new WicketRuntimeException(
+								"Unexpected tag encountered in markup of component border "
+										+ getClass().getName() + ". Tag: " + wt.toString()
+										+ ", expected tag: <wicket:body> or </wicket:body>");
+					}
 				}
 			}
-			response.write(markupElement.toCharSequence());
+			if (insideBorderMarkup)
+			{
+				response.write(e.toCharSequence());
+			}
 		}
-*/
+
+		if (!stream.hasMore())
+		{
+			throw new WicketRuntimeException("Markup for component border " + getClass().getName()
+					+ " ended prematurely, was expecting </wicket:border>");
+		}
 	}
 
 	/**
 	 * 
-	 * @param extension
-	 * @return MarkupFragment
+	 * @see wicket.IComponentBorder#renderAfter(wicket.Component)
 	 */
-	private MarkupFragment findMarkup(final String extension)
+	public void renderAfter(Component component)
 	{
-/*
+		final MarkupStream stream = getMarkupStream(component);
+		final Response response = component.getResponse();
+
+		boolean insideBorderMarkup = false;
+		boolean complete = false;
+		while (stream.hasMore())
+		{
+			MarkupElement e = stream.next();
+			if (e instanceof WicketTag)
+			{
+				WicketTag wt = (WicketTag)e;
+				if (!insideBorderMarkup)
+				{
+					if (wt.isBodyTag() && (wt.isClose() || wt.isOpenClose()))
+					{
+						insideBorderMarkup = true;
+					}
+					else if (!(wt.isBorderTag() && wt.isOpen() || wt.isBodyTag()))
+					{
+						throw new WicketRuntimeException(
+								"Unexpected tag encountered in markup of component border "
+										+ getClass().getName() + ". Tag: " + wt.toString()
+										+ ", expected tag: <wicket:border> or <wicket:body>");
+					}
+				}
+				else
+				{
+					if (wt.isBorderTag() && wt.isClose())
+					{
+						complete = true;
+						break;
+					}
+					else
+					{
+						throw new WicketRuntimeException(
+								"Unexpected tag encountered in markup of component border "
+										+ getClass().getName() + ". Tag: " + wt.toString()
+										+ ", expected tag: </wicket:border>");
+					}
+				}
+			}
+			if (insideBorderMarkup)
+			{
+				response.write(e.toCharSequence());
+			}
+		}
+		if (!complete)
+		{
+			throw new WicketRuntimeException(
+					"Missing </wicket:border> tag in markup of markup component border: "
+							+ getClass().getName());
+		}
+	}
+
+	private MarkupStream getMarkupStream(Component component)
+	{
+		if (markupStream == null)
+		{
+			markupStream = findMarkupStream(component);
+		}
+		return markupStream;
+	}
+
+	private MarkupStream findMarkupStream(Component owner)
+	{
+		// TODO we should open up the api to do this for any class
+		// not just a
+		// MarkupContainer so all this logic does not have to be duplicated here
+		final String markupType = getMarkupType(owner);
+
 		// Get locator to search for the resource
-		final IResourceStreamFactory locator = Application.get().getResourceSettings()
-				.getResourceStreamFactory();
+		final IResourceStreamLocator locator = Application.get().getResourceSettings()
+				.getResourceStreamLocator();
+
 
 		final Session session = Session.get();
 		final String style = session.getStyle();
@@ -141,37 +203,58 @@ public class MarkupComponentBorder implements IComponentBorder
 		MarkupResourceStream markupResourceStream = null;
 		Class containerClass = getClass();
 
-		while (containerClass != MarkupComponentBorder.class)
+		while (!(containerClass.equals(MarkupComponentBorder.class)))
 		{
 			String path = containerClass.getName().replace('.', '/');
-			IResourceStream resourceStream = locator.newResourceStream(containerClass, path, style, locale,
-					extension);
+			IResourceStream resourceStream = locator.locate(containerClass, path, style, locale,
+					markupType);
 
 			// Did we find it already?
 			if (resourceStream != null)
 			{
 				ContainerInfo ci = new ContainerInfo(containerClass, locale, style, null,
-						extension, null);
+						markupType);
 				markupResourceStream = new MarkupResourceStream(resourceStream, ci, containerClass);
+
+				break; // TODO jcompagner: was this break missing here on
+				// purpose?
 			}
 
 			// Walk up the class hierarchy one level, if markup has not
 			// yet been found
 			containerClass = containerClass.getSuperclass();
 		}
-		MarkupFragment markup;
+
+		if (markupResourceStream == null)
+		{
+			throw new WicketRuntimeException("Could not find markup for component border `"
+					+ getClass().getName() + "`");
+		}
+
 		try
 		{
-			markup = Application.get().getMarkupSettings().getMarkupParserFactory()
-					.newMarkupParser(markupResourceStream).readAndParse();
+			Markup markup = Application.get().getMarkupSettings().getMarkupParserFactory()
+					.newMarkupParser().readAndParse(markupResourceStream);
+			return new MarkupStream(markup);
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException(e);
+			throw new WicketRuntimeException("Could not parse markup from markup resource stream: "
+					+ markupResourceStream.toString());
 		}
+	}
 
-		return markup;
-*/
-		return null;
+	private String getMarkupType(Component component)
+	{
+		String extension;
+		if (component instanceof MarkupContainer)
+		{
+			extension = ((MarkupContainer)component).getMarkupType();
+		}
+		else
+		{
+			extension = component.getParent().getMarkupId();
+		}
+		return extension;
 	}
 }

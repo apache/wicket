@@ -54,6 +54,24 @@ public class ContainerInfo
 	}
 
 	/**
+	 * Construct.
+	 * @param containerClass
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @param fileExtension
+	 */
+	public ContainerInfo(final Class containerClass, final Locale locale, final String style, final String variation, final String fileExtension)
+	{
+		super();
+		this.containerClass = containerClass;
+		this.locale = locale;
+		this.style = style;
+		this.variation = variation;
+		this.fileExtension = fileExtension;
+	}
+
+	/**
 	 * 
 	 * @return The container class
 	 */
