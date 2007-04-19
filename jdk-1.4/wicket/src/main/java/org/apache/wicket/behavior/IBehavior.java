@@ -56,7 +56,7 @@ public interface IBehavior extends IClusterable
 	 * Bind this handler to the given component. This method is called by the
 	 * host component immediately after this behavior is added to it. This
 	 * method is useful if you need to do initialization based on the component
-	 * it is attached can you can't wait to do it at render time. Keep in mind
+	 * it is attached and you can't wait to do it at render time. Keep in mind
 	 * that if you decide to keep a reference to the host component, it is not
 	 * thread safe anymore, and should thus only be used in situations where you
 	 * do not reuse the behavior for multiple components.
