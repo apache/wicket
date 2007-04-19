@@ -104,7 +104,7 @@ public class FormInput extends WicketExamplePage
 					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
-			add(new Label("multiplyLabel", new PropertyModel(getModel(), "multiply")));
+			add(new Label("multiplyLabel", new PropertyModel(getModel(), "multiply")).setComponentBorder(BeforeAndAfterBorder.INSTANCE));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
 			rc.setRequired(true);
