@@ -1,0 +1,192 @@
+/*
+Copyright (c) 2006, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.net/yui/license.txt
+Version 0.12
+*/
+
+.yui-calcontainer {
+	position:relative;
+	padding:5px !important;
+	background-color:#F7F9FB;
+	border:1px solid #7B9EBD !important;
+	float:left !important;
+	overflow:hidden !important;
+}
+
+.yui-calcontainer iframe {
+	position:absolute !important;
+	border:none !important;
+	margin:0 !important;padding:0 !important;
+	left:-1px !important;
+	top:-1px !important;
+	z-index:0 !important;
+	width:50em !important;
+	height:50em !important;
+}
+
+.yui-calcontainer.multi {
+	padding:0 !important;
+}
+
+.yui-calcontainer.multi .groupcal {
+	padding:5px !important;
+	background-color:transparent;
+	z-index:1 !important;
+	float:left !important;
+	position:relative !important;
+	border:none !important;
+}
+
+.yui-calcontainer .title {
+	font:100% sans-serif !important;
+	color:#000 !important;
+	font-weight:bold !important;
+	margin-bottom:5px !important;
+	height:25px !important;
+	position:absolute !important;
+	top:3px;left:5px !important;
+	z-index:1 !important;
+}
+
+.yui-calcontainer .close-icon {
+	position:absolute !important;
+	right:3px !important;
+	top:3px !important;
+	border:none !important;
+	z-index:1 !important;
+}
+
+/* Calendar element styles */
+
+.yui-calendar {
+	font:100% sans-serif !important;
+	text-align:center !important;
+	border-spacing:0 !important;
+	border-collapse:separate;
+	position:relative !important;
+}
+
+.yui-calcontainer.withtitle {
+	padding-top:1.5em !important;
+}
+
+.yui-calendar .calnavleft {
+	position:absolute !important;
+	background-repeat:no-repeat;
+	cursor:pointer !important;
+	top:2px !important;
+	bottom:0 !important;
+	width:9px !important;
+	height:12px !important;   
+	left:2px !important;
+	z-index:1 !important;
+}
+
+.yui-calendar .calnavright {
+	position:absolute !important;
+	background-repeat:no-repeat;
+	cursor:pointer !important;
+	top:2px !important;
+	bottom:0 !important;
+	width:9px !important;
+	height:12px !important;  
+	right:2px !important;
+	z-index:1 !important;
+}
+
+.yui-calendar td.calcell {
+	padding:.1em .2em !important;
+	border:1px solid #E0E0E0 !important;
+	text-align:center !important;
+}
+
+.yui-calendar td.calcell a {
+	color:#003DB8 !important;
+	text-decoration:none !important;
+}
+
+.yui-calendar td.calcell.today {
+	border:1px solid #000 !important;
+}
+
+.yui-calendar td.calcell.oom {
+	cursor:default !important;
+	color:#999 !important;
+	background-color:#EEE;
+	border:1px solid #E0E0E0 !important;
+}
+
+.yui-calendar td.calcell.selected {
+	color:#003DB8 !important;
+	background-color:#FFF19F;
+	border:1px solid #FF9900 !important;
+}
+
+.yui-calendar td.calcell.calcellhover {
+	cursor:pointer !important;
+	color:#FFF !important;
+	background-color:#FF9900;
+	border:1px solid #FF9900 !important;
+}
+
+.yui-calendar td.calcell.calcellhover a {
+	color:#FFF !important;
+}
+
+.yui-calendar td.calcell.restricted {
+	text-decoration:line-through !important;
+}
+
+.yui-calendar td.calcell.previous {
+	color:#CCC !important;
+}
+
+.yui-calendar td.calcell.highlight1 { background-color:#CCFF99 ; }
+.yui-calendar td.calcell.highlight2 { background-color:#99CCFF ; }
+.yui-calendar td.calcell.highlight3 { background-color:#FFCCCC ; }
+.yui-calendar td.calcell.highlight4 { background-color:#CCFF99 ; }
+
+.yui-calendar .calhead {
+	border:1px solid #E0E0E0 !important;
+	vertical-align:middle !important;
+	background-color:#FFF;
+	color: black !important;
+}
+
+.yui-calendar .calheader {
+	position:relative !important;
+	width:100% !important;
+	text-align:center !important;
+}
+
+.yui-calendar .calheader img {
+	border:none !important;
+}
+
+.yui-calendar .calweekdaycell {
+	color:#666 !important;
+	font-weight:normal !important;
+	text-align:center !important;
+	width:1.5em !important;
+}
+
+.yui-calendar .calfoot {
+	background-color:#EEE;
+}
+
+.yui-calendar .calrowhead, .yui-calendar .calrowfoot {
+	color:#666 !important;
+	font-size:9px !important;
+	font-style:italic !important;
+	font-weight:normal !important;
+	width:15px !important;
+}
+
+.yui-calendar .calrowhead {
+	border-right-width:2px !important;
+}
+
+/*Specific changes for calendar running under fonts/reset */
+.yui-calendar a:hover {background:inherit;}
+p#clear {clear:left !important; padding-top:10px !important;}

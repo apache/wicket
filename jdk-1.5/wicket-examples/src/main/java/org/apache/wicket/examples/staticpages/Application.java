@@ -1,0 +1,71 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.examples.staticpages;
+
+import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
+import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.basic.URIRequestTargetUrlCodingStrategy;
+import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.PackageResourceStream;
+import org.apache.wicket.util.resource.WebExternalResourceStream;
+import org.apache.wicket.util.resource.XSLTResourceStream;
+
+/**
+ * Examples for serving static files
+ * 
+ * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
+ */
+public class Application extends WebApplication
+{
+	@Override
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
+	@Override
+	protected void init()
+	{
+		// Hello World as a Static Page
+		mount(new URIRequestTargetUrlCodingStrategy("/docs")
+		{
+			@Override
+			public IRequestTarget decode(RequestParameters requestParameters)
+			{
+				String path = "/staticpages/" + getURI(requestParameters);
+				return new WebExternalResourceRequestTarget(path);
+			}
+		});
+
+		// Hello World as a Static Page with XSLT layout
+		mount(new URIRequestTargetUrlCodingStrategy("/xsldocs")
+		{
+			@Override
+			public IRequestTarget decode(RequestParameters requestParameters)
+			{
+				String path = "/staticpages/" + getURI(requestParameters);
+				IResourceStream xslStream = new PackageResourceStream(Application.class,
+						"layout.xsl");
+				IResourceStream docStream = new WebExternalResourceStream(path);
+				return new ResourceStreamRequestTarget(new XSLTResourceStream(xslStream, docStream));
+			}
+		});
+	}
+}

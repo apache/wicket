@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <link wicket:id="css" src="myStyle.css"/>
+  </head>
+  <body>
+    111<span wicket:id="label1">base label 1</span>222
+    <wicket:child><wicket:extend>
+    555<span wicket:id="label3">base label 3</span>666
+    <wicket:child><wicket:extend>
+   aaa<span wicket:id="label5">extension label</span>bbb
+</wicket:extend></wicket:child>
+    777<span wicket:id="label4">base label 4</span>888
+</wicket:extend></wicket:child>
+    333<span wicket:id="label2">base label 2</span>444
+  </body>
+</html>
