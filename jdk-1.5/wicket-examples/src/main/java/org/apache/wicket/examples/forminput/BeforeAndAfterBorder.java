@@ -19,7 +19,6 @@
  */
 package org.apache.wicket.examples.forminput;
 
-import org.apache.wicket.IComponentBorder;
 import org.apache.wicket.markup.html.border.MarkupComponentBorder;
 
 /**
@@ -28,5 +27,4 @@ import org.apache.wicket.markup.html.border.MarkupComponentBorder;
  */
 public class BeforeAndAfterBorder extends MarkupComponentBorder
 {
-	public static final IComponentBorder INSTANCE = new BeforeAndAfterBorder();
 }
