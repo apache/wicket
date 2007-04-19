@@ -294,6 +294,18 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addChildren(MarkupContainer parent, Class childCriteria)
 	{
+		if (parent == null)
+		{
+			throw new IllegalArgumentException("Argument `parent` cannot be null");
+		}
+		if (childCriteria == null)
+		{
+			throw new IllegalArgumentException(
+					"Argument `childCriteria` cannot be null. If you want to traverse all components use `"
+							+ Component.class.getName() + ".class` as the value for this argument");
+		}
+		
+		
 		parent.visitChildren(childCriteria, new Component.IVisitor()
 		{
 
@@ -368,7 +380,8 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	/**
 	 * Sets the focus in the browser to the given component. The markup id must
-	 * be set. If the component is null the focus will not be set to any component.
+	 * be set. If the component is null the focus will not be set to any
+	 * component.
 	 * 
 	 * @param component
 	 *            The component to get the focus or null.
