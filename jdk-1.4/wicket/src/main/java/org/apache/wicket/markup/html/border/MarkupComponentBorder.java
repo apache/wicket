@@ -36,7 +36,10 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
- * @TODO Comment
+ * This is a IComponentBorder implementation that can be used if you have
+ * markup that should be around a component. It works just like {@link Border}
+ * so you have to have a <wicket:border>HTML before<wicket:body/>HTML after</wicket:border>
+ * in the html of your subclass.
  * 
  * @author jcompagner
  */
@@ -78,6 +81,7 @@ public class MarkupComponentBorder implements IComponentBorder
 					if (wt.isBorderTag() && wt.isOpen())
 					{
 						insideBorderMarkup = true;
+						continue;
 					}
 					else
 					{
@@ -124,54 +128,25 @@ public class MarkupComponentBorder implements IComponentBorder
 		final MarkupStream stream = getMarkupStream(component);
 		final Response response = component.getResponse();
 
-		boolean insideBorderMarkup = false;
-		boolean complete = false;
 		while (stream.hasMore())
 		{
 			MarkupElement e = stream.next();
 			if (e instanceof WicketTag)
 			{
 				WicketTag wt = (WicketTag)e;
-				if (!insideBorderMarkup)
+				if (wt.isBorderTag() && wt.isClose())
 				{
-					if (wt.isBodyTag() && (wt.isClose() || wt.isOpenClose()))
-					{
-						insideBorderMarkup = true;
-					}
-					else if (!(wt.isBorderTag() && wt.isOpen() || wt.isBodyTag()))
-					{
-						throw new WicketRuntimeException(
-								"Unexpected tag encountered in markup of component border "
-										+ getClass().getName() + ". Tag: " + wt.toString()
-										+ ", expected tag: <wicket:border> or <wicket:body>");
-					}
+					break;
 				}
 				else
 				{
-					if (wt.isBorderTag() && wt.isClose())
-					{
-						complete = true;
-						break;
-					}
-					else
-					{
-						throw new WicketRuntimeException(
-								"Unexpected tag encountered in markup of component border "
-										+ getClass().getName() + ". Tag: " + wt.toString()
-										+ ", expected tag: </wicket:border>");
-					}
+					throw new WicketRuntimeException(
+							"Unexpected tag encountered in markup of component border "
+									+ getClass().getName() + ". Tag: " + wt.toString()
+									+ ", expected tag: </wicket:border>");
 				}
 			}
-			if (insideBorderMarkup)
-			{
-				response.write(e.toCharSequence());
-			}
-		}
-		if (!complete)
-		{
-			throw new WicketRuntimeException(
-					"Missing </wicket:border> tag in markup of markup component border: "
-							+ getClass().getName());
+			response.write(e.toCharSequence());
 		}
 	}
 
@@ -186,9 +161,6 @@ public class MarkupComponentBorder implements IComponentBorder
 
 	private MarkupStream findMarkupStream(Component owner)
 	{
-		// TODO we should open up the api to do this for any class
-		// not just a
-		// MarkupContainer so all this logic does not have to be duplicated here
 		final String markupType = getMarkupType(owner);
 
 		// Get locator to search for the resource
@@ -212,12 +184,9 @@ public class MarkupComponentBorder implements IComponentBorder
 			// Did we find it already?
 			if (resourceStream != null)
 			{
-				ContainerInfo ci = new ContainerInfo(containerClass, locale, style, null,
-						markupType);
+				ContainerInfo ci = new ContainerInfo(containerClass, locale, style,null, markupType);
 				markupResourceStream = new MarkupResourceStream(resourceStream, ci, containerClass);
-
-				break; // TODO jcompagner: was this break missing here on
-				// purpose?
+				break; 
 			}
 
 			// Walk up the class hierarchy one level, if markup has not
@@ -253,7 +222,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		}
 		else
 		{
-			extension = component.getParent().getMarkupId();
+			extension = component.getParent().getMarkupType();
 		}
 		return extension;
 	}
