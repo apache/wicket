@@ -286,6 +286,27 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * Visits all children of the specified parent container and adds them to
+	 * the target if they are of same type as <code>childCriteria</code>
+	 * 
+	 * @param parent
+	 * @param childCriteria
+	 */
+	public final void addChildren(MarkupContainer parent, Class childCriteria)
+	{
+		parent.visitChildren(childCriteria, new Component.IVisitor()
+		{
+
+			public Object component(Component component)
+			{
+				addComponent(component);
+				return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+			}
+
+		});
+	}
+
+	/**
 	 * Adds a component to the list of components to be rendered
 	 * 
 	 * @param component
