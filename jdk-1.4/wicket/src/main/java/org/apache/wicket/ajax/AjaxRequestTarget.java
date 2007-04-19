@@ -368,7 +368,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			throw new IllegalArgumentException(
 					"Component "
 							+ component.getClass().getName()
-							+ " has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hieararchy.");
+							+ " has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
 		}
 
 		markupIdToComponent.put(markupId, component);
