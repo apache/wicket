@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 
 /**
  * A Wicket panel component to draw and maintain a complete page navigator,
@@ -146,21 +147,19 @@ public class AjaxPagingNavigator extends PagingNavigator
 		// markup container.
 
 		Component container = ((Component)pageable);
-		if ((pageable instanceof MarkupContainer) && !(pageable instanceof ListView))
+		// no need for a nullcheck as there is bound to be a non-repeater
+		// somewhere higher in the hierarchy
+		while ((container instanceof AbstractRepeater))
 		{
-			container = (MarkupContainer)pageable;
-		}
-		else
-		{
-			container = ((Component)pageable).findParent(MarkupContainer.class);
+			container = container.getParent();
 		}
 		target.addComponent(container);
-		
+
 		// in case the navigator is not contained by the container, we have
 		// to add it to the response
 		if (((MarkupContainer)container).contains(this, true) == false)
 		{
 			target.addComponent(this);
-		}				
+		}
 	}
 }
