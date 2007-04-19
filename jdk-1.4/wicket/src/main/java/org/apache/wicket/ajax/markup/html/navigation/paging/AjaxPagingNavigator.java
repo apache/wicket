@@ -149,7 +149,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 		Component container = ((Component)pageable);
 		// no need for a nullcheck as there is bound to be a non-repeater
 		// somewhere higher in the hierarchy
-		while ((container instanceof AbstractRepeater))
+		while (container instanceof AbstractRepeater)
 		{
 			container = container.getParent();
 		}
