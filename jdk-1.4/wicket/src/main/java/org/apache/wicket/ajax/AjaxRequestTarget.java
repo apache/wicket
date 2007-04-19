@@ -347,24 +347,21 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	/**
 	 * Sets the focus in the browser to the given component. The markup id must
-	 * be set.
+	 * be set. If the component is null the focus will not be set to any component.
 	 * 
 	 * @param component
-	 *            The component to get the focus.
+	 *            The component to get the focus or null.
 	 */
 	public final void focusComponent(Component component)
 	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("component cannot be null");
-		}
-		if (component.getOutputMarkupId() == false)
+		if (component != null && component.getOutputMarkupId() == false)
 		{
 			throw new IllegalArgumentException(
 					"cannot update component that does not have setOutputMarkupId property set to true. Component: "
 							+ component.toString());
 		}
-		appendJavascript("Wicket.Focus.setFocusOnId('" + component.getMarkupId() + "');");
+		final String id = component != null ? component.getMarkupId() : null;
+		appendJavascript("Wicket.Focus.setFocusOnId('" + null + "');");
 	}
 
 
