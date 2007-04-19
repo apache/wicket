@@ -36,8 +36,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * A panel that displays {@link org.apache.wicket.feedback.FeedbackMessage}s in a list
- * view. The maximum number of messages to show can be set with
+ * A panel that displays {@link org.apache.wicket.feedback.FeedbackMessage}s in
+ * a list view. The maximum number of messages to show can be set with
  * setMaxMessages().
  * 
  * @see org.apache.wicket.feedback.FeedbackMessage
@@ -96,9 +96,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	private static final long serialVersionUID = 1L;
-
-	/** whether model messages should be HTML escaped. Default is true. */
-	private boolean escapeMessages = true;
 
 	/** Message view */
 	private final MessageListView messageListView;
@@ -194,7 +191,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public final boolean getEscapeMessages()
 	{
-		return escapeMessages;
+		return getEscapeModelStrings();
 	}
 
 	/**
@@ -240,7 +237,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public final void setEscapeMessages(boolean escapeMessages)
 	{
-		this.escapeMessages = escapeMessages;
+		setEscapeModelStrings(escapeMessages);
 	}
 
 	/**
@@ -338,8 +335,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	protected Component newMessageDisplayComponent(String id, FeedbackMessage message)
 	{
 		Label label = new Label(id, message.getMessage().toString());
-		label.setEscapeModelStrings(getEscapeMessages()
-				|| FeedbackPanel.this.getEscapeModelStrings());
+		label.setEscapeModelStrings(FeedbackPanel.this.getEscapeModelStrings());
 		return label;
 	}
 }
