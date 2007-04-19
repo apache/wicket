@@ -517,7 +517,6 @@ public class MockWebApplication
 		this.wicketRequest = this.application.newWebRequest(servletRequest);
 		this.wicketResponse = this.application.newWebResponse(servletResponse);
 		createRequestCycle();
-		this.wicketSession = (WebSession)Session.findOrCreate();
 		this.application.getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse.setAjax(wicketRequest.isAjax());
 	}

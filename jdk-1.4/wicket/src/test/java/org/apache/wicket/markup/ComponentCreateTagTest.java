@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup;
 
-import java.util.Locale;
-
 import org.apache.wicket.WicketTestCase;
 
 
@@ -92,7 +90,6 @@ public class ComponentCreateTagTest extends WicketTestCase
 	public void testRenderHomePage_6() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-		tester.getWicketSession().setLocale(Locale.ENGLISH);
 	    executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
 	}
 }
