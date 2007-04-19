@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.markup.MarkupStream;
+import java.util.Iterator;
+
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.collections.ReadOnlyIterator;
 
 /**
  * A very simple loop component whose model is an Integer defining the number of
@@ -34,7 +37,7 @@ import org.apache.wicket.model.Model;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class Loop extends WebMarkupContainer
+public abstract class Loop extends AbstractRepeater
 {
 	/**
 	 * Item container for a Loop iteration.
@@ -44,7 +47,7 @@ public abstract class Loop extends WebMarkupContainer
 	public static final class LoopItem extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** The iteration number */
 		private final int iteration;
 
@@ -111,7 +114,7 @@ public abstract class Loop extends WebMarkupContainer
 	protected void onAttach()
 	{
 		super.onAttach();
-		
+
 		// Remove any previous loop contents
 		removeAll();
 
@@ -145,42 +148,27 @@ public abstract class Loop extends WebMarkupContainer
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.Component#onRender(org.apache.wicket.markup.MarkupStream)
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
-	protected final void onRender(final MarkupStream markupStream)
+	protected Iterator renderIterator()
 	{
-		// Save position in markup stream
-		final int markupStart = markupStream.getCurrentIndex();
-
-		// Get number of iterations
 		final int iterations = getIterations();
-		if (iterations > 0)
+
+		return new ReadOnlyIterator()
 		{
-			// Loop through the markup in this container for each item
-			for (int iteration = 0; iteration < iterations; iteration++)
+			private int index = 0;
+
+			public boolean hasNext()
 			{
-				// Get item for iteration
-				final LoopItem item = (LoopItem)get(Integer.toString(iteration));
-
-				// Item should have been constructed in internalOnBeginRequest
-				if (item == null)
-				{
-					throw new WicketRuntimeException(
-							"Loop item is null.  Probably the number of loop iterations were changed between onBeginRequest and render time.");
-				}
-
-				// Rewind to start of markup for kids
-				markupStream.setCurrentIndex(markupStart);
-
-				// Render iteration
-				renderItem(item);
+				return index < iterations;
 			}
-		}
-		else
-		{
-			markupStream.skipComponent();
-		}
+
+			public Object next()
+			{
+				return get(Integer.toString(index++));
+			}
+
+		};
 	}
 
 	/**
@@ -190,6 +178,14 @@ public abstract class Loop extends WebMarkupContainer
 	 *            The iteration of the loop
 	 */
 	protected abstract void populateItem(LoopItem item);
+
+	/**
+	 * @param child
+	 */
+	protected final void renderChild(Component child)
+	{
+		renderItem((LoopItem)child);
+	}
 
 	/**
 	 * Renders this loop iteration.

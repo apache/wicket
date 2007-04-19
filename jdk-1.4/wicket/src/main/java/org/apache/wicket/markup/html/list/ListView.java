@@ -22,11 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.collections.ReadOnlyIterator;
 import org.apache.wicket.version.undo.Change;
 
 
@@ -34,7 +34,8 @@ import org.apache.wicket.version.undo.Change;
  * A ListView is a repeater that makes it easy to display/work with {@link List}s.
  * However, there are situations where it is necessary to work with other
  * collection types, for repeaters that might work better with non-list or
- * database-driven collections see the org.apache.wicket.markup.repeater package.
+ * database-driven collections see the org.apache.wicket.markup.repeater
+ * package.
  * 
  * Also notice that in a list the item's uniqueness/primary key/id is identified
  * as its index in the list. If this is not the case you should either override
@@ -105,7 +106,7 @@ import org.apache.wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public abstract class ListView extends WebMarkupContainer
+public abstract class ListView extends AbstractRepeater
 {
 	/** Index of the first item to show */
 	private int firstIndex = 0;
@@ -643,38 +644,28 @@ public abstract class ListView extends WebMarkupContainer
 	}
 
 	/**
-	 * 
-	 * @see org.apache.wicket.Component#onRender(org.apache.wicket.markup.MarkupStream)
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
-	protected void onRender(final MarkupStream markupStream)
+	protected Iterator renderIterator()
 	{
-		// Save position in markup stream
-		final int markupStart = markupStream.getCurrentIndex();
 
-		// Get number of items to be displayed
 		final int size = getViewSize();
-		if (size > 0)
+		return new ReadOnlyIterator()
 		{
-			// Loop through the markup in this container for each item
-			for (int i = 0; i < size; i++)
+			private int index = 0;
+
+			public boolean hasNext()
 			{
-				// Get index
-				final int index = firstIndex + i;
-
-				// Get list item for index
-				ListItem item = (ListItem)get(Integer.toString(index));
-
-				// Rewind to start of markup for kids
-				markupStream.setCurrentIndex(markupStart);
-
-				// Render
-				renderItem(item);
+				return index < size;
 			}
-		}
-		else
-		{
-			markupStream.skipComponent();
-		}
+
+			public Object next()
+			{
+				final String id = Integer.toString(firstIndex + index);
+				index++;
+				return get(id);
+			}
+		};
 	}
 
 	/**
@@ -698,6 +689,15 @@ public abstract class ListView extends WebMarkupContainer
 	 *            The item to populate
 	 */
 	protected abstract void populateItem(final ListItem item);
+
+
+	/**
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderChild(org.apache.wicket.Component)
+	 */
+	protected final void renderChild(Component child)
+	{
+		renderItem((ListItem)child);
+	}
 
 	/**
 	 * Render a single item.

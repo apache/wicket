@@ -19,8 +19,6 @@ package org.apache.wicket.markup.repeater;
 import java.util.Iterator;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 
@@ -73,7 +71,7 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class RepeatingView extends WebMarkupContainer
+public class RepeatingView extends AbstractRepeater
 {
 	/**
 	 * 
@@ -116,59 +114,11 @@ public class RepeatingView extends WebMarkupContainer
 	}
 
 	/**
-	 * Renders all child items in no specified order
-	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 */
-	protected void onRender(final MarkupStream markupStream)
-	{
-		final int markupStart = markupStream.getCurrentIndex();
-
-		Iterator it = renderIterator();
-		if (it.hasNext())
-		{
-			do
-			{
-				markupStream.setCurrentIndex(markupStart);
-				renderChild((Component)it.next());
-			}
-			while (it.hasNext());
-		}
-		else
-		{
-			markupStream.skipComponent();
-		}
-	}
-
-	/**
-	 * Returns an iterator for the collection of child components to be
-	 * rendered.
-	 * 
-	 * Child component are rendered in the order they are in the iterator. Since
-	 * we use the iterator returned by wicket's
-	 * <code>MarkupContainer#iterator()</code> method and that method does not
-	 * guarantee any kind of ordering neither do we. This method can be
-	 * overridden by subclasses to create an ordering scheme, see
-	 * <code>OrderedRepeatingView#renderIterator()</code>.
-	 * 
-	 * @return iterator over child components to be rendered
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderIterator()
 	 */
 	protected Iterator renderIterator()
 	{
 		return iterator();
-	}
-
-	/**
-	 * Render a single child. This method can be overridden to modify how a
-	 * single child component is rendered.
-	 * 
-	 * @param child
-	 *            Child component to be rendered
-	 */
-	protected void renderChild(final Component child)
-	{
-		child.render(getMarkupStream());
 	}
 
 }
