@@ -202,13 +202,22 @@ public abstract class NumberValidator extends AbstractValidator
 		return new DoubleMaximumValidator(maximum);
 	}
 
-	private static class RangeValidator extends NumberValidator
+	/**
+	 * Validator to check the number is within the specified range
+	 */
+	public static class RangeValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final long minimum;
 		private final long maximum;
 
-		private RangeValidator(long minimum, long maximum)
+		/**
+		 * Construct.
+		 * 
+		 * @param minimum
+		 * @param maximum
+		 */
+		public RangeValidator(long minimum, long maximum)
 		{
 			this.minimum = minimum;
 			this.maximum = maximum;
@@ -242,12 +251,20 @@ public abstract class NumberValidator extends AbstractValidator
 
 	}
 
-	private static class MinimumValidator extends NumberValidator
+	/**
+	 * Validator to check the number meets the minimum requirement
+	 */
+	public static class MinimumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final long minimum;
 
-		private MinimumValidator(long minimum)
+		/**
+		 * Construct.
+		 * 
+		 * @param minimum
+		 */
+		public MinimumValidator(long minimum)
 		{
 			this.minimum = minimum;
 		}
@@ -278,12 +295,15 @@ public abstract class NumberValidator extends AbstractValidator
 
 	}
 
-	private static class MaximumValidator extends NumberValidator
+	/**
+	 * Validator to check the number meets the maximum requirement
+	 */
+	public static class MaximumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final long maximum;
 
-		private MaximumValidator(long maximum)
+		public MaximumValidator(long maximum)
 		{
 			this.maximum = maximum;
 		}
@@ -312,13 +332,22 @@ public abstract class NumberValidator extends AbstractValidator
 		}
 	}
 
-	private static class DoubleRangeValidator extends NumberValidator
+	/**
+	 * Validator to check the double is within the specified range
+	 */
+	public static class DoubleRangeValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final double minimum;
 		private final double maximum;
 
-		private DoubleRangeValidator(double minimum, double maximum)
+		/**
+		 * Construct.
+		 * 
+		 * @param minimum
+		 * @param maximum
+		 */
+		public DoubleRangeValidator(double minimum, double maximum)
 		{
 			this.minimum = minimum;
 			this.maximum = maximum;
@@ -349,12 +378,19 @@ public abstract class NumberValidator extends AbstractValidator
 
 	}
 
-	private static class DoubleMinimumValidator extends NumberValidator
+	/**
+	 * Validator to check the double meets the minimum requirement
+	 */
+	public static class DoubleMinimumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final double minimum;
 
-		private DoubleMinimumValidator(double minimum)
+		/**
+		 * Construct.
+		 * @param minimum
+		 */
+		public DoubleMinimumValidator(double minimum)
 		{
 			this.minimum = minimum;
 		}
@@ -384,12 +420,19 @@ public abstract class NumberValidator extends AbstractValidator
 
 	}
 
-	private static class DoubleMaximumValidator extends NumberValidator
+	/**
+	 * Validator to check the double meets a maximum requirement
+	 */
+	public static class DoubleMaximumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final double maximum;
 
-		private DoubleMaximumValidator(double maximum)
+		/**
+		 * Construct.
+		 * @param maximum
+		 */
+		public DoubleMaximumValidator(double maximum)
 		{
 			this.maximum = maximum;
 		}

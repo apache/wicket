@@ -22,11 +22,9 @@ import org.apache.wicket.validation.IValidatable;
 
 
 /**
- * FIXME 2.0: ivaynberg: look over javadoc
- * 
- * A validator for strings that can be used for subclassing or use one of the
- * static factory methods to get the default string validators as range, maximum
- * or minimum.
+ * Validator for dealing with string lengths. Usually this validator is used
+ * through the static factory methods, but it and its inner classes can also be
+ * subclassed directly.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -142,19 +140,31 @@ public abstract class StringValidator extends AbstractValidator
 		return new ExactLengthValidator(length);
 	}
 
-	private static class LengthBetweenValidator extends StringValidator
+	/**
+	 * Validator to check if the length of the string is within some range
+	 */
+	public static class LengthBetweenValidator extends StringValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final int minimum;
 		private final int maximum;
 
-		private LengthBetweenValidator(int minimum, int maximum)
+		/**
+		 * Construct.
+		 * 
+		 * @param minimum
+		 * @param maximum
+		 */
+		public LengthBetweenValidator(int minimum, int maximum)
 		{
 			this.minimum = minimum;
 			this.maximum = maximum;
 
 		}
 
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -184,16 +194,28 @@ public abstract class StringValidator extends AbstractValidator
 
 	}
 
-	private static class MinimumLengthValidator extends StringValidator
+	/**
+	 * Validator to check if the length of the string meets a minumum
+	 * requirement
+	 */
+	public static class MinimumLengthValidator extends StringValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final int minimum;
 
-		private MinimumLengthValidator(int minimum)
+		/**
+		 * Construct.
+		 * 
+		 * @param minimum
+		 */
+		public MinimumLengthValidator(int minimum)
 		{
 			this.minimum = minimum;
 		}
 
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -220,12 +242,21 @@ public abstract class StringValidator extends AbstractValidator
 
 	}
 
-	private static class ExactLengthValidator extends StringValidator
+	/**
+	 * Validator to check if the length of the string is exactly the specified
+	 * length
+	 */
+	public static class ExactLengthValidator extends StringValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final int length;
 
-		private ExactLengthValidator(int length)
+		/**
+		 * Construct.
+		 * 
+		 * @param length
+		 */
+		public ExactLengthValidator(int length)
 		{
 			this.length = length;
 		}
@@ -256,7 +287,11 @@ public abstract class StringValidator extends AbstractValidator
 
 	}
 
-	private static class MaximumLengthValidator extends StringValidator
+	/**
+	 * Validator to check if the length of the string meets a maximum
+	 * requirement
+	 */
+	public static class MaximumLengthValidator extends StringValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final int maximum;
@@ -266,6 +301,9 @@ public abstract class StringValidator extends AbstractValidator
 			this.maximum = maximum;
 		}
 
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
