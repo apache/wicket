@@ -37,6 +37,6 @@ public class MarkupComponentBorderTestPage extends WebPage
 	 */
 	public MarkupComponentBorderTestPage()
 	{
-	    add(new Label("label",new Model("label")).setComponentBorder(BeforeAndAfterBorder.INSTANCE));
+	    add(new Label("label",new Model("label")).setComponentBorder(new BeforeAndAfterBorder()));
 	}
 }
