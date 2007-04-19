@@ -103,12 +103,12 @@ import org.apache.wicket.version.undo.Change;
  * listener interface directly is highly discouraged. Instead, calls to
  * listeners are routed through logic specific to the event, resulting in calls
  * to user code through other overridable methods. For example, the
- * {@link org.apache.wicket.markup.html.form.IFormSubmitListener#onFormSubmitted()} method
- * implemented by the Form class is really a private implementation detail of
- * the Form class that is not designed to be overridden (although unfortunately,
- * it must be public since all interface methods in Java must be public).
- * Instead, Form subclasses should override user-oriented methods such as
- * onValidate(), onSubmit() and onError() (although only the latter two are
+ * {@link org.apache.wicket.markup.html.form.IFormSubmitListener#onFormSubmitted()}
+ * method implemented by the Form class is really a private implementation
+ * detail of the Form class that is not designed to be overridden (although
+ * unfortunately, it must be public since all interface methods in Java must be
+ * public). Instead, Form subclasses should override user-oriented methods such
+ * as onValidate(), onSubmit() and onError() (although only the latter two are
  * likely to be overridden in practice).
  * 
  * <li><b>onBeginRequest </b>- The {@link Component#onBeginRequest()} method is
@@ -448,31 +448,31 @@ public abstract class Component implements IClusterable
 	public static final Action RENDER = new Action(Action.RENDER);
 
 	/** True when a component is being auto-added */
-	private static final int FLAG_AUTO						= 0x0001;
+	private static final int FLAG_AUTO = 0x0001;
 
 	/** Flag for escaping HTML in model strings */
-	private static final int FLAG_ESCAPE_MODEL_STRINGS		= 0x0002;
+	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/** Flag for escaping HTML in model strings */
-	private static final int FLAG_INHERITABLE_MODEL			= 0x0004;
+	private static final int FLAG_INHERITABLE_MODEL = 0x0004;
 
 	/** Versioning boolean */
-	private static final int FLAG_VERSIONED					= 0x0008;
+	private static final int FLAG_VERSIONED = 0x0008;
 
 	/** Visibility boolean */
-	private static final int FLAG_VISIBLE					= 0x0010;
+	private static final int FLAG_VISIBLE = 0x0010;
 
 	/** Render tag boolean */
-	private static final int FLAG_RENDER_BODY_ONLY			= 0x0020;
+	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
 
 	/** Ignore attribute modifiers */
-	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER	= 0x0040;
+	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
 	/** True when a component is enabled for model updates and is reachable. */
-	private static final int FLAG_ENABLED 					= 0x0080;
+	private static final int FLAG_ENABLED = 0x0080;
 
 	/** Boolean whether this component was rendered once for tracking changes. */
-	private static final int FLAG_IS_RENDERED_ONCE 			= 0x1000;
+	private static final int FLAG_IS_RENDERED_ONCE = 0x1000;
 
 	/**
 	 * Internal indicator of whether this component may be rendered given the
@@ -481,13 +481,13 @@ public abstract class Component implements IClusterable
 	 * component (otherwise we would end up with a half rendered page in the
 	 * buffer)
 	 */
-	private static final int FLAG_IS_RENDER_ALLOWED 		= 0x2000;
+	private static final int FLAG_IS_RENDER_ALLOWED = 0x2000;
 
 	/**
 	 * Whether or not the component should print out its markup id into the id
 	 * attribute
 	 */
-	private static final int FLAG_OUTPUT_MARKUP_ID 			= 0x4000;
+	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
 
 	/**
 	 * Ouput a placeholder tag if the component is not visible. This is useful
@@ -495,35 +495,35 @@ public abstract class Component implements IClusterable
 	 * overhead of repaiting a visible parent container
 	 */
 
-	private static final int FLAG_PLACEHOLDER				= 0x8000;
+	private static final int FLAG_PLACEHOLDER = 0x8000;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED1				= 0x0100;
+	protected static final int FLAG_RESERVED1 = 0x0100;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED2				= 0x0200;
+	protected static final int FLAG_RESERVED2 = 0x0200;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED3				= 0x0400;
+	protected static final int FLAG_RESERVED3 = 0x0400;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED4				= 0x0800;
+	protected static final int FLAG_RESERVED4 = 0x0800;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED5				= 0x10000;
+	protected static final int FLAG_RESERVED5 = 0x10000;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED6				= 0x20000;
+	protected static final int FLAG_RESERVED6 = 0x20000;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED7				= 0x40000;
+	protected static final int FLAG_RESERVED7 = 0x40000;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED8				= 0x80000;
+	protected static final int FLAG_RESERVED8 = 0x80000;
 
-	private static final int FLAG_ATTACHED					= 0x20000000;
-	private static final int FLAG_ATTACHING					= 0x40000000;
-	private static final int FLAG_DETACHING					= 0x80000000;
+	private static final int FLAG_ATTACHED = 0x20000000;
+	private static final int FLAG_ATTACHING = 0x40000000;
+	private static final int FLAG_DETACHING = 0x80000000;
 
 
 	/** meta data key for missing body tags logging. */
@@ -531,7 +531,7 @@ public abstract class Component implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 	};
-	
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -1825,6 +1825,10 @@ public abstract class Component implements IClusterable
 	 * Print to the web response what ever the component wants to contribute to
 	 * the head section. Make sure that all attached behaviors are asked as
 	 * well.
+	 * <p>
+	 * NOT intended for overriding by framework clients. Rather, use
+	 * {@link IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)}
+	 * </p>
 	 * 
 	 * @param container
 	 *            The HtmlHeaderContainer
@@ -2647,12 +2651,13 @@ public abstract class Component implements IClusterable
 				// we turn off versioning as we share the model with another
 				// component that is the owner of the model (that component
 				// has to decide whether to version or not
-				// TODO can we really do this?? Model shouldn't versioned but all other things?? (add/remove)
+				// TODO can we really do this?? Model shouldn't versioned but
+				// all other things?? (add/remove)
 				setVersioned(false);
 
 				// return the shared inherited
 				model = ((IComponentInheritedModel)model).wrapOnInheritance(this);
-				setFlag(FLAG_INHERITABLE_MODEL,true);
+				setFlag(FLAG_INHERITABLE_MODEL, true);
 				return model;
 			}
 		}
@@ -2849,7 +2854,7 @@ public abstract class Component implements IClusterable
 		if (getFlag(FLAG_INHERITABLE_MODEL))
 		{
 			model = null;
-			setFlag(FLAG_INHERITABLE_MODEL,false);
+			setFlag(FLAG_INHERITABLE_MODEL, false);
 		}
 	}
 
