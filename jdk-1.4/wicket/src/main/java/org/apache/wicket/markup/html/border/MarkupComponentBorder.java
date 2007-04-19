@@ -36,9 +36,9 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
- * This is a IComponentBorder implementation that can be used if you have
- * markup that should be around a component. It works just like {@link Border}
- * so you have to have a <wicket:border>HTML before<wicket:body/>HTML after</wicket:border>
+ * This is a IComponentBorder implementation that can be used if you have markup
+ * that should be around a component. It works just like {@link Border} so you
+ * have to have a <wicket:border>HTML before<wicket:body/>HTML after</wicket:border>
  * in the html of your subclass.
  * 
  * @author jcompagner
@@ -163,6 +163,10 @@ public class MarkupComponentBorder implements IComponentBorder
 	{
 		final String markupType = getMarkupType(owner);
 
+		// TODO we need to expose this functionality for any class not just for
+		// markupcontainers in markupcache so we dont have to replicate this
+		// logic here
+
 		// Get locator to search for the resource
 		final IResourceStreamLocator locator = Application.get().getResourceSettings()
 				.getResourceStreamLocator();
@@ -184,9 +188,10 @@ public class MarkupComponentBorder implements IComponentBorder
 			// Did we find it already?
 			if (resourceStream != null)
 			{
-				ContainerInfo ci = new ContainerInfo(containerClass, locale, style,null, markupType);
+				ContainerInfo ci = new ContainerInfo(containerClass, locale, style, null,
+						markupType);
 				markupResourceStream = new MarkupResourceStream(resourceStream, ci, containerClass);
-				break; 
+				break;
 			}
 
 			// Walk up the class hierarchy one level, if markup has not
