@@ -28,11 +28,13 @@ import org.apache.wicket.extensions.markup.html.form.palette.component.Selection
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.StyleSheetReference;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 
 /**
@@ -433,7 +435,13 @@ public class Palette extends Panel
 	}
 
 	/**
-	 * update the model upon form processing
+	 * The model object is assumed to be a Collection, and it is modified
+	 * in-place. Then {@link Model#setObject(Object)} is called with the same
+	 * instance: it allows the Model to be notified of changes even when
+	 * {@link Model#getObject()} returns a different {@link Collection} at every
+	 * invocation.
+	 * 
+	 * @see FormComponent#updateModel()
 	 */
 	protected final void updateModel()
 	{
@@ -450,6 +458,7 @@ public class Palette extends Panel
 			model.add(selectedChoice);
 		}
 
+		getModel().setObject(model);
 	}
 
 	/**
