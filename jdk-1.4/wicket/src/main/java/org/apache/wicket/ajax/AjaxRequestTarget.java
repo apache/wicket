@@ -44,6 +44,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -304,8 +305,8 @@ public class AjaxRequestTarget implements IRequestTarget
 					"Argument `childCriteria` cannot be null. If you want to traverse all components use `"
 							+ Component.class.getName() + ".class` as the value for this argument");
 		}
-		
-		
+
+
 		parent.visitChildren(childCriteria, new Component.IVisitor()
 		{
 
@@ -361,6 +362,13 @@ public class AjaxRequestTarget implements IRequestTarget
 		else if (component instanceof Page)
 		{
 			throw new IllegalArgumentException("component cannot be a page");
+		}
+		else if (component instanceof AbstractRepeater)
+		{
+			throw new IllegalArgumentException(
+					"Component "
+							+ component.getClass().getName()
+							+ " has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hieararchy.");
 		}
 
 		markupIdToComponent.put(markupId, component);
