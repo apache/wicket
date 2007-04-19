@@ -149,9 +149,9 @@
 	</ciManagement>
 
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.x</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.x</developerConnection>
-		<url>http://svn.apache.org/viewvc/incubator/wicket/branches/wicket-1.x</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/incubator/wicket/trunk</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/trunk</developerConnection>
+		<url>http://svn.apache.org/viewvc/incubator/wicket/trunk</url>
 	</scm>
 
 	<mailingLists>
