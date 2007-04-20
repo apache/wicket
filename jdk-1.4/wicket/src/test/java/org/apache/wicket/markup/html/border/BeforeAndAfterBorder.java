@@ -19,8 +19,6 @@
  */
 package org.apache.wicket.markup.html.border;
 
-import org.apache.wicket.IComponentBorder;
-import org.apache.wicket.markup.html.border.MarkupComponentBorder;
 
 /**
  * @author jcompagner
@@ -29,6 +27,4 @@ import org.apache.wicket.markup.html.border.MarkupComponentBorder;
 public class BeforeAndAfterBorder extends MarkupComponentBorder
 {
 	private static final long serialVersionUID = 1L;
-
-	public static final IComponentBorder INSTANCE = new BeforeAndAfterBorder();
 }
