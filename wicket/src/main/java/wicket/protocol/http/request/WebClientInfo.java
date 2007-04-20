@@ -66,10 +66,6 @@ public class WebClientInfo extends ClientInfo
 		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
 				.getHttpServletRequest();
 		userAgent = httpServletRequest.getHeader("User-Agent");
-		if (userAgent == null)
-		{
-			throw new WicketRuntimeException("unable to read header 'User-Agent'");
-		}
 		init();
 	}
 
@@ -84,14 +80,7 @@ public class WebClientInfo extends ClientInfo
 	public WebClientInfo(WebRequestCycle requestCycle, String userAgent)
 	{
 		super();
-
-		if (userAgent == null)
-		{
-			throw new WicketRuntimeException("user agent must be provided");
-		}
-
 		this.userAgent = userAgent;
-
 		init();
 	}
 
@@ -100,7 +89,7 @@ public class WebClientInfo extends ClientInfo
 	 */
 	private final void init()
 	{
-		String userAgent = getUserAgent().toLowerCase();
+		String userAgent = (getUserAgent() != null) ? getUserAgent().toLowerCase() : "";
 
 		boolean browserOpera = userAgent.indexOf("opera") != -1;
 		boolean browserSafari = userAgent.indexOf("safari") != -1;
