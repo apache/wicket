@@ -527,10 +527,6 @@ public abstract class ListView extends AbstractRepeater
 	 */
 	public Component setModel(IModel model)
 	{
-		// remove all children; this has no effect when the list
-		// didn't render before, as in that case the list view
-		// does not yet have any children
-		removeAll();
 		return super.setModel(model);
 	}
 
