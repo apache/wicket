@@ -44,7 +44,7 @@ public abstract class Loop extends AbstractRepeater
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public static final class LoopItem extends WebMarkupContainer
+	public static class LoopItem extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -66,7 +66,7 @@ public abstract class Loop extends AbstractRepeater
 		/**
 		 * @return Returns the iteration.
 		 */
-		public int getIteration()
+		public final int getIteration()
 		{
 			return iteration;
 		}
