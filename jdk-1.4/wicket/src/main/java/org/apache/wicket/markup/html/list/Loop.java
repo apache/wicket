@@ -57,7 +57,7 @@ public abstract class Loop extends AbstractRepeater
 		 * @param iteration
 		 *            The iteration of the loop
 		 */
-		private LoopItem(final int iteration)
+		public LoopItem(final int iteration)
 		{
 			super(Integer.toString(iteration));
 			this.iteration = iteration;
