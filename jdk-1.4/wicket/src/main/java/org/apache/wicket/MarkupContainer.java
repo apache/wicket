@@ -675,7 +675,7 @@ public abstract class MarkupContainer extends Component
 	 */
 	public Component setModel(final IModel model)
 	{
-		final IModel previous = getModel();
+		final IModel previous = this.model;
 		super.setModel(model);
 		if (previous instanceof IComponentInheritedModel)
 		{

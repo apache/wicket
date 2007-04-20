@@ -578,7 +578,7 @@ public abstract class Component implements IClusterable
 	private MetaDataEntry[] metaData;
 
 	/** The model for this component. */
-	private IModel model;
+	IModel model;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
