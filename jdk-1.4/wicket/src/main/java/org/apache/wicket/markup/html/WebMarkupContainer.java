@@ -30,7 +30,7 @@ import org.apache.wicket.model.IModel;
 public class WebMarkupContainer extends MarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see Component#Component(String)
 	 */
@@ -52,7 +52,7 @@ public class WebMarkupContainer extends MarkupContainer
 	 * 
 	 * @return Markup type of HTML
 	 */
-	public final String getMarkupType()
+	public String getMarkupType()
 	{
 		return "html";
 	}
