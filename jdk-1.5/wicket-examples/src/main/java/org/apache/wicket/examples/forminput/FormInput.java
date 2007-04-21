@@ -104,7 +104,8 @@ public class FormInput extends WicketExamplePage
 					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
-			add(new Label("multiplyLabel", new PropertyModel(getModel(), "multiply")).setComponentBorder(new BeforeAndAfterBorder()));
+			add(new Label("multiplyLabel", new PropertyModel(getModel(), "multiply"))
+					.setComponentBorder(new BeforeAndAfterBorder()));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
 			rc.setRequired(true);
@@ -276,8 +277,10 @@ public class FormInput extends WicketExamplePage
 			// model allready calls FormInput.setLocale when the model is
 			// updated
 
-			// force re-render
-			getForm().modelChanged();
+			// force re-render by setting the page to render to the bookmarkable
+			// instance, so that the page will be rendered from scratch,
+			// re-evaluating the input patterns etc
+			setResponsePage(FormInput.class);
 		}
 
 		/**
