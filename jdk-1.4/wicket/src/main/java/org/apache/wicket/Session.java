@@ -123,45 +123,6 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class Session implements IClusterable, IConverterLocator
 {
-	/** True, if session has been invalidated */
-	private transient boolean sessionInvalidated = false;
-
-	/**
-	 * Invalidates this session at the end of the current request. If you need
-	 * to invalidate the session immediately, you can do this by calling
-	 * invalidateNow(), however this will remove all Wicket components from this
-	 * session, which means that you will no longer be able to work with them.
-	 */
-	public void invalidate()
-	{
-		sessionInvalidated = true;
-	}
-
-	/**
-	 * Invalidates this session immediately. Calling this method will remove all
-	 * Wicket components from this session, which means that you will no longer
-	 * be able to work with them.
-	 */
-	public void invalidateNow()
-	{
-		sessionInvalidated = true; // set this for isSessionInvalidated
-		getSessionStore().invalidate(RequestCycle.get().getRequest());
-	}
-
-	/**
-	 * Whether the session is invalid now, or will be invalidated by the end of
-	 * the request. Clients should rarely need to use this method if ever.
-	 * 
-	 * @return Whether the session is invalid when the current request is done
-	 * 
-	 * @see #invalidate()
-	 * @see #invalidateNow()
-	 */
-	public final boolean isSessionInvalidated()
-	{
-		return sessionInvalidated;
-	}
-
 	/**
 	 * Visitor interface for visiting page maps
 	 * 
@@ -197,6 +158,11 @@ public abstract class Session implements IClusterable, IConverterLocator
 		}
 	}
 
+	private static final class Counter
+	{
+		private int count = 0;
+	}
+
 	/**
 	 * Filter that returns all component scoped messages ({@link FeedbackMessage#getReporter()} !=
 	 * null).
@@ -210,6 +176,28 @@ public abstract class Session implements IClusterable, IConverterLocator
 			return message.getReporter() != null;
 		}
 	};
+
+	/** meta data key for missing body tags logging. */
+	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
+			PageMapAccessMetaData.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/** Name of session attribute under which this session is stored */
+	public static final String SESSION_ATTRIBUTE_NAME = "session";
+
+	/** Thread-local current session. */
+	private static final ThreadLocal current = new ThreadLocal();
+
+	/** A store for dirty objects for one request */
+	private static final ThreadLocal dirtyObjects = new ThreadLocal();
+
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(Session.class);
+
+	/** Attribute prefix for page maps stored in the session */
+	private static final String pageMapAttributePrefix = "m:";
 
 	/**
 	 * Filter that returns all session scoped messages ({@link FeedbackMessage#getReporter()} ==
@@ -225,32 +213,10 @@ public abstract class Session implements IClusterable, IConverterLocator
 		}
 	};
 
-	/** meta data key for missing body tags logging. */
-	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
-			PageMapAccessMetaData.class)
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
-	/** Name of session attribute under which this session is stored */
-	public static final String SESSION_ATTRIBUTE_NAME = "session";
-
 	private static final long serialVersionUID = 1L;
-
-	/** Thread-local current session. */
-	private static final ThreadLocal current = new ThreadLocal();
-
-	/** A store for dirty objects for one request */
-	private static final ThreadLocal dirtyObjects = new ThreadLocal();
 
 	/** A store for touched pages for one request */
 	private static final ThreadLocal touchedPages = new ThreadLocal();
-
-	/** Logging object */
-	private static final Log log = LogFactory.getLog(Session.class);
-
-	/** Attribute prefix for page maps stored in the session */
-	private static final String pageMapAttributePrefix = "m:";
 
 	/** Prefix for attributes holding page map entries */
 	static final String pageMapEntryAttributePrefix = "p:";
@@ -264,21 +230,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	public static boolean exists()
 	{
 		return current.get() != null;
-	}
-
-	/**
-	 * Get the session for the calling thread.
-	 * 
-	 * @return Session for calling thread
-	 */
-	public static Session get()
-	{
-		Session session = (Session)current.get();
-		if (session == null)
-		{
-			session = findOrCreate();
-		}
-		return session;
 	}
 
 	/**
@@ -319,6 +270,21 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Get the session for the calling thread.
+	 * 
+	 * @return Session for calling thread
+	 */
+	public static Session get()
+	{
+		Session session = (Session)current.get();
+		if (session == null)
+		{
+			session = findOrCreate();
+		}
+		return session;
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets session for calling thread.
@@ -346,11 +312,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 		current.set(null);
 	}
 
-	/**
-	 * Holds attributes for sessions that are still temporary/ not bound to a
-	 * session store. Only used when {@link #isTemporary()} is true.
-	 */
-	private transient Map temporarySessionAttributes;
+	/** A number to generate names for auto create pagemaps */
+	private int autoCreatePageMapCounter = 0;
 
 	/**
 	 * Cached instance of agent info which is typically designated by calling
@@ -364,25 +327,22 @@ public abstract class Session implements IClusterable, IConverterLocator
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
 
-	/** The locale to use when loading resources for this session. */
-	private Locale locale;
-
-	/** A number to generate names for auto create pagemaps */
-	private int autoCreatePageMapCounter = 0;
-
-	/** A linked list for last used pagemap queue */
-	private LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
-
-	/** Any special "skin" style to use when loading resources. */
-	private String style;
-
 	/** feedback messages */
 	private FeedbackMessages feedbackMessages = new FeedbackMessages();
 
-	private transient Map pageMapsUsedInRequest;
-
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
+
+	/** The locale to use when loading resources for this session. */
+	private Locale locale;
+
+	/** Application level meta data. */
+	private MetaDataEntry[] metaData;
+
+	private transient Map pageMapsUsedInRequest;
+
+	/** True, if session has been invalidated */
+	private transient boolean sessionInvalidated = false;
 
 	/**
 	 * Temporary instance of the session store. Should be set on each request as
@@ -390,8 +350,17 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 */
 	private transient ISessionStore sessionStore;
 
-	/** Application level meta data. */
-	private MetaDataEntry[] metaData;
+	/** Any special "skin" style to use when loading resources. */
+	private String style;
+
+	/**
+	 * Holds attributes for sessions that are still temporary/ not bound to a
+	 * session store. Only used when {@link #isTemporary()} is true.
+	 */
+	private transient Map temporarySessionAttributes;
+
+	/** A linked list for last used pagemap queue */
+	private LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
@@ -478,7 +447,38 @@ public abstract class Session implements IClusterable, IConverterLocator
 			dirty();
 		}
 
-		feedbackMessages.clear(MESSAGES_FOR_COMPONENTS);
+		// Render anything that was already rendered and what was assigned to a
+		// page that was just rendered if any
+		final Page page = RequestCycle.get().getResponsePage();
+		final Counter notCleanedUpCounter = new Counter();
+		feedbackMessages.clear(new IFeedbackMessageFilter()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public boolean accept(FeedbackMessage message)
+			{
+				if (message.isRendered())
+				{
+					return true;
+				}
+				if (page != null)
+				{
+					Component reporter = message.getReporter();
+					if (reporter != null)
+					{
+						Page reporterPage = reporter.findPage();
+						return reporterPage != null && reporterPage.equals(page);
+					}
+				}
+				notCleanedUpCounter.count++;
+				return false;
+			}
+		});
+
+		if (notCleanedUpCounter.count > 0)
+		{
+			log.warn("still " + notCleanedUpCounter.count + " messages unrendered");
+		}
 	}
 
 	/**
@@ -823,6 +823,42 @@ public abstract class Session implements IClusterable, IConverterLocator
 	public final void info(final String message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.INFO);
+	}
+
+	/**
+	 * Invalidates this session at the end of the current request. If you need
+	 * to invalidate the session immediately, you can do this by calling
+	 * invalidateNow(), however this will remove all Wicket components from this
+	 * session, which means that you will no longer be able to work with them.
+	 */
+	public void invalidate()
+	{
+		sessionInvalidated = true;
+	}
+
+	/**
+	 * Invalidates this session immediately. Calling this method will remove all
+	 * Wicket components from this session, which means that you will no longer
+	 * be able to work with them.
+	 */
+	public void invalidateNow()
+	{
+		sessionInvalidated = true; // set this for isSessionInvalidated
+		getSessionStore().invalidate(RequestCycle.get().getRequest());
+	}
+
+	/**
+	 * Whether the session is invalid now, or will be invalidated by the end of
+	 * the request. Clients should rarely need to use this method if ever.
+	 * 
+	 * @return Whether the session is invalid when the current request is done
+	 * 
+	 * @see #invalidate()
+	 * @see #invalidateNow()
+	 */
+	public final boolean isSessionInvalidated()
+	{
+		return sessionInvalidated;
 	}
 
 	/**
@@ -1225,6 +1261,18 @@ public abstract class Session implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * NOT TO BE CALLED BY FRAMEWORK USERS.
+	 * 
+	 * @deprecated obsolete method (was meant for internal book keeping really).
+	 *             Clients should override {@link #detach()} instead.
+	 */
+	protected final void update()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+
+	/**
 	 * @param page
 	 *            The page to add to dirty objects list
 	 */
@@ -1236,7 +1284,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 			dirtyObjects.add(page);
 		}
 	}
-
 
 	/**
 	 * @param map
@@ -1269,6 +1316,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 		}
 		return list;
 	}
+
+	// TODO remove after deprecation release
 
 	/**
 	 * INTERNAL API. The request cycle when detached will call this.
@@ -1363,18 +1412,5 @@ public abstract class Session implements IClusterable, IConverterLocator
 				pageMapsUsedInRequest.notifyAll();
 			}
 		}
-	}
-
-	// TODO remove after deprecation release
-
-	/**
-	 * NOT TO BE CALLED BY FRAMEWORK USERS.
-	 * 
-	 * @deprecated obsolete method (was meant for internal book keeping really).
-	 *             Clients should override {@link #detach()} instead.
-	 */
-	protected final void update()
-	{
-		throw new UnsupportedOperationException();
 	}
 }

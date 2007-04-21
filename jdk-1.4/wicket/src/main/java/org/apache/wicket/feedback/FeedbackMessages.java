@@ -296,6 +296,29 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
+	 * Gets the number of messages.
+	 * 
+	 * @param filter
+	 *            Filter for counting messages. If null, the count of all
+	 *            messages will be returned
+	 * 
+	 * @return the number of messages
+	 */
+	public final int size(final IFeedbackMessageFilter filter)
+	{
+		int count = 0;
+		for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+		{
+			final FeedbackMessage message = (FeedbackMessage)iterator.next();
+			if (filter == null || filter.accept(message))
+			{
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
