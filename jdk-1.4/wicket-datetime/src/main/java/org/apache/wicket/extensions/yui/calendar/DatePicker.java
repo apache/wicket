@@ -121,6 +121,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				"calendar.js"));
 		response.renderCSSReference(new CompressedResourceReference(DatePicker.class,
 				"assets/calendar.css"));
+		response.renderJavascriptReference(new JavascriptResourceReference(DatePicker.class,
+				"date.js"));
 
 		// not pretty to look at, but cheaper than using a template
 		String markupId = getCalendarMarkupId();
@@ -135,13 +137,14 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append("() {\n");
 
 		// instantiate the calendar object
-		buffer.append("  ");
+		buffer.append(" ");
 		buffer.append(javascriptWidgetId);
 		buffer.append(" = new YAHOO.widget.Calendar(\"");
 		buffer.append(javascriptId);
 		buffer.append("\",\"");
 		buffer.append(markupId);
 
+		String datePattern = getDatePattern();
 		// print out the initialization properties
 		Properties p = new Properties();
 		configureWidgetProperties(p);
@@ -188,34 +191,24 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append(" });\n");
 
 		buffer.append(" function showCalendar() {\n");
-		buffer.append("var dateValue = YAHOO.util.Dom.get(\"");
+		buffer.append("  var dateValue = YAHOO.util.Dom.get(\"");
 		buffer.append(component.getMarkupId());
 		buffer.append("\").value;\n");
-		buffer.append("if (dateValue) {\n");
-		// TODO pivot year hack. kind of ugly, make a nicer fix sometime
-		buffer.append("  var dateArray = dateValue.split('/');\n");
-		buffer.append("  if (dateArray[2] != undefined) {");
-		buffer.append("    var year = dateArray[2];");
-		buffer.append("    if (year < 100) {");
-		buffer.append("      if (year < 50) {");
-		buffer.append("        year = year * 1 + 2000;");
-		buffer.append("      } else {");
-		buffer.append("        year = year * 1 + 1900;");
-		buffer.append("      }");
-		buffer.append("    dateValue = dateArray[0] + '/' + dateArray[1] + '/' + year;");
-		buffer.append("    }");
-		buffer.append("  }");
+		buffer.append("  if (dateValue) {\n");
+		buffer.append("    dateValue = new Date(getDateFromFormat(dateValue,\'");
+		buffer.append(datePattern);
+		buffer.append("\'));\n    ");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".select(dateValue);\n");
-		buffer.append("var firstDate = ");
+		buffer.append("    var firstDate = ");
 		buffer.append(javascriptWidgetId);
-		buffer.append(".getSelectedDates()[0];");
+		buffer.append(".getSelectedDates()[0];\n    ");
 		buffer.append(javascriptWidgetId);
 		buffer
 				.append(".cfg.setProperty(\"pagedate\", (firstDate.getMonth()+1) + \"/\" + firstDate.getFullYear());");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".render();\n");
-		buffer.append("}\n");
+		buffer.append("  }\n");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".show();\n");
 		buffer.append(" }\n");
@@ -236,7 +229,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append("    var month = selDateArray[1];\n");
 		buffer.append("    var dt = selDateArray[2];\n");
 		buffer.append("    var val = '");
-		String datePattern = getDatePattern();
 		// use the target component's pattern to fill in the date
 		// it's quite rough (e.g. YY is still filled in as YYYY), but
 		// should work without problems
