@@ -48,7 +48,8 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 				"src/main/java/org/apache/wicket/extensions/yui/yahoo.js",
 				"src/main/java/org/apache/wicket/extensions/yui/event.js",
 				"src/main/java/org/apache/wicket/extensions/yui/dom.js",
-				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar.js" 
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar.js" ,
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/date.js"
 		};
 	}
 }
