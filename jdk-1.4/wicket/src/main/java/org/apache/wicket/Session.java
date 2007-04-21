@@ -475,9 +475,9 @@ public abstract class Session implements IClusterable, IConverterLocator
 			}
 		});
 
-		if (notCleanedUpCounter.count > 0)
+		if (log.isDebugEnabled() && notCleanedUpCounter.count > 0)
 		{
-			log.warn("still " + notCleanedUpCounter.count + " messages unrendered");
+			log.debug("still " + notCleanedUpCounter.count + " messages unrendered");
 		}
 	}
 
