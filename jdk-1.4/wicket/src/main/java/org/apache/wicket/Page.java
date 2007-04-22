@@ -275,6 +275,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param listener
 	 *            the listener of that component that is to be called
 	 */
+	// TODO Post-1.3: We should create a listener on Application like IComponentInstantiationListener
+	// that forwards to IAuthorizationStrategy for RequestListenerInterface invocations.  
 	public void beforeCallComponent(final Component component,
 			final RequestListenerInterface listener)
 	{
