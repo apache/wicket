@@ -122,9 +122,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		response.renderCSSReference(new CompressedResourceReference(DatePicker.class,
 				"assets/calendar.css"));
 		response.renderJavascriptReference(new JavascriptResourceReference(DatePicker.class,
-				"date.js"));
+				"wicket-date.js"));
 
-		// not pretty to look at, but cheaper than using a template
+		// TODO rewrite to use a template. This code has become too messy with
+		// String concats
+
 		String markupId = getCalendarMarkupId();
 		String javascriptId = getCalendarJavascriptId();
 		String javascriptWidgetId = "YAHOO.wicket." + getCalendarJavascriptId();
@@ -195,9 +197,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		buffer.append(component.getMarkupId());
 		buffer.append("\").value;\n");
 		buffer.append("  if (dateValue) {\n");
-		buffer.append("    dateValue = new Date(getDateFromFormat(dateValue,\'");
+		buffer.append("    dateValue = Wicket.DateTime.parseDate(\'");
 		buffer.append(datePattern);
-		buffer.append("\'));\n    ");
+		buffer.append("\', dateValue);\n    ");
 		buffer.append(javascriptWidgetId);
 		buffer.append(".select(dateValue);\n");
 		buffer.append("    var firstDate = ");
