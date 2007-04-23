@@ -1,0 +1,198 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.markup.html.link;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
+
+/**
+ * Base class that that contains functionality for rendering disabled links.
+ * 
+ * @author Matej Knopp
+ */
+public abstract class AbstractLink extends WebMarkupContainer
+{
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 * @param model
+	 */
+	public AbstractLink(String id, IModel model)
+	{
+		super(id, model);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public AbstractLink(String id)
+	{
+		super(id);
+	}
+
+	/**
+	 * Simple insertion string to allow disabled links to look like <i>Disabled
+	 * link </i>.
+	 */
+	private String beforeDisabledLink;
+
+	/**
+	 * Simple insertion string to allow disabled links to look like <i>Disabled
+	 * link </i>.
+	 */
+	private String afterDisabledLink;
+
+
+	/**
+	 * Sets the insertion string to allow disabled links to look like
+	 * <i>Disabled link </i>.
+	 * 
+	 * @param afterDisabledLink
+	 *            The insertion string
+	 */
+	public void setAfterDisabledLink(final String afterDisabledLink)
+	{
+		if (afterDisabledLink == null)
+		{
+			throw new IllegalArgumentException(
+					"Value cannot be null.  For no text, specify an empty String instead.");
+		}
+		this.afterDisabledLink = afterDisabledLink;
+	}
+
+	/**
+	 * Gets the insertion string to allow disabled links to look like
+	 * <i>Disabled link </i>.
+	 * 
+	 * @return The insertion string
+	 */
+	public String getAfterDisabledLink()
+	{
+		return afterDisabledLink;
+	}
+
+	/**
+	 * Sets the insertion string to allow disabled links to look like
+	 * <i>Disabled link </i>.
+	 * 
+	 * @param beforeDisabledLink
+	 *            The insertion string
+	 */
+	public void setBeforeDisabledLink(final String beforeDisabledLink)
+	{
+		if (beforeDisabledLink == null)
+		{
+			throw new IllegalArgumentException(
+					"Value cannot be null.  For no text, specify an empty String instead.");
+		}
+		this.beforeDisabledLink = beforeDisabledLink;
+	}
+
+	protected void onAttach()
+	{
+		super.onAttach();
+
+		// Set default for before/after link text
+		if (beforeDisabledLink == null)
+		{
+			final Application app = getApplication();
+			beforeDisabledLink = app.getMarkupSettings().getDefaultBeforeDisabledLink();
+			afterDisabledLink = app.getMarkupSettings().getDefaultAfterDisabledLink();
+		}
+	}
+
+	/**
+	 * Gets the insertion string to allow disabled links to look like
+	 * <i>Disabled link </i>.
+	 * 
+	 * @return The insertion string
+	 */
+	public String getBeforeDisabledLink()
+	{
+		return beforeDisabledLink;
+	}
+
+	/**
+	 * Helper methods that both checks whether the link is enabled and whether
+	 * the action ENABLE is allowed.
+	 * 
+	 * @return whether the link should be rendered as enabled
+	 */
+	protected final boolean isLinkEnabled()
+	{
+		return isEnabled() && isEnableAllowed();
+	}
+
+	/**
+	 * Renders this link's body.
+	 * 
+	 * @param markupStream
+	 *            the markup stream
+	 * @param openTag
+	 *            the open part of this tag
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream,
+			final ComponentTag openTag)
+	{
+		// Draw anything before the body?
+		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
+		{
+			getResponse().write(getBeforeDisabledLink());
+		}
+
+		// Render the body of the link
+		renderComponentTagBody(markupStream, openTag);
+
+		// Draw anything after the body?
+		if (!isLinkEnabled() && getAfterDisabledLink() != null)
+		{
+			getResponse().write(getAfterDisabledLink());
+		}
+	}
+
+	/**
+	 * Alters the tag so that the link renders as disabled.
+	 * 
+	 * This method is meant to be called from
+	 * {@link #onComponentTag(ComponentTag)} method of the derived class.
+	 * 
+	 * @param tag
+	 */
+	protected void disableLink(final ComponentTag tag)
+	{
+		// if the tag is an anchor proper
+		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+				|| tag.getName().equalsIgnoreCase("area"))
+		{
+			// Change anchor link to span tag
+			tag.setName("span");
+
+			// Remove any href from the old link
+			tag.remove("href");
+
+			tag.remove("onclick");
+		}
+	}
+}
