@@ -447,9 +447,10 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		}
 		else
 		{
-			// Page was expired from session, probably because backtracking
-			// limit was reached
-			throw new PageExpiredException("Cannot find the rendered page in session");
+			// Page could not be located in the session
+			throw new PageExpiredException("Cannot find the rendered page in session [pagemap="
+					+ requestParameters.getPageMapName() + ",componentPath=" + componentPath
+					+ ",versionNumber=" + requestParameters.getVersionNumber() + "]");
 		}
 	}
 
