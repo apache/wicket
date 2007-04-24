@@ -187,14 +187,6 @@ public abstract class Application
 	}
 
 	/**
-	 * @return True if the current thread is attached to an application.
-	 */
-	public static boolean isAttached()
-	{
-		return current.get() != null;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
 	 * @param application
@@ -235,11 +227,11 @@ public abstract class Application
 	/** Name of application subclass. */
 	private final String name;
 
-	/** The session facade. */
-	private ISessionStore sessionStore;
-
 	/** Request logger instance. */
 	private IRequestLogger requestLogger;
+
+	/** The session facade. */
+	private ISessionStore sessionStore;
 
 	/** Settings for this application. */
 	private Settings settings;
@@ -536,11 +528,6 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Request cycle factory for this kind of session.
-	 */
-	protected abstract IRequestCycleFactory getRequestCycleFactory();
-
-	/**
 	 * Gets the {@link RequestLogger}.
 	 * 
 	 * @return The RequestLogger
@@ -828,6 +815,11 @@ public abstract class Application
 	{
 		callDestroyers();
 	}
+
+	/**
+	 * @return Request cycle factory for this kind of session.
+	 */
+	protected abstract IRequestCycleFactory getRequestCycleFactory();
 
 	/**
 	 * Gets the factory for creating session instances.
