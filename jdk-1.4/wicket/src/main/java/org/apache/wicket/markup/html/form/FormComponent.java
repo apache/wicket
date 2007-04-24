@@ -795,7 +795,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 				error((IValidationError)error);
 			}
 		}
-		else if (!Strings.isEmpty(getInput()))
+		else
 		{
 			final IConverter converter = getConverter(type);
 			try
