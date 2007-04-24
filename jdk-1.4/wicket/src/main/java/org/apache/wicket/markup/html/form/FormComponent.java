@@ -66,7 +66,7 @@ import org.apache.wicket.version.undo.Change;
  * <li>${name}: the name of the component that failed</li>
  * <li>${label}: the label of the component</li>
  * </ul>
- *
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -81,7 +81,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	{
 		/**
 		 * Called when visiting a form component
-		 *
+		 * 
 		 * @param formComponent
 		 *            The form component
 		 * @return component
@@ -111,7 +111,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Change object to capture the required flag change
-	 *
+	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	private final class RequiredStateChange extends Change
@@ -204,7 +204,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Adds a validator to this form component.
-	 *
+	 * 
 	 * @param validator
 	 *            The validator
 	 * @return This
@@ -217,7 +217,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Checks if the form component's 'required' requirement is met
-	 *
+	 * 
 	 * @return true if the 'required' requirement is met, false otherwise
 	 */
 	public final boolean checkRequired()
@@ -255,12 +255,12 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Reports a validation error against this form component.
-	 *
+	 * 
 	 * The actual error is reported by creating a
 	 * {@link ValidationErrorFeedback} object that holds both the validation
 	 * error and the generated error message - so a custom feedback panel can
 	 * have access to both.
-	 *
+	 * 
 	 * @param error
 	 *            validation error
 	 */
@@ -306,7 +306,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets the request parameter for this component as a string.
-	 *
+	 * 
 	 * @return The value in the request for this component
 	 */
 	// TODO Post 1.2: make this final, if the users want to override this they
@@ -326,7 +326,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets the request parameters for this component as strings.
-	 *
+	 * 
 	 * @return The values in the request for this component
 	 */
 	public String[] getInputAsArray()
@@ -353,7 +353,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * element. Generated using the path from the form to the component,
 	 * excluding the form itself. Override it if you want even a smaller name.
 	 * E.g. if you know for sure that the id is unique within a form.
-	 *
+	 * 
 	 * @return The string to use as the form element's name attribute
 	 */
 	public String getInputName()
@@ -385,7 +385,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	/**
 	 * The value will be made available to the validator property by means of
 	 * ${label}. It does not have any specific meaning to FormComponent itself.
-	 *
+	 * 
 	 * @return labelModel
 	 */
 	public IModel getLabel()
@@ -397,7 +397,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * Use hasRawInput() to check if this component has raw input because null
 	 * can mean 2 things: It doesn't have rawinput or the rawinput is really
 	 * null.
-	 *
+	 * 
 	 * @return The raw form input that is stored for this formcomponent
 	 */
 	public final String getRawInput()
@@ -430,7 +430,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets an unmodifiable list of validators for this FormComponent.
-	 *
+	 * 
 	 * @return List of validators
 	 */
 	public final List getValidators()
@@ -453,7 +453,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets current value for a form component.
-	 *
+	 * 
 	 * @return The value
 	 */
 	public final String getValue()
@@ -474,7 +474,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * This method can be called to know if this component really has raw input.
-	 *
+	 * 
 	 * @return boolean if this form component has rawinput.
 	 */
 	public final boolean hasRawInput()
@@ -524,7 +524,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * component TextField is an example (possibly the only one) that never gets
 	 * a null passed in, even if the field is left empty UNLESS it had attribute
 	 * <code>disabled="disabled"</code> set.
-	 *
+	 * 
 	 * @return True if this component's input can be null. Returns true by
 	 *         default.
 	 */
@@ -564,7 +564,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * processed. This variable not only is convenient for 'business' use, but
 	 * is also nescesarry as we don't want the form component models updated
 	 * with invalid input.
-	 *
+	 * 
 	 * @return valid whether this component is 'valid'
 	 */
 	public final boolean isValid()
@@ -574,7 +574,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets whether this component is to be validated.
-	 *
+	 * 
 	 * @return True if this component has one or more validators
 	 */
 	public final boolean isValidated()
@@ -586,9 +586,9 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * This method will retrieve the request parameter, validate it, and if
 	 * valid update the model. These are the same steps as would be performed by
 	 * the form.
-	 *
+	 * 
 	 * This is useful when a formcomponent is used outside a form.
-	 *
+	 * 
 	 */
 	public final void processInput()
 	{
@@ -608,13 +608,13 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	/**
 	 * The value will be made available to the validator property by means of
 	 * ${label}. It does not have any specific meaning to FormComponent itself.
-	 *
+	 * 
 	 * @param labelModel
 	 * @return this for chaining
 	 */
 	public FormComponent setLabel(IModel labelModel)
 	{
-		if (labelModel instanceof IComponentAssignedModel) 
+		if (labelModel instanceof IComponentAssignedModel)
 		{
 			labelModel = ((IComponentAssignedModel)labelModel).wrapOnAssignment(this);
 		}
@@ -627,10 +627,10 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * Sets the value for a form component this value will be split the string
 	 * with {@link FormComponent#VALUE_SEPARATOR} and calls
 	 * setModelValue(String[]) with that.
-	 *
+	 * 
 	 * @param value
 	 *            The value
-	 *
+	 * 
 	 * @depricated call or override setModelValue(String[])
 	 */
 	public void setModelValue(final String value)
@@ -640,7 +640,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Sets the value for a form component.
-	 *
+	 * 
 	 * @param value
 	 *            The value
 	 */
@@ -652,7 +652,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Sets whether this component is to be persisted.
-	 *
+	 * 
 	 * @param persistent
 	 *            True if this component is to be persisted.
 	 * @return this for chaining
@@ -673,7 +673,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Sets the required flag
-	 *
+	 * 
 	 * @param required
 	 * @return this for chaining
 	 */
@@ -695,7 +695,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	/**
 	 * Sets the type that will be used when updating the model for this
 	 * component. If no type is specified String type is assumed.
-	 *
+	 * 
 	 * @param type
 	 * @return this for chaining
 	 */
@@ -711,11 +711,11 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * Updates this components' model from the request, it expect that the
 	 * object is already converted through the convert() call. By default it
 	 * just does this:
-	 *
+	 * 
 	 * <pre>
 	 * setModelObject(getConvertedInput());
 	 * </pre>
-	 *
+	 * 
 	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
 	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
 	 */
@@ -743,8 +743,14 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	public final void validate()
 	{
 		validateRequired();
-		convert();
-		validateValidators();
+		if (isValid())
+		{
+			convert();
+		}
+		if (isValid())
+		{
+			validateValidators();
+		}
 	}
 
 	/**
@@ -829,12 +835,12 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * Subclasses should overwrite this if the conversion is not done through
 	 * the type field and the IConverter. <strong>WARNING: this method may be
 	 * removed in future versions.</strong>
-	 *
+	 * 
 	 * If conversion fails then a ConversionException should be thrown
-	 *
+	 * 
 	 * @param value
 	 *            The value can be the getInput() or through a cookie
-	 *
+	 * 
 	 * @return The converted value. default returns just the given value
 	 * @throws ConversionException
 	 *             If input can't be converted
@@ -855,7 +861,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets the request parameter for this component as an int.
-	 *
+	 * 
 	 * @return The value in the request for this component
 	 */
 	protected final int inputAsInt()
@@ -875,7 +881,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	/**
 	 * Gets the request parameter for this component as an int, using the given
 	 * default in case no corresponding request parameter was found.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            Default value to return if request does not have an integer
 	 *            for this component
@@ -904,7 +910,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets the request parameters for this component as ints.
-	 *
+	 * 
 	 * @return The values in the request for this component
 	 */
 	protected final int[] inputAsIntArray()
@@ -924,7 +930,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Gets the request parameters for this component as strings.
-	 *
+	 * 
 	 * @return The values in the request for this component
 	 * @deprecated Use {@link #getInputAsArray()} instead
 	 */
@@ -946,7 +952,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Processes the component tag.
-	 *
+	 * 
 	 * @param tag
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
@@ -968,7 +974,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * disabled. By default, this method will add a disabled="disabled"
 	 * attribute to the tag. Components may override this method to tweak the
 	 * tag as they think is fit.
-	 *
+	 * 
 	 * @param tag
 	 *            the tag that is being rendered
 	 */
@@ -1083,7 +1089,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	/**
 	 * Gets validator from validators Object (which may be an array of
 	 * IValidators or a single instance, for efficiency) at the given index
-	 *
+	 * 
 	 * @param index
 	 *            The index of the validator to get
 	 * @return The validator
@@ -1121,7 +1127,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 
 	/**
 	 * Adapter that makes this component appear as {@link IValidatable}
-	 *
+	 * 
 	 * @author ivaynberg
 	 */
 	private class ValidatableAdapter implements IValidatable
@@ -1153,7 +1159,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	/**
 	 * {@link IErrorMessageSource} used for error messags against this form
 	 * components.
-	 *
+	 * 
 	 * @author ivaynberg
 	 */
 	private class MessageSource implements IErrorMessageSource
@@ -1176,9 +1182,10 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 			final Localizer localizer = formComponent.getLocalizer();
 
 			String resource = prefix + getId() + "." + key;
-			
-			// First use the parent for resolving so that form1.textfield1.RequiredValidator can be used.
-			
+
+			// First use the parent for resolving so that
+			// form1.textfield1.RequiredValidator can be used.
+
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
 			// return a default string like "[Warning: String ..."
@@ -1197,21 +1204,22 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 			if (Strings.isEmpty(message))
 			{
 				// If still empty then use default
-				
+
 				resource = prefix + getId() + "." + key;
-	
-				// Note: It is important that the default value of "" is provided
+
+				// Note: It is important that the default value of "" is
+				// provided
 				// to getString() not to throw a MissingResourceException or to
 				// return a default string like "[Warning: String ..."
 				message = localizer.getString(resource, formComponent, "");
-	
+
 				// If not found, than ...
 				if (Strings.isEmpty(message))
 				{
 					// Try a variation of the resource key
-	
+
 					resource = prefix + key;
-	
+
 					message = localizer.getString(resource, formComponent, "");
 				}
 			}
@@ -1228,7 +1236,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		/**
 		 * Creates a new params map that additionaly contains the default input,
 		 * name, label parameters
-		 *
+		 * 
 		 * @param params
 		 *            original params map
 		 * @return new params map
