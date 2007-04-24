@@ -402,30 +402,25 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * This method should not typically be called by clients
 	 * </p>
 	 */
-	public final void bind()
+	public synchronized final void bind()
 	{
 		ISessionStore store = getSessionStore();
 		Request request = RequestCycle.get().getRequest();
 		if (store.lookup(request) == null)
 		{
-			synchronized (this)
+			// explicitly create a session
+			this.id = store.getSessionId(request, true);
+			// bind it
+			store.bind(request, this);
+
+			if (temporarySessionAttributes != null)
 			{
-				// explicitly create a session
-				this.id = store.getSessionId(request, true);
-				// bind it
-				store.bind(request, this);
-
-				if (temporarySessionAttributes != null)
+				for (Iterator i = temporarySessionAttributes.entrySet().iterator(); i.hasNext();)
 				{
-					for (Iterator i = temporarySessionAttributes.entrySet().iterator(); i.hasNext();)
-					{
-						Entry entry = (Entry)i.next();
-						store.setAttribute(request, String.valueOf(entry.getKey()), entry
-								.getValue());
-					}
-					temporarySessionAttributes = null;
+					Entry entry = (Entry)i.next();
+					store.setAttribute(request, String.valueOf(entry.getKey()), entry.getValue());
 				}
-
+				temporarySessionAttributes = null;
 			}
 		}
 		else
