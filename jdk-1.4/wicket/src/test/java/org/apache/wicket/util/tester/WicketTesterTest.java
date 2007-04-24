@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
 import org.apache.wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
 import org.apache.wicket.util.tester.apps_1.Book;
 import org.apache.wicket.util.tester.apps_1.CreateBook;
@@ -155,10 +156,9 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * FIXME failing test disabled
 	 * @throws Exception
 	 */
-	public void bugTestPageConstructor() throws Exception
+	public void testPageConstructor() throws Exception
 	{
 		Book mockBook = new Book("xxId", "xxName");
 		Page page = new ViewBook(mockBook);
@@ -168,6 +168,20 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
+	}
+
+	/**
+	 * Test instance constructor and inner page class
+	 * @throws Exception
+	 */
+	public void testConstructorAndInnerPage() throws Exception
+	{
+		tester.startPage(new MockInnerClassPage());
+
+		// assertion
+		tester.assertRenderedPage(MockInnerClassPage.class);
+		tester.assertComponent("title", Label.class);
+		tester.assertContains("Hello world!");
 	}
 
 	/**

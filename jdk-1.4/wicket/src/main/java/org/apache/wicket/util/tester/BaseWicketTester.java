@@ -212,17 +212,15 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final Page page)
 	{
-		processRequestCycle(page);
+		return startPage(new ITestPageSource() {
+			private static final long serialVersionUID = 1L;
 
-		Page last = getLastRenderedPage();
-		//
-		// createRequestCycle();
-		// getWicketSession().touch(page);
-		// if (page != last)
-		// {
-		// getWicketSession().touch(last);
-		// }
-		return last;
+			public Page getTestPage()
+			{
+				return page;
+			}
+			
+		});
 	}
 
 	/**
