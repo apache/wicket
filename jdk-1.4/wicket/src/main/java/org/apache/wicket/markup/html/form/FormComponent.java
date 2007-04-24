@@ -750,7 +750,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	/**
 	 * Converts and validates the conversion of the raw input string into the
 	 * object specified by {@link FormComponent#getType()} and records any
-	 * errors. Converted value is available thorugh
+	 * errors. Converted value is available through
 	 * {@link FormComponent#getConvertedInput()}
 	 */
 	protected final void convert()
