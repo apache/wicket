@@ -59,7 +59,7 @@ public class CompoundValidator implements IValidator
 	/**
 	 * @see org.apache.wicket.validation.IValidator#validate(org.apache.wicket.validation.IValidatable)
 	 */
-	public void validate(IValidatable validatable)
+	public final void validate(IValidatable validatable)
 	{
 		Iterator it = validators.iterator();
 		while (it.hasNext() && validatable.isValid())
