@@ -779,7 +779,7 @@ Wicket.Window.prototype = {
 		if (Wicket.Window.unloadConfirmation == true) {
 			// new beforeunload handler - ask user before reloading window
 			window.onbeforeunload = function() {			
-				return "Reloading this page will cause the modal window disappear.";
+				return "Reloading this page will cause the modal window to disappear.";
 			}				
 		}
 
