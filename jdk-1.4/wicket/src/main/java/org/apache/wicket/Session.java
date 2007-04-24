@@ -442,38 +442,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 			dirty();
 		}
 
-		// Render anything that was already rendered and what was assigned to a
-		// page that was just rendered if any
-		final Page page = RequestCycle.get().getResponsePage();
-		final Counter notCleanedUpCounter = new Counter();
-		feedbackMessages.clear(new IFeedbackMessageFilter()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public boolean accept(FeedbackMessage message)
-			{
-				if (message.isRendered())
-				{
-					return true;
-				}
-				if (page != null)
-				{
-					Component reporter = message.getReporter();
-					if (reporter != null)
-					{
-						Page reporterPage = reporter.findPage();
-						return reporterPage != null && reporterPage.equals(page);
-					}
-				}
-				notCleanedUpCounter.count++;
-				return false;
-			}
-		});
-
-		if (log.isDebugEnabled() && notCleanedUpCounter.count > 0)
-		{
-			log.debug("still " + notCleanedUpCounter.count + " messages unrendered");
-		}
+		// clean up all component related feedback messages
+		feedbackMessages.clear(MESSAGES_FOR_COMPONENTS);
 	}
 
 	/**
