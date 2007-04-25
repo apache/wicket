@@ -631,7 +631,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 * @param value
 	 *            The value
 	 * 
-	 * @depricated call or override setModelValue(String[])
+	 * @deprecated call or override setModelValue(String[])
 	 */
 	public void setModelValue(final String value)
 	{

@@ -71,7 +71,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	}
 	
 	/**
-	 * This method is depricated use the isEnabled(Component)
+	 * This method is deprecated, use the isEnabled(Component)
 	 * @return true
 	 * @deprecated use isEnabled(Component) now.
 	 */
