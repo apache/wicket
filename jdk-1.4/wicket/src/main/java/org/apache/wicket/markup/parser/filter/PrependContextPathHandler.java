@@ -22,46 +22,40 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupParserFactory;
 import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupParserFactory;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
+import org.apache.wicket.settings.IMarkupSettings;
 
 
 /**
  * This is a markup inline filter which by default is added to the list of
- * markup filters. It can be added by means of subclassing
- * Application.newMarkupParser() like
- * 
- * <pre>
- *     public class MyApplication extends Application
- *     {
- *         ...
- *         public IMarkupFilter[] getAdditionalMarkupHandler()
- *         {
- *             return new IMarkupFilter[] { new new PrependContextPathHandler() };
- *         }
- * </pre>
+ * markup filters. It is configured int the {@link MarkupParserFactory default}
+ * implementation of {@link IMarkupParserFactory markup parser factory}, which
+ * is set in {@link IMarkupSettings the markup settings}.
  * 
  * The purpose of the filter is to prepend the web apps context path to all href
  * and src attributes found in the markup which contain a relative URL like
- * "myDir/myPage.gif". It is applied to all non wicket component tags (attributes).
+ * "myDir/myPage.gif". It is applied to all non wicket component tags
+ * (attributes).
  * 
  * @author Juergen Donnerstag
  */
 public final class PrependContextPathHandler extends AbstractMarkupFilter
 {
-	/** Logging */
-	private static final Log log = LogFactory.getLog(PrependContextPathHandler.class);
-
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src", "background" };
+
+	/** Logging */
+	private static final Log log = LogFactory.getLog(PrependContextPathHandler.class);
 
 	private final Application application;
 
 	/**
 	 * This constructor will get the context path from the application settings.
-	 * When it is not set the context path will be automatically resolved.
-	 * This should work in most cases, and support the following clustering
-	 * scheme
+	 * When it is not set the context path will be automatically resolved. This
+	 * should work in most cases, and support the following clustering scheme
 	 * 
 	 * <pre>
 	 *    node1.mydomain.com[/appcontext]
@@ -84,8 +78,9 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	 *    appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
-	 * @param application The application object
-	 *    
+	 * @param application
+	 *            The application object
+	 * 
 	 */
 	public PrependContextPathHandler(final Application application)
 	{
@@ -105,18 +100,19 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag. If null, no more tags are available
 		final ComponentTag tag = (ComponentTag)getParent().nextTag();
-		if (tag == null  || tag.getId() != null)
+		if (tag == null || tag.getId() != null)
 		{
 			return tag;
 		}
-		
+
 		// Don't touch any wicket:id component
 		if (tag.getId() != null)
 		{
 			return tag;
 		}
 
-		// this call should always get the default of the application or the overriden one.
+		// this call should always get the default of the application or the
+		// overriden one.
 		String contextPath = application.getApplicationSettings().getContextPath();
 		if (contextPath == null)
 		{
