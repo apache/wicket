@@ -850,10 +850,13 @@ public abstract class Session implements IClusterable, IConverterLocator
 	{
 		// Check that session doesn't have too many page maps already
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
-		if (usedPageMaps.size() >= maxPageMaps)
+		synchronized(usedPageMaps) 
 		{
-			IPageMap pm = (IPageMap)usedPageMaps.getFirst();
-			pm.remove();
+			if (usedPageMaps.size() >= maxPageMaps)
+			{
+				IPageMap pm = (IPageMap)usedPageMaps.getFirst();
+				pm.remove();
+			}
 		}
 
 		// Create new page map
@@ -892,7 +895,12 @@ public abstract class Session implements IClusterable, IConverterLocator
 		PageMapAccessMetaData pagemapMetaData = (PageMapAccessMetaData)getMetaData(PAGEMAP_ACCESS_MDK);
 		if (pagemapMetaData != null)
 			pagemapMetaData.pageMapNames.remove(pageMap.getName());
-		usedPageMaps.remove(pageMap);
+		
+		synchronized (usedPageMaps)
+		{	
+			usedPageMaps.remove(pageMap);
+		}
+				
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 		dirty();
 	}
@@ -1258,8 +1266,11 @@ public abstract class Session implements IClusterable, IConverterLocator
 	{
 		if (!map.isDefault())
 		{
-			usedPageMaps.remove(map);
-			usedPageMaps.addLast(map);
+			synchronized (usedPageMaps)
+			{
+				usedPageMaps.remove(map);
+				usedPageMaps.addLast(map);				
+			}
 		}
 		List dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(map))
