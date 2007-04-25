@@ -85,7 +85,7 @@ public class Application implements ApplicationMBean
 	 */
 	public String getHomePageClass() throws IOException
 	{
-		return application.getClass().getName();
+		return application.getHomePage().getName();
 	}
 
 	/**
