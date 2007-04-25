@@ -151,10 +151,10 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 *            the markup stream
 	 * @param openTag
 	 *            the open part of this tag
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream,
+	 *      ComponentTag)
 	 */
-	protected void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Draw anything before the body?
 		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
@@ -193,6 +193,12 @@ public abstract class AbstractLink extends WebMarkupContainer
 			tag.remove("href");
 
 			tag.remove("onclick");
+		}
+		// if the tag is a button or input
+		else if ("button".equalsIgnoreCase(tag.getName())
+				|| "input".equalsIgnoreCase(tag.getName()))
+		{
+			tag.put("disabled", "disabled");
 		}
 	}
 }
