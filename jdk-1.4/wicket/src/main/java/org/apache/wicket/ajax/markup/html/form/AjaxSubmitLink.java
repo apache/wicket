@@ -113,8 +113,8 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 		
 		if (isLinkEnabled()) 
 		{
-			checkComponentTag(tag, "a");
-			tag.put("href", "#");
+			if (tag.getName().toLowerCase().equals("a"))
+				tag.put("href", "#");
 		}
 		else
 		{
