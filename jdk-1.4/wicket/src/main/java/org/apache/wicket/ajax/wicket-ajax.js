@@ -262,6 +262,12 @@ Wicket.Form.encode = function(text) {
 }
 
 Wicket.Form.serializeSelect = function(select){
+	// if it is a non-multiple select, iterating on each element is not required (WICKET-389)
+	if (select.multiple == false){
+		return Wicket.Form.encode(select.name) + "=" + Wicket.Form.encode(select.value) + "&";
+	}
+
+    //else
     var result = "";
     for (var i = 0; i < select.options.length; ++i) {
         var option = select.options[i];
