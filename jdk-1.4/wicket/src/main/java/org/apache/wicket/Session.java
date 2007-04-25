@@ -356,6 +356,11 @@ public abstract class Session implements IClusterable, IConverterLocator
 	/**
 	 * Holds attributes for sessions that are still temporary/ not bound to a
 	 * session store. Only used when {@link #isTemporary()} is true.
+	 * <p>
+	 * Note: this doesn't have to be synchronized, as the only time when this
+	 * map is used is when a session is temporary, in which case it won't be
+	 * shared between requests (it's a per request instance).
+	 * </p>
 	 */
 	private transient Map temporarySessionAttributes;
 
@@ -402,7 +407,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * This method should not typically be called by clients
 	 * </p>
 	 */
-	public synchronized final void bind()
+	public final void bind()
 	{
 		ISessionStore store = getSessionStore();
 		Request request = RequestCycle.get().getRequest();
@@ -466,7 +471,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * 
 	 * @return Created PageMap
 	 */
-	public synchronized final IPageMap createAutoPageMap()
+	public final IPageMap createAutoPageMap()
 	{
 		return newPageMap(createAutoPageMapName());
 	}
@@ -850,7 +855,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	{
 		// Check that session doesn't have too many page maps already
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
-		synchronized(usedPageMaps) 
+		synchronized (usedPageMaps)
 		{
 			if (usedPageMaps.size() >= maxPageMaps)
 			{
@@ -895,12 +900,12 @@ public abstract class Session implements IClusterable, IConverterLocator
 		PageMapAccessMetaData pagemapMetaData = (PageMapAccessMetaData)getMetaData(PAGEMAP_ACCESS_MDK);
 		if (pagemapMetaData != null)
 			pagemapMetaData.pageMapNames.remove(pageMap.getName());
-		
+
 		synchronized (usedPageMaps)
-		{	
+		{
 			usedPageMaps.remove(pageMap);
 		}
-				
+
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 		dirty();
 	}
@@ -1269,7 +1274,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 			synchronized (usedPageMaps)
 			{
 				usedPageMaps.remove(map);
-				usedPageMaps.addLast(map);				
+				usedPageMaps.addLast(map);
 			}
 		}
 		List dirtyObjects = getDirtyObjectsList();
