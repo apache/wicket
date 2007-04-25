@@ -97,16 +97,9 @@ public final class FeedbackMessages implements IClusterable
 			return 0;
 		}
 
-		int count = 0;
-		for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
-		{
-			final FeedbackMessage message = (FeedbackMessage)iterator.next();
-			if (filter == null || filter.accept(message))
-			{
-				messages.remove(message);
-				count++;
-			}
-		}
+		List toDelete = messages(filter);
+		int count = toDelete.size();
+		messages.removeAll(toDelete);
 
 		trimToSize();
 		return count;
