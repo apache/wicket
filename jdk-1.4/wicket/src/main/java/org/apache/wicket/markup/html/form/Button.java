@@ -190,6 +190,8 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
+		checkComponentTag(tag, "input");
+
 		// Default handling for component tag
 		super.onComponentTag(tag);
 
