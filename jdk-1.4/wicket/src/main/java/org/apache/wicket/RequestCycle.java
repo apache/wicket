@@ -386,7 +386,7 @@ public abstract class RequestCycle
 	public final Page getResponsePage()
 	{
 		IRequestTarget target = getRequestTarget();
-		if (target instanceof PageRequestTarget)
+		if (target instanceof IPageRequestTarget)
 		{
 			return ((IPageRequestTarget)target).getPage();
 		}
