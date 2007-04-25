@@ -309,6 +309,22 @@ abstract class AbstractChoice extends FormComponent
 	protected abstract boolean isSelected(final Object object, int index, String selected);
 
 	/**
+	 * Gets whether the given value is disabled.  This default implementation always returns false.
+	 *
+	 * @param object
+	 *            The object to check
+	 * @param index
+	 *            The index in the choices collection this object is in.
+	 * @param selected
+	 *            The currently selected string value
+	 * @return Whether the given value represents the current selection
+	 */
+	protected boolean isDisabled(final Object object, int index, String selected)
+    {
+        return false;
+    }
+
+    /**
 	 * Handle the container's body.
 	 * 
 	 * @param markupStream
@@ -360,6 +376,10 @@ abstract class AbstractChoice extends FormComponent
 		if (isSelected(choice, index, selected))
 		{
 			buffer.append("selected=\"selected\" ");
+		}
+		if (isDisabled(choice, index, selected))
+		{
+			buffer.append("disabled=\"disabled\" ");
 		}
 		buffer.append("value=\"");
 		buffer.append(renderer.getIdValue(choice, index));
