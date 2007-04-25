@@ -1153,7 +1153,7 @@ public final class Objects
 		{
 			Objects.objectStreamFactory = objectStreamFactory;
 		}
-		log.info("using " + objectStreamFactory + " for creating object streams");
+		log.info("using " + Objects.objectStreamFactory + " for creating object streams");
 	}
 
 	/**
