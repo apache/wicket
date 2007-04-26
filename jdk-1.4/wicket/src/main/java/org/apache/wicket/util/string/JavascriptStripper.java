@@ -75,7 +75,7 @@ public class JavascriptStripper
 
 			if (state == REGULAR_TEXT)
 			{
-				if (c == '/' && next == '/')
+				if (c == '/' && next == '/' && prev != '\\')
 				{
 					state = LINE_COMMENT;
 					continue;
@@ -106,7 +106,7 @@ public class JavascriptStripper
 
 			if (state == LINE_COMMENT)
 			{
-				if (c == '\n')
+				if (c == '\n' || c == '\r')
 				{
 					state = REGULAR_TEXT;
 					continue;
