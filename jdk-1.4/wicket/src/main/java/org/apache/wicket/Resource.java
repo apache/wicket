@@ -18,12 +18,12 @@ package org.apache.wicket;
 
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -61,7 +61,7 @@ public abstract class Resource implements IResourceListener
 	private static final long serialVersionUID = 1L;
 
 	/** Logger */
-	private static final Log log = LogFactory.getLog(Resource.class);
+	private static final Logger log = LoggerFactory.getLogger(Resource.class);
 
 	/** True if this resource can be cached */
 	private boolean cacheable;

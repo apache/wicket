@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.AbortException;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.MetaDataKey;
@@ -31,6 +29,8 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.settings.IRequestCycleSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * RequestCycle implementation for HTTP protocol. Holds the application,
@@ -49,7 +49,7 @@ import org.apache.wicket.settings.IRequestCycleSettings;
 public class WebRequestCycle extends RequestCycle
 {
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
+	private static final Logger log = LoggerFactory.getLogger(WebRequestCycle.class);
 
 	private static final MetaDataKey BROWSER_WAS_POLLED_KEY = new MetaDataKey(Boolean.class)
 	{

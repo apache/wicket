@@ -352,8 +352,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					{
 						// currently it is not supported to jump over 2
 						// pages....
-						log
-								.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
+						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
 						return null;
 					}
 					return store.getPage(sessionId, page.getPageMap().getName(), page

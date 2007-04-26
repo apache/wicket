@@ -18,8 +18,6 @@ package org.apache.wicket;
 
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -39,6 +37,8 @@ import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequ
 import org.apache.wicket.request.target.resource.SharedResourceRequestTarget;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -189,7 +189,7 @@ public abstract class RequestCycle
 	private static final int HANDLE_EXCEPTION = 5;
 
 	/** Log */
-	private static final Log log = LogFactory.getLog(RequestCycle.class);
+	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
 	/** No processing has been done. */
 	private static final int NOT_STARTED = 0;

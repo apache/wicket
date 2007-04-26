@@ -18,10 +18,10 @@ package org.apache.wicket;
 
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.ArrayListStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -50,7 +50,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(AccessStackPageMap.class);
+	private static final Logger log = LoggerFactory.getLogger(AccessStackPageMap.class);
 
 
 	/** Stack of entry accesses by id */

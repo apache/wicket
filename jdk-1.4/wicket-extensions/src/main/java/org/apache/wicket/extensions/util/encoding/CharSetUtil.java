@@ -21,11 +21,11 @@ import java.io.InputStream;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +39,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 public class CharSetUtil
 {
     /** Logging */
-	private static final Log log = LogFactory.getLog(CharSetUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(CharSetUtil.class);
 
 	/** Locale to character encoding mapping */
 	private static CharSetMap charSetMap;

@@ -28,8 +28,6 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
@@ -58,6 +56,8 @@ import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -136,7 +136,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(WebRequestCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(WebRequestCodingStrategy.class);
 
 	/**
 	 * map of path mounts for mount encoders on paths.

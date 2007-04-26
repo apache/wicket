@@ -21,14 +21,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.listener.ChangeListenerSet;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.thread.ICode;
 import org.apache.wicket.util.thread.Task;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,7 +40,7 @@ import org.apache.wicket.util.time.Time;
 public final class ModificationWatcher
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(ModificationWatcher.class);
+	private static final Logger log = LoggerFactory.getLogger(ModificationWatcher.class);
 
 	/** Maps Modifiable objects to Entry objects */
 	private final Map modifiableToEntry = new HashMap();
@@ -152,7 +152,7 @@ public final class ModificationWatcher
 
 		task.run(pollFrequency, new ICode()
 		{
-			public void run(final Log log)
+			public void run(final Logger log)
 			{
 				// Iterate over a copy of the list of entries to avoid
 				// concurrent

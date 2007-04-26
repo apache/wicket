@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +38,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public class SharedResources
 {
 	/** Logger */
-	private static final Log log = LogFactory.getLog(SharedResources.class);
+	private static final Logger log = LoggerFactory.getLogger(SharedResources.class);
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts

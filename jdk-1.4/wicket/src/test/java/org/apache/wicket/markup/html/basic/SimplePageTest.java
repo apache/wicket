@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
@@ -26,6 +24,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,7 +36,7 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class SimplePageTest extends WicketTestCase
 {
-	private static final Log log = LogFactory.getLog(SimplePageTest.class);
+	private static final Logger log = LoggerFactory.getLogger(SimplePageTest.class);
 
 	/**
 	 * Create the test.

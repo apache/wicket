@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
@@ -50,6 +48,8 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.version.undo.Change;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -553,7 +553,7 @@ public abstract class Component implements IClusterable
 	};
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Component.class);
+	private static final Logger log = LoggerFactory.getLogger(Component.class);
 
 	/**
 	 * The name of attribute that will hold markup id

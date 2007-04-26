@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -40,6 +38,8 @@ import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -671,7 +671,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			"href");
 
 	/** Logging */
-	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(AutoLinkResolver.class);
 
 	private static final long serialVersionUID = 1L;
 

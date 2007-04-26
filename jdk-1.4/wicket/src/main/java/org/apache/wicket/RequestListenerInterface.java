@@ -22,12 +22,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.util.lang.Classes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,7 +41,7 @@ public class RequestListenerInterface
 	private static final Map interfaces = Collections.synchronizedMap(new HashMap());
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(RequestListenerInterface.class);
+	private static final Logger log = LoggerFactory.getLogger(RequestListenerInterface.class);
 
 	/**
 	 * Looks up a request interface listener by name.

@@ -23,13 +23,13 @@ import java.util.Locale;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,7 +45,7 @@ import org.apache.wicket.util.time.Time;
 public class WebResponse extends Response
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(WebResponse.class);
+	private static final Logger log = LoggerFactory.getLogger(WebResponse.class);
 
 	/** True if response is a redirect. */
 	protected boolean redirect;

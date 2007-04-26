@@ -23,13 +23,13 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -61,7 +61,7 @@ public final class PropertyResolver
 	private final static Map classesToGetAndSetters = new ConcurrentHashMap(64);
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(PropertyResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
 	/**
 	 * Looksup the value from the object with the given expression. If the

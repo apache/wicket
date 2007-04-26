@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
@@ -48,6 +46,8 @@ import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -228,7 +228,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	}
 
-	private static final Log LOG = LogFactory.getLog(AjaxRequestTarget.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AjaxRequestTarget.class);
 
 	private final List/* <String> */appendJavascripts = new ArrayList();
 

@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
@@ -38,6 +36,8 @@ import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.util.watch.ModificationWatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,7 +56,7 @@ import org.apache.wicket.util.watch.ModificationWatcher;
 public class PropertiesFactory implements IPropertiesFactory
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(PropertiesFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(PropertiesFactory.class);
 
 	/** Cache for all property files loaded */
 	private final Map propertiesCache = new ConcurrentHashMap();

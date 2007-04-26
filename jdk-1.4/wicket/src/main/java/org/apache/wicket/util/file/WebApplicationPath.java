@@ -23,12 +23,12 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.util.string.StringList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +39,7 @@ import org.apache.wicket.util.string.StringList;
  */
 public final class WebApplicationPath implements IResourcePath
 {
-	private final static Log log = LogFactory.getLog(WebApplicationPath.class);
+	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
 
 	/** The list of urls in the path */
 	private final List webappPaths = new ArrayList();

@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -42,6 +40,8 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -194,7 +194,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 	private static final ThreadLocal dirtyObjects = new ThreadLocal();
 
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(Session.class);
+	private static final Logger log = LoggerFactory.getLogger(Session.class);
 
 	/** Attribute prefix for page maps stored in the session */
 	private static final String pageMapAttributePrefix = "m:";

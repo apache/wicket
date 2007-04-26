@@ -13,7 +13,6 @@
         <webClassPathEntry>/wicket-datetime/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-examples/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-extensions/target/classes</webClassPathEntry>
-        <webClassPathEntry>/wicket-jmx/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-spring-annot/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-spring/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket/target/classes</webClassPathEntry>

@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.markup;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -47,7 +47,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class MergedMarkup extends Markup
 {
-	private final static Log log = LogFactory.getLog(MergedMarkup.class);
+	private final static Logger log = LoggerFactory.getLogger(MergedMarkup.class);
 
 	/**
 	 * Merge inherited and base markup.

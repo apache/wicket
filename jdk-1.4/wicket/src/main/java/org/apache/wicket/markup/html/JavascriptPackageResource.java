@@ -23,8 +23,6 @@ import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.SharedResources;
 import org.apache.wicket.util.io.Streams;
@@ -32,6 +30,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.JavascriptStripper;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -156,7 +156,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 
 	private static final long serialVersionUID = 1L;;
 
-	private static final Log log = LogFactory.getLog(JavascriptPackageResource.class);
+	private static final Logger log = LoggerFactory.getLogger(JavascriptPackageResource.class);
 
 	/**
 	 * Gets the resource for a given set of criteria. Only one resource will be

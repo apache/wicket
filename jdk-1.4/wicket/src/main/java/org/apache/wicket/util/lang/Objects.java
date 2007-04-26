@@ -29,8 +29,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -41,6 +39,8 @@ import org.apache.wicket.util.io.IObjectStreamFactory;
 import org.apache.wicket.util.io.WicketObjectStreamFactory;
 import org.apache.wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -130,8 +130,7 @@ public final class Objects
 			catch (ClassNotFoundException ex1)
 			{
 				// ignore this exception.
-				log
-						.debug("Class not found by using objects own classloader, trying the IClassResolver");
+				log.debug("Class not found by using objects own classloader, trying the IClassResolver");
 			}
 
 			Application application = Application.get();
@@ -217,7 +216,7 @@ public final class Objects
 	private static final int INT = 4;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(Objects.class);
+	private static final Logger log = LoggerFactory.getLogger(Objects.class);
 
 	/** Type tag meaning long. */
 	private static final int LONG = 5;

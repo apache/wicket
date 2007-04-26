@@ -19,8 +19,6 @@ package org.apache.wicket.markup;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
@@ -30,6 +28,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.apache.wicket.util.watch.Watcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,7 +42,7 @@ import org.apache.wicket.util.watch.Watcher;
 public class MarkupCache
 {
 	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(MarkupCache.class);
+	private static final Logger log = LoggerFactory.getLogger(MarkupCache.class);
 
 	/** Map of markup tags by class (exactly what is in the file). */
 	private final Map markupCache = new ConcurrentHashMap();

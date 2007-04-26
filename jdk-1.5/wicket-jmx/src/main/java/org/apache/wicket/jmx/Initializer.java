@@ -29,11 +29,11 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.IDestroyer;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.WicketRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -53,7 +53,7 @@ import org.apache.wicket.WicketRuntimeException;
  */
 public class Initializer implements IInitializer, IDestroyer
 {
-	private static Log log = LogFactory.getLog(Initializer.class);
+	private static Logger log = LoggerFactory.getLogger(Initializer.class);
 
 	// It's best to store a reference to the MBeanServer rather than getting it
 	// over and over

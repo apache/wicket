@@ -26,12 +26,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.ModificationWatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,7 +42,7 @@ import org.apache.wicket.util.watch.ModificationWatcher;
  */
 public class ReloadingClassLoader extends URLClassLoader
 {
-	private static final Log log = LogFactory.getLog(ReloadingClassLoader.class);
+	private static final Logger log = LoggerFactory.getLogger(ReloadingClassLoader.class);
 
 	private static final Set urls = new HashSet();
 	private static final List patterns = new ArrayList();

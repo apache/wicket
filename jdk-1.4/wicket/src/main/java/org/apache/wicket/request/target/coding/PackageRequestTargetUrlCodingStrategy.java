@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.target.coding;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
@@ -28,6 +26,8 @@ import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +38,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
 {
-	private static final Log log = LogFactory.getLog(PackageRequestTargetUrlCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(PackageRequestTargetUrlCodingStrategy.class);
 	/** package for this mount. */
 	private final PackageName packageName;
 

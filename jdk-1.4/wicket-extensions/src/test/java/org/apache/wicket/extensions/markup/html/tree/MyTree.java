@@ -21,11 +21,11 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.apache.wicket.markup.html.image.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,7 +42,7 @@ public class MyTree extends Tree
 	private static final ResourceReference nodeImage = new ResourceReference(MyTree.class, "node.gif");
 	
 	/** Log. */
-	private static final Log log = LogFactory.getLog(MyTree.class);
+	private static final Logger log = LoggerFactory.getLogger(MyTree.class);
 
 	/**
 	 * Construct.

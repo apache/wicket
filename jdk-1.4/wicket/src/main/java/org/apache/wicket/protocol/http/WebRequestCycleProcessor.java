@@ -18,8 +18,6 @@ package org.apache.wicket.protocol.http;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.AccessStackPageMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -35,6 +33,8 @@ import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default request processor implementation for normal web applications.
@@ -43,7 +43,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 {
-	private static final Log log = LogFactory.getLog(WebRequestCycleProcessor.class);
+	private static final Logger log = LoggerFactory.getLogger(WebRequestCycleProcessor.class);
 
 	/**
 	 * Construct.

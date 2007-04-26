@@ -19,9 +19,9 @@ package org.apache.wicket.protocol.http.documentvalidation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -33,7 +33,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class HtmlDocumentParser
 {
-	private static final Log log = LogFactory.getLog(HtmlDocumentParser.class);
+	private static final Logger log = LoggerFactory.getLogger(HtmlDocumentParser.class);
 
 	/** Constant for close tag token. */
 	public static final int CLOSE_TAG = 4;

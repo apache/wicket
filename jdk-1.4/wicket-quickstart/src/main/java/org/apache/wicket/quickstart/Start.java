@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.quickstart;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Seperate startup class for people that want to run the examples directly.
@@ -31,7 +31,7 @@ public class Start
 	/**
 	 * Used for logging.
 	 */
-	private static Log log = LogFactory.getLog(Start.class);
+	private static Logger log = LoggerFactory.getLogger(Start.class);
 
 	/**
 	 * Construct.

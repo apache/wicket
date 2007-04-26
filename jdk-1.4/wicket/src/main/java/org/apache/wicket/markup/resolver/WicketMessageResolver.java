@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.resolver;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
@@ -28,6 +26,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,7 +41,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  */
 public class WicketMessageResolver implements IComponentResolver
 {
-	private static final Log log = LogFactory.getLog(WicketMessageResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketMessageResolver.class);
 
 	static
 	{

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
@@ -46,6 +44,8 @@ import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.JavascriptUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -73,7 +73,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(WebPage.class);
+	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
 
 	/** The resource references used for new window/tab support */
 	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,

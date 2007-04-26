@@ -18,8 +18,6 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupParserFactory;
@@ -27,6 +25,8 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupParserFactory;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.settings.IMarkupSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,7 +48,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	private static final String attributeNames[] = new String[] { "href", "src", "background" };
 
 	/** Logging */
-	private static final Log log = LogFactory.getLog(PrependContextPathHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(PrependContextPathHandler.class);
 
 	private final Application application;
 

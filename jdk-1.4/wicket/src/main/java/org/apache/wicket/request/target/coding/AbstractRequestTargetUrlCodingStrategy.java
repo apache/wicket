@@ -24,13 +24,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,7 +45,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			IMountableRequestTargetUrlCodingStrategy
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractRequestTargetUrlCodingStrategy.class);
 
 	/** mounted path. */
 	private final String mountPath;

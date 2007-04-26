@@ -26,11 +26,11 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -63,7 +63,7 @@ public class ZipResourceStream extends AbstractResourceStream
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Log log = LogFactory.getLog(ZipResourceStream.class);
+	private static final Logger log = LoggerFactory.getLogger(ZipResourceStream.class);
 
 	ByteArrayOutputStream bytearray;
 

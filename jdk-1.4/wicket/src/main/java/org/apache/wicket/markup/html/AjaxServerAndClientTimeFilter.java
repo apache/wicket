@@ -19,14 +19,14 @@ package org.apache.wicket.markup.html;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavascriptUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,7 +45,7 @@ import org.apache.wicket.util.string.JavascriptUtils;
  */
 public class AjaxServerAndClientTimeFilter implements IResponseFilter
 {
-	private static Log log = LogFactory.getLog(AjaxServerAndClientTimeFilter.class);
+	private static Logger log = LoggerFactory.getLogger(AjaxServerAndClientTimeFilter.class);
 
 	/**
 	 * @see org.apache.wicket.IResponseFilter#filter(java.lang.StringBuffer)

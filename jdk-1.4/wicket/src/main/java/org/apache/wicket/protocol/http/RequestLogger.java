@@ -24,8 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.IPageMap;
@@ -39,6 +37,8 @@ import org.apache.wicket.request.target.resource.ISharedResourceRequestTarget;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -62,7 +62,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public class RequestLogger implements IRequestLogger
 {
 	/** log. */
-	protected static Log log = LogFactory.getLog(RequestLogger.class);
+	protected static Logger log = LoggerFactory.getLogger(RequestLogger.class);
 
 
 	/**

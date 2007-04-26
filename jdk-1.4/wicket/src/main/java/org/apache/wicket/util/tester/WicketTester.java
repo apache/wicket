@@ -26,8 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -38,6 +36,8 @@ import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.diff.DiffUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -148,7 +148,7 @@ import org.apache.wicket.util.diff.DiffUtil;
 public class WicketTester extends BaseWicketTester
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(WicketTester.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketTester.class);
 
 	/**
 	 * @author frankbille

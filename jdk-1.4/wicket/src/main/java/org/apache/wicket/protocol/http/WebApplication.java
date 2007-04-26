@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.IRequestCycleFactory;
 import org.apache.wicket.IRequestTarget;
@@ -50,6 +48,8 @@ import org.apache.wicket.util.collections.MostRecentlyUsedMap;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.watch.ModificationWatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -101,7 +101,7 @@ import org.apache.wicket.util.watch.ModificationWatcher;
 public abstract class WebApplication extends Application implements ISessionFactory
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(WebApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
 
 	/**
 	 * The cached application key. Will be set in

@@ -24,14 +24,14 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.StringList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a utility class. It serves two purposes.
@@ -47,7 +47,7 @@ import org.apache.wicket.util.string.StringList;
  */
 public final class DiffUtil
 {
-	private static final Log log = LogFactory.getLog(DiffUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(DiffUtil.class);
 
 	/**
 	 * Replace the expected result file with the current output.

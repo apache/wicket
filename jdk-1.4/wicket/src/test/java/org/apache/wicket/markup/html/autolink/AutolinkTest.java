@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.markup.html.autolink;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.autolink.sub.PageB;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,7 +29,7 @@ import org.apache.wicket.markup.resolver.AutoLinkResolver;
 public class AutolinkTest extends WicketTestCase
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(AutoLinkResolver.class);
 
 	/**
 	 * Construct.

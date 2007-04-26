@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,7 +40,7 @@ import org.apache.wicket.util.resource.WebExternalResourceStream;
 public class WebExternalResourceRequestTarget extends ResourceStreamRequestTarget
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(WebExternalResourceRequestTarget.class);
+	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestTarget.class);
 
 	/** the relative url of the external resource. */
 	private final String uri;

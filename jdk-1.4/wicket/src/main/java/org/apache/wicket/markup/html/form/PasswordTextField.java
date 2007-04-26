@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -37,7 +37,7 @@ public class PasswordTextField extends TextField
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(PasswordTextField.class);
+	private static final Logger log = LoggerFactory.getLogger(PasswordTextField.class);
 
 	/**
 	 * Flag indicating whether the contents of the field should be reset each

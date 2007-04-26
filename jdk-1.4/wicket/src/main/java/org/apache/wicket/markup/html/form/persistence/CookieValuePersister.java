@@ -18,13 +18,13 @@ package org.apache.wicket.markup.html.form.persistence;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +38,7 @@ public class CookieValuePersister implements IValuePersister
 	private static final long serialVersionUID = 1L;
 	
 	/** Logging */
-	private final static Log log = LogFactory.getLog(CookieValuePersister.class);
+	private final static Logger log = LoggerFactory.getLogger(CookieValuePersister.class);
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.persistence.IValuePersister#clear(org.apache.wicket.markup.html.form.FormComponent)

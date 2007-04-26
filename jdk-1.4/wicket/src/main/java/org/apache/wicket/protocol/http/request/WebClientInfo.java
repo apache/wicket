@@ -18,11 +18,11 @@ package org.apache.wicket.protocol.http.request;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.ClientInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,7 +35,7 @@ public class WebClientInfo extends ClientInfo
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(WebClientInfo.class);
+	private static final Logger log = LoggerFactory.getLogger(WebClientInfo.class);
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically,

@@ -21,8 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.MarkupException;
@@ -40,6 +38,8 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.value.Count;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.Change;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -159,7 +159,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Page.class);
+	private static final Logger log = LoggerFactory.getLogger(Page.class);
 
 	/** Used to create page-unique numbers */
 	private short autoIndex;

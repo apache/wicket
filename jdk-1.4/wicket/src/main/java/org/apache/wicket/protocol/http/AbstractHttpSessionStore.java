@@ -22,8 +22,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
@@ -33,6 +31,8 @@ import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.UndoPageVersionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -106,7 +106,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/** log. */
-	protected static Log log = LogFactory.getLog(AbstractHttpSessionStore.class);
+	protected static Logger log = LoggerFactory.getLogger(AbstractHttpSessionStore.class);
 
 	/** The web application for this store. Is never null. */
 	protected final WebApplication application;

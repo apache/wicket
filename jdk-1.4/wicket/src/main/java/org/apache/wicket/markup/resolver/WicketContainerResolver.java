@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.markup.resolver;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -59,7 +59,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
  */
 public class WicketContainerResolver implements IComponentResolver
 {
-	private static final Log log = LogFactory.getLog(WicketContainerResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketContainerResolver.class);
 
 	static
 	{

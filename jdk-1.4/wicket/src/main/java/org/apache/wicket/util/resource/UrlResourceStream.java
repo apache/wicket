@@ -25,11 +25,11 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -44,7 +44,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	private static final long serialVersionUID = 1L;
 
 	/** Logging. */
-	private static final Log log = LogFactory.getLog(UrlResourceStream.class);
+	private static final Logger log = LoggerFactory.getLogger(UrlResourceStream.class);
 
 	/** Resource stream. */
 	private transient InputStream inputStream;

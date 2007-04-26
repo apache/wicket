@@ -21,12 +21,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -34,7 +34,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  */
 public class ResourceTest extends WicketTestCase
 {
-	private static final Log log = LogFactory.getLog(ResourceTest.class);
+	private static final Logger log = LoggerFactory.getLogger(ResourceTest.class);
 	private static final String TEST_STRING = "Hello, World!";
 
 	/**

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.request.target.resource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -25,6 +23,8 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,7 +35,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 public class ResourceStreamRequestTarget implements IRequestTarget
 {
 	/** Logger */
-	private static final Log log = LogFactory.getLog(ResourceStreamRequestTarget.class);
+	private static final Logger log = LoggerFactory.getLogger(ResourceStreamRequestTarget.class);
 
 	/**
 	 * Optional filename, used to set the content disposition header. Only

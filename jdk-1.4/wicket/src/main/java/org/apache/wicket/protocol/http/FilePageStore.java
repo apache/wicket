@@ -28,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -364,7 +364,7 @@ public class FilePageStore implements IPageStore
 
 	private static final Object SERIALIZING = new Object();
 	/** log. */
-	protected static Log log = LogFactory.getLog(FilePageStore.class);
+	protected static Logger log = LoggerFactory.getLogger(FilePageStore.class);
 
 
 	private final File defaultWorkDir;

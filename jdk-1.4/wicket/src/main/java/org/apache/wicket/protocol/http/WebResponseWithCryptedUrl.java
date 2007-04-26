@@ -21,13 +21,13 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,7 +41,7 @@ import org.apache.wicket.util.string.Strings;
 public class WebResponseWithCryptedUrl extends WebResponse
 {
     /** Logger */
-    private static final Log log = LogFactory.getLog(WebResponseWithCryptedUrl.class);
+    private static final Logger log = LoggerFactory.getLogger(WebResponseWithCryptedUrl.class);
 
 	/**
 	 * Constructor.

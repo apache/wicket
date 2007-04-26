@@ -23,8 +23,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
@@ -39,6 +37,8 @@ import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -91,7 +91,7 @@ public abstract class MarkupContainer extends Component
 	private static final long serialVersionUID = 1L;
 
 	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(MarkupContainer.class);
+	private static final Logger log = LoggerFactory.getLogger(MarkupContainer.class);
 
 	/** List of children or single child */
 	private Object children;

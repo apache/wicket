@@ -19,8 +19,6 @@ package org.apache.wicket.ajax;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.MockPageWithLinkAndComponent;
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
@@ -32,6 +30,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -43,7 +43,7 @@ import org.apache.wicket.util.time.Duration;
  */
 public class AjaxTimerBehaviorTest extends WicketTestCase
 {
-	private static final Log log = LogFactory.getLog(AjaxTimerBehaviorTest.class);
+	private static final Logger log = LoggerFactory.getLogger(AjaxTimerBehaviorTest.class);
 
 	/**
 	 * Construct.

@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.protocol.http;
 
-import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import junit.framework.TestCase;
 
 /**
  *
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class WebResponseTest extends TestCase
 {
-	private static final Log log = LogFactory.getLog(WebResponseTest.class);
+	private static final Logger log = LoggerFactory.getLogger(WebResponseTest.class);
 
 	/**
 	 * Test that redirect works correctly when not using ajax

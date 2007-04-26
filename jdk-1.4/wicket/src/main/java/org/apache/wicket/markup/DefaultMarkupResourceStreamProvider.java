@@ -18,12 +18,12 @@ package org.apache.wicket.markup;
 
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,7 +36,7 @@ import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
 {
 	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(DefaultMarkupResourceStreamProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultMarkupResourceStreamProvider.class);
 
 	/**
 	 * Constructor.

@@ -22,8 +22,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.RequestListenerInterface;
@@ -34,6 +32,8 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileUploadException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -44,7 +44,7 @@ import org.apache.wicket.util.upload.FileUploadException;
 public class ServletWebRequest extends WebRequest
 {
 	/** Log */
-	private static final Log log = LogFactory.getLog(ServletWebRequest.class);
+	private static final Logger log = LoggerFactory.getLogger(ServletWebRequest.class);
 
 	/** Servlet request information. */
 	private final HttpServletRequest httpServletRequest;

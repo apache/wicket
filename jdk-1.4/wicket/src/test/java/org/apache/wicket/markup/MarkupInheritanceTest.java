@@ -16,18 +16,18 @@
  */
 package org.apache.wicket.markup;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.diff.DiffUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  */
 public class MarkupInheritanceTest extends WicketTestCase
 {
-	private static final Log log = LogFactory.getLog(MarkupInheritanceTest.class);
+	private static final Logger log = LoggerFactory.getLogger(MarkupInheritanceTest.class);
 
 	/**
 	 * Create the test.

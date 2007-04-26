@@ -33,8 +33,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.AbortException;
 import org.apache.wicket.Application;
 import org.apache.wicket.RequestCycle;
@@ -46,6 +44,8 @@ import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -103,7 +103,7 @@ public class PackageResource extends WebResource
 	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(PackageResource.class);
+	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
 
 	private static final long serialVersionUID = 1L;
 

@@ -21,12 +21,12 @@ import java.io.InputStream;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.time.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -43,7 +43,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(WebExternalResourceStream.class);
+	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceStream.class);
 
 	/** the relative url of the external resource. */
 	private final String url;

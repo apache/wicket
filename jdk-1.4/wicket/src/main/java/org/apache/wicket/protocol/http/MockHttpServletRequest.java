@@ -43,8 +43,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
@@ -63,6 +61,8 @@ import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.upload.ServletFileUpload;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -149,7 +149,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(MockHttpServletRequest.class);
+	private static final Logger log = LoggerFactory.getLogger(MockHttpServletRequest.class);
 
 	/** The application */
 	private final Application application;

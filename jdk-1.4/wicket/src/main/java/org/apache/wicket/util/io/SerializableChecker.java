@@ -36,10 +36,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -195,7 +195,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	private static final NoopOutputStream DUMMY_OUTPUT_STREAM = new NoopOutputStream();
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(SerializableChecker.class);
+	private static final Logger log = LoggerFactory.getLogger(SerializableChecker.class);
 
 	/** Whether we can execute the tests. If false, check will just return. */
 	private static boolean available = true;

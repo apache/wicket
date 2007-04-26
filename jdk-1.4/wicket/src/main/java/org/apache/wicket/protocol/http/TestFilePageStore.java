@@ -24,13 +24,13 @@ import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,7 +45,7 @@ import org.apache.wicket.util.lang.Objects;
 public class TestFilePageStore implements IPageStore
 {
 	/** log. */
-	protected static Log log = LogFactory.getLog(TestFilePageStore.class);
+	protected static Logger log = LoggerFactory.getLogger(TestFilePageStore.class);
 
 	private Map map = new ConcurrentHashMap();
 	
@@ -186,7 +186,7 @@ public class TestFilePageStore implements IPageStore
 			}
 			catch (Exception e)
 			{
-				log.error(e);
+				log.error("Error", e);
 			}
 		}
 		return null;

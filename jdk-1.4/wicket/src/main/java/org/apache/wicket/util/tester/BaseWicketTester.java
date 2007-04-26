@@ -24,8 +24,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
@@ -61,6 +59,8 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -77,7 +77,7 @@ import org.apache.wicket.util.string.Strings;
 public class BaseWicketTester extends MockWebApplication
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(BaseWicketTester.class);
+	private static final Logger log = LoggerFactory.getLogger(BaseWicketTester.class);
 
 	/**
 	 * @author frankbille

@@ -18,8 +18,6 @@ package org.apache.wicket.markup.html.pages;
 
 import java.io.Serializable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.PageParameters;
@@ -39,6 +37,8 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.settings.IRequestCycleSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -484,7 +484,7 @@ public class BrowserInfoPage extends WebPage
 	}
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(BrowserInfoPage.class);
+	private static final Logger log = LoggerFactory.getLogger(BrowserInfoPage.class);
 
 	private static final long serialVersionUID = 1L;
 

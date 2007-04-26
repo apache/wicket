@@ -22,12 +22,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.util.concurrent.CopyOnWriteArrayList;
 import org.apache.wicket.util.string.StringList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -43,7 +43,7 @@ import org.apache.wicket.util.string.StringList;
 public final class FeedbackMessages implements IClusterable
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(FeedbackMessages.class);
+	private static final Logger log = LoggerFactory.getLogger(FeedbackMessages.class);
 
 	private static final long serialVersionUID = 1L;
 

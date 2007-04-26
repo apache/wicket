@@ -22,8 +22,6 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.parser.XmlPullParser;
@@ -34,6 +32,8 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -44,7 +44,7 @@ import org.apache.wicket.util.string.StringValueConversionException;
  */
 public final class MarkupParserTest extends WicketTestCase
 {
-	private static final Log log = LogFactory.getLog(MarkupParserTest.class);
+	private static final Logger log = LoggerFactory.getLogger(MarkupParserTest.class);
 
 	/**
 	 * Construct.
@@ -74,7 +74,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		final ComponentTag aOpen = (ComponentTag)markupStream.next();
 
-		log.info(aOpen);
+		log.info("", aOpen);
 		Assert.assertTrue(aOpen.getName().equals("a"));
 		Assert.assertEquals("foo.html", aOpen.getAttributes().getString("href"));
 
@@ -82,7 +82,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		final ComponentTag boldOpen = (ComponentTag)markupStream.next();
 
-		log.info(boldOpen);
+		log.info("", boldOpen);
 		Assert.assertTrue(boldOpen.getName().equals("b"));
 		Assert.assertEquals(XmlTag.OPEN, boldOpen.getType());
 
@@ -90,7 +90,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		final ComponentTag boldClose = (ComponentTag)markupStream.next();
 
-		log.info(boldClose);
+		log.info("", boldClose);
 		Assert.assertTrue(boldClose.getName().equals("b"));
 		Assert.assertEquals(XmlTag.CLOSE, boldClose.getType());
 
@@ -98,7 +98,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		final ComponentTag img = (ComponentTag)markupStream.next();
 
-		log.info(img);
+		log.info("", img);
 		Assert.assertTrue(img.getName().equals("img"));
 		Assert.assertEquals(9, img.getAttributes().getInt("width"));
 		Assert.assertEquals(10, img.getAttributes().getInt("height"));
@@ -108,7 +108,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		final ComponentTag marker = (ComponentTag)markupStream.next();
 
-		log.info(marker);
+		log.info("", marker);
 		Assert.assertTrue(marker.getName().equals("marker"));
 		Assert.assertEquals(XmlTag.OPEN_CLOSE, marker.getType());
 
@@ -116,7 +116,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		final ComponentTag aClose = (ComponentTag)markupStream.next();
 
-		log.info(aClose);
+		log.info("", aClose);
 		Assert.assertTrue(aClose.getName().equals("a"));
 
 		Assert.assertNull(markupStream.next());

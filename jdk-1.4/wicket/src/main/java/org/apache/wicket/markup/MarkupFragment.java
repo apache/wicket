@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +39,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class MarkupFragment
 {
-	private static final Log log = LogFactory.getLog(MarkupFragment.class);
+	private static final Logger log = LoggerFactory.getLogger(MarkupFragment.class);
 
 	/** Placeholder that indicates no markup */
 	public static final MarkupFragment NO_MARKUP_FRAGMENT = new MarkupFragment(Markup.NO_MARKUP);

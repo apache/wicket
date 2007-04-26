@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavascriptUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,7 +36,7 @@ import org.apache.wicket.util.string.JavascriptUtils;
  */
 public class ServerTimeFilter implements IResponseFilter
 {
-	private static final Log log = LogFactory.getLog(ServerTimeFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(ServerTimeFilter.class);
 
 	/**
 	 * @see org.apache.wicket.IResponseFilter#filter(AppendingStringBuffer)

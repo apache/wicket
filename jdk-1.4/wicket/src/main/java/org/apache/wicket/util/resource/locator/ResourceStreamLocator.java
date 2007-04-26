@@ -19,12 +19,12 @@ package org.apache.wicket.util.resource.locator;
 import java.net.URL;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Application;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -57,7 +57,7 @@ import org.apache.wicket.util.resource.UrlResourceStream;
 public class ResourceStreamLocator implements IResourceStreamLocator
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(ResourceStreamLocator.class);
+	private static final Logger log = LoggerFactory.getLogger(ResourceStreamLocator.class);
 
 	/** If null, the application registered finder will be used */
 	private IResourceFinder finder;

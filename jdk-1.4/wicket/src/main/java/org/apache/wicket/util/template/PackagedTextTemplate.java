@@ -19,8 +19,6 @@ package org.apache.wicket.util.template;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -28,6 +26,8 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,7 +41,7 @@ public class PackagedTextTemplate extends TextTemplate
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(PackagedTextTemplate.class);
+	private static final Logger log = LoggerFactory.getLogger(PackagedTextTemplate.class);
 
 	/** class loader stream locator. */
 	private static final IResourceStreamLocator streamLocator = new ResourceStreamLocator();

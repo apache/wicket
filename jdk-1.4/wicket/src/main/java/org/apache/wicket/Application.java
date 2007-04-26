@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -62,6 +60,8 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -139,7 +139,7 @@ public abstract class Application
 	private static final ThreadLocal current = new ThreadLocal();
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Application.class);
+	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this

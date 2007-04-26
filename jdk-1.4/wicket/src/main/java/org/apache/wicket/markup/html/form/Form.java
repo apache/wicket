@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MarkupContainer;
@@ -53,6 +51,8 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.util.value.ValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -195,7 +195,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Form.class);
+	private static final Logger log = LoggerFactory.getLogger(Form.class);
 
 	/** Maximum size of an upload in bytes */
 	private Bytes maxSize = Bytes.MAX;

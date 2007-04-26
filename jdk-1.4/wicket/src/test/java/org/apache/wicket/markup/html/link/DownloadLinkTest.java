@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.MockServletContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,7 +30,7 @@ import org.apache.wicket.protocol.http.MockServletContext;
 public class DownloadLinkTest extends WicketTestCase
 {
 	private static final String APPLICATION_X_CUSTOM = "application/x-custom";
-	private static final Log log = LogFactory.getLog(DownloadLinkTest.class);
+	private static final Logger log = LoggerFactory.getLogger(DownloadLinkTest.class);
 
 	/**
 	 * Construct.
