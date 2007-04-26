@@ -403,21 +403,21 @@ public final class Objects
 		}
 		catch (ClassNotFoundException e)
 		{
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Could not deserialize object using `"
+					+ objectStreamFactory.getClass().getName() + "` object factory", e);
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Could not deserialize object using `"
+					+ objectStreamFactory.getClass().getName() + "` object factory", e);
 		}
 	}
 
 	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The
 	 * object must be fully serializable to be cloned. This method will not
-	 * clone wicket Components, it will just reuse those instances so
-	 * that the complete component tree is not copied over only the model data.
+	 * clone wicket Components, it will just reuse those instances so that the
+	 * complete component tree is not copied over only the model data.
 	 * 
 	 * @param object
 	 *            The object to clone
