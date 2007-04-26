@@ -222,7 +222,17 @@ public class RequestLogger implements IRequestLogger
 			long sizeInBytes = -1;
 			if (Application.get().getRequestLoggerSettings().getRecordSessionSize())
 			{
-				sizeInBytes = session.getSizeInBytes();
+				try
+				{
+					sizeInBytes = session.getSizeInBytes();
+				}
+				catch (Exception e)
+				{
+					// log the error and let the request logging continue (this is what happens in the
+					// detach phase of the request cycle anyway. This provides better diagnostics).
+					log.error("Exception while determining the size of the session in the request logger: " 
+					        + e.getMessage(), e);
+				}
 			}
 			rd.setSessionSize(sizeInBytes);
 			rd.setTimeTaken(timeTaken);
