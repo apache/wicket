@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.linkomatic;
 
+import org.apache.wicket.examples.ServerHostNameAndTimeFilter;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 
@@ -43,4 +44,12 @@ public class LinkomaticApplication extends WicketExampleApplication
 		return Home.class;
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#init()
+	 */
+	protected void init()
+	{
+		// log host name and server time in the browser's status bar
+		getRequestCycleSettings().addResponseFilter(new ServerHostNameAndTimeFilter());
+	}
 }
