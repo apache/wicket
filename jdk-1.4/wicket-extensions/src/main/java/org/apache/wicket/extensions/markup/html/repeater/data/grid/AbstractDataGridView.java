@@ -22,6 +22,7 @@ import java.util.Iterator;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.RefreshingView;
+import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.DataViewBase;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.util.ArrayIteratorAdapter;
@@ -67,7 +68,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 		this.populators = populators;
 	}
-	
+
 	/**
 	 * Returns iterator over ICellPopulator elements in the populators array.
 	 * This method caches the iterator implemenation in a transient member
@@ -165,39 +166,29 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 	protected final void populateItem(Item item)
 	{
-		final IModel rowModel = item.getModel();
+		RepeatingView cells = new RepeatingView(CELL_REPEATER_ID);
+		item.add(cells);
 
-		// TODO Post 1.2: General: Does this need to be a refreshing view? since the rows
-		// is a refreshing view this will be recreated anyways. maybe can se
-		// orderedrepeatingview instead to simplify.
-		item.add(new RefreshingView(CELL_REPEATER_ID)
+		Iterator populators = getPopulatorsIterator();
+
+		for (int i = 0; populators.hasNext(); i++)
 		{
-			private static final long serialVersionUID = 1L;
+			IModel populatorModel=(IModel)populators.next();
+			Item cellItem = newCellItem(cells.newChildId(), i, populatorModel);
+			cells.add(cellItem);
 
-			protected Iterator getItemModels()
+			ICellPopulator populator = (ICellPopulator)cellItem.getModelObject();
+			populator.populateItem(cellItem, CELL_ITEM_ID, item.getModel());
+
+			if (cellItem.get("cell") == null)
 			{
-				return getPopulatorsIterator();
+				throw new WicketRuntimeException(
+						populator.getClass().getName()
+								+ ".populateItem() failed to add a component with id ["
+								+ CELL_ITEM_ID
+								+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
 			}
+		}
 
-			protected Item newItem(String id, int index, IModel model)
-			{
-				return newCellItem(id, index, model);
-			}
-
-			protected void populateItem(Item item)
-			{
-				final ICellPopulator populator = (ICellPopulator)item.getModelObject();
-				populator.populateItem(item, CELL_ITEM_ID, rowModel);
-
-				if (item.get("cell") == null)
-				{
-					throw new WicketRuntimeException(populator.getClass().getName()
-							+ ".populateItem() failed to add a component with id [" + CELL_ITEM_ID
-							+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
-				}
-
-			}
-
-		});
 	}
 }
