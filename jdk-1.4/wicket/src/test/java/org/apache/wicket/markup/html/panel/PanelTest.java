@@ -29,8 +29,6 @@ import org.apache.wicket.markup.resolver.FragmentResolver;
  */
 public class PanelTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(PanelTest.class);
-
 	/**
 	 * Create the test.
 	 * 

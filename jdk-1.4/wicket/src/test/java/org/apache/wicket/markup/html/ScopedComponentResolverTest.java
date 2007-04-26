@@ -26,8 +26,6 @@ import org.apache.wicket.markup.resolver.ScopedComponentResolver;
  */
 public class ScopedComponentResolverTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(ScopedComponentResolverTest.class);
-
 	/**
 	 * Create the test.
 	 * 

@@ -25,8 +25,6 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class WicketNamespaceTest extends TestCase
 {
-	// private static final Log log = LogFactory.getLog(WicketNamespaceTest.class);
-
 	private WicketTester application;
 
 	/**

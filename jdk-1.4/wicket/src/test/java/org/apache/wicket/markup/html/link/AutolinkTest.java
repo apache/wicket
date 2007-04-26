@@ -26,8 +26,6 @@ import org.apache.wicket.WicketTestCase;
  */
 public class AutolinkTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(AutolinkTest.class);
-
 	/**
 	 * Create the test.
 	 * 

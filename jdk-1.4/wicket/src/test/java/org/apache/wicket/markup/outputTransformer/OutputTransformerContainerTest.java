@@ -24,8 +24,6 @@ import org.apache.wicket.WicketTestCase;
  */
 public class OutputTransformerContainerTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(OutputTransformerContainerTest.class);
-
 	/**
 	 * Create the test.
 	 * 

@@ -25,8 +25,6 @@ import org.apache.wicket.WicketTestCase;
  */
 public class WicketComponentTreeTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(WicketComponentTreeTest.class);
-
 	/**
 	 * Create the test.
 	 * 

@@ -30,8 +30,6 @@ import org.apache.wicket.protocol.http.MockHttpServletRequest;
  */
 public class BoxBorderTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(BoxBorderTest.class);
-
 	/**
 	 * Create the test.
 	 * 
