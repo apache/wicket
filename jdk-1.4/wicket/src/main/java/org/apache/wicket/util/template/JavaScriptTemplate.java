@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.util.resource;
+package org.apache.wicket.util.template;
 
 import java.util.Map;
 
-import org.apache.wicket.util.string.CssUtils;
+import org.apache.wicket.util.string.JavascriptUtils;
 
 
 /**
- * Decorates the template with CSS tags.
+ * Decorates the template with javascript tags.
  * 
  * @author Eelco Hillenius
  */
-public final class CssTemplate extends TextTemplateDecorator
+public final class JavaScriptTemplate extends TextTemplateDecorator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -36,31 +36,30 @@ public final class CssTemplate extends TextTemplateDecorator
 	 * @param textTemplate
 	 *            The template to decorate
 	 */
-	public CssTemplate(TextTemplate textTemplate)
+	public JavaScriptTemplate(TextTemplate textTemplate)
 	{
 		super(textTemplate);
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.util.resource.TextTemplateDecorator#getBeforeTemplateContents()
+	 * @see org.apache.wicket.util.template.TextTemplateDecorator#getBeforeTemplateContents()
 	 */
 	public String getBeforeTemplateContents()
 	{
-		return CssUtils.INLINE_OPEN_TAG;
+		return JavascriptUtils.SCRIPT_OPEN_TAG;
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.util.resource.TextTemplateDecorator#getAfterTemplateContents()
+	 * @see org.apache.wicket.util.template.TextTemplateDecorator#getAfterTemplateContents()
 	 */
 	public String getAfterTemplateContents()
 	{
-		return CssUtils.INLINE_CLOSE_TAG;
+		return JavascriptUtils.SCRIPT_CLOSE_TAG;
 	}
 
-
 	/**
-	 * This class decorates another text template class and so does not allow
-	 * interpolation.
+	 * This class decorates another text template class and so
+	 * does not allow interpolation.
 	 * 
 	 * @param variables
 	 *            Ignored

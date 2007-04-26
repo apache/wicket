@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.util.resource;
+package org.apache.wicket.util.template;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +58,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @return the contents decorated with {@link #getBeforeTemplateContents()}
 	 *         and {@link #getAfterTemplateContents()}.
-	 * @see org.apache.wicket.extensions.util.resource.TextTemplate#asString()
+	 * @see org.apache.wicket.util.template.TextTemplate#asString()
 	 */
 	public String asString()
 	{
@@ -72,7 +72,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @return the contents decorated with {@link #getBeforeTemplateContents()}
 	 *         and {@link #getAfterTemplateContents()}.
-	 * @see org.apache.wicket.extensions.util.resource.TextTemplate#asString(java.util.Map)
+	 * @see org.apache.wicket.util.template.TextTemplate#asString(java.util.Map)
 	 */
 	public String asString(Map variables)
 	{
@@ -194,7 +194,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.util.resource.TextTemplate#getString()
+	 * @see org.apache.wicket.util.template.TextTemplate#getString()
 	 */
 	public String getString()
 	{

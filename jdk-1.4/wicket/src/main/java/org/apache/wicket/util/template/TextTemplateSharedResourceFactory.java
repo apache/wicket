@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.util.resource;
+package org.apache.wicket.util.template;
 
 import java.util.Iterator;
 import java.util.Map;
