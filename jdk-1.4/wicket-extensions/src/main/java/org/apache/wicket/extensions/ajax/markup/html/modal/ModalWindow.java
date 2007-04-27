@@ -210,6 +210,16 @@ public class ModalWindow extends Panel
 		public void onClose(AjaxRequestTarget target);
 	}
 
+	
+	/**
+	 * Is this window currently showing.
+	 * 
+	 * @return the shown
+	 */
+	public boolean isShown()
+	{
+		return shown;
+	}
 	/**
 	 * Sets the name of the page ma for the content page. This makes only sense
 	 * when the content is a page, not a component and if wicket multiwindow
