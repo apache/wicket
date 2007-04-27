@@ -20,6 +20,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.wicket.util.string.Strings;
+
 /**
  * Converts from Object to Date.
  * 
@@ -34,7 +36,14 @@ public class DateConverter extends AbstractConverter
 	 */
 	public Object convertToObject(final String value, Locale locale)
 	{
-		return parse(getDateFormat(locale), value, locale);
+		if (value == null || Strings.isEmpty(value))
+		{
+			return null;
+		}
+		else
+		{
+			return parse(getDateFormat(locale), value, locale);
+		}
 	}
 
 	/**
