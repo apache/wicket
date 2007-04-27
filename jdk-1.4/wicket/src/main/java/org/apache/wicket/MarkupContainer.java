@@ -832,7 +832,7 @@ public abstract class MarkupContainer extends Component
 	{
 		return visitChildren(null, visitor);
 	}
-
+	
 	/**
 	 * @param component
 	 *            Component being added

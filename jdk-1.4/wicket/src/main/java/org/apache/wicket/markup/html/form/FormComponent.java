@@ -21,12 +21,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Localizer;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
@@ -569,7 +571,22 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	 */
 	public final boolean isValid()
 	{
-		return !hasErrorMessage();
+		final boolean valid[] = { true };
+		visitFormComponentsPostOrder(this, new IVisitor()
+		{
+			public Object formComponent(IFormProcessingListener formComponent)
+			{
+				final FormComponent fc = (FormComponent)formComponent;
+				if (fc.hasErrorMessage())
+				{
+					valid[0] = false;
+					return Component.IVisitor.STOP_TRAVERSAL;
+				}
+				return Component.IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		return valid[0];
 	}
 
 	/**
@@ -1316,4 +1333,65 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	{
 		return true;
 	}
+
+	/**
+	 * Visits any form components inside component if it is a container, or
+	 * component itself if it is itself a form component
+	 * 
+	 * @param component
+	 *            starting point of the traversal
+	 * 
+	 * @param visitor
+	 *            The visitor to call
+	 */
+	public static final void visitFormComponentsPostOrder(Component component,
+			final FormComponent.IVisitor visitor)
+	{
+		if (visitor == null)
+		{
+			throw new IllegalArgumentException("Argument `visitor` cannot be null");
+		}
+
+
+		visitFormComponentsPostOrderHelper(component, visitor);
+	}
+
+	private static final Object visitFormComponentsPostOrderHelper(Component component,
+			final FormComponent.IVisitor visitor)
+	{
+		if (component instanceof MarkupContainer)
+		{
+			final MarkupContainer container = (MarkupContainer)component;
+			if (container.size() > 0)
+			{
+				boolean visitChildren = true;
+				if (container instanceof IFormProcessingListener)
+				{
+					visitChildren = ((IFormProcessingListener)container).processChildren();
+				}
+				if (visitChildren)
+				{
+					final Iterator children = container.iterator();
+					while (children.hasNext())
+					{
+						final Component child = (Component)children.next();
+						Object value = visitFormComponentsPostOrderHelper(child, visitor);
+						if (value == Component.IVisitor.STOP_TRAVERSAL)
+						{
+							return value;
+						}
+					}
+				}
+			}
+		}
+
+		if (component instanceof FormComponent)
+		{
+			final FormComponent fc = (FormComponent)component;
+			return visitor.formComponent(fc);
+		}
+
+		return null;
+	}
+
 }

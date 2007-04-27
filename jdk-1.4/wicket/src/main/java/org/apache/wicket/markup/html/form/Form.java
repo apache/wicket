@@ -95,8 +95,8 @@ import org.slf4j.LoggerFactory;
  * Form for handling (file) uploads with multipart requests is supported by
  * callign setMultiPart(true) ( although wicket will try to automatically detect
  * this for you ). Use this with
- * {@link org.apache.wicket.markup.html.form.upload.FileUploadField} components. You can
- * attach mutliple FileUploadField components for muliple file uploads.
+ * {@link org.apache.wicket.markup.html.form.upload.FileUploadField} components.
+ * You can attach mutliple FileUploadField components for muliple file uploads.
  * <p>
  * In case of an upload error two resource keys are available to specify error
  * messages: uploadTooLarge and uploadFailed
@@ -305,7 +305,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final void loadPersistentFormComponentValues()
 	{
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
@@ -406,7 +406,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		super.internalOnDetach();
 		setFlag(FLAG_SUBMITTED, false);
-		
+
 		super.onDetach();
 	}
 
@@ -427,7 +427,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		final IValuePersister persister = getValuePersister();
 
 		// Search for FormComponents like TextField etc.
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
@@ -525,6 +525,41 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public boolean isVersioned()
 	{
 		return super.isVersioned();
+	}
+
+	/**
+	 * Convenient and typesafe way to visit all the form components on a form
+	 * postorder (deepest first)
+	 * 
+	 * @param visitor
+	 *            The visitor interface to call
+	 */
+	public final void visitFormComponentsPostOrder(final FormComponent.IVisitor visitor)
+	{
+		FormComponent.visitFormComponentsPostOrder(this, visitor);
+
+		/**
+		 * TODO Post 1.2 General: Maybe we should re-think how Borders are
+		 * implemented, because there are just too many exceptions in the code
+		 * base because of borders. This time it is to solve the problem tested
+		 * in BoxBorderTestPage_3 where the Form is defined in the box border
+		 * and the FormComponents are in the "body". Thus, the formComponents
+		 * are not childs of the form. They are rather childs of the border, as
+		 * the Form itself.
+		 */
+		if (getParent() instanceof Border)
+		{
+			MarkupContainer border = getParent();
+			Iterator iter = border.iterator();
+			while (iter.hasNext())
+			{
+				Component child = (Component)iter.next();
+				if (child instanceof FormComponent)
+				{
+					visitor.formComponent((FormComponent)child);
+				}
+			}
+		}
 	}
 
 	/**
@@ -717,7 +752,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void internalOnModelChanged()
 	{
 		// Visit all the form components and validate each
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
@@ -736,7 +771,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected final void markFormComponentsInvalid()
 	{
 		// call invalidate methods of all nested form components
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
@@ -754,7 +789,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected final void markFormComponentsValid()
 	{
 		// call invalidate methods of all nested form components
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
@@ -974,7 +1009,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void updateFormComponentModels()
 	{
-		visitFormComponents(new ValidationVisitor()
+		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			public void validate(FormComponent formComponent)
 			{
@@ -992,7 +1027,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public final void clearInput()
 	{
 		// Visit all the (visible) form components and clear the input on each.
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
@@ -1030,7 +1065,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void validateRequired()
 	{
-		visitFormComponents(new ValidationVisitor()
+		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			public void validate(final FormComponent formComponent)
 			{
@@ -1044,7 +1079,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void validateConversion()
 	{
-		visitFormComponents(new ValidationVisitor()
+		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			public void validate(final FormComponent formComponent)
 			{
@@ -1058,7 +1093,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void validateValidators()
 	{
-		visitFormComponents(new ValidationVisitor()
+		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			public void validate(final FormComponent formComponent)
 			{
@@ -1228,7 +1263,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			final IValuePersister persister = getValuePersister();
 
 			// Search for FormComponent children. Ignore all other
-			visitFormComponents(new FormComponent.AbstractVisitor()
+			visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 			{
 				public void onFormComponent(final FormComponent formComponent)
 				{
@@ -1254,8 +1289,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Method for dispatching/calling a interface on a page from the given url.
-	 * Used by {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()} for
-	 * dispatching events
+	 * Used by {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()}
+	 * for dispatching events
 	 * 
 	 * @param page
 	 *            The page where the event should be called on.
@@ -1289,7 +1324,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void inputChanged()
 	{
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
