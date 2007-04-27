@@ -18,20 +18,19 @@ package org.apache.wicket.markup.html.list;
 
 import java.util.List;
 
-import org.apache.wicket.model.LoadableDetachableModel;
-
+import org.apache.wicket.model.IModel;
 
 /**
  * Model for list items.
  */
-public class ListItemModel extends LoadableDetachableModel
+public class ListItemModel implements IModel
 {
 	private static final long serialVersionUID = 1L;
 	
-	/** The ListView's list model */
+	/** The ListView itself */
 	private final ListView listView;
 
-	/* The list item's index */
+	/** The list item's index */
 	private final int index;
 
 	/**
@@ -47,12 +46,28 @@ public class ListItemModel extends LoadableDetachableModel
 		this.listView = listView;
 		this.index = index;
 	}
+
 	/**
-	 * @see org.apache.wicket.model.AbstractDetachableModel#onAttach()
+	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-	protected Object load()
+	public Object getObject()
 	{
-		// Re-attach the model object based on index and ListView model object
 		return ((List)listView.getModelObject()).get(index);
+	}
+
+	/**
+	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
+	 */
+	public void setObject(Object object)
+	{
+		((List)listView.getModelObject()).set(index, object);
+	}
+
+	/**
+	 * @see org.apache.wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+		// Do nothing. ListView will detach its own model object.
 	}
 }
