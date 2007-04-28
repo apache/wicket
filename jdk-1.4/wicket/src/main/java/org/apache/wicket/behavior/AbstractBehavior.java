@@ -22,8 +22,8 @@ import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
- * Adapter implementation of {@link org.apache.wicket.behavior.IBehavior}. It is
- * recommended to extend from this class instead of directly implementing
+ * Adapter implementation of {@link org.apache.wicket.behavior.IBehavior}. It
+ * is recommended to extend from this class instead of directly implementing
  * {@link org.apache.wicket.behavior.IBehavior} as this class has an extra clean
  * 
  * @author Ralf Ebert
@@ -63,11 +63,11 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IBehavior#detachModel(Component)
+	 * @see org.apache.wicket.behavior.IBehavior#detach(Component)
 	 */
-	public void detachModel(Component component)
+	public void detach(Component component)
 	{
-		
+
 	}
 
 	/**
@@ -85,7 +85,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 			cleanup();
 		}
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#getStatelessHint(org.apache.wicket.Component)
 	 */
@@ -128,9 +128,9 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.IBehavior#rendered(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.IBehavior#afterRender(org.apache.wicket.Component)
 	 */
-	public final void rendered(final Component component)
+	public final void afterRender(final Component component)
 	{
 		try
 		{
@@ -141,19 +141,27 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 			cleanup();
 		}
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.behavior.IBehavior#isEnabled(Component)
 	 */
 	public boolean isEnabled(Component component)
 	{
 		return true;
+	}
+
+	/**
+	 * @see org.apache.wicket.behavior.IBehavior#isTemporary()
+	 */
+	public boolean isTemporary()
+	{
+		return false;
 	}
 }

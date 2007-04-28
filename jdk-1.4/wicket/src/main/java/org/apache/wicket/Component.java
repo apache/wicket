@@ -1758,7 +1758,7 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * {@link IBehavior#rendered(Component)} Notify all behaviors that are
+	 * {@link IBehavior#afterRender(Component)} Notify all behaviors that are
 	 * assigned to this component that the component has rendered.
 	 */
 	private void notifyBehaviorsComponentRendered()
@@ -1771,7 +1771,7 @@ public abstract class Component implements IClusterable
 				IBehavior behavior = (IBehavior)i.next();
 				if (isBehaviorAccepted(behavior))
 				{
-					behavior.rendered(this);
+					behavior.afterRender(this);
 				}
 			}
 		}
@@ -1814,7 +1814,16 @@ public abstract class Component implements IClusterable
 				IBehavior behavior = (IBehavior)i.next();
 				if (isBehaviorAccepted(behavior))
 				{
-					behavior.detachModel(this);
+					/*
+					 * TODO eelco: shouldnt we detach model always, accepted or
+					 * not? what if this method returns true during render, but
+					 * false here - something can go undetached
+					 */
+					behavior.detach(this);
+				}
+				if (behavior.isTemporary())
+				{
+					i.remove();
 				}
 			}
 		}

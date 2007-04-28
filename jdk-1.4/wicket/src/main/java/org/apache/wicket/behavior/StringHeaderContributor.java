@@ -157,9 +157,9 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * @see org.apache.wicket.behavior.AbstractBehavior#detachModel(org.apache.wicket.Component)
+	 * @see org.apache.wicket.behavior.AbstractBehavior#detach(org.apache.wicket.Component)
 	 */
-	public void detachModel(Component component)
+	public void detach(Component component)
 	{
 		contributor.contribution.detach();
 	}

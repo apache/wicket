@@ -180,7 +180,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @param component
 	 *            the model that initiates the detachement
 	 */
-	public final void detachModel(Component component)
+	public final void detach(Component component)
 	{
 		if (replaceModel != null)
 		{

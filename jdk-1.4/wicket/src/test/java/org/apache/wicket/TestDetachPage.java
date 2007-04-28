@@ -105,10 +105,10 @@ public class TestDetachPage extends WebPage
 			/** for serialization. */
 			private static final long serialVersionUID = 1L;
 
-			public void detachModel(Component component)
+			public void detach(Component component)
 			{
 				nrAjaxBehaviorDetachModelCalls++;
-				super.detachModel(component);
+				super.detach(component);
 			}
 
 			protected void onEvent(AjaxRequestTarget target)

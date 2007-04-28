@@ -30,8 +30,8 @@ import org.apache.wicket.markup.ComponentTag;
  * component.
  * <p>
  * It is recommended that you extend from
- * {@link org.apache.wicket.behavior.AbstractBehavior} instead of directly implementing
- * this interface.
+ * {@link org.apache.wicket.behavior.AbstractBehavior} instead of directly
+ * implementing this interface.
  * </p>
  * 
  * @see org.apache.wicket.behavior.IBehaviorListener
@@ -41,6 +41,7 @@ import org.apache.wicket.markup.ComponentTag;
  * 
  * @author Ralf Ebert
  * @author Eelco Hillenius
+ * @author Igor Vaynberg (ivaynberg)
  */
 public interface IBehavior extends IClusterable
 {
@@ -52,6 +53,14 @@ public interface IBehavior extends IClusterable
 	 */
 	void beforeRender(Component component);
 
+	/**
+	 * Called when a component that has this behavior coupled was rendered.
+	 * 
+	 * @param component
+	 *            the component that has this behavior coupled
+	 */
+	void afterRender(Component component);
+	
 	/**
 	 * Bind this handler to the given component. This method is called by the
 	 * host component immediately after this behavior is added to it. This
@@ -67,22 +76,19 @@ public interface IBehavior extends IClusterable
 	void bind(Component component);
 
 	/**
-	 * Provides for the ability to detach any models this behavior has. This
-	 * method is called by the components which have this behavior attached to
-	 * them when they are detaching their models themselves (ie after
-	 * rendering). Note that if you share a behavior between components, this
-	 * method is called multiple times.
+	 * Allows the behavior to detach any state it has attached during request
+	 * processing.
 	 * 
 	 * @param component
 	 *            the component that initiates the detachement of this behavior
 	 */
-	void detachModel(Component component);
+	void detach(Component component);
 
 	/**
 	 * In case an unexpected exception happened anywhere between
 	 * onComponentTag() and rendered(), onException() will be called for any
 	 * behavior. Typically, if you clean up resources in
-	 * {@link #rendered(Component)}, you should do the same in the
+	 * {@link #afterRender(Component)}, you should do the same in the
 	 * implementation of this method.
 	 * 
 	 * @param component
@@ -97,8 +103,8 @@ public interface IBehavior extends IClusterable
 	 * This method returns false if the behaviour generates a callback url (for
 	 * example ajax behaviours)
 	 * 
-	 * @param component 
-	 * 			 the component that has this behavior coupled.
+	 * @param component
+	 *            the component that has this behavior coupled.
 	 * 
 	 * @return boolean true or false.
 	 */
@@ -127,10 +133,12 @@ public interface IBehavior extends IClusterable
 	void onComponentTag(Component component, ComponentTag tag);
 
 	/**
-	 * Called when a component that has this behavior coupled was rendered.
+	 * Specifies whether or not this behavior is temporary. Temporary behaviors
+	 * are removed at the end of request. Such behaviors are useful for
+	 * modifying component rendering only when it renders next. Usecases include
+	 * javascript effects, initial clientside dom setup, etc.
 	 * 
-	 * @param component
-	 *            the component that has this behavior coupled
+	 * @return true if this behavior is temporary
 	 */
-	void rendered(Component component);
+	boolean isTemporary();
 }
