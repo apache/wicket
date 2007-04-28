@@ -157,8 +157,8 @@ public class Markup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the
-	 * information ...
+	 * protected. However to allow wicket-bench easy access to the information
+	 * ...
 	 * 
 	 * @param index
 	 *            Index into markup list
@@ -181,8 +181,8 @@ public class Markup
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the
-	 * information ...
+	 * protected. However to allow wicket-bench easy access to the information
+	 * ...
 	 * 
 	 * @return Number of markup elements
 	 */
@@ -362,8 +362,16 @@ public class Markup
 				this.componentMap = new HashMap();
 			}
 
+			/*
+			 * XXX cleanup - this fragment check probably needs to be in
+			 * componenttag.isWantToBeDirectMarkupChild() or something similar
+			 * instead of being here
+			 */
+			final boolean fragment = (tag instanceof WicketTag && ((WicketTag)tag).isFragementTag());
+
 			final String key;
-			if (tag.getPath() != null)
+
+			if (tag.getPath() != null && !fragment/* WICKET-404 */)
 			{
 				key = tag.getPath() + ":" + tag.getId();
 			}
@@ -455,8 +463,8 @@ public class Markup
 	}
 
 	/**
-	 * Reset the markup to its defaults, except for the wicket
-	 * namespace which remains unchanged.
+	 * Reset the markup to its defaults, except for the wicket namespace which
+	 * remains unchanged.
 	 */
 	final void reset()
 	{

@@ -236,8 +236,10 @@ public class Fragment extends WebMarkupContainer
 		int index = providerMarkupStream.findComponentIndex(null, markupId);
 		if (index == -1)
 		{
-			throw new MarkupException("Markup does not contain a fragment with id=" + markupId
-					+ "; Component: " + toString());
+			throw new MarkupException("Markup of component class `"
+					+ providerMarkupStream.getContainerClass().getName()
+					+ "` does not contain a fragment with id `" + markupId + "`. Context: "
+					+ toString());
 		}
 
 		// Set the markup stream position to where the fragment begins
