@@ -109,13 +109,12 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		try
 		{
 			return webSessionClass.getDeclaredConstructor(AuthenticatedWebApplication.class,
-					Request.class, Response.class).newInstance(AuthenticatedWebApplication.this,
-					request, response);
+					Request.class).newInstance(AuthenticatedWebApplication.this, request);
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Unable to instantiate web session class "
-					+ webSessionClass, e);
+			throw new WicketRuntimeException(
+					"Unable to instantiate web session " + webSessionClass, e);
 		}
 	}
 
