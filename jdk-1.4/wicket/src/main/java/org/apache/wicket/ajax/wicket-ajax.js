@@ -36,6 +36,21 @@ if (Function.prototype.bind == null) {
 if (typeof(Wicket) == "undefined")
 	Wicket = { };
 
+
+Wicket.$=function(arg) {
+	if (arguments.length > 1) {
+		var e=[];
+		for (var i=0; i<arguments.length; i++) {
+			e.push(Wicket.$(arguments[i]));
+		}
+		return e;
+	} else if (typeof arg == 'string') {
+		return document.getElementById(arg);
+	} else {
+		return arg;
+	}
+}
+
 Wicket.emptyFunction = function() { };
 
 Wicket.Class = {
@@ -1621,16 +1636,20 @@ function wicketKeyCode(event) {
 }
 
 function wicketGet(id) {
-    return document.getElementById(id);
+    return Wicket.$(id);
 }
 
 function wicketShow(id) {
     var e=wicketGet(id);
-    e.style.display = "";
+    if (e!=null) {
+	    e.style.display = "";
+	}
 }
 
 function wicketHide(id) {
     var e=wicketGet(id);
-    e.style.display = "none";
+	if (e!=null) {
+	    e.style.display = "none";
+	}
 }
 
