@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.transformer;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Page;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 
 /**
@@ -28,9 +30,8 @@ import org.apache.wicket.markup.ComponentTag;
  * The containers tag will be the root element of the xml data applied for
  * transformation to ensure the xml data are well formed (single root element).
  * In addition the attribute
- * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to
- * the root element to allow the XSL processor to handle the wicket
- * namespace.
+ * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to the root
+ * element to allow the XSL processor to handle the wicket namespace.
  * <p>
  * The reason why the transformer can not be used to XSLT the ListViews output
  * is because of the ListViews markup being reused for each ListItem. Please use
@@ -87,5 +88,18 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	public CharSequence transform(final Component component, final String output) throws Exception
 	{
 		return new XsltTransformer(this.xslFile).transform(component, output);
+	}
+
+	/**
+	 * @see org.apache.wicket.behavior.AbstractBehavior#bind(org.apache.wicket.Component)
+	 */
+	public void bind(final Component component)
+	{
+		if (component instanceof Page)
+		{
+			throw new WicketRuntimeException(
+					"You can not attach a XstlTransformerBehavior to a Page. It can be attached to any other component.");
+		}
+		super.bind(component);
 	}
 }
