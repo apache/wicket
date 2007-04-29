@@ -428,7 +428,7 @@ Wicket.DOM.serializeNode = function(node){
 Wicket.DOM.containsElement = function(element) {
 	var id = element.getAttribute("id");
 	if (id != null)
-		return document.getElementById(id) != null;
+		return Wicket.$(id) != null;
 	else
 		return false;
 }
@@ -834,7 +834,7 @@ Wicket.Ajax.Call.prototype = {
 	
 	// Submits a form using ajax
 	submitFormById: function(formId, submitButton) {
-		var form = document.getElementById(formId);
+		var form = Wicket.$(formId);
 		if (form == null || typeof (form) == "undefined")
 			Wicket.Log.error("Trying to submit form with id '"+formId+"' that is not in document.");
 		return this.submitForm(form, submitButton);
@@ -937,7 +937,7 @@ Wicket.Ajax.Call.prototype = {
 			}
 			
 			// get existing component
-			var element = document.getElementById(compId);
+			var element = Wicket.$(compId);
 
 			if (element == null || typeof(element) == "undefined") {			
 				Wicket.Log.error("Component with id [["+compId+"]] a was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
@@ -1573,7 +1573,7 @@ Wicket.Focus = {
 	{
 		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
 		{ 
-			var toFocus = document.getElementById(lastFocusId);
+			var toFocus = Wicket.$(lastFocusId);
 			if (toFocus != null && typeof(toFocus) != "undefined") {
 				Wicket.Log.info("Calling focus on " + lastFocusId);
 				try {
