@@ -50,9 +50,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		implements
 			IComponentResolver
 {
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
 
 	/** TODO Post 1.2: General: Namespace should not be a constant */

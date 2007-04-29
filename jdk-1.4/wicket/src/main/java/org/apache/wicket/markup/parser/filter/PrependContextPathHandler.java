@@ -100,13 +100,14 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag. If null, no more tags are available
 		final ComponentTag tag = (ComponentTag)getParent().nextTag();
-		if (tag == null || tag.getId() != null)
+		if ((tag == null) || tag.isClose())
 		{
 			return tag;
 		}
 
 		// Don't touch any wicket:id component
-		if (tag.getId() != null)
+		if ((tag.getId() != null)
+				&& (tag.getId().equals(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID) == false))
 		{
 			return tag;
 		}
