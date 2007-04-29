@@ -682,6 +682,11 @@ public final class Strings
 	 */
 	public static String lastPathComponent(final String path, final char separator)
 	{
+		if (path == null)
+		{
+			return null;
+		}
+
 		final int index = path.lastIndexOf(separator);
 
 		if (index == -1)
