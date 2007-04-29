@@ -72,7 +72,8 @@ final class MarkupFragmentFinder
 					if (elem instanceof ComponentTag)
 					{
 						ComponentTag tag = (ComponentTag)elem;
-						if (tag.getId().equals(component.getId()))
+						String id = tag.getId();
+						if ((id != null) && id.equals(component.getId()))
 						{
 							// Ok, found it
 							return markupStream;
