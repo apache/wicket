@@ -83,24 +83,19 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 */
 	public CharSequence getCallbackUrl()
 	{
-		return getCallbackUrl(false, true);
+		return getCallbackUrl(true);
 	}
 
 	/**
 	 * Gets the url that references this handler.
 	 * 
-	 * @param recordPageVersion
-	 *            if true the url will be encoded to execute on the current page
-	 *            version, otherwise url will be encoded to execute on the
-	 *            latest page version
 	 * @param onlyTargetActivePage
 	 *            if true the callback to this behavior will be ignore if the
 	 *            page is not the last one the user accessed
 	 * 
 	 * @return the url that references this handler
 	 */
-	public final CharSequence getCallbackUrl(final boolean recordPageVersion,
-			final boolean onlyTargetActivePage)
+	public final CharSequence getCallbackUrl(final boolean onlyTargetActivePage)
 	{
 		if (getComponent() == null)
 		{
@@ -109,14 +104,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		}
 		
 		final RequestListenerInterface rli;
-		if (recordPageVersion)
-		{
-			rli = IBehaviorListener.INTERFACE;
-		}
-		else
-		{
-			rli = IUnversionedBehaviorListener.INTERFACE;
-		}
+		
+		rli = IBehaviorListener.INTERFACE;
 		
 		AppendingStringBuffer url = new AppendingStringBuffer(getComponent().urlFor(this, rli));
 		

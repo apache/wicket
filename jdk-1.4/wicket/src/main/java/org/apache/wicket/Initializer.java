@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import org.apache.wicket.behavior.IBehaviorListener;
-import org.apache.wicket.behavior.IUnversionedBehaviorListener;
 import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.link.ILinkListener;
@@ -38,7 +37,6 @@ public class Initializer implements IInitializer
 		// register when loaded) because deserialization of an object that
 		// implements an interface does not load the interfaces it implements!
 		IBehaviorListener.INTERFACE.register();
-		IUnversionedBehaviorListener.INTERFACE.register();
 		IFormSubmitListener.INTERFACE.register();
 		ILinkListener.INTERFACE.register();
 		IOnChangeListener.INTERFACE.register();

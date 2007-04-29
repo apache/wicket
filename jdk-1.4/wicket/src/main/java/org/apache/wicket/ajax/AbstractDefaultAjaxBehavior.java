@@ -96,25 +96,21 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getCallbackScript()
 	{
-		return getCallbackScript(true, false);
+		return getCallbackScript(false);
 	}
 
 	/**
 	 * @return javascript that will generate an ajax GET request to this
 	 *         behavior *
-	 * @param recordPageVersion
-	 *            if true the url will be encoded to execute on the current page
-	 *            version, otherwise url will be encoded to execute on the
-	 *            latest page version
 	 * @param onlyTargetActivePage
 	 *            if true the callback to this behavior will be ignore if the
 	 *            page is not the last one the user accessed
 	 * 
 	 */
-	protected CharSequence getCallbackScript(boolean recordPageVersion, boolean onlyTargetActivePage)
+	protected CharSequence getCallbackScript(boolean onlyTargetActivePage)
 	{
 		return getCallbackScript("wicketAjaxGet('"
-				+ getCallbackUrl(recordPageVersion, onlyTargetActivePage) + "'", null, null);
+				+ getCallbackUrl(onlyTargetActivePage) + "'", null, null);
 	}
 
 	/**

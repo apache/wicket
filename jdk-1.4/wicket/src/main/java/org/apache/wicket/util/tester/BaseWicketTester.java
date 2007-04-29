@@ -200,7 +200,7 @@ public class BaseWicketTester extends MockWebApplication
 		setupRequestAndResponse();
 		WebRequestCycle cycle = createRequestCycle();
 		getServletRequest().setRequestToRedirectString(
-				behavior.getCallbackUrl(false, false).toString());
+				behavior.getCallbackUrl(false).toString());
 		processRequestCycle(cycle);
 	}
 
