@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.yui.calendar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -36,10 +37,11 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
-import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.template.TextTemplateHeaderContributor;
 import org.joda.time.DateTime;
 
 
@@ -93,8 +95,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		Response response = component.getResponse();
 		response
 				.write("\n<span>&nbsp;<div style=\"display:none;z-index: 99999;position:absolute;\" id=\"");
-		response.write(getCalendarMarkupId());
-		response.write("\"></div><img style=\"");
+		response.write(getComponentMarkupId());
+		response.write("Dp\"></div><img style=\"");
 		response.write(getIconStyle());
 		response.write("\" id=\"");
 		response.write(getIconId());
@@ -124,148 +126,63 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		response.renderJavascriptReference(new JavascriptResourceReference(DatePicker.class,
 				"wicket-date.js"));
 
-		// TODO rewrite to use a template. This code has become too messy with
-		// String concats
-
-		String markupId = getCalendarMarkupId();
-		String javascriptId = getCalendarJavascriptId();
-		String javascriptWidgetId = "YAHOO.wicket." + getCalendarJavascriptId();
-
-		StringBuffer buffer = new StringBuffer();
-		// initialize wicket namespace and register the init function
-		// for the YUI widget
-		buffer.append("YAHOO.namespace(\"wicket\");\nfunction init");
-		buffer.append(javascriptId);
-		buffer.append("() {\n");
-
-		// instantiate the calendar object
-		buffer.append(" ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(" = new YAHOO.widget.Calendar(\"");
-		buffer.append(javascriptId);
-		buffer.append("\",\"");
-		buffer.append(markupId);
-
-		String datePattern = getDatePattern();
+		// variables for the initialization script
+		Map variables = new HashMap();
+		String widgetId = getComponentMarkupId();
+		variables.put("widgetId", widgetId);
+		variables.put("datePattern", getDatePattern());
 		// print out the initialization properties
 		Properties p = new Properties();
 		configureWidgetProperties(p);
-		buffer.append("\", { ");
+		// ${calendarInit}
+		StringBuffer calendarInit = new StringBuffer();
 		for (Iterator i = p.entrySet().iterator(); i.hasNext();)
 		{
 			Entry entry = (Entry)i.next();
-			buffer.append(entry.getKey());
+			calendarInit.append(entry.getKey());
 			Object value = entry.getValue();
 			if (value instanceof CharSequence)
 			{
-				buffer.append(":\"");
-				buffer.append(value);
-				buffer.append("\"");
+				calendarInit.append(":\"");
+				calendarInit.append(value);
+				calendarInit.append("\"");
 			}
 			else if (value instanceof CharSequence[])
 			{
-				buffer.append(":[");
+				calendarInit.append(":[");
 				CharSequence[] valueArray = (CharSequence[])value;
 				for (int j = 0; j < valueArray.length; j++)
 				{
 					CharSequence tmpValue = valueArray[j];
-					buffer.append("\"");
-					buffer.append(tmpValue);
-					buffer.append("\"");
+					calendarInit.append("\"");
+					calendarInit.append(tmpValue);
+					calendarInit.append("\"");
 					if (j < valueArray.length - 1)
 					{
-						buffer.append(",");
+						calendarInit.append(",");
 					}
 				}
-				buffer.append("]");
+				calendarInit.append("]");
 			}
 			else
 			{
-				buffer.append(":");
-				buffer.append(value);
+				calendarInit.append(":");
+				calendarInit.append(value);
 			}
 			// TODO handle arrays
 			if (i.hasNext())
 			{
-				buffer.append(",");
+				calendarInit.append(",");
 			}
 		}
-		buffer.append(" });\n");
+		variables.put("calendarInit", calendarInit.toString());
+		TextTemplateHeaderContributor.forJavaScript(DatePicker.class, "DatePicker.js",
+				Model.valueOf(variables)).renderHead(response);
 
-		buffer.append(" function showCalendar() {\n");
-		buffer.append("  var dateValue = YAHOO.util.Dom.get(\"");
-		buffer.append(component.getMarkupId());
-		buffer.append("\").value;\n");
-		buffer.append("  if (dateValue) {\n");
-		buffer.append("    dateValue = Wicket.DateTime.parseDate(\'");
-		buffer.append(datePattern);
-		buffer.append("\', dateValue);\n    ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(".select(dateValue);\n");
-		buffer.append("    var firstDate = ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(".getSelectedDates()[0];\n    ");
-		buffer.append(javascriptWidgetId);
-		buffer
-				.append(".cfg.setProperty(\"pagedate\", (firstDate.getMonth()+1) + \"/\" + firstDate.getFullYear());");
-		buffer.append(javascriptWidgetId);
-		buffer.append(".render();\n");
-		buffer.append("  }\n");
-		buffer.append(javascriptWidgetId);
-		buffer.append(".show();\n");
-		buffer.append(" }\n");
-
-		// add a listener to the calendar widget that fills in the value
-		// of the passed in date text field when a selection is made,
-		// after which the widget is hidden again (it starts out hidden)
-		buffer.append("  YAHOO.util.Event.addListener(\"");
-		String iconId = getIconId();
-		buffer.append(iconId);
-		buffer.append("\", \"click\", ");
-		buffer.append("showCalendar, ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(", true);\n");
-		buffer.append("  function selectHandler(type, args, cal) {\n");
-		buffer.append("    var selDateArray = args[0][0];\n");
-		buffer.append("    var yr = selDateArray[0];\n");
-		buffer.append("    var month = selDateArray[1];\n");
-		buffer.append("    var dt = selDateArray[2];\n");
-		buffer.append("    var val = '");
-		// use the target component's pattern to fill in the date
-		// it's quite rough (e.g. YY is still filled in as YYYY), but
-		// should work without problems
-		buffer.append(datePattern);
-		buffer.append("'.replace(/d+/, dt).replace(/M+/, month)");
-		buffer.append(".replace(/y+/, yr);\n    YAHOO.util.Dom.get(\"");
-		buffer.append(component.getMarkupId());
-		buffer.append("\").value = val;\n");
-		buffer.append("    cal.hide();\n  }\n");
-		buffer.append("  ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(".selectEvent.subscribe(selectHandler, ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(");\n");
-
-		// append the javascript we want for our init function; call
-		// this in an overridable method so that clients can add their
-		// stuff without needing a big ass API
-		appendToInit(markupId, javascriptId, javascriptWidgetId, buffer);
-
-		// trigger rendering
-		buffer.append("  ");
-		buffer.append(javascriptWidgetId);
-		buffer.append(".render();\n");
-		buffer.append("}\n");
-
-		buffer.insert(0, JavascriptUtils.SCRIPT_OPEN_TAG);
-		buffer.append(JavascriptUtils.SCRIPT_CLOSE_TAG);
-		response.renderString(buffer);
-
-		// Initialize the calendar. This depends on how the datepicker is
-		// used (AJAX or not).
+		// Initialize the calendar.
 		StringBuffer initBuffer = new StringBuffer();
 		initBuffer.append("init");
-		initBuffer.append(javascriptId);
+		initBuffer.append(widgetId + "DpJs");
 		initBuffer.append("();");
 		response.renderOnLoadJavascript(initBuffer.toString());
 	}
@@ -354,27 +271,14 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Gets the id of the javascript widget. Note that this is the
-	 * non-namespaced id, so depending on what you want to do with it, you may
-	 * need to prepend 'YAHOO.wicket.' to it. Or you can call
-	 * {@link #getJavascriptWidgetId()}.
+	 * Gets the DOM id that the calendar widget will get attached to.
 	 * 
-	 * @return The javascript id
-	 * @see #getJavascriptWidgetId()
+	 * @return The DOM id of the calendar widget - same as the component's
+	 *         markup id + 'Dp'}
 	 */
-	protected final String getCalendarJavascriptId()
+	protected final String getComponentMarkupId()
 	{
-		return component.getMarkupId() + "DpJs";
-	}
-
-	/**
-	 * Gets the markup id that the calendar widget will get attached to.
-	 * 
-	 * @return The markup id of the calendar widget
-	 */
-	protected final String getCalendarMarkupId()
-	{
-		return component.getMarkupId() + "Dp";
+		return component.getMarkupId();
 	}
 
 	/**
