@@ -84,8 +84,6 @@ public class DateField extends FormComponentPanel {
 	 */
 	public void updateModel() {
 
-		dateField.updateModel();
-
 		if (date != null) {
 			Date d = date.toDate();
 			setModelObject(d);

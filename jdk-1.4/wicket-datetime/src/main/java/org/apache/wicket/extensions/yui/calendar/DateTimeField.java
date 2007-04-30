@@ -45,14 +45,16 @@ import org.joda.time.MutableDateTime;
  */
 // TODO AM/PM should really be locale dependent; some locales have 12 hour
 // systems with AM/PM, others have 24 hour systems
-public class DateTimeField extends FormComponentPanel {
+public class DateTimeField extends FormComponentPanel
+{
 
 	/**
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
 	 */
 	// enums are mucho nicer, but let's keep this project at 1.4 for now
-	private static class AM_PM extends EnumeratedType {
+	private static class AM_PM extends EnumeratedType
+	{
 
 		private static final long serialVersionUID = 1L;
 
@@ -60,11 +62,13 @@ public class DateTimeField extends FormComponentPanel {
 
 		static final AM_PM PM = new AM_PM("PM");
 
-		public static AM_PM[] values() {
+		public static AM_PM[] values()
+		{
 			return new AM_PM[] { AM, PM };
 		}
 
-		private AM_PM(final String name) {
+		private AM_PM(final String name)
+		{
 			super(name);
 		}
 	}
@@ -92,7 +96,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * 
 	 * @param id
 	 */
-	public DateTimeField(String id) {
+	public DateTimeField(String id)
+	{
 		super(id);
 		init();
 	}
@@ -103,7 +108,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * @param id
 	 * @param model
 	 */
-	public DateTimeField(String id, IModel model) {
+	public DateTimeField(String id, IModel model)
+	{
 		super(id, model);
 		init();
 	}
@@ -113,7 +119,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * 
 	 * @return amOrPm
 	 */
-	public AM_PM getAmOrPm() {
+	public AM_PM getAmOrPm()
+	{
 		return amOrPm;
 	}
 
@@ -122,7 +129,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * 
 	 * @return date
 	 */
-	public Date getDate() {
+	public Date getDate()
+	{
 		return (date != null) ? date.toDate() : null;
 	}
 
@@ -131,7 +139,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * 
 	 * @return hours
 	 */
-	public Integer getHours() {
+	public Integer getHours()
+	{
 		return hours;
 	}
 
@@ -140,7 +149,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * 
 	 * @return minutes
 	 */
-	public Integer getMinutes() {
+	public Integer getMinutes()
+	{
 		return minutes;
 	}
 
@@ -150,7 +160,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * @param amOrPm
 	 *            amOrPm
 	 */
-	public void setAmOrPm(AM_PM amOrPm) {
+	public void setAmOrPm(AM_PM amOrPm)
+	{
 		this.amOrPm = amOrPm;
 	}
 
@@ -160,7 +171,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * @param date
 	 *            date
 	 */
-	public void setDate(Date date) {
+	public void setDate(Date date)
+	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
 	}
 
@@ -170,7 +182,8 @@ public class DateTimeField extends FormComponentPanel {
 	 * @param hours
 	 *            hours
 	 */
-	public void setHours(Integer hours) {
+	public void setHours(Integer hours)
+	{
 		this.hours = hours;
 	}
 
@@ -180,37 +193,39 @@ public class DateTimeField extends FormComponentPanel {
 	 * @param minutes
 	 *            minutes
 	 */
-	public void setMinutes(Integer minutes) {
+	public void setMinutes(Integer minutes)
+	{
 		this.minutes = minutes;
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel() {
+	public void updateModel()
+	{
 
-		dateField.updateModel();
-		hoursField.updateModel();
-		minutesField.updateModel();
-		amOrPmChoice.updateModel();
+		if (date != null)
+		{
 
-		if (date != null) {
-
-			try {
+			try
+			{
 				TimeZone zone = getClientTimeZone();
-				if (zone != null) {
+				if (zone != null)
+				{
 					date.setZone(DateTimeZone.forTimeZone(zone));
 				}
 
-				if (hours != null) {
-					date.set(DateTimeFieldType.hourOfHalfday(), hours
-							.intValue());
-					date.setMinuteOfHour((minutes != null) ? minutes.intValue()
-							: 0);
+				if (hours != null)
+				{
+					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue());
+					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
 				}
-				if (amOrPm == AM_PM.PM) {
+				if (amOrPm == AM_PM.PM)
+				{
 					date.set(DateTimeFieldType.halfdayOfDay(), 1);
-				} else {
+				}
+				else
+				{
 					date.set(DateTimeFieldType.halfdayOfDay(), 0);
 				}
 
@@ -218,12 +233,16 @@ public class DateTimeField extends FormComponentPanel {
 				Date d = date.toDate();
 				setModelObject(d);
 
-			} catch (RuntimeException e) {
+			}
+			catch (RuntimeException e)
+			{
 				DateTimeField.this.error(e.getMessage());
 				invalid();
 			}
 
-		} else {
+		}
+		else
+		{
 			setModelObject(null);
 		}
 	}
@@ -233,57 +252,62 @@ public class DateTimeField extends FormComponentPanel {
 	 * 
 	 * @return The client's time zone or null
 	 */
-	private TimeZone getClientTimeZone() {
+	private TimeZone getClientTimeZone()
+	{
 		ClientInfo info = Session.get().getClientInfo();
-		if (info instanceof WebClientInfo) {
-			return ((WebClientInfo) info).getProperties().getTimeZone();
+		if (info instanceof WebClientInfo)
+		{
+			return ((WebClientInfo)info).getProperties().getTimeZone();
 		}
 		return null;
 	}
 
-	private void init() {
+	private void init()
+	{
 
 		setType(Date.class);
-		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(
-				this, "date")));
+		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
 		dateField.add(new DatePicker());
 		// add(new CalendarPopup("picker", dateField));
-		add(hoursField = new TextField("hours",
-				new PropertyModel(this, "hours"), Integer.class));
+		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
-		add(minutesField = new TextField("minutes", new PropertyModel(this,
-				"minutes"), Integer.class));
+		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
+				Integer.class));
 		minutesField.add(NumberValidator.range(0, 60));
-		add(amOrPmChoice = new DropDownChoice("amOrPmChoice",
-				new PropertyModel(this, "amOrPm"), Arrays
-						.asList(AM_PM.values())));
+		add(amOrPmChoice = new DropDownChoice("amOrPmChoice", new PropertyModel(this, "amOrPm"),
+				Arrays.asList(AM_PM.values())));
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#onAttach()
 	 */
-	protected void onAttach() {
+	protected void onAttach()
+	{
 
-		Date d = (Date) getModelObject();
-		if (d != null) {
+		Date d = (Date)getModelObject();
+		if (d != null)
+		{
 			date = new MutableDateTime(d);
-		} else {
+		}
+		else
+		{
 			date = null;
 		}
 
-		if (date != null) {
+		if (date != null)
+		{
 
 			// convert date to the client's time zone if we have that info
 			TimeZone zone = getClientTimeZone();
 			// instantiate with the previously set date
-			if (zone != null) {
+			if (zone != null)
+			{
 				date.setZone(DateTimeZone.forTimeZone(zone));
 			}
 
 			hours = new Integer(date.get(DateTimeFieldType.hourOfHalfday()));
 			minutes = new Integer(date.getMinuteOfHour());
-			amOrPm = (date.get(DateTimeFieldType.halfdayOfDay()) == 0) ? AM_PM.AM
-					: AM_PM.PM;
+			amOrPm = (date.get(DateTimeFieldType.halfdayOfDay()) == 0) ? AM_PM.AM : AM_PM.PM;
 
 			// we don't really have to reset the date field to the server's
 			// timezone, as it's the same milis from EPOCH anyway, and toDate
