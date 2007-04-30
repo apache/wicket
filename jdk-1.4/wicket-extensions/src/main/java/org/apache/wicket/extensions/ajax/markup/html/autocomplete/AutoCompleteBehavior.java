@@ -92,11 +92,6 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 			{
 			}
 
-			public Object getLock(RequestCycle requestCycle)
-			{
-				return requestCycle.getSession();
-			}
-
 		};
 		requestCycle.setRequestTarget(target);
 	}
