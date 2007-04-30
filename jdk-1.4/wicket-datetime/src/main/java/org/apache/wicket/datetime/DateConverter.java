@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -87,15 +88,30 @@ public abstract class DateConverter implements IConverter
 				format = format.withZone(DateTimeZone.forTimeZone(zone));
 				dt.setZone(DateTimeZone.forTimeZone(zone));
 			}
-			// parse date retaining the time of the submission
-			format.parseInto(dt, value, 0);
+			try
+			{
+				// parse date retaining the time of the submission
+				format.parseInto(dt, value, 0);
+			}
+			catch (RuntimeException e)
+			{
+				throw new ConversionException(e);
+			}
 			// apply the server time zone to the parsed value
 			dt.setZone(getTimeZone());
 			return dt.toDate();
 		}
 		else
 		{
-			return format.parseDateTime(value).toDate();
+			try
+			{
+				DateTime date = format.parseDateTime(value);
+				return date.toDate();
+			}
+			catch (RuntimeException e)
+			{
+				throw new ConversionException(e);
+			}
 		}
 	}
 
