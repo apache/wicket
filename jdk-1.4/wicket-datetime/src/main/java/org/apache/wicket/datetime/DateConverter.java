@@ -76,6 +76,10 @@ public abstract class DateConverter implements IConverter
 	public Object convertToObject(String value, Locale locale)
 	{
 		DateTimeFormatter format = getFormat();
+		if (format == null)
+		{
+			throw new IllegalStateException("format must be not null");
+		}
 
 		if (applyTimeZoneDifference)
 		{
