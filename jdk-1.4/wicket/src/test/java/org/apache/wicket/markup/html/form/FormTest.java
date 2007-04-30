@@ -66,7 +66,7 @@ public class FormTest extends WicketTestCase
 
 	private void assertTraversalStatus(Object expected, final boolean processChildren)
 	{
-		assertEquals(expected, visitor.formComponent(new IFormProcessingListener()
+		assertEquals(expected, visitor.formComponent(new IFormVisitorParticipant()
 		{
 			public boolean processChildren()
 			{

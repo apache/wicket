@@ -17,17 +17,22 @@
 package org.apache.wicket.markup.html.form;
 
 /**
- * Listener interface that is called when a form is processed.
- *
+ * Participates in the form visiting algoritm, and can hint that visiting should
+ * go on as normal ({@link #processChildren()} returns true) or is limited to
+ * the same level (only siblings are processed, {@link #processChildren()}
+ * returns false).
+ * 
  * @author Pekka Enberg
  */
-public interface IFormProcessingListener
+public interface IFormVisitorParticipant
 {
 	/**
-	 * Should children be traversed during form processing.
-	 *
+	 * Should children be traversed during visiting or should only the siblings
+	 * be processed.
+	 * 
 	 * @return <tt>true</tt> if children should be traversed during form
-	 *         processing; <tt>false</tt> otherwise.
+	 *         processing; <tt>false</tt> if only the siblings should be
+	 *         processed.
 	 */
 	boolean processChildren();
 }

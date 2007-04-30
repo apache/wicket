@@ -74,7 +74,7 @@ import org.apache.wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class FormComponent extends WebMarkupContainer implements IFormProcessingListener
+public abstract class FormComponent extends WebMarkupContainer implements IFormVisitorParticipant
 {
 	/**
 	 * Typesafe interface to code that is called when visiting a form component.
@@ -88,7 +88,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		 *            The form component
 		 * @return component
 		 */
-		public Object formComponent(IFormProcessingListener formComponent);
+		public Object formComponent(IFormVisitorParticipant formComponent);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		/**
 		 * @see org.apache.wicket.markup.html.form.FormComponent.IVisitor#formComponent(org.apache.wicket.markup.html.form.FormComponent)
 		 */
-		public Object formComponent(IFormProcessingListener component)
+		public Object formComponent(IFormVisitorParticipant component)
 		{
 			if (component instanceof FormComponent)
 			{
@@ -574,7 +574,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 		final boolean valid[] = { true };
 		visitFormComponentsPostOrder(this, new IVisitor()
 		{
-			public Object formComponent(IFormProcessingListener formComponent)
+			public Object formComponent(IFormVisitorParticipant formComponent)
 			{
 				final FormComponent fc = (FormComponent)formComponent;
 				if (fc.hasErrorMessage())
@@ -1327,7 +1327,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.IFormProcessingListener#processChildren(boolean)
+	 * @see org.apache.wicket.markup.html.form.IFormVisitorParticipant#processChildren(boolean)
 	 */
 	public boolean processChildren()
 	{
@@ -1365,9 +1365,9 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormP
 			if (container.size() > 0)
 			{
 				boolean visitChildren = true;
-				if (container instanceof IFormProcessingListener)
+				if (container instanceof IFormVisitorParticipant)
 				{
-					visitChildren = ((IFormProcessingListener)container).processChildren();
+					visitChildren = ((IFormVisitorParticipant)container).processChildren();
 				}
 				if (visitChildren)
 				{
