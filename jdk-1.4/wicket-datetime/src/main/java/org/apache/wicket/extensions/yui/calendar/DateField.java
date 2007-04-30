@@ -31,7 +31,8 @@ import org.joda.time.MutableDateTime;
  * 
  * @author eelcohillenius
  */
-public class DateField extends FormComponentPanel {
+public class DateField extends FormComponentPanel
+{
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +45,8 @@ public class DateField extends FormComponentPanel {
 	 * 
 	 * @param id
 	 */
-	public DateField(String id) {
+	public DateField(String id)
+	{
 		super(id);
 		init();
 	}
@@ -55,7 +57,8 @@ public class DateField extends FormComponentPanel {
 	 * @param id
 	 * @param model
 	 */
-	public DateField(String id, IModel model) {
+	public DateField(String id, IModel model)
+	{
 		super(id, model);
 		init();
 	}
@@ -65,7 +68,8 @@ public class DateField extends FormComponentPanel {
 	 * 
 	 * @return date
 	 */
-	public Date getDate() {
+	public Date getDate()
+	{
 		return (date != null) ? date.toDate() : null;
 	}
 
@@ -75,19 +79,24 @@ public class DateField extends FormComponentPanel {
 	 * @param date
 	 *            date
 	 */
-	public void setDate(Date date) {
+	public void setDate(Date date)
+	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
 	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public void updateModel() {
+	public void updateModel()
+	{
 
-		if (date != null) {
+		if (date != null)
+		{
 			Date d = date.toDate();
 			setModelObject(d);
-		} else {
+		}
+		else
+		{
 			setModelObject(null);
 		}
 	}
@@ -95,23 +104,27 @@ public class DateField extends FormComponentPanel {
 	/**
 	 * Initialize.
 	 */
-	private void init() {
+	private void init()
+	{
 
 		setType(Date.class);
-		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(
-				this, "date")));
+		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
 		dateField.add(new DatePicker());
 	}
 
 	/**
 	 * @see org.apache.wicket.Component#onAttach()
 	 */
-	protected void onAttach() {
+	protected void onAttach()
+	{
 
-		Date d = (Date) getModelObject();
-		if (d != null) {
+		Date d = (Date)getModelObject();
+		if (d != null)
+		{
 			date = new MutableDateTime(d);
-		} else {
+		}
+		else
+		{
 			date = null;
 		}
 

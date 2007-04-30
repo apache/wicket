@@ -23,13 +23,15 @@ import org.apache.wicket.IClusterable;
  * 
  * @author eelcohillenius
  */
-public final class YuiLib implements IClusterable {
+public final class YuiLib implements IClusterable
+{
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Prevent construction.
 	 */
-	private YuiLib() {
+	private YuiLib()
+	{
 	}
 }

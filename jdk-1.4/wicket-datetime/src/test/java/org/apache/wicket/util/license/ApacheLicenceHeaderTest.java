@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.license;
 
-import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
 /**
  * Test that the license headers are in place in this project. The tests are run
@@ -25,22 +24,21 @@ import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+{
 
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest() {
-
-//		 addHeaders = true;
+	public ApacheLicenceHeaderTest()
+	{
+		// addHeaders = true;
 
 		/*
 		 * YUI lib. See NOTICE
 		 */
-		cssIgnore = new String[] { 
-				"src/main/java/org/apache/wicket/extensions/yui/calendar/assets/calendar.css" 
-		};
-		
+		cssIgnore = new String[] { "src/main/java/org/apache/wicket/extensions/yui/calendar/assets/calendar.css" };
+
 		/*
 		 * YUI lib. See NOTICE
 		 */
@@ -48,8 +46,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
 				"src/main/java/org/apache/wicket/extensions/yui/yahoo.js",
 				"src/main/java/org/apache/wicket/extensions/yui/event.js",
 				"src/main/java/org/apache/wicket/extensions/yui/dom.js",
-				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar.js" ,
-				"src/main/java/org/apache/wicket/extensions/yui/calendar/date.js"
-		};
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/calendar.js",
+				"src/main/java/org/apache/wicket/extensions/yui/calendar/date.js" };
 	}
 }
