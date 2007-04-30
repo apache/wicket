@@ -699,7 +699,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
 
 						// Check for button-name or button-name.x request string
-						if (submit.getForm().getRootForm() == Form.this
+						if (submit.getForm() != null && submit.getForm().getRootForm() == Form.this
 								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
 										.getParameter(submit.getInputName() + ".x") != null))
 						{
