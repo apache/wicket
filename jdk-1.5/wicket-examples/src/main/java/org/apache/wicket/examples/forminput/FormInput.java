@@ -104,8 +104,13 @@ public class FormInput extends WicketExamplePage
 					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
-			add(new Label("multiplyLabel", new PropertyModel(getModel(), "multiply"))
-					.setComponentBorder(new BeforeAndAfterBorder()));
+			// display the multiply result
+			Label multiplyLabel = new Label("multiplyLabel", new PropertyModel(getModel(),
+					"multiply"));
+			// just for fun, add a border so that our result will be displayed
+			// as '[ x ]'
+			multiplyLabel.setComponentBorder(new BeforeAndAfterBorder());
+			add(multiplyLabel);
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
 			rc.setRequired(true);

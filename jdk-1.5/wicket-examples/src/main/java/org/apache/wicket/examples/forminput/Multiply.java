@@ -102,11 +102,8 @@ public class Multiply extends FormComponentPanel
 	 */
 	public void updateModel()
 	{
-		// childs are currently updated *after* this component,
-		// so if we want to use the updated models of these
-		// components, we have to trigger the update manually
-		left.updateModel();
-		right.updateModel();
+		// note that form components are updated in post order form, so lhs and
+		// rhs are already updated
 		setModelObject(new Integer(lhs * rhs));
 	}
 

@@ -22,8 +22,10 @@ package org.apache.wicket.examples.forminput;
 import org.apache.wicket.markup.html.border.MarkupComponentBorder;
 
 /**
+ * Simple example to show how a border works. Adding this border to e.g. a label
+ * that displays 'x' results in '[ x ]' being displayed.
+ * 
  * @author jcompagner
- *
  */
 public class BeforeAndAfterBorder extends MarkupComponentBorder
 {
