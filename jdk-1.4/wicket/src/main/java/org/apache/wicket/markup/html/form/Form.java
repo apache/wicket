@@ -699,7 +699,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
 
 						// Check for button-name or button-name.x request string
-						if (submit.getForm() != null && submit.getForm().getRootForm() == Form.this
+						if (submit.getForm() != null
+								&& submit.getForm().getRootForm() == Form.this
 								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
 										.getParameter(submit.getInputName() + ".x") != null))
 						{
@@ -1051,53 +1052,21 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected void validate()
 	{
-		validateRequired();
-
-		validateConversion();
-
-		validateValidators();
-
+		validateComponents();
 		validateFormValidators();
 	}
 
-	/**
-	 * Triggers input required attribute validation on all form components
-	 */
-	protected final void validateRequired()
-	{
-		visitFormComponentsPostOrder(new ValidationVisitor()
-		{
-			public void validate(final FormComponent formComponent)
-			{
-				formComponent.validateRequired();
-			}
-		});
-	}
 
 	/**
 	 * Triggers type conversion on form components
 	 */
-	protected final void validateConversion()
+	protected final void validateComponents()
 	{
 		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
 			public void validate(final FormComponent formComponent)
 			{
-				formComponent.convert();
-			}
-		});
-	}
-
-	/**
-	 * Triggers all IValidator validators added to the form components
-	 */
-	protected final void validateValidators()
-	{
-		visitFormComponentsPostOrder(new ValidationVisitor()
-		{
-			public void validate(final FormComponent formComponent)
-			{
-				formComponent.validateValidators();
+				formComponent.validate();
 			}
 		});
 	}
