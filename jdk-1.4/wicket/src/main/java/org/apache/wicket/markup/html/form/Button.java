@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
 
 /**
@@ -190,22 +191,24 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		checkComponentTag(tag, "input");
-
 		// Default handling for component tag
 		super.onComponentTag(tag);
 
-		try
+		String name = tag.getName();
+		if (Strings.isEqual("input", name))
 		{
-			String value = getModelObjectAsString();
-			if (value != null && !"".equals(value))
+			try
 			{
-				tag.put("value", value);
+				String value = getModelObjectAsString();
+				if (value != null && !"".equals(value))
+				{
+					tag.put("value", value);
+				}
 			}
-		}
-		catch (Exception e)
-		{
-			// ignore.
+			catch (Exception e)
+			{
+				// ignore.
+			}
 		}
 
 		// If the subclass specified javascript, use that
