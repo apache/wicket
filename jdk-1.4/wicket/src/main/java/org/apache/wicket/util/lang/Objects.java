@@ -36,7 +36,6 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
 import org.apache.wicket.util.io.IObjectStreamFactory;
-import org.apache.wicket.util.io.WicketObjectStreamFactory;
 import org.apache.wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -130,7 +129,8 @@ public final class Objects
 			catch (ClassNotFoundException ex1)
 			{
 				// ignore this exception.
-				log.debug("Class not found by using objects own classloader, trying the IClassResolver");
+				log
+						.debug("Class not found by using objects own classloader, trying the IClassResolver");
 			}
 
 			Application application = Application.get();
@@ -245,7 +245,7 @@ public final class Objects
 	 * opposed to in Application, as the Application most likely isn't available
 	 * in the threads we'll be using this with.
 	 */
-	private static IObjectStreamFactory objectStreamFactory = new WicketObjectStreamFactory();
+	private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
 
 	/**
 	 * Strategy for calculating sizes of objects. Note: I didn't make this an
