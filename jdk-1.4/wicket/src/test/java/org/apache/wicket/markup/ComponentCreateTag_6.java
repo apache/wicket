@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.markup;
 
-import java.util.Locale;
-
-import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 
 
@@ -36,7 +33,5 @@ public class ComponentCreateTag_6 extends WebPage
 	 */
 	public ComponentCreateTag_6() 
 	{
-		// bit of a hack, but before the instance is created we don't have access to this request's session
-		Session.get().setLocale(Locale.ENGLISH);
     }
 }
