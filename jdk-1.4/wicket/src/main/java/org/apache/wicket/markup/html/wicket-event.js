@@ -154,7 +154,7 @@ Wicket.Event = {
 				}, 1);
 			} else if (document.readyState && Wicket.Browser.isIE()) { 
 				// internet explorer - use script with defer attribute
-				document.write("<script id=ie_ready defer src=javascript:void(0)><\/script>");
+				document.write("<script id='ie_ready' defer src='://0'><\/script>");
 				document.getElementById('ie_ready').onreadystatechange = function() {
 					if (this.readyState == 'complete') domReady();
 				};
