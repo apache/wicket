@@ -1,5 +1,5 @@
 #/bin/sh
-mvn eclipse:eclipse
+mvn eclipse:eclipse -DdownloadSources=true
 
 case `uname` in
 Linux)
