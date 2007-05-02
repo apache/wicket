@@ -111,7 +111,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
 		final FormComponent formComponent = getFormComponent();
-		boolean callOnUpdate = true;
 
 		try
 		{
@@ -120,25 +119,19 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			if (formComponent.hasErrorMessage())
 			{
 				formComponent.invalid();
+				onError(target, null);
 			}
 			else
 			{
 				formComponent.valid();
 				formComponent.updateModel();
+				onUpdate(target);
 			}
 		}
 		catch (RuntimeException e)
 		{
-			callOnUpdate = false;
 			onError(target, e);
-
 		}
-
-		if (callOnUpdate)
-		{
-			onUpdate(target);
-		}
-
 	}
 
 	/**
