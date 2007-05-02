@@ -41,6 +41,10 @@ import sun.reflect.ReflectionFactory;
 /**
  * TODO DOC ME!
  * 
+ * NOTE: this class uses Sun-specific features: we use {@link Unsafe} because we
+ * need to set the final fields, and we use {@link ReflectionFactory} to be able
+ * to find constructors appropriate for serialization.
+ * 
  * @author jcompagner
  */
 public final class ClassStreamHandler
