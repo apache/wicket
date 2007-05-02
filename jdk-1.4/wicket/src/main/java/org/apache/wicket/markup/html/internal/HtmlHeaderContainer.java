@@ -216,6 +216,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 */
 	private final void renderHeaderSections(final WebPage page, final HtmlHeaderContainer container)
 	{
+		page.renderHead(container);
 		// Make sure all Components interested in contributing to the header
 		// and there attached behaviors are asked.
 		page.visitChildren(new IVisitor()
@@ -236,8 +237,6 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 				}
 			}
 		});
-
-		page.renderHead(container);
 	}
 
 	/**
