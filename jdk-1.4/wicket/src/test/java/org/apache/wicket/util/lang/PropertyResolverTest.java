@@ -332,4 +332,28 @@ public class PropertyResolverTest extends TestCase
 		Address address2 = (Address)PropertyResolver.getValue("privateAddress", person2);
 		assertEquals(address, address2);
 	}	
+	
+	/**
+	 *
+	 */
+	public void testGetTargetClass() 
+	{
+		Address address = new Address();
+		
+		Class clazz = PropertyResolver.getTargetClass("number", address);
+		assertEquals(int.class, clazz);
+		
+		Person person = new Person();
+		person.setAddress(new Address());
+		
+		clazz = PropertyResolver.getTargetClass("address.number", person);
+		assertEquals(int.class, clazz);
+		
+		person.setAddressArray(new Address[] { new Address(), new Address() });
+		clazz = PropertyResolver.getTargetClass("addressArray[0]", person);
+		assertEquals(Address.class, clazz);
+		
+		clazz = PropertyResolver.getTargetClass("addressArray[0].number", person);
+		assertEquals(int.class, clazz);
+	}
 }

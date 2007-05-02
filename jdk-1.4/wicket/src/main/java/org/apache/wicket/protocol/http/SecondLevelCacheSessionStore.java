@@ -146,12 +146,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				String sessionId = getSession().getId();
 				if (sessionId != null)
 				{
-					if (lastPage != page && page.getCurrentVersionNumber() == 0)
-					{
-						// we have to save a new page directly to the file store
-						// so that this version is also recoverable.
-						getStore().storePage(sessionId, page);
-					}
+					getStore().storePage(sessionId, page);
 					lastPage = page;
 					dirty();
 				}
