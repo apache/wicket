@@ -169,7 +169,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	 */
 	public String toString()
 	{
-		return "StringHeaderContributor[contribution=" + contributor.contribution.getObject()
-				+ "]";
+		Object string = contributor.contribution.getObject();
+		return (string != null) ? string.toString() : "";
 	}
 }
