@@ -208,14 +208,24 @@ public class Fragment extends WebMarkupContainer
 	 */
 	protected MarkupStream chooseMarkupStream(final MarkupStream markupStream)
 	{
+		MarkupStream stream = null;
+
 		if (this.markupProvider == null)
 		{
-			return markupStream;
+			stream = markupStream;
 		}
+		else
+		{
 
-		// The following statement assumes that the markup provider is a
-		// parent along the line up to the Page
-		return this.markupProvider.getMarkupStream();
+			stream = this.markupProvider.getAssociatedMarkupStream(false);
+			if (stream == null)
+			{
+				// The following statement assumes that the markup provider is a
+				// parent along the line up to the Page
+				stream = markupProvider.getMarkupStream();
+			}
+		}
+		return stream;
 	}
 
 	/**
