@@ -46,11 +46,22 @@ public class FileResourceStream extends AbstractResourceStream implements IFixed
 	 * Constructor.
 	 *
 	 * @param file
-	 *            File containing resource
+	 *            {@link File} containing resource
 	 */
 	public FileResourceStream(final File file)
 	{
 		this.file = file;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param file
+	 *            {@link java.io.File} containing resource
+	 */
+	public FileResourceStream(final java.io.File file)
+	{
+		this.file = new File(file);
 	}
 
 	/**
