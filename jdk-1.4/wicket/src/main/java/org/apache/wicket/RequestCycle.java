@@ -758,8 +758,26 @@ public abstract class RequestCycle
 	 * all information necessary to instantiate and render the page, it can be
 	 * stored in a user's browser as a stable bookmark.
 	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public final CharSequence urlFor(final Class pageClass, final PageParameters parameters)
+	{
+		return urlFor(null, pageClass, parameters);
+	}
+
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
 	 * @param pageMap
-	 *            Pagemap to use
+	 *            Pagemap to use. If null is passed the default page map will be
+	 *            used
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
