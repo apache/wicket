@@ -133,6 +133,22 @@ public final class PropertyResolver
 		setter.setValue(value, converter == null ? new PropertyResolverConverter(Session.get(),
 				Session.get().getLocale()) : converter);
 	}
+	
+	/**
+	 * @param expression
+	 * @param object
+	 * @return
+	 */
+	public final static Class getTargetClass(String expression, Object object)
+	{
+		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, true);
+		if (setter == null)
+		{
+			throw new WicketRuntimeException("Null object returned for expression: " + expression
+					+ " for getting the target classs of: " + object);
+		}
+		return setter.getTargetClass();
+	}
 
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
@@ -465,6 +481,11 @@ public final class PropertyResolver
 		{
 			return getAndSetter.getValue(value);
 		}
+		
+		public Class getTargetClass()
+		{	
+			return getAndSetter.getTargetClass(this.value);
+		}
 
 	}
 
@@ -478,6 +499,11 @@ public final class PropertyResolver
 		 * @return The value of this property
 		 */
 		public Object getValue(final Object object);
+
+		/**
+		 * @return
+		 */
+		public Class getTargetClass(final Object object);
 
 		/**
 		 * @param object
@@ -530,6 +556,14 @@ public final class PropertyResolver
 		{
 			// Map can't make a newValue or should it look what is more in the
 			// map and try to make one of the class if finds?
+			return null;
+		}
+		
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
 			return null;
 		}
 	}
@@ -586,6 +620,14 @@ public final class PropertyResolver
 			// list and try to make one of the class if finds?
 			return null;
 		}
+		
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
+			return null;
+		}
 	}
 
 	private static final class ArrayGetSet implements IGetAndSet
@@ -634,6 +676,14 @@ public final class PropertyResolver
 			}
 			return value;
 		}
+		
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
+			return object.getClass().getComponentType();
+		}
 	}
 
 	private static final class ArrayLengthGetSet implements IGetAndSet
@@ -665,6 +715,14 @@ public final class PropertyResolver
 		public Object newValue(Object object)
 		{
 			throw new WicketRuntimeException("Cant get a new value from a length of an array");
+		}
+		
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
+			return null;
 		}
 	}
 
@@ -756,6 +814,14 @@ public final class PropertyResolver
 				throw new WicketRuntimeException("no set method defined for value: " + value
 						+ " on object: " + object);
 			}
+		}
+		
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
+			return getMethod.getReturnType();
 		}
 
 		/**
@@ -929,6 +995,13 @@ public final class PropertyResolver
 			return value;
 		}
 
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
+			return getMethod.getReturnType();
+		}
 	}
 
 	/**
@@ -1002,6 +1075,14 @@ public final class PropertyResolver
 				throw new WicketRuntimeException("Error setting field value of field " + field
 						+ " on object " + object + ", value " + value, ex);
 			}
+		}
+		
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
+			return field.getType();
 		}
 	}
 }
