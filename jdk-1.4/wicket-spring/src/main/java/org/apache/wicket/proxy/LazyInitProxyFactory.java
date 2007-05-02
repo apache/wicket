@@ -120,9 +120,26 @@ public class LazyInitProxyFactory
 		{
 			JdkHandler handler = new JdkHandler(type, locator);
 
-			return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-					new Class[] {type, Serializable.class, ILazyInitProxy.class,
-							IWriteReplace.class}, handler);
+			try
+			{
+				return Proxy.newProxyInstance(Thread.currentThread()
+						.getContextClassLoader(), new Class[] {type, Serializable.class,
+						ILazyInitProxy.class, IWriteReplace.class}, handler);
+			}
+			catch (IllegalArgumentException e)
+			{
+				/*
+				 * STW: In some clustering environments it appears the context
+				 * classloader fails to load the proxied interface (currently
+				 * seen in BEA WLS 9.x clusters). If this happens, we can try
+				 * and fall back to the classloader (current) that actually
+				 * loaded this class.
+				 */
+				return Proxy.newProxyInstance(
+						LazyInitProxyFactory.class.getClassLoader(), new Class[] {type,
+								Serializable.class, ILazyInitProxy.class,
+								IWriteReplace.class}, handler);
+			}
 
 		}
 		else
