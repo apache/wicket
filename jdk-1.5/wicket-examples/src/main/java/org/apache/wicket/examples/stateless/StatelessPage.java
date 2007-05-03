@@ -31,8 +31,6 @@ import org.apache.wicket.model.Model;
  */
 public class StatelessPage extends WebPage
 {
-	private TextField tf;
-
 	/**
 	 * Constructor
 	 */
@@ -41,6 +39,8 @@ public class StatelessPage extends WebPage
 		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink("indexLink", Index.class));
+		final TextField field = new TextField("textfield", new Model());
+		field.setRequired(true);
 
 		StatelessForm statelessForm = new StatelessForm("statelessform")
 		{
@@ -49,13 +49,11 @@ public class StatelessPage extends WebPage
 			 */
 			protected void onSubmit()
 			{
-				info("Submitted text: " + tf.getModelObject());
+				info("Submitted text: " + field.getModelObject());
 			}
 		};
-		tf = new TextField("textfield", new Model());
-		tf.setRequired(true);
+		statelessForm.add(field);
 		add(statelessForm);
-		statelessForm.add(tf);
 		add(new FeedbackPanel("feedback"));
 	}
 }
