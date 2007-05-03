@@ -39,4 +39,14 @@ public class StatelessApplication extends WicketExampleApplication
 	{
 		return Index.class;
 	}
+
+	/**
+	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
+	 */
+	@Override
+	protected void init()
+	{
+		// Doesn't work currently
+		// mount("/public", PackageName.forClass(StatelessApplication.class));
+	}
 }
