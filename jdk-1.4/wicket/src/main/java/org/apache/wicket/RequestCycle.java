@@ -1058,26 +1058,11 @@ public abstract class RequestCycle
 					break;
 				}
 				case PROCESS_EVENTS : {
-					// determine what kind of synchronization is to be used, and
-					// handle any events with that and generate a response in
-					// that same block
-					// NOTE: because of synchronization, we need to take the
-					// steps PROCESS_EVENTS and RESPOND together
 					processEventsAndRespond();
 					break;
 				}
 				case RESPOND : {
 					// generate a response
-					// NOTE: We have to do sync here because the
-					// processEventsAndRespond step will be unrolled by a
-					// RestartXX Exception. And if this is not the case
-					// then still it is not a problem to have 2 locks on
-					// the same session this will not cause a deadlock.
-					// So only if the request targets are different and the
-					// getLock() doesn't return 2 times the same object a
-					// deadlock could maybe occur. But we use the session
-					// as the lock at all times maybe use a variable inside
-					// RequestCycle to know that a lock is still in place?
 					respond();
 					break;
 				}
