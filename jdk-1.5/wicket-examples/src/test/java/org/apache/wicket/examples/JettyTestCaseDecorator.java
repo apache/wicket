@@ -34,6 +34,8 @@ public class JettyTestCaseDecorator extends TestSetup
 {
 
 	private Server server;
+	private String contextPath;
+	private String webappLocation;
 
 	/**
 	 * @param test
@@ -51,15 +53,25 @@ public class JettyTestCaseDecorator extends TestSetup
 		server.setConnectors(new Connector[] { connector });
 
 		WebAppContext web = new WebAppContext();
-		web.setContextPath("/wicket-examples");
+		if (contextPath == null)
+			web.setContextPath("/wicket-examples");
+		else
+			web.setContextPath(contextPath);
 
-		String basedir = System.getProperty("basedir");
-		String path = "";
-		if (basedir != null)
-			path = basedir + "/";
-		path += "src/main/webapp";
+		if (webappLocation == null)
+		{
+			String basedir = System.getProperty("basedir");
+			String path = "";
+			if (basedir != null)
+				path = basedir + "/";
+			path += "src/main/webapp";
 
-		web.setWar(path);
+			web.setWar(path);
+		}
+		else
+		{
+			web.setWar(webappLocation);
+		}
 		server.addHandler(web);
 
 		server.start();
@@ -72,6 +84,26 @@ public class JettyTestCaseDecorator extends TestSetup
 		super.tearDown();
 		server.stop();
 		server.join();
+	}
+
+	public String getContextPath()
+	{
+		return contextPath;
+	}
+
+	public void setContextPath(String contextPath)
+	{
+		this.contextPath = contextPath;
+	}
+
+	public String getWebappLocation()
+	{
+		return webappLocation;
+	}
+
+	public void setWebappLocation(String webappLocation)
+	{
+		this.webappLocation = webappLocation;
 	}
 
 }
