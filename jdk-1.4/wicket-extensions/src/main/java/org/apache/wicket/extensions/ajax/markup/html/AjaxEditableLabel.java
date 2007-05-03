@@ -366,6 +366,7 @@ public class AjaxEditableLabel extends Panel
 				+ "  el.focus(); " + "  if (el.createTextRange) { "
 				+ "     var v = el.value; var r = el.createTextRange(); "
 				+ "     r.moveStart('character', v.length); r.select(); } }");
+		target.focusComponent(editor);
 	}
 
 	/**
