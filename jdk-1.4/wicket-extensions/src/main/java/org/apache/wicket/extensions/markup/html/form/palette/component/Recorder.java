@@ -71,9 +71,9 @@ public class Recorder extends HiddenField
 		setOutputMarkupId(true);
 	}
 
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 
 		if (!getForm().hasError())
 		{

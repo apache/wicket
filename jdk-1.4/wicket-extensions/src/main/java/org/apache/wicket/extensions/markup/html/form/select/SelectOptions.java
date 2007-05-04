@@ -80,11 +80,11 @@ public class SelectOptions extends RepeatingView
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 
 		if (size() == 0 || recreateChoices)
 		{

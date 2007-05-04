@@ -684,11 +684,11 @@ public class Tree extends AbstractTree implements TreeModelListener
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
 	protected void onAttach()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 		// if we don't optimize, rebuild the paths on every request
 		if (!getOptimizeItemRemoval())
 		{

@@ -73,11 +73,11 @@ public final class NextButton extends WizardButton
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
 	protected final void onAttach()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 		// TODO after the constructor change we can do this in the constructor
 		// of either this class or the button form
 		getForm().setDefaultButton(this);

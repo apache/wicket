@@ -722,11 +722,11 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 		getContent().setOutputMarkupId(true);
 		getContent().setVisible(shown);
 	}

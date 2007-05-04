@@ -457,11 +457,11 @@ public class WizardStep extends Panel implements IWizardStep
 	/**
 	 * Workaround for adding the form validators; not needed in 2.0.
 	 * 
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 		if (onAttachAction != null)
 		{
 			onAttachAction.execute();

@@ -53,8 +53,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	{
 		private static final long serialVersionUID = 1L;
 
-		private transient boolean attachedButNotRendered = false;
-
 		private transient boolean dirty = false;
 
 		private transient int size;
@@ -108,26 +106,16 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.list.ListView#onAttach()
+		 * @see org.apache.wicket.markup.html.list.ListView#onBeforeRender()
 		 */
-		protected void onAttach()
+		protected void onBeforeRender()
 		{
-			super.onAttach();
+			super.onBeforeRender();
 			if (dirty)
 			{
 				super.internalOnAttach();
 				this.dirty = false;
 			}
-			attachedButNotRendered = true;
-		}
-
-		/**
-		 * @see org.apache.wicket.Component#onBeforeRender()
-		 */
-		protected void onBeforeRender()
-		{
-			// it this point, we can't change the hierarchy anymore
-			attachedButNotRendered = false;
 		}
 
 		/**
@@ -146,22 +134,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 */
 		private void signalModelChange()
 		{
-			if (!attachedButNotRendered)
-			{
-				// if the list view was not yet attached, or
-				// it has already been rendered, setting it dirty will suffice
-				// it will have the effect that next time the list view
-				// is processes, it will recalculate it's children
-				this.dirty = true;
-			}
-			else
-			{
-				// else let the listview recalculate it's childs immediately;
-				// it was attached, but it needs to go trhough that again now
-				// as the signalling component attached after this
-				getModel().detach();
-				super.internalOnAttach();
-			}
+			// else let the listview recalculate it's childs immediately;
+			// it was attached, but it needs to go trhough that again now
+			// as the signalling component attached after this
+			getModel().detach();
+			super.internalOnAttach();
 		}
 	}
 
