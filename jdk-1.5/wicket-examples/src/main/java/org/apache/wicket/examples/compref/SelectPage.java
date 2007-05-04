@@ -162,7 +162,6 @@ public class SelectPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new ListMultipleChoice(\"choices\", MANY_CHOICES).setMaxRows(5);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
 
-		// TODO Post 1.2: General: Unknown todo
 		html = "SEE INSIDE FOR NOW";
 		code = "SEE INSIDE FOR NOW";
 
