@@ -1760,14 +1760,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 				}
 
 				// Render the component and all its children
-				onBeforeRender();
+				beforeRender();
 				render(markupStream);
 			}
 			finally
 			{
 				// Make sure the original markup stream is back in place
 				parent.setMarkupStream(originalMarkupStream);
-				onAfterRender();
+				afterRender();
 			}
 		}
 	}
