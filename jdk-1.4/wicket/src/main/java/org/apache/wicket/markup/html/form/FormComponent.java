@@ -590,16 +590,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	}
 
 	/**
-	 * Gets whether this component is to be validated.
-	 * 
-	 * @return True if this component has one or more validators
-	 */
-	public final boolean isValidated()
-	{
-		return this.validators != null;
-	}
-
-	/**
 	 * This method will retrieve the request parameter, validate it, and if
 	 * valid update the model. These are the same steps as would be performed by
 	 * the form.
