@@ -688,7 +688,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 */
 	protected void onAttach()
 	{
-		super.onBeforeRender();
+		super.onAttach();
 		// if we don't optimize, rebuild the paths on every request
 		if (!getOptimizeItemRemoval())
 		{
