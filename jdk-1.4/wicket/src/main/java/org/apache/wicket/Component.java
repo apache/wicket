@@ -748,7 +748,7 @@ public abstract class Component implements IClusterable
 		{
 			throw new IllegalArgumentException("Argument `behavior` cannot be null");
 		}
-		if (behaviors == null || !behaviors.contains(behavior) == false)
+		if (behaviors == null || !behaviors.contains(behavior))
 		{
 			throw new IllegalStateException(
 					"Tried to remove a behavior that was not added to the component. Behavior: "
