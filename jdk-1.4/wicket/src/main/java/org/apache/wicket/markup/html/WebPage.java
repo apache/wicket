@@ -231,9 +231,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		return compressor;
 	}
 
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 
 		if (!bodyContainerAdded)
 		{

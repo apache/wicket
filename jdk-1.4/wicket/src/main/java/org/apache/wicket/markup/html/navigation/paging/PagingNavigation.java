@@ -276,9 +276,9 @@ public class PagingNavigation extends Loop
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
 		
 		// PagingNavigation itself (as well as the PageableListView)
@@ -287,7 +287,7 @@ public class PagingNavigation extends Loop
 		// The index of the first page link depends on the PageableListView's
 		// page currently printed.
 		this.setStartIndex();
-		super.onAttach();
+		super.onBeforeRender();
 	}
 
 	/**

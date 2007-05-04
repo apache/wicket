@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -161,6 +162,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Page.class);
 
+	/**
+	 * This is a thread local that is used for serializing page references in this 
+	 * page.It stores a {@link IPageSerializer} which can be set by the outside world
+	 * to do the serialization of this page.  
+	 */
+	public static final ThreadLocal serializer = new ThreadLocal();
+
 	/** Used to create page-unique numbers */
 	private short autoIndex;
 
@@ -242,7 +250,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		init(pageMap);
 	}
 
-
+	protected Object writeReplace() throws ObjectStreamException
+	{
+		IPageSerializer ps = (IPageSerializer)serializer.get();
+		if (ps != null)
+		{
+			return ps.serializePage(this);
+		}
+		return this;
+	}
+	
+	
 	/**
 	 * Called right after a component's listener method (the provided method
 	 * argument) was called. This method may be used to clean up dependencies,
@@ -764,6 +782,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void renderPage()
 	{
+		// if not attached then attach the whole page.
+		if (!isAttached())
+		{
+			attach();
+		}
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -791,7 +814,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			public Object component(Component component)
 			{
 				((IFeedback)component).updateFeedback();
-				component.attach();
+				component.beforeRender();
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
@@ -800,9 +823,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			((IFeedback)this).updateFeedback();
 		}
-
-		// Now, do the initialization for the other components
-		attach();
 
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
@@ -826,8 +846,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		});
 
+		beforeRender();
 		// Handle request by rendering page
 		render(null);
+		
+		afterRender();
 
 		// Check rendering if it happened fully
 		checkRendering(this);
@@ -935,7 +958,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private void checkHierarchyChange(Component component)
 	{
 		// Throw exception if modification is attempted during rendering
-		if ((!component.isAuto()) && getFlag(FLAG_IS_RENDERING))
+		if ((!component.isAuto()) && getFlag(FLAG_IS_RENDERING) || getFlag(FLAG_ATTACHING))
 		{
 			throw new WicketRuntimeException(
 					"Cannot modify component hierarchy during render phase");
@@ -1373,5 +1396,26 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	void setPageStateless(Boolean stateless)
 	{
 		this.stateless = stateless;
+	}
+	
+	/**
+	 * You can set implementation of the interface in the {@link Page#serializer}
+	 * then that implementation will handle the serialization of this page.
+	 * The serializePage method is called from the writeReplace then the implementation
+	 * can give another object to serialize instead. Which should have a readResolve method
+	 * for constructing back the page.
+	 * 
+	 * @author jcompagner
+	 */
+	public static interface IPageSerializer
+	{
+		/**
+		 * Called from the {@link Page#writeReplace()} method.
+		 * 
+		 * @param page The page that must be serialized.
+		 * 
+		 * @return The page or another Object that should be replaced for the page.
+		 */
+		public Object serializePage(Page page);
 	}
 }

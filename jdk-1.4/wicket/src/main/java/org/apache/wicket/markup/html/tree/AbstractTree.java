@@ -234,10 +234,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			}
 		}
 		
-		protected void onAttach()
+		protected void onBeforeRender()
 		{
 			AbstractTree.this.attach();
-			super.onAttach();
+			super.onBeforeRender();
 		}
 	}
 
@@ -471,9 +471,9 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 * Called at the beginning of the request (not ajax request, unless we are
 	 * rendering the entire component)
 	 */
-	public void onAttach()
+	public void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 		if (attached == false)
 		{
 			onBeforeAttach();
@@ -904,6 +904,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	protected void onAfterRender()
 	{
+		super.onAfterRender();
 		// rendering is complete, clear all dirty flags and items
 		updated();
 	}

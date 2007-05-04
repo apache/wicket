@@ -278,11 +278,11 @@ public abstract class ListView extends AbstractRepeater
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.Component#onAttach()
+			 * @see org.apache.wicket.Component#onBeforeRender()
 			 */
-			protected void onAttach()
+			protected void onBeforeRender()
 			{
-				super.onAttach();
+				super.onBeforeRender();
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
 				{
@@ -335,11 +335,11 @@ public abstract class ListView extends AbstractRepeater
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.Component#onAttach()
+			 * @see org.apache.wicket.Component#onBeforeRender()
 			 */
-			protected void onAttach()
+			protected void onBeforeRender()
 			{
-				super.onAttach();
+				super.onBeforeRender();
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == 0)
 				{
@@ -551,11 +551,11 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * @see org.apache.wicket.MarkupContainer#onAttach()
+	 * @see org.apache.wicket.MarkupContainer#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 
 		if (isVisibleInHierarchy())
 		{

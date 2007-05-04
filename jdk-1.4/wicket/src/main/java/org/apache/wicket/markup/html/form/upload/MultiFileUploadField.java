@@ -182,11 +182,11 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 
 		// auto toggle form's multipart property
 		Form form = (Form)findParent(Form.class);

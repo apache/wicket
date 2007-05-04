@@ -109,11 +109,11 @@ public abstract class Loop extends AbstractRepeater
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 
 		// Remove any previous loop contents
 		removeAll();

@@ -21,7 +21,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +33,7 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Objects;
@@ -217,7 +221,6 @@ public class FilePageStore implements IPageStore
 									else
 									{
 										sessionList.remove(0);
-										System.err.println("shouldn't happen");
 										continue;
 									}
 								}
@@ -647,79 +650,97 @@ public class FilePageStore implements IPageStore
 
 	private byte[] serializePage(SessionPageKey key, Page page)
 	{
+		byte[] bytes = null;
+		System.err.println("SERIALIZING " + key);
 		long t1 = System.currentTimeMillis();
-		byte[] bytes = Objects.objectToByteArray(page);
-		totalSerializationTime += (System.currentTimeMillis() - t1);
-		serialized++;
-		if (log.isDebugEnabled() && bytes != null)
+		Page.serializer.set(new PageSerializer(key));
+		try
 		{
-			log.debug("serializing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
-					+ "] size: " + bytes.length + " for session " + key.sessionId + " took "
-					+ (System.currentTimeMillis() - t1) + " miliseconds to serialize");
+			bytes = Objects.objectToByteArray(page);
+			totalSerializationTime += (System.currentTimeMillis() - t1);
+			serialized++;
+			if (log.isDebugEnabled() && bytes != null)
+			{
+				log.debug("serializing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
+						+ "] size: " + bytes.length + " for session " + key.sessionId + " took "
+						+ (System.currentTimeMillis() - t1) + " miliseconds to serialize");
+			}
 		}
+		finally
+		{
+			Page.serializer.set(null);
+		}
+		System.err.println("SERIALIZING " + key + " bytes: " + bytes);
 		return bytes;
 	}
 
-	private byte[] testMap(SessionPageKey currentKey)
+	private byte[] testMap(final SessionPageKey currentKey)
 	{
-		SessionPageKey previousPage = (SessionPageKey)pagesToBeSaved.get(currentKey);
-		if (previousPage != null)
-		{
-			return (byte[])previousPage.data;
-		}
+		System.err.println("TESTMAP:" + currentKey);
+		byte[] bytes = null;
 		List list = (List)pagesToBeSerialized.get(currentKey.sessionId);
-
 		if (list == null)
-			return null;
-
-		synchronized (list)
 		{
-			int index = list.indexOf(currentKey);
-			if (index != -1)
+			SessionPageKey previousPage = (SessionPageKey)pagesToBeSaved.get(currentKey);
+			if (previousPage != null)
 			{
-				currentKey = (SessionPageKey)list.get(index);
-				Object object = currentKey.data;
-				if (object instanceof Page)
+				bytes = (byte[])previousPage.data;
+			}
+		}
+		else
+		{
+			while(true)
+			{
+				SessionPageKey listKey = null;
+				synchronized (list)
 				{
-					list.remove(index);
-				}
-				else if (object == SERIALIZING)
-				{
-					try
+					if (list.size() > 0)
 					{
-						list.wait();
-					}
-					catch (InterruptedException ex)
-					{
-						throw new RuntimeException(ex);
-					}
-					object = currentKey.data;
-					if (object instanceof byte[])
-					{
-						return (byte[])object;
+						listKey = (SessionPageKey)list.get(list.size()-1);
+						Object object = listKey.data;
+						if (object instanceof Page)
+						{
+							list.remove(list.size()-1);
+						}
+						else if (object == SERIALIZING)
+						{
+							try
+							{
+								list.wait();
+							}
+							catch (InterruptedException ex)
+							{
+								throw new RuntimeException(ex);
+							}
+						}
 					}
 					else
 					{
-						previousPage = (SessionPageKey)pagesToBeSaved.get(currentKey);
-						if (previousPage != null)
-						{
-							return (byte[])previousPage.data;
-						}
-						return null;
+						break;
 					}
 				}
-			}
-			else
-			{
-				return null;
+				if (listKey.data instanceof Page)
+				{
+					byte[] ser = serializePage(listKey, (Page)listKey.data);
+					if (ser != null)
+					{
+						listKey.setObject(ser);
+						pagesToBeSaved.put(listKey, listKey);
+					}
+				}
+				if (listKey.equals(currentKey) && listKey.data instanceof byte[])
+				{
+					bytes = (byte[])listKey.data;
+				}
 			}
 		}
-
-		byte[] bytes = serializePage(currentKey, (Page)currentKey.data);
-		if (bytes != null)
+		if (bytes == null)
 		{
-			currentKey.setObject(bytes);
-			pagesToBeSaved.put(currentKey, currentKey);
+			SessionPageKey previousPage = (SessionPageKey)pagesToBeSaved.get(currentKey);
+			if (previousPage != null)
+			{
+				bytes = (byte[])previousPage.data;
+			}
 		}
 		return bytes;
 	}
@@ -734,5 +755,65 @@ public class FilePageStore implements IPageStore
 	protected File getWorkDir()
 	{
 		return defaultWorkDir;
+	}
+	
+	private class PageSerializer implements Page.IPageSerializer
+	{
+		private SessionPageKey current;
+		
+		private List previous = new ArrayList();
+		private List completed = new ArrayList();
+	
+
+		/**
+		 * Construct.
+		 * @param key
+		 */
+		public PageSerializer(SessionPageKey key)
+		{
+			this.current = key;
+		}
+
+		/**
+		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page)
+		 */
+		public Object serializePage(Page page)
+		{
+			if (current.id == page.getNumericId())
+			{
+				return page;
+			}
+			SessionPageKey spk = new SessionPageKey(current.sessionId,page);
+			if (!completed.contains(spk))
+			{
+				previous.add(current);
+				current = spk;
+				byte[] bytes = Objects.objectToByteArray(page);
+				current.setObject(bytes);
+				pagesToBeSaved.put(spk, spk);
+				completed.add(current);
+				current = (SessionPageKey)previous.remove(previous.size()-1);
+			}
+			return new PageHolder(page);
+		}
+	}
+	
+	private static class PageHolder implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final int pageid;
+		private final String pagemap;
+		
+		PageHolder(Page page)
+		{
+			this.pageid = page.getNumericId();
+			this.pagemap = page.getPageMap().getName();
+		}
+		
+		protected Object readResolve() throws ObjectStreamException
+		{
+			return Session.get().getPage(pagemap, Integer.toString(pageid), -1);
+		}
 	}
 }

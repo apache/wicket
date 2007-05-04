@@ -215,7 +215,7 @@ public abstract class MarkupContainer extends Component
 		}
 		component.setAuto(true);
 		add(component);
-		component.attach();
+		component.onBeforeRender();
 		component.render();
 		return true;
 	}
@@ -1359,12 +1359,8 @@ public abstract class MarkupContainer extends Component
 				// Get next child
 				final Component child = children_get(i);
 
-				// Ignore feedback as that was done in Page
-				if (!(child instanceof IFeedback))
-				{
-					// Call begin request on the child
-					child.attach();
-				}
+				// Call begin request on the child
+				child.attach();
 			}
 		}
 		catch (RuntimeException ex)
@@ -1392,6 +1388,50 @@ public abstract class MarkupContainer extends Component
 		super.detachChildren();
 	}
 
+	void onBeforeRenderChildren()
+	{
+		super.onBeforeRenderChildren();
+		try
+		{
+			// Loop through child components
+			final int size = children_size();
+			for (int i = 0; i < size; i++)
+			{
+				// Get next child
+				final Component child = children_get(i);
+
+				// Ignore feedback as that was done in Page
+				if (!(child instanceof IFeedback))
+				{
+					// Call begin request on the child
+					child.beforeRender();
+				}
+			}
+		}
+		catch (RuntimeException ex)
+		{
+			if (ex instanceof WicketRuntimeException)
+				throw ex;
+			else
+				throw new WicketRuntimeException("Error attaching this container for rendering: "
+						+ this, ex);
+		}
+	}
+
+	void onAfterRenderChildren()
+	{
+		// Loop through child components
+		final Iterator iter = iterator();
+		while (iter.hasNext())
+		{
+			// Get next child
+			final Component child = (Component)iter.next();
+
+			// Call end request on the child
+			child.afterRender();
+		}
+		super.onAfterRenderChildren();
+	}
 	/**
 	 * @return True if this markup container has associated markup
 	 */

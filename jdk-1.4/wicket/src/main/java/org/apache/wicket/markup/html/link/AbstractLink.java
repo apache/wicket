@@ -109,9 +109,9 @@ public abstract class AbstractLink extends WebMarkupContainer
 		this.beforeDisabledLink = beforeDisabledLink;
 	}
 
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 
 		// Set default for before/after link text
 		if (beforeDisabledLink == null)

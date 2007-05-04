@@ -14,44 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.http;
+package org.apache.wicket;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.lang.Objects;
 
 /**
- * Tests that an error page is displayed on runtime errors during ajax requests.
+ * @author jcompagner
  */
-public class TestErrorPage extends WebPage
+public class PageInPageVersionTest extends WicketTestCase
 {
-	private static final long serialVersionUID = 1L;
-
-	private boolean clicked = false;
-
-	/**
-	 * Construct.
-	 */
-	public TestErrorPage()
+	public void testPageInPage() throws Exception
 	{
-
-		add(new AjaxLink("link")
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void onClick(AjaxRequestTarget target)
-			{
-				clicked = true;
-				target.addComponent(this);
-			}
-
-			protected void onAfterRender()
-			{
-				super.onAfterRender();
-				if (clicked)
-					throw new IllegalStateException("Intentional error");
-			}
-		});
+		Page1 page = new Page1();
+		
+		byte[] array = Objects.objectToByteArray(page);
+		
+		Page1 page2 = (Page1)Objects.byteArrayToObject(array);
+		
+		System.err.println(page2);
 	}
-
+	
+	
+	private static class Page1 extends WebPage
+	{
+		Page2 page = new Page2(); 
+	}
+	
+	private static class Page2 extends WebPage
+	{
+		
+	}
 }

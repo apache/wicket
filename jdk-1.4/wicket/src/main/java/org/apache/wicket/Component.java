@@ -222,7 +222,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component implements IClusterable
+public abstract class Component implements IClusterable, IConverterLocator
 {
 	/**
 	 * Change record of a model.
@@ -599,8 +599,12 @@ public abstract class Component implements IClusterable
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
 	private static final int FLAG_ATTACHED = 0x20000000;
-	private static final int FLAG_ATTACHING = 0x40000000;
+	protected static final int FLAG_ATTACHING = 0x40000000;
 	private static final int FLAG_DETACHING = 0x80000000;
+
+	private static final int FLAG_RENDERING = 0x2000000;
+	private static final int FLAG_BEFORE_RENDERING = 0x4000000;
+	private static final int FLAG_AFTER_RENDERING = 0x8000000;
 
 
 	/** meta data key for missing body tags logging. */
@@ -1640,26 +1644,17 @@ public abstract class Component implements IClusterable
 			try
 			{
 				// Call implementation to render component
-				onBeforeRender();
 				notifyBehaviorsComponentBeforeRender();
-				try
+				final IComponentBorder border = getComponentBorder();
+				if (border != null)
 				{
-					final IComponentBorder border = getComponentBorder();
-					if (border != null)
-					{
-						border.renderBefore(this);
-					}
-					onRender(markupStream);
-					if (border != null)
-					{
-						border.renderAfter(this);
-					}
+					border.renderBefore(this);
 				}
-				finally
+				onRender(markupStream);
+				if (border != null)
 				{
-					onAfterRender();
+					border.renderAfter(this);
 				}
-
 				// Component has been rendered
 				rendered();
 			}
@@ -2799,7 +2794,7 @@ public abstract class Component implements IClusterable
 	 * 
 	 * Called when a request begins.
 	 * 
-	 * @Deprecated use {@link #onAttach()} instead
+	 * @Deprecated use {@link #onBeforeRender()} instead
 	 */
 	protected final void internalOnAttach()
 	{
@@ -2811,7 +2806,7 @@ public abstract class Component implements IClusterable
 	 * 
 	 * Called when a request ends.
 	 * 
-	 * @Deprecated use {@link #onAttach()} instead
+	 * @Deprecated use {@link #onBeforeRender()} instead
 	 * 
 	 */
 	protected final void internalOnDetach()
@@ -2896,18 +2891,10 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
-	 * Called just after a component is rendered.
-	 */
-	protected void onAfterRender()
-	{
-	}
-
-
-	/**
 	 * Attaches any child components
 	 * 
 	 * This method is here only for {@link MarkupContainer}. It is broken out
-	 * of {@link #onAttach()} so we can guarantee that it executes as the last
+	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the last
 	 * in onAttach() chain no matter where user places the
 	 * <code>super.onAttach()</code> call
 	 */
@@ -2918,6 +2905,8 @@ public abstract class Component implements IClusterable
 
 	/**
 	 * Attaches the component.
+	 * This is called when the page is starting to be used for rendering or when
+	 * a component listener call is executed on it. 
 	 */
 	public final void attach()
 	{
@@ -2937,6 +2926,14 @@ public abstract class Component implements IClusterable
 
 		attachChildren();
 	}
+	
+	/**
+	 * @return true if this component is attached
+	 */
+	protected final boolean isAttached()
+	{
+		return getFlag(FLAG_ATTACHED);
+	}
 
 	/**
 	 * Detaches any child components
@@ -2950,6 +2947,8 @@ public abstract class Component implements IClusterable
 
 	/**
 	 * Detaches the component.
+	 * This is called at the end of the request for all the pages that are touched
+	 * in that request.
 	 */
 	public final void detach()
 	{
@@ -2996,16 +2995,86 @@ public abstract class Component implements IClusterable
 	protected void onAttach()
 	{
 		setFlag(FLAG_ATTACHING, false);
-
 	}
+	
+	/**
+	 * Called for every component when the page is getting to be rendered.
+	 * it will call onBeforeRender for this component and all the child components
+	 */
+	public final void beforeRender()
+	{
+		if (!getFlag(FLAG_RENDERING))
+		{
+			setFlag(FLAG_BEFORE_RENDERING, true);
+			setFlag(FLAG_RENDERING, true);
+			onBeforeRender();
+			if (getFlag(FLAG_BEFORE_RENDERING))
+			{
+				throw new IllegalStateException(Component.class.getName()
+						+ " has not been properly rendered. Something in the hierarchy of "
+						+ getClass().getName()
+						+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
+			}
+		}
 
+		onBeforeRenderChildren();
+	}
 	/**
 	 * Called just before a component is rendered.
 	 */
 	protected void onBeforeRender()
 	{
+		setFlag(FLAG_BEFORE_RENDERING, false);
+	}
+	
+	/**
+	 * This method is here only for {@link MarkupContainer}. It is broken out
+	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the last
+	 * in onAttach() chain no matter where user places the
+	 * <code>super.onAttach()</code> call
+	 */
+	void onBeforeRenderChildren()
+	{
+		// noop
 	}
 
+	/**
+	 * Called on very component after the page is renderd
+	 * It will call onAfterRender for it self and its childeren.
+	 */
+	public final void afterRender()
+	{
+		// if the component has been previously attached via attach()
+		// detach it now
+		setFlag(FLAG_AFTER_RENDERING, true);
+		onAfterRender();
+		if (getFlag(FLAG_AFTER_RENDERING))
+		{
+			throw new IllegalStateException(Component.class.getName()
+					+ " has not been properly detached. Something in the hierarchy of "
+					+ getClass().getName()
+					+ " has not called super.onAfterRender() in the override of onAfterRender() method");
+		}
+		setFlag(FLAG_RENDERING, false);
+
+		// always detach children because components can be attached
+		// independently of their parents
+		onAfterRenderChildren();
+	}
+
+	/**
+	 * Called just after a component is rendered.
+	 */
+	protected void onAfterRender()
+	{
+		setFlag(FLAG_AFTER_RENDERING, false);
+	}
+	
+	void onAfterRenderChildren()
+	{
+		// noop
+	}
+	
 	/**
 	 * Processes the component tag.
 	 * 

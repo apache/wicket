@@ -17,6 +17,8 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -106,6 +108,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		private static final long serialVersionUID = 1L;
 
 		private Page lastPage = null;
+		
+		private List pageVersions = new ArrayList();
+		
 
 		/**
 		 * Construct.
@@ -119,6 +124,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		public Page get(int id, int versionNumber)
 		{
+			PageVersions pv = null;
+			if (versionNumber == -1)
+			{
+				int index = pageVersions.indexOf(new PageVersions(id,-1,-1));
+				pv = (PageVersions)pageVersions.get(index);
+				versionNumber = pv.versionid;
+			}
 			String sessionId = getSession().getId();
 			if (lastPage != null && lastPage.getNumericId() == id)
 			{
@@ -132,9 +144,20 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 			if (sessionId != null)
 			{
-				// this is really a page request for a default page. (so without
-				// an ajax version)
-				return getStore().getPage(sessionId, getName(), id, versionNumber, 0);
+				int ajaxVersionNumber = 0;
+				if (pv == null)
+				{
+					int index = pageVersions.indexOf(new PageVersions(id,-1,-1));
+					if (index != -1)
+					{
+						pv = (PageVersions)pageVersions.get(index);
+					}
+				}
+				if (pv != null)
+				{
+					ajaxVersionNumber = pv.ajaxversionid;
+				}
+				return getStore().getPage(sessionId, getName(), id, versionNumber, ajaxVersionNumber);
 			}
 			return null;
 		}
@@ -149,6 +172,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					getStore().storePage(sessionId, page);
 					lastPage = page;
 					dirty();
+					
+					PageVersions pv = new PageVersions(page.getNumericId(),page.getCurrentVersionNumber(),page.getAjaxVersionNumber());
+					pageVersions.remove(pv);
+					pageVersions.add(pv);
+					if (pageVersions.size() > 100)
+					{
+						pageVersions.remove(0);
+					}
 				}
 			}
 		}
@@ -165,6 +196,40 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		private IPageStore getStore()
 		{
 			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
+		}
+		
+		private static class PageVersions
+		{
+			private final int pageid;
+			private int versionid;
+			private int ajaxversionid;
+			
+			PageVersions(int pageid, int versionid, int ajaxversionid)
+			{
+				this.pageid = pageid;
+				this.versionid = versionid;
+				this.ajaxversionid = versionid;
+			}
+			
+			/**
+			 * @see java.lang.Object#equals(java.lang.Object)
+			 */
+			public boolean equals(Object obj)
+			{
+				if (obj instanceof PageVersions)
+				{
+					return ((PageVersions)obj).pageid == pageid; 
+				}
+				return false;
+			}
+			
+			/**
+			 * @see java.lang.Object#hashCode()
+			 */
+			public int hashCode()
+			{
+				return pageid;
+			}
 		}
 	}
 

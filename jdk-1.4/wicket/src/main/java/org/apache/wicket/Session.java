@@ -714,6 +714,12 @@ public abstract class Session implements IClusterable, IConverterLocator
 					pageMapsUsedInRequest.remove(pageMap);
 					pageMapsUsedInRequest.notifyAll();
 				}
+				else
+				{
+					// attach the page now.
+					page.attach();
+					touch(page);
+				}
 				return page;
 			}
 		}
