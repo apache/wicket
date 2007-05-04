@@ -113,9 +113,9 @@ public class DateField extends FormComponentPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
 
 		Date d = (Date)getModelObject();
@@ -128,6 +128,6 @@ public class DateField extends FormComponentPanel
 			date = null;
 		}
 
-		super.onAttach();
+		super.onBeforeRender();
 	}
 }
