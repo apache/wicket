@@ -315,6 +315,75 @@ public abstract class Component implements IClusterable
 	}
 
 	/**
+	 * Change object for undoing removal of behavior
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private final class RemovedBehaviorChange extends Change
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		private final IBehavior behavior;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param behavior
+		 */
+		public RemovedBehaviorChange(IBehavior behavior)
+		{
+			this.behavior = behavior;
+		}
+
+		public void undo()
+		{
+			add(behavior);
+		}
+
+		public String toString()
+		{
+			return "[" + getClass().getName() + " behavior=" + behavior.toString() + "]";
+		}
+
+	}
+
+	/**
+	 * Change object for undoing addition of behavior
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private final class AddedBehaviorChange extends Change
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		private final IBehavior behavior;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param behavior
+		 */
+		public AddedBehaviorChange(IBehavior behavior)
+		{
+			this.behavior = behavior;
+		}
+
+		public void undo()
+		{
+			remove(behavior);
+		}
+
+		public String toString()
+		{
+			return "[" + getClass().getName() + " behavior=" + behavior.toString() + "]";
+		}
+
+	}
+
+
+	/**
 	 * A enabled change operation.
 	 */
 	protected final static class EnabledChange extends Change
@@ -563,7 +632,7 @@ public abstract class Component implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** List of behaviors to be applied for this Component */
-	private List behaviors = null;
+	private ArrayList behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
@@ -654,8 +723,44 @@ public abstract class Component implements IClusterable
 
 		behaviors.add(behavior);
 
+		if (!behavior.isTemporary())
+		{
+			addStateChange(new AddedBehaviorChange(behavior));
+		}
+
 		// Give handler the opportunity to bind this component
 		behavior.bind(this);
+
+		return this;
+	}
+
+	/**
+	 * Removes behavior from component
+	 * 
+	 * @param behavior
+	 *            behavior to remove
+	 * 
+	 * @return this (to allow method call chaining)
+	 */
+	public Component remove(final IBehavior behavior)
+	{
+		if (behavior == null)
+		{
+			throw new IllegalArgumentException("Argument `behavior` cannot be null");
+		}
+		if (behaviors == null || !behaviors.contains(behavior) == false)
+		{
+			throw new IllegalStateException(
+					"Tried to remove a behavior that was not added to the component. Behavior: "
+							+ behavior.toString());
+		}
+
+		if (!behavior.isTemporary())
+		{
+			addStateChange(new RemovedBehaviorChange(behavior));
+		}
+		behaviors.remove(behavior);
+
 		return this;
 	}
 
@@ -2924,6 +3029,10 @@ public abstract class Component implements IClusterable
 	 */
 	protected void onDetach()
 	{
+		if (behaviors != null)
+		{
+			behaviors.trimToSize();
+		}
 		setFlag(FLAG_DETACHING, false);
 
 	}
