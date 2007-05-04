@@ -75,7 +75,7 @@ public final class NextButton extends WizardButton
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected final void onAttach()
+	protected final void onBeforeRender()
 	{
 		super.onBeforeRender();
 		// TODO after the constructor change we can do this in the constructor

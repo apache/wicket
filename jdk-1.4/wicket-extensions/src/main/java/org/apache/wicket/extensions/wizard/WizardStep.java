@@ -336,7 +336,8 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
-	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
+	 *      org.apache.wicket.Component,
+	 *      org.apache.wicket.extensions.wizard.IWizard)
 	 */
 	public Component getHeader(String id, Component parent, IWizard wizard)
 	{
@@ -367,7 +368,8 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
-	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
+	 *      org.apache.wicket.Component,
+	 *      org.apache.wicket.extensions.wizard.IWizard)
 	 */
 	public Component getView(String id, Component parent, IWizard wizard)
 	{
@@ -455,7 +457,7 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Workaround for adding the form validators; not needed in 2.0.
+	 * Workaround for adding the form validators.
 	 * 
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */

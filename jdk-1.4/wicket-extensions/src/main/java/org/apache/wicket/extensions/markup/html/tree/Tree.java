@@ -145,7 +145,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 */
 		public boolean getReuseItems()
 		{
-			return Tree.this.getOptimizeItemRemoval();
+			return Tree.this.getReuseItems();
 		}
 
 		/**
@@ -363,24 +363,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 		ResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
-	}
-
-	/**
-	 * Gets whether item removal should be optimized. If true, re-rendering the
-	 * tree is more efficient if the tree model doesn't get changed. However, if
-	 * this is true, you need to push changes to this tree. This can easility be
-	 * done by registering this tree as the listener for tree model events
-	 * (TreeModelListener), but you should <b>be carefull</b> not to create a
-	 * memory leak by doing this (e.g. when you store the tree model in your
-	 * session, the tree you registered cannot be GC-ed). TRUE by default.
-	 * 
-	 * @return whether item removal should be optimized
-	 * @deprecated Will be replaced by {@link #getReuseItems()}
-	 */
-	// TODO Post 1.2: Remove
-	public boolean getOptimizeItemRemoval()
-	{
-		return getReuseItems();
 	}
 
 	/**
@@ -686,11 +668,11 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
+		super.onBeforeRender();
 		// if we don't optimize, rebuild the paths on every request
-		if (!getOptimizeItemRemoval())
+		if (!getReuseItems())
 		{
 			treePathsModel.dirty = true;
 		}
