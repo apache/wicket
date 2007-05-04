@@ -338,7 +338,11 @@ public abstract class Component implements IClusterable
 
 		public void undo()
 		{
-			add(behavior);
+			if (behaviors == null)
+			{
+				behaviors = new ArrayList(1);
+			}
+			behaviors.add(behavior);
 		}
 
 		public String toString()
@@ -372,7 +376,11 @@ public abstract class Component implements IClusterable
 
 		public void undo()
 		{
-			remove(behavior);
+			behaviors.remove(behavior);
+			if (behaviors.size() == 0)
+			{
+				behaviors = null;
+			}
 		}
 
 		public String toString()
@@ -760,6 +768,11 @@ public abstract class Component implements IClusterable
 			addStateChange(new RemovedBehaviorChange(behavior));
 		}
 		behaviors.remove(behavior);
+
+		if (behaviors.size() == 0)
+		{
+			behaviors = null;
+		}
 
 		return this;
 	}
