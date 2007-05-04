@@ -163,7 +163,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		AppendingStringBuffer buff = new AppendingStringBuffer(256);
 		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_RESULT_VAR).append("=");
 		buff.append(partialCall).append(", function() { ").append(success);
-		buff.append("}, function() { ").append(failure).append("});");
+		buff.append("}.bind(this), function() { ").append(failure).append("}.bind(this));");
 
 		CharSequence call = buff;
 
