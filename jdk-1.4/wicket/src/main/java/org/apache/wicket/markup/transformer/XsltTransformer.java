@@ -84,9 +84,10 @@ public class XsltTransformer implements ITransformer
 	 * component's id.
 	 * 
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      java.lang.String)
+	 *      CharSequence)
 	 */
-	public CharSequence transform(final Component component, final String output) throws Exception
+	public CharSequence transform(final Component component, final CharSequence output)
+			throws Exception
 	{
 		IResourceStream resourceStream = getResourceStream(component);
 
@@ -110,8 +111,8 @@ public class XsltTransformer implements ITransformer
 			// 3. Use the Transformer to transform an XML Source and send the
 			// output to a Result object.
 			StringWriter writer = new StringWriter();
-			transformer.transform(new StreamSource(new StringReader(output)), new StreamResult(
-					writer));
+			transformer.transform(new StreamSource(new StringReader(output.toString())),
+					new StreamResult(writer));
 
 			return writer.getBuffer();
 		}
@@ -135,15 +136,15 @@ public class XsltTransformer implements ITransformer
 		String filePath = this.xslFile;
 		if (filePath == null)
 		{
-			filePath = component.findParentWithAssociatedMarkup().getClass()
-				.getPackage().getName().replace('.', '/')
-				+ "/" + component.getId();
+			filePath = component.findParentWithAssociatedMarkup().getClass().getPackage().getName()
+					.replace('.', '/')
+					+ "/" + component.getId();
 		}
-		
-		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator()
-				.locate(getClass(), filePath, component.getStyle(), component.getLocale(),
-						XsltTransformer.extension);
-		
+
+		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
+				getClass(), filePath, component.getStyle(), component.getLocale(),
+				XsltTransformer.extension);
+
 		return resourceStream;
 	}
 }

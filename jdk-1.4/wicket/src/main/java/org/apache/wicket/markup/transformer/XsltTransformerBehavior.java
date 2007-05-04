@@ -83,9 +83,9 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 
 	/**
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      java.lang.String)
+	 *      CharSequence)
 	 */
-	public CharSequence transform(final Component component, final String output) throws Exception
+	public CharSequence transform(final Component component, final CharSequence output) throws Exception
 	{
 		return new XsltTransformer(this.xslFile).transform(component, output);
 	}

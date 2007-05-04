@@ -51,9 +51,9 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 
 	/**
 	 * 
-	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component, java.lang.String)
+	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component, CharSequence)
 	 */
-	public CharSequence transform(final Component component, final String output)
+	public CharSequence transform(final Component component, final CharSequence output)
 	{
 		return output;
 	}

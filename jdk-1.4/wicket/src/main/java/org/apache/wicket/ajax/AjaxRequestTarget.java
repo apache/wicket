@@ -679,11 +679,14 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param str
 	 * @return encoded string
 	 */
-	protected String encode(String str)
+	protected String encode(String s)
 	{
-		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for
-		// more efficient replacement
-		return str.replaceAll("]", "]^");
+		if (s == null)
+		{
+			return null;
+		}
+
+		return Strings.replaceAll(s, "]", "]^").toString();
 	}
 
 	/**

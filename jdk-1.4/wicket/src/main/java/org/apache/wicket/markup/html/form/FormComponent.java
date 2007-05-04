@@ -311,8 +311,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 * 
 	 * @return The value in the request for this component
 	 */
-	// TODO Post 1.2: make this final, if the users want to override this they
-	// should really be overriding #getInputAsArray()
 	public String getInput()
 	{
 		String[] input = getInputAsArray();
@@ -933,18 +931,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 			return ints;
 		}
 		return null;
-	}
-
-	/**
-	 * Gets the request parameters for this component as strings.
-	 * 
-	 * @return The values in the request for this component
-	 * @deprecated Use {@link #getInputAsArray()} instead
-	 */
-	// TODO Post 1.2: remove
-	protected final String[] inputAsStringArray()
-	{
-		return getInputAsArray();
 	}
 
 	/**

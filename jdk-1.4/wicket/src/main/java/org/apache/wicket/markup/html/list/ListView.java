@@ -188,23 +188,6 @@ public abstract class ListView extends AbstractRepeater
 	 * validation will not work properly.
 	 * 
 	 * @return Whether to reuse items
-	 * @deprecated Use {@link #getReuseItems()} instead
-	 */
-	// TODO Post 1.2: Remove
-	public boolean getOptimizeItemRemoval()
-	{
-		return getReuseItems();
-	}
-
-	/**
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
-	 * validation will not work properly.
-	 * 
-	 * @return Whether to reuse items
 	 */
 	public boolean getReuseItems()
 	{
@@ -278,19 +261,6 @@ public abstract class ListView extends AbstractRepeater
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.Component#onBeforeRender()
-			 */
-			protected void onBeforeRender()
-			{
-				super.onBeforeRender();
-				setAutoEnable(false);
-				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
-				{
-					setEnabled(false);
-				}
-			}
-
-			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */
 			public void onClick()
@@ -316,6 +286,19 @@ public abstract class ListView extends AbstractRepeater
 					ListView.this.removeAll();
 				}
 			}
+
+			/**
+			 * @see org.apache.wicket.Component#onBeforeRender()
+			 */
+			protected void onBeforeRender()
+			{
+				super.onBeforeRender();
+				setAutoEnable(false);
+				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
+				{
+					setEnabled(false);
+				}
+			}
 		};
 	}
 
@@ -333,19 +316,6 @@ public abstract class ListView extends AbstractRepeater
 		return new Link(id)
 		{
 			private static final long serialVersionUID = 1L;
-
-			/**
-			 * @see org.apache.wicket.Component#onBeforeRender()
-			 */
-			protected void onBeforeRender()
-			{
-				super.onBeforeRender();
-				setAutoEnable(false);
-				if (getList().indexOf(item.getModelObject()) == 0)
-				{
-					setEnabled(false);
-				}
-			}
 
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
@@ -372,6 +342,19 @@ public abstract class ListView extends AbstractRepeater
 					// Swap items and invalidate listView
 					Collections.swap(getList(), index, index - 1);
 					ListView.this.removeAll();
+				}
+			}
+
+			/**
+			 * @see org.apache.wicket.Component#onBeforeRender()
+			 */
+			protected void onBeforeRender()
+			{
+				super.onBeforeRender();
+				setAutoEnable(false);
+				if (getList().indexOf(item.getModelObject()) == 0)
+				{
+					setEnabled(false);
 				}
 			}
 		};
@@ -401,8 +384,8 @@ public abstract class ListView extends AbstractRepeater
 				{
 					private static final long serialVersionUID = 1L;
 
-					final Object removedObject = item.getModelObject();
 					final int oldIndex = getList().indexOf(item.getModelObject());
+					final Object removedObject = item.getModelObject();
 
 					public void undo()
 					{
@@ -423,22 +406,32 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
-	 * validation will not work properly.
+	 * Sets the model as the provided list and removes all children, so that the
+	 * next render will be using the contents of the model.
 	 * 
-	 * @param reuseItems
-	 *            Whether to reuse items
-	 * @return this
-	 * @deprecated Use {@link #setReuseItems(boolean)} instead
+	 * @param list
+	 *            The list for the new model. The list must implement
+	 *            {@link Serializable}.
+	 * @return This for chaining
 	 */
-	// TODO Post 1.2: Remove
-	public ListView setOptimizeItemRemoval(boolean reuseItems)
+	public Component setList(List list)
 	{
-		return setReuseItems(reuseItems);
+		return setModel(new Model((Serializable)list));
+	}
+
+	/**
+	 * Sets the model and removes all current children, so that the next render
+	 * will be using the contents of the model.
+	 * 
+	 * @param model
+	 *            The new model
+	 * @return This for chaining
+	 * 
+	 * @see org.apache.wicket.MarkupContainer#setModel(org.apache.wicket.model.IModel)
+	 */
+	public Component setModel(IModel model)
+	{
+		return super.setModel(model);
 	}
 
 	/**
@@ -502,35 +495,6 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Sets the model as the provided list and removes all children, so that the
-	 * next render will be using the contents of the model.
-	 * 
-	 * @param list
-	 *            The list for the new model. The list must implement
-	 *            {@link Serializable}.
-	 * @return This for chaining
-	 */
-	public Component setList(List list)
-	{
-		return setModel(new Model((Serializable)list));
-	}
-
-	/**
-	 * Sets the model and removes all current children, so that the next render
-	 * will be using the contents of the model.
-	 * 
-	 * @param model
-	 *            The new model
-	 * @return This for chaining
-	 * 
-	 * @see org.apache.wicket.MarkupContainer#setModel(org.apache.wicket.model.IModel)
-	 */
-	public Component setModel(IModel model)
-	{
-		return super.setModel(model);
-	}
-
-	/**
 	 * Subclasses may provide their own ListItemModel with extended
 	 * functionality. The default ListItemModel works fine with mostly static
 	 * lists where index remains valid. In cases where the underlying list
@@ -548,6 +512,17 @@ public abstract class ListView extends AbstractRepeater
 	protected IModel getListItemModel(final IModel listViewModel, final int index)
 	{
 		return new ListItemModel(this, index);
+	}
+
+	/**
+	 * Create a new ListItem for list item at index.
+	 * 
+	 * @param index
+	 * @return ListItem
+	 */
+	protected ListItem newItem(final int index)
+	{
+		return new ListItem(index, getListItemModel(getModel(), index));
 	}
 
 	/**
@@ -618,17 +593,6 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Create a new ListItem for list item at index.
-	 * 
-	 * @param index
-	 * @return ListItem
-	 */
-	protected ListItem newItem(final int index)
-	{
-		return new ListItem(index, getListItemModel(getModel(), index));
-	}
-
-	/**
 	 * Comes handy for ready made ListView based components which must implement
 	 * populateItem() but you don't want to lose compile time error checking
 	 * reminding the user to implement abstract populateItem().
@@ -637,6 +601,48 @@ public abstract class ListView extends AbstractRepeater
 	 */
 	protected void onBeginPopulateItem(final ListItem item)
 	{
+	}
+
+	/**
+	 * Populate a given item.
+	 * <p>
+	 * <b>be carefull</b> to add any components to the list item. So, don't do:
+	 * 
+	 * <pre>
+	 * add(new Label(&quot;foo&quot;, &quot;bar&quot;));
+	 * </pre>
+	 * 
+	 * but:
+	 * 
+	 * <pre>
+	 * item.add(new Label(&quot;foo&quot;, &quot;bar&quot;));
+	 * </pre>
+	 * 
+	 * </p>
+	 * 
+	 * @param item
+	 *            The item to populate
+	 */
+	protected abstract void populateItem(final ListItem item);
+
+	/**
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderChild(org.apache.wicket.Component)
+	 */
+	protected final void renderChild(Component child)
+	{
+		renderItem((ListItem)child);
+	}
+
+
+	/**
+	 * Render a single item.
+	 * 
+	 * @param item
+	 *            The item to be rendered
+	 */
+	protected void renderItem(final ListItem item)
+	{
+		item.render(getMarkupStream());
 	}
 
 	/**
@@ -662,47 +668,5 @@ public abstract class ListView extends AbstractRepeater
 				return get(id);
 			}
 		};
-	}
-
-	/**
-	 * Populate a given item.
-	 * <p>
-	 * <b>be carefull</b> to add any components to the list item. So, don't do:
-	 * 
-	 * <pre>
-	 * add(new Label(&quot;foo&quot;, &quot;bar&quot;));
-	 * </pre>
-	 * 
-	 * but:
-	 * 
-	 * <pre>
-	 * item.add(new Label(&quot;foo&quot;, &quot;bar&quot;));
-	 * </pre>
-	 * 
-	 * </p>
-	 * 
-	 * @param item
-	 *            The item to populate
-	 */
-	protected abstract void populateItem(final ListItem item);
-
-
-	/**
-	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#renderChild(org.apache.wicket.Component)
-	 */
-	protected final void renderChild(Component child)
-	{
-		renderItem((ListItem)child);
-	}
-
-	/**
-	 * Render a single item.
-	 * 
-	 * @param item
-	 *            The item to be rendered
-	 */
-	protected void renderItem(final ListItem item)
-	{
-		item.render(getMarkupStream());
 	}
 }

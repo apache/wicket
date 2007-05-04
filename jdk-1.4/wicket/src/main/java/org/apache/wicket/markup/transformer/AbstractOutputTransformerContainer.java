@@ -93,9 +93,9 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	/**
 	 * 
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      java.lang.String)
+	 *      CharSequence)
 	 */
-	public abstract CharSequence transform(final Component component, final String output)
+	public abstract CharSequence transform(final Component component, final CharSequence output)
 			throws Exception;
 
 	/**
@@ -171,7 +171,6 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 			try
 			{
 				// Tranform the data
-				// TODO post 1.2 transform also just charsequence, is this 1.2 or 1.1??
 				CharSequence output = transform(this, response.toString());
 				webResponse.write(output);
 			}

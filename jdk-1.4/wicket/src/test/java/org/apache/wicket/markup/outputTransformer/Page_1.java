@@ -57,7 +57,7 @@ public class Page_1 extends WebPage
 	    {
 			private static final long serialVersionUID = 1L;
 
-			public CharSequence transform(Component component, String output)
+			public CharSequence transform(Component component, CharSequence output)
 			{
 				// replace the generated String
 				return "Whatever";
@@ -73,10 +73,10 @@ public class Page_1 extends WebPage
 	    {
 			private static final long serialVersionUID = 1L;
 
-			public CharSequence transform(Component component, String output)
+			public CharSequence transform(Component component, CharSequence output)
 			{
 				// Convert all text to uppercase
-				return output.toUpperCase();
+				return output.toString().toUpperCase();
 			}
 	    };
 

@@ -141,9 +141,6 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 		dirty();
 	}
 
-	// TODO Post 1.2: We should encode the page id of the current page into the
-	// URL for truly stateless pages so we can adjust the stack correctly
-
 	/**
 	 * Returns a stack of PageMap.Access entries pushed in the order that the
 	 * pages and versions were accessed.

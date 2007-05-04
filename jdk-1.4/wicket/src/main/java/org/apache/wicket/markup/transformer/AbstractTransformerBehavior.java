@@ -92,7 +92,6 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 			Response response = requestCycle.getResponse();
 
 			// Tranform the data
-			// TODO post 1.2 transform also just use a CharSequence param instead of string
 			CharSequence output = transform(component, response.toString());
 			this.webResponse.write(output);
 		}
@@ -130,8 +129,8 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	/**
 	 * 
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
-	 *      java.lang.String)
+	 *      CharSequence)
 	 */
-	public abstract CharSequence transform(final Component component, final String output)
+	public abstract CharSequence transform(final Component component, final CharSequence output)
 			throws Exception;
 }
