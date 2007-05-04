@@ -396,7 +396,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 *            the component tag
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void onComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for tag
 		super.onComponentTag(tag);
