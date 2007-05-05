@@ -142,7 +142,7 @@ public abstract class AbstractCrypt implements ICrypt
 		}
 		catch (GeneralSecurityException e)
 		{
-			throw new WicketRuntimeException("Unable to decrypt the text '" + encrypted + "'", e);
+			throw new WicketRuntimeException("Unable to decrypt the text '" + encrypted.toString() + "'", e);
 		}
 	}
 
