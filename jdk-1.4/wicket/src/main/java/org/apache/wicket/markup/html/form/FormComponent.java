@@ -442,7 +442,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		}
 		else
 		{
-			final List list = new ArrayList();
+			final List list = new ArrayList(size);
 			for (int i = 0; i < size; i++)
 			{
 				list.add(validators_get(i));
