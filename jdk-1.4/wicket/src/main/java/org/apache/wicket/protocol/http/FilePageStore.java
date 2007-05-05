@@ -651,7 +651,7 @@ public class FilePageStore implements IPageStore
 	private byte[] serializePage(SessionPageKey key, Page page)
 	{
 		byte[] bytes = null;
-		System.err.println("SERIALIZING " + key);
+		//System.err.println("SERIALIZING " + key);
 		long t1 = System.currentTimeMillis();
 		Page.serializer.set(new PageSerializer(key));
 		try
@@ -670,13 +670,13 @@ public class FilePageStore implements IPageStore
 		{
 			Page.serializer.set(null);
 		}
-		System.err.println("SERIALIZING " + key + " bytes: " + bytes);
+		//System.err.println("SERIALIZING " + key + " bytes: " + bytes);
 		return bytes;
 	}
 
 	private byte[] testMap(final SessionPageKey currentKey)
 	{
-		System.err.println("TESTMAP:" + currentKey);
+		//System.err.println("TESTMAP:" + currentKey);
 		byte[] bytes = null;
 		List list = (List)pagesToBeSerialized.get(currentKey.sessionId);
 		if (list == null)
