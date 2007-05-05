@@ -183,7 +183,15 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	}
 
 	/**
-	 * Processes the component tag.
+	 * Processes the component tag. A <tt>value</tt> attribute is added with
+	 * the value of the model object, if available. An <tt>onclick</tt>
+	 * attribute is added if the subclass specified javascript.
+	 * 
+	 * <p>
+	 * <b>NOTE</b>. For a <tt>&lt;button&gt;</tt> the <tt>value</tt>
+	 * attribute is not rendered, markup needs to be added within the button
+	 * to display the button's label.
+	 * </p>
 	 * 
 	 * @param tag
 	 *            Tag to modify
@@ -195,20 +203,18 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 		super.onComponentTag(tag);
 
 		String name = tag.getName();
-		if (Strings.isEqual("input", name))
+
+		try
 		{
-			try
+			String value = getModelObjectAsString();
+			if (value != null && !"".equals(value))
 			{
-				String value = getModelObjectAsString();
-				if (value != null && !"".equals(value))
-				{
-					tag.put("value", value);
-				}
+				tag.put("value", value);
 			}
-			catch (Exception e)
-			{
-				// ignore.
-			}
+		}
+		catch (Exception e)
+		{
+			// ignore.
 		}
 
 		// If the subclass specified javascript, use that
