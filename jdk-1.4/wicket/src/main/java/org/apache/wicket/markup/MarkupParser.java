@@ -23,12 +23,16 @@ import java.util.regex.Pattern;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
+import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.filter.BodyTagHandler;
+import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.parser.filter.PrependContextPathHandler;
 import org.apache.wicket.markup.parser.filter.TagTypeHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
@@ -37,9 +41,8 @@ import org.apache.wicket.markup.parser.filter.WicketRemoveTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-
-
 
 /**
  * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a
@@ -78,14 +81,43 @@ public class MarkupParser
 	/**
 	 * Constructor.
 	 * 
+	 * @param resource
+	 *            The markup resource (file)
+	 */
+	public MarkupParser(final MarkupResourceStream resource)
+	{
+		this(new XmlPullParser(), resource);
+	}
+
+	/**
+	 * Constructor. Usually for testing purposes only
+	 * 
+	 * @param markup
+	 *            The markup resource.
+	 */
+	public MarkupParser(final String markup)
+	{
+		this(new XmlPullParser(), new MarkupResourceStream(new StringResourceStream(markup)));
+	}
+
+	/**
+	 * Constructor.
+	 * 
 	 * @param xmlParser
 	 *            The streaming xml parser to read and parse the markup
+	 * @param resource
+	 *            The markup resource (file)
 	 */
-	public MarkupParser(final IXmlPullParser xmlParser)
+	public MarkupParser(final IXmlPullParser xmlParser, final MarkupResourceStream resource)
 	{
 		this.xmlParser = xmlParser;
-		this.markup = new Markup();
 		this.markupSettings = Application.get().getMarkupSettings();
+
+		this.markup = new Markup();
+		this.markup.setResource(resource);
+
+		// Initialize the markup filter chain
+		initializeMarkupFilters();
 	}
 
 	/**
@@ -145,6 +177,9 @@ public class MarkupParser
 				appendMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
+		
+		appendMarkupFilter(new PrependContextPathHandler(Application.get()));
+		appendMarkupFilter(new EnclosureHandler());
 	}
 
 	/**
@@ -152,72 +187,76 @@ public class MarkupParser
 	 * filters if required.
 	 * 
 	 * @see #appendMarkupFilter(IMarkupFilter)
+	 * @deprecated since 1.3
 	 */
 	protected void initFilterChain()
 	{
+		throw new WicketRuntimeException("This method is no longer suppoert: since 1.3");
 	}
 
 	/**
 	 * Append a new filter to the list of already pre-configured markup filters.
-	 * To be used by subclasses which implement {@link #initFilterChain()}.
 	 * 
 	 * @param filter
 	 *            The filter to be appended
 	 */
 	public final void appendMarkupFilter(final IMarkupFilter filter)
 	{
-		filter.setParent(this.markupFilterChain);
-		this.markupFilterChain = filter;
+		appendMarkupFilter(filter, PrependContextPathHandler.class);
+	}
+
+	/**
+	 * Append a new filter to the list of already pre-configured markup filters.
+	 * 
+	 * @param filter
+	 *            The filter to be appended
+	 * @param beforeFilter
+	 *            The filter should be added before the beforeFilter. If
+	 *            beforeFilter == null or beforeFilter not found than append to
+	 *            the end
+	 */
+	public final void appendMarkupFilter(final IMarkupFilter filter,
+			final Class beforeFilter)
+	{
+		if ((beforeFilter == null) || (this.markupFilterChain == null))
+		{
+			filter.setParent(this.markupFilterChain);
+			this.markupFilterChain = filter;
+		}
+		else
+		{
+			IMarkupFilter current = this.markupFilterChain;
+			while (current != null)
+			{
+				if (current.getClass() == beforeFilter)
+				{
+					filter.setParent(current.getParent());
+					current.setParent(filter);
+					break;
+				}
+				current = current.getParent();
+			}
+			
+			if (current == null)
+			{
+				filter.setParent(this.markupFilterChain);
+				this.markupFilterChain = filter;
+			}
+		}
 	}
 
 	/**
 	 * Reads and parses markup from a file.
 	 * 
-	 * @param resource
-	 *            The file
 	 * @return The markup
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public final Markup readAndParse(final MarkupResourceStream resource) throws IOException,
-			ResourceStreamNotFoundException
+	public final Markup parse() throws IOException, ResourceStreamNotFoundException
 	{
-		// Remove all existing markup elements
-		this.markup.reset();
-
-		// For diagnostic purposes
-		this.markup.setResource(resource);
-
 		// Initialize the xml parser
-		this.xmlParser.parse(resource.getInputStream(), this.markupSettings.getDefaultMarkupEncoding());
-
-		// parse the xml markup and tokenize it into wicket relevant markup
-		// elements
-		parseMarkup();
-
-		this.markup.setEncoding(xmlParser.getEncoding());
-		this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
-
-		return this.markup;
-	}
-
-	/**
-	 * Parse the markup.
-	 * 
-	 * @param string
-	 *            The markup
-	 * @return The markup
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
-	 */
-	public final Markup parse(final String string) throws IOException,
-			ResourceStreamNotFoundException
-	{
-		// Remove all existing markup elements
-		this.markup.reset();
-
-		// Initialize the xml parser
-		this.xmlParser.parse(string);
+		this.xmlParser.parse(this.markup.getResource().getInputStream(), this.markupSettings
+				.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
@@ -235,12 +274,6 @@ public class MarkupParser
 	 */
 	private void parseMarkup()
 	{
-		// Initialize the markup filter chain
-		initializeMarkupFilters();
-
-		// Allow subclasses to extend the filter chain
-		initFilterChain();
-
 		// Get relevant settings from the Application
 		final boolean stripComments = this.markupSettings.getStripComments();
 		final boolean compressWhitespace = this.markupSettings.getCompressWhitespace();

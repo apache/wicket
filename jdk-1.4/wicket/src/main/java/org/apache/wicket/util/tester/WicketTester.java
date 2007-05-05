@@ -32,6 +32,7 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.UnitTestSettings;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -151,15 +152,20 @@ public class WicketTester extends BaseWicketTester
 	private static final Logger log = LoggerFactory.getLogger(WicketTester.class);
 
 	/**
-	 * @author frankbille
 	 */
 	public static class DummyWebApplication extends WebApplication
 	{
+		/**
+		 * @see org.apache.wicket.Application#getHomePage()
+		 */
 		public Class getHomePage()
 		{
 			return DummyHomePage.class;
 		}
 
+		/**
+		 * @see org.apache.wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
+		 */
 		protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
 		{
 			return new WebResponse(servletResponse);
@@ -363,23 +369,22 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * assert last rendered Page against an expected HTML document
+	 * Assert last rendered Page against an expected HTML document
 	 * <p>
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to
 	 * automatically replace the expected output file.
 	 * </p>
 	 * 
-	 * @param pageClass
+	 * @param clazz
 	 *            Used to load the file (relative to clazz package)
 	 * @param filename
 	 *            Expected output
 	 * @throws Exception
 	 */
-	public void assertResultPage(final Class pageClass, final String filename) throws Exception
+	public void assertResultPage(final Class clazz, final String filename) throws Exception
 	{
-		// Validate the document
 		String document = getServletResponse().getDocument();
-		DiffUtil.validatePage(document, pageClass, filename, true);
+		DiffUtil.validatePage(document, clazz, filename, true);
 	}
 
 	/**
@@ -444,7 +449,7 @@ public class WicketTester extends BaseWicketTester
 		List actualMessages = getMessages(FeedbackMessage.INFO);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
 	}
-
+	
 	/**
 	 * Test that a component has been added to a AjaxRequestTarget, using
 	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually
@@ -486,6 +491,32 @@ public class WicketTester extends BaseWicketTester
 		if (result.wasFailed())
 		{
 			throw new AssertionFailedError(result.getMessage());
+		}
+	}
+
+	/**
+	 * Assert that the ajax location header is present
+	 */
+	public void assertAjaxLocation()
+	{
+		if (null != ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
+						.getRedirectLocation())
+		{
+			throw new AssertionFailedError("Location header should *not* be present when using Ajax");
+		}
+		
+		String ajaxLocation = ((MockHttpServletResponse)getWicketResponse()
+				.getHttpServletResponse()).getHeader("Ajax-Location");
+		if (null == ajaxLocation)
+		{
+			throw new AssertionFailedError("Ajax-Location header should be present when using Ajax");
+		}
+		
+		int statusCode = ((MockHttpServletResponse)getWicketResponse()
+				.getHttpServletResponse()).getStatus();
+		if (statusCode != 200)
+		{
+			throw new AssertionFailedError("Expected HTTP status code to be 200 (OK)");
 		}
 	}
 }

@@ -26,7 +26,6 @@ import junit.framework.Assert;
 
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupParser;
-import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.StringList;
@@ -176,8 +175,8 @@ public final class DiffUtil
 		try
 		{
 			// Parse a and b into markup and compare
-			final Markup amarkup = new MarkupParser(new XmlPullParser()).parse(a);
-			final Markup bmarkup = new MarkupParser(new XmlPullParser()).parse(b);
+			final Markup amarkup = new MarkupParser(a).parse();
+			final Markup bmarkup = new MarkupParser(b).parse();
 			return amarkup.equalTo(bmarkup);
 		}
 		catch (IOException e)

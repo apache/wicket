@@ -19,7 +19,6 @@ package org.apache.wicket;
 import junit.framework.TestCase;
 
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
@@ -52,11 +51,17 @@ public abstract class WicketTestCase extends TestCase
 		super(name);
 	}
 
+	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
@@ -81,81 +86,38 @@ public abstract class WicketTestCase extends TestCase
 
 	/**
 	 * 
-	 * @param pageClass
+	 * @param clazz
 	 * @param component
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executedListener(final Class pageClass, final Component component,
+	protected void executedListener(final Class clazz, final Component component,
 			final String filename) throws Exception
 	{
 		assertNotNull(component);
 
-		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath()
+		System.out.println("=== " + clazz.getName() + " : " + component.getPageRelativePath()
 				+ " ===");
 
 		tester.executeListener(component);
-		tester.assertResultPage(pageClass, filename);
+		tester.assertResultPage(clazz, filename);
 	}
 
 	/**
 	 * 
-	 * @param pageClass
+	 * @param clazz
 	 * @param behavior
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executedBehavior(final Class pageClass, final AbstractAjaxBehavior behavior,
+	protected void executedBehavior(final Class clazz, final AbstractAjaxBehavior behavior,
 			final String filename) throws Exception
 	{
 		assertNotNull(behavior);
 
-		System.out.println("=== " + pageClass.getName() + " : " + behavior.toString() + " ===");
+		System.out.println("=== " + clazz.getName() + " : " + behavior.toString() + " ===");
 
 		tester.executeBehavior(behavior);
-		tester.assertResultPage(pageClass, filename);
-	}
-
-	protected String getContentType()
-	{
-		String contentType = ((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getHeader("Content-Type");
-		if (contentType == null)
-			throw new WicketRuntimeException("No Content-Type header found");
-		return contentType;
-	}
-
-	protected int getContentLength()
-	{
-		String contentLength = ((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getHeader("Content-Length");
-		if (contentLength == null)
-			throw new WicketRuntimeException("No Content-Length header found");
-		return Integer.parseInt(contentLength);
-	}
-
-	protected String getLastModified()
-	{
-		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
-				.getHeader("Last-Modified");
-	}
-
-	protected String getContentDisposition()
-	{
-		return ((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Disposition");
-	}
-
-	protected void assertAjaxLocation()
-	{
-		assertNull("Location header should *not* be present when using Ajax",
-				((MockHttpServletResponse)tester.getWicketResponse().getHttpServletResponse())
-						.getRedirectLocation());
-		String ajaxLocation = ((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getHeader("Ajax-Location");
-		assertNotNull("Ajax-Location header should be present when using Ajax", ajaxLocation);
-		int statusCode = ((MockHttpServletResponse)tester.getWicketResponse()
-				.getHttpServletResponse()).getStatus();
-		assertEquals(200, statusCode);
+		tester.assertResultPage(clazz, filename);
 	}
 }

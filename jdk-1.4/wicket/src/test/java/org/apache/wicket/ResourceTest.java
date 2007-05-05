@@ -71,9 +71,9 @@ public class ResourceTest extends WicketTestCase
 		resource.onResourceRequested();
 		tester.processRequestCycle(cycle);
 
-		log.debug(getLastModified());
-		assertEquals(testFileLastModified, getLastModified());
-		assertEquals(TEST_STRING.length(), getContentLength());
+		log.debug(tester.getLastModifiedFromResponseHeader());
+		assertEquals(testFileLastModified, tester.getLastModifiedFromResponseHeader());
+		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class ResourceTest extends WicketTestCase
 		resource.onResourceRequested();
 		tester.processRequestCycle(cycle);
 
-		assertNull(getLastModified());
-		assertEquals(TEST_STRING.length(), getContentLength());
+		assertNull(tester.getLastModifiedFromResponseHeader());
+		assertEquals(TEST_STRING.length(), tester.getContentLengthFromResponseHeader());
 	}
 }

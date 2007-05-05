@@ -24,7 +24,9 @@ package org.apache.wicket.markup;
 public interface IMarkupParserFactory
 {
 	/**
+	 * @param resource
+	 *            The markup resource (file)
 	 * @return new instance of {@link MarkupParser}
 	 */
-	MarkupParser newMarkupParser();
+	MarkupParser newMarkupParser(final MarkupResourceStream resource);
 }

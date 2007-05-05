@@ -57,6 +57,23 @@ public class MarkupResourceStream implements IResourceStream
 	 * Construct.
 	 * 
 	 * @param resourceStream
+	 */
+	public MarkupResourceStream(final IResourceStream resourceStream)
+	{
+		this.resourceStream = resourceStream;
+		this.containerInfo = null;
+		this.markupClass = null;
+
+		if (resourceStream == null)
+		{
+			throw new IllegalArgumentException("Parameter 'resourceStream' must not be null");
+		}
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param resourceStream
 	 * @param containerInfo
 	 * @param markupClass
 	 */

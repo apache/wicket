@@ -20,7 +20,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +52,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.PageLink;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.protocol.http.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -199,8 +199,7 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		setupRequestAndResponse();
 		WebRequestCycle cycle = createRequestCycle();
-		getServletRequest().setRequestToRedirectString(
-				behavior.getCallbackUrl(false).toString());
+		getServletRequest().setRequestToRedirectString(behavior.getCallbackUrl(false).toString());
 		processRequestCycle(cycle);
 	}
 
@@ -212,14 +211,15 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final Page page)
 	{
-		return startPage(new ITestPageSource() {
+		return startPage(new ITestPageSource()
+		{
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
 			{
 				return page;
 			}
-			
+
 		});
 	}
 
@@ -781,35 +781,6 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
-	 * assert error feedback messages
-	 * 
-	 * @param expectedErrorMessages
-	 *            expected error messages
-	 */
-	public void assertErrorMessages(String[] expectedErrorMessages)
-	{
-		List actualMessages = getMessages(FeedbackMessage.ERROR);
-		List msgs = new ArrayList();
-		for (Iterator iterator = actualMessages.iterator(); iterator.hasNext();)
-		{
-			msgs.add(iterator.next().toString());
-		}
-		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), msgs);
-	}
-
-	/**
-	 * assert info feedback message
-	 * 
-	 * @param expectedInfoMessages
-	 *            expected info messages
-	 */
-	public void assertInfoMessages(String[] expectedInfoMessages)
-	{
-		List actualMessages = getMessages(FeedbackMessage.INFO);
-		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
-	}
-
-	/**
 	 * get feedback messages
 	 * 
 	 * @param level
@@ -1093,6 +1064,56 @@ public class BaseWicketTester extends MockWebApplication
 				}
 			}
 		});
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getContentTypeFromResponseHeader()
+	{
+		String contentType = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
+				.getHeader("Content-Type");
+		if (contentType == null)
+		{
+			throw new WicketRuntimeException("No Content-Type header found");
+		}
+		return contentType;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getContentLengthFromResponseHeader()
+	{
+		String contentLength = ((MockHttpServletResponse)getWicketResponse()
+				.getHttpServletResponse()).getHeader("Content-Length");
+		if (contentLength == null)
+		{
+			throw new WicketRuntimeException("No Content-Length header found");
+		}
+		return Integer.parseInt(contentLength);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getLastModifiedFromResponseHeader()
+	{
+		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
+				.getHeader("Last-Modified");
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getContentDispositionFromResponseHeader()
+	{
+		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
+				.getHeader("Content-Disposition");
 	}
 
 	private Result isTrue(String message, boolean condition)

@@ -208,7 +208,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		try
 		{
 			Markup markup = Application.get().getMarkupSettings().getMarkupParserFactory()
-					.newMarkupParser().readAndParse(markupResourceStream);
+					.newMarkupParser(markupResourceStream).parse();
 			return new MarkupStream(markup);
 		}
 		catch (Exception e)

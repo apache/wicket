@@ -18,8 +18,8 @@ package org.apache.wicket.markup;
 
 
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.filter.HtmlProblemFinder;
+import org.apache.wicket.markup.parser.filter.PrependContextPathHandler;
 
 
 /**
@@ -44,17 +44,12 @@ public class HtmlProblemFinderTest extends WicketTestCase
      */
     public void testProblemFinder()
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser())
-        {
-            public void initFilterChain()
-            {
-                appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION));
-            }
-        };
+        final MarkupParser parser = new MarkupParser("<img src=\"\"/>");
+        parser.appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION), PrependContextPathHandler.class);
 	    
 	    try
 	    {
-	        parser.parse("<img src=\"\"/>");
+	        parser.parse();
 	        assertTrue("Should have thrown an exception", false);
 	    }
 	    catch (Exception ex)

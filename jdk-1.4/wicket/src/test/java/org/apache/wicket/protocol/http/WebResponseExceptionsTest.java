@@ -88,7 +88,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.request();
 
-		assertAjaxLocation();
+		tester.assertAjaxLocation();
 	}
 
 	/**
@@ -120,6 +120,6 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.request();
 
-		assertAjaxLocation();
+		tester.assertAjaxLocation();
 	}
 }

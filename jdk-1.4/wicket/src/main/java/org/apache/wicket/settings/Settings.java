@@ -301,7 +301,6 @@ public final class Settings
 	public Settings(final Application application)
 	{
 		this.application = application;
-		this.markupParserFactory = new MarkupParserFactory(application);
 		stringResourceLoaders.add(new ComponentStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(this.application.getClass()));
 	}
@@ -557,6 +556,10 @@ public final class Settings
 	 */
 	public IMarkupParserFactory getMarkupParserFactory()
 	{
+		if (this.markupParserFactory == null)
+		{
+			this.markupParserFactory = new MarkupParserFactory();
+		}
 		return markupParserFactory;
 	}
 
