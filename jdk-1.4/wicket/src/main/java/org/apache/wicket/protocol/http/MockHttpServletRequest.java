@@ -774,7 +774,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Get the request url. Always return the path value.
+	 * Returns context path and servlet path concatenated, typically /applicationClassName/applicationClassName
 	 * 
 	 * @return The path value
 	 * @see javax.servlet.http.HttpServletRequest#getRequestURI()
@@ -783,7 +783,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		if (url == null)
 		{
-			return "";
+			return getContextPath() + getServletPath();
 		}
 		return url;
 	}

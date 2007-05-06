@@ -59,7 +59,7 @@ public class UrlMountingTest extends TestCase
 	 */
 	public void testBadRequest3()
 	{
-		tester.getServletRequest().setPath("/mount/point/nonexistent.TestPage");
+		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/mount/point/nonexistent.TestPage");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
 		assertNotNull(ucs);
 		try
@@ -84,7 +84,7 @@ public class UrlMountingTest extends TestCase
 	{
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
-				"?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}
@@ -128,7 +128,7 @@ public class UrlMountingTest extends TestCase
 	{
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
-				"/foo/bar/?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/foo/bar/?wicket:bookmarkablePage=:" + TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}
@@ -141,7 +141,7 @@ public class UrlMountingTest extends TestCase
 		tester.getApplication().getSecuritySettings().setEnforceMounts(false);
 
 		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL("/mount/point/TestPage");
+		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/mount/point/TestPage");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}
@@ -151,7 +151,7 @@ public class UrlMountingTest extends TestCase
 	 */
 	public void testValidMount1()
 	{
-		tester.getServletRequest().setPath("/mount/point");
+		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/mount/point");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
 		assertNotNull(ucs);
 		assertNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));
@@ -162,7 +162,7 @@ public class UrlMountingTest extends TestCase
 	 */
 	public void testValidMount2()
 	{
-		tester.getServletRequest().setPath("/mount/point/TestPage");
+		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/mount/point/TestPage");
 		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
 		assertNotNull(ucs);
 		assertNotNull(ucs.decode(tester.getWicketRequest().getRequestParameters()));

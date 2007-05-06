@@ -55,7 +55,7 @@ public class IndexedParamTest extends WicketTestCase
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
 		((MockHttpServletRequest)tester.getWicketRequest().getHttpServletRequest())
-				.setURL("/page2/abc");
+				.setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/page2/abc");
 		tester.processRequestCycle(cycle);
 
 		assertEquals(Page2.class, tester.getLastRenderedPage().getClass());

@@ -46,7 +46,7 @@ public class StatelessComponentTest extends WicketTestCase
 		tester
 				.getServletRequest()
 				.setURL(
-						"?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener:");
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener:");
 		try
 		{
 			tester.processRequestCycle();
@@ -70,7 +70,7 @@ public class StatelessComponentTest extends WicketTestCase
 		// "StatelessComponentPage_mount_result.html");
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
-				"/stateless/wicket:interface/:0:link::ILinkListener:");
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/:0:link::ILinkListener:");
 		try
 		{
 			tester.processRequestCycle();
