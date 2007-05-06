@@ -83,4 +83,24 @@
 			<artifactId>jetty-management</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webResources>
+						<resource>
+							<!-- FIXME this is very unelegant! -->
+							<directory>${basedir}/target</directory>
+							<targetPath>WEB-INF/lib</targetPath>
+							<includes>
+								<include>wicket-*-sources.jar</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
