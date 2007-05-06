@@ -29,6 +29,8 @@ import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Tests package resources.
+ * 
+ * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class UrlMountingTest extends TestCase
 {

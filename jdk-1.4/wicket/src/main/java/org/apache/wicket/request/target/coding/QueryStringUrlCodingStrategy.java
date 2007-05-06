@@ -134,37 +134,14 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 			{
 				entries = parameters.entrySet().iterator();				
 			}
-
+			WebRequestEncoder encoder = new WebRequestEncoder(url);
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
 
 				if (entry.getValue() != null)
 				{
-
-					String escapedValue = urlEncode(entry.getValue().toString());
-
-					if (!Strings.isEmpty(escapedValue))
-					{
-						if (firstParam)
-						{
-							url.append("?"); /* Begin query string. */
-							firstParam = false;
-						}
-						else
-						{
-							/*
-							 * Separate new key=value(s) pair from previous pair
-							 * with an ampersand.
-							 */
-							url.append("&");
-						}
-
-						/* Append key=value(s) pair. */
-						url.append(entry.getKey());
-						url.append("=");
-						url.append(escapedValue);
-					}
+					encoder.addValue(entry.getKey().toString(), entry.getValue());
 				}
 			}
 		}
