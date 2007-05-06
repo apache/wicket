@@ -176,7 +176,7 @@ public class ResourceReference implements IClusterable
 		if (obj instanceof ResourceReference)
 		{
 			ResourceReference that = (ResourceReference)obj;
-			return Objects.equal(this.scope, that.scope) && Objects.equal(this.name, that.name)
+			return Objects.equal(this.scope.getName(), that.scope.getName()) && Objects.equal(this.name, that.name)
 					&& Objects.equal(this.locale, that.locale)
 					&& Objects.equal(this.style, that.style);
 		}
