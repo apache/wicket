@@ -47,6 +47,7 @@ import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -672,21 +673,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 		}
 
-		boolean firstParameter = true;
+		WebRequestEncoder encoder = new WebRequestEncoder(url);
 		if (!application.getHomePage().equals(pageClass)
 				|| !"".equals(pageMapName)
 				|| (application.getHomePage().equals(pageClass) && requestTarget instanceof BookmarkableListenerInterfaceRequestTarget))
 		{
-			firstParameter = false;
-			url.append('?');
-			url.append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
-			url.append('=');
-
-
-			// Add <page-map-name>:<bookmarkable-page-class>
-			String pageClassName = pageClass.getName();
-
 			/*
+			 * Add <page-map-name>:<bookmarkable-page-class>
+			 * 
 			 * Encode the url so it is correct even for class names containing
 			 * non ASCII characters, like ä, æ, ø, å etc.
 			 * 
@@ -695,16 +689,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			 * because we can't rely on the browser to interpret the unencoded
 			 * url correctly.
 			 */
-			try
-			{
-				url.append(URLEncoder.encode(
-						pageMapName + Component.PATH_SEPARATOR + pageClassName, "UTF-8"));
-			}
-			catch (UnsupportedEncodingException ex)
-			{
-				log.error(ex.getMessage(), ex);
-				url.append(pageMapName + Component.PATH_SEPARATOR + pageClassName);
-			}
+			encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
 		}
 
 		// Get page parameters
@@ -726,28 +712,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				final String value = parameters.getString(key);
 				if (value != null)
 				{
-					String escapedValue = value;
-					try
-					{
-						escapedValue = URLEncoder.encode(escapedValue, application
-								.getRequestCycleSettings().getResponseRequestEncoding());
-					}
-					catch (UnsupportedEncodingException ex)
-					{
-						log.error(ex.getMessage(), ex);
-					}
-					if (!firstParameter)
-					{
-						url.append('&');
-					}
-					else
-					{
-						firstParameter = false;
-						url.append('?');
-					}
-					url.append(key);
-					url.append('=');
-					url.append(escapedValue);
+					encoder.addValue(key, value);
 				}
 			}
 		}

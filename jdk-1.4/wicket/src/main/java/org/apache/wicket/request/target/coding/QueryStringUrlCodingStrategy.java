@@ -124,7 +124,6 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 
 		if (parameters != null && parameters.size() > 0)
 		{
-			boolean firstParam = url.indexOf("?") < 0;
 			final Iterator entries;
 			if (UnitTestSettings.getSortUrlParameters())
 			{
