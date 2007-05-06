@@ -91,11 +91,10 @@
 				<configuration>
 					<webResources>
 						<resource>
-							<!-- FIXME this is very unelegant! -->
-							<directory>${basedir}/target</directory>
-							<targetPath>WEB-INF/lib</targetPath>
+							<directory>src/main/java</directory>
+							<targetPath>WEB-INF/classes</targetPath>
 							<includes>
-								<include>wicket-*-sources.jar</include>
+								<include>**/*.java</include>
 							</includes>
 						</resource>
 					</webResources>
