@@ -164,4 +164,24 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	{
 		return false;
 	}
+
+	// TODO remove these methods after compatibility release
+
+	/**
+	 * @param component
+	 * @deprecated replaced by {@link #detach(Component)}
+	 */
+	public final void detachModel(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param component
+	 * @deprecated replaced by {@link #afterRender(Component)}
+	 */
+	public final void rendered(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
 }
