@@ -288,15 +288,13 @@ public class WicketFilter implements Filter
 	 */
 	public String getRelativePath(HttpServletRequest request)
 	{
-		String path = request.getServletPath();
+		String path = request.getRequestURI();
+		String contextPath = request.getContextPath();
+		path = path.substring(contextPath.length());
 		if (servletMode)
 		{
-			path = request.getPathInfo();
-			// No path info => root.
-			if (path == null)
-			{
-				path = "";
-			}
+			String servletPath = request.getServletPath();
+			path = path.substring(servletPath.length());
 		}
 		filterPath = getFilterPath(request);
 

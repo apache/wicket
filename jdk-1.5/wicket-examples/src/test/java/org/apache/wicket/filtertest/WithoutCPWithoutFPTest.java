@@ -74,7 +74,7 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 		assertTitleEquals("Wicket Examples - helloworld");
 		assertTextInElement("message", "Message is: 'Test'");
 	}
-	public void bugTestWithSlash() throws Exception
+	public void testWithSlash() throws Exception
 	{
 		beginAt("/hello/message/Test%2FWith%20a%20Slash");
 		dumpHtml();
