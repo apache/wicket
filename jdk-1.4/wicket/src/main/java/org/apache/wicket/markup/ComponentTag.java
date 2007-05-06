@@ -77,6 +77,9 @@ public class ComponentTag extends MarkupElement
 	/** True, if attributes have been modified or added */
 	private boolean modified = false;
 
+	/** If true, than the MarkupParser will ignore (remove) it. */
+	private boolean ignore = false;
+
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged
 	 * and the information about the tags origin is lost. In some cases like
@@ -398,7 +401,7 @@ public class ComponentTag extends MarkupElement
 			return tag;
 		}
 	}
-	
+
 	/**
 	 * Copies all internal properties from this tag to <code>dest</code>.
 	 * This is basically cloning without instance creation.
@@ -780,5 +783,26 @@ public class ComponentTag extends MarkupElement
 			return getXmlTag().equalTo(that.getXmlTag());
 		}
 		return false;
+	}
+
+	/**
+	 * Gets ignore.
+	 * 
+	 * @return If true than MarkupParser will remove it from the markup
+	 */
+	public boolean isIgnore()
+	{
+		return this.ignore;
+	}
+
+	/**
+	 * Sets ignore.
+	 * 
+	 * @param ignore
+	 *            If true than MarkupParser will remove it from the markup
+	 */
+	public void setIgnore(boolean ignore)
+	{
+		this.ignore = ignore;
 	}
 }

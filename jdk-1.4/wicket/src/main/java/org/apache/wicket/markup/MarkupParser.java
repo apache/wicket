@@ -177,7 +177,7 @@ public class MarkupParser
 				appendMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
-		
+
 		appendMarkupFilter(new PrependContextPathHandler(Application.get()));
 		appendMarkupFilter(new EnclosureHandler());
 	}
@@ -202,21 +202,24 @@ public class MarkupParser
 	 */
 	public final void appendMarkupFilter(final IMarkupFilter filter)
 	{
+		// PrependContextPathHandler should always be close to the end.
+		// It doesn't have to be last though.
 		appendMarkupFilter(filter, PrependContextPathHandler.class);
 	}
 
 	/**
 	 * Append a new filter to the list of already pre-configured markup filters.
+	 * Add the new filter before the "beforeFilter" which is identified by its
+	 * class.
 	 * 
 	 * @param filter
 	 *            The filter to be appended
 	 * @param beforeFilter
-	 *            The filter should be added before the beforeFilter. If
+	 *            The filter will be added before the beforeFilter. If
 	 *            beforeFilter == null or beforeFilter not found than append to
 	 *            the end
 	 */
-	public final void appendMarkupFilter(final IMarkupFilter filter,
-			final Class beforeFilter)
+	public final void appendMarkupFilter(final IMarkupFilter filter, final Class beforeFilter)
 	{
 		if ((beforeFilter == null) || (this.markupFilterChain == null))
 		{
@@ -236,7 +239,7 @@ public class MarkupParser
 				}
 				current = current.getParent();
 			}
-			
+
 			if (current == null)
 			{
 				filter.setParent(this.markupFilterChain);
@@ -269,6 +272,17 @@ public class MarkupParser
 	}
 
 	/**
+	 * Get the next tag from the markup file
+	 * 
+	 * @return The next tag
+	 * @throws ParseException
+	 */
+	public ComponentTag getNextTag() throws ParseException
+	{
+		return (ComponentTag)this.markupFilterChain.nextTag();
+	}
+
+	/**
 	 * Scans the given markup and extracts balancing tags.
 	 * 
 	 */
@@ -280,11 +294,12 @@ public class MarkupParser
 
 		try
 		{
-			// allways remember the latest index (size)
+			// always remember the latest index (size)
 			int size = this.markup.size();
 
 			// Loop through tags
-			for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
+			ComponentTag tag;
+			while (null != (tag = getNextTag()))
 			{
 				boolean add = (tag.getId() != null);
 				if (!add && tag.getXmlTag().isClose())
@@ -295,9 +310,8 @@ public class MarkupParser
 				// Add tag to list?
 				if (add || tag.isModified())
 				{
+					// Add text from last position to the current tag position
 					final CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
-
-					// Add text from last position to tag position
 					if (text.length() > 0)
 					{
 						String rawMarkup = text.toString();
@@ -319,10 +333,9 @@ public class MarkupParser
 
 					if (add)
 					{
-						// Add to list unless preview component tag remover
-						// flagged
-						// as removed
-						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
+						// Add to the markup unless the tag has been flagged as
+						// to be removed from the markup. (e.g. <wicket:remove>
+						if (tag.isIgnore() == false)
 						{
 							this.markup.addMarkupElement(tag);
 						}
@@ -335,7 +348,7 @@ public class MarkupParser
 					xmlParser.setPositionMarker();
 				}
 
-				// allways remember the latest index (size)
+				// always remember the latest index (size)
 				size = this.markup.size();
 			}
 		}
@@ -380,7 +393,7 @@ public class MarkupParser
 		// Make all tags immutable and the list of elements unmodifable
 		this.markup.makeImmutable();
 	}
-
+	
 	/**
 	 * Remove whitespaces from the raw markup
 	 * 
