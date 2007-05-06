@@ -147,7 +147,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				int ajaxVersionNumber = 0;
 				if (pv == null)
 				{
-					int index = pageVersions.indexOf(new PageVersions(id,-1,-1));
+					int index = pageVersions.indexOf(new PageVersions(id, versionNumber,-1));
 					if (index != -1)
 					{
 						pv = (PageVersions)pageVersions.get(index);
@@ -208,7 +208,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				this.pageid = pageid;
 				this.versionid = versionid;
-				this.ajaxversionid = versionid;
+				this.ajaxversionid = ajaxversionid;
 			}
 			
 			/**
@@ -218,7 +218,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				if (obj instanceof PageVersions)
 				{
-					return ((PageVersions)obj).pageid == pageid; 
+					return ((PageVersions)obj).pageid == pageid &&
+					       ((PageVersions)obj).versionid == versionid;
 				}
 				return false;
 			}
