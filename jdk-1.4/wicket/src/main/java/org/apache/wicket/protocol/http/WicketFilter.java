@@ -288,7 +288,7 @@ public class WicketFilter implements Filter
 	 */
 	public String getRelativePath(HttpServletRequest request)
 	{
-		String path = request.getRequestURI();
+		String path = Strings.stripJSessionId(request.getRequestURI());
 		String contextPath = request.getContextPath();
 		path = path.substring(contextPath.length());
 		if (servletMode)
