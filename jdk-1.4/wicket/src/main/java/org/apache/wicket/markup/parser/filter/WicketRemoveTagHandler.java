@@ -34,9 +34,6 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
  */
 public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 {
-	/** Flag value to use as component name for ignored components */
-	public static final String IGNORE = "<<Removed by WicketRemoveTagHandler>>";
-
 	static
 	{
 		// register "wicket:remove"
@@ -69,8 +66,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 		}
 
 		// If it is not a remove tag, than we are finished
-		if (!(openTag instanceof WicketTag)
-				|| !((WicketTag)openTag).isRemoveTag())
+		if (!(openTag instanceof WicketTag) || !((WicketTag)openTag).isRemoveTag())
 		{
 			return openTag;
 		}
@@ -97,18 +93,18 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 			// tag, must be it's corresponding close tag.
 			if (closeTag.closes(openTag))
 			{
-				// Component's named with the IGNORE component name will be ignored 
-				// by MarkupParser and not added to the Markup.
-				openTag.setId(IGNORE);
+				// The tag (from open to close) should be ignored by
+				// MarkupParser and not be added to the Markup.
+				openTag.setIgnore(true);
 				return openTag;
 			}
 
 			throw new ParseException(
-					"Markup remove regions must not contain Wicket component tags. " + "tag: "
+					"Markup remove regions must not contain Wicket component tags. tag: "
 							+ closeTag.toUserDebugString(), closeTag.getPos());
 		}
 
-		throw new ParseException("Did not find close tag for markup remove region. "
-				+ "Open tag: " + openTag.toUserDebugString(), openTag.getPos());
+		throw new ParseException("Did not find close tag for markup remove region. Open tag: "
+				+ openTag.toUserDebugString(), openTag.getPos());
 	}
 }
