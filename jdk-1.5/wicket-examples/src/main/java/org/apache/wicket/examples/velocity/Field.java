@@ -15,27 +15,36 @@ import java.io.Serializable;
 public class Field implements Serializable
 {
 	private String fieldName;
+
 	private int fieldSize;
+
 	/**
+	 * Construct.
 	 * 
+	 * @param fieldName
+	 * @param fieldSize
 	 */
 	public Field(String fieldName, int fieldSize)
 	{
 		this.fieldName = fieldName;
 		this.fieldSize = fieldSize;
 	}
+
 	public String getFieldName()
 	{
 		return fieldName;
 	}
-	public void setFieldName(String fieldName)
-	{
-		this.fieldName = fieldName;
-	}
+
 	public int getFieldSize()
 	{
 		return fieldSize;
 	}
+
+	public void setFieldName(String fieldName)
+	{
+		this.fieldName = fieldName;
+	}
+
 	public void setFieldSize(int fieldSize)
 	{
 		this.fieldSize = fieldSize;

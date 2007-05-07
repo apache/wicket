@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.PackageResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -69,7 +68,8 @@ public class TemplatePage extends WicketExamplePage
 	}
 
 	/** the current template contents. */
-	private IStringResourceStream template = new PackageResourceStream(DynamicPage.class, "persons.vm");
+	private IStringResourceStream template = new PackageResourceStream(DynamicPage.class,
+			"persons.vm");
 
 	/** context to be used by the template. */
 	private final Model templateContext;
@@ -87,7 +87,8 @@ public class TemplatePage extends WicketExamplePage
 		templateContext = Model.valueOf(map);
 
 		add(new TemplateForm("templateForm"));
-		add(new VelocityPanel("templatePanel", templateContext) {
+		add(new VelocityPanel("templatePanel", templateContext)
+		{
 			@Override
 			protected IStringResourceStream getTemplateResource()
 			{

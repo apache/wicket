@@ -31,8 +31,11 @@ import org.apache.wicket.protocol.http.WebApplication;
  */
 public class VelocityTemplateApplication extends WebApplication
 {
+	private static List<Field> fields = new ArrayList<Field>();
+
 	/** simple persons db. */
 	private static List<Person> persons = new ArrayList<Person>();
+
 	static
 	{
 		persons.add(new Person("Joe", "Down"));
@@ -42,14 +45,17 @@ public class VelocityTemplateApplication extends WebApplication
 		persons.add(new Person("Sue", "Hazel"));
 		persons.add(new Person("Bush", "Gump"));
 	}
-
-	private static List<Field> fields = new ArrayList<Field>();
 	static
 	{
 		fields.add(new Field("firstName", 50));
 		fields.add(new Field("lastName", 80));
 	}
-	public static List<Field> getFields() {
+
+	/**
+	 * @return Fields
+	 */
+	public static List<Field> getFields()
+	{
 		return fields;
 	}
 
