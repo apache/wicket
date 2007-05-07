@@ -259,12 +259,13 @@ public abstract class Session implements IClusterable, IConverterLocator
 			// Create session using session factory
 			session = application.getSessionFactory().newSession(requestCycle.getRequest(),
 					requestCycle.getResponse());
-			// Set the current session
-			// execute any attach logic now
-			session.attach();
 		}
 
 		set(session);
+
+		// Set the current session
+		// execute any attach logic now
+		session.attach();
 
 		return session;
 	}
