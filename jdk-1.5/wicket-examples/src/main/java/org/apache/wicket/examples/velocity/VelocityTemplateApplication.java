@@ -23,7 +23,6 @@ import org.apache.velocity.app.Velocity;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.time.Duration;
 
 /**
  * Application class for velocity template example.
@@ -75,8 +74,6 @@ public class VelocityTemplateApplication extends WebApplication
 	@Override
 	protected void init()
 	{
-		getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
-
 		// initialize velocity
 		try
 		{
