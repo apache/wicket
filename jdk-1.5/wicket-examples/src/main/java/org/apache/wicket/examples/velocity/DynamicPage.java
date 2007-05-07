@@ -32,17 +32,9 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
 /**
  * Template example page.
- * 
- * @author Eelco Hillenius
  */
 public class DynamicPage extends WicketExamplePage
 {
-	/** the current template contents. */
-	private PackageResourceStream template = new PackageResourceStream(DynamicPage.class,
-			"fields.vm");
-	/** context to be used by the template. */
-	private final Model templateContext;
-
 	/**
 	 * Constructor
 	 * 
@@ -51,13 +43,15 @@ public class DynamicPage extends WicketExamplePage
 	 */
 	public DynamicPage(final PageParameters parameters)
 	{
+		final IStringResourceStream template = new PackageResourceStream(DynamicPage.class,
+				"fields.vm");
+
 		Map<String, List<Field>> map = new HashMap<String, List<Field>>();
 		List<Field> fields = VelocityTemplateApplication.getFields();
 		map.put("fields", fields);
-		templateContext = Model.valueOf(map);
 
 		VelocityPanel panel;
-		add(panel = new VelocityPanel("templatePanel", templateContext)
+		add(panel = new VelocityPanel("templatePanel", Model.valueOf(map))
 		{
 			@Override
 			protected IStringResourceStream getTemplateResource()
