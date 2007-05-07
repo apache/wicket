@@ -261,11 +261,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 					requestCycle.getResponse());
 		}
 
+		// set thread local
 		set(session);
-
-		// Set the current session
-		// execute any attach logic now
-		session.attach();
 
 		return session;
 	}
@@ -288,7 +285,8 @@ public abstract class Session implements IClusterable, IConverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Sets session for calling thread.
+	 * Sets session for calling thread. Also triggers {@link #attach()} being
+	 * called.
 	 * 
 	 * @param session
 	 *            The session
@@ -299,7 +297,11 @@ public abstract class Session implements IClusterable, IConverterLocator
 		{
 			throw new IllegalArgumentException("Argument session can not be null");
 		}
+
 		current.set(session);
+
+		// execute any attach logic now
+		session.attach();
 	}
 
 	/**
@@ -1074,9 +1076,7 @@ public abstract class Session implements IClusterable, IConverterLocator
 
 	/**
 	 * Any attach logic for session subclasses. Called when a session is set for
-	 * the thread. Note that this is done on demand (lazily): as long as the
-	 * session isn't being used, it is not located or created and this method is
-	 * not called.
+	 * the thread.
 	 */
 	protected void attach()
 	{
