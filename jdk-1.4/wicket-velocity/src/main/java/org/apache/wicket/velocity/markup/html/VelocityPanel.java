@@ -59,19 +59,49 @@ import org.apache.wicket.util.string.Strings;
 public abstract class VelocityPanel extends Panel
 {
 	/**
+	 * Convenience factory method to create a {@link VelocityPanel} instance
+	 * with a given {@link IStringResourceStream template resource}.
+	 * 
+	 * @param id
+	 *            Component id
+	 * @param model
+	 *            optional model for variable substituation.
+	 * @param templateResource
+	 *            The template resource
+	 * @return
+	 */
+	public static VelocityPanel forTemplateResource(String id, IModel model,
+			final IStringResourceStream templateResource)
+	{
+		if (templateResource == null)
+		{
+			throw new IllegalArgumentException(
+					"argument templateResource must be not null");
+		}
+
+		return new VelocityPanel(id, model)
+		{
+			protected IStringResourceStream getTemplateResource()
+			{
+				return templateResource;
+			}
+		};
+	}
+
+	/**
 	 * Construct.
 	 * 
-	 * @param name
-	 *            See Component
+	 * @param id
+	 *            Component id
 	 * @param templateResource
 	 *            The velocity template as a string resource
 	 * @param model
 	 *            Model with variables that can be substituted by Velocity. Must
 	 *            return a {@link Map}.
 	 */
-	public VelocityPanel(final String name, final IModel/* <Map> */model)
+	public VelocityPanel(final String id, final IModel/* <Map> */model)
 	{
-		super(name, model);
+		super(id, model);
 	}
 
 	/**
