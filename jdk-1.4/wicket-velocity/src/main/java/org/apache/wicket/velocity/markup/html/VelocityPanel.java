@@ -81,11 +81,19 @@ public abstract class VelocityPanel extends Panel
 	 */
 	private Reader getTemplateReader()
 	{
-		final String template = getTemplateResource().asString();
+		final IStringResourceStream resource = getTemplateResource();
+		if (resource == null)
+		{
+			throw new IllegalArgumentException(
+					"getTemplateResource must return a resource");
+		}
+
+		final String template = resource.asString();
 		if (template != null)
 		{
 			return new StringReader(template);
 		}
+
 		return null;
 	}
 
