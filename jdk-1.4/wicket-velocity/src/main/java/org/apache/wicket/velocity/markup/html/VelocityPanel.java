@@ -69,7 +69,7 @@ public abstract class VelocityPanel extends Panel
 	 *            Model with variables that can be substituted by Velocity. Must
 	 *            return a {@link Map}.
 	 */
-	public VelocityPanel(final String name, final IModel/* <Map> */ model)
+	public VelocityPanel(final String name, final IModel/* <Map> */model)
 	{
 		super(name, model);
 	}
@@ -88,11 +88,6 @@ public abstract class VelocityPanel extends Panel
 		}
 		return null;
 	}
-
-	/**
-	 * Returns the template resource passed to the constructor
-	 */
-	protected abstract IStringResourceStream getTemplateResource();
 
 	/**
 	 * Either print or rethrow the throwable.
@@ -129,6 +124,13 @@ public abstract class VelocityPanel extends Panel
 	{
 		return false;
 	}
+
+	/**
+	 * Returns the template resource passed to the constructor.
+	 * 
+	 * @return The template resource
+	 */
+	protected abstract IStringResourceStream getTemplateResource();
 
 	/**
 	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
@@ -187,8 +189,7 @@ public abstract class VelocityPanel extends Panel
 					}
 					catch (ResourceStreamNotFoundException e)
 					{
-						throw new RuntimeException(
-								"Could not parse resulting markup", e);
+						throw new RuntimeException("Could not parse resulting markup", e);
 					}
 					markupStream.skipRawMarkup();
 					renderAll(new MarkupStream(markup));
