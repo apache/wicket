@@ -40,6 +40,7 @@
 		<module>wicket-spring</module>
 		<module>wicket-quickstart</module>
 		<module>wicket-datetime</module>
+		<module>wicket-velocity</module>
 	</modules>
 	<build>
 		<plugins>

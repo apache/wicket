@@ -17,8 +17,12 @@
 package org.apache.wicket.util.template;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -38,16 +42,66 @@ import org.slf4j.LoggerFactory;
 // TODO cache templates application scoped with a watch
 public class PackagedTextTemplate extends TextTemplate
 {
-	private static final long serialVersionUID = 1L;
+	private static final class CachedTextTemplate implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final String text;
+
+		CachedTextTemplate(String text)
+		{
+			this.text = text;
+		}
+	}
+
+	private static final class CachedTextTemplateKey implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final Class clazz;
+		private final String path;
+
+		CachedTextTemplateKey(Class clazz, String path)
+		{
+			this.clazz = clazz;
+			this.path = path;
+		}
+
+	}
+
+	private static final class TextTemplateCache implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final Map cache = new ConcurrentHashMap();
+
+		CachedTextTemplate get(CachedTextTemplateKey key)
+		{
+			return (CachedTextTemplate)cache.get(key);
+		}
+
+		void put(CachedTextTemplateKey key, CachedTextTemplate value)
+		{
+			cache.put(key, value);
+		}
+	}
 
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(PackagedTextTemplate.class);
 
+	private static final long serialVersionUID = 1L;
+
 	/** class loader stream locator. */
 	private static final IResourceStreamLocator streamLocator = new ResourceStreamLocator();
 
+	private static final MetaDataKey TEXT_TEMPLATE_CACHE_KEY = new MetaDataKey(
+			TextTemplateCache.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	/** contents */
-	private StringBuffer buffer = new StringBuffer();
+	private final StringBuffer buffer = new StringBuffer();
 
 	/**
 	 * Constructor.
@@ -100,6 +154,11 @@ public class PackagedTextTemplate extends TextTemplate
 		super(contentType);
 
 		String path = Packages.absolutePath(clazz, fileName);
+
+		Application app = Application.get();
+		TextTemplateCache cache = (TextTemplateCache)app.getMetaData(TEXT_TEMPLATE_CACHE_KEY);
+		// TODO implement cache
+
 		IResourceStream stream = streamLocator.locate(clazz, path);
 
 		if (stream == null)
@@ -141,6 +200,14 @@ public class PackagedTextTemplate extends TextTemplate
 	}
 
 	/**
+	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getString()
+	 */
+	public String getString()
+	{
+		return buffer.toString();
+	}
+
+	/**
 	 * Interpolate the map of variables with the content and replace the content
 	 * with the result. Variables are denoted in this string by the syntax
 	 * ${variableName}. The contents will be altered by replacing each variable
@@ -173,13 +240,5 @@ public class PackagedTextTemplate extends TextTemplate
 	public final long length()
 	{
 		return buffer.length();
-	}
-
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getString()
-	 */
-	public String getString()
-	{
-		return buffer.toString();
 	}
 }

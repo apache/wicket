@@ -169,13 +169,14 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				calendarInit.append(":");
 				calendarInit.append(value);
 			}
-			// TODO handle arrays
 			if (i.hasNext())
 			{
 				calendarInit.append(",");
 			}
 		}
 		variables.put("calendarInit", calendarInit.toString());
+
+		// render initialization script with the variables interpolated
 		TextTemplateHeaderContributor.forJavaScript(DatePicker.class, "DatePicker.js",
 				Model.valueOf(variables)).renderHead(response);
 

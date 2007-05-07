@@ -59,6 +59,7 @@
 				<module>jdk-1.4/wicket-datetime</module>
 				<module>jdk-1.4/wicket-extensions</module>
 				<module>jdk-1.4/wicket-spring</module>
+				<module>jdk-1.4/wicket-velocity</module>
 				<module>jdk-1.5/wicket-spring-annot</module>
 				<module>jdk-1.5/wicket-auth-roles</module>
 				<module>jdk-1.5/wicket-jmx</module>
@@ -236,6 +237,12 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-datetime</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-velocity</artifactId>
 				<version>${project.version}</version>
 				<type>jar</type>
 			</dependency>
