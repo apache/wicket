@@ -127,6 +127,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			PageVersions pv = null;
 			if (versionNumber == -1)
 			{
+				// when no version was specified, get the last touched page for given page id
 				for (int index = pageVersions.size() - 1; index >= 0; --index) 
 				{
 					if (((PageVersions)pageVersions.get(index)).pageid == id) 
