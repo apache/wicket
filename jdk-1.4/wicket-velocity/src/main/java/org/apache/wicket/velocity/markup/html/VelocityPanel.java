@@ -56,31 +56,10 @@ import org.apache.wicket.util.string.Strings;
  * <code>VelocityPanel</code>.
  * </p>
  */
-public final class VelocityPanel extends Panel
+public class VelocityPanel extends Panel
 {
-	/** Whether to escape HTML characters. The default value is false. */
-	private boolean escapeHtml = false;
-
-	/** Whether to parse the resulting Wicket markup */
-	private boolean parseGeneratedMarkup = false;
-
 	/** Velocity template resource */
 	private final IStringResourceStream templateResource;
-
-	/**
-	 * Whether any velocity exception should be trapped and displayed on the
-	 * panel (false) or thrown up to be handled by the exception mechanism of
-	 * Wicket (true). The default is false, which traps and displays any
-	 * exception without having consequences for the other components on the
-	 * page.
-	 * <p>
-	 * Trapping these exceptions without disturbing the other components is
-	 * especially usefull in CMS like applications, where 'normal' users are
-	 * allowed to do basic scripting. On errors, you want them to be able to
-	 * have them correct them while the rest of the application keeps on
-	 * working.
-	 */
-	private boolean throwVelocityExceptions = false;
 
 	/**
 	 * Construct.
@@ -97,82 +76,6 @@ public final class VelocityPanel extends Panel
 	{
 		super(name, model);
 		this.templateResource = templateResource;
-	}
-
-	/**
-	 * Gets whether to escape HTML characters.
-	 * 
-	 * @return whether to escape HTML characters
-	 */
-	public final boolean getEscapeHtml()
-	{
-		return escapeHtml;
-	}
-
-	/**
-	 * Gets whether to parse the resulting Wicket markup
-	 * 
-	 * @return whether to parse the resulting Wicket markup
-	 */
-	public boolean getParseGeneratedMarkup()
-	{
-		return parseGeneratedMarkup;
-	}
-
-	/**
-	 * Gets whether any velocity exception should be trapped and displayed on
-	 * the panel (false) or thrown up to be handled by the exception mechanism
-	 * of Wicket (true). The default is true, which traps and displays any
-	 * exception without having consequences for the other components on the
-	 * page.
-	 * 
-	 * @return Whether any velocity exceptions should be thrown or trapped.
-	 */
-	public final boolean getThrowVelocityExceptions()
-	{
-		return throwVelocityExceptions;
-	}
-
-	/**
-	 * Sets whether to escape HTML characters. The default value is false.
-	 * 
-	 * @param escapeHtml
-	 *            whether to escape HTML characters
-	 * @return This
-	 */
-	public final VelocityPanel setEscapeHtml(boolean escapeHtml)
-	{
-		this.escapeHtml = escapeHtml;
-		return this;
-	}
-
-	/**
-	 * Sets whether to parse the resulting Wicket markup. The default value is
-	 * false.
-	 * 
-	 * @param parseGeneratedMarkup
-	 *            whether to parse the resulting Wicket markup
-	 * @return This
-	 */
-	public final VelocityPanel setParseGeneratedMarkup(boolean parseGeneratedMarkup)
-	{
-		this.parseGeneratedMarkup = parseGeneratedMarkup;
-		return this;
-	}
-
-	/**
-	 * Gets whether any velocity exception should be trapped and displayed on
-	 * the panel (true) or thrown up to be handled by the exception mechanism of
-	 * Wicket (false).
-	 * 
-	 * @param throwVelocityExceptions
-	 *            whether any exception should be trapped or rethrown
-	 * @return This
-	 */
-	public final VelocityPanel setThrowVelocityExceptions(boolean throwVelocityExceptions)
-	{
-		this.throwVelocityExceptions = throwVelocityExceptions;
-		return this;
 	}
 
 	/**
@@ -203,7 +106,7 @@ public final class VelocityPanel extends Panel
 	private void onException(final Exception exception, final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		if (!throwVelocityExceptions)
+		if (!throwVelocityExceptions())
 		{
 			// print the exception on the panel
 			String stackTraceAsString = Strings.toString(exception);
@@ -214,6 +117,16 @@ public final class VelocityPanel extends Panel
 			// rethrow the exception
 			throw new WicketRuntimeException(exception);
 		}
+	}
+
+	/**
+	 * Gets whether to escape HTML characters.
+	 * 
+	 * @return whether to escape HTML characters. The default value is false.
+	 */
+	protected boolean escapeHtml()
+	{
+		return false;
 	}
 
 	/**
@@ -246,14 +159,14 @@ public final class VelocityPanel extends Panel
 				// replace the tag's body the Velocity output
 				String result = writer.toString();
 
-				if (escapeHtml)
+				if (escapeHtml())
 				{
 					// encode the result in order to get valid html output that
 					// does not break the rest of the page
 					result = Strings.escapeMarkup(result).toString();
 				}
 
-				if (!getParseGeneratedMarkup())
+				if (!parseGeneratedMarkup())
 				{
 					// now replace the body of the tag with the velocity merge
 					// result
@@ -301,5 +214,38 @@ public final class VelocityPanel extends Panel
 		{
 			replaceComponentTagBody(markupStream, openTag, ""); // just empty it
 		}
+	}
+
+	/**
+	 * Gets whether to parse the resulting Wicket markup.
+	 * 
+	 * @return whether to parse the resulting Wicket markup. The default is
+	 *         false.
+	 */
+	protected boolean parseGeneratedMarkup()
+	{
+		return false;
+	}
+
+	/**
+	 * Whether any velocity exception should be trapped and displayed on the
+	 * panel (false) or thrown up to be handled by the exception mechanism of
+	 * Wicket (true). The default is false, which traps and displays any
+	 * exception without having consequences for the other components on the
+	 * page.
+	 * <p>
+	 * Trapping these exceptions without disturbing the other components is
+	 * especially usefull in CMS like applications, where 'normal' users are
+	 * allowed to do basic scripting. On errors, you want them to be able to
+	 * have them correct them while the rest of the application keeps on
+	 * working.
+	 * </p>
+	 * 
+	 * @return Whether any velocity exceptions should be thrown or trapped. The
+	 *         default is false.
+	 */
+	protected boolean throwVelocityExceptions()
+	{
+		return false;
 	}
 }

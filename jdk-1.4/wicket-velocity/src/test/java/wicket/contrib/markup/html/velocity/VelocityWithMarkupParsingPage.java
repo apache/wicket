@@ -38,9 +38,16 @@ public class VelocityWithMarkupParsingPage extends WebPage
 	{
 		HashMap values = new HashMap();
 		values.put("labelId", "message");
-		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel",
-				new UrlResourceStream(this.getClass().getResource("testWithMarkup.html")), new Model(values));
-		velocityPanel.setParseGeneratedMarkup(true);
+		VelocityPanel velocityPanel = new VelocityPanel(
+				"velocityPanel",
+				new UrlResourceStream(this.getClass().getResource("testWithMarkup.html")),
+				new Model(values))
+		{
+			public boolean parseGeneratedMarkup()
+			{
+				return true;
+			}
+		};
 		velocityPanel.add(new Label("message", VelocityPage.TEST_STRING));
 		add(velocityPanel);
 	}
