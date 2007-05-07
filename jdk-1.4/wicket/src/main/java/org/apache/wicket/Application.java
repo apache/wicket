@@ -374,7 +374,7 @@ public abstract class Application
 		else
 		{
 			throw new IllegalArgumentException(
-					"Invalid configuration type.  Must be \"development\" or \"deployment\".");
+					"Invalid configuration type: '" + configurationType + "'.  Must be \"development\" or \"deployment\".");
 		}
 	}
 
