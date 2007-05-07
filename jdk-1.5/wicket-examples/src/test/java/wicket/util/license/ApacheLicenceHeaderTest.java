@@ -25,64 +25,62 @@ import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+{
 
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest() {
+	public ApacheLicenceHeaderTest()
+	{
 
-//		 addHeaders = true;
+		// addHeaders = true;
 
 		htmlIgnore = new String[] {
-				/*
-				 * This is an example project. Therefore we'd rather not have
-				 * license headers in html files, because it removes the
-				 * focus away from what the example is about.
-				 */
-				"src"
-		};
-		
+		/*
+		 * This is an example project. Therefore we'd rather not have license
+		 * headers in html files, because it removes the focus away from what
+		 * the example is about.
+		 */
+		"src" };
+
+		/* same, same */
+		velocityIgnore = new String[] { "src" };
+
 		javaScriptIgnore = new String[] {
-				/*
-				 * Prototype, released under MIT. See NOTICE
-				 */
-				"src/main/webapp/prototype.js",
-				/*
-				 * Script.aculo.us, released under MIT. See NOTICE
-				 */
-				"src/main/webapp/effects.js",
-				"src/main/webapp/scriptaculous.js",
-				/*
-				 * Behaviour, released under BSD. See NOTICE
-				 */
-				"src/main/java/org/apache/wicket/examples/preview/behaviour.js",
-				/*
-				 * DOJO is dual licensed. We use the BSD license. See NOTICE.
-				 */
-				"src/main/java/org/apache/wicket/examples/preview/dojo.js"
-		};
-		
+		/*
+		 * Prototype, released under MIT. See NOTICE
+		 */
+		"src/main/webapp/prototype.js",
+		/*
+		 * Script.aculo.us, released under MIT. See NOTICE
+		 */
+		"src/main/webapp/effects.js", "src/main/webapp/scriptaculous.js",
+		/*
+		 * Behaviour, released under BSD. See NOTICE
+		 */
+		"src/main/java/org/apache/wicket/examples/preview/behaviour.js",
+		/*
+		 * DOJO is dual licensed. We use the BSD license. See NOTICE.
+		 */
+		"src/main/java/org/apache/wicket/examples/preview/dojo.js" };
+
 		xmlIgnore = new String[] {
-				/*
-				 * Part of an example
-				 */
-				"src/main/java/org/apache/wicket/examples/compref/XmlPage.xml"
-		};
-		
+		/*
+		 * Part of an example
+		 */
+		"src/main/java/org/apache/wicket/examples/compref/XmlPage.xml" };
+
 		propertiesIgnore = new String[] {
-				/*
-				 * Configuration files with no "intelligent" content
-				 */
-				"src/main/java/commons-logging.properties",
-				"src/main/java/log4j.properties"
-		};
-		
+		/*
+		 * Configuration files with no "intelligent" content
+		 */
+		"src/main/java/commons-logging.properties", "src/main/java/log4j.properties" };
+
 		javaIgnore = new String[] {
-				/*
-				 * MIT style license. See NOTICE
-				 */
-				"src/test/java/com/meterware/httpunit/ParsedHTML.java"
-		};
+		/*
+		 * MIT style license. See NOTICE
+		 */
+		"src/test/java/com/meterware/httpunit/ParsedHTML.java" };
 	}
 }
