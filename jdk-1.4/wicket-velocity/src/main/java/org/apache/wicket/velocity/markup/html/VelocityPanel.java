@@ -34,7 +34,7 @@ import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -69,10 +69,11 @@ public class VelocityPanel extends Panel
 	 * @param templateResource
 	 *            The velocity template as a string resource
 	 * @param model
-	 *            MapModel with variables that can be substituted by Velocity
+	 *            Model with variables that can be substituted by Velocity. Must
+	 *            return a {@link Map}.
 	 */
 	public VelocityPanel(final String name, final IStringResourceStream templateResource,
-			final Model model)
+			final IModel/* <Map> */model)
 	{
 		super(name, model);
 		this.templateResource = templateResource;
