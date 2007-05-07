@@ -127,9 +127,15 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			PageVersions pv = null;
 			if (versionNumber == -1)
 			{
-				int index = pageVersions.indexOf(new PageVersions(id,-1,-1));
-				pv = (PageVersions)pageVersions.get(index);
-				versionNumber = pv.versionid;
+				for (int index = pageVersions.size() - 1; index >= 0; --index) 
+				{
+					if (((PageVersions)pageVersions.get(index)).pageid == id) 
+					{
+						pv = (PageVersions)pageVersions.get(index);
+						versionNumber = pv.versionid;
+						break;
+					}
+				}
 			}
 			String sessionId = getSession().getId();
 			if (lastPage != null && lastPage.getNumericId() == id)
