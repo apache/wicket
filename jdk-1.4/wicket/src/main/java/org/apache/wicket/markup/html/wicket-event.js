@@ -153,11 +153,13 @@ Wicket.Event = {
 					}
 				}, 1);
 			} else if (document.readyState && Wicket.Browser.isIE()) { 
-				// internet explorer - use script with defer attribute
-				document.write("<script id='ie_ready' defer src='://0'><\/script>");
-				document.getElementById('ie_ready').onreadystatechange = function() {
-					if (this.readyState == 'complete') domReady();
-				};
+				if (document.getElementById('ie_ready') == null) {
+					var src = (window.location.protocol == 'https:') ? ':\/\/0' : 'javascript:void(0)';
+					document.write('<script id="ie_ready" defer src="' + src + '"><\/script>');
+					document.getElementById('ie_ready').onreadystatechange = function() {
+						if (this.readyState == 'complete') domReady();
+					};
+				}
 			} else { 
 				// other browsers
 				Wicket.Event.add(document, "DOMContentLoaded", domReady);
