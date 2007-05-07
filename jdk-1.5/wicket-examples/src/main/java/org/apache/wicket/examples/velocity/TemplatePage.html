@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title>Wicket Contrib Examples - Template Page</title>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+
+ <span wicket:id="mainNavigation"/>
+
+ <div id="explain">
+ 	<h3>Velocity Template Component</h3>
+ 	<p>
+ 		The VelocityPanel is usefull for CMS like functionality, where you want
+ 		to enable users to do basic scripting in predefined areas of your web
+ 		application. Read more about the
+ 		<a href="http://jakarta.apache.org/velocity/">velocity</a> language
+ 		<a href="http://jakarta.apache.org/velocity/user-guide.html">here</a>.
+ 	</p>
+ </div>
+
+<table cellpadding="5px">
+ <tr>
+  <td valign="top" height="100%">
+  
+ <div id="templateInputBox">
+    <form wicket:id="templateForm">
+      <fieldset>
+        <legend><a target="#" href="http://jakarta.apache.org/velocity/">velocity</a> template input</legend>
+
+        <textarea wicket:id="templateInput" rows="16" cols="36">Template input comes here</textarea>
+
+		<div id="templateUpdateButton">
+        <input type="submit" value="update"/>
+        </div>
+      </fieldset>
+     </form>   
+ </div>
+ 
+  </td>
+  <td valign="top" height="100%">
+
+ <div id="templateOutputBox">
+  <fieldset>
+    <legend>output</legend>
+	<span wicket:id="templatePanel">Template output will be put here</span>
+  </fieldset>
+ </div>
+ 
+  </td>
+ </tr>
+</table>
+
+ <div>
+	<span wicket:id="feedback"/>
+ </div>
+
+</body>
+</html>
