@@ -1,0 +1,11 @@
+<fieldset>
+ <legend>persons</legend>
+  <ul>
+   #foreach( $person in $persons )
+    <li>
+     ${person.lastName},
+     ${person.firstName}
+    </li>
+  #end
+ </ul>
+</fieldset>

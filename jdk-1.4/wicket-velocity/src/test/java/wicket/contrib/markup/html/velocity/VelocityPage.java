@@ -20,6 +20,7 @@ import java.util.HashMap;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
@@ -39,6 +40,12 @@ public class VelocityPage extends WebPage
 	{
 		HashMap values = new HashMap();
 		values.put("message", TEST_STRING);
-		add(new VelocityPanel("velocityPanel", new UrlResourceStream(this.getClass().getResource("test.html")), new Model(values)));
+		add(new VelocityPanel("velocityPanel", new Model(values))
+		{
+			protected IStringResourceStream getTemplateResource()
+			{
+				return new UrlResourceStream(this.getClass().getResource("test.html"));
+			}
+		});
 	}
 }

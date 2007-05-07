@@ -43,6 +43,16 @@ public class VelocityTemplateApplication extends WebApplication
 		persons.add(new Person("Bush", "Gump"));
 	}
 
+	private static List<Field> fields = new ArrayList<Field>();
+	static
+	{
+		fields.add(new Field("firstName", 50));
+		fields.add(new Field("lastName", 80));
+	}
+	public static List<Field> getFields() {
+		return fields;
+	}
+
 	/**
 	 * Gets the dummy persons database.
 	 * 
@@ -65,7 +75,7 @@ public class VelocityTemplateApplication extends WebApplication
 	 */
 	public Class< ? extends Page> getHomePage()
 	{
-		return TemplatePage.class;
+		return Home.class;
 	}
 
 	/**

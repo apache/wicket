@@ -21,6 +21,7 @@ import java.util.HashMap;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
@@ -38,11 +39,15 @@ public class VelocityWithMarkupParsingPage extends WebPage
 	{
 		HashMap values = new HashMap();
 		values.put("labelId", "message");
-		VelocityPanel velocityPanel = new VelocityPanel(
-				"velocityPanel",
-				new UrlResourceStream(this.getClass().getResource("testWithMarkup.html")),
+		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel",
 				new Model(values))
 		{
+			protected IStringResourceStream getTemplateResource()
+			{
+				return new UrlResourceStream(this.getClass().getResource(
+						"testWithMarkup.html"));
+			}
+
 			public boolean parseGeneratedMarkup()
 			{
 				return true;

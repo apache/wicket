@@ -56,11 +56,8 @@ import org.apache.wicket.util.string.Strings;
  * <code>VelocityPanel</code>.
  * </p>
  */
-public class VelocityPanel extends Panel
+public abstract class VelocityPanel extends Panel
 {
-	/** Velocity template resource */
-	private final IStringResourceStream templateResource;
-
 	/**
 	 * Construct.
 	 * 
@@ -72,11 +69,9 @@ public class VelocityPanel extends Panel
 	 *            Model with variables that can be substituted by Velocity. Must
 	 *            return a {@link Map}.
 	 */
-	public VelocityPanel(final String name, final IStringResourceStream templateResource,
-			final IModel/* <Map> */model)
+	public VelocityPanel(final String name, final IModel/* <Map> */ model)
 	{
 		super(name, model);
-		this.templateResource = templateResource;
 	}
 
 	/**
@@ -86,13 +81,18 @@ public class VelocityPanel extends Panel
 	 */
 	private Reader getTemplateReader()
 	{
-		final String template = templateResource.asString();
+		final String template = getTemplateResource().asString();
 		if (template != null)
 		{
 			return new StringReader(template);
 		}
 		return null;
 	}
+
+	/**
+	 * Returns the template resource passed to the constructor
+	 */
+	protected abstract IStringResourceStream getTemplateResource();
 
 	/**
 	 * Either print or rethrow the throwable.
@@ -188,9 +188,9 @@ public class VelocityPanel extends Panel
 					catch (ResourceStreamNotFoundException e)
 					{
 						throw new RuntimeException(
-								"Could not parse resulting markup from '"
-										+ templateResource + "'", e);
+								"Could not parse resulting markup", e);
 					}
+					markupStream.skipRawMarkup();
 					renderAll(new MarkupStream(markup));
 				}
 			}

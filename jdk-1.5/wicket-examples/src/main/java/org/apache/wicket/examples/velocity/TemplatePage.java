@@ -27,7 +27,10 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.resource.StringBufferResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.IStringResourceStream;
+import org.apache.wicket.util.resource.PackageResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
 /**
@@ -66,23 +69,10 @@ public class TemplatePage extends WicketExamplePage
 	}
 
 	/** the current template contents. */
-	private StringBufferResourceStream template = new StringBufferResourceStream();
+	private IStringResourceStream template = new PackageResourceStream(DynamicPage.class, "persons.vm");
+
 	/** context to be used by the template. */
 	private final Model templateContext;
-
-	{
-		template.append("<fieldset>\n");
-		template.append(" <legend>persons</legend>\n");
-		template.append("  <ul>\n");
-		template.append("   #foreach( $person in $persons )\n");
-		template.append("    <li>\n");
-		template.append("     ${person.lastName},\n");
-		template.append("     ${person.firstName}\n");
-		template.append("    </li>\n");
-		template.append("  #end\n");
-		template.append(" </ul>\n");
-		template.append("</fieldset>\n");
-	}
 
 	/**
 	 * Constructor
@@ -97,7 +87,13 @@ public class TemplatePage extends WicketExamplePage
 		templateContext = Model.valueOf(map);
 
 		add(new TemplateForm("templateForm"));
-		add(new VelocityPanel("templatePanel", template, templateContext));
+		add(new VelocityPanel("templatePanel", templateContext) {
+			@Override
+			protected IStringResourceStream getTemplateResource()
+			{
+				return template;
+			}
+		});
 		add(new FeedbackPanel("feedback"));
 	}
 
@@ -119,7 +115,6 @@ public class TemplatePage extends WicketExamplePage
 	 */
 	public final void setTemplate(String template)
 	{
-		this.template.clear();
-		this.template.append(template);
+		this.template = new StringResourceStream(template);
 	}
 }
