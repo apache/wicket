@@ -20,7 +20,8 @@ import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Factory that creates application objects based on the class name specified in
- * the APP_CLASS_PARAM context variable.
+ * the {@link ContextParamWebApplicationFactory#APP_CLASS_PARAM} context
+ * variable.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -30,7 +31,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	 * context parameter name that must contain the class name of the
 	 * application
 	 */
-	public final String APP_CLASS_PARAM = "applicationClassName";
+	public static final String APP_CLASS_PARAM = "applicationClassName";
 
 	/** @see IWebApplicationFactory#createApplication(WicketFilter) */
 	public WebApplication createApplication(WicketFilter filter)
