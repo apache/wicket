@@ -824,6 +824,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			((IFeedback)this).updateFeedback();
 		}
 
+		beforeRender();
+		
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
@@ -846,7 +848,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		});
 
-		beforeRender();
 		// Handle request by rendering page
 		render(null);
 		
