@@ -24,7 +24,6 @@ if (typeof(Wicket) == "undefined")
 	Wicket = { };
 
 Wicket.AutoComplete=function(elementId,callbackUrl){
-    var KEY_BACKSPACE=8;
     var KEY_TAB=9;
     var KEY_ENTER=13;
     var KEY_ESC=27;
@@ -64,7 +63,7 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
         }
 
         obj.onkeydown=function(event){
-            switch(wicketKeyCode(getEvent(event))){
+            switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_UP:
         	        if(selected>-1)selected--;
             	    if(selected==-1){
@@ -110,7 +109,7 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
         }
 
         obj.onkeyup=function(event){
-            switch(wicketKeyCode(getEvent(event))){
+            switch(wicketKeyCode(Wicket.fixEvent(event))){
                 case KEY_ENTER:
 	                return killEvent(event);
                 case KEY_UP:
@@ -131,7 +130,7 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
         }
 
         obj.onkeypress=function(event){
-            if(wicketKeyCode(getEvent(event))==KEY_ENTER){
+            if(wicketKeyCode(Wicket.fixEvent(event))==KEY_ENTER){
                 if(selected>-1 || hidingAutocomplete==1){
 			        hidingAutocomplete=0;
 	                return killEvent(event);
@@ -161,11 +160,6 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
         choiceDiv.hide = function() { wicketHide(this.id) }
 
         return choiceDiv;
-    }
-
-    function getEvent(event){
-        if(!event)return window.event;
-        return event;
     }
 
     function killEvent(event){
