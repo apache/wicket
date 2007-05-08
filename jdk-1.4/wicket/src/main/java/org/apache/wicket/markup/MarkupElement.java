@@ -29,7 +29,7 @@ package org.apache.wicket.markup;
  * Wicket.
  * </ul>
  * 
- * @see Markup
+ * @see MarkupResourceData
  * @see org.apache.wicket.markup.RawMarkup
  * @see ComponentTag
  * @author Jonathan Locke

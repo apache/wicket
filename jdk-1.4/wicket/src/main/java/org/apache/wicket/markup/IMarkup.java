@@ -30,7 +30,7 @@ package org.apache.wicket.markup;
 public abstract interface IMarkup
 {
 	/** Placeholder that indicates no markup */
-	public static final Markup NO_MARKUP = new Markup();
+	public static final MarkupResourceData NO_MARKUP = new MarkupResourceData();
 
 	/**
 	 * Find the markup element index of the component with 'path'

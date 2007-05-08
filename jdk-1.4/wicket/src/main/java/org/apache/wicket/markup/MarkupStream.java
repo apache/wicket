@@ -60,14 +60,14 @@ public final class MarkupStream
 	/**
 	 * Constructor
 	 * 
-	 * @param markup
+	 * @param markupFragment
 	 *            List of markup elements
 	 */
-	public MarkupStream(final Markup markup)
+	public MarkupStream(final Markup markupFragment)
 	{
-		this.markup = markup;
+		this.markup = markupFragment;
 
-		if (markup.size() > 0)
+		if (markupFragment.size() > 0)
 		{
 			current = get(currentIndex);
 		}
@@ -79,7 +79,7 @@ public final class MarkupStream
 	 */
 	protected MarkupStream()
 	{
-		markup = null;
+		this.markup = null;
 	}
 
 	/**
@@ -243,7 +243,7 @@ public final class MarkupStream
 	 */
 	public final Class getContainerClass()
 	{
-		return markup.getResource().getMarkupClass();
+		return markup.getMarkupResourceData().getResource().getMarkupClass();
 	}
 
 	/**
@@ -263,7 +263,7 @@ public final class MarkupStream
 	 */
 	public final String getEncoding()
 	{
-		return markup.getEncoding();
+		return markup.getMarkupResourceData().getEncoding();
 	}
 
 	/**
@@ -271,7 +271,7 @@ public final class MarkupStream
 	 */
 	public IResourceStream getResource()
 	{
-		return markup.getResource();
+		return markup.getMarkupResourceData().getResource();
 	}
 
 	/**
@@ -296,7 +296,7 @@ public final class MarkupStream
 	 */
 	public final String getWicketNamespace()
 	{
-		return this.markup.getWicketNamespace();
+		return markup.getMarkupResourceData().getWicketNamespace();
 	}
 
 	/**
@@ -306,7 +306,7 @@ public final class MarkupStream
 	 */
 	public String getXmlDeclaration()
 	{
-		return markup.getXmlDeclaration();
+		return markup.getMarkupResourceData().getXmlDeclaration();
 	}
 
 	/**

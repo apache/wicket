@@ -55,7 +55,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * @see IMarkupFilter
  * @see IMarkupParserFactory
  * @see IMarkupSettings
- * @see Markup
+ * @see MarkupResourceData
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -113,8 +113,10 @@ public class MarkupParser
 		this.xmlParser = xmlParser;
 		this.markupSettings = Application.get().getMarkupSettings();
 
-		this.markup = new Markup();
-		this.markup.setResource(resource);
+		MarkupResourceData markup = new MarkupResourceData();
+		markup.setResource(resource);
+		
+		this.markup = new Markup(markup);
 
 		// Initialize the markup filter chain
 		initializeMarkupFilters();
@@ -128,7 +130,7 @@ public class MarkupParser
 	 */
 	public final void setWicketNamespace(final String namespace)
 	{
-		this.markup.setWicketNamespace(namespace);
+		this.markup.getMarkupResourceData().setWicketNamespace(namespace);
 	}
 
 	/**
@@ -139,7 +141,7 @@ public class MarkupParser
 	 */
 	protected MarkupResourceStream getMarkupResourceStream()
 	{
-		return this.markup.getResource();
+		return this.markup.getMarkupResourceData().getResource();
 	}
 
 	/**
@@ -151,15 +153,17 @@ public class MarkupParser
 		// Chain together all the different markup filters and configure them
 		this.markupFilterChain = xmlParser;
 
-		appendMarkupFilter(new WicketTagIdentifier(markup));
+		MarkupResourceData markupResourceData = this.markup.getMarkupResourceData();
+		
+		appendMarkupFilter(new WicketTagIdentifier(markupResourceData));
 		appendMarkupFilter(new TagTypeHandler());
 		appendMarkupFilter(new HtmlHandler());
 		appendMarkupFilter(new WicketRemoveTagHandler());
 		appendMarkupFilter(new WicketLinkTagHandler());
-		appendMarkupFilter(new WicketNamespaceHandler(markup));
+		appendMarkupFilter(new WicketNamespaceHandler(markupResourceData));
 
 		// Provided the wicket component requesting the markup is known ...
-		final MarkupResourceStream resource = markup.getResource();
+		final MarkupResourceStream resource = markupResourceData.getResource();
 		if (resource != null)
 		{
 			final ContainerInfo containerInfo = resource.getContainerInfo();
@@ -171,7 +175,7 @@ public class MarkupParser
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
-					appendMarkupFilter(new HtmlHeaderSectionHandler(this.markup));
+					appendMarkupFilter(new HtmlHeaderSectionHandler(markup));
 				}
 
 				appendMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
@@ -257,16 +261,18 @@ public class MarkupParser
 	 */
 	public final Markup parse() throws IOException, ResourceStreamNotFoundException
 	{
+		MarkupResourceData markupResourceData = this.markup.getMarkupResourceData();
+		
 		// Initialize the xml parser
-		this.xmlParser.parse(this.markup.getResource().getInputStream(), this.markupSettings
+		this.xmlParser.parse(markupResourceData.getResource().getInputStream(), this.markupSettings
 				.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
 		parseMarkup();
 
-		this.markup.setEncoding(xmlParser.getEncoding());
-		this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
+		markupResourceData.setEncoding(xmlParser.getEncoding());
+		markupResourceData.setXmlDeclaration(xmlParser.getXmlDeclaration());
 
 		return this.markup;
 	}
@@ -361,10 +367,10 @@ public class MarkupParser
 				this.markup.addMarkupElement(new RawMarkup(text));
 			}
 
-			this.markup.setEncoding(xmlParser.getEncoding());
-			this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
+			this.markup.getMarkupResourceData().setEncoding(xmlParser.getEncoding());
+			this.markup.getMarkupResourceData().setXmlDeclaration(xmlParser.getXmlDeclaration());
 
-			final MarkupStream markupStream = new MarkupStream(markup);
+			final MarkupStream markupStream = new MarkupStream(this.markup);
 			markupStream.setCurrentIndex(this.markup.size() - 1);
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}

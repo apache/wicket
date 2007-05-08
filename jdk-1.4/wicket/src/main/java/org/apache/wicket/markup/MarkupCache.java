@@ -171,25 +171,24 @@ public class MarkupCache
 		}
 
 		// get the base markup
-		final Markup baseMarkup = getMarkup(container, markup.getResource().getMarkupClass()
+		final Markup baseMarkup = getMarkup(container, markup.getMarkupResourceData().getResource().getMarkupClass()
 				.getSuperclass());
 
 		if (baseMarkup == Markup.NO_MARKUP)
 		{
 			throw new MarkupNotFoundException(
 					"Parent markup of inherited markup not found. Component class: "
-							+ markup.getResource().getContainerInfo().getContainerClass().getName()
+							+ markup.getMarkupResourceData().getResource().getContainerInfo().getContainerClass().getName()
 							+ " Enable debug messages for org.apache.wicket.util.resource.Resource to get a list of all filenames tried.");
 		}
 
-		final CharSequence key = markup.getResource().getCacheKey();
+		final CharSequence key = markup.getMarkupResourceData().getResource().getCacheKey();
 		if (key != null)
 		{
 			// register an after-load listener for base markup. The listener
 			// implementation will remove the derived markup which must be
-			// merged
-			// with the base markup
-			afterLoadListeners.add(baseMarkup.getResource(), new IChangeListener()
+			// merged with the base markup
+			afterLoadListeners.add(baseMarkup.getMarkupResourceData().getResource(), new IChangeListener()
 			{
 				/**
 				 * Make sure there is only one listener per derived markup
@@ -215,9 +214,9 @@ public class MarkupCache
 				{
 					if (log.isDebugEnabled())
 					{
-						log.debug("Remove derived markup from cache: " + markup.getResource());
+						log.debug("Remove derived markup from cache: " + markup.getMarkupResourceData().getResource());
 					}
-					removeMarkup(markup.getResource());
+					removeMarkup(markup.getMarkupResourceData().getResource());
 				}
 			});
 		}
