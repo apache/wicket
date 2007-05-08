@@ -1474,6 +1474,49 @@ Wicket.Drag = {
 	}
 };
 
+Wicket.ChangeHandler=function(elementId){
+    var KEY_BACKSPACE=8;
+    var KEY_TAB=9;
+    var KEY_ENTER=13;
+    var KEY_ESC=27;
+    var KEY_LEFT=37;
+    var KEY_UP=38;
+    var KEY_RIGHT=39;
+    var KEY_DOWN=40;
+    var KEY_SHIFT=16;
+    var KEY_CTRL=17;
+    var KEY_ALT=18;
+
+	var objonkeyup;
+
+    function initialize(){
+        var obj=wicketGet(elementId);
+
+        objonkeyup = obj.onkeyup;
+
+        obj.onkeyup=function(event){
+            switch(wicketKeyCode(Wicket.fixEvent(event))){
+                case KEY_ENTER:
+                case KEY_UP:
+                case KEY_DOWN:
+                case KEY_ESC:
+                case KEY_TAB:
+                case KEY_RIGHT:
+                case KEY_LEFT:
+                case KEY_SHIFT:
+                case KEY_ALT:
+                case KEY_CTRL:
+	                return Wicket.stopEvent(event);
+                break;
+                default:
+				if(typeof objonkeyup == "function")objonkeyup();
+            }
+            return null;
+        }
+    }
+    initialize();
+}
+
 /*
  * Compatibility layer to maintain the original wicket-ajax API.
  */
