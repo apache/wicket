@@ -151,7 +151,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	static abstract class ValidationVisitor implements FormComponent.IVisitor
+	public static abstract class ValidationVisitor implements FormComponent.IVisitor
 	{
 		/**
 		 * @see org.apache.wicket.markup.html.form.FormComponent.IVisitor#formComponent(org.apache.wicket.markup.html.form.IFormVisitorParticipant)
