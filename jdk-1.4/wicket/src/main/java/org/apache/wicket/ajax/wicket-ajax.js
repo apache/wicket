@@ -1328,28 +1328,25 @@ Wicket.throttler = new Wicket.Throttler();
  * Prevent event from bubbling up in the element hierarchy.
  */
 Wicket.stopEvent = function(e) {
-	if (typeof(e) == "undefined")
-		e = window.event;
-		
+	e=Wicket.fixEvent(e);		
 	e.cancelBubble = true;
 	if (e.stopPropagation)
 		e.stopPropagation();
 }
 
+/**
+ * If no event is given as argument (IE), window.event is returned. 
+ */
+Wicket.fixEvent = function(e) {
+	if (typeof e == 'undefined') 
+		e = window.event;
+	return e;		
+}
 
 /**
  * Flexible dragging support.
  */
 Wicket.Drag = {
-
-	/**
-	 * If no event is given as argument (IE), window.event is returned. 
-	 */
-	fixEvent: function(e) {
-		if (typeof e == 'undefined') 
-			e = window.event;
-		return e;		
-	},
 	
 	/**
 	 * Initializes the dragging on the specified element.
@@ -1372,7 +1369,7 @@ Wicket.Drag = {
 		// set the mousedown handler 
 		element.onmousedown = function(e) {			
 			
-			e = Wicket.Drag.fixEvent(e);
+			e = Wicket.fixEvent(e);
 	
 			// HACK - for safari stopPropagation doesn't work well because
 			// it also prevents scrollbars and form components getting the
@@ -1424,7 +1421,7 @@ Wicket.Drag = {
 	 * @param {Event} e
 	 */	
 	mouseMove: function(e) {
-		e = Wicket.Drag.fixEvent(e);
+		e = Wicket.fixEvent(e);
 		var o = Wicket.Drag.current;
 
 		// this happens sometimes in Safari 
@@ -1455,7 +1452,7 @@ Wicket.Drag = {
 	 * @param {Event} e
 	 */	
 	mouseUp: function(e) {		
-		e = Wicket.Drag.fixEvent(e);
+		e = Wicket.fixEvent(e);
 		var o = Wicket.Drag.current;
 		
 		o.onDragEnd(o);		
@@ -1549,12 +1546,7 @@ Wicket.Focus = {
 
 	setFocus: function(event)
 	{ 
-		// IE doesn't pass event into the parameter
-		// don't think this is needed for us because of Function.prototype.bind(element)?
-	    if ( !event )
-	    {
-	        event = window.event;
-	    }
+		event = Wicket.fixEvent(event);
 	
 	    // IE doesn't have the property "target".
 	    // Use "srcElement" instead.
