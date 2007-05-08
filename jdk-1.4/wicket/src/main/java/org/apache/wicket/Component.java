@@ -1738,6 +1738,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				// Make sure that while rendering the markup stream is found
 				parent.setMarkupStream(markupStream);
 
+				beforeRender();
 				// check authorization
 				// first the component itself
 				// (after attach as otherwise list views etc wont work)
@@ -1760,7 +1761,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 				}
 
 				// Render the component and all its children
-				beforeRender();
 				render(markupStream);
 			}
 			finally
