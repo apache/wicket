@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.MarkupResourceData;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.util.value.IValueMap;
@@ -42,7 +42,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	private static final String WICKET_URI = "http://wicket.apache.org";
 
 	/** The markup created by reading the markup file */
-	private final Markup markup;
+	private final MarkupResourceData markup;
 
 	/**
 	 * namespace prefix: e.g. <html
@@ -56,7 +56,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	 * @param markup
 	 *            The markup created by reading the markup file
 	 */
-	public WicketNamespaceHandler(final Markup markup)
+	public WicketNamespaceHandler(final MarkupResourceData markup)
 	{
 		this.markup = markup;
 	}

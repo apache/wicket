@@ -67,9 +67,7 @@ public final class MarkupParserTest extends WicketTestCase
 		parser.setWicketNamespace("componentName");
 
 		final Markup markup = parser.parse();
-
 		final MarkupStream markupStream = new MarkupStream(markup);
-
 		final ComponentTag aOpen = (ComponentTag)markupStream.next();
 
 		log.info("", aOpen);
