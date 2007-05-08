@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
@@ -205,8 +206,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
 		}
 		
-		private static class PageVersions
+		private static class PageVersions implements IClusterable 
 		{
+			private static final long serialVersionUID = 1L;
+		
 			private final int pageid;
 			private int versionid;
 			private int ajaxversionid;
