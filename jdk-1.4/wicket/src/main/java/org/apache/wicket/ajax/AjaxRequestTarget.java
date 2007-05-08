@@ -403,7 +403,7 @@ public class AjaxRequestTarget implements IRequestTarget
 							+ component.toString());
 		}
 		final String id = component != null ? component.getMarkupId() : null;
-		appendJavascript("Wicket.Focus.setFocusOnId('" + null + "');");
+		appendJavascript("Wicket.Focus.setFocusOnId('" + id + "');");
 	}
 
 
