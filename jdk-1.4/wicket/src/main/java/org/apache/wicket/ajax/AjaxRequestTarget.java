@@ -679,14 +679,14 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param str
 	 * @return encoded string
 	 */
-	protected String encode(String s)
+	protected String encode(String str)
 	{
-		if (s == null)
+		if (str == null)
 		{
 			return null;
 		}
 
-		return Strings.replaceAll(s, "]", "]^").toString();
+		return Strings.replaceAll(str, "]", "]^").toString();
 	}
 
 	/**
