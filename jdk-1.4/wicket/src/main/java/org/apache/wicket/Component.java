@@ -3051,7 +3051,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		onBeforeRenderChildren();
 	}
 	/**
-	 * Called just before a component is rendered.
+	 * Called just before a component is rendered. If you override this, you
+	 * *must* call super.onBeforeRender() within your implementation.
 	 */
 	protected void onBeforeRender()
 	{
