@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.protocol.http.request;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -404,10 +402,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			throw new IllegalArgumentException(
 					"The mount path '/' is reserved for the application home page");
 		}
-		if (encoder == null)
-		{
-			throw new IllegalArgumentException("Argument encoder must be not-null");
-		}
 
 		// sanity check
 		if (path.startsWith("/"))
@@ -709,10 +703,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			while (iterator.hasNext())
 			{
 				final String key = (String)iterator.next();
-				final String value = parameters.getString(key);
-				if (value != null)
+				final String values[] = parameters.getStringArray(key);
+				if (values != null)
 				{
-					encoder.addValue(key, value);
+					for (int i = 0; i < values.length; i++)
+					{
+						encoder.addValue(key, values[i]);
+					}
 				}
 			}
 		}
