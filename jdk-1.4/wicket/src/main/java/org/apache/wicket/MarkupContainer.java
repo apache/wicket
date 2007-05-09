@@ -858,6 +858,10 @@ public abstract class MarkupContainer extends Component
 		final Page page = findPage();
 		if (page != null && page.isAttached())
 		{
+			// if page is not null and the page has already been attached,
+			// attach the component. we only attach if the page has been
+			// attached because at some point the page must be attached and the
+			// call would cascade down anyways.
 			component.attach();
 		}
 
