@@ -16,25 +16,18 @@
  */
 package org.apache.wicket.ajax.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Response;
-import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.util.string.JavascriptUtils;
 
 /**
- * A behavior that updates the hosting {@link AbstractTextComponent} (typically
- * {@link TextField} or {@link TextArea}) via ajax when an onkeyup javascript
- * event is triggered. 
+ * A behavior that updates the hosting {@link FormComponent} via ajax when 
+ * value of the component is changed.
  * 
- * Opposed to {@link AjaxFormComponentUpdatingBehavior} with onkeyup event 
- * this behavior ignores events which do not really change the content of the 
- * component (like esc, cursor keys, tabs etc.), which reduces the the amount 
- * of extra requests that will be sent to the server. Also, opposed to 
- * {@link AjaxFormComponentUpdatingBehavior} with onchange/onblur event
- * this behavior sends the request immediately after the keypress.
- * 
- * If you need similiar behavior to other (non-text) form components, use 
- * {@link AjaxFormComponentUpdatingBehavior} with onchange event.
+ * This behavior uses best available method to track changes on different 
+ * types of form components. 
  * 
  * @author Janne Hietam&auml;ki (janne)
  * 
@@ -51,27 +44,36 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 		super("onkeyup");
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
-	 */
-	protected void onBind()
+	protected final void onComponentTag(final ComponentTag tag)
 	{
-		super.onBind();
-
-		if (!(getComponent() instanceof AbstractTextComponent))
+		super.onComponentTag(tag);
+		if (this.getComponent().isEnabled())
 		{
-			throw new WicketRuntimeException("Behavior " + getClass().getName()
-					+ " can only be added to an instance of a AbstractTextComponent");
+			tag.put(getEventForComponent(getComponent()), getEventHandler());
 		}
 	}
 
-	protected void onComponentRendered()
+	private String getEventForComponent(Component component)
 	{
-		Response response = getComponent().getResponse();
-		final String id = getComponent().getMarkupId();
-		response.write(JavascriptUtils.SCRIPT_OPEN_TAG);
-		response.write("new Wicket.ChangeHandler('" + id + "');");
-		response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
+		if (component instanceof AbstractTextComponent)
+		{
+			return "onkeyup";
+		}
+		else
+		{
+			return "onchange";
+		}
+	}
+
+	protected final void onComponentRendered()
+	{
+		if (getComponent() instanceof AbstractTextComponent)
+		{
+			Response response = getComponent().getResponse();
+			final String id = getComponent().getMarkupId();
+			response.write(JavascriptUtils.SCRIPT_OPEN_TAG);
+			response.write("new Wicket.ChangeHandler('" + id + "');");
+			response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
+		}
 	}
 }
