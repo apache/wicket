@@ -216,7 +216,7 @@ public abstract class MarkupContainer extends Component
 		}
 		component.setAuto(true);
 		add(component);
-		component.onBeforeRender();
+		component.beforeRender();
 		component.render();
 		return true;
 	}
@@ -833,7 +833,7 @@ public abstract class MarkupContainer extends Component
 	{
 		return visitChildren(null, visitor);
 	}
-	
+
 	/**
 	 * @param component
 	 *            Component being added
@@ -855,10 +855,13 @@ public abstract class MarkupContainer extends Component
 		// Set child's parent
 		component.setParent(this);
 
+		component.attach();
+
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
 		{
-			component.setMetaData(ADDED_AT_KEY, Strings.toString(component, new MarkupException("added")));
+			component.setMetaData(ADDED_AT_KEY, Strings.toString(component, new MarkupException(
+					"added")));
 		}
 
 		// Tell the page a component was added
@@ -1109,30 +1112,8 @@ public abstract class MarkupContainer extends Component
 			page.componentRemoved(component);
 		}
 
-		// detach children models
-		if (component instanceof MarkupContainer)
-		{
-			((MarkupContainer)component).visitChildren(new IVisitor()
-			{
-				public Object component(Component component)
-				{
-					try
-					{
-						// detach any models of the component
-						component.detachModels();
-					}
-					catch (Exception e) // catch anything; we MUST detach all
-					// models
-					{
-						log.error("detaching models of component " + component + " failed:", e);
-					}
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
-		}
+		component.detach();
 
-		// Detach model
-		component.detachModels();
 		// Component is removed
 		component.setParent(null);
 	}
@@ -1439,6 +1420,7 @@ public abstract class MarkupContainer extends Component
 		}
 		super.onAfterRenderChildren();
 	}
+
 	/**
 	 * @return True if this markup container has associated markup
 	 */

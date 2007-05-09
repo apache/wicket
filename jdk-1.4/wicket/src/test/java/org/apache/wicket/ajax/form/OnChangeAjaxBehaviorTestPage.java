@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.form.TextField;
  */
 public class OnChangeAjaxBehaviorTestPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
