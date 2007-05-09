@@ -34,6 +34,7 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
@@ -853,6 +854,12 @@ public abstract class MarkupContainer extends Component
 
 		// Set child's parent
 		component.setParent(this);
+
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.getComponentUseCheck())
+		{
+			component.setMetaData(ADDED_AT_KEY, Strings.toString(component, new MarkupException("added")));
+		}
 
 		// Tell the page a component was added
 		final Page page = findPage();

@@ -41,6 +41,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
@@ -613,6 +614,24 @@ public abstract class Component implements IClusterable, IConverterLocator
 		private static final long serialVersionUID = 1L;
 	};
 
+	/**
+	 * meta data key for line precise error logging for the moment of construction.
+	 * Made package private for access in {@link Page}
+	 */
+	static final MetaDataKey CONSTRUCTED_AT_KEY = new MetaDataKey(String.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/**
+	 * Meta data key for line precise error logging for the moment of addition. 
+	 * Made package private for access in {@link MarkupContainer} and {@link Page}
+	 */
+	static final MetaDataKey ADDED_AT_KEY = new MetaDataKey(String.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -685,6 +704,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		setId(id);
 		getApplication().notifyComponentInstantiationListeners(this);
+
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.getComponentUseCheck())
+		{
+			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException("constructed")));
+		}
 	}
 
 	/**
@@ -704,6 +729,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		setId(id);
 		getApplication().notifyComponentInstantiationListeners(this);
 		this.model = wrap(model);
+
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.getComponentUseCheck())
+		{
+			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException("constructed")));
+		}
 	}
 
 	/**

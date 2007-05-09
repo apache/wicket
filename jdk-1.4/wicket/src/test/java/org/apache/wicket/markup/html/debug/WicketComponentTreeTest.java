@@ -42,6 +42,10 @@ public class WicketComponentTreeTest extends WicketTestCase
 	 */
 	public void test1() throws Exception
 	{
+		// disable the component use check, as this consumes extra 
+		// memory (label size doubles to 1.1K)
+		tester.getApplication().getDebugSettings().setComponentUseCheck(false);
+
 		this.executeTest(WicketComponentTreeTestPage.class, "WicketComponentTreeTestPage_ExpectedResult.html");
 	}
 }
