@@ -855,7 +855,11 @@ public abstract class MarkupContainer extends Component
 		// Set child's parent
 		component.setParent(this);
 
-		component.attach();
+		final Page page = findPage();
+		if (page != null && page.isAttached())
+		{
+			component.attach();
+		}
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
@@ -864,8 +868,6 @@ public abstract class MarkupContainer extends Component
 					"added")));
 		}
 
-		// Tell the page a component was added
-		final Page page = findPage();
 		if (page != null)
 		{
 			page.componentAdded(component);
