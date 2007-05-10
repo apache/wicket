@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.http.servlet;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.AbortException;
+import org.apache.wicket.AbstractRestartResponseException;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -36,7 +36,7 @@ import org.apache.wicket.request.target.basic.EmptyRequestTarget;
  * @author Gili Tzabari
  * @see HttpServletResponse
  */
-public class AbortWithHttpStatusException extends AbortException
+public class AbortWithHttpStatusException extends AbstractRestartResponseException
 {
 	private static final long serialVersionUID = 1L;
 	private final int status;

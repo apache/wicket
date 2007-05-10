@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.AbortException;
+import org.apache.wicket.AbstractRestartResponseException;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 
@@ -31,7 +32,7 @@ import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
  * @see AbortException
  * @see WebErrorCodeResponseTarget
  */
-public final class AbortWithWebErrorCodeException extends AbortException
+public final class AbortWithWebErrorCodeException extends AbstractRestartResponseException
 {
 	private static final long serialVersionUID = 1L;
 
