@@ -296,7 +296,12 @@ public abstract class StringValidator extends AbstractValidator
 		private static final long serialVersionUID = 1L;
 		private final int maximum;
 
-		private MaximumLengthValidator(int maximum)
+		/**
+		 * Construct.
+		 * 
+		 * @param maximum
+		 */
+		public MaximumLengthValidator(int maximum)
 		{
 			this.maximum = maximum;
 		}
