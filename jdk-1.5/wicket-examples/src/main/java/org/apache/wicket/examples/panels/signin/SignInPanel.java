@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.panels.signin;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
