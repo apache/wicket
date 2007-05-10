@@ -81,7 +81,7 @@ public class MergedMarkup extends Markup
 		merge(markup, baseMarkup, extendIndex);
 
 		// Initialize internals based on new markup
-//		initialize();
+		initialize();
 
 		if (log.isDebugEnabled())
 		{
