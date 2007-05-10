@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.datetime;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -25,6 +26,7 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.string.Strings;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
@@ -75,6 +77,11 @@ public abstract class DateConverter implements IConverter
 	 */
 	public Object convertToObject(String value, Locale locale)
 	{
+		if (Strings.isEmpty(value))
+		{
+			return null;
+		}
+
 		DateTimeFormatter format = getFormat();
 		if (format == null)
 		{
@@ -95,7 +102,12 @@ public abstract class DateConverter implements IConverter
 			try
 			{
 				// parse date retaining the time of the submission
-				format.parseInto(dt, value, 0);
+				int result = format.parseInto(dt, value, 0);
+				if (result < 0)
+				{
+					throw new ConversionException(new ParseException("unable to parse date "
+							+ value, ~result));
+				}
 			}
 			catch (RuntimeException e)
 			{
