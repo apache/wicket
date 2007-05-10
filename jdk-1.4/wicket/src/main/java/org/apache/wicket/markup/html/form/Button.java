@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
 
 /**
