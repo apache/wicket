@@ -59,7 +59,7 @@ public class ListDataProvider implements IDataProvider
 	 */
 	public Iterator iterator(final int first, final int count)
 	{
-		return list.listIterator(first);
+		return list.subList(first, first + count).listIterator();
 	}
 
 	/**
