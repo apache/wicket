@@ -113,13 +113,7 @@ public final class WebApplicationPath implements IResourcePath
 				final URL url = servletContext.getResource(path + pathname);
 				if (url != null)
 				{
-					IResourceStream stream = new UrlResourceStream(url);
-					if (stream == null)
-					{
-						log.error("ClassLoader problem: found the URL, but was unable to load it. URL="
-										+ url.toExternalForm());
-					}
-					return stream;
+					return new UrlResourceStream(url);
 				}
 			}
 			catch (Exception ex)
