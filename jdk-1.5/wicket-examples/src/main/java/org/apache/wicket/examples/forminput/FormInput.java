@@ -188,11 +188,10 @@ public class FormInput extends WicketExamplePage
 			{
 				public void onSubmit()
 				{
-					// just call modelChanged so that any invalid input is
-					// cleared.
-					InputForm.this.modelChanged();
+					// just set a new instance of the page
+					setResponsePage(FormInput.class);
 				}
-			});
+			}.setDefaultFormProcessing(false));
 		}
 
 		/**
