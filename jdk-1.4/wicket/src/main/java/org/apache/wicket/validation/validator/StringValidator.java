@@ -34,84 +34,247 @@ public abstract class StringValidator extends AbstractValidator
 {
 
 	/**
-	 * Gets a String range validator to check if a string length is between min
-	 * and max.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.range" and the messages keys that can be used are:
-	 * <ul>
-	 * <li>${minimum}: the minimum length</li>
-	 * <li>${maximum}: the maximum length</li>
-	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
-	 * </ul>
-	 * 
-	 * @param minimum
-	 *            The minimum length of the string.
-	 * @param maximum
-	 *            The maximum length of the string.
-	 * 
-	 * @return The StringValidator
+	 * Validator to check if the length of the string is exactly the specified
+	 * length
 	 */
-	public static StringValidator lengthBetween(int minimum, int maximum)
+	public static class ExactLengthValidator extends StringValidator
 	{
-		return new LengthBetweenValidator(minimum, maximum);
+		private static final long serialVersionUID = 1L;
+		private final int length;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param length
+		 */
+		public ExactLengthValidator(int length)
+		{
+			this.length = length;
+		}
+
+		/**
+		 * Gets length.
+		 * 
+		 * @return length
+		 */
+		public final int getLength()
+		{
+			return length;
+		}
+
+		protected void onValidate(IValidatable validatable)
+		{
+			if (((String)validatable.getValue()).length() != length)
+			{
+				error(validatable);
+			}
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 */
+		protected String resourceKey()
+		{
+			return "StringValidator.exact";
+		}
+
+		protected Map variablesMap(IValidatable validatable)
+		{
+			final Map map = super.variablesMap(validatable);
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			map.put("exact", new Integer(this.length));
+			return map;
+		}
+
 	}
 
 	/**
-	 * Gets a String minimum validator to check if a string length is greater
-	 * then the given minimum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.minimum" and the messages keys that can be used are:
-	 * <ul>
-	 * <li>${minimum}: the minimum length</li>
-	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
-	 * </ul>
-	 * 
-	 * @param minimum
-	 *            The minimum length of the string.
-	 * 
-	 * @return The StringValidator
+	 * Validator to check if the length of the string is within some range
 	 */
-	public static StringValidator minimumLength(int minimum)
+	public static class LengthBetweenValidator extends StringValidator
 	{
-		return new MinimumLengthValidator(minimum);
+		private static final long serialVersionUID = 1L;
+		private final int maximum;
+		private final int minimum;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param minimum
+		 * @param maximum
+		 */
+		public LengthBetweenValidator(int minimum, int maximum)
+		{
+			this.minimum = minimum;
+			this.maximum = maximum;
+
+		}
+
+		/**
+		 * Gets maximum.
+		 * 
+		 * @return maximum
+		 */
+		public final int getMaximum()
+		{
+			return maximum;
+		}
+
+		/**
+		 * Gets minimum.
+		 * 
+		 * @return minimum
+		 */
+		public final int getMinimum()
+		{
+			return minimum;
+		}
+
+		protected void onValidate(IValidatable validatable)
+		{
+			final String value = (String)validatable.getValue();
+			if (value.length() < minimum || value.length() > maximum)
+			{
+				error(validatable);
+			}
+
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 */
+		protected String resourceKey()
+		{
+			return "StringValidator.range";
+		}
+
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 */
+		protected Map variablesMap(IValidatable validatable)
+		{
+			final Map map = super.variablesMap(validatable);
+			map.put("minimum", new Integer(minimum));
+			map.put("maximum", new Integer(maximum));
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			return map;
+		}
+
 	}
 
 	/**
-	 * Gets a String maximum validator to check if a string length is smaller
-	 * then the given maximum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.maximum" and the messages keys that can be used are:
-	 * <ul>
-	 * <li>${maximum}: the maximum length</li>
-	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
-	 * </ul>
-	 * 
-	 * @param maximum
-	 *            The maximum length of the string.
-	 * 
-	 * @return The StringValidator
+	 * Validator to check if the length of the string meets a maximum
+	 * requirement
 	 */
-	public static StringValidator maximumLength(int maximum)
+	public static class MaximumLengthValidator extends StringValidator
 	{
-		return new MaximumLengthValidator(maximum);
+		private static final long serialVersionUID = 1L;
+		private final int maximum;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param maximum
+		 */
+		public MaximumLengthValidator(int maximum)
+		{
+			this.maximum = maximum;
+		}
+
+		/**
+		 * Gets maximum.
+		 * 
+		 * @return maximum
+		 */
+		public final int getMaximum()
+		{
+			return maximum;
+		}
+
+		protected void onValidate(IValidatable validatable)
+		{
+			if (((String)validatable.getValue()).length() > maximum)
+			{
+				error(validatable);
+			}
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 */
+		protected String resourceKey()
+		{
+			return "StringValidator.maximum";
+		}
+
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 */
+		protected Map variablesMap(IValidatable validatable)
+		{
+			final Map map = super.variablesMap(validatable);
+			map.put("maximum", new Integer(maximum));
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			return map;
+		}
+	}
+
+	/**
+	 * Validator to check if the length of the string meets a minumum
+	 * requirement
+	 */
+	public static class MinimumLengthValidator extends StringValidator
+	{
+		private static final long serialVersionUID = 1L;
+		private final int minimum;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param minimum
+		 */
+		public MinimumLengthValidator(int minimum)
+		{
+			this.minimum = minimum;
+		}
+
+		/**
+		 * Gets minimum.
+		 * 
+		 * @return minimum
+		 */
+		public final int getMinimum()
+		{
+			return minimum;
+		}
+
+		protected void onValidate(IValidatable validatable)
+		{
+			if (((String)validatable.getValue()).length() < minimum)
+			{
+				error(validatable);
+			}
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 */
+		protected String resourceKey()
+		{
+			return "StringValidator.minimum";
+		}
+
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 */
+		protected Map variablesMap(IValidatable validatable)
+		{
+			final Map map = super.variablesMap(validatable);
+			map.put("minimum", new Integer(minimum));
+			map.put("length", new Integer(((String)validatable.getValue()).length()));
+			return map;
+		}
+
 	}
 
 	/**
@@ -141,196 +304,83 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check if the length of the string is within some range
+	 * Gets a String range validator to check if a string length is between min
+	 * and max.
+	 * 
+	 * If that is not the case then an error message will be generated with the
+	 * key "StringValidator.range" and the messages keys that can be used are:
+	 * <ul>
+	 * <li>${minimum}: the minimum length</li>
+	 * <li>${maximum}: the maximum length</li>
+	 * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
+	 * </ul>
+	 * 
+	 * @param minimum
+	 *            The minimum length of the string.
+	 * @param maximum
+	 *            The maximum length of the string.
+	 * 
+	 * @return The StringValidator
 	 */
-	public static class LengthBetweenValidator extends StringValidator
+	public static StringValidator lengthBetween(int minimum, int maximum)
 	{
-		private static final long serialVersionUID = 1L;
-		private final int minimum;
-		private final int maximum;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param minimum
-		 * @param maximum
-		 */
-		public LengthBetweenValidator(int minimum, int maximum)
-		{
-			this.minimum = minimum;
-			this.maximum = maximum;
-
-		}
-
-		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
-		 */
-		protected Map variablesMap(IValidatable validatable)
-		{
-			final Map map = super.variablesMap(validatable);
-			map.put("minimum", new Integer(minimum));
-			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
-			return map;
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
-		 */
-		protected String resourceKey()
-		{
-			return "StringValidator.range";
-		}
-
-		protected void onValidate(IValidatable validatable)
-		{
-			final String value = (String)validatable.getValue();
-			if (value.length() < minimum || value.length() > maximum)
-			{
-				error(validatable);
-			}
-
-		}
-
+		return new LengthBetweenValidator(minimum, maximum);
 	}
 
 	/**
-	 * Validator to check if the length of the string meets a minumum
-	 * requirement
+	 * Gets a String maximum validator to check if a string length is smaller
+	 * then the given maximum value.
+	 * 
+	 * If that is not the case then an error message will be generated with the
+	 * key "StringValidator.maximum" and the messages keys that can be used are:
+	 * <ul>
+	 * <li>${maximum}: the maximum length</li>
+	 * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
+	 * </ul>
+	 * 
+	 * @param maximum
+	 *            The maximum length of the string.
+	 * 
+	 * @return The StringValidator
 	 */
-	public static class MinimumLengthValidator extends StringValidator
+	public static StringValidator maximumLength(int maximum)
 	{
-		private static final long serialVersionUID = 1L;
-		private final int minimum;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param minimum
-		 */
-		public MinimumLengthValidator(int minimum)
-		{
-			this.minimum = minimum;
-		}
-
-		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
-		 */
-		protected Map variablesMap(IValidatable validatable)
-		{
-			final Map map = super.variablesMap(validatable);
-			map.put("minimum", new Integer(minimum));
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
-			return map;
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
-		 */
-		protected String resourceKey()
-		{
-			return "StringValidator.minimum";
-		}
-
-		protected void onValidate(IValidatable validatable)
-		{
-			if (((String)validatable.getValue()).length() < minimum)
-			{
-				error(validatable);
-			}
-		}
-
+		return new MaximumLengthValidator(maximum);
 	}
 
 	/**
-	 * Validator to check if the length of the string is exactly the specified
-	 * length
+	 * Gets a String minimum validator to check if a string length is greater
+	 * then the given minimum value.
+	 * 
+	 * If that is not the case then an error message will be generated with the
+	 * key "StringValidator.minimum" and the messages keys that can be used are:
+	 * <ul>
+	 * <li>${minimum}: the minimum length</li>
+	 * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
+	 * </ul>
+	 * 
+	 * @param minimum
+	 *            The minimum length of the string.
+	 * 
+	 * @return The StringValidator
 	 */
-	public static class ExactLengthValidator extends StringValidator
+	public static StringValidator minimumLength(int minimum)
 	{
-		private static final long serialVersionUID = 1L;
-		private final int length;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param length
-		 */
-		public ExactLengthValidator(int length)
-		{
-			this.length = length;
-		}
-
-		protected Map variablesMap(IValidatable validatable)
-		{
-			final Map map = super.variablesMap(validatable);
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
-			map.put("exact", new Integer(this.length));
-			return map;
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
-		 */
-		protected String resourceKey()
-		{
-			return "StringValidator.exact";
-		}
-
-		protected void onValidate(IValidatable validatable)
-		{
-			if (((String)validatable.getValue()).length() != length)
-			{
-				error(validatable);
-			}
-		}
-
-	}
-
-	/**
-	 * Validator to check if the length of the string meets a maximum
-	 * requirement
-	 */
-	public static class MaximumLengthValidator extends StringValidator
-	{
-		private static final long serialVersionUID = 1L;
-		private final int maximum;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param maximum
-		 */
-		public MaximumLengthValidator(int maximum)
-		{
-			this.maximum = maximum;
-		}
-
-		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
-		 */
-		protected Map variablesMap(IValidatable validatable)
-		{
-			final Map map = super.variablesMap(validatable);
-			map.put("maximum", new Integer(maximum));
-			map.put("length", new Integer(((String)validatable.getValue()).length()));
-			return map;
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
-		 */
-		protected String resourceKey()
-		{
-			return "StringValidator.maximum";
-		}
-
-		protected void onValidate(IValidatable validatable)
-		{
-			if (((String)validatable.getValue()).length() > maximum)
-			{
-				error(validatable);
-			}
-		}
+		return new MinimumLengthValidator(minimum);
 	}
 }
