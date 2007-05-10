@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.validation;
 
-import org.apache.wicket.IClusterable;
+import java.io.Serializable;
 
 /**
  * A validator that can validate a {@link IValidatable} object.
@@ -25,7 +25,7 @@ import org.apache.wicket.IClusterable;
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IValidator extends IClusterable
+public interface IValidator extends Serializable
 {
 	/**
 	 * Validates the <code>validatable</code> object. Validation errors should
