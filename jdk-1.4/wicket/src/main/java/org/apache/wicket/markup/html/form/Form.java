@@ -28,6 +28,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -51,6 +52,7 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.validation.IBehaviorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1447,9 +1449,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Adds a form validator to the form.
 	 * 
-	 * @see IFormValidator
 	 * @param validator
 	 *            validator
+	 * @throws IllegalArgumentException
+	 *             if validator is null
+	 * @see IFormValidator
+	 * @see IBehaviorProvider
 	 */
 	public void add(IFormValidator validator)
 	{
@@ -1457,7 +1462,22 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			throw new IllegalArgumentException("validator argument cannot be null");
 		}
+
+		// add the validator
 		formValidators_add(validator);
+
+		// see whether the validator provides a behavior
+		if (validator instanceof IBehaviorProvider)
+		{
+			IBehavior behavior = ((IBehaviorProvider)validator).newValidationBehavior(this);
+			if (behavior != null)
+			{
+				add(behavior);
+			}
+			// Else just ignore. We're lenient here as people may want to
+			// override a validator but wan't Wicket to ignore the behavior it
+			// was providing
+		}
 	}
 
 	/**

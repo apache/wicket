@@ -31,6 +31,7 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IComponentAssignedModel;
@@ -42,6 +43,7 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
+import org.apache.wicket.validation.IBehaviorProvider;
 import org.apache.wicket.validation.IErrorMessageSource;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
@@ -210,10 +212,35 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 * @param validator
 	 *            The validator
 	 * @return This
+	 * @throws IllegalArgumentException
+	 *             if validator is null
+	 * @see IValidator
+	 * @see IBehaviorProvider
 	 */
 	public final FormComponent add(final IValidator validator)
 	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("validator argument cannot be null");
+		}
+
+		// add the validator
 		validators_add(validator);
+
+		// see whether the validator provides a behavior
+		if (validator instanceof IBehaviorProvider)
+		{
+			IBehavior behavior = ((IBehaviorProvider)validator).newValidationBehavior(this);
+			if (behavior != null)
+			{
+				add(behavior);
+			}
+			// Else just ignore. We're lenient here as people may want to
+			// override a validator but wan't Wicket to ignore the behavior it
+			// was providing
+		}
+
+		// return this for chaining
 		return this;
 	}
 
@@ -290,6 +317,15 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	public final Object getConvertedInput()
 	{
 		return convertedInput;
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#getBehaviors(java.lang.Class)
+	 */
+	protected List getBehaviors(Class type)
+	{
+		// List
+		return super.getBehaviors(type);
 	}
 
 	/**
