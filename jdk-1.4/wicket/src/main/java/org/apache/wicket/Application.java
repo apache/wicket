@@ -31,6 +31,7 @@ import java.util.Properties;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
+import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.EnclosureResolver;
@@ -864,6 +865,7 @@ public abstract class Application
 		pageSettings.addComponentResolver(new WicketMessageResolver());
 		pageSettings.addComponentResolver(new WicketMessageTagHandler());
 		pageSettings.addComponentResolver(new FragmentResolver());
+		pageSettings.addComponentResolver(new RelativePathPrefixHandler());
 		pageSettings.addComponentResolver(new EnclosureResolver());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
 

@@ -37,15 +37,21 @@ public class RedirectRequestTarget implements IRequestTarget
 	private final String redirectUrl;
 
 	/**
-	 * Construct.
-	 * @param redirectUrl
+	 * Your URL should be one of the following:
+	 * <ul>
+	 * <li>Fully qualified "http://foo.com/bar"</li>
+	 * <li>Relative to the Wicket filter/servlet, e.g. "?wicket:interface=foo", "mounted_page"</li>
+	 * <li>Absolute within your web application's context root, e.g. "/foo.html"</li>
+	 * </ul>
+	 * 
+	 * @param redirectUrl URL to redirect to.
 	 */
 	public RedirectRequestTarget(String redirectUrl)
 	{
 		this.redirectUrl = redirectUrl;
-		
+
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.IRequestTarget#detach(org.apache.wicket.RequestCycle)
 	 */
@@ -60,7 +66,14 @@ public class RedirectRequestTarget implements IRequestTarget
 	{
 		Response response = requestCycle.getResponse();
 		response.reset();
-		response.redirect(redirectUrl);
+		if (redirectUrl.startsWith("/") || redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://"))
+		{
+			response.redirect(redirectUrl);
+		}
+		else
+		{
+			response.redirect(RequestCycle.get().getRequest().getRelativePathPrefixToWicketHandler() + redirectUrl);
+		}
 	}
 
 }

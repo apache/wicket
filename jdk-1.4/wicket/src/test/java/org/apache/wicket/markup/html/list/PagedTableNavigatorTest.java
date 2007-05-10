@@ -57,6 +57,7 @@ public class PagedTableNavigatorTest extends TestCase
 		application.startPage(PagedTableNavigatorPage.class);
 		PagedTableNavigatorPage page = (PagedTableNavigatorPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
+		application.setupRequestAndResponse();
 		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_1.html", true);
 
 		Link link = (Link)page.get("navigator:first");

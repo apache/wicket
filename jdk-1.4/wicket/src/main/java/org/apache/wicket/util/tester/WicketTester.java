@@ -384,6 +384,7 @@ public class WicketTester extends BaseWicketTester
 	public void assertResultPage(final Class clazz, final String filename) throws Exception
 	{
 		String document = getServletResponse().getDocument();
+		setupRequestAndResponse();
 		DiffUtil.validatePage(document, clazz, filename, true);
 	}
 

@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -120,7 +121,7 @@ public class Home extends WicketExamplePage
 				new BookmarkablePageLink("page1", Page1.class)).addCircleLink(160, 50, 35,
 				new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(
 				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-				new BookmarkablePageLink("page3", Page3.class)));
+				new BookmarkablePageLink("page3", Page3.class)).add(RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(

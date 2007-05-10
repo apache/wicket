@@ -32,7 +32,7 @@ import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
-import org.apache.wicket.markup.parser.filter.PrependContextPathHandler;
+import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.TagTypeHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
@@ -182,7 +182,7 @@ public class MarkupParser
 			}
 		}
 
-		appendMarkupFilter(new PrependContextPathHandler(Application.get()));
+		appendMarkupFilter(new RelativePathPrefixHandler());
 		appendMarkupFilter(new EnclosureHandler());
 	}
 
@@ -208,7 +208,7 @@ public class MarkupParser
 	{
 		// PrependContextPathHandler should always be close to the end.
 		// It doesn't have to be last though.
-		appendMarkupFilter(filter, PrependContextPathHandler.class);
+		appendMarkupFilter(filter, RelativePathPrefixHandler.class);
 	}
 
 	/**

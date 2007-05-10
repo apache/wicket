@@ -16,13 +16,11 @@
  */
 package org.apache.wicket.behavior;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 
 /**
  * A {@link org.apache.wicket.behavior.AbstractHeaderContributor} behavior that is
@@ -157,7 +155,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				response.renderCSSReference(returnLocationWithContextPath(location));
+				response.renderCSSReference(returnRelativePath(location));
 			}
 		});
 	}
@@ -181,7 +179,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				response.renderCSSReference(returnLocationWithContextPath(location), media);
+				response.renderCSSReference(returnRelativePath(location), media);
 			}
 		});
 	}
@@ -249,14 +247,14 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				response.renderJavascriptReference(returnLocationWithContextPath(location));
+				response.renderJavascriptReference(returnRelativePath(location));
 			}
 		});
 	}
 
-	// adds the context path on the front of the location, if it's not
-	// a fully-qualified URL.
-	private static final String returnLocationWithContextPath(String location)
+	// Adds ../ links to make the location relative to the root of the webapp,
+	// provided it's not a fully-qualified URL.
+	private static final String returnRelativePath(String location)
 	{
 		// WICKET-59 allow external URLs.
 		if (location.startsWith("http://") || location.startsWith("https://"))
@@ -265,24 +263,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 		else
 		{
-			StringBuffer b = new StringBuffer();
-			String contextPath = Application.get().getApplicationSettings().getContextPath();
-			if (contextPath == null)
-			{
-				contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-						.getContextPath();
-				if (contextPath == null)
-				{
-					contextPath = "";
-				}
-			}
-			b.append(contextPath);
-			if (!contextPath.endsWith("/") && !location.startsWith("/"))
-			{
-				b.append("/");
-			}
-			b.append(location);
-			return b.toString();
+			return RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + location;
 		}
 	}
 

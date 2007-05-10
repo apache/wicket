@@ -54,14 +54,6 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getContextPath()
-	 */
-	public String getContextPath()
-	{
-		return application.getApplicationSettings().getContextPath();
-	}
-
-	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getConverterFactory()
 	 */
 	public String getConverterLocatorFactory()

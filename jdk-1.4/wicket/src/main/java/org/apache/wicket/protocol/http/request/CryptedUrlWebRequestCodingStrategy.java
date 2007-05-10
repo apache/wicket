@@ -375,9 +375,6 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 */
 		private final Map parameterMap;
 
-		/** The start index to the new relative URL */
-		private final int startRelativeUrl;
-
 		/**
 		 * Construct.
 		 * 
@@ -428,9 +425,6 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 				urlBuf.append(url.substring(pos2));
 			}
 			this.url = urlBuf.toString();
-
-			// Determine the index for the relative path.
-			this.startRelativeUrl = url.indexOf(request.getRelativeURL());
 		}
 
 		/**
@@ -520,15 +514,17 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			// Hasn't changed. We only encoded the querystring
 			return this.request.getPath();
 		}
-
-		/**
-		 * @see org.apache.wicket.Request#getRelativeURL()
-		 */
-		public String getRelativeURL()
+		
+		public String getRelativePathPrefixToContextRoot()
 		{
-			return this.url.substring(this.startRelativeUrl);
+			return request.getRelativePathPrefixToContextRoot();
 		}
-
+		
+		public String getRelativePathPrefixToWicketHandler()
+		{
+			return request.getRelativePathPrefixToWicketHandler();
+		}
+		
 		/**
 		 * @see org.apache.wicket.Request#getURL()
 		 */

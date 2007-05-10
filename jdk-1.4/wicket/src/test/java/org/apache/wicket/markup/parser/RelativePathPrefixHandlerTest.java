@@ -23,14 +23,14 @@ import org.apache.wicket.WicketTestCase;
  * 
  * @author Juergen Donnerstag
  */
-public class PrependContextPathHandlerTest extends WicketTestCase
+public class RelativePathPrefixHandlerTest extends WicketTestCase
 {
 	/**
 	 * Construct.
 	 * 
 	 * @param name
 	 */
-	public PrependContextPathHandlerTest(String name)
+	public RelativePathPrefixHandlerTest(String name)
 	{
 		super(name);
 	}

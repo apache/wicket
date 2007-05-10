@@ -37,13 +37,6 @@ import org.apache.wicket.util.lang.Bytes;
 public abstract class WebRequest extends Request
 {
 	/**
-	 * Gets the application context path.
-	 * 
-	 * @return application context path
-	 */
-	public abstract String getContextPath();
-
-	/**
 	 * Get the requests' cookies
 	 * 
 	 * @return Cookies
@@ -108,25 +101,6 @@ public abstract class WebRequest extends Request
 	 * @return Servlet path
 	 */
 	public abstract String getServletPath();
-
-	/**
-	 * Retrieves the URL of this request for local use.
-	 * 
-	 * @return The request URL for local use, which is the context path + the
-	 *         relative url
-	 */
-	public String getURL()
-	{
-		/*
-		 * Servlet 2.3 specification : Context Path: The path prefix associated
-		 * with the ServletContext that this servlet is a part of. If this
-		 * context is the default context rooted at the base of the web server's
-		 * URL namespace, this path will be an empty string. Otherwise, this
-		 * path starts with a "/" character but does not end with a "/"
-		 * character.
-		 */
-		return getContextPath() + '/' + getRelativeURL();
-	}
 
 	/**
 	 * Create a runtime context type specific (e.g. Servlet or Portlet)

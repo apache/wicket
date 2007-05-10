@@ -222,23 +222,8 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 */
 	public final void redirectToInterceptPage(final Class pageClazz)
 	{
-		Session session = Session.get();
-		if (session.isTemporary())
-		{
-			session.bind();
-		}
-		// Get the request cycle
 		final RequestCycle cycle = RequestCycle.get();
-
-		// The intercept continuation URL should be saved exactly as the
-		// original request specified.
-		interceptContinuationURL = cycle.getRequest().getURL();
-
-		// Page map is dirty
-		session.dirtyPageMap(this);
-
-		// Redirect to the page
-		cycle.setRedirect(true);
+		setUpRedirect(cycle);
 		cycle.setResponsePage(pageClazz);
 	}
 
@@ -254,24 +239,28 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 */
 	public final void redirectToInterceptPage(final Page page)
 	{
+		final RequestCycle cycle = RequestCycle.get();
+		setUpRedirect(cycle);
+		cycle.setResponsePage(page);
+	}
+	
+	private void setUpRedirect(final RequestCycle cycle)
+	{
 		Session session = Session.get();
 		if (session.isTemporary())
 		{
 			session.bind();
 		}
-		// Get the request cycle
-		final RequestCycle cycle = RequestCycle.get();
 
 		// The intercept continuation URL should be saved exactly as the
 		// original request specified.
-		interceptContinuationURL = cycle.getRequest().getURL();
+		interceptContinuationURL = cycle.getRequest().getPath();
 
 		// Page map is dirty
 		dirty();
 
 		// Redirect to the page
 		cycle.setRedirect(true);
-		cycle.setResponsePage(page);
 	}
 
 	/**

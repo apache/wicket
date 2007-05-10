@@ -41,21 +41,6 @@ public interface ApplicationSettingsMBean
 	String getClassResolver();
 
 	/**
-	 * Gets context path to use for absolute path generation. For example an
-	 * Application Server that is used as a virtual server on a Webserver:
-	 * 
-	 * <pre>
-	 *           appserver.com/context mapped to webserver/ (context path should be '/')
-	 * </pre>
-	 * 
-	 * @return The context path
-	 * 
-	 * @see IApplicationSettings#setContextPath(String) what the possible values
-	 *      can be.
-	 */
-	String getContextPath();
-
-	/**
 	 * Gets the converter factory.
 	 * 
 	 * @return the converter factory

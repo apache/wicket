@@ -1399,24 +1399,21 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		}
 
 		/**
-		 * @see org.apache.wicket.Request#getRelativeURL()
-		 */
-		public String getRelativeURL()
-		{
-			int tmp = url.indexOf("/", 1);
-			if (tmp != -1)
-			{
-				return url.substring(tmp);
-			}
-			return url;
-		}
-
-		/**
 		 * @see org.apache.wicket.Request#getURL()
 		 */
 		public String getURL()
 		{
 			return url;
+		}
+		
+		public String getRelativePathPrefixToContextRoot()
+		{
+			return realRequest.getRelativePathPrefixToContextRoot();
+		}
+		
+		public String getRelativePathPrefixToWicketHandler()
+		{
+			return realRequest.getRelativePathPrefixToWicketHandler();
 		}
 	}
 

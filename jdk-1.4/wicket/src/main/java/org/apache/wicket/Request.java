@@ -107,13 +107,47 @@ public abstract class Request
 	public abstract String getPath();
 
 	/**
+	 * Gets a prefix to make this relative to the context root.
+	 * <p>
+	 * For example, if your context root is http://server.com/myApp/ and the
+	 * request is for /myApp/mountedPage/, then the prefix returned might be
+	 * "../../".
+	 * <p>
+	 * For a particular technology, this might return either an absolute prefix
+	 * or a relative one.
+	 * 
+	 * @return Prefix relative to this request required to back up to context
+	 *         root.
+	 */
+	public abstract String getRelativePathPrefixToContextRoot();
+	
+	/**
+	 * Gets a prefix to make this relative to the Wicket Servlet/Filter.
+	 * <p>
+	 * For example, if your context root is http://server.com/myApp/ and the
+	 * request is for /myApp/mountedPage/, then the prefix returned might be
+	 * "../../".
+	 * <p>
+	 * For a particular technology, this might return either an absolute prefix
+	 * or a relative one.
+	 * 
+	 * @return Prefix relative to this request required to back up to context
+	 *         root.
+	 */
+	public abstract String getRelativePathPrefixToWicketHandler();
+	
+	/**
 	 * Gets the relative (to some root) url (e.g. in a servlet environment, the
 	 * url without the context path and without a leading '/'). Use this method
 	 * e.g. to load resources using the servlet context.
 	 * 
 	 * @return Request URL
+	 * @deprecated Use {@link #getURL()} instead.
 	 */
-	public abstract String getRelativeURL();
+	public String getRelativeURL()
+	{
+		return getURL();
+	}
 
 	/**
 	 * Gets the request parameters object using the instance of
@@ -161,9 +195,9 @@ public abstract class Request
 	}
 
 	/**
-	 * Retrieves the absolute URL of this request for local use.
+	 * Retrieves the relative URL of this request for local use. This is relative to the context root.
 	 * 
-	 * @return The absolute request URL for local use
+	 * @return The relative request URL for local use
 	 */
 	public abstract String getURL();
 

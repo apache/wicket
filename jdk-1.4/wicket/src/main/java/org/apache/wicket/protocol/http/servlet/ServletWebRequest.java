@@ -24,17 +24,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRedirectListener;
+import org.apache.wicket.Request;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.upload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * A Servlet specific WebRequest implementation wrapping a HttpServletRequest
@@ -58,16 +59,6 @@ public class ServletWebRequest extends WebRequest
 	public ServletWebRequest(final HttpServletRequest httpServletRequest)
 	{
 		this.httpServletRequest = httpServletRequest;
-	}
-
-	/**
-	 * Gets the servlet context path.
-	 * 
-	 * @return Servlet context path
-	 */
-	public String getContextPath()
-	{
-		return httpServletRequest.getContextPath();
 	}
 
 	/**
@@ -139,13 +130,106 @@ public class ServletWebRequest extends WebRequest
 				httpServletRequest);
 	}
 
+	public String getRelativePathPrefixToContextRoot()
+	{
+		String tmp = getRelativePathPrefixToWicketHandler();
+		String servletPath = getServletPath();
+		if (servletPath == null || servletPath.length() == 0)
+		{
+			return tmp;
+		}
+
+		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
+		for (int i = 1; i < servletPath.length(); i++)
+		{
+			if (servletPath.charAt(i) == '?')
+			{
+				break;
+			}
+			if (servletPath.charAt(i) == '/')
+			{
+				prepender.prepend("../");
+			}
+		}
+		return prepender.toString();
+	}
+	
+	public String getRelativePathPrefixToWicketHandler()
+	{
+		String relativeUrl = getPath();
+		PrependingStringBuffer prepender = new PrependingStringBuffer();
+
+		/*
+		 * We might be serving an error page.
+		 * 
+		 * In this case, the request will appear to be for something like
+		 * "/ErrorPage", whereas the URL in the user's browser will actually be
+		 * something like "/foo/page/where/the/error/actually/happened".
+		 * 
+		 * We need to generate links and resource URLs relative to the URL in
+		 * the browser window, not the internal request for the error page.
+		 * 
+		 * This original URL is available from request attributes, so we look in
+		 * there and use that for the relative path if it's available.
+		 */
+
+		HttpServletRequest httpRequest = getHttpServletRequest();
+
+		// This is in the Servlet 2.3 spec giving us the URI of the resource
+		// that caused the error. Unfortunately, this includes the context path.
+		String errorUrl = (String)httpRequest.getAttribute("javax.servlet.error.request_uri");
+
+		// This gives us a context-relative path for RequestDispatcher.forward stuff, with a leading slash.
+		String forwardUrl = (String)httpRequest.getAttribute("javax.servlet.forward.servlet_path");
+
+		if (errorUrl != null)
+		{
+			// Strip off context path from front of URI.
+			errorUrl = errorUrl.substring(httpRequest.getContextPath().length());
+
+			String servletPath = httpRequest.getServletPath();
+			if (!errorUrl.startsWith(servletPath))
+			{
+				prepender.prepend(servletPath.substring(1) + "/");
+			}
+			for (int i = servletPath.length() + 1; i < errorUrl.length(); i++)
+			{
+				if (errorUrl.charAt(i) == '?')
+				{
+					break;
+				}
+				if (errorUrl.charAt(i) == '/')
+				{
+					prepender.prepend("../");
+				}
+			}
+			return prepender.toString();
+		}
+		else if (forwardUrl != null)
+		{
+			// Strip off leading slash, if forwardUrl has any length.
+			relativeUrl = forwardUrl.substring(relativeUrl.length() > 0 ? 1 : 0);
+		}
+
+		for (int i = 0; i < relativeUrl.length(); i++)
+		{
+			if (relativeUrl.charAt(i) == '?')
+			{
+				break;
+			}
+			if (relativeUrl.charAt(i) == '/')
+			{
+				prepender.prepend("../");
+			}
+		}
+
+		return prepender.toString();
+	}
+
 	/**
-	 * Gets the relative url (url without the context path and without a leading
-	 * '/'). Use this method to load resources using the servlet context.
-	 * 
-	 * @return Request URL
+	 * @see org.apache.wicket.Request#getURL()
 	 */
-	public String getRelativeURL()
+	public String getURL()
 	{
 		/*
 		 * Servlet 2.3 specification :
@@ -174,8 +258,8 @@ public class ServletWebRequest extends WebRequest
 			url += ("?" + queryString);
 		}
 
-		// If url is non-empty it has to start with '/', which we should lose
-		if (!url.equals(""))
+		// If url is non-empty it will start with '/', which we should lose
+		if (url.length() > 0 && url.charAt(0) == '/')
 		{
 			// Remove leading '/'
 			url = url.substring(1);

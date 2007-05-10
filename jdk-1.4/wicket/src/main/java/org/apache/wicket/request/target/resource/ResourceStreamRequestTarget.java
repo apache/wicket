@@ -175,7 +175,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 			if (getFileName() != null)
 				response.detectContentType(requestCycle, getFileName());
 			else
-				response.detectContentType(requestCycle, requestCycle.getRequest().getRelativeURL());
+				response.detectContentType(requestCycle, requestCycle.getRequest().getURL());
 		}
 
 		// WICKET-473 Allow IResourceStream.length() to return -1

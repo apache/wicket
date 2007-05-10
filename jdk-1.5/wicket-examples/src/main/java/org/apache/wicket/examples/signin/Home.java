@@ -16,22 +16,15 @@
  */
 package org.apache.wicket.examples.signin;
 
-import org.apache.wicket.PageParameters;
+import org.apache.wicket.examples.WicketExamplePage;
+
 
 /**
  * Simple home page.
  * 
  * @author Jonathan Locke
  */
-public class Home extends AuthenticatedWebPage
+public class Home extends WicketExamplePage implements AuthenticatedWebPage
 {
-	/**
-	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Page parameters (ignored since this is the home page)
-	 */
-	public Home(final PageParameters parameters)
-	{
-	}
+	// Nothing in here.
 }

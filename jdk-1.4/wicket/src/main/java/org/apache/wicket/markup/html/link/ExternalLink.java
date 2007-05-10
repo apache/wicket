@@ -17,12 +17,12 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.IPageMap;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -160,21 +160,7 @@ public class ExternalLink extends WebMarkupContainer
 					{
 						url = url.substring(1);
 					}
-					PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
-					String relativeUrl = getRequest().getRelativeURL();
-
-					for (int i = 0; i < relativeUrl.length(); i++)
-					{
-						if (relativeUrl.charAt(i) == '?')
-						{
-							break;
-						}
-						if (relativeUrl.charAt(i) == '/')
-						{
-							prepender.prepend("../");
-						}
-					}
-					url = prepender.toString();
+					url = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + url;
 				}
 
 				// if the tag is an anchor proper

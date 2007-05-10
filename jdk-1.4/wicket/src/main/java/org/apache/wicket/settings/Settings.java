@@ -29,7 +29,6 @@ import org.apache.wicket.IResourceFactory;
 import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -43,7 +42,6 @@ import org.apache.wicket.markup.html.form.persistence.CookieValuePersisterSettin
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
@@ -441,24 +439,7 @@ public final class Settings
 	{
 		return compressWhitespace;
 	}
-
-	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#getContextPath()
-	 */
-	public String getContextPath()
-	{
-		// Set the default context path if the context path is not already
-		// set (previous time or by the developer itself)
-		// This all to do missing api in the servlet spec.. You can't get a
-		// context path from the servlet context, which is just stupid.
-		if (contextPath == null && RequestCycle.get() != null
-				&& RequestCycle.get().getRequest() instanceof WebRequest)
-		{
-			contextPath = ((WebRequest)RequestCycle.get().getRequest()).getContextPath();
-		}
-		return contextPath;
-	}
-
+	
 	/**
 	 * @see org.apache.wicket.settings.IApplicationSettings#getConverterLocatorFactory()
 	 */

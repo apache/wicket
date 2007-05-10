@@ -600,7 +600,7 @@ public class BrowserInfoPage extends WebPage
 		// Redirect there
 		Response response = requestCycle.getResponse();
 		response.reset();
-		response.redirect(continueTo);
+		response.redirect(requestCycle.getRequest().getRelativePathPrefixToWicketHandler() + continueTo);
 	}
 
 	/**

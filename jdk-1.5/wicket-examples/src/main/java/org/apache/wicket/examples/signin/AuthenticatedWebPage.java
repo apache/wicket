@@ -16,12 +16,11 @@
  */
 package org.apache.wicket.examples.signin;
 
-import org.apache.wicket.examples.WicketExamplePage;
-
 /**
+ * Marker interface to indicate that a page should be viewable by authenticated users only.
  * 
  * @author Jonathan Locke
  */
-public class AuthenticatedWebPage extends WicketExamplePage
+public interface AuthenticatedWebPage
 {
 }

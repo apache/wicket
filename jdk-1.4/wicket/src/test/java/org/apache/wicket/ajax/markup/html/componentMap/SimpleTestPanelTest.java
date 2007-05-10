@@ -43,9 +43,8 @@ public class SimpleTestPanelTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-	    executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
-	    
 		tester.setupRequestAndResponse();
+	    executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 		WebRequestCycle cycle = tester.createRequestCycle();
 		
 		Page page = tester.getLastRenderedPage();

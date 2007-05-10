@@ -266,7 +266,8 @@ public class CookieValuePersister implements IValuePersister
     			cookie.setDomain(domain);
     		}
     
-			cookie.setPath(getWebRequest().getContextPath());
+    		cookie.setPath("/");
+			//cookie.setPath(getWebRequest().getContextPath());
 
     		cookie.setVersion(getSettings().getVersion());
     		cookie.setSecure(getSettings().getSecure());

@@ -248,9 +248,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			// This calls page.urlFor(IRedirectListener.INTERFACE), which calls
 			// the function we're in again. We therefore need to jump out here
-			// and
-			// return the url immediately, otherwise we end up prefixing it with
-			// relative path or absolute prefixes twice.
+			// and return the url immediately, otherwise we end up prefixing it
+			// with relative path or absolute prefixes twice.
 			url = encode(requestCycle, (IPageRequestTarget)requestTarget);
 			return url;
 		}
@@ -262,89 +261,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (url != null)
 		{
-			String relativeUrl = requestCycle.getRequest().getPath();
-
-			// Add the actual URL.
+			// Add the actual URL. This will be relative to the Wicket Servlet/Filter, with no leading '/'.
 			PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
-
-			// If we're displaying an error page, we need to display relative
-			// URLs
-			// relative to that, not the servlet container request.
-			HttpServletRequest httpRequest = ((WebRequest)requestCycle.getRequest())
-					.getHttpServletRequest();
-
-			String errorUrl = (String)httpRequest.getAttribute("javax.servlet.error.request_uri");
-			String forwardUrl = (String)httpRequest
-					.getAttribute("javax.servlet.forward.servlet_path");
-			// We get an errorUrl for 404 pages and the like if we're a servlet.
-			if (errorUrl != null)
-			{
-				String servletPath = httpRequest.getServletPath();
-				if (servletPath.endsWith(relativeUrl))
-				{
-					servletPath = servletPath.substring(0, servletPath.length()
-							- relativeUrl.length() - 1);
-				}
-				errorUrl = errorUrl.substring(httpRequest.getContextPath().length());
-
-				if (!errorUrl.startsWith(servletPath))
-				{
-					prepender.prepend(servletPath.substring(1) + "/");
-				}
-				for (int i = servletPath.length() + 1; i < errorUrl.length(); i++)
-				{
-					if (errorUrl.charAt(i) == '?')
-					{
-						break;
-					}
-					if (errorUrl.charAt(i) == '/')
-					{
-						prepender.prepend("../");
-					}
-				}
-				return requestCycle.getOriginalResponse().encodeURL(prepender.toString());
+			
+			// Prepend prefix to the URL to make it relative to the current request.
+			prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
+			
+			String result = prepender.toString();
+			// We need to special-case links to the home page if we're at the same level.
+			if (result.length() == 0) {
+				result = "./";
 			}
-
-			// We get a forwardUrl for 404 pages and the like if we're a filter.
-			if (forwardUrl != null)
-			{
-				// Strip off leading slash, if forwardUrl has any length.
-				relativeUrl = forwardUrl.substring(relativeUrl.length() > 0 ? 1 : 0);
-
-			}
-
-			// If we're a bookmarkable page or a shared resource, make the path
-			// relative and prefix with ../
-			if (requestTarget instanceof BookmarkablePageRequestTarget
-					|| requestTarget instanceof ISharedResourceRequestTarget)
-			{
-				for (int i = 0; i < relativeUrl.length(); i++)
-				{
-					if (relativeUrl.charAt(i) == '?')
-					{
-						break;
-					}
-					if (relativeUrl.charAt(i) == '/')
-					{
-						prepender.prepend("../");
-					}
-				}
-			}
-			else if (url.length() > 0 && url.charAt(0) == '?')
-			{
-				// Keep the last part of mounted pages for resource/interface
-				// links.
-				// E.g. if we generate app/Clients we want links like
-				// "Clients?wicket:interface[...]"
-				prepender.prepend(relativeUrl.substring(relativeUrl.lastIndexOf("/") + 1));
-			}
-			// Fix for the special case where we're linking to the home page;
-			// make the link "./" not "".
-			if (prepender.length() == 0)
-			{
-				prepender.prepend("./");
-			}
-			return requestCycle.getOriginalResponse().encodeURL(prepender.toString());
+			return requestCycle.getOriginalResponse().encodeURL(result);
 		}
 
 		// Just return null intead of throwing an exception. So that it can be
@@ -754,9 +682,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					buffer.append(entry.getKey());
 					buffer.append('=');
 					buffer.append(entry.getValue());
-					buffer.append('&');
+					if (it.hasNext())
+					{
+						buffer.append("&amp;");
+					}
 				}
-				buffer.setLength(buffer.length() - 1);
 			}
 			return buffer;
 		}

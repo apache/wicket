@@ -108,7 +108,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals(cycle.getWebRequest().getContextPath(),((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals("/", ((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// To clear in the context of cookies means to add a special cookie
 		// (maxAge=0) to the response, provided a cookie with
@@ -119,7 +119,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals(cycle.getWebRequest().getContextPath(),((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals("/", ((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's name
 		// it remains unchanged

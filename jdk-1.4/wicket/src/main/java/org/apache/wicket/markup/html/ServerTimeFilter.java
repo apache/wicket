@@ -59,7 +59,7 @@ public class ServerTimeFilter implements IResponseFilter
 		}
 		
 		log.info(timeTaken + "ms server time taken for request "
-				+ RequestCycle.get().getRequest().getURL() + " response size: "
+			+ RequestCycle.get().getRequest().getURL() + " response size: "
 				+ responseBuffer.length());
 		return responseBuffer;
 	}

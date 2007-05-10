@@ -19,14 +19,14 @@ package org.apache.wicket.examples.staticpages;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.parser.filter.PrependContextPathHandler;
+import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
  * Examples for serving static files. XXX Notice the use of a WebMarkupContainer
  * to produce the static links, since with plain <tt>href</tt> attribute
- * Wicket's {@link PrependContextPathHandler} would prepend the servlet context
+ * Wicket's {@link RelativePathPrefixHandler} would prepend the servlet context
  * path but without Wicket's filter path.
  * 
  * TODO provide an example using a bookmarkable page

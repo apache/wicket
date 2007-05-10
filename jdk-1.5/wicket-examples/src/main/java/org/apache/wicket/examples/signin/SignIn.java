@@ -98,7 +98,7 @@ public final class SignIn extends WicketExamplePage
 			{
 				if (!continueToOriginalDestination())
 				{
-					setResponsePage(new Home(PageParameters.NULL));
+					setResponsePage(getApplication().getHomePage());
 				}
 			}
 			else
