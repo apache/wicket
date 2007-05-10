@@ -104,8 +104,7 @@ public abstract class SignInPanel extends Panel
 				// otherwise to the Home page
 				if (!continueToOriginalDestination())
 				{
-					setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
-							getApplication().getHomePage(), (PageParameters)null));
+					setResponsePage(getApplication().getHomePage());
 				}
 			}
 			else
