@@ -26,6 +26,10 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * returned by {@link IFormValidator#getDependentFormComponents()} have been
  * successfully validated before this validator runs.
  * 
+ * TODO 1.3: * remove validate(form) *make IFormValidator extends IValidator
+ * where IValidatable's value is form.modelobject and error reports on form -
+ * that way IBehaviorProvider can extend IValidator
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public interface IFormValidator extends IClusterable
