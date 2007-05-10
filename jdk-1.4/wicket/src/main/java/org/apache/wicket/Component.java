@@ -939,12 +939,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final List/* <IBehavior> */getBehaviors()
 	{
-		if (behaviors == null)
-		{
-			return Collections.EMPTY_LIST;
-		}
-
-		return Collections.unmodifiableList(behaviors);
+		return getBehaviors(null);
 	}
 
 	/**
@@ -2715,12 +2710,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * no behaviors coupled to this component.
 	 * 
 	 * @param type
-	 *            The type
+	 *            The type or null for all
 	 * 
 	 * @return The subset of the currently coupled behaviors that are of the
 	 *         provided type as a unmodifiable list or null
 	 */
-	protected final List/* <IBehavior> */getBehaviors(Class type)
+	protected List/* <IBehavior> */getBehaviors(Class type)
 	{
 		if (behaviors == null)
 		{
@@ -2731,7 +2726,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		for (Iterator i = behaviors.iterator(); i.hasNext();)
 		{
 			Object behavior = i.next();
-			if (type.isAssignableFrom(behavior.getClass()))
+			if (type == null || type.isAssignableFrom(behavior.getClass()))
 			{
 				subset.add(behavior);
 			}
@@ -2925,8 +2920,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Attaches any child components
 	 * 
 	 * This method is here only for {@link MarkupContainer}. It is broken out
-	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the last
-	 * in onAttach() chain no matter where user places the
+	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the
+	 * last in onAttach() chain no matter where user places the
 	 * <code>super.onAttach()</code> call
 	 */
 	void attachChildren()
@@ -2935,9 +2930,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Attaches the component.
-	 * This is called when the page is starting to be used for rendering or when
-	 * a component listener call is executed on it. 
+	 * Attaches the component. This is called when the page is starting to be
+	 * used for rendering or when a component listener call is executed on it.
 	 */
 	public final void attach()
 	{
@@ -2957,7 +2951,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		attachChildren();
 	}
-	
+
 	/**
 	 * @return true if this component is attached
 	 */
@@ -2977,9 +2971,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Detaches the component.
-	 * This is called at the end of the request for all the pages that are touched
-	 * in that request.
+	 * Detaches the component. This is called at the end of the request for all
+	 * the pages that are touched in that request.
 	 */
 	public final void detach()
 	{
@@ -3027,10 +3020,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		setFlag(FLAG_ATTACHING, false);
 	}
-	
+
 	/**
-	 * Called for every component when the page is getting to be rendered.
-	 * it will call onBeforeRender for this component and all the child components
+	 * Called for every component when the page is getting to be rendered. it
+	 * will call onBeforeRender for this component and all the child components
 	 */
 	public final void beforeRender()
 	{
@@ -3041,15 +3034,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 			onBeforeRender();
 			if (getFlag(FLAG_BEFORE_RENDERING))
 			{
-				throw new IllegalStateException(Component.class.getName()
-						+ " has not been properly rendered. Something in the hierarchy of "
-						+ getClass().getName()
-						+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
+				throw new IllegalStateException(
+						Component.class.getName()
+								+ " has not been properly rendered. Something in the hierarchy of "
+								+ getClass().getName()
+								+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
 		}
 
 		onBeforeRenderChildren();
 	}
+
 	/**
 	 * Called just before a component is rendered. If you override this, you
 	 * *must* call super.onBeforeRender() within your implementation.
@@ -3058,11 +3053,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		setFlag(FLAG_BEFORE_RENDERING, false);
 	}
-	
+
 	/**
 	 * This method is here only for {@link MarkupContainer}. It is broken out
-	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the last
-	 * in onAttach() chain no matter where user places the
+	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the
+	 * last in onAttach() chain no matter where user places the
 	 * <code>super.onAttach()</code> call
 	 */
 	void onBeforeRenderChildren()
@@ -3071,8 +3066,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Called on very component after the page is renderd
-	 * It will call onAfterRender for it self and its childeren.
+	 * Called on very component after the page is renderd It will call
+	 * onAfterRender for it self and its childeren.
 	 */
 	public final void afterRender()
 	{
@@ -3082,10 +3077,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 		onAfterRender();
 		if (getFlag(FLAG_AFTER_RENDERING))
 		{
-			throw new IllegalStateException(Component.class.getName()
-					+ " has not been properly detached. Something in the hierarchy of "
-					+ getClass().getName()
-					+ " has not called super.onAfterRender() in the override of onAfterRender() method");
+			throw new IllegalStateException(
+					Component.class.getName()
+							+ " has not been properly detached. Something in the hierarchy of "
+							+ getClass().getName()
+							+ " has not called super.onAfterRender() in the override of onAfterRender() method");
 		}
 		setFlag(FLAG_RENDERING, false);
 
@@ -3101,12 +3097,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		setFlag(FLAG_AFTER_RENDERING, false);
 	}
-	
+
 	void onAfterRenderChildren()
 	{
 		// noop
 	}
-	
+
 	/**
 	 * Processes the component tag.
 	 * 
