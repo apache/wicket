@@ -51,16 +51,17 @@ public abstract class AbstractPropertyModel implements IChainingModel
 
 		this.target = modelObject;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
 	public IModel getChainedModel()
 	{
-		if (target instanceof IModel) return (IModel)target;
+		if (target instanceof IModel)
+			return (IModel)target;
 		return null;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
@@ -80,11 +81,19 @@ public abstract class AbstractPropertyModel implements IChainingModel
 	}
 
 	/**
-	 * @param component
-	 *            The component to get a property expression for
 	 * @return The property expression for the component
 	 */
 	protected abstract String propertyExpression();
+
+	/**
+	 * Gets the property expression for this model
+	 * 
+	 * @return The property expression
+	 */
+	public final String getPropertyExpression()
+	{
+		return propertyExpression();
+	}
 
 	/**
 	 * Unsets this property model's instance variables and detaches the model.
