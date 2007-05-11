@@ -19,8 +19,8 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.model.IModel;
 
 /**
- * A text field which automatically adds a RequiredValidator. This is mainly for
- * convenience, since you can always add(new RequiredValidator()) manually.
+ * A text field which automatically adds a Required. This is mainly for
+ * convenience, since you can always add(new Required()) manually.
  * 
  * @author Jonathan Locke
  */

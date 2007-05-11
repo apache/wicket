@@ -17,8 +17,8 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="inputForm.urlProperty.TypeValidator">'${input}' یک آدرس معتبر نمی باشد</entry>
-	<entry key="inputForm.phoneNumberUS.TypeValidator">'${input}' یک شماره معتبر در ایالات متحده نمی باشุ</entry>
+	<entry key="inputForm.urlProperty.IConverter">'${input}' یک آدرس معتبر نمی باشد</entry>
+	<entry key="inputForm.phoneNumberUS.IConverter">'${input}' یک شماره معتبر در ایالات متحده نمی باشุ</entry>
 	<entry key="use.locale">استفاده از محلی سازی:</entry>
 	<entry key="default">standard</entry>
 				<entry key="input">فرم ورودی</entry>

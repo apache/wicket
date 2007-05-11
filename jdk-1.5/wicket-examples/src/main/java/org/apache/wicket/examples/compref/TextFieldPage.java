@@ -90,7 +90,7 @@ public class TextFieldPage extends WicketExamplePage
 		// bundles for the actual
 		// message lookup. The message for this component can be found in
 		// TextFieldPage.properties
-		// with key 'form.integer.TypeValidator'. Read more about how this works
+		// with key 'form.integer.IConverter'. Read more about how this works
 		// in the javadocs
 		// of AbstractValidator
 		form.add(new TextField("integer", Integer.class));
@@ -140,7 +140,7 @@ public class TextFieldPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;to figure out what type should be converted to.\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// Note that the default validation message mechanism uses resource bundles for the actual\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// message lookup. The message for this component can be found in TextFieldPage.properties\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;// with key 'form.integer.TypeValidator'. Read more about how this works in the javadocs\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;// with key 'form.integer.IConverter'. Read more about how this works in the javadocs\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// of AbstractValidator\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextField(\"integer\", Integer.class));";
 		add(new ExplainPanel(html, code));

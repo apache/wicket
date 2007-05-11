@@ -67,17 +67,17 @@ import org.slf4j.LoggerFactory;
  * In addition to the above search order, each key will be pre-pended with the
  * relative path of the current component related to the component that is being
  * searched. E.g. assume a component hierarchy like page1.form1.input1 and your
- * are requesting a key named 'RequiredValidator'. Wicket will search the
+ * are requesting a key named 'Required'. Wicket will search the
  * property in the following order:
  * 
  * <pre>
- *        page1.properties =&gt; form1.input1.RequiredValidator
- *        page1.properties =&gt; RequiredValidator
- *        form1.properties =&gt; input1.RequiredValidator
- *        form1.properties =&gt; RequiredValidator
- *        input1.properties =&gt; RequiredValidator
- *        myApplication.properties =&gt; page1.form1.input1.RequiredValidator
- *        myApplication.properties =&gt; RequiredValidator
+ *        page1.properties =&gt; form1.input1.Required
+ *        page1.properties =&gt; Required
+ *        form1.properties =&gt; input1.Required
+ *        form1.properties =&gt; Required
+ *        input1.properties =&gt; Required
+ *        myApplication.properties =&gt; page1.form1.input1.Required
+ *        myApplication.properties =&gt; Required
  * </pre>
  * 
  * Note that the latter two property files are only checked if the

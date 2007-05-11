@@ -63,8 +63,8 @@ import org.apache.wicket.version.undo.Change;
  * versioning on for the form and all form component children.
  * <p>
  * If this component is required and that fails, the error key that is used is
- * the "RequiredValidator"; if the type conversion fails, it will use the key
- * "TypeValidator". The keys that can be used in both are:
+ * the "Required"; if the type conversion fails, it will use the key
+ * "IConverter". The keys that can be used in both are:
  * <ul>
  * <li>${input}: the input the user did give</li>
  * <li>${name}: the name of the component that failed</li>
@@ -843,8 +843,8 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 				{
 					error.addMessageKey(e.getResourceKey());
 				}
-				error.addMessageKey("TypeValidator." + Classes.simpleName(type));
-				error.addMessageKey("TypeValidator");
+				error.addMessageKey("IConverter." + Classes.simpleName(type));
+				error.addMessageKey("IConverter");
 
 
 				error.setVariable("type", Classes.simpleName(type));
@@ -1040,7 +1040,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	{
 		if (!checkRequired())
 		{
-			error((IValidationError)new ValidationError().addMessageKey("RequiredValidator"));
+			error((IValidationError)new ValidationError().addMessageKey("Required"));
 		}
 	}
 
@@ -1206,7 +1206,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 			String resource = prefix + getId() + "." + key;
 
 			// First use the parent for resolving so that
-			// form1.textfield1.RequiredValidator can be used.
+			// form1.textfield1.Required can be used.
 
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to

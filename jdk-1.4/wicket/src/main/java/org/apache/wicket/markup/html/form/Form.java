@@ -1419,17 +1419,17 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Returns the prefix used when building validator keys. This allows a form
 	 * to use a separate "set" of keys. For example if prefix "short" is
-	 * returned, validator key short.RequiredValidator will be tried instead of
-	 * RequiredValidator key.
+	 * returned, validator key short.Required will be tried instead of
+	 * Required key.
 	 * <p>
 	 * This can be useful when different designs are used for a form. In a form
 	 * where error messages are displayed next to their respective form
 	 * components as opposed to at the top of the form, the ${label} attribute
 	 * is of little use and only causes redundant information to appear in the
 	 * message. Forms like these can return the "short" (or any other string)
-	 * validator prefix and declare key: short.RequiredValidator=required to
+	 * validator prefix and declare key: short.Required=required to
 	 * override the longer message which is usually declared like this:
-	 * RequiredValidator=${label} is a required field
+	 * Required=${label} is a required field
 	 * <p>
 	 * Returned prefix will be used for all form components. The prefix can also
 	 * be overridden on form component level by overriding
