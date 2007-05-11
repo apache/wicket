@@ -53,49 +53,6 @@ public abstract class AbstractPropertyModel implements IChainingModel
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
-	 */
-	public IModel getChainedModel()
-	{
-		if (target instanceof IModel)
-			return (IModel)target;
-		return null;
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
-	 */
-	public void setChainedModel(IModel model)
-	{
-		target = model;
-	}
-
-	protected Object getTarget()
-	{
-		Object object = target;
-		while (object instanceof IModel)
-		{
-			object = ((IModel)object).getObject();
-		}
-		return object;
-	}
-
-	/**
-	 * @return The property expression for the component
-	 */
-	protected abstract String propertyExpression();
-
-	/**
-	 * Gets the property expression for this model
-	 * 
-	 * @return The property expression
-	 */
-	public final String getPropertyExpression()
-	{
-		return propertyExpression();
-	}
-
-	/**
 	 * Unsets this property model's instance variables and detaches the model.
 	 * 
 	 * @see AbstractDetachableModel#onDetach()
@@ -107,6 +64,16 @@ public abstract class AbstractPropertyModel implements IChainingModel
 		{
 			((IModel)target).detach();
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
+	 */
+	public IModel getChainedModel()
+	{
+		if (target instanceof IModel)
+			return (IModel)target;
+		return null;
 	}
 
 	/**
@@ -127,6 +94,24 @@ public abstract class AbstractPropertyModel implements IChainingModel
 			return PropertyResolver.getValue(expression, target);
 		}
 		return null;
+	}
+
+	/**
+	 * Gets the property expression for this model
+	 * 
+	 * @return The property expression
+	 */
+	public final String getPropertyExpression()
+	{
+		return propertyExpression();
+	}
+
+	/**
+	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
+	 */
+	public void setChainedModel(IModel model)
+	{
+		target = model;
 	}
 
 	/**
@@ -173,6 +158,34 @@ public abstract class AbstractPropertyModel implements IChainingModel
 		return sb.toString();
 	}
 
+	/**
+	 * @return The target object
+	 */
+	protected Object getTarget()
+	{
+		Object object = target;
+		while (object instanceof IModel)
+		{
+			object = ((IModel)object).getObject();
+		}
+		return object;
+	}
+
+	/**
+	 * @return The property expression for the component
+	 */
+	protected abstract String propertyExpression();
+
+	/**
+	 * @param component
+	 * @return
+	 * @deprecated use {@link #getObject()} instead
+	 */
+	protected final Object onGetObject(Component component)
+	{
+		throw new UnsupportedOperationException();
+	}
+
 	// TODO remove these methods after a deprecation release
 
 	/**
@@ -185,13 +198,4 @@ public abstract class AbstractPropertyModel implements IChainingModel
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param component
-	 * @return
-	 * @deprecated use {@link #getObject()} instead
-	 */
-	protected final Object onGetObject(Component component)
-	{
-		throw new UnsupportedOperationException();
-	}
 }
