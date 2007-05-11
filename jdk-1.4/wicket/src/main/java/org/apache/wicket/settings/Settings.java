@@ -125,9 +125,6 @@ public final class Settings
 	/** True if multiple tabs/spaces should be compressed to a single space */
 	private boolean compressWhitespace = false;
 
-	/** The context path that should be used for url prefixing */
-	private String contextPath;
-
 	private IConverterLocatorFactory converterLocatorFactory;
 
 	/** Default values for persistence of form data (by means of cookies) */
@@ -864,25 +861,6 @@ public final class Settings
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setContextPath(java.lang.String)
-	 */
-	public void setContextPath(String contextPath)
-	{
-		if (contextPath != null)
-		{
-			if (!contextPath.startsWith("/") && !contextPath.startsWith("http:")
-					&& !contextPath.startsWith("https:"))
-			{
-				this.contextPath = "/" + contextPath;
-			}
-			else
-			{
-				this.contextPath = contextPath;
-			}
-		}
 	}
 
 	/**

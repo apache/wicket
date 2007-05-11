@@ -211,9 +211,6 @@ public class MockWebApplication
 		// Create request cycle
 		createRequestCycle();
 
-		// Set the default context path
-		this.application.getApplicationSettings().setContextPath(context.getServletContextName());
-
 		this.application.getRequestCycleSettings().setRenderStrategy(
 				IRequestCycleSettings.ONE_PASS_RENDER);
 		this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));

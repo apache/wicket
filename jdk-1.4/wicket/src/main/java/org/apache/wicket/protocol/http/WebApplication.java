@@ -526,12 +526,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(new WebApplicationPath(getServletContext()));
 
-		String contextPath = getInitParameter(Application.CONTEXTPATH);
-		if (contextPath != null)
-		{
-			getApplicationSettings().setContextPath(contextPath);
-		}
-
 		// Check if system property -Dwicket.configuration exists
 		String configuration = null;
 		try
