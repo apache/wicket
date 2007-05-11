@@ -24,15 +24,15 @@ import org.apache.wicket.markup.html.WebPage;
  *
  * @author Chris Turner
  */
-public class Page_2 extends WebPage 
+public class Page_2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 * 
 	 */
-	public Page_2() 
+	public Page_2()
 	{
-    }
+	}
 }
