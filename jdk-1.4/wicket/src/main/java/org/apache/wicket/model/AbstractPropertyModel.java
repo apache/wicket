@@ -161,7 +161,7 @@ public abstract class AbstractPropertyModel implements IChainingModel
 	/**
 	 * @return The target object
 	 */
-	protected Object getTarget()
+	public final Object getTarget()
 	{
 		Object object = target;
 		while (object instanceof IModel)
