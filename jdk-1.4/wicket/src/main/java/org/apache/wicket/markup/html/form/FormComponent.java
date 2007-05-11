@@ -43,7 +43,7 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.validation.IBehaviorProvider;
+import org.apache.wicket.validation.IValidatorAddListener;
 import org.apache.wicket.validation.IErrorMessageSource;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
@@ -215,7 +215,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 * @throws IllegalArgumentException
 	 *             if validator is null
 	 * @see IValidator
-	 * @see IBehaviorProvider
+	 * @see IValidatorAddListener
 	 */
 	public final FormComponent add(final IValidator validator)
 	{
@@ -227,17 +227,10 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		// add the validator
 		validators_add(validator);
 
-		// see whether the validator provides a behavior
-		if (validator instanceof IBehaviorProvider)
+		// see whether the validator listens for add events
+		if (validator instanceof IValidatorAddListener)
 		{
-			IBehavior behavior = ((IBehaviorProvider)validator).newValidationBehavior(this);
-			if (behavior != null)
-			{
-				add(behavior);
-			}
-			// Else just ignore. We're lenient here as people may want to
-			// override a validator but wan't Wicket to ignore the behavior it
-			// was providing
+			((IValidatorAddListener)validator).onAdded(this);
 		}
 
 		// return this for chaining
