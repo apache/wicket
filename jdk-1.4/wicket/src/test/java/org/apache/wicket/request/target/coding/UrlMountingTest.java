@@ -39,6 +39,24 @@ public class UrlMountingTest extends TestCase
 	private WicketTester tester;
 
 	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester();
+		tester.getApplication().mount("/mount/point", PackageName.forClass(TestPage.class));
+		tester.setupRequestAndResponse();
+	}
+
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
+
+	/**
 	 * Tests mounting.
 	 */
 	public void testBadRequest1()
@@ -88,9 +106,11 @@ public class UrlMountingTest extends TestCase
 	public void testDirectAccessToMountedPageAllowed()
 	{
 		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:"
-						+ TestPage.class.getName() + "");
+		tester
+				.getServletRequest()
+				.setURL(
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:" +
+								TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}
@@ -136,8 +156,8 @@ public class UrlMountingTest extends TestCase
 		tester
 				.getServletRequest()
 				.setURL(
-						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/foo/bar/?wicket:bookmarkablePage=:"
-								+ TestPage.class.getName() + "");
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/foo/bar/?wicket:bookmarkablePage=:" +
+								TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}
@@ -193,23 +213,5 @@ public class UrlMountingTest extends TestCase
 				tester.getServletRequest());
 		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy()
 				.urlCodingStrategyForPath(relativePath);
-	}
-
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception
-	{
-		tester = new WicketTester();
-		tester.getApplication().mount("/mount/point", PackageName.forClass(TestPage.class));
-		tester.setupRequestAndResponse();
-	}
-
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception
-	{
-		tester.destroy();
 	}
 }

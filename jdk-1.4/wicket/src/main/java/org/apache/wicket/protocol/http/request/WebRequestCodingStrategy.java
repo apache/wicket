@@ -24,6 +24,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
@@ -361,7 +363,27 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters
 				.getPath());
-		return (encoder != null) ? encoder.decode(requestParameters) : null;
+		if (encoder == null)
+		{
+			return null;
+		}
+		try
+		{
+			return encoder.decode(requestParameters);
+		}
+		catch (WicketRuntimeException ex)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug(ex.toString());
+				
+				return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
+				"Unable to load Page: " + ex.toString());
+			}
+			
+			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
+				"Unable to load Page");
+		}
 	}
 
 	/**
