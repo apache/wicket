@@ -317,7 +317,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", Strings.replaceAll(RequestCycle.get().getOriginalResponse().encodeURL(url), "&", "&amp;"));
+		tag.put("src", RequestCycle.get().getOriginalResponse().encodeURL(url));	
 	}
 
 	/**
