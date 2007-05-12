@@ -74,10 +74,23 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
 		// this might look strange, but it is necessary for IE not to leak :(
-		return "setTimeout(\"" + getCallbackScript(true) + "\", "
+		return "setTimeout(\"" + getCallbackScript() + "\", "
 				+ updateInterval.getMilliseconds() + ");";
 	}
 
+	protected CharSequence getCallbackScript()
+	{
+		String componentId = getComponent().getMarkupId();
+		String precondition = "var c = Wicket.$('" + componentId + "'); return typeof(c) != 'undefined' && c != null";
+		
+		return getCallbackScript("wicketAjaxGet('"
+				+ getCallbackUrl(onlyTargetActivePage()) + "'", null, null, precondition);
+	}
+	
+	protected boolean onlyTargetActivePage() {
+		return true;
+	}
+	
 	/**
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)

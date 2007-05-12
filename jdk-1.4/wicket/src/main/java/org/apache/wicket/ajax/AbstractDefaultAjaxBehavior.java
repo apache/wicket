@@ -136,6 +136,36 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	protected CharSequence getCallbackScript(final CharSequence partialCall,
 			final CharSequence onSuccessScript, final CharSequence onFailureScript)
 	{
+		return getCallbackScript(partialCall, onSuccessScript, onFailureScript, null);
+	}
+	
+	/**
+	 * Returns javascript that performs an ajax callback to this behavior. The
+	 * script is decorated by the ajax callback decorator from
+	 * {@link AbstractDefaultAjaxBehavior#getAjaxCallDecorator()}.
+	 * 
+	 * @param partialCall
+	 *            Javascript of a partial call to the function performing the
+	 *            actual ajax callback. Must be in format
+	 *            <code>function(params,</code> with signature
+	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>.
+	 *            Example: <code>wicketAjaxGet('callbackurl'</code>
+	 * @param onSuccessScript
+	 *            javascript that will run when the ajax call finishes
+	 *            successfully
+	 * @param onFailureScript
+	 *            javascript that will run when the ajax call finishes with an
+	 *            error status
+	 * @param precondition
+	 * 			  optional javacript expression that determines whether the request
+	 *            will actually execute (in form of return XXX;);
+	 * 
+	 * @return script that peforms ajax callback to this behavior
+	 */
+	protected CharSequence getCallbackScript(final CharSequence partialCall,
+			final CharSequence onSuccessScript, final CharSequence onFailureScript, 
+			final CharSequence precondition)
+	{
 		final IAjaxCallDecorator decorator = getAjaxCallDecorator();
 
 		String indicatorId = findIndicatorId();
@@ -163,7 +193,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		AppendingStringBuffer buff = new AppendingStringBuffer(256);
 		buff.append("var ").append(IAjaxCallDecorator.WICKET_CALL_RESULT_VAR).append("=");
 		buff.append(partialCall).append(", function() { ").append(success);
-		buff.append("}.bind(this), function() { ").append(failure).append("}.bind(this));");
+		buff.append("}.bind(this), function() { ").append(failure).append("}.bind(this)");
+		
+		if (precondition != null) 
+		{
+			buff.append(", function() {");
+			buff.append(precondition);
+			buff.append("}");
+		}
+		
+		buff.append(");");
 
 		CharSequence call = buff;
 

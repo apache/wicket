@@ -621,6 +621,7 @@ Wicket.Ajax.Request.prototype = {
 		this.failureHandler = failureHandler != null ? failureHandler : function() { };
 		this.async = true;
 		this.channel = channel;
+		this.precondition = function() { return true; } // allow a condition to block request 
 
 		// when suppressDone is set, the loadedCallback is responsible for calling
 		// Ajax.Request.done() to process possibly pendings requests in the channel.
@@ -664,24 +665,29 @@ Wicket.Ajax.Request.prototype = {
 	
 	// The actual get request implementation
 	doGet: function() {
-		this.transport = Wicket.Ajax.getTransport();
+		if (this.precondition()) {
 	
-		var url = this.createUrl();	
-		this.log("GET", url);
+			this.transport = Wicket.Ajax.getTransport();
 		
-		Wicket.Ajax.invokePreCallHandlers();
-		
-		var t = this.transport;
-		if (t != null) {
-			t.open("GET", url, this.async);
-			t.onreadystatechange = this.stateChangeCallback.bind(this);
-			// set a special flag to allow server distinguish between ajax and non-ajax requests
-			t.setRequestHeader("Wicket-Ajax", "true");
-			t.send(null);
-			return true;
+			var url = this.createUrl();	
+			this.log("GET", url);
+			
+			Wicket.Ajax.invokePreCallHandlers();
+			
+			var t = this.transport;
+			if (t != null) {
+				t.open("GET", url, this.async);
+				t.onreadystatechange = this.stateChangeCallback.bind(this);
+				// set a special flag to allow server distinguish between ajax and non-ajax requests
+				t.setRequestHeader("Wicket-Ajax", "true");
+				t.send(null);
+				return true;
+			} else {
+				this.failure();
+	       		return false;
+			}
 		} else {
-			this.failure();
-       		return false;
+			return null;
 		}
 	},
 	
@@ -697,25 +703,29 @@ Wicket.Ajax.Request.prototype = {
 	
 	// The actual post implementation
 	doPost: function(body) {
-		this.transport = Wicket.Ajax.getTransport();	
-	
-		var url = this.createUrl();	
-		this.log("POST", url);
+		if (this.precondition()) {
+			this.transport = Wicket.Ajax.getTransport();	
 		
-		Wicket.Ajax.invokePreCallHandlers();
-		
-		var t = this.transport;
-		if (t != null) {
-			t.open("POST", url, this.async);
-			t.onreadystatechange = this.stateChangeCallback.bind(this);
-			t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			// set a special flag to allow server distinguish between ajax and non-ajax requests
-			t.setRequestHeader("Wicket-Ajax", "true");
-			t.send(body);
-			return true;
+			var url = this.createUrl();	
+			this.log("POST", url);
+			
+			Wicket.Ajax.invokePreCallHandlers();
+			
+			var t = this.transport;
+			if (t != null) {
+				t.open("POST", url, this.async);
+				t.onreadystatechange = this.stateChangeCallback.bind(this);
+				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				// set a special flag to allow server distinguish between ajax and non-ajax requests
+				t.setRequestHeader("Wicket-Ajax", "true");
+				t.send(body);
+				return true;
+			} else {
+	       		this.failure();
+	       		return false;
+			}
 		} else {
-       		this.failure();
-       		return false;
+			return null;
 		}
 	},
 	
@@ -1523,8 +1533,12 @@ Wicket.ChangeHandler=function(elementId){
 
 var wicketThrottler = Wicket.throttler;
 
-function wicketAjaxGet(url, successHandler, failureHandler, channel) {
+function wicketAjaxGet(url, successHandler, failureHandler, precondition, channel) {
 	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
+	
+	if (typeof(precondition) != "undefined" && precondition != null) {
+		call.request.precondition = precondition;
+	}
 	return call.call();
 }
 
