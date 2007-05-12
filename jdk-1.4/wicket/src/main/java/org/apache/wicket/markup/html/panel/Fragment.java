@@ -248,7 +248,7 @@ public class Fragment extends WebMarkupContainer
 		{
 			throw new MarkupException("Markup of component class `"
 					+ providerMarkupStream.getContainerClass().getName()
-					+ "` does not contain a fragment with id `" + markupId + "`. Context: "
+					+ "` does not contain a fragment with wicket:id `" + markupId + "`. Context: "
 					+ toString());
 		}
 
