@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
@@ -23,6 +24,7 @@ import junit.framework.Assert;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
@@ -160,6 +162,21 @@ public class LocalizerTest extends WicketTestCase
 
 		assertEquals("value 1", drop1);
 		assertEquals("value 2", drop2);
+	}
+
+	/**
+	 * 
+	 */
+	public void testGetStringUseModel()
+	{
+		HashMap model = new HashMap();
+		model.put("user", "juergen");
+		
+		Assert.assertEquals("Expected string should be returned", "Welcome, juergen", localizer
+				.getString("test.substitute", null, new PropertyModel(model, null), "DEFAULT {user}"));
+		
+		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen", localizer
+				.getString("test.substituteDoesNotExist", null, new PropertyModel(model, null), "DEFAULT ${user}"));
 	}
 
 	/**
