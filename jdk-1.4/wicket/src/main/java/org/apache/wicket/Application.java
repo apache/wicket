@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFa
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.resolver.AutoComponentResolver;
+import org.apache.wicket.markup.resolver.BodyContainerResolver;
 import org.apache.wicket.markup.resolver.EnclosureResolver;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
@@ -856,6 +857,7 @@ public abstract class Application
 	{
 		settingsAccessible = true;
 		IPageSettings pageSettings = getPageSettings();
+		
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new ParentResolver());
 		pageSettings.addComponentResolver(new AutoComponentResolver());
@@ -868,6 +870,7 @@ public abstract class Application
 		pageSettings.addComponentResolver(new RelativePathPrefixHandler());
 		pageSettings.addComponentResolver(new EnclosureResolver());
 		pageSettings.addComponentResolver(new WicketContainerResolver());
+		pageSettings.addComponentResolver(new BodyContainerResolver());
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",

@@ -24,12 +24,10 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Response;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.response.StringResponse;
 
@@ -145,15 +143,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			}
 
 			// must be a Page
-			if (parent instanceof WebPage)
-			{
-				renderHeaderSections((WebPage)parent, this);
-			}
-			else
-			{
-				throw new WicketRuntimeException(
-						"Programming error: 'parent' should be a Page or a Border.");
-			}
+			renderHeaderSections(parent, this);
 
 			// Automatically add <head> if necessary
 			CharSequence output = response.getBuffer();
@@ -210,11 +200,11 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * added to the header.
 	 * 
 	 * @param page
-	 *            The page object
+	 *            Usually it is the page object, but there might also be that a WebMarkupContainer has been attached to the &lt;html&gt; tag 
 	 * @param container
 	 *            The header component container
 	 */
-	private final void renderHeaderSections(final WebPage page, final HtmlHeaderContainer container)
+	private final void renderHeaderSections(final MarkupContainer page, final HtmlHeaderContainer container)
 	{
 		page.renderHead(container);
 		// Make sure all Components interested in contributing to the header

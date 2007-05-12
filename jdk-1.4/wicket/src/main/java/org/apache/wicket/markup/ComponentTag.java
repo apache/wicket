@@ -93,7 +93,6 @@ public class ComponentTag extends MarkupElement
 	 */
 	private boolean hasNoCloseTag = false;
 
-
 	/** added behaviors */
 	// FIXME these behaviors here are merely for wicket:message attributes on
 	// tags that are also wicket components. since this addition behavors have

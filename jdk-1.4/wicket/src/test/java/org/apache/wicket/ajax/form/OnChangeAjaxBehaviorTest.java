@@ -16,7 +16,15 @@
  */
 package org.apache.wicket.ajax.form;
 
+import java.util.Locale;
+
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 
 /**
  * @author Janne Hietam&auml;ki (janne)
@@ -28,6 +36,21 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 	 */
 	public void testRendering() throws Exception
 	{
+		WebApplication myApplication = new DummyWebApplication()
+		{
+			/**
+			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request, org.apache.wicket.Response)
+			 */
+			public Session newSession(Request request, Response response)
+			{
+				Session session = super.newSession(request, response);
+				session.setLocale(Locale.ENGLISH);
+				return session;
+			}
+		};
+		
+		tester = new WicketTester(myApplication);
+		
 		executeTest(OnChangeAjaxBehaviorTestPage.class,
 				"OnChangeAjaxBehaviorTestPage_expected.html");
 	}

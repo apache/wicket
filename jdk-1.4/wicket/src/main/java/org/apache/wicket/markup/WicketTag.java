@@ -100,14 +100,6 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'wicket:container'
-	 */
-	public final boolean isContainerTag()
-	{
-		return "container".equalsIgnoreCase(getName());
-	}
-
-	/**
 	 * @return True, if tag name equals 'wicket:child'
 	 */
 	public final boolean isChildTag()
@@ -124,7 +116,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True, if tag name equals 'wicket:extend'
+	 * @return True, if tag name equals 'wicket:head'
 	 */
 	public final boolean isHeadTag()
 	{
