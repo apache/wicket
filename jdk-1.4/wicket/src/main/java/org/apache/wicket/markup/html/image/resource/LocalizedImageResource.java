@@ -67,18 +67,21 @@ import org.apache.wicket.util.value.ValueMap;
  * <p>
  * Finally, if there is no SRC attribute and no VALUE attribute, the Image
  * component's model is inspected. If the model contains a resource or resource
- * reference, this image is used, otherwise the model is converted to a 
- * String and that value is used as a path to load the image.
+ * reference, this image is used, otherwise the model is converted to a String
+ * and that value is used as a path to load the image.
  * 
  * @author Jonathan Locke
  */
 public final class LocalizedImageResource implements IClusterable, IResourceListener
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** What kind of resource it is. TRUE==Resource is set, FALSE==ResourceReference is set, null none */
+
+	/**
+	 * What kind of resource it is. TRUE==Resource is set,
+	 * FALSE==ResourceReference is set, null none
+	 */
 	private Boolean resourceKind;
-	
+
 	/** The component that is referencing this image resource */
 	private Component component;
 
@@ -88,8 +91,8 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	/** The resource reference */
 	private ResourceReference resourceReference;
 
-  /** The resource parameters */
-  private ValueMap resourceParameters;
+	/** The resource parameters */
+	private ValueMap resourceParameters;
 
 	/** The locale of the image resource */
 	private transient Locale locale;
@@ -212,7 +215,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	{
 		setResourceReference(resourceReference, null);
 	}
-	
+
 	/**
 	 * @return If it is stateless (if resource is null)
 	 */
@@ -220,18 +223,19 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	{
 		return this.resource == null;
 	}
-	
+
 	/**
 	 * @param resourceReference
 	 *            The resource to set.
-	 * @param resourceParameters 
-	 * 			  The resource parameters for the shared resource
+	 * @param resourceParameters
+	 *            The resource parameters for the shared resource
 	 */
-	public final void setResourceReference(final ResourceReference resourceReference,final ValueMap resourceParameters)
+	public final void setResourceReference(final ResourceReference resourceReference,
+			final ValueMap resourceParameters)
 	{
 		resourceKind = Boolean.FALSE;
 		this.resourceReference = resourceReference;
-	    this.resourceParameters = resourceParameters;
+		this.resourceParameters = resourceParameters;
 		bind();
 	}
 
@@ -247,9 +251,11 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	{
 		// If locale has changed from the initial locale used to attach image
 		// resource, then we need to reload the resource in the new locale
-		if ( resourceKind == null && 
-				(!Objects.equal(locale, component.getLocale())
-				|| !Objects.equal(style, component.getStyle())))
+		Locale l = component.getLocale();
+		String s = component.getStyle();
+		if (resourceKind == null &&
+				(!Objects.equal(locale, component.getLocale()) || !Objects.equal(style, component
+						.getStyle())))
 		{
 			// Get new component locale and style
 			this.locale = component.getLocale();
@@ -261,19 +267,24 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		}
 		else
 		{
-			// TODO post 1.2: should we have support for locale changes when the 
+			// TODO post 1.2: should we have support for locale changes when the
 			// resource reference (or resource??) is set manually..
-			// We should get a new resource reference for the current locale then
-			// that points to the same resource but with another locale if it exists.
-			// something like SharedResource.getResourceReferenceForLocale(resourceReference);
+			// We should get a new resource reference for the current locale
+			// then that points to the same resource but with another locale if
+			// it exists. Something like
+			// SharedResource.getResourceReferenceForLocale(resourceReference);
 		}
-		
-		// check if the model contains a resource, if so, load the resource from the model.
+
+		// check if the model contains a resource, if so, load the resource from
+		// the model.
 		Object modelObject = component.getModelObject();
-		if ( modelObject instanceof ResourceReference ) {
-			resourceReference = (ResourceReference) modelObject;
-		} else if ( modelObject instanceof Resource ) {
-			resource = (Resource) modelObject;
+		if (modelObject instanceof ResourceReference)
+		{
+			resourceReference = (ResourceReference)modelObject;
+		}
+		else if (modelObject instanceof Resource)
+		{
+			resource = (Resource)modelObject;
 		}
 
 		// Need to load image resource for this component?
@@ -317,7 +328,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", RequestCycle.get().getOriginalResponse().encodeURL(url));	
+		tag.put("src", RequestCycle.get().getOriginalResponse().encodeURL(url));
 	}
 
 	/**
@@ -332,13 +343,14 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	private IResourceFactory getResourceFactory(final Application application,
 			final String factoryName)
 	{
-		final IResourceFactory factory = application.getResourceSettings().getResourceFactory(factoryName);
+		final IResourceFactory factory = application.getResourceSettings().getResourceFactory(
+				factoryName);
 
 		// Found factory?
 		if (factory == null)
 		{
-			throw new WicketRuntimeException("Could not find image resource factory named "
-					+ factoryName);
+			throw new WicketRuntimeException("Could not find image resource factory named " +
+					factoryName);
 		}
 		return factory;
 	}
@@ -357,10 +369,10 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		if ((path.indexOf("..") != -1) || (path.indexOf("./") != -1) || (path.indexOf("/.") != -1))
 		{
 			throw new WicketRuntimeException(
-					"The 'src' attribute must not contain any of the following strings: '..', './', '/.': path=" 
-					+ path);
+					"The 'src' attribute must not contain any of the following strings: '..', './', '/.': path=" +
+							path);
 		}
-		
+
 		MarkupContainer parent = component.findParentWithAssociatedMarkup();
 		if (parent instanceof Border)
 		{
@@ -370,13 +382,14 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		this.resourceReference = new ResourceReference(scope, path)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			/**
 			 * @see org.apache.wicket.ResourceReference#newResource()
 			 */
 			protected Resource newResource()
 			{
-				PackageResource pr = PackageResource.get(getScope(), getName(), LocalizedImageResource.this.locale, style);
+				PackageResource pr = PackageResource.get(getScope(), getName(),
+						LocalizedImageResource.this.locale, style);
 				locale = pr.getLocale();
 				return pr;
 			}
@@ -401,22 +414,24 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		if (valueParser.matches())
 		{
 			final String imageReferenceName = valueParser.getImageReferenceName();
-			final String specification = Strings.replaceHtmlEscapeNumber(valueParser.getSpecification());
+			final String specification = Strings.replaceHtmlEscapeNumber(valueParser
+					.getSpecification());
 			final String factoryName = valueParser.getFactoryName();
 			final Application application = component.getApplication();
-			
+
 			// Do we have a reference?
 			if (!Strings.isEmpty(imageReferenceName))
 			{
 				// Is resource already available via the application?
-				if (application.getSharedResources().get(Application.class, imageReferenceName, locale, style, true) == null)
+				if (application.getSharedResources().get(Application.class, imageReferenceName,
+						locale, style, true) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
 					final Resource imageResource = getResourceFactory(application, factoryName)
 							.newResource(specification, locale, style);
-					application.getSharedResources().add(Application.class, imageReferenceName, locale, style,
-							imageResource);
+					application.getSharedResources().add(Application.class, imageReferenceName,
+							locale, style, imageResource);
 				}
 
 				// Create resource reference
@@ -427,16 +442,16 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 			}
 			else
 			{
-				this.resource = getResourceFactory(application, factoryName)
-						.newResource(specification, locale, style);
+				this.resource = getResourceFactory(application, factoryName).newResource(
+						specification, locale, style);
 			}
 		}
 		else
 		{
 			throw new WicketRuntimeException(
-					"Could not generate image for value attribute '"
-							+ value
-							+ "'.  Was expecting a value attribute of the form \"[resourceFactoryName]:[resourceReferenceName]?:[factorySpecification]\".");
+					"Could not generate image for value attribute '" +
+							value +
+							"'.  Was expecting a value attribute of the form \"[resourceFactoryName]:[resourceReferenceName]?:[factorySpecification]\".");
 		}
 	}
 }

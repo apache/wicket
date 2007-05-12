@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -80,7 +81,15 @@ public class ResourceNameIterator implements Iterator
 			final String extensions)
 	{
 		this.locale = locale;
-		this.extensions = extensions;
+		if (extensions == null)
+		{
+			this.extensions = Strings.afterLast(path, '.');
+			path = Strings.beforeLast(path, '.');
+		}
+		else
+		{
+			this.extensions = extensions;
+		}
 
 		this.styleIterator = new StyleAndVariationResourceNameIterator(path, style, null);
 	}
