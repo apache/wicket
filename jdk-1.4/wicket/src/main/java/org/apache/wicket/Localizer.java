@@ -114,10 +114,10 @@ public class Localizer
 	{
 		return getString(key, component, null, defaultValue);
 	}
-	
+
 	/**
 	 * This method is now deprecated.
-	 *  
+	 * 
 	 * @param key
 	 * @param component
 	 * @param model
@@ -127,7 +127,8 @@ public class Localizer
 	 * @return String
 	 * @throws MissingResourceException
 	 * 
-	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
+	 * @Deprecated please use
+	 *             {@link #getString(String, Component, IModel, String)}
 	 */
 	public String getString(final String key, final Component component, final IModel model,
 			final Locale locale, final String style, final String defaultValue)
@@ -135,7 +136,7 @@ public class Localizer
 	{
 		return null;
 	}
-	
+
 	/**
 	 * Get the localized string using all of the supplied parameters. This
 	 * method is left public to allow developers full control over string
@@ -162,8 +163,9 @@ public class Localizer
 		// Iterate over all registered string resource loaders until the
 		// property has been found
 		String string = null;
-		
-		Iterator iter = Application.get().getResourceSettings().getStringResourceLoaders().iterator();
+
+		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
+		Iterator iter = resourceSettings.getStringResourceLoaders().iterator();
 		while (iter.hasNext())
 		{
 			IStringResourceLoader loader = (IStringResourceLoader)iter.next();
@@ -174,25 +176,27 @@ public class Localizer
 			}
 		}
 
-		// If a property value has been found, than replace the placeholder
-		// and we are done
+		if ((string == null) && (defaultValue != null))
+		{
+			// Resource not found, so handle missing resources based on
+			// application configuration and try the default value
+			if (resourceSettings.getUseDefaultOnMissingResource())
+			{
+				string = defaultValue;
+			}
+		}
+
+		// If a property value has been found, or a default value was given,
+		// than replace the placeholder and we are done
 		if (string != null)
 		{
 			return substitutePropertyExpressions(component, string, model);
 		}
 
-		// Resource not found, so handle missing resources based on application
-		// configuration
-		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
-		if (resourceSettings.getUseDefaultOnMissingResource() && (defaultValue != null))
-		{
-			return defaultValue;
-		}
-
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: "
-					+ key);
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: " +
+					key);
 			if (component != null)
 			{
 				message.append(" for component: ");
