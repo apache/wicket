@@ -93,7 +93,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	static final String BODY = "body";
 	static final String BORDER = "border";
 
-
 	static
 	{
 		// register "wicket:body" and "wicket:border"
@@ -310,6 +309,11 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			markupStream.next();
 			bodyTag.setType(XmlTag.CLOSE);
 			renderComponentTag(bodyTag);
+		}
+		else
+		{
+			this.renderComponentTag(borderMarkup.getTag());
+			markupStream.next();
 		}
 
 		// There shall exactly only one body tag per border

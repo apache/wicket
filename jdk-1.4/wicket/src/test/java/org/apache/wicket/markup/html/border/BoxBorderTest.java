@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.protocol.http.MockHttpServletRequest;
+import org.apache.wicket.settings.IMarkupSettings;
 
 
 /**
@@ -143,5 +145,21 @@ public class BoxBorderTest extends WicketTestCase
 	public void test6() throws Exception
 	{
 		executeTest(BoxBorderTestPage_6.class, "BoxBorderTestPage_ExpectedResult_6.html");
+	}
+
+	/**
+	 * Test a simply page containing the debug component
+	 * 
+	 * @throws Exception
+	 */
+	public void test7() throws Exception
+	{
+		final IMarkupSettings markupSettings = Application.get().getMarkupSettings();
+	    markupSettings.setCompressWhitespace(true);
+	    markupSettings.setStripComments(true);
+	    markupSettings.setStripWicketTags(true);
+	    markupSettings.setStripXmlDeclarationFromOutput(true);
+	    
+		executeTest(BoxBorderTestPage_1.class, "BoxBorderTestPage_ExpectedResult_7.html");
 	}
 }
