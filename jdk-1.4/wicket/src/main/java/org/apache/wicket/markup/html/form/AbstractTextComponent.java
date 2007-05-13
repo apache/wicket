@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.text.SimpleDateFormat;
 
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 
@@ -89,6 +90,33 @@ public abstract class AbstractTextComponent extends FormComponent
 	public boolean isInputNullable()
 	{
 		return false;
+	}
+
+	
+	/**
+	 * If the type is not set try to guess it if the model supports it.
+	 * @see org.apache.wicket.Component#onAttach()
+	 */
+	protected void onAttach()
+	{
+		super.onAttach();
+		
+		if (getType() == null)
+		{
+			setType(getModelType(getModel()));
+		}
+	}
+
+	private Class getModelType(IModel model) 
+	{
+		if (model instanceof IObjectClassAwareModel) 
+		{
+			return ((IObjectClassAwareModel)model).getObjectClass();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**

@@ -139,7 +139,7 @@ public final class PropertyResolver
 	 * @param object
 	 * @return
 	 */
-	public final static Class getTargetClass(String expression, Object object)
+	public final static Class getPropertyClass(String expression, Object object)
 	{
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, true);
 		if (setter == null)

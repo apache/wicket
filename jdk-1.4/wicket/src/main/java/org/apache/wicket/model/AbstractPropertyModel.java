@@ -31,7 +31,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel implements IChainingModel
+public abstract class AbstractPropertyModel implements IChainingModel, IObjectClassAwareModel
 {
 	/** Any model object (which may or may not implement IModel) */
 	private Object target;
@@ -172,13 +172,34 @@ public abstract class AbstractPropertyModel implements IChainingModel
 	}
 
 	/**
+	 * @return model object class
+	 */
+	public Class getObjectClass()
+	{
+		final String expression = propertyExpression();
+		if (Strings.isEmpty(expression))
+		{
+			// Return a meaningful value for an empty property expression
+			Object target = getTarget();
+			return target != null ? target.getClass() : null;
+		}
+
+		final Object target = getTarget();
+		if (target != null)
+		{
+			return PropertyResolver.getPropertyClass(expression, target);
+		}
+		return null;
+	}
+	
+	/**
 	 * @return The property expression for the component
 	 */
 	protected abstract String propertyExpression();
 
 	/**
 	 * @param component
-	 * @return
+	 * @return nothing
 	 * @deprecated use {@link #getObject()} instead
 	 */
 	protected final Object onGetObject(Component component)
