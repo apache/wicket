@@ -959,10 +959,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private void checkHierarchyChange(Component component)
 	{
 		// Throw exception if modification is attempted during rendering
-		if ((!component.isAuto()) && getFlag(FLAG_IS_RENDERING) || getFlag(FLAG_ATTACHING))
+		if ( !component.isAuto() && getFlag(FLAG_IS_RENDERING) )
 		{
 			throw new WicketRuntimeException(
 					"Cannot modify component hierarchy during render phase");
+		}
+		else  if ( getFlag(FLAG_ATTACHING) )
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during attach phase");
 		}
 	}
 
