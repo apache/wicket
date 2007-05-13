@@ -83,7 +83,7 @@ public class RequestParameters implements IClusterable
 	private String path;
 	
 	/** depth of the page for relative URLs. */
-	private int urlDepth;
+	private int urlDepth = -1;
 
 	/**
 	 * Construct.
@@ -371,6 +371,7 @@ public class RequestParameters implements IClusterable
 			b.append(" interfaceName=").append(getInterfaceName());
 			b.append(" componentId=").append(getComponentId());
 			b.append(" behaviorId=").append(getBehaviorId());
+			b.append(" urlDepth=").append(getUrlDepth());
 		}
 		if (getBookmarkablePageClass() != null)
 		{
