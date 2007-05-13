@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebRequestCycleProcessor;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
@@ -83,19 +83,9 @@ public class UrlMountingTest extends TestCase
 				.getServletRequest()
 				.setURL(
 						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/mount/point/nonexistent.TestPage");
-		IRequestTargetUrlCodingStrategy ucs = getRequestCodingStrategy();
-		assertNotNull(ucs);
-		try
-		{
-			ucs.decode(tester.getWicketRequest().getRequestParameters());
-			fail("decode() should have raised a WicketRuntimeException!");
-		}
-		catch (WicketRuntimeException e)
-		{
-			assertEquals(
-					"Unable to load class with name: org.apache.wicket.request.target.coding.nonexistent.TestPage",
-					e.getMessage());
-		}
+		WebRequestCycle requestCycle = tester.createRequestCycle();
+		tester.processRequestCycle(requestCycle);
+		assertEquals(HttpServletResponse.SC_NOT_FOUND, getErrorCode(requestCycle));
 	}
 
 	/**
@@ -106,13 +96,19 @@ public class UrlMountingTest extends TestCase
 	public void testDirectAccessToMountedPageAllowed()
 	{
 		tester.setupRequestAndResponse();
-		tester
-				.getServletRequest()
-				.setURL(
-						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:" +
-								TestPage.class.getName() + "");
+		tester.getServletRequest().setURL(
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:"
+						+ TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
+	}
+
+	int getErrorCode(RequestCycle requestCycle)
+	{
+		IRequestTarget requestTarget = requestCycle.getRequestTarget();
+		assertTrue(requestTarget instanceof WebErrorCodeResponseTarget);
+		WebErrorCodeResponseTarget error = (WebErrorCodeResponseTarget)requestTarget;
+		return error.getErrorCode();
 	}
 
 	/**
@@ -131,10 +127,7 @@ public class UrlMountingTest extends TestCase
 		{
 			WebRequestCycle requestCycle = tester.createRequestCycle();
 			tester.processRequestCycle(requestCycle);
-			IRequestTarget requestTarget = requestCycle.getRequestTarget();
-			assertTrue(requestTarget instanceof WebErrorCodeResponseTarget);
-			WebErrorCodeResponseTarget error = (WebErrorCodeResponseTarget)requestTarget;
-			assertEquals(HttpServletResponse.SC_FORBIDDEN, error.getErrorCode());
+			assertEquals(HttpServletResponse.SC_FORBIDDEN, getErrorCode(requestCycle));
 		}
 		finally
 		{
@@ -156,8 +149,8 @@ public class UrlMountingTest extends TestCase
 		tester
 				.getServletRequest()
 				.setURL(
-						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/foo/bar/?wicket:bookmarkablePage=:" +
-								TestPage.class.getName() + "");
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/foo/bar/?wicket:bookmarkablePage=:"
+								+ TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}
