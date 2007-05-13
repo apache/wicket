@@ -142,9 +142,9 @@ public class ServletWebRequest extends WebRequest
 
 	public String getRelativePathPrefixToContextRoot()
 	{
-		if (relativePathPrefixToWicketHandler != null)
+		if (relativePathPrefixToContextRoot != null)
 		{
-			return relativePathPrefixToWicketHandler;
+			return relativePathPrefixToContextRoot;
 		}
 		String tmp = getRelativePathPrefixToWicketHandler();
 		String servletPath = getServletPath();
@@ -165,7 +165,7 @@ public class ServletWebRequest extends WebRequest
 				prepender.prepend("../");
 			}
 		}
-		return relativePathPrefixToWicketHandler = prepender.toString();
+		return relativePathPrefixToContextRoot = prepender.toString();
 	}
 	
 	/**
