@@ -704,7 +704,14 @@ public abstract class RequestCycle
 		params.setBehaviorId(String.valueOf(index));
 		if (request instanceof ServletWebRequest)
 		{
-			params.setUrlDepth(((ServletWebRequest)request).getDepthRelativeToWicketHandler());
+			ServletWebRequest swr = (ServletWebRequest)request;
+			// If we're coming in with an existing depth, use it. Otherwise,
+			// compute from the URL. This provides correct behavior for repeated
+			// AJAX requests: If we need to generate a URL within an AJAX
+			// request for another one, it needs to be at the same depth as the
+			// original AJAX request.
+			int urlDepth = swr.getRequestParameters().getUrlDepth();
+			params.setUrlDepth(urlDepth > -1 ? urlDepth : swr.getDepthRelativeToWicketHandler());
 		}
 
 		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,
