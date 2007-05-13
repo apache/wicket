@@ -124,6 +124,13 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		{
 			url.append(params.getBehaviorId());
 		}
+		url.append(Component.PATH_SEPARATOR);
+		
+		// Add URL depth
+		if (params != null && params.getUrlDepth() != 0)
+		{
+			url.append(params.getUrlDepth());
+		}
 		return requestCycle.getOriginalResponse().encodeURL(url);
 	}
 }
