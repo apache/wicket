@@ -22,6 +22,7 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestCycleProcessor;
@@ -701,6 +702,10 @@ public abstract class RequestCycle
 		}
 		RequestParameters params = new RequestParameters();
 		params.setBehaviorId(String.valueOf(index));
+		if (request instanceof ServletWebRequest)
+		{
+			params.setUrlDepth(((ServletWebRequest)request).getRelativePathPrefixToWicketHandler().length() / 3);
+		}
 
 		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,
 				listener, params);
