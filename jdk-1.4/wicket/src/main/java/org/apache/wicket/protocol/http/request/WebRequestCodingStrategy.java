@@ -500,7 +500,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 			// Extract URL depth after last colon
 			final String urlDepthString = pathComponents[pathComponents.length - 1];
-			final int urlDepth = Strings.isEmpty(urlDepthString) ? 0 : Integer
+			final int urlDepth = Strings.isEmpty(urlDepthString) ? -1 : Integer
 					.parseInt(urlDepthString);
 			parameters.setUrlDepth(urlDepth);
 			
