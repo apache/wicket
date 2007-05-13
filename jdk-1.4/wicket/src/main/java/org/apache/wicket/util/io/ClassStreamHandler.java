@@ -271,10 +271,7 @@ public final class ClassStreamHandler
 				
 				parent = parent.getSuperclass();
 			}
-			if (writeReplaceMethod == null)
-			{
-				fillFields(cls);
-			}
+			fillFields(cls);
 		}
 	}
 
