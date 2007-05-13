@@ -81,6 +81,9 @@ public class RequestParameters implements IClusterable
 
 	/** the path info. */
 	private String path;
+	
+	/** depth of the page for relative URLs. */
+	private int urlDepth;
 
 	/**
 	 * Construct.
@@ -333,6 +336,26 @@ public class RequestParameters implements IClusterable
 	{
 		this.versionNumber = versionNumber;
 	}
+	
+	/**
+	 * Gets the depth for relative URLs. Used in AJAX requests.
+	 * 
+	 * @return depth (number of slashes)
+	 */
+	public int getUrlDepth()
+	{
+		return urlDepth;
+	}
+
+	/**
+	 * Sets the depth for relative URLs. Used in AJAX requests.
+	 * 
+	 * @param urlDepth Number of slashes deep the page is that an AJAX request is made from.
+	 */
+	public void setUrlDepth(int urlDepth)
+	{
+		this.urlDepth = urlDepth;
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -402,4 +425,5 @@ public class RequestParameters implements IClusterable
 		b.append("]");
 		return b.toString();
 	}
+
 }

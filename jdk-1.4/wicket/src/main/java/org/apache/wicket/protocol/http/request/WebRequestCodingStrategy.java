@@ -40,6 +40,7 @@ import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.UnitTestSettings;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
@@ -225,22 +226,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		// First check to see whether the target is mounted
 		CharSequence url = pathForTarget(requestTarget);
 
-		boolean makePathRelative = false;
-		
 		if (url != null)
 		{
 			// Do nothing - we've found the URL and it's mounted.
-			makePathRelative = true;
 		}
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			url = encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
-			makePathRelative = true;
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
 			url = encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
-			makePathRelative = true;
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
@@ -252,8 +248,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			// the function we're in again. We therefore need to jump out here
 			// and return the url immediately, otherwise we end up prefixing it
 			// with relative path or absolute prefixes twice.
-			url = encode(requestCycle, (IPageRequestTarget)requestTarget);
-			return url;
+			return encode(requestCycle, (IPageRequestTarget)requestTarget);
 		}
 		// fallthough for non-default request targets
 		else
@@ -263,18 +258,32 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (url != null)
 		{
-			// Add the actual URL. This will be relative to the Wicket Servlet/Filter, with no leading '/'.
+			// Add the actual URL. This will be relative to the Wicket
+			// Servlet/Filter, with no leading '/'.
 			PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
-			
-			if (makePathRelative)
+
+			// For AJAX requests, we need to make the URLs relative to the
+			// original page.
+			if (requestCycle.getRequest() instanceof WebRequest
+					&& ((WebRequest)requestCycle.getRequest()).isAjax())
 			{
-				// Prepend prefix to the URL to make it relative to the current request.
+				for (int i = 0; i < requestCycle.getRequest().getRequestParameters().getUrlDepth(); i++)
+				{
+					prepender.prepend("../");
+				}
+			}
+			else
+			{
+				// Prepend prefix to the URL to make it relative to the current
+				// request.
 				prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
 			}
-			
+
 			String result = prepender.toString();
-			// We need to special-case links to the home page if we're at the same level.
-			if (result.length() == 0) {
+			// We need to special-case links to the home page if we're at the
+			// same level.
+			if (result.length() == 0)
+			{
 				result = "./";
 			}
 			return requestCycle.getOriginalResponse().encodeURL(result);
@@ -489,18 +498,24 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					? PageMap.DEFAULT_NAME
 					: pageMapName);
 
+			// Extract URL depth after last colon
+			final String urlDepthString = pathComponents[pathComponents.length - 1];
+			final int urlDepth = Strings.isEmpty(urlDepthString) ? 0 : Integer
+					.parseInt(urlDepthString);
+			parameters.setUrlDepth(urlDepth);
+			
 			// Extract behaviour ID after last colon
-			final String behaviourId = pathComponents[pathComponents.length - 1];
+			final String behaviourId = pathComponents[pathComponents.length - 2];
 			parameters.setBehaviorId(behaviourId.length() != 0 ? behaviourId : null);
 
 			// Extract interface name after second-to-last colon
-			final String interfaceName = pathComponents[pathComponents.length - 2];
+			final String interfaceName = pathComponents[pathComponents.length - 3];
 			parameters.setInterfaceName(interfaceName.length() != 0
 					? interfaceName
 					: IRedirectListener.INTERFACE.getName());
 
 			// Extract version
-			final String versionNumberString = pathComponents[pathComponents.length - 3];
+			final String versionNumberString = pathComponents[pathComponents.length - 4];
 			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
 					.parseInt(versionNumberString);
 			parameters.setVersionNumber(versionNumber);
@@ -508,7 +523,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			// Component path is everything after pageMapName and before version
 			final int start = pageMapName.length() + 1;
 			final int end = requestString.length() - behaviourId.length() - interfaceName.length()
-					- versionNumberString.length() - 3;
+					- versionNumberString.length() - urlDepthString.length() - 4;
 			final String componentPath = requestString.substring(start, end);
 			parameters.setComponentPath(componentPath);
 		}
@@ -783,6 +798,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			url.append(params.getBehaviorId());
 		}
+		url.append(Component.PATH_SEPARATOR);
+		
+		// Add URL depth
+		if (params != null && params.getUrlDepth() != 0)
+		{
+			url.append(params.getUrlDepth());
+		}
+		
 		return url;
 	}
 
