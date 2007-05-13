@@ -225,17 +225,22 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		// First check to see whether the target is mounted
 		CharSequence url = pathForTarget(requestTarget);
 
+		boolean makePathRelative = false;
+		
 		if (url != null)
 		{
 			// Do nothing - we've found the URL and it's mounted.
+			makePathRelative = true;
 		}
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			url = encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
+			makePathRelative = true;
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
 			url = encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
+			makePathRelative = true;
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
@@ -261,8 +266,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			// Add the actual URL. This will be relative to the Wicket Servlet/Filter, with no leading '/'.
 			PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
 			
-			// Prepend prefix to the URL to make it relative to the current request.
-			prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
+			if (makePathRelative)
+			{
+				// Prepend prefix to the URL to make it relative to the current request.
+				prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
+			}
 			
 			String result = prepender.toString();
 			// We need to special-case links to the home page if we're at the same level.
