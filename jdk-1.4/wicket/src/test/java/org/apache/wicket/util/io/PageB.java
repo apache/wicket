@@ -23,6 +23,11 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class PageB extends WebPage
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof PageB)

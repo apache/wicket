@@ -24,6 +24,10 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class PageA extends WebPage
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Page page;
 	
 	public PageA(Page page)
