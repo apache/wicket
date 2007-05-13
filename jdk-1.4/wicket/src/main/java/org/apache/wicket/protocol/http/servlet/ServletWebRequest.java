@@ -52,7 +52,8 @@ public class ServletWebRequest extends WebRequest
 	private int depthRelativeToWicketHandler = -1;
 	private String relativePathPrefixToWicketHandler;
 	private String relativePathPrefixToContextRoot;
-
+	private Map parameterMap;
+	
 	/**
 	 * Protected constructor.
 	 * 
@@ -106,8 +107,14 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public Map getParameterMap()
 	{
+		// Lazy-init parameter map. Only make one copy. It's more efficient, and
+		// we can add stuff to it (which the BookmarkablePage stuff does).
+		if (parameterMap == null)
+		{
+			parameterMap = new HashMap(httpServletRequest.getParameterMap());
+		}
 		// return a mutable copy
-		return new HashMap(httpServletRequest.getParameterMap());
+		return parameterMap;
 	}
 
 	/**

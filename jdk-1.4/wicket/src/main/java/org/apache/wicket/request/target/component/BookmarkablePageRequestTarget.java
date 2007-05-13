@@ -255,6 +255,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		}
 		else
 		{
+			// Add bookmarkable params in for WICKET-400.
+			requestCycle.getRequest().getParameterMap().putAll(pageParameters);
 			return pageFactory.newPage(pageClass, pageParameters);
 		}
 	}
