@@ -46,7 +46,7 @@ public class StatelessComponentTest extends WicketTestCase
 		tester
 				.getServletRequest()
 				.setURL(
-						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener:");
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPage&wicket:interface=:0:link::ILinkListener::");
 		try
 		{
 			tester.processRequestCycle();
