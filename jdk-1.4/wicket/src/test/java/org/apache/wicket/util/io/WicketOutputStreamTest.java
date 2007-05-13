@@ -17,16 +17,20 @@
 package org.apache.wicket.util.io;
 
 import java.io.ByteArrayInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
+
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.WebApplication;
 
 /**
  * @author jcompagner
  */
-public class WicketOutputStreamTest extends TestCase
+public class WicketOutputStreamTest extends WicketTestCase
 {
 	ByteArrayOutputStream baos;
 	WicketObjectOutputStream woos;
@@ -69,22 +73,53 @@ public class WicketOutputStreamTest extends TestCase
 	}
 
 
-	// public void testNotSerializeable() throws Exception
-	// {
-	// WebApplication app = new WebApplication()
-	// {
-	// public Class getHomePage()
-	// {
-	// return null;
-	// }
-	// };
-	//		
-	// java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-	// ObjectOutputStream oos = new ObjectOutputStream(baos);
-	// oos.writeObject(app);
-	//		
-	// }
+	 public void testNotSerializeable() throws Exception
+	 {
+		 WebApplication app = new WebApplication()
+		 {
+			 public Class getHomePage()
+			 {
+				 return null;
+			 }
+		 };
+				
+		 try
+		 {
+			 woos.writeObject(app);
+			 assertFalse("webapplication is not serializeable",false);
+		 } 
+		 catch(Exception e){ }
+	 }
+	 
+	 public void testLocale() throws Exception
+	 {
+		 Locale locale = new Locale("nl","NL");
+		 woos.writeObject(locale);
 
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
+		Locale locale2 = (Locale)wois.readObject();
+
+		Assert.assertEquals(locale, locale2);
+
+	 }
+
+	public void testPageReference() throws Exception
+	{
+		PageA a = new PageA(new PageB());
+		
+		woos.writeObject(a);
+
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+		WicketObjectInputStream wois = new WicketObjectInputStream(bais);
+		PageA a2 = (PageA)wois.readObject();
+
+		Assert.assertEquals(a, a2);
+
+	}
+	 
 
 	// public void testStringsEqualsAfterSerialization() throws Exception
 	// {
@@ -114,6 +149,7 @@ public class WicketOutputStreamTest extends TestCase
 	 */
 	protected void setUp() throws Exception
 	{
+		super.setUp();
 		baos = new ByteArrayOutputStream();
 		woos = new WicketObjectOutputStream(baos);
 	}
