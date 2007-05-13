@@ -240,7 +240,7 @@ public class WebRequestCycle extends RequestCycle
 				// we haven't done the redirect yet; record that we will be
 				// doing that now and redirect
 				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
-				throw new RestartResponseAtInterceptPageException(new BrowserInfoPage(getRequest().getURL()));
+				throw new RestartResponseAtInterceptPageException(new BrowserInfoPage(getRequest().getRelativePathPrefixToContextRoot() + getRequest().getURL()));
 			}
 			// if we get here, the redirect already has been done; clear
 			// the meta data entry; we don't need it any longer is the client
