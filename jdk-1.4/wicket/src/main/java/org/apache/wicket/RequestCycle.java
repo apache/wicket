@@ -704,7 +704,7 @@ public abstract class RequestCycle
 		params.setBehaviorId(String.valueOf(index));
 		if (request instanceof ServletWebRequest)
 		{
-			params.setUrlDepth(((ServletWebRequest)request).getRelativePathPrefixToWicketHandler().length() / 3);
+			params.setUrlDepth(((ServletWebRequest)request).getDepthRelativeToWicketHandler());
 		}
 
 		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,

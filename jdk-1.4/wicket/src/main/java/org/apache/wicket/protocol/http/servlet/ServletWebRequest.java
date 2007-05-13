@@ -48,6 +48,10 @@ public class ServletWebRequest extends WebRequest
 
 	/** Servlet request information. */
 	private final HttpServletRequest httpServletRequest;
+	
+	private int depthRelativeToWicketHandler = -1;
+	private String relativePathPrefixToWicketHandler;
+	private String relativePathPrefixToContextRoot;
 
 	/**
 	 * Protected constructor.
@@ -131,6 +135,10 @@ public class ServletWebRequest extends WebRequest
 
 	public String getRelativePathPrefixToContextRoot()
 	{
+		if (relativePathPrefixToWicketHandler != null)
+		{
+			return relativePathPrefixToWicketHandler;
+		}
 		String tmp = getRelativePathPrefixToWicketHandler();
 		String servletPath = getServletPath();
 		if (servletPath == null || servletPath.length() == 0)
@@ -150,11 +158,29 @@ public class ServletWebRequest extends WebRequest
 				prepender.prepend("../");
 			}
 		}
-		return prepender.toString();
+		return relativePathPrefixToWicketHandler = prepender.toString();
+	}
+	
+	/**
+	 * Gets the depth of this request relative to the Wicket handler.
+	 * @return
+	 */
+	public int getDepthRelativeToWicketHandler()
+	{
+		if (depthRelativeToWicketHandler == -1)
+		{
+			// Initialize it.
+			getRelativePathPrefixToWicketHandler();
+		}
+		return depthRelativeToWicketHandler;
 	}
 	
 	public String getRelativePathPrefixToWicketHandler()
 	{
+		if (relativePathPrefixToWicketHandler != null)
+		{
+			return relativePathPrefixToWicketHandler;
+		}
 		String relativeUrl = getPath();
 		PrependingStringBuffer prepender = new PrependingStringBuffer();
 
@@ -204,25 +230,36 @@ public class ServletWebRequest extends WebRequest
 			}
 			return prepender.toString();
 		}
-		else if (forwardUrl != null)
+		
+		if (forwardUrl != null)
 		{
 			// Strip off leading slash, if forwardUrl has any length.
 			relativeUrl = forwardUrl.substring(relativeUrl.length() > 0 ? 1 : 0);
 		}
 
-		for (int i = 0; i < relativeUrl.length(); i++)
+		if (depthRelativeToWicketHandler == -1)
 		{
-			if (relativeUrl.charAt(i) == '?')
+			int depth = 0;
+			for (int i = 0; i < relativeUrl.length(); i++)
 			{
-				break;
+				if (relativeUrl.charAt(i) == '?')
+				{
+					break;
+				}
+				if (relativeUrl.charAt(i) == '/')
+				{
+					depth++;
+				}
 			}
-			if (relativeUrl.charAt(i) == '/')
-			{
-				prepender.prepend("../");
-			}
+			depthRelativeToWicketHandler = depth;
 		}
-
-		return prepender.toString();
+		
+		for (int i = 0; i < depthRelativeToWicketHandler; i++)
+		{
+			prepender.prepend("../");
+		}
+		
+		return relativePathPrefixToWicketHandler = prepender.toString();
 	}
 
 	/**
