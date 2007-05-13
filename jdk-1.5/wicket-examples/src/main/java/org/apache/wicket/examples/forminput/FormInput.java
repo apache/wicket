@@ -91,16 +91,15 @@ public class FormInput extends WicketExamplePage
 			RequiredTextField stringTextField = new RequiredTextField("stringProperty");
 			stringTextField.setLabel(new Model("String"));
 			add(stringTextField);
-			RequiredTextField integerTextField = new RequiredTextField("integerProperty",
-					Integer.class);
+			RequiredTextField integerTextField = new RequiredTextField("integerProperty");
 			add(integerTextField.add(NumberValidator.POSITIVE));
-			add(new RequiredTextField("doubleProperty", Double.class));
+			add(new RequiredTextField("doubleProperty"));
 
 			add(new DateTimeField("dateProperty"));
 			// add(DateTextField.forShortStyle("dateProperty").add(new
 			// DatePicker()));
 
-			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
+			add(new RequiredTextField("integerInRangeProperty").add(NumberValidator
 					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
 			add(new Multiply("multiply"));
