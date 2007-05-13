@@ -197,9 +197,12 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeBehavior(final AbstractAjaxBehavior behavior)
 	{
-		setupRequestAndResponse();
+		//setupRequestAndResponse();
 		WebRequestCycle cycle = createRequestCycle();
-		getServletRequest().setRequestToRedirectString(behavior.getCallbackUrl(false).toString());
+		CharSequence url = behavior.getCallbackUrl(false);
+		setupRequestAndResponse();
+		cycle = createRequestCycle();
+		getServletRequest().setRequestToRedirectString(url.toString());
 		processRequestCycle(cycle);
 	}
 

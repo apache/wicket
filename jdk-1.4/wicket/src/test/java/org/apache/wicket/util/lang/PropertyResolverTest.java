@@ -340,20 +340,20 @@ public class PropertyResolverTest extends TestCase
 	{
 		Address address = new Address();
 		
-		Class clazz = PropertyResolver.getTargetClass("number", address);
+		Class clazz = PropertyResolver.getPropertyClass("number", address);
 		assertEquals(int.class, clazz);
 		
 		Person person = new Person();
 		person.setAddress(new Address());
 		
-		clazz = PropertyResolver.getTargetClass("address.number", person);
+		clazz = PropertyResolver.getPropertyClass("address.number", person);
 		assertEquals(int.class, clazz);
 		
 		person.setAddressArray(new Address[] { new Address(), new Address() });
-		clazz = PropertyResolver.getTargetClass("addressArray[0]", person);
+		clazz = PropertyResolver.getPropertyClass("addressArray[0]", person);
 		assertEquals(Address.class, clazz);
 		
-		clazz = PropertyResolver.getTargetClass("addressArray[0].number", person);
+		clazz = PropertyResolver.getPropertyClass("addressArray[0].number", person);
 		assertEquals(int.class, clazz);
 	}
 }

@@ -152,12 +152,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		}
 
 
-		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
-		String url = timer.getCallbackUrl().toString();
-		tester.getServletRequest().setRequestToRedirectString(url);
-
-		tester.processRequestCycle(cycle);
+		tester.executeBehavior(timer);
 
 		// Validate the document
 		document = tester.getServletResponse().getDocument();

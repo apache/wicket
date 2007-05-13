@@ -48,10 +48,7 @@ public class SimpleTestPanelTest extends WicketTestCase
 		WebRequestCycle cycle = tester.createRequestCycle();
 		
 		Page page = tester.getLastRenderedPage();
-	    String url = ((SimpleTestPanel)page.get("testPanel")).getTimeBehavior().getCallbackUrl().toString();
-		tester.getServletRequest().setRequestToRedirectString(url);
-
-		tester.processRequestCycle(cycle);
+		tester.executeBehavior(((SimpleTestPanel)page.get("testPanel")).getTimeBehavior());
 
 		// Validate the document
 		String document = tester.getServletResponse().getDocument();
