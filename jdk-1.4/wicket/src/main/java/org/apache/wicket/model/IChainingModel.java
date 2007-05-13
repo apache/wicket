@@ -17,7 +17,7 @@
 package org.apache.wicket.model;
 
 /**
- * Models who implement this interface will support chaining of IModels.
+ * Models that implement this interface will support chaining of IModels.
  *	getObject() of a IChainingModel should do something like:
  * <pre>
  * if ( object instanceof IModel) { return ((IModel)object).getObject()}
