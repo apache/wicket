@@ -73,7 +73,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
+	private static final Logger _log = LoggerFactory.getLogger(WebPage.class);
 
 	/** The resource references used for new window/tab support */
 	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
@@ -304,7 +304,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		}
 		catch (Exception e)
 		{
-			log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
+			_log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
 		}
 		final IPageMap map = getSession().createAutoPageMap();
 		clonedPage.moveToPageMap(map);
