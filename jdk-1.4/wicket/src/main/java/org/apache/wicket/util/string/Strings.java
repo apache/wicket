@@ -1185,7 +1185,7 @@ public final class Strings
 			if (!(traceString.startsWith("sun.reflect.") && i > 1))
 			{
 				// filter out reflection API calls from the stack trace
-				if (traceString.indexOf("java.lang.reflect") >= 0)
+				if (traceString.indexOf("java.lang.reflect") < 0)
 				{
 					sb.append("     at ");
 					sb.append(traceString);
