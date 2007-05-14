@@ -49,6 +49,12 @@ import org.apache.wicket.Component;
 public interface IComponentAssignedModel extends IModel
 {
 	/**
+	 * This method is called when the component gets its model assigned.
+	 * 
+	 * WARNING: Because the model can be assigned in the constructor of
+	 * component this method can also be called with a 'this' of a component
+	 * that is not fully constructed yet. 
+	 *   
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
