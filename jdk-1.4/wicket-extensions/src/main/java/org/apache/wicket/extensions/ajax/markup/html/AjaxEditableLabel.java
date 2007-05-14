@@ -381,8 +381,8 @@ public class AjaxEditableLabel extends Panel
 		Serializable errorMessage = editor.getFeedbackMessage().getMessage();
 		if (errorMessage instanceof String)
 		{
-			target.appendJavascript("window.status='" + JavascriptUtils.escapeQuotes((String)errorMessage)
-					+ "';");
+			target.appendJavascript("window.status='"
+					+ JavascriptUtils.escapeQuotes((String)errorMessage) + "';");
 		}
 		String editorMarkupId = editor.getMarkupId();
 		target.appendJavascript(editorMarkupId + ".select();");
@@ -410,7 +410,9 @@ public class AjaxEditableLabel extends Panel
 	/**
 	 * Lazy initialization of the label and editor components and set tempModel
 	 * to null.
-	 * @param model The model for the label and editor
+	 * 
+	 * @param model
+	 *            The model for the label and editor
 	 */
 	private void initLabelAndEditor(IModel model)
 	{
@@ -419,7 +421,7 @@ public class AjaxEditableLabel extends Panel
 		add(label);
 		add(editor);
 	}
-	
+
 	/**
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */
@@ -428,15 +430,23 @@ public class AjaxEditableLabel extends Panel
 		// the #getModel() call below will resolve and assign any inheritable
 		// model this component can use. Set that directly to the label and
 		// editor so that those components work like this enclosing panel
-		// does not exist (must have that e.g. with CompoundPropertyModels
+		// does not exist (must have that e.g. with CompoundPropertyModels)
 		IModel m = getModel();
 
 		// check that a model was found
 		if (m == null)
 		{
-			throw new IllegalStateException(
-					"No model found for this component, either pass one explicitly or "
-							+ "make sure an inheritable model is available");
+			Component parent = getParent();
+			String msg = "No model found for this component, either pass one explicitly or "
+					+ "make sure an inheritable model is available.";
+			if (parent == null)
+			{
+				msg += " This component is not added to a parent yet, so if this component "
+						+ "is supposed to use the model of the parent (e.g. when it uses a "
+						+ "compound property model), add it first before further configuring "
+						+ "the component calling methods like e.g. setType and addValidator.";
+			}
+			throw new IllegalStateException(msg);
 		}
 		return m;
 	}
