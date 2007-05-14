@@ -23,7 +23,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
@@ -1394,12 +1393,8 @@ public abstract class MarkupContainer extends Component
 				// Get next child
 				final Component child = children_get(i);
 
-				// Ignore feedback as that was done in Page
-				if (!(child instanceof IFeedback))
-				{
-					// Call begin request on the child
-					child.beforeRender();
-				}
+				// Call begin request on the child
+				child.beforeRender();
 			}
 		}
 		catch (RuntimeException ex)
