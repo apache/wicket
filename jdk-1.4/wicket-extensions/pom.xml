@@ -42,7 +42,7 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket</artifactId>
 			<classifier>tests</classifier>
-			<scope>tests</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
