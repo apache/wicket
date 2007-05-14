@@ -244,7 +244,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			{
 				return ((IAjaxIndicatorAware)parent).getAjaxIndicatorMarkupId();
 			}
-			parent = getComponent().getParent();
+			parent = parent.getParent();
 		}
 		return null;
 	}
