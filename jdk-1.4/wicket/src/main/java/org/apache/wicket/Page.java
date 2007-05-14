@@ -147,9 +147,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private static final ConcurrentHashMap pageClassToBookmarkableCache = new ConcurrentHashMap();
 
-	/** True if this page is currently rendering. */
-	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
-
 	/** True if a new version was created for this request. */
 	private static final short FLAG_NEW_VERSION = FLAG_RESERVED3;
 
@@ -949,28 +946,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Checks whether the hierarchy may be changed at all, and throws an
-	 * exception if this is not the case.
-	 * 
-	 * @param component
-	 *            the component which is about to be added or removed
-	 */
-	private void checkHierarchyChange(Component component)
-	{
-		// Throw exception if modification is attempted during rendering
-		if ( !component.isAuto() && getFlag(FLAG_IS_RENDERING) )
-		{
-			throw new WicketRuntimeException(
-					"Cannot modify component hierarchy during render phase");
-		}
-		else  if ( getFlag(FLAG_ATTACHING) )
-		{
-			throw new WicketRuntimeException(
-					"Cannot modify component hierarchy during attach phase");
-		}
-	}
-
-	/**
 	 * Throw an exception if not all components rendered.
 	 * 
 	 * @param renderedContainer
@@ -1296,16 +1271,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Configure response object with locale and content type
 		configureResponse();
 
-		// Render all the page's markup
-		setFlag(FLAG_IS_RENDERING, true);
-		try
-		{
-			renderAll(associatedMarkupStream);
-		}
-		finally
-		{
-			setFlag(FLAG_IS_RENDERING, false);
-		}
+		// Render markup
+		renderAll(associatedMarkupStream);
 	}
 
 
@@ -1317,8 +1284,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	final void componentAdded(final Component component)
 	{
-		checkHierarchyChange(component);
-
 		dirty();
 		if (mayTrackChangesFor(component, component.getParent()))
 		{
@@ -1334,8 +1299,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	final void componentModelChanging(final Component component)
 	{
-		checkHierarchyChange(component);
-
 		dirty();
 		if (mayTrackChangesFor(component, null))
 		{
@@ -1351,8 +1314,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	final void componentRemoved(final Component component)
 	{
-		checkHierarchyChange(component);
-
 		dirty();
 		if (mayTrackChangesFor(component, component.getParent()))
 		{
@@ -1362,8 +1323,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	final void componentStateChanging(final Component component, Change change)
 	{
-		checkHierarchyChange(component);
-
 		dirty();
 		if (mayTrackChangesFor(component, null))
 		{

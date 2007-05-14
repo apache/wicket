@@ -599,12 +599,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
+	private static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
 	private static final int FLAG_ATTACHED = 0x20000000;
-	protected static final int FLAG_ATTACHING = 0x40000000;
+	private static final int FLAG_ATTACHING = 0x40000000;
 	private static final int FLAG_DETACHING = 0x80000000;
 
+	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
 	private static final int FLAG_RENDERING = 0x2000000;
-	private static final int FLAG_BEFORE_RENDERING = 0x4000000;
 	private static final int FLAG_AFTER_RENDERING = 0x8000000;
 
 
@@ -615,8 +616,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	};
 
 	/**
-	 * meta data key for line precise error logging for the moment of construction.
-	 * Made package private for access in {@link Page}
+	 * meta data key for line precise error logging for the moment of
+	 * construction. Made package private for access in {@link Page}
 	 */
 	static final MetaDataKey CONSTRUCTED_AT_KEY = new MetaDataKey(String.class)
 	{
@@ -624,8 +625,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	};
 
 	/**
-	 * Meta data key for line precise error logging for the moment of addition. 
-	 * Made package private for access in {@link MarkupContainer} and {@link Page}
+	 * Meta data key for line precise error logging for the moment of addition.
+	 * Made package private for access in {@link MarkupContainer} and
+	 * {@link Page}
 	 */
 	static final MetaDataKey ADDED_AT_KEY = new MetaDataKey(String.class)
 	{
@@ -708,7 +710,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException("constructed")));
+			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
+					"constructed")));
 		}
 	}
 
@@ -733,7 +736,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
 		{
-			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException("constructed")));
+			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
+					"constructed")));
 		}
 	}
 
@@ -1553,6 +1557,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void modelChanging()
 	{
+		checkHierarchyChange(this);
+
 		// Call user code
 		onModelChanging();
 
@@ -2593,6 +2599,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected final void addStateChange(final Change change)
 	{
+		checkHierarchyChange(this);
 		final Page page = findPage();
 		if (page != null)
 		{
@@ -2938,18 +2945,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!getFlag(FLAG_ATTACHED))
 		{
 			setFlag(FLAG_ATTACHING, true);
-			setFlag(FLAG_ATTACHED, true);
+			setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
 			onAttach();
-			if (getFlag(FLAG_ATTACHING))
+			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
 			{
-				throw new IllegalStateException(Component.class.getName()
-						+ " has not been properly attached. Something in the hierarchy of "
-						+ getClass().getName()
-						+ " has not called super.onAttach() in the override of onAttach() method");
+				throw new IllegalStateException("Component " + this + " of type " + getClass().getName() + " has not been properly attached.  "
+						+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
 			}
+			setFlag(FLAG_ATTACHING, false);
+			setFlag(FLAG_ATTACHED, true);
+			attachChildren();
 		}
-
-		attachChildren();
 	}
 
 	/**
@@ -3008,7 +3014,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 	}
 
-
 	/**
 	 * Called to allow a component to attach resources for use.
 	 * 
@@ -3018,7 +3023,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected void onAttach()
 	{
-		setFlag(FLAG_ATTACHING, false);
+		setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
@@ -3029,10 +3034,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (!getFlag(FLAG_RENDERING))
 		{
-			setFlag(FLAG_BEFORE_RENDERING, true);
-			setFlag(FLAG_RENDERING, true);
+			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 			onBeforeRender();
-			if (getFlag(FLAG_BEFORE_RENDERING))
+			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(
 						Component.class.getName()
@@ -3040,9 +3044,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 								+ getClass().getName()
 								+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
+			setFlag(FLAG_RENDERING, true);
+			onBeforeRenderChildren();
 		}
-
-		onBeforeRenderChildren();
 	}
 
 	/**
@@ -3051,7 +3055,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected void onBeforeRender()
 	{
-		setFlag(FLAG_BEFORE_RENDERING, false);
+		setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
@@ -3566,5 +3570,29 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected final void onEndRequest()
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Checks whether the hierarchy may be changed at all, and throws an
+	 * exception if this is not the case.
+	 * 
+	 * @param component
+	 *            the component which is about to be added or removed
+	 */
+	protected void checkHierarchyChange(final Component component)
+	{
+		// Throw exception if modification is attempted during rendering
+		if (!component.isAuto() && getFlag(FLAG_RENDERING))
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during render phase");
+		}
+
+		// Throw exception if modification is attempted during attach
+		if (getFlag(FLAG_ATTACHING))
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during attach phase");
+		}
 	}
 }

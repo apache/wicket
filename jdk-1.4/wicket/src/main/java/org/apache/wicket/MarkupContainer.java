@@ -135,6 +135,8 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final MarkupContainer add(final Component child)
 	{
+		checkHierarchyChange(child);
+		
 		if (child == null)
 		{
 			throw new IllegalArgumentException("argument child may not be null");
@@ -166,6 +168,8 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final MarkupContainer addOrReplace(final Component child)
 	{
+		checkHierarchyChange(child);
+		
 		if (child == null)
 		{
 			throw new IllegalArgumentException("argument child must be not null");
@@ -209,11 +213,11 @@ public abstract class MarkupContainer extends Component
 		}
 
 		/* Replace strategy */
+		component.setAuto(true);
 		if (get(component.getId()) != null)
 		{
 			this.remove(component);
 		}
-		component.setAuto(true);
 		add(component);
 		component.beforeRender();
 		component.render();
@@ -434,7 +438,9 @@ public abstract class MarkupContainer extends Component
 
 			public void remove()
 			{
-				removedComponent(children_remove(--index));
+				final Component removed = children_remove(--index);
+				checkHierarchyChange(removed);
+				removedComponent(removed);
 			}
 		};
 	}
@@ -490,6 +496,8 @@ public abstract class MarkupContainer extends Component
 	 */
 	public void remove(final Component component)
 	{
+		checkHierarchyChange(component);
+		
 		if (component == null)
 		{
 			throw new IllegalArgumentException("argument component may not be null");
@@ -631,6 +639,8 @@ public abstract class MarkupContainer extends Component
 	 */
 	public final MarkupContainer replace(final Component child)
 	{
+		checkHierarchyChange(child);
+		
 		if (child == null)
 		{
 			throw new IllegalArgumentException("argument child must be not null");
@@ -656,6 +666,7 @@ public abstract class MarkupContainer extends Component
 
 			// first remove the component.
 			removedComponent(replaced);
+			
 			// then add the other one.
 			addedComponent(child);
 
