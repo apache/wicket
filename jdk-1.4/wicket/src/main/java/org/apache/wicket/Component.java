@@ -599,9 +599,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
-	private static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
-	private static final int FLAG_ATTACHED = 0x20000000;
-	private static final int FLAG_ATTACHING = 0x40000000;
+	static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
+	static final int FLAG_ATTACHED = 0x20000000;
+	static final int FLAG_ATTACHING = 0x40000000;
 	private static final int FLAG_DETACHING = 0x80000000;
 
 	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
@@ -2931,16 +2931,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * last in onAttach() chain no matter where user places the
 	 * <code>super.onAttach()</code> call
 	 */
-	void attachChildren()
-	{
-		// noop
-	}
-
-	/**
-	 * Attaches the component. This is called when the page is starting to be
-	 * used for rendering or when a component listener call is executed on it.
-	 */
-	public final void attach()
+	void internalAttach2()
 	{
 		if (!getFlag(FLAG_ATTACHED))
 		{
@@ -2954,8 +2945,16 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 			setFlag(FLAG_ATTACHING, false);
 			setFlag(FLAG_ATTACHED, true);
-			attachChildren();
 		}
+	}
+
+	/**
+	 * Attaches the component. This is called when the page is starting to be
+	 * used for rendering or when a component listener call is executed on it.
+	 */
+	public final void attach()
+	{
+		internalAttach2();
 	}
 
 	/**
@@ -3044,8 +3043,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 								+ getClass().getName()
 								+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
-			setFlag(FLAG_RENDERING, true);
 			onBeforeRenderChildren();
+			setFlag(FLAG_RENDERING, true);
 		}
 	}
 

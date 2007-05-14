@@ -1351,29 +1351,54 @@ public abstract class MarkupContainer extends Component
 		this.markupStream = markupStream;
 	}
 
-	void attachChildren()
+	final void internalAttach2()
 	{
-		super.attachChildren();
-		try
+		if (!getFlag(FLAG_ATTACHED))
 		{
-			// Loop through child components
-			final int size = children_size();
-			for (int i = 0; i < size; i++)
+			setFlag(FLAG_ATTACHING, true);
+			visitChildren(new IVisitor()
 			{
-				// Get next child
-				final Component child = children_get(i);
-
-				// Call begin request on the child
-				child.attach();
+				public Object component(Component component)
+				{
+					component.setFlag(FLAG_ATTACHING, true);
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+			setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
+			onAttach();
+			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
+			{
+				throw new IllegalStateException("Component " + this + " of type " + getClass().getName() + " has not been properly attached.  "
+						+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
 			}
-		}
-		catch (RuntimeException ex)
-		{
-			if (ex instanceof WicketRuntimeException)
-				throw ex;
-			else
-				throw new WicketRuntimeException("Error attaching this container for rendering: "
-						+ this, ex);
+			
+			visitChildren(new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					component.setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
+					component.onAttach();
+					if (!component.getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
+					{
+						throw new IllegalStateException("Component " + component + " of type " + component.getClass().getName() + " has not been properly attached.  "
+								+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
+					}
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+			
+			visitChildren(new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					component.setFlag(FLAG_ATTACHING, false);
+					component.setFlag(FLAG_ATTACHED, true);
+					return IVisitor.CONTINUE_TRAVERSAL;
+				}
+			});
+
+			setFlag(FLAG_ATTACHING, false);
+			setFlag(FLAG_ATTACHED, true);
 		}
 	}
 
