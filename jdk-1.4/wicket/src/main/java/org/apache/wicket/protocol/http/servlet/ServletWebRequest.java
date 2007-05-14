@@ -53,6 +53,8 @@ public class ServletWebRequest extends WebRequest
 	private String relativePathPrefixToWicketHandler;
 	private String relativePathPrefixToContextRoot;
 	private Map parameterMap;
+
+	private String wicketRedirectUrl;
 	
 	/**
 	 * Protected constructor.
@@ -213,7 +215,7 @@ public class ServletWebRequest extends WebRequest
 
 		// This gives us a context-relative path for RequestDispatcher.forward stuff, with a leading slash.
 		String forwardUrl = (String)httpRequest.getAttribute("javax.servlet.forward.servlet_path");
-
+		
 		if (errorUrl != null)
 		{
 			// Strip off context path from front of URI.
@@ -242,6 +244,10 @@ public class ServletWebRequest extends WebRequest
 		{
 			// Strip off leading slash, if forwardUrl has any length.
 			relativeUrl = forwardUrl.substring(relativeUrl.length() > 0 ? 1 : 0);
+		}
+		else if (wicketRedirectUrl != null)
+		{
+			relativeUrl = wicketRedirectUrl;
 		}
 
 		if (depthRelativeToWicketHandler == -1)
@@ -394,5 +400,21 @@ public class ServletWebRequest extends WebRequest
 				+ httpServletRequest.getRequestURI() + ", servletPath = "
 				+ httpServletRequest.getServletPath() + ", pathTranslated = "
 				+ httpServletRequest.getPathTranslated() + "]";
+	}
+
+	/**
+	 * Set the redirect url where wicket will redirect to for the next page
+	 * 
+	 * @param wicketRedirectUrl 
+	 */
+	public void setWicketRedirectUrl(String wicketRedirectUrl)
+	{
+		this.wicketRedirectUrl = wicketRedirectUrl;
+		depthRelativeToWicketHandler = -1;
+		relativePathPrefixToContextRoot = null;
+		relativePathPrefixToWicketHandler = null;
+		
+		getRequestParameters().setUrlDepth(getDepthRelativeToWicketHandler());
+		
 	}
 }

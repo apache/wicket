@@ -26,6 +26,7 @@ import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -138,6 +139,13 @@ public class WebRequestCycle extends RequestCycle
 			final WebResponse currentResponse = getWebResponse();
 			try
 			{
+				redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
+				if (getWebRequest() instanceof ServletWebRequest)
+				{
+					// Get the redirect url and set it in the ServletWebRequest
+					// so that it can be used for relative url calculation.
+					((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(redirectUrl.replaceAll("../", ""));	
+				}
 				// create the redirect response.
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(
 						currentResponse.getHttpServletResponse());
@@ -180,7 +188,6 @@ public class WebRequestCycle extends RequestCycle
 					// here on.
 					servletResponse.close();
 
-					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 					int index = redirectUrl.indexOf("?");
 					String sessionId = getWebRequest().getHttpServletRequest().getSession(true)
 							.getId();
