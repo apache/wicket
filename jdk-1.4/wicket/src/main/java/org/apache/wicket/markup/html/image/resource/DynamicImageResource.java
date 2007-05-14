@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.DynamicWebResource;
@@ -147,14 +146,9 @@ public abstract class DynamicImageResource extends DynamicWebResource
     {
       // Create output stream
       final ByteArrayOutputStream out = new ByteArrayOutputStream();
-      
-      // Get image writer for format
-      final ImageWriter writer = (ImageWriter) ImageIO.
-        getImageWritersByFormatName(format).next();
-      
-      // Write out image
-      writer.setOutput(ImageIO.createImageOutputStream(out));
-      writer.write(image);
+
+      // Write image using any matching ImageWriter
+      ImageIO.write(image, format, out);
       
       // Return the image data
       return out.toByteArray();
