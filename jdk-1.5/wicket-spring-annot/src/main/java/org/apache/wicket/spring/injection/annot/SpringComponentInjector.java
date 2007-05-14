@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import java.io.FileNotFoundException;
-
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.Application;
@@ -30,12 +28,7 @@ import org.apache.wicket.injection.web.InjectorHolder;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.ISpringContextLocator;
-import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 

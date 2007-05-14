@@ -23,7 +23,6 @@ import junit.framework.TestCase;
 import org.apache.wicket.proxy.ILazyInitProxy;
 import org.apache.wicket.spring.ISpringContextLocator;
 import org.apache.wicket.spring.SpringBeanLocator;
-import org.apache.wicket.spring.injection.annot.AnnotProxyFieldValueFactory;
 import org.apache.wicket.spring.injection.util.Bean;
 import org.apache.wicket.spring.injection.util.Bean2;
 import org.apache.wicket.spring.injection.util.Injectable;
@@ -138,6 +137,7 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase {
 	
 	static class InjectableWithReferenceToNonexistingBean {
 		@SpringBean(name="nonExisting")
+		@SuppressWarnings("unused")
 		private Bean nonExisting;
 	}
 }
