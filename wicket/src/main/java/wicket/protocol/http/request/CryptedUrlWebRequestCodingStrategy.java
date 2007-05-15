@@ -429,7 +429,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			{
 				return null;
 			}
-			return (String)this.parameterMap.get(key);
+			String[] params = (String[])this.parameterMap.get(key);
+			if (params==null||params.length==0) {
+				return null;
+			} else {
+				return params[0];
+			}
 		}
 
 		/**
