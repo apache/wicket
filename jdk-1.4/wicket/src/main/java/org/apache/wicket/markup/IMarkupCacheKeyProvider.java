@@ -22,6 +22,8 @@ import org.apache.wicket.MarkupContainer;
  * To be implemented by MarkupContainers that wish to implement their own
  * algorithms for the markup cache key.
  * 
+ * @see IMarkupResourceStreamProvider
+ * 
  * @author Juergen Donnerstag
  */
 public interface IMarkupCacheKeyProvider
