@@ -478,7 +478,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	protected void addInterfaceParameters(final Request request, final RequestParameters parameters)
 	{
 		// Format of interface target parameter is
-		// <page-map-name>:<path>:<version>:<interface>:<behaviourId>
+		// <page-map-name>:<path>:<version>:<interface>:<behaviourId>:urlDepth
 		final String requestString = request.getParameter(INTERFACE_PARAMETER_NAME);
 		if (requestString != null)
 		{
