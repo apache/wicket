@@ -485,8 +485,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			// Split into array of strings
 			String[] pathComponents = Strings.split(requestString, Component.PATH_SEPARATOR);
 
-			// There must be at least 4 components
-			if (pathComponents.length < 4)
+			// There must be 6 components
+			// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:depth
+			if (pathComponents.length < 6)
 			{
 				throw new WicketRuntimeException("Internal error parsing "
 						+ INTERFACE_PARAMETER_NAME + " = " + requestString);
