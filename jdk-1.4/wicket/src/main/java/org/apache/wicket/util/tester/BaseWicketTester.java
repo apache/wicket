@@ -80,6 +80,29 @@ public class BaseWicketTester extends MockWebApplication
 	private static final Logger log = LoggerFactory.getLogger(BaseWicketTester.class);
 
 	/**
+	 * @author jcompagner
+	 */
+	private static final class TestPageSource implements ITestPageSource
+	{
+		private final Page page;
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * @param page
+		 */
+		private TestPageSource(Page page)
+		{
+			this.page = page;
+		}
+
+		public Page getTestPage()
+		{
+			return page;
+		}
+	}
+
+	/**
 	 * @author frankbille
 	 */
 	public static class DummyWebApplication extends WebApplication
@@ -214,8 +237,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final Page page)
 	{
-		executeListener(page);
-		return getLastRenderedPage();
+		return startPage(new TestPageSource(page));
 	}
 
 	/**
