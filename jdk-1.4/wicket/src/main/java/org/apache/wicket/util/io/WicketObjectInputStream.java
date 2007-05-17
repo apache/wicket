@@ -79,6 +79,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		else if (token == ClassStreamHandler.CLASS_DEF)
 		{
 			short classDef = in.readShort();
+			ClassStreamHandler oldStreamHandler = currentStreamHandler;
 			currentStreamHandler = ClassStreamHandler.lookup(classDef);
 			if (currentStreamHandler.getStreamClass() == String.class)
 			{
@@ -96,6 +97,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					{
 						currentStreamHandler.readFields(this,value);
 					}
+					value = currentStreamHandler.readResolve(value);
 					stack.pop();
 				}
 				catch (IllegalArgumentException ex)
@@ -115,6 +117,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					throw new RuntimeException(ex);
 				}
 			}
+			currentStreamHandler = oldStreamHandler;
 		}
 		else if (token == ClassStreamHandler.CLASS)
 		{

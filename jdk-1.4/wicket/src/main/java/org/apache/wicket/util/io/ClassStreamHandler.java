@@ -258,7 +258,7 @@ public final class ClassStreamHandler
 		    }
 		    else
 		    {
-		    	cons = null;
+				cons = getSerializableConstructor(clz);
 		    }
 
 			Class parent = cls;
@@ -1150,4 +1150,19 @@ public final class ClassStreamHandler
 		return null;
 	}
 	
+	public Object readResolve(Object o) throws NotSerializableException
+	{
+		if (readResolveMethod != null)
+		{
+			try
+			{
+				return readResolveMethod.invoke(o, null);
+			}
+			catch (Exception ex)
+			{
+				throw new NotSerializableException(ex.getMessage());
+			} 
+		}
+		return o;
+	}
 }
