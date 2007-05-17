@@ -214,16 +214,8 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final Page page)
 	{
-		return startPage(new ITestPageSource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Page getTestPage()
-			{
-				return page;
-			}
-
-		});
+		executeListener(page);
+		return getLastRenderedPage();
 	}
 
 	/**
