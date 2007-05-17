@@ -826,6 +826,7 @@ public class FilePageStore implements IPageStore
 			{
 				stream.writeBoolean(false);
 				stream.defaultWriteObject();
+				return;
 			}
 			SessionPageKey spk = new SessionPageKey(current.sessionId,page);
 			if (!completed.contains(spk) && !previous.contains(spk))
