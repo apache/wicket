@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.IOException;
 import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -257,6 +258,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return this;
 	}
 	
+	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	{
+		s.writeShort(numericId);
+		s.writeObject(pageMapName);
+		s.defaultWriteObject();
+	}
+	
+	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	{
+		int id = s.readShort();
+		String name = (String)s.readObject();
+		
+		IPageSerializer ps = (IPageSerializer)serializer.get();
+		if (ps != null)
+		{
+			ps.deserializePage(id, name, this);
+		}
+		s.defaultReadObject();
+	}
 	
 	/**
 	 * Called right after a component's listener method (the provided method
@@ -1391,5 +1411,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		 * @return The page or another Object that should be replaced for the page.
 		 */
 		public Object serializePage(Page page);
+
+		/**
+		 * @param id TODO
+		 * @param name TODO
+		 * @param page
+		 */
+		public void deserializePage(int id, String name, Page page);
 	}
 }

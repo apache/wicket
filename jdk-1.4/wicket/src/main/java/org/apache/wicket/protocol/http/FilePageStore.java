@@ -25,6 +25,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
+import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
@@ -384,6 +386,8 @@ public class FilePageStore implements IPageStore
 	private volatile int serialized;
 
 	private volatile long totalSerializationTime = 0;
+	
+	private static final ThreadLocal restoredPages = new ThreadLocal();
 
 	/**
 	 * Construct.
@@ -447,9 +451,7 @@ public class FilePageStore implements IPageStore
 		byte[] bytes = testMap(currentKey);
 		if (bytes != null)
 		{
-			Page page = (Page)Objects.byteArrayToObject(bytes);
-			page = page.getVersion(versionNumber);
-			return page;
+			return readPage(versionNumber, bytes);
 		}
 		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
@@ -475,19 +477,26 @@ public class FilePageStore implements IPageStore
 						pageData = new byte[length];
 						bb.get(pageData);
 					}
-					long t2 = System.currentTimeMillis();
-					Page page = (Page)Objects.byteArrayToObject(pageData);
-					page = page.getVersion(versionNumber);
-					if (page != null && log.isDebugEnabled())
+					try
 					{
-						long t3 = System.currentTimeMillis();
-						log.debug("restoring page " + page.getClass() + "[" + page.getNumericId()
-								+ "," + page.getCurrentVersionNumber() + "] size: "
-								+ pageData.length + " for session " + sessionId + " took "
-								+ (t2 - t1) + " miliseconds to read in and " + (t3 - t2)
-								+ " miliseconds to deserialize");
+						long t2 = System.currentTimeMillis();
+						Page page = readPage(versionNumber, pageData);
+						if (page != null && log.isDebugEnabled())
+						{
+							long t3 = System.currentTimeMillis();
+							log.debug("restoring page " + page.getClass() + "[" + page.getNumericId()
+									+ "," + page.getCurrentVersionNumber() + "] size: "
+									+ pageData.length + " for session " + sessionId + " took "
+									+ (t2 - t1) + " miliseconds to read in and " + (t3 - t2)
+									+ " miliseconds to deserialize");
+						}
+						return page;
+					} 
+					finally
+					{
+						
 					}
-					return page;
+
 				}
 				catch (Exception e)
 				{
@@ -511,6 +520,37 @@ public class FilePageStore implements IPageStore
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param versionNumber
+	 * @param bytes
+	 * @return
+	 */
+	private Page readPage(int versionNumber, byte[] bytes)
+	{
+		Page page;
+		Map map = null;
+		try
+		{
+			if (restoredPages.get() == null)
+			{
+				map = new HashMap();
+				restoredPages.set(map);
+				Page.serializer.set(new PageSerializer(null));
+			}
+			page = (Page)Objects.byteArrayToObject(bytes);
+			page = page.getVersion(versionNumber);
+		} 
+		finally
+		{
+			if (map != null)
+			{
+				Page.serializer.set(null);
+				restoredPages.set(null);
+			}
+		}
+		return page;
 	}
 
 	/**
@@ -784,7 +824,7 @@ public class FilePageStore implements IPageStore
 				return page;
 			}
 			SessionPageKey spk = new SessionPageKey(current.sessionId,page);
-			if (!completed.contains(spk))
+			if (!completed.contains(spk) && !previous.contains(spk))
 			{
 				previous.add(current);
 				current = spk;
@@ -795,6 +835,25 @@ public class FilePageStore implements IPageStore
 				current = (SessionPageKey)previous.remove(previous.size()-1);
 			}
 			return new PageHolder(page);
+		}
+
+		/**
+		 * @see org.apache.wicket.Page.IPageSerializer#deserializePage(int, String, org.apache.wicket.Page)
+		 */
+		public void deserializePage(int id, String name, Page page)
+		{
+			HashMap map = (HashMap)restoredPages.get();
+			if (map != null)
+			{
+				IntHashMap pagesMap = (IntHashMap)map.get(name);
+				if (pagesMap == null)
+				{
+					pagesMap = new IntHashMap();
+					map.put(name, pagesMap);
+				}
+				
+				pagesMap.put(id, page);
+			}
 		}
 	}
 	
@@ -813,7 +872,27 @@ public class FilePageStore implements IPageStore
 		
 		protected Object readResolve() throws ObjectStreamException
 		{
-			return Session.get().getPage(pagemap, Integer.toString(pageid), -1);
+			IntHashMap intHashMap = null;
+			Map map = (Map)restoredPages.get();
+			if (map != null)
+			{
+				intHashMap = (IntHashMap)map.get(pagemap);
+				if (intHashMap == null)
+				{
+					intHashMap = new IntHashMap();
+					map.put(pagemap, intHashMap);
+				}
+			}
+			Page page = (Page)intHashMap.get(pageid);
+			if (page == null)
+			{
+				page = Session.get().getPage(pagemap, Integer.toString(pageid), -1);
+				if (page != null)
+				{
+					intHashMap.put(pageid, page);
+				}
+			}
+			return page;
 		}
 	}
 }

@@ -165,6 +165,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				{
 					ajaxVersionNumber = pv.ajaxversionid;
 				}
+				lastPage = null;
 				return getStore().getPage(sessionId, getName(), id, versionNumber, ajaxVersionNumber);
 			}
 			return null;

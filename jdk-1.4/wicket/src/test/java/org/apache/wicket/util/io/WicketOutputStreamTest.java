@@ -107,7 +107,9 @@ public class WicketOutputStreamTest extends WicketTestCase
 
 	public void testPageReference() throws Exception
 	{
-		PageA a = new PageA(new PageB());
+		PageB b = new PageB("test");
+		PageA a = new PageA(b);
+		b.setA(a);
 		
 		woos.writeObject(a);
 
@@ -117,6 +119,8 @@ public class WicketOutputStreamTest extends WicketTestCase
 		PageA a2 = (PageA)wois.readObject();
 
 		Assert.assertEquals(a, a2);
+		
+		Assert.assertSame(a2, a2.getB().getA());
 
 	}
 	 

@@ -14,58 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.io;
+package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.Model;
+import junit.framework.Assert;
+
+import org.apache.wicket.Session;
+import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.io.PageA;
+import org.apache.wicket.util.io.PageB;
 
 /**
  * @author jcompagner
  */
-public class PageB extends WebPage
+public class FilePageStoreTest extends WicketTestCase
 {
 	/**
-	 * 
+	 * @throws Exception
 	 */
-	private static final long serialVersionUID = 1L;
-	private PageA a;
-	private final String test;
-	
-	/**
-	 * Construct.
-	 * @param t
-	 */
-	public PageB(String test)
+	public void testPageSerialization() throws Exception
 	{
-		this.test = test;
+		PageB b = new PageB("test");
+		PageA a = new PageA(b);
+		b.setA(a);
 		
+		tester.setupRequestAndResponse();
+		
+		Session session = Session.get();
+		
+		a.getPageMap().put(a);
+		a.getPageMap().put(b);
+		
+		PageA a2 = (PageA)a.getPageMap().get(a.getNumericId(), a.getCurrentVersionNumber());
+		
+		Assert.assertEquals(a, a2);
+		
+		Assert.assertSame(a2, a2.getB().getA());
 	}
-
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof PageB)
-		{
-			return getNumericId() == ((PageB)obj).getNumericId() && test.equals( ((PageB)obj).test);
-		}
-		return false;
-	}
-
-	/**
-	 * @param a
-	 */
-	public void setA(PageA a)
-	{
-		this.a = a;
-		//add(new AttributeModifier("test",new Model(a)));
-	}
-
-	/**
-	 * @return
-	 */
-	public PageA getA()
-	{
-		return a;
-	}
-	
 }

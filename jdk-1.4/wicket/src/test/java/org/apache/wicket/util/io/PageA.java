@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.util.io;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.Model;
 
 /**
  * @author jcompagner
@@ -28,11 +30,13 @@ public class PageA extends WebPage
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	Page page;
 	
-	public PageA(Page page)
+	private PageB page;
+	
+	public PageA(PageB page)
 	{
 		this.page = page;
+		//add(new AttributeModifier("test",new Model(page)));
 	}
 	
 	/**
@@ -52,5 +56,13 @@ public class PageA extends WebPage
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @return
+	 */
+	public PageB getB()
+	{
+		return page;
 	}
 }

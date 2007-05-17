@@ -43,7 +43,7 @@ public class MockHttpSession implements HttpSession, Serializable
 
 	private final long creationTime = System.currentTimeMillis();
 
-	private final String id = (new UID()).toString();
+	private final String id = (new UID()).toString().replace(':', '_').replace('-','_');
 
 	private long lastAccessedTime = 0;
 
