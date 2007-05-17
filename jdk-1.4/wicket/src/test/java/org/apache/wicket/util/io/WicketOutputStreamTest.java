@@ -123,15 +123,6 @@ public class WicketOutputStreamTest extends WicketTestCase
 		Assert.assertEquals(a, a2);
 		
 		Assert.assertSame(a2, a2.getB().getA());
-
-		Objects.setObjectStreamFactory(new DefaultObjectStreamFactory());
-		
-		byte[] array = Objects.objectToByteArray(a);
-		PageA aa = (PageA) Objects.byteArrayToObject(array);
-		
-		Assert.assertEquals(a, aa);
-		
-		Assert.assertSame(aa, aa.getB().getA());
 	}
 	 
 
