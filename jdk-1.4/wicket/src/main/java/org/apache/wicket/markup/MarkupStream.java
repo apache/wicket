@@ -452,7 +452,7 @@ public final class MarkupStream
 
 			final MarkupElement element = markup.get(i);
 
-			buffer.append(Strings.escapeMarkup(element.toString(), true));
+			buffer.append(Strings.escapeMarkup(element.toString(), true).toString());
 
 			if (i == currentIndex)
 			{
