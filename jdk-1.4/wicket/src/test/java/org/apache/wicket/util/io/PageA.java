@@ -36,7 +36,7 @@ public class PageA extends WebPage
 	public PageA(PageB page)
 	{
 		this.page = page;
-		//add(new AttributeModifier("test",new Model(page)));
+		add(new AttributeModifier("test",new Model(page)));
 	}
 	
 	/**

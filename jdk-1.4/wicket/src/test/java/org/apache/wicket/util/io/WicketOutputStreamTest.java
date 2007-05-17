@@ -26,6 +26,8 @@ import junit.framework.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
+import org.apache.wicket.util.lang.Objects;
 
 /**
  * @author jcompagner
@@ -122,6 +124,14 @@ public class WicketOutputStreamTest extends WicketTestCase
 		
 		Assert.assertSame(a2, a2.getB().getA());
 
+		Objects.setObjectStreamFactory(new DefaultObjectStreamFactory());
+		
+		byte[] array = Objects.objectToByteArray(a);
+		PageA aa = (PageA) Objects.byteArrayToObject(array);
+		
+		Assert.assertEquals(a, aa);
+		
+		Assert.assertSame(aa, aa.getB().getA());
 	}
 	 
 

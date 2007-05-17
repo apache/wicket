@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -525,7 +527,7 @@ public class FilePageStore implements IPageStore
 	/**
 	 * @param versionNumber
 	 * @param bytes
-	 * @return
+	 * @return page instance
 	 */
 	private Page readPage(int versionNumber, byte[] bytes)
 	{
@@ -813,15 +815,17 @@ public class FilePageStore implements IPageStore
 		{
 			this.current = key;
 		}
-
+		
 		/**
+		 * @throws IOException 
 		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page)
 		 */
-		public Object serializePage(Page page)
+		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
 		{
 			if (current.id == page.getNumericId())
 			{
-				return page;
+				stream.writeBoolean(false);
+				stream.defaultWriteObject();
 			}
 			SessionPageKey spk = new SessionPageKey(current.sessionId,page);
 			if (!completed.contains(spk) && !previous.contains(spk))
@@ -834,13 +838,11 @@ public class FilePageStore implements IPageStore
 				completed.add(current);
 				current = (SessionPageKey)previous.remove(previous.size()-1);
 			}
-			return new PageHolder(page);
+			stream.writeBoolean(true);
+			stream.writeObject(new PageHolder(page));
 		}
 
-		/**
-		 * @see org.apache.wicket.Page.IPageSerializer#deserializePage(int, String, org.apache.wicket.Page)
-		 */
-		public void deserializePage(int id, String name, Page page)
+		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream) throws IOException, ClassNotFoundException
 		{
 			HashMap map = (HashMap)restoredPages.get();
 			if (map != null)
@@ -854,9 +856,25 @@ public class FilePageStore implements IPageStore
 				
 				pagesMap.put(id, page);
 			}
+			
+			boolean b = stream.readBoolean();
+			
+			if (b == false) 
+			{
+				stream.defaultReadObject();
+				return page;
+			} 
+			else 
+			{
+				// the object will resolve to a Page (probably PageHolder)
+				return (Page) stream.readObject();
+			}
 		}
 	}
 	
+	/**
+	 * Class that resolves to page instance
+	 */
 	private static class PageHolder implements Serializable
 	{
 		private static final long serialVersionUID = 1L;

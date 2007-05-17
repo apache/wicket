@@ -57,7 +57,7 @@ public class PageB extends WebPage
 	public void setA(PageA a)
 	{
 		this.a = a;
-		//add(new AttributeModifier("test",new Model(a)));
+		add(new AttributeModifier("test",new Model(a)));
 	}
 
 	/**

@@ -17,6 +17,8 @@
 package org.apache.wicket;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -92,16 +94,17 @@ import org.slf4j.LoggerFactory;
  * <li><b>Models </b>- Pages, like other Components, can have models (see
  * {@link IModel}). A Page can be assigned a model by passing one to the Page's
  * constructor, by overriding initModel() or with an explicit invocation of
- * setModel(). If the model is a {@link org.apache.wicket.model.CompoundPropertyModel},
- * Components on the Page can use the Page's model implicitly via container
- * inheritance. If a Component is not assigned a model, the initModel() override
- * in Component will cause that Component to use the nearest CompoundModel in
- * the parent chain, in this case, the Page's model. For basic CompoundModels,
- * the name of the Component determines which property of the implicit page
- * model the component is bound to. If more control is desired over the binding
- * of Components to the page model (for example, if you want to specify some
- * property expression other than the component's name for retrieving the model
- * object), BoundCompoundPropertyModel can be used.
+ * setModel(). If the model is a
+ * {@link org.apache.wicket.model.CompoundPropertyModel}, Components on the
+ * Page can use the Page's model implicitly via container inheritance. If a
+ * Component is not assigned a model, the initModel() override in Component will
+ * cause that Component to use the nearest CompoundModel in the parent chain, in
+ * this case, the Page's model. For basic CompoundModels, the name of the
+ * Component determines which property of the implicit page model the component
+ * is bound to. If more control is desired over the binding of Components to the
+ * page model (for example, if you want to specify some property expression
+ * other than the component's name for retrieving the model object),
+ * BoundCompoundPropertyModel can be used.
  * 
  * <li><b>Back Button </b>- Pages can support the back button by enabling
  * versioning with a call to setVersioned(boolean). If a Page is versioned and
@@ -161,9 +164,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private static final Logger log = LoggerFactory.getLogger(Page.class);
 
 	/**
-	 * This is a thread local that is used for serializing page references in this 
-	 * page.It stores a {@link IPageSerializer} which can be set by the outside world
-	 * to do the serialization of this page.  
+	 * This is a thread local that is used for serializing page references in
+	 * this page.It stores a {@link IPageSerializer} which can be set by the
+	 * outside world to do the serialization of this page.
 	 */
 	public static final ThreadLocal serializer = new ThreadLocal();
 
@@ -248,36 +251,58 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		init(pageMap);
 	}
 
-	protected Object writeReplace() throws ObjectStreamException
+	// temporary variable to pass page instance from readObject to readResolve
+	private transient Page pageToResolve = null;
+
+	// called after readObject
+	private Object readResolve() throws ObjectStreamException
 	{
-		IPageSerializer ps = (IPageSerializer)serializer.get();
-		if (ps != null)
+		if (pageToResolve == null)
 		{
-			return ps.serializePage(this);
+			return this;
 		}
-		return this;
+		else
+		{
+			Page page = pageToResolve;
+			pageToResolve = null;
+			return page;
+		}
 	}
-	
+
 	private void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
 		s.writeShort(numericId);
 		s.writeObject(pageMapName);
-		s.defaultWriteObject();
+
+
+		IPageSerializer ps = (IPageSerializer)serializer.get();
+
+		if (ps != null)
+		{
+			ps.serializePage(this, s);
+		}
+		else
+		{
+			s.defaultWriteObject();
+		}
 	}
-	
+
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
 		int id = s.readShort();
 		String name = (String)s.readObject();
-		
+
 		IPageSerializer ps = (IPageSerializer)serializer.get();
 		if (ps != null)
 		{
-			ps.deserializePage(id, name, this);
+			pageToResolve = ps.deserializePage(id, name, this, s);
 		}
-		s.defaultReadObject();
+		else
+		{
+			s.defaultReadObject();
+		}
 	}
-	
+
 	/**
 	 * Called right after a component's listener method (the provided method
 	 * argument) was called. This method may be used to clean up dependencies,
@@ -290,8 +315,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param listener
 	 *            the listener of that component that is to be called
 	 */
-	// TODO Post-1.3: We should create a listener on Application like IComponentInstantiationListener
-	// that forwards to IAuthorizationStrategy for RequestListenerInterface invocations.  
+	// TODO Post-1.3: We should create a listener on Application like
+	// IComponentInstantiationListener
+	// that forwards to IAuthorizationStrategy for RequestListenerInterface
+	// invocations.
 	public void afterCallComponent(final Component component,
 			final RequestListenerInterface listener)
 	{
@@ -310,8 +337,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param listener
 	 *            the listener of that component that is to be called
 	 */
-	// TODO Post-1.3: We should create a listener on Application like IComponentInstantiationListener
-	// that forwards to IAuthorizationStrategy for RequestListenerInterface invocations.  
+	// TODO Post-1.3: We should create a listener on Application like
+	// IComponentInstantiationListener
+	// that forwards to IAuthorizationStrategy for RequestListenerInterface
+	// invocations.
 	public void beforeCallComponent(final Component component,
 			final RequestListenerInterface listener)
 	{
@@ -841,7 +870,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 
 		beforeRender();
-		
+
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
@@ -866,7 +895,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		// Handle request by rendering page
 		render(null);
-		
+
 		afterRender();
 
 		// Check rendering if it happened fully
@@ -889,7 +918,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @param numberOfVersions
 	 *            to rollback
-	 * @return
+	 * @return rollbacked page instance
 	 */
 	public final Page rollbackPage(int numberOfVersions)
 	{
@@ -1004,13 +1033,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							// Add to explanatory string to buffer
 							buffer.append(Integer.toString(unrenderedComponents.getCount()) + ". "
 									+ component + "\n");
-							String metadata = (String)component.getMetaData(Component.CONSTRUCTED_AT_KEY);
-							if(metadata != null)
+							String metadata = (String)component
+									.getMetaData(Component.CONSTRUCTED_AT_KEY);
+							if (metadata != null)
 							{
 								buffer.append(metadata);
 							}
 							metadata = (String)component.getMetaData(Component.ADDED_AT_KEY);
-							if(metadata != null)
+							if (metadata != null)
 							{
 								buffer.append(metadata);
 							}
@@ -1391,32 +1421,43 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		this.stateless = stateless;
 	}
-	
+
 	/**
-	 * You can set implementation of the interface in the {@link Page#serializer}
-	 * then that implementation will handle the serialization of this page.
-	 * The serializePage method is called from the writeReplace then the implementation
-	 * can give another object to serialize instead. Which should have a readResolve method
-	 * for constructing back the page.
+	 * You can set implementation of the interface in the
+	 * {@link Page#serializer} then that implementation will handle the
+	 * serialization of this page. The serializePage method is called from the
+	 * writeObject method then the implementation override the default serialization.
 	 * 
 	 * @author jcompagner
 	 */
 	public static interface IPageSerializer
 	{
 		/**
-		 * Called from the {@link Page#writeReplace()} method.
+		 * Called from the {@link Page#writeObject()} method.
 		 * 
-		 * @param page The page that must be serialized.
-		 * 
-		 * @return The page or another Object that should be replaced for the page.
+		 * @param page
+		 *            The page that must be serialized.
+		 * @param stream
+		 *            ObjectOutputStream
+		 * @throws IOException
 		 */
-		public Object serializePage(Page page);
+		public void serializePage(Page page, ObjectOutputStream stream) throws IOException;
 
 		/**
-		 * @param id TODO
-		 * @param name TODO
+		 * Called when page is being deserialized
+		 * 
+		 * @param id
+		 *            TODO
+		 * @param name
+		 *            TODO
 		 * @param page
+		 * @param stream
+		 * @return New instance to replace page instance being deserialized
+		 * @throws IOException
+		 * @throws ClassNotFoundException
+		 * 
 		 */
-		public void deserializePage(int id, String name, Page page);
+		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream)
+				throws IOException, ClassNotFoundException;
 	}
 }
