@@ -95,12 +95,11 @@ public abstract class AbstractTextComponent extends FormComponent
 	
 	/**
 	 * If the type is not set try to guess it if the model supports it.
-	 * @see org.apache.wicket.Component#onAttach()
+	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onAttach()
+	protected void onBeforeRender()
 	{
-		super.onAttach();
-		
+		super.onBeforeRender();
 		if (getType() == null)
 		{
 			setType(getModelType(getModel()));
