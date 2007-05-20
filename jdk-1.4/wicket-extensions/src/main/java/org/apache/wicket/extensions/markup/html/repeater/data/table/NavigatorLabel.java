@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
 
@@ -31,6 +32,25 @@ public class NavigatorLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
 
+	// TODO Factor this interface out and let dataview/datatable implement it
+	private static interface PageableComponent
+	{
+		/**
+		 * @return total number of rows across all pages
+		 */
+		int getRowCount();
+
+		/**
+		 * @return current page
+		 */
+		int getCurrentPage();
+
+		/**
+		 * @return rows per page
+		 */
+		int getRowsPerPage();
+	}
+
 	/**
 	 * @param id
 	 *            component id
@@ -38,6 +58,60 @@ public class NavigatorLabel extends Label
 	 *            dataview
 	 */
 	public NavigatorLabel(final String id, final DataTable table)
+	{
+		this(id, new PageableComponent()
+		{
+
+			public int getCurrentPage()
+			{
+				return table.getCurrentPage();
+			}
+
+			public int getRowCount()
+			{
+				return table.getRowCount();
+			}
+
+			public int getRowsPerPage()
+			{
+				return table.getRowsPerPage();
+			}
+
+		});
+
+	}
+
+	/**
+	 * @param id
+	 *            component id
+	 * @param table
+	 *            pageable view
+	 */
+	public NavigatorLabel(final String id, final DataView table)
+	{
+		this(id, new PageableComponent()
+		{
+
+			public int getCurrentPage()
+			{
+				return table.getCurrentPage();
+			}
+
+			public int getRowCount()
+			{
+				return table.getRowCount();
+			}
+
+			public int getRowsPerPage()
+			{
+				return table.getItemsPerPage();
+			}
+
+		});
+
+	}
+
+	private NavigatorLabel(final String id, final PageableComponent table)
 	{
 		super(id, new AbstractReadOnlyModel()
 		{
@@ -61,4 +135,5 @@ public class NavigatorLabel extends Label
 			}
 		});
 	}
+
 }
