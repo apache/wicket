@@ -32,13 +32,32 @@
 	<name>Wicket JDK 1.5 modules</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
 
-	<modules>
-		<module>wicket-auth-roles</module>
-		<module>wicket-jmx</module>
-		<module>wicket-objectssizeof-agent</module>
-		<module>wicket-spring-annot</module>
-		<module>wicket-examples</module>
-	</modules>
+	<profiles>
+		<profile>
+			<id>all</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>wicket-auth-roles</module>
+				<module>wicket-jmx</module>
+				<module>wicket-objectssizeof-agent</module>
+				<module>wicket-spring-annot</module>
+				<module>wicket-examples</module>
+			</modules>
+		</profile>
+		<!--
+			release profile remains empty because the release moduleset is 
+			determined at the parent pom -->
+		<profile>
+			<id>release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+			</modules>
+		</profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>

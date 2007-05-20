@@ -34,14 +34,33 @@
 	<name>Wicket JDK 1.4 modules</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
 
-	<modules>
-		<module>wicket</module>
-		<module>wicket-extensions</module>
-		<module>wicket-spring</module>
-		<module>wicket-quickstart</module>
-		<module>wicket-datetime</module>
-		<module>wicket-velocity</module>
-	</modules>
+	<profiles>
+		<profile>
+			<id>all</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>wicket</module>
+				<module>wicket-extensions</module>
+				<module>wicket-spring</module>
+				<module>wicket-quickstart</module>
+				<module>wicket-datetime</module>
+				<module>wicket-velocity</module>
+			</modules>
+		</profile>
+		<!--
+			release profile remains empty because the release moduleset is 
+			determined at the parent pom -->
+		<profile>
+			<id>release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+			</modules>
+		</profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
