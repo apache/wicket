@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -126,8 +127,20 @@ public class TabbedPanel extends Panel
 			}
 		};
 
+		WebMarkupContainer tabsContainer = new WebMarkupContainer("tabs-container")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.put("class", getTabContainerCssClass());
+			}
+		};
+		add(tabsContainer);
+
 		// add the loop used to generate tab names
-		add(new Loop("tabs", tabCount)
+		tabsContainer.add(new Loop("tabs", tabCount)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -164,6 +177,15 @@ public class TabbedPanel extends Panel
 		// select the first tab by default
 		setSelectedTab(0);
 
+	}
+
+	/**
+	 * @return the value of css class attribute that will be added to a div
+	 *         containing the tabs. The default value is <code>tab-row</code>
+	 */
+	protected String getTabContainerCssClass()
+	{
+		return "tab-row";
 	}
 
 	/**
