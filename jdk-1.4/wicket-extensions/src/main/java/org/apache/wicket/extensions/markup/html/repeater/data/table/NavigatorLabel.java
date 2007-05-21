@@ -17,6 +17,8 @@
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 
+import java.io.Serializable;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -33,7 +35,7 @@ public class NavigatorLabel extends Label
 	private static final long serialVersionUID = 1L;
 
 	// TODO Factor this interface out and let dataview/datatable implement it
-	private static interface PageableComponent
+	private static interface PageableComponent extends Serializable
 	{
 		/**
 		 * @return total number of rows across all pages
@@ -61,6 +63,11 @@ public class NavigatorLabel extends Label
 	{
 		this(id, new PageableComponent()
 		{
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
 			public int getCurrentPage()
 			{
@@ -91,6 +98,11 @@ public class NavigatorLabel extends Label
 	{
 		this(id, new PageableComponent()
 		{
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
 			public int getCurrentPage()
 			{
