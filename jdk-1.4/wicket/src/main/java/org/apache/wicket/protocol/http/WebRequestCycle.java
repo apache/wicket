@@ -258,11 +258,11 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * If it's an ajax request we always redirects.
+	 * If it's an ajax request we always redirect.
 	 * 
-	 * @see org.apache.wicket.RequestCycle#getRedirect()
+	 * @see org.apache.wicket.RequestCycle#isRedirect()
 	 */
-	public final boolean getRedirect()
+	public final boolean isRedirect()
 	{
 		if (getWebRequest().isAjax())
 		{
@@ -270,7 +270,7 @@ public class WebRequestCycle extends RequestCycle
 		}
 		else
 		{
-			return super.getRedirect();
+			return super.isRedirect();
 		}
 	}
 }

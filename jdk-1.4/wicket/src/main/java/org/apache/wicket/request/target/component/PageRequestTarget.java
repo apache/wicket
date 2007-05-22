@@ -53,7 +53,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	public void respond(RequestCycle requestCycle)
 	{
 		// Should page be redirected to?
-		if (requestCycle.getRedirect())
+		if (requestCycle.isRedirect())
 		{
 			// Redirect to the page
 			requestCycle.redirectTo(page);

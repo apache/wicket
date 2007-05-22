@@ -198,7 +198,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public void processEvents(RequestCycle requestCycle)
 	{
-		if (!requestCycle.getRedirect())
+		if (!requestCycle.isRedirect())
 		{
 			page = getPage(requestCycle);
 		}
@@ -211,7 +211,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	{
 		if (pageClass != null)
 		{
-			if (requestCycle.getRedirect())
+			if (requestCycle.isRedirect())
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
 				String redirectUrl = processor.getRequestCodingStrategy().encode(requestCycle, this).toString();
@@ -270,7 +270,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	protected final Page getPage(RequestCycle requestCycle)
 	{
-		if (page == null && pageClass != null && !requestCycle.getRedirect())
+		if (page == null && pageClass != null && !requestCycle.isRedirect())
 		{
 			page = newPage(pageClass, requestCycle);
 		}

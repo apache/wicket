@@ -342,8 +342,19 @@ public abstract class RequestCycle
 	 * Gets whether the page for this request should be redirected.
 	 * 
 	 * @return whether the page for this request should be redirected
+	 * @deprecated Use {@link #isRedirect()} instead
 	 */
-	public boolean getRedirect()
+	public final boolean getRedirect()
+	{
+		return isRedirect();
+	}
+
+	/**
+	 * Gets whether the page for this request should be redirected.
+	 * 
+	 * @return whether the page for this request should be redirected
+	 */
+	public boolean isRedirect()
 	{
 		return redirect;
 	}
@@ -1178,7 +1189,7 @@ public abstract class RequestCycle
 			getSession().detach();
 		}
 
-		if (getRedirect())
+		if (isRedirect())
 		{
 			// Since we are explicitly redirecting to a page already, we do not
 			// want a second redirect to occur automatically
