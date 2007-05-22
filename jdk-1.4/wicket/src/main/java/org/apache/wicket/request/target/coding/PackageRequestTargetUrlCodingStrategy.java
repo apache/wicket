@@ -92,17 +92,31 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		log.debug("remainder=" + remainder);
 		log.debug("parametersFragment=" + parametersFragment);
 		final String bookmarkablePageClassName = packageName + "." + remainder.substring(0, ix);
-		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
-				bookmarkablePageClassName);
-		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
-				requestParameters.getParameters()));
-
-		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
-		requestParameters.setPageMapName(pageMapName);
-
-		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
-				bookmarkablePageClass, parameters);
-		return target;
+		try
+		{
+			Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
+					bookmarkablePageClassName);
+			PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
+					requestParameters.getParameters()));
+	
+			final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+			requestParameters.setPageMapName(pageMapName);
+	
+			BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
+					bookmarkablePageClass, parameters);
+			return target;
+		}
+		catch (RuntimeException ex)
+		{
+			// If the class resolver wraps a ClassNotFoundException with a
+			// RuntimeException, just return null here, which will cause a 404
+			// or similar.
+			if (ex.getCause() instanceof ClassNotFoundException)
+			{
+				return null;
+			}
+			throw ex;
+		}
 	}
 
 	/**
