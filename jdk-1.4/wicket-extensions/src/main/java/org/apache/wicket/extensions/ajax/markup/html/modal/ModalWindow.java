@@ -47,6 +47,9 @@ import org.apache.wicket.util.string.Strings;
  * prevent user from interacting the rest of page (using a mask) until the
  * window is closed.
  * <p>
+ * If you want this to work under IE, don't attach this component to a
+ * &lt;span&gt; tag, make sure you use a &lt;div&gt;.
+ * <p>
  * The window is draggable and optionally resizable. The content can be either
  * <ul>
  * <li><b>a component</b> - you need to add the component to modal window
@@ -101,7 +104,8 @@ import org.apache.wicket.util.string.Strings;
  * in a cookie, so that it is preserved when window is close. The name of the
  * cookie is specified via <code>{@link #setCookieName(String)}</code>. If
  * the name is <code>null</code>, position is not stored (initial width and
- * height are always used). Default cookie name is null (position is not stored).
+ * height are always used). Default cookie name is null (position is not
+ * stored).
  * <li><code>{@link #setMinimalWidth(int)}</code> and
  * <code>{@link #setMinimalHeight(int)}</code> set the minimal dimensions of
  * resizable window.
