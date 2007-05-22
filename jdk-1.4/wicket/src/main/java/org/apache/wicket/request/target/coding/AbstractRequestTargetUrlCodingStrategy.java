@@ -114,12 +114,25 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
-				if (entry.getValue() != null)
+				Object value = entry.getValue();
+				if (value != null)
 				{
-					String escapedValue = urlEncode(entry.getValue().toString());
-					if (!Strings.isEmpty(escapedValue))
-					{
-						url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+					if (value instanceof String[]) {
+						String[] values = (String[])value;
+						for (int i = 0; i < values.length; i++) {
+							String escapedValue = urlEncode(values[i]);
+							if (!Strings.isEmpty(escapedValue))
+							{
+								url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+							}
+						}
+					}
+					else {
+						String escapedValue = urlEncode(value.toString());
+						if (!Strings.isEmpty(escapedValue))
+						{
+							url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+						}
 					}
 				}
 			}
