@@ -117,25 +117,29 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 				Object value = entry.getValue();
 				if (value != null)
 				{
-					if (value instanceof String[]) {
+					if (value instanceof String[])
+					{
 						String[] values = (String[])value;
-						for (int i = 0; i < values.length; i++) {
-							String escapedValue = urlEncode(values[i]);
-							if (!Strings.isEmpty(escapedValue))
-							{
-								url.append("/").append(entry.getKey()).append("/").append(escapedValue);
-							}
+						for (int i = 0; i < values.length; i++)
+						{
+							appendValue(url, entry.getKey().toString(), values[i]);
 						}
 					}
-					else {
-						String escapedValue = urlEncode(value.toString());
-						if (!Strings.isEmpty(escapedValue))
-						{
-							url.append("/").append(entry.getKey()).append("/").append(escapedValue);
-						}
+					else
+					{
+						appendValue(url, entry.getKey().toString(), value.toString());
 					}
 				}
 			}
+		}
+	}
+	
+	private void appendValue(AppendingStringBuffer url, String key, String value)
+	{
+		String escapedValue = urlEncode(value);
+		if (!Strings.isEmpty(escapedValue))
+		{
+			url.append("/").append(key).append("/").append(escapedValue);
 		}
 	}
 
