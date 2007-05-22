@@ -148,21 +148,35 @@ public class ServletWebRequest extends WebRequest
 		{
 			return relativePathPrefixToContextRoot;
 		}
+		
+		// Prepend to get back to the wicket handler.
 		String tmp = getRelativePathPrefixToWicketHandler();
-		String servletPath = getServletPath();
-		if (servletPath == null || servletPath.length() == 0)
-		{
-			return tmp;
-		}
-
 		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
-		for (int i = 1; i < servletPath.length(); i++)
+		
+		String path = getPath();
+		if (path == null || path.length() == 0)
 		{
-			if (servletPath.charAt(i) == '?')
-			{
-				break;
-			}
-			if (servletPath.charAt(i) == '/')
+			path = "";
+		}
+		
+		// Now prepend to get back from the wicket handler to the root context.
+		
+		// Find the absolute path for the wicket filter/servlet
+		String wicketPath = "";
+		
+		// We're running as a filter.
+		String servletPath = getServletPath();
+		if (servletPath.endsWith(path)) {
+			wicketPath = servletPath.substring(0, servletPath.length() - path.length() - 1);
+		}
+		// We're running as a servlet
+		else {
+			wicketPath = servletPath;
+		}
+		
+		for (int i = 0; i < wicketPath.length(); i++)
+		{
+			if (wicketPath.charAt(i) == '/')
 			{
 				prepender.prepend("../");
 			}
