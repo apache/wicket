@@ -78,8 +78,9 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 				.getName());
 
 		int version = component.getPage().getCurrentVersionNumber();
-
+		
 		// add the wicket:interface param to the params.
+		// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:urlDepth
 		AppendingStringBuffer param = new AppendingStringBuffer(4 + componentPath.length()
 				+ interfaceName.length());
 		if (pageMapName != null)
@@ -93,9 +94,14 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		{
 			param.append(version);
 		}
+		// Interface
 		param.append(Component.PATH_SEPARATOR);
 		param.append(getInterfaceName());
+		
+		// Behavior (none)
 		param.append(Component.PATH_SEPARATOR);
+		
+		// URL depth (not required)
 		param.append(Component.PATH_SEPARATOR);
 
 		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, param.toString());
