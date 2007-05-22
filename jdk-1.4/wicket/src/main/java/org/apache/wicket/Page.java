@@ -894,9 +894,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		});
 
 		// Handle request by rendering page
-		render(null);
-
-		afterRender();
+		try
+		{
+			render(null);
+		} 
+		finally
+		{
+			afterRender();
+		}
 
 		// Check rendering if it happened fully
 		checkRendering(this);

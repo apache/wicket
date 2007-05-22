@@ -3076,21 +3076,27 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		// if the component has been previously attached via attach()
 		// detach it now
-		setFlag(FLAG_AFTER_RENDERING, true);
-		onAfterRender();
-		if (getFlag(FLAG_AFTER_RENDERING))
+		try
 		{
-			throw new IllegalStateException(
-					Component.class.getName()
-							+ " has not been properly detached. Something in the hierarchy of "
-							+ getClass().getName()
-							+ " has not called super.onAfterRender() in the override of onAfterRender() method");
+			setFlag(FLAG_AFTER_RENDERING, true);
+			onAfterRender();
+			if (getFlag(FLAG_AFTER_RENDERING))
+			{
+				throw new IllegalStateException(
+						Component.class.getName()
+								+ " has not been properly detached. Something in the hierarchy of "
+								+ getClass().getName()
+								+ " has not called super.onAfterRender() in the override of onAfterRender() method");
+			}
+			// always detach children because components can be attached
+			// independently of their parents
+			onAfterRenderChildren();
 		}
-		setFlag(FLAG_RENDERING, false);
-
-		// always detach children because components can be attached
-		// independently of their parents
-		onAfterRenderChildren();
+		finally
+		{
+			// this flag must always be set to false.
+			setFlag(FLAG_RENDERING, false);
+		}
 	}
 
 	/**
