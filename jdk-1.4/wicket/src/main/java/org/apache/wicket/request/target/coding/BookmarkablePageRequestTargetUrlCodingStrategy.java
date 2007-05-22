@@ -99,17 +99,17 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			// try to parse component path and listener interface
 			final String[] pathComponents = Strings.split(bookmarkableInterfaceListener,
 					Component.PATH_SEPARATOR);
-			// There must be at least 4 path components
-			if (pathComponents.length < 4)
+			// There must be at least 6 path components
+			if (pathComponents.length < 6)
 			{
 				throw new WicketRuntimeException("Internal error parsing "
 						+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = "
 						+ bookmarkableInterfaceListener);
 			}
-			final String interfaceName = pathComponents[pathComponents.length - 2];
+			final String interfaceName = pathComponents[pathComponents.length - 3];
 			int start = (pageMapName != null) ? pageMapName.length() + 1 : 1;
 			final String componentPath = bookmarkableInterfaceListener.substring(start,
-					bookmarkableInterfaceListener.length() - interfaceName.length() - 2);
+					bookmarkableInterfaceListener.length() - interfaceName.length() - 3);
 
 			target = new BookmarkableListenerInterfaceRequestTarget(pageMapName,
 					bookmarkablePageClass, parameters, componentPath, interfaceName);
