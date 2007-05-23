@@ -31,7 +31,6 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IComponentAssignedModel;
@@ -598,22 +597,22 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 */
 	public final boolean isValid()
 	{
-		final boolean valid[] = { true };
-		visitFormComponentsPostOrder(this, new IVisitor()
-		{
+		class IsValidVisitor implements IVisitor {
+			boolean valid = true;
 			public Object formComponent(IFormVisitorParticipant formComponent)
 			{
 				final FormComponent fc = (FormComponent)formComponent;
 				if (fc.hasErrorMessage())
 				{
-					valid[0] = false;
+					valid = false;
 					return Component.IVisitor.STOP_TRAVERSAL;
 				}
 				return Component.IVisitor.CONTINUE_TRAVERSAL;
 			}
-		});
-
-		return valid[0];
+		}
+		IsValidVisitor tmp = new IsValidVisitor();
+		visitFormComponentsPostOrder(this, tmp);
+		return tmp.valid;
 	}
 
 	/**
