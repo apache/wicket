@@ -70,7 +70,7 @@ public class StatelessComponentTest extends WicketTestCase
 		// "StatelessComponentPage_mount_result.html");
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/:0:link::ILinkListener:");
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/:0:link::ILinkListener::");
 		try
 		{
 			tester.processRequestCycle();
