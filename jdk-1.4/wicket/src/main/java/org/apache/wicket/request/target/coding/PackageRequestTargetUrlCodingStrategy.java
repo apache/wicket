@@ -111,7 +111,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 			// If the class resolver wraps a ClassNotFoundException with a
 			// RuntimeException, just return null here, which will cause a 404
 			// or similar.
-			if (ex.getCause() instanceof ClassNotFoundException)
+			if (ex.getCause() != null && ex.getCause() instanceof ClassNotFoundException)
 			{
 				return null;
 			}
