@@ -254,8 +254,8 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 		// The intercept continuation URL should be saved exactly as the
 		// original request specified.
-		interceptContinuationURL = cycle.getRequest().getPath();
-
+		 interceptContinuationURL = "/" + cycle.getRequest().getURL();
+		
 		// Page map is dirty
 		dirty();
 

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
@@ -81,5 +82,31 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public void testBookmarkableRequestWithInterceptWithParams() throws Exception
+	{
+		tester.setupRequestAndResponse();
+		
+		WebRequestCycle cycle = tester.createRequestCycle();
+		
+		PageParameters pp = new PageParameters();
+		pp.put("test", "test");
+		String url = cycle.urlFor(new BookmarkablePageRequestTarget(BookmarkableThrowsInterceptPage.class,pp)).toString();
+		String url2 = cycle.urlFor(new BookmarkablePageRequestTarget(BookmarkableContinueToPage.class,null)).toString();
+
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url);
+		tester.processRequestCycle();
+		
+		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableSetSecurityPage.class);
+		
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url2);
+		tester.processRequestCycle();
+		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableThrowsInterceptPage.class);
+
+	}
 
 }

@@ -66,7 +66,11 @@ public class RedirectRequestTarget implements IRequestTarget
 	{
 		Response response = requestCycle.getResponse();
 		response.reset();
-		if (redirectUrl.startsWith("/") || redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://"))
+		if (redirectUrl.startsWith("/"))
+		{
+			response.redirect(RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + redirectUrl.substring(1));	
+		}
+		else if (redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://"))
 		{
 			response.redirect(redirectUrl);
 		}
