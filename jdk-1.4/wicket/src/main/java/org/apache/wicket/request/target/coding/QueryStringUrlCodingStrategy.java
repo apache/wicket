@@ -108,10 +108,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	}
 
 	/**
-	 * Gets the encoded URL for the request target. Typically, the result will
-	 * be prepended with a protocol specific prefix. In a servlet environment,
-	 * the prefix concatenates the context path and the servlet path, for
-	 * example "mywebapp/myservlet".
+	 * Append the parameters to the end of the URL.
 	 * 
 	 * @param url
 	 *            the relative reference URL
