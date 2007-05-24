@@ -461,7 +461,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 			if (popupSettings != null)
 			{
 				IPageMap popupPageMap = popupSettings.getPageMap(this);
-				if (popupPageMap != null)
+				if (popupPageMap != null && popupPageMap.getName() != null)
 				{
 					tag.put("target", popupPageMap.getName());
 				}
