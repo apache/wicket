@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.util.lang.Bytes;
@@ -65,7 +66,8 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public String getContextPath()
 	{
-		return httpServletRequest.getContextPath();
+		String contextPath = Application.get().getApplicationSettings().getContextPath();
+		return contextPath != null ? contextPath : httpServletRequest.getContextPath();
 	}
 
 	/**

@@ -222,16 +222,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 				{
 					if (path == null)
 					{
-						String contextPath = Application.get().getApplicationSettings()
-								.getContextPath();
+						String contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest().getContextPath();
 						if (contextPath == null)
 						{
-							contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-									.getContextPath();
-							if (contextPath == null)
-							{
-								contextPath = "";
-							}
+							contextPath = "";
 						}
 						AppendingStringBuffer b = new AppendingStringBuffer();
 						b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
@@ -319,17 +313,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 				public Object getObject(Component component)
 				{
 					if (path == null)
-					{
-						String contextPath = Application.get().getApplicationSettings()
+					{					
+						String contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
 								.getContextPath();
 						if (contextPath == null)
 						{
-							contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-									.getContextPath();
-							if (contextPath == null)
-							{
-								contextPath = "";
-							}
+							contextPath = "";
 						}
 						AppendingStringBuffer b = new AppendingStringBuffer();
 						b.append("<script type=\"text/javascript\" src=\"");
