@@ -255,7 +255,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		if (path == null)
 		{
-			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
+			return null;
 		}
 		else if (!path.equals("/")) // ignore root paths.. is this the right
 		// path?
