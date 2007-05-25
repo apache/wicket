@@ -214,7 +214,6 @@ public class WicketFilter implements Filter
 					// Try to see if there is a redirect stored
 					ISessionStore sessionStore = webApplication.getSessionStore();
 					String sessionId = sessionStore.getSessionId(request, false);
-					System.out.println("THOOF-WICKET: Redirect to buffer for session id " + sessionId);
 					if (sessionId != null)
 					{
 						BufferedHttpServletResponse bufferedResponse = webApplication
