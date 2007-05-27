@@ -73,7 +73,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		{
 			ResourceStreamRequestTarget that = (ResourceStreamRequestTarget)obj;
 			return resourceStream.equals(that.resourceStream)
-					&& ((fileName != null) ? fileName.equals(this.fileName) : true);
+					&& ((fileName != null) ? fileName.equals(that.fileName) : true);
 		}
 		return false;
 	}
