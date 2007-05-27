@@ -409,7 +409,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 		url = appendAnchor(tag, url);
 
 		// If we're disabled
-		if (!isEnabled())
+		if (!isLinkEnabled())
 		{
 			disableLink(tag);
 		}
