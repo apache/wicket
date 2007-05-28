@@ -21,13 +21,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
-import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +44,6 @@ public class TestFilePageStore implements IPageStore
 	/** log. */
 	protected static Logger log = LoggerFactory.getLogger(TestFilePageStore.class);
 
-	private Map map = new ConcurrentHashMap();
-	
 	public void destroy()
 	{
 	}
@@ -197,10 +192,8 @@ public class TestFilePageStore implements IPageStore
 		
 	}
 
-	public void removePage(String sessionId, Page page)
+	public void removePage(String sessionId, String pageMapName, int pageId)
 	{
-		SessionPageKey key = new SessionPageKey(sessionId, page);
-		map.remove(page);
 	}
 
 	public void storePage(String sessionId, Page page)
@@ -213,11 +206,6 @@ public class TestFilePageStore implements IPageStore
 
 	public void unbind(String sessionId)
 	{
-		for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
-			SessionPageKey key = (SessionPageKey)i.next();
-			if (key.sessionId.equals(sessionId))
-				i.remove();
-		}
 	}
 
 	private File getPageFile(SessionPageKey key, File sessionDir)

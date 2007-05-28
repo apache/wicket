@@ -38,6 +38,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
+import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Objects;
@@ -531,7 +532,7 @@ public class FilePageStore implements IPageStore
 	 */
 	private Page readPage(int versionNumber, byte[] bytes)
 	{
-		Page page;
+		Page page = null;
 		Map map = null;
 		try
 		{
@@ -541,8 +542,12 @@ public class FilePageStore implements IPageStore
 				restoredPages.set(map);
 				Page.serializer.set(new PageSerializer(null));
 			}
-			page = (Page)Objects.byteArrayToObject(bytes);
-			page = page.getVersion(versionNumber);
+			IPageMapEntry entry = (IPageMapEntry)Objects.byteArrayToObject(bytes);
+			if (entry != null)
+			{
+				page = entry.getPage();
+				page = page.getVersion(versionNumber);
+			}
 		} 
 		finally
 		{
@@ -570,9 +575,10 @@ public class FilePageStore implements IPageStore
 	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#removePage(java.lang.String,
 	 *      org.apache.wicket.Page)
 	 */
-	public void removePage(String sessionId, Page page)
+	public void removePage(String sessionId, String pageMapName, int pageId)
 	{
-		removePageFromPendingMap(sessionId, page.getNumericId());
+		removePageFromPendingMap(sessionId, pageMapName, pageId);
+		removeFiles(sessionId,pageMapName, pageId);
 	}
 
 	/**
@@ -614,12 +620,20 @@ public class FilePageStore implements IPageStore
 	}
 
 
-	private void removePage(String sessionId, int id)
+	private void removeFiles(String sessionId, String pageMap, int id)
 	{
 		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
-			final String filepart = appName + "-page-" + id;
+			final String filepart;
+			if (id != -1)
+			{
+				filepart = appName + "-pm-"+pageMap +"-p-" + id;
+			}
+			else
+			{
+				filepart = appName + "-pm-"+pageMap;
+			}
 			File[] listFiles = sessionDir.listFiles(new FilenameFilter()
 			{
 				public boolean accept(File dir, String name)
@@ -636,10 +650,11 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * @param sessionId
-	 * @param id
+	 * @param sessionId The session of the page that must be removed
+	 * @param pageMap The pagemap of the page that must be removed
+	 * @param id The id of the page.
 	 */
-	private void removePageFromPendingMap(String sessionId, int id)
+	private void removePageFromPendingMap(String sessionId, String pageMap,int id)
 	{
 		List list = (List)pagesToBeSerialized.get(sessionId);
 
@@ -652,14 +667,14 @@ public class FilePageStore implements IPageStore
 			while (iterator.hasNext())
 			{
 				SessionPageKey key = (SessionPageKey)iterator.next();
-				if (key.sessionId == sessionId && key.id == id)
+				
+				if ( (id == -1 ||  key.id == id) && Objects.equal(key.sessionId, sessionId) && 
+						Objects.equal(key.pageMap, pageMap))
 				{
 					iterator.remove();
 				}
 			}
 		}
-		// TODO remove from pages to be saved
-		removePage(sessionId, id);
 	}
 
 	private void removeSession(String sessionId)
@@ -698,7 +713,7 @@ public class FilePageStore implements IPageStore
 		Page.serializer.set(new PageSerializer(key));
 		try
 		{
-			bytes = Objects.objectToByteArray(page);
+			bytes = Objects.objectToByteArray(page.getPageMapEntry());
 			totalSerializationTime += (System.currentTimeMillis() - t1);
 			serialized++;
 			if (log.isDebugEnabled() && bytes != null)
@@ -833,7 +848,7 @@ public class FilePageStore implements IPageStore
 			{
 				previous.add(current);
 				current = spk;
-				byte[] bytes = Objects.objectToByteArray(page);
+				byte[] bytes = Objects.objectToByteArray(page.getPageMapEntry());
 				current.setObject(bytes);
 				pagesToBeSaved.put(spk, spk);
 				completed.add(current);

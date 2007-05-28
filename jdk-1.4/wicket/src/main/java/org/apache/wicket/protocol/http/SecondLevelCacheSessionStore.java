@@ -81,10 +81,11 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * Removes a page from the persistent layer.
 		 * 
-		 * @param sessionId
-		 * @param page
+		 * @param sessionId The session of the page that must be removed
+		 * @param pagemap The pagemap of the page that must be removed
+		 * @param id The id of the page.
 		 */
-		void removePage(String sessionId, Page page);
+		void removePage(String sessionId, String pagemap, int id);
 
 		/**
 		 * Stores the page to a persistent layer. The page should be stored
@@ -192,13 +193,26 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				}
 			}
 		}
+		
+		/**
+		 * @see org.apache.wicket.PageMap#clear()
+		 */
+		public void clear()
+		{
+			super.clear();
+			String sessionId = getSession().getId();
+			if (sessionId != null)
+			{
+				getStore().removePage(sessionId, getName(),-1);
+			}
+		}
 
 		public void removeEntry(IPageMapEntry entry)
 		{
 			String sessionId = getSession().getId();
 			if (sessionId != null)
 			{
-				getStore().removePage(sessionId, entry.getPage());
+				getStore().removePage(sessionId, getName(), entry.getNumericId());
 			}
 		}
 
