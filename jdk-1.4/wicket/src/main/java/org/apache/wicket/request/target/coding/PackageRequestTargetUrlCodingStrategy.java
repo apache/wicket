@@ -63,9 +63,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	 */
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
-		log.debug("path=" + requestParameters.getPath());
 		String remainder = requestParameters.getPath().substring(getMountPath().length());
-		log.debug("remainder=" + remainder);
 		final String parametersFragment;
 		int ix = remainder.indexOf('/', 1);
 		if (ix == -1)
@@ -89,8 +87,6 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 			return null;
 		}
 
-		log.debug("remainder=" + remainder);
-		log.debug("parametersFragment=" + parametersFragment);
 		final String bookmarkablePageClassName = packageName + "." + remainder.substring(0, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
@@ -112,8 +108,8 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("this encoder can only be used with instances of " +
-					IBookmarkablePageRequestTarget.class.getName());
+			throw new IllegalArgumentException("this encoder can only be used with instances of "
+					+ IBookmarkablePageRequestTarget.class.getName());
 		}
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
