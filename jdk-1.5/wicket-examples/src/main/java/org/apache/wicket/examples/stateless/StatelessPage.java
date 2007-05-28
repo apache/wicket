@@ -36,7 +36,6 @@ public class StatelessPage extends WebPage
 	 */
 	public StatelessPage()
 	{
-		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink("indexLink", Index.class));
 		final TextField field = new TextField("textfield", new Model());
