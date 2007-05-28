@@ -21,15 +21,20 @@ import java.net.URLDecoder;
 
 import org.apache.wicket.util.value.ValueMap;
 
-
 /**
- * TODO
+ * Wicket Http specific utilities class.
  */
-public class RequestUtils
+public final class RequestUtils
 {
 	/**
+	 * Decode the provided queryString as a series of key/ value pairs and set
+	 * them in the provided value map.
+	 * 
 	 * @param queryString
+	 *            string to decode, uses '&' to separate parameters and '=' to
+	 *            separate key from value
 	 * @param params
+	 *            parameters map to write the found key/ value pairs to
 	 */
 	public static void decodeParameters(String queryString, ValueMap params)
 	{
@@ -54,5 +59,12 @@ public class RequestUtils
 				// Should never happen
 			}
 		}
+	}
+
+	/**
+	 * Hidden utility class constructor.
+	 */
+	private RequestUtils()
+	{
 	}
 }
