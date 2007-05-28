@@ -348,8 +348,7 @@ public final class TimeOfDay extends AbstractTime
 		if (timeToday.before(Time.now()))
 		{
 			// Return the time tomorrow
-			calendar.add(Calendar.DATE, 1);
-			return Time.valueOf(calendar, this);
+			return Time.valueOf(calendar, this).add(Duration.ONE_DAY);
 		}
 		else
 		{
