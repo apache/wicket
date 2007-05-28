@@ -59,7 +59,6 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 	public IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
-		// First, see whether we can find any mount
 		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
 				.getRequestCodingStrategy();
 
