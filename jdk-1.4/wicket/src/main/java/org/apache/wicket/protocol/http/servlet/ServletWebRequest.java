@@ -48,14 +48,14 @@ public class ServletWebRequest extends WebRequest
 
 	/** Servlet request information. */
 	private final HttpServletRequest httpServletRequest;
-	
+
 	private int depthRelativeToWicketHandler = -1;
 	private String relativePathPrefixToWicketHandler;
 	private String relativePathPrefixToContextRoot;
 	private Map parameterMap;
 
 	private String wicketRedirectUrl;
-	
+
 	/**
 	 * Protected constructor.
 	 * 
@@ -148,32 +148,38 @@ public class ServletWebRequest extends WebRequest
 		{
 			return relativePathPrefixToContextRoot;
 		}
-		
+
 		// Prepend to get back to the wicket handler.
 		String tmp = getRelativePathPrefixToWicketHandler();
 		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
-		
-		String path = getPath();
+
+		String path = Strings.replaceAll(getPath(), "%3A", ":").toString();
 		if (path == null || path.length() == 0)
 		{
 			path = "";
 		}
-		
+
 		// Now prepend to get back from the wicket handler to the root context.
-		
+
 		// Find the absolute path for the wicket filter/servlet
 		String wicketPath = "";
-		
+
 		// We're running as a filter.
-		String servletPath = getServletPath();
-		if (servletPath.endsWith(path)) {
+		String servletPath = Strings.replaceAll(getServletPath(), "%3A", ":").toString();
+
+		// We need to substibute the %3A (or the other way around) to be able to
+		// get a good match, as parts of the path may have been escaped while
+		// others arent
+		if (servletPath.endsWith(path))
+		{
 			wicketPath = servletPath.substring(0, servletPath.length() - path.length() - 1);
 		}
 		// We're running as a servlet
-		else {
+		else
+		{
 			wicketPath = servletPath;
 		}
-		
+
 		for (int i = 0; i < wicketPath.length(); i++)
 		{
 			if (wicketPath.charAt(i) == '/')
@@ -183,9 +189,10 @@ public class ServletWebRequest extends WebRequest
 		}
 		return relativePathPrefixToContextRoot = prepender.toString();
 	}
-	
+
 	/**
 	 * Gets the depth of this request relative to the Wicket handler.
+	 * 
 	 * @return
 	 */
 	public int getDepthRelativeToWicketHandler()
@@ -197,7 +204,7 @@ public class ServletWebRequest extends WebRequest
 		}
 		return depthRelativeToWicketHandler;
 	}
-	
+
 	public String getRelativePathPrefixToWicketHandler()
 	{
 		if (relativePathPrefixToWicketHandler != null)
@@ -227,9 +234,10 @@ public class ServletWebRequest extends WebRequest
 		// that caused the error. Unfortunately, this includes the context path.
 		String errorUrl = (String)httpRequest.getAttribute("javax.servlet.error.request_uri");
 
-		// This gives us a context-relative path for RequestDispatcher.forward stuff, with a leading slash.
+		// This gives us a context-relative path for RequestDispatcher.forward
+		// stuff, with a leading slash.
 		String forwardUrl = (String)httpRequest.getAttribute("javax.servlet.forward.servlet_path");
-		
+
 		if (errorUrl != null)
 		{
 			// Strip off context path from front of URI.
@@ -253,7 +261,7 @@ public class ServletWebRequest extends WebRequest
 			}
 			return prepender.toString();
 		}
-		
+
 		if (forwardUrl != null)
 		{
 			// Strip off leading slash, if forwardUrl has any length.
@@ -280,12 +288,12 @@ public class ServletWebRequest extends WebRequest
 			}
 			depthRelativeToWicketHandler = depth;
 		}
-		
+
 		for (int i = 0; i < depthRelativeToWicketHandler; i++)
 		{
 			prepender.prepend("../");
 		}
-		
+
 		return relativePathPrefixToWicketHandler = prepender.toString();
 	}
 
@@ -419,7 +427,7 @@ public class ServletWebRequest extends WebRequest
 	/**
 	 * Set the redirect url where wicket will redirect to for the next page
 	 * 
-	 * @param wicketRedirectUrl 
+	 * @param wicketRedirectUrl
 	 */
 	public void setWicketRedirectUrl(String wicketRedirectUrl)
 	{
@@ -427,8 +435,8 @@ public class ServletWebRequest extends WebRequest
 		depthRelativeToWicketHandler = -1;
 		relativePathPrefixToContextRoot = null;
 		relativePathPrefixToWicketHandler = null;
-		
+
 		getRequestParameters().setUrlDepth(getDepthRelativeToWicketHandler());
-		
+
 	}
 }
