@@ -173,10 +173,11 @@ public class ServletWebRequest extends WebRequest
 		if (servletPath.endsWith(path))
 		{
 			int len = servletPath.length() - path.length() - 1;
-			if (len > -1)
+			if (len < 0)
 			{
-				wicketPath = servletPath.substring(0, len);
+				len = 0;
 			}
+			wicketPath = servletPath.substring(0, len);
 		}
 		// We're running as a servlet
 		else
