@@ -16,17 +16,14 @@
  */
 package org.apache.wicket.request.target.coding;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Encodes and decodes mounts for a single bookmarkable page class.
@@ -86,41 +83,23 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			pageMapName = requestParameters.getPageMapName();
 		}
 
-		final BookmarkablePageRequestTarget target;
-
-		final String bookmarkableInterfaceListener = (String)parameters
+		// do some extra work for checking whether this is a normal request to a
+		// bookmarkable page, or a request to a stateless page (in which case a
+		// wicket:interface parameter should be available
+		final String interfaceParameter = (String)parameters
 				.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
 
-		// Do the parameters contain component path and listener interface?
-		if (bookmarkableInterfaceListener != null)
+		if (interfaceParameter != null)
 		{
-			// TODO check if the page already exists and reuse that?
-
-			// try to parse component path and listener interface
-			final String[] pathComponents = Strings.split(bookmarkableInterfaceListener,
-					Component.PATH_SEPARATOR);
-			// There must be at least 6 path components
-			if (pathComponents.length < 6)
-			{
-				throw new WicketRuntimeException("Internal error parsing "
-						+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = "
-						+ bookmarkableInterfaceListener);
-			}
-			final String interfaceName = pathComponents[pathComponents.length - 3];
-			int start = (pageMapName != null) ? pageMapName.length() + 1 : 1;
-			final String componentPath = bookmarkableInterfaceListener.substring(start,
-					bookmarkableInterfaceListener.length() - interfaceName.length() - 3);
-
-			target = new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-					bookmarkablePageClass, parameters, componentPath, interfaceName);
+			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
+			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
+					bookmarkablePageClass, parameters, requestParameters.getComponentPath(),
+					requestParameters.getInterfaceName());
 		}
 		else
 		{
-			target = new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass,
-					parameters);
+			return new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass, parameters);
 		}
-
-		return target;
 	}
 
 	/**

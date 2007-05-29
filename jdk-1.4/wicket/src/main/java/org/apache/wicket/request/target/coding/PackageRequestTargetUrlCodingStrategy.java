@@ -21,6 +21,7 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.util.lang.Classes;
@@ -96,9 +97,23 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);
 
-		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
-				bookmarkablePageClass, parameters);
-		return target;
+		// do some extra work for checking whether this is a normal request to a
+		// bookmarkable page, or a request to a stateless page (in which case a
+		// wicket:interface parameter should be available
+		final String interfaceParameter = (String)parameters
+				.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+
+		if (interfaceParameter != null)
+		{
+			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
+			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
+					bookmarkablePageClass, parameters, requestParameters.getComponentPath(),
+					requestParameters.getInterfaceName());
+		}
+		else
+		{
+			return new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass, parameters);
+		}
 	}
 
 	/**

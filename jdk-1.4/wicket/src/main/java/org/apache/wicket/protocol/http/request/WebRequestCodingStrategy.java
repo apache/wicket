@@ -393,13 +393,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			if (log.isDebugEnabled())
 			{
 				log.debug(ex.toString());
-				
+
 				return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-				"Unable to load Page: " + ex.toString());
+						"Unable to load Page: " + ex.toString());
 			}
-			
+
 			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-				"Unable to load Page");
+					"Unable to load Page");
 		}
 	}
 
@@ -477,57 +477,71 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	protected void addInterfaceParameters(final Request request, final RequestParameters parameters)
 	{
-		// Format of interface target parameter is
-		// <page-map-name>:<path>:<version>:<interface>:<behaviourId>:urlDepth
-		final String requestString = request.getParameter(INTERFACE_PARAMETER_NAME);
-		if (requestString != null)
+		addInterfaceParameters(request.getParameter(INTERFACE_PARAMETER_NAME), parameters);
+	}
+
+	/**
+	 * Analyses the passed in interfaceParameter for the relevant parts and puts
+	 * the parts as parameters in the provided request parameters object.
+	 * 
+	 * @param interfaceParameter
+	 *            The format of the interfaceParameter is: <code>
+	 * page-map-name:path:version:interface:behaviourId:urlDepth
+	 * </code>
+	 * @param parameters
+	 *            parameters object to set the found parts in
+	 */
+	public static void addInterfaceParameters(final String interfaceParameter,
+			final RequestParameters parameters)
+	{
+		if (interfaceParameter == null)
 		{
-			// Split into array of strings
-			String[] pathComponents = Strings.split(requestString, Component.PATH_SEPARATOR);
-
-			// There must be 6 components
-			// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:depth
-			if (pathComponents.length < 6)
-			{
-				throw new WicketRuntimeException("Internal error parsing "
-						+ INTERFACE_PARAMETER_NAME + " = " + requestString);
-			}
-
-			// Set pagemap name
-			final String pageMapName = pathComponents[0];
-			parameters.setPageMapName(pageMapName.length() == 0
-					? PageMap.DEFAULT_NAME
-					: pageMapName);
-
-			// Extract URL depth after last colon
-			final String urlDepthString = pathComponents[pathComponents.length - 1];
-			final int urlDepth = Strings.isEmpty(urlDepthString) ? -1 : Integer
-					.parseInt(urlDepthString);
-			parameters.setUrlDepth(urlDepth);
-			
-			// Extract behaviour ID after last colon
-			final String behaviourId = pathComponents[pathComponents.length - 2];
-			parameters.setBehaviorId(behaviourId.length() != 0 ? behaviourId : null);
-
-			// Extract interface name after second-to-last colon
-			final String interfaceName = pathComponents[pathComponents.length - 3];
-			parameters.setInterfaceName(interfaceName.length() != 0
-					? interfaceName
-					: IRedirectListener.INTERFACE.getName());
-
-			// Extract version
-			final String versionNumberString = pathComponents[pathComponents.length - 4];
-			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
-					.parseInt(versionNumberString);
-			parameters.setVersionNumber(versionNumber);
-
-			// Component path is everything after pageMapName and before version
-			final int start = pageMapName.length() + 1;
-			final int end = requestString.length() - behaviourId.length() - interfaceName.length()
-					- versionNumberString.length() - urlDepthString.length() - 4;
-			final String componentPath = requestString.substring(start, end);
-			parameters.setComponentPath(componentPath);
+			return;
 		}
+
+		// Split into array of strings
+		String[] pathComponents = Strings.split(interfaceParameter, Component.PATH_SEPARATOR);
+
+		// There must be 6 components
+		// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:depth
+		if (pathComponents.length < 6)
+		{
+			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME
+					+ " = " + interfaceParameter);
+		}
+
+		// Set pagemap name
+		final String pageMapName = pathComponents[0];
+		parameters.setPageMapName(pageMapName.length() == 0 ? PageMap.DEFAULT_NAME : pageMapName);
+
+		// Extract URL depth after last colon
+		final String urlDepthString = pathComponents[pathComponents.length - 1];
+		final int urlDepth = Strings.isEmpty(urlDepthString) ? -1 : Integer
+				.parseInt(urlDepthString);
+		parameters.setUrlDepth(urlDepth);
+
+		// Extract behaviour ID after last colon
+		final String behaviourId = pathComponents[pathComponents.length - 2];
+		parameters.setBehaviorId(behaviourId.length() != 0 ? behaviourId : null);
+
+		// Extract interface name after second-to-last colon
+		final String interfaceName = pathComponents[pathComponents.length - 3];
+		parameters.setInterfaceName(interfaceName.length() != 0
+				? interfaceName
+				: IRedirectListener.INTERFACE.getName());
+
+		// Extract version
+		final String versionNumberString = pathComponents[pathComponents.length - 4];
+		final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
+				.parseInt(versionNumberString);
+		parameters.setVersionNumber(versionNumber);
+
+		// Component path is everything after pageMapName and before version
+		final int start = pageMapName.length() + 1;
+		final int end = interfaceParameter.length() - behaviourId.length() - interfaceName.length()
+				- versionNumberString.length() - urlDepthString.length() - 4;
+		final String componentPath = interfaceParameter.substring(start, end);
+		parameters.setComponentPath(componentPath);
 	}
 
 	/**
@@ -652,8 +666,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			 * because we can't rely on the browser to interpret the unencoded
 			 * url correctly.
 			 */
-			encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+			encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
+					+ Component.PATH_SEPARATOR + pageClass.getName());
 		}
 
 		// Get page parameters
@@ -800,13 +814,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url.append(params.getBehaviorId());
 		}
 		url.append(Component.PATH_SEPARATOR);
-		
+
 		// Add URL depth
 		if (params != null && params.getUrlDepth() != 0)
 		{
 			url.append(params.getUrlDepth());
 		}
-		
+
 		return url;
 	}
 
