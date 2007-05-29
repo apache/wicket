@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.util.lang.PackageName;
 
 /**
  * Application class for the stateless application.
@@ -46,7 +47,7 @@ public class StatelessApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		// Doesn't work currently
-		// mount("/public", PackageName.forClass(StatelessApplication.class));
+		mount("/public", PackageName.forClass(StatelessApplication.class));
+		// mountBookmarkablePage("foo", StatelessPage.class);
 	}
 }
