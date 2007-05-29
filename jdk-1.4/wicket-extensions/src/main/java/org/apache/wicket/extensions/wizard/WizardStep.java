@@ -277,8 +277,8 @@ public class WizardStep extends Panel implements IWizardStep
 	{
 		super(Wizard.VIEW_ID, model);
 
-		this.title = title;
-		this.summary = summary;
+		this.title = wrap(title);
+		this.summary = wrap(summary);
 	}
 
 	/**
