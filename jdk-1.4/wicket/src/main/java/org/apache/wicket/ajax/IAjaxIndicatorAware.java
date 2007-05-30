@@ -20,11 +20,11 @@ package org.apache.wicket.ajax;
 /**
  * This interface makes it trivial to use busy indicators for ajax requests.
  * This interface can be implemented by a component that has an ajax behavior
- * attached to it, or by the ajax behavior itself. If this is the case
- * javascript will be added automatically that will show a markup element
- * pointed to by the {@link #getAjaxIndicatorMarkupId()} markup id attribute
- * when the ajax request begins, and hide it when the ajax requests succeeds or
- * fails.
+ * attached to it, or any parent of the component, or by the ajax behavior
+ * itself. If this is the case javascript will be added automatically that will
+ * show a markup element pointed to by the {@link #getAjaxIndicatorMarkupId()}
+ * markup id attribute when the ajax request begins, and hide it when the ajax
+ * requests succeeds or fails.
  * <p>
  * If both a component and a behavior implement this interface, the component
  * will take precedence.
