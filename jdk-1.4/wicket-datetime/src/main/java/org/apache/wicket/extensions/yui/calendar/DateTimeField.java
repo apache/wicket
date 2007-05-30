@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
@@ -269,11 +270,22 @@ public class DateTimeField extends FormComponentPanel
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
 		dateField.add(new DatePicker());
 		// add(new CalendarPopup("picker", dateField));
-		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
+		add(hoursField = new TextField("hours", new PropertyModel(this, "hours")
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void setObject(Object object)
+			{
+				int hours = ((Integer)object).intValue() % 12;
+				super.setObject(new Integer(hours));
+			}
+		}, Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
+		hoursField.setLabel(new Model("hours"));
 		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
 				Integer.class));
-		minutesField.add(NumberValidator.range(0, 60));
+		minutesField.add(NumberValidator.range(0, 59));
+		minutesField.setLabel(new Model("minutes"));
 		add(amOrPmChoice = new DropDownChoice("amOrPmChoice", new PropertyModel(this, "amOrPm"),
 				Arrays.asList(AM_PM.values())));
 	}
