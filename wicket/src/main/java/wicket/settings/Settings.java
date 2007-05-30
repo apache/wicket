@@ -450,7 +450,7 @@ public final class Settings
 		// context path from the servlet context, which is just stupid.
 		if (contextPath == null && RequestCycle.get().getRequest() instanceof WebRequest)
 		{
-			contextPath = ((WebRequest)RequestCycle.get().getRequest()).getContextPath();
+			contextPath = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest().getContextPath();
 		}
 		return contextPath;
 	}
