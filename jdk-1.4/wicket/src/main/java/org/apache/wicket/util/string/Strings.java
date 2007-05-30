@@ -1103,7 +1103,10 @@ public final class Strings
 	}
 
 	/**
-	 * Converts the given object to a string.
+	 * Converts the given object to a string. Does special conversion for
+	 * {@link Throwable throwables} and String arrays of length 1 (in which case
+	 * it just returns to string in that array, as this is a common thing to
+	 * have in the Servlet API).
 	 * 
 	 * @param object
 	 *            The object
@@ -1115,14 +1118,23 @@ public final class Strings
 		{
 			return null;
 		}
-		else if (object instanceof Throwable)
+
+		if (object instanceof Throwable)
 		{
 			return toString((Throwable)object);
 		}
-		else
+
+		if (object instanceof String)
 		{
-			return object.toString();
+			return (String)object;
 		}
+
+		if (object instanceof String[] && ((String[])object).length == 1)
+		{
+			return ((String[])object)[0];
+		}
+
+		return object.toString();
 	}
 
 	/**

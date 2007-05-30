@@ -37,6 +37,7 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -502,7 +503,7 @@ public class BrowserInfoPage extends WebPage
 	 */
 	public BrowserInfoPage(PageParameters parameters)
 	{
-		String to = (String)parameters.get("cto");
+		String to = Strings.toString(parameters.get("cto"));
 		if (to == null)
 		{
 			throw new IllegalArgumentException("parameter cto must be provided!");
@@ -600,7 +601,8 @@ public class BrowserInfoPage extends WebPage
 		// Redirect there
 		Response response = requestCycle.getResponse();
 		response.reset();
-		response.redirect(requestCycle.getRequest().getRelativePathPrefixToWicketHandler() + continueTo);
+		response.redirect(requestCycle.getRequest().getRelativePathPrefixToWicketHandler()
+				+ continueTo);
 	}
 
 	/**
