@@ -305,7 +305,8 @@ public class DateTimeField extends FormComponentPanel
 				date.setZone(DateTimeZone.forTimeZone(zone));
 			}
 
-			hours = new Integer(date.get(DateTimeFieldType.hourOfHalfday()));
+			int hourOfHalfDay = date.get(DateTimeFieldType.hourOfHalfday());
+			hours = new Integer(hourOfHalfDay == 0 ? 12 : hourOfHalfDay);
 			minutes = new Integer(date.getMinuteOfHour());
 			amOrPm = (date.get(DateTimeFieldType.halfdayOfDay()) == 0) ? AM_PM.AM : AM_PM.PM;
 
