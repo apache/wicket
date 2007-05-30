@@ -204,10 +204,8 @@ public class DateTimeField extends FormComponentPanel
 	 */
 	public void updateModel()
 	{
-
 		if (date != null)
 		{
-
 			try
 			{
 				TimeZone zone = getClientTimeZone();
@@ -218,7 +216,7 @@ public class DateTimeField extends FormComponentPanel
 
 				if (hours != null)
 				{
-					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue());
+					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue() % 12);
 					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
 				}
 				if (amOrPm == AM_PM.PM)
@@ -269,17 +267,7 @@ public class DateTimeField extends FormComponentPanel
 		setType(Date.class);
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
 		dateField.add(new DatePicker());
-		// add(new CalendarPopup("picker", dateField));
-		add(hoursField = new TextField("hours", new PropertyModel(this, "hours")
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void setObject(Object object)
-			{
-				int hours = ((Integer)object).intValue() % 12;
-				super.setObject(new Integer(hours));
-			}
-		}, Integer.class));
+		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
 		hoursField.setLabel(new Model("hours"));
 		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
