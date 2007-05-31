@@ -60,4 +60,22 @@ public interface IDebugSettings
 	 * 
 	 */
 	boolean isAjaxDebugModeEnabled();
+	
+	/**
+	 * Enables wrapping output of markup container in html comments that
+	 * contain markup container's class name. (Useful for determining which
+	 * part of page belongs to which markup file).
+	 * 
+	 * @param enable
+	 */
+	void setOutputMarkupContainerClassName(boolean enable);
+	
+	/**
+	 * Returns whether the output of markup container's should be wrapped
+	 * by comments containing the container's class name.
+	 * 
+	 * @return true if the markup container's class name should be written
+	 *         to response
+	 */
+	public boolean isOutputMarkupContainerClassName();
 }

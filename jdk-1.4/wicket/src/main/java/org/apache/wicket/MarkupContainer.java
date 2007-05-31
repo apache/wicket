@@ -618,7 +618,23 @@ public abstract class MarkupContainer extends Component
 			setIgnoreAttributeModifier(true);
 			renderComponentTag(associatedMarkupOpenTag);
 			associatedMarkupStream.next();
+			
+			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName()) 
+			{
+				getResponse().write("<!-- MARKUP FOR ");
+				getResponse().write(getClass().getName());
+				getResponse().write(" BEGIN -->");
+			}
+				
 			renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
+			
+			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
+			{
+				getResponse().write("<!-- MARKUP FOR ");
+				getResponse().write(getClass().getName());
+				getResponse().write(" END -->");
+			}
+				
 			renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
 			setMarkupStream(originalMarkupStream);
 		}

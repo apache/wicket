@@ -292,6 +292,11 @@ public final class Settings
 	private boolean stripJavascriptCommentsAndWhitespace;
 
 	/**
+	 * Whether the container's class name should be printed to response (in a html comment).
+	 */
+	private boolean outputMarkupContainerClassName = false;
+	
+	/**
 	 * Create the application settings, carrying out any necessary
 	 * initialisations.
 	 * 
@@ -1246,5 +1251,21 @@ public final class Settings
 	public void setStripJavascriptCommentsAndWhitespace(boolean value)
 	{
 		stripJavascriptCommentsAndWhitespace = value;
+	}
+	
+	/**
+	 * @see org.apache.wicket.settings.IDebugSettings#setOutputMarkupContainerClassName(boolean)
+	 */
+	public void setOutputMarkupContainerClassName(boolean enable)
+	{
+		outputMarkupContainerClassName = enable;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IDebugSettings#isOutputMarkupContainerClassName()
+	 */
+	public boolean isOutputMarkupContainerClassName()
+	{
+		return outputMarkupContainerClassName;
 	}
 }
