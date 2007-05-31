@@ -918,6 +918,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		cookies.clear();
 		setDefaultHeaders();
 		path = null;
+		url = null;
 		characterEncoding = "UTF-8";
 		parameters.clear();
 		attributes.clear();
@@ -1196,6 +1197,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':'
 					+ component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':'
 					+ Classes.simpleName(clazz) + "::");
+			
+			if (component.isStateless() && component.getPage().isBookmarkable())
+			{
+				parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
+						+ ':' + component.getPage().getClass().getName());
+			}
 		}
 	}
 

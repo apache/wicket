@@ -1,0 +1,62 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>Carmel College</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+
+<!-- Browsercheck -->
+<script type="text/javascript" src="browser_detect.js"></script>
+
+<!-- Voor de dropdown functionaliteit -->
+<script type="text/javascript" src="dropdown.js"></script>
+
+<wicket:remove>
+	<link href="../../../../../../../../webapp/style.css" type="text/css" rel="stylesheet" />
+</wicket:remove>
+</head>
+<body>
+<div class="pagecontainer withsearch">
+<div class="filler"></div>
+
+<IFRAME
+	style="Z-INDEX: 2; DISPLAY: none; LEFT: 0px; POSITION: absolute; TOP: 0px"
+	src="javascript:false;" id="iefix" frameBorder="0" scrolling="no"></IFRAME>
+
+<div style="height:70px;"></div>
+<div class="inlogContainer">
+
+  <div class="maintop" id="inlogwidth">
+    <div class="maintop_left" id="inlogmenuleft" style="border-right:none;">
+      <span class="pagetitle" id="systemname">Vocus Leerling Informatie Systeem</span>
+    </div>
+    <div class="maintop_left maintop_right" id="inlogmenuright" style="border-left:none;"></div>
+  </div>
+
+  <div class="menuwrap" id="loginschool">&nbsp;</div>
+
+  <div class="searchbar nosearch" id="inlogsearchbar"></div>
+  <div class="contentbox cbnosearch" id="inlogcontent">
+	 
+	 <div class="loginLeft">
+		<span wicket:id="signInPanel"> login panel comes here </span>
+	</div> 
+
+  	<div class="loginRight">	  
+	  TESTING
+	</div>
+
+  </div>
+
+  <div class="mainbottom" id="inlogwidth">
+    <div class="mainbottom_left" id="inlogbar"></div>
+    <div class="mainbottom_left mainbottom_right"></div>
+  </div>
+
+</div>
+</div>
+</body>
+</html>
