@@ -20,7 +20,9 @@ var WicketAjaxDebug = {
 
 	debugWindowId : "wicketAjaxDebugWindow",
 	
-	debugWindowDragHandleId : "wicketAjaxDebugWindowHandle",
+	debugWindowDragHandleId : "wicketAjaxDebugWindowDragHandle",
+	
+	debugWindowResizeHandleId : "wicketAjaxDebugWindowResizeHandle",
 	
 	debugWindowLogId : "wicketAjaxDebugWindowLogId",
 	
@@ -81,13 +83,14 @@ var WicketAjaxDebug = {
         	var wad=WicketAjaxDebug;
         	var dwid=wad.debugWindowId;
         	var dwdhid=wad.debugWindowDragHandleId;
+        	var dwrhid=wad.debugWindowResizeHandleId;
 
 			var firstTime = document.getElementById(dwid) == null;
 
 			if (firstTime) {
 				
 	            var html = 	        	
-					"<div style='width: 50em; display: none; position: absolute; left: 200px; top: 300px; z-index: 1000;' id='"+dwid+"'>"+
+					"<div style='width: 400px; display: none; position: absolute; left: 200px; top: 300px; z-index: 1000;' id='"+dwid+"'>"+
 					"	<div style='border: 1px solid black; padding: 1px; background-color: #eee'>"+
 					"		<div style='overflow: auto; width: 100%'>"+
 					"			<div style='float: right; padding: 0.2em; padding-right: 1em;'>"+
@@ -97,8 +100,12 @@ var WicketAjaxDebug = {
 					"			<div id='"+dwdhid+"' style='padding: 0.2em; background-color: gray; color: white; padding-left: 1em; margin-right: 8em; cursor: move;'>"+
 					"				Wicket Ajax Debug Window (drag me here)"+
 					"			</div>"+
-					"			<div id='"+WicketAjaxDebug.debugWindowLogId+"' style='width: 100%; height: 30em; background-color: white; overflow: auto; white-space: nowrap'>"+
+					"			<div id='"+WicketAjaxDebug.debugWindowLogId+"' style='width: 100%; height: 200px; background-color: white; overflow: auto; white-space: nowrap'>"+
 					"			</div>"+
+					"           <div style='height: 10px; margin:0px; padding:0px;overflow:hidden;'>"+
+					"              <div style='height: 10px; width: 10px; background-color: gray; margin:0px; padding: 0px;overflow:hidden; float:right; cursor: nw-resize' id='" + WicketAjaxDebug.debugWindowResizeHandleId + "'>"+
+					"              </div>"+
+					"           </div>"+
 					"		</div>"+					
 					"	</div>" +
 					"</div>"+
@@ -109,9 +116,26 @@ var WicketAjaxDebug = {
 				
 				WicketAjaxDebug.addElement(html);
             	Wicket.Drag.init(wicketGet(dwdhid), function() {} , function() { }, WicketAjaxDebug.onDrag);
+            	Wicket.Drag.init(wicketGet(dwrhid), function() {} , function() { }, WicketAjaxDebug.onResize);
 			}
 
         }
+	},
+	
+	onResize: function(element, deltaX, deltaY) {
+		var window = wicketGet(WicketAjaxDebug.debugWindowId);
+		var log = wicketGet(WicketAjaxDebug.debugWindowLogId);
+		
+		var width = parseInt(window.style.width, 10) + deltaX;
+		var height = parseInt(log.style.height, 10) + deltaY;
+		
+		if (width < 200)
+			width = 200;
+		if (height < 100)
+			height = 100;							
+			
+		window.style.width = width + "px";
+		log.style.height = height + "px";		
 	},
 	
 	onDrag: function(element, deltaX, deltaY) {
