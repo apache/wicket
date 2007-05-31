@@ -264,6 +264,10 @@ public class CompressedPackageResource extends PackageResource
 	 */
 	private boolean supportsCompression()
 	{
+		if (Application.get().getResourceSettings().getDisableGZipCompression())
+		{
+			return false;
+		}
 		WebRequest request = (WebRequest)WebRequestCycle.get().getRequest();
 		String s = request.getHttpServletRequest().getHeader("Accept-Encoding");
 		if (s == null)
