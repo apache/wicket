@@ -57,6 +57,7 @@ public class TextArea extends AbstractTextComponent
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
+		checkComponentTag(openTag, "textarea");
 		replaceComponentTagBody(markupStream, openTag, getValue());
 	}
 }
