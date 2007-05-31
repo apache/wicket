@@ -142,7 +142,10 @@ public final class Settings
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
 
-	private boolean disableGZipCompression;
+	/**
+	 * Whether we should disable gzip compression for resources.
+	 */
+	private boolean disableGZipCompression = false;
 	
 	/**
 	 * Whether mounts should be enforced. If true, requests for mounted targets
