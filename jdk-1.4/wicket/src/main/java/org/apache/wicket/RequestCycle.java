@@ -23,6 +23,7 @@ import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestCycleProcessor;
@@ -459,9 +460,7 @@ public abstract class RequestCycle
 	/**
 	 * Template method that is called when a runtime exception is thrown, just
 	 * before the actual handling of the runtime exception. This is called by
-	 * {@link org.apache.wicket.request.compound.DefaultExceptionResponseStrategy},
-	 * hence if that strategy is replaced by another one, there is no guarantee
-	 * this method is called.
+	 * {@link AbstractRequestCycleProcessor#respond(RuntimeException, RequestCycle)}.
 	 * 
 	 * @param page
 	 *            Any page context where the exception was thrown
