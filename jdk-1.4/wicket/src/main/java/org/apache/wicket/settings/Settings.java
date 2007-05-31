@@ -142,6 +142,8 @@ public final class Settings
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
 
+	private boolean disableGZipCompression;
+	
 	/**
 	 * Whether mounts should be enforced. If true, requests for mounted targets
 	 * have to done through the mounted paths. If, for instance, a bookmarkable
@@ -493,6 +495,14 @@ public final class Settings
 		return defaultMarkupEncoding;
 	}
 
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#getDisableGZipCompression()
+	 */
+	public boolean getDisableGZipCompression()
+	{
+		return disableGZipCompression;
+	}
+	
 	/**
 	 * @see wicket.settings.ISecuritySettings#getEnforceMounts()
 	 */
@@ -920,6 +930,14 @@ public final class Settings
 		this.defaultMarkupEncoding = encoding;
 	}
 
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setDisableGZipCompression(boolean)
+	 */
+	public void setDisableGZipCompression(boolean disableGZipCompression)
+	{
+		this.disableGZipCompression = disableGZipCompression;
+	}
+	
 	/**
 	 * @see wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
 	 */

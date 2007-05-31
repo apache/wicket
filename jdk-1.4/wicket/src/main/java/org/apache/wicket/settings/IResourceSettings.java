@@ -112,6 +112,14 @@ public interface IResourceSettings
 	void addStringResourceLoader(final IStringResourceLoader loader);
 
 	/**
+	 * Whether to disable gzip compression for resources. You need this on SAP, which gzips things twice.
+	 * 
+	 * @return True if we should disable gzip compression
+	 * @since 1.3.0
+	 */
+	boolean getDisableGZipCompression();
+	
+	/**
 	 * Get the application's localizer.
 	 * 
 	 * @see IResourceSettings#addStringResourceLoader(org.apache.wicket.resource.loader.IStringResourceLoader)
@@ -190,6 +198,15 @@ public interface IResourceSettings
 	 */
 	boolean getUseDefaultOnMissingResource();
 
+	/**
+	 * Sets whether to disable gzip compression for resources.
+	 * You need to set this on some SAP versions, which gzip things twice.
+	 * 
+	 * @param disableGZipCompression
+	 * @since 1.3.0
+	 */
+	void setDisableGZipCompression(final boolean disableGZipCompression);
+	
 	/**
 	 * Sets the {@link PackageResourceGuard package resource guard}.
 	 * 
