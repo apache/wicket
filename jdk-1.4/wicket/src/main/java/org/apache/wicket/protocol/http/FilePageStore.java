@@ -311,7 +311,7 @@ public class FilePageStore implements IPageStore
 		SessionPageKey(String sessionId, Page page)
 		{
 			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page
-					.getAjaxVersionNumber(), page.getPageMap().getName(), page.getClass(), page);
+					.getAjaxVersionNumber(), page.getPageMapName(), page.getClass(), page);
 		}
 
 		/**
@@ -901,7 +901,7 @@ public class FilePageStore implements IPageStore
 		PageHolder(Page page)
 		{
 			this.pageid = page.getNumericId();
-			this.pagemap = page.getPageMap().getName();
+			this.pagemap = page.getPageMapName();
 		}
 		
 		protected Object readResolve() throws ObjectStreamException

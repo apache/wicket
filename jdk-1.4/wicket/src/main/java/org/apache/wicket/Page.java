@@ -511,6 +511,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 		return pageMap;
 	}
+	
+	/**
+	 * @return
+	 */
+	public final String getPageMapName()
+	{
+		return pageMapName;
+	}
 
 	/**
 	 * @return Get a page map entry for this page. By default, this is the page

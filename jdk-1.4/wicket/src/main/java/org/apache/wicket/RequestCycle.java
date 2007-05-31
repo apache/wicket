@@ -753,7 +753,7 @@ public abstract class RequestCycle
 		if (listener != IRedirectListener.INTERFACE && component.isStateless()
 				&& page.isBookmarkable())
 		{
-			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMap().getName(),
+			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(),
 					page.getClass(), new PageParameters(), component, listener);
 		}
 		else

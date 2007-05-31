@@ -424,7 +424,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				// current page version.
 				if (ajaxNumber >= numberOfVersions)
 				{
-					return store.getPage(sessionId, page.getPageMap().getName(), page
+					return store.getPage(sessionId, page.getPageMapName(), page
 							.getNumericId(), versionNumber, ajaxNumber - numberOfVersions);
 				}
 				else
@@ -441,7 +441,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
 						return null;
 					}
-					return store.getPage(sessionId, page.getPageMap().getName(), page
+					return store.getPage(sessionId, page.getPageMapName(), page
 							.getNumericId(), versionNumber, ajaxNumber);
 				}
 			}

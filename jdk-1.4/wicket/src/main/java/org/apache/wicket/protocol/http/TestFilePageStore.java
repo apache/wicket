@@ -91,7 +91,7 @@ public class TestFilePageStore implements IPageStore
 		SessionPageKey(String sessionId, Page page)
 		{
 			this(sessionId, page.getNumericId(), page.getCurrentVersionNumber(), page
-					.getAjaxVersionNumber(), page.getPageMap().getName(), page.getClass());
+					.getAjaxVersionNumber(), page.getPageMapName(), page.getClass());
 		}
 
 		SessionPageKey(String sessionId, int id, int versionNumber, int ajaxVersionNumber,
