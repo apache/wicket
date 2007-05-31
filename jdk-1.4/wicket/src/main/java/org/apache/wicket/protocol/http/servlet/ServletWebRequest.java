@@ -216,8 +216,21 @@ public class ServletWebRequest extends WebRequest
 		{
 			return relativePathPrefixToWicketHandler;
 		}
-		String relativeUrl = getPath();
+		
 		PrependingStringBuffer prepender = new PrependingStringBuffer();
+		
+		// For AJAX requests, we need to make the URLs relative to the
+		// original page.
+		if (isAjax())
+		{
+			for (int i = 0; i < getRequestParameters().getUrlDepth(); i++)
+			{
+				prepender.prepend("../");
+			}
+			return relativePathPrefixToWicketHandler = prepender.toString();
+		}
+
+		String relativeUrl = getPath();
 
 		/*
 		 * We might be serving an error page.
@@ -264,7 +277,7 @@ public class ServletWebRequest extends WebRequest
 					prepender.prepend("../");
 				}
 			}
-			return prepender.toString();
+			return relativePathPrefixToWicketHandler = prepender.toString();
 		}
 
 		if (forwardUrl != null)

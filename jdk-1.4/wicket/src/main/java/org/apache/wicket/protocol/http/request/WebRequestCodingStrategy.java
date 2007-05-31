@@ -40,7 +40,6 @@ import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.UnitTestSettings;
-import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
@@ -262,22 +261,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			// Servlet/Filter, with no leading '/'.
 			PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
 
-			// For AJAX requests, we need to make the URLs relative to the
-			// original page.
-			if (requestCycle.getRequest() instanceof WebRequest
-					&& ((WebRequest)requestCycle.getRequest()).isAjax())
-			{
-				for (int i = 0; i < requestCycle.getRequest().getRequestParameters().getUrlDepth(); i++)
-				{
-					prepender.prepend("../");
-				}
-			}
-			else
-			{
-				// Prepend prefix to the URL to make it relative to the current
-				// request.
-				prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
-			}
+			// Prepend prefix to the URL to make it relative to the current
+			// request.
+			prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
 
 			String result = prepender.toString();
 			// We need to special-case links to the home page if we're at the
