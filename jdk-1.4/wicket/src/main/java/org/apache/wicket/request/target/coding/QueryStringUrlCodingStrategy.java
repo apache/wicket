@@ -78,8 +78,7 @@ import org.apache.wicket.util.value.ValueMap;
  * <code>init</code> method of a class implementing
  * {@link org.apache.wicket.protocol.http.WebApplication WebApplication}:
  * <p>
- * <code>mount("/admin/productmanagement", new 
- * QueryStringRequestTargetUrlCodingStrategy("/admin/productmanagement",
+ * <code>mount(new QueryStringRequestTargetUrlCodingStrategy("/admin/productmanagement",
  * admin.ProductManagement.class));</code>
  * <p>
  * Note that, as with the main BookmarkablePageRequestTargetUrlCodingStrategy,
