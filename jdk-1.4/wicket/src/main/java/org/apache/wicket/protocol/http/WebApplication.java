@@ -45,6 +45,7 @@ import org.apache.wicket.request.target.coding.PackageRequestTargetUrlCodingStra
 import org.apache.wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
+import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -524,42 +525,62 @@ public abstract class WebApplication extends Application implements ISessionFact
 		getPageSettings().addComponentResolver(new AutoLinkResolver());
 
 		// Set resource finder to web app path
-		getResourceSettings().setResourceFinder(new WebApplicationPath(getServletContext()));
+		getResourceSettings().setResourceFinder(getResourceFinder());
 
-		// Check if system property -Dwicket.configuration exists
-		String configuration = null;
+		// Add optional sourceFolder for resources.
+		String resourceFolder = getInitParameter("sourceFolder");
+		if (resourceFolder != null)
+		{
+			getResourceSettings().addResourceFolder(resourceFolder);
+		}
+		
+		// Configure the app.
+		configure();
+	}
+	
+	/**
+	 * @see org.apache.wicket.Application#getConfigurationType()
+	 */
+	public String getConfigurationType()
+	{
+		String result = null;
 		try
 		{
-			configuration = System.getProperty("wicket." + Application.CONFIGURATION);
+			result = System.getProperty("wicket." + Application.CONFIGURATION);
 		}
 		catch (SecurityException e)
 		{
-			// ignore; it is not allowed to read system properties
+			// Ignore - we're not allowed to read system properties.
 		}
 
-		// If no system parameter check servlet specific <init-param>
-		if (configuration == null)
+		// If no system parameter check filter/servlet specific <init-param>
+		if (result == null)
 		{
-			configuration = getInitParameter(Application.CONFIGURATION);
+			result = getInitParameter(Application.CONFIGURATION);
 		}
+
 		// If no system parameter and no <init-param>, then check
 		// <context-param>
-		if (configuration == null)
+		if (result == null)
 		{
-			configuration = getServletContext().getInitParameter(Application.CONFIGURATION);
+			result = getServletContext().getInitParameter(Application.CONFIGURATION);
 		}
 
-		// Development mode is the default if no settings have been found
-		if (configuration != null)
+		// Return result if we have found it, else fall back to DEVELOPMENT mode
+		// as the default.
+		if (result != null)
 		{
-			configure(configuration, getInitParameter("sourceFolder"));
+			return result;
 		}
-		else
-		{
-			configure(Application.DEVELOPMENT, getInitParameter("sourceFolder"));
-		}
+
+		return Application.DEVELOPMENT;
 	}
 
+	protected IResourceFinder getResourceFinder()
+	{
+		return new WebApplicationPath(getServletContext());
+	}
+	
 	/**
 	 * Gets a new request cycle processor for web requests. May be replaced by
 	 * subclasses which whishes to uses there own implementation of

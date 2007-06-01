@@ -58,13 +58,11 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.Settings;
-import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Base class for all Wicket applications. To create a Wicket application, you
@@ -214,9 +212,6 @@ public abstract class Application
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
 
-	/** Record what the configuration is, so that we can query for it later. */
-	private String configurationType;
-
 	/** list of initializers. */
 	private List initializers = new ArrayList();
 
@@ -315,43 +310,13 @@ public abstract class Application
 	}
 
 	/**
-	 * Convenience method that sets application settings to good defaults for
-	 * the given configuration type (either DEVELOPMENT or DEPLOYMENT).
-	 * 
-	 * @param configurationType
-	 *            The configuration type (either DEVELOPMENT or DEPLOYMENT)
-	 * @see org.apache.wicket.Application#configure(String, IResourceFinder)
+	 * Configures application settings to good defaults.
 	 */
-	public final void configure(final String configurationType)
+	public final void configure()
 	{
-		configure(configurationType, (IResourceFinder)null);
-	}
+		final String configurationType = getConfigurationType();
 
-	/**
-	 * Configures application settings to good defaults for the given
-	 * configuration type (either DEVELOPMENT or DEPLOYMENT).
-	 * 
-	 * @param configurationType
-	 *            The configuration type. Must currently be either DEVELOPMENT
-	 *            or DEPLOYMENT. Currently, if the configuration type is
-	 *            DEVELOPMENT, resources are polled for changes, component usage
-	 *            is checked, wicket tags are not stripped from ouput and a
-	 *            detailed exception page is used. If the type is DEPLOYMENT,
-	 *            component usage is not checked, wicket tags are stripped from
-	 *            output and a non-detailed exception page is used to display
-	 *            errors.
-	 * @param resourceFinder
-	 *            Resource finder for looking up resources
-	 */
-	public final void configure(final String configurationType, final IResourceFinder resourceFinder)
-	{
-		this.configurationType = configurationType;
-
-		if (resourceFinder != null)
-		{
-			getResourceSettings().setResourceFinder(resourceFinder);
-		}
-		// As long as this is public api the developermenat and deployment mode
+		// As long as this is public api the development and deployment mode
 		// should counter act each other for all properties.
 		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
 		{
@@ -381,24 +346,6 @@ public abstract class Application
 	}
 
 	/**
-	 * Convenience method that sets application settings to good defaults for
-	 * the given configuration type (either DEVELOPMENT or DEPLOYMENT).
-	 * 
-	 * @param configurationType
-	 *            The configuration type (either DEVELOPMENT or DEPLOYMENT)
-	 * @param resourceFolder
-	 *            Folder for polling resources
-	 */
-	public final void configure(final String configurationType, final String resourceFolder)
-	{
-		configure(configurationType);
-		if (resourceFolder != null)
-		{
-			getResourceSettings().addResourceFolder(resourceFolder);
-		}
-	}
-
-	/**
 	 * Gets the unique key of this application within a given context (like a
 	 * web application). NOT INTENDED FOR FRAMEWORK CLIENTS.
 	 * 
@@ -417,16 +364,24 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets the configuration mode that is currently set, either
+	 * Gets the configuration mode to use for configuring the app, either
 	 * {@link #DEVELOPMENT} or {@link #DEPLOYMENT}.
 	 * 
+	 * 
+	 * The configuration type. Must currently be either DEVELOPMENT
+	 * or DEPLOYMENT. Currently, if the configuration type is
+	 * DEVELOPMENT, resources are polled for changes, component usage
+	 * is checked, wicket tags are not stripped from ouput and a
+	 * detailed exception page is used. If the type is DEPLOYMENT,
+	 * component usage is not checked, wicket tags are stripped from
+	 * output and a non-detailed exception page is used to display
+	 * errors.
+	 * 
 	 * @return configuration
-	 * @since 1.2.3
+	 * @since 1.2.3 (function existed as a property getter)
+	 * @since 1.3.0 (abstract, used to configure things)
 	 */
-	public String getConfigurationType()
-	{
-		return configurationType;
-	}
+	public abstract String getConfigurationType();
 
 	/**
 	 * @return Application's debug related settings
