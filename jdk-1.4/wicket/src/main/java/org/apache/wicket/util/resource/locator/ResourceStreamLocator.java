@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
  * Locate Wicket resource.
  * <p>
  * Contains the logic to locate a resource based on a path, a style (see
- * {@link org.apache.wicket.Session}), a locale and an extension string. The full filename
- * will be built like:
+ * {@link org.apache.wicket.Session}), a locale and an extension string. The
+ * full filename will be built like:
  * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
@@ -61,18 +61,19 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 
 	/** If null, the application registered finder will be used */
 	private IResourceFinder finder;
-	
+
 	/**
 	 * Constructor
 	 */
 	public ResourceStreamLocator()
 	{
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param finder resource finder
+	 * @param finder
+	 *            resource finder
 	 */
 	public ResourceStreamLocator(final IResourceFinder finder)
 	{
@@ -80,47 +81,14 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 * Helper to get the Application registered resource stream locator
 	 * 
-	 * @return resource stream locator
-	 */
-	public static IResourceStreamLocator get()
-	{
-		return Application.get().getResourceSettings().getResourceStreamLocator();
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class, java.lang.String, java.lang.String, java.util.Locale, java.lang.String)
-	 */
-	public IResourceStream locate(final Class clazz, String path, final String style,
-			final Locale locale, final String extension)
-	{
-		// Try the various combinations of style, locale and extension to find
-		// the resource.
-		ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, extension);
-		while (iter.hasNext())
-		{
-			String newPath = (String) iter.next();
-			
-			IResourceStream stream = locate(clazz, newPath);
-			if (stream != null)
-			{
-				stream.setLocale(iter.getLocale());
-				return stream;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class, java.lang.String)
+	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
+	 *      java.lang.String)
 	 */
 	public IResourceStream locate(final Class clazz, final String path)
 	{
-		// First try with the resource finder registered with the application (allows for markup reloading)
+		// First try with the resource finder registered with the application
+		// (allows for markup reloading)
 		IResourceStream stream = locateByResourceFinder(clazz, path);
 		if (stream != null)
 		{
@@ -132,6 +100,33 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		if (stream != null)
 		{
 			return stream;
+		}
+
+		return null;
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
+	 *      java.lang.String, java.lang.String, java.util.Locale,
+	 *      java.lang.String)
+	 */
+	public IResourceStream locate(final Class clazz, String path, final String style,
+			final Locale locale, final String extension)
+	{
+		// Try the various combinations of style, locale and extension to find
+		// the resource.
+		ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, extension);
+		while (iter.hasNext())
+		{
+			String newPath = (String)iter.next();
+
+			IResourceStream stream = locate(clazz, newPath);
+			if (stream != null)
+			{
+				stream.setLocale(iter.getLocale());
+				return stream;
+			}
 		}
 
 		return null;

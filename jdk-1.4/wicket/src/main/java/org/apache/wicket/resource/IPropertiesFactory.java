@@ -16,14 +16,22 @@
  */
 package org.apache.wicket.resource;
 
+import org.apache.wicket.util.value.ValueMap;
+
 
 /**
- * IPropertyiesFactory is not a 100% replacement for java.util.Properties as it
- * does not provide the same interface. But it serves kind of the same purpose
- * with Wicket specific features. E.g. besides Locale it take 'styles' and
- * 'variations' into account as well, it allows to register listeners which get
- * called when a property resource has changed and it allows to clear the
- * locally cached properties.
+ * Implementations are responsible for {@link #load(Class, String) locating}
+ * {@link Properties} objects, which are a thin wrapper around {@link ValueMap}
+ * and is used to locate localized messages.
+ * <p>
+ * The {@link #clearCache()} method should remove any cached references to
+ * properties objects used by an implementation, so that
+ * {@link #load(Class, String)} gets the freshest instance possible.
+ * </p>
+ * <p>
+ * {@link IPropertiesChangeListener Listeners} are related to cached properties
+ * and should be used to inform observers when sets of properties are reloaded.
+ * </p>
  * 
  * @see org.apache.wicket.resource.Properties
  * 
@@ -40,6 +48,11 @@ public interface IPropertiesFactory
 	void addListener(final IPropertiesChangeListener listener);
 
 	/**
+	 * Remove all cached properties.
+	 */
+	abstract void clearCache();
+
+	/**
 	 * Load the properties associated with the path
 	 * 
 	 * @param clazz
@@ -49,9 +62,4 @@ public interface IPropertiesFactory
 	 * @return The properties
 	 */
 	Properties load(final Class clazz, final String path);
-
-	/**
-	 * Remove all cached properties
-	 */
-	abstract void clearCache();
 }

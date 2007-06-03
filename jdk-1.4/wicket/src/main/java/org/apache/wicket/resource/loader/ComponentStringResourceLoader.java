@@ -27,8 +27,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
-import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -67,8 +67,8 @@ import org.slf4j.LoggerFactory;
  * In addition to the above search order, each key will be pre-pended with the
  * relative path of the current component related to the component that is being
  * searched. E.g. assume a component hierarchy like page1.form1.input1 and your
- * are requesting a key named 'Required'. Wicket will search the
- * property in the following order:
+ * are requesting a key named 'Required'. Wicket will search the property in the
+ * following order:
  * 
  * <pre>
  *        page1.properties =&gt; form1.input1.Required
@@ -141,6 +141,10 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			return null;
 		}
 
+		// Load the properties associated with the path
+		IPropertiesFactory propertiesFactory = Application.get().getResourceSettings()
+				.getPropertiesFactory();
+
 		while (true)
 		{
 			// Create the base path
@@ -151,10 +155,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 					"properties,xml");
 			while (iter.hasNext())
 			{
-				String newPath = (String) iter.next();
+				String newPath = (String)iter.next();
 
-				// Load the properties associated with the path
-				final Properties props = PropertiesFactory.get().load(clazz, newPath);
+				final Properties props = propertiesFactory.load(clazz, newPath);
 				if (props != null)
 				{
 					// Lookup the value
@@ -183,33 +186,6 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 
 		// not found
 		return null;
-	}
-
-	/**
-	 * Check the supplied class to see if it is one that we shouldn't bother
-	 * further searches up the class hierarchy for properties.
-	 * 
-	 * @param clazz
-	 *            The class to check
-	 * @return Whether to stop the search
-	 */
-	protected boolean isStopResourceSearch(final Class clazz)
-	{
-		if (clazz == null || clazz.equals(Object.class) || clazz.equals(Application.class))
-		{
-			return true;
-		}
-
-		// Stop at all html markup base classes
-		if (clazz.equals(WebPage.class) || clazz.equals(WebMarkupContainer.class)
-				|| clazz.equals(WebComponent.class))
-		{
-			return true;
-		}
-
-		// Stop at all wicket base classes
-		return clazz.equals(Page.class) || clazz.equals(MarkupContainer.class)
-				|| clazz.equals(Component.class);
 	}
 
 	/**
@@ -294,5 +270,32 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 			}
 		}
 		return searchStack;
+	}
+
+	/**
+	 * Check the supplied class to see if it is one that we shouldn't bother
+	 * further searches up the class hierarchy for properties.
+	 * 
+	 * @param clazz
+	 *            The class to check
+	 * @return Whether to stop the search
+	 */
+	protected boolean isStopResourceSearch(final Class clazz)
+	{
+		if (clazz == null || clazz.equals(Object.class) || clazz.equals(Application.class))
+		{
+			return true;
+		}
+
+		// Stop at all html markup base classes
+		if (clazz.equals(WebPage.class) || clazz.equals(WebMarkupContainer.class)
+				|| clazz.equals(WebComponent.class))
+		{
+			return true;
+		}
+
+		// Stop at all wicket base classes
+		return clazz.equals(Page.class) || clazz.equals(MarkupContainer.class)
+				|| clazz.equals(Component.class);
 	}
 }

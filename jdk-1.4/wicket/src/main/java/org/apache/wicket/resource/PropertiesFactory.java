@@ -32,7 +32,7 @@ import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -41,13 +41,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Reloadable properties. It is not a 100% replacement for java.util.Properties
- * as it does not provide the same interface. But is serves kind of the same
- * purpose with Wicket specific features as it take Locale, style and variations
- * into account. PropertiesFactory loads and reloads the Properties and
- * maintaines a cache. Hence property files are loaded just once, but are
- * reloaded if a change to a property file has been detected (actually the cache
- * gets cleared which forces a reload on demand).
+ * Default implementation of {@link IPropertiesFactory} which uses the
+ * {@link IResourceStreamLocator} as defined by
+ * {@link IResourceSettings#getResourceStreamLocator()} to load the
+ * {@link Properties} objects. Depending on the settings, it will assign
+ * {@link ModificationWatcher}s to the loaded resources to support reloading.
  * 
  * @see org.apache.wicket.settings.IResourceSettings#getPropertiesFactory()
  * 
@@ -58,14 +56,14 @@ public class PropertiesFactory implements IPropertiesFactory
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PropertiesFactory.class);
 
-	/** Cache for all property files loaded */
-	private final Map propertiesCache = new ConcurrentHashMap();
-
 	/**
 	 * Listeners will be invoked after changes to property file have been
 	 * detected
 	 */
 	private final List afterReloadListeners = new ArrayList();
+
+	/** Cache for all property files loaded */
+	private final Map propertiesCache = new ConcurrentHashMap();
 
 	/** Resource Settings */
 	private final IResourceSettings resourceSettings;
@@ -79,16 +77,6 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * Little helper
-	 * 
-	 * @return The properties factory registered with the application
-	 */
-	public static IPropertiesFactory get()
-	{
-		return Application.get().getResourceSettings().getPropertiesFactory();
-	}
-
-	/**
 	 * @see org.apache.wicket.resource.IPropertiesFactory#addListener(org.apache.wicket.resource.IPropertiesChangeListener)
 	 */
 	public void addListener(final IPropertiesChangeListener listener)
@@ -98,6 +86,14 @@ public class PropertiesFactory implements IPropertiesFactory
 		{
 			afterReloadListeners.add(listener);
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.resource.IPropertiesFactory#clearCache()
+	 */
+	public final void clearCache()
+	{
+		propertiesCache.clear();
 	}
 
 	/**
@@ -120,7 +116,8 @@ public class PropertiesFactory implements IPropertiesFactory
 		}
 
 		// If not in the cache than try to load the resource stream
-		IResourceStream stream = ResourceStreamLocator.get().locate(clazz, path);
+		IResourceStream stream = Application.get().getResourceSettings().getResourceStreamLocator()
+				.locate(clazz, path);
 		if (stream != null)
 		{
 			// Load the properties from the stream
@@ -135,24 +132,6 @@ public class PropertiesFactory implements IPropertiesFactory
 		// Add a placeholder to the cache. Null is not a valid value to add.
 		this.propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
 		return null;
-	}
-
-	/**
-	 * For subclasses to get access to the cache
-	 * 
-	 * @return Map
-	 */
-	protected final Map getCache()
-	{
-		return this.propertiesCache;
-	}
-
-	/**
-	 * @see org.apache.wicket.resource.IPropertiesFactory#clearCache()
-	 */
-	public final void clearCache()
-	{
-		propertiesCache.clear();
 	}
 
 	/**
@@ -299,5 +278,15 @@ public class PropertiesFactory implements IPropertiesFactory
 
 		log.info("Loading properties files from " + resourceStream);
 		return loadPropertiesFile(key, resourceStream);
+	}
+
+	/**
+	 * For subclasses to get access to the cache
+	 * 
+	 * @return Map
+	 */
+	protected final Map getCache()
+	{
+		return this.propertiesCache;
 	}
 }
