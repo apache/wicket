@@ -90,6 +90,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 
 		final String wicketMessageAttribute = tag.getAttributes().getString(
 				WICKET_MESSAGE_ATTRIBUTE_NAME);
+
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
 			// check if this tag is raw markup
@@ -99,20 +100,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				// that wicket will not merge this as raw markup and instead
 				// pass it on to a resolver
 				tag.setId(WICKET_MESSAGE_CONTAINER_ID);
-
-				// There is no point attaching the attributelocalizer to this
-				// tag because it will be represented by an auto component and
-				// they do not inherit the behaviors from their component tag
-				// unlike regular components, instead the attributelocalizer
-				// will be added by the code that creates the auto component
 			}
-			else
-			{
-				// if this is a component tag we attach a behavior to it that
-				// will in turn be attached to the component that is attached to
-				// this tag
-				tag.addBehavior(ATTRIBUTE_LOCALIZER);
-			}
+			tag.addBehavior(new AttributeLocalizer());
 		}
 
 		return tag;
@@ -156,9 +145,9 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 					String attr = attrAndKey.substring(0, colon);
 					String key = attrAndKey.substring(colon + 1);
 
-					String value;
 					// we need to call the proper getString() method based on
 					// whether or not we have a default value
+					final String value;
 					if (tag.getAttributes().containsKey(attr))
 					{
 						value = component.getString(key, null, tag.getAttributes().getString(attr));
@@ -173,6 +162,10 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		}
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer, org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		// localize any raw markup that has wicket:message attrs
@@ -190,7 +183,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				wc = new WebMarkupContainer(WICKET_MESSAGE_CONTAINER_ID
 						+ container.getPage().getAutoIndex());
 			}
-			wc.add(new AttributeLocalizer());
+			
 			container.autoAdd(wc);
 			return true;
 		}

@@ -58,44 +58,53 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 {
 	private static final long serialVersionUID = 1L;
 
+	/** Logging */
+	private static final Logger log = LoggerFactory.getLogger(RelativePathPrefixHandler.class);
+
 	/**
 	 * The id automatically assigned to tags without an id which we need to
 	 * prepend a relative path to.
 	 */
-	public final static String WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID = "-relative_path_prefix";
+	public static final String WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID = "-relative_path_prefix";
 
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src", "background" };
 
-	/** Logging */
-	private static final Logger log = LoggerFactory.getLogger(RelativePathPrefixHandler.class);
-
-	/**	Behavior that adds a prefix to src, href and background attributes to make them context-relative */
+	/**
+	 * Behavior that adds a prefix to src, href and background attributes to
+	 * make them context-relative
+	 */
 	public static final IBehavior RELATIVE_PATH_BEHAVIOR = new AbstractBehavior()
 	{
 		private static final long serialVersionUID = 1L;
 
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
+			String prefix = null;
+
 			// Modify all relevant attributes
 			for (int i = 0; i < attributeNames.length; i++)
 			{
 				String attrName = attributeNames[i];
 				String attrValue = tag.getAttributes().getString(attrName);
 
-				if ((attrValue != null) && (attrValue.startsWith("/") == false)
-						&& (attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
+				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
+						(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
-					String prefix = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot();
-					// getRelativePathPrefix only gives us relative to the Wicket Servlet/Filter.
-					// To be relative to the actual context path, we may need an extra ../ to take off the servletPath 
+					if (prefix == null)
+					{
+						prefix = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot();
+					}
+					
+					// getRelativePathPrefix only gives us relative to the
+					// Wicket Servlet/Filter. To be relative to the actual
+					// context path, we may need an extra ../ to take off the
+					// servletPath
 					attrValue = prefix + attrValue;
 					tag.getAttributes().put(attrName, attrValue);
 				}
 			}
-
 		}
-
 	};
 
 	/**
@@ -116,59 +125,53 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			return tag;
 		}
 
-		// Don't touch any wicket:id component
-		if (tag.getId() != null)
+		// Don't touch any wicket:id component and any auto-components
+		if ((tag.getId() != null) && (tag.getId().startsWith("-") == false))
 		{
 			return tag;
 		}
 
 		// Work out whether we have any attributes that require us to add a
-		// behaviour that prepends the relative path.
-		boolean addBehaviour = false;
-
+		// behavior that prepends the relative path.
 		for (int i = 0; i < attributeNames.length; i++)
 		{
 			String attrName = attributeNames[i];
 			String attrValue = tag.getAttributes().getString(attrName);
-			if ((attrValue != null) && (attrValue.startsWith("/") == false)
-					&& (attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
+			if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
+					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 			{
-				addBehaviour = true;
+				tag.setId(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID);
+				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
+				tag.setModified(true);
 				break;
 			}
 		}
 
-		if (addBehaviour)
-		{
-			tag.setId(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID);
-			tag.setModified(true);
-		}
-
-
 		return tag;
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer, org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		if (WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID.equals(tag.getId()))
 		{
-			Component wc = null;
+			final Component wc;
+			String id = WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID +
+					container.getPage().getAutoIndex();
 			if (tag.isOpenClose())
 			{
-				wc = new WebComponent(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID
-						+ container.getPage().getAutoIndex());
+				wc = new WebComponent(id);
 			}
 			else
 			{
-				wc = new WebMarkupContainer(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID
-						+ container.getPage().getAutoIndex());
+				wc = new WebMarkupContainer(id);
 			}
-			wc.add(RELATIVE_PATH_BEHAVIOR);
 			container.autoAdd(wc);
 			return true;
 		}
 		return false;
 	}
-
-
 }
