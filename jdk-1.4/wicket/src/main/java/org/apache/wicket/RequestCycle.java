@@ -962,7 +962,7 @@ public abstract class RequestCycle
 						+ ".", re);
 			}
 		}
-
+		
 		if (getResponse() instanceof BufferedWebResponse)
 		{
 			try
@@ -983,7 +983,16 @@ public abstract class RequestCycle
 		{
 			log.error("Exception occurred during onEndRequest", e);
 		}
-
+		
+		try
+		{
+			getApplication().getSessionStore().onEndRequest(getRequest());
+		}
+		catch (RuntimeException e)
+		{
+			log.error("Exception occurred during onEndRequest of the SessionStore", e);
+		}
+		
 		// Release thread local resources
 		try
 		{
@@ -1001,6 +1010,14 @@ public abstract class RequestCycle
 	 */
 	private void prepare()
 	{
+		try
+		{
+			getApplication().getSessionStore().onBeginRequest(getRequest());
+		}
+		catch (RuntimeException e)
+		{
+			log.error("Exception occurred during onEndRequest of the SessionStore", e);
+		}
 		// Event callback
 		onBeginRequest();
 	}

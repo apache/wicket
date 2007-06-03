@@ -390,8 +390,6 @@ public class FilePageStore implements IPageStore
 
 	private volatile long totalSerializationTime = 0;
 	
-	private static final ThreadLocal restoredPages = new ThreadLocal();
-
 	/**
 	 * Construct.
 	 */
@@ -532,14 +530,12 @@ public class FilePageStore implements IPageStore
 	 */
 	private Page readPage(int versionNumber, byte[] bytes)
 	{
+		boolean set = Page.serializer.get() == null; 
 		Page page = null;
-		Map map = null;
 		try
 		{
-			if (restoredPages.get() == null)
+			if (set)
 			{
-				map = new HashMap();
-				restoredPages.set(map);
 				Page.serializer.set(new PageSerializer(null));
 			}
 			IPageMapEntry entry = (IPageMapEntry)Objects.byteArrayToObject(bytes);
@@ -551,10 +547,9 @@ public class FilePageStore implements IPageStore
 		} 
 		finally
 		{
-			if (map != null)
+			if (set)
 			{
 				Page.serializer.set(null);
-				restoredPages.set(null);
 			}
 		}
 		return page;
@@ -860,21 +855,20 @@ public class FilePageStore implements IPageStore
 
 		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream) throws IOException, ClassNotFoundException
 		{
-			HashMap map = (HashMap)restoredPages.get();
-			if (map != null)
+			HashMap pageMaps = (HashMap)SecondLevelCacheSessionStore.usedPages.get();
+			if (pageMaps == null)
 			{
-				IntHashMap pagesMap = (IntHashMap)map.get(name);
-				if (pagesMap == null)
-				{
-					pagesMap = new IntHashMap();
-					map.put(name, pagesMap);
-				}
-				
-				pagesMap.put(id, page);
+				pageMaps = new HashMap();
+				SecondLevelCacheSessionStore.usedPages.set(pageMaps);
 			}
-			
+			IntHashMap pages = (IntHashMap)pageMaps.get(name);
+			if (pages == null)
+			{
+				pages = new IntHashMap();
+				pageMaps.put(name, pages);
+			}
+			pages.put(id, page);
 			boolean b = stream.readBoolean();
-			
 			if (b == false) 
 			{
 				stream.defaultReadObject();
@@ -906,27 +900,7 @@ public class FilePageStore implements IPageStore
 		
 		protected Object readResolve() throws ObjectStreamException
 		{
-			IntHashMap intHashMap = null;
-			Map map = (Map)restoredPages.get();
-			if (map != null)
-			{
-				intHashMap = (IntHashMap)map.get(pagemap);
-				if (intHashMap == null)
-				{
-					intHashMap = new IntHashMap();
-					map.put(pagemap, intHashMap);
-				}
-			}
-			Page page = (Page)intHashMap.get(pageid);
-			if (page == null)
-			{
-				page = Session.get().getPage(pagemap, Integer.toString(pageid), -1);
-				if (page != null)
-				{
-					intHashMap.put(pageid, page);
-				}
-			}
-			return page;
+			return Session.get().getPage(pagemap, Integer.toString(pageid), -1);
 		}
 	}
 }

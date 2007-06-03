@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.wicket.Application;
@@ -28,6 +29,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.Request;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
+import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.Change;
 
@@ -41,8 +43,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 {
 	/**
 	 * This interface is used by the SecondLevelCacheSessionStore so that pages
-	 * can be stored to a persistent layer. Implemenation should store the page
-	 * that it gets under the id and versionnumber. So that every page version
+	 * can be stored to a persistent layer. Implementation should store the page
+	 * that it gets under the id and version number. So that every page version
 	 * can be reconstructed when asked for.
 	 * 
 	 * @see FilePageStore as default implementation.
@@ -70,8 +72,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		/**
 		 * This method is called when the page is accessed. A IPageStore
-		 * implemenation can block until a save of that page version is done. So
-		 * that a specifiek page version is always restoreable.
+		 * implementation can block until a save of that page version is done. So
+		 * that a specific page version is always restore able.
 		 * 
 		 * @param sessionId
 		 * @param page
@@ -126,6 +128,25 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		public Page get(int id, int versionNumber)
 		{
+			HashMap pageMaps = (HashMap)usedPages.get();
+			if (pageMaps == null)
+			{
+				pageMaps = new HashMap();
+				usedPages.set(pageMaps);
+			}
+			IntHashMap pages = (IntHashMap)pageMaps.get(getName());
+			if (pages == null)
+			{
+				pages = new IntHashMap();
+				pageMaps.put(getName(), pages);
+			}
+			
+			// for now i only get by id.
+			// does it really make any sense that there are multiply instances of the 
+			// same page are alive in one session??
+			Page page = (Page)pages.get(id);
+			if (page != null) return page;
+			
 			PageVersions pv = null;
 			if (versionNumber == -1)
 			{
@@ -143,11 +164,12 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			String sessionId = getSession().getId();
 			if (lastPage != null && lastPage.getNumericId() == id)
 			{
-				Page page = lastPage.getVersion(versionNumber);
+				page = lastPage.getVersion(versionNumber);
 				if (page != null)
 				{
 					// ask the page store if it is ready saving the page.
 					getStore().pageAccessed(sessionId, page);
+					pages.put(id,page);
 					return page;
 				}
 			}
@@ -167,7 +189,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					ajaxVersionNumber = pv.ajaxversionid;
 				}
 				lastPage = null;
-				return getStore().getPage(sessionId, getName(), id, versionNumber, ajaxVersionNumber);
+				page = getStore().getPage(sessionId, getName(), id, versionNumber, ajaxVersionNumber);
+				pages.put(id,page);
+				return page;
+				
 			}
 			return null;
 		}
@@ -465,6 +490,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 
 	}
+	
+	static final ThreadLocal usedPages = new ThreadLocal();
 
 	private IPageStore pageStore;
 
@@ -483,10 +510,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		this.pageStore = pageStore;
 
-		// turn automatic multiwindow support off by default, as we don't really
+		// turn automatic multi window support off by default, as we don't really
 		// need to be afraid to run out of history with this implementation.
 		// note that the session store is created before Application#init is
-		// called, so if users set this setting explicitly, it'll be overriden
+		// called, so if users set this setting explicitly, it'll be overridden
 		// (and that's exactly what we want: provide a better default, but not
 		// forcing people to do away with this feature).
 		Application.get().getPageSettings().setAutomaticMultiWindowSupport(false);
@@ -501,6 +528,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		return new SecondLevelCachePageMap(name);
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.AbstractHttpSessionStore#onEndRequest(org.apache.wicket.Request)
+	 */
+	public void onEndRequest(Request request)
+	{
+		super.onEndRequest(request);
+		usedPages.set(null);
+	}
 	/**
 	 * @see org.apache.wicket.protocol.http.AbstractHttpSessionStore#destroy()
 	 */
