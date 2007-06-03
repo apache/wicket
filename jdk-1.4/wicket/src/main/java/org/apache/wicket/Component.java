@@ -1164,7 +1164,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
 				{
 					// Escape it
-					return Strings.escapeMarkup(modelString).toString();
+					return Strings.escapeMarkup(modelString, false, true).toString();
 				}
 				return modelString;
 			}
