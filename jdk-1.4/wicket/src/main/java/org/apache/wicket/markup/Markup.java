@@ -91,7 +91,6 @@ public class Markup
 		while (iter.hasNext())
 		{
 			buf.append(iter.next());
-			buf.append(",");
 		}
 
 		return buf.toString();
