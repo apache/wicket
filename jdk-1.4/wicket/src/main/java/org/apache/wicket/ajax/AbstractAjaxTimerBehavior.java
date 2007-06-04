@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.util.time.Duration;
 
@@ -80,8 +81,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	protected CharSequence getCallbackScript()
 	{
-		String componentId = getComponent().getMarkupId();
-		String precondition = "var c = Wicket.$('" + componentId + "'); return typeof(c) != 'undefined' && c != null";
+		String precondition = null;
+		
+		if ( !(getComponent() instanceof Page) )
+		{
+			String componentId = getComponent().getMarkupId();
+			precondition = "var c = Wicket.$('" + componentId + "'); return typeof(c) != 'undefined' && c != null";
+		}
 		
 		return getCallbackScript("wicketAjaxGet('"
 				+ getCallbackUrl(onlyTargetActivePage()) + "'", null, null, precondition);
