@@ -140,11 +140,17 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path.
+	 * contributor referencing a CSS file using one of the following schemes:
+	 * <ul>
+	 * <li>Starts with http:// or https:// for an external reference.</li>
+	 * <li>Starts with "/" for an absolute reference that Wicket will not
+	 * rewrite.</li>
+	 * <li>Starts with anything else, which Wicket will automatically prepend
+	 * to make relative to the context root of your web-app.</li>
+	 * </ul>
 	 * 
 	 * @param location
-	 *            The location of the css file relative to the context path
+	 *            The location of the css file.
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forCss(final String location)
@@ -162,11 +168,17 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path.
+	 * contributor referencing a CSS file using one of the following schemes:
+	 * <ul>
+	 * <li>Starts with http:// or https:// for an external reference.</li>
+	 * <li>Starts with "/" for an absolute reference that Wicket will not
+	 * rewrite.</li>
+	 * <li>Starts with anything else, which Wicket will automatically prepend
+	 * to make relative to the context root of your web-app.</li>
+	 * </ul>
 	 * 
 	 * @param location
-	 *            The location of the css file relative to the context path
+	 *            The location of the css.
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
@@ -232,11 +244,17 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a JavaScript file that lives in the web
-	 * application directory and that is addressed relative to the context path.
+	 * contributor referencing a CSS file using one of the following schemes:
+	 * <ul>
+	 * <li>Starts with http:// or https:// for an external reference.</li>
+	 * <li>Starts with "/" for an absolute reference that Wicket will not
+	 * rewrite.</li>
+	 * <li>Starts with anything else, which Wicket will automatically prepend
+	 * to make relative to the context root of your web-app.</li>
+	 * </ul>
 	 * 
 	 * @param location
-	 *            The location of the css file relative to the context path
+	 *            The location of the css file.
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forJavaScript(final String location)
@@ -256,8 +274,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 	// provided it's not a fully-qualified URL.
 	private static final String returnRelativePath(String location)
 	{
-		// WICKET-59 allow external URLs.
-		if (location.startsWith("http://") || location.startsWith("https://"))
+		// WICKET-59 allow external URLs, WICKET-612 allow absolute URLs.
+		if (location.startsWith("http://") || location.startsWith("https://") || location.startsWith("/"))
 		{
 			return location;
 		}
