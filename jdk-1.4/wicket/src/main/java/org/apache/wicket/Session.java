@@ -36,7 +36,6 @@ import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
@@ -121,7 +120,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements IClusterable, IConverterLocator
+public abstract class Session implements IClusterable
 {
 	/**
 	 * Visitor interface for visiting page maps
@@ -323,9 +322,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 	 * {@link RequestCycle#newClientInfo()}.
 	 */
 	private ClientInfo clientInfo;
-
-	/** The converter instance. */
-	private transient IConverterLocator converterSupplier;
 
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
@@ -556,28 +552,6 @@ public abstract class Session implements IClusterable, IConverterLocator
 			this.clientInfo = RequestCycle.get().newClientInfo();
 		}
 		return clientInfo;
-	}
-
-	/**
-	 * Gets the converter instance. This method returns the cached converter for
-	 * the current locale. Whenever the locale is changed, the cached value is
-	 * cleared and the converter will be recreated for the new locale on a next
-	 * request.
-	 * 
-	 * @param type
-	 *            TODO
-	 * 
-	 * @return the converter
-	 */
-	public final IConverter getConverter(Class/* <?> */type)
-	{
-		if (converterSupplier == null)
-		{
-			// Let the factory create a new converter
-			converterSupplier = getApplication().getApplicationSettings()
-					.getConverterLocatorFactory().newConverterLocator();
-		}
-		return converterSupplier.getConverter(type);
 	}
 
 	/**

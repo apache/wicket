@@ -49,8 +49,6 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
 import org.apache.wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
-import org.apache.wicket.util.convert.ConverterLocatorFactory;
-import org.apache.wicket.util.convert.IConverterLocatorFactory;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.file.IResourceFinder;
@@ -124,8 +122,6 @@ public final class Settings
 
 	/** True if multiple tabs/spaces should be compressed to a single space */
 	private boolean compressWhitespace = false;
-
-	private IConverterLocatorFactory converterLocatorFactory;
 
 	/** Default values for persistence of form data (by means of cookies) */
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
@@ -445,18 +441,6 @@ public final class Settings
 	public boolean getCompressWhitespace()
 	{
 		return compressWhitespace;
-	}
-	
-	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#getConverterLocatorFactory()
-	 */
-	public IConverterLocatorFactory getConverterLocatorFactory()
-	{
-		if (converterLocatorFactory == null)
-		{
-			converterLocatorFactory = new ConverterLocatorFactory();
-		}
-		return converterLocatorFactory;
 	}
 
 	/**
@@ -879,18 +863,6 @@ public final class Settings
 	public void setCompressWhitespace(final boolean compressWhitespace)
 	{
 		this.compressWhitespace = compressWhitespace;
-	}
-
-	/**
-	 * @see org.apache.wicket.settings.IApplicationSettings#setConverterLocatorFactory(org.apache.wicket.util.convert.IConverterLocatorFactory)
-	 */
-	public void setConverterLocatorFactory(IConverterLocatorFactory factory)
-	{
-		if (factory == null)
-		{
-			throw new IllegalArgumentException("converter factory cannot be set to null");
-		}
-		this.converterLocatorFactory = factory;
 	}
 
 	/**

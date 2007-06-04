@@ -187,39 +187,33 @@ public final class AutoComponentResolver implements IComponentResolver
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw new MarkupException(
-					"Unable to create Component from wicket tag: Cause: "
-							+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
+					+ e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new MarkupException(
-					"Unable to create Component from wicket tag: Cause: "
-							+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
+					+ e.getMessage());
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new MarkupException(
-					"Unable to create Component from wicket tag: Cause: "
-							+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
+					+ e.getMessage());
 		}
 		catch (InstantiationException e)
 		{
-			throw new MarkupException(
-					"Unable to create Component from wicket tag: Cause: "
-							+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
+					+ e.getMessage());
 		}
 		catch (ClassCastException e)
 		{
-			throw new MarkupException(
-					"Unable to create Component from wicket tag: Cause: "
-							+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
+					+ e.getMessage());
 		}
 		catch (SecurityException e)
 		{
-			throw new MarkupException(
-					"Unable to create Component from wicket tag: Cause: "
-							+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
+					+ e.getMessage());
 		}
 
 		// Get all remaining attributes and invoke the component's setters
@@ -292,8 +286,8 @@ public final class AutoComponentResolver implements IComponentResolver
 		final Class paramClass = parameterClasses[0];
 		try
 		{
-			final IConverter converter = Application.get().getApplicationSettings()
-					.getConverterLocatorFactory().newConverterLocator().getConverter(paramClass);
+			final IConverter converter = Application.get().getConverterLocator().getConverter(
+					paramClass);
 			final Object param = converter.convertToObject(value, locale);
 			if (param == null)
 			{

@@ -976,7 +976,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public IConverter getConverter(Class/* <?> */type)
 	{
-		return getSession().getConverter(type);
+		return getApplication().getConverterLocator().getConverter(type);
 	}
 
 	/**
@@ -2940,8 +2940,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 			onAttach();
 			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
 			{
-				throw new IllegalStateException("Component " + this + " of type " + getClass().getName() + " has not been properly attached.  "
-						+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
+				throw new IllegalStateException(
+						"Component "
+								+ this
+								+ " of type "
+								+ getClass().getName()
+								+ " has not been properly attached.  "
+								+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
 			}
 			setFlag(FLAG_ATTACHING, false);
 			setFlag(FLAG_ATTACHED, true);

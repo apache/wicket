@@ -16,16 +16,14 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.convert.ConverterLocator;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.IConverterLocatorFactory;
 
 /**
  * Locates the proper converter instance for a given type. Classes that
  * implement this interface must return the right converter for the given class
- * type. Instances are created by {@link IConverterLocatorFactory}, which can
- * be configured using {@link IApplicationSettings#getConverterLocatorFactory()}.
+ * type. Instances are created by {@link IConverterLocator}, which can be
+ * configured using {@link Application#newConverterLocator()}.
  * 
  * @see ConverterLocator
  * @see IConverterLocatorFactory

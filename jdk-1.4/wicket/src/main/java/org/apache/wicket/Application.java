@@ -58,6 +58,7 @@ import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.settings.ISecuritySettings;
 import org.apache.wicket.settings.ISessionSettings;
 import org.apache.wicket.settings.Settings;
+import org.apache.wicket.util.convert.ConverterLocator;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.time.Duration;
@@ -212,6 +213,9 @@ public abstract class Application
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
 
+	/** The converter locator instance. */
+	private IConverterLocator converterLocator;
+
 	/** list of initializers. */
 	private List initializers = new ArrayList();
 
@@ -340,8 +344,8 @@ public abstract class Application
 		}
 		else
 		{
-			throw new IllegalArgumentException(
-					"Invalid configuration type: '" + configurationType + "'.  Must be \"development\" or \"deployment\".");
+			throw new IllegalArgumentException("Invalid configuration type: '" + configurationType
+					+ "'.  Must be \"development\" or \"deployment\".");
 		}
 	}
 
@@ -368,13 +372,12 @@ public abstract class Application
 	 * {@link #DEVELOPMENT} or {@link #DEPLOYMENT}.
 	 * 
 	 * 
-	 * The configuration type. Must currently be either DEVELOPMENT
-	 * or DEPLOYMENT. Currently, if the configuration type is
-	 * DEVELOPMENT, resources are polled for changes, component usage
-	 * is checked, wicket tags are not stripped from ouput and a
-	 * detailed exception page is used. If the type is DEPLOYMENT,
-	 * component usage is not checked, wicket tags are stripped from
-	 * output and a non-detailed exception page is used to display
+	 * The configuration type. Must currently be either DEVELOPMENT or
+	 * DEPLOYMENT. Currently, if the configuration type is DEVELOPMENT,
+	 * resources are polled for changes, component usage is checked, wicket tags
+	 * are not stripped from ouput and a detailed exception page is used. If the
+	 * type is DEPLOYMENT, component usage is not checked, wicket tags are
+	 * stripped from output and a non-detailed exception page is used to display
 	 * errors.
 	 * 
 	 * @return configuration
@@ -382,6 +385,14 @@ public abstract class Application
 	 * @since 1.3.0 (abstract, used to configure things)
 	 */
 	public abstract String getConfigurationType();
+
+	/**
+	 * @return The converter locator for this application
+	 */
+	public final IConverterLocator getConverterLocator()
+	{
+		return converterLocator;
+	}
 
 	/**
 	 * @return Application's debug related settings
@@ -812,7 +823,7 @@ public abstract class Application
 	{
 		settingsAccessible = true;
 		IPageSettings pageSettings = getPageSettings();
-		
+
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new ParentResolver());
 		pageSettings.addComponentResolver(new AutoComponentResolver());
@@ -835,6 +846,17 @@ public abstract class Application
 		applicationKeyToApplication.put(applicationKey, this);
 
 		sessionStore = newSessionStore();
+		converterLocator = newConverterLocator();
+	}
+
+	/**
+	 * Creates and returns a new instance of {@link IConverterLocator}.
+	 * 
+	 * @return A new {@link IConverterLocator} instance
+	 */
+	protected IConverterLocator newConverterLocator()
+	{
+		return new ConverterLocator();
 	}
 
 	/**

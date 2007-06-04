@@ -41,13 +41,6 @@ public interface ApplicationSettingsMBean
 	String getClassResolver();
 
 	/**
-	 * Gets the converter factory.
-	 * 
-	 * @return the converter factory
-	 */
-	String getConverterLocatorFactory();
-
-	/**
 	 * Gets internal error page class.
 	 * 
 	 * @return Returns the internalErrorPage.

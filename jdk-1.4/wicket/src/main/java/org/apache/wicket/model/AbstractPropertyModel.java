@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.model;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.lang.PropertyResolver;
@@ -142,7 +143,8 @@ public abstract class AbstractPropertyModel implements IChainingModel, IObjectCl
 		else
 		{
 			PropertyResolverConverter prc = null;
-			prc = new PropertyResolverConverter(Session.get(), Session.get().getLocale());
+			prc = new PropertyResolverConverter(Application.get().getConverterLocator(), Session
+					.get().getLocale());
 			PropertyResolver.setValue(expression, getTarget(), object, prc);
 		}
 	}
@@ -191,7 +193,7 @@ public abstract class AbstractPropertyModel implements IChainingModel, IObjectCl
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @return The property expression for the component
 	 */

@@ -17,7 +17,6 @@
 package org.apache.wicket.settings;
 
 import org.apache.wicket.application.IClassResolver;
-import org.apache.wicket.util.convert.IConverterLocatorFactory;
 
 /**
  * Settings interface for application settings.
@@ -53,13 +52,6 @@ public interface IApplicationSettings
 	IClassResolver getClassResolver();
 
 	/**
-	 * Gets the converter locator factory.
-	 * 
-	 * @return the converter locator factory
-	 */
-	IConverterLocatorFactory getConverterLocatorFactory();
-
-	/**
 	 * Gets internal error page class.
 	 * 
 	 * @return Returns the internalErrorPage.
@@ -91,13 +83,6 @@ public interface IApplicationSettings
 	 *            The default class resolver
 	 */
 	void setClassResolver(final IClassResolver defaultClassResolver);
-
-	/**
-	 * Sets the CoverterLocatorFactory
-	 * 
-	 * @param factory
-	 */
-	public void setConverterLocatorFactory(IConverterLocatorFactory factory);
 
 	/**
 	 * Sets internal error page class. The class must be bookmarkable and must

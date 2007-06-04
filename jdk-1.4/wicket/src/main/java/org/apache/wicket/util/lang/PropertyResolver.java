@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
@@ -53,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Index or map properties can also be written as: "property[index]" or
  * "property[key]" <p/>
- *
+ * 
  * @author jcompagner
  */
 public final class PropertyResolver
@@ -67,7 +68,7 @@ public final class PropertyResolver
 	 * Looksup the value from the object with the given expression. If the
 	 * expresion, the object itself or one property evalutes to null then a null
 	 * will be returned.
-	 *
+	 * 
 	 * @param expression
 	 *            The expression string with the property to be lookup.
 	 * @param object
@@ -96,10 +97,10 @@ public final class PropertyResolver
 	 * can't be evaluated then a WicketRuntimeException will be thrown. If a
 	 * null object is encounted then it will try to generate it by calling the
 	 * default constructor and set it on the object.
-	 *
+	 * 
 	 * The value will be tried to convert to the right type with the given
 	 * converter.
-	 *
+	 * 
 	 * @param expression
 	 *            The expression string with the property to be set.
 	 * @param object
@@ -130,10 +131,10 @@ public final class PropertyResolver
 			throw new WicketRuntimeException("Null object returned for expression: " + expression
 					+ " for setting value: " + value + " on: " + object);
 		}
-		setter.setValue(value, converter == null ? new PropertyResolverConverter(Session.get(),
-				Session.get().getLocale()) : converter);
+		setter.setValue(value, converter == null ? new PropertyResolverConverter(Application.get()
+				.getConverterLocator(), Session.get().getLocale()) : converter);
 	}
-	
+
 	/**
 	 * @param expression
 	 * @param object
@@ -153,7 +154,8 @@ public final class PropertyResolver
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
 	{
-		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[").toString();
+		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[")
+				.toString();
 		int index = expressionBracketsSeperated.indexOf('.');
 		int lastIndex = 0;
 		Object value = object;
@@ -267,7 +269,8 @@ public final class PropertyResolver
 						else
 						{
 							throw new WicketRuntimeException("The expression '" + exp
-									+ "' is neither an index nor is it a method for the list " + clz);
+									+ "' is neither an index nor is it a method for the list "
+									+ clz);
 						}
 					}
 				}
@@ -298,7 +301,7 @@ public final class PropertyResolver
 				else
 				{
 					field = findField(clz, exp);
-					if(field == null)
+					if (field == null)
 					{
 						method = findMethod(clz, exp);
 						if (method == null)
@@ -324,17 +327,19 @@ public final class PropertyResolver
 								catch (Exception e)
 								{
 									throw new WicketRuntimeException(
-											"no get method defined for class: " + clz + " expression: "
-													+ propertyName);
+											"no get method defined for class: " + clz
+													+ " expression: " + propertyName);
 								}
 							}
 							else
 							{
-								// We do not look for a public FIELD because that is
+								// We do not look for a public FIELD because
+								// that is
 								// not good
 								// programming with beans patterns
-								throw new WicketRuntimeException("No get method defined for class: "
-										+ clz + " expression: " + exp);
+								throw new WicketRuntimeException(
+										"No get method defined for class: " + clz + " expression: "
+												+ exp);
 							}
 						}
 						else
@@ -373,12 +378,12 @@ public final class PropertyResolver
 		catch (Exception e)
 		{
 			Class tmp = clz;
-			while(tmp != null && tmp != Object.class)
+			while (tmp != null && tmp != Object.class)
 			{
 				Field[] fields = tmp.getDeclaredFields();
 				for (int i = 0; i < fields.length; i++)
 				{
-					if(fields[i].getName().equals(expression))
+					if (fields[i].getName().equals(expression))
 					{
 						fields[i].setAccessible(true);
 						return fields[i];
@@ -442,12 +447,13 @@ public final class PropertyResolver
 	/**
 	 * Utility class: instantiation not allowed.
 	 */
-	private PropertyResolver() {
+	private PropertyResolver()
+	{
 	}
 
 	/**
 	 * @author jcompagner
-	 *
+	 * 
 	 */
 	private final static class ObjectAndGetSetter
 	{
@@ -481,9 +487,9 @@ public final class PropertyResolver
 		{
 			return getAndSetter.getValue(value);
 		}
-		
+
 		public Class getTargetClass()
-		{	
+		{
 			return getAndSetter.getTargetClass(this.value);
 		}
 
@@ -495,7 +501,7 @@ public final class PropertyResolver
 		/**
 		 * @param object
 		 *            The object where the value must be taken from.
-		 *
+		 * 
 		 * @return The value of this property
 		 */
 		public Object getValue(final Object object);
@@ -508,7 +514,7 @@ public final class PropertyResolver
 		/**
 		 * @param object
 		 *            The object where the new value must be set on.
-		 *
+		 * 
 		 * @return The new value for the property that is set back on that
 		 *         object.
 		 */
@@ -519,7 +525,8 @@ public final class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public void setValue(final Object object, final Object value, PropertyResolverConverter converter);
+		public void setValue(final Object object, final Object value,
+				PropertyResolverConverter converter);
 
 	}
 
@@ -558,7 +565,7 @@ public final class PropertyResolver
 			// map and try to make one of the class if finds?
 			return null;
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
 		 */
@@ -620,7 +627,7 @@ public final class PropertyResolver
 			// list and try to make one of the class if finds?
 			return null;
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
 		 */
@@ -676,7 +683,7 @@ public final class PropertyResolver
 			}
 			return value;
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
 		 */
@@ -716,7 +723,7 @@ public final class PropertyResolver
 		{
 			throw new WicketRuntimeException("Cant get a new value from a length of an array");
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
 		 */
@@ -815,7 +822,7 @@ public final class PropertyResolver
 						+ " on object: " + object);
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
 		 */
@@ -894,7 +901,8 @@ public final class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public final void setValue(final Object object, final Object value, PropertyResolverConverter converter)
+		public final void setValue(final Object object, final Object value,
+				PropertyResolverConverter converter)
 		{
 			if (setMethod == null)
 			{
@@ -903,17 +911,20 @@ public final class PropertyResolver
 			if (setMethod != null)
 			{
 				Object converted = converter.convert(value, getMethod.getReturnType());
-				if ( converted == null)
+				if (converted == null)
 				{
-					if( value != null )
+					if (value != null)
 					{
-						throw new ConversionException("Can't convert value: " + value + " to class: "
-								+ getMethod.getReturnType() + " for setting it on " + object);
+						throw new ConversionException("Can't convert value: " + value
+								+ " to class: " + getMethod.getReturnType() + " for setting it on "
+								+ object);
 					}
-					else if( getMethod.getReturnType().isPrimitive() )
+					else if (getMethod.getReturnType().isPrimitive())
 					{
-						throw new ConversionException("Can't convert null value to a primitive class: "
-								+ getMethod.getReturnType() + " for setting it on " + object);
+						throw new ConversionException(
+								"Can't convert null value to a primitive class: "
+										+ getMethod.getReturnType() + " for setting it on "
+										+ object);
 					}
 				}
 				try
@@ -1014,7 +1025,7 @@ public final class PropertyResolver
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param field
 		 */
 		public FieldGetAndSetter(Field field)
@@ -1076,7 +1087,7 @@ public final class PropertyResolver
 						+ " on object " + object + ", value " + value, ex);
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
 		 */
