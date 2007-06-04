@@ -95,11 +95,6 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 					{
 						prefix = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot();
 					}
-					
-					// getRelativePathPrefix only gives us relative to the
-					// Wicket Servlet/Filter. To be relative to the actual
-					// context path, we may need an extra ../ to take off the
-					// servletPath
 					attrValue = prefix + attrValue;
 					tag.getAttributes().put(attrName, attrValue);
 				}
