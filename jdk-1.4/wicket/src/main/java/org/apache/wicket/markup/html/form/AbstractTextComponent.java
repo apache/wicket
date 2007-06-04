@@ -102,7 +102,13 @@ public abstract class AbstractTextComponent extends FormComponent
 		super.onBeforeRender();
 		if (getType() == null)
 		{
-			setType(getModelType(getModel()));
+			// Set the type, but only if it's not a String (see WICKET-606).
+			// Otherwise, getConvertEmptyInputStringToNull() won't work.
+			Class type = getModelType(getModel());
+			if (String.class.equals(type))
+			{
+				setType(type);
+			}
 		}
 	}
 
