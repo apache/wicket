@@ -687,7 +687,8 @@ Wicket.Ajax.Request.prototype = {
 	       		return false;
 			}
 		} else {
-			return null;
+			this.done();
+			return false;
 		}
 	},
 	
@@ -725,7 +726,8 @@ Wicket.Ajax.Request.prototype = {
 	       		return false;
 			}
 		} else {
-			return null;
+			this.done();
+			return false;
 		}
 	},
 	
@@ -917,11 +919,13 @@ Wicket.Ajax.Call.prototype = {
 			// This should be changed for IE See comments in wicket-event.js add (attachEvent/detachEvent)
 			// IE this will cause double events for everything.. (mostly because of the Function.prototype.bind(element))
 			Wicket.Focus.attachFocusEvent();
-			// set the focus to the last component
 			
-			Wicket.Focus.requestFocus();
 			this.request.done();
 			this.successHandler();
+
+			// set the focus to the last component
+			setTimeout("Wicket.Focus.requestFocus();", 0);
+			
 			// continue to next step (which should make the processing stop, as success should be the final step)		
 			notify();			
 		}.bind(this));
