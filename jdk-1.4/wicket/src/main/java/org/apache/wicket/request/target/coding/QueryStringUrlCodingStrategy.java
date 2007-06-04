@@ -150,6 +150,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		String pageMapName = requestParameters.getPageMapName();
 		final PageParameters parameters = new PageParameters(requestParameters.getParameters());
 		
+		// This might be a request to a stateless page, so check for an interface name.
 		if (requestParameters.getInterfaceName() != null) {
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
 					bookmarkablePageClass, parameters, requestParameters.getComponentPath(),
