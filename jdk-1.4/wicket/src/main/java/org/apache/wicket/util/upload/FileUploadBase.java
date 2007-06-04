@@ -362,7 +362,7 @@ public abstract class FileUploadBase
 		catch (IOException e)
 		{
 			throw new FileUploadException("Processing of " + MULTIPART_FORM_DATA
-					+ " request failed. " + e.getMessage());
+					+ " request failed. " + e.getMessage(), e);
 		}
 
 		return items;
