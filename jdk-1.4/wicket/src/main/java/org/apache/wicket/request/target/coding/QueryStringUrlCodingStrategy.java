@@ -21,11 +21,15 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageMap;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.UnitTestSettings;
+import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
+import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
-
 
 /**
  * Encodes and decodes mounts for a single bookmarkable page class, but with the
@@ -138,6 +142,22 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 					encoder.addValue(entry.getKey().toString(), entry.getValue());
 				}
 			}
+		}
+	}
+	
+	public IRequestTarget decode(RequestParameters requestParameters)
+	{
+		String pageMapName = requestParameters.getPageMapName();
+		final PageParameters parameters = new PageParameters(requestParameters.getParameters());
+		
+		if (requestParameters.getInterfaceName() != null) {
+			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
+					bookmarkablePageClass, parameters, requestParameters.getComponentPath(),
+					requestParameters.getInterfaceName());
+		}
+		else
+		{
+			return new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass, parameters);
 		}
 	}
 

@@ -35,7 +35,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
-	private final Class bookmarkablePageClass;
+	protected final Class bookmarkablePageClass;
 
 	/** page map name. */
 	private final String pageMapName;
