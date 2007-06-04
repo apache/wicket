@@ -43,4 +43,29 @@ public class FileUploadException extends Exception
 	{
 		super(msg);
 	}
+
+	/**
+	 * Constructs a new <code>FileUploadException</code> with specified cause.
+	 * 
+	 * @param cause
+	 *            the cause.
+	 */
+	public FileUploadException(Throwable cause)
+	{
+		super(cause);
+	}
+
+	/**
+	 * Constructs a new <code>FileUploadException</code> with specified detail
+	 * message and cause
+	 * 
+	 * @param msg
+	 *            the error message.
+	 * @param cause
+	 *            the cause.
+	 */
+	public FileUploadException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 }
