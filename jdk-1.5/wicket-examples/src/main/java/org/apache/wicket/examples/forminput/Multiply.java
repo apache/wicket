@@ -24,6 +24,12 @@ import org.apache.wicket.model.PropertyModel;
 /**
  * Displays how a {@link FormComponentPanel} can be used. Needs a model that
  * resolves to an Integer object.
+ * <p>
+ * Note that setting a new model value for this example wouldn't make sense, as
+ * it would mismatch with the lhs and rhs. You would use this component's model
+ * (value) primarily to write the result to some object, without ever directly
+ * setting it in code yourself.
+ * </p>
  * 
  * @author eelcohillenius
  */
