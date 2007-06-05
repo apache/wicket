@@ -78,21 +78,6 @@ import org.apache.wicket.version.undo.Change;
 public abstract class FormComponent extends WebMarkupContainer implements IFormVisitorParticipant
 {
 	/**
-	 * Typesafe interface to code that is called when visiting a form component.
-	 */
-	public static interface IVisitor
-	{
-		/**
-		 * Called when visiting a form component
-		 * 
-		 * @param formComponent
-		 *            The form component
-		 * @return component
-		 */
-		public Object formComponent(IFormVisitorParticipant formComponent);
-	}
-
-	/**
 	 * Visitor for traversing form components
 	 */
 	public static abstract class AbstractVisitor implements IVisitor
@@ -110,6 +95,174 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		}
 
 		protected abstract void onFormComponent(FormComponent formComponent);
+	}
+
+	/**
+	 * Typesafe interface to code that is called when visiting a form component.
+	 */
+	public static interface IVisitor
+	{
+		/**
+		 * Called when visiting a form component
+		 * 
+		 * @param formComponent
+		 *            The form component
+		 * @return component
+		 */
+		public Object formComponent(IFormVisitorParticipant formComponent);
+	}
+
+	/**
+	 * {@link IErrorMessageSource} used for error messags against this form
+	 * components.
+	 * 
+	 * @author ivaynberg
+	 */
+	private class MessageSource implements IErrorMessageSource
+	{
+
+		/**
+		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(java.lang.String)
+		 */
+		public String getMessage(String key)
+		{
+			final FormComponent formComponent = FormComponent.this;
+
+			// retrieve prefix that will be used to construct message keys
+			String prefix = formComponent.getValidatorKeyPrefix();
+			if (Strings.isEmpty(prefix))
+			{
+				prefix = "";
+			}
+
+			final Localizer localizer = formComponent.getLocalizer();
+
+			String resource = prefix + getId() + "." + key;
+
+			// First use the parent for resolving so that
+			// form1.textfield1.Required can be used.
+
+			// Note: It is important that the default value of "" is provided
+			// to getString() not to throw a MissingResourceException or to
+			// return a default string like "[Warning: String ..."
+			String message = localizer.getString(resource, formComponent.getParent(), "");
+
+			// If not found, than ...
+			if (Strings.isEmpty(message))
+			{
+				// Try a variation of the resource key
+
+				resource = prefix + key;
+
+				message = localizer.getString(resource, formComponent.getParent(), "");
+			}
+
+			if (Strings.isEmpty(message))
+			{
+				// If still empty then use default
+
+				resource = prefix + getId() + "." + key;
+
+				// Note: It is important that the default value of "" is
+				// provided
+				// to getString() not to throw a MissingResourceException or to
+				// return a default string like "[Warning: String ..."
+				message = localizer.getString(resource, formComponent, "");
+
+				// If not found, than ...
+				if (Strings.isEmpty(message))
+				{
+					// Try a variation of the resource key
+
+					resource = prefix + key;
+
+					message = localizer.getString(resource, formComponent, "");
+				}
+			}
+
+			// convert empty string to null in case our default value of "" was
+			// returned from localizer
+			if (Strings.isEmpty(message))
+			{
+				message = null;
+			}
+			return message;
+		}
+
+		/**
+		 * @see org.apache.wicket.validation.IErrorMessageSource#substitute(java.lang.String,
+		 *      java.util.Map)
+		 */
+		public String substitute(String string, Map vars) throws IllegalStateException
+		{
+			return new MapVariableInterpolator(string, addDefaultVars(vars), true).toString();
+		}
+
+		/**
+		 * Creates a new params map that additionaly contains the default input,
+		 * name, label parameters
+		 * 
+		 * @param params
+		 *            original params map
+		 * @return new params map
+		 */
+		private Map addDefaultVars(Map params)
+		{
+			// create and fill the new params map
+			final HashMap fullParams;
+			if (params == null)
+			{
+				fullParams = new HashMap(6);
+			}
+			else
+			{
+				fullParams = new HashMap(params.size() + 6);
+				fullParams.putAll(params);
+			}
+
+			// add the input param if not already present
+			if (!fullParams.containsKey("input"))
+			{
+				fullParams.put("input", FormComponent.this.getInput());
+			}
+
+			// add the name param if not already present
+			if (!fullParams.containsKey("name"))
+			{
+				fullParams.put("name", FormComponent.this.getId());
+			}
+
+			// add the label param if not already present
+			if (!fullParams.containsKey("label"))
+			{
+				fullParams.put("label", getLabel());
+			}
+			return fullParams;
+		}
+
+
+		/**
+		 * @return value of label param for this form component
+		 */
+		private Object getLabel()
+		{
+			final FormComponent fc = FormComponent.this;
+			Object label = null;
+
+			// first try the label model ...
+			if (fc.getLabel() != null)
+			{
+				label = fc.getLabel().getObject();
+			}
+			// ... then try a resource of format [form-component-id] with
+			// default of '[form-component-id]'
+			if (label == null)
+			{
+
+				label = fc.getLocalizer().getString(fc.getId(), fc.getParent(), fc.getId());
+			}
+			return label;
+		}
 	}
 
 	/**
@@ -133,15 +286,40 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	}
 
 	/**
+	 * Adapter that makes this component appear as {@link IValidatable}
+	 * 
+	 * @author ivaynberg
+	 */
+	private class ValidatableAdapter implements IValidatable
+	{
+
+		/**
+		 * @see org.apache.wicket.validation.IValidatable#error(org.apache.wicket.validation.IValidationError)
+		 */
+		public void error(IValidationError error)
+		{
+			FormComponent.this.error(error);
+		}
+
+		/**
+		 * @see org.apache.wicket.validation.IValidatable#getValue()
+		 */
+		public Object getValue()
+		{
+			return FormComponent.this.getConvertedInput();
+		}
+
+		public boolean isValid()
+		{
+			return FormComponent.this.isValid();
+		}
+
+	}
+
+	/**
 	 * The value separator
 	 */
 	public static String VALUE_SEPARATOR = ";";
-
-	/**
-	 * Make empty strings null values boolean. Used by AbstractTextComponent
-	 * subclass.
-	 */
-	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
 
 	private static final String[] EMPTY_STRING_ARRAY = new String[] { "" };
 
@@ -154,10 +332,76 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	/** Whether or not this component's value is required (non-empty) */
 	private static final short FLAG_REQUIRED = FLAG_RESERVED3;
 
+
 	private static final String NO_RAW_INPUT = "[-NO-RAW-INPUT-]";
 
-
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Make empty strings null values boolean. Used by AbstractTextComponent
+	 * subclass.
+	 */
+	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
+
+	/**
+	 * Visits any form components inside component if it is a container, or
+	 * component itself if it is itself a form component
+	 * 
+	 * @param component
+	 *            starting point of the traversal
+	 * 
+	 * @param visitor
+	 *            The visitor to call
+	 */
+	public static final void visitFormComponentsPostOrder(Component component,
+			final FormComponent.IVisitor visitor)
+	{
+		if (visitor == null)
+		{
+			throw new IllegalArgumentException("Argument `visitor` cannot be null");
+		}
+
+
+		visitFormComponentsPostOrderHelper(component, visitor);
+	}
+
+	private static final Object visitFormComponentsPostOrderHelper(Component component,
+			final FormComponent.IVisitor visitor)
+	{
+		if (component instanceof MarkupContainer)
+		{
+			final MarkupContainer container = (MarkupContainer)component;
+			if (container.size() > 0)
+			{
+				boolean visitChildren = true;
+				if (container instanceof IFormVisitorParticipant)
+				{
+					visitChildren = ((IFormVisitorParticipant)container).processChildren();
+				}
+				if (visitChildren)
+				{
+					final Iterator children = container.iterator();
+					while (children.hasNext())
+					{
+						final Component child = (Component)children.next();
+						Object value = visitFormComponentsPostOrderHelper(child, visitor);
+						if (value == Component.IVisitor.STOP_TRAVERSAL)
+						{
+							return value;
+						}
+					}
+				}
+			}
+		}
+
+		if (component instanceof FormComponent)
+		{
+			final FormComponent fc = (FormComponent)component;
+			return visitor.formComponent(fc);
+		}
+
+		return null;
+	}
 
 	private transient Object convertedInput;
 
@@ -312,15 +556,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#getBehaviors(java.lang.Class)
-	 */
-	protected List getBehaviors(Class type)
-	{
-		// List
-		return super.getBehaviors(type);
-	}
-
-	/**
 	 * @return The parent form for this form component
 	 */
 	public Form getForm()
@@ -410,6 +645,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		return inputName.toString();
 	}
 
+
 	/**
 	 * The value will be made available to the validator property by means of
 	 * ${label}. It does not have any specific meaning to FormComponent itself.
@@ -440,7 +676,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	{
 		return type;
 	}
-
 
 	/**
 	 * @see Form#getValidatorKeyPrefix()
@@ -586,6 +821,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		return getFlag(FLAG_REQUIRED);
 	}
 
+
 	/**
 	 * Gets whether this component is 'valid'. Valid in this context means that
 	 * no validation errors were reported the last time the form component was
@@ -613,6 +849,14 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		IsValidVisitor tmp = new IsValidVisitor();
 		visitFormComponentsPostOrder(this, tmp);
 		return tmp.valid;
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.IFormVisitorParticipant#processChildren(boolean)
+	 */
+	public boolean processChildren()
+	{
+		return true;
 	}
 
 	/**
@@ -654,7 +898,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		this.labelModel = labelModel;
 		return this;
 	}
-
 
 	/**
 	 * Sets the value for a form component this value will be split the string
@@ -757,6 +1000,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		setModelObject(getConvertedInput());
 	}
 
+
 	/**
 	 * Called to indicate that the user input is valid.
 	 */
@@ -784,6 +1028,77 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		{
 			validateValidators();
 		}
+	}
+
+	/**
+	 * @param validator
+	 *            The validator to add to the validators Object (which may be an
+	 *            array of IValidators or a single instance, for efficiency)
+	 */
+	private void validators_add(final IValidator validator)
+	{
+		if (this.validators == null)
+		{
+			this.validators = validator;
+		}
+		else
+		{
+			// Get current list size
+			final int size = validators_size();
+
+			// Create array that holds size + 1 elements
+			final IValidator[] validators = new IValidator[size + 1];
+
+			// Loop through existing validators copying them
+			for (int i = 0; i < size; i++)
+			{
+				validators[i] = validators_get(i);
+			}
+
+			// Add new validator to the end
+			validators[size] = validator;
+
+			// Save new validator list
+			this.validators = validators;
+		}
+	}
+
+	/**
+	 * Gets validator from validators Object (which may be an array of
+	 * IValidators or a single instance, for efficiency) at the given index
+	 * 
+	 * @param index
+	 *            The index of the validator to get
+	 * @return The validator
+	 */
+	private IValidator validators_get(int index)
+	{
+		if (this.validators == null)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		if (this.validators instanceof IValidator[])
+		{
+			return ((IValidator[])validators)[index];
+		}
+		return (IValidator)validators;
+	}
+
+	/**
+	 * @return The number of validators in the validators Object (which may be
+	 *         an array of IValidators or a single instance, for efficiency)
+	 */
+	private int validators_size()
+	{
+		if (this.validators == null)
+		{
+			return 0;
+		}
+		if (this.validators instanceof IValidator[])
+		{
+			return ((IValidator[])validators).length;
+		}
+		return 1;
 	}
 
 	/**
@@ -883,6 +1198,14 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		return value != null && value.length > 0 && value[0] != null ? value[0].trim() : null;
 	}
 
+	/**
+	 * @see org.apache.wicket.Component#getBehaviors(java.lang.Class)
+	 */
+	protected List getBehaviors(Class type)
+	{
+		// List
+		return super.getBehaviors(type);
+	}
 
 	/**
 	 * @return Value to return when model value is needed
@@ -990,6 +1313,13 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		super.onComponentTag(tag);
 	}
 
+	protected void onDetach()
+	{
+		super.onDetach();
+		convertedInput = null;
+	}
+
+
 	/**
 	 * Called by {@link #onComponentTag(ComponentTag)} when the component is
 	 * disabled. By default, this method will add a disabled="disabled"
@@ -1002,12 +1332,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	protected void onDisabled(final ComponentTag tag)
 	{
 		tag.put("disabled", "disabled");
-	}
-
-	protected void onDetach()
-	{
-		super.onDetach();
-		convertedInput = null;
 	}
 
 	/**
@@ -1072,330 +1396,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation "
 					+ validator.getClass().getName() + " on component " + this.getPath(), e);
 		}
-	}
-
-	/**
-	 * @param validator
-	 *            The validator to add to the validators Object (which may be an
-	 *            array of IValidators or a single instance, for efficiency)
-	 */
-	private void validators_add(final IValidator validator)
-	{
-		if (this.validators == null)
-		{
-			this.validators = validator;
-		}
-		else
-		{
-			// Get current list size
-			final int size = validators_size();
-
-			// Create array that holds size + 1 elements
-			final IValidator[] validators = new IValidator[size + 1];
-
-			// Loop through existing validators copying them
-			for (int i = 0; i < size; i++)
-			{
-				validators[i] = validators_get(i);
-			}
-
-			// Add new validator to the end
-			validators[size] = validator;
-
-			// Save new validator list
-			this.validators = validators;
-		}
-	}
-
-	/**
-	 * Gets validator from validators Object (which may be an array of
-	 * IValidators or a single instance, for efficiency) at the given index
-	 * 
-	 * @param index
-	 *            The index of the validator to get
-	 * @return The validator
-	 */
-	private IValidator validators_get(int index)
-	{
-		if (this.validators == null)
-		{
-			throw new IndexOutOfBoundsException();
-		}
-		if (this.validators instanceof IValidator[])
-		{
-			return ((IValidator[])validators)[index];
-		}
-		return (IValidator)validators;
-	}
-
-
-	/**
-	 * @return The number of validators in the validators Object (which may be
-	 *         an array of IValidators or a single instance, for efficiency)
-	 */
-	private int validators_size()
-	{
-		if (this.validators == null)
-		{
-			return 0;
-		}
-		if (this.validators instanceof IValidator[])
-		{
-			return ((IValidator[])validators).length;
-		}
-		return 1;
-	}
-
-	/**
-	 * Adapter that makes this component appear as {@link IValidatable}
-	 * 
-	 * @author ivaynberg
-	 */
-	private class ValidatableAdapter implements IValidatable
-	{
-
-		/**
-		 * @see org.apache.wicket.validation.IValidatable#error(org.apache.wicket.validation.IValidationError)
-		 */
-		public void error(IValidationError error)
-		{
-			FormComponent.this.error(error);
-		}
-
-		/**
-		 * @see org.apache.wicket.validation.IValidatable#getValue()
-		 */
-		public Object getValue()
-		{
-			return FormComponent.this.getConvertedInput();
-		}
-
-		public boolean isValid()
-		{
-			return FormComponent.this.isValid();
-		}
-
-	}
-
-	/**
-	 * {@link IErrorMessageSource} used for error messags against this form
-	 * components.
-	 * 
-	 * @author ivaynberg
-	 */
-	private class MessageSource implements IErrorMessageSource
-	{
-
-		/**
-		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(java.lang.String)
-		 */
-		public String getMessage(String key)
-		{
-			final FormComponent formComponent = FormComponent.this;
-
-			// retrieve prefix that will be used to construct message keys
-			String prefix = formComponent.getValidatorKeyPrefix();
-			if (Strings.isEmpty(prefix))
-			{
-				prefix = "";
-			}
-
-			final Localizer localizer = formComponent.getLocalizer();
-
-			String resource = prefix + getId() + "." + key;
-
-			// First use the parent for resolving so that
-			// form1.textfield1.Required can be used.
-
-			// Note: It is important that the default value of "" is provided
-			// to getString() not to throw a MissingResourceException or to
-			// return a default string like "[Warning: String ..."
-			String message = localizer.getString(resource, formComponent.getParent(), "");
-
-			// If not found, than ...
-			if (Strings.isEmpty(message))
-			{
-				// Try a variation of the resource key
-
-				resource = prefix + key;
-
-				message = localizer.getString(resource, formComponent.getParent(), "");
-			}
-
-			if (Strings.isEmpty(message))
-			{
-				// If still empty then use default
-
-				resource = prefix + getId() + "." + key;
-
-				// Note: It is important that the default value of "" is
-				// provided
-				// to getString() not to throw a MissingResourceException or to
-				// return a default string like "[Warning: String ..."
-				message = localizer.getString(resource, formComponent, "");
-
-				// If not found, than ...
-				if (Strings.isEmpty(message))
-				{
-					// Try a variation of the resource key
-
-					resource = prefix + key;
-
-					message = localizer.getString(resource, formComponent, "");
-				}
-			}
-
-			// convert empty string to null in case our default value of "" was
-			// returned from localizer
-			if (Strings.isEmpty(message))
-			{
-				message = null;
-			}
-			return message;
-		}
-
-		/**
-		 * Creates a new params map that additionaly contains the default input,
-		 * name, label parameters
-		 * 
-		 * @param params
-		 *            original params map
-		 * @return new params map
-		 */
-		private Map addDefaultVars(Map params)
-		{
-			// create and fill the new params map
-			final HashMap fullParams;
-			if (params == null)
-			{
-				fullParams = new HashMap(6);
-			}
-			else
-			{
-				fullParams = new HashMap(params.size() + 6);
-				fullParams.putAll(params);
-			}
-
-			// add the input param if not already present
-			if (!fullParams.containsKey("input"))
-			{
-				fullParams.put("input", FormComponent.this.getInput());
-			}
-
-			// add the name param if not already present
-			if (!fullParams.containsKey("name"))
-			{
-				fullParams.put("name", FormComponent.this.getId());
-			}
-
-			// add the label param if not already present
-			if (!fullParams.containsKey("label"))
-			{
-				fullParams.put("label", getLabel());
-			}
-			return fullParams;
-		}
-
-		/**
-		 * @return value of label param for this form component
-		 */
-		private Object getLabel()
-		{
-			final FormComponent fc = FormComponent.this;
-			Object label = null;
-
-			// first try the label model ...
-			if (fc.getLabel() != null)
-			{
-				label = fc.getLabel().getObject();
-			}
-			// ... then try a resource of format [form-component-id] with
-			// default of '[form-component-id]'
-			if (label == null)
-			{
-
-				label = fc.getLocalizer().getString(fc.getId(), fc.getParent(), fc.getId());
-			}
-			return label;
-		}
-
-
-		/**
-		 * @see org.apache.wicket.validation.IErrorMessageSource#substitute(java.lang.String,
-		 *      java.util.Map)
-		 */
-		public String substitute(String string, Map vars) throws IllegalStateException
-		{
-			return new MapVariableInterpolator(string, addDefaultVars(vars), true).toString();
-		}
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormVisitorParticipant#processChildren(boolean)
-	 */
-	public boolean processChildren()
-	{
-		return true;
-	}
-
-	/**
-	 * Visits any form components inside component if it is a container, or
-	 * component itself if it is itself a form component
-	 * 
-	 * @param component
-	 *            starting point of the traversal
-	 * 
-	 * @param visitor
-	 *            The visitor to call
-	 */
-	public static final void visitFormComponentsPostOrder(Component component,
-			final FormComponent.IVisitor visitor)
-	{
-		if (visitor == null)
-		{
-			throw new IllegalArgumentException("Argument `visitor` cannot be null");
-		}
-
-
-		visitFormComponentsPostOrderHelper(component, visitor);
-	}
-
-	private static final Object visitFormComponentsPostOrderHelper(Component component,
-			final FormComponent.IVisitor visitor)
-	{
-		if (component instanceof MarkupContainer)
-		{
-			final MarkupContainer container = (MarkupContainer)component;
-			if (container.size() > 0)
-			{
-				boolean visitChildren = true;
-				if (container instanceof IFormVisitorParticipant)
-				{
-					visitChildren = ((IFormVisitorParticipant)container).processChildren();
-				}
-				if (visitChildren)
-				{
-					final Iterator children = container.iterator();
-					while (children.hasNext())
-					{
-						final Component child = (Component)children.next();
-						Object value = visitFormComponentsPostOrderHelper(child, visitor);
-						if (value == Component.IVisitor.STOP_TRAVERSAL)
-						{
-							return value;
-						}
-					}
-				}
-			}
-		}
-
-		if (component instanceof FormComponent)
-		{
-			final FormComponent fc = (FormComponent)component;
-			return visitor.formComponent(fc);
-		}
-
-		return null;
 	}
 
 }
