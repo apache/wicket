@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.crypt;
 
+import java.lang.ref.WeakReference;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class ClassCryptFactory implements ICryptFactory
 {
 	private static final Logger log = LoggerFactory.getLogger(ClassCryptFactory.class);
-	private Class cryptClass;
+	private WeakReference/*<Class>*/ cryptClass;
 	private String encryptionKey;
 
 	/**
@@ -52,7 +54,7 @@ public class ClassCryptFactory implements ICryptFactory
 			throw new IllegalArgumentException("cryptClass must implement ICrypt interface");
 		}
 
-		this.cryptClass = cryptClass;
+		this.cryptClass = new WeakReference(cryptClass);
 		this.encryptionKey=encryptionKey;
 	}
 
@@ -63,7 +65,7 @@ public class ClassCryptFactory implements ICryptFactory
 	{
 		try
 		{
-			ICrypt crypt = (ICrypt)cryptClass.newInstance();
+			ICrypt crypt = (ICrypt)((Class)cryptClass.get()).newInstance();
 			log.info("using encryption/decryption object " + crypt);
 			crypt.setKey(encryptionKey);
 			return crypt;
