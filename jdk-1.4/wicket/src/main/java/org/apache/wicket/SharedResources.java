@@ -16,9 +16,11 @@
  */
 package org.apache.wicket;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -92,11 +94,13 @@ public class SharedResources
 	}
 
 	/** Map of Class to alias String */
-	private final Map classAliasMap = new HashMap();
-	private final Map aliasClassMap = new HashMap();
+	private final Map/*<Class, String>*/ classAliasMap = new WeakHashMap();
+	
+	/** Map of alias String to WeakReference(Class) */
+	private final Map/*<String, WeakReference<Class>>*/ aliasClassMap = new HashMap();
 
 	/** Map of shared resources states */
-	private final Map resourceMap = new HashMap();
+	private final Map/*<String, Resource>*/ resourceMap = new HashMap();
 
 	/**
 	 * Construct.
@@ -265,7 +269,7 @@ public class SharedResources
 	public final void putClassAlias(Class clz, String alias)
 	{
 		classAliasMap.put(clz, alias);
-		aliasClassMap.put(alias, clz);
+		aliasClassMap.put(alias, new WeakReference(clz));
 	}
 	
 	/**
@@ -277,7 +281,12 @@ public class SharedResources
 	 */
 	public final Class getAliasClass(String alias)
 	{
-		return (Class)aliasClassMap.get(alias);
+		Object classRef = aliasClassMap.get(alias);
+		if (classRef == null)
+		{
+			return null;
+		}
+		return (Class)((WeakReference)classRef).get();
 	}
 
 	/**
