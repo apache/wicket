@@ -370,8 +370,7 @@ public abstract class Application
 	/**
 	 * Gets the configuration mode to use for configuring the app, either
 	 * {@link #DEVELOPMENT} or {@link #DEPLOYMENT}.
-	 * 
-	 * 
+	 * <p>
 	 * The configuration type. Must currently be either DEVELOPMENT or
 	 * DEPLOYMENT. Currently, if the configuration type is DEVELOPMENT,
 	 * resources are polled for changes, component usage is checked, wicket tags
@@ -379,6 +378,10 @@ public abstract class Application
 	 * type is DEPLOYMENT, component usage is not checked, wicket tags are
 	 * stripped from output and a non-detailed exception page is used to display
 	 * errors.
+	 * <p>
+	 * Note that you should not run Wicket in DEVELOPMENT mode on production
+	 * servers - the various debugging checks and resource polling is
+	 * inefficient and may leak resources, particularly on webapp redeploy.
 	 * 
 	 * @return configuration
 	 * @since 1.2.3 (function existed as a property getter)

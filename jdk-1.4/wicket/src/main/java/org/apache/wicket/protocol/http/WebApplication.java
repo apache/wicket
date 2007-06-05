@@ -675,6 +675,28 @@ public abstract class WebApplication extends Application implements ISessionFact
 		}
 		b.append("in ").append(getConfigurationType()).append(" mode");
 		log.info(b.toString());
+		if (DEVELOPMENT.equalsIgnoreCase(getConfigurationType()))
+		{
+			outputDevelopmentModeWarning();
+		}
+	}
+	
+	/**
+	 * This method prints a warning to stderr that we are starting in
+	 * development mode.
+	 * <p>
+	 * If you really need to test Wicket in development mode on a staging server
+	 * somewhere and are annoying the sysadmin for it with stderr messages, you
+	 * can override this to make it do something else.
+	 */
+	protected void outputDevelopmentModeWarning()
+	{
+		System.err.print("********************************************************************\n"
+				+ "*** WARNING: Wicket is running in DEVELOPMENT mode.              ***\n"
+				+ "***                               ^^^^^^^^^^^                    ***\n"
+				+ "*** Do NOT deploy to your live server(s) without changing this.  ***\n"
+				+ "*** See Application#getConfigurationType() for more information. ***\n"
+				+ "********************************************************************\n");
 	}
 
 	/**
