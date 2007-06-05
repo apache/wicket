@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.PackageResource;
@@ -66,7 +67,7 @@ public class ResourceReference implements IClusterable
 	private transient Resource resource;
 
 	/** The scope of the named resource */
-	private final Class scope;
+	private final WeakReference scope;
 
 	/** The style of the resource */
 	private String style;
@@ -105,7 +106,7 @@ public class ResourceReference implements IClusterable
 	 */
 	public ResourceReference(final Class scope, final String name, Locale locale, String style)
 	{
-		this.scope = scope;
+		this.scope = new WeakReference(scope);
 		this.name = name;
 		this.locale = locale;
 		this.style = style;
@@ -138,7 +139,7 @@ public class ResourceReference implements IClusterable
 		{
 			SharedResources sharedResources = application.getSharedResources();
 			// Try to get resource from Application repository
-			resource = sharedResources.get(scope, name, locale, style, true);
+			resource = sharedResources.get(getScope(), name, locale, style, true);
 
 			// Not available yet?
 			if (resource == null)
@@ -149,13 +150,13 @@ public class ResourceReference implements IClusterable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = sharedResources.get(scope, name, locale, style, false);
+					resource = sharedResources.get(getScope(), name, locale, style, false);
 					if (resource == null)
 					{
 						// still null? try to see whether it is a package
 						// resource that should
 						// be lazily loaded
-						PackageResource packageResource = PackageResource.get(scope, name);
+						PackageResource packageResource = PackageResource.get(getScope(), name);
 						// will throw an exception if not found, so if we come
 						// here, it was found
 						sharedResources.add(name, packageResource);
@@ -163,7 +164,7 @@ public class ResourceReference implements IClusterable
 				}
 
 				// Share through application
-				sharedResources.add(scope, name, locale, style, resource);
+				sharedResources.add(getScope(), name, locale, style, resource);
 			}
 		}
 	}
@@ -176,7 +177,7 @@ public class ResourceReference implements IClusterable
 		if (obj instanceof ResourceReference)
 		{
 			ResourceReference that = (ResourceReference)obj;
-			return Objects.equal(this.scope.getName(), that.scope.getName()) && Objects.equal(this.name, that.name)
+			return Objects.equal(this.getScope().getName(), that.getScope().getName()) && Objects.equal(this.name, that.name)
 					&& Objects.equal(this.locale, that.locale)
 					&& Objects.equal(this.style, that.style);
 		}
@@ -217,7 +218,7 @@ public class ResourceReference implements IClusterable
 	 */
 	public final Class getScope()
 	{
-		return scope;
+		return (Class)scope.get();
 	}
 
 	/**
@@ -227,7 +228,7 @@ public class ResourceReference implements IClusterable
 	{
 		Application application = Application.get();
 		bind(application);
-		return application.getSharedResources().resourceKey(scope, name, locale, style);
+		return application.getSharedResources().resourceKey(getScope(), name, locale, style);
 	}
 
 	/**
