@@ -19,12 +19,15 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.IInitializer;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A panel to show the progress of an HTTP upload.
@@ -36,6 +39,7 @@ import org.apache.wicket.model.Model;
  */
 public class UploadProgressBar extends Panel
 {
+	private static final Logger log = LoggerFactory.getLogger(UploadProgressBar.class);
 
 	/**
 	 * Initializer for this component; binds static resources.
@@ -88,6 +92,11 @@ public class UploadProgressBar extends Panel
 		statusDiv.setOutputMarkupId(true);
 		add(statusDiv);
 
+		if (!(RequestCycle.get().getRequest() instanceof UploadWebRequest))
+		{
+			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
+		}
+		
 		form.add(new AttributeModifier("onsubmit", true, new Model()
 		{
 

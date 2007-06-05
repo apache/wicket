@@ -34,9 +34,6 @@ import org.apache.wicket.protocol.http.WebRequest;
 class UploadStatusResource extends DynamicWebResource
 {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected ResourceState getResourceState()
@@ -53,9 +50,7 @@ class UploadStatusResource extends DynamicWebResource
 		 */
 		private String status;
 
-		/**
-		 * 
-		 */
+		/** Create a new one of these from the current request */
 		public UploadResourceState()
 		{
 
