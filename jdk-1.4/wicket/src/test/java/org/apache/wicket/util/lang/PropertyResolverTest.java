@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.lang;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -355,5 +357,71 @@ public class PropertyResolverTest extends TestCase
 		
 		clazz = PropertyResolver.getPropertyClass("addressArray[0].number", person);
 		assertEquals(int.class, clazz);
+	}
+	
+	/**
+	 *
+	 */
+	public void testGetTargetField() {
+		Address address = new Address();
+		
+		Field field = PropertyResolver.getPropertyField("number", address);
+		assertEquals(field.getName(), "number");
+		assertEquals(field.getType(), int.class);
+		
+		Person person = new Person();
+		person.setAddress(new Address());
+		
+		field = PropertyResolver.getPropertyField("address.number", person);
+		assertEquals(field.getName(), "number");
+		assertEquals(field.getType(), int.class);
+		
+		person.setAddressArray(new Address[] { new Address(), new Address() });
+		field = PropertyResolver.getPropertyField("addressArray[0].number", person);
+		assertEquals(field.getName(), "number");
+		assertEquals(field.getType(), int.class);
+	}
+	
+	/**
+	 *
+	 */
+	public void testGetTargetGetter() {
+		Address address = new Address();
+		
+		Method method = PropertyResolver.getPropertyGetter("number", address);
+		assertEquals(method.getName(), "getNumber");
+		assertEquals(method.getReturnType(), int.class);
+		
+		Person person = new Person();
+		person.setAddress(new Address());
+		
+		method = PropertyResolver.getPropertyGetter("address.number", person);
+		assertEquals(method.getName(), "getNumber");
+		assertEquals(method.getReturnType(), int.class);
+		
+		person.setAddressArray(new Address[] { new Address(), new Address() });
+		method = PropertyResolver.getPropertyGetter("addressArray[0].number", person);
+		assertEquals(method.getName(), "getNumber");
+		assertEquals(method.getReturnType(), int.class);
+	}
+	
+	/**
+	 *
+	 */
+	public void testGetTargetSetter() {
+		Address address = new Address();
+		
+		Method method = PropertyResolver.getPropertySetter("number", address);
+		assertEquals(method.getName(), "setNumber");
+		
+		Person person = new Person();
+		person.setAddress(new Address());
+		
+		method = PropertyResolver.getPropertySetter("address.number", person);
+		assertEquals(method.getName(), "setNumber");
+		
+		person.setAddressArray(new Address[] { new Address(), new Address() });
+		method = PropertyResolver.getPropertySetter("addressArray[0].number", person);
+		assertEquals(method.getName(), "setNumber");
 	}
 }

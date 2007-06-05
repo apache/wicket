@@ -138,7 +138,7 @@ public final class PropertyResolver
 	/**
 	 * @param expression
 	 * @param object
-	 * @return
+	 * @return class of the target property object
 	 */
 	public final static Class getPropertyClass(String expression, Object object)
 	{
@@ -151,6 +151,57 @@ public final class PropertyResolver
 		return setter.getTargetClass();
 	}
 
+	/**
+	 * @param expression
+	 * @param object
+	 * @return Field for the property expression or null if such field doesn't
+	 *         exist (only getters and setters)
+	 */
+	public final static Field getPropertyField(String expression, Object object)
+	{
+		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, true);
+		if (setter == null)
+		{
+			throw new WicketRuntimeException("Null object returned for expression: " + expression
+					+ " for getting the target classs of: " + object);
+		}
+		return setter.getField();
+	}
+
+	/**
+	 * @param expression
+	 * @param object
+	 * @return Getter method for the property expression or null if such getter
+	 *         doesn't exist (only field)
+	 */
+	public final static Method getPropertyGetter(String expression, Object object)
+	{
+		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, true);
+		if (setter == null)
+		{
+			throw new WicketRuntimeException("Null object returned for expression: " + expression
+					+ " for getting the target classs of: " + object);
+		}
+		return setter.getGetter();
+	}
+
+	/**
+	 * @param expression
+	 * @param object
+	 * @return Setter method for the property expression or null if such setter
+	 *         doesn't exist (only field)
+	 */
+	public final static Method getPropertySetter(String expression, Object object)
+	{
+		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, true);
+		if (setter == null)
+		{
+			throw new WicketRuntimeException("Null object returned for expression: " + expression
+					+ " for getting the target classs of: " + object);
+		}
+		return setter.getSetter();
+	}
+	
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
 	{
@@ -264,7 +315,7 @@ public final class PropertyResolver
 						method = findMethod(clz, exp);
 						if (method != null)
 						{
-							getAndSetter = new MethodGetAndSet(method);
+							getAndSetter = new MethodGetAndSet(method, null);
 						}
 						else
 						{
@@ -344,7 +395,7 @@ public final class PropertyResolver
 						}
 						else
 						{
-							getAndSetter = new MethodGetAndSet(method);
+							getAndSetter = new MethodGetAndSet(method, field);
 						}
 					}
 					else
@@ -355,7 +406,8 @@ public final class PropertyResolver
 			}
 			else
 			{
-				getAndSetter = new MethodGetAndSet(method);
+				field = findField(clz, exp);
+				getAndSetter = new MethodGetAndSet(method, field);
 			}
 			getAndSetters.put(exp, getAndSetter);
 		}
@@ -488,9 +540,36 @@ public final class PropertyResolver
 			return getAndSetter.getValue(value);
 		}
 
+		/**
+		 * @return class of property value
+		 */
 		public Class getTargetClass()
 		{
 			return getAndSetter.getTargetClass(this.value);
+		}
+
+		/**
+		 * @return Field or null if no field exists for expression
+		 */
+		public Field getField()
+		{
+			return getAndSetter.getField();
+		}
+
+		/**
+		 * @return Getter method or null if no getter exists for expression
+		 */
+		public Method getGetter()
+		{
+			return getAndSetter.getGetter();
+		}
+
+		/**
+		 * @return Setter method or null if no setter exists for expression
+		 */
+		public Method getSetter()
+		{
+			return getAndSetter.getSetter();
 		}
 
 	}
@@ -528,9 +607,58 @@ public final class PropertyResolver
 		public void setValue(final Object object, final Object value,
 				PropertyResolverConverter converter);
 
+		/**
+		 * @return Field or null if there is no field
+		 */
+		public Field getField();
+
+		/**
+		 * @return Getter method or null if there is no getter
+		 */
+		public Method getGetter();
+
+		/**
+		 * @return Setter of null if there is no setter
+		 */
+		public Method getSetter();
 	}
 
-	private static final class MapGetSet implements IGetAndSet
+	private static abstract class AbstractGetAndSet implements IGetAndSet
+	{
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getField()
+		 */
+		public Field getField()
+		{
+			return null;
+		}
+
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getGetter()
+		 */
+		public Method getGetter()
+		{
+			return null;
+		}
+
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getSetter()
+		 */
+		public Method getSetter()
+		{
+			return null;
+		}
+
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(java.lang.Object)
+		 */
+		public Class getTargetClass(Object object)
+		{
+			return null;
+		}
+	}
+
+	private static final class MapGetSet extends AbstractGetAndSet
 	{
 		final private String key;
 
@@ -565,17 +693,9 @@ public final class PropertyResolver
 			// map and try to make one of the class if finds?
 			return null;
 		}
-
-		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
-		 */
-		public Class getTargetClass(Object object)
-		{
-			return null;
-		}
 	}
 
-	private static final class ListGetSet implements IGetAndSet
+	private static final class ListGetSet extends AbstractGetAndSet
 	{
 		final private int index;
 
@@ -627,17 +747,9 @@ public final class PropertyResolver
 			// list and try to make one of the class if finds?
 			return null;
 		}
-
-		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#getTargetClass(Object)
-		 */
-		public Class getTargetClass(Object object)
-		{
-			return null;
-		}
 	}
 
-	private static final class ArrayGetSet implements IGetAndSet
+	private static final class ArrayGetSet extends AbstractGetAndSet
 	{
 		final private int index;
 
@@ -693,7 +805,7 @@ public final class PropertyResolver
 		}
 	}
 
-	private static final class ArrayLengthGetSet implements IGetAndSet
+	private static final class ArrayLengthGetSet extends AbstractGetAndSet
 	{
 		ArrayLengthGetSet()
 		{
@@ -733,7 +845,7 @@ public final class PropertyResolver
 		}
 	}
 
-	private static final class ArrayPropertyGetSet implements IGetAndSet
+	private static final class ArrayPropertyGetSet extends AbstractGetAndSet
 	{
 		final private Integer index;
 		final private Method getMethod;
@@ -862,15 +974,17 @@ public final class PropertyResolver
 		}
 	}
 
-	private static final class MethodGetAndSet implements IGetAndSet
+	private static final class MethodGetAndSet extends AbstractGetAndSet
 	{
 		private Method getMethod;
 		private Method setMethod;
+		private Field field;
 
-		MethodGetAndSet(Method getMethod)
+		MethodGetAndSet(Method getMethod, Field field)
 		{
 			this.getMethod = getMethod;
 			this.getMethod.setAccessible(true);
+			this.field = field;
 		}
 
 		/**
@@ -1013,12 +1127,36 @@ public final class PropertyResolver
 		{
 			return getMethod.getReturnType();
 		}
+
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.AbstractGetAndSet#getGetter()
+		 */
+		public Method getGetter()
+		{
+			return getMethod;
+		}
+
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.AbstractGetAndSet#getSetter()
+		 */
+		public Method getSetter()
+		{
+			return setMethod;
+		}
+
+		/**
+		 * @see org.apache.wicket.util.lang.PropertyResolver.AbstractGetAndSet#getField()
+		 */
+		public Field getField()
+		{
+			return field;
+		}
 	}
 
 	/**
 	 * @author jcompagner
 	 */
-	private static class FieldGetAndSetter implements IGetAndSet
+	private static class FieldGetAndSetter extends AbstractGetAndSet
 	{
 
 		private Field field;
@@ -1094,6 +1232,11 @@ public final class PropertyResolver
 		public Class getTargetClass(Object object)
 		{
 			return field.getType();
+		}
+
+		public Field getField()
+		{
+			return field;
 		}
 	}
 }

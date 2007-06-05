@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.model;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
@@ -32,7 +35,11 @@ import org.apache.wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel implements IChainingModel, IObjectClassAwareModel
+public abstract class AbstractPropertyModel
+		implements
+			IChainingModel,
+			IObjectClassAwareModel,
+			IPropertyReflectionAwareModel
 {
 	/** Any model object (which may or may not implement IModel) */
 	private Object target;
@@ -194,6 +201,57 @@ public abstract class AbstractPropertyModel implements IChainingModel, IObjectCl
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertyField()
+	 */
+	public Field getPropertyField()
+	{
+		String expression = propertyExpression();
+		if (Strings.isEmpty(expression) == false) 
+		{
+			Object target = getTarget();
+			if (target != null) 
+			{
+				return PropertyResolver.getPropertyField(expression, target);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertyGetter()
+	 */
+	public Method getPropertyGetter()
+	{
+		String expression = propertyExpression();
+		if (Strings.isEmpty(expression) == false) 
+		{
+			Object target = getTarget();
+			if (target != null) 
+			{
+				return PropertyResolver.getPropertyGetter(expression, target);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertySetter()
+	 */
+	public Method getPropertySetter()
+	{
+		String expression = propertyExpression();
+		if (Strings.isEmpty(expression) == false) 
+		{
+			Object target = getTarget();
+			if (target != null) 
+			{
+				return PropertyResolver.getPropertySetter(expression, target);
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * @return The property expression for the component
 	 */
