@@ -66,8 +66,7 @@ public class StatelessComponentTest extends WicketTestCase
 	{
 		tester.getApplication().mountBookmarkablePage("/stateless", StatelessComponentPage.class);
 		// test is always the home page. it doesn't work then
-		// executeTest(StatelessComponentPage.class,
-		// "StatelessComponentPage_mount_result.html");
+		executeTest(StatelessComponentPage.class, "StatelessComponentPage_mount_result.html");
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(
 				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/wicket:interface/:0:link::ILinkListener::");
