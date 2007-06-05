@@ -48,7 +48,6 @@ import org.joda.time.MutableDateTime;
 // systems with AM/PM, others have 24 hour systems
 public class DateTimeField extends FormComponentPanel
 {
-
 	/**
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
@@ -56,7 +55,6 @@ public class DateTimeField extends FormComponentPanel
 	// enums are mucho nicer, but let's keep this project at 1.4 for now
 	private static class AM_PM extends EnumeratedType
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		static final AM_PM AM = new AM_PM("AM");
@@ -126,6 +124,67 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
+	 * Gets the converted input. It combines the inputs of the nested date,
+	 * hours, minutes and am/pm fields and constructs a date from it.
+	 * <p>
+	 * Note that overriding this method is a better option than overriding
+	 * {@link #updateModel()} like the first versions of this class did. The
+	 * reason for that is that this method can be used by form validators
+	 * without having to depend on the actual model being updated, and this
+	 * method is called by the default implementation of {@link #updateModel()}
+	 * anyway (so we don't have to override that anymore).
+	 * </p>
+	 * 
+	 * @return instance of {@link Date}, possibly null
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#getConvertedInput()
+	 */
+	public Object getConvertedInput()
+	{
+		MutableDateTime date = new MutableDateTime(dateField.getConvertedInput());
+		Integer hours = (Integer)hoursField.getConvertedInput();
+		Integer minutes = (Integer)minutesField.getConvertedInput();
+		AM_PM amOrPm = (AM_PM)amOrPmChoice.getConvertedInput();
+
+		if (date != null)
+		{
+			try
+			{
+				TimeZone zone = getClientTimeZone();
+				if (zone != null)
+				{
+					date.setZone(DateTimeZone.forTimeZone(zone));
+				}
+
+				if (hours != null)
+				{
+					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue() % 12);
+					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
+				}
+				if (amOrPm == AM_PM.PM)
+				{
+					date.set(DateTimeFieldType.halfdayOfDay(), 1);
+				}
+				else
+				{
+					date.set(DateTimeFieldType.halfdayOfDay(), 0);
+				}
+
+				// the date will be in the server's timezone
+				return date.toDate();
+			}
+			catch (RuntimeException e)
+			{
+				DateTimeField.this.error(e.getMessage());
+				invalid();
+			}
+
+		}
+
+		return null;
+	}
+
+	/**
 	 * Gets date.
 	 * 
 	 * @return date
@@ -175,6 +234,7 @@ public class DateTimeField extends FormComponentPanel
 	public void setDate(Date date)
 	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
+		setModelObject(date);
 	}
 
 	/**
@@ -200,53 +260,6 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public void updateModel()
-	{
-		if (date != null)
-		{
-			try
-			{
-				TimeZone zone = getClientTimeZone();
-				if (zone != null)
-				{
-					date.setZone(DateTimeZone.forTimeZone(zone));
-				}
-
-				if (hours != null)
-				{
-					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue() % 12);
-					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
-				}
-				if (amOrPm == AM_PM.PM)
-				{
-					date.set(DateTimeFieldType.halfdayOfDay(), 1);
-				}
-				else
-				{
-					date.set(DateTimeFieldType.halfdayOfDay(), 0);
-				}
-
-				// the date will be in the server's timezone
-				Date d = date.toDate();
-				setModelObject(d);
-
-			}
-			catch (RuntimeException e)
-			{
-				DateTimeField.this.error(e.getMessage());
-				invalid();
-			}
-
-		}
-		else
-		{
-			setModelObject(null);
-		}
-	}
-
-	/**
 	 * Gets the client's time zone.
 	 * 
 	 * @return The client's time zone or null
@@ -263,7 +276,6 @@ public class DateTimeField extends FormComponentPanel
 
 	private void init()
 	{
-
 		setType(Date.class);
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
 		dateField.add(new DatePicker());
@@ -283,7 +295,6 @@ public class DateTimeField extends FormComponentPanel
 	 */
 	protected void onBeforeRender()
 	{
-
 		Date d = (Date)getModelObject();
 		if (d != null)
 		{

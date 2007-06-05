@@ -548,9 +548,14 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	}
 
 	/**
+	 * Gets the converter input. You typically should not override this method,
+	 * unless you are writing a
+	 * {@link FormComponentPanel special form component} that embeds other form
+	 * components that receive the real user input.
+	 * 
 	 * @return value of input converted into appropriate type if any was set
 	 */
-	public final Object getConvertedInput()
+	public Object getConvertedInput()
 	{
 		return convertedInput;
 	}
@@ -833,8 +838,10 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 */
 	public final boolean isValid()
 	{
-		class IsValidVisitor implements IVisitor {
+		class IsValidVisitor implements IVisitor
+		{
 			boolean valid = true;
+
 			public Object formComponent(IFormVisitorParticipant formComponent)
 			{
 				final FormComponent fc = (FormComponent)formComponent;

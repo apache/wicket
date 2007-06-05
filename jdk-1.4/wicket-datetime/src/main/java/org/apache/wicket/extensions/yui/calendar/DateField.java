@@ -24,7 +24,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.joda.time.MutableDateTime;
 
-
 /**
  * Works on a {@link java.util.Date} object. Displays a date field and a
  * {@link CalendarPopup calendar popup}.
@@ -33,7 +32,6 @@ import org.joda.time.MutableDateTime;
  */
 public class DateField extends FormComponentPanel
 {
-
 	private static final long serialVersionUID = 1L;
 
 	private MutableDateTime date;
@@ -64,6 +62,28 @@ public class DateField extends FormComponentPanel
 	}
 
 	/**
+	 * Gets the converted input. In this case, we're really just interested in
+	 * the nested date field, as that is the element that receives the real user
+	 * input. So we're just passing that on.
+	 * <p>
+	 * Note that overriding this method is a better option than overriding
+	 * {@link #updateModel()} like the first versions of this class did. The
+	 * reason for that is that this method can be used by form validators
+	 * without having to depend on the actual model being updated, and this
+	 * method is called by the default implementation of {@link #updateModel()}
+	 * anyway (so we don't have to override that anymore).
+	 * </p>
+	 * 
+	 * @return instance of {@link Date}, possibly null
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#getConvertedInput()
+	 */
+	public Object getConvertedInput()
+	{
+		return dateField.getConvertedInput();
+	}
+
+	/**
 	 * Gets date.
 	 * 
 	 * @return date
@@ -82,23 +102,7 @@ public class DateField extends FormComponentPanel
 	public void setDate(Date date)
 	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	public void updateModel()
-	{
-
-		if (date != null)
-		{
-			Date d = date.toDate();
-			setModelObject(d);
-		}
-		else
-		{
-			setModelObject(null);
-		}
+		setModelObject(date);
 	}
 
 	/**
@@ -106,7 +110,6 @@ public class DateField extends FormComponentPanel
 	 */
 	private void init()
 	{
-
 		setType(Date.class);
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
 		dateField.add(new DatePicker());
@@ -117,7 +120,6 @@ public class DateField extends FormComponentPanel
 	 */
 	protected void onBeforeRender()
 	{
-
 		Date d = (Date)getModelObject();
 		if (d != null)
 		{
