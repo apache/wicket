@@ -1,0 +1,21 @@
+/* Progress bar */
+.wupb-progressBar {
+	margin: 0.5em auto 0 auto;
+}
+
+.wupb-border {
+	border: 1px solid #888;
+	background-color: #eee;
+	width: 20em;
+	margin: 0 auto;
+}
+
+.wupb-background {
+	background-color: #ccc;
+	height: 1.5em;
+	width: 0%;
+}
+
+.wupb-foreground {
+	/* Nothing here - included merely so you know you can change this. */
+}
