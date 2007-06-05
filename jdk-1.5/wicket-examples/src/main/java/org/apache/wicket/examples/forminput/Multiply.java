@@ -98,13 +98,17 @@ public class Multiply extends FormComponentPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
+	 * @see org.apache.wicket.markup.html.form.FormComponent#getConvertedInput()
 	 */
-	public void updateModel()
+	@Override
+	public Object getConvertedInput()
 	{
-		// note that form components are updated in post order form, so lhs and
-		// rhs are already updated
-		setModelObject(new Integer(lhs * rhs));
+		// note that earlier versions did override updateModel, which looked
+		// somewhat better, but wasn't useful for when you want to do
+		// validations with either normal validators or form validators
+		Integer lhs = (Integer)left.getConvertedInput();
+		Integer rhs = (Integer)right.getConvertedInput();
+		return lhs * rhs;
 	}
 
 	private void init()
