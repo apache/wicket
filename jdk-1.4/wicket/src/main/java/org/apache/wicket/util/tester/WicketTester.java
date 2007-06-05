@@ -170,6 +170,11 @@ public class WicketTester extends BaseWicketTester
 		{
 			return new WebResponse(servletResponse);
 		}
+		
+		protected void outputDevelopmentModeWarning()
+		{
+			// do nothing
+		}
 	}
 
 	/**
