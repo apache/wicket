@@ -64,8 +64,11 @@ public class UploadProgressBar extends Panel
 		}
 	}
 
-	private static final ResourceReference JS_PROGRESSBAR = new ResourceReference(
+	private static final ResourceReference JS = new ResourceReference(
 			UploadProgressBar.class, "progressbar.js");
+
+	private static final ResourceReference CSS = new ResourceReference(
+			UploadProgressBar.class, "UploadProgressBar.css");
 
 	private static final String RESOURCE_NAME = UploadProgressBar.class.getName();
 
@@ -82,7 +85,12 @@ public class UploadProgressBar extends Panel
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
 
-		add(HeaderContributor.forJavaScript(JS_PROGRESSBAR));
+		add(HeaderContributor.forJavaScript(JS));
+		ResourceReference css = getCss();
+		if (css != null)
+		{
+			add(HeaderContributor.forCss(css));
+		}
 
 		final WebMarkupContainer barDiv = new WebMarkupContainer("bar");
 		barDiv.setOutputMarkupId(true);
@@ -112,6 +120,16 @@ public class UploadProgressBar extends Panel
 						+ getPage().urlFor(ref) + "'); wupb.start(def); return false;";
 			}
 		}));
+	}
+	
+	/**
+	 * Override this to provide your own CSS, or return null to avoid including the default.
+	 * 
+	 * @return ResourceReference for your CSS.
+	 */
+	protected ResourceReference getCss()
+	{
+		return CSS;
 	}
 
 }
