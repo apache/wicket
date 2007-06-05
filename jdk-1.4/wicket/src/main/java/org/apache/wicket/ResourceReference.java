@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.PackageResource;
@@ -55,7 +54,7 @@ import org.apache.wicket.util.lang.Objects;
  */
 public class ResourceReference implements IClusterable
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	/** The locale of the resource */
 	protected Locale locale;
@@ -65,9 +64,9 @@ public class ResourceReference implements IClusterable
 
 	/** The actual resource */
 	private transient Resource resource;
-
+	
 	/** The scope of the named resource */
-	private final WeakReference scope;
+	private final String scopeName;
 
 	/** The style of the resource */
 	private String style;
@@ -106,7 +105,7 @@ public class ResourceReference implements IClusterable
 	 */
 	public ResourceReference(final Class scope, final String name, Locale locale, String style)
 	{
-		this.scope = new WeakReference(scope);
+		this.scopeName = scope.getName();
 		this.name = name;
 		this.locale = locale;
 		this.style = style;
@@ -218,7 +217,8 @@ public class ResourceReference implements IClusterable
 	 */
 	public final Class getScope()
 	{
-		return (Class)scope.get();
+		return Application.get().getApplicationSettings().getClassResolver()
+				.resolveClass(scopeName);
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class ResourceReference implements IClusterable
 	public int hashCode()
 	{
 		int result = 17;
-		result = 37 * result + (scope != null ? scope.hashCode() : 0);
+		result = 37 * result + (scopeName != null ? scopeName.hashCode() : 0);
 		result = 37 * result + (name != null ? name.hashCode() : 0);
 		result = 37 * result + (locale != null ? locale.hashCode() : 0);
 		result = 37 * result + (style != null ? style.hashCode() : 0);
@@ -286,7 +286,7 @@ public class ResourceReference implements IClusterable
 	 */
 	public String toString()
 	{
-		return "[ResourceReference name = " + name + ", scope = " + scope + ", locale = " + locale
+		return "[ResourceReference name = " + name + ", scope = " + scopeName + ", locale = " + locale
 				+ ", style = " + style + "]";
 	}
 
