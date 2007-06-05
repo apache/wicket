@@ -138,16 +138,6 @@ import org.slf4j.LoggerFactory;
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
 	/**
-	 * Constant for specifying how a form is submitted, in this case using post.
-	 */
-	public static final String METHOD_POST = "post";
-
-	/**
-	 * Constant for specifying how a form is submitted, in this case using get.
-	 */
-	public static final String METHOD_GET = "get";
-
-	/**
 	 * Visitor used for validation
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
@@ -186,28 +176,117 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		public abstract void validate(FormComponent formComponent);
 	}
 
-	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
+	/**
+	 * 
+	 */
+	class FormDispatchRequest extends Request
+	{
+		private final ValueMap params = new ValueMap();
 
-	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
+		private final Request realRequest;
+
+		private final String url;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param realRequest
+		 * @param url
+		 */
+		public FormDispatchRequest(final Request realRequest, final String url)
+		{
+			this.realRequest = realRequest;
+			this.url = realRequest.decodeURL(url);
+
+			String queryString = this.url.substring(this.url.indexOf("?") + 1);
+			RequestUtils.decodeParameters(queryString, params);
+		}
+
+		/**
+		 * @see org.apache.wicket.Request#getLocale()
+		 */
+		public Locale getLocale()
+		{
+			return realRequest.getLocale();
+		}
+
+		/**
+		 * @see org.apache.wicket.Request#getParameter(java.lang.String)
+		 */
+		public String getParameter(String key)
+		{
+			return (String)params.get(key);
+		}
+
+		/**
+		 * @see org.apache.wicket.Request#getParameterMap()
+		 */
+		public Map getParameterMap()
+		{
+			return params;
+		}
+
+		/**
+		 * @see org.apache.wicket.Request#getParameters(java.lang.String)
+		 */
+		public String[] getParameters(String key)
+		{
+			String param = (String)params.get(key);
+			if (param != null)
+			{
+				return new String[] { param };
+			}
+			return new String[0];
+		}
+
+		/**
+		 * @see org.apache.wicket.Request#getPath()
+		 */
+		public String getPath()
+		{
+			return realRequest.getPath();
+		}
+
+		public String getRelativePathPrefixToContextRoot()
+		{
+			return realRequest.getRelativePathPrefixToContextRoot();
+		}
+
+		public String getRelativePathPrefixToWicketHandler()
+		{
+			return realRequest.getRelativePathPrefixToWicketHandler();
+		}
+
+		/**
+		 * @see org.apache.wicket.Request#getURL()
+		 */
+		public String getURL()
+		{
+			return url;
+		}
+	}
+
+	/**
+	 * Constant for specifying how a form is submitted, in this case using get.
+	 */
+	public static final String METHOD_GET = "get";
+
+	/**
+	 * Constant for specifying how a form is submitted, in this case using post.
+	 */
+	public static final String METHOD_POST = "post";
 
 	/** Flag that indicates this form has been submitted during this request */
 	private static final short FLAG_SUBMITTED = FLAG_RESERVED1;
 
-	private static final long serialVersionUID = 1L;
-
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Form.class);
 
-	/** Maximum size of an upload in bytes */
-	private Bytes maxSize = Bytes.MAX;
+	private static final long serialVersionUID = 1L;
 
-	/** True if the form has enctype of multipart/form-data */
-	private boolean multiPart = false;
+	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
 
-	private String javascriptId;
-
-	/** multi-validators assigned to this form */
-	private Object formValidators = null;
+	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 
 	/**
 	 * Any default button. If set, a hidden submit button will be rendered right
@@ -221,6 +300,17 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * </p>
 	 */
 	private Button defaultButton;
+
+	/** multi-validators assigned to this form */
+	private Object formValidators = null;
+
+	private String javascriptId;
+
+	/** Maximum size of an upload in bytes */
+	private Bytes maxSize = Bytes.MAX;
+
+	/** True if the form has enctype of multipart/form-data */
+	private boolean multiPart = false;
 
 	/**
 	 * Constructs a form with no validation.
@@ -246,19 +336,101 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Gets the method used to submit the form. Defaults to 'post'. Override
-	 * this if you have a requirement to alter this behavior.
+	 * Adds a form validator to the form.
 	 * 
-	 * @return the method used to submit the form.
+	 * @param validator
+	 *            validator
+	 * @throws IllegalArgumentException
+	 *             if validator is null
+	 * @see IFormValidator
+	 * @see IValidatorAddListener
 	 */
-	protected String getMethod()
+	public void add(IFormValidator validator)
 	{
-		return METHOD_POST;
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("validator argument cannot be null");
+		}
+
+		// add the validator
+		formValidators_add(validator);
+
+		// see whether the validator listens for add events
+		if (validator instanceof IValidatorAddListener)
+		{
+			((IValidatorAddListener)validator).onAdded(this);
+		}
 	}
 
-	protected boolean getStatelessHint()
+	/**
+	 * Clears the input from the form's nested children of type
+	 * {@link FormComponent}. This method is typically called when a form needs
+	 * to be reset.
+	 */
+	public final void clearInput()
 	{
-		return false;
+		// Visit all the (visible) form components and clear the input on each.
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
+		{
+			public void onFormComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					// Clear input from form component
+					formComponent.clearInput();
+				}
+			}
+		});
+	}
+
+	/**
+	 * /** Registers an error feedback message for this component
+	 * 
+	 * @param error
+	 *            error message
+	 * @param args
+	 *            argument replacement map for ${key} variables
+	 */
+	public final void error(String error, Map args)
+	{
+		error(new MapVariableInterpolator(error, args).toString());
+	}
+
+	/**
+	 * Gets the button which submitted this form.
+	 * 
+	 * @return The button which submitted this form or null if the processing
+	 *         was not trigger by a registered button component
+	 */
+	public final IFormSubmittingComponent findSubmittingButton()
+	{
+		IFormSubmittingComponent submittingButton = (IFormSubmittingComponent)getPage()
+				.visitChildren(IFormSubmittingComponent.class, new IVisitor()
+				{
+					public Object component(final Component component)
+					{
+						// Get button
+						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
+
+						// Check for button-name or button-name.x request string
+						if (submit.getForm() != null
+								&& submit.getForm().getRootForm() == Form.this
+								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
+										.getParameter(submit.getInputName() + ".x") != null))
+						{
+							if (!component.isVisible())
+							{
+								throw new WicketRuntimeException("Submit Button "
+										+ submit.getInputName() + " (path="
+										+ component.getPageRelativePath() + ") is not visible");
+							}
+							return submit;
+						}
+						return CONTINUE_TRAVERSAL;
+					}
+				});
+
+		return submittingButton;
 	}
 
 	/**
@@ -291,11 +463,126 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
+	 * This generates a piece of javascript code that sets the url in the
+	 * special hidden field and submits the form.
+	 * 
+	 * Warning: This code should only be called in the rendering phase for form
+	 * components inside the form because it uses the css/javascript id of the
+	 * form which can be stored in the markup.
+	 * 
+	 * @param url
+	 *            The interface url that has to be stored in the hidden field
+	 *            and submitted
+	 * @return The javascript code that submits the form.
+	 */
+	public final CharSequence getJsForInterfaceUrl(CharSequence url)
+	{
+		return new AppendingStringBuffer("document.getElementById('").append(getHiddenFieldId())
+				.append("').value='").append(url).append("';document.getElementById('").append(
+						getJavascriptId()).append("').submit();");
+	}
+
+	/**
 	 * @return the maxSize of uploaded files
 	 */
 	public Bytes getMaxSize()
 	{
 		return this.maxSize;
+	}
+
+	/**
+	 * Returns the root form or this, if this is the root form.
+	 * 
+	 * @return root form or this form
+	 */
+	public Form getRootForm()
+	{
+		Form form;
+		Form parent = this;
+		do
+		{
+			form = parent;
+			parent = (Form)form.findParent(Form.class);
+		}
+		while (parent != null);
+
+		return form;
+	}
+
+	/**
+	 * Returns the prefix used when building validator keys. This allows a form
+	 * to use a separate "set" of keys. For example if prefix "short" is
+	 * returned, validator key short.Required will be tried instead of Required
+	 * key.
+	 * <p>
+	 * This can be useful when different designs are used for a form. In a form
+	 * where error messages are displayed next to their respective form
+	 * components as opposed to at the top of the form, the ${label} attribute
+	 * is of little use and only causes redundant information to appear in the
+	 * message. Forms like these can return the "short" (or any other string)
+	 * validator prefix and declare key: short.Required=required to override the
+	 * longer message which is usually declared like this: Required=${label} is
+	 * a required field
+	 * <p>
+	 * Returned prefix will be used for all form components. The prefix can also
+	 * be overridden on form component level by overriding
+	 * {@link FormComponent#getValidatorKeyPrefix()}
+	 * 
+	 * @return prefix prepended to validator keys
+	 */
+	public String getValidatorKeyPrefix()
+	{
+		return null;
+	}
+
+	/**
+	 * Gets whether the current form has any error registered.
+	 * 
+	 * @return True if this form has at least one error.
+	 */
+	public final boolean hasError()
+	{
+		// if this form itself has an error message
+		if (hasErrorMessage())
+		{
+			return true;
+		}
+
+		// the form doesn't have any errors, now check any nested form
+		// components
+		return anyFormComponentError();
+	}
+
+	/**
+	 * Returns whether the form is a root form, which means that there's no
+	 * other form in it's parent hierarchy.
+	 * 
+	 * @return true if form is a root form, false otherwise
+	 */
+	public boolean isRootForm()
+	{
+		return findParent(Form.class) == null;
+	}
+
+	/**
+	 * Checks if this form has been submitted during the current request
+	 * 
+	 * @return true if the form has been submitted during this request, false
+	 *         otherwise
+	 */
+	public final boolean isSubmitted()
+	{
+		return getFlag(FLAG_SUBMITTED);
+	}
+
+	/**
+	 * Method made final because we want to ensure users call setVersioned.
+	 * 
+	 * @see org.apache.wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return super.isVersioned();
 	}
 
 	/**
@@ -390,25 +677,48 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Checks if this form has been submitted during the current request
+	 * Process the form. Though you can override this method to provide your
+	 * whole own algorithm, it is not recommended to do so.
+	 * <p>
+	 * See the class documentation for further details on the form processing
+	 * </p>
 	 * 
-	 * @return true if the form has been submitted during this request, false
-	 *         otherwise
+	 * @return False if the form had an error
 	 */
-	public final boolean isSubmitted()
+	public boolean process()
 	{
-		return getFlag(FLAG_SUBMITTED);
-	}
+		// run validation
+		validate();
 
-	/**
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
-	protected void onDetach()
-	{
-		super.internalOnDetach();
-		setFlag(FLAG_SUBMITTED, false);
+		// If a validation error occurred
+		if (hasError())
+		{
+			// mark all children as invalid
+			markFormComponentsInvalid();
 
-		super.onDetach();
+			// let subclass handle error
+			onError();
+
+			// Form has an error
+			return false;
+		}
+		else
+		{
+			// mark all childeren as valid
+			markFormComponentsValid();
+
+			// before updating, call the interception method for clients
+			beforeUpdateFormComponentModels();
+
+			// Update model using form data
+			updateFormComponentModels();
+
+			// Persist FormComponents if requested
+			persistFormComponentData();
+
+			// Form has no error
+			return true;
+		}
 	}
 
 	/**
@@ -519,13 +829,44 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Method made final because we want to ensure users call setVersioned.
+	 * Convenient and typesafe way to visit all the form components on a form
 	 * 
-	 * @see org.apache.wicket.Component#isVersioned()
+	 * @param visitor
+	 *            The visitor interface to call
 	 */
-	public boolean isVersioned()
+	public final void visitFormComponents(final FormComponent.IVisitor visitor)
 	{
-		return super.isVersioned();
+		visitChildren(FormComponent.class, new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				visitor.formComponent((FormComponent)component);
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+
+		/**
+		 * TODO Post 1.2 General: Maybe we should re-think how Borders are
+		 * implemented, because there are just too many exceptions in the code
+		 * base because of borders. This time it is to solve the problem tested
+		 * in BoxBorderTestPage_3 where the Form is defined in the box border
+		 * and the FormComponents are in the "body". Thus, the formComponents
+		 * are not childs of the form. They are rather childs of the border, as
+		 * the Form itself.
+		 */
+		if (getParent() instanceof Border)
+		{
+			MarkupContainer border = getParent();
+			Iterator iter = border.iterator();
+			while (iter.hasNext())
+			{
+				Component child = (Component)iter.next();
+				if (child instanceof FormComponent)
+				{
+					visitor.formComponent((FormComponent)child);
+				}
+			}
+		}
 	}
 
 	/**
@@ -564,43 +905,190 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Convenient and typesafe way to visit all the form components on a form
+	 * Find out whether there is any registered error for a form component.
 	 * 
-	 * @param visitor
-	 *            The visitor interface to call
+	 * @return whether there is any registered error for a form component
 	 */
-	public final void visitFormComponents(final FormComponent.IVisitor visitor)
+	private boolean anyFormComponentError()
 	{
-		visitChildren(FormComponent.class, new IVisitor()
+		final Object value = visitChildren(new IVisitor()
 		{
 			public Object component(final Component component)
 			{
-				visitor.formComponent((FormComponent)component);
+				if (component.hasErrorMessage())
+				{
+					return STOP_TRAVERSAL;
+				}
+
+				// Traverse all children
 				return CONTINUE_TRAVERSAL;
 			}
 		});
 
-		/**
-		 * TODO Post 1.2 General: Maybe we should re-think how Borders are
-		 * implemented, because there are just too many exceptions in the code
-		 * base because of borders. This time it is to solve the problem tested
-		 * in BoxBorderTestPage_3 where the Form is defined in the box border
-		 * and the FormComponents are in the "body". Thus, the formComponents
-		 * are not childs of the form. They are rather childs of the border, as
-		 * the Form itself.
-		 */
-		if (getParent() instanceof Border)
+		return value == IVisitor.STOP_TRAVERSAL ? true : false;
+	}
+
+	/**
+	 * Method for dispatching/calling a interface on a page from the given url.
+	 * Used by {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()}
+	 * for dispatching events
+	 * 
+	 * @param page
+	 *            The page where the event should be called on.
+	 * @param url
+	 *            The url which describes the component path and the interface
+	 *            to be called.
+	 */
+	private void dispatchEvent(final Page page, final String url)
+	{
+		RequestCycle rc = RequestCycle.get();
+		IRequestCycleProcessor processor = rc.getProcessor();
+		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
+				new FormDispatchRequest(rc.getRequest(), url));
+		IRequestTarget rt = processor.resolve(rc, requestParameters);
+		if (rt instanceof ListenerInterfaceRequestTarget)
 		{
-			MarkupContainer border = getParent();
-			Iterator iter = border.iterator();
-			while (iter.hasNext())
+			ListenerInterfaceRequestTarget interfaceTarget = ((ListenerInterfaceRequestTarget)rt);
+			interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
+		}
+		else
+		{
+			throw new WicketRuntimeException(
+					"Attempt to access unknown request listener interface "
+							+ requestParameters.getInterfaceName());
+		}
+	}
+
+	/**
+	 * @param validator
+	 *            The form validator to add to the formValidators Object (which
+	 *            may be an array of IFormValidators or a single instance, for
+	 *            efficiency)
+	 */
+	private void formValidators_add(final IFormValidator validator)
+	{
+		if (this.formValidators == null)
+		{
+			this.formValidators = validator;
+		}
+		else
+		{
+			// Get current list size
+			final int size = formValidators_size();
+
+			// Create array that holds size + 1 elements
+			final IFormValidator[] validators = new IFormValidator[size + 1];
+
+			// Loop through existing validators copying them
+			for (int i = 0; i < size; i++)
 			{
-				Component child = (Component)iter.next();
-				if (child instanceof FormComponent)
+				validators[i] = formValidators_get(i);
+			}
+
+			// Add new validator to the end
+			validators[size] = validator;
+
+			// Save new validator list
+			this.formValidators = validators;
+		}
+	}
+
+	/**
+	 * Gets form validator from formValidators Object (which may be an array of
+	 * IFormValidators or a single instance, for efficiency) at the given index
+	 * 
+	 * @param index
+	 *            The index of the validator to get
+	 * @return The form validator
+	 */
+	private IFormValidator formValidators_get(int index)
+	{
+		if (this.formValidators == null)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		if (this.formValidators instanceof IFormValidator[])
+		{
+			return ((IFormValidator[])formValidators)[index];
+		}
+		return (IFormValidator)formValidators;
+	}
+
+	/**
+	 * @return The number of form validators in the formValidators Object (which
+	 *         may be an array of IFormValidators or a single instance, for
+	 *         efficiency)
+	 */
+	private int formValidators_size()
+	{
+		if (this.formValidators == null)
+		{
+			return 0;
+		}
+		if (this.formValidators instanceof IFormValidator[])
+		{
+			return ((IFormValidator[])formValidators).length;
+		}
+		return 1;
+	}
+
+	/**
+	 * Visits the form's children FormComponents and inform them that a new user
+	 * input is available in the Request
+	 */
+	private void inputChanged()
+	{
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
+		{
+			public void onFormComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
 				{
-					visitor.formComponent((FormComponent)child);
+					formComponent.inputChanged();
 				}
 			}
+		});
+	}
+
+	/**
+	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned
+	 * to the FormComponent automatically when the page is visited by the user
+	 * next time.
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
+	 */
+	private void persistFormComponentData()
+	{
+		// Cannot add cookies to request cycle unless it accepts them
+		// We could conceivably be HTML over some other protocol!
+		if (getRequestCycle() instanceof WebRequestCycle)
+		{
+			// The persistence manager responsible to persist and retrieve
+			// FormComponent data
+			final IValuePersister persister = getValuePersister();
+
+			// Search for FormComponent children. Ignore all other
+			visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
+			{
+				public void onFormComponent(final FormComponent formComponent)
+				{
+					if (formComponent.isVisibleInHierarchy())
+					{
+						// If peristence is switched on for that FormComponent
+						// ...
+						if (formComponent.isPersistent())
+						{
+							// Save component's data (e.g. in a cookie)
+							persister.save(formComponent);
+						}
+						else
+						{
+							// Remove component's data (e.g. cookie)
+							persister.clear(formComponent);
+						}
+					}
+				}
+			});
 		}
 	}
 
@@ -684,126 +1172,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Gets the button which submitted this form.
-	 * 
-	 * @return The button which submitted this form or null if the processing
-	 *         was not trigger by a registered button component
-	 */
-	public final IFormSubmittingComponent findSubmittingButton()
-	{
-		IFormSubmittingComponent submittingButton = (IFormSubmittingComponent)getPage()
-				.visitChildren(IFormSubmittingComponent.class, new IVisitor()
-				{
-					public Object component(final Component component)
-					{
-						// Get button
-						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
-
-						// Check for button-name or button-name.x request string
-						if (submit.getForm() != null
-								&& submit.getForm().getRootForm() == Form.this
-								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
-										.getParameter(submit.getInputName() + ".x") != null))
-						{
-							if (!component.isVisible())
-							{
-								throw new WicketRuntimeException("Submit Button "
-										+ submit.getInputName() + " (path="
-										+ component.getPageRelativePath() + ") is not visible");
-							}
-							return submit;
-						}
-						return CONTINUE_TRAVERSAL;
-					}
-				});
-
-		return submittingButton;
-	}
-
-	/**
-	 * Gets the form component persistence manager; it is lazy loaded.
-	 * 
-	 * @return The form component value persister
-	 */
-	protected IValuePersister getValuePersister()
-	{
-		return new CookieValuePersister();
-	}
-
-	/**
-	 * Gets whether the current form has any error registered.
-	 * 
-	 * @return True if this form has at least one error.
-	 */
-	public final boolean hasError()
-	{
-		// if this form itself has an error message
-		if (hasErrorMessage())
-		{
-			return true;
-		}
-
-		// the form doesn't have any errors, now check any nested form
-		// components
-		return anyFormComponentError();
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#internalOnModelChanged()
-	 */
-	protected void internalOnModelChanged()
-	{
-		// Visit all the form components and validate each
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-		{
-			public void onFormComponent(final FormComponent formComponent)
-			{
-				// If form component is using form model
-				if (formComponent.sameInnermostModel(Form.this))
-				{
-					formComponent.modelChanged();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Mark each form component on this form invalid.
-	 */
-	protected final void markFormComponentsInvalid()
-	{
-		// call invalidate methods of all nested form components
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-		{
-			public void onFormComponent(final FormComponent formComponent)
-			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					formComponent.invalid();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Mark each form component on this form valid.
-	 */
-	protected final void markFormComponentsValid()
-	{
-		// call invalidate methods of all nested form components
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-		{
-			public void onFormComponent(final FormComponent formComponent)
-			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					formComponent.valid();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Returns the HiddenFieldId which will be used as the name and id property
 	 * of the hiddenfield that is generated for event dispatches.
 	 * 
@@ -831,316 +1199,31 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		return javascriptId;
 	}
 
+
 	/**
-	 * Append an additional hidden input tag to support anchor tags that can
-	 * submit a form.
+	 * Gets the method used to submit the form. Defaults to 'post'. Override
+	 * this if you have a requirement to alter this behavior.
 	 * 
-	 * @param markupStream
-	 *            The markup stream
-	 * @param openTag
-	 *            The open tag for the body
+	 * @return the method used to submit the form.
 	 */
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	protected String getMethod()
 	{
-		if (isRootForm())
-		{
-			// get the hidden field id
-			String nameAndId = getHiddenFieldId();
+		return METHOD_POST;
+	}
 
-			// render the hidden field
-			AppendingStringBuffer buffer = new AppendingStringBuffer(
-					"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
-					.append("\" id=\"").append(nameAndId).append("\" /></div>");
-			getResponse().write(buffer);
-
-			// if a default button was set, handle the rendering of that
-			if (defaultButton != null && defaultButton.isVisibleInHierarchy()
-					&& defaultButton.isEnabled())
-			{
-				appendDefaultButtonField(markupStream, openTag);
-			}
-		}
-
-		// do the rest of the processing
-		super.onComponentTagBody(markupStream, openTag);
+	protected boolean getStatelessHint()
+	{
+		return false;
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
-	 */
-	protected void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
-
-		checkComponentTag(tag, "form");
-
-		// If the javascriptid is already generated then use that on even it
-		// was before the first render. Because there could be a component
-		// which already uses it to submit the forum. This should be fixed
-		// when we pre parse the markup so that we know the id is at front.
-		if (!Strings.isEmpty(javascriptId))
-		{
-			tag.put("id", javascriptId);
-		}
-		else
-		{
-			javascriptId = (String)tag.getAttributes().get("id");
-			if (Strings.isEmpty(javascriptId))
-			{
-				javascriptId = getJavascriptId();
-				tag.put("id", javascriptId);
-			}
-		}
-
-		if (isRootForm())
-		{
-			tag.put("method", getMethod());
-			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
-					"&amp;"));
-
-			if (multiPart)
-			{
-				tag.put("enctype", "multipart/form-data");
-			}
-			else
-			{
-				// sanity check
-				String enctype = (String)tag.getAttributes().get("enctype");
-				if ("multipart/form-data".equalsIgnoreCase(enctype))
-				{
-					// though not set explicitly in Java, this is a multipart
-					// form
-					setMultiPart(true);
-				}
-			}
-		}
-		else
-		{
-			tag.setName("div");
-			tag.remove("method");
-			tag.remove("action");
-			tag.remove("enctype");
-		}
-	}
-
-	/**
-	 * Method to override if you want to do something special when an error
-	 * occurs (other than simply displaying validation errors).
-	 */
-	protected void onError()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#onRender(MarkupStream)
-	 */
-	protected void onRender(final MarkupStream markupStream)
-	{
-		// Force multi-part on if any child form component is multi-part
-		visitFormComponents(new FormComponent.AbstractVisitor()
-		{
-			public void onFormComponent(FormComponent formComponent)
-			{
-				if (formComponent.isVisible() && formComponent.isMultiPart())
-				{
-					setMultiPart(true);
-				}
-			}
-		});
-
-		super.onRender(markupStream);
-	}
-
-	/**
-	 * Implemented by subclasses to deal with form submits.
-	 */
-	protected void onSubmit()
-	{
-	}
-
-	/**
-	 * Process the form. Though you can override this method to provide your
-	 * whole own algorithm, it is not recommended to do so.
-	 * <p>
-	 * See the class documentation for further details on the form processing
-	 * </p>
+	 * Gets the form component persistence manager; it is lazy loaded.
 	 * 
-	 * @return False if the form had an error
+	 * @return The form component value persister
 	 */
-	public boolean process()
+	protected IValuePersister getValuePersister()
 	{
-		// run validation
-		validate();
-
-		// If a validation error occurred
-		if (hasError())
-		{
-			// mark all children as invalid
-			markFormComponentsInvalid();
-
-			// let subclass handle error
-			onError();
-
-			// Form has an error
-			return false;
-		}
-		else
-		{
-			// mark all childeren as valid
-			markFormComponentsValid();
-
-			// before updating, call the interception method for clients
-			beforeUpdateFormComponentModels();
-
-			// Update model using form data
-			updateFormComponentModels();
-
-			// Persist FormComponents if requested
-			persistFormComponentData();
-
-			// Form has no error
-			return true;
-		}
-	}
-
-	/**
-	 * Update the model of all form components using the fields that were sent
-	 * with the current request.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
-	 */
-	protected final void updateFormComponentModels()
-	{
-		visitFormComponentsPostOrder(new ValidationVisitor()
-		{
-			public void validate(FormComponent formComponent)
-			{
-				// Potentially update the model
-				formComponent.updateModel();
-			}
-		});
-	}
-
-	/**
-	 * Clears the input from the form's nested children of type
-	 * {@link FormComponent}. This method is typically called when a form needs
-	 * to be reset.
-	 */
-	public final void clearInput()
-	{
-		// Visit all the (visible) form components and clear the input on each.
-		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-		{
-			public void onFormComponent(final FormComponent formComponent)
-			{
-				if (formComponent.isVisibleInHierarchy())
-				{
-					// Clear input from form component
-					formComponent.clearInput();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Validates the form by checking required fields, converting raw input and
-	 * running validators for every form component, and last running global form
-	 * validators. This method is typically called before updating any models.
-	 * <p>
-	 * NOTE: in most cases, custom validations on the form can be achieved using
-	 * an IFormValidator that can be added using addValidator().
-	 * </p>
-	 */
-	protected void validate()
-	{
-		validateComponents();
-		validateFormValidators();
-	}
-
-
-	/**
-	 * Triggers type conversion on form components
-	 */
-	protected final void validateComponents()
-	{
-		visitFormComponentsPostOrder(new ValidationVisitor()
-		{
-			public void validate(final FormComponent formComponent)
-			{
-				formComponent.validate();
-			}
-		});
-	}
-
-	/**
-	 * Triggers any added {@link IFormValidator}s.
-	 */
-	protected final void validateFormValidators()
-	{
-		final int count = formValidators_size();
-		for (int i = 0; i < count; i++)
-		{
-			validateFormValidator(formValidators_get(i));
-		}
-	}
-
-	/**
-	 * Validates form with the given form validator
-	 * 
-	 * @param validator
-	 */
-	protected final void validateFormValidator(final IFormValidator validator)
-	{
-		if (validator == null)
-		{
-			throw new IllegalArgumentException("Argument [[validator]] cannot be null");
-		}
-
-		final FormComponent[] dependents = validator.getDependentFormComponents();
-
-		boolean validate = true;
-
-		if (dependents != null)
-		{
-			for (int j = 0; j < dependents.length; j++)
-			{
-				final FormComponent dependent = dependents[j];
-				if (!dependent.isValid())
-				{
-					validate = false;
-					break;
-				}
-			}
-		}
-
-		if (validate)
-		{
-			validator.validate(this);
-		}
-	}
-
-	/**
-	 * Find out whether there is any registered error for a form component.
-	 * 
-	 * @return whether there is any registered error for a form component
-	 */
-	private boolean anyFormComponentError()
-	{
-		final Object value = visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				if (component.hasErrorMessage())
-				{
-					return STOP_TRAVERSAL;
-				}
-
-				// Traverse all children
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-
-		return value == IVisitor.STOP_TRAVERSAL ? true : false;
+		return new CookieValuePersister();
 	}
 
 	/**
@@ -1216,372 +1299,289 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned
-	 * to the FormComponent automatically when the page is visited by the user
-	 * next time.
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
+	 * @see org.apache.wicket.Component#internalOnModelChanged()
 	 */
-	private void persistFormComponentData()
+	protected void internalOnModelChanged()
 	{
-		// Cannot add cookies to request cycle unless it accepts them
-		// We could conceivably be HTML over some other protocol!
-		if (getRequestCycle() instanceof WebRequestCycle)
-		{
-			// The persistence manager responsible to persist and retrieve
-			// FormComponent data
-			final IValuePersister persister = getValuePersister();
-
-			// Search for FormComponent children. Ignore all other
-			visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
-			{
-				public void onFormComponent(final FormComponent formComponent)
-				{
-					if (formComponent.isVisibleInHierarchy())
-					{
-						// If peristence is switched on for that FormComponent
-						// ...
-						if (formComponent.isPersistent())
-						{
-							// Save component's data (e.g. in a cookie)
-							persister.save(formComponent);
-						}
-						else
-						{
-							// Remove component's data (e.g. cookie)
-							persister.clear(formComponent);
-						}
-					}
-				}
-			});
-		}
-	}
-
-	/**
-	 * Method for dispatching/calling a interface on a page from the given url.
-	 * Used by {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()}
-	 * for dispatching events
-	 * 
-	 * @param page
-	 *            The page where the event should be called on.
-	 * @param url
-	 *            The url which describes the component path and the interface
-	 *            to be called.
-	 */
-	private void dispatchEvent(final Page page, final String url)
-	{
-		RequestCycle rc = RequestCycle.get();
-		IRequestCycleProcessor processor = rc.getProcessor();
-		final RequestParameters requestParameters = processor.getRequestCodingStrategy().decode(
-				new FormDispatchRequest(rc.getRequest(), url));
-		IRequestTarget rt = processor.resolve(rc, requestParameters);
-		if (rt instanceof ListenerInterfaceRequestTarget)
-		{
-			ListenerInterfaceRequestTarget interfaceTarget = ((ListenerInterfaceRequestTarget)rt);
-			interfaceTarget.getRequestListenerInterface().invoke(page, interfaceTarget.getTarget());
-		}
-		else
-		{
-			throw new WicketRuntimeException(
-					"Attempt to access unknown request listener interface "
-							+ requestParameters.getInterfaceName());
-		}
-	}
-
-	/**
-	 * Visits the form's children FormComponents and inform them that a new user
-	 * input is available in the Request
-	 */
-	private void inputChanged()
-	{
+		// Visit all the form components and validate each
 		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
 			public void onFormComponent(final FormComponent formComponent)
 			{
-				if (formComponent.isVisibleInHierarchy())
+				// If form component is using form model
+				if (formComponent.sameInnermostModel(Form.this))
 				{
-					formComponent.inputChanged();
+					formComponent.modelChanged();
 				}
 			}
 		});
 	}
 
 	/**
-	 * This generates a piece of javascript code that sets the url in the
-	 * special hidden field and submits the form.
-	 * 
-	 * Warning: This code should only be called in the rendering phase for form
-	 * components inside the form because it uses the css/javascript id of the
-	 * form which can be stored in the markup.
-	 * 
-	 * @param url
-	 *            The interface url that has to be stored in the hidden field
-	 *            and submitted
-	 * @return The javascript code that submits the form.
+	 * Mark each form component on this form invalid.
 	 */
-	public final CharSequence getJsForInterfaceUrl(CharSequence url)
+	protected final void markFormComponentsInvalid()
 	{
-		return new AppendingStringBuffer("document.getElementById('").append(getHiddenFieldId())
-				.append("').value='").append(url).append("';document.getElementById('").append(
-						getJavascriptId()).append("').submit();");
-	}
-
-	/**
-	 * 
-	 */
-	class FormDispatchRequest extends Request
-	{
-		private final Request realRequest;
-
-		private final String url;
-
-		private final ValueMap params = new ValueMap();
-
-		/**
-		 * Construct.
-		 * 
-		 * @param realRequest
-		 * @param url
-		 */
-		public FormDispatchRequest(final Request realRequest, final String url)
+		// call invalidate methods of all nested form components
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
 		{
-			this.realRequest = realRequest;
-			this.url = realRequest.decodeURL(url);
-
-			String queryString = this.url.substring(this.url.indexOf("?") + 1);
-			RequestUtils.decodeParameters(queryString, params);
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getLocale()
-		 */
-		public Locale getLocale()
-		{
-			return realRequest.getLocale();
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getParameter(java.lang.String)
-		 */
-		public String getParameter(String key)
-		{
-			return (String)params.get(key);
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getParameterMap()
-		 */
-		public Map getParameterMap()
-		{
-			return params;
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getParameters(java.lang.String)
-		 */
-		public String[] getParameters(String key)
-		{
-			String param = (String)params.get(key);
-			if (param != null)
+			public void onFormComponent(final FormComponent formComponent)
 			{
-				return new String[] { param };
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.invalid();
+				}
 			}
-			return new String[0];
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getPath()
-		 */
-		public String getPath()
-		{
-			return realRequest.getPath();
-		}
-
-		/**
-		 * @see org.apache.wicket.Request#getURL()
-		 */
-		public String getURL()
-		{
-			return url;
-		}
-
-		public String getRelativePathPrefixToContextRoot()
-		{
-			return realRequest.getRelativePathPrefixToContextRoot();
-		}
-
-		public String getRelativePathPrefixToWicketHandler()
-		{
-			return realRequest.getRelativePathPrefixToWicketHandler();
-		}
+		});
 	}
 
 	/**
-	 * Returns the prefix used when building validator keys. This allows a form
-	 * to use a separate "set" of keys. For example if prefix "short" is
-	 * returned, validator key short.Required will be tried instead of
-	 * Required key.
-	 * <p>
-	 * This can be useful when different designs are used for a form. In a form
-	 * where error messages are displayed next to their respective form
-	 * components as opposed to at the top of the form, the ${label} attribute
-	 * is of little use and only causes redundant information to appear in the
-	 * message. Forms like these can return the "short" (or any other string)
-	 * validator prefix and declare key: short.Required=required to
-	 * override the longer message which is usually declared like this:
-	 * Required=${label} is a required field
-	 * <p>
-	 * Returned prefix will be used for all form components. The prefix can also
-	 * be overridden on form component level by overriding
-	 * {@link FormComponent#getValidatorKeyPrefix()}
-	 * 
-	 * @return prefix prepended to validator keys
+	 * Mark each form component on this form valid.
 	 */
-	public String getValidatorKeyPrefix()
+	protected final void markFormComponentsValid()
 	{
-		return null;
+		// call invalidate methods of all nested form components
+		visitFormComponentsPostOrder(new FormComponent.AbstractVisitor()
+		{
+			public void onFormComponent(final FormComponent formComponent)
+			{
+				if (formComponent.isVisibleInHierarchy())
+				{
+					formComponent.valid();
+				}
+			}
+		});
 	}
 
 	/**
-	 * Adds a form validator to the form.
-	 * 
-	 * @param validator
-	 *            validator
-	 * @throws IllegalArgumentException
-	 *             if validator is null
-	 * @see IFormValidator
-	 * @see IValidatorAddListener
+	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
-	public void add(IFormValidator validator)
+	protected void onComponentTag(final ComponentTag tag)
 	{
-		if (validator == null)
-		{
-			throw new IllegalArgumentException("validator argument cannot be null");
-		}
+		super.onComponentTag(tag);
 
-		// add the validator
-		formValidators_add(validator);
+		checkComponentTag(tag, "form");
 
-		// see whether the validator listens for add events
-		if (validator instanceof IValidatorAddListener)
+		// If the javascriptid is already generated then use that on even it
+		// was before the first render. Because there could be a component
+		// which already uses it to submit the forum. This should be fixed
+		// when we pre parse the markup so that we know the id is at front.
+		if (!Strings.isEmpty(javascriptId))
 		{
-			((IValidatorAddListener)validator).onAdded(this);
-		}
-	}
-
-	/**
-	 * @param validator
-	 *            The form validator to add to the formValidators Object (which
-	 *            may be an array of IFormValidators or a single instance, for
-	 *            efficiency)
-	 */
-	private void formValidators_add(final IFormValidator validator)
-	{
-		if (this.formValidators == null)
-		{
-			this.formValidators = validator;
+			tag.put("id", javascriptId);
 		}
 		else
 		{
-			// Get current list size
-			final int size = formValidators_size();
-
-			// Create array that holds size + 1 elements
-			final IFormValidator[] validators = new IFormValidator[size + 1];
-
-			// Loop through existing validators copying them
-			for (int i = 0; i < size; i++)
+			javascriptId = (String)tag.getAttributes().get("id");
+			if (Strings.isEmpty(javascriptId))
 			{
-				validators[i] = formValidators_get(i);
+				javascriptId = getJavascriptId();
+				tag.put("id", javascriptId);
 			}
+		}
 
-			// Add new validator to the end
-			validators[size] = validator;
+		if (isRootForm())
+		{
+			tag.put("method", getMethod());
+			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
+					"&amp;"));
 
-			// Save new validator list
-			this.formValidators = validators;
+			if (multiPart)
+			{
+				tag.put("enctype", "multipart/form-data");
+			}
+			else
+			{
+				// sanity check
+				String enctype = (String)tag.getAttributes().get("enctype");
+				if ("multipart/form-data".equalsIgnoreCase(enctype))
+				{
+					// though not set explicitly in Java, this is a multipart
+					// form
+					setMultiPart(true);
+				}
+			}
+		}
+		else
+		{
+			tag.setName("div");
+			tag.remove("method");
+			tag.remove("action");
+			tag.remove("enctype");
 		}
 	}
 
 	/**
-	 * Gets form validator from formValidators Object (which may be an array of
-	 * IFormValidators or a single instance, for efficiency) at the given index
+	 * Append an additional hidden input tag to support anchor tags that can
+	 * submit a form.
 	 * 
-	 * @param index
-	 *            The index of the validator to get
-	 * @return The form validator
+	 * @param markupStream
+	 *            The markup stream
+	 * @param openTag
+	 *            The open tag for the body
 	 */
-	private IFormValidator formValidators_get(int index)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		if (this.formValidators == null)
+		if (isRootForm())
 		{
-			throw new IndexOutOfBoundsException();
+			// get the hidden field id
+			String nameAndId = getHiddenFieldId();
+
+			// render the hidden field
+			AppendingStringBuffer buffer = new AppendingStringBuffer(
+					"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
+					.append("\" id=\"").append(nameAndId).append("\" /></div>");
+			getResponse().write(buffer);
+
+			// if a default button was set, handle the rendering of that
+			if (defaultButton != null && defaultButton.isVisibleInHierarchy()
+					&& defaultButton.isEnabled())
+			{
+				appendDefaultButtonField(markupStream, openTag);
+			}
 		}
-		if (this.formValidators instanceof IFormValidator[])
-		{
-			return ((IFormValidator[])formValidators)[index];
-		}
-		return (IFormValidator)formValidators;
+
+		// do the rest of the processing
+		super.onComponentTagBody(markupStream, openTag);
 	}
 
 	/**
-	 * @return The number of form validators in the formValidators Object (which
-	 *         may be an array of IFormValidators or a single instance, for
-	 *         efficiency)
+	 * @see org.apache.wicket.Component#onDetach()
 	 */
-	private int formValidators_size()
+	protected void onDetach()
 	{
-		if (this.formValidators == null)
-		{
-			return 0;
-		}
-		if (this.formValidators instanceof IFormValidator[])
-		{
-			return ((IFormValidator[])formValidators).length;
-		}
-		return 1;
+		super.internalOnDetach();
+		setFlag(FLAG_SUBMITTED, false);
+
+		super.onDetach();
 	}
 
 	/**
-	 * /** Registers an error feedback message for this component
+	 * Method to override if you want to do something special when an error
+	 * occurs (other than simply displaying validation errors).
+	 */
+	protected void onError()
+	{
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onRender(MarkupStream)
+	 */
+	protected void onRender(final MarkupStream markupStream)
+	{
+		// Force multi-part on if any child form component is multi-part
+		visitFormComponents(new FormComponent.AbstractVisitor()
+		{
+			public void onFormComponent(FormComponent formComponent)
+			{
+				if (formComponent.isVisible() && formComponent.isMultiPart())
+				{
+					setMultiPart(true);
+				}
+			}
+		});
+
+		super.onRender(markupStream);
+	}
+
+	/**
+	 * Implemented by subclasses to deal with form submits.
+	 */
+	protected void onSubmit()
+	{
+	}
+
+	/**
+	 * Update the model of all form components using the fields that were sent
+	 * with the current request.
 	 * 
-	 * @param error
-	 *            error message
-	 * @param args
-	 *            argument replacement map for ${key} variables
+	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
-	public final void error(String error, Map args)
+	protected final void updateFormComponentModels()
 	{
-		error(new MapVariableInterpolator(error, args).toString());
-	}
-
-	/**
-	 * Returns whether the form is a root form, which means that there's no
-	 * other form in it's parent hierarchy.
-	 * 
-	 * @return true if form is a root form, false otherwise
-	 */
-	public boolean isRootForm()
-	{
-		return findParent(Form.class) == null;
-	}
-
-	/**
-	 * Returns the root form or this, if this is the root form.
-	 * 
-	 * @return root form or this form
-	 */
-	public Form getRootForm()
-	{
-		Form form;
-		Form parent = this;
-		do
+		visitFormComponentsPostOrder(new ValidationVisitor()
 		{
-			form = parent;
-			parent = (Form)form.findParent(Form.class);
-		}
-		while (parent != null);
+			public void validate(FormComponent formComponent)
+			{
+				// Potentially update the model
+				formComponent.updateModel();
+			}
+		});
+	}
 
-		return form;
+	/**
+	 * Validates the form by checking required fields, converting raw input and
+	 * running validators for every form component, and last running global form
+	 * validators. This method is typically called before updating any models.
+	 * <p>
+	 * NOTE: in most cases, custom validations on the form can be achieved using
+	 * an IFormValidator that can be added using addValidator().
+	 * </p>
+	 */
+	protected void validate()
+	{
+		validateComponents();
+		validateFormValidators();
+	}
+
+	/**
+	 * Triggers type conversion on form components
+	 */
+	protected final void validateComponents()
+	{
+		visitFormComponentsPostOrder(new ValidationVisitor()
+		{
+			public void validate(final FormComponent formComponent)
+			{
+				formComponent.validate();
+			}
+		});
+	}
+
+	/**
+	 * Validates form with the given form validator
+	 * 
+	 * @param validator
+	 */
+	protected final void validateFormValidator(final IFormValidator validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("Argument [[validator]] cannot be null");
+		}
+
+		final FormComponent[] dependents = validator.getDependentFormComponents();
+
+		boolean validate = true;
+
+		if (dependents != null)
+		{
+			for (int j = 0; j < dependents.length; j++)
+			{
+				final FormComponent dependent = dependents[j];
+				if (!dependent.isValid())
+				{
+					validate = false;
+					break;
+				}
+			}
+		}
+
+		if (validate)
+		{
+			validator.validate(this);
+		}
+	}
+
+	/**
+	 * Triggers any added {@link IFormValidator}s.
+	 */
+	protected final void validateFormValidators()
+	{
+		final int count = formValidators_size();
+		for (int i = 0; i < count; i++)
+		{
+			validateFormValidator(formValidators_get(i));
+		}
 	}
 }
