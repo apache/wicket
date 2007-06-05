@@ -499,7 +499,7 @@ Wicket.ChannelManager.prototype = {
 		this.channels = new Array();
 	},
   
-    // Schedules the callback to channel with given name.
+	// Schedules the callback to channel with given name.
 	schedule: function(channel, callback) {
 		var c = this.channels[channel];
 		if (c == null) {
@@ -736,7 +736,14 @@ Wicket.Ajax.Request.prototype = {
 		var t = this.transport;
 
 		if (t != null && t.readyState == 4) {
-			if (t.status == 200) {		
+			try {
+				status = t.status;
+			}
+			catch (e) {
+				Wicket.Log.error("Exception evaluating AJAX status: " + e);
+				status = "unavailable";
+			}
+			if (status == 200) {
 				// response came without error
 				var responseAsText = t.responseText;
 				
@@ -781,7 +788,7 @@ Wicket.Ajax.Request.prototype = {
         	} else {
         		// when an error happened
         		var log = Wicket.Log.error;
-        		log("Received Ajax response with code: " + t.status);
+        		log("Received Ajax response with code: " + status);
 		   		this.done();        		
         		this.failure();
         	}    	
