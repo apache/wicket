@@ -27,8 +27,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 /**
- * ProgressbarPanel
- *
+ * A panel to show the progress of an HTTP upload.
+ * <p>
+ * NB: For this to work, you *must* use an {@link UploadWebRequest}. See the
+ * javadoc in that class for details.
+ * 
  * @author Andrew Lombardi
  */
 public class UploadProgressBar extends Panel
@@ -88,9 +91,6 @@ public class UploadProgressBar extends Panel
 		form.add(new AttributeModifier("onsubmit", true, new Model()
 		{
 
-			/**
-			 *
-			 */
 			private static final long serialVersionUID = 1L;
 
 
