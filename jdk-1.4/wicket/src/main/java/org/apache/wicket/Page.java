@@ -877,7 +877,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			((IFeedback)this).updateFeedback();
 		}
 
-		beforeRender();
+		try
+		{
+			beforeRender();
+		} 
+		catch(RuntimeException e)
+		{
+			// if an exception is thrown then we have to call after render
+			// else the components could be in a wrong state (rendering)
+			try
+			{
+				afterRender();
+			} 
+			catch(RuntimeException e2) 
+			{
+				// ignore this one could be a result off.
+			}
+			throw e;
+		}
 
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
