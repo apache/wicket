@@ -34,9 +34,21 @@ import org.apache.wicket.model.IModel;
  * outside world as one component, but internally uses separate components. This
  * component would then use these nested components to handle it's internal
  * state, and would use that internal state to get to one model object.
+ * <p>
+ * It is recommended that you override {@link #getConvertedInput()} and let it
+ * return the value that represents the compound value of the nested components.
+ * This value will then be set as the model value of the component. Often, this
+ * goes hand-in-hand with overriding {@link #onBeforeRender()}, where you would
+ * analyse the model value, break it up and distribute the appropriate values
+ * over the child components.
+ * </p>
  * 
+ * <p>
  * Here is a simple example of a panel with two components that multiplies and
- * sets that as the master model object.
+ * sets that as the master model object. Note that for this simple example,
+ * setting the model value wouldn't make sense, as the lhs and rhs cannot be
+ * known. For more complete examples of using this class, see the
+ * wicket-datetime project.
  * 
  * <pre>
  * public class Multiply extends FormComponentPanel
@@ -58,14 +70,11 @@ import org.apache.wicket.model.IModel;
  * 		init();
  * 	}
  * 
- * 	public void updateModel()
+ * 	public Object getConvertedInput()
  * 	{
- * 		// childs are currently updated *after* this component,
- * 		// so if we want to use the updated models of these
- * 		// components, we have to trigger the update manually
- * 		left.updateModel();
- * 		right.updateModel();
- * 		setModelObject(new Integer(lhs * rhs));
+ * 		Integer lhs = (Integer)left.getConvertedInput();
+ * 		Integer rhs = (Integer)right.getConvertedInput();
+ * 		return lhs * rhs;
  * 	}
  * 
  * 	private void init()
@@ -99,6 +108,8 @@ import org.apache.wicket.model.IModel;
  *   &lt;span wicket:id=&quot;multiply&quot;&gt;[multiply]&lt;/span&gt;
  *   = &lt;span wicket:id=&quot;multiplyLabel&quot;&gt;[result]&lt;/span&gt;
  * </pre>
+ * 
+ * </p>
  * 
  * @author eelcohillenius
  */
