@@ -549,8 +549,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/** True when a component is enabled for model updates and is reachable. */
 	private static final int FLAG_ENABLED = 0x0080;
 
-	/** Boolean whether this component was rendered once for tracking changes. */
-	private static final int FLAG_IS_RENDERED_ONCE = 0x1000;
+	/**
+	 * Boolean whether this component was rendered at least once for tracking
+	 * changes.
+	 */
+	private static final int FLAG_HAS_BEEN_RENDERED = 0x1000;
 
 	/**
 	 * Internal indicator of whether this component may be rendered given the
@@ -1151,9 +1154,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		return getModelObjectAsString(getModelObject());
 	}
-	
+
 	/**
-	 * @param modelObject Model object to convert to string
+	 * @param modelObject
+	 *            Model object to convert to string
 	 * @return The string
 	 */
 	public final String getModelObjectAsString(final Object modelObject)
@@ -1162,10 +1166,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			// Get converter
 			final IConverter converter = getConverter(modelObject.getClass());
-	
+
 			// Model string from property
 			final String modelString = converter.convertToString(modelObject, getLocale());
-	
+
 			if (modelString != null)
 			{
 				// If we should escape the markup
@@ -1496,7 +1500,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public boolean isVersioned()
 	{
 		// Is the component itself versioned?
-		if (!getFlag(FLAG_VERSIONED) || !getFlag(FLAG_IS_RENDERED_ONCE))
+		if (!getFlag(FLAG_VERSIONED) || !getFlag(FLAG_HAS_BEEN_RENDERED))
 		{
 			return false;
 		}
@@ -1669,7 +1673,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void render(final MarkupStream markupStream)
 	{
 		setMarkupStream(markupStream);
-		setFlag(FLAG_IS_RENDERED_ONCE, true);
+		setFlag(FLAG_HAS_BEEN_RENDERED, true);
 
 		// Determine if component is visible using it's authorization status
 		// and the isVisible property.
