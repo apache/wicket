@@ -251,6 +251,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		init(pageMap);
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param parameters
+	 *            externally passed parameters
+	 * @see PageParameters
+	 */
+	protected Page(final PageParameters parameters)
+	{
+		super(null);
+	}
+
 	// temporary variable to pass page instance from readObject to readResolve
 	private transient Page pageToResolve = null;
 
@@ -511,7 +523,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 		return pageMap;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -922,7 +934,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		try
 		{
 			render(null);
-		} 
+		}
 		finally
 		{
 			afterRender();
@@ -1456,7 +1468,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * You can set implementation of the interface in the
 	 * {@link Page#serializer} then that implementation will handle the
 	 * serialization of this page. The serializePage method is called from the
-	 * writeObject method then the implementation override the default serialization.
+	 * writeObject method then the implementation override the default
+	 * serialization.
 	 * 
 	 * @author jcompagner
 	 */

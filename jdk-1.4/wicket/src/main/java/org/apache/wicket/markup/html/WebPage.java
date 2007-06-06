@@ -242,7 +242,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	protected WebPage(final PageParameters parameters)
 	{
-		this((IModel)null);
+		super(parameters);
 	}
 
 	/**
