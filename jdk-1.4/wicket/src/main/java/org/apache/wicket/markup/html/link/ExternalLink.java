@@ -221,7 +221,7 @@ public class ExternalLink extends WebMarkupContainer
 		this.checkComponentTag(openTag, "a");
 		if ((label != null) && (label.getObject() != null))
 		{
-			replaceComponentTagBody(markupStream, openTag, label.getObject().toString());
+			replaceComponentTagBody(markupStream, openTag, getModelObjectAsString(label.getObject()));
 		}
 		else
 		{
