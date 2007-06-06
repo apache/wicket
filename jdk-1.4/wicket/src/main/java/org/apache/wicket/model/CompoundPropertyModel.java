@@ -102,9 +102,9 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	 */
 	public void detach()
 	{
-		if (target instanceof IModel)
+		if (target instanceof IDetachable)
 		{
-			((IModel)target).detach();
+			((IDetachable)target).detach();
 		}
 	}
 

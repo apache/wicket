@@ -67,10 +67,10 @@ public abstract class AbstractPropertyModel
 	 */
 	public void detach()
 	{
-		// Detach nested object if it's an IModel
-		if (target instanceof IModel)
+		// Detach nested object if it's a detachable
+		if (target instanceof IDetachable)
 		{
-			((IModel)target).detach();
+			((IDetachable)target).detach();
 		}
 	}
 
