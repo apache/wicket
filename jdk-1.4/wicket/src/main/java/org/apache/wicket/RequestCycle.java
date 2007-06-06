@@ -254,6 +254,12 @@ public abstract class RequestCycle
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
 
+	/**
+	 * Any page parameters. Only set when the request is resolving and the
+	 * parameters are passed into a page.
+	 */
+	private PageParameters pageParameters;
+
 	/** The session object. */
 	private Session session;
 
@@ -330,6 +336,18 @@ public abstract class RequestCycle
 	public final Response getOriginalResponse()
 	{
 		return this.originalResponse;
+	}
+
+	/**
+	 * Any set page parameters. Typically only available when a request to a
+	 * bookmarkable page with a {@link Page#Page(PageParameters)} constructor
+	 * was made.
+	 * 
+	 * @return the page parameters or null
+	 */
+	public final PageParameters getPageParameters()
+	{
+		return this.pageParameters;
 	}
 
 	/**
@@ -744,7 +762,9 @@ public abstract class RequestCycle
 	 * Returns a URL that references a given interface on a component. When the
 	 * URL is requested from the server at a later time, the interface will be
 	 * called. A URL returned by this method will not be stable across sessions
-	 * and cannot be bookmarked by a user.
+	 * and cannot be bookmarked by a user unless the component resides on a
+	 * stateless bookmarkable page, in which case the URL *will* be
+	 * bookmarkable.
 	 * 
 	 * @param component
 	 *            The component to reference
@@ -761,8 +781,11 @@ public abstract class RequestCycle
 		if (listener != IRedirectListener.INTERFACE && component.isStateless()
 				&& page.isBookmarkable())
 		{
-			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(),
-					page.getClass(), new PageParameters(), component, listener);
+			PageParameters parameters = (this.pageParameters != null)
+					? this.pageParameters
+					: new PageParameters();
+			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMapName(), page
+					.getClass(), parameters, component, listener);
 		}
 		else
 		{
@@ -954,7 +977,7 @@ public abstract class RequestCycle
 						+ ".", re);
 			}
 		}
-		
+
 		if (getResponse() instanceof BufferedWebResponse)
 		{
 			try
@@ -975,7 +998,7 @@ public abstract class RequestCycle
 		{
 			log.error("Exception occurred during onEndRequest", e);
 		}
-		
+
 		try
 		{
 			getApplication().getSessionStore().onEndRequest(getRequest());
@@ -984,7 +1007,7 @@ public abstract class RequestCycle
 		{
 			log.error("Exception occurred during onEndRequest of the SessionStore", e);
 		}
-		
+
 		// Release thread local resources
 		try
 		{
@@ -1215,6 +1238,21 @@ public abstract class RequestCycle
 		// Clear ThreadLocal reference; makes sense as this object should not be
 		// reused
 		current.set(null);
+	}
+
+	/**
+	 * Possibly set the page parameters. Only set when the request is resolving
+	 * and the parameters are passed into a page.
+	 * 
+	 * @param parameters
+	 *            the parameters to set
+	 */
+	final void setPageParameters(PageParameters parameters)
+	{
+		if (currentStep == RESOLVE_TARGET)
+		{
+			this.pageParameters = parameters;
+		}
 	}
 
 	/**
