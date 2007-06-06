@@ -92,7 +92,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 
 			// Walk up the class hierarchy one level, if markup has not
 			// yet been found
-			containerClass = (Class)containerClass.getSuperclass();
+			containerClass = containerClass.getSuperclass();
 		}
 
 		return null;
