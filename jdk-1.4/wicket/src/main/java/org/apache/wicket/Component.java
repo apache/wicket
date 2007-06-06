@@ -1158,21 +1158,24 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final String getModelObjectAsString(final Object modelObject)
 	{
-		// Get converter
-		final IConverter converter = getConverter(modelObject.getClass());
-
-		// Model string from property
-		final String modelString = converter.convertToString(modelObject, getLocale());
-
-		if (modelString != null)
+		if (modelObject != null)
 		{
-			// If we should escape the markup
-			if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
+			// Get converter
+			final IConverter converter = getConverter(modelObject.getClass());
+	
+			// Model string from property
+			final String modelString = converter.convertToString(modelObject, getLocale());
+	
+			if (modelString != null)
 			{
-				// Escape it
-				return Strings.escapeMarkup(modelString, false, true).toString();
+				// If we should escape the markup
+				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
+				{
+					// Escape it
+					return Strings.escapeMarkup(modelString, false, true).toString();
+				}
+				return modelString;
 			}
-			return modelString;
 		}
 		return "";
 	}
