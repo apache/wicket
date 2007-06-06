@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.application.IComponentOnAfterRenderListener;
+import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
@@ -894,6 +896,116 @@ public abstract class Application
 		for (int i = 0; i < len; i++)
 		{
 			componentInstantiationListeners[i].onInstantiation(component);
+		}
+	}
+	
+	private List componentOnBeforeRenderListeners = null;
+	
+	/**
+	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typicaly only
+	 * be called during application startup; it is not thread safe.
+	 * 
+	 * @param listener
+	 */
+	final public void addComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener listener) 
+	{
+		if (componentOnBeforeRenderListeners == null)
+		{
+			componentOnBeforeRenderListeners = new ArrayList();
+		}
+		
+		if (componentOnBeforeRenderListeners.contains(listener) == false)
+		{
+			componentOnBeforeRenderListeners.add(listener);
+		}
+	}
+	
+	/**
+	 * Removes an {@link IComponentOnBeforeRenderListener}.
+	 *  
+	 * @param listener
+	 */
+	final public void removeComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener listener)
+	{
+		if (componentOnBeforeRenderListeners != null)
+		{
+			componentOnBeforeRenderListeners.remove(listener);
+			if (componentOnBeforeRenderListeners.isEmpty())
+			{
+				componentOnBeforeRenderListeners = null;
+			}
+		}
+	}
+	
+	/**
+	 * Notifies the {@link IComponentOnBeforeRenderListener}s.
+	 * 
+	 * @param component
+	 */
+	final void notifyComponentOnBeforeRenderListeners(Component component) 
+	{
+		if (componentOnBeforeRenderListeners != null)
+		{
+			for (Iterator i = componentOnBeforeRenderListeners.iterator(); i.hasNext();)
+			{
+				IComponentOnBeforeRenderListener listener = (IComponentOnBeforeRenderListener) i.next();
+				listener.onBeforeRender(component);
+			}
+		}
+	}
+	
+	private List componentOnAfterRenderListeners = null;
+	
+	/**
+	 * Adds an {@link IComponentOnAfterRenderListener}. This method should typicaly only
+	 * be called during application startup; it is not thread safe.
+	 * 
+	 * @param listener
+	 */
+	final public void addComponentOnAfterRenderListener(IComponentOnAfterRenderListener listener) 
+	{
+		if (componentOnAfterRenderListeners == null)
+		{
+			componentOnAfterRenderListeners = new ArrayList();
+		}
+		
+		if (componentOnAfterRenderListeners.contains(listener) == false)
+		{
+			componentOnAfterRenderListeners.add(listener);
+		}
+	}
+	
+	/**
+	 * Removes an {@link IComponentOnAfterRenderListener}.
+	 *  
+	 * @param listener
+	 */
+	final public void removeComponentOnAfterRenderListener(IComponentOnAfterRenderListener listener)
+	{
+		if (componentOnAfterRenderListeners != null)
+		{
+			componentOnAfterRenderListeners.remove(listener);
+			if (componentOnAfterRenderListeners.isEmpty())
+			{
+				componentOnAfterRenderListeners = null;
+			}
+		}
+	}
+	
+	/**
+	 * Notifies the {@link IComponentOnAfterRenderListener}s.
+	 * 
+	 * @param component
+	 */
+	final void notifyComponentOnAfterRenderListeners(Component component) 
+	{
+		if (componentOnAfterRenderListeners != null)
+		{
+			for (Iterator i = componentOnAfterRenderListeners.iterator(); i.hasNext();)
+			{
+				IComponentOnAfterRenderListener listener = (IComponentOnAfterRenderListener) i.next();
+				listener.onAfterRender(component);
+			}
 		}
 	}
 }

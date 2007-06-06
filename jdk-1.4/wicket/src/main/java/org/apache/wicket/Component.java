@@ -3048,6 +3048,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 			onBeforeRender();
+			getApplication().notifyComponentOnBeforeRenderListeners(this);
 			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(
@@ -3093,6 +3094,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			setFlag(FLAG_AFTER_RENDERING, true);
 			onAfterRender();
+			getApplication().notifyComponentOnAfterRenderListeners(this);
 			if (getFlag(FLAG_AFTER_RENDERING))
 			{
 				throw new IllegalStateException(
