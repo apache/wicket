@@ -209,12 +209,6 @@ public abstract class RequestCycle
 	private static final int RESPOND = 4;
 
 	/**
-	 * True if the request cycle should automatically clear feedback messages
-	 * after processing. True by default.
-	 */
-	private boolean automaticallyClearFeedbackMessages = true;
-
-	/**
 	 * Gets request cycle for calling thread.
 	 * 
 	 * @return Request cycle for calling thread
@@ -239,6 +233,12 @@ public abstract class RequestCycle
 		current.set(cycle);
 	}
 
+	/**
+	 * True if the request cycle should automatically clear feedback messages
+	 * after processing. True by default.
+	 */
+	private boolean automaticallyClearFeedbackMessages = true;
+
 	/** The current stage of event processing. */
 	private int currentStep = NOT_STARTED;
 
@@ -254,6 +254,9 @@ public abstract class RequestCycle
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
 
+	/** The session object. */
+	private Session session;
+
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
 
@@ -268,9 +271,6 @@ public abstract class RequestCycle
 
 	/** The current response. */
 	protected Response response;
-
-	/** The session object. */
-	private Session session;
 
 	/**
 	 * Constructor. This instance will be set as the current one for this
@@ -351,16 +351,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Gets whether the page for this request should be redirected.
-	 * 
-	 * @return whether the page for this request should be redirected
-	 */
-	public boolean isRedirect()
-	{
-		return redirect;
-	}
-
-	/**
 	 * Gets the request.
 	 * 
 	 * @return Request object
@@ -428,14 +418,6 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * @return True if a session exists for the calling thread
-	 */
-	private boolean sessionExists()
-	{
-		return Session.exists();
-	}
-
-	/**
 	 * Gets the session.
 	 * 
 	 * @return Session object
@@ -455,6 +437,16 @@ public abstract class RequestCycle
 	public final long getStartTime()
 	{
 		return startTime;
+	}
+
+	/**
+	 * Gets whether the page for this request should be redirected.
+	 * 
+	 * @return whether the page for this request should be redirected
+	 */
+	public boolean isRedirect()
+	{
+		return redirect;
 	}
 
 	/**
@@ -687,6 +679,23 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public final CharSequence urlFor(final Class pageClass, final PageParameters parameters)
+	{
+		return urlFor(null, pageClass, parameters);
+	}
+
+	/**
 	 * Returns a URL that references a given interface on a given behaviour of a
 	 * component. When the URL is requested from the server at a later time, the
 	 * interface on the behaviour will be called. A URL returned by this method
@@ -772,23 +781,6 @@ public abstract class RequestCycle
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
-	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public final CharSequence urlFor(final Class pageClass, final PageParameters parameters)
-	{
-		return urlFor(null, pageClass, parameters);
 	}
 
 	/**
@@ -1061,6 +1053,14 @@ public abstract class RequestCycle
 			throw new WicketRuntimeException("request cycle processor must be not-null");
 		}
 		return processor;
+	}
+
+	/**
+	 * @return True if a session exists for the calling thread
+	 */
+	private boolean sessionExists()
+	{
+		return Session.exists();
 	}
 
 	/**
