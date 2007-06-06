@@ -264,24 +264,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Undo change for component border property
-	 * 
-	 * @author ivaynberg
-	 */
-	private class ComponentBorderChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final IComponentBorder old = getComponentBorder();
-
-		public void undo()
-		{
-			setComponentBorder(old);
-		}
-
-	}
-
-	/**
 	 * Generic component visitor interface for component traversals.
 	 */
 	public static interface IVisitor
@@ -316,44 +298,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Change object for undoing removal of behavior
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private final class RemovedBehaviorChange extends Change
-	{
-
-		private static final long serialVersionUID = 1L;
-
-		private final IBehavior behavior;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param behavior
-		 */
-		public RemovedBehaviorChange(IBehavior behavior)
-		{
-			this.behavior = behavior;
-		}
-
-		public void undo()
-		{
-			if (behaviors == null)
-			{
-				behaviors = new ArrayList(1);
-			}
-			behaviors.add(behavior);
-		}
-
-		public String toString()
-		{
-			return "[" + getClass().getName() + " behavior=" + behavior.toString() + "]";
-		}
-
-	}
-
-	/**
 	 * Change object for undoing addition of behavior
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
@@ -375,6 +319,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 			this.behavior = behavior;
 		}
 
+		public String toString()
+		{
+			return "[" + getClass().getName() + " behavior=" + behavior.toString() + "]";
+		}
+
 		public void undo()
 		{
 			behaviors.remove(behavior);
@@ -384,9 +333,60 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 		}
 
+	}
+
+	/**
+	 * Undo change for component border property
+	 * 
+	 * @author ivaynberg
+	 */
+	private class ComponentBorderChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final IComponentBorder old = getComponentBorder();
+
+		public void undo()
+		{
+			setComponentBorder(old);
+		}
+
+	}
+
+	/**
+	 * Change object for undoing removal of behavior
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private final class RemovedBehaviorChange extends Change
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		private final IBehavior behavior;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param behavior
+		 */
+		public RemovedBehaviorChange(IBehavior behavior)
+		{
+			this.behavior = behavior;
+		}
+
 		public String toString()
 		{
 			return "[" + getClass().getName() + " behavior=" + behavior.toString() + "]";
+		}
+
+		public void undo()
+		{
+			if (behaviors == null)
+			{
+				behaviors = new ArrayList(1);
+			}
+			behaviors.add(behavior);
 		}
 
 	}
@@ -525,114 +525,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public static final Action RENDER = new Action(Action.RENDER);
 
-	/** True when a component is being auto-added */
-	private static final int FLAG_AUTO = 0x0001;
-
-	/** Flag for escaping HTML in model strings */
-	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
-
-	/** Flag for escaping HTML in model strings */
-	private static final int FLAG_INHERITABLE_MODEL = 0x0004;
-
-	/** Versioning boolean */
-	private static final int FLAG_VERSIONED = 0x0008;
-
-	/** Visibility boolean */
-	private static final int FLAG_VISIBLE = 0x0010;
-
-	/** Render tag boolean */
-	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
-
-	/** Ignore attribute modifiers */
-	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final int FLAG_ENABLED = 0x0080;
-
-	/**
-	 * Boolean whether this component was rendered at least once for tracking
-	 * changes.
-	 */
-	private static final int FLAG_HAS_BEEN_RENDERED = 0x1000;
-
-	/**
-	 * Internal indicator of whether this component may be rendered given the
-	 * current context's authorization. It overrides the visible flag in case
-	 * this is false. Authorization is done before trying to render any
-	 * component (otherwise we would end up with a half rendered page in the
-	 * buffer)
-	 */
-	private static final int FLAG_IS_RENDER_ALLOWED = 0x2000;
-
-	/**
-	 * Whether or not the component should print out its markup id into the id
-	 * attribute
-	 */
-	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
-
-	/**
-	 * Ouput a placeholder tag if the component is not visible. This is useful
-	 * in ajax mode to go to visible(false) to visible(true) without the
-	 * overhead of repaiting a visible parent container
-	 */
-
-	private static final int FLAG_PLACEHOLDER = 0x8000;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED1 = 0x0100;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED2 = 0x0200;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED3 = 0x0400;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED4 = 0x0800;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED5 = 0x10000;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED6 = 0x20000;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED7 = 0x40000;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED8 = 0x80000;
-
-	static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
-	static final int FLAG_ATTACHED = 0x20000000;
-	static final int FLAG_ATTACHING = 0x40000000;
-	private static final int FLAG_DETACHING = 0x80000000;
-
-	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
-	private static final int FLAG_RENDERING = 0x2000000;
-	private static final int FLAG_AFTER_RENDERING = 0x8000000;
-
-
 	/** meta data key for missing body tags logging. */
 	private static final MetaDataKey BORDER_KEY = new MetaDataKey(IComponentBorder.class)
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
-	/**
-	 * meta data key for line precise error logging for the moment of
-	 * construction. Made package private for access in {@link Page}
-	 */
-	static final MetaDataKey CONSTRUCTED_AT_KEY = new MetaDataKey(String.class)
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
-	/**
-	 * Meta data key for line precise error logging for the moment of addition.
-	 * Made package private for access in {@link MarkupContainer} and
-	 * {@link Page}
-	 */
-	static final MetaDataKey ADDED_AT_KEY = new MetaDataKey(String.class)
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -657,6 +551,67 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 	};
 
+	private static final int FLAG_AFTER_RENDERING = 0x8000000;
+
+	/** True when a component is being auto-added */
+	private static final int FLAG_AUTO = 0x0001;
+
+	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
+
+	private static final int FLAG_DETACHING = 0x80000000;
+
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final int FLAG_ENABLED = 0x0080;
+
+	/** Flag for escaping HTML in model strings */
+	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+
+	/**
+	 * Boolean whether this component was rendered at least once for tracking
+	 * changes.
+	 */
+	private static final int FLAG_HAS_BEEN_RENDERED = 0x1000;
+
+	/** Ignore attribute modifiers */
+	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+
+	/** Flag for escaping HTML in model strings */
+	private static final int FLAG_INHERITABLE_MODEL = 0x0004;
+
+	/**
+	 * Internal indicator of whether this component may be rendered given the
+	 * current context's authorization. It overrides the visible flag in case
+	 * this is false. Authorization is done before trying to render any
+	 * component (otherwise we would end up with a half rendered page in the
+	 * buffer)
+	 */
+	private static final int FLAG_IS_RENDER_ALLOWED = 0x2000;
+
+	/**
+	 * Whether or not the component should print out its markup id into the id
+	 * attribute
+	 */
+	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
+
+	/**
+	 * Ouput a placeholder tag if the component is not visible. This is useful
+	 * in ajax mode to go to visible(false) to visible(true) without the
+	 * overhead of repaiting a visible parent container
+	 */
+
+	private static final int FLAG_PLACEHOLDER = 0x8000;
+
+	/** Render tag boolean */
+	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
+
+	private static final int FLAG_RENDERING = 0x2000000;
+
+	/** Versioning boolean */
+	private static final int FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final int FLAG_VISIBLE = 0x0010;
+
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
 
@@ -665,7 +620,62 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	private static final String MARKUP_ID_ATTR_NAME = "id";
 
+	/**
+	 * Metadata key used to store/retrieve markup id
+	 */
+	private static MetaDataKey MARKUP_ID_KEY = new MetaDataKey(String.class)
+	{
+
+		private static final long serialVersionUID = 1L;
+
+	};
 	private static final long serialVersionUID = 1L;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED1 = 0x0100;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED2 = 0x0200;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED3 = 0x0400;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED4 = 0x0800;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED5 = 0x10000;
+
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED6 = 0x20000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED7 = 0x40000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED8 = 0x80000;
+
+	/**
+	 * Meta data key for line precise error logging for the moment of addition.
+	 * Made package private for access in {@link MarkupContainer} and
+	 * {@link Page}
+	 */
+	static final MetaDataKey ADDED_AT_KEY = new MetaDataKey(String.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/**
+	 * meta data key for line precise error logging for the moment of
+	 * construction. Made package private for access in {@link Page}
+	 */
+	static final MetaDataKey CONSTRUCTED_AT_KEY = new MetaDataKey(String.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
+
+	static final int FLAG_ATTACHED = 0x20000000;
+
+	static final int FLAG_ATTACHING = 0x40000000;
 
 	/** List of behaviors to be applied for this Component */
 	private ArrayList behaviors = null;
@@ -682,9 +692,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	private MetaDataEntry[] metaData;
 
-	/** The model for this component. */
-	IModel model;
-
 	/** Any parent container. */
 	private MarkupContainer parent;
 
@@ -694,6 +701,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * component and markup
 	 */
 	int markupIndex = -1;
+
+	/** The model for this component. */
+	IModel model;
 
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
@@ -785,38 +795,68 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Removes behavior from component
-	 * 
-	 * @param behavior
-	 *            behavior to remove
-	 * 
-	 * @return this (to allow method call chaining)
+	 * Called on very component after the page is renderd It will call
+	 * onAfterRender for it self and its childeren.
 	 */
-	public Component remove(final IBehavior behavior)
+	public final void afterRender()
 	{
-		if (behavior == null)
+		// if the component has been previously attached via attach()
+		// detach it now
+		try
 		{
-			throw new IllegalArgumentException("Argument `behavior` cannot be null");
+			setFlag(FLAG_AFTER_RENDERING, true);
+			onAfterRender();
+			getApplication().notifyComponentOnAfterRenderListeners(this);
+			if (getFlag(FLAG_AFTER_RENDERING))
+			{
+				throw new IllegalStateException(
+						Component.class.getName()
+								+ " has not been properly detached. Something in the hierarchy of "
+								+ getClass().getName()
+								+ " has not called super.onAfterRender() in the override of onAfterRender() method");
+			}
+			// always detach children because components can be attached
+			// independently of their parents
+			onAfterRenderChildren();
 		}
-		if (behaviors == null || !behaviors.contains(behavior))
+		finally
 		{
-			throw new IllegalStateException(
-					"Tried to remove a behavior that was not added to the component. Behavior: "
-							+ behavior.toString());
+			// this flag must always be set to false.
+			setFlag(FLAG_RENDERING, false);
 		}
+	}
 
-		if (!behavior.isTemporary())
-		{
-			addStateChange(new RemovedBehaviorChange(behavior));
-		}
-		behaviors.remove(behavior);
+	/**
+	 * Attaches the component. This is called when the page is starting to be
+	 * used for rendering or when a component listener call is executed on it.
+	 */
+	public final void attach()
+	{
+		internalAttach2();
+	}
 
-		if (behaviors.size() == 0)
+	/**
+	 * Called for every component when the page is getting to be rendered. it
+	 * will call onBeforeRender for this component and all the child components
+	 */
+	public final void beforeRender()
+	{
+		if (!getFlag(FLAG_RENDERING))
 		{
-			behaviors = null;
+			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
+			onBeforeRender();
+			getApplication().notifyComponentOnBeforeRenderListeners(this);
+			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
+			{
+				throw new IllegalStateException(
+						Component.class.getName()
+								+ " has not been properly rendered. Something in the hierarchy of "
+								+ getClass().getName()
+								+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
+			}
+			onBeforeRenderChildren();
+			setFlag(FLAG_RENDERING, true);
 		}
-
-		return this;
 	}
 
 	/**
@@ -840,6 +880,77 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void debug(final String message)
 	{
 		Session.get().getFeedbackMessages().debug(this, message);
+	}
+
+	/**
+	 * Detaches the component. This is called at the end of the request for all
+	 * the pages that are touched in that request.
+	 */
+	public final void detach()
+	{
+		// if the component has been previously attached via attach()
+		// detach it now
+		setFlag(FLAG_DETACHING, true);
+		onDetach();
+		if (getFlag(FLAG_DETACHING))
+		{
+			throw new IllegalStateException(Component.class.getName()
+					+ " has not been properly detached. Something in the hierarchy of "
+					+ getClass().getName()
+					+ " has not called super.onDetach() in the override of onDetach() method");
+		}
+		setFlag(FLAG_ATTACHED, false);
+
+		// always detach models because they can be attached without the
+		// component. eg component has a compoundpropertymodel and one of its
+		// children component's getmodelobject is called
+		detachModels();
+
+		// always detach children because components can be attached
+		// independently of their parents
+		detachChildren();
+
+		// reset the model to null when the current model is a IWrapModel and
+		// the model that created it/wrapped in it is a IComponentInheritedModel
+		// The model will be created next time.
+		if (getFlag(FLAG_INHERITABLE_MODEL))
+		{
+			model = null;
+			setFlag(FLAG_INHERITABLE_MODEL, false);
+		}
+	}
+
+	/**
+	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
+	 * 
+	 * Traverses all behaviors and calls detachModel() on them. This is needed
+	 * to cleanup behavior after render. This method is necessary for
+	 * {@link AjaxRequestTarget} to be able to cleanup component's behaviors
+	 * after header contribution has been done (which is separated from
+	 * component render).
+	 */
+	public final void detachBehaviors()
+	{
+		if (behaviors != null)
+		{
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			{
+				IBehavior behavior = (IBehavior)i.next();
+				if (isBehaviorAccepted(behavior))
+				{
+					/*
+					 * TODO eelco: shouldnt we detach model always, accepted or
+					 * not? what if this method returns true during render, but
+					 * false here - something can go undetached
+					 */
+					behavior.detach(this);
+				}
+				if (behavior.isTemporary())
+				{
+					i.remove();
+				}
+			}
+		}
 	}
 
 	/**
@@ -959,6 +1070,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * @return component border assigned to this component, or null if none
+	 */
+	public final IComponentBorder getComponentBorder()
+	{
+		return (IComponentBorder)getMetaData(BORDER_KEY);
+	}
+
+	/**
 	 * @return nothing, will always throw an exception. Use
 	 *         {@link #getConverter(Class)} instead.
 	 * @deprecated To be removed. Please use/ override
@@ -1008,6 +1127,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public String getId()
 	{
 		return id;
+	}
+
+	/**
+	 * @return Innermost model for this component
+	 */
+	public final IModel getInnermostModel()
+	{
+		return getInnermostModel(getModel());
 	}
 
 	/**
@@ -1083,16 +1210,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 			setMetaData(MARKUP_ID_KEY, markupId);
 		}
 		return markupId;
-	}
-
-	final boolean hasMarkupIdMetaData()
-	{
-		return getMetaData(MARKUP_ID_KEY) != null;
-	}
-
-	final void setMarkupIdMetaData(String markupId)
-	{
-		setMetaData(MARKUP_ID_KEY, markupId);
 	}
 
 	/**
@@ -1182,6 +1299,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Gets whether or not component will output id attribute into the markup.
+	 * id attribute will be set to the value returned from
+	 * {@link Component#getMarkupId()}.
+	 * 
+	 * @return whether or not component will output id attribute into the markup
+	 */
+	public final boolean getOutputMarkupId()
+	{
+		return getFlag(FLAG_OUTPUT_MARKUP_ID);
 	}
 
 	/**
@@ -1427,6 +1556,24 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * @deprecated
+	 */
+	// TODO remove after deprecation release
+	public final void internalAttach()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	// TODO remove after deprecation release
+	public final void internalDetach()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Authorizes an action for a component.
 	 * 
 	 * @param action
@@ -1492,6 +1639,33 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public boolean isEnabled()
 	{
 		return getFlag(FLAG_ENABLED);
+	}
+
+	/**
+	 * Returns if the component is stateless or not. It checks the stateless
+	 * hint if that is false it returns directly false. If that is still true it
+	 * checks all its behaviours if they can be stateless.
+	 * 
+	 * @return whether the component is stateless.
+	 */
+	public final boolean isStateless()
+	{
+		if (!getStatelessHint())
+		{
+			return false;
+		}
+
+		final Iterator behaviors = getBehaviors().iterator();
+
+		while (behaviors.hasNext())
+		{
+			IBehavior behavior = (IBehavior)behaviors.next();
+			if (!behavior.getStatelessHint(this))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -1626,6 +1800,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		getPage().getPageMap().redirectToInterceptPage(page);
 	}
 
+
 	/**
 	 * Removes this component from its parent. It's important to remember that a
 	 * component that is removed cannot be referenced from the markup still.
@@ -1639,6 +1814,42 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		parent.remove(this);
 	}
+
+	/**
+	 * Removes behavior from component
+	 * 
+	 * @param behavior
+	 *            behavior to remove
+	 * 
+	 * @return this (to allow method call chaining)
+	 */
+	public Component remove(final IBehavior behavior)
+	{
+		if (behavior == null)
+		{
+			throw new IllegalArgumentException("Argument `behavior` cannot be null");
+		}
+		if (behaviors == null || !behaviors.contains(behavior))
+		{
+			throw new IllegalStateException(
+					"Tried to remove a behavior that was not added to the component. Behavior: "
+							+ behavior.toString());
+		}
+
+		if (!behavior.isTemporary())
+		{
+			addStateChange(new RemovedBehaviorChange(behavior));
+		}
+		behaviors.remove(behavior);
+
+		if (behaviors.size() == 0)
+		{
+			behaviors = null;
+		}
+
+		return this;
+	}
+
 
 	/**
 	 * Performs a render of this component as part of a Page level render
@@ -1915,79 +2126,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * {@link IBehavior#afterRender(Component)} Notify all behaviors that are
-	 * assigned to this component that the component has rendered.
-	 */
-	private void notifyBehaviorsComponentRendered()
-	{
-		// notify the behaviors that component has been rendered
-		if (behaviors != null)
-		{
-			for (Iterator i = behaviors.iterator(); i.hasNext();)
-			{
-				IBehavior behavior = (IBehavior)i.next();
-				if (isBehaviorAccepted(behavior))
-				{
-					behavior.afterRender(this);
-				}
-			}
-		}
-	}
-
-	/**
-	 * {@link IBehavior#beforeRender(Component)} Notify all behaviors that are
-	 * assigned to this component that the component is about to be rendered.
-	 */
-	private void notifyBehaviorsComponentBeforeRender()
-	{
-		if (behaviors != null)
-		{
-			for (Iterator i = behaviors.iterator(); i.hasNext();)
-			{
-				IBehavior behavior = (IBehavior)i.next();
-				if (isBehaviorAccepted(behavior))
-				{
-					behavior.beforeRender(this);
-				}
-			}
-		}
-	}
-
-	/**
-	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
-	 * 
-	 * Traverses all behaviors and calls detachModel() on them. This is needed
-	 * to cleanup behavior after render. This method is necessary for
-	 * {@link AjaxRequestTarget} to be able to cleanup component's behaviors
-	 * after header contribution has been done (which is separated from
-	 * component render).
-	 */
-	public final void detachBehaviors()
-	{
-		if (behaviors != null)
-		{
-			for (Iterator i = behaviors.iterator(); i.hasNext();)
-			{
-				IBehavior behavior = (IBehavior)i.next();
-				if (isBehaviorAccepted(behavior))
-				{
-					/*
-					 * TODO eelco: shouldnt we detach model always, accepted or
-					 * not? what if this method returns true during render, but
-					 * false here - something can go undetached
-					 */
-					behavior.detach(this);
-				}
-				if (behavior.isTemporary())
-				{
-					i.remove();
-				}
-			}
-		}
-	}
-
-
-	/**
 	 * Print to the web response what ever the component wants to contribute to
 	 * the head section. Make sure that all attached behaviors are asked as
 	 * well.
@@ -2056,7 +2194,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		parent.replace(replacement);
 	}
 
-
 	/**
 	 * @param component
 	 *            The component to compare with
@@ -2087,6 +2224,25 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		return false;
+	}
+
+	/**
+	 * Assigns a component border to this component. If called with
+	 * <code>null</code> any previous border will be cleared.
+	 * 
+	 * @param border
+	 *            componnet border to assign, or <code>null</code> to clear
+	 *            any previous
+	 * @return component for chaining
+	 */
+	public final Component setComponentBorder(final IComponentBorder border)
+	{
+		if (!Objects.equal(getComponentBorder(), border))
+		{
+			addStateChange(new ComponentBorderChange());
+		}
+		setMetaData(BORDER_KEY, border);
+		return this;
 	}
 
 	/**
@@ -2246,15 +2402,38 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets whether or not component will output id attribute into the markup.
-	 * id attribute will be set to the value returned from
-	 * {@link Component#getMarkupId()}.
+	 * Render a placeholder tag when the component is not visible. The tag is of
+	 * form: &lt;componenttag style="display:none;" id="componentid"/&gt;. This
+	 * method will also call <code>setOutputMarkupId(true)</code>.
 	 * 
-	 * @return whether or not component will output id attribute into the markup
+	 * This is useful, for example, in ajax situations where the component
+	 * starts out invisible and then becomes visible through an ajax update.
+	 * With a placeholder tag already in the markup you do not need to repaint
+	 * this component's parent, instead you can repaint the component directly.
+	 * 
+	 * When this method is called with parameter <code>false</code> the
+	 * outputmarkupid flag is not reverted to false.
+	 * 
+	 * @param outputTag
+	 * @return this for chaining
 	 */
-	public final boolean getOutputMarkupId()
+	public final Component setOutputMarkupPlaceholderTag(final boolean outputTag)
 	{
-		return getFlag(FLAG_OUTPUT_MARKUP_ID);
+		if (outputTag != getFlag(FLAG_PLACEHOLDER))
+		{
+			if (outputTag)
+			{
+				setOutputMarkupId(true);
+				setFlag(FLAG_PLACEHOLDER, true);
+			}
+			else
+			{
+				setFlag(FLAG_PLACEHOLDER, false);
+				// I think it's better to not setOutputMarkupId to false...
+				// user can do it if we want
+			}
+		}
+		return this;
 	}
 
 	/**
@@ -2266,6 +2445,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		getRequestCycle().setRedirect(redirect);
 	}
+
 
 	/**
 	 * If false the component's tag will be printed as well as its body (which
@@ -2279,33 +2459,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final Component setRenderBodyOnly(final boolean renderTag)
 	{
 		this.setFlag(FLAG_RENDER_BODY_ONLY, renderTag);
-		return this;
-	}
-
-	/**
-	 * @return component border assigned to this component, or null if none
-	 */
-	public final IComponentBorder getComponentBorder()
-	{
-		return (IComponentBorder)getMetaData(BORDER_KEY);
-	}
-
-	/**
-	 * Assigns a component border to this component. If called with
-	 * <code>null</code> any previous border will be cleared.
-	 * 
-	 * @param border
-	 *            componnet border to assign, or <code>null</code> to clear
-	 *            any previous
-	 * @return component for chaining
-	 */
-	public final Component setComponentBorder(final IComponentBorder border)
-	{
-		if (!Objects.equal(getComponentBorder(), border))
-		{
-			addStateChange(new ComponentBorderChange());
-		}
-		setMetaData(BORDER_KEY, border);
 		return this;
 	}
 
@@ -2380,76 +2533,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return this;
 	}
 
-
-	/**
-	 * Render a placeholder tag when the component is not visible. The tag is of
-	 * form: &lt;componenttag style="display:none;" id="componentid"/&gt;. This
-	 * method will also call <code>setOutputMarkupId(true)</code>.
-	 * 
-	 * This is useful, for example, in ajax situations where the component
-	 * starts out invisible and then becomes visible through an ajax update.
-	 * With a placeholder tag already in the markup you do not need to repaint
-	 * this component's parent, instead you can repaint the component directly.
-	 * 
-	 * When this method is called with parameter <code>false</code> the
-	 * outputmarkupid flag is not reverted to false.
-	 * 
-	 * @param outputTag
-	 * @return this for chaining
-	 */
-	public final Component setOutputMarkupPlaceholderTag(final boolean outputTag)
-	{
-		if (outputTag != getFlag(FLAG_PLACEHOLDER))
-		{
-			if (outputTag)
-			{
-				setOutputMarkupId(true);
-				setFlag(FLAG_PLACEHOLDER, true);
-			}
-			else
-			{
-				setFlag(FLAG_PLACEHOLDER, false);
-				// I think it's better to not setOutputMarkupId to false...
-				// user can do it if we want
-			}
-		}
-		return this;
-	}
-
-	/**
-	 * Traverses all parent components of the given class in this container,
-	 * calling the visitor's visit method at each one.
-	 * 
-	 * @param c
-	 *            Class
-	 * @param visitor
-	 *            The visitor to call at each parent of the given type
-	 * @return First non-null value returned by visitor callback
-	 */
-	public final Object visitParents(final Class c, final IVisitor visitor)
-	{
-		// Start here
-		Component current = this;
-
-		// Walk up containment hierarchy
-		while (current != null)
-		{
-			// Is current an instance of this class?
-			if (c.isInstance(current))
-			{
-				final Object object = visitor.component(current);
-				if (object != IVisitor.CONTINUE_TRAVERSAL)
-				{
-					return object;
-				}
-			}
-
-			// Check parent
-			current = current.getParent();
-		}
-		return null;
-	}
-
 	/**
 	 * Gets the string representation of this component.
 	 * 
@@ -2511,18 +2594,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Returns a URL that references the given request target.
+	 * Gets a URL for the listener interface on a behaviour (e.g.
+	 * IBehaviorListener on AjaxPagingNavigationBehavior).
 	 * 
-	 * @see RequestCycle#urlFor(IRequestTarget)
-	 * 
-	 * @param requestTarget
-	 *            the request target to reference
-	 * 
-	 * @return a URL that references the given request target
+	 * @param behaviour
+	 *            The behaviour that the URL should point to
+	 * @param listener
+	 *            The listener interface that the URL should call
+	 * @return The URL
 	 */
-	public final CharSequence urlFor(final IRequestTarget requestTarget)
+	public final CharSequence urlFor(final IBehavior behaviour,
+			final RequestListenerInterface listener)
 	{
-		return getRequestCycle().urlFor(requestTarget);
+		return getRequestCycle().urlFor(this, behaviour, listener);
 	}
 
 	/**
@@ -2550,6 +2634,21 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Returns a URL that references the given request target.
+	 * 
+	 * @see RequestCycle#urlFor(IRequestTarget)
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * 
+	 * @return a URL that references the given request target
+	 */
+	public final CharSequence urlFor(final IRequestTarget requestTarget)
+	{
+		return getRequestCycle().urlFor(requestTarget);
+	}
+
+	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
 	 * 
 	 * @param listener
@@ -2559,22 +2658,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final CharSequence urlFor(final RequestListenerInterface listener)
 	{
 		return getRequestCycle().urlFor(this, listener);
-	}
-
-	/**
-	 * Gets a URL for the listener interface on a behaviour (e.g.
-	 * IBehaviorListener on AjaxPagingNavigationBehavior).
-	 * 
-	 * @param behaviour
-	 *            The behaviour that the URL should point to
-	 * @param listener
-	 *            The listener interface that the URL should call
-	 * @return The URL
-	 */
-	public final CharSequence urlFor(final IBehavior behaviour,
-			final RequestListenerInterface listener)
-	{
-		return getRequestCycle().urlFor(this, behaviour, listener);
 	}
 
 	/**
@@ -2593,6 +2676,40 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Traverses all parent components of the given class in this container,
+	 * calling the visitor's visit method at each one.
+	 * 
+	 * @param c
+	 *            Class
+	 * @param visitor
+	 *            The visitor to call at each parent of the given type
+	 * @return First non-null value returned by visitor callback
+	 */
+	public final Object visitParents(final Class c, final IVisitor visitor)
+	{
+		// Start here
+		Component current = this;
+
+		// Walk up containment hierarchy
+		while (current != null)
+		{
+			// Is current an instance of this class?
+			if (c.isInstance(current))
+			{
+				final Object object = visitor.component(current);
+				if (object != IVisitor.CONTINUE_TRAVERSAL)
+				{
+					return object;
+				}
+			}
+
+			// Check parent
+			current = current.getParent();
+		}
+		return null;
+	}
+
+	/**
 	 * Registers a warning feedback message for this component.
 	 * 
 	 * @param message
@@ -2601,6 +2718,45 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void warn(final String message)
 	{
 		Session.get().getFeedbackMessages().warn(this, message);
+	}
+
+	/**
+	 * {@link IBehavior#beforeRender(Component)} Notify all behaviors that are
+	 * assigned to this component that the component is about to be rendered.
+	 */
+	private void notifyBehaviorsComponentBeforeRender()
+	{
+		if (behaviors != null)
+		{
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			{
+				IBehavior behavior = (IBehavior)i.next();
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.beforeRender(this);
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@link IBehavior#afterRender(Component)} Notify all behaviors that are
+	 * assigned to this component that the component has rendered.
+	 */
+	private void notifyBehaviorsComponentRendered()
+	{
+		// notify the behaviors that component has been rendered
+		if (behaviors != null)
+		{
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			{
+				IBehavior behavior = (IBehavior)i.next();
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.afterRender(this);
+				}
+			}
+		}
 	}
 
 	/**
@@ -2664,6 +2820,30 @@ public abstract class Component implements IClusterable, IConverterLocator
 								+ "' attribute matching '" + value + "', not '" + tagAttributeValue
 								+ "'");
 			}
+		}
+	}
+
+	/**
+	 * Checks whether the hierarchy may be changed at all, and throws an
+	 * exception if this is not the case.
+	 * 
+	 * @param component
+	 *            the component which is about to be added or removed
+	 */
+	protected void checkHierarchyChange(final Component component)
+	{
+		// Throw exception if modification is attempted during rendering
+		if (!component.isAuto() && getFlag(FLAG_RENDERING))
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during render phase");
+		}
+
+		// Throw exception if modification is attempted during attach
+		if (getFlag(FLAG_ATTACHING))
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during attach phase");
 		}
 	}
 
@@ -2778,6 +2958,29 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Finds the innermost IModel object for an IModel that might contain nested
+	 * IModel(s).
+	 * 
+	 * @param model
+	 *            The model
+	 * @return The innermost (most nested) model
+	 */
+	protected final IModel getInnermostModel(final IModel model)
+	{
+		IModel nested = model;
+		while (nested != null && nested instanceof IWrapModel)
+		{
+			final IModel next = ((IWrapModel)nested).getWrappedModel();
+			if (nested == next)
+			{
+				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
+			}
+			nested = next;
+		}
+		return nested;
+	}
+
+	/**
 	 * Gets the value defaultModelComparator. Implementations of this interface
 	 * can be used in the Component.getComparator() for testing the current
 	 * value of the components model data with the new value that is given.
@@ -2787,6 +2990,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected IModelComparator getModelComparator()
 	{
 		return defaultModelComparator;
+	}
+
+	/**
+	 * Returns whether the component can be stateless. Being able to be
+	 * stateless doesn't necessary mean, that the component should be stateless.
+	 * Whether the component should be stateless depends on
+	 * 
+	 * @return whether the component can be stateless
+	 */
+	protected boolean getStatelessHint()
+	{
+		return true;
 	}
 
 	/**
@@ -2869,6 +3084,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * @return true if this component is attached
+	 */
+	protected final boolean isAttached()
+	{
+		return getFlag(FLAG_ATTACHED);
+	}
+
+	/**
 	 * Components are allowed to reject behavior modifiers.
 	 * 
 	 * @param behavior
@@ -2896,138 +3119,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
 
-	/**
-	 * Returns whether the component can be stateless. Being able to be
-	 * stateless doesn't necessary mean, that the component should be stateless.
-	 * Whether the component should be stateless depends on
-	 * 
-	 * @return whether the component can be stateless
-	 */
-	protected boolean getStatelessHint()
+	protected final boolean isRenderAllowed()
 	{
-		return true;
+		return getFlag(FLAG_IS_RENDER_ALLOWED);
 	}
 
 	/**
-	 * Returns if the component is stateless or not. It checks the stateless
-	 * hint if that is false it returns directly false. If that is still true it
-	 * checks all its behaviours if they can be stateless.
-	 * 
-	 * @return whether the component is stateless.
+	 * Called just after a component is rendered.
 	 */
-	public final boolean isStateless()
+	protected void onAfterRender()
 	{
-		if (!getStatelessHint())
-		{
-			return false;
-		}
-
-		final Iterator behaviors = getBehaviors().iterator();
-
-		while (behaviors.hasNext())
-		{
-			IBehavior behavior = (IBehavior)behaviors.next();
-			if (!behavior.getStatelessHint(this))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Attaches any child components
-	 * 
-	 * This method is here only for {@link MarkupContainer}. It is broken out
-	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the
-	 * last in onAttach() chain no matter where user places the
-	 * <code>super.onAttach()</code> call
-	 */
-	void internalAttach2()
-	{
-		if (!getFlag(FLAG_ATTACHED))
-		{
-			setFlag(FLAG_ATTACHING, true);
-			setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
-			onAttach();
-			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(
-						"Component "
-								+ this
-								+ " of type "
-								+ getClass().getName()
-								+ " has not been properly attached.  "
-								+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
-			}
-			setFlag(FLAG_ATTACHING, false);
-			setFlag(FLAG_ATTACHED, true);
-		}
-	}
-
-	/**
-	 * Attaches the component. This is called when the page is starting to be
-	 * used for rendering or when a component listener call is executed on it.
-	 */
-	public final void attach()
-	{
-		internalAttach2();
-	}
-
-	/**
-	 * @return true if this component is attached
-	 */
-	protected final boolean isAttached()
-	{
-		return getFlag(FLAG_ATTACHED);
-	}
-
-	/**
-	 * Detaches any child components
-	 * 
-	 * @see {@link #attachChildren()}
-	 */
-	void detachChildren()
-	{
-
-	}
-
-	/**
-	 * Detaches the component. This is called at the end of the request for all
-	 * the pages that are touched in that request.
-	 */
-	public final void detach()
-	{
-		// if the component has been previously attached via attach()
-		// detach it now
-		setFlag(FLAG_DETACHING, true);
-		onDetach();
-		if (getFlag(FLAG_DETACHING))
-		{
-			throw new IllegalStateException(Component.class.getName()
-					+ " has not been properly detached. Something in the hierarchy of "
-					+ getClass().getName()
-					+ " has not called super.onDetach() in the override of onDetach() method");
-		}
-		setFlag(FLAG_ATTACHED, false);
-
-		// always detach models because they can be attached without the
-		// component. eg component has a compoundpropertymodel and one of its
-		// children component's getmodelobject is called
-		detachModels();
-
-		// always detach children because components can be attached
-		// independently of their parents
-		detachChildren();
-
-		// reset the model to null when the current model is a IWrapModel and
-		// the model that created it/wrapped in it is a IComponentInheritedModel
-		// The model will be created next time.
-		if (getFlag(FLAG_INHERITABLE_MODEL))
-		{
-			model = null;
-			setFlag(FLAG_INHERITABLE_MODEL, false);
-		}
+		setFlag(FLAG_AFTER_RENDERING, false);
 	}
 
 	/**
@@ -3043,30 +3145,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Called for every component when the page is getting to be rendered. it
-	 * will call onBeforeRender for this component and all the child components
-	 */
-	public final void beforeRender()
-	{
-		if (!getFlag(FLAG_RENDERING))
-		{
-			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
-			onBeforeRender();
-			getApplication().notifyComponentOnBeforeRenderListeners(this);
-			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(
-						Component.class.getName()
-								+ " has not been properly rendered. Something in the hierarchy of "
-								+ getClass().getName()
-								+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
-			}
-			onBeforeRenderChildren();
-			setFlag(FLAG_RENDERING, true);
-		}
-	}
-
-	/**
 	 * Called just before a component is rendered. If you override this, you
 	 * *must* call super.onBeforeRender() within your implementation.
 	 */
@@ -3076,59 +3154,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * This method is here only for {@link MarkupContainer}. It is broken out
-	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the
-	 * last in onAttach() chain no matter where user places the
-	 * <code>super.onAttach()</code> call
+	 * @deprecated use onAttach() instead
 	 */
-	void onBeforeRenderChildren()
+	// TODO remove after the deprecation release
+	protected final void onBeginRequest()
 	{
-		// noop
-	}
-
-	/**
-	 * Called on very component after the page is renderd It will call
-	 * onAfterRender for it self and its childeren.
-	 */
-	public final void afterRender()
-	{
-		// if the component has been previously attached via attach()
-		// detach it now
-		try
-		{
-			setFlag(FLAG_AFTER_RENDERING, true);
-			onAfterRender();
-			getApplication().notifyComponentOnAfterRenderListeners(this);
-			if (getFlag(FLAG_AFTER_RENDERING))
-			{
-				throw new IllegalStateException(
-						Component.class.getName()
-								+ " has not been properly detached. Something in the hierarchy of "
-								+ getClass().getName()
-								+ " has not called super.onAfterRender() in the override of onAfterRender() method");
-			}
-			// always detach children because components can be attached
-			// independently of their parents
-			onAfterRenderChildren();
-		}
-		finally
-		{
-			// this flag must always be set to false.
-			setFlag(FLAG_RENDERING, false);
-		}
-	}
-
-	/**
-	 * Called just after a component is rendered.
-	 */
-	protected void onAfterRender()
-	{
-		setFlag(FLAG_AFTER_RENDERING, false);
-	}
-
-	void onAfterRenderChildren()
-	{
-		// noop
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -3173,6 +3204,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 		setFlag(FLAG_DETACHING, false);
 
+	}
+
+	/**
+	 * @deprecated use onDetach() instead
+	 */
+	// TODO remove after the deprecation release
+	protected final void onEndRequest()
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -3302,6 +3342,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * @param auto
+	 *            True to put component into auto-add mode
+	 */
+	protected final void setAuto(final boolean auto)
+	{
+		setFlag(FLAG_AUTO, auto);
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * @param flag
@@ -3363,6 +3412,32 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * @param model
+	 *            The model to wrap if need be
+	 * @return The wrapped model
+	 */
+	protected final IModel wrap(final IModel model)
+	{
+		if (model instanceof IComponentAssignedModel)
+		{
+			return ((IComponentAssignedModel)model).wrapOnAssignment(this);
+		}
+		else
+		{
+			return model;
+		}
+	}
+
+	/**
+	 * Detaches any child components
+	 * 
+	 * @see {@link #attachChildren()}
+	 */
+	void detachChildren()
+	{
+	}
+
+	/**
 	 * Gets the component at the given path.
 	 * 
 	 * @param path
@@ -3377,8 +3452,43 @@ public abstract class Component implements IClusterable, IConverterLocator
 			return this;
 		}
 		throw new IllegalArgumentException(
-				exceptionMessage("Component is not a container and so does not contain the path "
-						+ path));
+				exceptionMessage("Component is not a container and so does "
+						+ "not contain the path " + path));
+	}
+
+	final boolean hasMarkupIdMetaData()
+	{
+		return getMetaData(MARKUP_ID_KEY) != null;
+	}
+
+	/**
+	 * Attaches any child components
+	 * 
+	 * This method is here only for {@link MarkupContainer}. It is broken out
+	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the
+	 * last in onAttach() chain no matter where user places the
+	 * <code>super.onAttach()</code> call
+	 */
+	void internalAttach2()
+	{
+		if (!getFlag(FLAG_ATTACHED))
+		{
+			setFlag(FLAG_ATTACHING, true);
+			setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
+			onAttach();
+			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
+			{
+				throw new IllegalStateException(
+						"Component "
+								+ this
+								+ " of type "
+								+ getClass().getName()
+								+ " has not been properly attached.  "
+								+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
+			}
+			setFlag(FLAG_ATTACHING, false);
+			setFlag(FLAG_ATTACHED, true);
+		}
 	}
 
 	/**
@@ -3397,9 +3507,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return false;
 	}
 
-	protected final boolean isRenderAllowed()
+	void onAfterRenderChildren()
 	{
-		return getFlag(FLAG_IS_RENDER_ALLOWED);
+	}
+
+	/**
+	 * This method is here only for {@link MarkupContainer}. It is broken out
+	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the
+	 * last in onAttach() chain no matter where user places the
+	 * <code>super.onAttach()</code> call
+	 */
+	void onBeforeRenderChildren()
+	{
 	}
 
 	/**
@@ -3451,32 +3570,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * @param auto
-	 *            True to put component into auto-add mode
-	 */
-	protected final void setAuto(final boolean auto)
-	{
-		setFlag(FLAG_AUTO, auto);
-	}
-
-	/**
-	 * @param model
-	 *            The model to wrap if need be
-	 * @return The wrapped model
-	 */
-	protected final IModel wrap(final IModel model)
-	{
-		if (model instanceof IComponentAssignedModel)
-		{
-			return ((IComponentAssignedModel)model).wrapOnAssignment(this);
-		}
-		else
-		{
-			return model;
-		}
-	}
-
-	/**
 	 * Sets the id of this component. This method is private because the only
 	 * time a component's id can be set is in its constructor.
 	 * 
@@ -3492,6 +3585,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 		this.id = id;
 	}
 
+	final void setMarkupIdMetaData(String markupId)
+	{
+		setMetaData(MARKUP_ID_KEY, markupId);
+	}
+
 	/**
 	 * Sets the parent of a component.
 	 * 
@@ -3505,8 +3603,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 			log.debug("Replacing parent " + this.parent + " with " + parent);
 		}
 		this.parent = parent;
-		//		
-		// resetHeadRendered();
 	}
 
 	/**
@@ -3517,106 +3613,5 @@ public abstract class Component implements IClusterable, IConverterLocator
 	final void setRenderAllowed(boolean renderAllowed)
 	{
 		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
-	}
-
-	/**
-	 * Finds the innermost IModel object for an IModel that might contain nested
-	 * IModel(s).
-	 * 
-	 * @param model
-	 *            The model
-	 * @return The innermost (most nested) model
-	 */
-	protected final IModel getInnermostModel(final IModel model)
-	{
-		IModel nested = model;
-		while (nested != null && nested instanceof IWrapModel)
-		{
-			final IModel next = ((IWrapModel)nested).getWrappedModel();
-			if (nested == next)
-			{
-				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
-			}
-			nested = next;
-		}
-		return nested;
-	}
-
-	/**
-	 * @return Innermost model for this component
-	 */
-	public final IModel getInnermostModel()
-	{
-		return getInnermostModel(getModel());
-	}
-
-	/**
-	 * Metadata key used to store/retrieve markup id
-	 */
-	private static MetaDataKey MARKUP_ID_KEY = new MetaDataKey(String.class)
-	{
-
-		private static final long serialVersionUID = 1L;
-
-	};
-
-	/**
-	 * @deprecated
-	 */
-	// TODO remove after deprecation release
-	public final void internalAttach()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	// TODO remove after deprecation release
-	public final void internalDetach()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated use onAttach() instead
-	 */
-	// TODO remove after the deprecation release
-	protected final void onBeginRequest()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated use onDetach() instead
-	 */
-	// TODO remove after the deprecation release
-	protected final void onEndRequest()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Checks whether the hierarchy may be changed at all, and throws an
-	 * exception if this is not the case.
-	 * 
-	 * @param component
-	 *            the component which is about to be added or removed
-	 */
-	protected void checkHierarchyChange(final Component component)
-	{
-		// Throw exception if modification is attempted during rendering
-		if (!component.isAuto() && getFlag(FLAG_RENDERING))
-		{
-			throw new WicketRuntimeException(
-					"Cannot modify component hierarchy during render phase");
-		}
-
-		// Throw exception if modification is attempted during attach
-		if (getFlag(FLAG_ATTACHING))
-		{
-			throw new WicketRuntimeException(
-					"Cannot modify component hierarchy during attach phase");
-		}
 	}
 }
