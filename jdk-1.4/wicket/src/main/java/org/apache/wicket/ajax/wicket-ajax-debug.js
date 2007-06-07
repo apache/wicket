@@ -129,13 +129,22 @@ var WicketAjaxDebug = {
 		var width = parseInt(window.style.width, 10) + deltaX;
 		var height = parseInt(log.style.height, 10) + deltaY;
 		
-		if (width < 200)
+		var res = [0, 0];
+		
+		if (width < 200) {
+			res[0] = -deltaX;
 			width = 200;
-		if (height < 100)
-			height = 100;							
+		}
+		
+		if (height < 100) {
+			res[1] = -deltaY;
+			height = 100;	
+		}						
 			
 		window.style.width = width + "px";
 		log.style.height = height + "px";		
+		
+		return res;
 	},
 	
 	onDrag: function(element, deltaX, deltaY) {
@@ -143,14 +152,22 @@ var WicketAjaxDebug = {
 		
 		var x = parseInt(w.style.left, 10) + deltaX;
 		var y = parseInt(w.style.top, 10) + deltaY;
+
+		var res = [0, 0];
 		
-		if (x < 0)
+		if (x < 0) {
+			res[0] = -deltaX;
 			x = 0;
-		if (y < 0)
-			y = 0;							
+		}
+		if (y < 0) {
+			res[1] = -deltaY;
+			y = 0;	
+		}						
 			
 		w.style.left = x + "px";
 		w.style.top = y + "px";		
+		
+		return res;
 	},
 	
 	addElement : function(html) {
