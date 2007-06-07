@@ -19,15 +19,18 @@ package org.apache.wicket.application;
 import org.apache.wicket.Component;
 
 /**
- * Listener that is called right after the component's onBeforeRender method was
- * invoked.
+ * Listener that is called right after the component's
+ * {@link Component#onBeforeRender} method was invoked.
  * 
  * @author Matej Knopp
  */
 public interface IComponentOnBeforeRenderListener
 {
 	/**
+	 * Called when the component is about to be rendered
+	 * 
 	 * @param component
+	 *            the component that is about to be rendered
 	 */
 	public void onBeforeRender(Component component);
 }
