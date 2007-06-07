@@ -1433,7 +1433,7 @@ public abstract class MarkupContainer extends Component
 		super.detachChildren();
 	}
 
-	void onBeforeRenderChildren()
+	protected void onBeforeRenderChildren()
 	{
 		super.onBeforeRenderChildren();
 		try

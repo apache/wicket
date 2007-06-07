@@ -3523,12 +3523,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * This method is here only for {@link MarkupContainer}. It is broken out
+	 * This method is here primarily for {@link MarkupContainer}. It is broken out
 	 * of {@link #onBeforeRender()} so we can guarantee that it executes as the
-	 * last in onAttach() chain no matter where user places the
-	 * <code>super.onAttach()</code> call
+	 * last in onBeforeRender() chain no matter where user places the
+	 * <code>super.onBeforeRender()</code> call.
+	 * 
+	 * See WICKET-627 for why this is now protected.
 	 */
-	void onBeforeRenderChildren()
+	protected void onBeforeRenderChildren()
 	{
 	}
 
