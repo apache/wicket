@@ -1529,6 +1529,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Gets whether this component was rendered at least once.
+	 * 
+	 * @return true if the component has been rendered before, false if it is
+	 *         merely constructed
+	 */
+	public final boolean hasBeenRendered()
+	{
+		return getFlag(FLAG_HAS_BEEN_RENDERED);
+	}
+
+	/**
 	 * @return True if this component has an error message
 	 */
 	public final boolean hasErrorMessage()
