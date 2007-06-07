@@ -78,8 +78,6 @@ public final class NextButton extends WizardButton
 	protected final void onBeforeRender()
 	{
 		super.onBeforeRender();
-		// TODO after the constructor change we can do this in the constructor
-		// of either this class or the button form
 		getForm().setDefaultButton(this);
 	}
 }
