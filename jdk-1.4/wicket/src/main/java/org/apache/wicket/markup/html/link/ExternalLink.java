@@ -147,6 +147,7 @@ public class ExternalLink extends WebMarkupContainer
 	 */
 	protected void onComponentTag(ComponentTag tag)
 	{
+		super.onComponentTag(tag);
 		if (href != null)
 		{
 			Object hrefValue = href.getObject();
