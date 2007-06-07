@@ -84,10 +84,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected final CharSequence getEventHandler()
 	{
-		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
+		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
 				getCallbackUrl(false)).append(
 				"', wicketSerialize(Wicket.$('" + getComponent().getMarkupId()
-						+ "'))"), null, null);
+						+ "'))"));
 	}
 
 	/**

@@ -110,8 +110,34 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getCallbackScript(boolean onlyTargetActivePage)
 	{
-		return getCallbackScript("wicketAjaxGet('"
-				+ getCallbackUrl(onlyTargetActivePage) + "'", null, null);
+		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(onlyTargetActivePage) + "'");
+	}
+
+	/**
+	 * @return javascript that will run when the ajax call finishes
+	 *            successfully
+	 */
+	protected CharSequence getPreconditonScript()
+	{
+		return null;
+	}
+
+	/**
+	 * @return javascript that will run when the ajax call finishes with an
+	 *            error status
+	 */
+	protected CharSequence getFailureScript()
+	{
+		return null;
+	}
+
+	/**
+	 * @return an optional javacript expression that determines whether the request
+	 *            will actually execute (in form of return XXX;);
+	 */
+	protected CharSequence getSuccessScript()
+	{
+		return null;
 	}
 
 	/**
@@ -125,48 +151,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *            <code>function(params,</code> with signature
 	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>.
 	 *            Example: <code>wicketAjaxGet('callbackurl'</code>
-	 * @param onSuccessScript
-	 *            javascript that will run when the ajax call finishes
-	 *            successfully
-	 * @param onFailureScript
-	 *            javascript that will run when the ajax call finishes with an
-	 *            error status
 	 * 
 	 * @return script that peforms ajax callback to this behavior
 	 */
-	protected CharSequence getCallbackScript(final CharSequence partialCall,
-			final CharSequence onSuccessScript, final CharSequence onFailureScript)
+	protected CharSequence generateCallbackScript(final CharSequence partialCall)
 	{
-		return getCallbackScript(partialCall, onSuccessScript, onFailureScript, null);
-	}
-	
-	/**
-	 * Returns javascript that performs an ajax callback to this behavior. The
-	 * script is decorated by the ajax callback decorator from
-	 * {@link AbstractDefaultAjaxBehavior#getAjaxCallDecorator()}.
-	 * 
-	 * @param partialCall
-	 *            Javascript of a partial call to the function performing the
-	 *            actual ajax callback. Must be in format
-	 *            <code>function(params,</code> with signature
-	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>.
-	 *            Example: <code>wicketAjaxGet('callbackurl'</code>
-	 * @param onSuccessScript
-	 *            javascript that will run when the ajax call finishes
-	 *            successfully
-	 * @param onFailureScript
-	 *            javascript that will run when the ajax call finishes with an
-	 *            error status
-	 * @param precondition
-	 * 			  optional javacript expression that determines whether the request
-	 *            will actually execute (in form of return XXX;);
-	 * 
-	 * @return script that peforms ajax callback to this behavior
-	 */
-	protected CharSequence getCallbackScript(final CharSequence partialCall,
-			final CharSequence onSuccessScript, final CharSequence onFailureScript, 
-			final CharSequence precondition)
-	{
+		final CharSequence onSuccessScript = getSuccessScript();
+		final CharSequence onFailureScript = getFailureScript();
+		final CharSequence precondition = getPreconditonScript();
+
 		final IAjaxCallDecorator decorator = getAjaxCallDecorator();
 
 		String indicatorId = findIndicatorId();

@@ -125,11 +125,9 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
-	protected CharSequence getCallbackScript(CharSequence partialCall,
-			CharSequence onSuccessScript, CharSequence onFailureScript)
+	protected CharSequence generateCallbackScript(CharSequence partialCall)
 	{
-		CharSequence script = super
-				.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
+		CharSequence script = super.generateCallbackScript(partialCall);
 		final ThrottlingSettings ts = throttlingSettings;
 
 		if (ts != null)

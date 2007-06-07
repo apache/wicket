@@ -129,10 +129,10 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 */
 	protected final CharSequence getEventHandler()
 	{
-		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
+		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
 				getCallbackUrl()).append(
 				"', wicketSerializeForm(document.getElementById('" + getComponent().getMarkupId()
-						+ "',false))"), null, null);
+						+ "',false))"));
 	}
 
 	/**

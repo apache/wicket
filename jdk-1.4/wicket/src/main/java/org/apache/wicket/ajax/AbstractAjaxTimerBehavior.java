@@ -81,16 +81,22 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	protected CharSequence getCallbackScript()
 	{
+		return generateCallbackScript("wicketAjaxGet('"
+				+ getCallbackUrl(onlyTargetActivePage()) + "'");
+	}
+	
+	/**
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditonScript()
+	 */
+	protected CharSequence getPreconditonScript()
+	{
 		String precondition = null;
-		
 		if ( !(getComponent() instanceof Page) )
 		{
 			String componentId = getComponent().getMarkupId();
 			precondition = "var c = Wicket.$('" + componentId + "'); return typeof(c) != 'undefined' && c != null";
 		}
-		
-		return getCallbackScript("wicketAjaxGet('"
-				+ getCallbackUrl(onlyTargetActivePage()) + "'", null, null, precondition);
+		return precondition;
 	}
 	
 	protected boolean onlyTargetActivePage() {

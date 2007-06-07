@@ -20,9 +20,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -125,7 +123,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			call.append("null");
 		}
 
-		return getCallbackScript(call, null, null) + ";";
+		return generateCallbackScript(call) + ";";
 	}
 
 	protected void onEvent(AjaxRequestTarget target)
