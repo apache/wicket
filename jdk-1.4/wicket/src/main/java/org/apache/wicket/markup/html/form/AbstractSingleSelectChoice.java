@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -215,7 +216,11 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			final String option = getLocalizer().getString("nullValid", this, "");
+			String option = getLocalizer().getString(getId() + ".nullValid", this, "");
+			if (Strings.isEmpty(option))
+			{
+				option = getLocalizer().getString("nullValid", this, "");
+			}
 
 			// The <option> tag buffer
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(32 + option.length());
@@ -241,7 +246,11 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 					|| selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
-				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
+				String option = getLocalizer().getString(getId() + ".null", this, "");
+				if (Strings.isEmpty(option))
+				{
+					option = getLocalizer().getString("null", this, CHOOSE_ONE);
+				}
 				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">")
 						.append(option).append("</option>");
 			}
