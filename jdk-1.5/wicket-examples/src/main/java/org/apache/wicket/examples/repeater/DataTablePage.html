@@ -1,3 +1,14 @@
+<wicket:head>
+	<style type="text/css">
+		th.last-name *, td.last-name {
+			font-weight: bold;
+			color: #AA0000;
+		}
+		th.numeric, td.numeric {
+			text-align: right !important;
+		}
+	</style>
+</wicket:head>
 <wicket:extend>
 
 
@@ -8,6 +19,7 @@ This is a demo of the DataTable (DataView wrapper). Provided features:<br/>
 <li>Takes care of page navigator automatically</li>
 <li>Takes care of adding class="odd" and class="even" to table rows</li>
 <li>Adds a navigator message</li>
+<li>Different CSS class for certain columns</li>
 </ul>
 <br/>
 

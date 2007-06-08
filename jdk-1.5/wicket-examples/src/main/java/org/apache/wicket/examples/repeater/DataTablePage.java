@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
@@ -41,7 +42,7 @@ public class DataTablePage extends BasePage
 	 */
 	public DataTablePage()
 	{
-		List columns = new ArrayList();
+		List<IColumn> columns = new ArrayList<IColumn>();
 
 		columns.add(new AbstractColumn(new Model("Actions"))
 		{
@@ -51,9 +52,24 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model("ID"), "id"));
+		columns.add(new PropertyColumn(new Model("ID"), "id") {
+			@Override
+			public String getCssClass()
+			{
+				return "numeric";
+			}
+		});
+		
 		columns.add(new PropertyColumn(new Model("First Name"), "firstName", "firstName"));
-		columns.add(new PropertyColumn(new Model("Last Name"), "lastName", "lastName"));
+		
+		columns.add(new PropertyColumn(new Model("Last Name"), "lastName", "lastName") {
+			@Override
+			public String getCssClass()
+			{
+				return "last-name";
+			}
+		});
+		
 		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
 
