@@ -25,7 +25,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public abstract class AbstractColumn implements IColumn
+public abstract class AbstractColumn implements IStyledColumn
 {
 	private IModel displayModel;
 	private String sortProperty;
@@ -92,5 +92,13 @@ public abstract class AbstractColumn implements IColumn
 		{
 			displayModel.detach();
 		}
+	}
+	
+	/**
+	 * @ssee {@link IStyledColumn#getCssClass()}
+	 */
+	public String getCssClass()
+	{
+		return null;
 	}
 }

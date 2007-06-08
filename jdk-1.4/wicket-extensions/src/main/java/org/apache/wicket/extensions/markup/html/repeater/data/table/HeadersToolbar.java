@@ -34,7 +34,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 public class HeadersToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * Constructor
 	 * 
@@ -69,6 +69,20 @@ public class HeadersToolbar extends AbstractToolbar
 			{
 				header = new WebMarkupContainer("header");
 			}
+			
+			if (column instanceof IStyledColumn)
+			{
+				header.add(new DataTable.CssAttributeBehavior() 
+				{
+					private static final long serialVersionUID = 1L;
+	
+					protected String getCssClass()
+					{
+						return ((IStyledColumn)column).getCssClass();
+					}
+				});
+			}
+			
 			item.add(header);
 			item.setRenderBodyOnly(true);
 			header.add(column.getHeader("label"));

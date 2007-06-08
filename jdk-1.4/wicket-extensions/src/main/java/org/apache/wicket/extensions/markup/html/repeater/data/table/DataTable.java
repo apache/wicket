@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -26,6 +30,7 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -67,6 +72,31 @@ import org.apache.wicket.model.IModel;
  */
 public class DataTable extends Panel implements IPageable
 {
+	static abstract class CssAttributeBehavior extends AbstractBehavior
+	{
+		protected abstract String getCssClass();
+		
+		/**
+		 * @see IBehavior#onComponentTag(Component, ComponentTag)
+		 */
+		public void onComponentTag(Component component, ComponentTag tag)
+		{
+			String className = getCssClass();
+			if (!Strings.isEmpty(className)) 
+			{
+				CharSequence oldClassName = tag.getString("class");
+				if (Strings.isEmpty(oldClassName))
+				{
+					tag.put("class", className);
+				}
+				else
+				{
+					tag.put("class", oldClassName + " " + className);
+				}
+			}
+		}
+	}
+
 	/**
 	 * The component id that toolbars must be created with in order to be added
 	 * to the data table
@@ -106,7 +136,21 @@ public class DataTable extends Panel implements IPageable
 
 			protected Item newCellItem(String id, int index, IModel model)
 			{
-				return DataTable.this.newCellItem(id, index, model);
+				Item item = DataTable.this.newCellItem(id, index, model);
+				final IColumn column = DataTable.this.columns[index];
+				if (column instanceof IStyledColumn)
+				{
+					item.add(new DataTable.CssAttributeBehavior() 
+					{
+						private static final long serialVersionUID = 1L;
+		
+						protected String getCssClass()
+						{
+							return ((IStyledColumn)column).getCssClass();
+						}
+					});
+				}
+				return item;
 			}
 
 			protected Item newRowItem(String id, int index, IModel model)
@@ -286,7 +330,7 @@ public class DataTable extends Panel implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newCellItem(final String id, int index, final IModel model)
+	protected Item newCellItem(final String id, final int index, final IModel model)
 	{
 		return new Item(id, index, model);
 	}
