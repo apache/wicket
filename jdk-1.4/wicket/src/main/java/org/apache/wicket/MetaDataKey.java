@@ -33,7 +33,7 @@ import java.io.Serializable;
 public abstract class MetaDataKey implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Type of data associated with this key */
 	private Class type;
 
@@ -53,7 +53,7 @@ public abstract class MetaDataKey implements IClusterable
 	 */
 	public boolean equals(Object obj)
 	{
-		return getClass().isInstance(obj);
+		return obj != null && getClass().isInstance(obj);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public abstract class MetaDataKey implements IClusterable
 	 * @param metaData
 	 *            The array of metadata
 	 * @param object
-	 *            The object to set
+	 *            The object to set, null to remove
 	 * @return Any new metadata array (if it was reallocated)
 	 */
 	MetaDataEntry[] set(MetaDataEntry[] metaData, final Serializable object)
@@ -95,12 +95,33 @@ public abstract class MetaDataKey implements IClusterable
 				MetaDataEntry m = metaData[i];
 				if (equals(m.key))
 				{
-					m.object = object;
+					if (object != null)
+					{
+						// set new value
+						m.object = object;
+					}
+					else
+					{
+						// remove value and schrink or null array
+						if (metaData.length > 1)
+						{
+							int l = metaData.length - 1;
+							MetaDataEntry[] newMetaData = new MetaDataEntry[l];
+							System.arraycopy(metaData, 0, newMetaData, 0, i);
+							System.arraycopy(metaData, i + 1, newMetaData, i, l - i);
+							metaData = newMetaData;
+						}
+						else
+						{
+							metaData = null;
+							break;
+						}
+					}
 					set = true;
 				}
 			}
 		}
-		if (!set)
+		if (!set && object != null)
 		{
 			MetaDataEntry m = new MetaDataEntry();
 			m.key = this;
@@ -133,7 +154,7 @@ public abstract class MetaDataKey implements IClusterable
 	 */
 	void checkType(final Object object)
 	{
-		if (object != null && !type.isAssignableFrom(object.getClass()) )
+		if (object != null && !type.isAssignableFrom(object.getClass()))
 		{
 			throw new IllegalArgumentException("MetaDataKey " + getClass()
 					+ " requires argument of " + type + ", not " + object.getClass());
