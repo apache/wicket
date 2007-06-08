@@ -139,29 +139,50 @@ import org.slf4j.LoggerFactory;
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
 	/**
+	 * You can set implementation of the interface in the
+	 * {@link Page#serializer} then that implementation will handle the
+	 * serialization of this page. The serializePage method is called from the
+	 * writeObject method then the implementation override the default
+	 * serialization.
+	 * 
+	 * @author jcompagner
+	 */
+	public static interface IPageSerializer
+	{
+		/**
+		 * Called when page is being deserialized
+		 * 
+		 * @param id
+		 *            TODO
+		 * @param name
+		 *            TODO
+		 * @param page
+		 * @param stream
+		 * @return New instance to replace page instance being deserialized
+		 * @throws IOException
+		 * @throws ClassNotFoundException
+		 * 
+		 */
+		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream)
+				throws IOException, ClassNotFoundException;
+
+		/**
+		 * Called from the {@link Page#writeObject()} method.
+		 * 
+		 * @param page
+		 *            The page that must be serialized.
+		 * @param stream
+		 *            ObjectOutputStream
+		 * @throws IOException
+		 */
+		public void serializePage(Page page, ObjectOutputStream stream) throws IOException;
+	}
+
+	/**
 	 * When passed to {@link Page#getVersion(int)} the latest page version is
 	 * returned.
 	 */
 	public static final int LATEST_VERSION = -1;
-
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * {@link #isBookmarkable()} is expensive, we cache the result here
-	 */
-	private static final ConcurrentHashMap pageClassToBookmarkableCache = new ConcurrentHashMap();
-
-	/** True if a new version was created for this request. */
-	private static final short FLAG_NEW_VERSION = FLAG_RESERVED3;
-
-	/** True if component changes are being tracked. */
-	private static final short FLAG_TRACK_CHANGES = FLAG_RESERVED4;
-
-	/** True if the page should try to be stateless */
-	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
-
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(Page.class);
 
 	/**
 	 * This is a thread local that is used for serializing page references in
@@ -169,6 +190,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * outside world to do the serialization of this page.
 	 */
 	public static final ThreadLocal serializer = new ThreadLocal();
+
+	/** True if a new version was created for this request. */
+	private static final short FLAG_NEW_VERSION = FLAG_RESERVED3;
+
+	/** True if the page should try to be stateless */
+	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
+
+	/** True if component changes are being tracked. */
+	private static final short FLAG_TRACK_CHANGES = FLAG_RESERVED4;
+
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(Page.class);
+
+	/**
+	 * {@link #isBookmarkable()} is expensive, we cache the result here
+	 */
+	private static final ConcurrentHashMap pageClassToBookmarkableCache = new ConcurrentHashMap();
+
+	private static final long serialVersionUID = 1L;
 
 	/** Used to create page-unique numbers */
 	private short autoIndex;
@@ -181,6 +221,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/** Name of PageMap that this page is stored in */
 	private String pageMapName;
+
+	// temporary variable to pass page instance from readObject to readResolve
+	private transient Page pageToResolve = null;
 
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
@@ -263,58 +306,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		super(null);
 	}
 
-	// temporary variable to pass page instance from readObject to readResolve
-	private transient Page pageToResolve = null;
-
-	// called after readObject
-	private Object readResolve() throws ObjectStreamException
-	{
-		if (pageToResolve == null)
-		{
-			return this;
-		}
-		else
-		{
-			Page page = pageToResolve;
-			pageToResolve = null;
-			return page;
-		}
-	}
-
-	private void writeObject(java.io.ObjectOutputStream s) throws IOException
-	{
-		s.writeShort(numericId);
-		s.writeObject(pageMapName);
-
-
-		IPageSerializer ps = (IPageSerializer)serializer.get();
-
-		if (ps != null)
-		{
-			ps.serializePage(this, s);
-		}
-		else
-		{
-			s.defaultWriteObject();
-		}
-	}
-
-	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
-	{
-		int id = s.readShort();
-		String name = (String)s.readObject();
-
-		IPageSerializer ps = (IPageSerializer)serializer.get();
-		if (ps != null)
-		{
-			pageToResolve = ps.deserializePage(id, name, this, s);
-		}
-		else
-		{
-			s.defaultReadObject();
-		}
-	}
-
 	/**
 	 * Called right after a component's listener method (the provided method
 	 * argument) was called. This method may be used to clean up dependencies,
@@ -357,7 +348,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			final RequestListenerInterface listener)
 	{
 	}
-
 
 	/**
 	 * Adds a component to the set of rendered components.
@@ -414,6 +404,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		super.detachModels();
 	}
+
 
 	/**
 	 * Mark this page as dirty in the session
@@ -525,14 +516,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return
-	 */
-	public final String getPageMapName()
-	{
-		return pageMapName;
-	}
-
-	/**
 	 * @return Get a page map entry for this page. By default, this is the page
 	 *         itself. But if you know of some way to compress the state for the
 	 *         page, you can return a custom implementation that produces the
@@ -541,6 +524,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	public IPageMapEntry getPageMapEntry()
 	{
 		return this;
+	}
+
+	/**
+	 * @return
+	 */
+	public final String getPageMapName()
+	{
+		return pageMapName;
 	}
 
 	/**
@@ -892,16 +883,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		try
 		{
 			beforeRender();
-		} 
-		catch(RuntimeException e)
+		}
+		catch (RuntimeException e)
 		{
 			// if an exception is thrown then we have to call after render
 			// else the components could be in a wrong state (rendering)
 			try
 			{
 				afterRender();
-			} 
-			catch(RuntimeException e2) 
+			}
+			catch (RuntimeException e2)
 			{
 				// ignore this one could be a result off.
 			}
@@ -1244,6 +1235,55 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
+	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	{
+		int id = s.readShort();
+		String name = (String)s.readObject();
+
+		IPageSerializer ps = (IPageSerializer)serializer.get();
+		if (ps != null)
+		{
+			pageToResolve = ps.deserializePage(id, name, this, s);
+		}
+		else
+		{
+			s.defaultReadObject();
+		}
+	}
+
+	// called after readObject
+	private Object readResolve() throws ObjectStreamException
+	{
+		if (pageToResolve == null)
+		{
+			return this;
+		}
+		else
+		{
+			Page page = pageToResolve;
+			pageToResolve = null;
+			return page;
+		}
+	}
+
+	private void writeObject(java.io.ObjectOutputStream s) throws IOException
+	{
+		s.writeShort(numericId);
+		s.writeObject(pageMapName);
+
+
+		IPageSerializer ps = (IPageSerializer)serializer.get();
+
+		if (ps != null)
+		{
+			ps.serializePage(this, s);
+		}
+		else
+		{
+			s.defaultWriteObject();
+		}
+	}
+
 	/**
 	 * Set-up response with appropriate content type, locale and encoding. The
 	 * locale is set equal to the session's locale. The content type header
@@ -1349,6 +1389,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		super.onDetach();
 	}
 
+
 	/**
 	 * Renders this container to the given response object.
 	 * 
@@ -1366,7 +1407,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Render markup
 		renderAll(associatedMarkupStream);
 	}
-
 
 	/**
 	 * A component was added.
@@ -1462,45 +1502,5 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	void setPageStateless(Boolean stateless)
 	{
 		this.stateless = stateless;
-	}
-
-	/**
-	 * You can set implementation of the interface in the
-	 * {@link Page#serializer} then that implementation will handle the
-	 * serialization of this page. The serializePage method is called from the
-	 * writeObject method then the implementation override the default
-	 * serialization.
-	 * 
-	 * @author jcompagner
-	 */
-	public static interface IPageSerializer
-	{
-		/**
-		 * Called from the {@link Page#writeObject()} method.
-		 * 
-		 * @param page
-		 *            The page that must be serialized.
-		 * @param stream
-		 *            ObjectOutputStream
-		 * @throws IOException
-		 */
-		public void serializePage(Page page, ObjectOutputStream stream) throws IOException;
-
-		/**
-		 * Called when page is being deserialized
-		 * 
-		 * @param id
-		 *            TODO
-		 * @param name
-		 *            TODO
-		 * @param page
-		 * @param stream
-		 * @return New instance to replace page instance being deserialized
-		 * @throws IOException
-		 * @throws ClassNotFoundException
-		 * 
-		 */
-		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream)
-				throws IOException, ClassNotFoundException;
 	}
 }
