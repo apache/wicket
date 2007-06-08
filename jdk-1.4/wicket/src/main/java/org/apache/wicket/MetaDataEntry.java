@@ -23,10 +23,33 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-class MetaDataEntry implements IClusterable
+final class MetaDataEntry implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	MetaDataKey key;
+	final MetaDataKey key;
+
 	Serializable object;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param key
+	 *            meta data key
+	 * @param object
+	 */
+	public MetaDataEntry(MetaDataKey key, Serializable object)
+	{
+		this.key = key;
+		this.object = object;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return key + "=" + object.getClass().getName() + "@"
+				+ Integer.toHexString(object.hashCode());
+	}
 }

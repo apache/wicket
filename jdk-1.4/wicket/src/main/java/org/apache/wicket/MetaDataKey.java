@@ -123,9 +123,7 @@ public abstract class MetaDataKey implements IClusterable
 		}
 		if (!set && object != null)
 		{
-			MetaDataEntry m = new MetaDataEntry();
-			m.key = this;
-			m.object = object;
+			MetaDataEntry m = new MetaDataEntry(this, object);
 			if (metaData == null)
 			{
 				metaData = new MetaDataEntry[1];
@@ -159,5 +157,13 @@ public abstract class MetaDataKey implements IClusterable
 			throw new IllegalArgumentException("MetaDataKey " + getClass()
 					+ " requires argument of " + type + ", not " + object.getClass());
 		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return getClass() + "[type=" + type + "]";
 	}
 }
