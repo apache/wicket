@@ -173,9 +173,13 @@ public class WicketFilter implements Filter
 		}
 
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+		final ClassLoader newClassLoader = getClassLoader();
 		try
 		{
-			Thread.currentThread().setContextClassLoader(getClassLoader());
+			if (previousClassLoader != newClassLoader)
+			{
+				Thread.currentThread().setContextClassLoader(newClassLoader);
+			}
 
 			// If the request does not provide information about the encoding of
 			// its body (which includes POST parameters), than assume the
@@ -269,7 +273,10 @@ public class WicketFilter implements Filter
 		}
 		finally
 		{
-			Thread.currentThread().setContextClassLoader(previousClassLoader);
+			if (newClassLoader != previousClassLoader)
+			{
+				Thread.currentThread().setContextClassLoader(previousClassLoader);
+			}
 		}
 	}
 
