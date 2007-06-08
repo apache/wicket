@@ -934,6 +934,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Check rendering if it happened fully
 		checkRendering(this);
 
+		// clean up debug meta data if component check is on
+		if (Application.get().getDebugSettings().getComponentUseCheck())
+		{
+			visitChildren(new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					component.setMetaData(Component.CONSTRUCTED_AT_KEY, null);
+					component.setMetaData(Component.ADDED_AT_KEY, null);
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+		}
+
 		if (!isPageStateless())
 		{
 			// trigger creation of the actual session in case it was deferred
