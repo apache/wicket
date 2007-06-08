@@ -496,6 +496,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					+ " = " + interfaceParameter);
 		}
 
+		// Extract version
+		String versionNumberString = null;
+		try
+		{
+			versionNumberString = pathComponents[pathComponents.length - 4];
+			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
+					.parseInt(versionNumberString);
+			parameters.setVersionNumber(versionNumber);
+		}
+		catch (NumberFormatException e)
+		{
+			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME
+					+ " = " + interfaceParameter
+					+ "; wrong format for page version argument. Expected a number but was '"
+					+ versionNumberString + "'", e);
+		}
+
 		// Set pagemap name
 		final String pageMapName = pathComponents[0];
 		parameters.setPageMapName(pageMapName.length() == 0 ? PageMap.DEFAULT_NAME : pageMapName);
@@ -515,12 +532,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		parameters.setInterfaceName(interfaceName.length() != 0
 				? interfaceName
 				: IRedirectListener.INTERFACE.getName());
-
-		// Extract version
-		final String versionNumberString = pathComponents[pathComponents.length - 4];
-		final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
-				.parseInt(versionNumberString);
-		parameters.setVersionNumber(versionNumber);
 
 		// Component path is everything after pageMapName and before version
 		final int start = pageMapName.length() + 1;
@@ -1034,6 +1045,5 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				}
 			}
 		};
-
 	}
 }
