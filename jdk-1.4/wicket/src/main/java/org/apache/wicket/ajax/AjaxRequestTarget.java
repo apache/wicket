@@ -754,9 +754,11 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		page.startComponentRender(component);
 
+		component.beforeRender();
+		
 		// render any associated headers of the component
 		respondHeaderContribution(response, component);
-
+		
 		component.renderComponent();
 
 		page.endComponentRender(component);
