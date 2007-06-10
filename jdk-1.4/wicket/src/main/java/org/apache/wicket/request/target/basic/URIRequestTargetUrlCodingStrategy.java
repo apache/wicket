@@ -18,12 +18,20 @@ package org.apache.wicket.request.target.basic;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.protocol.http.UnitTestSettings;
+import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
+import org.apache.wicket.request.target.coding.WebRequestEncoder;
+import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
+import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -76,17 +84,39 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	}
 
 	/**
-	 * Does nothing
+	 * Copied from
+	 * {@link BookmarkablePageRequestTargetUrlCodingStrategy#encode(IRequestTarget)}
+	 * without pageMapName field
 	 * 
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
 	public CharSequence encode(IRequestTarget requestTarget)
 	{
-		return null;
+		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
+		{
+			throw new IllegalArgumentException("This encoder can only be used with "
+					+ "instances of " + IBookmarkablePageRequestTarget.class.getName());
+		}
+		final AppendingStringBuffer url = new AppendingStringBuffer(40);
+		url.append(getMountPath());
+		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
+
+		PageParameters pageParameters = target.getPageParameters();
+		String pagemap = target.getPageMapName();
+		if (pagemap != null)
+		{
+			if (pageParameters == null)
+			{
+				pageParameters = new PageParameters();
+			}
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
+		}
+		appendParameters(url, pageParameters);
+		return url;
 	}
 
 	/**
-	 * Does nothing
+	 * Always returns false
 	 * 
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(wicket.IRequestTarget)
 	 */
@@ -96,10 +126,9 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	}
 
 	/**
-	 * Gets the encoded URL for the request target. Typically, the result will
-	 * be prepended with a protocol specific prefix. In a servlet environment,
-	 * the prefix concatenates the context path and the servlet path, for
-	 * example "mywebapp/myservlet".
+	 * Gets the encoded URL for the request target. The "uri" parameter is
+	 * appended first with a slash, then the remaining parameters are handled
+	 * like in {@link QueryStringUrlCodingStrategy#appendParameters()}
 	 * 
 	 * @param url
 	 *            the relative reference URL
@@ -109,47 +138,36 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 
+		if (parameters.get(URI) != null)
+		{
+			url.append("/").append(parameters.get(URI));
+		}
+
+		// Copied from QueryStringUrlCodingStrategy
 		if (parameters != null && parameters.size() > 0)
 		{
-			boolean firstParam = true;
-			Iterator entries = parameters.entrySet().iterator();
-
+			final Iterator entries;
+			if (UnitTestSettings.getSortUrlParameters())
+			{
+				entries = new TreeMap(parameters).entrySet().iterator();
+			}
+			else
+			{
+				entries = parameters.entrySet().iterator();
+			}
+			WebRequestEncoder encoder = new WebRequestEncoder(url);
 			while (entries.hasNext())
 			{
 				Map.Entry entry = (Entry)entries.next();
 
+				if (entry.getKey().equals(URI))
+				{
+					// Ignore "uri" parameter already handled
+					continue;
+				}
 				if (entry.getValue() != null)
 				{
-					String escapedValue = urlEncode(entry.getValue().toString());
-
-					if (!Strings.isEmpty(escapedValue))
-					{
-						if (entry.getKey().equals(URI))
-						{
-							url.append("/").append(escapedValue);
-						}
-						else
-						{
-							if (firstParam)
-							{
-								url.append("?"); /* Begin query string. */
-								firstParam = false;
-							}
-							else
-							{
-								/*
-								 * Separate new key=value(s) pair from previous
-								 * pair with an ampersand.
-								 */
-								url.append("&");
-							}
-
-							/* Append key=value(s) pair. */
-							url.append(entry.getKey());
-							url.append("=");
-							url.append(escapedValue);
-						}
-					}
+					encoder.addValue(entry.getKey().toString(), entry.getValue());
 				}
 			}
 		}
@@ -188,8 +206,9 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 
 		return parameters;
 	}
-	
-	protected String getURI(RequestParameters requestParameters) {
+
+	protected String getURI(RequestParameters requestParameters)
+	{
 		return decodeParameters(requestParameters).getString(URI);
 	}
 }
