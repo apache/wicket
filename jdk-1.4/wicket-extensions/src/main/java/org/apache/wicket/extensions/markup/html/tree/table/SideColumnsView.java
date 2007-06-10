@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree.table;
+package org.apache.wicket.extensions.markup.html.tree.table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,10 @@ import javax.swing.tree.TreeNode;
 import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
+import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
+import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.tree.table.ColumnLocation.Alignment;
-import org.apache.wicket.markup.html.tree.table.ColumnLocation.Unit;
 
 
 /**

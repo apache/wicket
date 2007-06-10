@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.tree.table;
+package org.apache.wicket.extensions.markup.html.tree.table;
 
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
@@ -24,13 +24,13 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree;
+import org.apache.wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.tree.AbstractTree;
-import org.apache.wicket.markup.html.tree.DefaultAbstractTree;
-import org.apache.wicket.markup.html.tree.table.ColumnLocation.Alignment;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
