@@ -187,6 +187,6 @@ public class ModelBean implements Serializable
 	@Override
 	public String toString()
 	{
-		return getProperty1();
+		return getProperty1() + ", " + getProperty2() + ", " + getProperty3();
 	}
 }

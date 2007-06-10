@@ -236,7 +236,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		
 		protected void onBeforeRender()
 		{
-			AbstractTree.this.attach();
+			AbstractTree.this.onBeforeRender();
 			super.onBeforeRender();
 		}
 	}
@@ -573,7 +573,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		if (isNodeVisible(node))
 		{
-			invalidateNode(node, true);
+			invalidateNode(node, isForceRebuildOnSelectionChange());
 		}
 	}
 
@@ -584,8 +584,18 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		if (isNodeVisible(node))
 		{
-			invalidateNode(node, true);
+			invalidateNode(node, isForceRebuildOnSelectionChange());
 		}
+	}
+	
+	/**
+	 * Determines whether the TreeNode needs to be rebuilt if it is selected
+	 * or deselected
+	 * @return true if the node should be rebuilt after (de)selection, false otherwise
+	 */
+	protected boolean isForceRebuildOnSelectionChange() 
+	{
+		return true;
 	}
 
 	/**
@@ -1053,7 +1063,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	//
-	// State and Model's callbacks
+	// State and Model callbacks
 	//
 
 	/**

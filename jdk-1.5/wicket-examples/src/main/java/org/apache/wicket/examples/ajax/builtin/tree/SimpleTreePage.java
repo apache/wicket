@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.examples.ajax.builtin.tree;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
-
-import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.apache.wicket.markup.html.tree.AbstractTree;
+import org.apache.wicket.markup.html.tree.BaseTree;
+import org.apache.wicket.markup.html.tree.LinkTree;
 
 
 /**
@@ -31,7 +29,7 @@ import org.apache.wicket.markup.html.tree.AbstractTree;
  */
 public class SimpleTreePage extends BaseTreePage
 {
-	private Tree tree;
+	private BaseTree tree;
 
 	protected AbstractTree getTree()
 	{
@@ -44,14 +42,7 @@ public class SimpleTreePage extends BaseTreePage
 	 */
 	public SimpleTreePage()
 	{
-		tree = new Tree("tree", createTreeModel())
-		{
-			protected String renderNode(TreeNode node)
-			{
-				ModelBean bean = (ModelBean)((DefaultMutableTreeNode)node).getUserObject();
-				return bean.getProperty1();
-			}
-		};
+		tree = new LinkTree("tree", createTreeModel());
 		add(tree);
 		tree.getTreeState().collapseAll();
 	}
