@@ -106,10 +106,12 @@
 				<include>org.apache.wicket:wicket-objectsizeof-agent</include>
 				<include>org.apache.wicket:wicket-spring</include>
 				<include>org.apache.wicket:wicket-spring-annot</include>
+				<include>org.apache.wicket:wicket-velocity</include>
 			</includes>
 			<binaries>
 				<outputDirectory>lib</outputDirectory>
 				<unpack>false</unpack>
+				<includeDependencies>false</includeDependencies>
 			</binaries>
 		</moduleSet>
 	</moduleSets>
