@@ -180,4 +180,13 @@ public class ModelBean implements Serializable
 	{
 		this.property6 = property6;
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return getProperty1();
+	}
 }
