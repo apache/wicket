@@ -40,7 +40,7 @@ public class BookmarkablePageLink extends Link
 	private String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
-	private final PageParameters parameters;
+	protected final PageParameters parameters;
 
 	/**
 	 * Constructor.
