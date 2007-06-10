@@ -25,6 +25,7 @@ import java.util.Locale;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -112,5 +113,29 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#length()
+	 */
+	public long length()
+	{
+		return -1;
+	}
+
+	/**
+	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
+	 */
+	public String getContentType()
+	{
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
+	 */
+	public Time lastModifiedTime()
+	{
+		return null;
 	}
 }
