@@ -19,8 +19,8 @@ package org.apache.wicket.examples.ajax.builtin.tree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
+import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.apache.wicket.markup.html.tree.AbstractTree;
-import org.apache.wicket.markup.html.tree.Tree;
 
 
 /**
