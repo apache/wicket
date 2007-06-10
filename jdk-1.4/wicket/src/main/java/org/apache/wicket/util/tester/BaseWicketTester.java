@@ -46,6 +46,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.IPageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -630,9 +631,9 @@ public class BaseWicketTester extends MockWebApplication
 			requestCycle.getRequestTarget().respond(requestCycle);
 		}
 		// if the link is a normal link (or ResourceLink)
-		else if (linkComponent instanceof Link)
+		else if (linkComponent instanceof AbstractLink)
 		{
-			Link link = (Link)linkComponent;
+			AbstractLink link = (AbstractLink)linkComponent;
 
 			/*
 			 * If the link is a bookmarkable link, then we need to transfer the
