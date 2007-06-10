@@ -214,6 +214,7 @@ public class AjaxEditableLabel extends Panel
 	public final Component setModel(IModel model)
 	{
 		super.setModel(model);
+		getLabel().setModel(model);
 		getEditor().setModel(model);
 		return this;
 	}
