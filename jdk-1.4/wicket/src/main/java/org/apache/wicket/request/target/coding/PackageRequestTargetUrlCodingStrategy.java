@@ -89,8 +89,17 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		}
 
 		final String bookmarkablePageClassName = packageName + "." + remainder.substring(0, ix);
-		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
-				bookmarkablePageClassName);
+		Class bookmarkablePageClass;
+		try
+		{
+			bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
+					bookmarkablePageClassName);
+		}
+		catch (Exception e)
+		{
+			log.debug(e.getMessage());
+			return null;
+		}		
 		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
 

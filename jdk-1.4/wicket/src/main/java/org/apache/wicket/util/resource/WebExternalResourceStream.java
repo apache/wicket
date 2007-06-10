@@ -96,7 +96,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 		in = context.getResourceAsStream(url);
 		if (in == null)
 		{
-			throw new WicketRuntimeException("The requested resource was not found: " + url);
+			throw new ResourceStreamNotFoundException("The requested resource was not found: " + url);
 		}
 		return in;
 	}

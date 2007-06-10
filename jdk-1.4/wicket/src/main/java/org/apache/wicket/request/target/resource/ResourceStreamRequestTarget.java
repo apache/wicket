@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.request.target.resource;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.slf4j.Logger;
@@ -126,7 +128,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			throw new WicketRuntimeException(e);
+			requestCycle.setRequestTarget(new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND));
 		}
 	}
 
