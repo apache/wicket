@@ -370,23 +370,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			return null;
 		}
-		try
-		{
-			return encoder.decode(requestParameters);
-		}
-		catch (WicketRuntimeException ex)
-		{
-			if (log.isDebugEnabled())
-			{
-				log.debug(ex.toString());
-
-				return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-						"Unable to load Page: " + ex.toString());
-			}
-
-			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
-					"Unable to load Page");
-		}
+		return encoder.decode(requestParameters);
 	}
 
 	/**
