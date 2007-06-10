@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
@@ -30,43 +31,74 @@ public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	private FormComponent fc;
+	private Component component;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
 	 *            component id
-	 * @param formcomponent
-	 *            form component that this label represents
+	 * @param check
+	 *            Check component that this label represents
 	 */
-	public FormComponentLabel(String id, FormComponent formcomponent)
+	public FormComponentLabel(String id, Check check)
+	{
+		this(id, (Component)check);
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            component id
+	 * @param radio
+	 *            Radio component that this label represents
+	 */
+	public FormComponentLabel(String id, Radio radio)
+	{
+		this(id, (Component)radio);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 *            component id
+	 * @param formComponent
+	 *            FormComponent that this label represents
+	 */
+	public FormComponentLabel(String id, FormComponent formComponent)
+	{
+		this(id, (Component)formComponent);
+	}
+	
+	private FormComponentLabel(String id, Component component)
 	{
 		super(id);
-		if (formcomponent == null)
+		if (component == null)
 		{
-			throw new IllegalArgumentException("Argument `formcomponent` cannot be null");
+			throw new IllegalArgumentException("Component argument cannot be null");
 		}
-		this.fc = formcomponent;
-		formcomponent.setOutputMarkupId(true);
+		this.component = component;
+		component.setOutputMarkupId(true);
 	}
 
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-
 		checkComponentTag(tag, "label");
-		tag.put("for", fc.getMarkupId());
+		tag.put("for", component.getMarkupId());
 	}
 
 
 	/**
-	 * Returns form component bound to this label
+	 * Returns form component bound to this label.
+	 * This will be a FormComponent, a Radio or a Check.
 	 * 
 	 * @return form component
 	 */
-	public FormComponent getFormComponent()
+	public Component getFormComponent()
 	{
-		return fc;
+		return component;
 	}
 }
