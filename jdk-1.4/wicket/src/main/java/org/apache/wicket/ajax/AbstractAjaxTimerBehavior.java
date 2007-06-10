@@ -86,9 +86,9 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 	
 	/**
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditonScript()
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getPreconditionScript()
 	 */
-	protected CharSequence getPreconditonScript()
+	protected CharSequence getPreconditionScript()
 	{
 		String precondition = null;
 		if ( !(getComponent() instanceof Page) )

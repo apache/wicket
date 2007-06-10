@@ -117,7 +117,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @return javascript that will run when the ajax call finishes
 	 *            successfully
 	 */
-	protected CharSequence getPreconditonScript()
+	protected CharSequence getPreconditionScript()
 	{
 		return null;
 	}
@@ -158,7 +158,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		final CharSequence onSuccessScript = getSuccessScript();
 		final CharSequence onFailureScript = getFailureScript();
-		final CharSequence precondition = getPreconditonScript();
+		final CharSequence precondition = getPreconditionScript();
 
 		final IAjaxCallDecorator decorator = getAjaxCallDecorator();
 
