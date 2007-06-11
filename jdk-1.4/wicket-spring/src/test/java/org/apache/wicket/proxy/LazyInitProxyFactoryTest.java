@@ -59,6 +59,14 @@ public class LazyInitProxyFactoryTest extends TestCase
 		}
 	};
 
+	private static IProxyTargetLocator stringObjectLocator = new IProxyTargetLocator()
+	{
+		public Object locateProxyTarget()
+		{
+			return "StringLiteral";
+		}
+	};
+
 	/**
 	 * Tests lazy init proxy to represent interfaces
 	 */
@@ -158,4 +166,14 @@ public class LazyInitProxyFactoryTest extends TestCase
 		assertEquals(proxy2.getMessage(), "concrete");
 	}
 
+	/**
+	 * Tests String beans.
+	 */
+	public void testStringProxy()
+	{
+		// We special-case String objects to avoid proxying them, as they're final.
+		// See WICKET-603.
+		String proxy = (String)LazyInitProxyFactory.createProxy(String.class, stringObjectLocator);
+		assertEquals("StringLiteral", proxy);
+	}
 }
