@@ -346,9 +346,13 @@ public class WicketFilter implements Filter
 		}
 
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+		final ClassLoader newClassLoader = getClassLoader();
 		try
 		{
-			Thread.currentThread().setContextClassLoader(getClassLoader());
+			if (previousClassLoader != newClassLoader)
+			{
+				Thread.currentThread().setContextClassLoader(newClassLoader);
+			}
 
 			// Try to configure filterPath from web.xml if it's not specified as
 			// an init-param.
@@ -411,7 +415,10 @@ public class WicketFilter implements Filter
 		finally
 		{
 			Application.unset();
-			Thread.currentThread().setContextClassLoader(previousClassLoader);
+			if (newClassLoader != previousClassLoader)
+			{
+				Thread.currentThread().setContextClassLoader(previousClassLoader);
+			}
 		}
 	}
 
