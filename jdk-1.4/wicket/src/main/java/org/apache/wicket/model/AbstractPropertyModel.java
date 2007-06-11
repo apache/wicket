@@ -207,12 +207,18 @@ public abstract class AbstractPropertyModel
 	public Field getPropertyField()
 	{
 		String expression = propertyExpression();
-		if (Strings.isEmpty(expression) == false) 
+		if (Strings.isEmpty(expression) == false)
 		{
 			Object target = getTarget();
-			if (target != null) 
+			if (target != null)
 			{
-				return PropertyResolver.getPropertyField(expression, target);
+				try
+				{
+					return PropertyResolver.getPropertyField(expression, target);
+				}
+				catch (Exception ignore)
+				{
+				}
 			}
 		}
 		return null;
@@ -224,34 +230,46 @@ public abstract class AbstractPropertyModel
 	public Method getPropertyGetter()
 	{
 		String expression = propertyExpression();
-		if (Strings.isEmpty(expression) == false) 
+		if (Strings.isEmpty(expression) == false)
 		{
 			Object target = getTarget();
-			if (target != null) 
+			if (target != null)
 			{
-				return PropertyResolver.getPropertyGetter(expression, target);
+				try
+				{
+					return PropertyResolver.getPropertyGetter(expression, target);
+				}
+				catch (Exception ignore)
+				{
+				}
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertySetter()
 	 */
 	public Method getPropertySetter()
 	{
 		String expression = propertyExpression();
-		if (Strings.isEmpty(expression) == false) 
+		if (Strings.isEmpty(expression) == false)
 		{
 			Object target = getTarget();
-			if (target != null) 
+			if (target != null)
 			{
-				return PropertyResolver.getPropertySetter(expression, target);
+				try
+				{
+					return PropertyResolver.getPropertySetter(expression, target);
+				}
+				catch (Exception ignore)
+				{
+				}
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @return The property expression for the component
 	 */
