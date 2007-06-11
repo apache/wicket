@@ -24,6 +24,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.JavascriptUtils;
 import org.apache.wicket.util.value.IValueMap;
 
 
@@ -74,6 +75,12 @@ public abstract class AbstractOptions extends FormComponent
 			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
 			value = getLocalizer().getString(id + "." + value, this, value);
 
+			// a peace of javascript to avoid to serialize this during ajax serialization
+			buffer.append(JavascriptUtils.SCRIPT_OPEN_TAG  +
+						  "if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
+			  			  "    Wicket.Form.excludeFromAjaxSerialization." + this.getMarkupId() + "='true';" +
+						  JavascriptUtils.SCRIPT_CLOSE_TAG);
+			
 			buffer.append("\n<option value=\"").append(id).append("\">").append(value).append(
 					"</option>");
 

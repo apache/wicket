@@ -305,8 +305,16 @@ Wicket.Form.serializeInput = function(input) {
     }
 }
 
+//list of item to exclude from serialization
+Wicket.Form.excludeFromAjaxSerialization = {};
+
 // Returns url/post-body fragment representing element (e) 
 Wicket.Form.serializeElement = function(e) {
+
+	if (Wicket.Form.excludeFromAjaxSerialization && e.id && Wicket.Form.excludeFromAjaxSerialization[e.id] == "true") {
+		return "";
+	}
+
     var tag = e.tagName.toLowerCase();
     if (tag == "select") {
         return Wicket.Form.serializeSelect(e);
