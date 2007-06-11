@@ -207,6 +207,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					{
 						public void visitItem(TreeItem item)
 						{
+							item.beforeRender();
 							// rewind markupStream
 							markupStream.setCurrentIndex(index);
 							// render child
