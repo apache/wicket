@@ -212,13 +212,14 @@ public class DefaultTreeState implements ITreeState, Serializable
 	 */
 	public void selectNode(TreeNode node, boolean selected)
 	{
-		if (selected == true && selectedNodes.contains(node) == false)
+		
+		if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
 		{
-			if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
+			for (Iterator i = selectedNodes.iterator(); i.hasNext();)
 			{
-				for (Iterator i = selectedNodes.iterator(); i.hasNext();)
+				TreeNode current = (TreeNode)i.next();
+				if (current.equals(node) == false) 
 				{
-					TreeNode current = (TreeNode)i.next();
 					i.remove();
 					Object[] listenersCopy = listeners.toArray();
 					for(int j = 0; j < listenersCopy.length; j++) 
@@ -228,6 +229,11 @@ public class DefaultTreeState implements ITreeState, Serializable
 					}
 				}
 			}
+		}
+		
+		if (selected == true && selectedNodes.contains(node) == false)
+		{
+			
 			selectedNodes.add(node);
 			Object[] listenersCopy = listeners.toArray();
 			for(int i = 0; i < listenersCopy.length; i++) 
