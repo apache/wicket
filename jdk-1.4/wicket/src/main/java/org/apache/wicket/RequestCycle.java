@@ -44,23 +44,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * THIS CLASS IS DELIBERATELY NOT INSTANTIABLE BY FRAMEWORK CLIENTS AND IS NOT
- * INTENDED TO BE SUBCLASSED BY FRAMEWORK CLIENTS.
- * <p>
- * Represents the request cycle, including the applicable application, page,
- * request, response and session.
- * <p>
- * Convenient container for an application, session, request and response object
- * for a page request cycle. Each of these properties can be retrieved with the
- * corresponding getter method. In addition, getPage and setPage can be used to
- * access the page property of the RequestCycle, which determines what page is
- * rendered back to the requester. The setRedirect() method determines if the
- * page should be rendered directly back to the browser or if the browser should
- * instead be redirected to the page (which then renders itself). The actual
- * rendering of the cycle's page is an implementation detail and occurs when the
- * render() method of RequestCycle is called by the framework. The render()
- * method is only public to allow invocation from implementation packages and
- * should never be called directly by clients of the framework.
+ * Represents the processing of a request. It is responsible for instructing the
+ * {@link IRequestCycleProcessor request cycle processor} to execute the various
+ * steps there are in the handling of a request (resolving the kind of work that
+ * needs to be done, handling of events and generating a response), and it holds
+ * the intended {@link IRequestTarget request target}, which is an abstraction
+ * for e.g. the processing of a bookmarkable page.
  * <p>
  * The abstract urlFor() methods are implemented by subclasses of RequestCycle
  * and return encoded page URLs. The URL returned depends on the kind of page
