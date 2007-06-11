@@ -116,7 +116,12 @@ public class LazyInitProxyFactory
 	 */
 	public static Object createProxy(Class type, IProxyTargetLocator locator)
 	{
-		if (type.isInterface())
+		if (type == String.class)
+		{
+			// We special-case Strings as sometimes people use these as SpringBeans (WICKET-603).
+			return locator.locateProxyTarget(); 
+		}
+		else if (type.isInterface())
 		{
 			JdkHandler handler = new JdkHandler(type, locator);
 
