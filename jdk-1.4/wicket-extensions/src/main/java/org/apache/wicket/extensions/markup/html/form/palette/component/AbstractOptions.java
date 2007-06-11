@@ -75,7 +75,7 @@ public abstract class AbstractOptions extends FormComponent
 			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
 			value = getLocalizer().getString(id + "." + value, this, value);
 
-			// a peace of javascript to avoid to serialize this during ajax serialization
+			// A piece of javascript to avoid serializing this during AJAX serialization.
 			buffer.append(JavascriptUtils.SCRIPT_OPEN_TAG  +
 						  "if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
 			  			  "    Wicket.Form.excludeFromAjaxSerialization." + this.getMarkupId() + "='true';" +
