@@ -425,19 +425,18 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @return
+	 * @return nada
 	 * @deprecated Replaced by {@link #getRequestCycleFactory()}
 	 */
+	// TODO remove after compatibility release.
 	protected final IRequestCycleFactory getDefaultRequestCycleFactory()
 	{
 		throw new UnsupportedOperationException("obsolete method. see getRequestCycleFactory");
 	}
 
 	/**
-	 * Create a request cycle factory which is used by default by WebSession.
-	 * You may provide your own default factory by subclassing WebApplication
-	 * and overriding this method or your may subclass WebSession to create a
-	 * session specific request cycle factory.
+	 * Create a request cycle factory that will be used for creating request
+	 * cycle objects.
 	 * 
 	 * @see WebSession#getRequestCycleFactory()
 	 * @see IRequestCycleFactory
@@ -533,11 +532,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			getResourceSettings().addResourceFolder(resourceFolder);
 		}
-		
+
 		// Configure the app.
 		configure();
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Application#getConfigurationType()
 	 */
@@ -580,7 +579,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		return new WebApplicationPath(getServletContext());
 	}
-	
+
 	/**
 	 * Gets a new request cycle processor for web requests. May be replaced by
 	 * subclasses which whishes to uses there own implementation of
@@ -680,7 +679,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 			outputDevelopmentModeWarning();
 		}
 	}
-	
+
 	/**
 	 * This method prints a warning to stderr that we are starting in
 	 * development mode.
