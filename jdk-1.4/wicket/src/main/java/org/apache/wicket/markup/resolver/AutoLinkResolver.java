@@ -812,7 +812,10 @@ public final class AutoLinkResolver implements IComponentResolver
 
 		// By setting the component name, the tag becomes a Wicket component
 		// tag, which must have a associated Component.
-		tag.setId(autoId);
+		if (tag.getId() == null)
+		{
+			tag.setId(autoId);
+		}
 
 		// get the reference resolver
 		ITagReferenceResolver referenceResolver = (ITagReferenceResolver)tagNameToTagReferenceResolvers
