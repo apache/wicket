@@ -194,7 +194,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return The wizard form
 	 */
-	public final Form getForm()
+	public Form getForm()
 	{
 		return form;
 	}
@@ -263,7 +263,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		this.wizardModel = wizardModel;
 
-		form = new Form("form");
+		form = newForm("form");
 		add(form);
 		// dummy view to be replaced
 		form.add(new WebMarkupContainer(HEADER_ID));
@@ -310,6 +310,19 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	protected FeedbackPanel newFeedbackPanel(String id)
 	{
 		return new FeedbackPanel(id, new ContainerFeedbackMessageFilter(this));
+	}
+
+	/**
+	 * Create a new form. Clients can override this method to provide a custom
+	 * {@link Form}.
+	 * 
+	 * @param id
+	 *            The id to be used to construct the component
+	 * @return a new form
+	 */
+	protected Form newForm(String id)
+	{
+		return new Form(id);
 	}
 
 	/**
