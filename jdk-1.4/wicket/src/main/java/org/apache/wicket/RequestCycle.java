@@ -243,6 +243,12 @@ public abstract class RequestCycle
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
 	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
 
+	/**
+	 * Any page parameters. Only set when the request is resolving and the
+	 * parameters are passed into a page.
+	 */
+	private PageParameters pageParameters;
+
 	/** The session object. */
 	private Session session;
 
@@ -319,6 +325,18 @@ public abstract class RequestCycle
 	public final Response getOriginalResponse()
 	{
 		return this.originalResponse;
+	}
+
+	/**
+	 * Any set page parameters. Typically only available when a request to a
+	 * bookmarkable page with a {@link Page#Page(PageParameters)} constructor
+	 * was made.
+	 * 
+	 * @return the page parameters or null
+	 */
+	public final PageParameters getPageParameters()
+	{
+		return this.pageParameters;
 	}
 
 	/**
@@ -1204,6 +1222,21 @@ public abstract class RequestCycle
 		// Clear ThreadLocal reference; makes sense as this object should not be
 		// reused
 		current.set(null);
+	}
+
+	/**
+	 * Possibly set the page parameters. Only set when the request is resolving
+	 * and the parameters are passed into a page.
+	 * 
+	 * @param parameters
+	 *            the parameters to set
+	 */
+	final void setPageParameters(PageParameters parameters)
+	{
+		if (currentStep == RESOLVE_TARGET)
+		{
+			this.pageParameters = parameters;
+		}
 	}
 
 	/**

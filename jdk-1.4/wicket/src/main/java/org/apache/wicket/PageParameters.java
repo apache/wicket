@@ -38,18 +38,21 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public final class PageParameters extends ValueMap
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Null value for page parameters
 	 */
 	public static final PageParameters NULL = new PageParameters();
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor
 	 */
 	public PageParameters()
 	{
+		super();
+
+		setOnRequestCycle();
 	}
 
 	/**
@@ -62,6 +65,8 @@ public final class PageParameters extends ValueMap
 	public PageParameters(final Map parameterMap)
 	{
 		super(parameterMap);
+
+		setOnRequestCycle();
 	}
 
 	/**
@@ -95,6 +100,8 @@ public final class PageParameters extends ValueMap
 	public PageParameters(final String keyValuePairs, final String delimiter)
 	{
 		super();
+
+		setOnRequestCycle();
 
 		// We can not use ValueMaps constructor as it uses
 		// VariableAssignmentParser which is more suitable for markup
@@ -130,6 +137,19 @@ public final class PageParameters extends ValueMap
 
 				put(key, value);
 			}
+		}
+	}
+
+	/**
+	 * Set this on request cycle. Request will decide whether to keep it as a
+	 * reference or not.
+	 */
+	private void setOnRequestCycle()
+	{
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			cycle.setPageParameters(this);
 		}
 	}
 }
