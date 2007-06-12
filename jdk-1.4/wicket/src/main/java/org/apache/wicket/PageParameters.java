@@ -50,13 +50,6 @@ public final class PageParameters extends ValueMap
 	 */
 	public PageParameters()
 	{
-		super();
-		
-		RequestCycle cycle = RequestCycle.get();
-		if (cycle != null)
-		{
-			cycle.setPageParameters(this);
-		}
 	}
 
 	/**
@@ -69,12 +62,6 @@ public final class PageParameters extends ValueMap
 	public PageParameters(final Map parameterMap)
 	{
 		super(parameterMap);
-		
-		RequestCycle cycle = RequestCycle.get();
-		if (cycle != null)
-		{
-			cycle.setPageParameters(this);
-		}
 	}
 
 	/**
@@ -108,12 +95,6 @@ public final class PageParameters extends ValueMap
 	public PageParameters(final String keyValuePairs, final String delimiter)
 	{
 		super();
-
-		RequestCycle cycle = RequestCycle.get();
-		if (cycle != null)
-		{
-			cycle.setPageParameters(this);
-		}
 
 		// We can not use ValueMaps constructor as it uses
 		// VariableAssignmentParser which is more suitable for markup
