@@ -36,6 +36,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.IDetachable;
@@ -176,7 +177,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		{
 			return getFlag(FLAG_RENDER_CHILDREN);
 		}
-
+		
 		/**
 		 * @see org.apache.wicket.MarkupContainer#onRender(org.apache.wicket.markup.MarkupStream)
 		 */
@@ -207,29 +208,69 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					{
 						public void visitItem(TreeItem item)
 						{
-							try 
-							{
-								item.beforeRender();
-								// rewind markupStream
-								markupStream.setCurrentIndex(index);
-								// render child
-								item.onRender(markupStream);
-							} 
-							finally 
-							{
-								item.afterRender();
-							}
-						}
+							// rewind markupStream
+							markupStream.setCurrentIndex(index);
+							// render child
+							item.onRender(markupStream);
+						} 							
 					});
-					// children are rendered, clear the flag
-					setRenderChildren(false);
+					// 
 				}
+			}
+		}
+		
+		public void renderHead(final HtmlHeaderContainer container)
+		{
+			super.renderHead(container);
+			
+			if (isRenderChildren())
+			{
+				// visit every child
+				visitItemChildren(this, new IItemCallback()
+				{
+					public void visitItem(TreeItem item)
+					{
+						// write header contributions from the children of item
+						item.visitChildren(new Component.IVisitor()
+						{
+							public Object component(Component component)
+							{
+								if (component.isVisible())
+								{
+									component.renderHead(container);
+									return CONTINUE_TRAVERSAL;
+								}
+								else
+								{
+									return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+								}
+							}
+						});
+					}
+				});
 			}
 		}
 
 		protected final void setRenderChildren(boolean value)
 		{
 			setFlag(FLAG_RENDER_CHILDREN, value);
+		}
+		
+		protected void onAttach()
+		{
+			super.onAttach();
+			
+			if (isRenderChildren())
+			{
+				// visit every child
+				visitItemChildren(this, new IItemCallback()
+				{
+					public void visitItem(TreeItem item)
+					{
+						item.attach();
+					}
+				});
+			}
 		}
 
 		protected void onDetach()
@@ -240,12 +281,55 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			{
 				((IDetachable)object).detach();
 			}
+			
+			if (isRenderChildren())
+			{
+				// visit every child
+				visitItemChildren(this, new IItemCallback()
+				{
+					public void visitItem(TreeItem item)
+					{
+						item.detach();
+					}
+				});
+			}
+			
+			//children are rendered, clear the flag
+			setRenderChildren(false);
 		}
 		
 		protected void onBeforeRender()
 		{
 			AbstractTree.this.onBeforeRender();
 			super.onBeforeRender();
+			
+			if (isRenderChildren())
+			{
+				// visit every child
+				visitItemChildren(this, new IItemCallback()
+				{
+					public void visitItem(TreeItem item)
+					{
+						item.beforeRender();
+					}
+				});
+			}
+		}
+		
+		protected void onAfterRender()
+		{
+			super.onAfterRender();
+			if (isRenderChildren())
+			{
+				// visit every child
+				visitItemChildren(this, new IItemCallback()
+				{
+					public void visitItem(TreeItem item)
+					{
+						item.afterRender();
+					}
+				});
+			}
 		}
 	}
 
