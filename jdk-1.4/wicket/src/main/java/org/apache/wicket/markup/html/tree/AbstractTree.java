@@ -207,11 +207,18 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					{
 						public void visitItem(TreeItem item)
 						{
-							item.beforeRender();
-							// rewind markupStream
-							markupStream.setCurrentIndex(index);
-							// render child
-							item.onRender(markupStream);
+							try 
+							{
+								item.beforeRender();
+								// rewind markupStream
+								markupStream.setCurrentIndex(index);
+								// render child
+								item.onRender(markupStream);
+							} 
+							finally 
+							{
+								item.afterRender();
+							}
 						}
 					});
 					// children are rendered, clear the flag
@@ -524,6 +531,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	public void onDetach()
 	{
 		attached = false;
+		updateTreeCalled = false;
 		super.onDetach();
 	}
 
@@ -767,11 +775,15 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		}
 	}
 
+	private transient boolean updateTreeCalled = false;
+	
 	/**
 	 * Updates the changed portions of the tree using given AjaxRequestTarget.
 	 * Call this method if you modified the tree model during an ajax request
 	 * target and you want to partially update the component on page. Make sure
 	 * that the tree model has fired the proper listener functions.
+	 * <p>
+	 * <b>You can only call this method once in a request.</b>
 	 * 
 	 * @param target
 	 *            Ajax request target used to send the update to the page
@@ -783,6 +795,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			return;
 		}
 
+		updateTreeCalled = true;
+		
 		// check whether the model hasn't changed
 		checkModel();
 
