@@ -21,7 +21,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 
 /**
- * Resource served from files relative to the context root.
+ * Resource served from a file relative to the context root.
  * 
  * @author almaw
  */
