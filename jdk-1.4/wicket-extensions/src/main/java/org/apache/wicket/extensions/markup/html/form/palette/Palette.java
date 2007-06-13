@@ -266,7 +266,7 @@ public class Palette extends Panel
 	 */
 	protected Component newAvailableHeader(String componentId)
 	{
-		return new Label(componentId, "Available");
+		return new Label(componentId, getString("palette.available", null, "Available"));
 	}
 
 	/**
@@ -279,7 +279,7 @@ public class Palette extends Panel
 	 */
 	protected Component newSelectedHeader(String componentId)
 	{
-		return new Label(componentId, "Selected");
+		return new Label(componentId, getString("palette.selected", null, "Selected"));
 	}
 
 
