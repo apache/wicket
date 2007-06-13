@@ -127,7 +127,7 @@ public class NavigatorLabel extends Label
 	private NavigatorLabel(final String id, final PageableComponent table)
 	{
 		super(id);
-		setModel(new StringResourceModel("NavigatorLabel", this, new Model(new LabelModelObject(table))));
+		setModel(new StringResourceModel("NavigatorLabel", this, new Model(new LabelModelObject(table)), "Showing ${from} to ${to} of ${of}"));
 	}
 
 	private class LabelModelObject implements Serializable
