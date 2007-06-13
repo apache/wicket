@@ -141,8 +141,10 @@ public final class PageParameters extends ValueMap
 	}
 
 	/**
-	 * Set this on request cycle. Request will decide whether to keep it as a
-	 * reference or not.
+	 * Set this on request cycle. The RequestCycle will decide whether to keep
+	 * it as a reference or not.
+	 * 
+	 * @see RequestCycle#setPageParameters(PageParameters)
 	 */
 	private void setOnRequestCycle()
 	{
