@@ -22,12 +22,11 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.IResponseFilter;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.JavascriptUtils;
+import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * This is a filter that injects javascript code to the top head portion and
@@ -98,15 +97,11 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 	 */
 	private String getStatusString(long timeTaken, String resourceKey)
 	{
-		Map map = new HashMap(4);
+		final String txt = Application.get().getResourceSettings().getLocalizer().getString(resourceKey, null,
+		"Server parsetime: ${servertime}, Client parsetime: ${clienttime}");
+		final Map map = new HashMap(4);
 		map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 		map.put("servertime", ((double)timeTaken) / 1000 + "s");
-		AppendingStringBuffer defaultValue = new AppendingStringBuffer(128);
-		defaultValue.append("Server parsetime: ");
-		defaultValue.append(((double)timeTaken) / 1000);
-		defaultValue.append("s, Client parsetime: ' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
-		String txt = Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-				null, Model.valueOf(map), defaultValue.toString());
-		return txt;
+		return MapVariableInterpolator.interpolate(txt, map);
 	}
 }
