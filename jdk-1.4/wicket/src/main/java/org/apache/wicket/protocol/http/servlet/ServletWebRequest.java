@@ -256,7 +256,12 @@ public class ServletWebRequest extends WebRequest
 		// stuff, with a leading slash.
 		String forwardUrl = (String)httpRequest.getAttribute("javax.servlet.forward.servlet_path");
 
-		if (errorUrl != null)
+		if (forwardUrl != null)
+		{
+			// If this is an error page, this will be /mount or /?wicket:foo
+			relativeUrl = forwardUrl.substring(1);
+		}
+		else if (errorUrl != null)
 		{
 			// Strip off context path from front of URI.
 			errorUrl = errorUrl.substring(httpRequest.getContextPath().length());
@@ -278,12 +283,6 @@ public class ServletWebRequest extends WebRequest
 				}
 			}
 			return relativePathPrefixToWicketHandler = prepender.toString();
-		}
-
-		if (forwardUrl != null)
-		{
-			// Strip off leading slash, if forwardUrl has any length.
-			relativeUrl = forwardUrl.substring(relativeUrl.length() > 0 ? 1 : 0);
 		}
 		else if (wicketRedirectUrl != null)
 		{
