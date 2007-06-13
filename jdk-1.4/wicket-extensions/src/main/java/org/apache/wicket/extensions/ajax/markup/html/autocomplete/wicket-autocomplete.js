@@ -22,6 +22,10 @@
 
 if (typeof(Wicket) == "undefined")
 	Wicket = { };
+	
+Wicket.AutoCompleteSettings =  {
+	enterHidesWithNoSelection : false
+};
 
 Wicket.AutoComplete=function(elementId,callbackUrl){
     var KEY_TAB=9;
@@ -94,13 +98,16 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
     	                obj.value=getSelectedValue();
  			            hideAutoComplete();
           		        hidingAutocomplete=1;
+					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection == true) {
+ 			            hideAutoComplete();
+          		        hidingAutocomplete=1;						
 					}
 
 		            if(typeof objonkeydown == "function")objonkeydown();
     				if(typeof objonchange == "function")objonchange();
 
 	                if(selected>-1){
-	                	return killEvent(event);
+	                	//return killEvent(event);
             	    }
             	    return true;
                 break;
