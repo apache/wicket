@@ -140,7 +140,7 @@ public interface IWizardModel extends IClusterable
 	void lastStep();
 
 	/**
-	 * Increments the model the the next step. This method must only be called
+	 * Increments the model to the next step. This method must only be called
 	 * if {@link #isNextAvailable} returns <tt>true</tt>.
 	 */
 	void next();
