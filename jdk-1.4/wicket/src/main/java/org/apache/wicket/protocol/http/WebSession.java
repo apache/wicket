@@ -17,9 +17,11 @@
 package org.apache.wicket.protocol.http;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A session subclass for the HTTP protocol.
@@ -56,5 +58,42 @@ public class WebSession extends Session
 	public WebSession(final WebApplication application, Request request)
 	{
 		super(application, request);
+	}
+	
+	/**
+	 * @see org.apache.wicket.Session#isCurrentRequestValid(org.apache.wicket.RequestCycle)
+	 */
+	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
+	{
+		WebRequest lockedRequest = (WebRequest) lockedRequestCycle.getRequest();
+		
+		// if the request that's holding the lock is ajax, we allow this request
+		if (lockedRequest.isAjax() == true)
+		{
+			return true;
+		}
+		
+		RequestCycle currentRequestCycle = RequestCycle.get();
+		WebRequest currentRequest = (WebRequest) currentRequestCycle.getRequest();
+		
+		if (currentRequest.isAjax() == false)
+		{
+			// if this request is not ajax, we allow it
+			return true;
+		}
+		
+		String lockedPageId = Strings.firstPathComponent(lockedRequest.getRequestParameters().getComponentPath(), Component.PATH_SEPARATOR);
+		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest().getRequestParameters().getComponentPath(), Component.PATH_SEPARATOR); 
+		
+		int lockedVersion = lockedRequest.getRequestParameters().getVersionNumber();
+		int currentVersion = currentRequest.getRequestParameters().getVersionNumber();
+		
+		if (currentPageId.equals(lockedPageId) && currentVersion == lockedVersion) 
+		{
+			// we don't allow tis request
+			return false;
+		}
+		
+		return true;
 	}
 }

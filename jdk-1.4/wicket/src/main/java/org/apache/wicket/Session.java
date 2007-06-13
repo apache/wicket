@@ -34,6 +34,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.protocol.http.IgnoreAjaxRequestException;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
@@ -338,6 +339,15 @@ public abstract class Session implements IClusterable
 	/** Application level meta data. */
 	private MetaDataEntry[] metaData;
 
+	/**
+	 * We need to know both thread that keeps the pagemap lock and the RequestCycle
+	 */
+	private static class PageMapsUsedInRequestEntry
+	{
+		Thread thread;
+		RequestCycle requestCycle;
+	};
+
 	private transient Map pageMapsUsedInRequest;
 
 	/** True, if session has been invalidated */
@@ -618,6 +628,18 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
+	 * When a regular request on certain page with certain version is being
+	 * processed, we don't allow ajax requests to same page and version.
+	 * 
+	 * @param lockedRequestCycle
+	 * @return whether current request is valid or sould be discarded
+	 */
+	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
+	{
+		return true;
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Get the page for the given path.
@@ -659,10 +681,20 @@ public abstract class Session implements IClusterable
 				// later
 				Duration timeout = Application.get().getRequestCycleSettings().getTimeout();
 
+				PageMapsUsedInRequestEntry entry = (PageMapsUsedInRequestEntry)pageMapsUsedInRequest
+						.get(pageMap);
+
 				// Get page entry for id and version
-				Thread t = (Thread)pageMapsUsedInRequest.get(pageMap);
+				Thread t = entry != null ? entry.thread : null;
 				while (t != null && t != Thread.currentThread())
 				{
+					if (isCurrentRequestValid(entry.requestCycle) == false)
+					{
+						// we need to ignore this request. That's because it is an ajax request
+						// while regular page request is being processed
+						throw new IgnoreAjaxRequestException();
+					}
+
 					try
 					{
 						pageMapsUsedInRequest.wait(timeout.getMilliseconds());
@@ -671,7 +703,10 @@ public abstract class Session implements IClusterable
 					{
 						throw new WicketRuntimeException(ex);
 					}
-					t = (Thread)pageMapsUsedInRequest.get(pageMap);
+
+					entry = (PageMapsUsedInRequestEntry)pageMapsUsedInRequest.get(pageMap);
+					t = entry != null ? entry.thread : null;
+
 					if (t != null && t != Thread.currentThread()
 							&& (startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
 					{
@@ -683,7 +718,11 @@ public abstract class Session implements IClusterable
 								+ ", giving up trying to get the page for path: " + path);
 					}
 				}
-				pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
+
+				PageMapsUsedInRequestEntry newEntry = new PageMapsUsedInRequestEntry();
+				newEntry.thread = Thread.currentThread();
+				newEntry.requestCycle = RequestCycle.get();
+				pageMapsUsedInRequest.put(pageMap, newEntry);
 				final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 				Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 				if (page == null)
@@ -1366,7 +1405,7 @@ public abstract class Session implements IClusterable
 				while (it.hasNext())
 				{
 					Entry entry = (Entry)it.next();
-					if (entry.getValue() == t)
+					if (((PageMapsUsedInRequestEntry)entry.getValue()).thread == t)
 					{
 						it.remove();
 					}

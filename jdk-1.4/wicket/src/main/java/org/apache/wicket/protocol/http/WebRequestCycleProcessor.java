@@ -32,6 +32,7 @@ import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
+import org.apache.wicket.request.target.basic.EmptyAjaxRequestTarget;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,7 +134,11 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			}
 			if (processRequest)
 			{
-				target = resolveRenderedPage(requestCycle, requestParameters);
+				try {
+					target = resolveRenderedPage(requestCycle, requestParameters);
+				} catch (IgnoreAjaxRequestException e) {
+					target = EmptyAjaxRequestTarget.getInstance();
+				}
 			}
 			else
 			{
