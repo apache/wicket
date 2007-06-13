@@ -60,7 +60,7 @@ public class Clock extends Label
 		 */
 		public ClockModel(TimeZone tz)
 		{
-			df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
+			df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.LONG);
 			df.setTimeZone(tz);
 		}
 
