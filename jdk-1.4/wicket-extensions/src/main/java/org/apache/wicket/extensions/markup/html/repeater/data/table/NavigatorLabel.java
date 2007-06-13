@@ -21,7 +21,8 @@ import java.io.Serializable;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 
 /**
@@ -125,27 +126,55 @@ public class NavigatorLabel extends Label
 
 	private NavigatorLabel(final String id, final PageableComponent table)
 	{
-		super(id, new AbstractReadOnlyModel()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public Object getObject()
-			{
-				int of = table.getRowCount();
-				int from = table.getCurrentPage() * table.getRowsPerPage();
-				int to = Math.min(of, from + table.getRowsPerPage());
-
-				from++;
-
-				if (of == 0)
-				{
-					from = 0;
-					to = 0;
-				}
-
-				return new String("Showing " + from + " to " + to + " of " + of);
-			}
-		});
+		super(id);
+		setModel(new StringResourceModel("NavigatorLabel", this, new Model(new LabelModelObject(table))));
 	}
 
+	private class LabelModelObject implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+		private PageableComponent table;
+		
+		/**
+		 * Construct.
+		 * @param table
+		 */
+		public LabelModelObject(PageableComponent table)
+		{
+			this.table = table;
+		}
+		
+		/**
+		 * @return "z" in "Showing x to y of z"
+		 */
+		public int getOf()
+		{
+			return table.getRowCount();
+		}
+		
+		/**
+		 * @return "x" in "Showing x to y of z"
+		 */
+		public int getFrom()
+		{
+			if (getOf() == 0)
+			{
+				return 0;
+			}
+			return (table.getCurrentPage() * table.getRowsPerPage()) + 1;
+		}
+		
+		/**
+		 * @return "y" in "Showing x to y of z"
+		 */
+		public int getTo()
+		{
+			if (getOf() == 0)
+			{
+				return 0;
+			}
+			return Math.min(getOf(), getFrom() + table.getRowsPerPage());
+		}
+		
+	}
 }
