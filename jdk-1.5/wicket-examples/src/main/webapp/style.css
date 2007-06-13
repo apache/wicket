@@ -20,8 +20,8 @@ body {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: 96% 96%;
-	color: #6F6F6F;
-	font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';
+	color: black;
+	font-family: 'Tahoma', 'Lucida Sans', 'Arial', 'Helvetica', 'Sans-serif', 'sans';
 	font-size: 9pt;
 	line-height: 1.8em;
 	padding: 10px 10px 10px 10px;
@@ -30,6 +30,12 @@ body {
 
 h1,h2,h3,h4,h5,h6,h7,h8 {
 	color: #E9601A;
+	font-weight: normal;
+}
+
+h1,h2 {
+	letter-spacing: -1px;
+	font-family: 'Trebuchet MS';
 }
 
 #extitle {
@@ -79,6 +85,10 @@ h1,h2,h3,h4,h5,h6,h7,h8 {
 	padding: 2px 2px 2px 6px;
 }
 
+#titleblock a {
+	color: #000;
+}
+
 h2 {
 	font-size: 1.25em;
 }
@@ -88,7 +98,12 @@ h3 {
 }
 
 a {
-	color: #6F6F6F;
+	color: #E9601A;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
 	text-decoration: underline;
 }
 
