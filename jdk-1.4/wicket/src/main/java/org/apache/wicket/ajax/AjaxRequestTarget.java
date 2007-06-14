@@ -882,7 +882,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			}
 		}
 
-		public Response getResponse()
+		protected Response getRealResponse()
 		{
 			return RequestCycle.get().getResponse();
 		}
