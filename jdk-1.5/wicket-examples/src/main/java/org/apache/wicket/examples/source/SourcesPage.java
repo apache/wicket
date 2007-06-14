@@ -52,6 +52,9 @@ import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 
+import com.uwyn.jhighlight.renderer.Renderer;
+import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
+
 
 /**
  * Displays the resources in a packages directory in a browsable format.
@@ -104,7 +107,17 @@ public class SourcesPage extends WebPage
 					sb.append(br.readLine());
 					sb.append("\n");
 				}
-				return sb.toString();
+				int lastDot = name.lastIndexOf('.');
+				if (lastDot != -1)
+				{
+					String type = name.substring(lastDot + 1);
+					Renderer renderer = XhtmlRendererFactory.getRenderer(type);
+					if (renderer != null)
+					{
+						return renderer.highlight(name, sb.toString(), "UTF-8", true);
+					}
+				}
+				return Strings.escapeMarkup(sb.toString(), false, true).toString().replaceAll("\n", "<br />");
 			}
 			catch (IOException e)
 			{
@@ -381,7 +394,7 @@ public class SourcesPage extends WebPage
 		{
 			super(id);
 			Label code = new Label("code", new SourceModel());
-			code.setEscapeModelStrings(true);
+			code.setEscapeModelStrings(false);
 			code.setOutputMarkupId(true);
 			add(code);
 		}

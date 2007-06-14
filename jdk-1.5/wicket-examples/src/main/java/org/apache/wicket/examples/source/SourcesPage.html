@@ -7,41 +7,34 @@
 	<script language="JavaScript" type="text/javascript" src="scriptaculous.js"></script>
 	<script language="JavaScript" type="text/javascript" src="effects.js"></script>
 	<style type="text/css">
-		#content {
-		    width : 800px;
-			height : 600px;
-		}
-		#header {
-		}
-		.header {
-			height : 20px;
-			background-color : #888;
-			color : #fff;
-			position : absolute;
-			top : 0px;
-			text-align : center;
-		}
-		.body {
-			position : absolute;
-			top : 20px;
-			height : 490px;
-			overflow : scroll;
-			border-bottom : 1px solid #aaa;
+		body {
+			padding: 0;
+			margin: 0;
 		}
 		.left {
 			width : 220px;
-			left : 0px;
 		}
-		.left{
-			border-right : 1px solid #aaa;
+		#header {
+			height: 20px;
+			background-color : #888;
+			color : #fff;
 		}
-		.right {
-			width : 579px;
-			left : 221px;
+		#body .left,
+		#body .right {
+			position : absolute;
+			top : 20px;
+			bottom: 90px;
 		}
-		.body.right {
+		#body .left {
+			overflow: auto;
+			border-right: 1px solid #aaa;
+		}
+		#body .right {
+			right: 0;
+			left: 221px;
 			padding-left : 5px;
-			width : 574px;
+			overflow: auto;
+			line-height: normal;
 		}
 		#footer {
 		    text-align : center;
@@ -49,41 +42,102 @@
 		    bottom : 0;
 		    height : 90px;
 		    width : 100%;
-		}
-		pre {
-			line-height : 14px;
-			font-size : 11px;
-			font-family : Lucida Console, Monospace, Courier New, Courier, Fixed;
+		    border-top: 1px solid #aaa;
 		}
 		ul {
 			list-style-type : none;
 			margin : 0px;
 			padding : 10px;
 		}
+		
+		code {
+			color: rgb(0,0,0);
+			white-space: nowrap;
+			font-size : 11px;
+			font-family : Lucida Console, Monospace, Courier New, Courier, Fixed;
+		}
+		.java_type {
+			color: rgb(0,44,221);
+		}
+		.java_comment {
+			color: rgb(147,147,147); background-color: rgb(247,247,247);
+		}
+		.java_operator {
+			color: rgb(0,124,31);
+		}
+		.java_separator {
+			color: rgb(0,33,255);
+		}
+		.java_plain {
+			color: rgb(0,0,0);
+		}
+		.java_javadoc_comment {
+			color: rgb(147,147,147); background-color: rgb(247,247,247); font-style: italic;
+		}
+		.java_keyword {
+			color: rgb(0,0,0); font-weight: bold;
+		}
+		.java_literal {
+			color: rgb(188,0,0);
+		}
+		.java_javadoc_tag {
+			color: rgb(147,147,147); background-color: rgb(247,247,247); font-style: italic; font-weight: bold;
+		}
+		
+		e {
+			color: rgb(0,0,0); font-family: monospace; font-size: 12px; white-space: nowrap;
+		}
+		.xml_tag_symbols {
+			color: rgb(0,59,255);
+		}
+		.xml_rife_tag {
+			color: rgb(0,0,0); background-color: rgb(228,230,160);
+		}
+		.xml_plain {
+			color: rgb(0,0,0);
+		}
+		.xml_comment {
+			color: rgb(147,147,147); background-color: rgb(247,247,247);
+		}
+		.xml_attribute_name {
+			color: rgb(0,0,0); font-weight: bold;
+		}
+		.xml_tag_name {
+			color: rgb(0,55,255);
+		}
+		.xml_char_data {
+			color: rgb(0,0,0);
+		}
+		.xml_processing_instruction {
+			color: rgb(0,0,0); font-weight: bold; font-style: italic;
+		}
+		.xml_attribute_value {
+			color: rgb(193,0,0);
+		}
+		.xml_rife_name {
+			color: rgb(0,0,196); background-color: rgb(228,230,160);
+		}
 	</style>
 </head>
 <body>
-<div id="content">
 	<div id="header">
-		<div class="left header">Files</div>
-		<div class="right header">Code for <span wicket:id="filename"></span></div>
+		<div class="left">Files</div>
+		<div class="right">Code for <span wicket:id="filename"></span></div>
 	</div>
 	<div id="body">
-		<div class="left body" wicket:id="filespanel">
+		<div class="left" wicket:id="filespanel">
 			<ul>
 				<li wicket:id="file">
 					<a href="#" wicket:id="link"><span wicket:id="name"></span></a>
 				</li>
 			</ul>
 		</div>
-		<div class="right body" wicket:id="codepanel">
-			<pre wicket:id="code"></pre>
+		<div class="right" wicket:id="codepanel">
+			<code wicket:id="code"></code>
 		</div>
 	</div>
 	<div id="footer">
-		<a href="#" wicket:id="close">[close]</a>
+		[<a href="#" wicket:id="close">Close</a>]
 	</div>
-</div>
-
 </body>
 </html>
