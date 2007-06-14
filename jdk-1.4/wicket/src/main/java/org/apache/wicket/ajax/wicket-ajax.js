@@ -197,6 +197,7 @@ Wicket.replaceOuterHtml = function(element, text) {
 			//element.parentNode.replaceChild(tempDiv.getElementsByTagName(tn).item(0), element);
 			element.parentNode.removeChild(element);						
 		}
+
        
 	    // execute inserted javascripts
 	    
@@ -208,9 +209,16 @@ Wicket.replaceOuterHtml = function(element, text) {
 		}
 			
 		// we need to execute the javascript in reverse order to be consistent with firefox 
-		for (i = elements.length - 1; i >= 0; --i) {
-			Wicket.Head.addJavascripts(elements[i]); 
-		}						
+
+		if (element.tagName == "SCRIPT") {
+			// in case we replaced the script element
+			Wicket.Head.addJavascripts(element);
+		} else {
+			for (i = elements.length - 1; i >= 0; --i) {
+				Wicket.Head.addJavascripts(elements[i]); 
+			}						
+		} 
+							
 		
 
     } else {
