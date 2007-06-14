@@ -646,7 +646,7 @@ Wicket.Ajax.Request.prototype = {
 		if (this.randomURL == false)
 			return this.url;
 		else
-			return this.url + "&random=" + Math.random();
+			return this.url + (this.url.indexOf("?")>-1 ? "&" : "?") + "random=" + Math.random();
 	},
 	
 	log: function(method, url) {
