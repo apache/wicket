@@ -1030,10 +1030,11 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		if (isValid())
 		{
 			convert();
-		}
-		if (isValid())
-		{
-			validateValidators();
+			
+			if (isValid() && getConvertedInput() != null)
+			{
+				validateValidators();
+			}
 		}
 	}
 
