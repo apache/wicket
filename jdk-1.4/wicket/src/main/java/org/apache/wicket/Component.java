@@ -1206,7 +1206,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 								+ "to find the page it is supposed to operate in before you can call "
 								+ "this method (Component#getMarkupId)");
 			}
-			markupId = getId() + page.getAutoIndex();
+            markupId = RenderContext.get().encodeMarkupId(getId() + page.getAutoIndex());
 			setMetaData(MARKUP_ID_KEY, markupId);
 		}
 		return markupId;
