@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.AbortException;
 import org.apache.wicket.Application;
+import org.apache.wicket.RenderContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Resource;
 import org.apache.wicket.Session;
@@ -244,6 +245,7 @@ public class WicketFilter implements Filter
 			response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 					.getResponseRequestEncoding());
 
+            createRenderContext(request, response);
 			try
 			{
 				// Create request cycle
@@ -707,4 +709,9 @@ public class WicketFilter implements Filter
 		}
 		return -1;
 	}
+
+    protected void createRenderContext(WebRequest request, WebResponse response)
+    {
+        new RenderContext();
+    }
 }
