@@ -28,15 +28,20 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class DynamicWizardStep extends WizardStep implements IDynamicWizardStep
 {
-	private IDynamicWizardStep previousStep;
+	private final IDynamicWizardStep previousStep;
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a
 	 * custom header by overiding {@link #getHeader(String, Component, IWizard)}.
+	 * 
+	 * @param previousStep
+	 *            The previous step. May be null if this is the first step in
+	 *            the wizard
 	 */
-	public DynamicWizardStep()
+	public DynamicWizardStep(IDynamicWizardStep previousStep)
 	{
 		super();
+		this.previousStep = previousStep;
 	}
 
 	/**
@@ -44,14 +49,18 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * summary are displayed in the wizard title block while this step is
 	 * active.
 	 * 
+	 * @param previousStep
+	 *            The previous step. May be null if this is the first step in
+	 *            the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public DynamicWizardStep(IModel title, IModel summary)
+	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel title, IModel summary)
 	{
 		super(title, summary);
+		this.previousStep = previousStep;
 	}
 
 	/**
@@ -59,6 +68,9 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * summary are displayed in the wizard title block while this step is
 	 * active.
 	 * 
+	 * @param previousStep
+	 *            The previous step. May be null if this is the first step in
+	 *            the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary
@@ -66,9 +78,11 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public DynamicWizardStep(IModel title, IModel summary, IModel model)
+	public DynamicWizardStep(IDynamicWizardStep previousStep, IModel title, IModel summary,
+			IModel model)
 	{
 		super(title, summary, model);
+		this.previousStep = previousStep;
 	}
 
 	/**
@@ -76,14 +90,18 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * summary are displayed in the wizard title block while this step is
 	 * active.
 	 * 
+	 * @param previousStep
+	 *            The previous step. May be null if this is the first step in
+	 *            the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public DynamicWizardStep(String title, String summary)
+	public DynamicWizardStep(IDynamicWizardStep previousStep, String title, String summary)
 	{
 		super(title, summary);
+		this.previousStep = previousStep;
 	}
 
 	/**
@@ -91,6 +109,9 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * summary are displayed in the wizard title block while this step is
 	 * active.
 	 * 
+	 * @param previousStep
+	 *            The previous step. May be null if this is the first step in
+	 *            the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary
@@ -98,9 +119,11 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public DynamicWizardStep(String title, String summary, IModel model)
+	public DynamicWizardStep(IDynamicWizardStep previousStep, String title, String summary,
+			IModel model)
 	{
 		super(title, summary, model);
+		this.previousStep = previousStep;
 	}
 
 	/**
