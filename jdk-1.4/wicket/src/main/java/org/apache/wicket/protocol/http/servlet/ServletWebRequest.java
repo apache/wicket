@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRedirectListener;
+import org.apache.wicket.RenderContext;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -149,10 +150,23 @@ public class ServletWebRequest extends WebRequest
 			return relativePathPrefixToContextRoot;
 		}
 
+		if (RenderContext.get().isEmbedded())
+		{
+			return relativePathPrefixToContextRoot = getHttpServletRequest().getContextPath()+"/";
+		}
+
 		// Prepend to get back to the wicket handler.
 		String tmp = getRelativePathPrefixToWicketHandler();
-		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
-
+		
+		boolean embeddedRequest = RenderContext.get().isEmbedded();
+		
+		PrependingStringBuffer prepender = new PrependingStringBuffer();
+		
+		if (!embeddedRequest)
+		{
+			prepender.prepend(tmp);
+		}
+		
 		String path = Strings.replaceAll(getPath(), "%3A", ":").toString();
 		if (path == null || path.length() == 0)
 		{
@@ -218,10 +232,12 @@ public class ServletWebRequest extends WebRequest
 		}
 		
 		PrependingStringBuffer prepender = new PrependingStringBuffer();
+
+		boolean embeddedRequest = RenderContext.get().isEmbedded();
 		
 		// For AJAX requests, we need to make the URLs relative to the
 		// original page.
-		if (isAjax())
+		if (!embeddedRequest && isAjax())
 		{
 			for (int i = 0; i < getRequestParameters().getUrlDepth(); i++)
 			{
@@ -289,28 +305,42 @@ public class ServletWebRequest extends WebRequest
 			relativeUrl = wicketRedirectUrl;
 		}
 
+		int lastPathPos = -1;
 		if (depthRelativeToWicketHandler == -1)
 		{
 			int depth = 0;
+			int ajaxUrlDepth = isAjax() ? getRequestParameters().getUrlDepth() : -1;
 			for (int i = 0; i < relativeUrl.length(); i++)
 			{
 				if (relativeUrl.charAt(i) == '?')
-				{
+				{					
 					break;
 				}
 				if (relativeUrl.charAt(i) == '/')
 				{
 					depth++;
+					lastPathPos = i;
+					if (depth == ajaxUrlDepth)
+					{
+						return relativeUrl.substring(0,lastPathPos+1);
+					}
 				}
 			}
 			depthRelativeToWicketHandler = depth;
 		}
-
-		for (int i = 0; i < depthRelativeToWicketHandler; i++)
+		
+		if (embeddedRequest)
 		{
-			prepender.prepend("../");
+			prepender.prepend(getHttpServletRequest().getServletPath());
+			prepender.prepend(getHttpServletRequest().getContextPath());
 		}
-
+		else
+		{
+			for (int i = 0; i < depthRelativeToWicketHandler; i++)
+			{
+				prepender.prepend("../");
+			}
+		}
 		return relativePathPrefixToWicketHandler = prepender.toString();
 	}
 
