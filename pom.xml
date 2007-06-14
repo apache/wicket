@@ -197,6 +197,15 @@
 		</mailingList>
 	</mailingLists>
 
+	<repositories>
+		<repository>
+			<!-- for portals-bridges-common -->
+			<id>com.bluesunrise.m2</id>			
+			<name>Maven2 BlueSunrise</name>
+			<url>http://www.bluesunrise.com/maven2</url>
+		</repository>
+	</repositories>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -387,6 +396,20 @@
 				<artifactId>jwebunit-htmlunit-plugin</artifactId>
 				<version>1.4-rc3</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.portlet</groupId>
+				<artifactId>portlet-api</artifactId>
+				<version>1.0</version>
+				<scope>provided</scope>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.portals.bridges</groupId>
+				<artifactId>portals-bridges-common</artifactId>
+				<version>1.0.2-beta1</version>
+				<scope>provided</scope>
+				<optional>true</optional>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
