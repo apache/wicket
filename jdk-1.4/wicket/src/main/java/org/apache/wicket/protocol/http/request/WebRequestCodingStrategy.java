@@ -31,15 +31,19 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.RenderContext;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.protocol.http.UnitTestSettings;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestTargetMountsInfo;
 import org.apache.wicket.request.RequestParameters;
@@ -224,22 +228,40 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		// First check to see whether the target is mounted
 		CharSequence url = pathForTarget(requestTarget);
+		
+		RenderContext renderContext = RenderContext.get();
+		boolean sharedResourceURL = false;
 
 		if (url != null)
 		{
+			// TODO portlet-support: not yet sure what to do here
 			// Do nothing - we've found the URL and it's mounted.
 		}
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
-			url = encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
+			url = renderContext.encodeRenderURL(encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget));
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
-			url = encode(requestCycle, (ISharedResourceRequestTarget)requestTarget);
+			url = renderContext.encodeSharedResourceURL(encode(requestCycle, (ISharedResourceRequestTarget)requestTarget));
+			sharedResourceURL = true;
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
 			url = encode(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
+			if (renderContext.isEmbedded())
+			{
+				RequestListenerInterface rli = ((IListenerInterfaceRequestTarget)requestTarget).getRequestListenerInterface();
+				if (IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass())
+					|| IBehaviorListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
+				{
+					url = renderContext.encodeResourceURL(url);
+				}
+				else
+				{
+					url = renderContext.encodeActionURL(url);
+				}
+			}
 		}
 		else if (requestTarget instanceof IPageRequestTarget)
 		{
@@ -257,20 +279,29 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (url != null)
 		{
-			// Add the actual URL. This will be relative to the Wicket
-			// Servlet/Filter, with no leading '/'.
-			PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
-
-			// Prepend prefix to the URL to make it relative to the current
-			// request.
-			prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
-
-			String result = prepender.toString();
-			// We need to special-case links to the home page if we're at the
-			// same level.
-			if (result.length() == 0)
+			String result = null;
+			
+			if (!sharedResourceURL && renderContext.isEmbedded())
 			{
-				result = "./";
+				result = url.toString();
+			}
+			else
+			{
+				// Add the actual URL. This will be relative to the Wicket
+			    // Servlet/Filter, with no leading '/'.
+				PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
+
+				// Prepend prefix to the URL to make it relative to the current
+				// request.
+				prepender.prepend(requestCycle.getRequest().getRelativePathPrefixToWicketHandler());
+
+				result = prepender.toString();
+				// We need to special-case links to the home page if we're at the
+				// same level.
+				if (result.length() == 0)
+				{
+					result = "./";
+				}
 			}
 			return requestCycle.getOriginalResponse().encodeURL(result);
 		}
