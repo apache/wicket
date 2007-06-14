@@ -340,7 +340,8 @@ public abstract class Session implements IClusterable
 	private MetaDataEntry[] metaData;
 
 	/**
-	 * We need to know both thread that keeps the pagemap lock and the RequestCycle
+	 * We need to know both thread that keeps the pagemap lock and the
+	 * RequestCycle
 	 */
 	private static class PageMapsUsedInRequestEntry
 	{
@@ -411,9 +412,6 @@ public abstract class Session implements IClusterable
 	 * By calling this method, the session will be bound (made not-temporary) if
 	 * it was not bound yet. It is useful for cases where you want to be
 	 * absolutely sure this session object will be available in next requests.
-	 * </p>
-	 * <p>
-	 * This method should not typically be called by clients
 	 * </p>
 	 */
 	public final void bind()
@@ -690,7 +688,8 @@ public abstract class Session implements IClusterable
 				{
 					if (isCurrentRequestValid(entry.requestCycle) == false)
 					{
-						// we need to ignore this request. That's because it is an ajax request
+						// we need to ignore this request. That's because it is
+						// an ajax request
 						// while regular page request is being processed
 						throw new IgnoreAjaxRequestException();
 					}
@@ -1340,11 +1339,6 @@ public abstract class Session implements IClusterable
 		// If state is dirty
 		if (dirty)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("update: Session is dirty.  Replicating.");
-			}
-
 			// State is no longer dirty
 			this.dirty = false;
 
