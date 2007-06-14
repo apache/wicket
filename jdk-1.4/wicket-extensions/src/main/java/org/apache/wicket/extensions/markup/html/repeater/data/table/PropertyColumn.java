@@ -70,14 +70,14 @@ public class PropertyColumn extends AbstractColumn
 	 * 
 	 * @param displayModel
 	 *            display model
-	 * @param propertyExpressions
+	 * @param propertyExpression
 	 *            wicket property expression
 	 * @see PropertyModel
 	 */
-	public PropertyColumn(IModel displayModel, String propertyExpressions)
+	public PropertyColumn(IModel displayModel, String propertyExpression)
 	{
 		super(displayModel, null);
-		this.propertyExpression = propertyExpressions;
+		this.propertyExpression = propertyExpression;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class PropertyColumn extends AbstractColumn
 		item.add(new Label(componentId, createLabelModel(model)));
 	}
 
-	//TODO Post 1.3: rename embeddedModel to itemModel
+	// TODO Post 1.3: rename embeddedModel to itemModel
 	protected IModel createLabelModel(IModel embeddedModel)
 	{
 		return new PropertyModel(embeddedModel, propertyExpression);
