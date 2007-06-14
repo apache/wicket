@@ -25,11 +25,15 @@ import org.apache.wicket.util.collections.ArrayListStack;
 
 
 /**
- * Default implementation of {@link IWizardModel}.
+ * Default implementation of {@link IWizardModel}, which models a semi-static
+ * wizard. This means that all steps should be known upfront, and added to the
+ * model on construction. Steps can be optional by using {@link ICondition}.
+ * The wizard is initialized with a wizard model through calling method
+ * {@link Wizard#init(IWizardModel)}.
  * <p>
  * Steps can be added to this model directly using either the
  * {@link #add(IWizardStep) normal add method} or
- * {@link #add(IWizardStep, org.apache.wicket.extensions.wizard.WizardModel.ICondition) the conditional add method}.
+ * {@link #add(IWizardStep, ICondition) the conditional add method}.
  * </p>
  * 
  * <p>
@@ -39,7 +43,7 @@ import org.apache.wicket.util.collections.ArrayListStack;
  * 
  * @author Eelco Hillenius
  */
-public class WizardModel implements IWizardModel
+public class WizardModel extends AbstractWizardModel
 {
 	/**
 	 * Interface for conditional displaying of wizard steps.
@@ -79,23 +83,14 @@ public class WizardModel implements IWizardModel
 	/** The currently active step. */
 	private IWizardStep activeStep;
 
-	/** Whether cancel functionality is available. */
-	private boolean cancelVisible = true;
-
 	/** Conditions with steps. */
 	private List conditions = new ArrayList();
 
 	/** State history. */
 	private final ArrayListStack history = new ArrayListStack();
 
-	/** Whether the last button should be shown at all; false by default. */
-	private boolean lastVisible = false;
-
 	/** The wizard steps. */
 	private List steps = new ArrayList();
-
-	/** Listeners for {@link IWizardModelListener model events}. */
-	private final List wizardModelListeners = new ArrayList(1);
 
 	/**
 	 * Construct.
@@ -137,43 +132,6 @@ public class WizardModel implements IWizardModel
 	}
 
 	/**
-	 * Adds a wizard model listener.
-	 * 
-	 * @param listener
-	 *            The listener to add
-	 */
-	public final void addListener(IWizardModelListener listener)
-	{
-		this.wizardModelListeners.add(listener);
-	}
-
-	/**
-	 * This implementation just fires
-	 * {@link IWizardModelListener#onCancel() a cancel event}. Though this
-	 * isn't a very strong contract, it gives all the power to the user of this
-	 * model.
-	 * 
-	 * @see org.apache.wicket.extensions.wizard.IWizardModel#cancel()
-	 */
-	public void cancel()
-	{
-		fireWizardCancelled();
-	}
-
-	/**
-	 * This implementation just fires
-	 * {@link IWizardModelListener#onFinish() a finish event}. Though this
-	 * isn't a very strong contract, it gives all the power to the user of this
-	 * model.
-	 * 
-	 * @see org.apache.wicket.extensions.wizard.IWizardModel#finish()
-	 */
-	public void finish()
-	{
-		fireWizardFinished();
-	}
-
-	/**
 	 * Gets the current active step the wizard should display.
 	 * 
 	 * @return the active step.
@@ -184,21 +142,11 @@ public class WizardModel implements IWizardModel
 	}
 
 	/**
-	 * Gets whether cancel functionality is available.
-	 * 
-	 * @return Whether cancel functionality is available
-	 */
-	public boolean isCancelVisible()
-	{
-		return cancelVisible;
-	}
-
-	/**
 	 * Checks if the last button should be enabled.
 	 * 
 	 * @return <tt>true</tt> if the last button should be enabled,
 	 *         <tt>false</tt> otherwise.
-	 * @see #isLastVisible
+	 * @see IWizardModel#isLastVisible
 	 */
 	public boolean isLastAvailable()
 	{
@@ -211,20 +159,6 @@ public class WizardModel implements IWizardModel
 	public boolean isLastStep(IWizardStep step)
 	{
 		return findLastStep().equals(step);
-	}
-
-	/**
-	 * Checks if the last button should be displayed. This method should only
-	 * return true if the {@link #isLastAvailable} will return true at any
-	 * point. Returning false will prevent the last button from appearing on the
-	 * wizard at all.
-	 * 
-	 * @return <tt>true</tt> if the previou last should be displayed,
-	 *         <tt>false</tt> otherwise.
-	 */
-	public boolean isLastVisible()
-	{
-		return lastVisible;
 	}
 
 	/**
@@ -250,9 +184,9 @@ public class WizardModel implements IWizardModel
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.wizard.IWizardModel#lastStep()
+	 * @see org.apache.wicket.extensions.wizard.IWizardModel#last()
 	 */
-	public void lastStep()
+	public void last()
 	{
 		history.push(getActiveStep());
 		IWizardStep lastStep = findLastStep();
@@ -279,17 +213,6 @@ public class WizardModel implements IWizardModel
 	}
 
 	/**
-	 * Removes a wizard model listener.
-	 * 
-	 * @param listener
-	 *            The listener to remove
-	 */
-	public final void removeListener(IWizardModelListener listener)
-	{
-		this.wizardModelListeners.remove(listener);
-	}
-
-	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#reset()
 	 */
 	public void reset()
@@ -311,38 +234,14 @@ public class WizardModel implements IWizardModel
 		{
 			return;
 		}
-		IWizardStep old = this.activeStep;
+
 		this.activeStep = step;
 
 		fireActiveStepChanged(step);
 	}
 
 	/**
-	 * Sets whether cancel functionality is available.
-	 * 
-	 * @param cancelVisible
-	 *            Whether cancel functionality is available
-	 */
-	public void setCancelVisible(boolean cancelVisible)
-	{
-		this.cancelVisible = cancelVisible;
-	}
-
-	/**
-	 * Configures if the last button should be displayed.
-	 * 
-	 * @param lastVisible
-	 *            <tt>true</tt> to display the last button, <tt>false</tt>
-	 *            otherwise.
-	 * @see #isLastVisible
-	 */
-	public void setLastVisible(boolean lastVisible)
-	{
-		this.lastVisible = lastVisible;
-	}
-
-	/**
-	 * @see org.apache.wicket.extensions.wizard.IWizardModel#stepIterator()
+	 * @see IWizardModel#stepIterator()
 	 */
 	public final Iterator stepIterator()
 	{
@@ -408,44 +307,5 @@ public class WizardModel implements IWizardModel
 		}
 
 		throw new IllegalStateException("Wizard contains no more visible steps");
-	}
-
-	/**
-	 * Notify listeners that the active step has changed.
-	 * 
-	 * @param step
-	 *            The new step
-	 */
-	protected final void fireActiveStepChanged(IWizardStep step)
-	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
-		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
-			listener.onActiveStepChanged(step);
-		}
-	}
-
-	/**
-	 * Notify listeners that the wizard is finished.
-	 */
-	protected final void fireWizardCancelled()
-	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
-		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
-			listener.onCancel();
-		}
-	}
-
-	/**
-	 * Notify listeners that the wizard is finished.
-	 */
-	protected final void fireWizardFinished()
-	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
-		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
-			listener.onFinish();
-		}
 	}
 }

@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.wizard;
 /**
  * Models a 'last' button in the wizard. When pressed, it calls
  * {@link IWizardStep#applyState()} on the active wizard step, and then moves to
- * the last step in the model with {@link IWizardModel#lastStep()}.
+ * the last step in the model with {@link IWizardModel#last()}.
  * 
  * @author Eelco Hillenius
  */
@@ -63,6 +63,6 @@ public final class LastButton extends WizardButton
 	{
 		IWizardModel wizardModel = getWizardModel();
 		wizardModel.getActiveStep().applyState();
-		wizardModel.lastStep();
+		wizardModel.last();
 	}
 }

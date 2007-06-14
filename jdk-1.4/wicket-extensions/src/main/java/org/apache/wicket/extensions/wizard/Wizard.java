@@ -28,22 +28,22 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 
 /**
- * A wizard is a dialog component that takes it's users through a number of
- * predefined steps. It has common functionality like a next, previous, finish
+ * A wizard is a dialog component that takes users through a number of steps to
+ * complete a task. It has common functionality like a next, previous, finish
  * and cancel button, and it uses a {@link IWizardModel} to navigate through the
  * steps.
+ * <p>
+ * Before you can use the wizard component, it needs to be initialized with a
+ * model. You do this by calling {@link #init(IWizardModel)} with the wizard
+ * model you intent to use.
+ * </p>
  * 
  * <p>
  * This default implementation should be useful for basic cases, if the layout
  * is exactly what you need. If you want to provide your own layout and/ or have
  * more or less components (e.g. you want to additionally provide an overview
  * component), you can override this class and add the components you want
- * yourself.
- * </p>
- * <p>
- * If that's still not enough flexiblity for you, but you want to use the
- * {@link IWizardModel wizard model} and {@link IWizardStep wizard step}
- * functionality provided in this package, you can provde a custom wizard
+ * yourself using methods like {@link #newButtonBar(String)} et-cetera.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -275,9 +275,13 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		wizardModel.addListener(this);
 
-		for (Iterator iter = wizardModel.stepIterator(); iter.hasNext();)
+		Iterator stepsIterator = wizardModel.stepIterator();
+		if (stepsIterator != null)
 		{
-			((IWizardStep)iter.next()).init(wizardModel);
+			while (stepsIterator.hasNext())
+			{
+				((IWizardStep)stepsIterator.next()).init(wizardModel);
+			}
 		}
 
 		// reset model to prepare for action

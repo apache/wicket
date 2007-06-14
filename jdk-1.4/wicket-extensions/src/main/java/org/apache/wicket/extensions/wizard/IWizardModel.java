@@ -20,8 +20,6 @@ import java.util.Iterator;
 
 import org.apache.wicket.IClusterable;
 
-
-
 /**
  * This interface defines the model for wizards. This model knows about the
  * wizard's steps and the transitions between them, and it holds a reference to
@@ -39,7 +37,8 @@ import org.apache.wicket.IClusterable;
  * Typically, you would use
  * {@link WizardModel the default implementation of this interface}, but if you
  * need to do more sophisticated stuff, like branching etc, you can consider
- * creating your own implementation.
+ * creating your own implementation. In that case, it is recommended you start
+ * by extending from {@link AbstractWizardModel}.
  * </p>
  * 
  * <p>
@@ -47,6 +46,7 @@ import org.apache.wicket.IClusterable;
  * served as a valuable source of inspiration.
  * </p>
  * 
+ * @see AbstractWizardModel
  * @see WizardModel
  * 
  * @author Eelco Hillenius
@@ -118,7 +118,6 @@ public interface IWizardModel extends IClusterable
 	 */
 	boolean isLastVisible();
 
-
 	/**
 	 * Gets whether the next button should be enabled.
 	 * 
@@ -135,19 +134,25 @@ public interface IWizardModel extends IClusterable
 
 	/**
 	 * Takes the model to the last step in the wizard. This method must only be
-	 * called if {@link #isLastAvailable} returns <tt>true</tt>.
+	 * called if {@link #isLastAvailable} returns <tt>true</tt>. Implementors
+	 * should notify {@link IWizardModelListener listeners} through calling
+	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
 	 */
-	void lastStep();
+	void last();
 
 	/**
-	 * Increments the model to the next step. This method must only be called
-	 * if {@link #isNextAvailable} returns <tt>true</tt>.
+	 * Increments the model to the next step. This method must only be called if
+	 * {@link #isNextAvailable} returns <tt>true</tt>. Implementors should
+	 * notify {@link IWizardModelListener listeners} through calling
+	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
 	 */
 	void next();
 
 	/**
 	 * Takes the model to the previous step.This method must only be called if
-	 * {@link #isPreviousAvailable} returns <tt>true</tt>.
+	 * {@link #isPreviousAvailable} returns <tt>true</tt>. Implementors
+	 * should notify {@link IWizardModelListener listeners} through calling
+	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
 	 */
 	void previous();
 
@@ -160,15 +165,20 @@ public interface IWizardModel extends IClusterable
 	void removeListener(IWizardModelListener listener);
 
 	/**
-	 * Resets the model, setting it to the first step.
+	 * Resets the model, setting it to the first step. Implementors should
+	 * notify {@link IWizardModelListener listeners} through calling
+	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
 	 */
 	void reset();
 
 	/**
 	 * Returns an iterator over all the steps in the model. The iteration order
-	 * is not guarenteed to the be the order of traversal.
+	 * is not guarenteed to the be the order of traversal. This is an optional
+	 * operation; dynamic models can just return null, and should call init the
+	 * first time a step is encountered right before rendering it.
 	 * 
-	 * @return an iterator over all the steps of the model
+	 * @return an iterator over all the steps of the model or null if the wizard
+	 *         model is not static
 	 */
 	Iterator stepIterator();
 }
