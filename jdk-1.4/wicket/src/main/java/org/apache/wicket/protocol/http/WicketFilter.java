@@ -39,6 +39,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.protocol.http.portlet.WicketFilterPortletContext;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -93,6 +94,12 @@ public class WicketFilter implements Filter
 
 	private boolean servletMode = false;
 
+	/* init marker if running in a portlet container context */
+	private static Boolean portletContextAvailable;
+	
+	/* Delegate for handling Portlet specific filtering. Not instantiated if not running in a portlet container context */
+	private static WicketFilterPortletContext filterPortletContext;
+	
 	/**
 	 * Servlet cleanup.
 	 */
@@ -115,6 +122,11 @@ public class WicketFilter implements Filter
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		String relativePath = getRelativePath(httpServletRequest);
 
+        if (filterPortletContext != null)
+        {
+        	filterPortletContext.setupFilter(getFilterConfig(), request, response, getFilterPath(httpServletRequest));
+        }
+        
 		if (isWicketRequest(relativePath))
 		{
 			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
@@ -413,6 +425,24 @@ public class WicketFilter implements Filter
 
 			// Give the application the option to log that it is started
 			this.webApplication.logStarted();
+			
+	        if ( portletContextAvailable == null )
+	        {
+	        	try
+				{
+					Class portletClass = Class.forName("javax.portlet.PortletContext");
+					portletContextAvailable = Boolean.TRUE;
+					filterPortletContext = new WicketFilterPortletContext();
+				}
+				catch (ClassNotFoundException e)
+				{
+					portletContextAvailable = Boolean.FALSE;
+				}
+	        }
+	        if (filterPortletContext != null)
+	        {
+	        	filterPortletContext.initFilter(filterConfig, this.webApplication);
+	        }
 		}
 		finally
 		{
@@ -712,6 +742,9 @@ public class WicketFilter implements Filter
 
     protected void createRenderContext(WebRequest request, WebResponse response)
     {
-        new RenderContext();
+        if (filterPortletContext == null || !filterPortletContext.createPortletRenderContext(request, response))
+        {
+        	new RenderContext();
+        }
     }
 }

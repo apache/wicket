@@ -62,7 +62,7 @@
 	
 	<filter>
 		<filter-name>AjaxPrototypeApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.ajax.prototype.PrototypeApplication</param-value>
@@ -71,7 +71,7 @@
 
 	<filter>
 		<filter-name>AjaxApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>org.apache.wicket.examples.ajax.builtin.AjaxApplication</param-value>
@@ -80,7 +80,7 @@
 
 	<filter>
 		<filter-name>HelloWorldApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.helloworld.HelloWorldApplication</param-value>
@@ -89,7 +89,7 @@
 
 	<filter>
 		<filter-name>EchoApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.echo.EchoApplication</param-value>
@@ -98,7 +98,7 @@
 
 	<filter>
 		<filter-name>UnicodeConverterApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
@@ -107,7 +107,7 @@
 
 	<filter>
 		<filter-name>HelloBrowserApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.hellobrowser.HelloBrowserApplication</param-value>
@@ -116,7 +116,7 @@
 
     <filter>
         <filter-name>StockQuoteApplication</filter-name>
-        <filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
             <param-name>applicationClassName</param-name>
             <param-value>org.apache.wicket.examples.stockquote.StockQuoteApplication</param-value>
@@ -125,7 +125,7 @@
     
 	<filter>
 		<filter-name>HangmanApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.hangman.HangmanApplication</param-value>
@@ -134,7 +134,7 @@
 
 	<filter>
 		<filter-name>FormInputApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.forminput.FormInputApplication</param-value>
@@ -143,7 +143,7 @@
 
 	<filter>
 		<filter-name>NestedApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.nested.NestedApplication</param-value>
@@ -152,7 +152,7 @@
 
 	<filter>
 		<filter-name>GuestBookApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.guestbook.GuestBookApplication</param-value>
@@ -161,7 +161,7 @@
 
 	<filter>
 		<filter-name>ImagesApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.images.ImagesApplication</param-value>
@@ -170,7 +170,7 @@
 
 	<filter>
 		<filter-name>LibraryApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.library.LibraryApplication</param-value>
@@ -179,7 +179,7 @@
 
 	<filter>
 		<filter-name>LinkomaticApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.linkomatic.LinkomaticApplication</param-value>
@@ -188,7 +188,7 @@
 
 	<filter>
 		<filter-name>NavomaticApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.navomatic.NavomaticApplication</param-value>
@@ -197,7 +197,7 @@
 
 	<filter>
 		<filter-name>PubApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.pub.PubApplication</param-value>
@@ -206,7 +206,7 @@
 
 	<filter>
 		<filter-name>SignInApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.signin.SignInApplication</param-value>
@@ -215,7 +215,7 @@
 
 	<filter>
 		<filter-name>SignIn2Application</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.signin2.SignIn2Application</param-value>
@@ -224,7 +224,7 @@
 
 	<filter>
 		<filter-name>UploadApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.upload.UploadApplication</param-value>
@@ -233,7 +233,7 @@
 
 	<filter>
 		<filter-name>EncodingsApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.encodings.EncodingsApplication</param-value>
@@ -242,7 +242,7 @@
 
 	<filter>
 		<filter-name>TemplateApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.template.TemplateApplication</param-value>
@@ -255,7 +255,7 @@
 
 	<filter>
 		<filter-name>ComponentReferenceApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.compref.ComponentReferenceApplication</param-value>
@@ -264,7 +264,7 @@
 
 	<filter>
 		<filter-name>RepeaterExamplesApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>org.apache.wicket.examples.repeater.RepeaterApplication</param-value>
@@ -273,7 +273,7 @@
 
 	<filter>
 		<filter-name>NiceUrlApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.niceurl.NiceUrlApplication</param-value>
@@ -282,7 +282,7 @@
 
 	<filter>
 		<filter-name>FramesApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.frames.FramesApplication</param-value>
@@ -291,7 +291,7 @@
 	
 	<filter>
 		<filter-name>CustomResourceLoadingApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.customresourceloading.CustomResourceLoadingApplication</param-value>
@@ -300,7 +300,7 @@
 
 	<filter>
 		<filter-name>WizardApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.wizard.WizardApplication</param-value>
@@ -309,7 +309,7 @@
 
 	<filter>
 		<filter-name>CaptchaApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.captcha.CaptchaApplication</param-value>
@@ -318,7 +318,7 @@
 
 	<filter>
 		<filter-name>BreadCrumbApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
@@ -327,7 +327,7 @@
 
 	<filter>
 		<filter-name>StatelessApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.stateless.StatelessApplication</param-value>
@@ -336,7 +336,7 @@
 
 	<filter>
 		<filter-name>StaticPagesApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.staticpages.Application</param-value>
@@ -345,7 +345,7 @@
 
 	<filter>
 		<filter-name>RolesAuthApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>org.apache.wicket.authorization.strategies.role.example.RolesApplication</param-value>
@@ -354,7 +354,7 @@
 
 	<filter>
 		<filter-name>MyAuthenticatedWebApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>org.apache.wicket.authentication.example.MyAuthenticatedWebApplication</param-value>
@@ -363,7 +363,7 @@
 
 	<filter>
 		<filter-name>SpringExample</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
             <param-name>applicationFactoryClassName</param-name>
             <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
@@ -372,7 +372,7 @@
 
 	<filter>
 		<filter-name>VelocityTemplateApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.portlet.WicketPortletFilter</filter-class>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
             <param-name>applicationClassName</param-name>
             <param-value>org.apache.wicket.examples.velocity.VelocityTemplateApplication</param-value>

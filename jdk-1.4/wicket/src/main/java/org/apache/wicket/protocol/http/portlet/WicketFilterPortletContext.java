@@ -21,7 +21,6 @@ import java.io.IOException;
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -34,34 +33,27 @@ import org.apache.portals.bridges.util.ServletPortletSessionProxy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebResponse;
-import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
  * @author Ate Douma
+ * @Id@
  */
-public class WicketPortletFilter extends WicketFilter
+public class WicketFilterPortletContext
 {
-	private int filterPathPrefixLength = -1;
-	
-    public void init(FilterConfig filterConfig) throws ServletException
+    public void initFilter(FilterConfig filterConfig, WebApplication webApplication) throws ServletException
     {
-        super.init(filterConfig);
-        // Get the instance of the application object from the servlet context
-        // make integration with outside world easier
-        String contextKey = "wicket:" + filterConfig.getFilterName();
-        WebApplication webApplication = (WebApplication)filterConfig.getServletContext().getAttribute(contextKey);
         webApplication.getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_RENDER);
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+    public void setupFilter(FilterConfig config, ServletRequest request, ServletResponse response, String filterPath) throws IOException, ServletException
     {
     	HttpServletRequest servletRequest = (HttpServletRequest)request;
     	PortletConfig portletConfig = (PortletConfig)request.getAttribute("javax.portlet.config");
         if ( portletConfig != null )
         {
         	WicketResponseState responseState = (WicketResponseState)request.getAttribute(WicketPortlet.RESPONSE_STATE_ATTR);
-            request = new PortletServletRequestWrapper(getFilterConfig().getServletContext(),servletRequest, ServletPortletSessionProxy.createProxy(servletRequest));
+            request = new PortletServletRequestWrapper(config.getServletContext(),servletRequest, ServletPortletSessionProxy.createProxy(servletRequest));
             if ( WicketPortlet.ACTION_REQUEST.equals(request.getAttribute(WicketPortlet.REQUEST_TYPE_ATTR)))
             {
                 response = new PortletActionServletResponseWrapper((HttpServletResponse)response, responseState);
@@ -73,21 +65,11 @@ public class WicketPortletFilter extends WicketFilter
         }
         else
         {
-        	request = PortletRenderContext.getPortletServletRequest(getFilterConfig().getServletContext(),servletRequest, getFilterPath(servletRequest));
+        	request = PortletRenderContext.getPortletServletRequest(config.getServletContext(),servletRequest, filterPath);
         }
-        super.doFilter(request, response, chain);
     }
     
-    protected int getFilterPathPrefixLength(HttpServletRequest request)
-    {
-    	if (filterPathPrefixLength == -1)
-    	{
-    		filterPathPrefixLength = request.getContextPath().length()+getFilterPath(request).length();
-    	}
-    	return filterPathPrefixLength;
-    }
-    
-    protected void createRenderContext(WebRequest request, WebResponse response)
+    public boolean createPortletRenderContext(WebRequest request, WebResponse response)
     {
     	HttpServletRequest servletRequest = request.getHttpServletRequest();
     	PortletConfig portletConfig = (PortletConfig)servletRequest.getAttribute("javax.portlet.config");
@@ -105,10 +87,8 @@ public class WicketPortletFilter extends WicketFilter
             	boolean isResourceRequest = "true".equals(servletRequest.getAttribute(WicketPortlet.PORTLET_RESOURCE_URL_ATTR));
             	new PortletRenderContext(portletConfig, renderRequest, renderResponse, resourceURLFactory, isResourceRequest ? null : new EmbeddedPortletHeaderResponse(response));
             }
+            return true;
         }
-        else
-        {
-        	super.createRenderContext(request, response);
-        }
+        return false;
     }
 }
