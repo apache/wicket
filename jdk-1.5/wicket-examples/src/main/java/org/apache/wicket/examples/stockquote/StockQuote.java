@@ -33,9 +33,10 @@ import java.net.URLConnection;
 public class StockQuote
 {
 	/**
-	 * Use the www.xmethods.com demo webservice for stockquotes.
+	 * We used to use the www.xmethods.com demo webservice for stockquotes.
+	 * We now use webservicex, as xmethods was really overloaded and unreliable.
 	 */
-	private static final String serviceUrl = "http://64.124.140.30:9090/soap";
+	private static final String serviceUrl = "http://www.webservicex.net/stockquote.asmx";
 
 	/** the symbol to get the quote for. */
 	private String symbol;
@@ -88,15 +89,16 @@ public class StockQuote
 		final String response = getSOAPQuote(symbol);
 
 		// make sure we get
-		int start = response.indexOf("<Result xsi:type='xsd:float'>") + 29;
-		int end = response.indexOf("</Result>");
+		int start = response.indexOf("&lt;Last&gt;") + "&lt;Last&gt;".length();
+		int end = response.indexOf("&lt;/Last&gt;");
 
 		// if the string returned isn't valid, just return empty.
-		if (start < 29)
+		if (start < "&lt;Last&gt;".length())
 		{
 			return "(unknown)";
 		}
-		return response.substring(start, end);
+		String result = response.substring(start, end);
+		return result.equals("0.00") ? "(unknown)" : result;
 	}
 
 	/**
@@ -154,7 +156,7 @@ public class StockQuote
 	 * @param url
 	 *            the url to connect to
 	 * @param length
-	 *            the length to the inpupt message
+	 *            the length to the input message
 	 * @return the HttpurLConnection
 	 * @throws IOException
 	 * @throws ProtocolException
@@ -167,7 +169,7 @@ public class StockQuote
 		// Set the appropriate HTTP parameters.
 		httpConn.setRequestProperty("Content-Length", String.valueOf(length));
 		httpConn.setRequestProperty("Content-Type", "text/xml; charset=utf-8");
-		httpConn.setRequestProperty("SOAPAction", "urn:xmethods-delayed-quotes#getQuote");
+		httpConn.setRequestProperty("SOAPAction", "\"http://www.webserviceX.NET/GetQuote\"");
 		httpConn.setRequestMethod("POST");
 		httpConn.setDoOutput(true);
 		httpConn.setDoInput(true);
@@ -208,16 +210,14 @@ public class StockQuote
 	 */
 	private String createMessage(String symbol)
 	{
-		StringBuffer message = new StringBuffer("<?xml version = '1.0' encoding = 'UTF-8'?>");
-		message.append("<SOAP-ENV:Envelope xmlns:SOAP-ENV=");
-		message.append("'http://schemas.xmlsoap.org/soap/envelope/' ");
-		message.append("xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' ");
-		message.append("xmlns:xsd='http://www.w3.org/2001/XMLSchema'> ");
-		message.append("<SOAP-ENV:Body>");
-		message.append("<ns1:getQuote xmlns:ns1='urn:xmethods-delayed-quotes' ");
-		message.append("SOAP-ENV:encodingStyle=" + "'http://schemas.xmlsoap.org/soap/encoding/'>");
-		message.append("<symbol xsi:type='xsd:string'>" + symbol + "</symbol>" + "</ns1:getQuote>");
-		message.append("</SOAP-ENV:Body></SOAP-ENV:Envelope>");
+		StringBuffer message = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		message.append("<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
+		message.append("  <soap:Body>");
+		message.append("    <GetQuote xmlns=\"http://www.webserviceX.NET/\">");
+		message.append("      <symbol>").append(symbol).append("</symbol>");
+		message.append("    </GetQuote>");
+		message.append("  </soap:Body>");
+		message.append("</soap:Envelope>");
 		return message.toString();
 	}
 }
