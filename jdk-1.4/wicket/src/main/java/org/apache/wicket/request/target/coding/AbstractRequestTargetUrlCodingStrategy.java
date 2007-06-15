@@ -58,8 +58,15 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 */
 	public AbstractRequestTargetUrlCodingStrategy(final String mountPath)
 	{
-		checkMountPath(mountPath);
-		this.mountPath = (mountPath.startsWith("/")) ? mountPath.substring(1) : mountPath;
+		if (mountPath == null)
+		{
+			throw new IllegalArgumentException("Mount path cannot be null or empty");
+		}
+		this.mountPath = mountPath.startsWith("/") ? mountPath.substring(1) : mountPath;
+		if (this.mountPath.startsWith("resources/") || this.mountPath.equals("resources"))
+		{
+			throw new IllegalArgumentException("Mount path cannot be under '/resources'");
+		}
 	}
 
 	/**
@@ -68,24 +75,6 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	public final String getMountPath()
 	{
 		return mountPath;
-	}
-
-	/**
-	 * Checks mount path is valid.
-	 * 
-	 * @param path
-	 *            mount path
-	 */
-	private void checkMountPath(String path)
-	{
-		if (path == null)
-		{
-			throw new IllegalArgumentException("Mount path cannot be null");
-		}
-		if (path.startsWith("/resources/") || path.equals("/resources"))
-		{
-			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
-		}
 	}
 
 	/**
