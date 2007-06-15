@@ -83,7 +83,8 @@ public interface IDynamicWizardStep extends IWizardStep
 	 * Gets the next wizard step from here. Can only be called when
 	 * {@link #isNextAvailable()} returns true.
 	 * 
-	 * @return The next wizard step. May not be null.
+	 * @return The next wizard step. May not be null unless this is the last
+	 *         step ({@link #isLastStep()} returns true).
 	 */
 	IDynamicWizardStep next();
 
@@ -91,7 +92,8 @@ public interface IDynamicWizardStep extends IWizardStep
 	 * Gets the previous wizard step from here. Can only be called when
 	 * {@link #isPreviousAvailable()} returns true.
 	 * 
-	 * @return The next wizard step. May not be null.
+	 * @return The next wizard step. May not be null unless this is the first
+	 *         step (in which case it should never be called).
 	 */
 	IDynamicWizardStep previous();
 }
