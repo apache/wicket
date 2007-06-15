@@ -29,6 +29,7 @@ public interface IRequestTargetUrlCodingStrategy
 {
 	/**
 	 * Returns the path of the url where this request target is mounted on.
+	 * This should not have a leading slash.
 	 * 
 	 * @return String The path of the url
 	 */
