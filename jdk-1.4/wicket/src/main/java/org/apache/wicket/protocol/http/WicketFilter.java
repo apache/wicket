@@ -39,6 +39,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.protocol.http.portlet.FilterRequestContext;
 import org.apache.wicket.protocol.http.portlet.WicketFilterPortletContext;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
@@ -119,17 +120,26 @@ public class WicketFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
 	{
-		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-		String relativePath = getRelativePath(httpServletRequest);
-
+		HttpServletRequest httpServletRequest;
+		HttpServletResponse httpServletResponse;
+		
         if (filterPortletContext != null)
         {
-        	filterPortletContext.setupFilter(getFilterConfig(), request, response, getFilterPath(httpServletRequest));
+        	FilterRequestContext filterRequestContext = new FilterRequestContext((HttpServletRequest)request,(HttpServletResponse)response);
+        	filterPortletContext.setupFilter(getFilterConfig(), filterRequestContext, getFilterPath((HttpServletRequest)request));
+        	httpServletRequest = filterRequestContext.getRequest();
+        	httpServletResponse = filterRequestContext.getResponse();
+        }
+        else
+        {
+    		httpServletRequest = (HttpServletRequest)request;
+			httpServletResponse = (HttpServletResponse)response;
         }
         
+		String relativePath = getRelativePath(httpServletRequest);
+		
 		if (isWicketRequest(relativePath))
 		{
-			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 			long lastModified = getLastModified(httpServletRequest);
 			if (lastModified == -1)
 			{

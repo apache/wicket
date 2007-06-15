@@ -26,7 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.portals.bridges.common.PortletResourceURLFactory;
 import org.apache.portals.bridges.util.ServletPortletSessionProxy;
@@ -41,31 +40,30 @@ import org.apache.wicket.settings.IRequestCycleSettings;
  */
 public class WicketFilterPortletContext
 {
-    public void initFilter(FilterConfig filterConfig, WebApplication webApplication) throws ServletException
+	public void initFilter(FilterConfig filterConfig, WebApplication webApplication) throws ServletException
     {
         webApplication.getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_RENDER);
     }
 
-    public void setupFilter(FilterConfig config, ServletRequest request, ServletResponse response, String filterPath) throws IOException, ServletException
+    public void setupFilter(FilterConfig config, FilterRequestContext filterRequestContext, String filterPath) throws IOException, ServletException
     {
-    	HttpServletRequest servletRequest = (HttpServletRequest)request;
-    	PortletConfig portletConfig = (PortletConfig)request.getAttribute("javax.portlet.config");
+    	PortletConfig portletConfig = (PortletConfig)filterRequestContext.getRequest().getAttribute("javax.portlet.config");
         if ( portletConfig != null )
         {
-        	WicketResponseState responseState = (WicketResponseState)request.getAttribute(WicketPortlet.RESPONSE_STATE_ATTR);
-            request = new PortletServletRequestWrapper(config.getServletContext(),servletRequest, ServletPortletSessionProxy.createProxy(servletRequest));
-            if ( WicketPortlet.ACTION_REQUEST.equals(request.getAttribute(WicketPortlet.REQUEST_TYPE_ATTR)))
+        	WicketResponseState responseState = (WicketResponseState)filterRequestContext.getRequest().getAttribute(WicketPortlet.RESPONSE_STATE_ATTR);
+        	filterRequestContext.setRequest(new PortletServletRequestWrapper(config.getServletContext(),filterRequestContext.getRequest(), ServletPortletSessionProxy.createProxy(filterRequestContext.getRequest())));
+            if ( WicketPortlet.ACTION_REQUEST.equals(filterRequestContext.getRequest().getAttribute(WicketPortlet.REQUEST_TYPE_ATTR)))
             {
-                response = new PortletActionServletResponseWrapper((HttpServletResponse)response, responseState);
+            	filterRequestContext.setResponse(new PortletActionServletResponseWrapper(filterRequestContext.getResponse(), responseState));
             }
             else
             {   
-                response = new PortletRenderServletResponseWrapper( (HttpServletResponse)response, (RenderResponse)request.getAttribute("javax.portlet.response"),responseState);
+            	filterRequestContext.setResponse(new PortletRenderServletResponseWrapper(filterRequestContext.getResponse(), (RenderResponse)filterRequestContext.getRequest().getAttribute("javax.portlet.response"),responseState));
             }            
         }
         else
         {
-        	request = PortletRenderContext.getPortletServletRequest(config.getServletContext(),servletRequest, filterPath);
+        	filterRequestContext.setRequest(PortletRenderContext.getPortletServletRequest(config.getServletContext(),filterRequestContext.getRequest(), filterPath));
         }
     }
     
