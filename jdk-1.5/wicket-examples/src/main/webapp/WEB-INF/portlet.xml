@@ -635,7 +635,7 @@
     <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
     <init-param>
       <name>wicketFilterPath</name>
-      <value>/welocity</value>
+      <value>/velocity</value>
     </init-param>
     <supports>
       <mime-type>*/*</mime-type>
