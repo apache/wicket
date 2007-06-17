@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.IMarkupParserFactory;
 import org.apache.wicket.markup.MarkupParserFactory;
 
@@ -72,6 +73,13 @@ public interface IMarkupSettings
 	IMarkupParserFactory getMarkupParserFactory();
 
 	/**
+	 * The markup cache also loads the markup if not yet avaiable in the cache.
+	 * 
+	 * @return markup cache
+	 */
+	IMarkupCache getMarkupCache();
+
+	/**
 	 * @return Returns the stripComments.
 	 * @see IMarkupSettings#setStripComments(boolean)
 	 */
@@ -95,7 +103,8 @@ public interface IMarkupSettings
 	 * Application default for automatic link resolution. Please
 	 * 
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver and
-	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler for more details.
+	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler for more
+	 *      details.
 	 * 
 	 * @param automaticLinking
 	 *            The automaticLinking to set.
@@ -150,6 +159,15 @@ public interface IMarkupSettings
 	 *            new factory
 	 */
 	void setMarkupParserFactory(IMarkupParserFactory factory);
+
+	/**
+	 * Sets a new markup cache which will also be used to load markup if not yet
+	 * available in the cache.
+	 * 
+	 * @param markupCache
+	 *            new markup cache
+	 */
+	void setMarkupCache(IMarkupCache markupCache);
 
 	/**
 	 * Enables stripping of markup comments denoted in markup by HTML comment

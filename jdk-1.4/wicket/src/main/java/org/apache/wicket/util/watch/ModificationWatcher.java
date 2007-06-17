@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.wicket.util.listener.ChangeListenerSet;
 import org.apache.wicket.util.listener.IChangeListener;
@@ -190,5 +191,13 @@ public final class ModificationWatcher
 		{
 			task.stop();
 		}
+	}
+	
+	/**
+	 * @return Gets all IModifiable entries currently maintained
+	 */
+	public final Set getEntries()
+	{
+		return this.modifiableToEntry.keySet();
 	}
 }

@@ -31,7 +31,7 @@ import java.util.Properties;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
-import org.apache.wicket.markup.MarkupCache;
+import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
@@ -221,9 +221,6 @@ public abstract class Application
 	/** list of initializers. */
 	private List initializers = new ArrayList();
 
-	/** Markup cache for this application */
-	private final MarkupCache markupCache;
-
 	/** Application level meta data. */
 	private MetaDataEntry[] metaData;
 
@@ -253,9 +250,6 @@ public abstract class Application
 	{
 		// Create name from subclass
 		this.name = Classes.simpleName(getClass());
-
-		// Construct markup cache for this application
-		this.markupCache = new MarkupCache(this);
 
 		// Create shared resources repository
 		this.sharedResources = new SharedResources(this);
@@ -441,10 +435,11 @@ public abstract class Application
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
 	 * @return The markup cache associated with the application
+	 * @deprecated please use {@link IMarkupSettings#getMarkupCache()} instead
 	 */
-	public final MarkupCache getMarkupCache()
+	public final IMarkupCache getMarkupCache()
 	{
-		return this.markupCache;
+		return getMarkupSettings().getMarkupCache();
 	}
 
 	/**

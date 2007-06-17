@@ -74,15 +74,6 @@ public final class MarkupStream
 	}
 
 	/**
-	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN THE NEAR
-	 * FUTURE.
-	 */
-	protected MarkupStream()
-	{
-		this.markup = null;
-	}
-
-	/**
 	 * @return True if current markup element is a close tag
 	 */
 	public boolean atCloseTag()

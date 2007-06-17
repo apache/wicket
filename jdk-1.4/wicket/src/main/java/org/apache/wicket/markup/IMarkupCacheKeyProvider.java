@@ -39,5 +39,5 @@ public interface IMarkupCacheKeyProvider
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	CharSequence getCacheKey(final MarkupContainer container, Class containerClass);
+	String getCacheKey(final MarkupContainer container, Class containerClass);
 }

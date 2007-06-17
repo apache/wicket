@@ -34,7 +34,9 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.IMarkupParserFactory;
+import org.apache.wicket.markup.MarkupCache;
 import org.apache.wicket.markup.MarkupParserFactory;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.PackageResourceGuard;
@@ -169,6 +171,9 @@ public final class Settings
 	/** Factory for creating markup parsers */
 	private IMarkupParserFactory markupParserFactory;
 
+	/** A markup cache which will load the markup if required. */
+	private IMarkupCache markupCache;
+	
 	/** To help prevent denial of service attacks */
 	private int maxPageMaps = 5;
 
@@ -1239,5 +1244,27 @@ public final class Settings
 	public boolean isOutputMarkupContainerClassName()
 	{
 		return outputMarkupContainerClassName;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IMarkupSettings#getMarkupCache()
+	 */
+	public IMarkupCache getMarkupCache()
+	{
+		if (this.markupCache == null)
+		{
+			// Construct markup cache for this application
+			this.markupCache = new MarkupCache();
+		}
+
+		return this.markupCache;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IMarkupSettings#setMarkupCache(org.apache.wicket.markup.MarkupCache)
+	 */
+	public void setMarkupCache(final IMarkupCache markupCache)
+	{
+		this.markupCache = markupCache;
 	}
 }

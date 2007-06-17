@@ -48,14 +48,15 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	public CharSequence getCacheKey(final MarkupContainer container, final Class clazz)
+	public String getCacheKey(final MarkupContainer container, final Class clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = container.getLocale();
+		// TODO until now getStyle() == style + variation
 		final String style = container.getStyle();
 		final String markupType = container.getMarkupType();
 
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(classname.length() + 32);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(classname.length() + 64);
 		buffer.append(classname);
 
 		if (locale != null)
@@ -81,6 +82,6 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 		}
 
 		buffer.append(markupType);
-		return buffer;
+		return buffer.toString();
 	}
 }

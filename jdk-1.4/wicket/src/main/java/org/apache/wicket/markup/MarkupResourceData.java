@@ -37,8 +37,11 @@ public class MarkupResourceData
 	/** Placeholder that indicates no markup */
 	public static final MarkupResourceData NO_MARKUP_RESOURCE_DATA = new MarkupResourceData();
 
-	/** The markup's resource stream for diagnostic purposes */
+	/** The markup's resource stream */
 	private MarkupResourceStream resource;
+
+	/** In case of the inherited markup, the base markup's resource stream */
+	private MarkupResourceData baseMarkupResourceData;
 
 	/** If found in the markup, the <?xml ...?> string */
 	private String xmlDeclaration;
@@ -80,7 +83,7 @@ public class MarkupResourceData
 	 * 
 	 * @return The resource where this markup came from
 	 */
-	MarkupResourceStream getResource()
+	public MarkupResourceStream getResource()
 	{
 		return resource;
 	}
@@ -125,7 +128,7 @@ public class MarkupResourceData
 	{
 		return wicketId;
 	}
-	
+
 	/**
 	 * Sets encoding.
 	 * 
@@ -175,5 +178,26 @@ public class MarkupResourceData
 	final void setResource(final MarkupResourceStream resource)
 	{
 		this.resource = resource;
+	}
+
+	/**
+	 * Get the resource stream containing the base markup (markup inheritance)
+	 * 
+	 * @return baseMarkupResource Null, if not base markup
+	 */
+	public MarkupResourceData getBaseMarkupResourceData()
+	{
+		return this.baseMarkupResourceData;
+	}
+
+	/**
+	 * In case of markup inheritance, the base markup resource.
+	 * 
+	 * @param baseMarkupResourceData
+	 *            The base markup resource
+	 */
+	public void setBaseMarkupResourceData(MarkupResourceData baseMarkupResourceData)
+	{
+		this.baseMarkupResourceData = baseMarkupResourceData;
 	}
 }

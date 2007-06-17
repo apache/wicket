@@ -328,7 +328,7 @@ public abstract class MarkupContainer extends Component
 	{
 		try
 		{
-			return getApplication().getMarkupCache().getMarkupStream(this, throwException);
+			return getApplication().getMarkupSettings().getMarkupCache().getMarkupStream(this, false, throwException);
 		}
 		catch (MarkupException ex)
 		{
@@ -1479,6 +1479,6 @@ public abstract class MarkupContainer extends Component
 	 */
 	final boolean hasAssociatedMarkup()
 	{
-		return getApplication().getMarkupCache().hasAssociatedMarkup(this);
+		return getApplication().getMarkupSettings().getMarkupCache().hasAssociatedMarkup(this);
 	}
 }
