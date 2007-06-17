@@ -17,7 +17,9 @@
 package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 
@@ -36,6 +38,16 @@ public class SimplePage_13 extends WebPage
 	 */
 	public SimplePage_13()
 	{
-		add(new WebMarkupContainer("html").add(new AttributeModifier("lang", new Model("de"))));
+//		Component header = new WebMarkupContainer("html");
+		Component header = new AjaxLink("html", new Model("test"))
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick(AjaxRequestTarget target)
+			{
+			}
+		};
+		header.add(new AttributeModifier("lang", new Model("de")));
+		add(header);
 	}
 }
