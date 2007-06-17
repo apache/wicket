@@ -14,19 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.template;
+package org.apache.wicket.examples.template.pageinheritance;
 
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.examples.template.Banner;
+import org.apache.wicket.examples.template.Banner1;
+import org.apache.wicket.examples.template.Banner2;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
 
-
 /**
- * Our base page that serves as a template for pages that inherit from it.
- * Doesn't have to be abstract, but was made abstract here to stress the fact
- * that this page is not meant for direct use.
+ * Base page that serves as a template for pages that inherit from it. Doesn't
+ * have to be abstract, but was made abstract here to stress the fact that this
+ * page is not meant for direct use.
  * 
  * @author Eelco Hillenius
  */
@@ -85,15 +87,5 @@ public abstract class TemplatePage extends WicketExamplePage
 	public final void setPageTitle(String title)
 	{
 		this.pageTitle = title;
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
-	public boolean isVersioned()
-	{
-		// TODO Bug: Versioning gives problems... probably has to do with markup
-		// inheritance
-		return false;
 	}
 }

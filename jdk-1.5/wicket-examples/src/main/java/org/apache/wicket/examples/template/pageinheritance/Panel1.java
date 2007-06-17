@@ -14,30 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.template;
+package org.apache.wicket.examples.template.pageinheritance;
 
-import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.model.IModel;
 
 /**
- * Application class for the template example.
+ * Concrete, extending panel.
  * 
  * @author Eelco Hillenius
  */
-public class TemplateApplication extends WicketExampleApplication
+public class Panel1 extends TemplatePanel
 {
 	/**
-	 * Constructor.
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
 	 */
-	public TemplateApplication()
+	public Panel1(String id)
 	{
+		super(id);
 	}
 
 	/**
-	 * @see org.apache.wicket.Application#getHomePage()
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            the model
 	 */
-	public Class< ? > getHomePage()
+	public Panel1(String id, IModel model)
 	{
-		return Index.class;
+		super(id, model);
 	}
 
 }

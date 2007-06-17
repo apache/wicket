@@ -16,28 +16,19 @@
  */
 package org.apache.wicket.examples.template;
 
-import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.examples.WicketExamplePage;
 
 /**
- * Application class for the template example.
+ * Home page of the template example.
  * 
  * @author Eelco Hillenius
  */
-public class TemplateApplication extends WicketExampleApplication
+public class Index extends WicketExamplePage
 {
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
-	public TemplateApplication()
+	public Index()
 	{
 	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	public Class< ? > getHomePage()
-	{
-		return Index.class;
-	}
-
 }

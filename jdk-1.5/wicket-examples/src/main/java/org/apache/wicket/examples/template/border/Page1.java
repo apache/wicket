@@ -14,30 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.template;
+package org.apache.wicket.examples.template.border;
 
-import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.examples.WicketExamplePage;
+
 
 /**
- * Application class for the template example.
+ * Page that adds a template border for layout.
  * 
  * @author Eelco Hillenius
  */
-public class TemplateApplication extends WicketExampleApplication
+public class Page1 extends WicketExamplePage
 {
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
-	public TemplateApplication()
+	public Page1()
 	{
+		super();
+		add(new TemplateBorder("border"));
 	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	public Class< ? > getHomePage()
-	{
-		return Index.class;
-	}
-
 }

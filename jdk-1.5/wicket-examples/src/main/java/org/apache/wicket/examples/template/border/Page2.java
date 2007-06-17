@@ -14,25 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.template;
+package org.apache.wicket.examples.template.border;
 
+import org.apache.wicket.examples.WicketExamplePage;
 
 /**
- * Concrete page. Note that it extends {@link TemplatePage} and the markup uses
- * &lt;wicket:extend&gt; tags to define the region that is to be expanded into
- * the parent's &lt;wicket:child&gt; element.
+ * Page that adds a template border for layout.
  * 
  * @author Eelco Hillenius
  */
-public class Page1 extends TemplatePage
+public class Page2 extends WicketExamplePage
 {
 	/**
 	 * Constructor
 	 */
-	public Page1()
+	public Page2()
 	{
-		super();
-		setPageTitle("Template example, page 1");
-		add(new Panel1("panel1"));
+		add(new TemplateBorder("border"));
 	}
 }

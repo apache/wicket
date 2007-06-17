@@ -14,39 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.template;
-
-import org.apache.wicket.model.IModel;
+package org.apache.wicket.examples.template.pageinheritance;
 
 /**
- * Concrete, extending panel.
+ * Concrete page. Note that it extends {@link TemplatePage} and the markup uses
+ * &lt;wicket:extend&gt; tags to define the region that is to be expanded into
+ * the parent's &lt;wicket:child&gt; element.
  * 
  * @author Eelco Hillenius
  */
-public class Panel1 extends TemplatePanel
+public class Page2 extends TemplatePage
 {
 	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 *            component id
+	 * Constructor
 	 */
-	public Panel1(String id)
+	public Page2()
 	{
-		super(id);
+		setPageTitle("Template example, page 2");
 	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 *            component id
-	 * @param model
-	 *            the model
-	 */
-	public Panel1(String id, IModel model)
-	{
-		super(id, model);
-	}
-
 }

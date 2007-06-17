@@ -14,8 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.template;
-
+package org.apache.wicket.examples.template.pageinheritance;
 
 /**
  * Concrete page. Note that it extends {@link TemplatePage} and the markup uses
@@ -24,14 +23,14 @@ package org.apache.wicket.examples.template;
  * 
  * @author Eelco Hillenius
  */
-public class Page2 extends TemplatePage
+public class Page1 extends TemplatePage
 {
 	/**
 	 * Constructor
 	 */
-	public Page2()
+	public Page1()
 	{
-		super();
-		setPageTitle("Template example, page 2");
+		setPageTitle("Template example, page 1");
+		add(new Panel1("panel1"));
 	}
 }
