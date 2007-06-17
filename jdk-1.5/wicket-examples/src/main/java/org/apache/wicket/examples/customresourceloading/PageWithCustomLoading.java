@@ -85,7 +85,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
-	public CharSequence getCacheKey(MarkupContainer container, Class containerClass)
+	public String getCacheKey(MarkupContainer container, Class containerClass)
 	{
 		return null;
 	}
