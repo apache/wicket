@@ -45,6 +45,7 @@ import org.apache.wicket.request.target.coding.PackageRequestTargetUrlCodingStra
 import org.apache.wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
+import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.WebApplicationPath;
 import org.apache.wicket.util.lang.PackageName;
@@ -494,6 +495,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 		super.internalDestroy();
 		bufferedResponses.clear();
 		getSessionStore().destroy();
+		FileCleaner.destroy();
 	}
 
 	/**

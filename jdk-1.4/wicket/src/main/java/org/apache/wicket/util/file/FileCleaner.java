@@ -25,9 +25,9 @@ import java.util.Vector;
 /**
  * Keeps track of files awaiting deletion, and deletes them when an associated marker
  * object is reclaimed by the garbage collector.
+ * 
  * @author Noel Bergman
  * @author Martin Cooper
- * @version $Id$
  */
 public class FileCleaner
 {
@@ -82,6 +82,19 @@ public class FileCleaner
 		reaper.start();
 	}
 
+	/**
+	 * Stop the daemon thread
+	 */
+	public static void destroy()
+	{
+		if (reaper != null)
+		{
+			reaper.interrupt();
+			
+			// TODO Do we need to manually remove the temp files now?
+		}
+	}
+	
 	/**
 	 * Track the specified file, using the provided marker, deleting the file when the
 	 * marker instance is garbage collected.

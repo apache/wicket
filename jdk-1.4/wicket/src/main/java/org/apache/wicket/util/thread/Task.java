@@ -57,9 +57,12 @@ public final class Task
 	/** The time that the task should start. */
 	private Time startTime = Time.now();
 
-	/** When set the taks will stop as soon as possible. */
+	/** When set the task will stop as soon as possible. */
 	private boolean stop;
 
+	/** Each task has an associated Thread */
+	private Thread thread;
+	
 	/**
 	 * Constructor.
 	 * 
@@ -129,9 +132,9 @@ public final class Task
 			};
 
 			// Start the thread
-			final Thread thread = new Thread(runnable, name + " Task");
-			thread.setDaemon(isDaemon);
-			thread.start();
+			this.thread = new Thread(runnable, name + " Task");
+			this.thread.setDaemon(isDaemon);
+			this.thread.start();
 
 			// We're started all right!
 			isStarted = true;
@@ -224,5 +227,17 @@ public final class Task
 	public void stop()
 	{
 		stop = true;
+	}
+
+	/**
+	 * Will stop the task as soon as it does have that opportunity  
+	 */
+	public void interrupt()
+	{
+		stop();
+		if (this.thread != null)
+		{
+			thread.interrupt();
+		}
 	}
 }

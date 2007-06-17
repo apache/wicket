@@ -56,7 +56,7 @@ public final class ModificationWatcher
 
 		// The set of listeners to call when the modifiable changes
 		final ChangeListenerSet listeners = new ChangeListenerSet();
-		
+
 		// The modifiable thing
 		IModifiable modifiable;
 	}
@@ -87,7 +87,8 @@ public final class ModificationWatcher
 	 *            The modifiable thing to monitor
 	 * @param listener
 	 *            The listener to call if the modifiable is modified
-	 * @return <tt>true</tt> if the set did not already contain the specified element.
+	 * @return <tt>true</tt> if the set did not already contain the specified
+	 *         element.
 	 */
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
@@ -114,7 +115,7 @@ public final class ModificationWatcher
 				// The IModifiable is not returning a valid lastModifiedTime
 				log.info("Cannot track modifications to resource " + modifiable);
 			}
-			
+
 			return true;
 		}
 		else
@@ -133,13 +134,13 @@ public final class ModificationWatcher
 	public IModifiable remove(final IModifiable modifiable)
 	{
 		final Entry entry = (Entry)modifiableToEntry.remove(modifiable);
-		if(entry != null)
+		if (entry != null)
 		{
 			return entry.modifiable;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Start watching at a given polling rate
 	 * 
@@ -183,16 +184,17 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 *  stops the modification watcher from watching.
+	 * stops the modification watcher from watching.
 	 */
 	public void destroy()
 	{
-		if(task != null)
+		if (task != null)
 		{
-			task.stop();
+//			task.stop();
+			task.interrupt();
 		}
 	}
-	
+
 	/**
 	 * @return Gets all IModifiable entries currently maintained
 	 */
