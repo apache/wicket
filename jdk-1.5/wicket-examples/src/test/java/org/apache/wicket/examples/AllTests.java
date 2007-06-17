@@ -34,7 +34,6 @@ import org.apache.wicket.examples.niceurl.NiceUrlTest;
 import org.apache.wicket.examples.panels.signin.CookieTest;
 import org.apache.wicket.examples.repeater.RepeaterTest;
 import org.apache.wicket.examples.signin2.Signin2Test;
-import org.apache.wicket.examples.template.TemplateTest;
 
 import wicket.util.license.ApacheLicenceHeaderTest;
 
@@ -70,7 +69,6 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(ComprefTest.class);
 		suite.addTestSuite(EncodingTest.class);
 		suite.addTestSuite(NiceUrlTest.class);
-		suite.addTestSuite(TemplateTest.class);
 		suite.addTestSuite(RepeaterTest.class);
 		suite.addTestSuite(ImagesTest.class);
 		suite.addTestSuite(LibraryTest.class);
