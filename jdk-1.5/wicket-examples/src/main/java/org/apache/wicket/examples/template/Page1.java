@@ -18,9 +18,9 @@ package org.apache.wicket.examples.template;
 
 
 /**
- * Our base page that serves as a template for pages that inherit from it.
- * Doesn't have to be abstract, but was made abstract here to stress the fact
- * that this page is not meant for direct use.
+ * Concrete page. Note that it extends {@link TemplatePage} and the markup uses
+ * &lt;wicket:extend&gt; tags to define the region that is to be expanded into
+ * the parent's &lt;wicket:child&gt; element.
  * 
  * @author Eelco Hillenius
  */
