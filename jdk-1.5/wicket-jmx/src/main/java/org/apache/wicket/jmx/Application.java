@@ -61,7 +61,7 @@ public class Application implements ApplicationMBean
 	 */
 	public void clearMarkupCache() throws IOException
 	{
-		application.getMarkupCache().clear();
+		application.getMarkupSettings().getMarkupCache().clear();
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class Application implements ApplicationMBean
 	 */
 	public int getMarkupCacheSize() throws IOException
 	{
-		return application.getMarkupCache().size();
+		return application.getMarkupSettings().getMarkupCache().size();
 	}
 
 	/**
