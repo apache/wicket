@@ -63,10 +63,9 @@ import org.slf4j.LoggerFactory;
  * unique or unique within a Page's component hierarchy.
  * 
  * <li><b>Hierarchy </b>- A component has a parent which can be retrieved with
- * getParent(). If a component is an instance of MarkupContainer, it may have
- * children. In this way it has a place in the hierarchy of components contained
- * on a given page. The {@link Component#isAncestorOf(Component)} method returns
- * true if this Component is an ancestor of the given Component.
+ * {@link #getParent()}. If a component is an instance of MarkupContainer, it
+ * may have children. In this way it has a place in the hierarchy of components
+ * contained on a given page.
  * 
  * <li><b>Component Paths </b>- The path from the Page at the root of the
  * component hierarchy to a given Component is simply the concatenation with dot
