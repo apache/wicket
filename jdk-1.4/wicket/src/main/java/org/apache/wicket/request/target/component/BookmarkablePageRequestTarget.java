@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.target.component;
 
+import java.lang.ref.WeakReference;
+
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
@@ -36,7 +38,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	private Page page;
 
 	/** the class of the page. */
-	private final Class pageClass;
+	private final WeakReference/*<Class>*/ pageClassRef;
 
 	/** optional page map name. */
 	private final String pageMapName;
@@ -105,7 +107,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			throw new IllegalArgumentException("Argument pageClass must be an instance of "
 					+ Page.class.getName());
 		}
-		this.pageClass = pageClass;
+		this.pageClassRef = new WeakReference(pageClass);
 		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
 		this.pageMapName = pageMapName;
 	}
@@ -130,7 +132,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		if (obj != null && (obj instanceof BookmarkablePageRequestTarget))
 		{
 			BookmarkablePageRequestTarget that = (BookmarkablePageRequestTarget)obj;
-			if (pageClass.equals(that.pageClass))
+			if (getPageClass().equals(that.getPageClass()))
 			{
 				boolean mapMatch = false;
 
@@ -163,7 +165,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public final Class getPageClass()
 	{
-		return pageClass;
+		return (Class)pageClassRef.get();
 	}
 
 	/**
@@ -188,7 +190,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	public int hashCode()
 	{
 		int result = "BookmarkablePageRequestTarget".hashCode();
-		result += pageClass.hashCode();
+		result += getPageClass().hashCode();
 		result += pageMapName != null ? pageMapName.hashCode() : 0;
 		return 17 * result;
 	}
@@ -209,7 +211,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		if (pageClass != null)
+		if (pageClassRef != null && pageClassRef.get() != null)
 		{
 			if (requestCycle.isRedirect())
 			{
@@ -230,7 +232,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public String toString()
 	{
-		return "[BookmarkablePageRequestTarget@" + hashCode() + " pageClass=" + pageClass.getName()
+		return "[BookmarkablePageRequestTarget@" + hashCode() + " pageClass=" + getPageClass().getName()
 				+ "]";
 	}
 
@@ -270,9 +272,9 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	protected final Page getPage(RequestCycle requestCycle)
 	{
-		if (page == null && pageClass != null && !requestCycle.isRedirect())
+		if (page == null && !requestCycle.isRedirect())
 		{
-			page = newPage(pageClass, requestCycle);
+			page = newPage(getPageClass(), requestCycle);
 		}
 		return page;
 	}

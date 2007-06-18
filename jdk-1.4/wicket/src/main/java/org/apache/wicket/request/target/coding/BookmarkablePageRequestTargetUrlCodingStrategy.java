@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.target.coding;
 
+import java.lang.ref.WeakReference;
+
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
@@ -35,7 +37,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
-	protected final Class bookmarkablePageClass;
+	protected final WeakReference/*<Class>*/ bookmarkablePageClassRef;
 
 	/** page map name. */
 	private final String pageMapName;
@@ -60,7 +62,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			throw new IllegalArgumentException("Argument bookmarkablePageClass must be not null");
 		}
 
-		this.bookmarkablePageClass = bookmarkablePageClass;
+		this.bookmarkablePageClassRef = new WeakReference(bookmarkablePageClass);
 		this.pageMapName = pageMapName;
 	}
 
@@ -93,12 +95,12 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		{
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-					bookmarkablePageClass, parameters, requestParameters.getComponentPath(),
+					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters.getComponentPath(),
 					requestParameters.getInterfaceName());
 		}
 		else
 		{
-			return new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass, parameters);
+			return new BookmarkablePageRequestTarget(pageMapName, (Class)bookmarkablePageClassRef.get(), parameters);
 		}
 	}
 
@@ -138,7 +140,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-			if (bookmarkablePageClass.equals(target.getPageClass()))
+			if (((Class)bookmarkablePageClassRef.get()).equals(target.getPageClass()))
 			{
 				if (this.pageMapName == null)
 				{
@@ -158,6 +160,6 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 	 */
 	public String toString()
 	{
-		return "BookmarkablePageEncoder[page=" + bookmarkablePageClass + "]";
+		return "BookmarkablePageEncoder[page=" + (Class)bookmarkablePageClassRef.get() + "]";
 	}
 }
