@@ -38,4 +38,9 @@ public class DummyApplication extends WebApplication
 	{
 		return new WebResponse(servletResponse);
 	}
+	
+	protected void outputDevelopmentModeWarning()
+	{
+		// Do nothing.
+	}
 }

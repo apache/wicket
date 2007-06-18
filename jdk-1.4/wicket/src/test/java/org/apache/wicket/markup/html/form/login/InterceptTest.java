@@ -161,6 +161,11 @@ public class InterceptTest extends TestCase
 		{
 			return new WebResponse(servletResponse);
 		}
+		
+		protected void outputDevelopmentModeWarning()
+		{
+			// Do nothing.
+		}
 	}
 
 	/**
