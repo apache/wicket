@@ -30,4 +30,9 @@ public class MyTesterApplication extends WebApplication
 	{
 		return null;
 	}
+	
+	protected void outputDevelopmentModeWarning()
+	{
+		// Do nothing.
+	}
 }
