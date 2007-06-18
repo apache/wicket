@@ -22,6 +22,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * Renders a stable link which can be cached in a web browser and used at a
@@ -34,7 +35,7 @@ public class BookmarkablePageLink extends Link
 	private static final long serialVersionUID = 1L;
 
 	/** The page class that this link links to. */
-	private final Class pageClass;
+	private final String pageClassName;
 
 	/** Any page map for this link */
 	private String pageMapName = null;
@@ -79,7 +80,7 @@ public class BookmarkablePageLink extends Link
 			throw new IllegalArgumentException("Page class must be derived from "
 					+ Page.class.getName());
 		}
-		this.pageClass = pageClass;
+		this.pageClassName = pageClass.getName();
 		this.parameters = parameters;
 	}
 
@@ -90,7 +91,7 @@ public class BookmarkablePageLink extends Link
 	 */
 	public final Class getPageClass()
 	{
-		return this.pageClass;
+		return Classes.resolveClass(this.pageClassName);
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class BookmarkablePageLink extends Link
 	 */
 	public boolean linksTo(final Page page)
 	{
-		return page.getClass() == pageClass;
+		return page.getClass() == getPageClass();
 	}
 
 	protected boolean getStatelessHint()
@@ -213,11 +214,11 @@ public class BookmarkablePageLink extends Link
 
 		if (getPopupSettings() != null)
 		{
-			return urlFor(getPopupSettings().getPageMap(this), pageClass, parameters);
+			return urlFor(getPopupSettings().getPageMap(this), getPageClass(), parameters);
 		}
 		else
 		{
-			return urlFor(getPageMap(), pageClass, parameters);
+			return urlFor(getPageMap(), getPageClass(), parameters);
 		}
 	}
 }
