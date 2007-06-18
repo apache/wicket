@@ -64,14 +64,14 @@ public abstract class EnumeratedType extends StringValue
 	public static List getValues(final Class c)
 	{
 		// Get values for class
-		List valueList = (List)valueListByClass.get(c);
+		List valueList = (List)valueListByClass.get(c.getName());
 
 		// If no list exists
 		if (valueList == null)
 		{
 			// create lazily
 			valueList = new ArrayList();
-			valueListByClass.put(c, valueList);
+			valueListByClass.put(c.getName(), valueList);
 		}
 
 		return valueList;
