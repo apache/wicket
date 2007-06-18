@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authorization.strategies.role.example;
+package org.apache.wicket.examples.authorization;
 
 import org.apache.wicket.Request;
 import org.apache.wicket.protocol.http.WebApplication;

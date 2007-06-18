@@ -14,9 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authorization.strategies.role.example;
+package org.apache.wicket.examples.authorization;
 
 import org.apache.wicket.Session;
+import org.apache.wicket.examples.authorization.pages.AdminAnnotationsBookmarkablePage;
+import org.apache.wicket.examples.authorization.pages.AdminAnnotationsInternalPage;
+import org.apache.wicket.examples.authorization.pages.AdminBookmarkablePage;
+import org.apache.wicket.examples.authorization.pages.AdminInternalPage;
+import org.apache.wicket.examples.authorization.pages.AnnotationsPanelsPage;
+import org.apache.wicket.examples.authorization.pages.PanelsPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -25,13 +31,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-
-import org.apache.wicket.authorization.strategies.role.example.pages.AdminAnnotationsBookmarkablePage;
-import org.apache.wicket.authorization.strategies.role.example.pages.AdminAnnotationsInternalPage;
-import org.apache.wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
-import org.apache.wicket.authorization.strategies.role.example.pages.AdminInternalPage;
-import org.apache.wicket.authorization.strategies.role.example.pages.AnnotationsPanelsPage;
-import org.apache.wicket.authorization.strategies.role.example.pages.PanelsPage;
 
 /**
  * Home page for the roles example.

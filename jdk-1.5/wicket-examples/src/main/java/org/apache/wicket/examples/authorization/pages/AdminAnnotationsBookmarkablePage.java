@@ -14,26 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authorization.strategies.role.example.pages;
+package org.apache.wicket.examples.authorization.pages;
 
+import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.WebPage;
+
 
 /**
  * Bookmarkable page that may only be accessed by users that have role ADMIN.
  * 
  * @author Eelco Hillenius
  */
-public class AdminBookmarkablePage extends WebPage
+@AuthorizeInstantiation("ADMIN")
+public class AdminAnnotationsBookmarkablePage extends WebPage
 {
-	/*
-	 * See for configuration of this class the {@link RolesApplication#init)
-	 * MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
-	 */
-	
 	/**
 	 * Construct.
 	 */
-	public AdminBookmarkablePage()
+	public AdminAnnotationsBookmarkablePage()
 	{
 	}
 }

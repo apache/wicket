@@ -14,37 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authorization.strategies.role.example;
+package org.apache.wicket.examples.authorization.pages;
 
-import org.apache.wicket.Session;
-import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
-import org.apache.wicket.authorization.strategies.role.Roles;
-
+import org.apache.wicket.markup.html.WebPage;
 
 /**
- * The authorizer we need to provide to the authorization strategy
- * implementation
- * {@link org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy}.
+ * Non-bookmarkable page that may only be accessed by users that have role
+ * ADMIN.
  * 
  * @author Eelco Hillenius
  */
-public class UserRolesAuthorizer implements IRoleCheckingStrategy
+public class AdminInternalPage extends WebPage
 {
+	/*
+	 * See for configuration of this class the {@link RolesApplication#init)
+	 * MetaDataRoleAuthorizationStrategy.authorize(AdminInternalPage.class, "ADMIN");
+	 */
 
 	/**
 	 * Construct.
+	 * 
+	 * @param dummy
+	 *            just a parameter to make this page non-bookmarkable
 	 */
-	public UserRolesAuthorizer()
+	public AdminInternalPage(String dummy)
 	{
 	}
-
-	/**
-	 * @see org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Roles)
-	 */
-	public boolean hasAnyRole(Roles roles)
-	{
-		RolesSession authSession = (RolesSession)Session.get();
-		return authSession.getUser().hasAnyRole(roles);
-	}
-
 }

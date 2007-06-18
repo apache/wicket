@@ -339,7 +339,7 @@
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>org.apache.wicket.authorization.strategies.role.example.RolesApplication</param-value>
+			<param-value>org.apache.wicket.examples.authorization.RolesApplication</param-value>
 		</init-param>
 	</filter>
 

@@ -14,24 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authorization.strategies.role.example.pages;
+package org.apache.wicket.examples.authorization;
 
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.Session;
+import org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy;
+import org.apache.wicket.authorization.strategies.role.Roles;
 
 
 /**
- * Bookmarkable page that may only be accessed by users that have role ADMIN.
+ * The authorizer we need to provide to the authorization strategy
+ * implementation
+ * {@link org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy}.
  * 
  * @author Eelco Hillenius
  */
-@AuthorizeInstantiation("ADMIN")
-public class AdminAnnotationsBookmarkablePage extends WebPage
+public class UserRolesAuthorizer implements IRoleCheckingStrategy
 {
+
 	/**
 	 * Construct.
 	 */
-	public AdminAnnotationsBookmarkablePage()
+	public UserRolesAuthorizer()
 	{
 	}
+
+	/**
+	 * @see org.apache.wicket.authorization.strategies.role.IRoleCheckingStrategy#hasAnyRole(Roles)
+	 */
+	public boolean hasAnyRole(Roles roles)
+	{
+		RolesSession authSession = (RolesSession)Session.get();
+		return authSession.getUser().hasAnyRole(roles);
+	}
+
 }

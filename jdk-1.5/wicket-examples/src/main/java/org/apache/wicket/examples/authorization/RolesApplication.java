@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authorization.strategies.role.example;
+package org.apache.wicket.examples.authorization;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +24,9 @@ import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.strategies.role.RoleAuthorizationStrategy;
-import org.apache.wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
-import org.apache.wicket.authorization.strategies.role.example.pages.AdminInternalPage;
 import org.apache.wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.examples.authorization.pages.AdminBookmarkablePage;
+import org.apache.wicket.examples.authorization.pages.AdminInternalPage;
 import org.apache.wicket.protocol.http.WebApplication;
 
 
