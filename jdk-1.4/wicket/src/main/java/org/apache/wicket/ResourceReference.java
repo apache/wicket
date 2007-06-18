@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.PackageResource;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 
 
@@ -217,8 +218,7 @@ public class ResourceReference implements IClusterable
 	 */
 	public final Class getScope()
 	{
-		return Application.get().getApplicationSettings().getClassResolver()
-				.resolveClass(scopeName);
+		return Classes.resolveClass(scopeName);
 	}
 
 	/**
