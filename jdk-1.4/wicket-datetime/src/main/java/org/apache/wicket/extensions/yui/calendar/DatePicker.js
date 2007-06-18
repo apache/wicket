@@ -22,7 +22,7 @@ function init${widgetId}DpJs() {
 
  // create date picker instance
  YAHOO.wicket.${widgetId}DpJs = new YAHOO.widget.Calendar("${widgetId}DpJs","${widgetId}Dp", { ${calendarInit} });
-
+ YAHOO.wicket.${widgetId}DpJs.isVisible = function() { return YAHOO.wicket.${widgetId}DpJs.oDomContainer.style.display == 'block'; } 
  // inner function to show the calendar
  function showCalendar() {
     var dateValue = YAHOO.util.Dom.get("${widgetId}").value;
@@ -47,11 +47,17 @@ function init${widgetId}DpJs() {
     var yr = selDateArray[0];
     var month = selDateArray[1];
     var dt = selDateArray[2];
-    var val = '${datePattern}'.replace(/d+/, dt).replace(/M+/, month).replace(/y+/, yr);
+    var val = '${datePattern}'.replace(/d+/, dt).replace(/M+/, month).replace(/y+/, yr);    
+    var wasVisible = YAHOO.wicket.${widgetId}DpJs.isVisible();
     YAHOO.util.Dom.get("${widgetId}").value = val;
-
+     
     // hide picker
     cal.hide();
+    
+    // fire onchange notification 
+    if (wasVisible && ${fireChangeEvent}) {
+    	YAHOO.util.Dom.get("${widgetId}").onchange();
+    }
   }
 
   // register the select handler function

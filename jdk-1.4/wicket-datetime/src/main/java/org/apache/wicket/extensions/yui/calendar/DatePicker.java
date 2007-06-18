@@ -29,6 +29,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.YuiLib;
@@ -131,6 +132,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		String widgetId = getComponentMarkupId();
 		variables.put("widgetId", widgetId);
 		variables.put("datePattern", getDatePattern());
+		variables.put("fireChangeEvent", Boolean.valueOf(getNotifyBoundComponentOnDateSelected()));
+
 		// print out the initialization properties
 		Properties p = new Properties();
 		configureWidgetProperties(p);
@@ -340,5 +343,20 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected CharSequence getIconUrl()
 	{
 		return RequestCycle.get().urlFor(new ResourceReference(DatePicker.class, "icon1.gif"));
+	}
+
+	/**
+	 * Whether to notify the associated component when a date is selected.
+	 * Notifying is done by calling the associated component's onchange
+	 * Javascript event handler. You can for instance attach an
+	 * {@link AjaxEventBehavior} to that component to get a call back to the
+	 * server. Returns false by default.
+	 * 
+	 * @return if true, notifies the associated component when a date is
+	 *         selected
+	 */
+	protected boolean getNotifyBoundComponentOnDateSelected()
+	{
+		return false;
 	}
 }
