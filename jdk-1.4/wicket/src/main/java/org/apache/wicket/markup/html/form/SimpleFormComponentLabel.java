@@ -34,19 +34,19 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 * 
 	 * @param id
 	 *            component id
-	 * @param fc
-	 *            form component
+	 * @param labelProvider
+	 *            label provider (e.g. FormComponent, Radio, Check)
 	 */
-	public SimpleFormComponentLabel(String id, FormComponent fc)
+	public SimpleFormComponentLabel(String id, LabeledWebMarkupContainer labelProvider)
 	{
-		super(id, fc);
-		if (fc.getLabel() == null)
+		super(id, labelProvider);
+		if (labelProvider.getLabel() == null)
 		{
 			throw new IllegalStateException("Provided form component does not have a label set. "
 					+ "Use FormComponent.setLabel(IModel) to set the model "
 					+ "that will feed this label");
 		}
-		setModel(fc.getLabel());
+		setModel(labelProvider.getLabel());
 	}
 
 	/**

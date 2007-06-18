@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
- * A component that represents html label tag. This component will automatically
- * make the form component output an id attribute and link its for attribute
- * with that value.
+ * A component that represents html &lt;label&gt; tag. This component will
+ * automatically make the form component output an id attribute and link its for
+ * attribute with that value.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -31,48 +30,17 @@ public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	private Component component;
+	private LabeledWebMarkupContainer component;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
 	 *            component id
-	 * @param check
-	 *            Check component that this label represents
+	 * @param component
+	 *            component that this label is linked to
 	 */
-	public FormComponentLabel(String id, Check check)
-	{
-		this(id, (Component)check);
-	}
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            component id
-	 * @param radio
-	 *            Radio component that this label represents
-	 */
-	public FormComponentLabel(String id, Radio radio)
-	{
-		this(id, (Component)radio);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            component id
-	 * @param formComponent
-	 *            FormComponent that this label represents
-	 */
-	public FormComponentLabel(String id, FormComponent formComponent)
-	{
-		this(id, (Component)formComponent);
-	}
-	
-	private FormComponentLabel(String id, Component component)
+	public FormComponentLabel(String id, LabeledWebMarkupContainer component)
 	{
 		super(id);
 		if (component == null)
@@ -92,12 +60,12 @@ public class FormComponentLabel extends WebMarkupContainer
 
 
 	/**
-	 * Returns form component bound to this label.
-	 * This will be a FormComponent, a Radio or a Check.
+	 * Returns LabeledWebMarkupContainer bound to this label. This will be a
+	 * FormComponent, a Radio or a Check.
 	 * 
 	 * @return form component
 	 */
-	public Component getFormComponent()
+	public LabeledWebMarkupContainer getFormComponent()
 	{
 		return component;
 	}

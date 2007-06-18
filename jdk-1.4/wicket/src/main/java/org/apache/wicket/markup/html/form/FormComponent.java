@@ -32,8 +32,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
@@ -42,11 +40,11 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
-import org.apache.wicket.validation.IValidatorAddListener;
 import org.apache.wicket.validation.IErrorMessageSource;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.IValidatorAddListener;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.version.undo.Change;
 
@@ -75,7 +73,7 @@ import org.apache.wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class FormComponent extends WebMarkupContainer implements IFormVisitorParticipant
+public abstract class FormComponent extends LabeledWebMarkupContainer implements IFormVisitorParticipant
 {
 	/**
 	 * Visitor for traversing form components
@@ -406,12 +404,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	private transient Object convertedInput;
 
 	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to FormComponent itself.
-	 */
-	private IModel labelModel = null;
-
-	/**
 	 * Raw Input entered by the user or NO_RAW_INPUT if nothing is filled in.
 	 */
 	private String rawInput = NO_RAW_INPUT;
@@ -419,7 +411,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	/**
 	 * Type that the raw input string will be converted to
 	 */
-	private Class type;
+	private String typeName;
 
 	/**
 	 * The list of validators for this form component as either an IValidator
@@ -650,18 +642,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		return inputName.toString();
 	}
 
-
-	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to FormComponent itself.
-	 * 
-	 * @return labelModel
-	 */
-	public IModel getLabel()
-	{
-		return this.labelModel;
-	}
-
 	/**
 	 * Use hasRawInput() to check if this component has raw input because null
 	 * can mean 2 things: It doesn't have rawinput or the rawinput is really
@@ -679,7 +659,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 */
 	public final Class getType()
 	{
-		return type;
+		return typeName == null ? null : Classes.resolveClass(typeName);
 	}
 
 	/**
@@ -890,23 +870,6 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	}
 
 	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to FormComponent itself.
-	 * 
-	 * @param labelModel
-	 * @return this for chaining
-	 */
-	public FormComponent setLabel(IModel labelModel)
-	{
-		if (labelModel instanceof IComponentAssignedModel)
-		{
-			labelModel = ((IComponentAssignedModel)labelModel).wrapOnAssignment(this);
-		}
-		this.labelModel = labelModel;
-		return this;
-	}
-
-	/**
 	 * Sets the value for a form component this value will be split the string
 	 * with {@link FormComponent#VALUE_SEPARATOR} and calls
 	 * setModelValue(String[]) with that.
@@ -962,7 +925,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 */
 	public final FormComponent setRequired(final boolean required)
 	{
-		if (!required && type != null && type.isPrimitive())
+		if (!required && getType() != null && getType().isPrimitive())
 		{
 			throw new WicketRuntimeException(
 					"FormComponent can't be not required when the type is primitive class: " + this);
@@ -984,9 +947,11 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 */
 	public final FormComponent setType(Class type)
 	{
-		this.type = type;
+		this.typeName = type == null ? null : type.getName();
 		if (type != null && type.isPrimitive())
+		{
 			setRequired(true);
+		}
 		return this;
 	}
 
@@ -1117,7 +1082,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 	 */
 	protected final void convert()
 	{
-		if (type == null)
+		if (typeName == null)
 		{
 			try
 			{
@@ -1153,7 +1118,7 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 		}
 		else
 		{
-			final IConverter converter = getConverter(type);
+			final IConverter converter = getConverter(getType());
 			try
 			{
 				convertedInput = converter.convertToObject(getInput(), getLocale());
@@ -1165,11 +1130,12 @@ public abstract class FormComponent extends WebMarkupContainer implements IFormV
 				{
 					error.addMessageKey(e.getResourceKey());
 				}
-				error.addMessageKey("IConverter." + Classes.simpleName(type));
+				String simpleName = Classes.simpleName(getType());
+				error.addMessageKey("IConverter." + simpleName);
 				error.addMessageKey("IConverter");
 
 
-				error.setVariable("type", Classes.simpleName(type));
+				error.setVariable("type", simpleName);
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{

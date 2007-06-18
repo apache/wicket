@@ -35,14 +35,10 @@ import org.apache.wicket.util.lang.Objects;
  * @author Sven Meier (svenmeier)
  * 
  */
-public class Radio extends WebMarkupContainer
+public class Radio extends LabeledWebMarkupContainer
 {
-	private static final String ATTR_DISABLED = "disabled";
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
+	private static final String ATTR_DISABLED = "disabled";
 
 	/**
 	 * page-scoped uuid of this check. this property must not be accessed

@@ -36,11 +36,8 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class Check extends WebMarkupContainer
+public class Check extends LabeledWebMarkupContainer
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String ATTR_DISABLED = "disabled";
