@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.template;
 
+import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class TextTemplateSharedResourceFactory
 	/**
 	 * Shared resource scope
 	 */
-	private final Class scope;
+	private final WeakReference/*<Class>*/ scopeRef;
 
 	/**
 	 * Template to use to create resources
@@ -86,7 +87,7 @@ public class TextTemplateSharedResourceFactory
 	public TextTemplateSharedResourceFactory(final TextTemplate template, final Class scope)
 	{
 		this.template = template;
-		this.scope = scope;
+		this.scopeRef = new WeakReference(scope);
 	}
 
 	/**
@@ -130,7 +131,7 @@ public class TextTemplateSharedResourceFactory
 			};
 			sharedResources.add(uniqueName, newResource);
 		}
-		return new ResourceReference(scope == null ? Application.class : scope, uniqueName);
+		return new ResourceReference((Class)scopeRef.get(), uniqueName);
 	}
 
 	/**
