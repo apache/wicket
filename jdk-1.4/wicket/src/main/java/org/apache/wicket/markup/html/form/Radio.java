@@ -150,4 +150,17 @@ public class Radio extends LabeledWebMarkupContainer
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 	}
+	
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to Radio itself.
+	 * 
+	 * @param labelModel
+	 * @return this for chaining
+	 */
+	public Radio setLabel(IModel labelModel)
+	{
+		setLabelInternal(labelModel);
+		return this;
+	}
 }

@@ -868,6 +868,19 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 			updateModel();
 		}
 	}
+	
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 * 
+	 * @param labelModel
+	 * @return this for chaining
+	 */
+	public FormComponent setLabel(IModel labelModel)
+	{
+		setLabelInternal(labelModel);
+		return this;
+	}
 
 	/**
 	 * Sets the value for a form component this value will be split the string

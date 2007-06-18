@@ -169,4 +169,16 @@ public class Check extends LabeledWebMarkupContainer
 
 	}
 
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to Check itself.
+	 * 
+	 * @param labelModel
+	 * @return this for chaining
+	 */
+	public Check setLabel(IModel labelModel)
+	{
+		setLabelInternal(labelModel);
+		return this;
+	}
 }

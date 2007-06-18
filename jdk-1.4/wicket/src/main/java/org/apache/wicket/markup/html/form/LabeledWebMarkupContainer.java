@@ -30,9 +30,8 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 			ILabelProvider
 {
 	/**
-	 * The value will be made available to the validator property by means
-	 * of ${label}. It does not have any specific meaning to FormComponent
-	 * itself.
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
 	 */
 	private IModel labelModel = null;
 
@@ -61,15 +60,22 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.ILabelProvider#setLabel(org.apache.wicket.model.IModel)
+	 * Provide internal setter. We need this because people want to be able to
+	 * chain together our setters in FormComponent, etc. e.g. for
+	 * .setLabel(foo).setRequired()
+	 * 
+	 * TODO: When we move to JDK5 and covariant return types, we can push this
+	 * into ILabelProvider and still make chaining in FormComponent work
+	 * properly.
+	 * 
+	 * @param labelModel
 	 */
-	public ILabelProvider setLabel(IModel labelModel)
+	protected void setLabelInternal(IModel labelModel)
 	{
 		if (labelModel instanceof IComponentAssignedModel)
 		{
 			labelModel = ((IComponentAssignedModel)labelModel).wrapOnAssignment(this);
 		}
 		this.labelModel = labelModel;
-		return this;
 	}
 }

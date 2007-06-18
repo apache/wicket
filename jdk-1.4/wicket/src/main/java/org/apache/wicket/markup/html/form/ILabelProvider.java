@@ -32,13 +32,4 @@ public interface ILabelProvider
 	 * @return labelModel
 	 */
 	public IModel getLabel();
-
-	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to FormComponent itself.
-	 * 
-	 * @param labelModel
-	 * @return this for chaining
-	 */
-	public ILabelProvider setLabel(IModel labelModel);
 }
