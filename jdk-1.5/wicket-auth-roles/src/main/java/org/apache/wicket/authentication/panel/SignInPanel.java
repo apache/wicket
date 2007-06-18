@@ -160,7 +160,7 @@ public class SignInPanel extends Panel
 	 */
 	public String getPassword()
 	{
-		return password.getModelObjectAsString();
+		return password.getInput();
 	}
 
 	/**
