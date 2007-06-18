@@ -181,12 +181,24 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	protected final Object convertValue(final String[] value)
 	{
 		String tmp = value != null && value.length > 0 ? value[0] : null;
-		List choices = getChoices();
+		return convertChoiceIdToChoice(tmp);
+	}
+
+	/**
+	 * Converts submitted choice id string back to choice object.
+	 * 
+	 * @param id
+	 * @return choice object
+	 */
+	protected Object convertChoiceIdToChoice(String id)
+	{
+		final List choices = getChoices();
+		final IChoiceRenderer renderer = getChoiceRenderer();
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
 			final Object choice = choices.get(index);
-			if (getChoiceRenderer().getIdValue(choice, index).equals(tmp))
+			if (renderer.getIdValue(choice, index).equals(id))
 			{
 				return choice;
 			}
