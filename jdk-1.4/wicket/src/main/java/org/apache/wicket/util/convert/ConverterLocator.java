@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert;
 
+import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -55,7 +56,7 @@ public class ConverterLocator implements IConverterLocator
 	{
 		private static final long serialVersionUID = 1L;
 
-		private Class/* ? */type;
+		private WeakReference/*<Class<?>>*/ type;
 
 		/**
 		 * Construct.
@@ -64,7 +65,7 @@ public class ConverterLocator implements IConverterLocator
 		 */
 		public DefaultConverter(Class/* ? */type)
 		{
-			this.type = type;
+			this.type = new WeakReference(type);
 		}
 
 		/**
@@ -79,7 +80,7 @@ public class ConverterLocator implements IConverterLocator
 			}
 			if ("".equals(value))
 			{
-				if (type == String.class)
+				if (((Class)type.get()) == String.class)
 				{
 					return "";
 				}
@@ -88,7 +89,7 @@ public class ConverterLocator implements IConverterLocator
 
 			try
 			{
-				return Objects.convertValue(value, type);
+				return Objects.convertValue(value, (Class)type.get());
 			}
 			catch (Exception e)
 			{
@@ -114,10 +115,7 @@ public class ConverterLocator implements IConverterLocator
 	private static final long serialVersionUID = 1L;
 
 	/** Maps Classes to ITypeConverters. */
-	private final Map/* Class<?>, IConverter */classToConverter = new HashMap/*
-																				 * Class<?>,
-																				 * IConverter
-																				 */();;
+	private final Map/* String, IConverter */classToConverter = new HashMap/* String, IConverter */();
 
 	/**
 	 * Constructor
@@ -156,7 +154,7 @@ public class ConverterLocator implements IConverterLocator
 	 */
 	public final IConverter get(Class/* ? */c)
 	{
-		return (IConverter)classToConverter.get(c);
+		return (IConverter)classToConverter.get(c.getName());
 	}
 
 	/**
@@ -199,7 +197,7 @@ public class ConverterLocator implements IConverterLocator
 	 */
 	public final IConverter remove(Class/* ? */c)
 	{
-		return (IConverter)classToConverter.remove(c);
+		return (IConverter)classToConverter.remove(c.getName());
 	}
 
 	/**
@@ -222,6 +220,6 @@ public class ConverterLocator implements IConverterLocator
 		{
 			throw new IllegalArgumentException("Class cannot be null");
 		}
-		return (IConverter)classToConverter.put(c, converter);
+		return (IConverter)classToConverter.put(c.getName(), converter);
 	}
 }
