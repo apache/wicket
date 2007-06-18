@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.settings;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -90,7 +91,7 @@ public final class Settings
 			IRequestLoggerSettings
 {
 	/** Class of access denied page. */
-	private Class accessDeniedPage;
+	private WeakReference/*<Class<? extends Page>*/ accessDeniedPage;
 
 	/** ajax debug mode status */
 	private boolean ajaxDebugModeEnabled = false;
@@ -163,7 +164,7 @@ public final class Settings
 	private boolean gatherExtendedBrowserInfo = false;
 
 	/** Class of internal error page. */
-	private Class internalErrorPage;
+	private WeakReference/*<Class<? extends Page>*/ internalErrorPage;
 
 	/** I18N support */
 	private Localizer localizer;
@@ -187,7 +188,7 @@ public final class Settings
 	private IPackageResourceGuard packageResourceGuard = new PackageResourceGuard();
 
 	/** The error page displayed when an expired page is accessed. */
-	private Class pageExpiredErrorPage;
+	private WeakReference/*<Class<? extends Page>*/ pageExpiredErrorPage;
 
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
@@ -378,7 +379,7 @@ public final class Settings
 	 */
 	public Class getAccessDeniedPage()
 	{
-		return accessDeniedPage;
+		return (Class)accessDeniedPage.get();
 	}
 
 	/**
@@ -521,7 +522,7 @@ public final class Settings
 	 */
 	public Class getInternalErrorPage()
 	{
-		return internalErrorPage;
+		return (Class)internalErrorPage.get();
 	}
 
 	/**
@@ -569,7 +570,7 @@ public final class Settings
 	 */
 	public Class getPageExpiredErrorPage()
 	{
-		return pageExpiredErrorPage;
+		return (Class)pageExpiredErrorPage.get();
 	}
 
 	/**
@@ -799,7 +800,7 @@ public final class Settings
 		}
 		checkPageClass(accessDeniedPage);
 
-		this.accessDeniedPage = accessDeniedPage;
+		this.accessDeniedPage = new WeakReference(accessDeniedPage);
 	}
 
 	/**
@@ -950,7 +951,7 @@ public final class Settings
 		}
 		checkPageClass(internalErrorPage);
 
-		this.internalErrorPage = internalErrorPage;
+		this.internalErrorPage = new WeakReference(internalErrorPage);
 	}
 
 	/**
@@ -997,7 +998,7 @@ public final class Settings
 		}
 		checkPageClass(pageExpiredErrorPage);
 
-		this.pageExpiredErrorPage = pageExpiredErrorPage;
+		this.pageExpiredErrorPage = new WeakReference(pageExpiredErrorPage);
 	}
 
 	/**
