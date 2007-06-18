@@ -17,8 +17,7 @@
 package org.apache.wicket.examples.authorization.pages;
 
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.html.WebPage;
-
+import org.apache.wicket.examples.authorization.BasePage;
 
 /**
  * Bookmarkable page that may only be accessed by users that have role ADMIN.
@@ -26,7 +25,7 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Eelco Hillenius
  */
 @AuthorizeInstantiation("ADMIN")
-public class AdminAnnotationsBookmarkablePage extends WebPage
+public class AdminAnnotationsBookmarkablePage extends BasePage
 {
 	/**
 	 * Construct.

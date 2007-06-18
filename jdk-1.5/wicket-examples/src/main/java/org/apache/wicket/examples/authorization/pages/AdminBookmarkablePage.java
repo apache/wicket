@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.examples.authorization.pages;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.authorization.BasePage;
 
 /**
  * Bookmarkable page that may only be accessed by users that have role ADMIN.
  * 
  * @author Eelco Hillenius
  */
-public class AdminBookmarkablePage extends WebPage
+public class AdminBookmarkablePage extends BasePage
 {
 	/*
 	 * See for configuration of this class the {@link RolesApplication#init)

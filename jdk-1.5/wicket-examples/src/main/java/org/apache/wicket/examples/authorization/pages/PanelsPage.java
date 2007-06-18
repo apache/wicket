@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.authorization.pages;
 
 import org.apache.wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.authorization.BasePage;
 import org.apache.wicket.markup.html.panel.Panel;
 
 
@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public class PanelsPage extends WebPage
+public class PanelsPage extends BasePage
 {
 	/**
 	 * Construct.

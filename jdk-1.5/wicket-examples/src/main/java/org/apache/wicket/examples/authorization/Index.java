@@ -37,7 +37,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class Index extends WebPage
+public class Index extends BasePage
 {
 	/**
 	 * Construct.

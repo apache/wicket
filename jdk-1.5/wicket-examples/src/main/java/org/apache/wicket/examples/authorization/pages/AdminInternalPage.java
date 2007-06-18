@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.authorization.pages;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.authorization.BasePage;
 
 /**
  * Non-bookmarkable page that may only be accessed by users that have role
@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-public class AdminInternalPage extends WebPage
+public class AdminInternalPage extends BasePage
 {
 	/*
 	 * See for configuration of this class the {@link RolesApplication#init)

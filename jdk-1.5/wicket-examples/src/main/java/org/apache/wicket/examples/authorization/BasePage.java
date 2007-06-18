@@ -14,27 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.authorization.pages;
+package org.apache.wicket.examples.authorization;
 
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.examples.authorization.BasePage;
+import org.apache.wicket.examples.WicketExamplePage;
 
 /**
- * Non-bookmarkable page that may only be accessed by users that have role
- * ADMIN.
- * 
- * @author Eelco Hillenius
+ * @author almaw
  */
-@AuthorizeInstantiation("ADMIN")
-public class AdminAnnotationsInternalPage extends BasePage
+public class BasePage extends WicketExamplePage
 {
-	/**
-	 * Construct.
-	 * 
-	 * @param dummy
-	 *            just a parameter to make this page non-bookmarkable
-	 */
-	public AdminAnnotationsInternalPage(String dummy)
-	{
-	}
+	
 }

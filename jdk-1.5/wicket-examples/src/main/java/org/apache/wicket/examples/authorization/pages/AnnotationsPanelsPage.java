@@ -24,20 +24,19 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.strategies.role.Roles;
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeAction;
+import org.apache.wicket.examples.authorization.BasePage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-
 
 /**
  * Bookmarkable page that may only be accessed by users that have role ADMIN.
  * 
  * @author Eelco Hillenius
  */
-public class AnnotationsPanelsPage extends WebPage
+public class AnnotationsPanelsPage extends BasePage
 {
 	@AuthorizeAction(action = Action.RENDER, roles = Roles.ADMIN)
 	private static class AdminLabel extends Label
