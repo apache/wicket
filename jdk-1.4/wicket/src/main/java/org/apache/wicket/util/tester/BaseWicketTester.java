@@ -145,6 +145,11 @@ public class BaseWicketTester extends MockWebApplication
 			{
 				return homePage;
 			}
+                        
+			protected void outputDevelopmentModeWarning()
+			{
+				// Do nothing.
+			}
 		}, null);
 	}
 

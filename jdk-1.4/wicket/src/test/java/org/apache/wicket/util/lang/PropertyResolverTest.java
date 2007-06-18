@@ -57,6 +57,11 @@ public class PropertyResolverTest extends TestCase
 				return null;
 			}
 			
+			protected void outputDevelopmentModeWarning()
+			{
+				// Do nothing.
+			}
+			
 		}, "/foo");
 		PropertyResolver.init(app.getApplication());
 	}

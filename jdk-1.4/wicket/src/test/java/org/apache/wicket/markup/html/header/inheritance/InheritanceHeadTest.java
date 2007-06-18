@@ -98,6 +98,11 @@ public class InheritanceHeadTest extends WicketTestCase
 			{
 				return new WebResponse(servletResponse);
 			}
+			
+			protected void outputDevelopmentModeWarning()
+			{
+				// Do nothing.
+			}
 		});
 		
 		executeTest(ConcretePage2.class, "ExpectedResult3.html");
