@@ -16,15 +16,12 @@
  */
 package org.apache.wicket.authentication.example;
 
-import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
-
+import org.apache.wicket.examples.WicketExamplePage;
 
 /**
- * A page only accessible by a user in the ADMIN role.
- * 
- * @author Jonathan Locke
+ * @author almaw
  */
-@AuthorizeInstantiation("ADMIN")
-public class AdminPage extends BasePage
+public class BasePage extends WicketExamplePage
 {
+	
 }

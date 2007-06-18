@@ -16,13 +16,12 @@
  */
 package org.apache.wicket.authentication.example;
 
-import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Simple home page.
  * 
  * @author Jonathan Locke
  */
-public class HomePage extends WebPage
+public class HomePage extends BasePage
 {
 }
