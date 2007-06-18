@@ -174,4 +174,11 @@ public interface IHeaderResponse
 	 * @param javascript
 	 */
 	public void renderOnLoadJavascript(String javascript);
+	
+	/**
+	 * Renders javascript that is executed before a page is unloaded.
+	 * 
+	 * @param javascript
+	 */
+	public void renderOnBeforeUnloadJavascript(String javascript);
 }

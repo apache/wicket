@@ -197,4 +197,18 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnBeforeUnloadJavascript(java.lang.String)
+	 */
+	public void renderOnBeforeUnloadJavascript(String javascript)
+	{
+		List token = Arrays.asList(new Object[] { "javascript-event", "beforeunload", javascript });
+		if (wasRendered(token) == false)
+		{
+			renderJavascriptReference(WicketEventReference.INSTANCE);
+			JavascriptUtils.writeJavascript(getResponse(),
+					"Wicket.Event.add(window, \"beforeunload\", function() { " + javascript + ";});");
+			markRendered(token);
+		}
+	}
 }
