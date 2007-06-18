@@ -151,7 +151,7 @@ public class FilePageStore implements IPageStore
 			}
 			catch (Exception e)
 			{
-				log.error("Error saving page " + key.pageClass + " [" + key.id + ","
+				log.error("Error saving page " + key.pageClassName + " [" + key.id + ","
 						+ key.versionNumber + "] for the sessionid " + key.sessionId);
 			}
 			finally
@@ -171,7 +171,7 @@ public class FilePageStore implements IPageStore
 			long t3 = System.currentTimeMillis();
 			if (log.isDebugEnabled())
 			{
-				log.debug("storing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
+				log.debug("storing page " + key.pageClassName + "[" + key.id + "," + key.versionNumber
 						+ "] size: " + length + " for session " + key.sessionId + " took "
 						+ (t3 - t1) + " miliseconds to save");
 			}
@@ -286,7 +286,7 @@ public class FilePageStore implements IPageStore
 		private final int versionNumber;
 		private final int ajaxVersionNumber;
 		private final String pageMap;
-		private final Class pageClass;
+		private final String pageClassName;
 
 		private volatile Object data;
 
@@ -303,7 +303,7 @@ public class FilePageStore implements IPageStore
 			this.id = id;
 			this.versionNumber = versionNumber;
 			this.ajaxVersionNumber = ajaxVersionNumber;
-			this.pageClass = pageClass;
+			this.pageClassName = pageClass == null ? null : pageClass.getName();
 			this.pageMap = pagemap;
 			this.data = page;
 		}
@@ -713,7 +713,7 @@ public class FilePageStore implements IPageStore
 			serialized++;
 			if (log.isDebugEnabled() && bytes != null)
 			{
-				log.debug("serializing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
+				log.debug("serializing page " + key.pageClassName + "[" + key.id + "," + key.versionNumber
 						+ "] size: " + bytes.length + " for session " + key.sessionId + " took "
 						+ (System.currentTimeMillis() - t1) + " miliseconds to serialize");
 			}
