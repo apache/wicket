@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -85,7 +86,7 @@ public class ComponentTag extends MarkupElement
 	 * and the information about the tags origin is lost. In some cases like
 	 * wicket:head and wicket:link this information however is required.
 	 */
-	private Class markupClass;
+	private WeakReference/*<Class>*/ markupClassRef = new WeakReference(null);
 
 	/**
 	 * Tags which are detected to have only an open tag, which is allowed with
@@ -411,7 +412,7 @@ public class ComponentTag extends MarkupElement
 	void copyPropertiesTo(ComponentTag dest)
 	{
 		dest.id = id;
-		dest.setMarkupClass(this.markupClass);
+		dest.setMarkupClass((Class)this.markupClassRef.get());
 		dest.setHasNoCloseTag(this.hasNoCloseTag);
 		dest.setPath(this.path);
 		if (behaviors != null)
@@ -757,7 +758,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public Class getMarkupClass()
 	{
-		return markupClass;
+		return (Class)markupClassRef.get();
 	}
 
 	/**
@@ -768,7 +769,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public void setMarkupClass(Class wicketHeaderClass)
 	{
-		this.markupClass = wicketHeaderClass;
+		this.markupClassRef = new WeakReference(wicketHeaderClass);
 	}
 
 	/**

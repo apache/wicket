@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.authorization.strategies.page;
 
+import java.lang.ref.WeakReference;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -58,7 +60,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 * The supertype (class or interface) of Pages that require authorization to
 	 * be instantiated.
 	 */
-	private final Class securePageSuperType;
+	private final WeakReference/*<Class>*/ securePageSuperTypeRef;
 
 	/**
 	 * Construct.
@@ -77,7 +79,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 			throw new IllegalArgumentException("Secure page super type must not be null");
 		}
 
-		this.securePageSuperType = securePageSuperType;
+		this.securePageSuperTypeRef = new WeakReference(securePageSuperType);
 
 		// Handle unauthorized access to pages
 		Application.get().getSecuritySettings().setUnauthorizedComponentInstantiationListener(
@@ -107,7 +109,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	 */
 	protected boolean isPageAuthorized(final Class pageClass)
 	{
-		if (instanceOf(pageClass, securePageSuperType))
+		if (instanceOf(pageClass, (Class)securePageSuperTypeRef.get()))
 		{
 			return isAuthorized();
 		}

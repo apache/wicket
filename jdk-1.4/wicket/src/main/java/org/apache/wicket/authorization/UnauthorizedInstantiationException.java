@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.authorization;
 
+import org.apache.wicket.util.lang.Classes;
+
 /**
  * Exception that is thrown when the creation of a component is not allowed.
  * 
@@ -27,7 +29,7 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	private static final long serialVersionUID = 1L;
 
 	/** The component class that could not be instantiated */
-	private Class componentClass;
+	private String componentClassName;
 
 	/**
 	 * Construct.
@@ -38,7 +40,7 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	public UnauthorizedInstantiationException(final Class componentClass)
 	{
 		super("Not authorized to instantiate class " + componentClass.getName());
-		this.componentClass = componentClass;
+		this.componentClassName = componentClass.getName();
 	}
 
 	/**
@@ -46,6 +48,6 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	 */
 	public Class getComponentClass()
 	{
-		return componentClass;
+		return Classes.resolveClass(componentClassName);
 	}
 }
