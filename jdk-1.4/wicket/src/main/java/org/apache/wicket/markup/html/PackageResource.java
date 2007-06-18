@@ -40,6 +40,7 @@ import org.apache.wicket.SharedResources;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -456,7 +457,7 @@ public class PackageResource extends WebResource
 	private final String path;
 
 	/** The scoping class, used for class loading and to determine the package. */
-	private final Class scope;
+	private final String scopeName;
 
 	/** The resource's style */
 	private final String style;
@@ -488,7 +489,7 @@ public class PackageResource extends WebResource
 					+ " may not be accessed");
 		}
 
-		this.scope = scope;
+		this.scopeName = scope.getName();
 		this.path = path;
 		this.locale = locale;
 		this.style = style;
@@ -541,7 +542,7 @@ public class PackageResource extends WebResource
 	{
 		// Locate resource
 		IResourceStream resourceStream = Application.get().getResourceSettings()
-				.getResourceStreamLocator().locate(scope, absolutePath, style, locale, null);
+				.getResourceStreamLocator().locate(getScope(), absolutePath, style, locale, null);
 
 		// Check that resource was found
 		if (resourceStream == null)
@@ -570,7 +571,7 @@ public class PackageResource extends WebResource
 	 */
 	public final Class getScope()
 	{
-		return scope;
+		return Classes.resolveClass(scopeName);
 	}
 
 	/**
