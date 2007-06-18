@@ -183,12 +183,7 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public WicketTester()
 	{
-		this(new DummyWebApplication() {
-			protected void outputDevelopmentModeWarning()
-			{
-				// do nothing
-			}
-		});
+		this(new DummyWebApplication());
 	}
 
 	/**
