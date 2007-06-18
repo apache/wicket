@@ -75,7 +75,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	
 	/**
 	 * @param markupId The components markupid.
-	 * @return The component to show when the real component is created.
+	 * @return The component to show while the real component is being created.
 	 */
 	public Component getLoadingComponent(String markupId)
 	{
