@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.lang;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -272,15 +271,14 @@ public final class PropertyResolver
 
 	private final static IGetAndSet getGetAndSetter(String exp, Class clz)
 	{
-		Map getAndSetters = (Map)classesToGetAndSetters.get(clz.getName());
+		Map getAndSetters = (Map)classesToGetAndSetters.get(clz);
 		if (getAndSetters == null)
 		{
 			getAndSetters = new ConcurrentHashMap(8);
-			classesToGetAndSetters.put(clz.getName(), getAndSetters);
+			classesToGetAndSetters.put(clz, getAndSetters);
 		}
 
-		WeakReference ref = (WeakReference)getAndSetters.get(exp);
-		IGetAndSet getAndSetter = ref == null ? null : (IGetAndSet)ref.get();
+		IGetAndSet getAndSetter = (IGetAndSet)getAndSetters.get(exp);
 		if (getAndSetter == null)
 		{
 			Method method = null;
@@ -411,7 +409,7 @@ public final class PropertyResolver
 				field = findField(clz, exp);
 				getAndSetter = new MethodGetAndSet(method, field);
 			}
-			getAndSetters.put(exp, new WeakReference(getAndSetter));
+			getAndSetters.put(exp, getAndSetter);
 		}
 		return getAndSetter;
 	}
@@ -1143,10 +1141,6 @@ public final class PropertyResolver
 		 */
 		public Method getSetter()
 		{
-			if (setMethod == null)
-			{
-				setMethod = findSetter(getMethod, getMethod.getReturnType());
-			}
 			return setMethod;
 		}
 
