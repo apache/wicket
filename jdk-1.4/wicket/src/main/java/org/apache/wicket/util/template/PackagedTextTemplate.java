@@ -58,12 +58,12 @@ public class PackagedTextTemplate extends TextTemplate
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final Class clazz;
+		private final String className;
 		private final String path;
 
 		CachedTextTemplateKey(Class clazz, String path)
 		{
-			this.clazz = clazz;
+			this.className = clazz.getName();
 			this.path = path;
 		}
 
