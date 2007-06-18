@@ -3185,7 +3185,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		if (getFlag(FLAG_OUTPUT_MARKUP_ID))
+		if (getFlag(FLAG_OUTPUT_MARKUP_ID) && !tag.getAttributes().containsKey(MARKUP_ID_ATTR_NAME))
 		{
 			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
 		}
