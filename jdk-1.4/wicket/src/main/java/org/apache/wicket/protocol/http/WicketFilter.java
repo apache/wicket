@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.servlet.Filter;
@@ -42,6 +43,7 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -356,7 +358,8 @@ public class WicketFilter implements Filter
 
 			// Try to configure filterPath from web.xml if it's not specified as
 			// an init-param.
-			if (filterConfig.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM) == null)
+			String filterMapping = filterConfig.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM);
+			if (filterMapping == null || filterMapping.equals(WicketFilter.SERVLET_PATH_HOLDER))
 			{
 				InputStream is = filterConfig.getServletContext().getResourceAsStream(
 						"/WEB-INF/web.xml");
@@ -366,18 +369,21 @@ public class WicketFilter implements Filter
 					{
 						filterPath = getFilterPath(filterConfig.getFilterName(), is);
 					}
-					catch (Exception e)
+					catch (ServletException e)
 					{
-						log.debug("Error parsing web.xml", e);
-						// Swallow IOException or SecurityException or similar,
-						// and log.info below.
+						log.error("Error reading servlet/filter path from web.xml", e);
 					}
-				}
-				if (filterPath == null)
-				{
-					log.info("Unable to parse filter mapping web.xml for "
-							+ filterConfig.getFilterName() + ". " + "Configure with init-param "
-							+ FILTER_MAPPING_PARAM + " if it is not \"/*\".");
+					catch (SecurityException e)
+					{
+						// Swallow this at INFO.
+						log.info("Couldn't read web.xml to automatically pick up servlet/filter path: " + e.getMessage());
+					}
+					if (filterPath == null)
+					{
+						log.info("Unable to parse filter mapping web.xml for "
+								+ filterConfig.getFilterName() + ". " + "Configure with init-param "
+								+ FILTER_MAPPING_PARAM + " if it is not \"/*\".");
+					}
 				}
 			}
 
@@ -424,6 +430,9 @@ public class WicketFilter implements Filter
 
 	private String getFilterPath(String filterName, InputStream is) throws ServletException
 	{
+		String prefix = servletMode ? "servlet" : "filter";
+		String mapping = prefix + "-mapping";
+		String name = prefix + "-name";
 
 		// Filter mappings look like this:
 		//		  
@@ -434,16 +443,16 @@ public class WicketFilter implements Filter
 			ArrayList urlPatterns = new ArrayList();
 			XmlPullParser parser = new XmlPullParser();
 			parser.parse(is);
-
+			
 			while (true)
-			{
+			{				
 				XmlTag elem;
 				do
 				{
 					elem = (XmlTag)parser.nextTag();
 				}
 				while (elem != null
-						&& (!(elem.getName().equals("filter-mapping") && elem.isOpen())));
+						&& (!(elem.getName().equals(mapping) && elem.isOpen())));
 
 				if (elem == null)
 					break;
@@ -457,7 +466,7 @@ public class WicketFilter implements Filter
 					{
 						parser.setPositionMarker();
 					}
-					else if (elem.isClose() && elem.getName().equals("filter-name"))
+					else if (elem.isClose() && elem.getName().equals(name))
 					{
 						encounteredFilterName = parser.getInputFromPositionMarker(elem.getPos())
 								.toString();
@@ -473,6 +482,8 @@ public class WicketFilter implements Filter
 					urlPatterns.add(urlPattern);
 			}
 
+			String prefixUppered = Character.toUpperCase(prefix.charAt(0)) + prefix.substring(1);
+			
 			// By the time we get here, we have a list of urlPatterns we match
 			// this filter against.
 			// In all likelihood, we will only have one. If we have none, we
@@ -481,8 +492,8 @@ public class WicketFilter implements Filter
 			// 302 redirects that require absolute URLs.
 			if (urlPatterns.size() == 0)
 			{
-				throw new ServletException(
-						"Error initialising WicketFilter - you have no filter-mapping element with a url-pattern that uses filter: "
+				throw new IllegalArgumentException(
+						"Error initialising Wicket" + prefixUppered + " - you have no <" + mapping + "> element with a url-pattern that uses " + prefix + ": "
 								+ filterName);
 			}
 			String urlPattern = (String)urlPatterns.get(0);
@@ -490,16 +501,23 @@ public class WicketFilter implements Filter
 			// Check for leading '/' and trailing '*'.
 			if (!urlPattern.startsWith("/") || !urlPattern.endsWith("*"))
 			{
-				throw new ServletException(
-						"Filter mappings for Wicket filter must start with '/' and end with '*'.");
+				throw new IllegalArgumentException("<" + mapping + "> for Wicket" + prefixUppered + " \"" + filterName + "\" must start with '/' and end with '*'.");
 			}
 
 			// Strip trailing '*' and leading '/'.
 			return urlPattern.substring(1, urlPattern.length() - 1);
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			throw new ServletException("Error finding filter " + filterName + " in web.xml", e);
+			throw new ServletException("Error finding <" + prefix + "> " + filterName + " in web.xml", e);
+		}
+		catch (ParseException e)
+		{
+			throw new ServletException("Error finding <" + prefix + "> " + filterName + " in web.xml", e);
+		}
+		catch (ResourceStreamNotFoundException e)
+		{
+			throw new ServletException("Error finding <" + prefix + "> " + filterName + " in web.xml", e);
 		}
 	}
 
