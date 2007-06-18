@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.authentication;
 
+import java.lang.ref.WeakReference;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Request;
@@ -43,7 +45,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			IUnauthorizedComponentInstantiationListener
 {
 	/** Subclass of authenticated web session to instantiate */
-	private final Class<? extends AuthenticatedWebSession> webSessionClass;
+	private final WeakReference<Class<? extends AuthenticatedWebSession>> webSessionClassRef;
 
 	/**
 	 * Constructor
@@ -51,7 +53,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	public AuthenticatedWebApplication()
 	{
 		// Get web session class to instantiate
-		this.webSessionClass = getWebSessionClass();
+		this.webSessionClassRef = new WeakReference<Class<? extends AuthenticatedWebSession>>(getWebSessionClass());
 	}
 
 	@Override
@@ -108,13 +110,13 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	{
 		try
 		{
-			return webSessionClass.getDeclaredConstructor(AuthenticatedWebApplication.class,
+			return webSessionClassRef.get().getDeclaredConstructor(AuthenticatedWebApplication.class,
 					Request.class).newInstance(AuthenticatedWebApplication.this, request);
 		}
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException(
-					"Unable to instantiate web session " + webSessionClass, e);
+					"Unable to instantiate web session " + webSessionClassRef.get(), e);
 		}
 	}
 
