@@ -86,7 +86,7 @@ public class TestFilePageStore implements IPageStore
 		private final int versionNumber;
 		private final int ajaxVersionNumber;
 		private final String pageMap;
-		private final Class pageClass;
+		private final String pageClassName;
 
 		SessionPageKey(String sessionId, Page page)
 		{
@@ -101,7 +101,7 @@ public class TestFilePageStore implements IPageStore
 			this.id = id;
 			this.versionNumber = versionNumber;
 			this.ajaxVersionNumber = ajaxVersionNumber;
-			this.pageClass = pageClass;
+			this.pageClassName = pageClass.getName();
 			this.pageMap = pagemap;
 		}
 
@@ -237,7 +237,7 @@ public class TestFilePageStore implements IPageStore
 		}
 		catch (Exception e)
 		{
-			log.error("Error saving page " + key.pageClass + " [" + key.id + ","
+			log.error("Error saving page " + key.pageClassName + " [" + key.id + ","
 					+ key.versionNumber + "] for the sessionid " + key.sessionId);
 		}
 		finally
@@ -257,7 +257,7 @@ public class TestFilePageStore implements IPageStore
 		long t3 = System.currentTimeMillis();
 		if (log.isDebugEnabled())
 		{
-			log.debug("storing page " + key.pageClass + "[" + key.id + "," + key.versionNumber
+			log.debug("storing page " + key.pageClassName + "[" + key.id + "," + key.versionNumber
 					+ "] size: " + length + " for session " + key.sessionId + " took " + (t3 - t1)
 					+ " miliseconds to save");
 		}
