@@ -14,38 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authentication.example;
+package org.apache.wicket.examples.authentication;
 
-import org.apache.wicket.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.authentication.AuthenticatedWebSession;
-import org.apache.wicket.markup.html.WebPage;
-
+import org.apache.wicket.examples.WicketExamplePage;
 
 /**
- * A role-authorized, authenticated web application in just a few lines of code.
- * 
- * @author Jonathan Locke
+ * @author almaw
  */
-public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
+public class BasePage extends WicketExamplePage
 {
-	@Override
-	protected Class< ? extends AuthenticatedWebSession> getWebSessionClass()
-	{
-		return MyAuthenticatedWebSession.class;
-	}
-
-	@Override
-	protected Class< ? extends WebPage> getSignInPageClass()
-	{
-		return MySignInPage.class;
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
-	@Override
-	public Class getHomePage()
-	{
-		return HomePage.class;
-	}
+	
 }

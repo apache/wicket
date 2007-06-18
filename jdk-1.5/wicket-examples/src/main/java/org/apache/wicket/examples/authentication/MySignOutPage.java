@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.authentication.example;
+package org.apache.wicket.examples.authentication;
 
-import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.authentication.pages.SignOutPage;
 
 /**
- * @author almaw
+ * Trivial sign out page
+ * 
+ * @author Jonathan
  */
-public class BasePage extends WicketExamplePage
+public class MySignOutPage extends SignOutPage
 {
-	
 }
