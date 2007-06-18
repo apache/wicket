@@ -683,7 +683,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public boolean isBookmarkable()
 	{
-		Boolean bookmarkable = (Boolean)pageClassToBookmarkableCache.get(getClass());
+		Boolean bookmarkable = (Boolean)pageClassToBookmarkableCache.get(getClass().getName());
 		if (bookmarkable == null)
 		{
 			try
@@ -712,7 +712,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			{
 				bookmarkable = Boolean.FALSE;
 			}
-			pageClassToBookmarkableCache.put(getClass(), bookmarkable);
+			pageClassToBookmarkableCache.put(getClass().getName(), bookmarkable);
 		}
 		return bookmarkable.booleanValue();
 
