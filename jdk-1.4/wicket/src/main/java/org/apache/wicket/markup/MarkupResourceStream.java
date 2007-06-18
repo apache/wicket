@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
@@ -48,7 +49,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * The actual component class the markup is directly associated with. It
 	 * might be super class of the component class
 	 */
-	private final Class markupClass;
+	private final String markupClassName;
 
 	/** The key used to cache the markup resource stream */
 	private String cacheKey;
@@ -62,7 +63,7 @@ public class MarkupResourceStream implements IResourceStream
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = null;
-		this.markupClass = null;
+		this.markupClassName = null;
 
 		if (resourceStream == null)
 		{
@@ -82,7 +83,7 @@ public class MarkupResourceStream implements IResourceStream
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = containerInfo;
-		this.markupClass = markupClass;
+		this.markupClassName = markupClass == null ? null : markupClass.getName();
 
 		if (resourceStream == null)
 		{
@@ -161,7 +162,7 @@ public class MarkupResourceStream implements IResourceStream
 	 */
 	public Class getMarkupClass()
 	{
-		return markupClass;
+		return Classes.resolveClass(markupClassName);
 	}
 
 	/**
