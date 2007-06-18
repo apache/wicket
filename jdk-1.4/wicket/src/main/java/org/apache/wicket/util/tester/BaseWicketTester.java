@@ -90,6 +90,7 @@ public class BaseWicketTester extends MockWebApplication
 
 		/**
 		 * Construct.
+		 * 
 		 * @param page
 		 */
 		private TestPageSource(Page page)
@@ -111,6 +112,11 @@ public class BaseWicketTester extends MockWebApplication
 		public Class getHomePage()
 		{
 			return DummyHomePage.class;
+		}
+
+		protected void outputDevelopmentModeWarning()
+		{
+			// Do nothing.
 		}
 	}
 
@@ -221,7 +227,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void executeBehavior(final AbstractAjaxBehavior behavior)
 	{
-		//setupRequestAndResponse();
+		// setupRequestAndResponse();
 		WebRequestCycle cycle = createRequestCycle();
 		CharSequence url = behavior.getCallbackUrl(false);
 		setupRequestAndResponse();
