@@ -66,6 +66,10 @@ public final class Classes
 	 */
 	public static Class resolveClass(final String className)
 	{
+		if (className == null)
+		{
+			return null;
+		}
 		if (Application.exists())
 		{
 			return Application.get().getApplicationSettings().getClassResolver().resolveClass(
