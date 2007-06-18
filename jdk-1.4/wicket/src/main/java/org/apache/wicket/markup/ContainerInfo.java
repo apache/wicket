@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
-
 
 /**
  * Because a Component has reference to its parents, which eventually is the
@@ -32,7 +32,7 @@ import org.apache.wicket.MarkupContainer;
  */
 public class ContainerInfo
 {
-	private final Class containerClass;
+	private final WeakReference/* <Class> */containerClassRef;
 	private final Locale locale;
 	private final String style;
 	private final String variation;
@@ -46,25 +46,24 @@ public class ContainerInfo
 	 */
 	public ContainerInfo(final MarkupContainer container)
 	{
-		this.containerClass = container.getClass();
-		this.locale = container.getLocale();
-		this.style = container.getStyle();
-		this.variation = null;
-		this.fileExtension = container.getMarkupType();
+		this(container.getClass(), container.getLocale(), container.getStyle(), null, container
+				.getMarkupType());
 	}
 
 	/**
 	 * Construct.
+	 * 
 	 * @param containerClass
 	 * @param locale
 	 * @param style
 	 * @param variation
 	 * @param fileExtension
 	 */
-	public ContainerInfo(final Class containerClass, final Locale locale, final String style, final String variation, final String fileExtension)
+	public ContainerInfo(final Class containerClass, final Locale locale, final String style,
+			final String variation, final String fileExtension)
 	{
 		super();
-		this.containerClass = containerClass;
+		this.containerClassRef = new WeakReference(containerClass);
 		this.locale = locale;
 		this.style = style;
 		this.variation = variation;
@@ -77,7 +76,7 @@ public class ContainerInfo
 	 */
 	public Class getContainerClass()
 	{
-		return containerClass;
+		return (Class)containerClassRef.get();
 	}
 
 	/**
@@ -122,6 +121,7 @@ public class ContainerInfo
 	 */
 	public String toString()
 	{
-		return containerClass.getName() + ":" + locale + ":" + style + ":" + fileExtension;
+		return ((Class)containerClassRef.get()).getName() + ":" + locale + ":" + style + ":"
+				+ fileExtension;
 	}
 }
