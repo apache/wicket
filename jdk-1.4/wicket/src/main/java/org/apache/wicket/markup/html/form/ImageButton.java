@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.markup.html.image.resource.LocalizedImageResource;
 
 /**
- * A button which renders itself as an image button resource.
+ * &lt;input type="image"&gt; component - like {@link Button} only with an image.
  * <p>
  * For details of how ImageButtons load, generate and manage images, see
  * {@link LocalizedImageResource}.
