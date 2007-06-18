@@ -32,7 +32,6 @@ import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * This class parses expressions to lookup or set a value on the object that is
  * given. <br/> The supported expressions are:
@@ -59,11 +58,11 @@ import org.slf4j.LoggerFactory;
  */
 public final class PropertyResolver
 {
-	private final static Map classesToGetAndSetters = new ConcurrentHashMap(64);
+	private final static Map applicationToClassesToGetAndSetters = new ConcurrentHashMap(2);
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
-
+	
 	/**
 	 * Looksup the value from the object with the given expression. If the
 	 * expresion, the object itself or one property evalutes to null then a null
@@ -271,6 +270,7 @@ public final class PropertyResolver
 
 	private final static IGetAndSet getGetAndSetter(String exp, Class clz)
 	{
+		Map classesToGetAndSetters = getClassesToGetAndSetters();
 		Map getAndSetters = (Map)classesToGetAndSetters.get(clz);
 		if (getAndSetters == null)
 		{
@@ -1238,5 +1238,30 @@ public final class PropertyResolver
 		{
 			return field;
 		}
+	}
+
+	private static Map getClassesToGetAndSetters()
+	{
+		return (Map)applicationToClassesToGetAndSetters.get(Application.get());
+	}
+	
+	/**
+	 * Initialize cache for this app.
+	 * 
+	 * @param application
+	 */
+	public static void init(Application application)
+	{
+		applicationToClassesToGetAndSetters.put(application, new ConcurrentHashMap(64));
+	}
+
+	/**
+	 * Clean up cache for this app.
+	 * 
+	 * @param application
+	 */
+	public static void destroy(Application application)
+	{
+		applicationToClassesToGetAndSetters.remove(application);
 	}
 }

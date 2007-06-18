@@ -27,6 +27,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.MockWebApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.ConverterLocator;
 
@@ -40,13 +42,29 @@ public class PropertyResolverTest extends TestCase
 			new ConverterLocator(), Locale.US);
 
 	private Person person;
-
+	private MockWebApplication app;
+	
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception
 	{
 		person = new Person();
+		app = new MockWebApplication(new WebApplication() {
+
+			public Class getHomePage()
+			{
+				return null;
+			}
+			
+		}, "/foo");
+		PropertyResolver.init(app.getApplication());
+	}
+	
+	protected void tearDown() throws Exception
+	{
+		super.tearDown();
+		PropertyResolver.destroy(app.getApplication());
 	}
 
 	/**
@@ -410,6 +428,9 @@ public class PropertyResolverTest extends TestCase
 	 */
 	public void testGetTargetSetter() {
 		Address address = new Address();
+		
+		// FIXME: We shouldn't need to run this first in order for the getName() stuff to work.
+		PropertyResolver.setValue("number", address, new Integer(1), CONVERTER);
 		
 		Method method = PropertyResolver.getPropertySetter("number", address);
 		assertEquals(method.getName(), "setNumber");

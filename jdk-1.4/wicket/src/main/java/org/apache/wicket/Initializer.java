@@ -20,13 +20,14 @@ import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.link.ILinkListener;
+import org.apache.wicket.util.lang.PropertyResolver;
 
 /**
  * Initializer for components in wicket core library.
  * 
  * @author Jonathan Locke
  */
-public class Initializer implements IInitializer
+public class Initializer implements IInitializer, IDestroyer
 {
 	/**
 	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
@@ -42,8 +43,18 @@ public class Initializer implements IInitializer
 		IOnChangeListener.INTERFACE.register();
 		IRedirectListener.INTERFACE.register();
 		IResourceListener.INTERFACE.register();
+		
+		PropertyResolver.init(application);
 	}
-	
+
+	/**
+	 * @see IDestroyer#destroy(org.apache.wicket.Application)
+	 */
+	public void destroy(Application application)
+	{
+		PropertyResolver.destroy(application);	
+	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
