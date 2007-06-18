@@ -24,7 +24,6 @@ import org.apache.wicket.proxy.LazyInitProxyFactory;
 import org.apache.wicket.spring.ISpringContextLocator;
 import org.apache.wicket.spring.SpringBeanLocator;
 
-
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create
  * proxies for Spring dependencies based on the {@link SpringBean} annotation
@@ -63,9 +62,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 
 	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = new ConcurrentHashMap<SpringBeanLocator, Object>();
 
-	/** fail fast tag, see {@link #setFailFast(boolean)} */
-	private boolean failFast = true;
-
 	/**
 	 * @param contextLocator
 	 *            spring context locator
@@ -94,11 +90,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 				return cache.get(locator);
 			}
 
-			// fail early - see if the locator can locate the spring bean
-			if (failFast) {
-				testLocator(locator, fieldOwner, field);
-			}
-
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
 					locator);
 			// only put the proxy into the cache if the bean is a singleton
@@ -112,42 +103,9 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 	}
 
 	/**
-	 * Tests if the locator can retrieve the bean it is responsible for.
-	 * 
-	 * @param locator
-	 * @param fieldOwner
-	 * @param field
-	 */
-	private void testLocator(SpringBeanLocator locator, Object fieldOwner,
-			Field field) {
-		try {
-			locator.locateProxyTarget();
-		} catch (Throwable e) {
-			String errorMessage = "Could not locate spring bean of class [["
-					+ locator.getBeanType().getName() + "]] ";
-			if (locator.getBeanName() != null
-					&& locator.getBeanName().length() > 0) {
-				errorMessage += "and id [[" + locator.getBeanName() + "]] ";
-			}
-			errorMessage += "needed in class [["
-					+ fieldOwner.getClass().getName() + "]] field [["
-					+ field.getName() + "]]";
-			throw new RuntimeException(errorMessage, e);
-		}
-	}
-
-	/**
 	 * @see org.apache.wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
 	 */
 	public boolean supportsField(Field field) {
 		return field.isAnnotationPresent(SpringBean.class);
-	}
-
-	/**
-	 * @param failFast
-	 *            true if the locator fails if a bean can't be located
-	 */
-	public void setFailFast(boolean failFast) {
-		this.failFast = failFast;
 	}
 }
