@@ -18,6 +18,8 @@ package org.apache.wicket;
 
 import java.io.Serializable;
 
+import org.apache.wicket.util.lang.Classes;
+
 /**
  * A key to a piece of metadata associated with a Component at runtime. The key
  * contains type information that can be used to check the type of any metadata
@@ -35,7 +37,7 @@ public abstract class MetaDataKey implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** Type of data associated with this key */
-	private Class type;
+	private String typeName;
 
 	/**
 	 * Constructor.
@@ -45,7 +47,7 @@ public abstract class MetaDataKey implements IClusterable
 	 */
 	public MetaDataKey(final Class type)
 	{
-		this.type = type;
+		this.typeName = type.getName();
 	}
 
 	/**
@@ -152,10 +154,11 @@ public abstract class MetaDataKey implements IClusterable
 	 */
 	void checkType(final Object object)
 	{
-		if (object != null && !type.isAssignableFrom(object.getClass()))
+		Class clazz = Classes.resolveClass(typeName);
+		if (object != null && !clazz.isAssignableFrom(object.getClass()) )
 		{
 			throw new IllegalArgumentException("MetaDataKey " + getClass()
-					+ " requires argument of " + type + ", not " + object.getClass());
+					+ " requires argument of " + clazz + ", not " + object.getClass());
 		}
 	}
 
@@ -164,6 +167,6 @@ public abstract class MetaDataKey implements IClusterable
 	 */
 	public String toString()
 	{
-		return getClass() + "[type=" + type + "]";
+		return getClass() + "[type=" + typeName + "]";
 	}
 }
