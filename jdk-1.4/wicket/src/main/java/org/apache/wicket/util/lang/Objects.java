@@ -24,7 +24,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -103,7 +102,7 @@ public final class Objects
 
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
-		private final WeakReference/*<ClassLoader>*/ classloaderRef;
+		private final ClassLoader classloader;
 		private HashMap replacedComponents;
 
 		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents,
@@ -111,7 +110,7 @@ public final class Objects
 		{
 			super(in);
 			this.replacedComponents = replacedComponents;
-			this.classloaderRef = new WeakReference(classloader);
+			this.classloader = classloader;
 			enableResolveObject(true);
 		}
 
@@ -125,7 +124,7 @@ public final class Objects
 
 			try
 			{
-				return Class.forName(className, true, (ClassLoader)classloaderRef.get());
+				return Class.forName(className, true, classloader);
 			}
 			catch (ClassNotFoundException ex1)
 			{
