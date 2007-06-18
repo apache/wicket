@@ -742,8 +742,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public Component(final String id, final IModel model)
 	{
 		setId(id);
-		getApplication().notifyComponentInstantiationListeners(this);
 		this.model = wrap(model);
+		getApplication().notifyComponentInstantiationListeners(this);
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
