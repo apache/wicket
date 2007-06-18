@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.application;
 
+import java.lang.ref.WeakReference;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.concurrent.ConcurrentReaderHashMap;
 
@@ -49,8 +51,14 @@ public final class DefaultClassResolver implements IClassResolver
 	{
 		try
 		{
-			Class clz = (Class)classes.get(classname);
-			if (clz == null)
+			Class clazz = null;
+			WeakReference ref = (WeakReference)classes.get(classname);
+			// Might be garbage-collected between getting the WeakRef and retrieving the Class from it.
+			if (ref != null)
+			{
+				clazz = (Class)ref.get();
+			}
+			if (clazz == null)
 			{
 				synchronized (classes)
 				{
@@ -59,11 +67,11 @@ public final class DefaultClassResolver implements IClassResolver
 					{
 						loader = DefaultClassResolver.class.getClassLoader();
 					}
-					clz = loader.loadClass(classname);
-					classes.put(classname, clz);
+					clazz = loader.loadClass(classname);
+					classes.put(classname, new WeakReference(clazz));
 				}
 			}
-			return clz;
+			return clazz;
 		}
 		catch (ClassNotFoundException ex)
 		{
