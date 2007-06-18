@@ -78,7 +78,8 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      List)
 	 */
 	public ListMultipleChoice(final String id, final List choices)
 	{
@@ -94,7 +95,8 @@ public class ListMultipleChoice extends AbstractChoice
 	 *            list of choices
 	 * @param maxRows
 	 *            the maximum number of visible rows.
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      List)
 	 */
 	public ListMultipleChoice(final String id, final List choices, final int maxRows)
 	{
@@ -251,6 +253,27 @@ public class ListMultipleChoice extends AbstractChoice
 	 */
 	protected Object convertValue(String[] ids) throws ConversionException
 	{
+		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
+		{
+			return convertChoiceIdsToChoices(ids);
+		}
+		else
+		{
+			// TODO 1.3: check if its safe to return Collections.EMPTY_LIST here
+			return new ArrayList();
+		}
+	}
+
+	/**
+	 * Converts submitted choice ids to choice objects.
+	 * 
+	 * @param ids
+	 *            choice ids. this array is nonnull and always contains at least
+	 *            one id.
+	 * @return list of choices.
+	 */
+	protected List convertChoiceIdsToChoices(String[] ids)
+	{
 		ArrayList selectedValues = new ArrayList();
 
 		// If one or more ids is selected
@@ -275,6 +298,7 @@ public class ListMultipleChoice extends AbstractChoice
 			}
 		}
 		return selectedValues;
+
 	}
 
 	/**
