@@ -20,6 +20,7 @@ import java.text.Format;
 import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.lang.Classes;
 
 
 /**
@@ -44,7 +45,7 @@ public class ConversionException extends WicketRuntimeException
 	private Object sourceValue;
 
 	/** Target type for the failed conversion. */
-	private Class/*<?>*/ targetType;
+	private String targetTypeName;
 	
 	/** Resource key for the message that should be displayed */
 	private String resourceKey;
@@ -131,7 +132,7 @@ public class ConversionException extends WicketRuntimeException
 	 */
 	public final Class/*<?>*/ getTargetType()
 	{
-		return targetType;
+		return Classes.resolveClass(targetTypeName);
 	}
 
 	/**
@@ -195,7 +196,7 @@ public class ConversionException extends WicketRuntimeException
 	 */
 	public final ConversionException setTargetType(Class/*?*/ targetType)
 	{
-		this.targetType = targetType;
+		this.targetTypeName = targetType.getName();
 		return this;
 	}
 
