@@ -132,7 +132,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		String widgetId = getComponentMarkupId();
 		variables.put("widgetId", widgetId);
 		variables.put("datePattern", getDatePattern());
-		variables.put("fireChangeEvent", Boolean.valueOf(getNotifyBoundComponentOnDateSelected()));
+		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
 
 		// print out the initialization properties
 		Properties p = new Properties();
@@ -355,7 +355,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * @return if true, notifies the associated component when a date is
 	 *         selected
 	 */
-	protected boolean getNotifyBoundComponentOnDateSelected()
+	protected boolean notifyComponentOnDateSelected()
 	{
 		return false;
 	}
