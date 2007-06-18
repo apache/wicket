@@ -134,9 +134,12 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 			}
 			if (processRequest)
 			{
-				try {
+				try
+				{
 					target = resolveRenderedPage(requestCycle, requestParameters);
-				} catch (IgnoreAjaxRequestException e) {
+				}
+				catch (IgnoreAjaxRequestException e)
+				{
 					target = EmptyAjaxRequestTarget.getInstance();
 				}
 			}
