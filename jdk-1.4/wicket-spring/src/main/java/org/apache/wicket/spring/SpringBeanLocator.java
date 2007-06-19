@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.spring;
 
+import java.lang.ref.WeakReference;
+
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Objects;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -33,7 +35,8 @@ import org.springframework.context.ApplicationContext;
  */
 public class SpringBeanLocator implements IProxyTargetLocator
 {
-	private transient Class beanTypeCache;
+	// Weak reference so we don't hold up WebApp classloader garbage collection.
+	private transient WeakReference/*<Class>*/ beanTypeCache;
 
 	private String beanTypeName;
 
@@ -78,7 +81,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			throw new IllegalArgumentException("[beanType] argument cannot be null");
 		}
 
-		this.beanTypeCache = beanType;
+		this.beanTypeCache = new WeakReference(beanType);
 		this.beanTypeName = beanType.getName();
 		this.springContextLocator = locator;
 		this.beanName = beanName;
@@ -133,12 +136,18 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public Class getBeanType()
 	{
-		if (beanTypeCache == null)
+		Class clazz = beanTypeCache == null ? null : (Class)beanTypeCache.get();
+		if (clazz == null)
 		{
 			try
 			{
-				beanTypeCache = Class.forName(beanTypeName, true, Thread.currentThread()
+				/* 
+				 * Need to make this scoped, rather than sticking it straight into the WeakReference,
+				 * otherwise it might get garbage collected before we've even returned it!
+				 */
+				clazz = Class.forName(beanTypeName, true, Thread.currentThread()
 						.getContextClassLoader());
+				beanTypeCache = new WeakReference(clazz);
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -148,7 +157,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 						+ "] bean", e);
 			}
 		}
-		return beanTypeCache;
+		return clazz;
 	}
 
 	/**
