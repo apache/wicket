@@ -154,7 +154,7 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	 */
 	public boolean isEnabled(Component component)
 	{
-		return true;
+		return component.isEnabled();
 	}
 
 	/**
