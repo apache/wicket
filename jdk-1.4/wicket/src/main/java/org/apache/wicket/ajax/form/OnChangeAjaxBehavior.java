@@ -16,18 +16,17 @@
  */
 package org.apache.wicket.ajax.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Response;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.string.JavascriptUtils;
 
 /**
- * A behavior that updates the hosting {@link FormComponent} via ajax when 
- * value of the component is changed.
+ * A behavior that updates the hosting {@link FormComponent} via ajax when value
+ * of the component is changed.
  * 
- * This behavior uses best available method to track changes on different 
- * types of form components. 
+ * This behavior uses best available method to track changes on different types
+ * of form components.
  * 
  * @author Janne Hietam&auml;ki (janne)
  * 
@@ -41,28 +40,7 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	 */
 	public OnChangeAjaxBehavior()
 	{
-		super("onkeyup");
-	}
-
-	protected final void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
-		if (this.getComponent().isEnabled())
-		{
-			tag.put(getEventForComponent(getComponent()), getEventHandler());
-		}
-	}
-
-	private String getEventForComponent(Component component)
-	{
-		if (component instanceof AbstractTextComponent)
-		{
-			return "onkeyup";
-		}
-		else
-		{
-			return "onchange";
-		}
+		super("onchange");
 	}
 
 	protected final void onComponentRendered()

@@ -1523,35 +1523,36 @@ Wicket.ChangeHandler=function(elementId){
     var KEY_CTRL=17;
     var KEY_ALT=18;
 
-	var objonkeyup;
+	var obj = Wicket.$(elementId);
+	obj.setAttribute("autocomplete", "off");
+	if (Wicket.Browser.isIE()) {
+		var objonchange = obj.onchange;
 
-    function initialize(){
-        var obj=wicketGet(elementId);
-
-        objonkeyup = obj.onkeyup;
-
-        obj.onkeyup=function(event){
-            switch(wicketKeyCode(Wicket.fixEvent(event))){
-                case KEY_ENTER:
-                case KEY_UP:
-                case KEY_DOWN:
-                case KEY_ESC:
-                case KEY_TAB:
-                case KEY_RIGHT:
-                case KEY_LEFT:
-                case KEY_SHIFT:
-                case KEY_ALT:
-                case KEY_CTRL:
-	                return Wicket.stopEvent(event);
-                break;
-                default:
-				if(typeof objonkeyup == "function")objonkeyup();
-            }
-            return null;
-        }
-    }
-    initialize();
-}
+		obj.onkeyup = function(event) {
+			switch (wicketKeyCode(Wicket.fixEvent(event))) {
+				case KEY_ENTER:
+				case KEY_UP:
+				case KEY_DOWN:
+				case KEY_ESC:
+				case KEY_TAB:
+				case KEY_RIGHT:
+				case KEY_LEFT:
+				case KEY_SHIFT:
+				case KEY_ALT:
+				case KEY_CTRL:
+					return Wicket.stopEvent(event);
+					break;
+				default:
+					if (typeof objonchange == "function")objonchange();
+			}
+			return null;
+		}
+		obj.attachEvent('onpaste', obj.onchange);
+		obj.attachEvent('oncut', obj.onchange);
+	} else {
+		obj.addEventListener('input', obj.onchange, true);
+	}
+} 
 
 /*
  * Compatibility layer to maintain the original wicket-ajax API.
