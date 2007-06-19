@@ -1155,7 +1155,7 @@ public abstract class RequestCycle
 			IRequestCycleProcessor processor = safeGetRequestProcessor();
 
 			// Arbitrary maximum number of steps
-			final int maxSteps = Short.MAX_VALUE;
+			final int maxSteps = 100;
 
 			// Loop through steps
 			for (int totalSteps = 0; currentStep < DONE; totalSteps++)
