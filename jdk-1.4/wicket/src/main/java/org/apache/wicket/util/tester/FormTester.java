@@ -324,8 +324,8 @@ public class FormTester
 	/** path to form component */
 	private final String path;
 
-	/** wicketTester that create FormTester */
-	private final WicketTester wicketTester;
+	/** baseWicketTester that create FormTester */
+	private final BaseWicketTester baseWicketTester;
 
 	/** form component to be test */
 	private Form workingForm;
@@ -344,12 +344,12 @@ public class FormTester
 	 *            String
 	 */
 	protected FormTester(final String path, final Form workingForm,
-			final WicketTester wicketTester, final boolean fillBlankString)
+			final BaseWicketTester wicketTester, final boolean fillBlankString)
 	{
 		this.path = path;
 		this.workingForm = workingForm;
-		this.wicketTester = wicketTester;
-		this.wicketTester.setupRequestAndResponse();
+		this.baseWicketTester = wicketTester;
+		this.baseWicketTester.setupRequestAndResponse();
 
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
@@ -538,7 +538,7 @@ public class FormTester
 					+ "component of this type.");
 		}
 
-		MockHttpServletRequest servletRequest = wicketTester.getServletRequest();
+		MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
 		servletRequest.addFile(formComponent.getInputName(), file, contentType);
 	}
 
@@ -550,8 +550,8 @@ public class FormTester
 		checkClosed();
 		try
 		{
-			MockHttpServletRequest servletRequest = wicketTester.getServletRequest();
-			WebRequestCycle requestCycle = wicketTester.createRequestCycle();
+			MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
+			WebRequestCycle requestCycle = baseWicketTester.createRequestCycle();
 			servletRequest.setRequestToComponent(workingForm);
 
 			if (servletRequest.hasUploadedFiles())
@@ -560,7 +560,7 @@ public class FormTester
 						.getMaxSize()));
 			}
 
-			wicketTester.processRequestCycle(requestCycle);
+			baseWicketTester.processRequestCycle(requestCycle);
 		}
 		catch (FileUploadException e)
 		{
@@ -603,14 +603,14 @@ public class FormTester
 	{
 		if (parameterExist(formComponent))
 		{
-			String[] values = wicketTester.getServletRequest().getParameterValues(
+			String[] values = baseWicketTester.getServletRequest().getParameterValues(
 					formComponent.getInputName());
 			// remove duplicated
 			HashSet all = new HashSet(Arrays.asList(values));
 			all.add(value);
 			Map newParameters = new HashMap();
 			newParameters.put(formComponent.getInputName(), all.toArray(new String[all.size()]));
-			wicketTester.getServletRequest().setParameters(newParameters);
+			baseWicketTester.getServletRequest().setParameters(newParameters);
 		}
 		else
 		{
@@ -639,7 +639,7 @@ public class FormTester
 	 */
 	private boolean parameterExist(FormComponent formComponent)
 	{
-		String parameter = wicketTester.getServletRequest().getParameter(
+		String parameter = baseWicketTester.getServletRequest().getParameter(
 				formComponent.getInputName());
 		return parameter != null && parameter.trim().length() > 0;
 	}
@@ -653,7 +653,7 @@ public class FormTester
 	 */
 	private void setFormComponentValue(FormComponent formComponent, String value)
 	{
-		wicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
+		baseWicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
 	}
 
 
