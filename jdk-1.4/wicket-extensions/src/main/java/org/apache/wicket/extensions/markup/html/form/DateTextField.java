@@ -49,7 +49,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	/**
 	 * The date pattern of the text field
 	 */
-	private SimpleDateFormat dateFormat = null;
+	private String datePattern = null;
 
 	/**
 	 * The converter for the TextField
@@ -119,17 +119,17 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	public DateTextField(String id, String datePattern)
 	{
 		super(id, Date.class);
-		this.dateFormat = new SimpleDateFormat(datePattern);
+		this.datePattern = datePattern;
 		this.converter = new DateConverter()
 		{
 			private static final long serialVersionUID = 1L;
-
+			
 			/**
 			 * @see org.apache.wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
 			 */
 			public DateFormat getDateFormat(Locale locale)
 			{
-				return dateFormat;
+				return new SimpleDateFormat(DateTextField.this.datePattern);
 			}
 		};
 	}
@@ -163,6 +163,6 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 */
 	public String getTextFormat()
 	{
-		return dateFormat.toPattern();
+		return datePattern;
 	}
 }
