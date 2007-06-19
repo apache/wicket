@@ -226,6 +226,6 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 */
 	public final String getTextFormat()
 	{
-		return ((DateConverter)converter).getDatePattern();
+		return converter.getDatePattern();
 	}
 }
