@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 
-
 /**
  * Injector scans fields of an object instance and checks if the specified
  * {@link IFieldValueFactory} can provide a value for a field; if it can, the
@@ -40,6 +39,8 @@ public class Injector
 {
 	private static Injector instance = new Injector();
 
+	// FIXME: WICKET-625 - Wicket doesn't clean up properly when hot-deploying; hangs onto Class references.
+	// We need some way to clean out this hashmap when we're done.
 	private ConcurrentHashMap/* <Class, Field[]> */classToFields = new ConcurrentHashMap();
 
 	/**
@@ -83,9 +84,7 @@ public class Injector
 	public Object inject(Object object, IFieldValueFactory factory)
 	{
 		Class clazz = object.getClass();
-		Field[] fields;
-
-		fields = (Field[]) classToFields.get(clazz);
+		Field[] fields = (Field[]) classToFields.get(clazz);
 		if (fields == null)
 		{
 			fields = findFields(clazz, factory);
