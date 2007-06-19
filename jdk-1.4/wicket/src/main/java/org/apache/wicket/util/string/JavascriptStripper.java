@@ -46,7 +46,7 @@ public class JavascriptStripper
 	private final static int MULTILINE_COMMENT = 6;
 	
 	/** Inside a regular expression */
-	private final static int REG_EXP = 7;
+	private final static int POSSIBLE_REG_EXP = 7;
 
 	/**
 	 * Removes javascript comments and whitespaces from specified string.
@@ -91,7 +91,8 @@ public class JavascriptStripper
 				}
 				else if (c == '/')
 				{
-					state = REG_EXP;
+					// Might also be a standard divide operator, though.
+					state = POSSIBLE_REG_EXP;
 				}
 				else if (Character.isWhitespace(c) && Character.isWhitespace(next))
 				{
@@ -150,9 +151,13 @@ public class JavascriptStripper
 				continue;
 			}
 			
-			if (state == REG_EXP)
+			if (state == POSSIBLE_REG_EXP)
 			{
 				if (c == '/' && prev != '\\')
+				{
+					state = REGULAR_TEXT;
+				}
+				if (c == '\r' || c == '\n')
 				{
 					state = REGULAR_TEXT;
 				}
