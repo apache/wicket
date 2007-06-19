@@ -77,7 +77,7 @@ public class ButtonPage extends WicketExamplePage
 		String html = " <form wicket:id=\"form\">\n"
 				+ "  <input type=\"submit\" value=\"non wicket submit button\" />\n"
 				+ "  <input wicket:id=\"button1\" type=\"submit\" value=\"default wicket button\" />\n"
-				+ "  <input wicket:id=\"button2\" type=\"submit\" value=\"wicket button with immediate == true\" />\n"
+				+ "  <input wicket:id=\"button2\" type=\"submit\" value=\"wicket button with setDefaultFormProcessing(false)\" />\n"
 				+ " </form>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// Add a form with an onSubmit implementation that sets a message\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;Form form = new Form(\"form\") {\n"
