@@ -52,4 +52,11 @@ public class JavascriptStripperTest extends TestCase
 				.stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
 		assertEquals("\nt = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
 	}
+	
+	public void testRegexpWithString()
+	{
+		String s = JavascriptStripper
+				.stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
+		assertEquals("foo.replace(/\"/, \"\"); doFoo();", s);
+	}
 }
