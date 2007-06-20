@@ -43,6 +43,7 @@
 			<modules>
 				<module>wicket</module>
 				<module>wicket-extensions</module>
+				<module>wicket-ioc</module>
 				<module>wicket-spring</module>
 				<module>wicket-quickstart</module>
 				<module>wicket-datetime</module>

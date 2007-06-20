@@ -19,6 +19,7 @@ package org.apache.wicket.spring;
 import java.lang.ref.WeakReference;
 
 import org.apache.wicket.proxy.IProxyTargetLocator;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -139,22 +140,13 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		Class clazz = beanTypeCache == null ? null : (Class)beanTypeCache.get();
 		if (clazz == null)
 		{
-			try
-			{
-				/* 
-				 * Need to make this scoped, rather than sticking it straight into the WeakReference,
-				 * otherwise it might get garbage collected before we've even returned it!
-				 */
-				clazz = Class.forName(beanTypeName, true, Thread.currentThread()
-						.getContextClassLoader());
-				beanTypeCache = new WeakReference(clazz);
-			}
-			catch (ClassNotFoundException e)
+			beanTypeCache = new WeakReference(clazz = Classes.resolveClass(beanTypeName));
+			if (clazz == null)
 			{
 				throw new RuntimeException("SpringBeanLocator could not find class ["
 						+ beanTypeName + "] needed to locate the ["
 						+ ((beanName != null) ? (beanName) : ("bean name not specified"))
-						+ "] bean", e);
+						+ "] bean");
 			}
 		}
 		return clazz;

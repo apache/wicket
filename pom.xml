@@ -220,6 +220,18 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-guice</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-ioc</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
 				<version>${project.version}</version>
 				<type>jar</type>
@@ -369,6 +381,11 @@
 				<groupId>asm</groupId>
 				<artifactId>asm</artifactId>
 				<version>1.5.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.guice</groupId>
+				<artifactId>guice</artifactId>
+				<version>1.0</version>
 			</dependency>
 			<dependency>
 				<groupId>easymock</groupId>
