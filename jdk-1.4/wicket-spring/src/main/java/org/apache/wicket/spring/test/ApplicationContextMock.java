@@ -39,13 +39,13 @@ import org.springframework.core.io.Resource;
 /**
  * Mock application context object. This mock context allows easy creation of
  * unit tests by allowing the user to put bean instances into the context.
- * 
+ *
  * Only getBean(String), getBean(String, Class), and getBeansOfType(Class) are
  * implemented so far. Any other method throws
  * {@link UnsupportedOperationException}.
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
@@ -53,7 +53,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 
 	/**
 	 * puts bean with the given name into the context
-	 * 
+	 *
 	 * @param name
 	 * @param bean
 	 */
@@ -70,7 +70,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * puts bean with into the context. bean object's class name will be used as
 	 * the bean name.
-	 * 
+	 *
 	 * @param bean
 	 */
 	public void putBean(Object bean)
@@ -234,7 +234,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 */
 	public boolean containsBean(String name)
 	{
-		throw new UnsupportedOperationException();
+		return beans.containsKey(name);
 	}
 
 	/**
