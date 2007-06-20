@@ -779,11 +779,22 @@ public abstract class Application
 	/**
 	 * Called when wicket servlet is destroyed. Overrides do not have to call
 	 * super.
+	 * 
+	 * @deprecated use {@link #onDestroy()} instead
 	 */
-	protected void destroy()
+	protected final void destroy()
 	{
-		
+
 	}
+
+	/**
+	 * Called when wicket servlet is destroyed. Overrides do not have to call
+	 * super.
+	 */
+	protected void onDestroy()
+	{
+	}
+
 
 	/**
 	 * @return Request cycle factory for this kind of session.
@@ -812,8 +823,8 @@ public abstract class Application
 	{
 		// Clear property resolver cache of Class keys.
 		PropertyResolver.destroy(this);
-		
-		destroy();
+
+		onDestroy();
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
 	}
@@ -828,7 +839,7 @@ public abstract class Application
 	{
 		settingsAccessible = true;
 		IPageSettings pageSettings = getPageSettings();
-		
+
 		// Set up the property resolver with a new cache instance for this app.
 		PropertyResolver.init(this);
 
@@ -901,34 +912,36 @@ public abstract class Application
 			componentInstantiationListeners[i].onInstantiation(component);
 		}
 	}
-	
+
 	private List componentOnBeforeRenderListeners = null;
-	
+
 	/**
-	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typicaly only
-	 * be called during application startup; it is not thread safe.
+	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should
+	 * typicaly only be called during application startup; it is not thread
+	 * safe.
 	 * 
 	 * @param listener
 	 */
-	final public void addComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener listener) 
+	final public void addComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener listener)
 	{
 		if (componentOnBeforeRenderListeners == null)
 		{
 			componentOnBeforeRenderListeners = new ArrayList();
 		}
-		
+
 		if (componentOnBeforeRenderListeners.contains(listener) == false)
 		{
 			componentOnBeforeRenderListeners.add(listener);
 		}
 	}
-	
+
 	/**
 	 * Removes an {@link IComponentOnBeforeRenderListener}.
-	 *  
+	 * 
 	 * @param listener
 	 */
-	final public void removeComponentOnBeforeRenderListener(IComponentOnBeforeRenderListener listener)
+	final public void removeComponentOnBeforeRenderListener(
+			IComponentOnBeforeRenderListener listener)
 	{
 		if (componentOnBeforeRenderListeners != null)
 		{
@@ -939,48 +952,50 @@ public abstract class Application
 			}
 		}
 	}
-	
+
 	/**
 	 * Notifies the {@link IComponentOnBeforeRenderListener}s.
 	 * 
 	 * @param component
 	 */
-	final void notifyComponentOnBeforeRenderListeners(Component component) 
+	final void notifyComponentOnBeforeRenderListeners(Component component)
 	{
 		if (componentOnBeforeRenderListeners != null)
 		{
 			for (Iterator i = componentOnBeforeRenderListeners.iterator(); i.hasNext();)
 			{
-				IComponentOnBeforeRenderListener listener = (IComponentOnBeforeRenderListener) i.next();
+				IComponentOnBeforeRenderListener listener = (IComponentOnBeforeRenderListener)i
+						.next();
 				listener.onBeforeRender(component);
 			}
 		}
 	}
-	
+
 	private List componentOnAfterRenderListeners = null;
-	
+
 	/**
-	 * Adds an {@link IComponentOnAfterRenderListener}. This method should typicaly only
-	 * be called during application startup; it is not thread safe.
+	 * Adds an {@link IComponentOnAfterRenderListener}. This method should
+	 * typicaly only be called during application startup; it is not thread
+	 * safe.
 	 * 
 	 * @param listener
 	 */
-	final public void addComponentOnAfterRenderListener(IComponentOnAfterRenderListener listener) 
+	final public void addComponentOnAfterRenderListener(IComponentOnAfterRenderListener listener)
 	{
 		if (componentOnAfterRenderListeners == null)
 		{
 			componentOnAfterRenderListeners = new ArrayList();
 		}
-		
+
 		if (componentOnAfterRenderListeners.contains(listener) == false)
 		{
 			componentOnAfterRenderListeners.add(listener);
 		}
 	}
-	
+
 	/**
 	 * Removes an {@link IComponentOnAfterRenderListener}.
-	 *  
+	 * 
 	 * @param listener
 	 */
 	final public void removeComponentOnAfterRenderListener(IComponentOnAfterRenderListener listener)
@@ -994,19 +1009,20 @@ public abstract class Application
 			}
 		}
 	}
-	
+
 	/**
 	 * Notifies the {@link IComponentOnAfterRenderListener}s.
 	 * 
 	 * @param component
 	 */
-	final void notifyComponentOnAfterRenderListeners(Component component) 
+	final void notifyComponentOnAfterRenderListeners(Component component)
 	{
 		if (componentOnAfterRenderListeners != null)
 		{
 			for (Iterator i = componentOnAfterRenderListeners.iterator(); i.hasNext();)
 			{
-				IComponentOnAfterRenderListener listener = (IComponentOnAfterRenderListener) i.next();
+				IComponentOnAfterRenderListener listener = (IComponentOnAfterRenderListener)i
+						.next();
 				listener.onAfterRender(component);
 			}
 		}
