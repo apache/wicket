@@ -33,13 +33,13 @@ import org.apache.wicket.spring.SpringBeanLocator;
  * decorated with a {@link SpringBean} annotation.
  * <p>
  * Example:
- * 
+ *
  * <pre>
  * IFieldValueFactory factory = new AnnotProxyFieldValueFactory(contextLocator);
  * field = obj.getClass().getDeclaredField(&quot;dependency&quot;);
  * IDependency dependency = (IDependency) factory.getFieldValue(field, obj);
  * </pre>
- * 
+ *
  * In the example above the <code>dependency</code> object returned is a lazy
  * init proxy that will look up the actual IDependency bean from spring context
  * upon first access to one of the methods.
@@ -48,17 +48,18 @@ import org.apache.wicket.spring.SpringBeanLocator;
  * always returned for the same spring dependency. This helps cut down on
  * session size beacause proxies for the same dependency will not be serialized
  * twice.
- * 
+ *
  * @see LazyInitProxyFactory
  * @see SpringBean
  * @see SpringBeanLocator
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  * @author Istvan Devai
- * 
+ *
  */
 public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 	private ISpringContextLocator contextLocator;
+	private boolean failFast = true;
 
 	private final ConcurrentHashMap<SpringBeanLocator, Object> cache = new ConcurrentHashMap<SpringBeanLocator, Object>();
 
@@ -90,6 +91,10 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 				return cache.get(locator);
 			}
 
+			if (failFast) {
+				testLocator(locator, fieldOwner, field);
+			}
+
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
 					locator);
 			// only put the proxy into the cache if the bean is a singleton
@@ -100,6 +105,42 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Tests if the locator can retrieve the bean it is responsible for.
+	 *
+	 * @param locator
+	 * @param fieldOwner
+	 * @param field
+	 */
+	private void testLocator(SpringBeanLocator locator, Object fieldOwner, Field field)
+	{
+		try
+		{
+			locator.locateProxyTarget();
+		}
+		catch (Throwable e)
+		{
+			String errorMessage = "Could not locate spring bean of class [["
+					+ locator.getBeanType().getName() + "]] ";
+			if (locator.getBeanName() != null && locator.getBeanName().length() > 0)
+			{
+				errorMessage += "and id [[" + locator.getBeanName() + "]] ";
+			}
+			errorMessage += "needed in class [["
+					+ fieldOwner.getClass().getName() + "]] field [[" + field.getName()
+					+ "]]";
+			throw new RuntimeException(errorMessage, e);
+		}
+	}
+
+	/**
+	 * @param failFast true if the locator fails if a bean can't be located
+	 */
+	public void setFailFast(boolean failFast)
+	{
+		this.failFast = failFast;
 	}
 
 	/**
