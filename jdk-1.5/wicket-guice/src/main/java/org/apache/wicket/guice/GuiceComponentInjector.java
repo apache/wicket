@@ -33,6 +33,7 @@ import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.Stage;
 
 /**
  * Injects fields/members of components using Guice.
@@ -75,7 +76,9 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	 */
 	public GuiceComponentInjector(Application app, Module ... modules)
 	{
-		this(app, Guice.createInjector(modules));
+		this(app, Guice.createInjector(app.getConfigurationType().equals(Application.DEVELOPMENT)
+				? Stage.DEVELOPMENT
+				: Stage.PRODUCTION, modules));
 	}
 
 	/**
