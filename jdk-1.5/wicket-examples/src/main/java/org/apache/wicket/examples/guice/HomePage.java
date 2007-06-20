@@ -24,9 +24,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import com.google.inject.Inject;
 
-
 /**
- * Everybody's favorite example, modified to use Guice.
+ * Everybody's favorite example (Hello World), modified to use Guice.
  * 
  * @author Alastair Maw
  */

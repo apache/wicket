@@ -22,7 +22,7 @@ import org.apache.wicket.guice.GuiceComponentInjector;
 /**
  * Application for Google Guice integration example.
  * 
- * @author Jonathan Locke
+ * @author Alastair Maw
  */
 public class GuiceApplication extends WicketExampleApplication
 {
