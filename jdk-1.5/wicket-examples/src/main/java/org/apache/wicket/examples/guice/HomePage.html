@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - helloworld</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+    <p>
+    This page uses <a href="http://code.google.com/p/google-guice/">Google Guice</a>.
+    There is a service interface called <code>IMyService</code>, with an implementation POJO called <code>MyService</code>.
+    Guice is used to wire the implementation into the <code>Page</code> using an <code>@Inject</code> annotation. You can use this
+    annotation on the fields of any <code>Component</code> subclass.    
+    </p>
+    <p>
+    The value of the <code>Label</code> component below will be updated with the return value from one of the service's methods when you click the link.
+    </p>
+    <hr />
+    <blockquote>
+    Value: <b wicket:id="message" id="message">Message goes here</b>
+    <br />
+    To update the label above, <a href="#" wicket:id="link">click here</a>.
+    </blockquote>
+    <hr />
+    <p>
+    The wicket-guice project will take care of proxying the injected beans so that your pages can be serialized safely.
+    To configure your application for Guice injection, just 
+    </p>
+    
+</body>
+</html>
