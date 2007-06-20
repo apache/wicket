@@ -23,7 +23,7 @@ package org.apache.wicket.protocol.http;
  * <pre>
  *     &lt;init-param&gt;
  *       &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *         &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *         &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
  *     &lt;/init-param&gt;
  *   
  * </pre>
