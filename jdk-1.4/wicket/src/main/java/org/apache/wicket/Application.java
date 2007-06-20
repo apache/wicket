@@ -782,7 +782,7 @@ public abstract class Application
 	 */
 	protected void destroy()
 	{
-		callDestroyers();
+		
 	}
 
 	/**
@@ -814,6 +814,7 @@ public abstract class Application
 		PropertyResolver.destroy(this);
 		
 		destroy();
+		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
 	}
 
