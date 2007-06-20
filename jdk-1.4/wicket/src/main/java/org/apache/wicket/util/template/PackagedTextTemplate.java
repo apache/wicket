@@ -29,6 +29,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.util.string.JavascriptStripper;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,7 +205,15 @@ public class PackagedTextTemplate extends TextTemplate
 	 */
 	public String getString()
 	{
-		return buffer.toString();
+		if (Application.get().getResourceSettings().getStripJavascriptCommentsAndWhitespace())
+		{
+			return JavascriptStripper.stripCommentsAndWhitespace(buffer.toString());
+		}
+		else
+		{
+			// don't strip the comments
+			return buffer.toString();
+		}
 	}
 
 	/**
