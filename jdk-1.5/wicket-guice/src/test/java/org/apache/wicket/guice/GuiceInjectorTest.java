@@ -31,50 +31,65 @@ public class GuiceInjectorTest extends TestCase
 {
 	public void testInjectionAndSerialization()
 	{
-		MockWebApplication mockApp = new MockWebApplication(new WebApplication() {
+		MockWebApplication mockApp = new MockWebApplication(new WebApplication()
+		{
 			@Override
 			protected void outputDevelopmentModeWarning()
 			{
 				// Do nothing.
 			}
+
 			@Override
 			public Class<WebPage> getHomePage()
 			{
 				return null;
 			}
 		}, null);
-		
+
 		// Make a new webapp and injector, and register the injector with the
 		// webapp as a component instantiation listener.
 		Application app = mockApp.getApplication();
-		
+
 		try
 		{
 			Application.set(app);
 			GuiceComponentInjector injector = new GuiceComponentInjector(app, new Module()
 			{
-			
+
 				public void configure(Binder binder)
 				{
 					binder.bind(ITestService.class).to(TestService.class);
+					binder.bind(ITestService.class).annotatedWith(Red.class).to(
+							TestServiceRed.class);
+					binder.bind(ITestService.class).annotatedWith(Blue.class).to(
+							TestServiceBlue.class);
 				}
-			
+
 			});
 			app.addComponentInstantiationListener(injector);
-			
-			// Create a new component. This should be automatically injected with the ITestService implementation.
+
+			// Create a new component, which should be automatically injected, and test to make sure the injection has worked.
 			TestComponent testComponent = new TestComponent("id");
-			
-			// Make sure the service is injected.
-			assertEquals(ITestService.EXPECTED_RESULT, testComponent.getTestService().getString());
-			
+			doChecksForComponent(testComponent);
+
 			// Serialize and deserialize the object, and check it still works.
-			TestComponent copiedComponent = (TestComponent)Objects.cloneObject(testComponent);
-			assertEquals(ITestService.EXPECTED_RESULT, copiedComponent.getTestService().getString());
+			TestComponent clonedComponent = (TestComponent)Objects.cloneObject(testComponent);
+			doChecksForComponent(clonedComponent);
+
 		}
 		finally
 		{
 			Application.unset();
 		}
+	}
+
+	private void doChecksForComponent(TestComponent component)
+	{
+		assertEquals(ITestService.RESULT, component.getInjectedField().getString());
+		assertEquals(ITestService.RESULT_RED, component.getInjectedFieldRed().getString());
+		assertEquals(ITestService.RESULT_BLUE, component.getInjectedFieldBlue().getString());
+		assertEquals(ITestService.RESULT, component.getInjectedMethod().getString());
+		assertEquals(ITestService.RESULT_BLUE, component.getInjectedMethodBlue().getString());
+		assertEquals(ITestService.RESULT_RED, component.getInjectedMethodRed().getString());
 	}
 }

@@ -16,24 +16,39 @@
  */
 package org.apache.wicket.guice;
 
+import java.lang.annotation.Annotation;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Classes;
+
+import com.google.inject.Key;
 
 class GuiceProxyTargetLocator implements IProxyTargetLocator
 {
 	private static final long serialVersionUID = 1L;
 
 	private String typeName;
+	private Annotation bindingAnnotation;
 	
-	GuiceProxyTargetLocator(Class<?> type)
+	GuiceProxyTargetLocator(Class<?> type, Annotation bindingAnnotation)
 	{
 		this.typeName = type.getName();
+		this.bindingAnnotation = bindingAnnotation;
 	}
 	
 	public Object locateProxyTarget()
 	{
 		GuiceInjectorHolder holder = (GuiceInjectorHolder)Application.get().getMetaData(GuiceInjectorHolder.INJECTOR_KEY);
-		return holder.getInjector().getInstance(Classes.resolveClass(typeName));
+		final Key<?> key;
+		if (bindingAnnotation == null)
+		{
+			key = Key.get(Classes.resolveClass(typeName));
+		}
+		else
+		{
+			key = Key.get(Classes.resolveClass(typeName), bindingAnnotation);
+		}
+		return holder.getInjector().getInstance(key);
 	}
 }

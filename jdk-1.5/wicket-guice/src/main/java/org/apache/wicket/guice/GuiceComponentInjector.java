@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.guice;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -24,6 +27,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 
+import com.google.inject.BindingAnnotation;
 import com.google.inject.Guice;
 import com.google.inject.ImplementedBy;
 import com.google.inject.Inject;
@@ -96,16 +100,65 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 			{
 				if (field.getAnnotation(Inject.class) != null)
 				{
-					Object proxy = LazyInitProxyFactory.createProxy(field.getType(), new GuiceProxyTargetLocator(field.getType()));
-					try {
+					try
+					{
+						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
+						Object proxy = LazyInitProxyFactory.createProxy(field.getType(), new GuiceProxyTargetLocator(field.getType(), bindingAnnotation));
+
 						if (!field.isAccessible())
 						{
 							field.setAccessible(true);
 						}
 						field.set(component, proxy);
 					}
-					catch (IllegalAccessException e) {
+					catch (IllegalAccessException e)
+					{
 						throw new WicketRuntimeException("Error Guice-injecting field " + field.getName() + " in " + component, e);
+					}
+					catch (MoreThanOneBindingException e)
+					{
+						throw new RuntimeException(
+								"Can't have more than one BindingAnnotation on field "
+										+ field.getName() + " of component class "
+										+ component.getClass().getName());
+					}
+				}
+			}
+			Method[] currentMethods = current.getDeclaredMethods();
+			for (final Method method : currentMethods)
+			{
+				if (method.getAnnotation(Inject.class) != null)
+				{
+					Annotation[][] paramAnnotations = method.getParameterAnnotations();
+					Class<?>[] paramTypes = method.getParameterTypes();
+					Object[] args = new Object[paramTypes.length];
+					for (int i = 0; i < paramTypes.length; i++)
+					{
+						try
+						{
+							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
+							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i], new GuiceProxyTargetLocator(paramTypes[i], bindingAnnotation));
+						}
+						catch (MoreThanOneBindingException e)
+						{
+							throw new RuntimeException(
+									"Can't have more than one BindingAnnotation on parameter "
+											+ i + "(" + paramTypes[i].getSimpleName() + ") of method " + method.getName()
+											+ " of component class "
+											+ component.getClass().getName());
+						}
+					}
+					try
+					{
+						method.invoke(component, args);
+					}
+					catch (IllegalAccessException e)
+					{
+						throw new WicketRuntimeException(e);
+					}
+					catch (InvocationTargetException e)
+					{
+						throw new WicketRuntimeException(e);
 					}
 				}
 			}
@@ -113,5 +166,29 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		}
 		// use null check just in case Component is in a different classloader.
 		while (current != null && current != Component.class);
+	}
+	
+	private Annotation findBindingAnnotation(Annotation[] annotations) throws MoreThanOneBindingException
+	{
+		Annotation bindingAnnotation = null;
+		
+		// Work out if we have a BindingAnnotation on this parameter.
+		for (int i = 0; i < annotations.length; i++)
+		{
+			if (annotations[i].annotationType().getAnnotation(BindingAnnotation.class) != null)
+			{
+				if (bindingAnnotation != null)
+				{
+					throw new MoreThanOneBindingException();
+				}
+				bindingAnnotation = annotations[i];
+			}
+		}
+		return bindingAnnotation;
+	}
+	
+	private static class MoreThanOneBindingException extends Exception
+	{
+		private static final long serialVersionUID = 1L;
 	}
 }

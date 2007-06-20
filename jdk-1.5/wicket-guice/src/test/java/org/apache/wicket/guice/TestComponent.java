@@ -26,8 +26,36 @@ public class TestComponent extends Component
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private ITestService testService;
+	private ITestService injectedField;
 
+	@Inject
+	@Red
+	private ITestService injectedFieldRed;
+	
+	@Inject
+	@Blue
+	private ITestService injectedFieldBlue;
+
+	@Inject
+	public void injectService(ITestService service)
+	{
+		injectedMethod = service;
+	}
+	
+	@Inject
+	public void injectServiceRed(@Red ITestService service)
+	{
+		injectedMethodRed = service;
+	}
+
+	@Inject
+	public void injectServiceBlue(@Blue ITestService service)
+	{
+		injectedMethodBlue = service;
+	}
+	
+	private ITestService injectedMethod, injectedMethodRed, injectedMethodBlue;
+	
 	public TestComponent(String id)
 	{
 		super(id);
@@ -39,8 +67,33 @@ public class TestComponent extends Component
 		// Do nothing.
 	}
 
-	public ITestService getTestService()
+	public ITestService getInjectedField()
 	{
-		return testService;
+		return injectedField;
+	}
+
+	public ITestService getInjectedFieldRed()
+	{
+		return injectedFieldRed;
+	}
+
+	public ITestService getInjectedFieldBlue()
+	{
+		return injectedFieldBlue;
+	}
+
+	public ITestService getInjectedMethod()
+	{
+		return injectedMethod;
+	}
+	
+	public ITestService getInjectedMethodRed()
+	{
+		return injectedMethodRed;
+	}
+
+	public ITestService getInjectedMethodBlue()
+	{
+		return injectedMethodBlue;
 	}
 }

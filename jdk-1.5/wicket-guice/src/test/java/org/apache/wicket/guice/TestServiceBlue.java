@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.guice;
 
-public class TestService implements ITestService
+public class TestServiceBlue implements ITestService
 {
 	public String getString()
 	{
-		return RESULT;
+		return RESULT_BLUE;
 	}
 }
