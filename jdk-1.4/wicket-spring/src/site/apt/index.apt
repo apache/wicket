@@ -16,7 +16,7 @@
 Apache Wicket Spring
 
 	Integration project to use Spring injection in your Wicket applications. 
-	See the wicket-spring-examples for integration patterns.
+	See the wicket-examples for integration patterns.
 
 * Incubation
 
