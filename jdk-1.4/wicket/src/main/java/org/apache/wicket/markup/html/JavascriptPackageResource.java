@@ -222,8 +222,8 @@ public class JavascriptPackageResource extends CompressedPackageResource
 					if (Application.get().getResourceSettings()
 							.getStripJavascriptCommentsAndWhitespace())
 					{
-						String s = new String(input, "utf-8");
-						return JavascriptStripper.stripCommentsAndWhitespace(s).getBytes("utf8");
+						String s = new String(input, "UTF-8");
+						return JavascriptStripper.stripCommentsAndWhitespace(s).getBytes("UTF-8");
 					}
 					else
 					{
