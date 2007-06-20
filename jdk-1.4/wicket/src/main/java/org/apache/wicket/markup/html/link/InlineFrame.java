@@ -19,10 +19,12 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -61,14 +63,40 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public InlineFrame(final String id, final IPageMap pageMap, final Class c)
 	{
+		this(id, pageMap, c, null);
+	}
+	
+	/**
+	 * Constructs an inline frame that instantiates the given Page class when
+	 * the content of the inline frame is requested. The instantiated Page is
+	 * used to render a response to the user.
+	 * 
+	 * @param id
+	 *            See Component
+	 * @param pageMap
+	 *            the pagemap where the page of the inline frame must be in
+	 * @param c
+	 *            Page class
+	 * @param params
+	 *            Page parameters
+	 */
+	public InlineFrame(final String id, final IPageMap pageMap, final Class c, final PageParameters params)
+	{
 		this(id, pageMap, new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
 			public Page getPage()
 			{
-				// Create page using page factory
-				return Session.get().getPageFactory().newPage(c);
+				if (params == null)
+				{
+					// Create page using page factory
+					return Session.get().getPageFactory().newPage(c);
+				}
+				else
+				{
+					return Session.get().getPageFactory().newPage(c, params);
+				}
 			}
 
 			public Class getPageIdentity()
@@ -95,9 +123,9 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param page
 	 *            The page
 	 */
-	public InlineFrame(final String id, final IPageMap pageMap, final Page page)
+	public InlineFrame(final String id, final Page page)
 	{
-		this(id, pageMap, new IPageLink()
+		this(id, null, new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -175,9 +203,20 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public final void onLinkClicked()
 	{
-		RequestCycle.get().getRequest().getRequestParameters().setPageMapName(pageMapName);
-
-		setResponsePage(pageLink.getPage());
+		RequestParameters parameters = RequestCycle.get().getRequest().getRequestParameters();
+		String oldPageMapName = parameters.getPageMapName();
+		try
+		{
+			if (pageMapName != null)
+			{
+				RequestCycle.get().getRequest().getRequestParameters().setPageMapName(pageMapName);
+			}
+			setResponsePage(pageLink.getPage());
+		}
+		finally
+		{
+			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(oldPageMapName);
+		}
 	}
 
 	/**
