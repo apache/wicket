@@ -63,6 +63,7 @@ import org.apache.wicket.settings.Settings;
 import org.apache.wicket.util.convert.ConverterLocator;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.lang.PropertyResolver;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -585,8 +586,8 @@ public abstract class Application
 		try
 		{
 			// Load properties files used by all libraries
-			final Enumeration resources = getClass().getClassLoader().getResources(
-					"wicket.properties");
+			final Enumeration resources = Thread.currentThread().getContextClassLoader()
+					.getResources("wicket.properties");
 			while (resources.hasMoreElements())
 			{
 				InputStream in = null;
@@ -809,6 +810,9 @@ public abstract class Application
 	 */
 	protected void internalDestroy()
 	{
+		// Clear property resolver cache of Class keys.
+		PropertyResolver.destroy(this);
+		
 		destroy();
 		applicationKeyToApplication.remove(getApplicationKey());
 	}
@@ -823,6 +827,9 @@ public abstract class Application
 	{
 		settingsAccessible = true;
 		IPageSettings pageSettings = getPageSettings();
+		
+		// Set up the property resolver with a new cache instance for this app.
+		PropertyResolver.init(this);
 
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new ParentResolver());
