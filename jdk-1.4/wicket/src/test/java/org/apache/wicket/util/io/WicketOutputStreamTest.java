@@ -17,7 +17,6 @@
 package org.apache.wicket.util.io;
 
 import java.io.ByteArrayInputStream;
-import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -26,8 +25,6 @@ import junit.framework.Assert;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.io.IObjectStreamFactory.DefaultObjectStreamFactory;
-import org.apache.wicket.util.lang.Objects;
 
 /**
  * @author jcompagner
@@ -39,7 +36,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 
 	/**
 	 * Tests serialization of a big int.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testBigInteger() throws Exception
@@ -84,15 +81,15 @@ public class WicketOutputStreamTest extends WicketTestCase
 				 return null;
 			 }
 		 };
-				
+
 		 try
 		 {
 			 woos.writeObject(app);
 			 assertFalse("webapplication is not serializeable",false);
-		 } 
+		 }
 		 catch(Exception e){ }
 	 }
-	 
+
 	 public void testLocale() throws Exception
 	 {
 		 Locale locale = new Locale("nl","NL");
@@ -112,7 +109,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 		PageB b = new PageB("test");
 		PageA a = new PageA(b);
 		b.setA(a);
-		
+
 		woos.writeObject(a);
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
@@ -121,32 +118,32 @@ public class WicketOutputStreamTest extends WicketTestCase
 		PageA a2 = (PageA)wois.readObject();
 
 		Assert.assertEquals(a, a2);
-		
+
 		Assert.assertSame(a2, a2.getB().getA());
 	}
-	 
+
 
 	// public void testStringsEqualsAfterSerialization() throws Exception
 	// {
 	// String[] strings = new String[2];
 	// strings[0] = new String("wicket");
 	// strings[1] = "wicket";
-	//		
+	//
 	// assertEquals(false, strings[0] == strings[1]);
-	//		
+	//
 	// woos.writeObject(strings);
 	// woos.close();
-	//		
+	//
 	// ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-	//		
+	//
 	// WicketObjectInputStream wois = new WicketObjectInputStream(bais);
 	// String[] strings2 = (String[])wois.readObject();
-	//		
+	//
 	// Assert.assertEquals(strings[0], strings[1]);
-	//		
+	//
 	// Assert.assertSame(strings[0], strings[1]);
 	//
-	//		
+	//
 	// }
 
 	/**
