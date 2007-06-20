@@ -45,6 +45,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 
 	private static IProxyTargetLocator interfaceObjectLocator = new IProxyTargetLocator()
 	{
+		private static final long serialVersionUID = 1L;
 		public Object locateProxyTarget()
 		{
 			return LazyInitProxyFactoryTest.interfaceObject;
@@ -53,6 +54,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 
 	private static IProxyTargetLocator concreteObjectLocator = new IProxyTargetLocator()
 	{
+		private static final long serialVersionUID = 1L;
 		public Object locateProxyTarget()
 		{
 			return LazyInitProxyFactoryTest.concreteObject;
@@ -61,6 +63,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 
 	private static IProxyTargetLocator stringObjectLocator = new IProxyTargetLocator()
 	{
+		private static final long serialVersionUID = 1L;
 		public Object locateProxyTarget()
 		{
 			return "StringLiteral";
@@ -97,6 +100,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 
 		IProxyTargetLocator testerLocator = new IProxyTargetLocator()
 		{
+			private static final long serialVersionUID = 1L;
 			public Object locateProxyTarget()
 			{
 				return tester;
@@ -140,6 +144,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 
 		IProxyTargetLocator testerLocator = new IProxyTargetLocator()
 		{
+			private static final long serialVersionUID = 1L;
 			public Object locateProxyTarget()
 			{
 				return tester;

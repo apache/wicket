@@ -195,6 +195,8 @@ public class LazyInitProxyFactory
 	 */
 	static class ProxyReplacement implements IClusterable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private IProxyTargetLocator locator;
 
 		private String type;

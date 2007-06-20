@@ -26,6 +26,7 @@ import org.apache.wicket.proxy.IProxyTargetLocator;
  */
 public class MockObjectLocator implements IProxyTargetLocator
 {
+	private static final long serialVersionUID = 1L;
 	private Object object;
 
 	/**
