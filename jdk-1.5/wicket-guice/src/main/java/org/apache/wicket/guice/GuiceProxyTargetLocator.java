@@ -20,7 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Classes;
 
-public class GuiceProxyTargetLocator implements IProxyTargetLocator
+class GuiceProxyTargetLocator implements IProxyTargetLocator
 {
 	private static final long serialVersionUID = 1L;
 
