@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.examples.guice.service;
 
+import com.google.inject.Singleton;
+
 /**
  * Implementation of IService.
  * 
  * @author Alastair Maw
  */
+@Singleton
 public class MyService implements IMyService
 {
 
