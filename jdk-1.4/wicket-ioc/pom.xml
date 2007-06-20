@@ -50,5 +50,9 @@
 			<groupId>asm</groupId>
 			<artifactId>asm</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>easymock</groupId>
+			<artifactId>easymock</artifactId>
+		</dependency>
 	</dependencies>
 </project>
