@@ -240,6 +240,7 @@ public class LazyInitProxyFactory
 	private static class CGLibInterceptor implements MethodInterceptor, ILazyInitProxy,
 			Serializable, IWriteReplace
 	{
+		private static final long serialVersionUID = 1L;
 
 		private IProxyTargetLocator locator;
 
@@ -333,6 +334,7 @@ public class LazyInitProxyFactory
 	private static class JdkHandler implements InvocationHandler, ILazyInitProxy,
 			Serializable, IWriteReplace
 	{
+		private static final long serialVersionUID = 1L;
 
 		private IProxyTargetLocator locator;
 
