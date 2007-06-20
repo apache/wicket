@@ -118,8 +118,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @param id
 	 *            See component
-	 * @param pageMap
-	 *            the pagemap where the page of the inline frame must be in
 	 * @param page
 	 *            The page
 	 */
