@@ -935,15 +935,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
 				IBehavior behavior = (IBehavior)i.next();
-				if (isBehaviorAccepted(behavior))
-				{
-					/*
-					 * TODO eelco: shouldnt we detach model always, accepted or
-					 * not? what if this method returns true during render, but
-					 * false here - something can go undetached
-					 */
-					behavior.detach(this);
-				}
+
+				// Always detach models, 'accepted' or not. Otherwise, if they
+				// are accepted during render, but not here - something can go
+				// undetached, and calling isEnabled can also lead to nasty side
+				// effects. See for instance Timo's comment on
+				// http://issues.apache.org/jira/browse/WICKET-673
+				behavior.detach(this);
+
 				if (behavior.isTemporary())
 				{
 					i.remove();
