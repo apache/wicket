@@ -19,10 +19,8 @@ package org.apache.wicket.threadtest.apps.app1;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.protocol.http.FilePageStore;
-import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.session.ISessionStore;
 
 public class TestApp1 extends WebApplication {
@@ -38,7 +36,7 @@ public class TestApp1 extends WebApplication {
 
 	/**
 	 * Gets contactsDB.
-	 * 
+	 *
 	 * @return contactsDB
 	 */
 	public ContactsDatabase getContactsDB() {
