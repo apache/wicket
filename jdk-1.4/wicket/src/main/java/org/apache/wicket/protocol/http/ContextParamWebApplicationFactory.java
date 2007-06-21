@@ -58,7 +58,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	 *            the classname of the application to create
 	 * @return the web application
 	 */
-	private WebApplication createApplication(final String applicationClassName)
+	protected WebApplication createApplication(final String applicationClassName)
 	{
 		try
 		{
