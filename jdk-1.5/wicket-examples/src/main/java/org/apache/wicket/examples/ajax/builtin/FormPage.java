@@ -19,7 +19,7 @@ package org.apache.wicket.examples.ajax.builtin;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RequiredTextField;
@@ -80,7 +80,7 @@ public class FormPage extends BasePage {
 				Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
-		form.add(new AjaxSubmitButton("ajax-submit-button", form) {
+		form.add(new AjaxButton("ajax-button", form) {
 			protected void onSubmit(AjaxRequestTarget target, Form form) {
 				// repaint the feedback panel so that it is hidden
 				target.addComponent(feedback);

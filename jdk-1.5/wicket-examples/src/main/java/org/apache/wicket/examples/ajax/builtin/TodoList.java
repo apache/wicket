@@ -23,8 +23,8 @@ import java.util.List;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -33,7 +33,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-
 
 /**
  * Ajax todo list without having to write any JavaScript yourself.
@@ -249,7 +248,7 @@ public class TodoList extends BasePage
 				super(id, new CompoundPropertyModel(new TodoItem()));
 				setOutputMarkupId(true);
 				add(new TextField("text"));
-				add(new AjaxSubmitButton("add", this)
+				add(new AjaxButton("add", this)
 				{
 					protected void onSubmit(AjaxRequestTarget target, Form form)
 					{
@@ -261,7 +260,7 @@ public class TodoList extends BasePage
 					}
 				});
 
-				add(new AjaxSubmitButton("cancel", this)
+				add(new AjaxButton("cancel", this)
 				{
 					public void onSubmit(AjaxRequestTarget target, Form form)
 					{
