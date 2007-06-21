@@ -42,7 +42,7 @@ public class ListItem extends WebMarkupContainer
 	 */
 	public ListItem(final int index, final IModel model)
 	{
-		super(Integer.toString(index), model);
+		super(Integer.toString(index).intern(), model);
 		this.index = index;
 	}
 

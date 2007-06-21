@@ -50,7 +50,7 @@ public class Item extends WebMarkupContainer
 	 */
 	public Item(final String id, int index, final IModel model)
 	{
-		super(id, model);
+		super(id.intern(), model);
 		this.index = index;
 	}
 
