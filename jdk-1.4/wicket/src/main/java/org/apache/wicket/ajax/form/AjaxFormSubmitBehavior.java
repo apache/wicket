@@ -40,9 +40,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private Component owner;
