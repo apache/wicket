@@ -11,6 +11,229 @@
 				<a href="http://wicket.sourceforge.net">front page</a>
 				.
 			</p>
+			<subsection name="April 22nd, 2007 - Wicket 1.2.6 available">
+				<p>
+					The Wicket team is proud to announce another maintenance release for Wicket 1.2. With our first 1.3 release
+					looming on the horizon, this probably marks the last 1.2 release. This release contains numerous fixes. 
+				</p>
+				<h3>IMPORTANT NOTE</h3>
+				<p>
+					A critical bug has been identified in the request processing of Wicket. In rare cases this bug could
+					lead to users being presented with a page from another user's session. This bug is caused by a failure to 
+					clean up resources in the processing thread under very rare circumstances. See 
+					[<a href="https://issues.apache.org/jira/browse/WICKET-476">WICKET-476</a>] for more information
+					on this issue.
+				</p>
+				<p>
+					Users are advised to upgrade their Wicket to 1.2.6. If you are using a custom built Wicket, please apply 
+					<a href="http://svn.apache.org/viewvc?view=rev&amp;rev=529917">revision 529917</a> to your code.
+				</p>
+				<h3>Other issues</h3>
+				<p>
+					This release fixes other issues as well:
+				</p>
+				<h3>Bugs:</h3>
+				<ul>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-9'>WICKET-9</a>] - OnError does not work on file upload exceding max size</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-134'>WICKET-134</a>] - servlet.jar is included in the wicket examples war file.</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-260'>WICKET-260</a>] - Wicket uses trivial encryption if com.sun.crypto.provider.SunJCE is not available</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-268'>WICKET-268</a>] - NPE in ListView.renderItem(ListItem)</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-269'>WICKET-269</a>] - Calls to enabled and visibleInHierarchy should not be done in component resolving.</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-276'>WICKET-276</a>] - AbstractHeaderContributor.cleanup() will never be called</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-281'>WICKET-281</a>] - wicket-ajax.js is sometime missing from &lt;head&gt; section</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-290'>WICKET-290</a>] - Inconsistent url generation</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-291'>WICKET-291</a>] - return immutable parameter map or a copy of parameters</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-304'>WICKET-304</a>] - AnnotSpringInjector corrupted class file in 1.2.5 release.</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-342'>WICKET-342</a>] - Application_sv.properties variable bugs</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-349'>WICKET-349</a>] - ListView can't undo changes to model</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-378'>WICKET-378</a>] - autocomplete does not explicitly call input's onchange event</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-395'>WICKET-395</a>] - Bookmarkable page problems</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-432'>WICKET-432</a>] - getvariation() is called from webpage constructor through commoninit()</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-438'>WICKET-438</a>] - File handles are leaked when loading images from a jar file, Tomcat crashes</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-475'>WICKET-475</a>] - NPE in WebClientInfo when user-agent header is not sent</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-476'>WICKET-476</a>] - Backport RequestCycle#updateSession and pagemap#session removal to 1.2.x</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-490'>WICKET-490</a>] - The wicket-auth-roles-1.2.5.jar contains the .svn subdirectories.</li>
+				</ul>
+				<h3>Improvement</h3>
+				<ul>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-324'>WICKET-324</a>] - AjaxFormComponentUpdatingBehavior updating other Component</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-325'>WICKET-325</a>] - Enable WebMarkupContainer as target for wicketSerialize</li>
+				</ul>
+
+				<h3>New Feature</h3>
+				<ul>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-3'>WICKET-3</a>] - listen for "selection changed"  event at AutocompleteTextField</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-338'>WICKET-338</a>] - DateTextField</li>
+				</ul>
+				<p>
+					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely 
+					as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the 
+					Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in 
+					no way affiliated with this release.
+				</p>
+				<ul>
+					<li>Download Wicket 1.2.6 <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
+				</ul>
+			</subsection>
+			<subsection name="Febuari 5th, 2007 - Wicket 1.2.5 available">
+				<p>
+					With Valentine's day rapidly approaching, what could be better than roses, chocolates or fancy dinners? 
+					Yes, that's right - a new Wicket release! Get out of the office faster and back to where it matters with 
+					this list of fixes to help you:
+				</p>
+				<ul>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-188'>WICKET-188</a>] - Header contribution is sometimes not rendered after the request</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-218'>WICKET-218</a>] - Removing comments from markup can fail</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-242'>WICKET-242</a>] - Modal Window always creates new cookies</li>
+				<li>[<a href='https://issues.apache.org/jira/browse/WICKET-251'>WICKET-251</a>] - replace &amp; with &amp;amp; in ExternalLink</li>
+				</ul>
+				<p>
+					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely 
+					as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the 
+					Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in 
+					no way affiliated with this release.
+				</p>
+				<ul>
+					<li>Download the Wicket 1.2.5 <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
+				</ul>
+			</subsection>
+			<subsection name="December 24th, 2006 - Santa bring Wicket 1.2.4">
+				<p>
+					As a thank you for your support in 2006, Santa has put Wicket 1.2.4 under the tree! Happy holidays and best wishes for 2007!
+				</p>
+				<p>
+					Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted using your favorite technology.
+				</p>
+				<ul>
+					<li>Download the releases <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
+				</ul>
+				<p>
+					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in no way affiliated with this release.
+				</p>
+				<h2>Fixed bugs</h2>
+				<ul>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-29'>WICKET-29</a>] - javascript error in wicket-ajax.js: Wicket.Log.Error is not a function</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-31'>WICKET-31</a>] - Wrong source paths in build.xml</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-35'>WICKET-35</a>] - WicketTester doesn't pass PageParameters to bookmarkable pages</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-64'>WICKET-64</a>] - Check/Radio fail in a GridView with item reuse strategy</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-143'>WICKET-143</a>] - [PATCH]Re-render a table element via AjaxRequestTarget under IE does not works</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-144'>WICKET-144</a>] - wrong handling of exceptions for Resource#respond and ComponentResourceRequestTarget#respond</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-179'>WICKET-179</a>] - ListView should not call getModelObject when not visible in hierarchy</li>
+				</ul>
+			</subsection>
+			<subsection name="October 31st, 2006 - Wicket 1.2.3 released">
+				<p>
+					The wicket-team is pleased to announce the release of Wicket 1.2.3!
+				</p>
+				<p>
+					Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted using your favorite technology.
+				</p>
+				<ul>
+					<li>Download the releases <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
+				</ul>
+				<p>
+					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in no way affiliated with this release.
+				</p>
+				<ul></ul>
+				<p>
+					Changes in this version include:
+				</p>
+				<p>
+					New Features:
+				</p>
+				<ul>
+					<li>Added method protected void onDisabled(final ComponentTag tag) to FormComponent, which is called during rendering when the component is disabled. By default, an disabled="disabled" attribute is added, but clients may override this method. </li>
+					<li>Made synchronization timeout configurable on an application level. Later, we might add more fine grained control. </li>
+					<li>Implemented optional interface for initializers: IDestroyer that may be implemented by initializers to clear up stuff when the application is shut down. Wicket's JMX code uses this to clean up the JMX beans it registered on application shutdown. </li>
+					<li>Wicket now has JMX support. For 1.2 as a separate project (wicket-jmx), for 2.0 as part of the core distribution. </li>
+					<li>The application's configuration type is now kept in a member which can be read using Application#getConfigurationType. </li>
+					<li>Added AbortWithWebError abort exception. </li>
+					<li>Bookmarkable page links set the target attribute to the proper page map when a page map is set and when the tag has a target attribute</li>
+				</ul>
+				<p>
+					Fixed Bugs:
+				</p>
+				<ul>
+					<li>Make sure that bookmarkable urls for classes containing non-ascii characters is encoded properly.  Issue: WICKET-16.</li>
+					<li>There was no check on render authorization action done for seperate component renders, resulting in that authorization check not being executed with ajax requests. Thanks to Benjamin Podszun.</li>
+					<li>Page was not checked for render authorization action.</li>
+					<li>Package resources that are not found now log a warning and then throw an abort error instead of a regular exception and send a 404 to the browser if in a web request.</li>
+					<li>Fixed deadlock possiblity on high load situations where resource managing filters (such as Spring's/ Hibernate's OpenSessionInViewFilter) run out of those resources before they are released. A test for this issue can be found in wicket-threadtest, wicket.threadtest.App2Test1. This bug is dangerous; everyone using Wicket 1.2.x is encouraged to update to this Wicket version asap. Thanks to Eelco Hillenius. </li>
+					<li>ResourceReference and PackageResourceReference evolved in doing almost the same thing with ResourceReference falling back to package resources. The two classes were used mixed for the same purposes, so it obviously was confusing. PackageResourceReference is now deprecated (and removed in 2.0) and ResourceReference uses package resources as the explicit default now. </li>
+					<li>FileUploadField's fileUpload member is now transient, and nulled at the end of a request; fileUpload depends on non-serializable classes and should be used for the upload request only anyway. </li>
+					<li>InputStreams returned from FileUpload is now closed at the end of the request  Issue: 1543832. </li>
+					<li>Fixed a bug in WicketTester.clickLink. When clicking an AjaxSubmitLink which submitted a form with a CheckGroup inside it, the test would fail. This was because I had only checked for RadioGroup when copying the data from the form to the request. </li>
+					<li>Do not set window.name automatically to the page map as this gives problems with frames </li>
+					<li>Buttons are now versioned by default </li>
+					<li>It is now possible to override default TypeValidator error key via ConversionException.setResourceKey() </li>
+					<li>Fixed bug where head contributions done through header contributors added to the page only worked on first page render </li>
+					<li>SubmitLink now properly supports back button Thanks to Erik Brakkee. </li>
+					<li>Fixed AjaxPreprocessingCallDecorator Thanks to Ingram Chen. </li>
+					<li>AjaxFormValidatingBehavior now property updates feedback panels when form error occurs Thanks to Adam Smyczek. </li>
+					<li>AjaxRequestTarget now doesn't switch component use check off, as it is no longer needed. Thanks to Tomer Mevorach. </li>
+				</ul>
+				<p>
+					Have fun!
+				</p>
+			</subsection>
+			<subsection name="October 15th, 2006 - Development infrastructure moved to Apache">
+				<p>
+					The next step in <a href="http://incubator.apache.org/projects/wicket">Wicket's incubation process</a> 
+					is complete: we moved our issue tracker away from SourceForge.net's offering to the
+					<a href="http://issues.apache.org/jira/browse/WICKET">JIRA provided by Apache</a>.
+				</p>
+				<p>
+					We are in the process of converting the old issues and importing them into our own
+					JIRA project: http://issues.apache.org/jira/browse/WICKET. As a consequence of this 
+					transition, we have closed down the sf.net trackers and ask you
+					to file new bug reports, patches and requests for information using the Wicket JIRA.
+				</p>
+				<p>
+					We also moved our code repository from sourceforge to Apache. The new repository can be
+					found at: <a href="https://svn.apache.org/repos/asf/incubator/wicket">https://svn.apache.org/repos/asf/incubator/wicket</a>.
+				</p>
+				<p>
+					And finally we have moved our development and commit mailinglists from SourceForge to
+					Apache hosted lists. To join the lists, please send a message to the following addresses and
+					follow the instructions provided in the reply:
+				</p>
+				<ul>
+					<li>Subscribe to development: <a href="mailto:wicket-dev-subscribe at incubator.apache.org">wicket-dev-subscribe at incubator.apache.org</a></li>
+					<li>Subscribe to commits: <a href="mailto:wicket-commits-subscribe at incubator.apache.org">wicket-commits-subscribe at incubator.apache.org</a></li>
+				</ul>
+			</subsection>
+			<subsection name="October 12th, 2006 - Wicket enters Apache Incubator">
+				<p>
+					The Wicket team is proud to announce that we are starting the process of 
+					joining the <a href="http://www.apache.org">Apache Software Foundation</a>.
+				</p>
+				<p>
+					When projects first move to Apache, they are housed at the
+					<a href="http://incubator.apache.org">Apache Incubator</a>. The Incubator 
+					helps incoming projects migrate to the vibrant Apache community. One of the 
+					primary goals of the incubator is to ensure that the joining community is 
+					open, diverse and effective meritocracy.
+				</p><p>
+					During <a href="http://incubator.apache.org/projects/wicket">Wicket's incubation</a> we will 
+					resolve any issues regarding license (in)compatibilities that might be present in our code. 
+					For more information on the incubation process, please read the <a href="http://incubator.apache.org">documents
+					found on the incubator website</a>.
+				</p><p>
+					To facilitate our transition we have moved parts of our development to the Apache Incubator 
+					infrastructure:
+				</p>
+					<ul>
+					<li>the subversion repository is now hosted at <a href="https://svn.apache.org/repos/asf/incubator/wicket">https://svn.apache.org/repos/asf/incubator/wicket</a></li>
+					<li>the development mailing list is now provided by wicket-dev at incubator.apache.org</li>
+					<li>the commit mailing list is now provided by wicket-commits at incubator.apache.org</li>
+					<li>our bug tracking system is now hosted at <a href="http://issues.apache.org/jira/browse/WICKET">http://issues.apache.org/jira/browse/WICKET</a></li>
+					</ul>
+				<p>
+					Please join our incubating community at Apache by subscribing to the Wicket 
+					development list. Send a message to <i>wicket-dev-subscribe at incubator.apache.org</i> 
+					and follow the instructions.
+				</p>
+			</subsection>
 			<subsection name="October 4th, 2006 - Wicket Support">
 				<a href="http://www.wicket-support.com">Wicket Support</a> - a company that provides 
 				Wicket consultation, training and commercial support launched.

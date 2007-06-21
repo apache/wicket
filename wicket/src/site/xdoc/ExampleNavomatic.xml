@@ -16,7 +16,7 @@
         In all the Wicket examples, you have to put all files in the same package directory. 
         This means putting the markup files and the java files next to one another. It is 
         possible to alter this behavior, but that is beyond the scope of this example. The
-        only exception is the oblibatory <code>web.xml</code> file which should reside
+        only exception is the obligatory <code>web.xml</code> file which should reside
         in the <code>WEB-INF/</code> directory of your web application root folder.
 	</p>
 	<p>
