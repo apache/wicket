@@ -141,13 +141,14 @@ public class DateTimeField extends FormComponentPanel
 	 */
 	public Object getConvertedInput()
 	{
-		MutableDateTime date = new MutableDateTime(dateField.getConvertedInput());
-		Integer hours = (Integer)hoursField.getConvertedInput();
-		Integer minutes = (Integer)minutesField.getConvertedInput();
-		AM_PM amOrPm = (AM_PM)amOrPmChoice.getConvertedInput();
-
-		if (date != null)
+		Object dateFieldInput = dateField.getConvertedInput();
+		if (dateFieldInput != null)
 		{
+			MutableDateTime date = new MutableDateTime(dateFieldInput);
+			Integer hours = (Integer)hoursField.getConvertedInput();
+			Integer minutes = (Integer)minutesField.getConvertedInput();
+			AM_PM amOrPm = (AM_PM)amOrPmChoice.getConvertedInput();
+
 			try
 			{
 				TimeZone zone = getClientTimeZone();
@@ -178,7 +179,6 @@ public class DateTimeField extends FormComponentPanel
 				DateTimeField.this.error(e.getMessage());
 				invalid();
 			}
-
 		}
 
 		return null;
