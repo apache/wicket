@@ -39,10 +39,6 @@
 			<artifactId>wicket</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>easymock</groupId>
-			<artifactId>easymock</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 		</dependency>
