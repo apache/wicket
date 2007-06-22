@@ -22,6 +22,7 @@ import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 /**
@@ -80,7 +81,13 @@ public class DateField extends FormComponentPanel
 	 */
 	public Object getConvertedInput()
 	{
-		return dateField.getConvertedInput();
+		Object input = dateField.getConvertedInput();
+		if (input != null && getDiscardTime())
+		{
+			// reset time fields
+			input = new DateTime(input).toDateMidnight().toDate();
+		}
+		return input;
 	}
 
 	/**
@@ -113,6 +120,18 @@ public class DateField extends FormComponentPanel
 		setType(Date.class);
 		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
 		dateField.add(new DatePicker());
+	}
+
+	/**
+	 * Gets whether any time info should be discarded. By default this is true,
+	 * as this field/ date picker combination will typically be used to select
+	 * 'whole' dates rather an exact times.
+	 * 
+	 * @return Whether any time info should be discarded
+	 */
+	protected boolean getDiscardTime()
+	{
+		return true;
 	}
 
 	/**
