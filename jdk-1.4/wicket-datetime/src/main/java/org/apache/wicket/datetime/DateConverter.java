@@ -27,6 +27,7 @@ import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
@@ -92,7 +93,7 @@ public abstract class DateConverter implements IConverter
 		{
 			TimeZone zone = getClientTimeZone();
 			// instantiate now/ current time
-			MutableDateTime dt = new MutableDateTime();
+			MutableDateTime dt = new MutableDateTime(new DateMidnight());
 			if (zone != null)
 			{
 				// set time zone for client
