@@ -138,4 +138,9 @@ public class PrependingStringBuffer
 	{
 		return new String(buffer, position, size);
 	}
+	
+	public boolean equals(Object obj)
+	{
+		return toString().equals(obj);
+	}
 }
