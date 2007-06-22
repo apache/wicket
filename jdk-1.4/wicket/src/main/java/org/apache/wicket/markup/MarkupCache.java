@@ -241,7 +241,8 @@ public class MarkupCache implements IMarkupCache
 		{
 			if (!clazz.isAssignableFrom(container.getClass()))
 			{
-				throw new WicketRuntimeException("Parameter clazz must be instance of container");
+				throw new WicketRuntimeException("Parameter clazz must be an instance of "
+						+ container.getClass().getName() + ", but is a " + clazz.getName());
 			}
 		}
 
