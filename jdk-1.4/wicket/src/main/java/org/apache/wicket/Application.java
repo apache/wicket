@@ -821,9 +821,11 @@ public abstract class Application
 	 */
 	protected void internalDestroy()
 	{
-		// Clear property resolver cache of Class keys.
+		// Clear caches of Class keys so the classloader can be garbage
+		// collected (WICKET-625)
 		PropertyResolver.destroy(this);
-
+		getMarkupSettings().getMarkupCache().clear();
+		
 		onDestroy();
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
