@@ -237,13 +237,10 @@ public class MarkupCache implements IMarkupCache
 		{
 			containerClass = container.getClass();
 		}
-		else
+		else if (!clazz.isAssignableFrom(container.getClass()))
 		{
-			if (!clazz.isAssignableFrom(container.getClass()))
-			{
-				throw new WicketRuntimeException("Parameter clazz must be an instance of "
-						+ container.getClass().getName() + ", but is a " + clazz.getName());
-			}
+			throw new WicketRuntimeException("Parameter clazz must be an instance of "
+					+ container.getClass().getName() + ", but is a " + clazz.getName());
 		}
 
 		// Get the cache key to be associated with the markup resource stream
