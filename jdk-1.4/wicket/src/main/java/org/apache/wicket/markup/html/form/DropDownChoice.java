@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 
@@ -206,11 +207,14 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
-	 * Whether this component's onSelectionChanged event handler should called
-	 * using javascript if the selection changes. If true, a roundtrip will be
-	 * generated with each selection change, resulting in the model being
-	 * updated (of just this component) and onSelectionChanged being called.
-	 * This method returns false by default.
+	 * Whether this component's onSelectionChanged event handler should be
+	 * called using javascript <tt>window.location</tt> if the selection
+	 * changes. If true, a roundtrip will be generated with each selection
+	 * change, resulting in the model being updated (of just this component) and
+	 * onSelectionChanged being called. This method returns false by default. If
+	 * you wish to use Ajax instead, let
+	 * {@link #wantOnSelectionChangedNotifications()} return false and add an
+	 * {@link AjaxFormComponentUpdatingBehavior} to the component.
 	 * 
 	 * @return True if this component's onSelectionChanged event handler should
 	 *         called using javascript if the selection changes
