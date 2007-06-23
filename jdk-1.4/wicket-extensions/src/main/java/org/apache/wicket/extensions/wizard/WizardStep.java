@@ -426,7 +426,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public void setSummaryModel(IModel summary)
 	{
-		this.summary = summary;
+		this.summary = wrap(summary);
 	}
 
 	/**
@@ -437,7 +437,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public void setTitleModel(IModel title)
 	{
-		this.title = title;
+		this.title = wrap(title);
 	}
 
 	/**
