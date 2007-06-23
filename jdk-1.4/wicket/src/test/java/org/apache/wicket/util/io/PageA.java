@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.util.io;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.Model;
 
 /**
  * @author jcompagner
@@ -32,10 +30,14 @@ public class PageA extends WebPage
 
 	private PageB page;
 
+	/**
+	 * 
+	 * Construct.
+	 * @param page
+	 */
 	public PageA(PageB page)
 	{
 		this.page = page;
-		add(new AttributeModifier("test",new Model(page)));
 	}
 
 	/**
