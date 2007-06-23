@@ -20,6 +20,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 
@@ -49,5 +50,7 @@ public class SimplePage_13 extends WebPage
 		};
 		header.add(new AttributeModifier("lang", new Model("de")));
 		add(header);
+
+		header.add(HeaderContributor.forCss("BasePage.css"));
 	}
 }
