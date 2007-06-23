@@ -41,6 +41,7 @@ import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.validation.IErrorMessageSource;
+import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
@@ -1009,7 +1010,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		{
 			convert();
 			
-			if (isValid() && getConvertedInput() != null)
+			if (isValid())
 			{
 				validateValidators();
 			}
@@ -1366,12 +1367,18 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		int i = 0;
 		IValidator validator = null;
 
+		boolean isNull = getConvertedInput() == null;
+		
 		try
 		{
 			for (i = 0; i < size; i++)
 			{
 				validator = validators_get(i);
-				validator.validate(validatable);
+				
+				if (isNull == false || validator instanceof INullAcceptingValidator)
+				{
+					validator.validate(validatable);
+				}
 				if (!isValid())
 				{
 					break;

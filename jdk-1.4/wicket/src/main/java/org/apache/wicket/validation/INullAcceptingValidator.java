@@ -16,26 +16,21 @@
  */
 package org.apache.wicket.validation;
 
-import java.io.Serializable;
-
 /**
- * A validator that can validate a {@link IValidatable} object.
+ * Marker interface for validators that will accept <code>null</code> value.
+ * Without implementing this interface wicket will never pass <code>null</code>
+ * value to {@link IValidator#validate(IValidatable)}.
  * <p>
- * Unless the validator implements also the {@link INullAcceptingValidator}
- * interface, wicket will not pass null value to the
- * {@link IValidator#validate(IValidatable)} method.
+ * Keep in mind that the form component must have set the required property to
+ * <code>false</code>, otherwise wicket will not permit the validator to
+ * process the <code>null</code> value.
  * 
+ * @see IValidator
+ * @see org.apache.wicket.markup.html.form.FormComponent#setRequired(boolean)
  * 
- * @author Jonathan Locke
- * @author Igor Vaynberg (ivaynberg)
+ * @author Matej Knopp
  */
-public interface IValidator extends Serializable
+public interface INullAcceptingValidator extends IValidator
 {
-	/**
-	 * Validates the <code>validatable</code> object. Validation errors should
-	 * be reported using {@link IValidatable#error(IValidationError)} method.
-	 * 
-	 * @param validatable
-	 */
-	void validate(IValidatable validatable);
+
 }

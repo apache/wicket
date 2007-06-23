@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
@@ -45,7 +46,7 @@ import org.apache.wicket.validation.ValidationError;
  * @author Igor Vaynberg (ivaynbeg)
  * 
  */
-public abstract class AbstractValidator implements IValidator, IClusterable
+public abstract class AbstractValidator implements INullAcceptingValidator, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
