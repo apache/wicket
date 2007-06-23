@@ -214,7 +214,8 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * onSelectionChanged being called. This method returns false by default. If
 	 * you wish to use Ajax instead, let
 	 * {@link #wantOnSelectionChangedNotifications()} return false and add an
-	 * {@link AjaxFormComponentUpdatingBehavior} to the component.
+	 * {@link AjaxFormComponentUpdatingBehavior} to the component using the
+	 * <tt>onchange</tt> event.
 	 * 
 	 * @return True if this component's onSelectionChanged event handler should
 	 *         called using javascript if the selection changes
