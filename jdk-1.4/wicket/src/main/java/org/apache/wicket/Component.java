@@ -1181,10 +1181,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Retrieves id by which this component is represented within the markup.
+	 * This is either the id attribute if it is set explicitly in the markup, or
+	 * a generated id.
 	 * <p>
 	 * The point of this function is to generate a unique id to make it easy to
 	 * locate this component in the generated markup for post-wicket processing
-	 * such as javascript or an xslt transform.
+	 * such as javascript or an xslt transform in case no explicit id was set
+	 * yet.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent
 	 * have been added to the page.
@@ -1204,7 +1207,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 								+ "to find the page it is supposed to operate in before you can call "
 								+ "this method (Component#getMarkupId)");
 			}
-			markupId = getId() + page.getAutoIndex();
+			// try to read from markup
+			markupId = getMarkupAttributes().getString("id");
+			if (markupId == null)
+			{
+				// if not in the markup, generate one
+				markupId = getId() + page.getAutoIndex();
+			}
 			setMetaData(MARKUP_ID_KEY, markupId);
 		}
 		return markupId;
