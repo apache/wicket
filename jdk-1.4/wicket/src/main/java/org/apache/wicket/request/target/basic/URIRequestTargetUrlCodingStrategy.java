@@ -205,6 +205,14 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 		return parameters;
 	}
 
+	/**
+	 * Calls decodeParameters() and retrieves the <tt>uri</tt> parameter. If
+	 * you need to access multiple parameters in the request, call
+	 * {@link #decodeParameters(RequestParameters)} directly.
+	 * 
+	 * @param requestParameters
+	 * @return
+	 */
 	protected String getURI(RequestParameters requestParameters)
 	{
 		return decodeParameters(requestParameters).getString(URI);
