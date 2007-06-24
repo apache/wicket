@@ -75,9 +75,9 @@ public class MarkupCache implements IMarkupCache
 	 * 
 	 * @param application
 	 */
-	public MarkupCache()
+	public MarkupCache(Application application)
 	{
-		this.application = Application.get();
+		this.application = application;
 	}
 
 	/**

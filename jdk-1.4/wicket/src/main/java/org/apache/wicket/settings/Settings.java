@@ -1255,7 +1255,7 @@ public final class Settings
 		if (this.markupCache == null)
 		{
 			// Construct markup cache for this application
-			this.markupCache = new MarkupCache();
+			this.markupCache = new MarkupCache(application);
 		}
 
 		return this.markupCache;
