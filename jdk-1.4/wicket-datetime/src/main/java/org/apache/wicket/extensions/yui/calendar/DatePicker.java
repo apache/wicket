@@ -61,6 +61,24 @@ import org.joda.time.DateTime;
  */
 public class DatePicker extends AbstractBehavior implements IHeaderContributor
 {
+	/**
+	 * Exception thrown when the bound component does not produce a format this
+	 * date picker can work with.
+	 */
+	private static final class UnableToDetermineFormatException extends WicketRuntimeException
+	{
+		private static final long serialVersionUID = 1L;
+
+		public UnableToDetermineFormatException()
+		{
+			super("This behavior can only be added to components that either implement "
+					+ ITextFormatProvider.class.getName()
+					+ " AND produce a non-null format, or that use"
+					+ " converters that this datepicker can use to determine"
+					+ " the pattern being used. Alternatively, you can extend "
+					+ " the date picker and override getDatePattern to provide your own");
+		}
+	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -79,9 +97,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	public void bind(Component component)
 	{
+		this.component = component;
 		checkComponentProvidesDateFormat(component);
 		component.setOutputMarkupId(true);
-		this.component = component;
 	}
 
 	/**
@@ -192,6 +210,24 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
+	 * Check that this behavior can get a date format out of the component it is
+	 * coupled to. It checks whether {@link #getDatePattern()} produces a
+	 * non-null value. If that method returns null, and exception will be thrown
+	 * 
+	 * @param component
+	 *            the component this behavior is being coupled to
+	 * @throws UnableToDetermineFormatException
+	 *             if this date picker is unable to determine a format.
+	 */
+	private final void checkComponentProvidesDateFormat(Component component)
+	{
+		if (getDatePattern() == null)
+		{
+			throw new UnableToDetermineFormatException();
+		}
+	}
+
+	/**
 	 * Append javascript to the initialization function for the YUI widget. Can
 	 * be used by subclasses to conveniently extend configuration without having
 	 * to write a separate contribution.
@@ -208,45 +244,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected void appendToInit(String markupId, String javascriptId, String javascriptWidgetId,
 			StringBuffer b)
 	{
-	}
-
-	/**
-	 * Check that this behavior can get a date format out of the component it is
-	 * coupled to. if you override this method to allow for other types (such as
-	 * your own), you should override {@link #getDatePattern()} as well. This
-	 * method should return normally if the component is accepted or throw a RTE
-	 * when it is not.
-	 * 
-	 * @param component
-	 *            the component this behavior is being coupled to
-	 * @throws WicketRuntimeException
-	 *             if the component is not support.
-	 */
-	protected void checkComponentProvidesDateFormat(Component component)
-	{
-
-		if (component instanceof ITextFormatProvider)
-		{
-			// were ok
-			return;
-		}
-
-		IConverter converter = component.getConverter(DateTime.class);
-		if (!(converter instanceof DateConverter))
-		{
-			converter = component.getConverter(Date.class);
-		}
-		if (converter instanceof DateConverter)
-		{
-
-			return; // This is ok
-		}
-		throw new WicketRuntimeException(
-				"this behavior can only be added to components that either implement "
-						+ ITextFormatProvider.class.getName() + " or that use "
-						+ DateConverter.class.getName() + " configured with an instance of "
-						+ SimpleDateFormat.class.getName()
-						+ " (like Wicket's default configuration has)");
 	}
 
 	/**
@@ -287,31 +284,32 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 	/**
 	 * Gets the date pattern to use for putting selected values in the coupled
-	 * component. If you override this method to support components that would
-	 * otherwise not be supported, you should override
-	 * {@link #checkComponentProvidesDateFormat(Component)} and let it return
-	 * normally.
+	 * component.
 	 * 
 	 * @return The date pattern
 	 */
 	protected String getDatePattern()
 	{
-
+		String format = null;
 		if (component instanceof ITextFormatProvider)
 		{
-			return ((ITextFormatProvider)component).getTextFormat();
+			format = ((ITextFormatProvider)component).getTextFormat();
+			// it is possible that components implement ITextFormatProvider but
+			// don't provide a format
 		}
-		else
+
+		if (format == null)
 		{
-			// cast from hell, but we checked before whether we could
 			IConverter converter = component.getConverter(DateTime.class);
 			if (!(converter instanceof DateConverter))
 			{
 				converter = component.getConverter(Date.class);
 			}
-			return ((SimpleDateFormat)((DateConverter)converter).getDateFormat(component
+			format = ((SimpleDateFormat)((DateConverter)converter).getDateFormat(component
 					.getLocale())).toPattern();
 		}
+
+		return format;
 	}
 
 	/**
