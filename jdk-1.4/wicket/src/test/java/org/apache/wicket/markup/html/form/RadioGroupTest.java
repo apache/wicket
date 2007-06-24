@@ -96,6 +96,10 @@ public class RadioGroupTest extends WicketTestCase
 	/**
 	 * test component form processing
 	 */
+	// TODO (Eelco) This is an aweful test. Why is 'mock page' (which isn't a
+	// real mock, but just some arbitrary page) used rather than a page with
+	// markup that corresponds to the component structure that is build up?
+	// Components and markup go together in Wicket, period.
 	public void testFormProcessing()
 	{
 		// setup some values we will use for testing as well as a test model
@@ -110,11 +114,21 @@ public class RadioGroupTest extends WicketTestCase
 
 		RequestCycle cycle = tester.createRequestCycle();
 
+		// this could have been any page it seems. see comment at method
 		MockPage page = new MockPage();
 
 		// create component hierarchy
 
-		final Form form = new Form("form", new CompoundPropertyModel(modelObject));
+		final Form form = new Form("form", new CompoundPropertyModel(modelObject))
+		{
+			private static final long serialVersionUID = 1L;
+
+			public String getMarkupId()
+			{
+				// hack for the fact that this test doesn't relate to any markup
+				return "foo";
+			}
+		};
 
 		final RadioGroup group = new RadioGroup("prop1");
 
@@ -196,7 +210,8 @@ public class RadioGroupTest extends WicketTestCase
 	}
 
 	/**
-	 * Regression test for markup parsing of radio buttons. Tests issue #1465676.
+	 * Regression test for markup parsing of radio buttons. Tests issue
+	 * #1465676.
 	 * 
 	 * @throws Exception
 	 */
@@ -206,12 +221,12 @@ public class RadioGroupTest extends WicketTestCase
 		// this was not the case in beta1
 		executeTest(RadioGroupTestPage3.class, "RadioGroupTestPage3_expected.html");
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
-	public void testDisabledRadioGroup()  throws Exception
+	public void testDisabledRadioGroup() throws Exception
 	{
 		executeTest(RadioGroupDisabledTestPage.class, "RadioGroupDisabledTestPage_expected.html");
-	}	
+	}
 }
