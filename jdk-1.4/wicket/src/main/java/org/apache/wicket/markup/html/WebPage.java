@@ -326,9 +326,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	{
 		super.configureResponse();
 
-		final WebResponse response = getWebRequestCycle().getWebResponse();
-		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store
+		if (getWebRequestCycle().getResponse() instanceof WebResponse) {
+			final WebResponse response = getWebRequestCycle().getWebResponse();
+			response.setHeader("Pragma", "no-cache");
+			response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store
+		}
 	}
 
 	/**
