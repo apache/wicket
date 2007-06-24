@@ -23,7 +23,7 @@
     <body>
         <section name="Welcome to Wicket-examples">
 			<p>
-				This is the examples project for the <a href="http://wicket.sourceforge.net">Wicket</a> framework.
+				This is the examples project for the <a href="http://wicket.apache.org">Wicket</a> framework.
 			</p>
 			<ul>
 				<li>Download the binary release</li>

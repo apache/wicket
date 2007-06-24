@@ -18,22 +18,6 @@ Apache Wicket Guice
 	Integration project to use Guice injection in your Wicket applications. 
 	See the wicket-examples for integration patterns.
 
-* Incubation
-
-	The Wicket project is an effort undergoing incubation at the Apache Software
-	Foundation (ASF), sponsored by the Incubator PMC. Incubation is required of all 
-	newly accepted projects until a further review indicates that the 
-	infrastructure, communications, and decision making process have stabilized in 
-	a manner consistent with other successful ASF projects. While incubation 
-	status is not necessarily a reflection of the completeness or stability of the 
-	code, it does indicate that the project has yet to be fully endorsed by the 
-	ASF.
-	
-	For more information about the incubation status of the Wicket project you
-	can go to the following page:
-	
-	{{http://incubator.apache.org/projects/wicket.html}}
-
 * License
 
 	Wicket is distributed under the terms of the Apache Software Foundation license,

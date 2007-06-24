@@ -12,15 +12,6 @@ NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
     AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
 
 ---------------------------------------------------------------------------
-src/jdk-1.4/wicket-quickstart/NOTICE
----------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
----------------------------------------------------------------------------
 src/jdk-1.4/wicket
 ---------------------------------------------------------------------------
    Apache Wicket
@@ -29,6 +20,9 @@ src/jdk-1.4/wicket
    This product includes software developed at
    The Apache Software Foundation (http://www.apache.org/).
 
+   This product includes software from QOS.ch (http://slf4j.org) licensed under the X11 license
+   Copyright (c) 2004-2007 QOS.ch
+   
    Contains Diff library from Mavens JRCS, released under
    The Apache Software License, Version 1.1.
    (c) 1999-2003
@@ -99,18 +93,9 @@ src/jdk-1.4/wicket-datetime
    Joda.org (http://www.joda.org/).
    
 ---------------------------------------------------------------------------
-src/jdk-1.4/wicket-spring
----------------------------------------------------------------------------
-   Apache Wicket Extensions
-   Copyright 2007 The Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-
----------------------------------------------------------------------------
 src/jdk-1.4/wicket-extensions
 ---------------------------------------------------------------------------
-   Apache Wicket
+   Apache Wicket Extensions
    Copyright 2007 The Apache Software Foundation
 
    This product includes software developed at
@@ -121,7 +106,7 @@ src/jdk-1.4/wicket-extensions
    (c) 2001-2005
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-jmx
+src/jdk-1.4/wicket-ioc
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation
@@ -130,7 +115,25 @@ src/jdk-1.5/wicket-jmx
    The Apache Software Foundation (http://www.apache.org/).
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-spring-annot
+src/jdk-1.4/wicket-quickstart/NOTICE
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+---------------------------------------------------------------------------
+src/jdk-1.4/wicket-spring
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+---------------------------------------------------------------------------
+src/jdk-1.5/wicket-auth-roles
 ---------------------------------------------------------------------------
    Apache Wicket Auth Roles
    Copyright 2007 The Apache Software Foundation
@@ -181,7 +184,26 @@ src/jdk-1.5/wicket-examples
    This product includes jhighlight (https://jhighlight.dev.java.net/)
    which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
 
-   
+---------------------------------------------------------------------------
+src/jdk-1.5/wicket-guice
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+   This product includes Guice, developed at Google, and licensed
+   under the Apache License 2.0. (http://code.google.com/p/google-guice/).
+---------------------------------------------------------------------------
+src/jdk-1.5/wicket-jmx
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2007 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
 ---------------------------------------------------------------------------
 src/jdk-1.5/wicket-objectssizeof-agent
 ---------------------------------------------------------------------------
@@ -193,7 +215,7 @@ src/jdk-1.5/wicket-objectssizeof-agent
 
 
 ---------------------------------------------------------------------------
-src/jdk-1.5/wicket-auth-roles
+src/jdk-1.5/wicket-spring-annot
 ---------------------------------------------------------------------------
    Apache Wicket
    Copyright 2007 The Apache Software Foundation

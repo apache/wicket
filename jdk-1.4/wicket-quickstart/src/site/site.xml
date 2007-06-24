@@ -19,12 +19,12 @@
 <skin>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-site-skin</artifactId>
-	<version>1.0-incubating-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 </skin>
 <body>
 	<menu name="Wicket QuickStart">
 		<item name="About" href="/index.html" />
-		<item name="Apache Wicket" href="http://incubator.apache.org/wicket" />
+		<item name="Apache Wicket" href="http://wicket.apache.org" />
 		<item name="License" href="/license.html" />
 	</menu>
 
@@ -50,7 +50,7 @@
 	</menu>
 
 	<menu name="Related projects">
-		<item name="Apache Wicket" href="http://incubator.apache.org/wicket"/>
+		<item name="Apache Wicket" href="http://wicket.apache.org"/>
 		<item name="Eclipse" href="http://www.eclipse.org"/>
 		<item name="NetBeans" href="http://www.netbeans.org"/>
 		<item name="IntelliJ IDEA" href="http://www.jetbrains.com/idea/"/>

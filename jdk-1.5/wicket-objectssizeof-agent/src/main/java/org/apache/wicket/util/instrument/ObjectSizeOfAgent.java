@@ -27,7 +27,7 @@ import org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy;
  * instrumentation API. To use it, have the jar somewhere we you can access it
  * (just having this class on the classpath is not enough) and startup your
  * application with a -javaagent argument like e.g:
- * '-javaagent:/mydir/wicket-objectsizeof-agent-1.3-incubating-SNAPSHOT.jar'.
+ * '-javaagent:/mydir/wicket-objectsizeof-agent-1.3-SNAPSHOT.jar'.
  * When the application starts up, this agent will register an
  * {@link IObjectSizeOfStrategy} at
  * {@link Objects#setObjectSizeOfStrategy(IObjectSizeOfStrategy)}. Note that

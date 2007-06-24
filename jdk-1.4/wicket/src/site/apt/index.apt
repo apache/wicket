@@ -21,7 +21,7 @@ Apache Wicket
 	complex debugging and brittle code for powerful, reusable components written with plain Java 
 	and HTML.
 
-	* Read the {{{http://incubator.apache.org/wicket}online documentation}} available on our website
+	* Read the {{{http://wicket.apache.org}online documentation}} available on our website
 
 	* Read the {{{http://cwiki.apache.org/WICKET/migrate-13.html}migration guide}}
 
@@ -31,22 +31,6 @@ Apache Wicket
 	  to solve to the user list ({{{mailto:wicket-user@lists.sourceforge.net}wicket-user@lists.sourceforge.net}})
 
 	* Ask a question on IRC at freenode.net, channel ##wicket
-
-* Incubation
-
-	The Wicket project is an effort undergoing incubation at the Apache Software
-	Foundation (ASF), sponsored by the Incubator PMC. Incubation is required of all 
-	newly accepted projects until a further review indicates that the 
-	infrastructure, communications, and decision making process have stabilized in 
-	a manner consistent with other successful ASF projects. While incubation 
-	status is not necessarily a reflection of the completeness or stability of the 
-	code, it does indicate that the project has yet to be fully endorsed by the 
-	ASF.
-	
-	For more information about the incubation status of the Wicket project you
-	can go to the following page:
-	
-	{{http://incubator.apache.org/projects/wicket.html}}
 
 * License
 

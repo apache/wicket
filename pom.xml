@@ -23,7 +23,7 @@
 
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>1.3.0-incubating-SNAPSHOT</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Wicket Parent</name>
@@ -65,11 +65,13 @@
 				<module>jdk-1.4/wicket</module>
 				<module>jdk-1.4/wicket-datetime</module>
 				<module>jdk-1.4/wicket-extensions</module>
+				<module>jdk-1.4/wicket-ioc</module>
 				<module>jdk-1.4/wicket-spring</module>
 				<module>jdk-1.4/wicket-velocity</module>
 				<module>jdk-1.5</module>
 				<module>jdk-1.5/wicket-spring-annot</module>
 				<module>jdk-1.5/wicket-auth-roles</module>
+				<module>jdk-1.5/wicket-guice</module>
 				<module>jdk-1.5/wicket-jmx</module>
 				<module>jdk-1.5/wicket-objectssizeof-agent</module>
 				<module>jdk-1.5/wicket-examples</module>
@@ -131,7 +133,7 @@
 		</profile>
 	</profiles>
 
-	<url>http://incubator.apache.org/wicket/${project.artifactId}</url>
+	<url>http://wicket.apache.org/${project.artifactId}</url>
 	<inceptionYear>2004</inceptionYear>
 
 	<organization>
@@ -158,42 +160,38 @@
 	</ciManagement>
 
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/incubator/wicket/trunk</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/trunk</developerConnection>
-		<url>http://svn.apache.org/viewvc/incubator/wicket/trunk</url>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/wicket/trunk</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/trunk</developerConnection>
+		<url>http://svn.apache.org/viewvc/wicket/trunk</url>
 	</scm>
 
 	<mailingLists>
 		<mailingList>
 			<name>Wicket Announcements List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
+			<post>announce@wicket.apache.org</post>
+			<subscribe>announce-subscribe@wicket.apache.org</subscribe>
+			<unsubscribe>announce-unsubscribe@wicket.apache.org</unsubscribe>
+			<archive>http://www.nabble.com/Wicket---Announce-f13975.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket User List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
+			<post>users@wicket.apache.org</post>
+			<subscribe>users-subscribe@wicket.apache.org</subscribe>
+			<unsubscribe>users-unsubscribe@wicket.apache.org</unsubscribe>
+			<archive>http://www.nabble.com/Wicket---User-f13976.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket Development List</name>
-			<post>wicket-dev@incubator.apache.org</post>
-			<subscribe>wicket-dev-subscribe@incubator.apache.org</subscribe>
-			<unsubscribe>wicket-dev-unsubscribe@incubator.apache.org</unsubscribe>
+			<post>dev@wicket.apache.org</post>
+			<subscribe>dev-subscribe@wicket.apache.org</subscribe>
+			<unsubscribe>dev-unsubscribe@wicket.apache.org</unsubscribe>
 			<archive>http://www.nabble.com/Wicket---Dev-f13977.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket commit List</name>
-			<subscribe>wicket-commits-subscribe@incubator.apache.org</subscribe>
-			<unsubscribe>wicket-commits-unsubscribe@incubator.apache.org</unsubscribe>
-			<archive>http://mail-archives.apache.org/mod_mbox/incubator-wicket-commits/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket automated builds List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-builds</archive>
+			<subscribe>commits-subscribe@wicket.apache.org</subscribe>
+			<unsubscribe>commits-unsubscribe@wicket.apache.org</unsubscribe>
+			<archive>http://mail-archives.apache.org/mod_mbox/wicket-commits/</archive>
 		</mailingList>
 	</mailingLists>
 
@@ -646,7 +644,6 @@
 							<configuration>
 								<resourceBundles>
 									<resourceBundle>org.apache:apache-jar-resource-bundle:1.2</resourceBundle>
-									<resourceBundle>org.apache:apache-incubator-disclaimer-resource-bundle:1.1</resourceBundle>
 								</resourceBundles>
 							</configuration>
 						</execution>

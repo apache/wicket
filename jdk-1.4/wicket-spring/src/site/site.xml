@@ -19,12 +19,12 @@
 	<skin>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-site-skin</artifactId>
-		<version>1.0-incubating-SNAPSHOT</version>
+		<version>1.0-SNAPSHOT</version>
 	</skin>
 	<body>
 		<menu name="Wicket Spring">
 			<item name="About" href="/index.html" />
-			<item name="Apache Wicket" href="http://incubator.apache.org/wicket" />
+			<item name="Apache Wicket" href="http://wicket.apache.org" />
 			<item name="License" href="/license.html" />
 		</menu>
 		<menu name="Project Info">
