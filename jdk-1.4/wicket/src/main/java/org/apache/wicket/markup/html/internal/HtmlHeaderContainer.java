@@ -28,7 +28,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.response.StringResponse;
 
 
@@ -131,19 +130,8 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
 
-			// If the parent component is a Page (or a bordered Page), we must
-			// now include the header sections of all components in the
-			// component hierarchie.
-			MarkupContainer parent = getParent();
-
-			// If bordered page ...
-			while ((parent instanceof Border))
-			{
-				parent = parent.getParent();
-			}
-
-			// must be a Page
-			renderHeaderSections(parent, this);
+			// Render all header sections of all components on the page
+			renderHeaderSections(getPage(), this);
 
 			// Automatically add <head> if necessary
 			CharSequence output = response.getBuffer();
