@@ -26,9 +26,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
@@ -411,18 +409,5 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			this.remove(header);
 		}
 		super.onDetach();
-	}
-
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#add(org.apache.wicket.behavior.IBehavior)
-	 */
-	public Component add(final IBehavior behavior)
-	{
-		throw new WicketRuntimeException(
-				"You can not attach behaviors onto WebPages. Web pages do require a markup "
-						+ "file but no specific tag to attach the page to. "
-						+ "This is why behaviors such as HeaderContributor for example don't work if "
-						+ "attached to a WebPage. Please attach the behavior to any other of your components.");
 	}
 }
