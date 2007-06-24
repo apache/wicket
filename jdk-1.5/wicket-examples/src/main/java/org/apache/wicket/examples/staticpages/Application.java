@@ -81,11 +81,6 @@ public class Application extends WebApplication
 			public IRequestTarget decode(RequestParameters requestParameters)
 			{
 				final ValueMap requestParams = decodeParameters(requestParameters);
-				final StringResponse emailResponse = new StringResponse();
-				final WebResponse originalResponse = (WebResponse)RequestCycle.get().getResponse();
-				if (requestParams.getString("email") != null) {
-					RequestCycle.get().setResponse(emailResponse);
-				}
 				PageParameters params = new PageParameters();
 				params.put("uri", requestParams.get(URI));
 				return new BookmarkablePageRequestTarget(Page.class, params) {
@@ -95,12 +90,17 @@ public class Application extends WebApplication
 					@Override
 					public void respond(RequestCycle requestCycle)
 					{
-						super.respond(requestCycle);
 						if (requestParams.getString("email") != null) {
+							final StringResponse emailResponse = new StringResponse();
+							final WebResponse originalResponse = (WebResponse)RequestCycle.get().getResponse();
+							RequestCycle.get().setResponse(emailResponse);
+							super.respond(requestCycle);
 							// Here send the email instead of dumping it to stdout!
 							System.out.println(emailResponse.toString());
 							RequestCycle.get().setResponse(originalResponse);
 							RequestCycle.get().setRequestTarget(new BookmarkablePageRequestTarget(Sent.class));
+						} else {
+							super.respond(requestCycle);
 						}
 					}
 				};
