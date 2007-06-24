@@ -44,9 +44,8 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 /**
  * This wizard shows some basic form use. It uses custom panels for the form
  * elements, and a single domain object ({@link User}) as it's subject. Also,
- * {@link UserRolesStep the user roles step} is an optional step, that will only
- * be executed when assignRoles is true (and that value is edited in the
- * {@link UserDetailsStep user details step}).
+ * the user roles step}is an optional step, that will only be executed when
+ * assignRoles is true (and that value is edited in the user details step).
  * 
  * @author Eelco Hillenius
  */
@@ -80,7 +79,7 @@ public class NewUserWizard extends Wizard
 		 */
 		public UserDetailsStep()
 		{
-			super(new ResourceModel("userdetails.title"), null);
+			setTitleModel(new ResourceModel("confirmation.title"));
 			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model(user)));
 			add(new RequiredTextField("user.firstName"));
 			add(new RequiredTextField("user.lastName"));
@@ -156,8 +155,8 @@ public class NewUserWizard extends Wizard
 	}
 
 	/** cheap ass roles database. */
-	private static final List allRoles = Arrays.asList(new String[] { "admin", "user", "moderator",
-			"joker", "slacker" });
+	private static final List<String> allRoles = Arrays.asList(new String[] { "admin", "user",
+			"moderator", "joker", "slacker" });
 
 	/** Whether the assign roles step should be executed. */
 	private boolean assignRoles = false;
