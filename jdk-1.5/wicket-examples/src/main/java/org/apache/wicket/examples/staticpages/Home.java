@@ -43,6 +43,8 @@ public class Home extends WicketExamplePage
 		add(new StaticLink("helloxslt", new Model("xsldocs/hello.html")));
 		// Passing URI to a Wicket page
 		add(new StaticLink("wicketpage", new Model("pages/path/to/hello.html")));
+		// Sending a Wicket page by email
+		add(new StaticLink("emailwicketpage", new Model("pages/path/to/hello.html?email=true")));
 	}
 
 	private class StaticLink extends WebMarkupContainer
