@@ -9,7 +9,8 @@ refreshing lack of XML, Apache Wicket makes developing web-apps simple and
 enjoyable again. Swap the boilerplate, complex debugging and brittle code for
 powerful, reusable components written with plain Java and HTML.
 
-Apache Wicket can be found at: http://wicket.apache.org and is licensed under the Apache Software Foundation license, version 2.0.
+Apache Wicket can be found at: http://wicket.apache.org and is licensed under
+the Apache Software Foundation license, version 2.0.
 
 Contents
 --------
@@ -104,10 +105,10 @@ Getting help
 
  - Read the migration guide (http://cwiki.apache.org/WICKET/migrate-13.html)
 
- - Read the mailing archives available on nabble, gmane and sourceforge
+ - Read the mailing archives available on Nabble, GMane and Apache
 
  - Send a complete message containing your problem, stacktrace and problem
-   you're trying to solve to the user list (wicket-user@lists.sourceforge.net)
+   you're trying to solve to the user list (users@wicket.apache.org)
 
  - Ask a question on IRC at freenode.net, channel ##wicket
  

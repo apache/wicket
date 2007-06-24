@@ -33,7 +33,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @see org.apache.wicket.markup.html.form.CheckGroup
  * 
- * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Igor Vaynberg
  * 
  */
 public class Check extends LabeledWebMarkupContainer

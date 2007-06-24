@@ -31,7 +31,7 @@ import org.apache.wicket.util.lang.Objects;
  * 
  * @see org.apache.wicket.markup.html.form.RadioGroup
  * 
- * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Igor Vaynberg
  * @author Sven Meier (svenmeier)
  * 
  */

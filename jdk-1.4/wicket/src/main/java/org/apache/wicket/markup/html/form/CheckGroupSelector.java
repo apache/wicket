@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * @see org.apache.wicket.markup.html.form.CheckGroup
  * @see org.apache.wicket.markup.html.form.Check
 
- * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Igor Vaynberg
  * 
  */
 public class CheckGroupSelector extends WebMarkupContainer

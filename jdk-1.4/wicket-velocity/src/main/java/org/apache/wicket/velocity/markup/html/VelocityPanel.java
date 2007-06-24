@@ -44,7 +44,7 @@ import org.apache.wicket.util.string.Strings;
  * Panel that displays the result of rendering a <a
  * href="http://jakarta.apache.org/velocity">Velocity</a> template. The
  * template itself can be any
- * <code><a href="http://wicket.sourceforge.net/apidocs/wicket/util/resource/IStringResourceStream.html">IStringResourceStream</a></code>
+ * <code><a href="http://wicket.apache.org/wicket/apidocs/org/apache/wicket/util/resource/IStringResourceStream.html">IStringResourceStream</a></code>
  * implementation, of which there are a number of convenient implementations in
  * the wicket.util package. The model can be any normal
  * <code><a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Map.html">Map</a></code>,

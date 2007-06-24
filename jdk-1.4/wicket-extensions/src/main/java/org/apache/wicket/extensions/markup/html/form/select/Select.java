@@ -40,7 +40,7 @@ import org.apache.wicket.util.lang.Objects;
  * @see SelectOption
  * @see SelectOptions
  * 
- * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Igor Vaynberg
  */
 public class Select extends FormComponent
 {

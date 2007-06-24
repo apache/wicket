@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
  *  
  * @see Select
  * 
- * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Igor Vaynberg
  */
 public class SelectOption extends WebMarkupContainer
 {

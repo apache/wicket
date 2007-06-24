@@ -55,7 +55,7 @@ import org.apache.wicket.util.string.Strings;
  * <p>
  * Note: This component does not support cookie persistence
  * 
- * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Igor Vaynberg
  * 
  */
 public class CheckGroup extends FormComponent implements IOnChangeListener

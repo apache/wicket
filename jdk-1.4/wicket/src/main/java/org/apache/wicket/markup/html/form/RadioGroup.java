@@ -40,7 +40,7 @@ import org.apache.wicket.util.convert.ConversionException;
  *    &lt;/span&gt;
  * </pre>
  * 
- * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Igor Vaynberg
  * @author Sven Meier (svenmeier)
  * 
  */
