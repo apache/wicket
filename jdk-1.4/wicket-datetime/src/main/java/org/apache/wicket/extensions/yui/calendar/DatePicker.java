@@ -232,7 +232,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		}
 
 		IConverter converter = component.getConverter(DateTime.class);
-		if (converter == null)
+		if (!(converter instanceof DateConverter))
 		{
 			converter = component.getConverter(Date.class);
 		}
@@ -305,7 +305,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		{
 			// cast from hell, but we checked before whether we could
 			IConverter converter = component.getConverter(DateTime.class);
-			if (converter == null)
+			if (!(converter instanceof DateConverter))
 			{
 				converter = component.getConverter(Date.class);
 			}
