@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ISessionFactory;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -78,7 +77,8 @@ public class InterceptTest extends TestCase
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
-		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(), loginPage.getClass());
+		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(), loginPage
+				.getClass());
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(loginPage.getForm());
@@ -88,7 +88,8 @@ public class InterceptTest extends TestCase
 
 		// continueToInterceptPage seems to return the same call, causing it to
 		// login twice as a result the lastrendered page is null
-		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage().getClass());
+		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
+				.getClass());
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(
@@ -106,14 +107,16 @@ public class InterceptTest extends TestCase
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
-		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(), loginPage.getClass());
+		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(), loginPage
+				.getClass());
 
 		// bypass form completely to login but continue to intercept page
 		application.setupRequestAndResponse();
 		WebRequestCycle requestCycle = application.createRequestCycle();
 		assertTrue(((MockLoginPage)application.getLastRenderedPage()).login("admin"));
 		application.processRequestCycle(requestCycle);
-		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage().getClass());
+		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
+				.getClass());
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(
@@ -126,9 +129,10 @@ public class InterceptTest extends TestCase
 	 * 
 	 * @author
 	 */
-	private static class MyMockWebApplication extends WebApplication implements ISessionFactory
+	private static class MyMockWebApplication extends WebApplication
 	{
 		private static final long serialVersionUID = 1L;
+
 		public Class getHomePage()
 		{
 			return MockHomePage.class;
@@ -156,12 +160,12 @@ public class InterceptTest extends TestCase
 		{
 			return new MySession(this, request);
 		}
-		
+
 		protected WebResponse newWebResponse(HttpServletResponse servletResponse)
 		{
 			return new WebResponse(servletResponse);
 		}
-		
+
 		protected void outputDevelopmentModeWarning()
 		{
 			// Do nothing.

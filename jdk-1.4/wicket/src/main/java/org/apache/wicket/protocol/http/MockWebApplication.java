@@ -27,7 +27,6 @@ import javax.servlet.ServletException;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IRequestCycleFactory;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
@@ -113,9 +112,6 @@ public class MockWebApplication
 	/** Session. */
 	private WebSession wicketSession;
 
-	/** Request cycle factory. */
-	private IRequestCycleFactory requestCycleFactory;
-
 	/** The homepage */
 	private Class homePage;
 
@@ -200,9 +196,6 @@ public class MockWebApplication
 		this.servletRequest = new MockHttpServletRequest(this.application, this.servletSession,
 				this.context);
 		this.servletResponse = new MockHttpServletResponse();
-
-		// Get request cycle factory
-		this.requestCycleFactory = this.application.getRequestCycleFactory();
 
 		// Construct request and response using factories
 		this.wicketRequest = this.application.newWebRequest(this.servletRequest);
@@ -488,8 +481,9 @@ public class MockWebApplication
 	public WebRequestCycle createRequestCycle()
 	{
 		// Create a web request cycle using factory
-		final WebRequestCycle cycle = (WebRequestCycle)requestCycleFactory.newRequestCycle(
-				application, wicketRequest, wicketResponse);
+
+		final WebRequestCycle cycle = (WebRequestCycle)application.newRequestCycle(wicketRequest,
+				wicketResponse);
 
 		// Construct session
 		this.wicketSession = (WebSession)Session.findOrCreate();

@@ -25,9 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IRequestCycleFactory;
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.ISessionFactory;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
@@ -73,11 +71,10 @@ import org.slf4j.LoggerFactory;
  * override the init() method. For example:
  * 
  * <pre>
- *               public void init()
- *               {
- *                   String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
- *                   URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                   ...
+ *  public void init() {
+ *  String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *  URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *  ...
  * </pre>
  * 
  * @see WicketFilter
@@ -100,7 +97,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  */
-public abstract class WebApplication extends Application implements ISessionFactory
+public abstract class WebApplication extends Application
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
@@ -125,9 +122,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * {@link HttpSession} for this application instance.
 	 */
 	private String sessionAttributePrefix;
-
-	/** Session factory for this web application */
-	private ISessionFactory sessionFactory = this;
 
 	/** The WicketFilter that this application is attached to */
 	private WicketFilter wicketFilter;
@@ -343,6 +337,15 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * @see org.apache.wicket.Application#newRequestCycle(org.apache.wicket.Request,
+	 *      org.apache.wicket.Response)
+	 */
+	public RequestCycle newRequestCycle(final Request request, final Response response)
+	{
+		return new WebRequestCycle(this, (WebRequest)request, (WebResponse)response);
+	}
+
+	/**
 	 * Create new Wicket Session object. Note, this method is not called if you
 	 * registered your own ISessionFactory with the Application.
 	 * 
@@ -370,7 +373,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @see org.apache.wicket.ISessionFactory#newSession(org.apache.wicket.Request,
+	 * @see org.apache.wicket.Application#newSession(org.apache.wicket.Request,
 	 *      org.apache.wicket.Response)
 	 */
 	public Session newSession(Request request, Response response)
@@ -391,15 +394,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			logger.sessionDestroyed(sessionId);
 		}
-	}
-
-	/**
-	 * @param sessionFactory
-	 *            The session factory to use
-	 */
-	public final void setSessionFactory(final ISessionFactory sessionFactory)
-	{
-		this.sessionFactory = sessionFactory;
 	}
 
 	/**
@@ -427,45 +421,12 @@ public abstract class WebApplication extends Application implements ISessionFact
 
 	/**
 	 * @return nada
-	 * @deprecated Replaced by {@link #getRequestCycleFactory()}
+	 * @deprecated Replaced by {@link #newRequestCycle(Request, Response)}
 	 */
 	// TODO remove after compatibility release.
-	protected final IRequestCycleFactory getDefaultRequestCycleFactory()
+	protected final Object getDefaultRequestCycleFactory()
 	{
 		throw new UnsupportedOperationException("obsolete method. see getRequestCycleFactory");
-	}
-
-	/**
-	 * Create a request cycle factory that will be used for creating request
-	 * cycle objects.
-	 * 
-	 * @see WebSession#getRequestCycleFactory()
-	 * @see IRequestCycleFactory
-	 * 
-	 * @return Request cycle factory
-	 */
-	protected IRequestCycleFactory getRequestCycleFactory()
-	{
-		return new IRequestCycleFactory()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public RequestCycle newRequestCycle(final Application application,
-					final Request request, final Response response)
-			{
-				// Respond to request
-				return new WebRequestCycle((WebApplication)application, (WebRequest)request,
-						(WebResponse)response);
-			}
-		};
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getSessionFactory()
-	 */
-	protected ISessionFactory getSessionFactory()
-	{
-		return this.sessionFactory;
 	}
 
 	/**
@@ -698,23 +659,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 				+ "*** Do NOT deploy to your live server(s) without changing this.  ***\n"
 				+ "*** See Application#getConfigurationType() for more information. ***\n"
 				+ "********************************************************************\n");
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Creates a new RequestCycle for the given request and response using the
-	 * application's request cycle factory.
-	 * 
-	 * @param request
-	 *            The request
-	 * @param response
-	 *            The response
-	 * @return The new request cycle.
-	 */
-	final RequestCycle newRequestCycle(final Request request, final Response response)
-	{
-		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
 
 	// TODO remove after deprecation release

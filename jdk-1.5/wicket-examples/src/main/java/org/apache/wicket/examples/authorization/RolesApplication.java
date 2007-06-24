@@ -19,7 +19,6 @@ package org.apache.wicket.examples.authorization;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.ISessionFactory;
 import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
@@ -35,7 +34,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  * 
  * @author Eelco Hillenius
  */
-public class RolesApplication extends WebApplication implements ISessionFactory
+public class RolesApplication extends WebApplication
 {
 	/**
 	 * User DB.
@@ -61,7 +60,8 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	}
 
 	/**
-	 * @see org.apache.wicket.ISessionFactory#newSession(Request, Response)
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+	 *      org.apache.wicket.Response)
 	 */
 	public Session newSession(Request request, Response response)
 	{
@@ -71,7 +71,6 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	@Override
 	protected void init()
 	{
-		setSessionFactory(this);
 		getSecuritySettings().setAuthorizationStrategy(
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer()));
 		MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");

@@ -636,6 +636,60 @@ public abstract class Application
 	}
 
 	/**
+	 * Creates a new RequestCycle object. Override this method if you want to
+	 * provide a custom request cycle.
+	 * 
+	 * @param application
+	 *            The application
+	 * @param request
+	 *            The request
+	 * @param response
+	 *            The response
+	 * @return The request cycle
+	 * 
+	 * @since 1.3
+	 */
+	public abstract RequestCycle newRequestCycle(final Request request, final Response response);
+
+	/**
+	 * FOR DEPRECATION ONLY.
+	 * 
+	 * @param application
+	 * @param request
+	 * @param response
+	 * @return nothing
+	 * @throws UnsupportedOperationException
+	 *             always
+	 * @deprecated interface {@link IRequestCycleFactory} will be removed in the
+	 *             next release. applications wishing to provide custom request
+	 *             cycles should override method
+	 *             {@link #newRequestCycle(Request, Response)}
+	 */
+	public final RequestCycle newRequestCycle(Application application, Request request,
+			Response response)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Creates a new session. Override this method if you want to provide a
+	 * custom session.
+	 * 
+	 * @param request
+	 *            The request that will create this session.
+	 * @param response
+	 *            The response to initialize, for example with cookies. This is
+	 *            important to use cases involving unit testing because those
+	 *            use cases might want to be able to sign a user in
+	 *            automatically when the session is created.
+	 * 
+	 * @return The session
+	 * 
+	 * @since 1.3
+	 */
+	public abstract Session newSession(Request request, Response response);
+
+	/**
 	 * Removes a component instantiation listener. This method should typicaly
 	 * only be called during application startup; it is not thread safe.
 	 * 
@@ -782,9 +836,9 @@ public abstract class Application
 	 * 
 	 * @deprecated use {@link #onDestroy()} instead
 	 */
+	// TODO remove after deprecation release
 	protected final void destroy()
 	{
-
 	}
 
 	/**
@@ -795,18 +849,27 @@ public abstract class Application
 	{
 	}
 
-
 	/**
 	 * @return Request cycle factory for this kind of session.
+	 * @deprecated replaced by {@link #newRequestCycle(Request, Response)}
 	 */
-	protected abstract IRequestCycleFactory getRequestCycleFactory();
+	// TODO remove after deprecation release
+	protected final Object getRequestCycleFactory()
+	{
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Gets the factory for creating session instances.
 	 * 
 	 * @return Factory for creating session instances
+	 * @deprecated replaced by {@link #newSession(Request, Response)}
 	 */
-	protected abstract ISessionFactory getSessionFactory();
+	// TODO remove after deprecation release
+	protected final Object getSessionFactory()
+	{
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Allows for initialization of the application by a subclass. <strong>Use
@@ -825,7 +888,7 @@ public abstract class Application
 		// collected (WICKET-625)
 		PropertyResolver.destroy(this);
 		getMarkupSettings().getMarkupCache().clear();
-		
+
 		onDestroy();
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
