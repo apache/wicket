@@ -41,6 +41,8 @@ public class Home extends WicketExamplePage
 		add(new StaticLink("hellostream", new Model("docs/hello.html")));
 		// Hello World as a Static Page with XSLT layout
 		add(new StaticLink("helloxslt", new Model("xsldocs/hello.html")));
+		// Passing URI to a Wicket page
+		add(new StaticLink("wicketpage", new Model("pages/path/to/hello.html")));
 	}
 
 	private class StaticLink extends WebMarkupContainer
