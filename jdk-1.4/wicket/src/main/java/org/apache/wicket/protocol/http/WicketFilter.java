@@ -376,13 +376,16 @@ public class WicketFilter implements Filter
 					catch (SecurityException e)
 					{
 						// Swallow this at INFO.
-						log.info("Couldn't read web.xml to automatically pick up servlet/filter path: " + e.getMessage());
+						log
+								.info("Couldn't read web.xml to automatically pick up servlet/filter path: "
+										+ e.getMessage());
 					}
 					if (filterPath == null)
 					{
 						log.info("Unable to parse filter mapping web.xml for "
-								+ filterConfig.getFilterName() + ". " + "Configure with init-param "
-								+ FILTER_MAPPING_PARAM + " if it is not \"/*\".");
+								+ filterConfig.getFilterName() + ". "
+								+ "Configure with init-param " + FILTER_MAPPING_PARAM
+								+ " if it is not \"/*\".");
 					}
 				}
 			}
@@ -443,16 +446,15 @@ public class WicketFilter implements Filter
 			ArrayList urlPatterns = new ArrayList();
 			XmlPullParser parser = new XmlPullParser();
 			parser.parse(is);
-			
+
 			while (true)
-			{				
+			{
 				XmlTag elem;
 				do
 				{
 					elem = (XmlTag)parser.nextTag();
 				}
-				while (elem != null
-						&& (!(elem.getName().equals(mapping) && elem.isOpen())));
+				while (elem != null && (!(elem.getName().equals(mapping) && elem.isOpen())));
 
 				if (elem == null)
 					break;
@@ -483,7 +485,7 @@ public class WicketFilter implements Filter
 			}
 
 			String prefixUppered = Character.toUpperCase(prefix.charAt(0)) + prefix.substring(1);
-			
+
 			// By the time we get here, we have a list of urlPatterns we match
 			// this filter against.
 			// In all likelihood, we will only have one. If we have none, we
@@ -492,16 +494,17 @@ public class WicketFilter implements Filter
 			// 302 redirects that require absolute URLs.
 			if (urlPatterns.size() == 0)
 			{
-				throw new IllegalArgumentException(
-						"Error initialising Wicket" + prefixUppered + " - you have no <" + mapping + "> element with a url-pattern that uses " + prefix + ": "
-								+ filterName);
+				throw new IllegalArgumentException("Error initialising Wicket" + prefixUppered
+						+ " - you have no <" + mapping + "> element with a url-pattern that uses "
+						+ prefix + ": " + filterName);
 			}
 			String urlPattern = (String)urlPatterns.get(0);
 
 			// Check for leading '/' and trailing '*'.
 			if (!urlPattern.startsWith("/") || !urlPattern.endsWith("*"))
 			{
-				throw new IllegalArgumentException("<" + mapping + "> for Wicket" + prefixUppered + " \"" + filterName + "\" must start with '/' and end with '*'.");
+				throw new IllegalArgumentException("<" + mapping + "> for Wicket" + prefixUppered
+						+ " \"" + filterName + "\" must start with '/' and end with '*'.");
 			}
 
 			// Strip trailing '*' and leading '/'.
@@ -509,15 +512,18 @@ public class WicketFilter implements Filter
 		}
 		catch (IOException e)
 		{
-			throw new ServletException("Error finding <" + prefix + "> " + filterName + " in web.xml", e);
+			throw new ServletException("Error finding <" + prefix + "> " + filterName
+					+ " in web.xml", e);
 		}
 		catch (ParseException e)
 		{
-			throw new ServletException("Error finding <" + prefix + "> " + filterName + " in web.xml", e);
+			throw new ServletException("Error finding <" + prefix + "> " + filterName
+					+ " in web.xml", e);
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			throw new ServletException("Error finding <" + prefix + "> " + filterName + " in web.xml", e);
+			throw new ServletException("Error finding <" + prefix + "> " + filterName
+					+ " in web.xml", e);
 		}
 	}
 
@@ -530,7 +536,10 @@ public class WicketFilter implements Filter
 	 */
 	private boolean isWicketRequest(String relativePath)
 	{
-		// Special case home page
+		// default location, like
+		// /wicket-examples/forminput/?wicket:interface=:0::::
+		// the relative path here is empty (wicket-examples is the web
+		// application and the filter is mapped to /forminput/*
 		if (relativePath.equals(""))
 		{
 			return true;
