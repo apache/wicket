@@ -19,6 +19,8 @@ package org.apache.wicket.util.lang;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -28,6 +30,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class Classes
 {
+	private static final Logger log = LoggerFactory.getLogger(Classes.class);
+	
 	/**
 	 * Gets the name of the given class or null if the class is null.
 	 * 
@@ -81,7 +85,7 @@ public final class Classes
 		}
 		catch (ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			log.error("Could not resolve class", e);
 			return null;
 		}
 	}
