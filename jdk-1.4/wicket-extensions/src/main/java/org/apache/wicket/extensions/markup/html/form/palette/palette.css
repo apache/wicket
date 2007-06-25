@@ -48,3 +48,9 @@ table.palette td.buttons button {
 	width: 40px;
 	height: 40px;
 }
+
+/* Fix a firefox (2.0.0.4) bug : https://bugzilla.mozilla.org/show_bug.cgi?id=382600 */
+select::-moz-dummy-option { 
+	visibility: hidden; 
+	content: ""; 
+}
