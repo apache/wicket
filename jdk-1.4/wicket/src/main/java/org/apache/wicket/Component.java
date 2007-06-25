@@ -1208,12 +1208,16 @@ public abstract class Component implements IClusterable, IConverterLocator
 								+ "this method (Component#getMarkupId)");
 			}
 			// try to read from markup
-			markupId = getMarkupAttributes().getString("id");
-			if (markupId == null)
-			{
-				// if not in the markup, generate one
-				markupId = getId() + page.getAutoIndex();
-			}
+			// TODO getting the id from markup doesn't work everywhere yet.
+			// unfortunately, we have to drop this until we have a good solution
+			// for issue http://issues.apache.org/jira/browse/WICKET-694
+			// markupId = getMarkupAttributes().getString("id");
+
+			// if (markupId == null)
+			// {
+			// if not in the markup, generate one
+			markupId = getId() + page.getAutoIndex();
+			// }
 			setMetaData(MARKUP_ID_KEY, markupId);
 		}
 		return markupId;
