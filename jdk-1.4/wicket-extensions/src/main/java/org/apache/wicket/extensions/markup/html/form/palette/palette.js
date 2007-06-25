@@ -50,12 +50,8 @@
 	function paletteMoveHelper(source, dest) {
 		var dirty=false;
 		for (var i=0;i<source.options.length;i++) {
-			if (source.options[i].selected) {
-				var option=new Option(source.options[i].text, source.options[i].value);
-				var destIndex=dest.options.length;
-				dest.options[destIndex]=option;
-				dest.options[destIndex].selected=true;
-				source.options[i]=null;
+			if (source.options[i].selected) {	
+				dest.appendChild(source.options[i]);
 				i--;
 				dirty=true;
 			}
@@ -73,21 +69,13 @@
 	}
 	
 	function paletteMoveUpHelper(box) {
-		var start=0;
 		var dirty=false;
-
-		for (start=0;start<box.options.length;start++) {
-			if (box.options[start].selected==false) {
-				break;
-			}
-		}
-		start++;
-
-		for (var i=start;i<box.options.length;i++) {
-			if (box.options[i].selected) {
-				paletteSwapHelper(box, i, i-1);
-				box.options[i-1].selected=true;
-				dirty=true;
+		for (var i=0;i<box.options.length;i++) {
+			if (box.options[i].selected && i>0) {
+				if(!box.options[i-1].selected) {
+					box.insertBefore(box.options[i],box.options[i-1]);
+					dirty=true;
+				}
 			}
 		}
 		return dirty;
@@ -95,7 +83,6 @@
 	
 	function paletteMoveDown(choicesId, selectionId, recorderId) {
 		var selection=paletteResolve(selectionId);
-		
 
 		if (paletteMoveDownHelper(selection)) {
 			var recorder=paletteResolve(recorderId);
@@ -104,36 +91,17 @@
 	}
 
 	function paletteMoveDownHelper(box) {
-		var start=0;
 		var dirty=false;
-
-		for (start=box.options.length-1;start>=0;start--) {
-			if (box.options[start].selected==false) {
-				break;
-			}
-		}
-		start--;
-
-		for (var i=start;i>=0;i--) {
-			if (box.options[i].selected) {
-				paletteSwapHelper(box, i, i+1);
-				box.options[i+1].selected=true;
-				dirty=true;
+		for (var i=box.options.length-1;i>=0;i--) {
+			if (box.options[i].selected && i<box.options.length-1) {
+				if(!box.options[i+1].selected) {
+					box.insertBefore(box.options[i+1],box.options[i]);
+					dirty=true;
+				}
 			}
 		}
 		return dirty;
-	}
-	
-		
-	function paletteSwapHelper(box, idx1, idx2) {
-		var value1=box.options[idx1].value;
-		var text1=box.options[idx1].text;
-		var value2=box.options[idx2].value;
-		var text2=box.options[idx2].text;
-		box.options[idx1]=new Option(text2, value2);
-		box.options[idx2]=new Option(text1, value1);
-	}
-	
+	}	
 	
 	function paletteUpdateRecorder(selection, recorder) {
 		recorder.value="";
@@ -152,4 +120,3 @@
 			box.options[i].selected=false;
 		}	
 	}
-	

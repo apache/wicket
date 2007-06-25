@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.form.palette.component;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
@@ -81,8 +82,18 @@ public abstract class AbstractOptions extends FormComponent
 			  			  "    Wicket.Form.excludeFromAjaxSerialization." + this.getMarkupId() + "='true';" +
 						  JavascriptUtils.SCRIPT_CLOSE_TAG);
 			
-			buffer.append("\n<option value=\"").append(id).append("\">").append(value).append(
-					"</option>");
+            buffer.append("\n<option value=\"").append(id).append("\"");
+            
+            HashMap additionalAttributesMap = getAdditionalAttributes(choice);
+            if(additionalAttributesMap != null) {
+                Iterator iter = additionalAttributesMap.keySet().iterator();
+                while(iter.hasNext()) {
+                    String next = (String)iter.next();
+                    buffer.append(" " + next.toString() + "=\"" + additionalAttributesMap.get(next).toString() + "\"");
+                }
+            }
+            
+			buffer.append(">").append(value).append("</option>");
 
 		}
 
@@ -90,6 +101,13 @@ public abstract class AbstractOptions extends FormComponent
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
+    /**
+     * @return map of attribute/value pairs (String/String)
+     */
+    protected HashMap getAdditionalAttributes(Object choice) {
+        return null;
+    }
+	
 	/**
 	 * 
 	 * @param tag

@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.markup.html.form.palette;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.wicket.Component;
@@ -366,9 +367,22 @@ public class Palette extends Panel
 	 */
 	protected Component newSelectionComponent()
 	{
-		return new Selection("selection", this);
+		return new Selection("selection", this) {
+			private static final long serialVersionUID = 1L;
+
+			protected HashMap getAdditionalAttributes(Object choice) {
+                return Palette.this.getAdditionalAttributesForSelection(choice);
+            }
+        };
 	}
 
+    /**
+     * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+     */
+    protected HashMap getAdditionalAttributesForSelection(Object choice) {
+        return null;
+    }
+	
 	/**
 	 * factory method for the available items component
 	 * 
@@ -376,9 +390,22 @@ public class Palette extends Panel
 	 */
 	protected Component newChoicesComponent()
 	{
-		return new Choices("choices", this);
+		return new Choices("choices", this) {
+			private static final long serialVersionUID = 1L;
+
+			protected HashMap getAdditionalAttributes(Object choice) {
+                return Palette.this.getAdditionalAttributesForChoices(choice);
+            }
+        };
 	}
 
+    /**
+     * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+     */
+    protected HashMap getAdditionalAttributesForChoices(Object choice) {
+        return null;
+    }
+	
 	private Component getChoicesComponent()
 	{
 		return choicesComponent;
