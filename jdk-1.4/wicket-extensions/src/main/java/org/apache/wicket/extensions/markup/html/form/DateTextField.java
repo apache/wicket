@@ -39,12 +39,17 @@ import org.apache.wicket.util.convert.converters.DateConverter;
  * user's locale)
  * 
  * @author Stefan Kanev
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
 public class DateTextField extends TextField implements ITextFormatProvider
 {
 
 	private static final long serialVersionUID = 1L;
+
+	// XXX i18n: we can probably make this lazy and localize according to
+	// session locale
+	private static final String DEFAULT_PATTERN = "MM/dd/yyyy";
 
 	/**
 	 * The date pattern of the text field
@@ -67,7 +72,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 */
 	public DateTextField(String id)
 	{
-		super(id, Date.class);
+		this(id, null, DEFAULT_PATTERN);
 	}
 
 	/**
@@ -76,33 +81,14 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * 
 	 * @param id
 	 *            The id of the text field
-	 * @param object
+	 * @param model
 	 *            The model
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public DateTextField(String id, IModel object)
+	public DateTextField(String id, IModel model)
 	{
-		super(id, object, Date.class);
-	}
-
-	/**
-	 * Creates a new DateTextField bound with a specific
-	 * <code>SimpleDateFormat</code> pattern.
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param object
-	 *            The model
-	 * @param datePattern
-	 *            A <code>SimpleDateFormat</code> pattern
-	 * 
-	 * @see org.apache.wicket.markup.html.form.TextField
-	 */
-	public DateTextField(String id, IModel object, String datePattern)
-	{
-		this(id, datePattern);
-		setModel(object);
+		this(id, model, DEFAULT_PATTERN);
 	}
 
 	/**
@@ -118,7 +104,25 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 */
 	public DateTextField(String id, String datePattern)
 	{
-		super(id, Date.class);
+		this(id, null, datePattern);
+	}
+
+	/**
+	 * Creates a new DateTextField bound with a specific
+	 * <code>SimpleDateFormat</code> pattern.
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param model
+	 *            The model
+	 * @param datePattern
+	 *            A <code>SimpleDateFormat</code> pattern
+	 * 
+	 * @see org.apache.wicket.markup.html.form.TextField
+	 */
+	public DateTextField(String id, IModel model, String datePattern)
+	{
+		super(id, model, Date.class);
 		this.datePattern = datePattern;
 		this.converter = new DateConverter()
 		{
@@ -138,7 +142,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * Returns the default converter if created without pattern; otherwise it
 	 * returns a pattern-specific converter.
 	 * 
-	 * @param type The type for which the convertor should work 
+	 * @param type
+	 *            The type for which the convertor should work
 	 * 
 	 * @return A pattern-specific converter
 	 * 
