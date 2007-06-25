@@ -18,9 +18,9 @@ package org.apache.wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Locale;
 
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
 import org.apache.wicket.util.watch.IModifiable;
@@ -41,7 +41,7 @@ import org.apache.wicket.util.watch.IModifiable;
  * 
  * @author Jonathan Locke
  */
-public interface IResourceStream extends IModifiable, Serializable
+public interface IResourceStream extends IModifiable, IClusterable
 {
 	/**
 	 * Gets the mime type of this resource

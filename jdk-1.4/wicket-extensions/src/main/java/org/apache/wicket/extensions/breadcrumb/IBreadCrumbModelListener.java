@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.extensions.breadcrumb;
 
-import java.io.Serializable;
 import java.util.EventListener;
+
+import org.apache.wicket.IClusterable;
 
 /**
  * Bread crumb model listeners get notified by
@@ -28,7 +29,7 @@ import java.util.EventListener;
  * 
  * @author Eelco Hillenius
  */
-public interface IBreadCrumbModelListener extends EventListener, Serializable
+public interface IBreadCrumbModelListener extends EventListener, IClusterable
 {
 	/**
 	 * Called when a bread crumb was activated.

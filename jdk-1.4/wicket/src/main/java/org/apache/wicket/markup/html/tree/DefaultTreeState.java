@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.tree;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +26,8 @@ import java.util.Set;
 
 import javax.swing.tree.TreeNode;
 
+import org.apache.wicket.IClusterable;
+
 /**
  * Default implementation of TreeState.
  * <p>
@@ -34,7 +35,7 @@ import javax.swing.tree.TreeNode;
  * 
  * @author Matej Knopp
  */
-public class DefaultTreeState implements ITreeState, Serializable
+public class DefaultTreeState implements ITreeState, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

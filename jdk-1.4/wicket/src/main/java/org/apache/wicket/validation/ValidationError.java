@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.validation;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.wicket.IClusterable;
 
 /**
  * A versatile implementation of {@link IValidationError} that supports message
@@ -41,7 +42,7 @@ import java.util.Map.Entry;
  * 
  * @author ivaynberg
  */
-public class ValidationError implements IValidationError, Serializable
+public class ValidationError implements IValidationError, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

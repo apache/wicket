@@ -17,8 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 
-import java.io.Serializable;
-
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.Model;
@@ -36,7 +35,7 @@ public class NavigatorLabel extends Label
 	private static final long serialVersionUID = 1L;
 
 	// TODO Factor this interface out and let dataview/datatable implement it
-	private static interface PageableComponent extends Serializable
+	private static interface PageableComponent extends IClusterable
 	{
 		/**
 		 * @return total number of rows across all pages
@@ -130,7 +129,7 @@ public class NavigatorLabel extends Label
 		setModel(new StringResourceModel("NavigatorLabel", this, new Model(new LabelModelObject(table)), "Showing ${from} to ${to} of ${of}"));
 	}
 
-	private class LabelModelObject implements Serializable
+	private class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		private PageableComponent table;

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.Serializable;
-
 import org.apache.wicket.markup.html.border.MarkupComponentBorder;
 
 /**
@@ -27,7 +25,7 @@ import org.apache.wicket.markup.html.border.MarkupComponentBorder;
  * 
  * @see MarkupComponentBorder
  */
-public interface IComponentBorder extends Serializable
+public interface IComponentBorder extends IClusterable
 {
 	/**
 	 * Called before the component is rendered.

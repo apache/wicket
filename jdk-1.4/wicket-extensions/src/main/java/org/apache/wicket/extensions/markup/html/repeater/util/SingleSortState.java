@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
-import java.io.Serializable;
-
+import org.apache.wicket.IClusterable;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 
 
@@ -28,7 +27,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class SingleSortState implements ISortState, Serializable
+public class SingleSortState implements ISortState, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
