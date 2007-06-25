@@ -172,7 +172,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	{
 		if (items < 1)
 		{
-			throw new IllegalArgumentException("Argument [itemsPerPage] cannot be less then 1");
+			throw new IllegalArgumentException("Argument [itemsPerPage] cannot be less than 1");
 		}
 
 		if (itemsPerPage != items)
