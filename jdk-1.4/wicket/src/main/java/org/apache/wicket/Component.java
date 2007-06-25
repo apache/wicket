@@ -1410,7 +1410,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final Request getRequest()
 	{
-		return getRequestCycle().getRequest();
+		RequestCycle requestCycle = getRequestCycle();
+		if (requestCycle == null)
+		{
+			// Happens often with WicketTester when one forgets to call createRequestCycle()
+			throw new WicketRuntimeException("No RequestCycle is currently set!");
+		}
+		return requestCycle.getRequest();
 	}
 
 	/**

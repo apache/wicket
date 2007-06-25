@@ -16,50 +16,32 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.io.Serializable;
+
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.validation.validator.StringValidator;
 
 /**
- * Mock page for testing basic FormTester functionality.
+ * Web page that contains a form with ajax functionality.
  * 
- * @author frankbille
+ * @author Kare Nuorteva
  */
-public class MockFormPage extends WebPage
+public class MockAjaxFormPage extends WebPage
 {
-	private static final long serialVersionUID = 1L;
+	private static final class MockDomainObject implements Serializable {
+		private static final long serialVersionUID = 1L;
 
-	/**
-	 * Domain object
-	 */
-	public class MockDomainObject
-	{
 		private String text;
-		private boolean checkbox;
-		private String textarea;
 
 		/**
-		 * @return checkbox
-		 */
-		public boolean isCheckbox()
-		{
-			return checkbox;
-		}
-
-		/**
-		 * @param checkbox
-		 */
-		public void setCheckbox(boolean checkbox)
-		{
-			this.checkbox = checkbox;
-		}
-
-		/**
-		 * @return text
+		 * Gets text.
+		 * @return text Text entered in the text field
 		 */
 		public String getText()
 		{
@@ -67,52 +49,40 @@ public class MockFormPage extends WebPage
 		}
 
 		/**
-		 * @param text
+		 * Sets text.
+		 * @param text New value for the text field
 		 */
 		public void setText(String text)
 		{
 			this.text = text;
 		}
-
-		/**
-		 * @return textarea
-		 */
-		public String getTextarea()
-		{
-			return textarea;
-		}
-
-		/**
-		 * @param textarea
-		 */
-		public void setTextarea(String textarea)
-		{
-			this.textarea = textarea;
-		}
 	}
 
-	private MockDomainObject domainObject;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public MockFormPage()
-	{
-		domainObject = new MockDomainObject();
-		Form form = new Form("form", new CompoundPropertyModel(domainObject));
+	public MockAjaxFormPage() {
+		Form form = new Form("form", new CompoundPropertyModel(new MockDomainObject()));
 		add(form);
-		
-		form.add(new TextField("text"));
-		form.add(new CheckBox("checkbox"));
-		form.add(new TextArea("textarea"));
-		form.add(new Button("submit"));
-	}
-	
-	/**
-	 * @return domainObject
-	 */
-	public MockDomainObject getDomainObject()
-	{
-		return domainObject;
+		final Button submit = new Button("submit");
+		submit.setOutputMarkupId(true);
+		submit.setEnabled(false);
+		form.add(submit);
+		final TextField text = new TextField("text");
+		text.setRequired(true);
+		text.add(StringValidator.minimumLength(4));
+		text.add(new AjaxFormValidatingBehavior(form, "onkeyup") {
+			private static final long serialVersionUID = 1L;
+
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				text.validate();
+				submit.setEnabled(text.isValid());
+				target.addComponent(submit);
+			}
+		});
+		form.add(text);
 	}
 }

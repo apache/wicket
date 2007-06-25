@@ -1067,8 +1067,12 @@ public class BaseWicketTester extends MockWebApplication
 				+ " which matches the event: " + event.toString();
 		notNull(failMessage, ajaxEventBehavior);
 
-		setupRequestAndResponse();
-		RequestCycle requestCycle = createRequestCycle();
+		// initialize the request only if needed to allow the user to pass request parameters, see WICKET-254
+		WebRequestCycle requestCycle;
+		if (RequestCycle.get() == null)
+			requestCycle = setupRequestAndResponse();
+		else
+			requestCycle = (WebRequestCycle)RequestCycle.get();
 
 		// If the event is an FormSubmitBehavior then also "submit" the form
 		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
@@ -1080,7 +1084,7 @@ public class BaseWicketTester extends MockWebApplication
 		ajaxEventBehavior.onRequest();
 
 		// process the request target
-		requestCycle.getRequestTarget().respond(requestCycle);
+		processRequestCycle(requestCycle);
 	}
 
 	/**
@@ -1146,7 +1150,9 @@ public class BaseWicketTester extends MockWebApplication
 					String name = formComponent.getInputName();
 					String value = formComponent.getValue();
 
-					getServletRequest().setParameter(name, value);
+					// Set request parameter with the field value, but do not modify an existing request parameter explicitly set using FormTester.setValue()
+					if (getServletRequest().getParameterMap().get(name) == null)
+						getServletRequest().setParameter(name, value);
 				}
 			}
 		});

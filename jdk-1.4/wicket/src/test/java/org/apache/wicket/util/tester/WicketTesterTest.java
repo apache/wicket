@@ -30,6 +30,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.PackageResource.PackageResourceBlockedException;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
@@ -370,5 +371,55 @@ public class WicketTesterTest extends TestCase
 	IRequestTargetUrlCodingStrategy getRequestCodingStrategy() {
 		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(tester.getServletRequest());
 		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath);
+	}
+
+	/**
+	 * Toggle submit button to disabled state.
+	 */
+	public void testToggleButtonEnabledState()
+	{
+		tester.startPage(MockFormPage.class);
+		Component submit = tester.getComponentFromLastRenderedPage("form:submit");
+		assertTrue(submit.isEnabled());
+		tester.createRequestCycle();
+		submit.setEnabled(false);
+		assertFalse(submit.isEnabled());
+	}
+
+	/**
+	 * Toggle submit button to enabled when text field validates.
+	 */
+	public void testToggleAjaxFormButton()
+	{
+		tester.startPage(new MockAjaxFormPage());
+		Button submit = getSubmitButton();
+		assertFalse(submit.isEnabled());
+		FormTester form = tester.newFormTester("form");
+
+		tester.setupRequestAndResponse();
+		form.setValue("text", "XX");
+		setTextFieldAndAssertSubmit(false);
+		Session.get().cleanupFeedbackMessages();
+
+		tester.setupRequestAndResponse();
+		form.setValue("text", "XXXYYYXXX");
+		setTextFieldAndAssertSubmit(true);
+
+		tester.setupRequestAndResponse();
+		form.setValue("text", "");
+		setTextFieldAndAssertSubmit(false);
+	}
+
+	private void setTextFieldAndAssertSubmit(boolean expected)
+	{
+		tester.executeAjaxEvent("form:text", "onkeyup");
+		Button submit = getSubmitButton();
+		System.out.println(Session.get().getFeedbackMessages());
+		assertEquals(expected, submit.isEnabled());
+	}
+
+	private Button getSubmitButton()
+	{
+		return (Button) tester.getComponentFromLastRenderedPage("form:submit");
 	}
 }

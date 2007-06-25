@@ -30,6 +30,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
@@ -499,7 +500,7 @@ public class MockWebApplication
 	 * the necessary wicket request, response and session objects. The request
 	 * and response objects can be accessed and initialised at this point.
 	 */
-	public void setupRequestAndResponse()
+	public WebRequestCycle setupRequestAndResponse()
 	{
 		servletRequest.initialize();
 		servletResponse.initialize();
@@ -507,9 +508,10 @@ public class MockWebApplication
 		parametersForNextRequest.clear();
 		this.wicketRequest = this.application.newWebRequest(servletRequest);
 		this.wicketResponse = this.application.newWebResponse(servletResponse);
-		createRequestCycle();
+		WebRequestCycle requestCycle = createRequestCycle();
 		this.application.getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse.setAjax(wicketRequest.isAjax());
+		return requestCycle;
 	}
 
 	/**
