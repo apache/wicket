@@ -17,8 +17,8 @@
 package org.apache.wicket.extensions.markup.html.form.palette;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ResourceReference;
@@ -51,9 +51,9 @@ import org.apache.wicket.model.Model;
  * Example:
  * 
  * <pre>
- *        Form form=new Form(...);
- *        Palette palette=new Palette(...);
- *        palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *         Form form=new Form(...);
+ *         Palette palette=new Palette(...);
+ *         palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -367,22 +367,25 @@ public class Palette extends Panel
 	 */
 	protected Component newSelectionComponent()
 	{
-		return new Selection("selection", this) {
+		return new Selection("selection", this)
+		{
 			private static final long serialVersionUID = 1L;
 
-			protected HashMap getAdditionalAttributes(Object choice) {
-                return Palette.this.getAdditionalAttributesForSelection(choice);
-            }
-        };
+			protected Map getAdditionalAttributes(Object choice)
+			{
+				return Palette.this.getAdditionalAttributesForSelection(choice);
+			}
+		};
 	}
 
-    /**
-     * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
-     */
-    protected HashMap getAdditionalAttributesForSelection(Object choice) {
-        return null;
-    }
-	
+	/**
+	 * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+	 */
+	protected Map getAdditionalAttributesForSelection(Object choice)
+	{
+		return null;
+	}
+
 	/**
 	 * factory method for the available items component
 	 * 
@@ -390,22 +393,25 @@ public class Palette extends Panel
 	 */
 	protected Component newChoicesComponent()
 	{
-		return new Choices("choices", this) {
+		return new Choices("choices", this)
+		{
 			private static final long serialVersionUID = 1L;
 
-			protected HashMap getAdditionalAttributes(Object choice) {
-                return Palette.this.getAdditionalAttributesForChoices(choice);
-            }
-        };
+			protected Map getAdditionalAttributes(Object choice)
+			{
+				return Palette.this.getAdditionalAttributesForChoices(choice);
+			}
+		};
 	}
 
-    /**
-     * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
-     */
-    protected HashMap getAdditionalAttributesForChoices(Object choice) {
-        return null;
-    }
-	
+	/**
+	 * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+	 */
+	protected Map getAdditionalAttributesForChoices(Object choice)
+	{
+		return null;
+	}
+
 	private Component getChoicesComponent()
 	{
 		return choicesComponent;

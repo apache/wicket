@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.form.palette.component;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.ComponentTag;
@@ -60,7 +60,7 @@ public abstract class AbstractOptions extends FormComponent
 
 	protected abstract Iterator getOptionsIterator();
 
-		
+
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
@@ -76,23 +76,28 @@ public abstract class AbstractOptions extends FormComponent
 			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
 			value = getLocalizer().getString(id + "." + value, this, value);
 
-			// A piece of javascript to avoid serializing this during AJAX serialization.
-			buffer.append(JavascriptUtils.SCRIPT_OPEN_TAG  +
-						  "if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
-			  			  "    Wicket.Form.excludeFromAjaxSerialization." + this.getMarkupId() + "='true';" +
-						  JavascriptUtils.SCRIPT_CLOSE_TAG);
-			
-            buffer.append("\n<option value=\"").append(id).append("\"");
-            
-            HashMap additionalAttributesMap = getAdditionalAttributes(choice);
-            if(additionalAttributesMap != null) {
-                Iterator iter = additionalAttributesMap.keySet().iterator();
-                while(iter.hasNext()) {
-                    String next = (String)iter.next();
-                    buffer.append(" " + next.toString() + "=\"" + additionalAttributesMap.get(next).toString() + "\"");
-                }
-            }
-            
+			// A piece of javascript to avoid serializing this during AJAX
+			// serialization.
+			buffer
+					.append(JavascriptUtils.SCRIPT_OPEN_TAG
+							+ "if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")"
+							+ "    Wicket.Form.excludeFromAjaxSerialization." + this.getMarkupId()
+							+ "='true';" + JavascriptUtils.SCRIPT_CLOSE_TAG);
+
+			buffer.append("\n<option value=\"").append(id).append("\"");
+
+			Map additionalAttributesMap = getAdditionalAttributes(choice);
+			if (additionalAttributesMap != null)
+			{
+				Iterator iter = additionalAttributesMap.keySet().iterator();
+				while (iter.hasNext())
+				{
+					String next = (String)iter.next();
+					buffer.append(" " + next.toString() + "=\""
+							+ additionalAttributesMap.get(next).toString() + "\"");
+				}
+			}
+
 			buffer.append(">").append(value).append("</option>");
 
 		}
@@ -101,13 +106,14 @@ public abstract class AbstractOptions extends FormComponent
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
-    /**
-     * @return map of attribute/value pairs (String/String)
-     */
-    protected HashMap getAdditionalAttributes(Object choice) {
-        return null;
-    }
-	
+	/**
+	 * @return map of attribute/value pairs (String/String)
+	 */
+	protected Map getAdditionalAttributes(Object choice)
+	{
+		return null;
+	}
+
 	/**
 	 * 
 	 * @param tag
@@ -122,8 +128,9 @@ public abstract class AbstractOptions extends FormComponent
 		attrs.put("multiple", null);
 		attrs.put("size", new Integer(getPalette().getRows()));
 
-		if (!palette.isPaletteEnabled()) {
-			attrs.put("disabled","disabled");
+		if (!palette.isPaletteEnabled())
+		{
+			attrs.put("disabled", "disabled");
 		}
 	}
 
