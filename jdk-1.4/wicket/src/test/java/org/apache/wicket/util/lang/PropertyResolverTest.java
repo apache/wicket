@@ -63,7 +63,6 @@ public class PropertyResolverTest extends TestCase
 			}
 			
 		}, "/foo");
-		PropertyResolver.init(app.getApplication());
 	}
 	
 	protected void tearDown() throws Exception

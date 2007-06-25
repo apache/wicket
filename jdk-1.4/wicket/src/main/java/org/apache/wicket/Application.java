@@ -905,9 +905,6 @@ public abstract class Application
 		settingsAccessible = true;
 		IPageSettings pageSettings = getPageSettings();
 
-		// Set up the property resolver with a new cache instance for this app.
-		PropertyResolver.init(this);
-
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new ParentResolver());
 		pageSettings.addComponentResolver(new AutoComponentResolver());

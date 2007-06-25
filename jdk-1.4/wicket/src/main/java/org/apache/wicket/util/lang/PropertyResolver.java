@@ -1242,17 +1242,16 @@ public final class PropertyResolver
 
 	private static Map getClassesToGetAndSetters()
 	{
-		return (Map)applicationToClassesToGetAndSetters.get(Application.get());
-	}
-	
-	/**
-	 * Initialize cache for this app.
-	 * 
-	 * @param application
-	 */
-	public static void init(Application application)
-	{
-		applicationToClassesToGetAndSetters.put(application, new ConcurrentHashMap(64));
+		Application app = Application.get();
+		Map result = (Map)applicationToClassesToGetAndSetters.get(Application.get());
+		if (result == null)
+		{
+			// Don't synchronize this - Doesn't matter if we create two of them,
+			// as it's only a cache and the first will go out of scope and get
+			// GC'ed.
+			applicationToClassesToGetAndSetters.put(app, result = new ConcurrentHashMap(64));
+		}
+		return result;
 	}
 
 	/**
