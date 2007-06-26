@@ -39,13 +39,13 @@ import org.springframework.core.io.Resource;
 /**
  * Mock application context object. This mock context allows easy creation of
  * unit tests by allowing the user to put bean instances into the context.
- *
- * Only getBean(String), getBean(String, Class), and getBeansOfType(Class) are
- * implemented so far. Any other method throws
- * {@link UnsupportedOperationException}.
- *
+ * 
+ * Only {@link #getBean(String)}, {@link #getBean(String, Class)}, and
+ * {@link #getBeansOfType(Class)} are implemented so far. Any other method
+ * throws {@link UnsupportedOperationException}.
+ * 
  * @author Igor Vaynberg (ivaynberg)
- *
+ * 
  */
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
@@ -83,7 +83,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 */
 	public Object getBean(String name) throws BeansException
 	{
-		throw new UnsupportedOperationException();
+		Object bean = beans.get(name);
+		if (bean == null)
+		{
+			throw new NoSuchBeanDefinitionException(name);
+		}
+		return bean;
 	}
 
 	/**
@@ -92,11 +97,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 */
 	public Object getBean(String name, Class requiredType) throws BeansException
 	{
-		Object bean = beans.get(name);
-		if (bean == null)
-		{
-			throw new NoSuchBeanDefinitionException(requiredType, name);
-		}
+		Object bean = getBean(name);
 		if (!(requiredType.isAssignableFrom(bean.getClass())))
 		{
 			throw new BeanNotOfRequiredTypeException(name, requiredType, bean.getClass());
@@ -176,14 +177,6 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames()
 	 */
 	public String[] getBeanDefinitionNames()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames(java.lang.Class)
-	 */
-	public String[] getBeanDefinitionNames(Class type)
 	{
 		throw new UnsupportedOperationException();
 	}
