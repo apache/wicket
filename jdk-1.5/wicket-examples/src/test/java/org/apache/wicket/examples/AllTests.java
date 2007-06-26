@@ -34,8 +34,8 @@ import org.apache.wicket.examples.niceurl.NiceUrlTest;
 import org.apache.wicket.examples.panels.signin.CookieTest;
 import org.apache.wicket.examples.repeater.RepeaterTest;
 import org.apache.wicket.examples.signin2.Signin2Test;
+import org.apache.wicket.util.license.ApacheLicenceHeaderTest;
 
-import wicket.util.license.ApacheLicenceHeaderTest;
 
 import com.meterware.httpunit.HttpUnitOptions;
 
