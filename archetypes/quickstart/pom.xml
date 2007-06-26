@@ -10,4 +10,34 @@
   <artifactId>wicket-archetype-quickstart</artifactId>
   <packaging>maven-plugin</packaging>
   <name>Wicket Quickstart Archetype</name>
+
+	<build>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/main/java</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/main/resources</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/test/java</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</testResource>
+		</testResources>
+	</build>
+	
 </project>
