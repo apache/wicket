@@ -1109,23 +1109,24 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void appendDefaultButtonField(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		String nameAndId = getHiddenFieldId();
+		
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
-		// get the value, first seeing whether the value attribute is set
-		// by a model
-		String value = defaultButton.getModelObjectAsString();
-		if (value == null || "".equals(value))
-		{
-			// nope it isn't; try to read from the attributes
-			// note that we're only trying lower case here
-			value = defaultButton.getMarkupAttributes().getString("value");
-		}
+	
+		// div that is not visible (but not display:none either)
+		buffer.append("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\"");
 
-		// append the button
-		buffer.append("<input type=\"submit\" value=\"").append(value).append("\" name=\"").append(
-				defaultButton.getInputName()).append("\"");
-		buffer.append("style=\"width: 0px; height: 0px; position: absolute; left:-100px;\"");
+		// add an empty textfield (otherwise IE doesn't work)
+		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
+		
+		// add the button
+		buffer.append("<input type=\"submit\" onclick=\" var b=Wicket.$('");
+		buffer.append(defaultButton.getMarkupId());
+		buffer.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(this)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
+		
+		// close div
+		buffer.append("</div>");
+		
 		getResponse().write(buffer);
 	}
 

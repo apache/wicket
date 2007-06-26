@@ -73,6 +73,7 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	{
 		super(id);
 		setVersioned(true);
+		setOutputMarkupId(true);
 	}
 
 	/**
@@ -93,6 +94,7 @@ public class Button extends FormComponent implements IFormSubmittingComponent
 	{
 		super(id, model);
 		setVersioned(true);
+		setOutputMarkupId(true);
 	}
 
 	/**
