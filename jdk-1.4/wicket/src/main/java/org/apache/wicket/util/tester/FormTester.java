@@ -274,6 +274,11 @@ public class FormTester
 		 */
 		protected ChoiceSelector create(FormComponent formComponent)
 		{
+			if (formComponent == null)
+			{
+				fail("Trying to select on null component.");
+			}
+
 			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice
 					|| formComponent instanceof RadioChoice)
 			{
