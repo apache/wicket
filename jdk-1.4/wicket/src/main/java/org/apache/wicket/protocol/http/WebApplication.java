@@ -30,7 +30,6 @@ import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
@@ -213,12 +212,7 @@ public abstract class WebApplication extends Application
 	{
 		if (sessionAttributePrefix == null)
 		{
-			String servletPath = request.getServletPath();
-			if (servletPath == null)
-			{
-				throw new WicketRuntimeException("unable to retrieve servlet path");
-			}
-			sessionAttributePrefix = "wicket:" + servletPath + ":";
+			sessionAttributePrefix = "wicket:" + getWicketFilter().getFilterConfig().getFilterName() + ":";
 		}
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
