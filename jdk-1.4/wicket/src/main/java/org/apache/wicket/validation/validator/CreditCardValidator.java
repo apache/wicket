@@ -58,12 +58,4 @@ public class CreditCardValidator extends AbstractValidator
 			error(validatable);
 		}
 	}
-
-	/**
-	 * @see org.apache.wicket.validation.validator.AbstractValidator#resourceKey()
-	 */
-	protected String resourceKey()
-	{
-		return "CreditCardValidator";
-	}
 }

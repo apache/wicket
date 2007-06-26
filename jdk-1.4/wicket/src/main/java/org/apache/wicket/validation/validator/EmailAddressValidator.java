@@ -52,6 +52,6 @@ public class EmailAddressValidator extends PatternValidator
 
 	protected String resourceKey()
 	{
-		return "EmailAddressPatternValidator";
+		return "EmailAddressValidator";
 	}
 }
