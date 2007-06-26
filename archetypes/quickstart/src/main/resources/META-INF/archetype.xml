@@ -1,0 +1,15 @@
+<archetype>
+  <id>wicket</id>
+  <sources>
+    <source>src/main/java/HomePage.java</source>
+    <source>src/main/java/HomePage.html</source>
+    <source>src/main/java/WicketApplication.java</source>
+  </sources>
+  <testSources>
+    <source>src/test/java/Start.java</source>
+  </testSources>
+  <resources>
+    <resource>src/main/resources/log4j.properties</resource>
+    <resource>src/main/webapp/WEB-INF/web.xml</resource>
+  </resources>
+</archetype>
