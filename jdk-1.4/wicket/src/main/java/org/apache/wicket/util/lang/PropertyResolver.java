@@ -319,9 +319,17 @@ public final class PropertyResolver
 						}
 						else
 						{
-							throw new WicketRuntimeException("The expression '" + exp
-									+ "' is neither an index nor is it a method for the list "
-									+ clz);
+							field = findField(clz, exp);
+							if (field != null)
+							{
+								getAndSetter = new FieldGetAndSetter(field);
+							}
+							else
+							{
+								throw new WicketRuntimeException("The expression '" + exp
+										+ "' is neither an index nor is it a method or field for the list "
+										+ clz);
+							}
 						}
 					}
 				}
@@ -586,6 +594,7 @@ public final class PropertyResolver
 		public Object getValue(final Object object);
 
 		/**
+		 * @param object 
 		 * @return
 		 */
 		public Class getTargetClass(final Object object);

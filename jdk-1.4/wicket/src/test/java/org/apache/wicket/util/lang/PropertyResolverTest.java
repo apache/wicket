@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -449,5 +450,27 @@ public class PropertyResolverTest extends TestCase
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		method = PropertyResolver.getPropertySetter("addressArray[0].number", person);
 		assertEquals(method.getName(), "setNumber");
+	}
+	
+	/**
+	 * Used for models in testing.
+	 */
+	private static class InnerVectorPOJO extends Vector
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * 
+		 */
+		public String	testValue = "vector";
+	}
+
+	/**
+	 * Tests the PropertyModel with vector.
+	 */
+	public void testPropertyModel()
+	{
+		String value = (String)PropertyResolver.getValue("testValue", new InnerVectorPOJO());
+ 		assertEquals("vector", value);
 	}
 }
