@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.util.license;
+package org.apache.wicket.util.license;
 
 import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
