@@ -1552,6 +1552,10 @@ Wicket.ChangeHandler=function(elementId){
 	} else {
 		obj.addEventListener('input', obj.onchange, true);
 	}
+
+	obj.onchange = function(event) {
+		Wicket.stopEvent(event);
+	}
 } 
 
 /*
