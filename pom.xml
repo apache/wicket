@@ -38,6 +38,7 @@
 			</activation>
 			<modules>
 				<module>jdk-1.4</module>
+				<module>archetypes/quickstart</module>
 			</modules>
 		</profile>
 		<profile>
@@ -47,6 +48,7 @@
 			</activation>
 			<modules>
 				<module>jdk-1.5</module>
+				<module>archetypes/quickstart</module>
 			</modules>
 		</profile>
 		<profile>
@@ -129,6 +131,7 @@
 			<modules>
 				<module>jdk-1.4</module>
 				<module>jdk-1.5</module>
+				<module>archetypes/quickstart</module>
 				<module>testing/wicket-threadtest</module>
 			</modules>
 		</profile>

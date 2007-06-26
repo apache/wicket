@@ -9,5 +9,5 @@
   
   <artifactId>wicket-archetype-quickstart</artifactId>
   <packaging>maven-plugin</packaging>
-  <name>Apache Wicket Quickstart Archetype</name>
+  <name>Wicket Quickstart Archetype</name>
 </project>
