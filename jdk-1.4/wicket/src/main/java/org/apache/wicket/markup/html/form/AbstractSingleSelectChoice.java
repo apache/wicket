@@ -188,7 +188,9 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * Converts submitted choice id string back to choice object.
 	 * 
 	 * @param id
-	 * @return choice object
+	 *            string id of one of the choice objects in the choices list.
+	 *            can be null.
+	 * @return choice object. null if none match the specified id.
 	 */
 	protected Object convertChoiceIdToChoice(String id)
 	{

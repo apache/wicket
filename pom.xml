@@ -75,6 +75,7 @@
 				<module>jdk-1.5/wicket-jmx</module>
 				<module>jdk-1.5/wicket-objectssizeof-agent</module>
 				<module>jdk-1.5/wicket-examples</module>
+				<module>archetypes/quickstart</module>
 			</modules>
 			<build>
 				<plugins>
