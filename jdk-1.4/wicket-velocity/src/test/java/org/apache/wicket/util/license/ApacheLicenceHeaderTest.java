@@ -31,6 +31,6 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 		// addHeaders = true;
 		
-		velocityIgnore = new String[]{ "src/test/java/wicket/contrib/velocity/testTemplate.vm" };
+		velocityIgnore = new String[]{ "src/test/java/org/apache/wicket/contrib/velocity/testTemplate.vm" };
 	}
 }

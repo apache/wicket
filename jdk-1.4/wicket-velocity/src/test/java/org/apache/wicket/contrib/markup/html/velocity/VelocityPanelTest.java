@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.contrib.markup.html.velocity;
+package org.apache.wicket.contrib.markup.html.velocity;
 
 import junit.framework.TestCase;
 

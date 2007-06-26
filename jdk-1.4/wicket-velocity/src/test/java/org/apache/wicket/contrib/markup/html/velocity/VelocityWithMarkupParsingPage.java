@@ -14,12 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.contrib.markup.html.velocity;
+package org.apache.wicket.contrib.markup.html.velocity;
 
 import java.util.HashMap;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.resource.IStringResourceStream;
 import org.apache.wicket.util.resource.UrlResourceStream;
 import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
@@ -28,18 +30,30 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
  * 
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
-public class VelocityPage extends WebPage
+public class VelocityWithMarkupParsingPage extends WebPage
 {
-	protected static final String TEST_STRING = "Hello, World!";
-
 	/**
-	 * Adds a VelocityPanel to the page
+	 * Adds a VelocityPanel to the page with markup parsing
 	 */
-	public VelocityPage()
+	public VelocityWithMarkupParsingPage()
 	{
 		HashMap values = new HashMap();
-		values.put("message", TEST_STRING);
-		add(VelocityPanel.forTemplateResource("velocityPanel", new Model(values),
-				new UrlResourceStream(this.getClass().getResource("test.html"))));
+		values.put("labelId", "message");
+		VelocityPanel velocityPanel = new VelocityPanel("velocityPanel",
+				new Model(values))
+		{
+			protected IStringResourceStream getTemplateResource()
+			{
+				return new UrlResourceStream(this.getClass().getResource(
+						"testWithMarkup.html"));
+			}
+
+			public boolean parseGeneratedMarkup()
+			{
+				return true;
+			}
+		};
+		velocityPanel.add(new Label("message", VelocityPage.TEST_STRING));
+		add(velocityPanel);
 	}
 }
