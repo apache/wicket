@@ -53,7 +53,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 
 		/**
-		 * 
+		 * Destroy the store.
 		 */
 		void destroy();
 
@@ -72,8 +72,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		/**
 		 * This method is called when the page is accessed. A IPageStore
-		 * implementation can block until a save of that page version is done. So
-		 * that a specific page version is always restore able.
+		 * implementation can block until a save of that page version is done.
+		 * So that a specific page version is always restore able.
 		 * 
 		 * @param sessionId
 		 * @param page
@@ -83,9 +83,12 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * Removes a page from the persistent layer.
 		 * 
-		 * @param sessionId The session of the page that must be removed
-		 * @param pagemap The pagemap of the page that must be removed
-		 * @param id The id of the page.
+		 * @param sessionId
+		 *            The session of the page that must be removed
+		 * @param pagemap
+		 *            The pagemap of the page that must be removed
+		 * @param id
+		 *            The id of the page.
 		 */
 		void removePage(String sessionId, String pagemap, int id);
 
@@ -104,17 +107,19 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param sessionId
 		 */
 		void unbind(String sessionId);
-
 	}
 
+	/**
+	 * Page map implementation for this session store.
+	 */
 	private static final class SecondLevelCachePageMap extends PageMap
 	{
 		private static final long serialVersionUID = 1L;
 
 		private Page lastPage = null;
-		
+
 		private List pageVersions = new ArrayList();
-		
+
 
 		/**
 		 * Construct.
@@ -126,6 +131,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			super(name);
 		}
 
+		/**
+		 * @see org.apache.wicket.PageMap#get(int, int)
+		 */
 		public Page get(int id, int versionNumber)
 		{
 			HashMap pageMaps = (HashMap)usedPages.get();
@@ -140,20 +148,23 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				pages = new IntHashMap();
 				pageMaps.put(getName(), pages);
 			}
-			
+
 			// for now i only get by id.
-			// does it really make any sense that there are multiply instances of the 
+			// does it really make any sense that there are multiply instances
+			// of the
 			// same page are alive in one session??
 			Page page = (Page)pages.get(id);
-			if (page != null) return page;
-			
+			if (page != null)
+				return page;
+
 			PageVersions pv = null;
 			if (versionNumber == -1)
 			{
-				// when no version was specified, get the last touched page for given page id
-				for (int index = pageVersions.size() - 1; index >= 0; --index) 
+				// when no version was specified, get the last touched page for
+				// given page id
+				for (int index = pageVersions.size() - 1; index >= 0; --index)
 				{
-					if (((PageVersions)pageVersions.get(index)).pageid == id) 
+					if (((PageVersions)pageVersions.get(index)).pageid == id)
 					{
 						pv = (PageVersions)pageVersions.get(index);
 						versionNumber = pv.versionid;
@@ -169,7 +180,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				{
 					// ask the page store if it is ready saving the page.
 					getStore().pageAccessed(sessionId, page);
-					pages.put(id,page);
+					pages.put(id, page);
 					return page;
 				}
 			}
@@ -178,7 +189,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				int ajaxVersionNumber = 0;
 				if (pv == null)
 				{
-					int index = pageVersions.indexOf(new PageVersions(id, versionNumber,-1));
+					int index = pageVersions.indexOf(new PageVersions(id, versionNumber, -1));
 					if (index != -1)
 					{
 						pv = (PageVersions)pageVersions.get(index);
@@ -189,14 +200,18 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					ajaxVersionNumber = pv.ajaxversionid;
 				}
 				lastPage = null;
-				page = getStore().getPage(sessionId, getName(), id, versionNumber, ajaxVersionNumber);
-				pages.put(id,page);
+				page = getStore().getPage(sessionId, getName(), id, versionNumber,
+						ajaxVersionNumber);
+				pages.put(id, page);
 				return page;
-				
+
 			}
 			return null;
 		}
 
+		/**
+		 * @see org.apache.wicket.PageMap#put(org.apache.wicket.Page)
+		 */
 		public void put(Page page)
 		{
 			if (!page.isPageStateless())
@@ -207,8 +222,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					getStore().storePage(sessionId, page);
 					lastPage = page;
 					dirty();
-					
-					PageVersions pv = new PageVersions(page.getNumericId(),page.getCurrentVersionNumber(),page.getAjaxVersionNumber());
+
+					PageVersions pv = new PageVersions(page.getNumericId(), page
+							.getCurrentVersionNumber(), page.getAjaxVersionNumber());
 					pageVersions.remove(pv);
 					pageVersions.add(pv);
 					if (pageVersions.size() > 100)
@@ -218,7 +234,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				}
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.PageMap#clear()
 		 */
@@ -228,10 +244,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			String sessionId = getSession().getId();
 			if (sessionId != null)
 			{
-				getStore().removePage(sessionId, getName(),-1);
+				getStore().removePage(sessionId, getName(), -1);
 			}
 		}
 
+		/**
+		 * @see org.apache.wicket.PageMap#removeEntry(org.apache.wicket.session.pagemap.IPageMapEntry)
+		 */
 		public void removeEntry(IPageMapEntry entry)
 		{
 			String sessionId = getSession().getId();
@@ -245,22 +264,22 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
 		}
-		
-		private static class PageVersions implements IClusterable 
+
+		private static class PageVersions implements IClusterable
 		{
 			private static final long serialVersionUID = 1L;
-		
+
 			private final int pageid;
 			private int versionid;
 			private int ajaxversionid;
-			
+
 			PageVersions(int pageid, int versionid, int ajaxversionid)
 			{
 				this.pageid = pageid;
 				this.versionid = versionid;
 				this.ajaxversionid = ajaxversionid;
 			}
-			
+
 			/**
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
@@ -268,12 +287,12 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			{
 				if (obj instanceof PageVersions)
 				{
-					return ((PageVersions)obj).pageid == pageid &&
-					       ((PageVersions)obj).versionid == versionid;
+					return ((PageVersions)obj).pageid == pageid
+							&& ((PageVersions)obj).versionid == versionid;
 				}
 				return false;
 			}
-			
+
 			/**
 			 * @see java.lang.Object#hashCode()
 			 */
@@ -284,6 +303,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 	}
 
+	/**
+	 * version manager for this session store.
+	 */
 	private static final class SecondLevelCachePageVersionManager implements IPageVersionManager
 	{
 		private static final long serialVersionUID = 1L;
@@ -449,8 +471,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				// current page version.
 				if (ajaxNumber >= numberOfVersions)
 				{
-					return store.getPage(sessionId, page.getPageMapName(), page
-							.getNumericId(), versionNumber, ajaxNumber - numberOfVersions);
+					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
+							versionNumber, ajaxNumber - numberOfVersions);
 				}
 				else
 				{
@@ -463,11 +485,12 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					{
 						// currently it is not supported to jump over 2
 						// pages....
-						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
+						log
+								.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
 						return null;
 					}
-					return store.getPage(sessionId, page.getPageMapName(), page
-							.getNumericId(), versionNumber, ajaxNumber);
+					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
+							versionNumber, ajaxNumber);
 				}
 			}
 
@@ -490,10 +513,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 
 	}
-	
+
 	static final ThreadLocal usedPages = new ThreadLocal();
 
-	private IPageStore pageStore;
+	private final IPageStore pageStore;
 
 	/**
 	 * Construct.
@@ -510,7 +533,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		this.pageStore = pageStore;
 
-		// turn automatic multi window support off by default, as we don't really
+		// turn automatic multi window support off by default, as we don't
+		// really
 		// need to be afraid to run out of history with this implementation.
 		// note that the session store is created before Application#init is
 		// called, so if users set this setting explicitly, it'll be overridden
@@ -536,6 +560,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		super.onEndRequest(request);
 		usedPages.set(null);
 	}
+
 	/**
 	 * @see org.apache.wicket.protocol.http.AbstractHttpSessionStore#destroy()
 	 */
