@@ -31,6 +31,7 @@ public interface IClassResolver
      * @param classname
      *            Fully qualified classname to find
      * @return Class
+     * @throws ClassNotFoundException 
      */
-    Class resolveClass(final String classname);
+    Class resolveClass(final String classname) throws ClassNotFoundException;
 }

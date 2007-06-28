@@ -74,18 +74,17 @@ public final class Classes
 		{
 			return null;
 		}
-		if (Application.exists())
-		{
-			return Application.get().getApplicationSettings().getClassResolver().resolveClass(
-					className);
-		}
 		try
 		{
+			if (Application.exists())
+			{
+				return Application.get().getApplicationSettings().getClassResolver().resolveClass(className);
+			}
 			return Class.forName(className);
 		}
 		catch (ClassNotFoundException e)
 		{
-			log.error("Could not resolve class", e);
+			log.warn("Could not resolve class: " + className);
 			return null;
 		}
 	}

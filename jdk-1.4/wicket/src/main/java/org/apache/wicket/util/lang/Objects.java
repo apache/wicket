@@ -1016,8 +1016,10 @@ public final class Objects
 		{
 			try
 			{
-				Class c = Application.get().getApplicationSettings().getClassResolver()
-						.resolveClass(className);
+				Class c = Classes.resolveClass(className);
+				if (c == null) {
+					throw new WicketRuntimeException("Unable to create " + className);
+				}
 				return c.newInstance();
 			}
 			catch (ClassCastException e)

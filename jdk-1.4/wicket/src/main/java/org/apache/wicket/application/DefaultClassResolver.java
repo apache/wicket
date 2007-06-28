@@ -18,7 +18,6 @@ package org.apache.wicket.application;
 
 import java.lang.ref.WeakReference;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.concurrent.ConcurrentReaderHashMap;
 
 /**
@@ -47,71 +46,64 @@ public final class DefaultClassResolver implements IClassResolver
 	/**
 	 * @see org.apache.wicket.application.IClassResolver#resolveClass(java.lang.String)
 	 */
-	public final Class resolveClass(final String classname)
+	public final Class resolveClass(final String classname) throws ClassNotFoundException
 	{
-		try
+		Class clazz = null;
+		WeakReference ref = (WeakReference)classes.get(classname);
+					
+		// Might be garbage-collected between getting the WeakRef and retrieving the Class from it.
+		if (ref != null)
 		{
-			Class clazz = null;
-			WeakReference ref = (WeakReference)classes.get(classname);
-						
-			// Might be garbage-collected between getting the WeakRef and retrieving the Class from it.
-			if (ref != null)
+			clazz = (Class)ref.get();
+		}
+		if (clazz == null)
+		{
+			synchronized (classes)
 			{
-				clazz = (Class)ref.get();
-			}
-			if (clazz == null)
-			{
-				synchronized (classes)
+				if (classname.equals("byte"))
 				{
-					if (classname.equals("byte"))
-					{
-						clazz = byte.class;
-					}
-					else if (classname.equals("short"))
-					{
-						clazz = short.class;
-					}
-					else if (classname.equals("int"))
-					{
-						clazz = int.class;
-					}
-					else if (classname.equals("long"))
-					{
-						clazz = long.class;
-					}
-					else if (classname.equals("float"))
-					{
-						clazz = float.class;
-					}
-					else if (classname.equals("double"))
-					{
-						clazz = double.class;
-					}
-					else if (classname.equals("boolean"))
-					{
-						clazz = boolean.class;
-					}
-					else if (classname.equals("char"))
-					{
-						clazz = char.class;
-					}
-					else
-					{
-						ClassLoader loader = Thread.currentThread().getContextClassLoader();
-						if (loader == null)
-						{
-							loader = DefaultClassResolver.class.getClassLoader();
-						}
-						clazz = loader.loadClass(classname);
-					}
-					classes.put(classname, new WeakReference(clazz));
+					clazz = byte.class;
 				}
+				else if (classname.equals("short"))
+				{
+					clazz = short.class;
+				}
+				else if (classname.equals("int"))
+				{
+					clazz = int.class;
+				}
+				else if (classname.equals("long"))
+				{
+					clazz = long.class;
+				}
+				else if (classname.equals("float"))
+				{
+					clazz = float.class;
+				}
+				else if (classname.equals("double"))
+				{
+					clazz = double.class;
+				}
+				else if (classname.equals("boolean"))
+				{
+					clazz = boolean.class;
+				}
+				else if (classname.equals("char"))
+				{
+					clazz = char.class;
+				}
+				else
+				{
+					ClassLoader loader = Thread.currentThread().getContextClassLoader();
+					if (loader == null)
+					{
+						loader = DefaultClassResolver.class.getClassLoader();
+					}
+					clazz = loader.loadClass(classname);
+				}
+				classes.put(classname, new WeakReference(clazz));
 			}
-			return clazz;
 		}
-		catch (ClassNotFoundException ex)
-		{
-			throw new WicketRuntimeException("Unable to load class with name: " + classname, ex);
-		}
+		return clazz;
 	}
 }

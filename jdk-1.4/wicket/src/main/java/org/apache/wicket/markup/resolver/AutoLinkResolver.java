@@ -26,7 +26,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -40,7 +39,6 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * The AutoLinkResolver is responsible to handle automatic link resolution. Tags
@@ -427,7 +425,7 @@ public final class AutoLinkResolver implements IComponentResolver
 					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters,
 							pathInfo.anchor);
 				}
-				catch (WicketRuntimeException ex)
+				catch (ClassNotFoundException ex)
 				{
 					log.warn("Did not find corresponding java class: " + className);
 					// fall through
@@ -451,7 +449,7 @@ public final class AutoLinkResolver implements IComponentResolver
 							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo
 									.getPageParameters(), pathInfo.anchor);
 						}
-						catch (WicketRuntimeException ex)
+						catch (ClassNotFoundException ex)
 						{
 							log.warn("Did not find corresponding java class: " + className);
 							// fall through

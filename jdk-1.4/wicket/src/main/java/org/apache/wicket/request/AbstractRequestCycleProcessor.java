@@ -217,7 +217,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		{
 			pageClass = session.getClassResolver().resolveClass(bookmarkablePageClass);
 		}
-		catch (RuntimeException e)
+		catch (ClassNotFoundException e)
 		{
 			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
 					"Unable to load Bookmarkable Page");

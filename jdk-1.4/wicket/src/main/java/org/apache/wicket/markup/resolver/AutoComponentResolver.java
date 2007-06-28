@@ -168,22 +168,27 @@ public final class AutoComponentResolver implements IComponentResolver
 		{
 			throw new MarkupException("Tag <wicket:component> must have attribute 'class'");
 		}
-
-		// Load the class. In case a Groovy Class Resolver has been provided,
-		// the name might be a Groovy file.
-		// Note: Spring based components are not supported this way. May be we
-		// should provide a ComponentFactory like we provide a PageFactory.
-		final Class componentClass = container.getSession().getClassResolver().resolveClass(
-				classname);
-
+		
 		// construct the component. It must have a constructor with a single
 		// String (componentId) parameter.
 		final Component component;
 		try
 		{
+			// Load the class. In case a Groovy Class Resolver has been provided,
+			// the name might be a Groovy file.
+			// Note: Spring based components are not supported this way. May be we
+			// should provide a ComponentFactory like we provide a PageFactory.
+			final Class componentClass = container.getSession().getClassResolver().resolveClass(
+					classname);
+
 			final Constructor constructor = componentClass
 					.getConstructor(new Class[] { String.class });
 			component = (Component)constructor.newInstance(new Object[] { componentId });
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
+					+ e.getMessage());
 		}
 		catch (NoSuchMethodException e)
 		{
