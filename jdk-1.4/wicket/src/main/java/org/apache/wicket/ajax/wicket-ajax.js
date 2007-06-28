@@ -1649,6 +1649,16 @@ Wicket.Focus = {
 		Wicket.Log.info("focus set on " + lastFocusId + " from serverside");
 	},
 	
+	getFocusedElement: function()
+	{
+		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
+		{
+			Wicket.Log.info("returned focused element: " + Wicket.$(lastFocusId)); 
+			return Wicket.$(lastFocusId);
+		}
+		return;
+	},
+	
 	requestFocus: function()
 	{
 		if (typeof(lastFocusId) != "undefined" && lastFocusId != "" && lastFocusId != null)
