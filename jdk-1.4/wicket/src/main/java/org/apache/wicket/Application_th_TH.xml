@@ -31,7 +31,7 @@
 	<entry key="DateValidator.minimum">'${input}' must be greater than ${minimum}.</entry>
 	<entry key="DateValidator.maximum">'${input}' must be smaller than ${maximum}.</entry>
 	<entry key="PatternValidator">'${input}' ไม่ตรงกับรูปแบบ '${pattern}'</entry>
-	<entry key="EmailAddressPatternValidator">'${input}' ไม่ใช่อีเมลที่ใช้งานได้จริง.</entry>
+	<entry key="EmailAddressValidator">'${input}' ไม่ใช่อีเมลที่ใช้งานได้จริง.</entry>
 	<entry key="EqualInputValidator">'${input0}' จาก ${label0} และ '${input1}' จาก ${label1} ต้องเท่ากัน.</entry>
 	<entry key="EqualPasswordInputValidator">${label0} และ ${label1} ต้องเท่ากัน.</entry>
 	<entry key="null">เลือกหนึ่งอย่าง</entry>

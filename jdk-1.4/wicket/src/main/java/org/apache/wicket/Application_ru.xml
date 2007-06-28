@@ -31,7 +31,7 @@
 	<entry key="DateValidator.minimum">дата '${input}' должна быть больше чем ${minimum}.</entry>
 	<entry key="DateValidator.maximum">дата '${input}' должна быть меньше чем ${maximum}.</entry>
 	<entry key="PatternValidator">'${input}' не соответствует шаблону '${pattern}'.</entry>
-	<entry key="EmailAddressPatternValidator">'${input}' не является корректным почтовым адресом.</entry>
+	<entry key="EmailAddressValidator">'${input}' не является корректным почтовым адресом.</entry>
 	<entry key="EqualInputValidator">'${input0}' из поля ${label0} и '${input1}' из поля ${label1} должны быть одинаковыми.</entry>
 	<entry key="EqualPasswordInputValidator">поля ${label0} и ${label1} должны быть одинаковыми.</entry>
 	<entry key="null">Выберите значение</entry>
