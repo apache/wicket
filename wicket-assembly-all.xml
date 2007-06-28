@@ -36,6 +36,8 @@
 				<exclude>**/*zip</exclude>
 				<exclude>**/archive-tmp</exclude>
 				<exclude>**/sessions</exclude>
+				<exclude>target</exclude>
+				<exclude>target/**</exclude>
 				<exclude>${basedir}/target</exclude>
 			</excludes>
 		</fileSet>
@@ -53,6 +55,7 @@
 				<exclude>**/archive-tmp</exclude>
 				<exclude>**/sessions</exclude>
 				<exclude>${basedir}/target</exclude>
+				<exclude>target/**</exclude>
 			</excludes>
 		</fileSet>
 		<fileSet>
@@ -104,6 +107,8 @@
 				<include>org.apache.wicket:wicket-extensions</include>
 				<include>org.apache.wicket:wicket-jmx</include>
 				<include>org.apache.wicket:wicket-objectsizeof-agent</include>
+				<include>org.apache.wicket:wicket-ioc</include>
+				<include>org.apache.wicket:wicket-guice</include>
 				<include>org.apache.wicket:wicket-spring</include>
 				<include>org.apache.wicket:wicket-spring-annot</include>
 				<include>org.apache.wicket:wicket-velocity</include>
