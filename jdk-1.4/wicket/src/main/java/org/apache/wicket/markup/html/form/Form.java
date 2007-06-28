@@ -52,6 +52,7 @@ import org.apache.wicket.util.upload.FileUploadException;
 import org.apache.wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.validation.IValidatorAddListener;
+import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -349,7 +350,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		if (validator == null)
 		{
-			throw new IllegalArgumentException("validator argument cannot be null");
+			throw new IllegalArgumentException("Argument `validator` cannot be null");
 		}
 
 		// add the validator
@@ -361,6 +362,112 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			((IValidatorAddListener)validator).onAdded(this);
 		}
 	}
+
+	/**
+	 * Removes a form validator from the form.
+	 * 
+	 * @param validator
+	 *            validator
+	 * @throws IllegalArgumentException
+	 *             if validator is null
+	 * @see IFormValidator
+	 */
+	public void remove(IFormValidator validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("Argument `validator` cannot be null");
+		}
+
+		IFormValidator removed = formValidators_remove(validator);
+		if (removed == null)
+		{
+			throw new IllegalStateException(
+					"Tried to remove form validator that was not previously added. "
+							+ "Make sure your validator's equals() implementation is sufficient");
+		}
+		addStateChange(new FormValidatorRemovedChange(removed));
+	}
+
+	private final int formValidators_indexOf(IFormValidator validator)
+	{
+		if (formValidators != null)
+		{
+			if (formValidators instanceof IFormValidator)
+			{
+				final IFormValidator v = (IFormValidator)formValidators;
+				if (v == validator || v.equals(validator))
+				{
+					return 0;
+				}
+			}
+			else
+			{
+				final IFormValidator[] validators = (IFormValidator[])formValidators;
+				for (int i = 0; i < validators.length; i++)
+				{
+					final IFormValidator v = validators[i];
+					if (v == validator || v.equals(validator))
+					{
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	private final IFormValidator formValidators_remove(IFormValidator validator)
+	{
+		int index = formValidators_indexOf(validator);
+		if (index != -1)
+		{
+			return formValidators_remove(index);
+		}
+		return null;
+	}
+
+	private final IFormValidator formValidators_remove(int index)
+	{
+		if (formValidators instanceof IFormValidator)
+		{
+			if (index == 0)
+			{
+				final IFormValidator removed = (IFormValidator)formValidators;
+				formValidators = null;
+				return removed;
+			}
+			else
+			{
+				throw new IndexOutOfBoundsException();
+			}
+		}
+		else
+		{
+			final IFormValidator[] validators = (IFormValidator[])formValidators;
+			final IFormValidator removed = validators[index];
+			// check if we can collapse array of 1 element into a single object
+			if (validators.length == 2)
+			{
+				formValidators = validators[1 - index];
+			}
+			else
+			{
+				IFormValidator[] newValidators = new IFormValidator[validators.length - 1];
+				int j = 0;
+				for (int i = 0; i < validators.length; i++)
+				{
+					if (i != index)
+					{
+						newValidators[j++] = validators[i];
+					}
+				}
+				this.formValidators = newValidators;
+			}
+			return removed;
+		}
+	}
+
 
 	/**
 	 * Clears the input from the form's nested children of type
@@ -1109,24 +1216,26 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void appendDefaultButtonField(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		
+
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
-	
+
 		// div that is not visible (but not display:none either)
-		buffer.append("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\"");
+		buffer
+				.append("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\"");
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
-		
+
 		// add the button
 		buffer.append("<input type=\"submit\" onclick=\" var b=Wicket.$('");
 		buffer.append(defaultButton.getMarkupId());
-		buffer.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(this)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+		buffer
+				.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(this)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
-		
+
 		// close div
 		buffer.append("</div>");
-		
+
 		getResponse().write(buffer);
 	}
 
@@ -1540,6 +1649,39 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
+	 * Checks if the specified form component visible and is attached to a page
+	 * 
+	 * @param fc
+	 *            form component
+	 * 
+	 * @return true if the form component and all its parents are visible and
+	 *         there component is in page's hierarchy
+	 */
+	private boolean isFormComponentVisibleInPage(FormComponent fc)
+	{
+		if (fc == null)
+		{
+			throw new IllegalArgumentException("Argument `fc` cannot be null");
+		}
+		Component c = fc;
+		Component last = fc;
+		while (c != null)
+		{
+			if (c.isRenderAllowed() && c.isVisible())
+			{
+				last = c;
+				c = c.getParent();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return last == this;
+	}
+
+
+	/**
 	 * Validates form with the given form validator
 	 * 
 	 * @param validator
@@ -1560,8 +1702,24 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			for (int j = 0; j < dependents.length; j++)
 			{
 				final FormComponent dependent = dependents[j];
+				// check if the dependent component is valid
 				if (!dependent.isValid())
 				{
+					validate = false;
+					break;
+				}
+				// check if the dependent componet is visible and is attached to
+				// the page
+				else if (!isFormComponentVisibleInPage(dependent))
+				{
+					if (log.isWarnEnabled())
+					{
+						log
+								.warn("IFormValidator in form `"
+										+ getPageRelativePath()
+										+ "` depends on a component that has been removed from the page or is no longer visible. "
+										+ "Offending component id `" + dependent.getId() + "`.");
+					}
 					validate = false;
 					break;
 				}
@@ -1584,5 +1742,35 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			validateFormValidator(formValidators_get(i));
 		}
+	}
+
+	/**
+	 * Change object to keep track of form validator removals
+	 * 
+	 * @author Igor Vaynberg (ivaynberg at apache dot org)
+	 */
+	private class FormValidatorRemovedChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final IFormValidator removed;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param removed
+		 */
+		public FormValidatorRemovedChange(final IFormValidator removed)
+		{
+			super();
+			this.removed = removed;
+		}
+
+
+		public void undo()
+		{
+			add(removed);
+		}
+
 	}
 }

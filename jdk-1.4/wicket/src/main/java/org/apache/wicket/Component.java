@@ -1413,7 +1413,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		RequestCycle requestCycle = getRequestCycle();
 		if (requestCycle == null)
 		{
-			// Happens often with WicketTester when one forgets to call createRequestCycle()
+			// Happens often with WicketTester when one forgets to call
+			// createRequestCycle()
 			throw new WicketRuntimeException("No RequestCycle is currently set!");
 		}
 		return requestCycle.getRequest();
@@ -3152,7 +3153,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
 
-	protected final boolean isRenderAllowed()
+	/**
+	 * Checks the security strategy if the {@link Component#RENDER} action is
+	 * allowed on this component
+	 * 
+	 * @return ture if {@link Component#RENDER} action is allowed, false
+	 *         otherwise
+	 */
+	public final boolean isRenderAllowed()
 	{
 		return getFlag(FLAG_IS_RENDER_ALLOWED);
 	}
