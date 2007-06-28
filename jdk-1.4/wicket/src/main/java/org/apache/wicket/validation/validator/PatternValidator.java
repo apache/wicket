@@ -130,11 +130,6 @@ public class PatternValidator extends StringValidator
 		return map;
 	}
 
-	protected String resourceKey()
-	{
-		return "PatternValidator";
-	}
-
 	/**
 	 * @see java.lang.Object#toString()
 	 */
