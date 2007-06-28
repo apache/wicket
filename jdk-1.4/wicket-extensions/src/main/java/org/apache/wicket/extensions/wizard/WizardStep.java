@@ -50,7 +50,7 @@ import org.apache.wicket.model.Model;
  * 	{
  * 		super(new ResourceModel(&quot;username.title&quot;), new ResourceModel(&quot;username.summary&quot;));
  * 		add(new RequiredTextField(&quot;user.userName&quot;));
- * 		add(new RequiredTextField(&quot;user.email&quot;).add(EmailAddressPatternValidator.getInstance()));
+ * 		add(new RequiredTextField(&quot;user.email&quot;).add(EmailAddressValidator.getInstance()));
  * 	}
  * }
  * </pre>
