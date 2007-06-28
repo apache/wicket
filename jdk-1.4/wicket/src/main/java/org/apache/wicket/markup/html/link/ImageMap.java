@@ -242,6 +242,8 @@ public final class ImageMap extends WebMarkupContainer
 
 			return "<area shape=\"" + getType() + "\"" + " coords=\"" + getCoordinates() + "\""
 					+ " href=\"" + link.getURL() + "\""
+					// Output the markup ID if that was specified, so we can link tooltips, etc. to it.
+					+ (link.getOutputMarkupId() ? " id=\"" + link.getMarkupId() + "\"" : "")
 					+ ((popupJavaScript == null) ? "" : (" onClick = \"" + popupJavaScript + "\""))
 					+ ">";
 		}
