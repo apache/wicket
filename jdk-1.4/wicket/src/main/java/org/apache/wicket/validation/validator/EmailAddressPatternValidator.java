@@ -16,40 +16,23 @@
  */
 package org.apache.wicket.validation.validator;
 
-import java.util.regex.Pattern;
-
 /**
- * Validator for checking the form/pattern of email addresses.
+ * This class will be removed post 1.3.
  * 
- * @author Chris Turner
- * @author Jonathan Locke
- * @author Martijn Dashorst
- * @author Al Maw
- * 
- * @since 1.3
+ * @deprecated Use {@link EmailAddressValidator} instead. Don't forget to update your resource keys!
  */
-public class EmailAddressValidator extends PatternValidator
+public class EmailAddressPatternValidator extends EmailAddressValidator
 {
 	private static final long serialVersionUID = 1L;
-
-	/** Singleton instance */
-	private static final EmailAddressValidator INSTANCE = new EmailAddressValidator();
-
+	private static final EmailAddressPatternValidator INSTANCE = new EmailAddressPatternValidator();
+	
 	/**
-	 * @return Instance of emailadress validator
+	 * @deprecated Use {@link EmailAddressValidator} instead. Don't forget to update your resource keys!
+	 * @return
 	 */
-	public static EmailAddressValidator getInstance()
-	{
+	public static EmailAddressValidator getInstance() {
+		// We have to have our own instance because otherwise we break the resource keys.
 		return INSTANCE;
 	}
 
-	/**
-	 * Protected constructor to force use of static singleton accessor method.
-	 * Or override it to implement resourceKey(Component)
-	 */
-	protected EmailAddressValidator()
-	{
-		super("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
-				Pattern.CASE_INSENSITIVE);
-	}
 }
