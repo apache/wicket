@@ -1,4 +1,4 @@
-/*
+info/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -45,7 +45,8 @@ var WicketAjaxDebug = {
 		WicketAjaxDebug.init();
         var d = wicketGet(WicketAjaxDebug.debugWindowLogId);
         var c = document.createElement("div");
-		
+
+		msg = "" + msg;		
         msg = msg.replace(/</g, "&lt;");
         msg = msg.replace(/>/g, "&gt;");
         msg = msg.replace(/\n/g, "<br/>");
