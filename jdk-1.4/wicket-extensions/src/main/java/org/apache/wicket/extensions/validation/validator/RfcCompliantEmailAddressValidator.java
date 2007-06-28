@@ -37,7 +37,7 @@ import org.apache.wicket.validation.validator.PatternValidator;
  * @see <a href="http://www.ietf.org/rfc/rfc0822.txt?number=822">RFC 822</a>
  * @author Frank Bille
  */
-public class RfcCompliantEmailAddressPatternValidator extends PatternValidator
+public class RfcCompliantEmailAddressValidator extends PatternValidator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -125,26 +125,18 @@ public class RfcCompliantEmailAddressPatternValidator extends PatternValidator
 			+ "?:\\r\\n)?[ \\t])*))*)?;\\s*)";
 
 	/** Singleton instance */
-	private static final RfcCompliantEmailAddressPatternValidator INSTANCE = new RfcCompliantEmailAddressPatternValidator();
+	private static final RfcCompliantEmailAddressValidator INSTANCE = new RfcCompliantEmailAddressValidator();
 
 	/**
 	 * @return Instance of RFC compliant emailaddress validator
 	 */
-	public static RfcCompliantEmailAddressPatternValidator getInstance()
+	public static RfcCompliantEmailAddressValidator getInstance()
 	{
 		return INSTANCE;
 	}
 
-	protected RfcCompliantEmailAddressPatternValidator()
+	protected RfcCompliantEmailAddressValidator()
 	{
 		super(emailPattern);
-	}
-
-	/**
-	 * @see org.apache.wicket.validation.validator.PatternValidator#resourceKey()
-	 */
-	protected String resourceKey()
-	{
-		return "RfcCompliantEmailAddressPatternValidator";
 	}
 }

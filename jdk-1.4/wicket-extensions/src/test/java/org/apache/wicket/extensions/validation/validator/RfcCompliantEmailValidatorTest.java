@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.validation.validator;
 
 import java.util.regex.Matcher;
 
-import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressPatternValidator;
+import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 
 import junit.framework.TestCase;
 
@@ -34,7 +34,7 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 	 */
 	public void testValidEmailAddresses()
 	{
-		RfcCompliantEmailAddressPatternValidator validator = RfcCompliantEmailAddressPatternValidator
+		RfcCompliantEmailAddressValidator validator = RfcCompliantEmailAddressValidator
 				.getInstance();
 
 		String[] validEmails = new String[] { "bill.gates@gmail.com",
@@ -57,7 +57,7 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 	 */
 	public void testInValidEmailAddresses()
 	{
-		RfcCompliantEmailAddressPatternValidator validator = RfcCompliantEmailAddressPatternValidator
+		RfcCompliantEmailAddressValidator validator = RfcCompliantEmailAddressValidator
 				.getInstance();
 
 		String[] inValidEmails = new String[] { "whatever", "dont.end.in.a.dot.@gmail.com",
