@@ -1109,7 +1109,7 @@ public abstract class Session implements IClusterable
 	/**
 	 * Marks session state as dirty
 	 */
-	protected final void dirty()
+	public final void dirty()
 	{
 		this.dirty = true;
 	}
