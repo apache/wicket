@@ -43,7 +43,7 @@ import org.apache.wicket.IClusterable;
 public interface IConverter extends IClusterable
 {
 	/**
-	 * Converts the given string value to class c.
+	 * Converts the given {@link String} value
 	 * 
 	 * @param value
 	 *            The string value to convert
