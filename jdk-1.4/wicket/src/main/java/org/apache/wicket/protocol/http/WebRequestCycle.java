@@ -189,8 +189,7 @@ public class WebRequestCycle extends RequestCycle
 
 					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 					int index = redirectUrl.indexOf("?");
-					String sessionId = getWebRequest().getHttpServletRequest().getSession(true)
-							.getId();
+					String sessionId = getApplication().getSessionStore().getSessionId(request, true); 
 					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl
 							.substring(index + 1), servletResponse);
 				}
