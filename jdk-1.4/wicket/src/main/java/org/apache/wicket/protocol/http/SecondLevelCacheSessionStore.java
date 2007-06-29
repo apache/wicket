@@ -390,9 +390,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			String sessionId = page.getSession().getId();
 			if (sessionId != null)
 			{
-				IPageStore store = ((SecondLevelCacheSessionStore)Application.get()
-						.getSessionStore()).getStore();
-				store.storePage(sessionId, page);
+				page.getSession().touch(page);
 			}
 		}
 
