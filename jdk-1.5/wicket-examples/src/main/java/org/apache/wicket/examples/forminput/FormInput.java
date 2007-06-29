@@ -123,7 +123,7 @@ public class FormInput extends WicketExamplePage
 					item.add(new Radio("radio", item.getModel()));
 					item.add(new Label("number", item.getModelObjectAsString()));
 				};
-			};
+			}.setReuseItems(true);
 			group.add(persons);
 
 			CheckGroup checks = new CheckGroup("numbersCheckGroup");
@@ -135,7 +135,7 @@ public class FormInput extends WicketExamplePage
 					item.add(new Check("check", item.getModel()));
 					item.add(new Label("number", item.getModelObjectAsString()));
 				};
-			};
+			}.setReuseItems(true);
 			checks.add(checksList);
 
 			add(new ListMultipleChoice("siteSelection", SITES));
