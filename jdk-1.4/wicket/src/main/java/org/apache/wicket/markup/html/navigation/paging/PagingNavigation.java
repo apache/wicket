@@ -25,7 +25,7 @@ import org.apache.wicket.version.undo.Change;
  * PageableListView.
  * <p>
  * For each row (one page of the list of pages) a {@link PagingNavigationLink}will
- * be added that contains a {@link Label}with the page number of that link
+ * be added that contains a {@link Label} with the page number of that link
  * (1..n).
  * 
  * <pre>
@@ -41,9 +41,7 @@ import org.apache.wicket.version.undo.Change;
  * thus renders like:
  * 
  * <pre>
- *  
  * 	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
- * 	
  * </pre>
  * 
  * </p>
@@ -52,39 +50,35 @@ import org.apache.wicket.version.undo.Change;
  * For instance:
  * 
  * <pre>
- * protected void populateItem(ListItem listItem)
- * {
- * 	final int page = ((Integer)listItem.getModelObject()).intValue();
- * 	final PagingNavigationLink link = new PagingNavigationLink(&quot;pageLink&quot;, pageableListView, page);
- * 	if (page &gt; 0)
- * 	{
- * 		listItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
- * 	}
- * 	else
- * 	{
- * 		listItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
- * 	}
- * 	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
- * 	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
- * 	listItem.add(link);
- * }
+ * 	protected void populateItem(LoopItem loopItem) {
+ * 		final int page = loopItem.getIteration();
+ *		final PagingNavigationLink link = new PagingNavigationLink(&quot;pageLink&quot;, pageableListView, page);
+ *		if (page &gt; 0) {
+ *			loopItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
+ *		} else {
+ *			loopItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
+ *		}
+ *		link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
+ *		link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
+ *		loopItem.add(link);
+ *	}
  * </pre>
  * 
  * With:
  * 
  * <pre>
- * 	&lt;td wicket:id=&quot;navigation&quot;&gt;
- * 	  &lt;span wicket:id=&quot;separator&quot;/&gt;
- * 	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- * 	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- * 	  &lt;/a&gt;
- * 	&lt;/td&gt;
+ *	&lt;span wicket:id=&quot;navigation&quot;&gt;
+ *		&lt;span wicket:id=&quot;separator&quot;&gt;&lt;/span&gt;
+ *		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *			&lt;span wicket:id=&quot;pageLabel&quot;&gt;&lt;/span&gt;&lt;span wicket:id=&quot;pageNumber&quot;&gt;&lt;/span&gt;
+ *		&lt;/a&gt;
+ *	&lt;/span&gt;
  * </pre>
  * 
  * renders like:
  * 
  * <pre>
- * page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
+ *	page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
  * </pre>
  * 
  * </p>
