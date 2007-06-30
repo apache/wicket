@@ -44,7 +44,7 @@
 				</li>
 				<li>
 					Alternatively download the latest <strong>beta</strong> release
-					<a href="http://people.apache.org/dist/incubator/wicket/">Wicket 1.3.0 BETA</a>
+					<a href="http://www.apache.org/dyn/closer.cgi/wicket/1.3.0-beta2/">Wicket 1.3.0 BETA</a>
 				</li>
 			</ul>
 			<p>
@@ -67,6 +67,21 @@
 			</p>
 		</section>
 		<section name="Latest News">
+			<subsection name="June 29th, 2007 - Wicket 1.3.0-beta 2 available">
+				<p>
+
+					The second beta for Wicket 1.3 has been released. This
+                    release contains many improvements from the first beta
+                    release. Upgrading from beta 1 should not be too big a
+                    deal, as our API is quite stable already.
+
+				</p><p>
+
+					Download the release <a
+                    href="http://www.apache.org/dyn/closer.cgi/wicket/1.3.0-beta2/">here</a>.
+
+				</p>
+			</subsection>
 			<subsection name="April 22nd, 2007 - Wicket 1.2.6 available">
 				<p>
 					The Wicket team is proud to announce another maintenance release for Wicket 1.2. With our first 1.3 release
