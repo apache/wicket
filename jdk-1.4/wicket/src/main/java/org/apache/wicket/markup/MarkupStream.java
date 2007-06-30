@@ -153,8 +153,8 @@ public final class MarkupStream
 		while (this.hasMore())
 		{
 			// Get an element from each
-			final MarkupElement thisElement = this.next();
-			final MarkupElement thatElement = that.next();
+			final MarkupElement thisElement = this.get();
+			final MarkupElement thatElement = that.get();
 			
 			// and if the elements are not equal
 			if (thisElement != null && thatElement != null)
@@ -174,6 +174,8 @@ public final class MarkupStream
 					return false;
 				}
 			}
+			this.next();
+			that.next();
 		}
 
 		// If we've run out of markup elements in b
