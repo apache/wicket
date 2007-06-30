@@ -482,3 +482,7 @@ table.grid td.filter-td input.go { width: 45%; }
 table.grid td.filter-td input.clear { width: 45%; }
 table.grid td.filter-td input { width: 100%; font-size: 0.6em; }
 table.grid td.filter-td select { width: 100%; font-size: 0.6em; }
+
+tr.section td {
+	padding-top: 0.75em;
+}
