@@ -22,12 +22,12 @@
 
 if (typeof(Wicket) == "undefined")
 	Wicket = { };
-	
+
 Wicket.AutoCompleteSettings =  {
 	enterHidesWithNoSelection : false
 };
 
-Wicket.AutoComplete=function(elementId,callbackUrl){
+Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     var KEY_TAB=9;
     var KEY_ENTER=13;
     var KEY_ESC=27;
@@ -100,7 +100,7 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
           		        hidingAutocomplete=1;
 					} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection == true) {
  			            hideAutoComplete();
-          		        hidingAutocomplete=1;						
+          		        hidingAutocomplete=1;
 					}
 
 		            if(typeof objonkeydown == "function")objonkeydown();
@@ -188,8 +188,12 @@ Wicket.AutoComplete=function(elementId,callbackUrl){
     }
 
     function updateChoices(){
-        selected=-1;
-
+        if(preselect==true){
+        	selected = 0;
+        }
+        else{
+        	selected=-1;
+        }
         var value = wicketGet(elementId).value;
        	var request = new Wicket.Ajax.Request(callbackUrl+"&q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
        	request.get();

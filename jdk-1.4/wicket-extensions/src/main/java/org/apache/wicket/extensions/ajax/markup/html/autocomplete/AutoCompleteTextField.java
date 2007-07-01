@@ -25,12 +25,12 @@ import org.apache.wicket.model.IModel;
 
 /**
  * An implementation of a textfield with the autoassist ajax behavior
- * 
+ *
  * @see AutoCompleteBehavior
  * @see IAutoCompleteRenderer
- * 
+ *
  * @since 1.2
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AutoCompleteTextField extends TextField
@@ -44,19 +44,32 @@ public abstract class AutoCompleteTextField extends TextField
 	 */
 	public AutoCompleteTextField(String id, Class type)
 	{
-		this(id, (IModel)null, type);
+		this(id, (IModel)null, type, false);
 	}
 
 	/**
 	 * @param id
 	 * @param model
 	 * @param type
+	 * @param preselect
+	 *            the first item
 	 */
-	public AutoCompleteTextField(String id, IModel model, Class type)
+	public AutoCompleteTextField(String id, IModel model, Class type, boolean preselect)
 	{
-		this(id, model, type, StringAutoCompleteRenderer.INSTANCE);
+		this(id, model, type, StringAutoCompleteRenderer.INSTANCE, preselect);
 
 	}
+
+	/**
+	 * @param id
+	 * @param object
+	 * @param preselect
+	 */
+	public AutoCompleteTextField(String id, IModel object, boolean preselect)
+	{
+		this(id, object, (Class)null, preselect);
+	}
+
 
 	/**
 	 * @param id
@@ -64,7 +77,17 @@ public abstract class AutoCompleteTextField extends TextField
 	 */
 	public AutoCompleteTextField(String id, IModel object)
 	{
-		this(id, object, (Class)null);
+		this(id, object, (Class)null, false);
+	}
+
+	/**
+	 * @param id
+	 * @param preselect
+	 */
+	public AutoCompleteTextField(String id, boolean preselect)
+	{
+		this(id, (IModel)null, preselect);
+
 	}
 
 	/**
@@ -72,7 +95,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 */
 	public AutoCompleteTextField(String id)
 	{
-		this(id, (IModel)null);
+		this(id, (IModel)null, false);
 
 	}
 
@@ -92,7 +115,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 */
 	public AutoCompleteTextField(String id, Class type, IAutoCompleteRenderer renderer)
 	{
-		this(id, null, type, renderer);
+		this(id, null, type, renderer, false);
 	}
 
 	/**
@@ -102,7 +125,7 @@ public abstract class AutoCompleteTextField extends TextField
 	 */
 	public AutoCompleteTextField(String id, IModel model, IAutoCompleteRenderer renderer)
 	{
-		this(id, model, (Class)null, renderer);
+		this(id, model, (Class)null, renderer, false);
 	}
 
 	/**
@@ -110,15 +133,17 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param model
 	 * @param type
 	 * @param renderer
+	 * @param preselect
 	 */
-	public AutoCompleteTextField(String id, IModel model, Class type, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(String id, IModel model, Class type,
+			IAutoCompleteRenderer renderer, boolean preselect)
 	{
 		super(id, model, type);
 
 		// this disables Firefox autocomplete
-		add(new SimpleAttributeModifier("autocomplete","off"));
-		
-		add(new AutoCompleteBehavior(renderer)
+		add(new SimpleAttributeModifier("autocomplete", "off"));
+
+		add(new AutoCompleteBehavior(renderer, preselect)
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -136,9 +161,9 @@ public abstract class AutoCompleteTextField extends TextField
 	 * Callback method that should return an iterator over all possible assist
 	 * choice objects. These objects will be passed to the renderer to generate
 	 * output. Usually it is enough to return an iterator over strings.
-	 * 
+	 *
 	 * @see AutoCompleteBehavior#getChoices(String)
-	 * 
+	 *
 	 * @param input
 	 *            current input
 	 * @return iterator ver all possible choice objects

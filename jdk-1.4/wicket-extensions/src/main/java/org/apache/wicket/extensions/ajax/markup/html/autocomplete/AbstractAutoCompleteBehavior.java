@@ -37,6 +37,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 	private static final long serialVersionUID = 1L;
 
+	protected boolean preselect = false;
 	/**
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
@@ -66,7 +67,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		Response response = getComponent().getResponse();
 		final String id = getComponent().getMarkupId();
 		response.write(JavascriptUtils.SCRIPT_OPEN_TAG);
-		response.write("new Wicket.AutoComplete('" + id + "','" + getCallbackUrl() + "');");
+		response.write("new Wicket.AutoComplete('" + id + "','" + getCallbackUrl() +"',"+ preselect + ");");
 		response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
 	}
 

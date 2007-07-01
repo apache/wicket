@@ -28,11 +28,11 @@ import org.apache.wicket.protocol.http.WebResponse;
  * This behavior builds on top of {@link AbstractAutoCompleteBehavior} by
  * introducing the concept of a {@link IAutoCompleteRenderer} to make response
  * writing easier.
- * 
+ *
  * @see IAutoCompleteRenderer
- * 
+ *
  * @since 1.2
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  * @author Janne Hietam&auml;ki (jannehietamaki)
  */
@@ -44,17 +44,32 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param renderer
 	 *            renderer that will be used to generate output
 	 */
 	public AutoCompleteBehavior(IAutoCompleteRenderer renderer)
+	{
+		this(renderer, false);
+	}
+
+
+	/**
+	 * Constructor
+	 *
+	 * @param renderer
+	 *            renderer that will be used to generate output
+	 * @param preselect
+	 * 		      highlight/preselect the first item in the autocomplete list automatically
+	 */
+	public AutoCompleteBehavior(IAutoCompleteRenderer renderer, boolean preselect)
 	{
 		if (renderer == null)
 		{
 			throw new IllegalArgumentException("renderer cannot be null");
 		}
 		this.renderer = renderer;
+		this.preselect = preselect;
 	}
 
 
@@ -65,11 +80,12 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 
 			public void respond(RequestCycle requestCycle)
 			{
-				
+
 				WebResponse r = (WebResponse)requestCycle.getResponse();
-				
+
 				// Determine encoding
-				final String encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
+				final String encoding = Application.get().getRequestCycleSettings()
+						.getResponseRequestEncoding();
 				r.setCharacterEncoding(encoding);
 				r.setContentType("text/xml; charset=" + encoding);
 
@@ -100,7 +116,7 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	 * Callback method that should return an iterator over all possiblet
 	 * choice objects. These objects will be passed to the renderer to generate
 	 * output. Usually it is enough to return an iterator over strings.
-	 * 
+	 *
 	 * @param input
 	 *            current input
 	 * @return iterator ver all possible choice objects
