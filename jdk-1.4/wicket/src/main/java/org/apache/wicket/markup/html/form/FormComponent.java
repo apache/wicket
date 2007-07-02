@@ -74,7 +74,9 @@ import org.apache.wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class FormComponent extends LabeledWebMarkupContainer implements IFormVisitorParticipant
+public abstract class FormComponent extends LabeledWebMarkupContainer
+		implements
+			IFormVisitorParticipant
 {
 	/**
 	 * Visitor for traversing form components
@@ -541,16 +543,27 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 	}
 
 	/**
-	 * Gets the converter input. You typically should not override this method,
-	 * unless you are writing a
-	 * {@link FormComponentPanel special form component} that embeds other form
-	 * components that receive the real user input.
+	 * Gets the converted input. The converted input is set earlier though the
+	 * implementation of {@link #convertInput()}.
 	 * 
-	 * @return value of input converted into appropriate type if any was set
+	 * @return value of input possibly converted into an appropriate type
 	 */
-	public Object getConvertedInput()
+	public final Object getConvertedInput()
 	{
 		return convertedInput;
+	}
+
+	/**
+	 * Sets the converted input. This method is typically not called by clients,
+	 * unless they override {@link #convertInput()}, in which case they should
+	 * call this method to update the input for this component instance.
+	 * 
+	 * @param convertedInput
+	 *            the converted input
+	 */
+	public final void setConvertedInput(Object convertedInput)
+	{
+		this.convertedInput = convertedInput;
 	}
 
 	/**
@@ -722,9 +735,10 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 	}
 
 	/**
-	 * This method can be called to know if this component really has raw input.
+	 * Returns whether this component has raw input. Raw input is unconverted
+	 * input straight from the client.
 	 * 
-	 * @return boolean if this form component has rawinput.
+	 * @return boolean whether this component has raw input.
 	 */
 	public final boolean hasRawInput()
 	{
@@ -869,7 +883,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 			updateModel();
 		}
 	}
-	
+
 	/**
 	 * The value will be made available to the validator property by means of
 	 * ${label}. It does not have any specific meaning to FormComponent itself.
@@ -925,8 +939,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		}
 		else
 		{
-			throw new UnsupportedOperationException("FormComponent " + getClass()
-					+ " does not support cookies");
+			throw new UnsupportedOperationException("FormComponent " + getClass() +
+					" does not support cookies");
 		}
 		return this;
 	}
@@ -1008,8 +1022,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		validateRequired();
 		if (isValid())
 		{
-			convert();
-			
+			convertInput();
+
 			if (isValid())
 			{
 				validateValidators();
@@ -1094,7 +1108,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 	 * errors. Converted value is available through
 	 * {@link FormComponent#getConvertedInput()}
 	 */
-	protected final void convert()
+	protected void convertInput()
 	{
 		if (typeName == null)
 		{
@@ -1217,8 +1231,9 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		}
 		catch (NumberFormatException e)
 		{
-			throw new IllegalArgumentException(exceptionMessage("Internal error.  Request string '"
-					+ string + "' not a valid integer"));
+			throw new IllegalArgumentException(
+					exceptionMessage("Internal error.  Request string '" + string +
+							"' not a valid integer"));
 		}
 	}
 
@@ -1242,8 +1257,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 			}
 			catch (NumberFormatException e)
 			{
-				throw new IllegalArgumentException(exceptionMessage("Request string '" + string
-						+ "' is not a valid integer"));
+				throw new IllegalArgumentException(exceptionMessage("Request string '" + string +
+						"' is not a valid integer"));
 			}
 		}
 		else
@@ -1301,6 +1316,11 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		super.onComponentTag(tag);
 	}
 
+	/**
+	 * Sets the temporary converted input value to null.
+	 * 
+	 * @see org.apache.wicket.Component#onDetach()
+	 */
 	protected void onDetach()
 	{
 		super.onDetach();
@@ -1368,13 +1388,13 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		IValidator validator = null;
 
 		boolean isNull = getConvertedInput() == null;
-		
+
 		try
 		{
 			for (i = 0; i < size; i++)
 			{
 				validator = validators_get(i);
-				
+
 				if (isNull == false || validator instanceof INullAcceptingValidator)
 				{
 					validator.validate(validatable);
@@ -1387,8 +1407,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer implements
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation "
-					+ validator.getClass().getName() + " on component " + this.getPath(), e);
+			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation " +
+					validator.getClass().getName() + " on component " + this.getPath(), e);
 		}
 	}
 

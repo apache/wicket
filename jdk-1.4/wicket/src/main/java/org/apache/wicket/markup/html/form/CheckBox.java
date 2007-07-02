@@ -72,7 +72,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 */
 	public void onSelectionChanged()
 	{
-		convert();
+		convertInput();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}

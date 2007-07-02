@@ -192,7 +192,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 */
 	public final void onSelectionChanged()
 	{
-		convert();
+		convertInput();
 		updateModel();
 		onSelectionChanged((Collection)getModelObject());
 	}

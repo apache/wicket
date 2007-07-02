@@ -19,12 +19,10 @@ package org.apache.wicket.examples.forminput;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.extensions.yui.calendar.DatePicker;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Check;
@@ -95,9 +93,6 @@ public class FormInput extends WicketExamplePage
 			RequiredTextField integerTextField = new RequiredTextField("integerProperty");
 			add(integerTextField.add(NumberValidator.POSITIVE));
 			add(new RequiredTextField("doubleProperty"));
-
-			// add(new DateTimeField("dateProperty"));
-			add(new TextField("dateProperty", Date.class).add(new DatePicker()));
 
 			add(new RequiredTextField("integerInRangeProperty").add(NumberValidator.range(0, 100)));
 			add(new CheckBox("booleanProperty"));

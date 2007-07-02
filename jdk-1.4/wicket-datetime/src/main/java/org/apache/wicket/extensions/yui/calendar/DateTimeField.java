@@ -124,67 +124,6 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
-	 * Gets the converted input. It combines the inputs of the nested date,
-	 * hours, minutes and am/pm fields and constructs a date from it.
-	 * <p>
-	 * Note that overriding this method is a better option than overriding
-	 * {@link #updateModel()} like the first versions of this class did. The
-	 * reason for that is that this method can be used by form validators
-	 * without having to depend on the actual model being updated, and this
-	 * method is called by the default implementation of {@link #updateModel()}
-	 * anyway (so we don't have to override that anymore).
-	 * </p>
-	 * 
-	 * @return instance of {@link Date}, possibly null
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#getConvertedInput()
-	 */
-	public Object getConvertedInput()
-	{
-		Object dateFieldInput = dateField.getConvertedInput();
-		if (dateFieldInput != null)
-		{
-			MutableDateTime date = new MutableDateTime(dateFieldInput);
-			Integer hours = (Integer)hoursField.getConvertedInput();
-			Integer minutes = (Integer)minutesField.getConvertedInput();
-			AM_PM amOrPm = (AM_PM)amOrPmChoice.getConvertedInput();
-
-			try
-			{
-				TimeZone zone = getClientTimeZone();
-				if (zone != null)
-				{
-					date.setZone(DateTimeZone.forTimeZone(zone));
-				}
-
-				if (hours != null)
-				{
-					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue() % 12);
-					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
-				}
-				if (amOrPm == AM_PM.PM)
-				{
-					date.set(DateTimeFieldType.halfdayOfDay(), 1);
-				}
-				else
-				{
-					date.set(DateTimeFieldType.halfdayOfDay(), 0);
-				}
-
-				// the date will be in the server's timezone
-				return date.toDate();
-			}
-			catch (RuntimeException e)
-			{
-				DateTimeField.this.error(e.getMessage());
-				invalid();
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Gets date.
 	 * 
 	 * @return date
@@ -288,6 +227,67 @@ public class DateTimeField extends FormComponentPanel
 		minutesField.setLabel(new Model("minutes"));
 		add(amOrPmChoice = new DropDownChoice("amOrPmChoice", new PropertyModel(this, "amOrPm"),
 				Arrays.asList(AM_PM.values())));
+	}
+
+	/**
+	 * Sets the converted input, which is an instance of {@link Date}, possibly
+	 * null. It combines the inputs of the nested date, hours, minutes and am/pm
+	 * fields and constructs a date from it.
+	 * <p>
+	 * Note that overriding this method is a better option than overriding
+	 * {@link #updateModel()} like the first versions of this class did. The
+	 * reason for that is that this method can be used by form validators
+	 * without having to depend on the actual model being updated, and this
+	 * method is called by the default implementation of {@link #updateModel()}
+	 * anyway (so we don't have to override that anymore).
+	 * </p>
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
+	 */
+	protected void convertInput()
+	{
+		Object convertedInput = null;
+		Object dateFieldInput = dateField.getConvertedInput();
+		if (dateFieldInput != null)
+		{
+			MutableDateTime date = new MutableDateTime(dateFieldInput);
+			Integer hours = (Integer)hoursField.getConvertedInput();
+			Integer minutes = (Integer)minutesField.getConvertedInput();
+			AM_PM amOrPm = (AM_PM)amOrPmChoice.getConvertedInput();
+
+			try
+			{
+				TimeZone zone = getClientTimeZone();
+				if (zone != null)
+				{
+					date.setZone(DateTimeZone.forTimeZone(zone));
+				}
+
+				if (hours != null)
+				{
+					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue() % 12);
+					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
+				}
+				if (amOrPm == AM_PM.PM)
+				{
+					date.set(DateTimeFieldType.halfdayOfDay(), 1);
+				}
+				else
+				{
+					date.set(DateTimeFieldType.halfdayOfDay(), 0);
+				}
+
+				// the date will be in the server's timezone
+				convertedInput = date.toDate();
+			}
+			catch (RuntimeException e)
+			{
+				DateTimeField.this.error(e.getMessage());
+				invalid();
+			}
+		}
+
+		setConvertedInput(convertedInput);
 	}
 
 	/**

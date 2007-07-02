@@ -83,7 +83,6 @@ public final class FormInputModel implements IClusterable
 	}
 
 	private Boolean booleanProperty;
-	private Date dateProperty = new Date();
 	private Double doubleProperty = new Double(20.5);
 	private Integer integerInRangeProperty = new Integer(50);
 	private Integer integerProperty = new Integer(100);
@@ -124,16 +123,6 @@ public final class FormInputModel implements IClusterable
 	public Boolean getBooleanProperty()
 	{
 		return booleanProperty;
-	}
-
-	/**
-	 * Gets dateProperty.
-	 * 
-	 * @return dateProperty
-	 */
-	public Date getDateProperty()
-	{
-		return dateProperty;
 	}
 
 	/**
@@ -257,17 +246,6 @@ public final class FormInputModel implements IClusterable
 	public void setBooleanProperty(Boolean booleanProperty)
 	{
 		this.booleanProperty = booleanProperty;
-	}
-
-	/**
-	 * Sets dateProperty.
-	 * 
-	 * @param dateProperty
-	 *            dateProperty
-	 */
-	public void setDateProperty(Date dateProperty)
-	{
-		this.dateProperty = dateProperty;
 	}
 
 	/**
@@ -395,9 +373,8 @@ public final class FormInputModel implements IClusterable
 		StringBuffer b = new StringBuffer();
 		b.append("[TestInputObject stringProperty = '").append(stringProperty).append(
 				"', integerProperty = ").append(integerProperty).append(", doubleProperty = ")
-				.append(doubleProperty).append(", dateProperty = ").append(dateProperty).append(
-						", booleanProperty = ").append(booleanProperty).append(
-						", integerInRangeProperty = ").append(integerInRangeProperty).append(
+				.append(doubleProperty).append(", booleanProperty = ").append(booleanProperty)
+				.append(", integerInRangeProperty = ").append(integerInRangeProperty).append(
 						", urlProperty = ").append(urlProperty).append(", phoneNumberUS = ")
 				.append(phoneNumberUS).append(", numberRadioChoice = ").append(numberRadioChoice)
 				.append(", numbersCheckgroup ").append(numbersCheckGroup).append(

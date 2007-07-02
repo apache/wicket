@@ -308,7 +308,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 */
 	public void onSelectionChanged()
 	{
-		convert();
+		convertInput();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}

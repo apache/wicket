@@ -136,7 +136,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	 */
 	public final void onSelectionChanged()
 	{
-		convert();
+		convertInput();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}

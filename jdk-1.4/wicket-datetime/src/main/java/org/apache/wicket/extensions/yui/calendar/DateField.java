@@ -62,7 +62,7 @@ public class DateField extends FormComponentPanel
 	}
 
 	/**
-	 * Gets the converted input. In this case, we're really just interested in
+	 * Sets the converted input. In this case, we're really just interested in
 	 * the nested date field, as that is the element that receives the real user
 	 * input. So we're just passing that on.
 	 * <p>
@@ -76,11 +76,11 @@ public class DateField extends FormComponentPanel
 	 * 
 	 * @return instance of {@link Date}, possibly null
 	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#getConvertedInput()
+	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
-	public Object getConvertedInput()
+	protected void convertInput()
 	{
-		return dateField.getConvertedInput();
+		setConvertedInput(dateField.getConvertedInput());
 	}
 
 	/**
