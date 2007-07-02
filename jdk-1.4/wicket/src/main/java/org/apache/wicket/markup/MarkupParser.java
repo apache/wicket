@@ -479,7 +479,7 @@ public class MarkupParser
 				final String comment = rawMarkup.substring(pos1 + 4, pos2);
 				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
 				{
-					buf.append(rawMarkup.substring(0, pos1 - 1));
+					buf.append(rawMarkup.substring(0, pos1));
 					if (rawMarkup.length() >= pos2 + 4)
 					{
 						buf.append(rawMarkup.substring(pos2 + 4));
