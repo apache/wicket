@@ -161,12 +161,13 @@ public class ExternalLink extends WebMarkupContainer
 					{
 						url = url.substring(1);
 					}
-					url = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + url;
+					url = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() +
+							url;
 				}
 
 				// if the tag is an anchor proper
-				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
-						|| tag.getName().equalsIgnoreCase("area"))
+				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
+						tag.getName().equalsIgnoreCase("area"))
 				{
 					// generate the href attribute
 					tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
@@ -219,10 +220,10 @@ public class ExternalLink extends WebMarkupContainer
 	 */
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		this.checkComponentTag(openTag, "a");
 		if ((label != null) && (label.getObject() != null))
 		{
-			replaceComponentTagBody(markupStream, openTag, getModelObjectAsString(label.getObject()));
+			replaceComponentTagBody(markupStream, openTag,
+					getModelObjectAsString(label.getObject()));
 		}
 		else
 		{
