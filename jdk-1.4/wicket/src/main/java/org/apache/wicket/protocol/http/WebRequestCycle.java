@@ -187,6 +187,13 @@ public class WebRequestCycle extends RequestCycle
 					// here on.
 					servletResponse.close();
 
+					if (getWebRequest() instanceof ServletWebRequest)
+					{
+						// Get the redirect url and set it in the ServletWebRequest
+						// so that it can be used for relative url calculation.
+						((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(null);	
+					}
+					
 					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 					int index = redirectUrl.indexOf("?");
 					String sessionId = getApplication().getSessionStore().getSessionId(request, true); 
