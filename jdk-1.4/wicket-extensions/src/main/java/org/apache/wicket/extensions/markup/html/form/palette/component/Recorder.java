@@ -67,7 +67,7 @@ public class Recorder extends HiddenField
 	{
 		super(id);
 		this.palette = palette;
-
+		setModel(new Model());
 		setOutputMarkupId(true);
 	}
 
