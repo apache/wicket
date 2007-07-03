@@ -103,6 +103,12 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	}
 
 
+	protected void onAttach()
+	{
+		clearCachedItemCount();
+		super.onAttach();
+ 	}
+
 	protected void onDetach()
 	{
 		clearCachedItemCount();
