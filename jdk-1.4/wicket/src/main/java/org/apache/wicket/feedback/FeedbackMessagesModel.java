@@ -127,10 +127,12 @@ public class FeedbackMessagesModel implements IModel
 	/**
 	 * @param filter
 	 *            Filter to apply to model
+	 * @return this
 	 */
-	public final void setFilter(IFeedbackMessageFilter filter)
+	public final FeedbackMessagesModel setFilter(IFeedbackMessageFilter filter)
 	{
 		this.filter = filter;
+		return this;
 	}
 
 	/**
@@ -138,14 +140,16 @@ public class FeedbackMessagesModel implements IModel
 	 * 
 	 * @param sortingComparator
 	 *            comparator used for sorting the messages
+	 * @return this
 	 */
-	public final void setSortingComparator(Comparator sortingComparator)
+	public final FeedbackMessagesModel setSortingComparator(Comparator sortingComparator)
 	{
 		if (!(sortingComparator instanceof Serializable))
 		{
 			throw new IllegalArgumentException("sortingComparator must be serializable");
 		}
 		this.sortingComparator = sortingComparator;
+		return this;
 	}
 
 	/**
