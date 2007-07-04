@@ -59,7 +59,10 @@ public class ListDataProvider implements IDataProvider
 	 */
 	public Iterator iterator(final int first, final int count)
 	{
-		return list.subList(first, first + count).listIterator();
+		int toIndex = first+count;
+		if(toIndex > list.size())
+			toIndex = list.size();
+		return list.subList(first, toIndex).listIterator();
 	}
 
 	/**
