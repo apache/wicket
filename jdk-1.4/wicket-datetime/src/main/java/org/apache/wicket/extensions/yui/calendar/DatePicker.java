@@ -350,13 +350,13 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * Notifying is done by calling the associated component's onchange
 	 * Javascript event handler. You can for instance attach an
 	 * {@link AjaxEventBehavior} to that component to get a call back to the
-	 * server. Returns false by default.
+	 * server. The default is true.
 	 * 
 	 * @return if true, notifies the associated component when a date is
 	 *         selected
 	 */
 	protected boolean notifyComponentOnDateSelected()
 	{
-		return false;
+		return true;
 	}
 }
