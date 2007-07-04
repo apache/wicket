@@ -22,6 +22,9 @@ package org.apache.wicket.model;
  * {@link IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)} and
  * {@link IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)}
  * 
+ * The wrapped model will be called detach on when the component is detached
+ * when the wrapmodel is created by an {@link IComponentAssignedModel}
+ * 
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */

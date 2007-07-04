@@ -2890,6 +2890,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			model.detach();
 		}
+		// also detach the wrapped model of a component assignet wrap (not inherited)
+		if (model instanceof IWrapModel && !getFlag(FLAG_INHERITABLE_MODEL))
+		{
+			((IWrapModel)model).getWrappedModel().detach();
+		}
 	}
 
 	/**
