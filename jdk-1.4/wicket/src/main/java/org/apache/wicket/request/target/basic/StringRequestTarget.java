@@ -27,7 +27,7 @@ import org.apache.wicket.util.resource.StringBufferResourceStream;
 
 
 /**
- * Request target that responds by sending it's string property.
+ * Request target that responds by sending its string property.
  * 
  * @author Eelco Hillenius
  */
