@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Request target that responds by sending it's resources stream.
+ * Request target that responds by sending its resources stream.
  * 
  * @author Eelco Hillenius
  */
