@@ -131,6 +131,24 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			super(name);
 		}
 
+		private int getLastPageVersion(int id) 
+		{
+			int versionNumber = -1;
+			// when no version was specified, get the last touched page for
+			// given page id
+			PageVersions pv = null;
+			for (int index = pageVersions.size() - 1; index >= 0; --index)
+			{
+				if (((PageVersions)pageVersions.get(index)).pageid == id)
+				{
+					pv = (PageVersions)pageVersions.get(index);
+					versionNumber = pv.versionid;
+					break;
+				}
+			}
+			return versionNumber;
+		}
+		
 		/**
 		 * @see org.apache.wicket.PageMap#get(int, int)
 		 */
@@ -160,17 +178,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			PageVersions pv = null;
 			if (versionNumber == -1)
 			{
-				// when no version was specified, get the last touched page for
-				// given page id
-				for (int index = pageVersions.size() - 1; index >= 0; --index)
-				{
-					if (((PageVersions)pageVersions.get(index)).pageid == id)
-					{
-						pv = (PageVersions)pageVersions.get(index);
-						versionNumber = pv.versionid;
-						break;
-					}
-				}
+				versionNumber = getLastPageVersion(id);
 			}
 			String sessionId = getSession().getId();
 			if (lastPage != null && lastPage.getNumericId() == id)
@@ -330,6 +338,11 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			this.page = page;
 		}
 
+		private short newVersion() {
+			SecondLevelCachePageMap pageMap = (SecondLevelCachePageMap) page.getPageMap();
+			return (short) (pageMap.getLastPageVersion(page.getNumericId()) + 1);
+		}
+		
 		/**
 		 * @see org.apache.wicket.version.IPageVersionManager#beginVersion(boolean)
 		 */
@@ -343,7 +356,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			versionStarted = true;
 			if (!mergeVersion)
 			{
-				currentVersionNumber++;
+				
+				currentVersionNumber = newVersion();
 				lastAjaxVersionNumber = currentAjaxVersionNumber;
 				currentAjaxVersionNumber = 0;
 			}
@@ -513,6 +527,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	}
 
 	static final ThreadLocal usedPages = new ThreadLocal();
+	
+	/**
+	 * @return
+	 */
+	public static ThreadLocal getUsedPages()
+	{
+		return usedPages;
+	}
 
 	private final IPageStore pageStore;
 
