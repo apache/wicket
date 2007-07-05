@@ -165,11 +165,23 @@ public class FileUploadField extends FormComponent
 	 */
 	protected void onDetach()
 	{
-		if (fileUpload != null)
+		if (fileUpload != null && forceCloseStreamsOnDetach())
 		{
 			fileUpload.closeStreams();
 			fileUpload = null;
 		}
 		super.onDetach();
+	}
+	
+	/**
+	 * The FileUploadField will close any input streams you have opened in its
+	 * FileUpload by default. If you wish to manage the stream yourself (e.g.
+	 * you want to use it in another thread) then you can override this method
+	 * to prevent this behaviour.
+	 * 
+	 * @return
+	 */
+	protected boolean forceCloseStreamsOnDetach() {
+		return true;
 	}
 }
