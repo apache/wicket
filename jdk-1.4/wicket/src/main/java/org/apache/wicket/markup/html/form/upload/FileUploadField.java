@@ -181,7 +181,8 @@ public class FileUploadField extends FormComponent
 	 * 
 	 * @return
 	 */
-	protected boolean forceCloseStreamsOnDetach() {
+	protected boolean forceCloseStreamsOnDetach()
+	{
 		return true;
 	}
 }
