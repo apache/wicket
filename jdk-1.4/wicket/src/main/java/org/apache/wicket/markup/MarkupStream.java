@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup;
 
-import java.util.Iterator;
-
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 
@@ -60,14 +58,14 @@ public final class MarkupStream
 	/**
 	 * Constructor
 	 * 
-	 * @param markupFragment
+	 * @param markup
 	 *            List of markup elements
 	 */
-	public MarkupStream(final Markup markupFragment)
+	public MarkupStream(final Markup markup)
 	{
-		this.markup = markupFragment;
+		this.markup = markup;
 
-		if (markupFragment.size() > 0)
+		if (markup.size() > 0)
 		{
 			current = get(currentIndex);
 		}
@@ -126,19 +124,19 @@ public final class MarkupStream
 	{
 		return current instanceof ComponentTag;
 	}
-
-	/**
-	 * Create an iterator for the component tags in the stream.
-	 * <p>
-	 * Note: it will not modify the current index of the underlying markup
-	 * stream
-	 * 
-	 * @return ComponentTagIterator
-	 */
-	public final Iterator componentTagIterator()
-	{
-		return markup.componentTagIterator(0, ComponentTag.class);
-	}
+//
+//	/**
+//	 * Create an iterator for the component tags in the stream.
+//	 * <p>
+//	 * Note: it will not modify the current index of the underlying markup
+//	 * stream
+//	 * 
+//	 * @return ComponentTagIterator
+//	 */
+//	public final Iterator componentTagIterator()
+//	{
+//		return markup.componentTagIterator(0, ComponentTag.class);
+//	}
 
 	/**
 	 * Compare this markup stream with another one
@@ -226,6 +224,16 @@ public final class MarkupStream
 	public MarkupElement get()
 	{
 		return current;
+	}
+
+	/**
+	 * @param index
+	 *            The index of a markup element
+	 * @return The MarkupElement element
+	 */
+	private MarkupElement get(final int index)
+	{
+		return markup.get(index);
 	}
 
 	/**
@@ -417,6 +425,30 @@ public final class MarkupStream
 	}
 
 	/**
+	 * Renders markup until a closing tag for openTag is reached.
+	 * 
+	 * @param openTag
+	 *            The open tag
+	 */
+	public void skipToMatchingCloseTag(final ComponentTag openTag)
+	{
+		// Loop through the markup in this container
+		while (hasMore())
+		{
+			// If the current markup tag closes the openTag
+			if (get().closes(openTag))
+			{
+				// Done!
+				return;
+			}
+
+			// Skip element
+			next();
+		}
+		throwMarkupException("Expected close tag for " + openTag);
+	}
+
+	/**
 	 * Throws a new markup exception
 	 * 
 	 * @param message
@@ -463,39 +495,5 @@ public final class MarkupStream
 	{
 		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex + ", current = "
 				+ ((current == null) ? "null" : current.toUserDebugString()) + "]";
-	}
-
-	/**
-	 * @param index
-	 *            The index of a markup element
-	 * @return The MarkupElement element
-	 */
-	private MarkupElement get(final int index)
-	{
-		return markup.get(index);
-	}
-
-	/**
-	 * Renders markup until a closing tag for openTag is reached.
-	 * 
-	 * @param openTag
-	 *            The open tag
-	 */
-	private void skipToMatchingCloseTag(final ComponentTag openTag)
-	{
-		// Loop through the markup in this container
-		while (hasMore())
-		{
-			// If the current markup tag closes the openTag
-			if (get().closes(openTag))
-			{
-				// Done!
-				return;
-			}
-
-			// Skip element
-			next();
-		}
-		throwMarkupException("Expected close tag for " + openTag);
 	}
 }

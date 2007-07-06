@@ -51,7 +51,7 @@ public class Markup
 	/** The list of markup elements */
 	private/* final */List markupElements;
 
-	/** The associate markup */
+	/** The associated markup */
 	private final MarkupResourceData markupResourceData;
 
 	/**
@@ -181,57 +181,57 @@ public class Markup
 	{
 		this.markupElements = new ArrayList();
 	}
-
-	/**
-	 * Create an iterator for the markup elements
-	 * 
-	 * @return Iterator
-	 */
-	public final Iterator iterator()
-	{
-		return iterator(0, null);
-	}
-
-	/**
-	 * Create an iterator for the tags being an istance of 'matchClass'
-	 * 
-	 * @param startIndex
-	 *            The index to start with
-	 * @param matchClass
-	 *            Iterate over elements matching the class
-	 * @return Iterator
-	 */
-	public final Iterator iterator(final int startIndex, final Class matchClass)
-	{
-		return new Iterator()
-		{
-			int index = startIndex - 1;
-
-			public boolean hasNext()
-			{
-				while (++index < size())
-				{
-					MarkupElement element = get(index);
-					if ((matchClass == null) || matchClass.isInstance(element))
-					{
-						return true;
-					}
-				}
-				return false;
-			}
-
-			public Object next()
-			{
-				return get(index);
-			}
-
-			public void remove()
-			{
-				markupElements.remove(index);
-				index -= 1;
-			}
-		};
-	}
+//
+//	/**
+//	 * Create an iterator for the markup elements
+//	 * 
+//	 * @return Iterator
+//	 */
+//	public final Iterator iterator()
+//	{
+//		return iterator(0, null);
+//	}
+//
+//	/**
+//	 * Create an iterator for the tags being an istance of 'matchClass'
+//	 * 
+//	 * @param startIndex
+//	 *            The index to start with
+//	 * @param matchClass
+//	 *            Iterate over elements matching the class
+//	 * @return Iterator
+//	 */
+//	public final Iterator iterator(final int startIndex, final Class matchClass)
+//	{
+//		return new Iterator()
+//		{
+//			int index = startIndex - 1;
+//
+//			public boolean hasNext()
+//			{
+//				while (++index < size())
+//				{
+//					MarkupElement element = get(index);
+//					if ((matchClass == null) || matchClass.isInstance(element))
+//					{
+//						return true;
+//					}
+//				}
+//				return false;
+//			}
+//
+//			public Object next()
+//			{
+//				return get(index);
+//			}
+//
+//			public void remove()
+//			{
+//				markupElements.remove(index);
+//				index -= 1;
+//			}
+//		};
+//	}
 
 	/**
 	 * Add the tag to the local cache if open or open-close and if wicket:id is
@@ -336,20 +336,20 @@ public class Markup
 
 		return this.currentPath;
 	}
-
-	/**
-	 * Create an iterator for the component tags in the markup.
-	 * 
-	 * @param startIndex
-	 *            The index to start with
-	 * @param matchClass
-	 *            Iterate over elements matching the class
-	 * @return ComponentTagIterator
-	 */
-	public Iterator componentTagIterator(final int startIndex, final Class matchClass)
-	{
-		return iterator(startIndex, matchClass);
-	}
+//
+//	/**
+//	 * Create an iterator for the component tags in the markup.
+//	 * 
+//	 * @param startIndex
+//	 *            The index to start with
+//	 * @param matchClass
+//	 *            Iterate over elements matching the class
+//	 * @return ComponentTagIterator
+//	 */
+//	public Iterator componentTagIterator(final int startIndex, final Class matchClass)
+//	{
+//		return iterator(startIndex, matchClass);
+//	}
 	
 	/**
 	 * Find the markup element index of the component with 'path'
