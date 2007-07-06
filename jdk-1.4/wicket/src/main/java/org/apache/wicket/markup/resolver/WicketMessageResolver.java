@@ -100,7 +100,7 @@ public class WicketMessageResolver implements IComponentResolver
 				component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
 						.getStripWicketTags());
 
-				container.autoAdd(component);
+				container.autoAdd(component, markupStream);
 
 				// Yes, we handled the tag
 				return true;

@@ -62,14 +62,14 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()));
+				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()), markupStream);
 			    return true;
 			}
 			
 			// It must be <wicket:child...>
 			if (wicketTag.isChildTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()));
+				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()), markupStream);
 			    return true;
 			}
 		}

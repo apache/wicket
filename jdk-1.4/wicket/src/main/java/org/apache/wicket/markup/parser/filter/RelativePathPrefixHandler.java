@@ -164,7 +164,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				wc = new WebMarkupContainer(id);
 			}
-			container.autoAdd(wc);
+			container.autoAdd(wc, markupStream);
 			return true;
 		}
 		return false;

@@ -78,7 +78,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 			// input the <head> from 'contributors'.
 			final WebMarkupContainer header = new HtmlHeaderContainer(
 					HtmlHeaderSectionHandler.HEADER_ID);
-			container.autoAdd(header);
+			container.autoAdd(header, markupStream);
 
 			// Yes, we handled the tag
 			return true;
@@ -112,7 +112,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				
 				header.add(header2);
 				
-				container.autoAdd(header);
+				container.autoAdd(header, markupStream);
 		    }
 		    else if (container instanceof HtmlHeaderContainer)
 		    {
@@ -134,7 +134,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 	
 				try
 				{
-					container.autoAdd(header);
+					container.autoAdd(header, markupStream);
 				}
 				catch (IllegalArgumentException ex)
 				{

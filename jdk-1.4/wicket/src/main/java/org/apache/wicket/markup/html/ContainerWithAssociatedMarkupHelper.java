@@ -97,7 +97,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// to the page or any other container in the hierachy.
 				if (htmlContainer.okToRenderComponent(headerPart.getScope(), headerPart.getId()))
 				{
-					htmlContainer.autoAdd(headerPart);
+					htmlContainer.autoAdd(headerPart, null);
 				}
 				else
 				{
@@ -109,7 +109,7 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 					try
 					{
 						container.getRequestCycle().setResponse(NullResponse.getInstance());
-						htmlContainer.autoAdd(headerPart);
+						htmlContainer.autoAdd(headerPart, null);
 					}
 					finally
 					{

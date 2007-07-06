@@ -59,7 +59,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 					onDetachWasCalledOnAutoAddedComponent = true;
 					super.onDetach();
 				}
-			});
+			}, markupStream);
 			return true;
 		}
 		return false;

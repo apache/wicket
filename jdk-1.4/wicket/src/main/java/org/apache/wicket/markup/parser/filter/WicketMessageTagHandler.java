@@ -184,7 +184,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 						+ container.getPage().getAutoIndex());
 			}
 			
-			container.autoAdd(wc);
+			container.autoAdd(wc, markupStream);
 			return true;
 		}
 		return false;

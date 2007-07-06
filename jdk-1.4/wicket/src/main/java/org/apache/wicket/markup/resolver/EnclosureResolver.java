@@ -50,7 +50,7 @@ public class EnclosureResolver implements IComponentResolver
 			String id = "enclosure-" + container.getPage().getAutoIndex();
 			final Enclosure enclosure = new Enclosure(id, tag
 					.getString(EnclosureHandler.CHILD_ATTRIBUTE));
-			container.autoAdd(enclosure);
+			container.autoAdd(enclosure, markupStream);
 
 			// Yes, we handled the tag
 			return true;

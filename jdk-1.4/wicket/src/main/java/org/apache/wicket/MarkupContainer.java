@@ -203,9 +203,12 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @param component
 	 *            The component to add
+	 * @param markupStream
+	 *            Null, if the parent container is able to provide the markup. 
+	 *            Else the markup stream to be used to render the component. 
 	 * @return True, if component has been added
 	 */
-	public final boolean autoAdd(final Component component)
+	public final boolean autoAdd(final Component component, final MarkupStream markupStream)
 	{
 		if (component == null)
 		{
@@ -220,10 +223,30 @@ public abstract class MarkupContainer extends Component
 		}
 		add(component);
 		component.beforeRender();
-		component.render();
+		if (markupStream == null)
+		{
+			component.render();
+		}
+		else
+		{
+			component.render(markupStream);
+		}
 		return true;
 	}
-
+	
+	/**
+	 * 
+	 * @param component
+	 *            The component to add
+	 * @return True, if component has been added
+	 * 
+	 * @deprecated since 1.3 Please use {@link #autoAdd(Component, MarkupStream)} instead
+	 */
+	public final boolean autoAdd(final Component component)
+	{
+		return autoAdd(component, null);
+	}
+	
 	/**
 	 * @param component
 	 *            The component to check

@@ -72,7 +72,7 @@ public class WicketLinkResolver implements IComponentResolver
 						}
 					};
 				
-				container.autoAdd(component);
+				container.autoAdd(component, markupStream);
 	
 				// Yes, we handled the tag
 				return true;

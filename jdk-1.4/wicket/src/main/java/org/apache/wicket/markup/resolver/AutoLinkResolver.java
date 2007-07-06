@@ -768,7 +768,7 @@ public final class AutoLinkResolver implements IComponentResolver
 					WicketLinkTagHandler.AUTOLINK_ID, tag);
 
 			// Add the link to the container
-			container.autoAdd(link);
+			container.autoAdd(link, markupStream);
 			if (log.isDebugEnabled())
 			{
 				log.debug("Added autolink " + link);
