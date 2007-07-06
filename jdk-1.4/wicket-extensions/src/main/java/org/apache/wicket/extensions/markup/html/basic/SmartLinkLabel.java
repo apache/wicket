@@ -98,6 +98,18 @@ public class SmartLinkLabel extends Label
 	 */
 	protected CharSequence getSmartLink(final CharSequence text)
 	{
+		return smartLink(text);
+	}
+	
+	/**
+	 * Replace all email and URL addresses
+	 * 
+	 * @param text
+	 *            Text to be modified
+	 * @return Modified Text
+	 */
+	static CharSequence smartLink(final CharSequence text)
+	{
 		if (text == null)
 		{
 			return text;
