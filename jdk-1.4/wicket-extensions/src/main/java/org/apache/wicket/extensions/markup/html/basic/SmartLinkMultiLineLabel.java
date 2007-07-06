@@ -65,8 +65,13 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
             final ComponentTag openTag)
     {
         final CharSequence body = Strings.toMultilineMarkup(getModelObjectAsString());
-        replaceComponentTagBody(markupStream, openTag, SmartLinkLabel.smartLink(body));
+        replaceComponentTagBody(markupStream, openTag, getSmartLink(body));
     }
+    
+	protected CharSequence getSmartLink(final CharSequence text)
+	{
+		return SmartLinkLabel.smartLink(text);
+	}
 }
 
 

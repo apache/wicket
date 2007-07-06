@@ -86,9 +86,14 @@ public final class SmartLinkLabel extends Label
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		replaceComponentTagBody(markupStream, openTag, smartLink(getModelObjectAsString()));
+		replaceComponentTagBody(markupStream, openTag, getSmartLink(getModelObjectAsString()));
 	}
 
+	protected CharSequence getSmartLink(final CharSequence text)
+	{
+		return smartLink(text);
+	}
+	
 	/**
 	 * Replace all email and URL addresses
 	 * 
