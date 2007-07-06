@@ -59,6 +59,7 @@ import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.upload.FileUploadBase;
 import org.apache.wicket.util.upload.ServletFileUpload;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -341,7 +342,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		if (uploadedFiles != null && uploadedFiles.size() > 0)
 		{
-			return ServletFileUpload.MULTIPART_FORM_DATA + "; boundary=abcdefgABCDEFG";
+			return FileUploadBase.MULTIPART_FORM_DATA + "; boundary=abcdefgABCDEFG";
 		}
 
 		return null;

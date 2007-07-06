@@ -87,7 +87,7 @@ public class FileUploadFieldTest extends WicketTestCase
 			// know the path of (e.g. the big DTD this test used previously). This enables
 			// us to run the test out of a JAR file if need be, and also with an unknown
 			// running directory (e.g. when run from wicket-parent).
-			tmp = new File(File.createTempFile(this.getClass().getName(), ".txt"));
+			tmp = new File(java.io.File.createTempFile(this.getClass().getName(), ".txt"));
 			OutputStream os = new BufferedOutputStream(new FileOutputStream(tmp));
 			for (int i = 0; i < 1000; i++)
 			{

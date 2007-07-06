@@ -24,8 +24,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
@@ -296,7 +294,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		if (path == null)
 		{
-			return (IRequestTargetUrlCodingStrategy)mountsOnPath.strategyForMount(null);
+			return mountsOnPath.strategyForMount(null);
 		}
 		else
 		{

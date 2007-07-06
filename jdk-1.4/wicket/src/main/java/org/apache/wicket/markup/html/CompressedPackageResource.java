@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.SharedResources;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.protocol.http.WebRequest;
@@ -268,7 +269,7 @@ public class CompressedPackageResource extends PackageResource
 		{
 			return false;
 		}
-		WebRequest request = (WebRequest)WebRequestCycle.get().getRequest();
+		WebRequest request = (WebRequest)RequestCycle.get().getRequest();
 		String s = request.getHttpServletRequest().getHeader("Accept-Encoding");
 		if (s == null)
 		{

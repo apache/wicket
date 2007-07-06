@@ -127,7 +127,7 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{
-			MarkupElement elem = (MarkupElement)markup.get(i);
+			MarkupElement elem = markup.get(i);
 			if (elem instanceof WicketTag)
 			{
 				WicketTag wtag = (WicketTag)elem;

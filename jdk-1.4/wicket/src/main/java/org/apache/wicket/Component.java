@@ -2138,7 +2138,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 		catch (RuntimeException re)
 		{
 			if (re instanceof WicketRuntimeException || re instanceof AbortException)
+			{
 				throw re;
+			}
 			throw new WicketRuntimeException("Exception in rendering component: " + this, re);
 		}
 	}

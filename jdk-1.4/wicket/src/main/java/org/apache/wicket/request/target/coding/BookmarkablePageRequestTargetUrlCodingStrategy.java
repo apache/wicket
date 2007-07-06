@@ -160,6 +160,6 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 	 */
 	public String toString()
 	{
-		return "BookmarkablePageEncoder[page=" + (Class)bookmarkablePageClassRef.get() + "]";
+		return "BookmarkablePageEncoder[page=" + bookmarkablePageClassRef.get() + "]";
 	}
 }

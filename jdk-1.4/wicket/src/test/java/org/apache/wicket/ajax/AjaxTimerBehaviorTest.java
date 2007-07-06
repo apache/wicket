@@ -27,7 +27,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.tester.ITestPageSource;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
