@@ -196,6 +196,18 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			buff.append("}");
 		}
 		
+		String channel = getChannelName();
+		if (channel != null) 
+		{
+			if (precondition == null) 
+			{
+				buff.append(", null");
+			}
+			buff.append(", '");
+			buff.append(channel);
+			buff.append("'");
+		}
+		
 		buff.append(");");
 
 		CharSequence call = buff;
@@ -214,6 +226,10 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return call;
 	}
 
+	protected String getChannelName() {
+		return null;
+	}
+	
 	/**
 	 * 
 	 * @return String
