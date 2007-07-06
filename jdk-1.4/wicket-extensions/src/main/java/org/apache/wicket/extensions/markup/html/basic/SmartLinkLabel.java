@@ -40,7 +40,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  */
-public final class SmartLinkLabel extends Label
+public class SmartLinkLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
 
@@ -89,11 +89,6 @@ public final class SmartLinkLabel extends Label
 		replaceComponentTagBody(markupStream, openTag, getSmartLink(getModelObjectAsString()));
 	}
 
-	protected CharSequence getSmartLink(final CharSequence text)
-	{
-		return smartLink(text);
-	}
-	
 	/**
 	 * Replace all email and URL addresses
 	 * 
@@ -101,7 +96,7 @@ public final class SmartLinkLabel extends Label
 	 *            Text to be modified
 	 * @return Modified Text
 	 */
-	static CharSequence smartLink(final CharSequence text)
+	protected CharSequence getSmartLink(final CharSequence text)
 	{
 		if (text == null)
 		{
@@ -117,5 +112,3 @@ public final class SmartLinkLabel extends Label
 		return work;
 	}
 }
-
-
