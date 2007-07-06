@@ -286,13 +286,13 @@ public final class SerializableChecker extends ObjectOutputStream
 	private final Map checked = new IdentityHashMap();
 
 	/** string stack with current names pushed. */
-	private LinkedList nameStack = new LinkedList();
+	private final LinkedList nameStack = new LinkedList();
 
 	/** root object being analyzed. */
 	private Object root;
 
 	/** cache for classes - writeObject methods. */
-	private Map writeObjectMethodCache = new HashMap();
+	private final Map writeObjectMethodCache = new HashMap();
 
 	/** current simple field name. */
 	private String simpleName = "";
@@ -301,7 +301,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	private String fieldDescription;
 
 	/** Exception that should be set as the cause when throwing a new exception. */
-	private NotSerializableException exception;
+	private final NotSerializableException exception;
 
 	/**
 	 * Construct.

@@ -50,7 +50,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	private transient InputStream inputStream;
 
 	/** The URL to this resource. */
-	private URL url;
+	private final URL url;
 
 	/**
 	 * the handle to the file if it is a file resource

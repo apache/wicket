@@ -83,7 +83,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	private Boolean resourceKind;
 
 	/** The component that is referencing this image resource */
-	private Component component;
+	private final Component component;
 
 	/** The image resource this image component references */
 	private Resource resource;

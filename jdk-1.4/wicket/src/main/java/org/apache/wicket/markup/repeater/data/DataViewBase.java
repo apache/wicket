@@ -41,7 +41,7 @@ import org.apache.wicket.model.IDetachable;
  */
 public abstract class DataViewBase extends AbstractPageableView
 {
-	private IDataProvider dataProvider;
+	private final IDataProvider dataProvider;
 
 	/**
 	 * @param id
@@ -82,9 +82,9 @@ public abstract class DataViewBase extends AbstractPageableView
 	 */
 	private static final class ModelIterator implements Iterator
 	{
-		private Iterator items;
-		private IDataProvider dataProvider;
-		private int max;
+		private final Iterator items;
+		private final IDataProvider dataProvider;
+		private final int max;
 		private int index;
 
 		/**

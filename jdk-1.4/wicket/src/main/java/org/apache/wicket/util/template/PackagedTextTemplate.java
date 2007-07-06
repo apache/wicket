@@ -47,11 +47,8 @@ public class PackagedTextTemplate extends TextTemplate
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final String text;
-
 		CachedTextTemplate(String text)
 		{
-			this.text = text;
 		}
 	}
 
@@ -60,12 +57,9 @@ public class PackagedTextTemplate extends TextTemplate
 		private static final long serialVersionUID = 1L;
 
 		private final String className;
-		private final String path;
-
 		CachedTextTemplateKey(Class clazz, String path)
 		{
 			this.className = clazz.getName();
-			this.path = path;
 		}
 
 	}

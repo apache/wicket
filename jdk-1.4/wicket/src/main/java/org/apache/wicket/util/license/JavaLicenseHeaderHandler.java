@@ -26,7 +26,7 @@ import org.apache.wicket.util.string.Strings;
 
 class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
-	private Pattern javaHeaderPattern = Pattern.compile("^(.*?)package.*$", Pattern.MULTILINE
+	private final Pattern javaHeaderPattern = Pattern.compile("^(.*?)package.*$", Pattern.MULTILINE
 			| Pattern.DOTALL);
 
 	/**

@@ -29,7 +29,7 @@ public class ContextRelativeResource extends WebResource
 {
 	private static final long serialVersionUID = 1L;
 
-	private String path;
+	private final String path;
 	
 	/**
 	 * Construct.

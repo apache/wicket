@@ -50,7 +50,7 @@ public final class XmlReader extends Reader
 	private String xmlDeclarationString;
 
 	/** The input stream to read the data from */
-	private InputStream inputStream;
+	private final InputStream inputStream;
 
 	/** The reader which does the character encoding */
 	private Reader reader;

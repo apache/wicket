@@ -961,7 +961,9 @@ public class BaseWicketTester extends MockWebApplication
 				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
 		Result result = isTrue(failMessage, isAjaxResponse);
 		if (result.wasFailed())
+		{
 			return result;
+		}
 
 		// See if the component has a markup id
 		String markupId = component.getMarkupId();
@@ -970,7 +972,9 @@ public class BaseWicketTester extends MockWebApplication
 				+ "which means that it can't have been added to the AJAX response";
 		result = isTrue(failMessage, !Strings.isEmpty(markupId));
 		if (result.wasFailed())
+		{
 			return result;
+		}
 
 		// Look for that the component is on the response, using the markup id
 		boolean isComponentInAjaxResponse = ajaxResponse.matches(".*<component id=\"" + markupId
@@ -1070,9 +1074,13 @@ public class BaseWicketTester extends MockWebApplication
 		// initialize the request only if needed to allow the user to pass request parameters, see WICKET-254
 		WebRequestCycle requestCycle;
 		if (RequestCycle.get() == null)
+		{
 			requestCycle = setupRequestAndResponse();
+		}
 		else
+		{
 			requestCycle = (WebRequestCycle)RequestCycle.get();
+		}
 
 		// If the event is an FormSubmitBehavior then also "submit" the form
 		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
@@ -1152,7 +1160,9 @@ public class BaseWicketTester extends MockWebApplication
 
 					// Set request parameter with the field value, but do not modify an existing request parameter explicitly set using FormTester.setValue()
 					if (getServletRequest().getParameterMap().get(name) == null)
+					{
 						getServletRequest().setParameter(name, value);
+					}
 				}
 			}
 		});
@@ -1251,10 +1261,5 @@ public class BaseWicketTester extends MockWebApplication
 	private void fail(String message)
 	{
 		throw new WicketRuntimeException(message);
-	}
-
-	private void fail(String message, Throwable t)
-	{
-		throw new WicketRuntimeException(message, t);
 	}
 }

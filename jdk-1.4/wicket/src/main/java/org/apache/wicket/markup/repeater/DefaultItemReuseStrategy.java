@@ -70,7 +70,9 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 			{
 				Object next = newModels.next();
 				if (next != null && ! (next instanceof IModel))
+				{
 					throw new WicketRuntimeException("Expecting an instance of " + IModel.class.getName() + ", got " + next.getClass().getName());
+				}
 				final IModel model = (IModel)next;
 
 				Item item = factory.newItem(index, model);

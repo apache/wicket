@@ -31,7 +31,7 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class ModelIteratorAdapter implements Iterator
 {
-	private Iterator delegate;
+	private final Iterator delegate;
 
 	/**
 	 * Constructor

@@ -66,7 +66,9 @@ public class ReloadingClassLoader extends URLClassLoader
             {
             	String rawpattern = (String) includesIterator.next();
             	if (rawpattern.length()<=1)
-            		continue;
+				{
+					continue;
+				}
             	boolean isInclude = rawpattern.substring(0, 1).equals("+");
             	String pattern = rawpattern.substring(1);
                 if (WildcardMatcherHelper.match(pattern, name) != null) {
@@ -159,9 +161,9 @@ public class ReloadingClassLoader extends URLClassLoader
 
 	private IChangeListener listener;
 
-	private Duration pollFrequency = Duration.seconds(3);
+	private final Duration pollFrequency = Duration.seconds(3);
 
-	private ModificationWatcher watcher;
+	private final ModificationWatcher watcher;
 
 	static
 	{

@@ -350,9 +350,13 @@ public class PackageResource extends WebResource
 						String lowerJarZipPart = jarZipPart.toLowerCase();
 						int index = lowerJarZipPart.indexOf(".zip");
 						if (index == -1)
+						{
 							index = lowerJarZipPart.indexOf(".jar");
+						}
 						if (index == -1)
+						{
 							throw e;
+						}
 
 						String filename = jarZipPart.substring(0, index + 4); // 4 =
 						// len of ".jar" or ".zip"

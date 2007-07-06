@@ -36,7 +36,7 @@ import org.apache.wicket.util.collections.IntHashMap;
 public final class WicketObjectInputStream extends ObjectInputStream
 {
 	 
-	private IntHashMap handledObjects = new IntHashMap(); 
+	private final IntHashMap handledObjects = new IntHashMap(); 
 	private short handleCounter = 0;
 
 	
@@ -361,7 +361,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
     
     private class GetFieldImpl extends GetField
     {
-    	private HashMap values = new HashMap();
+    	private final HashMap values = new HashMap();
     	
     	private void read() throws IOException, ClassNotFoundException
     	{
@@ -376,7 +376,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, readBoolean()?Boolean.TRUE:Boolean.FALSE);
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(byte.class);
 			if (token == lookup.getClassId())
@@ -388,7 +391,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, new Byte(readByte()));
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(short.class);
 			if (token == lookup.getClassId())
@@ -400,7 +406,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, new Short(readShort()));
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(char.class);
 			if (token == lookup.getClassId())
@@ -412,7 +421,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, new Character(readChar()));
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(int.class);
 			if (token == lookup.getClassId())
@@ -424,7 +436,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, new Integer(readInt()));
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(long.class);
 			if (token == lookup.getClassId())
@@ -436,7 +451,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, new Long(readLong()));
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(float.class);
 			if (token == lookup.getClassId())
@@ -448,7 +466,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, new Float(readFloat()));
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(double.class);
 			if (token == lookup.getClassId())
@@ -460,7 +481,10 @@ public final class WicketObjectInputStream extends ObjectInputStream
 					values.put(key, new Double(readDouble()));
 				}
 				token = readShort();
-				if (token == ClassStreamHandler.NULL) return;
+				if (token == ClassStreamHandler.NULL)
+				{
+					return;
+				}
 			}
 			lookup = ClassStreamHandler.lookup(Serializable.class);
 			if (token == lookup.getClassId())

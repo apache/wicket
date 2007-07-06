@@ -60,7 +60,7 @@ public class RequestListenerInterface
 	private Method method;
 
 	/** The name of this listener interface */
-	private String name;
+	private final String name;
 
 	/**
 	 * Whether or not this listener is targetted for a specific page version. If

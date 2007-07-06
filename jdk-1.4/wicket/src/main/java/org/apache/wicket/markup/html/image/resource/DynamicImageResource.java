@@ -175,7 +175,9 @@ public abstract class DynamicImageResource extends DynamicWebResource
         {
           lastModifiedTime = DynamicImageResource.this.lastModifiedTime;
           if (lastModifiedTime == null)
-            lastModifiedTime = Time.now();
+		{
+			lastModifiedTime = Time.now();
+		}
         }
         return lastModifiedTime;
       }
@@ -183,7 +185,9 @@ public abstract class DynamicImageResource extends DynamicWebResource
       public byte[] getData()
       {
         if (imageData==null)
-          imageData = getImageData();
+		{
+			imageData = getImageData();
+		}
         return imageData;
       }
       

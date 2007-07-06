@@ -37,7 +37,7 @@ public class FileResourceStream extends AbstractResourceStream implements IFixed
 	private static final long serialVersionUID = 1L;
 
 	/** Any associated file */
-	private File file;
+	private final File file;
 
 	/** Resource stream */
 	private transient InputStream inputStream;

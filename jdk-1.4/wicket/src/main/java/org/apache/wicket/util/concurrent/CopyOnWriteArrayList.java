@@ -118,7 +118,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		Iterator i = c.iterator();
 		int size = 0;
 		while (i.hasNext())
+		{
 			array_[size++] = i.next();
+		}
 	}
 
 	/**
@@ -219,14 +221,22 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		if (elem == null)
 		{
 			for (int i = 0; i < len; i++)
+			{
 				if (elementData[i] == null)
+				{
 					return i;
+				}
+			}
 		}
 		else
 		{
 			for (int i = 0; i < len; i++)
+			{
 				if (elem.equals(elementData[i]))
+				{
 					return i;
+				}
+			}
 		}
 		return -1;
 	}
@@ -255,14 +265,22 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		if (elem == null)
 		{
 			for (int i = index; i < elementCount; i++)
+			{
 				if (elementData[i] == null)
+				{
 					return i;
+				}
+			}
 		}
 		else
 		{
 			for (int i = index; i < elementCount; i++)
+			{
 				if (elem.equals(elementData[i]))
+				{
 					return i;
+				}
+			}
 		}
 		return -1;
 	}
@@ -288,14 +306,22 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		if (elem == null)
 		{
 			for (int i = len - 1; i >= 0; i--)
+			{
 				if (elementData[i] == null)
+				{
 					return i;
+				}
+			}
 		}
 		else
 		{
 			for (int i = len - 1; i >= 0; i--)
+			{
 				if (elem.equals(elementData[i]))
+				{
 					return i;
+				}
+			}
 		}
 		return -1;
 	}
@@ -320,14 +346,22 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		if (elem == null)
 		{
 			for (int i = index; i >= 0; i--)
+			{
 				if (elementData[i] == null)
+				{
 					return i;
+				}
+			}
 		}
 		else
 		{
 			for (int i = index; i >= 0; i--)
+			{
 				if (elem.equals(elementData[i]))
+				{
 					return i;
+				}
+			}
 		}
 		return -1;
 	}
@@ -394,13 +428,17 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		Object[] elementData = array();
 
 		if (a.length < elementData.length)
+		{
 			a = (Object[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(),
 					elementData.length);
+		}
 
 		System.arraycopy(elementData, 0, a, 0, elementData.length);
 
 		if (a.length > elementData.length)
+		{
 			a[elementData.length] = null;
+		}
 
 		return a;
 	}
@@ -485,7 +523,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	{
 		int len = array_.length;
 		if (index > len || index < 0)
+		{
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + len);
+		}
 
 		Object[] newArray = new Object[len + 1];
 		System.arraycopy(array_, 0, newArray, 0, index);
@@ -513,7 +553,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		System.arraycopy(array_, 0, newArray, 0, index);
 		int numMoved = len - index - 1;
 		if (numMoved > 0)
+		{
 			System.arraycopy(array_, index + 1, newArray, index, numMoved);
+		}
 		array_ = newArray;
 		return oldValue;
 	}
@@ -535,7 +577,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	{
 		int len = array_.length;
 		if (len == 0)
+		{
 			return false;
+		}
 
 		// Copy while searching for element to remove
 		// This wins in the normal case of element being present
@@ -549,12 +593,16 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			{
 				// found one; copy remaining and exit
 				for (int k = i + 1; k < len; ++k)
+				{
 					newArray[k - 1] = array_[k];
+				}
 				array_ = newArray;
 				return true;
 			}
 			else
+			{
 				newArray[i] = array_[i];
+			}
 		}
 		// special handling for last cell
 
@@ -564,7 +612,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			return true;
 		}
 		else
+		{
 			return false; // throw away copy
+		}
 
 	}
 
@@ -590,7 +640,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		int len = array_.length;
 
 		if (fromIndex < 0 || fromIndex >= len || toIndex > len || toIndex < fromIndex)
+		{
 			throw new IndexOutOfBoundsException();
+		}
 
 		int numMoved = len - toIndex;
 		int newlen = len - (toIndex - fromIndex);
@@ -618,9 +670,13 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		for (int i = 0; i < len; ++i)
 		{
 			if (element == array_[i] || (element != null && element.equals(array_[i])))
+			{
 				return false; // exit, throwing away copy
+			}
 			else
+			{
 				newArray[i] = array_[i];
+			}
 		}
 		newArray[len] = element;
 		array_ = newArray;
@@ -643,8 +699,12 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		int len = elementData.length;
 		Iterator e = c.iterator();
 		while (e.hasNext())
+		{
 			if (indexOf(e.next(), elementData, len) < 0)
+			{
 				return false;
+			}
+		}
 
 		return true;
 	}
@@ -663,7 +723,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		Object[] elementData = array_;
 		int len = elementData.length;
 		if (len == 0)
+		{
 			return false;
+		}
 
 		// temp array holds those elements we know we want to keep
 		Object[] temp = new Object[len];
@@ -678,7 +740,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		}
 
 		if (newlen == len)
+		{
 			return false;
+		}
 
 		// copy temp as new array
 		Object[] newArray = new Object[newlen];
@@ -700,7 +764,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		Object[] elementData = array_;
 		int len = elementData.length;
 		if (len == 0)
+		{
 			return false;
+		}
 
 		Object[] temp = new Object[len];
 		int newlen = 0;
@@ -714,7 +780,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		}
 
 		if (newlen == len)
+		{
 			return false;
+		}
 
 		Object[] newArray = new Object[newlen];
 		System.arraycopy(temp, 0, newArray, 0, newlen);
@@ -736,7 +804,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	{
 		int numNew = c.size();
 		if (numNew == 0)
+		{
 			return 0;
+		}
 
 		Object[] elementData = array_;
 		int len = elementData.length;
@@ -757,7 +827,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		}
 
 		if (added == 0)
+		{
 			return 0;
+		}
 
 		Object[] newArray = new Object[len + added];
 		System.arraycopy(elementData, 0, newArray, 0, len);
@@ -787,14 +859,18 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	{
 		int numNew = c.size();
 		if (numNew == 0)
+		{
 			return false;
+		}
 
 		int len = array_.length;
 		Object[] newArray = new Object[len + numNew];
 		System.arraycopy(array_, 0, newArray, 0, len);
 		Iterator e = c.iterator();
 		for (int i = 0; i < numNew; i++)
+		{
 			newArray[len++] = e.next();
+		}
 		array_ = newArray;
 
 		return true;
@@ -819,20 +895,28 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	{
 		int len = array_.length;
 		if (index > len || index < 0)
+		{
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + len);
+		}
 
 		int numNew = c.size();
 		if (numNew == 0)
+		{
 			return false;
+		}
 
 		Object[] newArray = new Object[len + numNew];
 		System.arraycopy(array_, 0, newArray, 0, len);
 		int numMoved = len - index;
 		if (numMoved > 0)
+		{
 			System.arraycopy(array_, index, newArray, index + numNew, numMoved);
+		}
 		Iterator e = c.iterator();
 		for (int i = 0; i < numNew; i++)
+		{
 			newArray[index++] = e.next();
+		}
 		array_ = newArray;
 
 		return true;
@@ -847,7 +931,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	protected void rangeCheck(int index, int length)
 	{
 		if (index >= length || index < 0)
+		{
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + length);
+		}
 	}
 
 	/**
@@ -870,7 +956,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 		// Write out all elements in the proper order.
 		for (int i = 0; i < elementData.length; i++)
+		{
 			s.writeObject(elementData[i]);
+		}
 	}
 
 	/**
@@ -891,7 +979,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 		// Read in all elements in the proper order.
 		for (int i = 0; i < elementData.length; i++)
+		{
 			elementData[i] = s.readObject();
+		}
 		array_ = elementData;
 	}
 
@@ -909,7 +999,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		{
 			buf.append(String.valueOf(e.next()));
 			if (i < maxIndex)
+			{
 				buf.append(", ");
+			}
 		}
 		buf.append("]");
 		return buf.toString();
@@ -941,13 +1033,19 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	public boolean equals(Object o)
 	{
 		if (o == this)
+		{
 			return true;
+		}
 		if (!(o instanceof List))
+		{
 			return false;
+		}
 
 		List l2 = (List)(o);
 		if (size() != l2.size())
+		{
 			return false;
+		}
 
 		ListIterator e1 = listIterator();
 		ListIterator e2 = l2.listIterator();
@@ -956,7 +1054,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			Object o1 = e1.next();
 			Object o2 = e2.next();
 			if (!(o1 == null ? o2 == null : o1.equals(o2)))
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -1026,7 +1126,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		Object[] elementData = array();
 		int len = elementData.length;
 		if (index < 0 || index > len)
+		{
 			throw new IndexOutOfBoundsException("Index: " + index);
+		}
 
 		return new COWIterator(array(), index);
 	}
@@ -1155,7 +1257,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		// synchronized since sublist ctor depends on it.
 		int len = array_.length;
 		if (fromIndex < 0 || toIndex > len || fromIndex > toIndex)
+		{
 			throw new IndexOutOfBoundsException();
+		}
 		return new COWSubList(this, fromIndex, toIndex);
 	}
 
@@ -1195,14 +1299,18 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		protected void checkForComodification()
 		{
 			if (l.array_ != expectedArray)
+			{
 				throw new ConcurrentModificationException();
+			}
 		}
 
 		// only call this holding l's lock
 		protected void rangeCheck(int index)
 		{
 			if (index < 0 || index >= size)
+			{
 				throw new IndexOutOfBoundsException("Index: " + index + ",Size: " + size);
+			}
 		}
 
 
@@ -1243,7 +1351,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			{
 				checkForComodification();
 				if (index < 0 || index > size)
+				{
 					throw new IndexOutOfBoundsException();
+				}
 				l.add(index + offset, element);
 				expectedArray = l.array_;
 				size++;
@@ -1278,7 +1388,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			{
 				checkForComodification();
 				if (index < 0 || index > size)
+				{
 					throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+				}
 				return new COWSubListIterator(index);
 			}
 		}
@@ -1302,9 +1414,13 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			public Object next()
 			{
 				if (hasNext())
+				{
 					return i.next();
+				}
 				else
+				{
 					throw new NoSuchElementException();
+				}
 			}
 
 			public boolean hasPrevious()
@@ -1315,9 +1431,13 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			public Object previous()
 			{
 				if (hasPrevious())
+				{
 					return i.previous();
+				}
 				else
+				{
 					throw new NoSuchElementException();
+				}
 			}
 
 			public int nextIndex()
@@ -1353,7 +1473,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 			{
 				checkForComodification();
 				if (fromIndex < 0 || toIndex > size)
+				{
 					throw new IndexOutOfBoundsException();
+				}
 				return new COWSubList(l, fromIndex + offset, toIndex + offset);
 			}
 		}

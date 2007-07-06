@@ -1475,10 +1475,14 @@ public abstract class MarkupContainer extends Component
 		catch (RuntimeException ex)
 		{
 			if (ex instanceof WicketRuntimeException)
+			{
 				throw ex;
+			}
 			else
+			{
 				throw new WicketRuntimeException("Error attaching this container for rendering: "
 						+ this, ex);
+			}
 		}
 	}
 

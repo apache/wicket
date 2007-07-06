@@ -33,8 +33,6 @@ public abstract class AjaxSubmitButton extends AjaxButton
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
-	
 	/**
 	 * Construct.
 	 * 

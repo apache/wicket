@@ -925,7 +925,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					 */
 					String remainder = path.substring(key.length());
 					if (remainder.length() == 0 || remainder.startsWith("/"))
+					{
 						return (IRequestTargetUrlCodingStrategy)entry.getValue();
+					}
 				}
 			}
 			return null;

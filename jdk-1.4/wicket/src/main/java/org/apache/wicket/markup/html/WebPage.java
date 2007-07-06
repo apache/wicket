@@ -82,9 +82,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		/** The unload model for deleting the pagemap cookie */
-		private Model onUnLoadModel;
-
 		private final WebPage webPage;
 
 		/**

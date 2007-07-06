@@ -82,7 +82,9 @@ public class FilePageStore implements IPageStore
 					{
 						Thread.sleep(getSleepTimeMs());
 						if (stop)
+						{
 							return;
+						}
 					}
 					// if ( pagesToBeSaved.size() > 100)
 					// {
@@ -217,7 +219,9 @@ public class FilePageStore implements IPageStore
 					{
 						Thread.sleep(getSleepTimeMs());
 						if (stop)
+						{
 							return;
+						}
 					}
 
 					Iterator it = pagesToBeSerialized.entrySet().iterator();
@@ -684,7 +688,9 @@ public class FilePageStore implements IPageStore
 		List list = (List)pagesToBeSerialized.get(sessionId);
 
 		if (list == null)
+		{
 			return;
+		}
 
 		synchronized (list)
 		{
@@ -844,8 +850,8 @@ public class FilePageStore implements IPageStore
 	{
 		private SessionPageKey current;
 
-		private List previous = new ArrayList();
-		private List completed = new ArrayList();
+		private final List previous = new ArrayList();
+		private final List completed = new ArrayList();
 
 
 		/**

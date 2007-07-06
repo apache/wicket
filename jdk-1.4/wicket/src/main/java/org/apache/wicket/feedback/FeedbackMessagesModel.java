@@ -45,9 +45,6 @@ public class FeedbackMessagesModel implements IModel
 	/** Comparator used for sorting the messages. */
 	private Comparator sortingComparator;
 
-	/** the page of component this model is attached to */
-	private final Component component;
-
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
 	 * 
@@ -62,7 +59,6 @@ public class FeedbackMessagesModel implements IModel
 		{
 			throw new IllegalArgumentException("Argument [[page]] cannot be null");
 		}
-		this.component = component;
 	}
 
 	/**

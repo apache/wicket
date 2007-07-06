@@ -81,16 +81,20 @@ final class HandleArrayListStack extends ArrayList
 			for (int i = 0; i < size; i++)
 			{
 				if (get(i) == null)
+				{
 					return i;
+				}
 			}
 		}
 		else
 		{
 			for (int i = 0; i < size; i++)
+			{
 				if (elem == get(i))
 				{
 					return i;
 				}
+			}
 		}
 		return -1;
 	}
@@ -105,7 +109,9 @@ final class HandleArrayListStack extends ArrayList
 			for (int i = size() - 1; i >= 0; i--)
 			{
 				if (get(i) == null)
+				{
 					return i;
+				}
 			}
 		}
 		else
@@ -113,7 +119,9 @@ final class HandleArrayListStack extends ArrayList
 			for (int i = size() - 1; i >= 0; i--)
 			{
 				if (elem == get(i))
+				{
 					return i;
+				}
 			}
 		}
 		return -1;

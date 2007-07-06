@@ -119,8 +119,6 @@ public class FormComponentPanel extends FormComponent implements IHeaderPartCont
 
 	static
 	{
-		// ensure panel class is loaded and panel tag is registered
-		Class c = Panel.class;
 	}
 
 	private ContainerWithAssociatedMarkupHelper markupHelper;

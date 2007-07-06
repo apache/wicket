@@ -115,7 +115,7 @@ public class PagingNavigation extends Loop
 	{
 		private static final long serialVersionUID = 1L;
 
-		private int startIndex;
+		private final int startIndex;
 
 		/**
 		 * Constructor, remembers the startIndex.

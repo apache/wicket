@@ -36,7 +36,7 @@ public class ImageButton extends Button implements IResourceListener
 	private static final long serialVersionUID = 1L;
 	
 	/** The image resource this image component references */
-	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
+	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)

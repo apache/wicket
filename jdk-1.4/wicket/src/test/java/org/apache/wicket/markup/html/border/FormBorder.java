@@ -30,7 +30,7 @@ public class FormBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
+	private final Form form;
 
 	/**
 	 * 

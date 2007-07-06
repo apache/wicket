@@ -41,7 +41,7 @@ public final class DefaultClassResolver implements IClassResolver
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private ConcurrentReaderHashMap classes = new ConcurrentReaderHashMap();
+	private final ConcurrentReaderHashMap classes = new ConcurrentReaderHashMap();
 
 	/**
 	 * @see org.apache.wicket.application.IClassResolver#resolveClass(java.lang.String)

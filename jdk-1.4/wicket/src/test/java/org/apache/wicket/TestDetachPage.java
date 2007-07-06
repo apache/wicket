@@ -44,7 +44,7 @@ public class TestDetachPage extends WebPage
 
 	private int nrModelDetachCalls = 0;
 
-	private AjaxEventBehavior ajaxEventBehavior;
+	private final AjaxEventBehavior ajaxEventBehavior;
 
 	/**
 	 * Model for testing detach logic.

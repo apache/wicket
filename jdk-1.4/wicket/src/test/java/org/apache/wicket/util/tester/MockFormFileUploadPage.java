@@ -59,9 +59,9 @@ public class MockFormFileUploadPage extends WebPage
 		}
 	}
 
-	private MockDomainObjectFileUpload domainObject;
+	private final MockDomainObjectFileUpload domainObject;
 
-	private FileUploadField fileUploadField;
+	private final FileUploadField fileUploadField;
 
 	private FileUpload fileUpload;
 

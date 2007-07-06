@@ -187,7 +187,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, boolean val)
 		{
 			if (mapBoolean == null)
+			{
 				mapBoolean = new HashMap(4);
+			}
 			mapBoolean.put(name, val ? Boolean.TRUE : Boolean.FALSE);
 		}
 
@@ -197,7 +199,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, byte val)
 		{
 			if (mapBytes == null)
+			{
 				mapBytes = new HashMap(4);
+			}
 			mapBytes.put(name, new Byte(val));
 		}
 
@@ -207,7 +211,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, char val)
 		{
 			if (mapChar == null)
+			{
 				mapChar = new HashMap(4);
+			}
 			mapChar.put(name, new Character(val));
 		}
 
@@ -218,7 +224,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, double val)
 		{
 			if (mapDouble == null)
+			{
 				mapDouble = new HashMap(4);
+			}
 			mapDouble.put(name, new Double(val));
 		}
 
@@ -228,7 +236,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, float val)
 		{
 			if (mapFloat == null)
+			{
 				mapFloat = new HashMap(4);
+			}
 			mapFloat.put(name, new Float(val));
 		}
 
@@ -238,7 +248,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, int val)
 		{
 			if (mapInt == null)
+			{
 				mapInt = new HashMap(4);
+			}
 			mapInt.put(name, new Integer(val));
 		}
 
@@ -248,7 +260,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, long val)
 		{
 			if (mapLong == null)
+			{
 				mapLong = new HashMap(4);
+			}
 			mapLong.put(name, new Long(val));
 		}
 
@@ -259,7 +273,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, Object val)
 		{
 			if (mapObject == null)
+			{
 				mapObject = new HashMap(4);
+			}
 			mapObject.put(name, val);
 		}
 
@@ -269,7 +285,9 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		public void put(String name, short val)
 		{
 			if (mapShort == null)
+			{
 				mapShort = new HashMap(4);
+			}
 			mapShort.put(name, new Short(val));
 		}
 
@@ -421,9 +439,6 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 
 	private ClassStreamHandler classHandler;
 
-	private int booleanCounter;
-
-	private int byteCounter;
 	private PutField curPut;
 
 	private Object curObject;

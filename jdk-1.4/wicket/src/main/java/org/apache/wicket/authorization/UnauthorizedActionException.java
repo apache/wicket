@@ -29,7 +29,7 @@ public class UnauthorizedActionException extends AuthorizationException
 	private static final long serialVersionUID = 1L;
 
 	/** The action */
-	private Action action;
+	private final Action action;
 
 	/** The component that caused the unauthorized exception */
 	private final Component component;

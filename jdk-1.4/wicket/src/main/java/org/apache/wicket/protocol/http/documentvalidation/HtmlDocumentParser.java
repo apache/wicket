@@ -62,7 +62,7 @@ public class HtmlDocumentParser
 	private String comment;
 
 	/** Document parse elements */
-	private String document;
+	private final String document;
 
 	private int pos;
 

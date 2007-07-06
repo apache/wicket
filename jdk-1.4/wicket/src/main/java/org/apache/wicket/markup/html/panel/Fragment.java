@@ -57,7 +57,7 @@ public class Fragment extends WebMarkupContainer
 	private String markupId;
 
 	/** The container providing the inline markup */
-	private MarkupContainer markupProvider;
+	private final MarkupContainer markupProvider;
 
 	/**
 	 * Constructor.

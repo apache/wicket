@@ -30,13 +30,13 @@ import java.util.Set;
  */
 public class Tag implements DocumentElement
 {
-    private Map expectedAttributes = new HashMap();
+    private final Map expectedAttributes = new HashMap();
 
-    private List expectedChildren = new ArrayList();
+    private final List expectedChildren = new ArrayList();
 
-    private Set illegalAttributes = new HashSet();
+    private final Set illegalAttributes = new HashSet();
 
-    private String tag;
+    private final String tag;
 
     /**
      * Create the tag element.

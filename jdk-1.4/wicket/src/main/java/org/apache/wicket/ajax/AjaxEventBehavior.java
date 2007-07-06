@@ -51,7 +51,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 	private static final long serialVersionUID = 1L;
 
-	private String event;
+	private final String event;
 
 
 	private ThrottlingSettings throttlingSettings;

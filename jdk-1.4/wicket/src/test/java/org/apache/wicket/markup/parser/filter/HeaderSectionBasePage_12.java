@@ -29,7 +29,7 @@ public class HeaderSectionBasePage_12 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 	
-	private Border border;
+	private final Border border;
 
 	/**
 	 * 

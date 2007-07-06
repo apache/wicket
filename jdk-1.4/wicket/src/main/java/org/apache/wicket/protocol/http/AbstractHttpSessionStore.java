@@ -180,7 +180,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 			id = httpSession.getId();
 			IRequestLogger logger = application.getRequestLogger();
 			if (logger != null)
+			{
 				logger.sessionCreated(id);
+			}
 		}
 		return id;
 	}

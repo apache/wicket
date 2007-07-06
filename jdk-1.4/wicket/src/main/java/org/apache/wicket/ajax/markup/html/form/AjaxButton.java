@@ -36,7 +36,7 @@ public abstract class AjaxButton extends Button
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
+	private final Form form;
 	
 	/**
 	 * Construct.
@@ -56,9 +56,13 @@ public abstract class AjaxButton extends Button
 	public Form getForm()
 	{
 		if (form != null)
+		{
 			return form;
+		}
 		else
+		{
 			return super.getForm();
+		}
 	}
 
 	/**

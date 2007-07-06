@@ -118,7 +118,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		private Page lastPage = null;
 
-		private List pageVersions = new ArrayList();
+		private final List pageVersions = new ArrayList();
 
 
 		/**
@@ -173,7 +173,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			// same page are alive in one session??
 			Page page = (Page)pages.get(id);
 			if (page != null)
+			{
 				return page;
+			}
 
 			PageVersions pv = null;
 			if (versionNumber == -1)
@@ -278,8 +280,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			private static final long serialVersionUID = 1L;
 
 			private final int pageid;
-			private int versionid;
-			private int ajaxversionid;
+			private final int versionid;
+			private final int ajaxversionid;
 
 			PageVersions(int pageid, int versionid, int ajaxversionid)
 			{
@@ -324,7 +326,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		private short lastAjaxVersionNumber;
 
-		private Page page;
+		private final Page page;
 
 		private transient boolean versionStarted;
 
@@ -351,7 +353,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			// this is an hack.. when object is read in. It must ignore the
 			// first version bump.
 			if (versionStarted)
+			{
 				return;
+			}
 
 			versionStarted = true;
 			if (!mergeVersion)

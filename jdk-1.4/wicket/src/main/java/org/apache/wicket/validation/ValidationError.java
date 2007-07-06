@@ -48,7 +48,7 @@ public class ValidationError implements IValidationError, IClusterable
 
 	// XXX 2.0: optimization - keys can be null by default until a key is added
 	/** List of message keys to try against the {@link IErrorMessageSource} */
-	private List keys = new ArrayList(1);
+	private final List keys = new ArrayList(1);
 
 	/** Variable map to use in variable substitution */
 	private Map vars;

@@ -56,7 +56,7 @@ public class ConverterLocator implements IConverterLocator
 	{
 		private static final long serialVersionUID = 1L;
 
-		private WeakReference/*<Class<?>>*/ type;
+		private final WeakReference/*<Class<?>>*/ type;
 
 		/**
 		 * Construct.

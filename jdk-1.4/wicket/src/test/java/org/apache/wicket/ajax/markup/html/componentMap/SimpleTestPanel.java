@@ -31,7 +31,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 
 	private int count = 0;
 
-	private AbstractAjaxBehavior timer;
+	private final AbstractAjaxBehavior timer;
 
 	/**
 	 * Construct.

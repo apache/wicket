@@ -148,9 +148,13 @@ public class Diff extends ToString
 
         this.orig = original;
         if (algorithm != null)
-            this.algorithm = algorithm;
-        else
-            this.algorithm = defaultAlgorithm();
+		{
+			this.algorithm = algorithm;
+		}
+		else
+		{
+			this.algorithm = defaultAlgorithm();
+		}
     }
 
     protected DiffAlgorithm defaultAlgorithm()
@@ -213,9 +217,13 @@ public class Diff extends ToString
     public Revision diff(Object[] rev) throws DifferentiationFailedException
     {
         if (orig.length == 0 && rev.length == 0)
-            return new Revision();
-        else
-            return algorithm.diff(orig, rev);
+		{
+			return new Revision();
+		}
+		else
+		{
+			return algorithm.diff(orig, rev);
+		}
     }
 
     /**
@@ -272,7 +280,9 @@ public class Diff extends ToString
         Object[] result = new String[text.length];
 
         for (int i = 0; i < text.length; i++)
-            result[i] = text[i] + " <edited>";
+		{
+			result[i] = text[i] + " <edited>";
+		}
 
         return result;
     }

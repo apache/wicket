@@ -197,7 +197,7 @@ public abstract class PageableListView extends ListView implements IPageable
 		private static final long serialVersionUID = 1L;
 		
 		/** the former 'current' page. */
-		private int currentPage;
+		private final int currentPage;
 
 		/**
 		 * Construct.
@@ -232,7 +232,7 @@ public abstract class PageableListView extends ListView implements IPageable
 		private static final long serialVersionUID = 1L;
 		
 		/** the former nbr of rows per page. */
-		private int rowsPerPage;
+		private final int rowsPerPage;
 
 		/**
 		 * Construct.

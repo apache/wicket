@@ -28,7 +28,7 @@ import org.apache.wicket.util.string.Strings;
 
 class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
-	private Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^"+LINE_ENDING+"]+?)"+LINE_ENDING+"(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+	private final Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^"+LINE_ENDING+"]+?)"+LINE_ENDING+"(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
 	
 	/**
 	 * Construct.

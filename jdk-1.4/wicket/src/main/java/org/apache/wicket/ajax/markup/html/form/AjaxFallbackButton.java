@@ -38,7 +38,7 @@ public abstract class AjaxFallbackButton extends Button
 
 	private static final long serialVersionUID = 1L;
 
-	private Form mForm;
+	private final Form mForm;
 
 	/**
 	 * Construct.

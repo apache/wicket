@@ -45,7 +45,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	/**
 	 * The threshold at which the event will be triggered.
 	 */
-	private int threshold;
+	private final int threshold;
 
 
 	/**

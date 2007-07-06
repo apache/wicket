@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 public class ClassCryptFactory implements ICryptFactory
 {
 	private static final Logger log = LoggerFactory.getLogger(ClassCryptFactory.class);
-	private WeakReference/*<Class>*/ cryptClass;
-	private String encryptionKey;
+	private final WeakReference/*<Class>*/ cryptClass;
+	private final String encryptionKey;
 
 	/**
 	 * Construct.

@@ -29,7 +29,7 @@ import java.util.Map;
 public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
 	/** The date format to use */
-	private Map/*<Locale, NumberFormat>*/ numberFormats = new HashMap/*<Locale, NumberFormat>*/();
+	private final Map/*<Locale, NumberFormat>*/ numberFormats = new HashMap/*<Locale, NumberFormat>*/();
 
 
 	/**

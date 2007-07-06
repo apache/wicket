@@ -36,9 +36,9 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 {
 	private static final long serialVersionUID = 1L;
 
-	private String resourceKey;
+	private final String resourceKey;
 
-	private String defaultValue;
+	private final String defaultValue;
 
 	/**
 	 * Constructor
@@ -92,7 +92,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 	{
 		private static final long serialVersionUID = 1L;
 
-		private Component component;
+		private final Component component;
 
 		/**
 		 * Construct.

@@ -23,7 +23,7 @@ package org.apache.wicket.protocol.http.documentvalidation;
  */
 public class TextContent implements DocumentElement
 {
-    private String value;
+    private final String value;
 
     /**
      * Construct the text content with the expected value.

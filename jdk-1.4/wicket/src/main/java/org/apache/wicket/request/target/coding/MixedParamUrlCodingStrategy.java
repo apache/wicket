@@ -69,7 +69,7 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUrlCodingStrategy
 {
-	private String[] parameterNames;
+	private final String[] parameterNames;
 
 	/**
 	 * Construct.

@@ -154,8 +154,6 @@ public final class ClassStreamHandler
 	private final PrimitiveArray primitiveArray;
 
 
-	private boolean isProxy;
-
 	/**
 	 * Construct.
 	 * 
@@ -224,11 +222,9 @@ public final class ClassStreamHandler
 			writeReplaceMethod = null;
 			readResolveMethod = null;
 			primitiveArray = null;
-			isProxy = false;
 		}
 		else if (Proxy.isProxyClass(clz))
 		{
-			isProxy = true;
 			fields = null;
 			cons = null;
 			writeObjectMethods = null;
@@ -243,9 +239,7 @@ public final class ClassStreamHandler
 			primitiveArray = null;
 	    	writeObjectMethods = new ArrayList(2);
 			readObjectMethods = new ArrayList(2);
-			isProxy = false;
-			
-		    writeReplaceMethod = getInheritableMethod( clz, "writeReplace", null, Object.class);
+			writeReplaceMethod = getInheritableMethod( clz, "writeReplace", null, Object.class);
 		    
 		    readResolveMethod = getInheritableMethod(clz, "readResolve", null, Object.class);
 		    if (readResolveMethod == null)
@@ -265,9 +259,15 @@ public final class ClassStreamHandler
 			while(parent != Object.class)
 			{
 				Method method = getPrivateMethod(parent, "writeObject", new Class[] { ObjectOutputStream.class }, Void.TYPE);
-				if (method != null) writeObjectMethods.add(method);
+				if (method != null)
+				{
+					writeObjectMethods.add(method);
+				}
 				method = getPrivateMethod(parent, "readObject", new Class[] { ObjectInputStream.class }, Void.TYPE);
-				if (method != null) readObjectMethods.add(method);
+				if (method != null)
+				{
+					readObjectMethods.add(method);
+				}
 				
 				parent = parent.getSuperclass();
 			}

@@ -59,7 +59,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	/**
 	 * The file to which output will be directed if the threshold is exceeded.
 	 */
-	private File outputFile;
+	private final File outputFile;
 
 
 	// ----------------------------------------------------------- Constructors

@@ -91,11 +91,11 @@ public class RequestLogger implements IRequestLogger
 
 	private int peakSessions;
 
-	private List requests;
+	private final List requests;
 
-	private Map liveSessions;
+	private final Map liveSessions;
 
-	private ThreadLocal currentRequest = new ThreadLocal();
+	private final ThreadLocal currentRequest = new ThreadLocal();
 
 	private int active;
 
@@ -178,7 +178,9 @@ public class RequestLogger implements IRequestLogger
 	{
 		liveSessions.put(sessionId, new SessionData(sessionId));
 		if (liveSessions.size() > peakSessions)
+		{
 			peakSessions = liveSessions.size();
+		}
 		totalCreatedSessions++;
 	}
 
@@ -492,8 +494,8 @@ public class RequestLogger implements IRequestLogger
 	{
 		private static final long serialVersionUID = 1L;
 
-		private String sessionId;
-		private long startDate;
+		private final String sessionId;
+		private final long startDate;
 		private long lastActive;
 		private long numberOfRequests;
 		private long totalTimeTaken;
@@ -604,7 +606,7 @@ public class RequestLogger implements IRequestLogger
 
 		private long startDate;
 		private long timeTaken;
-		private List entries = new ArrayList(5);
+		private final List entries = new ArrayList(5);
 		private String eventTarget;
 		private String responseTarget;
 

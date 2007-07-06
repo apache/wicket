@@ -103,7 +103,7 @@ public final class Objects
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
 		private final ClassLoader classloader;
-		private HashMap replacedComponents;
+		private final HashMap replacedComponents;
 
 		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents,
 				ClassLoader classloader) throws IOException
@@ -169,7 +169,7 @@ public final class Objects
 
 	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
 	{
-		private HashMap replacedComponents;
+		private final HashMap replacedComponents;
 
 		private ReplaceObjectOutputStream(OutputStream out, HashMap replacedComponents)
 				throws IOException
@@ -1198,7 +1198,6 @@ public final class Objects
 			return 0;
 		}
 		int result = 37;
-		int len = obj.length;
 		for (int i = obj.length - 1; i > -1; i--)
 		{
 			result = 37 * result + (obj[i] != null ? obj[i].hashCode() : 0);

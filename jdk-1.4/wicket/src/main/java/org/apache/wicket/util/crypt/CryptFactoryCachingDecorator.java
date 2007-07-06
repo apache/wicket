@@ -25,7 +25,7 @@ package org.apache.wicket.util.crypt;
  */
 public class CryptFactoryCachingDecorator implements ICryptFactory
 {
-	private ICryptFactory delegate;
+	private final ICryptFactory delegate;
 	private ICrypt cache;
 
 	/**

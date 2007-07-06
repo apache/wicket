@@ -82,7 +82,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 		private static final long serialVersionUID = 1L;
 
 		/** the old anchor. */
-		private Component anchor;
+		private final Component anchor;
 
 		/**
 		 * Construct.

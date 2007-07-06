@@ -285,7 +285,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	private class CountingInputStream extends InputStream
 	{
 
-		private InputStream in;
+		private final InputStream in;
 
 		/**
 		 * Constructs a new CountingInputStream.

@@ -35,7 +35,7 @@ import org.apache.wicket.Component;
 public class BundleStringResourceLoader implements IStringResourceLoader
 {
 	/** The name of the underlying resource bundle. */
-	private String bundleName;
+	private final String bundleName;
 
 	/**
 	 * Create the loader with the name of the given Java resource bundle.

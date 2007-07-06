@@ -29,7 +29,7 @@ public class UnauthorizedInstantiationException extends AuthorizationException
 	private static final long serialVersionUID = 1L;
 
 	/** The component class that could not be instantiated */
-	private String componentClassName;
+	private final String componentClassName;
 
 	/**
 	 * Construct.

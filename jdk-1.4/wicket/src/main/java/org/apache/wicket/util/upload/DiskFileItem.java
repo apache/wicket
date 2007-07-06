@@ -93,7 +93,7 @@ public class DiskFileItem implements FileItem
 	 * The content type passed by the browser, or <code>null</code> if not
 	 * defined.
 	 */
-	private String contentType;
+	private final String contentType;
 
 
 	/**
@@ -105,19 +105,19 @@ public class DiskFileItem implements FileItem
 	/**
 	 * The original filename in the user's filesystem.
 	 */
-	private String fileName;
+	private final String fileName;
 
 
 	/**
 	 * The threshold above which uploads will be stored on disk.
 	 */
-	private int sizeThreshold;
+	private final int sizeThreshold;
 
 
 	/**
 	 * The directory in which uploaded files will be stored, if stored on disk.
 	 */
-	private File repository;
+	private final File repository;
 
 
 	/**

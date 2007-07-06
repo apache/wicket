@@ -31,7 +31,7 @@ public class CreateBook extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private Book book = new Book(null, null);
+	private final Book book = new Book(null, null);
 
 	/**
 	 * 

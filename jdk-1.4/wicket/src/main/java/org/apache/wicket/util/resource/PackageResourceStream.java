@@ -58,8 +58,10 @@ public class PackageResourceStream extends AbstractResourceStream
 				scope, absolutePath, null, null, null);
 
 		if (resourceStream == null)
+		{
 			throw new WicketRuntimeException("Cannot find resource with " + scope.getName()
 					+ " and path " + path);
+		}
 	}
 
 	public void close() throws IOException

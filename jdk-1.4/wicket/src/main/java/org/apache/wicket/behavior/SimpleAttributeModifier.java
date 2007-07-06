@@ -31,10 +31,10 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	private static final long serialVersionUID = 1L;
 
 	/** The attribute */
-	private String attribute;
+	private final String attribute;
 	
 	/** The value to set */
-	private CharSequence value;
+	private final CharSequence value;
 
 	/**
 	 * Construct.

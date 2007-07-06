@@ -220,7 +220,7 @@ public abstract class Application
 	private IConverterLocator converterLocator;
 
 	/** list of initializers. */
-	private List initializers = new ArrayList();
+	private final List initializers = new ArrayList();
 
 	/** Application level meta data. */
 	private MetaDataEntry[] metaData;
@@ -506,7 +506,9 @@ public abstract class Application
 		if (getRequestLoggerSettings().isRequestLoggerEnabled())
 		{
 			if (requestLogger == null)
+			{
 				requestLogger = newRequestLogger();
+			}
 		}
 		else
 		{

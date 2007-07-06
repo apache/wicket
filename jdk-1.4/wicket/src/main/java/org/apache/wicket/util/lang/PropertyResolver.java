@@ -985,9 +985,9 @@ public final class PropertyResolver
 
 	private static final class MethodGetAndSet extends AbstractGetAndSet
 	{
-		private Method getMethod;
+		private final Method getMethod;
 		private Method setMethod;
-		private Field field;
+		private final Field field;
 
 		MethodGetAndSet(Method getMethod, Field field)
 		{
@@ -1168,7 +1168,7 @@ public final class PropertyResolver
 	private static class FieldGetAndSetter extends AbstractGetAndSet
 	{
 
-		private Field field;
+		private final Field field;
 
 		/**
 		 * Construct.

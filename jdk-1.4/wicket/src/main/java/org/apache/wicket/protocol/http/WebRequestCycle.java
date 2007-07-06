@@ -206,10 +206,14 @@ public class WebRequestCycle extends RequestCycle
 				// re-assign the original response
 				setResponse(currentResponse);
 				if (ex instanceof AbortException)
+				{
 					throw ex;
+				}
 
 				if (!(ex instanceof PageExpiredException))
+				{
 					logRuntimeException(ex);
+				}
 
 				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);

@@ -28,7 +28,7 @@ public class PageA extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private PageB page;
+	private final PageB page;
 
 	/**
 	 * 

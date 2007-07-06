@@ -110,7 +110,9 @@ public class ValueMap extends HashMap implements IValueMap
 		int equalsIndex = keyValuePairs.indexOf('=');
 		int delimiterIndex = keyValuePairs.indexOf(delimiter, equalsIndex);
 		if (delimiterIndex == -1)
+		{
 			delimiterIndex = keyValuePairs.length();
+		}
 		while (equalsIndex != -1)
 		{
 			if (delimiterIndex < keyValuePairs.length())
@@ -137,7 +139,9 @@ public class ValueMap extends HashMap implements IValueMap
 				{
 					delimiterIndex = keyValuePairs.indexOf(delimiter, equalsIndex);
 					if (delimiterIndex == -1)
+					{
 						delimiterIndex = keyValuePairs.length();
+					}
 				}
 			}
 			else

@@ -65,7 +65,9 @@ public abstract class DynamicWebResource extends WebResource
 		public Time lastModifiedTime()
 		{
 			if (lastModifiedTime == null)
+			{
 				lastModifiedTime = Time.now();
+			}
 			return lastModifiedTime;
 		}
 
@@ -82,7 +84,7 @@ public abstract class DynamicWebResource extends WebResource
 	/**
 	 * The resource locale.
 	 */
-	private Locale locale;
+	private final Locale locale;
 
 	/** The filename that will be set as the Content-Disposition header. */
 	private final String filename;

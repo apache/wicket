@@ -97,7 +97,7 @@ public final class Settings
 	private boolean ajaxDebugModeEnabled = false;
 
 	/** The application */
-	private Application application;
+	private final Application application;
 
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
@@ -118,7 +118,7 @@ public final class Settings
 	private IClassResolver classResolver = new DefaultClassResolver();
 
 	/** List of (static) ComponentResolvers */
-	private List componentResolvers = new ArrayList();
+	private final List componentResolvers = new ArrayList();
 
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
@@ -179,7 +179,7 @@ public final class Settings
 	private int maxPageMaps = 5;
 
 	/** Map to look up resource factories by name */
-	private Map nameToResourceFactory = new HashMap();
+	private final Map nameToResourceFactory = new HashMap();
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
@@ -232,7 +232,7 @@ public final class Settings
 	private String responseRequestEncoding = "UTF-8";
 
 	/** Chain of string resource loaders to use */
-	private List stringResourceLoaders = new ArrayList(4);
+	private final List stringResourceLoaders = new ArrayList(4);
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;

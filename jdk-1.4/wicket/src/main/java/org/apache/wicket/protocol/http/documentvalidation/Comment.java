@@ -24,7 +24,7 @@ package org.apache.wicket.protocol.http.documentvalidation;
 public class Comment implements DocumentElement
 {
     /** The text for this HTML comment */
-    private String text;
+    private final String text;
 
     /**
      * Create the comment.

@@ -40,7 +40,7 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	private final int errorCode;
 
 	/** the optional message to send to the client. */
-	private String message;
+	private final String message;
 
 	/**
 	 * Construct.

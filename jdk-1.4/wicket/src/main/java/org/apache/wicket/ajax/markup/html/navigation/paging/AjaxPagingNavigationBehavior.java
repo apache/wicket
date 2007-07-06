@@ -45,11 +45,6 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	private final IAjaxLink owner;
 
 	/**
-	 * The pageable component to update.
-	 */
-	private final IPageable pageable;
-
-	/**
 	 * Attaches the navigation behavior to the owner link and drives the
 	 * pageable component. The behavior is attached to the markup event.
 	 * 
@@ -64,7 +59,6 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	{
 		super(event);
 		this.owner = owner;
-		this.pageable = pageable;
 	}
 
 	/**

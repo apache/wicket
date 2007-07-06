@@ -32,7 +32,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** List of strategies to consult */
-	private ArrayList strategies = new ArrayList();
+	private final ArrayList strategies = new ArrayList();
 
 	/**
 	 * Adds a strategy to the chain

@@ -41,7 +41,7 @@ public class JavascriptUtils
 
 	
 	/** The response object */
-	private Response response;
+	private final Response response;
 
 	/**
 	 * Construct.

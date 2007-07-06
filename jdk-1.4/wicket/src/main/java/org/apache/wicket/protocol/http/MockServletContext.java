@@ -60,11 +60,11 @@ public class MockServletContext implements ServletContext
 {
 	private static final Logger log = LoggerFactory.getLogger(MockServletContext.class);
 
-	private Application application;
+	private final Application application;
 
-	private ValueMap attributes = new ValueMap();
+	private final ValueMap attributes = new ValueMap();
 
-	private ValueMap initParameters = new ValueMap();
+	private final ValueMap initParameters = new ValueMap();
 
 	/** Map of mime types */
 	private final ValueMap mimeTypes = new ValueMap();

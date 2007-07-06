@@ -86,7 +86,7 @@ public class UrlCompressor implements IClusterable
 
 	private static class IntKeyWeakReference extends WeakReference
 	{
-		private int uid;
+		private final int uid;
 
 		/**
 		 * @param uid

@@ -34,8 +34,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePageRequestTarget
 {
-	private String componentPath;
-	private String interfaceName;
+	private final String componentPath;
+	private final String interfaceName;
 
 	/**
 	 * This constructor is called when a stateless link is clicked on but the

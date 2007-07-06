@@ -38,7 +38,7 @@ class ChangeList implements IClusterable
 	private static final Logger log = LoggerFactory.getLogger(ChangeList.class);
 
 	/** the changes. */
-	private List changes = new ArrayList();
+	private final List changes = new ArrayList();
 
 	/**
 	 * A component was added.

@@ -33,8 +33,6 @@ public class Person
 	/** */
 	public Address address2;
 	
-	private Address privateAddress;
-	
 	private Country country;
 
 	private Map addressMap;

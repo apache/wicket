@@ -185,8 +185,8 @@ public abstract class BaseTree extends AbstractTree
 	{
 		private static final long serialVersionUID = 1L;
 
-		private TreeNode node;
-		private int level;
+		private final TreeNode node;
+		private final int level;
 
 		/**
 		 * Construct.

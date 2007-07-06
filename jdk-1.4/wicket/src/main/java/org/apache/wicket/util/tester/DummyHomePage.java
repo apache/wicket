@@ -30,7 +30,7 @@ public class DummyHomePage extends WebPage
 
 	private ITestPageSource testPageSource;
 
-	private Link testPageLink;
+	private final Link testPageLink;
 
 	/**
 	 * Construct

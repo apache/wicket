@@ -113,7 +113,7 @@ public class WildcardMatcherHelper {
         private final int lstr;
 
         /** The <code>Map</code> to be filled */
-        private Map map = new HashMap();
+        private final Map map = new HashMap();
 
         /** Whether string matched to pattern */
         private final boolean matched;
@@ -185,12 +185,18 @@ public class WildcardMatcherHelper {
 
             // if we are already at the end of both strings 
             // than the pattern matched
-            if(ipat >= lpat && istr >= lstr) return true;
+            if(ipat >= lpat && istr >= lstr)
+			{
+				return true;
+			}
 
             // if hole string has matched the pattern so far and the rest of the pattern only has wildcard(s)
             // we match too otherwise we clearly don't match
             if(ipat < lpat && istr >= lstr) {
-                while(ipat < lpat && apat[ipat] == STAR) ipat++;
+                while(ipat < lpat && apat[ipat] == STAR)
+				{
+					ipat++;
+				}
 
                 if(ipat >= lpat) {
                     add("");
@@ -203,16 +209,25 @@ public class WildcardMatcherHelper {
 
             // if hole pattern has matched the string so far but the string has more characters left
             // we don't match
-            if(ipat >= lpat && istr < lstr) return false;
+            if(ipat >= lpat && istr < lstr)
+			{
+				return false;
+			}
 
             // if we have not stopped at a wildcard character 
             // a character doesn't match and thus we do not match at all
-            if(apat[ipat] != STAR) return false;
+            if(apat[ipat] != STAR)
+			{
+				return false;
+			}
 
             // if it is a double (or more) wildcard pattern
             if(ipat < lpat - 1 && apat[ipat + 1] == STAR) {
                 // skip to first non star charater in the pattern
-                while(++ipat < lpat && apat[ipat] == STAR);
+                while(++ipat < lpat && apat[ipat] == STAR)
+				{
+					;
+				}
 
                 // if we are at the end of the pattern we've matched and are finish scanning
                 if(ipat >= lpat) {
@@ -224,7 +239,10 @@ public class WildcardMatcherHelper {
                 // Now we need to scan for the end of the literal characters in the pattern
                 final int sipat = ipat; // start position of a literal character used for substring operations
 
-                while(ipat < lpat && (apat[ipat] != STAR || (ipat > 0 && apat[ipat - 1] == ESC))) ipat++;
+                while(ipat < lpat && (apat[ipat] != STAR || (ipat > 0 && apat[ipat - 1] == ESC)))
+				{
+					ipat++;
+				}
 
                 // if we reached the end of the pattern just do a string compare with the corresponding part from 
                 // the end of the string
@@ -238,9 +256,15 @@ public class WildcardMatcherHelper {
                 int eistr = lstr - l;
 
                 // beause the '**' wildcard need to be greedy we scan from the end of the string for a match
-                while(istr < eistr && ! strncmp(apat, sipat, astr, eistr, l)) eistr--;
+                while(istr < eistr && ! strncmp(apat, sipat, astr, eistr, l))
+				{
+					eistr--;
+				}
 
-                if(istr >= eistr) return false;
+                if(istr >= eistr)
+				{
+					return false;
+				}
 
                 add(new String(astr, istr, eistr - istr));
                 istr = eistr + l;
@@ -252,7 +276,10 @@ public class WildcardMatcherHelper {
                 if(ipat >= lpat) {
                     final int sistr = istr;
 
-                    while(istr < lstr && (astr[istr] != PATHSEP)) istr++;
+                    while(istr < lstr && (astr[istr] != PATHSEP))
+					{
+						istr++;
+					}
 
                     if(istr >= lstr) {
                         add(new String(astr, sistr, lstr - sistr));
@@ -292,9 +319,15 @@ public class WildcardMatcherHelper {
                 final int l = ipat- sipat + 1;
                 final int sistr = istr;
 
-                while(istr < lstr && ! strncmp(apat, sipat, astr, istr, l)) istr++;
+                while(istr < lstr && ! strncmp(apat, sipat, astr, istr, l))
+				{
+					istr++;
+				}
 
-                if(istr >= lstr) return false;
+                if(istr >= lstr)
+				{
+					return false;
+				}
 
                 add(new String(astr, sistr, istr - sistr));
                 ipat++;
@@ -337,7 +370,10 @@ public class WildcardMatcherHelper {
                                 final int l) {
             int i = 0;
 
-            while(i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i]) i++;
+            while(i < l && o1 + i < a1.length && o2 + i < a2.length && a1[o1 + i] == a2[o2 + i])
+			{
+				i++;
+			}
 
             return i == l;
         }

@@ -318,7 +318,7 @@ public class FormTester
 		}
 	}
 
-	private ChoiceSelectorFactory choiceSelectorFactory = new ChoiceSelectorFactory();
+	private final ChoiceSelectorFactory choiceSelectorFactory = new ChoiceSelectorFactory();
 
 	/**
 	 * An instance of FormTester can only be used once. Create a new instance of
@@ -333,7 +333,7 @@ public class FormTester
 	private final BaseWicketTester baseWicketTester;
 
 	/** form component to be test */
-	private Form workingForm;
+	private final Form workingForm;
 
 	/**
 	 * @see WicketTester#newFormTester(String)
@@ -662,44 +662,9 @@ public class FormTester
 	}
 
 
-	private Result isTrue(String message, boolean condition)
-	{
-		if (condition)
-		{
-			return Result.pass();
-		}
-		return Result.fail(message);
-	}
-
-	private Result isEqual(Object expected, Object actual)
-	{
-		if (expected == null && actual == null)
-		{
-			return Result.pass();
-		}
-		if (expected != null && expected.equals(actual))
-		{
-			return Result.pass();
-		}
-		String message = "expected:<" + expected + "> but was:<" + actual + ">";
-		return Result.fail(message);
-	}
-
-	private void notNull(String message, Object object)
-	{
-		if (object == null) {
-			fail(message);
-		}
-	}
-
 	private void fail(String message)
 	{
 		throw new WicketRuntimeException(message);
-	}
-
-	private void fail(String message, Throwable t)
-	{
-		throw new WicketRuntimeException(message, t);
 	}
 
 }

@@ -120,7 +120,9 @@ public class FileUploadField extends FormComponent
 	{
 		FileUpload fu = getFileUpload();
 		if (fu != null)
+		{
 			return new String[] { fu.getClientFileName() };
+		}
 		return null;
 	}
 

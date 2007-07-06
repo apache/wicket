@@ -37,7 +37,7 @@ public class ListDataProvider implements IDataProvider
 	private static final long serialVersionUID = 1L;
 
 	/** reference to the list used as dataprovider for the dataview */
-	private List list;
+	private final List list;
 
 	/**
 	 * 
@@ -61,7 +61,9 @@ public class ListDataProvider implements IDataProvider
 	{
 		int toIndex = first+count;
 		if(toIndex > list.size())
+		{
 			toIndex = list.size();
+		}
 		return list.subList(first, toIndex).listIterator();
 	}
 

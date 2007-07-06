@@ -46,7 +46,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	private static final long serialVersionUID = 1L;
 
 	/** The pageable component that needs to be updated. */
-	private IPageable pageable;
+	private final IPageable pageable;
 
 	/**
 	 * Constructor.

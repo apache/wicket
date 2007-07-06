@@ -188,7 +188,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
     private static final String quote(String s) {
         int slashEIndex = s.indexOf("\\E");
         if (slashEIndex == -1)
-            return "\\Q" + s + "\\E";
+		{
+			return "\\Q" + s + "\\E";
+		}
 
         StringBuffer sb = new StringBuffer(s.length() * 2);
         sb.append("\\Q");
@@ -211,7 +213,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		 *
 		 */
 		private static final long serialVersionUID = 1L;
-		private Duration duration;
+		private final Duration duration;
 		String updateScript;
 
 		/**

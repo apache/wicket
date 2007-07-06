@@ -232,7 +232,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		private static final long serialVersionUID = 1L;
 
 		/** Former model. */
-		private IModel model;
+		private final IModel model;
 
 		/**
 		 * Construct.

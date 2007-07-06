@@ -38,21 +38,21 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceTest extends TestCase
 {
-	private Locale locale_de = new Locale("de");
-	private Locale locale_de_DE = new Locale("de", "DE");
-	private Locale locale_de_DE_POSIX = new Locale("de", "DE", "POSIX");
-	private Locale locale_de_POSIX = new Locale("de", "", "POSIX");
-	private Locale locale_de_CH = new Locale("de", "CH");
+	private final Locale locale_de = new Locale("de");
+	private final Locale locale_de_DE = new Locale("de", "DE");
+	private final Locale locale_de_DE_POSIX = new Locale("de", "DE", "POSIX");
+	private final Locale locale_de_POSIX = new Locale("de", "", "POSIX");
+	private final Locale locale_de_CH = new Locale("de", "CH");
 
-	private Locale locale_en = new Locale("en");
-	private Locale locale_en_US = new Locale("en", "US");
-	private Locale locale_en_US_WIN = new Locale("en", "US", "WIN");
-	private Locale locale_en_WIN = new Locale("en", "", "WIN");
+	private final Locale locale_en = new Locale("en");
+	private final Locale locale_en_US = new Locale("en", "US");
+	private final Locale locale_en_US_WIN = new Locale("en", "US", "WIN");
+	private final Locale locale_en_WIN = new Locale("en", "", "WIN");
 
-	private Locale locale_fr = new Locale("fr");
-	private Locale locale_fr_FR = new Locale("fr", "FR");
-	private Locale locale_fr_FR_WIN = new Locale("fr", "FR", "WIN");
-	private Locale locale_fr_WIN = new Locale("fr", "", "WIN");
+	private final Locale locale_fr = new Locale("fr");
+	private final Locale locale_fr_FR = new Locale("fr", "FR");
+	private final Locale locale_fr_FR_WIN = new Locale("fr", "FR", "WIN");
+	private final Locale locale_fr_WIN = new Locale("fr", "", "WIN");
 
 	/**
 	 * 

@@ -32,7 +32,7 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class ArrayIteratorAdapter implements Iterator
 {
-	private Object[] array;
+	private final Object[] array;
 	private int pos = 0;
 
 	/**

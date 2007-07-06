@@ -191,9 +191,11 @@ public class ListMultipleChoice extends AbstractChoice
 		// Get the list of selected values
 		Object modelObject = getModelObject();
 		if (modelObject != null && !(modelObject instanceof Collection))
+		{
 			throw new WicketRuntimeException(
 					"Model object for a ListMultipleChoice must be a Collection (found "
 							+ modelObject.getClass() + ")");
+		}
 		final Collection selectedValues = (Collection)modelObject;
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)

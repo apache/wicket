@@ -338,9 +338,9 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 */
 	private static class CappedIteratorAdapter implements Iterator
 	{
-		private int max;
+		private final int max;
 		private int index;
-		private Iterator delegate;
+		private final Iterator delegate;
 
 		/**
 		 * Constructor

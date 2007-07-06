@@ -136,7 +136,7 @@ public class FileCleaner
 		/**
 		 * The full path to the file being tracked.
 		 */
-		private String path;
+		private final String path;
 
 		/**
 		 * Constructs an instance of this class from the supplied parameters.

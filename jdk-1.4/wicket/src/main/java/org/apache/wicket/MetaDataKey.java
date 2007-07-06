@@ -37,7 +37,7 @@ public abstract class MetaDataKey implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** Type of data associated with this key */
-	private String typeName;
+	private final String typeName;
 
 	/**
 	 * Constructor.

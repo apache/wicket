@@ -80,7 +80,9 @@ public abstract class AbstractPropertyModel
 	public IModel getChainedModel()
 	{
 		if (target instanceof IModel)
+		{
 			return (IModel)target;
+		}
 		return null;
 	}
 

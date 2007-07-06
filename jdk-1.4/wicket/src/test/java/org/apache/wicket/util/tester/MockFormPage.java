@@ -91,7 +91,7 @@ public class MockFormPage extends WebPage
 		}
 	}
 
-	private MockDomainObject domainObject;
+	private final MockDomainObject domainObject;
 
 	/**
 	 * Construct.

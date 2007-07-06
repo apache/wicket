@@ -49,11 +49,11 @@ import org.apache.wicket.util.value.IValueMap;
  */
 public class TagTester
 {
-	private XmlTag openTag;
+	private final XmlTag openTag;
 
-	private XmlTag closeTag;
+	private final XmlTag closeTag;
 
-	private XmlPullParser parser;
+	private final XmlPullParser parser;
 
 	/**
 	 * Construct.

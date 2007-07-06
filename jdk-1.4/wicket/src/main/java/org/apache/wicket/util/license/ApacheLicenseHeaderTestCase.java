@@ -48,8 +48,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 	private class SuffixAndIgnoreFileFilter implements FileFilter
 	{
-		private String[] suffixes;
-		private String[] ignoreFiles;
+		private final String[] suffixes;
+		private final String[] ignoreFiles;
 
 		private SuffixAndIgnoreFileFilter(String[] suffixes)
 		{
@@ -133,7 +133,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 	private class DirectoryFileFilter implements FileFilter
 	{
-		private String[] ignoreDirectory = new String[] { ".svn" };
+		private final String[] ignoreDirectory = new String[] { ".svn" };
 
 		public boolean accept(File pathname)
 		{

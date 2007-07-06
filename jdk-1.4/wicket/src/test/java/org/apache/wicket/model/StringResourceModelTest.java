@@ -217,8 +217,6 @@ public class StringResourceModelTest extends TestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			private transient WeatherStation station;
-
 			protected Object load()
 			{
 				return new WeatherStation();

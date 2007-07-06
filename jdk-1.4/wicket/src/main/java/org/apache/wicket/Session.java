@@ -158,11 +158,6 @@ public abstract class Session implements IClusterable
 		}
 	}
 
-	private static final class Counter
-	{
-		private int count = 0;
-	}
-
 	/**
 	 * Filter that returns all component scoped messages ({@link FeedbackMessage#getReporter()} !=
 	 * null).
@@ -327,7 +322,7 @@ public abstract class Session implements IClusterable
 	private transient boolean dirty = false;
 
 	/** feedback messages */
-	private FeedbackMessages feedbackMessages = new FeedbackMessages();
+	private final FeedbackMessages feedbackMessages = new FeedbackMessages();
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -374,7 +369,7 @@ public abstract class Session implements IClusterable
 	private transient Map temporarySessionAttributes;
 
 	/** A linked list for last used pagemap queue */
-	private LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
+	private final LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
@@ -919,7 +914,9 @@ public abstract class Session implements IClusterable
 	{
 		PageMapAccessMetaData pagemapMetaData = (PageMapAccessMetaData)getMetaData(PAGEMAP_ACCESS_MDK);
 		if (pagemapMetaData != null)
+		{
 			pagemapMetaData.pageMapNames.remove(pageMap.getName());
+		}
 
 		synchronized (usedPageMaps)
 		{

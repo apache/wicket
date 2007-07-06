@@ -87,7 +87,9 @@ public class ZipResourceStream extends AbstractResourceStream
 			String files[] = dir.list();
 
 			if (files == null)
+			{
 				throw new IllegalArgumentException("Not a directory: " + dir);
+			}
 
 			for (int i = 0; i < files.length; i++)
 			{

@@ -293,7 +293,7 @@ public abstract class GridView extends DataViewBase
 	 */
 	private static class ItemsIterator implements Iterator
 	{
-		private Iterator rows;
+		private final Iterator rows;
 		private Iterator cells;
 
 		private Item next;

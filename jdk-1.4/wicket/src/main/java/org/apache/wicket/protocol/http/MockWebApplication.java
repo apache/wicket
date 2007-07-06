@@ -92,13 +92,13 @@ public class MockWebApplication
 	private Page previousRenderedPage;
 
 	/** Mock http servlet request. */
-	private MockHttpServletRequest servletRequest;
+	private final MockHttpServletRequest servletRequest;
 
 	/** Mock http servlet response. */
-	private MockHttpServletResponse servletResponse;
+	private final MockHttpServletResponse servletResponse;
 
 	/** Mock http servlet session. */
-	private MockHttpSession servletSession;
+	private final MockHttpSession servletSession;
 
 	/** Request. */
 	private WebRequest wicketRequest;
@@ -112,15 +112,12 @@ public class MockWebApplication
 	/** Session. */
 	private WebSession wicketSession;
 
-	/** The homepage */
-	private Class homePage;
-
 	/** The tester object */
 	private final WebApplication application;
 
 	private final ServletContext context;
 
-	private WicketFilter filter;
+	private final WicketFilter filter;
 
 	/**
 	 * Create the mock http tester that can be used for testing.

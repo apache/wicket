@@ -29,7 +29,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	private static final long serialVersionUID = 1L;
 
 	/** Stylesheet information */
-	private AppendingStringBuffer buffer = new AppendingStringBuffer(128);
+	private final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
 
 	/**
 	 * Constructor.

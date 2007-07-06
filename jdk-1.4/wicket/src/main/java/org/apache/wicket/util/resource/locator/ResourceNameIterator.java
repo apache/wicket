@@ -58,7 +58,7 @@ public class ResourceNameIterator implements Iterator
 	private final String extensions;
 
 	// The various iterators used to locate the resource file
-	private Iterator styleIterator;
+	private final Iterator styleIterator;
 	private LocaleResourceNameIterator localeIterator;
 	private Iterator extenstionsIterator;
 

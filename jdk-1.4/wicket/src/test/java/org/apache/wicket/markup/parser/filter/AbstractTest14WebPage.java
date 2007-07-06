@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.border.Border;
  */
 public abstract class AbstractTest14WebPage extends WebPage
 {
-	private Border border;
+	private final Border border;
 
 	/**
 	 * 

@@ -30,7 +30,7 @@ public class FormComponentLabel extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	private LabeledWebMarkupContainer component;
+	private final LabeledWebMarkupContainer component;
 
 	/**
 	 * Constructor

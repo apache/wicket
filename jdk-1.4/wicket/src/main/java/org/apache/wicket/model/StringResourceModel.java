@@ -201,16 +201,16 @@ public class StringResourceModel extends LoadableDetachableModel
 	private transient Localizer localizer;
 
 	/** The wrapped model. */
-	private IModel model;
+	private final IModel model;
 
 	/** Optional parameters. */
-	private Object[] parameters;
+	private final Object[] parameters;
 
 	/** The relative component used for lookups. */
-	private Component component;
+	private final Component component;
 
 	/** The key of message to get. */
-	private String resourceKey;
+	private final String resourceKey;
 
 	/** The default value of the message. */
 	private final String defaultValue;

@@ -40,7 +40,7 @@ public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 
 	private boolean executed = false;
 
-	private Pojo pojo;
+	private final Pojo pojo;
 
 	/**
 	 * Construct.

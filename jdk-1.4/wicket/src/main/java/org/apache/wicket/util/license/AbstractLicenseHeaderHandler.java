@@ -32,7 +32,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 {
 	protected static final String LINE_ENDING = System.getProperty("line.separator");
 	private String licenseHeader;
-	private String[] ignoreFiles;
+	private final String[] ignoreFiles;
 
 	/**
 	 * Construct.
@@ -92,9 +92,18 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			}
 			finally
 			{
-				if (lineNumberReader != null)  try { lineNumberReader.close(); }  catch (Exception e) { /* Ignore */ };
-				if (inputStream != null)       try { inputStream.close(); }	  catch (Exception e) { /* Ignore */ };
-				if (inputStreamReader != null) try { inputStreamReader.close(); } catch (Exception e) { /* Ignore */ };
+				if (lineNumberReader != null)
+				{
+					try { lineNumberReader.close(); }  catch (Exception e) { /* Ignore */ }
+				};
+				if (inputStream != null)
+				{
+					try { inputStream.close(); }	  catch (Exception e) { /* Ignore */ }
+				};
+				if (inputStreamReader != null)
+				{
+					try { inputStreamReader.close(); } catch (Exception e) { /* Ignore */ }
+				};
 			}
 		}
 

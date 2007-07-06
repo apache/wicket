@@ -457,7 +457,9 @@ public class WicketFilter implements Filter
 				while (elem != null && (!(elem.getName().equals(mapping) && elem.isOpen())));
 
 				if (elem == null)
+				{
 					break;
+				}
 
 				String encounteredFilterName = null, urlPattern = null;
 
@@ -481,7 +483,9 @@ public class WicketFilter implements Filter
 				while (urlPattern == null || encounteredFilterName == null);
 
 				if (filterName.equals(encounteredFilterName))
+				{
 					urlPatterns.add(urlPattern);
+				}
 			}
 
 			String prefixUppered = Character.toUpperCase(prefix.charAt(0)) + prefix.substring(1);

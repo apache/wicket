@@ -33,7 +33,7 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	Object removedValue;
 	
 	/** Maximum number of entries allowed in this map */
-	private int maxEntries;
+	private final int maxEntries;
 
 	/**
 	 * Constructor

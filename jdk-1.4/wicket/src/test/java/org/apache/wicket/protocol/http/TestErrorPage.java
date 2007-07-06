@@ -49,7 +49,9 @@ public class TestErrorPage extends WebPage
 			{
 				super.onAfterRender();
 				if (clicked)
+				{
 					throw new IllegalStateException("Intentional error");
+				}
 			}
 		});
 	}

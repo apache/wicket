@@ -95,7 +95,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		private List children = null;
 
 		/** tree item level - how deep is this item in tree */
-		private int level;
+		private final int level;
 
 		/**
 		 * Construct.
@@ -425,7 +425,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		return new Iterator()
 		{
-			private Enumeration e = enumeration;
+			private final Enumeration e = enumeration;
 
 			public boolean hasNext()
 			{
@@ -615,7 +615,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	public void onDetach()
 	{
 		attached = false;
-		updateTreeCalled = false;
 		super.onDetach();
 	}
 
@@ -731,6 +730,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			// go through all changed nodes
 			Object[] children = e.getChildren();
 			if (children != null)
+			{
 				for (int i = 0; i < children.length; i++)
 				{
 					TreeNode node = (TreeNode)children[i];
@@ -740,6 +740,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 						invalidateNode(node, true);
 					}
 				}
+			}
 		}
 	};
 
@@ -859,8 +860,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		}
 	}
 
-	private transient boolean updateTreeCalled = false;
-	
 	/**
 	 * Updates the changed portions of the tree using given AjaxRequestTarget.
 	 * Call this method if you modified the tree model during an ajax request
@@ -879,8 +878,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			return;
 		}
 
-		updateTreeCalled = true;
-		
 		// check whether the model hasn't changed
 		checkModel();
 
@@ -1258,7 +1255,9 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 				dirtyItems.add(item);
 				if (createDOM)
+				{
 					dirtyItemsCreateDOM.add(item);
+				}
 			}
 		}
 	}

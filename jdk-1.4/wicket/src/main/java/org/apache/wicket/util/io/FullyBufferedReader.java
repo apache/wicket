@@ -35,7 +35,7 @@ import java.io.Reader;
 public final class FullyBufferedReader
 {
 	/** All the chars from the resouce */
-	private String input;
+	private final String input;
 
 	/** Position in parse. */
 	private int inputPosition;

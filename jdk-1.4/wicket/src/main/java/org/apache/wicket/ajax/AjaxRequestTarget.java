@@ -938,7 +938,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			return target.getHeaderResponse();
 		}
 
-		private transient AjaxRequestTarget target;
+		private final transient AjaxRequestTarget target;
 	};
 
 	/**
@@ -1026,9 +1026,13 @@ public class AjaxRequestTarget implements IRequestTarget
 		headerRendering = false;
 
 		if (oldHeader == null)
+		{
 			component.getPage().remove(header);
+		}
 		else
+		{
 			component.getPage().replace(oldHeader);
+		}
 	}
 
 	/**

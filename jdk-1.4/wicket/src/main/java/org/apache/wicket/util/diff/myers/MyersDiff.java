@@ -116,9 +116,13 @@ public class MyersDiff implements DiffAlgorithm
             throws DifferentiationFailedException
     {
         if (orig == null)
-            throw new IllegalArgumentException("original sequence is null");
+		{
+			throw new IllegalArgumentException("original sequence is null");
+		}
         if (rev == null)
-            throw new IllegalArgumentException("revised sequence is null");
+		{
+			throw new IllegalArgumentException("revised sequence is null");
+		}
 
         // these are local constants
         final int N = orig.length;
@@ -167,7 +171,9 @@ public class MyersDiff implements DiffAlgorithm
                     j++;
                 }
                 if (i > node.i)
-                    node = new Snake(i, j, node);
+				{
+					node = new Snake(i, j, node);
+				}
 
                 diagonal[kmiddle] = node;
 
@@ -200,20 +206,30 @@ public class MyersDiff implements DiffAlgorithm
             Object[] rev)
     {
         if (path == null)
-            throw new IllegalArgumentException("path is null");
+		{
+			throw new IllegalArgumentException("path is null");
+		}
         if (orig == null)
-            throw new IllegalArgumentException("original sequence is null");
+		{
+			throw new IllegalArgumentException("original sequence is null");
+		}
         if (rev == null)
-            throw new IllegalArgumentException("revised sequence is null");
+		{
+			throw new IllegalArgumentException("revised sequence is null");
+		}
 
         Revision revision = new Revision();
         if (path.isSnake())
-            path = path.prev;
+		{
+			path = path.prev;
+		}
         while (path != null && path.prev != null && path.prev.j >= 0)
         {
             if (path.isSnake())
-                throw new IllegalStateException(
+			{
+				throw new IllegalStateException(
                         "bad diffpath: found snake when looking for diff");
+			}
             int i = path.i;
             int j = path.j;
 
@@ -225,7 +241,9 @@ public class MyersDiff implements DiffAlgorithm
                     new Chunk(rev, janchor, j - janchor));
             revision.insertDelta(delta);
             if (path.isSnake())
-                path = path.prev;
+			{
+				path = path.prev;
+			}
         }
         return revision;
     }

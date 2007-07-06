@@ -33,7 +33,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	private static final long serialVersionUID = 1L;
 
 	/** Maximum number of page versions in a page map before evictions start */
-	private int maxVersions;
+	private final int maxVersions;
 
 	/**
 	 * Constructor.

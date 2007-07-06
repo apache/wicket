@@ -31,7 +31,7 @@ public class CompoundValidator implements IValidator
 {
 	private static final long serialVersionUID = 1L;
 
-	private List validators = new ArrayList(2);
+	private final List validators = new ArrayList(2);
 
 	/**
 	 * Constructor

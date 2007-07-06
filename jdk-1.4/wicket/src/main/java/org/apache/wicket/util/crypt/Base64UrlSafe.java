@@ -352,7 +352,7 @@ public class Base64UrlSafe
 
         int numberQuadruple = (base64Data.length + 3) / FOURBYTE;
         byte decodedData[] = new byte[base64Data.length - numberQuadruple];
-        byte b1 = 0, b2 = 0, b3 = 0, b4 = 0, marker0 = 0, marker1 = 0;
+        byte b1 = 0, b2 = 0, b3 = 0, b4 = 0;
 
         // Throw away anything not in base64Data
         int encodedIndex = 0;
