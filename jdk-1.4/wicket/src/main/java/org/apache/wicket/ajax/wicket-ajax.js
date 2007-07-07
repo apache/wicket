@@ -1525,10 +1525,11 @@ Wicket.ChangeHandler=function(elementId){
 
 	var obj = Wicket.$(elementId);
 	obj.setAttribute("autocomplete", "off");
-	if (Wicket.Browser.isIE()) {
+	if (Wicket.Browser.isIE() || Wicket.Browser.isKHTML() || Wicket.Browser.isSafari()) {
+	
 		var objonchange = obj.onchange;
 
-		obj.onkeyup = function(event) {
+		obj.onkeyup = function(event) {		
 			switch (wicketKeyCode(Wicket.fixEvent(event))) {
 				case KEY_ENTER:
 				case KEY_UP:
@@ -1547,8 +1548,24 @@ Wicket.ChangeHandler=function(elementId){
 			}
 			return null;
 		}
-		obj.attachEvent('onpaste', obj.onchange);
-		obj.attachEvent('oncut', obj.onchange);
+		
+		obj.onpaste = function(event) {
+			if (typeof objonchange == "function"){
+				setTimeout(function() {
+	   			  objonchange();
+			     }, 10);
+			}
+			return null;
+		}
+		
+		obj.oncut = function(event) {
+			if (typeof objonchange == "function"){
+				setTimeout(function() {
+	   			  objonchange();
+			     }, 10);
+			}
+			return null;
+		}
 	} else {
 		obj.addEventListener('input', obj.onchange, true);
 	}
