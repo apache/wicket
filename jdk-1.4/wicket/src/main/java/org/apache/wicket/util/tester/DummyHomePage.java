@@ -28,7 +28,7 @@ public class DummyHomePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private ITestPageSource testPageSource;
+	private transient ITestPageSource testPageSource;
 
 	private final Link testPageLink;
 
