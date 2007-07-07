@@ -27,8 +27,14 @@ import org.apache.wicket.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Serves as a base class for different kinds of property models.
+ * Serves as a base class for different kinds of property models. By default,
+ * this class uses {@link PropertyResolver} to resolve expressions on the target
+ * model object. Note that the property resolver by default provides access to
+ * private members and methods. If guaranteeing encapsultion of the target
+ * objects is a big concern, you should consider using an alternative
+ * implementation.
  * 
+ * @see PropertyResolver
  * @see org.apache.wicket.model.AbstractDetachableModel
  * 
  * @author Chris Turner
