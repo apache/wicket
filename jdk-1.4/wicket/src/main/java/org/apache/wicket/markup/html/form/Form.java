@@ -44,6 +44,7 @@ import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
+import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -153,8 +154,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			if (component instanceof FormComponent)
 			{
 				FormComponent formComponent = (FormComponent)component;
-				if (formComponent.isVisibleInHierarchy() && formComponent.isValid()
-						&& formComponent.isEnabled() && formComponent.isEnableAllowed())
+				if (formComponent.isVisibleInHierarchy() && formComponent.isValid() &&
+						formComponent.isEnabled() && formComponent.isEnableAllowed())
 				{
 					validate(formComponent);
 				}
@@ -307,8 +308,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	private String javascriptId;
 
-	/** Maximum size of an upload in bytes */
-	private Bytes maxSize = Bytes.MAX;
+	/**
+	 * Maximum size of an upload in bytes. If null, the setting
+	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 */
+	private Bytes maxSize = null;
 
 	/** True if the form has enctype of multipart/form-data */
 	private boolean multiPart = false;
@@ -520,16 +524,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
 
 						// Check for button-name or button-name.x request string
-						if (submit.getForm() != null
-								&& submit.getForm().getRootForm() == Form.this
-								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
+						if (submit.getForm() != null &&
+								submit.getForm().getRootForm() == Form.this &&
+								(getRequest().getParameter(submit.getInputName()) != null || getRequest()
 										.getParameter(submit.getInputName() + ".x") != null))
 						{
 							if (!component.isVisible())
 							{
-								throw new WicketRuntimeException("Submit Button "
-										+ submit.getInputName() + " (path="
-										+ component.getPageRelativePath() + ") is not visible");
+								throw new WicketRuntimeException("Submit Button " +
+										submit.getInputName() + " (path=" +
+										component.getPageRelativePath() + ") is not visible");
 							}
 							return submit;
 						}
@@ -590,11 +594,18 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * @return the maxSize of uploaded files
+	 * Gets the maximum size for uploads. If null, the setting
+	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * 
+	 * @return the maximum size
 	 */
 	public Bytes getMaxSize()
 	{
-		return this.maxSize;
+		if (maxSize == null)
+		{
+			return getApplication().getApplicationSettings().getDefaultMaximumUploadSize();
+		}
+		return maxSize;
 	}
 
 	/**
@@ -897,8 +908,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
+	 * Sets the maximum size for uploads. If null, the setting
+	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
+	 * 
 	 * @param maxSize
-	 *            The maxSize for uploaded files
+	 *            The maximum size
 	 */
 	public void setMaxSize(final Bytes maxSize)
 	{
@@ -1061,8 +1075,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		else
 		{
 			throw new WicketRuntimeException(
-					"Attempt to access unknown request listener interface "
-							+ requestParameters.getInterfaceName());
+					"Attempt to access unknown request listener interface " +
+							requestParameters.getInterfaceName());
 		}
 	}
 
@@ -1355,7 +1369,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			try
 			{
 				final WebRequest multipartWebRequest = ((WebRequest)getRequest())
-						.newMultipartWebRequest(this.maxSize);
+						.newMultipartWebRequest(getMaxSize());
 				getRequestCycle().setRequest(multipartWebRequest);
 			}
 			catch (WicketRuntimeException wre)
@@ -1369,13 +1383,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				// Create model with exception and maximum size values
 				final Map model = new HashMap();
 				model.put("exception", e);
-				model.put("maxSize", maxSize);
+				model.put("maxSize", getMaxSize());
 
 				if (e instanceof SizeLimitExceededException)
 				{
 					// Resource key should be <form-id>.uploadTooLarge to
 					// override default message
-					final String defaultValue = "Upload must be less than " + maxSize;
+					final String defaultValue = "Upload must be less than " + getMaxSize();
 					String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY, Model
 							.valueOf(model), defaultValue);
 					error(msg);
@@ -1544,8 +1558,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			getResponse().write(buffer);
 
 			// if a default button was set, handle the rendering of that
-			if (defaultButton != null && defaultButton.isVisibleInHierarchy()
-					&& defaultButton.isEnabled())
+			if (defaultButton != null && defaultButton.isVisibleInHierarchy() &&
+					defaultButton.isEnabled())
 			{
 				appendDefaultButtonField(markupStream, openTag);
 			}
@@ -1715,10 +1729,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					if (log.isWarnEnabled())
 					{
 						log
-								.warn("IFormValidator in form `"
-										+ getPageRelativePath()
-										+ "` depends on a component that has been removed from the page or is no longer visible. "
-										+ "Offending component id `" + dependent.getId() + "`.");
+								.warn("IFormValidator in form `" +
+										getPageRelativePath() +
+										"` depends on a component that has been removed from the page or is no longer visible. " +
+										"Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
 					break;

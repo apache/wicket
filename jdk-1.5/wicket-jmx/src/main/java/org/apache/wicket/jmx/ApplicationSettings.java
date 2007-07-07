@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.jmx;
 
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -53,6 +54,11 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 		return Stringz.className(application.getApplicationSettings().getClassResolver());
 	}
 
+	public String getDefaultMaximumUploadSize()
+	{
+		return application.getApplicationSettings().getDefaultMaximumUploadSize().toString();
+	}
+
 	/**
 	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getInternalErrorPage()
 	 */
@@ -76,5 +82,14 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 	public String getUnexpectedExceptionDisplay()
 	{
 		return application.getExceptionSettings().getUnexpectedExceptionDisplay().toString();
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#setDefaultMaximumUploadSize(java.lang.String)
+	 */
+	public void setDefaultMaximumUploadSize(String defaultUploadSize)
+	{
+		application.getApplicationSettings().setDefaultMaximumUploadSize(
+				Bytes.valueOf(defaultUploadSize));
 	}
 }

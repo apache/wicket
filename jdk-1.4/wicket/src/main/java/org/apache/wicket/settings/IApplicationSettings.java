@@ -17,6 +17,8 @@
 package org.apache.wicket.settings;
 
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Settings interface for application settings.
@@ -52,6 +54,15 @@ public interface IApplicationSettings
 	IClassResolver getClassResolver();
 
 	/**
+	 * Gets the default maximum size for uploads. This is used by
+	 * {@link Form#getMaxSize()} if no value is explicitly set through
+	 * {@link Form#setMaxSize(Bytes)}.
+	 * 
+	 * @return the default maximum size for uploads
+	 */
+	Bytes getDefaultMaximumUploadSize();
+
+	/**
 	 * Gets internal error page class.
 	 * 
 	 * @return Returns the internalErrorPage.
@@ -83,6 +94,16 @@ public interface IApplicationSettings
 	 *            The default class resolver
 	 */
 	void setClassResolver(final IClassResolver defaultClassResolver);
+
+	/**
+	 * Sets the default maximum size for uploads. This is used by
+	 * {@link Form#getMaxSize()} if no value is explicitly set through
+	 * {@link Form#setMaxSize(Bytes)}.
+	 * 
+	 * @param defaultUploadSize
+	 *            the default maximum size for uploads
+	 */
+	void setDefaultMaximumUploadSize(Bytes defaultUploadSize);
 
 	/**
 	 * Sets internal error page class. The class must be bookmarkable and must

@@ -57,6 +57,7 @@ import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.IResourcePath;
 import org.apache.wicket.util.file.Path;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
@@ -1267,5 +1268,17 @@ public final class Settings
 	public void setMarkupCache(final IMarkupCache markupCache)
 	{
 		this.markupCache = markupCache;
+	}
+
+	private Bytes defaultMaximumUploadSize = Bytes.MAX;
+
+	public Bytes getDefaultMaximumUploadSize()
+	{
+		return this.defaultMaximumUploadSize;
+	}
+
+	public void setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)
+	{
+		this.defaultMaximumUploadSize = defaultMaximumUploadSize;
 	}
 }

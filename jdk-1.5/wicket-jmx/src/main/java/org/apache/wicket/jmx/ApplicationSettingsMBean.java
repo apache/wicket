@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.jmx;
 
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Application settings.
@@ -41,6 +43,15 @@ public interface ApplicationSettingsMBean
 	String getClassResolver();
 
 	/**
+	 * Gets the default maximum size for uploads. This is used by
+	 * {@link Form#getMaxSize()} if no value is explicitly set through
+	 * {@link Form#setMaxSize(Bytes)}.
+	 * 
+	 * @return the default maximum size for uploads
+	 */
+	String getDefaultMaximumUploadSize();
+
+	/**
 	 * Gets internal error page class.
 	 * 
 	 * @return Returns the internalErrorPage.
@@ -62,4 +73,17 @@ public interface ApplicationSettingsMBean
 	 * @return the unexpected exception display
 	 */
 	String getUnexpectedExceptionDisplay();
+
+	/**
+	 * Sets the default maximum size for uploads. This is used by
+	 * {@link Form#getMaxSize()} if no value is explicitly set through
+	 * {@link Form#setMaxSize(Bytes)}. The String value should be a floating
+	 * point value followed by K, M, G or T for kilobytes, megabytes, gigabytes
+	 * or terabytes, respectively. The abbreviations KB, MB, GB and TB are also
+	 * accepted. Matching is case insensitive.
+	 * 
+	 * @param defaultUploadSize
+	 *            the default maximum size for uploads
+	 */
+	void setDefaultMaximumUploadSize(String defaultUploadSize);
 }

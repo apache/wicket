@@ -68,7 +68,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 * Constructor
 	 * 
 	 * @param maxSize
-	 *            the maximum size this request may be
+	 *            the maximum size allowed for this request
 	 * @param request
 	 *            the servlet request
 	 * @throws FileUploadException
@@ -78,6 +78,10 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 			throws FileUploadException
 	{
 		super(request);
+		
+		if (maxSize == null) {
+			throw new IllegalArgumentException("argument maxSize must be not null");
+		}
 
 		// Check that request is multipart
 		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
