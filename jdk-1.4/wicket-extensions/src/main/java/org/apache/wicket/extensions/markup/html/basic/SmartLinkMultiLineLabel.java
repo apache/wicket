@@ -24,17 +24,18 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * If you have email addresses or web URLs in the data that you are displaying, 
- * then you can automatically display those pieces of data as hyperlinks, 
- * you will not have to take any action to convert that data.
+ * If you have email addresses or web URLs in the data that you are displaying,
+ * then you can automatically display those pieces of data as hyperlinks, you
+ * will not have to take any action to convert that data.
  * <p>
- * Email addresses will be wrapped with a &lt;a href="mailto:xxx"&gt;xxx&lt;/a&gt; 
- * tag, where "xxx" is the email address that was detected.
+ * Email addresses will be wrapped with a &lt;a
+ * href="mailto:xxx"&gt;xxx&lt;/a&gt; tag, where "xxx" is the email address that
+ * was detected.
  * <p>
- * Web URLs will be wrapped with a &lt;a href="xxx"&gt;xxx&lt;/a&gt; tag, 
- * where "xxx" is the URL that was detected (it can be any valid URL type, 
- * http://, https://, ftp://, etc...)
- *
+ * Web URLs will be wrapped with a &lt;a href="xxx"&gt;xxx&lt;/a&gt; tag, where
+ * "xxx" is the URL that was detected (it can be any valid URL type, http://,
+ * https://, ftp://, etc...)
+ * 
  * @author Juergen Donnerstag
  */
 public final class SmartLinkMultiLineLabel extends MultiLineLabel
@@ -57,21 +58,23 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 		super(name, model);
 	}
 
-    /**
-     * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-     *      org.apache.wicket.markup.ComponentTag)
-     */
-    protected void onComponentTagBody(final MarkupStream markupStream,
-            final ComponentTag openTag)
-    {
-        final CharSequence body = Strings.toMultilineMarkup(getModelObjectAsString());
-        replaceComponentTagBody(markupStream, openTag, getSmartLink(body));
-    }
-    
+	/**
+	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
+	 *      org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		final CharSequence body = Strings.toMultilineMarkup(getModelObjectAsString());
+		replaceComponentTagBody(markupStream, openTag, getSmartLink(body));
+	}
+
+	protected ILinkParser getLinkParser()
+	{
+		return new DefaultLinkParser();
+	}
+
 	protected CharSequence getSmartLink(final CharSequence text)
 	{
-		return SmartLinkLabel.smartLink(text);
+		return getLinkParser().parse(text.toString());
 	}
 }
-
-

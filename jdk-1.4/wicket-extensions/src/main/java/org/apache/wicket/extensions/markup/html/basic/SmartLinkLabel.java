@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.basic;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.Label;
@@ -43,18 +40,6 @@ import org.apache.wicket.model.IModel;
 public class SmartLinkLabel extends Label
 {
 	private static final long serialVersionUID = 1L;
-
-	/** Email address pattern */
-	private static final Pattern emailPattern = Pattern.compile("[\\w\\.-]+@[\\w\\.-]+",
-			Pattern.DOTALL);
-
-	private static final String emailReplacePattern = "<a href=\"mailto:$0\">$0</a>";
-
-	/** URL pattern */
-	private static final Pattern urlPattern = Pattern.compile(
-			"([a-zA-Z]+://[\\w\\.\\-\\:\\/]+)[\\w\\.:\\-/?&=%]*", Pattern.DOTALL);
-
-	private static final String urlReplacePattern = "<a href=\"$0\">$1</a>";
 
 	/**
 	 * @see Label#Label(String, String)
@@ -89,18 +74,11 @@ public class SmartLinkLabel extends Label
 		replaceComponentTagBody(markupStream, openTag, getSmartLink(getModelObjectAsString()));
 	}
 
-	/**
-	 * Replace all email and URL addresses
-	 * 
-	 * @param text
-	 *            Text to be modified
-	 * @return Modified Text
-	 */
-	protected CharSequence getSmartLink(final CharSequence text)
+	protected ILinkParser getLinkParser()
 	{
-		return smartLink(text);
+		return new DefaultLinkParser();
 	}
-	
+
 	/**
 	 * Replace all email and URL addresses
 	 * 
@@ -108,19 +86,8 @@ public class SmartLinkLabel extends Label
 	 *            Text to be modified
 	 * @return Modified Text
 	 */
-	static CharSequence smartLink(final CharSequence text)
+	protected final CharSequence getSmartLink(final CharSequence text)
 	{
-		if (text == null)
-		{
-			return text;
-		}
-
-		Matcher matcher = emailPattern.matcher(text);
-		String work = matcher.replaceAll(emailReplacePattern);
-
-		matcher = urlPattern.matcher(work);
-		work = matcher.replaceAll(urlReplacePattern);
-
-		return work;
+		return getLinkParser().parse(text.toString());
 	}
 }
