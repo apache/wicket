@@ -31,7 +31,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
-import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -460,63 +459,6 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
-	private static class SessionPageMapKey
-	{
-		private final String sessionId;
-		private final String pageMapName;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param sessionId
-		 * @param pageMapName
-		 */
-		public SessionPageMapKey(String sessionId, String pageMapName)
-		{
-			this.sessionId = sessionId;
-			this.pageMapName = pageMapName;
-		}
-
-		/**
-		 * @return
-		 */
-		public String getSessionId()
-		{
-			return sessionId;
-		}
-
-		/**
-		 * @return
-		 */
-		public String getPageMapName()
-		{
-			return pageMapName;
-		}
-
-		public boolean equals(Object obj)
-		{
-			if (this == obj)
-			{
-				return true;
-			}
-
-			if (obj instanceof SessionPageMapKey == false)
-			{
-				return false;
-			}
-
-			SessionPageMapKey rhs = (SessionPageMapKey)obj;
-
-			return Objects.equal(sessionId, rhs.sessionId) &&
-					Objects.equal(pageMapName, rhs.pageMapName);
-		}
-		
-		public int hashCode()
-		{
-			return Objects.hashCode(new Object[] { sessionId, pageMapName } );
-		}
-	}
-	
 	// map from session id to serializedpage list
 	// this contains lists for all active sessions
 	private Map /* <String, List<SerializedPage> */ pagesToSaveAll = new ConcurrentHashMap();
