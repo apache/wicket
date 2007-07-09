@@ -1400,7 +1400,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		endVersion();
 
+		dirty();
+
 		super.onDetach();
+		
 	}
 
 
