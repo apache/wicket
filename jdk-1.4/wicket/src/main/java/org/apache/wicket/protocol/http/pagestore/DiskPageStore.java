@@ -115,29 +115,32 @@ public class DiskPageStore extends AbstractPageStore
 		 */
 		public synchronized void savePage(SerializedPage page)
 		{
-			PageMapEntry entry = getPageMapEntry(page.getPageMapName(), true);
-			PageWindow window = entry.manager.savePage(page.getPageId(), page.getVersionNumber(),
-					page.getAjaxVersionNumber(), page.getData().length);
-			pageMapEntryList.remove(entry);
-			pageMapEntryList.add(entry);
-
-			while (getTotalSize() > getMaxSizePerSession() && pageMapEntryList.size() > 1)
+			if (page.getData() != null)
 			{
-				removePageMapEntry((PageMapEntry)pageMapEntryList.get(0));
-			}
-
-			FileChannel channel = fileChannelPool.getFileChannel(entry.fileName, true);
-			try
-			{
-				channel.write(ByteBuffer.wrap(page.getData()), window.getFilePartOffset());
-			}
-			catch (IOException e)
-			{
-				log.error("Error writing to a channel " + channel, e);
-			}
-			finally
-			{
-				fileChannelPool.returnFileChannel(channel);
+				PageMapEntry entry = getPageMapEntry(page.getPageMapName(), true);
+				PageWindow window = entry.manager.savePage(page.getPageId(), page.getVersionNumber(),
+						page.getAjaxVersionNumber(), page.getData().length);
+				pageMapEntryList.remove(entry);
+				pageMapEntryList.add(entry);
+	
+				while (getTotalSize() > getMaxSizePerSession() && pageMapEntryList.size() > 1)
+				{
+					removePageMapEntry((PageMapEntry)pageMapEntryList.get(0));
+				}
+	
+				FileChannel channel = fileChannelPool.getFileChannel(entry.fileName, true);
+				try
+				{
+					channel.write(ByteBuffer.wrap(page.getData()), window.getFilePartOffset());
+				}
+				catch (IOException e)
+				{
+					log.error("Error writing to a channel " + channel, e);
+				}
+				finally
+				{
+					fileChannelPool.returnFileChannel(channel);
+				}
 			}
 		}
 
