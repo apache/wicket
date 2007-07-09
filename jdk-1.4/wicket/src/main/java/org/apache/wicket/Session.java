@@ -1352,7 +1352,7 @@ public abstract class Session implements IClusterable
 		List dirtyObjects = (List)Session.dirtyObjects.get();
 		Session.dirtyObjects.set(null);
 
-		Set alreadySet = new HashSet();
+		Map tempMap = new HashMap();
 		
 		// Go through all dirty entries, replicating any dirty objects
 		if (dirtyObjects != null)
@@ -1384,11 +1384,19 @@ public abstract class Session implements IClusterable
 					attribute = attributeForPageMapName(((IPageMap)object).getName());
 				}
 
-				if (alreadySet.contains(attribute) == false)
-				{
-					setAttribute(attribute, object);
-					alreadySet.add(attribute);
-				}	
+				// we might override some attributes, so we use a temporary map
+				// and then just copy the last values to real sesssion
+				tempMap.put(attribute, object);
+			}
+		}
+		
+		// in case we have dirty attributes, set them to session
+		if (tempMap.isEmpty() == false)
+		{
+			for (Iterator i = tempMap.entrySet().iterator(); i.hasNext(); )
+			{
+				Map.Entry entry = (Map.Entry)i.next();
+				setAttribute((String) entry.getKey(), entry.getValue());
 			}
 		}
 
