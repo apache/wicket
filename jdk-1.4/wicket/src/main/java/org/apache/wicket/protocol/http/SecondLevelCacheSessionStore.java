@@ -28,6 +28,7 @@ import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.Request;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.version.IPageVersionManager;
@@ -367,7 +368,11 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 			else
 			{
-				currentAjaxVersionNumber++;
+				if (RequestCycle.get().getRequest() instanceof WebRequest &&
+					((WebRequest)RequestCycle.get().getRequest()).isAjax())
+				{
+					currentAjaxVersionNumber++;
+				}
 			}
 		}
 
