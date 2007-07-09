@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.Objects;
 
 /**
  * Abstract page store that implements the serialization logic so that
- * the subclasses can concentrate on actuall storing of serialized 
+ * the subclasses can concentrate on actual storing of serialized 
  * page instances.
  * 
  * @author Matej Knopp
