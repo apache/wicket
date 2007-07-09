@@ -1352,6 +1352,8 @@ public abstract class Session implements IClusterable
 		List dirtyObjects = (List)Session.dirtyObjects.get();
 		Session.dirtyObjects.set(null);
 
+		Set alreadySet = new HashSet();
+		
 		// Go through all dirty entries, replicating any dirty objects
 		if (dirtyObjects != null)
 		{
@@ -1382,7 +1384,11 @@ public abstract class Session implements IClusterable
 					attribute = attributeForPageMapName(((IPageMap)object).getName());
 				}
 
-				setAttribute(attribute, object);
+				if (alreadySet.contains(attribute) == false)
+				{
+					setAttribute(attribute, object);
+					alreadySet.add(attribute);
+				}	
 			}
 		}
 
