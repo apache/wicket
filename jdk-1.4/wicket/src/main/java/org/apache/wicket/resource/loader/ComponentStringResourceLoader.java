@@ -218,22 +218,23 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		{
 			Class clazz = (Class)searchStack.get(i);
 
-			// First check if a property with the 'key' provided by the
-			// user is available.
-			string = loadStringResource(clazz, key, locale, style);
-
-			// If not, prepend the component relativ path to the key
-			if ((string == null) && (prefix != null) && (prefix.length() > 0))
+			// First, try the fully qualified resource name relative to the
+			// component on the path from page down.
+			if ((prefix != null) && (prefix.length() > 0))
 			{
 				string = loadStringResource(clazz, prefix + '.' + key, locale, style);
 
-				// If still not found, adjust the component relativ path
-				// for the next component on the path from the page
-				// down.
 				if (string == null)
 				{
 					prefix = Strings.afterFirst(prefix, '.');
 				}
+			}
+
+			// If not found, than check if a property with the 'key' provided by
+			// the user can be found.
+			if (string == null)
+			{
+				string = loadStringResource(clazz, key, locale, style);
 			}
 		}
 
@@ -288,14 +289,14 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		}
 
 		// Stop at all html markup base classes
-		if (clazz.equals(WebPage.class) || clazz.equals(WebMarkupContainer.class)
-				|| clazz.equals(WebComponent.class))
+		if (clazz.equals(WebPage.class) || clazz.equals(WebMarkupContainer.class) ||
+				clazz.equals(WebComponent.class))
 		{
 			return true;
 		}
 
 		// Stop at all wicket base classes
-		return clazz.equals(Page.class) || clazz.equals(MarkupContainer.class)
-				|| clazz.equals(Component.class);
+		return clazz.equals(Page.class) || clazz.equals(MarkupContainer.class) ||
+				clazz.equals(Component.class);
 	}
 }
