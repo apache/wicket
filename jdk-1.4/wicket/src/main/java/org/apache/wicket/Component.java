@@ -2129,8 +2129,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 					// rendered.
 					if (getRenderBodyOnly() == false)
 					{
-						// Close the manually opened panel tag.
-						getResponse().write(openTag.syntheticCloseTagString());
+						final boolean stripWicketTags = Application.get().getMarkupSettings().getStripWicketTags();
+						if (!(openTag instanceof WicketTag) || !stripWicketTags)
+						{
+							// Close the manually opened panel tag.
+							getResponse().write(openTag.syntheticCloseTagString());
+						}
 					}
 				}
 			}
