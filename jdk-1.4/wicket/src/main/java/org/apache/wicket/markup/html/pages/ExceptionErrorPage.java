@@ -26,6 +26,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.debug.PageView;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -37,7 +38,7 @@ import org.apache.wicket.util.string.Strings;
 public class ExceptionErrorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	 
+
 	/** Keep a reference to the root cause. WicketTester will use it */
 	private final transient Throwable throwable;
 
@@ -52,7 +53,7 @@ public class ExceptionErrorPage extends WebPage
 	public ExceptionErrorPage(final Throwable throwable, final Page page)
 	{
 		this.throwable = throwable;
-		
+
 		// Add exception label
 		add(new MultiLineLabel("exception", Strings.toString(throwable)));
 
@@ -87,32 +88,36 @@ public class ExceptionErrorPage extends WebPage
 		// Show container if markup stream is available
 		markupHighlight.setVisible(markupStream != null);
 
-		// Show component tree of the page
-		if (page != null)
+		add(new Link("displayPageViewLink")
 		{
-		    add(new PageView("componentTree", page));
-		}
-		else
-		{
-		    add(new Label("componentTree", ""));
-		}
+			private static final long serialVersionUID = 1L;
+
+			public void onClick()
+			{
+				ExceptionErrorPage.this.replace(new PageView("componentTree", page));
+				setVisible(false);
+			}
+		});
+
+		add(new Label("componentTree", ""));
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
 	 */
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
-	
+
 	/**
 	 * Get access to the exception
 	 * 
 	 * @return The exception
 	 */
-	public Throwable getThrowable() 
+	public Throwable getThrowable()
 	{
 		return throwable;
 	}
