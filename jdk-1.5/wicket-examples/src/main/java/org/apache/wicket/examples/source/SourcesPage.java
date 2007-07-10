@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -319,7 +320,7 @@ public class SourcesPage extends WebPage
 			{
 				throw new WicketRuntimeException(e);
 			}
-		
+			Collections.sort(resources);
 			return;
 		}
 
