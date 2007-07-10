@@ -39,11 +39,15 @@ public class FormBorder extends Border
 	public FormBorder(final String id)
 	{
 		super(id);
-		
+
 		this.form = new Form("myForm");
 		add(this.form);
+
+		// Due to BorderBodyResolver it works without the following line. But
+		// for clarity reasons it is recommended to use it.
+		// form.add(getBodyContainer());
 	}
-	
+
 	/**
 	 * 
 	 * @param child

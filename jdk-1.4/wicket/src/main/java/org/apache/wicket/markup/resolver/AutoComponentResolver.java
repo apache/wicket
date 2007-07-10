@@ -32,6 +32,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
+import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.convert.IConverter;
 
@@ -96,7 +97,14 @@ public final class AutoComponentResolver implements IComponentResolver
 				if (component != null)
 				{
 					// 1. push the current component onto the stack
-					nestedComponents.put(component, null);
+					if (component instanceof Border)
+					{
+						nestedComponents.put(((Border)component).getBodyContainer(), container);
+					}
+					else
+					{
+						nestedComponents.put(component, container);
+					}
 
 					try
 					{
@@ -117,21 +125,21 @@ public final class AutoComponentResolver implements IComponentResolver
 		// Re-parent children of <wicket:component>.
 		if ((tag.getId() != null) && nestedComponents.containsKey(container))
 		{
-			MarkupContainer parent = container.getParent();
-
-			// Take care of nested <wicket:component>
-			while ((parent != null) && nestedComponents.containsKey(parent))
+			// Make sure you handle nested auto-components properly
+			MarkupContainer parent = (MarkupContainer)nestedComponents.get(container);
+			while (parent != null)
 			{
-				parent = parent.getParent();
-			}
-
-			if (parent != null)
-			{
-				final Component component = parent.get(tag.getId());
+				Component component = parent.get(tag.getId());
 				if (component != null)
 				{
 					component.render(markupStream);
 					return true;
+				}
+				
+				parent = parent.getParent();
+				if (nestedComponents.containsKey(parent))
+				{
+					parent = (MarkupContainer)nestedComponents.get(parent);
 				}
 			}
 		}
