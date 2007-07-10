@@ -41,7 +41,10 @@ import org.apache.wicket.model.Model;
 /**
  * Palette is a component that allows the user to easily select and order
  * multiple items by moving them from one select box into another.
- * 
+ * <p>
+ * When creating a Palette object make sure your IChoiceRenderer returns a
+ * specific ID, not the index.
+ * <p>
  * <strong>Ajaxifying the palette</strong>: The palette itself cannot be
  * ajaxified because it is a panel and therefore does not receive any javascript
  * events. Instead ajax behaviors can be attached to the recorder component
@@ -122,16 +125,16 @@ public class Palette extends Panel
 
 	/**
 	 * @param id
-	 *            component id
+	 *            Component id
 	 * @param choicesModel
-	 *            model representing collection of all available choices
+	 *            Model representing collection of all available choices
 	 * @param choiceRenderer
-	 *            render used to render choices
+	 *            Render used to render choices. This must use unique IDs for the objects, not the index.
 	 * @param rows
-	 *            number of choices to be visible on the screen with out
+	 *            Number of choices to be visible on the screen with out
 	 *            scrolling
 	 * @param allowOrder
-	 *            allow user to move selections up and down
+	 *            Allow user to move selections up and down
 	 */
 	public Palette(String id, IModel choicesModel, IChoiceRenderer choiceRenderer, int rows,
 			boolean allowOrder)
@@ -141,18 +144,18 @@ public class Palette extends Panel
 
 	/**
 	 * @param id
-	 *            component id
+	 *            Component id
 	 * @param model
-	 *            model representing collection of user's selections
+	 *            Model representing collection of user's selections
 	 * @param choicesModel
-	 *            model representing collection of all available choices
+	 *            Model representing collection of all available choices
 	 * @param choiceRenderer
-	 *            render used to render choices
+	 *            Render used to render choices. This must use unique IDs for the objects, not the index.
 	 * @param rows
-	 *            number of choices to be visible on the screen with out
+	 *            Number of choices to be visible on the screen with out
 	 *            scrolling
 	 * @param allowOrder
-	 *            allow user to move selections up and down
+	 *            Allow user to move selections up and down
 	 */
 	public Palette(String id, IModel model, IModel choicesModel, IChoiceRenderer choiceRenderer,
 			int rows, boolean allowOrder)
