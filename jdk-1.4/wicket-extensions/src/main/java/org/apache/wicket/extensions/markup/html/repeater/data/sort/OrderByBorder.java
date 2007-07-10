@@ -54,8 +54,9 @@ public class OrderByBorder extends Border
 	{
 		super(id);
 		OrderByLink link = new OrderByLink("orderByLink", property, stateLocator,
-				OrderByLink.VoidCssProvider.getInstance()) {
-			
+				OrderByLink.VoidCssProvider.getInstance())
+		{
+
 			private static final long serialVersionUID = 1L;
 
 			protected void onSortChanged()
@@ -65,6 +66,7 @@ public class OrderByBorder extends Border
 		};
 		add(link);
 		add(new OrderByLink.CssModifier(link, cssProvider));
+		link.add(getBodyContainer());
 	}
 
 	/**
