@@ -20,8 +20,6 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -41,30 +39,30 @@ import org.apache.wicket.model.Model;
  * 
  * <pre>
  *                                 
- *                                 List tabs=new ArrayList();
+ * List tabs=new ArrayList();
  *                                 
- *                                 tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
+ * tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
+ * 
+ *   public Panel getPanel(String panelId)
+ *   {
+ *     return new TabPanel1(panelId);
+ *   }
+ *   
+ * });
  *                                
- *                                 public Panel getPanel(String panelId)
- *                                 {
- *                                 return new TabPanel1(panelId);
- *                                 }
+ * tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
+ * 
+ *   public Panel getPanel(String panelId)
+ *   {
+ *     return new TabPanel2(panelId);
+ *   }
  *                                 
- *                                 });
+ * });
  *                                
- *                                 tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *                                
- *                                 public Panel getPanel(String panelId)
- *                                 {
- *                                 return new TabPanel2(panelId);
- *                                 }
- *                                 
- *                                 });
- *                                
- *                                 add(new TabbedPanel(&quot;tabs&quot;, tabs));
- *                             
- *                                 
- *                                 &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ * add(new TabbedPanel(&quot;tabs&quot;, tabs));
+ * 
+ * 
+ * &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
  *                             
  * </pre>
  * 
@@ -77,7 +75,7 @@ import org.apache.wicket.model.Model;
  * 
  * @see org.apache.wicket.extensions.markup.html.tabs.ITab
  * 
- * @author Igor Vaynberg (ivaynberg)
+ * @author Igor Vaynberg (ivaynberg at apache dot org)
  * 
  */
 public class TabbedPanel extends Panel
@@ -154,22 +152,36 @@ public class TabbedPanel extends Panel
 
 				titleLink.add(newTitle("title", tab.getTitle(), index));
 				item.add(titleLink);
+			}
 
-				item.add(new SimpleAttributeModifier("class", "selected")
+			protected LoopItem newItem(int iteration)
+			{
+				return new LoopItem(iteration)
 				{
 					private static final long serialVersionUID = 1L;
 
-					public boolean isEnabled(Component component)
+					protected void onComponentTag(ComponentTag tag)
 					{
-						return index == selected;
+						super.onComponentTag(tag);
+						String cssClass = (String)tag.getString("class");
+						if (cssClass == null)
+						{
+							cssClass = " ";
+						}
+						cssClass += " tab" + getIteration();
+
+						if (getIteration() == getSelectedTab())
+						{
+							cssClass += " selected";
+						}
+						if (getIteration() == getIterations() - 1)
+						{
+							cssClass += " last";
+						}
+						tag.put("class", cssClass.trim());
 					}
 
-				});
-				if (item.getIteration() == getIterations() - 1)
-				{
-					item.add(new AttributeAppender("class", true, new Model("last"), " "));
-				}
-
+				};
 			}
 
 		});
