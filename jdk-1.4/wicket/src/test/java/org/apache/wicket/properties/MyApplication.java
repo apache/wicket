@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.properties;
 
+import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.ISessionStore;
 
 /**
  * 
@@ -34,5 +36,13 @@ public class MyApplication extends WebApplication
 	protected void outputDevelopmentModeWarning()
 	{
 		// Do nothing.
+	}
+	
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSessionStore()
+	 */
+	protected ISessionStore newSessionStore()
+	{
+		return new HttpSessionStore(this);
 	}
 }
