@@ -219,8 +219,11 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         hidingAutocomplete=1;
         visible=0;
         selected=-1;
-        getAutocompleteMenu().hide();
-        hideShowCovered();
+        if ( document.getElementById(getMenuId()) )
+        {
+	        getAutocompleteMenu().hide();
+    	    hideShowCovered();
+        }
     }
 
     function getPosition(obj) {
@@ -335,8 +338,13 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
         if (!/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
             return;
         }
-
-        var el = getAutocompleteMenu();
+        // IE7 fix, if this doesn't go in a timeout then the complete page could become invisible.
+        // when closing the popup.
+		setTimeout(hideShowCoveredTimeout,1);
+    }
+    
+    function hideShowCoveredTimeout(){
+		var el = getAutocompleteMenu();
         var p = getPosition(el);
 
         var acLeftX=p[0];
@@ -368,7 +376,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
                     tag.style.visibility = "hidden";
                 }
             }
-        }
+        }        
     }
 
     initialize();
