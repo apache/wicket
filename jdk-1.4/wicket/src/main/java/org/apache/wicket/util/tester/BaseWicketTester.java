@@ -977,7 +977,7 @@ public class BaseWicketTester extends MockWebApplication
 		}
 
 		// Look for that the component is on the response, using the markup id
-		boolean isComponentInAjaxResponse = ajaxResponse.matches(".*<component id=\"" + markupId
+		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" + markupId
 				+ "\" ?>.*");
 		failMessage = "Component wasn't found in the AJAX response";
 		return isTrue(failMessage, isComponentInAjaxResponse);
