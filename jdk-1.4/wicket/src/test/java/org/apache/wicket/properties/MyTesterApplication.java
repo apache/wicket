@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.properties;
 
+import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.ISessionStore;
 
 /**
  * 
@@ -35,4 +37,10 @@ public class MyTesterApplication extends WebApplication
 	{
 		// Do nothing.
 	}
+	
+        protected ISessionStore newSessionStore()
+        {
+                // Don't use a filestore, or we spawn lots of threads, which makes things slow.
+                return new HttpSessionStore(this);
+        }
 }

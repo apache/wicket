@@ -109,7 +109,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 
 		// Invoke the call back URL of the ajax event behavior
 		String callbackUrl = ((AjaxEventBehavior)link.getBehaviors().get(0)).getCallbackUrl()
-				.toString();
+				.toString().replaceAll("&amp;", "&");
 		tester.setupRequestAndResponse();
 		// Fake an Ajax request
 		(tester.getServletRequest()).addHeader("Wicket-Ajax", "Yes");

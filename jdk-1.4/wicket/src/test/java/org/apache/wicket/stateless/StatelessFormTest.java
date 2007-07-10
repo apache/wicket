@@ -18,7 +18,9 @@ package org.apache.wicket.stateless;
 
 import junit.framework.TestCase;
 
+import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
@@ -55,6 +57,13 @@ public class StatelessFormTest extends TestCase
 			{
 				// Do nothing.
 			}
+			
+			protected ISessionStore newSessionStore()
+			{
+				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
+				return new HttpSessionStore(this);
+			}
+			
 		}, "src/test/java/" + getClass().getPackage().getName().replace('.', '/'));
 	}
 

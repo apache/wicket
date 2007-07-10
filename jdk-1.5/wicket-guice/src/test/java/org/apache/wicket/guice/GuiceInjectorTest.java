@@ -20,8 +20,10 @@ import junit.framework.TestCase;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Objects;
 
 import com.google.inject.Binder;
@@ -44,6 +46,12 @@ public class GuiceInjectorTest extends TestCase
 			{
 				return null;
 			}
+			
+            protected ISessionStore newSessionStore()
+            {
+                    // Don't use a filestore, or we spawn lots of threads, which makes things slow.
+                    return new HttpSessionStore(this);
+            }
 		}, null);
 
 		// Make a new webapp and injector, and register the injector with the

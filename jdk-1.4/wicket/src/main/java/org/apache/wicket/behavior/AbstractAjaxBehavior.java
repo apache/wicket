@@ -111,7 +111,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		
 		if (onlyTargetActivePage)
 		{
-			url.append("&").append(WebRequestCodingStrategy.IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+			url.append("&amp;").append(WebRequestCodingStrategy.IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 
 		return url;

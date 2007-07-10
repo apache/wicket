@@ -24,7 +24,9 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.session.ISessionStore;
 
 /**
  * @author jcompagner
@@ -80,6 +82,13 @@ public class WicketOutputStreamTest extends WicketTestCase
 			 {
 				 return null;
 			 }
+			 
+			 protected ISessionStore newSessionStore()
+			 {
+				 // Don't use a filestore, or we spawn lots of threads, which makes things slow.
+				 return new HttpSessionStore(this);
+			 }
+
 		 };
 
 		 try
