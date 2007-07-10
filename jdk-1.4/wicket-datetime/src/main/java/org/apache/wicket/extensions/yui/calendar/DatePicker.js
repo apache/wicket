@@ -56,7 +56,10 @@ function init${widgetId}DpJs() {
     
     // fire onchange notification 
     if (wasVisible && ${fireChangeEvent}) {
-    	YAHOO.util.Dom.get("${widgetId}").onchange();
+    	var field = YAHOO.util.Dom.get("${widgetId}");
+    	if (typeof(field.onchange) != 'undefined') {
+    		field.onchange();
+    	}
     }
   }
 
