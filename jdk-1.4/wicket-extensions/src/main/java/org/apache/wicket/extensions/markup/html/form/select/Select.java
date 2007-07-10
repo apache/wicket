@@ -84,7 +84,7 @@ public class Select extends FormComponent
 		}
 		else
 		{
-			getModel().setObject(null);
+			object = null;
 		}
 
 		/*
@@ -145,7 +145,8 @@ public class Select extends FormComponent
 					}
 					else
 					{
-						setModelObject(option.getModelObject());
+						object = option.getModelObject();
+						break;
 					}
 				}
 			}
@@ -155,6 +156,9 @@ public class Select extends FormComponent
 		{
 			modelChanged();
 		}
+
+		// force notify of model via setObject()
+		getModel().setObject(object);
 	}
 
 	/**
@@ -166,19 +170,23 @@ public class Select extends FormComponent
 	boolean isSelected(SelectOption option)
 	{
 		// if the raw input is specified use that, otherwise use model
-		if (hasRawInput()) {
+		if (hasRawInput())
+		{
 			String[] paths = getInputAsArray();
 			if (paths != null && paths.length > 0)
 			{
 				for (int i = 0; i < paths.length; i++)
 				{
 					String path = paths[i];
-					if (path.equals(option.getPath())) {
+					if (path.equals(option.getPath()))
+					{
 						return true;
 					}
 				}
 			}
-		} else {
+		}
+		else
+		{
 			Object selected = getModelObject();
 			Object value = option.getModelObject();
 
@@ -198,9 +206,9 @@ public class Select extends FormComponent
 				return Objects.equal(selected, value);
 			}
 		}
-		
+
 		return false;
-		
+
 	}
 
 }
