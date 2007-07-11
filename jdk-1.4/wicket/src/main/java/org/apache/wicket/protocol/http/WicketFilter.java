@@ -511,8 +511,8 @@ public class WicketFilter implements Filter
 						+ " \"" + filterName + "\" must start with '/' and end with '*'.");
 			}
 
-			// Strip trailing '*' and leading '/'.
-			return urlPattern.substring(1, urlPattern.length() - 1);
+			// Strip trailing '*' and keep leading '/'.
+			return stripWildcard(urlPattern);
 		}
 		catch (IOException e)
 		{
@@ -674,7 +674,14 @@ public class WicketFilter implements Filter
 			throw new WicketRuntimeException("Your " + FILTER_MAPPING_PARAM
 					+ " must start with \"/\" and end with \"/*\". It is: " + result);
 		}
-		return filterPath = result.substring(1, result.length() - 2);
+		return filterPath = stripWildcard(result);
+	}
+	
+	/**
+	 * Strip trailing '*' and keep leading '/'
+	 */
+	private String stripWildcard(String result) {
+		return result.substring(1, result.length() - 1);
 	}
 
 	/**
