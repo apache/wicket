@@ -653,7 +653,7 @@ public class ComponentTag extends MarkupElement
 					if (value != null)
 					{
 						response.write("=\"");
-						value = Strings.replaceAll(value, "\"", "\\\"");
+						value = Strings.replaceAll(value, "\"", "&#34;");
 						response.write(value);
 						response.write("\"");
 					}
