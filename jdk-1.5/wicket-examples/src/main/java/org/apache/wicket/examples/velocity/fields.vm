@@ -1,8 +1,6 @@
 <ul>
 #foreach( $field in $fields )
-<!-- There must be a bug somewhere because wicket:message does not work when inserted here!
-  <wicket:message key="${field.fieldName}">value</wicket:message-->
-<span wicket:id="label_${field.fieldName}">Label</span>
+  <wicket:message key="${field.fieldName}">Label</wicket:message>
   <input wicket:id="${field.fieldName}" size="${field.fieldSize}"/><br/>
 #end
 </ul>

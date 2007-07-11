@@ -32,6 +32,8 @@ import org.apache.wicket.velocity.markup.html.VelocityPanel;
 
 /**
  * Template example page.
+ * 
+ * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class DynamicPage extends WicketExamplePage
 {
@@ -68,8 +70,6 @@ public class DynamicPage extends WicketExamplePage
 		for (Field field : fields)
 		{
 			panel.add(new TextField(field.getFieldName()));
-			panel.add(new Label("label_" + field.getFieldName(), new ResourceModel(field
-					.getFieldName())));
 		}
 	}
 }
