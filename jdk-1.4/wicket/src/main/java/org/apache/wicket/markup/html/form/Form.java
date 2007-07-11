@@ -1691,7 +1691,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				return false;
 			}
 		}
-		return last == this;
+		return last == this.findPage();
 	}
 
 
