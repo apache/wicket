@@ -1979,7 +1979,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 				log.debug("End render " + this);
 			}
 		}
-		else
+		// markupStream is null when rendering a page
+		else if (markupStream != null)
 		{
 			if (getFlag(FLAG_PLACEHOLDER))
 			{
