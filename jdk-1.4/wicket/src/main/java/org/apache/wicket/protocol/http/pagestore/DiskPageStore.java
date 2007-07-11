@@ -22,34 +22,80 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
+import org.apache.wicket.protocol.http.FilePageStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
+import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * {@link IPageStore} implementation that stores the serialized page grouped in
+ * a single file per pagemap.
+ * <p>
+ * This store was designed to overcome the problems of {@link FilePageStore}
+ * which stores the pages in separate files per page.
+ * <p>
+ * {@link DiskPageStore} allows to set maximum size for pagemap file and maximum
+ * size for session. If the maximum size for session is exceeded, the last
+ * recently used pagemap file is removed.
+ * 
  * @author Matej Knopp
  */
 public class DiskPageStore extends AbstractPageStore
 {
-	private static class PageMapEntry
+	protected static class PageMapEntry
 	{
 		private String pageMapName;
 		private String fileName;
 		private PageWindowManager manager;
+
+		/**
+		 * @return
+		 */
+		public String getPageMapName()
+		{
+			return pageMapName;
+		}
+
+		/**
+		 * @return
+		 */
+		public String getFileName()
+		{
+			return fileName;
+		}
+
+		/**
+		 * @return
+		 */
+		public PageWindowManager getManager()
+		{
+			return manager;
+		}
 	}
 
-	private class SessionEntry
+	protected class SessionEntry
 	{
 		private String sessionId;
 		private List pageMapEntryList = new ArrayList();
+
+		/**
+		 * @return
+		 */
+		public String getSessionId()
+		{
+			return sessionId;
+		}
 
 		/**
 		 * @return
@@ -68,7 +114,20 @@ public class DiskPageStore extends AbstractPageStore
 			return result;
 		}
 
-		private PageMapEntry getPageMapEntry(String pageMapName, boolean create)
+		/**
+		 * @return
+		 */
+		public List getPageMapEntryList()
+		{
+			return Collections.unmodifiableList(pageMapEntryList);
+		}
+
+		/**
+		 * @param pageMapName
+		 * @param create
+		 * @return
+		 */
+		public PageMapEntry getPageMapEntry(String pageMapName, boolean create)
 		{
 			PageMapEntry result = null;
 			for (Iterator i = pageMapEntryList.iterator(); i.hasNext();)
@@ -118,16 +177,16 @@ public class DiskPageStore extends AbstractPageStore
 			if (page.getData() != null)
 			{
 				PageMapEntry entry = getPageMapEntry(page.getPageMapName(), true);
-				PageWindow window = entry.manager.savePage(page.getPageId(), page.getVersionNumber(),
-						page.getAjaxVersionNumber(), page.getData().length);
+				PageWindow window = entry.manager.createPageWindow(page.getPageId(), page
+						.getVersionNumber(), page.getAjaxVersionNumber(), page.getData().length);
 				pageMapEntryList.remove(entry);
 				pageMapEntryList.add(entry);
-	
+
 				while (getTotalSize() > getMaxSizePerSession() && pageMapEntryList.size() > 1)
 				{
 					removePageMapEntry((PageMapEntry)pageMapEntryList.get(0));
 				}
-	
+
 				FileChannel channel = fileChannelPool.getFileChannel(entry.fileName, true);
 				try
 				{
@@ -159,6 +218,38 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
+		 * @param window
+		 * @param pageMapFileName
+		 * @return
+		 */
+		public byte[] loadPage(PageWindow window, String pageMapFileName)
+		{
+			byte[] result = null;
+			FileChannel channel = fileChannelPool.getFileChannel(pageMapFileName, false);
+			if (channel != null)
+			{
+				ByteBuffer buffer = ByteBuffer.allocate(window.getFilePartSize());
+				try
+				{
+					channel.read(buffer, window.getFilePartOffset());
+					if (buffer.hasArray())
+					{
+						result = buffer.array();
+					}
+				}
+				catch (IOException e)
+				{
+					log.error("Error reading from file channel " + channel, e);
+				}
+				finally
+				{
+					fileChannelPool.returnFileChannel(channel);
+				}
+			}
+			return result;
+		}
+
+		/**
 		 * @param pageMapName
 		 * @param id
 		 * @param versionNumber
@@ -176,27 +267,7 @@ public class DiskPageStore extends AbstractPageStore
 						ajaxVersionNumber);
 				if (window != null)
 				{
-					FileChannel channel = fileChannelPool.getFileChannel(entry.fileName, false);
-					if (channel != null)
-					{
-						ByteBuffer buffer = ByteBuffer.allocate(window.getFilePartSize());
-						try
-						{
-							channel.read(buffer, window.getFilePartOffset());
-							if (buffer.hasArray())
-							{
-								result = buffer.array();
-							}
-						}
-						catch (IOException e)
-						{
-							log.error("Error reading from file channel " + channel, e);
-						}
-						finally
-						{
-							fileChannelPool.returnFileChannel(channel);
-						}
-					}
+					result = loadPage(window, entry.fileName);
 				}
 			}
 			return result;
@@ -288,8 +359,8 @@ public class DiskPageStore extends AbstractPageStore
 	 * @param maxSizePerSession
 	 * @param fileChannelPoolCapacity
 	 */
-	public DiskPageStore(File fileStoreFolder, int maxSizePerPagemap,
-			int maxSizePerSession, int fileChannelPoolCapacity)
+	public DiskPageStore(File fileStoreFolder, int maxSizePerPagemap, int maxSizePerSession,
+			int fileChannelPoolCapacity)
 	{
 		this.maxSizePerPageMap = maxSizePerPagemap;
 		this.maxSizePerSession = maxSizePerSession;
@@ -298,7 +369,7 @@ public class DiskPageStore extends AbstractPageStore
 
 		this.fileStoreFolder.mkdirs();
 		appName = Application.get().getApplicationKey();
-		
+
 		initPageSavingThread();
 	}
 
@@ -315,11 +386,18 @@ public class DiskPageStore extends AbstractPageStore
 	 * @param maxSizePerSession
 	 * @param fileChannelPoolCapacity
 	 */
-	public DiskPageStore(int maxSizePerPagemap, int maxSizePerSession,
-			int fileChannelPoolCapacity)
+	public DiskPageStore(int maxSizePerPagemap, int maxSizePerSession, int fileChannelPoolCapacity)
 	{
 		this(getDefaultFileStoreFolder(), maxSizePerPagemap, maxSizePerSession,
 				fileChannelPoolCapacity);
+	}
+
+	/**
+	 * Construct.
+	 */
+	public DiskPageStore()
+	{
+		this((int)Bytes.megabytes(10).bytes(), (int)Bytes.megabytes(100).bytes(), 50);
 	}
 
 	public void destroy()
@@ -332,8 +410,8 @@ public class DiskPageStore extends AbstractPageStore
 	}
 
 	private Map /* <String, SessionEntry> */sessionIdToEntryMap = new ConcurrentHashMap();
-	
-	private SessionEntry getSessionEntry(String sessionId, boolean createIfDoesNotExist)
+
+	protected SessionEntry getSessionEntry(String sessionId, boolean createIfDoesNotExist)
 	{
 		SessionEntry entry = (SessionEntry)sessionIdToEntryMap.get(sessionId);
 		if (entry == null && createIfDoesNotExist)
@@ -359,7 +437,7 @@ public class DiskPageStore extends AbstractPageStore
 		if (entry != null)
 		{
 			byte[] data;
-			
+
 			if (isSynchronous())
 			{
 				data = entry.loadPage(pagemap, id, versionNumber, ajaxVersionNumber);
@@ -373,7 +451,7 @@ public class DiskPageStore extends AbstractPageStore
 					data = entry.loadPage(pagemap, id, versionNumber, ajaxVersionNumber);
 				}
 			}
-			
+
 			if (data != null)
 			{
 				return deserializePage(data, versionNumber);
@@ -396,9 +474,9 @@ public class DiskPageStore extends AbstractPageStore
 		else
 		{
 			entry.removePageMap(pageMap);
-		}		
+		}
 	}
-	
+
 	public void removePage(String sessionId, String pageMap, int id)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, false);
@@ -420,11 +498,9 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
-	public void storePage(String sessionId, Page page)
+	protected void storeSerializedPages(String sessionId, List /* <SerializedPage> */pages)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, true);
-
-		List pages = serializePage(page);
 
 		if (isSynchronous())
 		{
@@ -438,6 +514,26 @@ public class DiskPageStore extends AbstractPageStore
 		{
 			schedulePagesSave(sessionId, pages);
 		}
+	}
+
+	/**
+	 * Hook for processing serialized pages (e.g. sending those across cluster)
+	 * 
+	 * @param sessionId
+	 * @param pages
+	 */
+	protected void onPagesSerialized(String sessionId, List /* <SerializedPage */pages)
+	{
+
+	}
+
+	public void storePage(String sessionId, Page page)
+	{
+		List pages = serializePage(page);
+
+		onPagesSerialized(sessionId, pages);
+
+		storeSerializedPages(sessionId, pages);
 	}
 
 	public void unbind(String sessionId)
@@ -464,19 +560,19 @@ public class DiskPageStore extends AbstractPageStore
 
 	// map from session id to serializedpage list
 	// this contains lists for all active sessions
-	private Map /* <String, List<SerializedPage> */ pagesToSaveAll = new ConcurrentHashMap();
-	
+	private Map /* <String, List<SerializedPage>> */pagesToSaveAll = new ConcurrentHashMap();
+
 	// contains list of serialized pages to be saved - only non empty lists
-	private Map /* <String, List<SerializedPage> */ pagesToSaveActive = new ConcurrentHashMap();
-	
-	private List getPagesToSaveList(String sessionId)
+	private Map /* <String, List<SerializedPage>> */pagesToSaveActive = new ConcurrentHashMap();
+
+	protected List getPagesToSaveList(String sessionId)
 	{
-		List list = (List) pagesToSaveAll.get(sessionId);
+		List list = (List)pagesToSaveAll.get(sessionId);
 		if (list == null)
 		{
 			synchronized (pagesToSaveAll)
 			{
-				list = (List) pagesToSaveAll.get(sessionId);
+				list = (List)pagesToSaveAll.get(sessionId);
 				if (list == null)
 				{
 					list = new ArrayList();
@@ -486,38 +582,38 @@ public class DiskPageStore extends AbstractPageStore
 		}
 		return list;
 	}
-	
-	private void flushPagesToSaveList(String sessionId, List list)
+
+	protected void flushPagesToSaveList(String sessionId, List list)
 	{
 		if (list != null)
 		{
-			for (Iterator i = list.iterator(); i.hasNext();) 
+			for (Iterator i = list.iterator(); i.hasNext();)
 			{
-				SerializedPage page = (SerializedPage) i.next();
+				SerializedPage page = (SerializedPage)i.next();
 				getSessionEntry(sessionId, true).savePage(page);
 			}
 			list.clear();
 		}
 	}
-	
-	private void schedulePagesSave(String sessionId, List/* <SerializedPage */ pages)
+
+	private void schedulePagesSave(String sessionId, List/* <SerializedPage */pages)
 	{
 		List list = getPagesToSaveList(sessionId);
 		synchronized (list)
 		{
 			list.addAll(pages);
-			
+
 			if (list.size() > 0 && pagesToSaveActive.containsKey(sessionId) == false)
 			{
 				pagesToSaveActive.put(sessionId, list);
 			}
 		}
 	}
-	
+
 	private class PageSavingThread implements Runnable
 	{
 		private volatile boolean stop = false;
-		
+
 		public void run()
 		{
 			while (stop == false)
@@ -532,22 +628,32 @@ public class DiskPageStore extends AbstractPageStore
 					{
 					}
 				}
-					
-				for (Iterator i = pagesToSaveActive.entrySet().iterator(); i.hasNext(); )
+
+				for (Iterator i = pagesToSaveActive.entrySet().iterator(); i.hasNext();)
 				{
-					Map.Entry entry = (Map.Entry) i.next();
-					String sessionId = (String) entry.getKey();
-					List pages = (List) entry.getValue();
-					
+					Map.Entry entry = (Map.Entry)i.next();
+					String sessionId = (String)entry.getKey();
+					List pages = (List)entry.getValue();
+
 					synchronized (pages)
 					{
-						flushPagesToSaveList(sessionId, pages);
+						try
+						{
+							flushPagesToSaveList(sessionId, pages);
+						}
+						catch (Exception e)
+						{
+							log
+									.error(
+											"Error flushing serialized pages from worker thread for session " +
+													sessionId, e);
+						}
 						i.remove();
 					}
 				}
 			}
 		}
-		
+
 		/**
 		 * 
 		 */
@@ -556,8 +662,8 @@ public class DiskPageStore extends AbstractPageStore
 			this.stop = true;
 		}
 	};
-	
-	private void initPageSavingThread() 
+
+	private void initPageSavingThread()
 	{
 		if (isSynchronous() == false)
 		{
@@ -568,15 +674,15 @@ public class DiskPageStore extends AbstractPageStore
 			t.start();
 		}
 	}
-	
+
 	private PageSavingThread pageSavingThread = null;
-	
-	private int getSavingThreadSleepTime() 
+
+	protected int getSavingThreadSleepTime()
 	{
 		return 100;
 	}
-	
-	private boolean isSynchronous()
+
+	protected boolean isSynchronous()
 	{
 		return false;
 	}

@@ -34,17 +34,22 @@ import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.util.lang.Objects;
 
 /**
- * Abstract page store that implements the serialization logic so that
- * the subclasses can concentrate on actual storing of serialized 
- * page instances.
+ * Abstract page store that implements the serialization logic so that the
+ * subclasses can concentrate on actual storing of serialized page instances.
  * 
  * @author Matej Knopp
  */
 public abstract class AbstractPageStore implements IPageStore
 {
 
-	protected static class SerializedPage
+	/**
+	 * Immutable class that contains a serialized page instance.
+	 * 
+	 * @author Matej Knopp
+	 */
+	protected static class SerializedPage implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
 
 		private final int pageId;
 		private final String pageMapName;
@@ -70,9 +75,10 @@ public abstract class AbstractPageStore implements IPageStore
 			this.ajaxVersionNumber = ajaxVersionNumber;
 			this.data = data;
 		}
-		
+
 		/**
 		 * Construct.
+		 * 
 		 * @param page
 		 */
 		public SerializedPage(Page page)
@@ -130,7 +136,7 @@ public abstract class AbstractPageStore implements IPageStore
 		{
 			this.data = data;
 		}
-		
+
 		public int hashCode()
 		{
 			return pageId * 1931 + versionNumber * 13 + ajaxVersionNumber * 301 +
@@ -141,45 +147,79 @@ public abstract class AbstractPageStore implements IPageStore
 		{
 			if (this == obj)
 				return true;
-			
+
 			if (obj instanceof SerializedPage == false)
 				return false;
-			
-			SerializedPage rhs = (SerializedPage) obj;
-			
+
+			SerializedPage rhs = (SerializedPage)obj;
+
 			return pageId == rhs.pageId &&
-			       (pageMapName == rhs.pageMapName || (pageMapName != null && pageMapName.equals(rhs.pageMapName))) &&
-			       versionNumber == rhs.versionNumber &&
-			       ajaxVersionNumber == rhs.ajaxVersionNumber;
+					(pageMapName == rhs.pageMapName || (pageMapName != null && pageMapName
+							.equals(rhs.pageMapName))) && versionNumber == rhs.versionNumber &&
+					ajaxVersionNumber == rhs.ajaxVersionNumber;
 		}
 	};
-	
-	protected List/* SerializedPage */ serializePage(Page page) {
+
+	/**
+	 * Creates a list of {@link SerializedPage} instances obtained from
+	 * serializing the provided page.
+	 * <p>
+	 * One page instance can be serialized to multiple {@link SerializedPage}
+	 * instances, because each referenced page is serialized separately and
+	 * should also be separately saved On deserialization wicket detects a page
+	 * instance placeholder and loads the appropriate page.
+	 * <p>
+	 * As an example, when there is PageA that has a member variable of type
+	 * PageB, serializing instanceof PageA will result in a list of two
+	 * {@link SerializedPage} instances, one for PageA and another one for the
+	 * referenced PageB.
+	 * 
+	 * @param page
+	 *            page to be serialized
+	 * @return list of {@link SerializedPage}s
+	 */
+	protected List/* <SerializedPage> */serializePage(Page page)
+	{
 		final List result = new ArrayList();
-		
+
 		SerializedPage initialPage = new SerializedPage(page);
 		result.add(initialPage);
-		
-		PageSerializer serializer = new PageSerializer(initialPage) {
+
+		PageSerializer serializer = new PageSerializer(initialPage)
+		{
 			protected void onPageSerialized(SerializedPage page)
 			{
 				result.add(page);
 			}
 		};
-		
+
 		Page.serializer.set(serializer);
-		
+
 		try
 		{
 			initialPage.setData(Objects.objectToByteArray(page.getPageMapEntry()));
-		} finally {
+		}
+		finally
+		{
 			Page.serializer.set(null);
 		}
-		
+
 		return result;
 	}
-	
-	protected Page deserializePage(byte[] data, int versionNumber) {
+
+	/**
+	 * Creates a page instance from given byte array. Optionally gets the
+	 * specified version of the page.
+	 * 
+	 * @param data
+	 *            Serialized page instance data as byte array
+	 * @param versionNumber
+	 *            Requested page version or -1 if original version (the one
+	 *            serialized) should be kept
+	 * @return page instance
+	 */
+	protected Page deserializePage(byte[] data, int versionNumber)
+	{
 		boolean set = Page.serializer.get() == null;
 		Page page = null;
 		try
@@ -192,7 +232,10 @@ public abstract class AbstractPageStore implements IPageStore
 			if (entry != null)
 			{
 				page = entry.getPage();
-				page = page.getVersion(versionNumber);
+				if (versionNumber != -1)
+				{
+					page = page.getVersion(versionNumber);
+				}
 			}
 		}
 		finally
@@ -204,7 +247,12 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 		return page;
 	}
-	
+
+	/**
+	 * Internal class for page serialization and deserialization
+	 * @author Matej Knopp
+	 * @author Johan Compagner
+	 */
 	private static class PageSerializer implements Page.IPageSerializer
 	{
 		private SerializedPage current;
@@ -213,10 +261,11 @@ public abstract class AbstractPageStore implements IPageStore
 		private List completed = new ArrayList();
 
 
-		protected void onPageSerialized(SerializedPage page) {
-			
+		protected void onPageSerialized(SerializedPage page)
+		{
+
 		}
-		
+
 		/**
 		 * Construct.
 		 * 
@@ -284,7 +333,7 @@ public abstract class AbstractPageStore implements IPageStore
 		}
 	}
 
-	
+
 	/**
 	 * Class that resolves to page instance
 	 */

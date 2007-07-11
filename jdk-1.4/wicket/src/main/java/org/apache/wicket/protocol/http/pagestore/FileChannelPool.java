@@ -32,11 +32,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Thread safe implementation of {@link FileChannel} pool.
+ * Thread safe pool of {@link FileChannel} objects.
+ * <p>
+ * Opening and closing file is an expensive operation and under certain
+ * circumstances this can singificantly harm performances, because on every
+ * close the filesystem cache might be flushed.
+ * <p>
+ * To minimize the negative impact opened files can be pooled, which is a
+ * responsibility of {@link FileChannelPool} class.
+ * <p>
+ * {@link FileChannelPool} allows to specify maximum number of opened
+ * {@link FileChannel}s.
+ * <p>
+ * Note that under certain circumtances (when there are no empty slots in pool)
+ * the initial capacity can be exceeded (more files are opened then the
+ * specified capacity is). If this happens, a warning is written to log, as this
+ * probably means that there is a problem with page store.
  * 
  * @author Matej Knopp
  */
-class FileChannelPool
+public class FileChannelPool
 {
 
 	private final Map /* <String, FileChannel> */nameToChannel = new HashMap();
@@ -51,6 +66,7 @@ class FileChannelPool
 	 * Construct.
 	 * 
 	 * @param capacity
+	 *            Maximum number of opened file channels.
 	 */
 	public FileChannelPool(int capacity)
 	{
@@ -64,6 +80,15 @@ class FileChannelPool
 		log.debug("Starting file channel pool with capacity of " + capacity + " channels");
 	};
 
+	/**
+	 * Creates a new file channel with specified file name.
+	 * 
+	 * @param fileName
+	 * @param createIfDoesNotExist
+	 *            in case the file does not exist this parameter determines if
+	 *            the file should be created
+	 * @return
+	 */
 	private FileChannel newFileChannel(String fileName, boolean createIfDoesNotExist)
 	{
 		File file = new File(fileName);
@@ -84,17 +109,28 @@ class FileChannelPool
 	}
 
 
+	/**
+	 * Tries to reduce (close) enouch channels to have at least one channel free
+	 * (so that there are maximum capacity - 1 opened channel).
+	 */
 	private void reduceChannels()
 	{
+		// how much channels we need to close?
 		int channelsToReduce = nameToChannel.size() - capacity + 1;
 
+		// while there are still channels to close and we have still idle
+		// channels left
 		while (channelsToReduce > 0 && idleChannels.isEmpty() == false)
 		{
 			FileChannel channel = (FileChannel)idleChannels.getFirst();
 			String channelName = (String)channelToName.get(channel);
+
+			// remove oldest idle channel
 			idleChannels.removeFirst();
 			nameToChannel.remove(channelName);
 			channelToName.remove(channel);
+
+			// this shouldn't really happen
 			if (channelToUseCount.get(channel) != null)
 			{
 				log.warn("Channel " + channelName + " is both idle and in use at the same time!");
@@ -119,6 +155,9 @@ class FileChannelPool
 	}
 
 	/**
+	 * Returns a channel for given file. If the file doesn't exist, the
+	 * createIfDoesNotExit attribute specifies if the file should be crated.
+	 * 
 	 * Do NOT call close on the returned chanel. Instead call
 	 * {@link #returnFileChannel(FileChannel)}
 	 * 
@@ -150,6 +189,8 @@ class FileChannelPool
 
 		if (channel != null)
 		{
+			// increase the usage count for this channel
+
 			Integer count = (Integer)channelToUseCount.get(channel);
 			if (count == null || count.intValue() == 0)
 			{
@@ -167,6 +208,9 @@ class FileChannelPool
 	}
 
 	/**
+	 * Returns the channel to the pool. It is necessary to call this for every
+	 * channel obtained by calling {@link #getFileChannel(String, boolean)}.
+	 * 
 	 * @param channel
 	 */
 	public synchronized void returnFileChannel(FileChannel channel)
@@ -180,6 +224,7 @@ class FileChannelPool
 
 		count = new Integer(count.intValue() - 1);
 
+		// decrease the usage count
 		if (count.intValue() == 0)
 		{
 			channelToUseCount.remove(channel);
@@ -189,6 +234,7 @@ class FileChannelPool
 			}
 			else
 			{
+				// this was the last usage, add chanel to idle channels
 				idleChannels.addLast(channel);
 			}
 		}
@@ -201,12 +247,12 @@ class FileChannelPool
 	private void closeAndDelete(FileChannel channel)
 	{
 		channelsToDeleteOnReturn.remove(channel);
-		String name = (String) channelToName.get(channel);
+		String name = (String)channelToName.get(channel);
 		channelToName.remove(channel);
 
 		channelToUseCount.remove(channel);
 		idleChannels.remove(channel);
-		
+
 		try
 		{
 			channel.close();
@@ -215,12 +261,16 @@ class FileChannelPool
 		{
 			log.error("Error closing file channel", e);
 		}
-		
+
 		File file = new File(name);
 		file.delete();
 	}
-	
+
 	/**
+	 * Closes the file channel with given name and removes it from pool. If the
+	 * channel is in use, the pool first waits until the chanel is returned to
+	 * the pool and then closes it.
+	 * 
 	 * @param name
 	 */
 	public synchronized void closeAndDeleteFileChannel(String name)
@@ -229,7 +279,7 @@ class FileChannelPool
 		if (channel != null)
 		{
 			nameToChannel.remove(name);
-		
+
 			Integer count = (Integer)channelToUseCount.get(channel);
 			if (count != null && count.intValue() > 0)
 			{
@@ -248,12 +298,12 @@ class FileChannelPool
 	}
 
 	/**
-	 * 
+	 * Destroys the {@link FileChannel} pool and closes all opened channels.
 	 */
-	public synchronized void destroy() 
+	public synchronized void destroy()
 	{
 		log.debug("Destroying FileChannel pool");
-		for (Iterator i = channelToName.keySet().iterator(); i.hasNext(); )
+		for (Iterator i = channelToName.keySet().iterator(); i.hasNext();)
 		{
 			FileChannel channel = (FileChannel)i.next();
 			try
@@ -266,6 +316,6 @@ class FileChannelPool
 			}
 		}
 	}
-	
+
 	private static final Logger log = LoggerFactory.getLogger(FileChannelPool.class);
 }
