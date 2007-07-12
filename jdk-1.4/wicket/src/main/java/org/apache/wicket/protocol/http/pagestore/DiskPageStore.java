@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link IPageStore} implementation that stores the serialized page grouped in
+ * {@link IPageStore} implementation that stores the serialized pages grouped in
  * a single file per pagemap.
  * <p>
  * This store was designed to overcome the problems of {@link FilePageStore}
@@ -53,6 +53,11 @@ import org.slf4j.LoggerFactory;
  */
 public class DiskPageStore extends AbstractPageStore
 {
+	/**
+	 * Each PageMap is represented by this class.
+	 * 
+	 * @author Matej Knopp
+	 */
 	protected static class PageMapEntry
 	{
 		private String pageMapName;
@@ -60,7 +65,7 @@ public class DiskPageStore extends AbstractPageStore
 		private PageWindowManager manager;
 
 		/**
-		 * @return
+		 * @return the name of pagemap
 		 */
 		public String getPageMapName()
 		{
@@ -68,7 +73,7 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
-		 * @return
+		 * @return path of file that contains serialized pages in this pagemap
 		 */
 		public String getFileName()
 		{
@@ -76,7 +81,8 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
-		 * @return
+		 * @return manager that maintains information about pages inside the
+		 *         file
 		 */
 		public PageWindowManager getManager()
 		{
@@ -84,13 +90,18 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
+	/**
+	 * Represents a session,
+	 * 
+	 * @author Matej Knopp
+	 */
 	protected class SessionEntry
 	{
 		private String sessionId;
 		private List pageMapEntryList = new ArrayList();
 
 		/**
-		 * @return
+		 * @return session id
 		 */
 		public String getSessionId()
 		{
@@ -98,7 +109,7 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
-		 * @return
+		 * @return summed size of all pagemap files
 		 */
 		public int getTotalSize()
 		{
@@ -115,14 +126,18 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
-		 * @return
+		 * @return list of {@link PageMapEntry} for this session
 		 */
-		public List getPageMapEntryList()
+		public List /* <PageMapEntry> */getPageMapEntryList()
 		{
 			return Collections.unmodifiableList(pageMapEntryList);
 		}
 
 		/**
+		 * Returns a {@link PageMapEntry} for specified pagemap. If the create
+		 * attribute is set and the pagemap does not exist, new
+		 * {@link PageMapEntry} will be created.
+		 * 
 		 * @param pageMapName
 		 * @param create
 		 * @return
@@ -151,6 +166,11 @@ public class DiskPageStore extends AbstractPageStore
 			return result;
 		}
 
+		/**
+		 * Removes the pagemap entry and deletes the file.
+		 * 
+		 * @param entry
+		 */
 		private void removePageMapEntry(PageMapEntry entry)
 		{
 			fileChannelPool.closeAndDeleteFileChannel(entry.fileName);
@@ -158,6 +178,8 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
+		 * Removes the specified pagemap and deletes the file.
+		 * 
 		 * @param pageMapName
 		 */
 		public synchronized void removePageMap(String pageMapName)
@@ -170,26 +192,38 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
+		 * Saves the serialized page to appropriate pagemap file.
+		 * 
 		 * @param page
 		 */
 		public synchronized void savePage(SerializedPage page)
 		{
+			// only save page that has some data
 			if (page.getData() != null)
 			{
 				PageMapEntry entry = getPageMapEntry(page.getPageMapName(), true);
+
+				// allocate window for page
 				PageWindow window = entry.manager.createPageWindow(page.getPageId(), page
 						.getVersionNumber(), page.getAjaxVersionNumber(), page.getData().length);
+
+				// remove the entry and add it to the end of entry list (to mark
+				// it as last accessed(
 				pageMapEntryList.remove(entry);
 				pageMapEntryList.add(entry);
 
+				// if we exceeded maximum session size, try to remove as many
+				// pagemap as necessary and possible
 				while (getTotalSize() > getMaxSizePerSession() && pageMapEntryList.size() > 1)
 				{
 					removePageMapEntry((PageMapEntry)pageMapEntryList.get(0));
 				}
 
+				// take the filechannel from the pool
 				FileChannel channel = fileChannelPool.getFileChannel(entry.fileName, true);
 				try
 				{
+					// write the content
 					channel.write(ByteBuffer.wrap(page.getData()), window.getFilePartOffset());
 				}
 				catch (IOException e)
@@ -198,12 +232,14 @@ public class DiskPageStore extends AbstractPageStore
 				}
 				finally
 				{
+					// return the "borrowed" file channel
 					fileChannelPool.returnFileChannel(channel);
 				}
 			}
 		}
 
 		/**
+		 * Removes the page from pagemap file.
 		 * 
 		 * @param pageMapName
 		 * @param pageId
@@ -218,6 +254,8 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
+		 * Loads the part of pagemap file specified by the given PageWindow.
+		 * 
 		 * @param window
 		 * @param pageMapFileName
 		 * @return
@@ -250,11 +288,13 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
+		 * Loads the specified page data.
+		 * 
 		 * @param pageMapName
 		 * @param id
 		 * @param versionNumber
 		 * @param ajaxVersionNumber
-		 * @return
+		 * @return page data or null if the page is no longer in pagemap file
 		 */
 		public synchronized byte[] loadPage(String pageMapName, int id, int versionNumber,
 				int ajaxVersionNumber)
@@ -274,7 +314,7 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
-		 * 
+		 * Deletes all files for this session.
 		 */
 		public synchronized void unbind()
 		{
@@ -285,6 +325,14 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
+	/**
+	 * Returns the folder for the specified sessions. If the folder doesn't
+	 * exist and the create flag is set, the folder will be created.
+	 * 
+	 * @param sessionId
+	 * @param create
+	 * @return
+	 */
 	private File getSessionFolder(String sessionId, boolean create)
 	{
 		File storeFolder = new File(fileStoreFolder, appName + "-filestore");
@@ -296,9 +344,15 @@ public class DiskPageStore extends AbstractPageStore
 		return sessionFolder;
 	}
 
-	// for some reason, simple file.mkdirs sometimes fails under heavy load
+
+	/**
+	 * Utility method for creating a directory
+	 * 
+	 * @param file
+	 */
 	private void mkdirs(File file)
 	{
+		// for some reason, simple file.mkdirs sometimes fails under heavy load
 		for (int j = 0; j < 5; ++j)
 		{
 			for (int i = 0; i < 10; ++i)
@@ -319,6 +373,16 @@ public class DiskPageStore extends AbstractPageStore
 		log.error("Failed to make directory " + file);
 	}
 
+	/**
+	 * Returns the file name for specified pagemap. If the session folder
+	 * (folder that contains the file) does not exist and createSessionFolder is
+	 * true, the folder will becreated.
+	 * 
+	 * @param sessionId
+	 * @param pageMapName
+	 * @param createSessionFolder
+	 * @return file name for pagemap
+	 */
 	private String getPageMapFileName(String sessionId, String pageMapName,
 			boolean createSessionFolder)
 	{
@@ -328,6 +392,11 @@ public class DiskPageStore extends AbstractPageStore
 
 	private final int maxSizePerPageMap;
 
+	/**
+	 * Return maximum pagemap file size (in bytes).
+	 * 
+	 * @return
+	 */
 	protected int getMaxSizePerPageMap()
 	{
 		return maxSizePerPageMap;
@@ -335,6 +404,13 @@ public class DiskPageStore extends AbstractPageStore
 
 	private final int maxSizePerSession;
 
+	/**
+	 * Returns maximum size per session (in bytes). After the session exceeds
+	 * this size, appropriate number of last recently used pagemap files will be
+	 * removed.
+	 * 
+	 * @return
+	 */
 	protected int getMaxSizePerSession()
 	{
 		return maxSizePerSession;
@@ -344,6 +420,11 @@ public class DiskPageStore extends AbstractPageStore
 
 	private final File fileStoreFolder;
 
+	/**
+	 * Returns the "root" file store folder.
+	 * 
+	 * @return
+	 */
 	protected File getFileStoreFolder()
 	{
 		return fileStoreFolder;
@@ -352,12 +433,18 @@ public class DiskPageStore extends AbstractPageStore
 	private final String appName;
 
 	/**
-	 * Construct.
+	 * Creates a new {@link DiskPageStore} instance.
 	 * 
 	 * @param fileStoreFolder
+	 *            folder in which the session folders containing pagemap files
+	 *            will be stored
 	 * @param maxSizePerPagemap
+	 *            the maximum size of pagemap file (in bytes)
 	 * @param maxSizePerSession
+	 *            the maximum size of session (in bytes)
 	 * @param fileChannelPoolCapacity
+	 *            the maximum number of concurrently opened files (higher number
+	 *            improves performance under heavy load).
 	 */
 	public DiskPageStore(File fileStoreFolder, int maxSizePerPagemap, int maxSizePerSession,
 			int fileChannelPoolCapacity)
@@ -366,6 +453,12 @@ public class DiskPageStore extends AbstractPageStore
 		this.maxSizePerSession = maxSizePerSession;
 		this.fileChannelPool = new FileChannelPool(fileChannelPoolCapacity);
 		this.fileStoreFolder = fileStoreFolder;
+
+		if (maxSizePerSession < maxSizePerPageMap)
+		{
+			throw new IllegalArgumentException(
+					"Provided maximum session size must be bigger than maximum pagemap size");
+		}
 
 		this.fileStoreFolder.mkdirs();
 		appName = Application.get().getApplicationKey();
@@ -380,11 +473,16 @@ public class DiskPageStore extends AbstractPageStore
 	}
 
 	/**
-	 * Construct.
+	 * Creates a new {@link DiskPageStore} instance.
 	 * 
 	 * @param maxSizePerPagemap
+	 *            the maximum size of pagemap file (in bytes)
 	 * @param maxSizePerSession
+	 *            the maximum size of session (in bytes)
 	 * @param fileChannelPoolCapacity
+	 *            the maximum number of concurrently opened files (higher number
+	 *            improves performance under heavy load).
+	 * 
 	 */
 	public DiskPageStore(int maxSizePerPagemap, int maxSizePerSession, int fileChannelPoolCapacity)
 	{
@@ -393,13 +491,16 @@ public class DiskPageStore extends AbstractPageStore
 	}
 
 	/**
-	 * Construct.
+	 * Creates a new {@link DiskPageStore} instance.
 	 */
 	public DiskPageStore()
 	{
 		this((int)Bytes.megabytes(10).bytes(), (int)Bytes.megabytes(100).bytes(), 50);
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#destroy()
+	 */
 	public void destroy()
 	{
 		fileChannelPool.destroy();
@@ -411,6 +512,15 @@ public class DiskPageStore extends AbstractPageStore
 
 	private Map /* <String, SessionEntry> */sessionIdToEntryMap = new ConcurrentHashMap();
 
+	/**
+	 * Returns the SessionEntry for session with given id. If the entry does not
+	 * yet exist and the createIfDoesNotExist attribute is set, new SessionEntry
+	 * will be created.
+	 * 
+	 * @param sessionId
+	 * @param createIfDoesNotExist
+	 * @return
+	 */
 	protected SessionEntry getSessionEntry(String sessionId, boolean createIfDoesNotExist)
 	{
 		SessionEntry entry = (SessionEntry)sessionIdToEntryMap.get(sessionId);
@@ -430,6 +540,10 @@ public class DiskPageStore extends AbstractPageStore
 		return entry;
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
+	 *      java.lang.String, int, int, int)
+	 */
 	public Page getPage(String sessionId, String pagemap, int id, int versionNumber,
 			int ajaxVersionNumber)
 	{
@@ -444,6 +558,8 @@ public class DiskPageStore extends AbstractPageStore
 			}
 			else
 			{
+				// we need to make sure that the there are no pending pages to
+				// be saved before loading a page
 				List pages = getPagesToSaveList(sessionId);
 				synchronized (pages)
 				{
@@ -461,10 +577,22 @@ public class DiskPageStore extends AbstractPageStore
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#pageAccessed(java.lang.String,
+	 *      org.apache.wicket.Page)
+	 */
 	public void pageAccessed(String sessionId, Page page)
 	{
 	}
 
+	/**
+	 * Removes the page (or entire pagemap) from specified session.
+	 * 
+	 * @param entry
+	 * @param pageMap
+	 * @param id
+	 *            page id to remove or -1 if the whole pagemap should be removed
+	 */
 	private void removePage(SessionEntry entry, String pageMap, int id)
 	{
 		if (id != -1)
@@ -477,6 +605,10 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#removePage(java.lang.String,
+	 *      java.lang.String, int)
+	 */
 	public void removePage(String sessionId, String pageMap, int id)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, false);
@@ -488,6 +620,8 @@ public class DiskPageStore extends AbstractPageStore
 			}
 			else
 			{
+				// we need to make sure that the there are no pending pages to
+				// be saved before removing the page (or pagemap)
 				List pages = getPagesToSaveList(sessionId);
 				synchronized (pages)
 				{
@@ -498,6 +632,13 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
+	/**
+	 * Stores the serialized pages. The storing is done either immediately (in
+	 * synchronous mode) or it's scheduled to be stored by the worker thread.
+	 * 
+	 * @param sessionId
+	 * @param pages
+	 */
 	protected void storeSerializedPages(String sessionId, List /* <SerializedPage> */pages)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, true);
@@ -527,6 +668,10 @@ public class DiskPageStore extends AbstractPageStore
 
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#storePage(java.lang.String,
+	 *      org.apache.wicket.Page)
+	 */
 	public void storePage(String sessionId, Page page)
 	{
 		List pages = serializePage(page);
@@ -536,6 +681,9 @@ public class DiskPageStore extends AbstractPageStore
 		storeSerializedPages(sessionId, pages);
 	}
 
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#unbind(java.lang.String)
+	 */
 	public void unbind(String sessionId)
 	{
 		SessionEntry entry = (SessionEntry)sessionIdToEntryMap.get(sessionId);
@@ -565,6 +713,13 @@ public class DiskPageStore extends AbstractPageStore
 	// contains list of serialized pages to be saved - only non empty lists
 	private Map /* <String, List<SerializedPage>> */pagesToSaveActive = new ConcurrentHashMap();
 
+	/**
+	 * Returns the list of pages to be saved for the specified session id. If
+	 * the list is not found, new list is created.
+	 * 
+	 * @param sessionId
+	 * @return
+	 */
 	protected List getPagesToSaveList(String sessionId)
 	{
 		List list = (List)pagesToSaveAll.get(sessionId);
@@ -583,7 +738,13 @@ public class DiskPageStore extends AbstractPageStore
 		return list;
 	}
 
-	protected void flushPagesToSaveList(String sessionId, List list)
+	/**
+	 * Saves all entries from the specified list.
+	 * 
+	 * @param sessionId
+	 * @param list
+	 */
+	protected void flushPagesToSaveList(String sessionId, List /* <SerializedPage> */list)
 	{
 		if (list != null)
 		{
@@ -596,7 +757,13 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
-	private void schedulePagesSave(String sessionId, List/* <SerializedPage */pages)
+	/**
+	 * Schedules the pages to be saved by the worker thread.
+	 * 
+	 * @param sessionId
+	 * @param pages
+	 */
+	private void schedulePagesSave(String sessionId, List/* <SerializedPage> */pages)
 	{
 		List list = getPagesToSaveList(sessionId);
 		synchronized (list)
@@ -610,6 +777,12 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	}
 
+	/**
+	 * Worker thread that saves the serialized pages. Saving pages in the
+	 * separate thread results in smoother performance under load.
+	 * 
+	 * @author Matej Knopp
+	 */
 	private class PageSavingThread implements Runnable
 	{
 		private volatile boolean stop = false;
@@ -618,6 +791,7 @@ public class DiskPageStore extends AbstractPageStore
 		{
 			while (stop == false)
 			{
+				// wait until we have something to save
 				while (pagesToSaveActive.isEmpty())
 				{
 					try
@@ -629,6 +803,7 @@ public class DiskPageStore extends AbstractPageStore
 					}
 				}
 
+				// iterate through lists of pages to be saved
 				for (Iterator i = pagesToSaveActive.entrySet().iterator(); i.hasNext();)
 				{
 					Map.Entry entry = (Map.Entry)i.next();
@@ -655,7 +830,7 @@ public class DiskPageStore extends AbstractPageStore
 		}
 
 		/**
-		 * 
+		 * Stops the worker thread.
 		 */
 		public void stop()
 		{
@@ -663,6 +838,9 @@ public class DiskPageStore extends AbstractPageStore
 		}
 	};
 
+	/**
+	 * Initializes the worker thread.
+	 */
 	private void initPageSavingThread()
 	{
 		if (isSynchronous() == false)
@@ -677,11 +855,24 @@ public class DiskPageStore extends AbstractPageStore
 
 	private PageSavingThread pageSavingThread = null;
 
+	/**
+	 * Returns the amount time in milliseconds for the saving thread to sleep between
+	 * checking whether there are pending serialized pages to be saved.
+	 * 
+	 * @return
+	 */
 	protected int getSavingThreadSleepTime()
 	{
 		return 100;
 	}
 
+	/**
+	 * Returns whether the {@link DiskPageStore} should work in synchronous or
+	 * asynchronous mode. Asynchronous mode uses a worker thread to save pages,
+	 * which results in smoother performance.
+	 * 
+	 * @return
+	 */
 	protected boolean isSynchronous()
 	{
 		return false;

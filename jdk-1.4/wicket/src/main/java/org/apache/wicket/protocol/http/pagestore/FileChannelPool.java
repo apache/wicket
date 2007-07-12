@@ -267,9 +267,9 @@ public class FileChannelPool
 	}
 
 	/**
-	 * Closes the file channel with given name and removes it from pool. If the
-	 * channel is in use, the pool first waits until the chanel is returned to
-	 * the pool and then closes it.
+	 * Closes the file channel with given name and removes it from pool. Also
+	 * removes the file from file system. If the channel is in use, the pool
+	 * first waits until the chanel is returned to the pool and then closes it.
 	 * 
 	 * @param name
 	 */
