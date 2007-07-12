@@ -77,7 +77,11 @@ class Add extends Change
 					+ ") from parent");
 		}
 
-		component.remove();
+		// check if somehow the component isn't already removed.
+		if (component.getParent() != null)
+		{
+			component.remove();
+		}
 	}
 
 	/**
