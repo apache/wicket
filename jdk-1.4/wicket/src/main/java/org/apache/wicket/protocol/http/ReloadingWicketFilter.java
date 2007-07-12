@@ -66,8 +66,8 @@ import org.apache.wicket.util.listener.IChangeListener;
  * When using Spring, the application must not be a Spring bean itself,
  * otherwise the reloading mechanism won't be able to reload the application. In
  * particular, make sure <b>not</b> to use
- * org.apache.wicket.spring.SpringWebApplicationFactory in web.xml. To inject dependencies
- * in your application, use SpringComponentInjector or
+ * org.apache.wicket.spring.SpringWebApplicationFactory in web.xml. To inject
+ * dependencies in your application, use SpringComponentInjector or
  * DefaultListableBeanFactory.autowireBeanProperties() in the init() method.
  * </p>
  * 
@@ -91,6 +91,15 @@ import org.apache.wicket.util.listener.IChangeListener;
  * It is also possible to add an extra URL to watch for changes using
  * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URL
  * returned by the provided class loader are registered.
+ * </p>
+ * 
+ * <p>
+ * <b>Important. </b> To enable back-button support for the reloading mechanism,
+ * be sure to put
+ * <tt>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</tt>
+ * in your application's {@link WebApplication#init()} method. <b>Native JDK
+ * object serialization will break the reloading mechanism when navigating in
+ * the browser's history.</b>
  * </p>
  * 
  * @see WicketFilter
