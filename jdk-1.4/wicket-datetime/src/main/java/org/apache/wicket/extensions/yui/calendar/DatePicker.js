@@ -43,11 +43,18 @@ function init${widgetId}DpJs() {
 
   // inner function for handling calendar selects  
   function selectHandler(type, args, cal) {
+
     var selDateArray = args[0][0];
     var yr = selDateArray[0];
     var month = selDateArray[1];
     var dt = selDateArray[2];
-    var val = '${datePattern}'.replace(/d+/, dt).replace(/M+/, month).replace(/y+/, yr);    
+
+    // optionally do some padding to match the pattern
+    if('${datePattern}'.match(/\bdd\b/)) dt = Wicket.DateTime.zeroFill(dt);
+    if('${datePattern}'.match(/\bMM\b/)) month = Wicket.DateTime.zeroFill(month);
+    if('${datePattern}'.match(/\byy\b/)) yr = Wicket.DateTime.zeroFill(yr % 100);
+
+    var val = '${datePattern}'.replace(/d+/, dt).replace(/M+/, month).replace(/y+/, yr);   
     var wasVisible = YAHOO.wicket.${widgetId}DpJs.isVisible();
     YAHOO.util.Dom.get("${widgetId}").value = val;
      

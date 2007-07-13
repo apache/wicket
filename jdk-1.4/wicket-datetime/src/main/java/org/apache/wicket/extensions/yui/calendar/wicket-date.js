@@ -61,3 +61,10 @@ Wicket.DateTime.parseDate = function(pattern, value) {
 	date.setFullYear(year, (month - 1), day);
 	return date;
 }
+
+/** 
+ * Returns a string containing the value, with a leading zero if the value is < 10.
+ */
+Wicket.DateTime.zeroFill = function(value) {
+	return (value < 10 ? "0" : "") + value;
+}
