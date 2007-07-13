@@ -27,7 +27,7 @@ import org.apache.wicket.injection.web.InjectorHolder;
  * 
  * <pre>
  *      ... (in your application's constructor or init method)
- *      add(new ComponentInjector());
+ *      addComponentInstantiationListener(new ComponentInjector());
  *      ...
  * </pre>
  * 
