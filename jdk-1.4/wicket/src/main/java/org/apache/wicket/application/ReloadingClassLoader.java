@@ -321,8 +321,9 @@ public class ReloadingClassLoader extends URLClassLoader
 						{
 							listener.onChange();
 						}
-						finally
+						catch (Exception e)
 						{
+							log.error("Could not notify listener", e);
 							// If an error occurs when the listener is notified,
 							// remove the watched object to avoid rethrowing the
 							// exception at next check

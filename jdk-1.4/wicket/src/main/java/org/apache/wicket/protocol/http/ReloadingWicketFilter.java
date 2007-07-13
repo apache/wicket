@@ -16,18 +16,22 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.net.URL;
+
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.application.ReloadingClassLoader;
 import org.apache.wicket.util.listener.IChangeListener;
 
 
 /**
- * Custom WicketFilter that reloads the web applications when classes are
- * modified. In order to reload your own classes, use include and exclude
- * patterns using wildcards. And in web.xml, point to your custom reloading
- * wicket filter instead of the original wicket filter.
+ * Custom {@link WicketFilter} that reloads the web applications when classes
+ * are modified. In order to monitor changes to your own classes, subclass
+ * {@link ReloadingWicketFilter} and use include and exclude patterns using
+ * wildcards. And in web.xml, point to your custom {@link ReloadingWicketFilter}
+ * instead of the original {@link WicketFilter}.
  * 
  * <p>
  * The built-in patterns are:
@@ -55,19 +59,44 @@ import org.apache.wicket.util.listener.IChangeListener;
  * </pre>
  * 
  * <p>
- * <b>Note. </b> The order of including and excluding patterns is significant.
+ * It is also possible to add an extra URL to watch for changes using
+ * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URLs
+ * returned by the parent class loader (ie all {@link URL} returned by
+ * {@link ClassLoader#getResources(String)} with empty {@link String}) are
+ * registered.
  * </p>
+ * <hr>
+ * <p>
+ * <b>Important. </b> It can be quite tricky to setup the reloading mechanism
+ * correctly. Here are the general guidelines:
+ * </p>
+ * <ul>
+ * <li>The order of include and exclude patterns is significant, the patterns
+ * are processed sequentially in the order they are defined</li>
+ * <li>Don't forget that inner classes are named after YourClass$1, so take
+ * that into account when setting up the patterns, eg include
+ * <tt>YourClass*</tt>, not just <tt>YourClass</tt></li>
+ * <li>To enable back-button support for the reloading mechanism, be sure to
+ * put <tt>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</tt>
+ * in your application's {@link WebApplication#init()} method. <b>Native JDK
+ * object serialization will break the reloading mechanism when navigating in
+ * the browser's history.</b></li>
+ * <li>It is advisable to <b>exclude</b> subclasses of {@link Session} from
+ * the the reloading classloader, because this is the only object that remains
+ * across application restarts</li>
+ * </ul>
  * 
  * <p>
- * Be sure to carefully read the following information if you also use Spring:
+ * <b>Be sure to carefully read the following information if you also use
+ * Spring:</b>
  * </p>
  * 
  * <p>
  * When using Spring, the application must not be a Spring bean itself,
  * otherwise the reloading mechanism won't be able to reload the application. In
  * particular, make sure <b>not</b> to use
- * org.apache.wicket.spring.SpringWebApplicationFactory in web.xml. To inject
- * dependencies in your application, use SpringComponentInjector or
+ * org.apache.wicket.spring.SpringWebApplicationFactory in web.xml. If you
+ * really need to inject dependencies in your application, use
  * DefaultListableBeanFactory.autowireBeanProperties() in the init() method.
  * </p>
  * 
@@ -76,30 +105,14 @@ import org.apache.wicket.util.listener.IChangeListener;
  * managers, you will get <tt>ClassCastException</tt> if a given class is
  * loaded two times, one time by the normal classloader, and another time by the
  * reloading classloader. You need to ensure that your Spring beans are properly
- * excluded from the reloading class loader and only keep the Wicket components
- * included. When getting a cryptic error with regard to class loading, class
- * instantiation or class comparison, first <b>disable the reloading class
+ * excluded from the reloading class loader and that only the Wicket components
+ * are included. When getting a cryptic error with regard to class loading,
+ * class instantiation or class comparison, first <b>disable the reloading class
  * loader</b> to rule out the possibility of a classloader conflict. Please
  * keep in mind that two classes are equal if and only if they have the same
  * name <b>and are loaded in the same classloader</b>. Same goes for errors
  * like <tt>LinkageError: Class FooBar violates loader constraints</tt>,
  * better be safe and disable the reloading feature.
- * </p>
- * 
- * 
- * <p>
- * It is also possible to add an extra URL to watch for changes using
- * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URL
- * returned by the provided class loader are registered.
- * </p>
- * 
- * <p>
- * <b>Important. </b> To enable back-button support for the reloading mechanism,
- * be sure to put
- * <tt>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</tt>
- * in your application's {@link WebApplication#init()} method. <b>Native JDK
- * object serialization will break the reloading mechanism when navigating in
- * the browser's history.</b>
  * </p>
  * 
  * @see WicketFilter
@@ -136,6 +149,12 @@ public class ReloadingWicketFilter extends WicketFilter
 		{
 			public void onChange()
 			{
+				/*
+				 * Create a new classloader, as there is no way to clear a
+				 * ClassLoader's cache. This supposes that we don't share
+				 * objects across application instances, this is almost true,
+				 * except for Wicket's Session object.
+				 */
 				reloadingClassLoader = new ReloadingClassLoader(getClass().getClassLoader());
 				try
 				{
