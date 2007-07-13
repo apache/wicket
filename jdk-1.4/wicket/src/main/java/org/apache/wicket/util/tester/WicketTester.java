@@ -192,7 +192,7 @@ public class WicketTester extends BaseWicketTester
 	 * cheaper to use for unit tests. Uses {@link SecondLevelCacheSessionStore}
 	 * with a noop {@link IPageStore}.
 	 */
-	public static class NonCachingDummyWebApplication extends DummyWebApplication
+	public static class NonPageCachingDummyWebApplication extends DummyWebApplication
 	{
 		protected ISessionStore newSessionStore()
 		{
