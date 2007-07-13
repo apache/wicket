@@ -52,7 +52,7 @@ import org.apache.wicket.model.IModel;
  * <u>Yields:</u>
  * 
  * <pre>
- *  &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
+ *  &lt;ul&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
  * To expand a bit: the repeater itself produces no markup, instead every direct
