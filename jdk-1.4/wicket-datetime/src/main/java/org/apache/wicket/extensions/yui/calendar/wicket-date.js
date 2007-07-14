@@ -68,3 +68,47 @@ Wicket.DateTime.parseDate = function(pattern, value) {
 Wicket.DateTime.padDateFragment = function(value) {
 	return (value < 10 ? "0" : "") + value;
 }
+
+/** 
+ * Position subject relative to target top-left.
+ * @param subject name of the dom element to has to be positioned
+ * @param target dom element to position relative to
+ */
+Wicket.DateTime.positionRelativeTo = function(subject, target) {
+	targetPos = YAHOO.util.Dom.getXY(target);
+	targetHeight = parseInt(YAHOO.util.Dom.getStyle(target, "height"));
+	subject.style.top = targetPos[1] + targetHeight + 1 + "px";
+	subject.style.left = targetPos[0] + "px";
+}
+
+/**
+ * Return the result of interpolating the value (date) argument with the date pattern.
+ * The dateValue has to be an array, where year is in the first, month in the second
+ * and date (day of month) in the third slot.
+ */
+Wicket.DateTime.substituteDate = function(datePattern, date) {
+	day = date[2];
+	month = date[1];
+	year = date[0];
+	// optionally do some padding to match the pattern
+	if(datePattern.match(/\bdd\b/)) day = Wicket.DateTime.padDateFragment(day);
+	if(datePattern.match(/\bMM\b/)) month = Wicket.DateTime.padDateFragment(month);
+	if(datePattern.match(/\byy\b/)) year = Wicket.DateTime.padDateFragment(year % 100);
+	// replace pattern with real values
+	return datePattern.replace(/d+/, day).replace(/M+/, month).replace(/y+/, year);
+}
+
+/**
+ * Display the YUI calendar widget. If the date is not null (should be a string) then it is parsed
+ * using the provided date pattern, and set as the current date on the widget.
+ */
+Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
+	if (date) {
+		date = Wicket.DateTime.parseDate(datePattern, date);
+		widget.select(date);
+		firstDate = widget.getSelectedDates()[0];
+		widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
+		widget.render();
+	}
+	widget.show();
+}
