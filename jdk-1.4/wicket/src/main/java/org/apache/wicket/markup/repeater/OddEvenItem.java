@@ -29,8 +29,8 @@ public class OddEvenItem extends Item
 {
 	private static final long serialVersionUID = 1L;
 
-	private final String CLASS_EVEN = "even";
-	private final String CLASS_ODD = "odd";
+	private static final String CLASS_EVEN = "even";
+	private static final String CLASS_ODD = "odd";
 
 	/**
 	 * Constructor
