@@ -93,4 +93,10 @@ public interface IMarkupCache
 	 * @return the number of elements currently in the cache.
 	 */
 	int size();
+
+	/**
+	 * Will be called by the application while shutting down. It allows the
+	 * markup cache to cleanup if necessary.
+	 */
+	void shutdown();
 }

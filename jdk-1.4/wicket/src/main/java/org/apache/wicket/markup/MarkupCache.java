@@ -17,8 +17,8 @@
 package org.apache.wicket.markup;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
@@ -56,7 +56,7 @@ public class MarkupCache implements IMarkupCache
 	private static final Logger log = LoggerFactory.getLogger(MarkupCache.class);
 
 	/** Map of markup tags by class (exactly what is in the file). */
-	private final Map markupCache = new ConcurrentHashMap();
+	private final ICache markupCache;
 
 	/** The markup cache key provider used by MarkupCache */
 	private IMarkupCacheKeyProvider markupCacheKeyProvider;
@@ -78,6 +78,12 @@ public class MarkupCache implements IMarkupCache
 	public MarkupCache(Application application)
 	{
 		this.application = application;
+
+		this.markupCache = newCacheImplementation();
+		if (this.markupCache == null)
+		{
+			throw new WicketRuntimeException("The map used to cache markup must not be null");
+		}
 	}
 
 	/**
@@ -88,6 +94,15 @@ public class MarkupCache implements IMarkupCache
 		this.markupCache.clear();
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.markup.IMarkupCache#shutdown()
+	 */
+	public void shutdown()
+	{
+		this.markupCache.shutdown();
+	}
+	
 	/**
 	 * @see org.apache.wicket.markup.IMarkupCache#removeMarkup(java.lang.String)
 	 */
@@ -105,9 +120,11 @@ public class MarkupCache implements IMarkupCache
 
 		// Remove the markup and any other markup which depends on it
 		// (inheritance)
-		Markup markup = (Markup)markupCache.remove(cacheKey);
+		Markup markup = (Markup)markupCache.get(cacheKey);
 		if (markup != null)
 		{
+			markupCache.remove(cacheKey);
+			
 			// In practice markup inheritance has probably not more than 3 or 4
 			// levels. And since markup reloading is only enabled in development
 			// mode, this max 4 iterations of the outer loop shouldn't be a
@@ -119,10 +136,10 @@ public class MarkupCache implements IMarkupCache
 
 				// If a base markup file has been removed from the cache, than
 				// the derived markup should be removed as well.
-				Iterator iter = markupCache.values().iterator();
+				Iterator iter = markupCache.getKeys().iterator();
 				while (iter.hasNext())
 				{
-					Markup cacheMarkup = (Markup)iter.next();
+					Markup cacheMarkup = (Markup)markupCache.get(iter.next());
 					MarkupResourceData resourceData = cacheMarkup.getMarkupResourceData()
 							.getBaseMarkupResourceData();
 					if (resourceData != null)
@@ -221,6 +238,17 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
+	 * Get a unmodifiable map which contains the cached data. The map key is of
+	 * type String and the value is of type Markup.
+	 * 
+	 * @return
+	 */
+	protected final ICache getMarkupCache()
+	{
+		return this.markupCache;
+	}
+
+	/**
 	 * THIS IS NOT PART OF WICKET'S PUBLIC API. DO NOT USE IT.
 	 * 
 	 * I still don't like this method being part of the API but I didn't find a
@@ -239,8 +267,8 @@ public class MarkupCache implements IMarkupCache
 		}
 		else if (!clazz.isAssignableFrom(container.getClass()))
 		{
-			throw new WicketRuntimeException("Parameter clazz must be an instance of "
-					+ container.getClass().getName() + ", but is a " + clazz.getName());
+			throw new WicketRuntimeException("Parameter clazz must be an instance of " +
+					container.getClass().getName() + ", but is a " + clazz.getName());
 		}
 
 		// Get the cache key to be associated with the markup resource stream
@@ -515,5 +543,163 @@ public class MarkupCache implements IMarkupCache
 			markupLoader = new DefaultMarkupLoader();
 		}
 		return markupLoader;
+	}
+
+	/**
+	 * Allows you to change the map implementation which will hold the cache
+	 * data. By default it is a ConcurrentHashMap() in order to allow multiple
+	 * thread to access the data in a secure way.
+	 * 
+	 * @return
+	 */
+	protected ICache newCacheImplementation()
+	{
+		return new DefaultCacheImplementation();
+	}
+
+	/**
+	 * MarkupCache allows you to implement you own cache implementation. ICache
+	 * is the interface the implementation must comply with.
+	 * 
+	 * @see MarkupCache
+	 */
+	public interface ICache
+	{
+		/**
+		 * Clear the cache
+		 */
+		void clear();
+
+		/**
+		 * Remove an entry from the cache.
+		 * 
+		 * @param key
+		 * @return true, if found and removed
+		 */
+		boolean remove(Object key);
+
+		/**
+		 * Get the cache element associated with the key
+		 * 
+		 * @param key
+		 * @return
+		 */
+		Object get(Object key);
+
+		/**
+		 * Get all the keys referencing cache entries 
+		 * 
+		 * @return
+		 */
+		Collection getKeys();
+
+		/**
+		 * Check if key is in the cache
+		 * 
+		 * @param key
+		 * @return
+		 */
+		boolean containsKey(Object key);
+
+		/**
+		 * Get the number of cache entries
+		 * 
+		 * @return
+		 */
+		int size();
+
+		/**
+		 * Put an entry into the cache
+		 * 
+		 * @param key The reference key to find the element
+		 * @param value The element to be cached
+		 */
+		void put(Object key, Object value);
+		
+		/**
+		 * Cleanup and shutdown
+		 */
+		void shutdown();
+	}
+
+	/**
+	 * 
+	 */
+	public class DefaultCacheImplementation implements ICache
+	{
+		private static final long serialVersionUID = 1L;
+
+		private ConcurrentHashMap cache = new ConcurrentHashMap();
+		
+		/**
+		 * Construct.
+		 */
+		public DefaultCacheImplementation()
+		{
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#clear()
+		 */
+		public void clear()
+		{
+			this.cache.clear();
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#containsKey(java.lang.Object)
+		 */
+		public boolean containsKey(Object key)
+		{
+			return this.cache.containsKey(key);
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#get(java.lang.Object)
+		 */
+		public Object get(Object key)
+		{
+			return this.cache.get(key);
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#getKeys()
+		 */
+		public Collection getKeys()
+		{
+			return this.cache.keySet();
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#put(java.lang.Object, java.lang.Object)
+		 */
+		public void put(Object key, Object value)
+		{
+			this.cache.put(key, value);
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#remove(java.lang.Object)
+		 */
+		public boolean remove(Object key)
+		{
+			return this.cache.remove(key) == null;
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#size()
+		 */
+		public int size()
+		{
+			return this.cache.size();
+		}
+
+		/**
+		 * @see org.apache.wicket.markup.MarkupCache.ICache#shutdown()
+		 */
+		public void shutdown()
+		{
+			clear();
+		}
 	}
 }

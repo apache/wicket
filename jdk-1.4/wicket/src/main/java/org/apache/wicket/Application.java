@@ -890,7 +890,7 @@ public abstract class Application
 		// Clear caches of Class keys so the classloader can be garbage
 		// collected (WICKET-625)
 		PropertyResolver.destroy(this);
-		getMarkupSettings().getMarkupCache().clear();
+		getMarkupSettings().getMarkupCache().shutdown();
 
 		onDestroy();
 		callDestroyers();
