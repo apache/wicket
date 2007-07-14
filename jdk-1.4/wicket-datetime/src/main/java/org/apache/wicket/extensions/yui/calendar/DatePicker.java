@@ -113,7 +113,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
 		response
-				.write("\n<span>&nbsp;<div style=\"display:none;z-index: 99999;position:absolute;\" id=\"");
+				.write("\n<span>&nbsp;<div style=\"display:none;position:absolute;z-index: 99999;\" id=\"");
 		response.write(getComponentMarkupId());
 		response.write("Dp\"></div><img style=\"");
 		response.write(getIconStyle());
@@ -151,6 +151,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("widgetId", widgetId);
 		variables.put("datePattern", getDatePattern());
 		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
+		variables.put("alignWithIcon", Boolean.valueOf(alignWithIcon()));
 
 		// print out the initialization properties
 		Properties p = new Properties();
@@ -225,6 +226,19 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		{
 			throw new UnableToDetermineFormatException();
 		}
+	}
+
+	/**
+	 * Whether to position the date picker relative to the trigger icon.
+	 * 
+	 * @return If true, the date picker is aligned with the left position of the
+	 *         icon, and with the top right under. If false, the date picker
+	 *         will skip positioning and will let you do the positioning
+	 *         yourself. Returns true by default.
+	 */
+	protected boolean alignWithIcon()
+	{
+		return true;
 	}
 
 	/**
