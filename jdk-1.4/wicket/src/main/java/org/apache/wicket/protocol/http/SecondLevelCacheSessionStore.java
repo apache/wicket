@@ -110,6 +110,22 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		void unbind(String sessionId);
 	}
 
+	protected boolean isPageStoreClustered() 
+	{
+		return pageStore instanceof IClusteredPageStore;
+	}
+	
+	/**
+	 * Marker interface for PageStores that support replication of serialized pages
+	 * across cluster, which means that the lastPage attribute of {@link SecondLevelCachePageMap}
+	 * does not have to be serialized; 
+	 * @author Matej Knopp
+	 */
+	public static interface IClusteredPageStore extends IPageStore 
+	{
+		
+	};
+	
 	/**
 	 * Page map implementation for this session store.
 	 */
@@ -117,19 +133,23 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 		private static final long serialVersionUID = 1L;
 
-		private Page lastPage = null;
+		private transient Page lastPage = null;
 
 		private final List pageVersions = new ArrayList();
 
-
+		// whether the last page instance should be serialized together with the pagemap
+		private boolean serializeLastPage;
+		
 		/**
 		 * Construct.
 		 * 
 		 * @param name
+		 * @param serializeLastPage
 		 */
-		private SecondLevelCachePageMap(String name)
+		private SecondLevelCachePageMap(boolean serializeLastPage, String name)
 		{
 			super(name);
+			this.serializeLastPage = serializeLastPage;
 		}
 
 		private int getLastPageVersion(int id) 
@@ -310,6 +330,30 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			public int hashCode()
 			{
 				return pageid;
+			}
+		}
+		
+		private void writeObject(java.io.ObjectOutputStream s) throws IOException 
+		{
+			s.defaultWriteObject();
+			
+			// if the pagestore is not clustered, we need to serialize the lastPage instance
+			if (serializeLastPage) 
+			{
+				// TODO: The PageStore probably already serialized the lastPage, 
+				// we should try to reuse the serialized data
+				s.writeObject(lastPage);
+			}
+		}
+		
+		private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException 
+		{
+			s.defaultReadObject();
+
+			// if the pagestore is not clustered, we need to read the lastPage instance
+			if (serializeLastPage)
+			{
+				lastPage = (Page) s.readObject();
 			}
 		}
 	}
@@ -578,7 +622,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 */
 	public IPageMap createPageMap(String name)
 	{
-		return new SecondLevelCachePageMap(name);
+		return new SecondLevelCachePageMap(isPageStoreClustered() == false, name);
 	}
 
 	/**
