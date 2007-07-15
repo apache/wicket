@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.wicket.behavior.IBehavior;
@@ -1277,5 +1278,41 @@ public abstract class RequestCycle
 	 */
 	protected void onEndRequest()
 	{
+	}
+	
+	/**
+	 * MetaDataEntry array.
+	 */
+	private MetaDataEntry[] metaData;
+
+	/**
+	 * Sets the metadata for this request using the given key. If the metadata
+	 * object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * 
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	{
+		metaData = key.set(metaData, object);
+	}
+	
+	/**
+	 * Gets metadata for this component using the given key.
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata or null of no metadata was found for the given key
+	 * @see MetaDataKey
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		return key.get(metaData);
 	}
 }
