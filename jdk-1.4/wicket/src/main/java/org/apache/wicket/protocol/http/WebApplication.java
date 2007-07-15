@@ -98,6 +98,13 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class WebApplication extends Application
 {
+	/**
+	 * The key that will be used to store the instance of the web application in
+	 * the servlet context. This might be useful for extending frameworks that
+	 * want to discover the Wicket application instance.
+	 */
+	public static final String SERVLET_CONTEXT_APPLICATION_KEY = "wicket.application";
+
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
 
@@ -212,7 +219,8 @@ public abstract class WebApplication extends Application
 	{
 		if (sessionAttributePrefix == null)
 		{
-			sessionAttributePrefix = "wicket:" + getWicketFilter().getFilterConfig().getFilterName() + ":";
+			sessionAttributePrefix = "wicket:" +
+					getWicketFilter().getFilterConfig().getFilterName() + ":";
 		}
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
@@ -451,6 +459,8 @@ public abstract class WebApplication extends Application
 		bufferedResponses.clear();
 		getSessionStore().destroy();
 		FileCleaner.destroy();
+
+		getServletContext().removeAttribute(SERVLET_CONTEXT_APPLICATION_KEY);
 	}
 
 	/**
@@ -492,6 +502,10 @@ public abstract class WebApplication extends Application
 
 		// Configure the app.
 		configure();
+
+		// when done, register the application with the servlet context for any
+		// extension project to discover it when they whish.
+		getServletContext().setAttribute(SERVLET_CONTEXT_APPLICATION_KEY, this);
 	}
 
 	/**
