@@ -27,7 +27,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +37,8 @@ import org.slf4j.LoggerFactory;
 /**
  * <p>
  * This filter can be used to make the Wicket
- * {@link org.apache.wicket.protocol.http.WebSession} instances available to non-wicket
- * servlets.
+ * {@link org.apache.wicket.protocol.http.WebSession} instances available to
+ * non-wicket servlets.
  * </p>
  * <p>
  * The following example displays how you can make the Wicket session object of
@@ -101,6 +103,8 @@ public class WicketSessionFilter implements Filter
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WicketSessionFilter.class);
 
+	private FilterConfig filterConfig;
+
 	/** the servlet path. */
 	private String servletPath;
 
@@ -119,13 +123,15 @@ public class WicketSessionFilter implements Filter
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
+		this.filterConfig = filterConfig;
+
 		servletPath = filterConfig.getInitParameter("servletPath");
 
 		if (servletPath == null)
 		{
 			throw new ServletException(
-					"you must provide init parameter servlet-path if you want to use "
-							+ getClass().getName());
+					"you must provide init parameter servlet-path if you want to use " +
+							getClass().getName());
 		}
 
 		if (servletPath.charAt(0) != '/')
@@ -153,6 +159,15 @@ public class WicketSessionFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
 	{
+		// set application thread local regarless of whether we can find a
+		// session
+		WebApplication webApplication = (WebApplication)filterConfig.getServletContext()
+				.getAttribute(WebApplication.SERVLET_CONTEXT_APPLICATION_KEY);
+		if (webApplication != null)
+		{
+			Application.set(webApplication);
+		}
+
 		HttpServletRequest httpServletRequest = ((HttpServletRequest)request);
 		HttpSession httpSession = httpServletRequest.getSession(false);
 		if (httpSession != null)
@@ -165,19 +180,19 @@ public class WicketSessionFilter implements Filter
 
 				if (log.isDebugEnabled())
 				{
-					log.debug("session " + session + " set as current for "
-							+ httpServletRequest.getContextPath() + ","
-							+ httpServletRequest.getServerName());
+					log.debug("session " + session + " set as current for " +
+							httpServletRequest.getContextPath() + "," +
+							httpServletRequest.getServerName());
 				}
 			}
 			else
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("could not set Wicket session: key " + sessionKey
-							+ " not found in http session for "
-							+ httpServletRequest.getContextPath() + ","
-							+ httpServletRequest.getServerName());
+					log.debug("could not set Wicket session: key " + sessionKey +
+							" not found in http session for " +
+							httpServletRequest.getContextPath() + "," +
+							httpServletRequest.getServerName());
 				}
 			}
 		}
@@ -185,17 +200,21 @@ public class WicketSessionFilter implements Filter
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("could not set Wicket session: no http session was created yet for "
-						+ httpServletRequest.getContextPath() + ","
-						+ httpServletRequest.getServerName());
+				log.debug("could not set Wicket session: no http session was created yet for " +
+						httpServletRequest.getContextPath() + "," +
+						httpServletRequest.getServerName());
 			}
 		}
 
 		// go on with processing
 		chain.doFilter(request, response);
-		
+
 		// clean up
 		Session.unset();
+		if (webApplication != null)
+		{
+			Application.unset();
+		}
 	}
 
 	/**
