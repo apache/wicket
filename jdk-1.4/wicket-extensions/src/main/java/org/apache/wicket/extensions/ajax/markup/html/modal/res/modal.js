@@ -303,6 +303,7 @@ Wicket.Window.prototype = {
 				this.caption.getElementsByTagName("a")[0].focus();
 				this.caption.getElementsByTagName("a")[0].blur();
 				this.close();
+				return false;
 			}.bind(this), /* called when close button is clicked */
 			
 			onClose: function() { }, /* called when window is closed */
