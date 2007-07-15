@@ -160,7 +160,7 @@ public class WicketFilter implements Filter
 	 *             Thrown if something goes wrong during request handling
 	 * @throws IOException
 	 */
-	public final void doGet(final HttpServletRequest servletRequest,
+	public void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
 		String relativePath = getRelativePath(servletRequest);
@@ -679,6 +679,8 @@ public class WicketFilter implements Filter
 	
 	/**
 	 * Strip trailing '*' and keep leading '/'
+	 * @param result 
+	 * @return 
 	 */
 	private String stripWildcard(String result) {
 		return result.substring(1, result.length() - 1);
