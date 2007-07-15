@@ -2434,6 +2434,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * {@link Component#getMarkupId()}.
 	 * 
 	 * @param output
+	 *            True if the component will out the id attribute into markup.
+	 *            Please note that the default behavior is to use the same id as
+	 *            the component. This means that your component must begin with
+	 *            [a-zA-Z] in order to generate a valid markup id according to:
+	 *            http://www.w3.org/TR/html401/types.html#type-name
+	 * 
 	 * @return this for chaining
 	 */
 	public final Component setOutputMarkupId(final boolean output)
