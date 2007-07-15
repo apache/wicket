@@ -19,19 +19,24 @@ package org.apache.wicket.protocol.http.pagestore;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.FilePageStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
+import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore;
 import org.apache.wicket.protocol.http.pagestore.PageWindowManager.PageWindow;
 import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Bytes;
@@ -51,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matej Knopp
  */
-public class DiskPageStore extends AbstractPageStore
+public class DiskPageStore extends AbstractPageStore implements ISerializationAwarePageStore
 {
 	/**
 	 * Each PageMap is represented by this class.
@@ -322,6 +327,11 @@ public class DiskPageStore extends AbstractPageStore
 			{
 				removePageMapEntry((PageMapEntry)pageMapEntryList.get(pageMapEntryList.size() - 1));
 			}
+			File sessionFolder = getSessionFolder(sessionId, false);
+			if (sessionFolder.exists())
+			{
+				sessionFolder.delete();
+			}
 		}
 	}
 
@@ -337,7 +347,7 @@ public class DiskPageStore extends AbstractPageStore
 	{
 		File storeFolder = new File(fileStoreFolder, appName + "-filestore");
 		File sessionFolder = new File(storeFolder, sessionId);
-		if (create)
+		if (create && sessionFolder.exists() == false)
 		{
 			mkdirs(sessionFolder);
 		}
@@ -676,6 +686,8 @@ public class DiskPageStore extends AbstractPageStore
 	{
 		List pages = serializePage(page);
 
+		cacheSerializedPage(sessionId, page, pages);
+
 		onPagesSerialized(sessionId, pages);
 
 		storeSerializedPages(sessionId, pages);
@@ -856,8 +868,8 @@ public class DiskPageStore extends AbstractPageStore
 	private PageSavingThread pageSavingThread = null;
 
 	/**
-	 * Returns the amount time in milliseconds for the saving thread to sleep between
-	 * checking whether there are pending serialized pages to be saved.
+	 * Returns the amount time in milliseconds for the saving thread to sleep
+	 * between checking whether there are pending serialized pages to be saved.
 	 * 
 	 * @return
 	 */
@@ -877,6 +889,129 @@ public class DiskPageStore extends AbstractPageStore
 	{
 		return false;
 	}
+
+	/**
+	 * We cache the serialized pages during the request so that the pagemap can
+	 * reuse serialized data when being itself serialized (e.g. when replication
+	 * the session).
+	 * 
+	 * @author Matej Knopp
+	 */
+	private static class SerializedPagesMetadataEntry implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private String sessionId;
+		Map /* <Page, List<SerializedPage> */map = new HashMap();
+	};
+
+	/**
+	 * Store the serialized page in the request metadata,.
+	 * 
+	 * @param sessionId
+	 * @param page
+	 * @param pagesList
+	 */
+	private void cacheSerializedPage(String sessionId, Page page,
+			List /* <SerializedPage> */pagesList)
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle != null)
+		{
+			SerializedPagesMetadataEntry entry = (SerializedPagesMetadataEntry)requestCycle
+					.getMetaData(SERIALIZED_PAGES_KEY);
+			if (entry == null)
+			{
+				entry = new SerializedPagesMetadataEntry();
+				entry.sessionId = sessionId;
+				requestCycle.setMetaData(SERIALIZED_PAGES_KEY, entry);
+			}
+
+			entry.map.put(page, pagesList);
+		}
+	}
+
+	/**
+	 * 
+	 * @author Matej Knopp
+	 */
+	private static class SerializedPageWithSession implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final String sessionId;
+		private final List pages;
+		private final int pageId;
+		private final String pageMapName;
+		private final int versionNumber;
+		private final int ajaxVersionNumber;
+
+		private SerializedPageWithSession(String sessionId, int pageId, String pageMapName,
+				int versionNumber, int ajaxVersionNumber, List /* <SerializablePage> */pages)
+		{
+			this.sessionId = sessionId;
+			this.pageId = pageId;
+			this.pageMapName = pageMapName;
+			this.versionNumber = versionNumber;
+			this.ajaxVersionNumber = ajaxVersionNumber;
+			this.pages = pages;
+		}
+	};
+
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore#prepareForSerialization(org.apache.wicket.Page)
+	 */
+	public Serializable prepareForSerialization(Page page)
+	{
+		Serializable result = page;
+
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle != null)
+		{
+			SerializedPagesMetadataEntry entry = (SerializedPagesMetadataEntry)requestCycle
+					.getMetaData(SERIALIZED_PAGES_KEY);
+
+			if (entry != null)
+			{
+				List list = (List)entry.map.get(page);
+				if (list != null && list.isEmpty() == false)
+				{
+					result = new SerializedPageWithSession(entry.sessionId, page.getNumericId(),
+							page.getPageMapName(), page.getCurrentVersionNumber(), page
+									.getAjaxVersionNumber(), list);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore#restoreAfterSerialization(java.io.Serializable)
+	 */
+	public Page restoreAfterSerialization(Serializable serializable)
+	{
+		if (serializable instanceof Page)
+		{
+			return (Page)serializable;
+		}
+		else if (serializable instanceof SerializedPageWithSession)
+		{
+			SerializedPageWithSession page = (SerializedPageWithSession)serializable;
+			storeSerializedPages(page.sessionId, page.pages);
+			return getPage(page.sessionId, page.pageMapName, page.pageId, page.versionNumber,
+					page.ajaxVersionNumber);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Unknown object type");
+		}
+	}
+
+	private static final MetaDataKey SERIALIZED_PAGES_KEY = new MetaDataKey(SerializedPagesMetadataEntry.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	private static final Logger log = LoggerFactory.getLogger(DiskPageStore.class);
 

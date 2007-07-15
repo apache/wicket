@@ -57,11 +57,12 @@ import org.slf4j.LoggerFactory;
  */
 public class FilePageStore implements IPageStore
 {
-	
-	protected int getSleepTimeMs() {
+
+	protected int getSleepTimeMs()
+	{
 		return 1000;
 	}
-	
+
 	private class PageSavingThread implements Runnable
 	{
 		private volatile boolean stop = false;
@@ -297,14 +298,14 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * Key based on session id, page id, version numbers, etc.
-	 * We don't serialize it anywhere. It's made serializable for convenience if a subclass needs
-	 * to serialize it
+	 * Key based on session id, page id, version numbers, etc. We don't
+	 * serialize it anywhere. It's made serializable for convenience if a
+	 * subclass needs to serialize it
 	 */
 	protected static class SessionPageKey implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
-	
+
 		private final String sessionId;
 		private final int id;
 		private final int versionNumber;
@@ -461,11 +462,12 @@ public class FilePageStore implements IPageStore
 		saveThread.stop();
 		serThread.stop();
 	}
-	protected byte[] doLoadPage(SessionPageKey key) 
+
+	protected byte[] doLoadPage(SessionPageKey key)
 	{
 		File sessionDir = new File(getWorkDir(), key.sessionId);
 		byte[] pageData = null;
-		
+
 		if (sessionDir.exists())
 		{
 			File pageFile = getPageFile(key, sessionDir);
@@ -525,6 +527,21 @@ public class FilePageStore implements IPageStore
 	public Page getPage(String sessionId, String pagemapName, int id, int versionNumber,
 			int ajaxVersionNumber)
 	{
+		// first try to figure out correct versionNumber and ajaxVersionNumeber if necessary
+		if (versionNumber == -1 || ajaxVersionNumber == -1)
+		{
+			PageVersions versions = findPageVersion(sessionId, pagemapName, id, versionNumber);
+			if (versions == null)
+			{
+				return null;
+			}
+			else
+			{
+				versionNumber = versions.versionid;
+				ajaxVersionNumber = versions.ajaxversionid;
+			}
+		}
+		
 		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber,
 				ajaxVersionNumber, pagemapName, null);
 		long t1 = System.currentTimeMillis();
@@ -624,6 +641,9 @@ public class FilePageStore implements IPageStore
 		}
 		// do really put it back in.. The writer thread could have removed it.
 		pagesToBeSerialized.put(sessionId, list);
+
+		putPageVersion(sessionId, page.getPageMapName(), new PageVersions(page.getNumericId(), page
+				.getCurrentVersionNumber(), page.getAjaxVersionNumber()));
 	}
 
 	/**
@@ -632,6 +652,7 @@ public class FilePageStore implements IPageStore
 	public void unbind(String sessionId)
 	{
 		removeSessionFromPendingMap(sessionId);
+		removePageVersions(sessionId);
 	}
 
 	/**
@@ -670,6 +691,9 @@ public class FilePageStore implements IPageStore
 			for (int i = 0; i < listFiles.length; i++)
 			{
 				listFiles[i].delete();
+			}
+			if (id == -1) {
+				removePageVersions(sessionId, pageMap);
 			}
 		}
 
@@ -940,6 +964,162 @@ public class FilePageStore implements IPageStore
 		protected Object readResolve() throws ObjectStreamException
 		{
 			return Session.get().getPage(pagemap, Integer.toString(pageid), -1);
+		}
+	}
+
+	// this is necessary to keep last version/pageversion informations (when -1
+	// is specified in getpage)
+	private static class PageVersions
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final int pageid;
+		private final int versionid;
+		private final int ajaxversionid;
+
+		PageVersions(int pageid, int versionid, int ajaxversionid)
+		{
+			this.pageid = pageid;
+			this.versionid = versionid;
+			this.ajaxversionid = ajaxversionid;
+		}
+
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		public boolean equals(Object obj)
+		{
+			if (obj instanceof PageVersions)
+			{
+				return ((PageVersions)obj).pageid == pageid &&
+						((PageVersions)obj).versionid == versionid;
+			}
+			return false;
+		}
+
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
+		public int hashCode()
+		{
+			return pageid;
+		}
+	}
+
+	// sessionId->(pageMapName->List<PageVersion>)
+	private Map /* <String, Map<String, List<PageVersions>> */pageVersionMap = new ConcurrentHashMap();
+
+	private List /* <PageVersions> */getPageVersions(String sessionId, String pageMapName,
+			boolean createIfDoesNotExist)
+	{
+		if (pageMapName == null)
+			pageMapName = "";
+		
+		Map pageMapToList = (Map)pageVersionMap.get(sessionId);
+		if (pageMapToList == null && createIfDoesNotExist == false)
+		{
+			return null;
+		}
+		else if (pageMapToList == null && createIfDoesNotExist == true)
+		{
+			pageMapToList = new ConcurrentHashMap();
+			pageVersionMap.put(sessionId, pageMapToList);
+		}
+
+		List versions = (List)pageMapToList.get(pageMapName);
+		if (versions == null && createIfDoesNotExist)
+		{
+			versions = new ArrayList();
+			pageMapToList.put(pageMapName, versions);
+		}
+		return versions;
+	}
+
+	private void removePageVersions(String sessionId)
+	{
+		pageVersionMap.remove(sessionId);
+	}
+	
+	private void removePageVersions(String sessionId, String pageMapName)
+	{
+		if (pageMapName == null)
+		{
+			pageMapName = "";
+		}
+		else
+		{
+			Map map = (Map)pageVersionMap.get(sessionId);
+			if (map != null)
+			{
+				map.remove(pageMapName);
+			}
+		}
+	}
+
+	private PageVersions findPageVersion(String sessionId, String pageMapName, int pageId,
+			int pageVersion)
+	{
+		List list = getPageVersions(sessionId, pageMapName, false);
+		PageVersions result = null;
+		if (list != null)
+		{
+			synchronized (list)
+			{
+				if (pageVersion == -1)
+				{
+					// get the last touched page with given id
+					for (int index = list.size() - 1; index >= 0; --index)
+					{
+						if (((PageVersions)list.get(index)).pageid == pageId)
+						{
+							result = (PageVersions)list.get(index);
+							break;
+						}
+					}
+				}
+				else
+				{
+					// we need to find last ajax version for given page version
+					int index = list.indexOf(new PageVersions(pageId, pageVersion, -1));
+					if (index != -1)
+					{
+						result = (PageVersions)list.get(index);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @param recordPageVersionCount
+	 */
+	public void setRecordPageVersionCount(int recordPageVersionCount)
+	{
+		this.recordPageVersionCount = recordPageVersionCount;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getRecordPageVersionCount()
+	{
+		return recordPageVersionCount;
+	}
+
+	private int recordPageVersionCount = 100;
+
+	private void putPageVersion(String sessionId, String pageMapName, PageVersions pv)
+	{
+		List list = getPageVersions(sessionId, pageMapName, true);
+		synchronized (list)
+		{
+			list.remove(pv);
+			list.add(pv);
+			if (list.size() > getRecordPageVersionCount())
+			{
+				list.remove(0);
+			}
 		}
 	}
 }

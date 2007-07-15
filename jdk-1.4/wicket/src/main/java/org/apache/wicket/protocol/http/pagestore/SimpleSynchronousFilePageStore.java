@@ -22,6 +22,8 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,11 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Very simple page store that uses separate file for each serialized
- * page instance. Also this store doesn't use any worker threads.
+ * Very simple page store that uses separate file for each serialized page
+ * instance. Also this store doesn't use any worker threads.
  * <p>
- * This store is for demonstration purposes only and will perfom badly
- * in production.
+ * This store is for demonstration purposes only and will perfom badly in
+ * production.
+ * 
  * @author Matej Knopp
  */
 public class SimpleSynchronousFilePageStore extends AbstractPageStore
@@ -66,12 +69,105 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 				"javax.servlet.context.tempdir"));
 	}
 
+	private String getFileName(String pageMapName, int pageId)
+	{
+		return appName + "-pm-" + pageMapName + "-p-" + pageId;
+	}
 
+	// sort file by modification time
+	private void sortFiles(File[] files)
+	{
+		Arrays.sort(files, new Comparator()
+		{
+			public int compare(Object arg0, Object arg1)
+			{
+				File f1 = (File)arg0;
+				File f2 = (File)arg1;
+
+				return f1.lastModified() < f2.lastModified() ? -1 : (f1.lastModified() == f2
+						.lastModified() ? 0 : 1);
+			}
+		});
+	}
+
+	/**
+	 * Returns the file for specified page. The specification might be
+	 * incomplete (-1 set as versionNumber or ajaxVersionNumber). In that case,
+	 * it search for the correct file. The search traverses the session folder
+	 * which is inefficient and should not be used in production. It's good to
+	 * manage/cache this information in page store implementations.
+	 * 
+	 * @param sessionDir
+	 * @param pageMapName
+	 * @param pageId
+	 * @param versionNumber
+	 * @param ajaxVersionNumber
+	 * @return
+	 */
 	private File getPageFile(File sessionDir, String pageMapName, int pageId, int versionNumber,
 			int ajaxVersionNumber)
 	{
-		return new File(sessionDir, appName + "-pm-" + pageMapName + "-p-" + pageId + "-v-" +
-				versionNumber + "-a-" + ajaxVersionNumber);
+		final String fileNamePrefix = getFileName(pageMapName, pageId);
+		if (versionNumber != -1 && ajaxVersionNumber != -1)
+		{
+			return new File(sessionDir, fileNamePrefix + "-v-" + versionNumber + "-a-" +
+					ajaxVersionNumber);
+		}
+		else if (versionNumber == -1)
+		{
+			// if versionNumber is -1, we need the last touched (saved) file
+			File[] files = sessionDir.listFiles(new FilenameFilter()
+			{
+				public boolean accept(File dir, String name)
+				{
+					return name.startsWith(fileNamePrefix);
+				}
+			});
+			if (files == null || files.length == 0)
+			{
+				return null;
+			}
+			sortFiles(files);
+			return files[files.length - 1];
+		}
+		else
+		{
+			// if versionNumber is specified and ajaxVersionNumber is -1, we
+			// need page
+			// with the highest ajax number
+			final String prefixWithVersion = fileNamePrefix + "-v-" + versionNumber;
+			// if versionNumber is -1, we need the last touched (saved) file
+			File[] files = sessionDir.listFiles(new FilenameFilter()
+			{
+				public boolean accept(File dir, String name)
+				{
+					return name.startsWith(prefixWithVersion);
+				}
+			});
+			if (files == null || files.length == 0)
+			{
+				return null;
+			}
+			// from the list of files, we need to pick one with highest ajax
+			// version
+			// (the last integer in file name)
+			int lastAjaxVersion = -1;
+			int indexWithBiggestAjaxVersion = -1;
+			for (int i = 0; i < files.length; ++i)
+			{
+				File file = files[i];
+				String ajaxVersionString = file.getName().substring(
+						file.getName().lastIndexOf('-') + 1);
+				int ajaxVersion = Integer.parseInt(ajaxVersionString);
+				if (lastAjaxVersion < ajaxVersion)
+				{
+					lastAjaxVersion = ajaxVersion;
+					indexWithBiggestAjaxVersion = i;
+				}
+			}
+
+			return files[indexWithBiggestAjaxVersion];
+		}
 	}
 
 

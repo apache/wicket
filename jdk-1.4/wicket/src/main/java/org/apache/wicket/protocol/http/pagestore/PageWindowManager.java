@@ -103,6 +103,70 @@ public class PageWindowManager
 		}
 	}
 
+	private int getWindowIndex(List /* Integer */indices, int pageId, int versionNumber,
+			int ajaxVersionNumber)
+	{
+		int result = -1;
+
+		if (versionNumber != -1 && ajaxVersionNumber != -1)
+		{
+			// just find the exact page version
+			for (Iterator i = indices.iterator(); i.hasNext();)
+			{
+				int currentIndex = ((Integer)i.next()).intValue();
+				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
+
+				if (window.pageId == pageId && window.versionNumber == versionNumber &&
+						window.ajaxVersionNumber == ajaxVersionNumber)
+				{
+					result = currentIndex;
+					break;
+				}
+			}
+		}
+		else if (versionNumber == -1)
+		{
+			// we need to find last recently stored page window - that is page
+			// window with index closest to the left of the indexPointer or farthest 
+			// to the right.
+			for (Iterator i = indices.iterator(); i.hasNext();)
+			{
+				int currentIndex = ((Integer)i.next()).intValue();
+				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
+
+				if (window.pageId == pageId)
+				{
+					if ((result == -1) || /**/
+						(currentIndex <= indexPointer && result > indexPointer) || /**/
+						(currentIndex > result && currentIndex <= indexPointer) || /**/
+						(currentIndex > result && result > indexPointer))
+					{
+						result = currentIndex;
+					}
+				}
+			}
+		}
+		else if (ajaxVersionNumber == -1)
+		{
+			int lastAjaxVersion = -1;
+			// we need to find index with highest ajax version
+			for (Iterator i = indices.iterator(); i.hasNext();)
+			{
+				int currentIndex = ((Integer)i.next()).intValue();
+				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
+
+				if (window.pageId == pageId && window.versionNumber == versionNumber && 
+					window.ajaxVersionNumber > lastAjaxVersion)
+				{
+					result = currentIndex;
+					lastAjaxVersion = window.ajaxVersionNumber;
+				}
+			}
+		}
+
+		return result;
+	}
+
 	/**
 	 * Returns the index of the given page in the {@link #windows} list.
 	 * 
@@ -123,20 +187,7 @@ public class PageWindowManager
 		List indices = (List)idToWindowIndices.get(pageId);
 		if (indices != null)
 		{
-			for (Iterator i = indices.iterator(); i.hasNext();)
-			{
-				Integer currentIndex = (Integer)i.next();
-				PageWindowInternal window = (PageWindowInternal)windows
-						.get(currentIndex.intValue());
-
-				// check whether the page window matches requested page
-				if (window.pageId == pageId && window.versionNumber == versionNumber &&
-						window.ajaxVersionNumber == ajaxVersionNumber)
-				{
-					index = currentIndex.intValue();
-					break;
-				}
-			}
+			index = getWindowIndex(indices, pageId, versionNumber, ajaxVersionNumber);
 		}
 		return index;
 	}

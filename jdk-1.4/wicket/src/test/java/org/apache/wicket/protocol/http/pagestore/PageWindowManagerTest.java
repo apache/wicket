@@ -132,6 +132,45 @@ public class PageWindowManagerTest extends TestCase
 		
 	}
 	
+	/**
+	 * 
+	 */
+	public void testLastVersions() 
+	{
+		PageWindowManager manager = new PageWindowManager(100);
+		PageWindow window;
+
+		manager.createPageWindow(1, 1, 1, 10);
+		
+		manager.createPageWindow(1, 1, 2, 10);
+		
+		manager.createPageWindow(1, 1, 3, 10);
+		
+		window = manager.getPageWindow(1, -1, -1);
+		
+		assertWindow(window, 1, 1, 3);
+		manager.createPageWindow(1, 1, 2, 10);
+		
+		window = manager.getPageWindow(1, -1, -1);
+		assertWindow(window, 1, 1, 2);
+		
+		manager.createPageWindow(1, 1, 4, 60);
+		
+		window = manager.getPageWindow(1, -1, -1);
+		assertWindow(window, 1, 1, 4);
+		
+		manager.createPageWindow(2, 1, 1, 20);
+
+		window = manager.getPageWindow(1, -1, -1);
+		assertWindow(window, 1, 1, 4);
+
+		manager.createPageWindow(1, 1, 5, 60);
+		manager.createPageWindow(3, 1, 1, 20);
+		
+		window = manager.getPageWindow(1, -1, -1);
+		assertWindow(window, 1, 1, 5);
+	}
+	
 	private void assertWindow(PageWindow window, int pageId, int versionNumber, int ajaxVersionNumber,
 			                  int filePartOffset, int filePartSize)
 	{
@@ -139,4 +178,13 @@ public class PageWindowManagerTest extends TestCase
 				   window.getAjaxVersionNumber() == ajaxVersionNumber && window.getFilePartOffset() == filePartOffset &&
 				   window.getFilePartSize() == filePartSize);
 	}
+
+
+	private void assertWindow(PageWindow window, int pageId, int versionNumber, int ajaxVersionNumber)
+	{
+		assertTrue(window.getPageId() == pageId && window.getVersionNumber() == versionNumber &&
+				   window.getAjaxVersionNumber() == ajaxVersionNumber);
+		
+	}
+
 }
