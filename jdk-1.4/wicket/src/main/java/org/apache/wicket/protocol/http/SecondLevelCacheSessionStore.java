@@ -345,8 +345,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					page = ((ISerializationAwarePageStore)store).prepareForSerialization(lastPage);
 				}
 				
-				// TODO: The PageStore probably already serialized the lastPage,
-				// we should try to reuse the serialized data
 				s.writeObject(page);
 			}
 		}
