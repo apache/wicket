@@ -1286,7 +1286,7 @@ public abstract class RequestCycle
 	private MetaDataEntry[] metaData;
 
 	/**
-	 * Sets the metadata for this request using the given key. If the metadata
+	 * Sets the metadata for this request cycle using the given key. If the metadata
 	 * object is not of the correct type for the metadata key, an
 	 * IllegalArgumentException will be thrown. For information on creating
 	 * MetaDataKeys, see {@link MetaDataKey}.
@@ -1304,7 +1304,7 @@ public abstract class RequestCycle
 	}
 	
 	/**
-	 * Gets metadata for this component using the given key.
+	 * Gets metadata for this request cycle using the given key.
 	 * 
 	 * @param key
 	 *            The key for the data
