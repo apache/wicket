@@ -29,7 +29,7 @@ import org.apache.wicket.util.time.Duration;
 
 
 /**
- * Inteface for request related settings
+ * Interface for request related settings
  * <p>
  * <i>bufferResponse </i> (defaults to true) - True if the application should
  * buffer responses. This does require some additional memory, but helps keep
