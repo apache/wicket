@@ -27,9 +27,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Session;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,15 +157,6 @@ public class WicketSessionFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
 	{
-		// set application thread local regarless of whether we can find a
-		// session
-		WebApplication webApplication = (WebApplication)filterConfig.getServletContext()
-				.getAttribute(WebApplication.SERVLET_CONTEXT_APPLICATION_KEY);
-		if (webApplication != null)
-		{
-			Application.set(webApplication);
-		}
-
 		HttpServletRequest httpServletRequest = ((HttpServletRequest)request);
 		HttpSession httpSession = httpServletRequest.getSession(false);
 		if (httpSession != null)
@@ -208,13 +197,6 @@ public class WicketSessionFilter implements Filter
 
 		// go on with processing
 		chain.doFilter(request, response);
-
-		// clean up
-		Session.unset();
-		if (webApplication != null)
-		{
-			Application.unset();
-		}
 	}
 
 	/**
