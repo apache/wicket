@@ -79,6 +79,7 @@ Wicket.DateTime.positionRelativeTo = function(subject, target) {
 	targetHeight = YAHOO.util.Dom.get(target).offsetHeight;
 	subject.style.top = targetPos[1] + targetHeight + 1 + "px";
 	subject.style.left = targetPos[0] + "px";
+	subject.style.overflow = "visible";
 }
 
 /**
