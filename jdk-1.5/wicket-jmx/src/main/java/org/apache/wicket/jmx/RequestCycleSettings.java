@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.jmx;
 
+import org.apache.wicket.util.time.Duration;
+
 
 /**
  * Exposes Application related functionality for JMX.
@@ -61,6 +63,14 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	}
 
 	/**
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#getTimeout()
+	 */
+	public String getTimeout()
+	{
+		return application.getRequestCycleSettings().getTimeout().toString();
+	}
+
+	/**
 	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setBufferResponse(boolean)
 	 */
 	public void setBufferResponse(boolean bufferResponse)
@@ -83,5 +93,13 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	public void setResponseRequestEncoding(String responseRequestEncoding)
 	{
 		application.getRequestCycleSettings().setResponseRequestEncoding(responseRequestEncoding);
+	}
+
+	/**
+	 * @see org.apache.wicket.jmx.RequestCycleSettingsMBean#setTimeout(java.lang.String)
+	 */
+	public void setTimeout(String timeout)
+	{
+		application.getRequestCycleSettings().setTimeout(Duration.valueOf(timeout));
 	}
 }

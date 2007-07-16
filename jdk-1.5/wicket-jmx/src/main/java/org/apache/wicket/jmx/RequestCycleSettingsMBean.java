@@ -54,6 +54,14 @@ public interface RequestCycleSettingsMBean
 	String getResponseRequestEncoding();
 
 	/**
+	 * Gets the time that a request will by default be waiting for the previous
+	 * request to be handled before giving up.
+	 * 
+	 * @return The time out
+	 */
+	String getTimeout();
+
+	/**
 	 * @param bufferResponse
 	 *            True if this application should buffer responses.
 	 */
@@ -84,4 +92,12 @@ public interface RequestCycleSettingsMBean
 	 *            The request and response encoding to be used.
 	 */
 	void setResponseRequestEncoding(final String responseRequestEncoding);
+
+	/**
+	 * Sets the time that a request will by default be waiting for the previous
+	 * request to be handled before giving up.
+	 * 
+	 * @param timeout
+	 */
+	void setTimeout(String timeout);
 }
