@@ -182,15 +182,26 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		// ISerializationAwareSessionStore) and set as lastPage
 		private Serializable lastPageDeserialized;
 		
+		private transient SecondLevelCacheSessionStore sessionStore;
+		
 		private IPageStore getPageStore()
 		{
-			IPageStore result = null;
-			Application app = Application.exists() ? Application.get() : null;
-			if (app != null)
-			{
-				result = ((SecondLevelCacheSessionStore)app.getSessionStore()).pageStore;
+			if (sessionStore == null)
+			{				
+				Application app = Application.exists() ? Application.get() : null;
+				if (app != null)
+				{
+					sessionStore = (SecondLevelCacheSessionStore)app.getSessionStore();
+				}
 			}
-			return result;
+			if (sessionStore != null)
+			{
+				return sessionStore.getStore();
+			}
+			else
+			{
+				return null;
+			}
 		}
 		
 		private Page getLastPage()
@@ -223,11 +234,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * 
 		 * @param name
 		 * @param serializeLastPage
+		 * @param sessionStore
 		 */
-		private SecondLevelCachePageMap(boolean serializeLastPage, String name)
+		private SecondLevelCachePageMap(SecondLevelCacheSessionStore sessionStore, String name)
 		{
 			super(name);
-			this.serializeLastPage = serializeLastPage;
+			this.sessionStore = sessionStore;
+			this.serializeLastPage = sessionStore.isPageStoreClustered() == false;
 		}
 		
 		/**
@@ -626,7 +639,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 */
 	public IPageMap createPageMap(String name)
 	{
-		return new SecondLevelCachePageMap(isPageStoreClustered() == false, name);
+		return new SecondLevelCachePageMap(this, name);
 	}
 
 	/**
