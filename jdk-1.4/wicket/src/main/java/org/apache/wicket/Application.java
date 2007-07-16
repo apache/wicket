@@ -21,12 +21,14 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
@@ -168,15 +170,16 @@ public abstract class Application
 		final Application application = (Application)current.get();
 		if (application == null)
 		{
-			throw new WicketRuntimeException("There is no application attached to current thread "
-					+ Thread.currentThread().getName());
+			throw new WicketRuntimeException("There is no application attached to current thread " +
+					Thread.currentThread().getName());
 		}
 		return application;
 	}
 
 	/**
 	 * Gets the Application based on the application key of that application.
-	 * THIS METHOD IS NOT MEANT INTENDED FOR FRAMEWORK CLIENTS.
+	 * You typically never have to use this method unless you are working on an
+	 * integration project.
 	 * 
 	 * @param applicationKey
 	 *            The unique key of the application within a certain context
@@ -189,6 +192,19 @@ public abstract class Application
 	{
 		Application application = (Application)applicationKeyToApplication.get(applicationKey);
 		return application;
+	}
+
+	/**
+	 * Gets the keys of the currently registered Wicket applications for this
+	 * web application. You typically never have to use this method unless you
+	 * are working on an integration project.
+	 * 
+	 * @return unmodifiable set with keys that correspond with
+	 *         {@link #getApplicationKey()}. Never null, but possibly empty
+	 */
+	public static Set/* <String> */getApplicationKeys()
+	{
+		return Collections.unmodifiableSet(applicationKeyToApplication.keySet());
 	}
 
 	/**
@@ -342,8 +358,8 @@ public abstract class Application
 		}
 		else
 		{
-			throw new IllegalArgumentException("Invalid configuration type: '" + configurationType
-					+ "'.  Must be \"development\" or \"deployment\".");
+			throw new IllegalArgumentException("Invalid configuration type: '" + configurationType +
+					"'.  Must be \"development\" or \"deployment\".");
 		}
 	}
 
