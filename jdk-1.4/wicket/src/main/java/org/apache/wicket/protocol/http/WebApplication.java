@@ -98,19 +98,12 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class WebApplication extends Application
 {
-	/**
-	 * The key that will be used to store the instance of the web application in
-	 * the servlet context. This might be useful for extending frameworks that
-	 * want to discover the Wicket application instance.
-	 */
-	public static final String SERVLET_CONTEXT_APPLICATION_KEY = "wicket.application";
-
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
 
 	/**
 	 * The cached application key. Will be set in
-	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
+	 * {@link #setWicketFilter(WicketFilter)} based on the filter name.
 	 */
 	private String applicationKey;
 
@@ -459,8 +452,6 @@ public abstract class WebApplication extends Application
 		bufferedResponses.clear();
 		getSessionStore().destroy();
 		FileCleaner.destroy();
-
-		getServletContext().removeAttribute(SERVLET_CONTEXT_APPLICATION_KEY);
 	}
 
 	/**
@@ -502,10 +493,6 @@ public abstract class WebApplication extends Application
 
 		// Configure the app.
 		configure();
-
-		// when done, register the application with the servlet context for any
-		// extension project to discover it when they whish.
-		getServletContext().setAttribute(SERVLET_CONTEXT_APPLICATION_KEY, this);
 	}
 
 	/**
