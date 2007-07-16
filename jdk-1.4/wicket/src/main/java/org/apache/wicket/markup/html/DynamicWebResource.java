@@ -30,6 +30,13 @@ import org.apache.wicket.util.time.Time;
 /**
  * An WebResource subclass for dynamic resources (resources created
  * programmatically).
+ * <p>
+ * This class caches the generated resource in memory, and is thus very useful
+ * for things you generate dynamically, but reuse for a while after that. If you
+ * need resources that stream directly and are not cached, extend
+ * {@link WebResource} directly and implement
+ * {@link WebResource#getResourceStream()} yourself.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -88,24 +95,25 @@ public abstract class DynamicWebResource extends WebResource
 
 	/** The filename that will be set as the Content-Disposition header. */
 	private final String filename;
-	
+
 	/**
 	 * Creates a dynamic resource.
 	 */
 	public DynamicWebResource()
 	{
-		this(null,null);
+		this(null, null);
 	}
 
 	/**
 	 * Creates a dynamic resource.
 	 * 
-	 * @param filename 
-	 * 			  The filename that will be set as the Content-Disposition header.
+	 * @param filename
+	 *            The filename that will be set as the Content-Disposition
+	 *            header.
 	 */
 	public DynamicWebResource(String filename)
 	{
-		this(null,filename);
+		this(null, filename);
 	}
 
 	/**
@@ -116,15 +124,17 @@ public abstract class DynamicWebResource extends WebResource
 	 */
 	public DynamicWebResource(Locale locale)
 	{
-		this(locale,null);
+		this(locale, null);
 	}
+
 	/**
 	 * Creates a dynamic resource from for the given locale
 	 * 
 	 * @param locale
 	 *            The locale of this resource
-	 * @param filename 
-	 * 			  The filename that will be set as the Content-Disposition header.
+	 * @param filename
+	 *            The filename that will be set as the Content-Disposition
+	 *            header.
 	 */
 	public DynamicWebResource(Locale locale, String filename)
 	{
@@ -139,11 +149,12 @@ public abstract class DynamicWebResource extends WebResource
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
-		if(filename != null)
+		if (filename != null)
 		{
 			response.setAttachmentHeader(filename);
 		}
-	}	
+	}
+
 	/**
 	 * Returns the resource locale.
 	 * 
