@@ -84,6 +84,10 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 */
 	public PageMap(String name)
 	{
+		if ("".equals(name))
+		{
+			throw new IllegalStateException("Empty string name for pagemaps is not allowed");
+		}
 		this.name = name;
 	}
 
@@ -243,7 +247,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 		setUpRedirect(cycle);
 		cycle.setResponsePage(page);
 	}
-	
+
 	private void setUpRedirect(final RequestCycle cycle)
 	{
 		Session session = Session.get();
@@ -254,8 +258,8 @@ public abstract class PageMap implements IClusterable, IPageMap
 
 		// The intercept continuation URL should be saved exactly as the
 		// original request specified.
-		 interceptContinuationURL = "/" + cycle.getRequest().getURL();
-		
+		interceptContinuationURL = "/" + cycle.getRequest().getURL();
+
 		// Page map is dirty
 		dirty();
 

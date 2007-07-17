@@ -37,7 +37,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
-	protected final WeakReference/*<Class>*/ bookmarkablePageClassRef;
+	protected final WeakReference/* <Class> */bookmarkablePageClassRef;
 
 	/** page map name. */
 	private final String pageMapName;
@@ -75,7 +75,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 				getMountPath().length());
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
-		String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		String pageMapName = WebRequestCodingStrategy.decodePageMapName((String)parameters
+				.remove(WebRequestCodingStrategy.PAGEMAP));
 		if (requestParameters.getPageMapName() == null)
 		{
 			requestParameters.setPageMapName(pageMapName);
@@ -95,12 +96,13 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		{
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters.getComponentPath(),
-					requestParameters.getInterfaceName());
+					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters
+							.getComponentPath(), requestParameters.getInterfaceName());
 		}
 		else
 		{
-			return new BookmarkablePageRequestTarget(pageMapName, (Class)bookmarkablePageClassRef.get(), parameters);
+			return new BookmarkablePageRequestTarget(pageMapName, (Class)bookmarkablePageClassRef
+					.get(), parameters);
 		}
 	}
 
@@ -111,8 +113,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("This encoder can only be used with "
-					+ "instances of " + IBookmarkablePageRequestTarget.class.getName());
+			throw new IllegalArgumentException("This encoder can only be used with " +
+					"instances of " + IBookmarkablePageRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
@@ -126,7 +128,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			{
 				pageParameters = new PageParameters();
 			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
+					.encodePageMapName(pagemap));
 		}
 		appendParameters(url, pageParameters);
 		return url;

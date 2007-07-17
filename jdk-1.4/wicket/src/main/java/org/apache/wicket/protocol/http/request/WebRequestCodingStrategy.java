@@ -78,6 +78,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/** Pagemap parameter constant */
 	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
 
+	/**
+	 * Url name of the default pagemap
+	 * 
+	 * When we encode the default pagemap name in a url we cannot always use
+	 * null or "" because it breaks urls which are encoded with /param1/value1/
+	 * eg /product/14/wicket:pageMapName/ split on / will split into
+	 * {product,14,wicket:pageMapName}
+	 */
+	public static final String DEFAULT_PAGEMAP_NAME = "wicketdef";
+
 	/** The URL path prefix expected for (so called) resources (not html pages). */
 	public static final String RESOURCES_PATH_PREFIX = "resources/";
 
@@ -87,8 +97,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * this parameter is not important, it simply has to be present to enable
 	 * the behavior
 	 */
-	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE
-			+ "ignoreIfNotActive";
+	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE +
+			"ignoreIfNotActive";
 
 	/**
 	 * Various settings used to configure this strategy
@@ -181,7 +191,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final RequestParameters parameters = new RequestParameters();
 		final String pathInfo = getRequestPath(request);
 		parameters.setPath(pathInfo);
-		parameters.setPageMapName(request.getParameter(PAGEMAP));
+		parameters.setPageMapName(WebRequestCodingStrategy.decodePageMapName(request
+				.getParameter(PAGEMAP)));
 		addInterfaceParameters(request, parameters);
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
@@ -337,8 +348,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (mountsOnPath.strategyForMount(path) != null)
 		{
-			throw new WicketRuntimeException(path + " is already mounted for "
-					+ mountsOnPath.strategyForMount(path));
+			throw new WicketRuntimeException(path + " is already mounted for " +
+					mountsOnPath.strategyForMount(path));
 		}
 		mountsOnPath.mount(path, encoder);
 	}
@@ -414,8 +425,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
 			if (components.length != 2)
 			{
-				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: "
-						+ requestString + ", expected: 'pageMapName:pageClassName'");
+				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: " +
+						requestString + ", expected: 'pageMapName:pageClassName'");
 			}
 
 			// Extract any pagemap name
@@ -474,8 +485,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:depth
 		if (pathComponents.length < 6)
 		{
-			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME
-					+ " = " + interfaceParameter);
+			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME +
+					" = " + interfaceParameter);
 		}
 
 		// Extract version
@@ -489,10 +500,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		catch (NumberFormatException e)
 		{
-			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME
-					+ " = " + interfaceParameter
-					+ "; wrong format for page version argument. Expected a number but was '"
-					+ versionNumberString + "'", e);
+			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME +
+					" = " + interfaceParameter +
+					"; wrong format for page version argument. Expected a number but was '" +
+					versionNumberString + "'", e);
 		}
 
 		// Set pagemap name
@@ -517,8 +528,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		// Component path is everything after pageMapName and before version
 		final int start = pageMapName.length() + 1;
-		final int end = interfaceParameter.length() - behaviourId.length() - interfaceName.length()
-				- versionNumberString.length() - urlDepthString.length() - 4;
+		final int end = interfaceParameter.length() - behaviourId.length() -
+				interfaceName.length() - versionNumberString.length() - urlDepthString.length() - 4;
 		final String componentPath = interfaceParameter.substring(start, end);
 		parameters.setComponentPath(componentPath);
 	}
@@ -630,9 +641,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 
 		WebRequestEncoder encoder = new WebRequestEncoder(url);
-		if (!application.getHomePage().equals(pageClass)
-				|| !"".equals(pageMapName)
-				|| (application.getHomePage().equals(pageClass) && requestTarget instanceof BookmarkableListenerInterfaceRequestTarget))
+		if (!application.getHomePage().equals(pageClass) ||
+				!"".equals(pageMapName) ||
+				(application.getHomePage().equals(pageClass) && requestTarget instanceof BookmarkableListenerInterfaceRequestTarget))
 		{
 			/*
 			 * Add <page-map-name>:<bookmarkable-page-class>
@@ -645,8 +656,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			 * because we can't rely on the browser to interpret the unencoded
 			 * url correctly.
 			 */
-			encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
-					+ Component.PATH_SEPARATOR + pageClass.getName());
+			encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
 		}
 
 		// Get page parameters
@@ -1029,5 +1040,48 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				}
 			}
 		};
+	}
+
+	/**
+	 * Makes page map name url safe.
+	 * 
+	 * Since the default page map name in wicket is null and null does not
+	 * encode well into urls this method will substitute null for a known token.
+	 * If the <code>pageMapName</code> passed in is not null it is returned
+	 * without modification.
+	 * 
+	 * @param pageMapName
+	 *            page map name
+	 * @return encoded pagemap name
+	 */
+	public static final String encodePageMapName(String pageMapName)
+	{
+		if (Strings.isEmpty(pageMapName))
+		{
+			return DEFAULT_PAGEMAP_NAME;
+		}
+		else
+		{
+			return pageMapName;
+		}
+	}
+
+	/**
+	 * Undoes the effect of {@link #encodePageMapName(String)}
+	 * 
+	 * @param pageMapName
+	 *            page map name
+	 * @return decoded page map name
+	 */
+	public static String decodePageMapName(String pageMapName)
+	{
+		if (DEFAULT_PAGEMAP_NAME.equals(pageMapName))
+		{
+			return null;
+		}
+		else
+		{
+			return pageMapName;
+		}
 	}
 }

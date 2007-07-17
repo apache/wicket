@@ -45,7 +45,8 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			IMountableRequestTargetUrlCodingStrategy
 {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(AbstractRequestTargetUrlCodingStrategy.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(AbstractRequestTargetUrlCodingStrategy.class);
 
 	/** mounted path. */
 	private final String mountPath;
@@ -122,7 +123,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			}
 		}
 	}
-	
+
 	private void appendValue(AppendingStringBuffer url, String key, String value)
 	{
 		String escapedValue = urlEncode(value);
@@ -162,8 +163,8 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		if (pairs.length % 2 != 0)
 		{
 			// give up
-			throw new IllegalStateException("URL fragment has unmatched key/value " + "pair: "
-					+ urlFragment);
+			throw new IllegalStateException("URL fragment has unmatched key/value " + "pair: " +
+					urlFragment);
 		}
 
 		// Loop through pairs

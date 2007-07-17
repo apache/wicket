@@ -37,8 +37,8 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
  * <p>
  * Though this object can be extended and hence more parameter options can be
  * used, anything other than in this implementation must be supported by
- * specific {@link org.apache.wicket.request.IRequestCycleProcessor} implementations and
- * thus are not supported by default implementations.
+ * specific {@link org.apache.wicket.request.IRequestCycleProcessor}
+ * implementations and thus are not supported by default implementations.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -81,7 +81,7 @@ public class RequestParameters implements IClusterable
 
 	/** the path info. */
 	private String path;
-	
+
 	/** depth of the page for relative URLs. */
 	private int urlDepth = -1;
 
@@ -289,7 +289,9 @@ public class RequestParameters implements IClusterable
 	 */
 	public void setPageMapName(String pageMapName)
 	{
-		this.pageMapName = pageMapName;
+		// this should be done in coding strategies, but its here as a
+		// precaution
+		this.pageMapName = WebRequestCodingStrategy.decodePageMapName(pageMapName);
 	}
 
 	/**
@@ -336,7 +338,7 @@ public class RequestParameters implements IClusterable
 	{
 		this.versionNumber = versionNumber;
 	}
-	
+
 	/**
 	 * Gets the depth for relative URLs. Used in AJAX requests.
 	 * 
@@ -350,7 +352,9 @@ public class RequestParameters implements IClusterable
 	/**
 	 * Sets the depth for relative URLs. Used in AJAX requests.
 	 * 
-	 * @param urlDepth Number of slashes deep the page is that an AJAX request is made from.
+	 * @param urlDepth
+	 *            Number of slashes deep the page is that an AJAX request is
+	 *            made from.
 	 */
 	public void setUrlDepth(int urlDepth)
 	{

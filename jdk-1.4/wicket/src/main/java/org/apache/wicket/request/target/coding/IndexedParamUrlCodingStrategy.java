@@ -84,6 +84,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		if (pageMap != null)
 		{
 			i++;
+			pageMap = WebRequestCodingStrategy.encodePageMapName(pageMap);
 			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
 					urlEncode(pageMap));
 		}
@@ -91,8 +92,8 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		if (i != parameters.size())
 		{
 			throw new WicketRuntimeException(
-					"Not all parameters were encoded. Make sure all parameter names are integers in consecutive order starting with zero. Current parameter names are: "
-							+ parameters.keySet().toString());
+					"Not all parameters were encoded. Make sure all parameter names are integers in consecutive order starting with zero. Current parameter names are: " +
+							parameters.keySet().toString());
 		}
 	}
 
@@ -114,7 +115,8 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
 			{
 				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP, urlDecode(parts[i]));
+				params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
+						.decodePageMapName(urlDecode(parts[i])));
 			}
 			else
 			{

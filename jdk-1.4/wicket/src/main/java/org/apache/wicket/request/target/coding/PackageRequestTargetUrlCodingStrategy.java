@@ -99,11 +99,12 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		{
 			log.debug(e.getMessage());
 			return null;
-		}		
+		}
 		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
 
-		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		pageMapName = WebRequestCodingStrategy.decodePageMapName(pageMapName);
 		requestParameters.setPageMapName(pageMapName);
 
 		// do some extra work for checking whether this is a normal request to a
@@ -132,8 +133,8 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("this encoder can only be used with instances of "
-					+ IBookmarkablePageRequestTarget.class.getName());
+			throw new IllegalArgumentException("this encoder can only be used with instances of " +
+					IBookmarkablePageRequestTarget.class.getName());
 		}
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
@@ -143,7 +144,8 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		PageParameters pageParameters = target.getPageParameters();
 		if (target.getPageMapName() != null)
 		{
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, target.getPageMapName());
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
+					.encodePageMapName(target.getPageMapName()));
 		}
 
 		appendParameters(url, pageParameters);

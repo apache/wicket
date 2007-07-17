@@ -92,8 +92,8 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("This encoder can only be used with "
-					+ "instances of " + IBookmarkablePageRequestTarget.class.getName());
+			throw new IllegalArgumentException("This encoder can only be used with " +
+					"instances of " + IBookmarkablePageRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
@@ -107,7 +107,8 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 			{
 				pageParameters = new PageParameters();
 			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
+			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
+					.encodePageMapName(pagemap));
 		}
 		appendParameters(url, pageParameters);
 		return url;
