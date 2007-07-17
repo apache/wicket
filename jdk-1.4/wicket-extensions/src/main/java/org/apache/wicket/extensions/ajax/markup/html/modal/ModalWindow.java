@@ -981,12 +981,23 @@ public class ModalWindow extends Panel
 			buffer.append("settings.onCloseButton = function() { " + behavior.getCallbackScript()
 					+ "};\n");
 		}
+	
+		postProcessSettings(buffer);
 		
 		buffer.append("Wicket.Window.create(settings).show();\n");
 
 		return buffer.toString();
 	}
 
+	/**
+	 * Method that allows tweaking the settings
+	 * @param settings
+	 * @return settings javascript
+	 */
+	protected AppendingStringBuffer postProcessSettings(AppendingStringBuffer settings)
+	{
+		return settings;
+	}
 
 	private boolean deletePageMap = false;
 	private boolean shown = false;
