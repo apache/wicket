@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.breadcrumb;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Component;
@@ -25,6 +26,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.LoadableDetachableModel;
 
 
@@ -46,6 +48,46 @@ import org.apache.wicket.model.LoadableDetachableModel;
  */
 public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 {
+	/** Default crumb component. */
+	private static final class BreadCrumbComponent extends Panel
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 *            Component id
+		 * @param index
+		 *            The index of the bread crumb
+		 * @param breadCrumbModel
+		 *            The bread crumb model
+		 * @param breadCrumbParticipant
+		 *            The bread crumb
+		 * @param enableLink
+		 *            Whether the link should be enabled
+		 */
+		public BreadCrumbComponent(String id, int index, IBreadCrumbModel breadCrumbModel,
+				final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
+		{
+			super(id);
+			add(new Label("sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
+					.setRenderBodyOnly(true));
+			BreadCrumbLink link = new BreadCrumbLink("link", breadCrumbModel)
+			{
+				private static final long serialVersionUID = 1L;
+
+				protected IBreadCrumbParticipant getParticipant(String componentId)
+				{
+					return breadCrumbParticipant;
+				}
+			};
+			link.setEnabled(enableLink);
+			add(link);
+			link.add(new Label("label", breadCrumbParticipant.getTitle()).setRenderBodyOnly(true));
+		}
+	}
+
 	/**
 	 * List view for rendering the bread crumbs.
 	 */
@@ -106,6 +148,18 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		}
 
 		/**
+		 * Signal model change.
+		 */
+		private void signalModelChange()
+		{
+			// else let the listview recalculate it's childs immediately;
+			// it was attached, but it needs to go trhough that again now
+			// as the signalling component attached after this
+			getModel().detach();
+			super.internalOnAttach();
+		}
+
+		/**
 		 * @see org.apache.wicket.markup.html.list.ListView#onBeforeRender()
 		 */
 		protected void onBeforeRender()
@@ -127,58 +181,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item
 					.getModelObject();
 			item.add(newBreadCrumbComponent("crumb", index, size, breadCrumbParticipant));
-		}
-
-		/**
-		 * Signal model change.
-		 */
-		private void signalModelChange()
-		{
-			// else let the listview recalculate it's childs immediately;
-			// it was attached, but it needs to go trhough that again now
-			// as the signalling component attached after this
-			getModel().detach();
-			super.internalOnAttach();
-		}
-	}
-
-	/** Default crumb component. */
-	private static final class BreadCrumbComponent extends Panel
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 *            Component id
-		 * @param index
-		 *            The index of the bread crumb
-		 * @param breadCrumbModel
-		 *            The bread crumb model
-		 * @param breadCrumbParticipant
-		 *            The bread crumb
-		 * @param enableLink
-		 *            Whether the link should be enabled
-		 */
-		public BreadCrumbComponent(String id, int index, IBreadCrumbModel breadCrumbModel,
-				final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
-		{
-			super(id);
-			add(new Label("sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
-					.setRenderBodyOnly(true));
-			BreadCrumbLink link = new BreadCrumbLink("link", breadCrumbModel)
-			{
-				private static final long serialVersionUID = 1L;
-
-				protected IBreadCrumbParticipant getParticipant(String componentId)
-				{
-					return breadCrumbParticipant;
-				}
-			};
-			link.setEnabled(enableLink);
-			add(link);
-			link.add(new Label("label", breadCrumbParticipant.getTitle()).setRenderBodyOnly(true));
 		}
 	}
 
@@ -231,7 +233,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		add(breadCrumbsListView);
 	}
 
-
 	/**
 	 * Will let the bread crumb bar contribute a CSS include to the page's
 	 * header. It will add BreadCrumbBar.css from this package. This method is
@@ -249,6 +250,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	public final void addDefaultCssStyle()
 	{
 	}
+
 
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
@@ -385,5 +387,25 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	{
 		boolean enableLink = getEnableLinkToCurrent() || (index < (total - 1));
 		return new BreadCrumbComponent(id, index, this, breadCrumbParticipant, enableLink);
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onDetach()
+	 */
+	protected void onDetach()
+	{
+		super.onDetach();
+		for (Iterator i = crumbs.iterator(); i.hasNext();)
+		{
+			IBreadCrumbParticipant crumb = (IBreadCrumbParticipant)i.next();
+			if (crumb instanceof Component)
+			{
+				((Component)crumb).detach();
+			}
+			else if (crumb instanceof IDetachable)
+			{
+				((IDetachable)crumb).detach();
+			}
+		}
 	}
 }
