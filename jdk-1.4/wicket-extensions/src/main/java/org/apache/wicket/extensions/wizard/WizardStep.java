@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.extensions.wizard.dynamic.DynamicWizardModel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -377,9 +378,18 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Called to initialize the step. This method will be called when the wizard
-	 * is first initialising. This method sets the wizard model and then calls
-	 * template method {@link #onInit(IWizardModel)}
+	 * Called to initialize the step. When this method is called depends on the
+	 * kind of wizard model that is used.
+	 * 
+	 * The {@link WizardModel static wizard model} knows all the steps upfront
+	 * and initializes themm when starting up. This method will be called when
+	 * the wizard is {@link #init(IWizardModel) initializing}.
+	 * 
+	 * The {@link DynamicWizardModel dynamic wizard model} initializes steps
+	 * every time they are encountered.
+	 * 
+	 * This method sets the wizard model and then calls template method
+	 * {@link #onInit(IWizardModel)}
 	 * 
 	 * @param wizardModel
 	 *            the model to which the step belongs.
@@ -472,9 +482,10 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Called when the step is being initialized.
+	 * Template method that is called when the step is being initialized.
 	 * 
 	 * @param wizardModel
+	 * @see #init(IWizardModel)
 	 */
 	protected void onInit(IWizardModel wizardModel)
 	{

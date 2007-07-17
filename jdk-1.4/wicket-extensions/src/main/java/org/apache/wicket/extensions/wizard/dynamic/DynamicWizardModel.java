@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.extensions.wizard.dynamic;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.apache.wicket.extensions.wizard.AbstractWizardModel;
 import org.apache.wicket.extensions.wizard.IWizardStep;
@@ -41,11 +39,6 @@ public class DynamicWizardModel extends AbstractWizardModel
 	 * The current step. The only step that matters really,
 	 */
 	private IDynamicWizardStep activeStep;
-
-	/**
-	 * Holds initialized steps.
-	 */
-	private final Set initializedSteps = new HashSet();
 
 	/**
 	 * Remember the first step for resetting the wizard.
@@ -155,26 +148,6 @@ public class DynamicWizardModel extends AbstractWizardModel
 	}
 
 	/**
-	 * Prepares a step for activation. Steps typically are initialized (have
-	 * their method
-	 * {@link IWizardStep#init(org.apache.wicket.extensions.wizard.IWizardModel)}
-	 * called) the first time they are about to be displayed (thus by default
-	 * when the next button is pushed or when the wizard is starting for the
-	 * first step in the model). You can override this method you need more
-	 * control.
-	 * 
-	 * @param step
-	 *            The step to be activated
-	 */
-	protected void prepareStep(IDynamicWizardStep step)
-	{
-		if (!wasStepInitialized(step))
-		{
-			step.init(this);
-		}
-	}
-
-	/**
 	 * Sets the active step.
 	 * 
 	 * @param step
@@ -187,14 +160,9 @@ public class DynamicWizardModel extends AbstractWizardModel
 			throw new IllegalArgumentException("argument step must to be not null");
 		}
 
+		step.init(this);
 		this.activeStep = step;
 
 		fireActiveStepChanged(step);
 	}
-
-	protected final boolean wasStepInitialized(IDynamicWizardStep step)
-	{
-		return initializedSteps.contains(step);
-	}
-
 }
