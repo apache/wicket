@@ -136,7 +136,7 @@ public abstract class MarkupContainer extends Component
 	public final MarkupContainer add(final Component child)
 	{
 		checkHierarchyChange(child);
-		
+
 		if (child == null)
 		{
 			throw new IllegalArgumentException("argument child may not be null");
@@ -151,8 +151,8 @@ public abstract class MarkupContainer extends Component
 		addedComponent(child);
 		if (put(child) != null)
 		{
-			throw new IllegalArgumentException(exceptionMessage("A child with id '" + child.getId()
-					+ "' already exists"));
+			throw new IllegalArgumentException(exceptionMessage("A child with id '" +
+					child.getId() + "' already exists"));
 		}
 
 		return this;
@@ -169,7 +169,7 @@ public abstract class MarkupContainer extends Component
 	public final MarkupContainer addOrReplace(final Component child)
 	{
 		checkHierarchyChange(child);
-		
+
 		if (child == null)
 		{
 			throw new IllegalArgumentException("argument child must be not null");
@@ -204,8 +204,8 @@ public abstract class MarkupContainer extends Component
 	 * @param component
 	 *            The component to add
 	 * @param markupStream
-	 *            Null, if the parent container is able to provide the markup. 
-	 *            Else the markup stream to be used to render the component. 
+	 *            Null, if the parent container is able to provide the markup.
+	 *            Else the markup stream to be used to render the component.
 	 * @return True, if component has been added
 	 */
 	public final boolean autoAdd(final Component component, final MarkupStream markupStream)
@@ -233,20 +233,21 @@ public abstract class MarkupContainer extends Component
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 * @param component
 	 *            The component to add
 	 * @return True, if component has been added
 	 * 
-	 * @deprecated since 1.3 Please use {@link #autoAdd(Component, MarkupStream)} instead
+	 * @deprecated since 1.3 Please use
+	 *             {@link #autoAdd(Component, MarkupStream)} instead
 	 */
 	public final boolean autoAdd(final Component component)
 	{
 		return autoAdd(component, null);
 	}
-	
+
 	/**
 	 * @param component
 	 *            The component to check
@@ -351,7 +352,8 @@ public abstract class MarkupContainer extends Component
 	{
 		try
 		{
-			return getApplication().getMarkupSettings().getMarkupCache().getMarkupStream(this, false, throwException);
+			return getApplication().getMarkupSettings().getMarkupCache().getMarkupStream(this,
+					false, throwException);
 		}
 		catch (MarkupException ex)
 		{
@@ -363,12 +365,9 @@ public abstract class MarkupContainer extends Component
 		{
 			// throw exception since there is no associated markup
 			throw new MarkupNotFoundException(
-					exceptionMessage("Markup of type '"
-							+ getMarkupType()
-							+ "' for component '"
-							+ getClass().getName()
-							+ "' not found."
-							+ " Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried"),
+					exceptionMessage("Markup of type '" + getMarkupType() + "' for component '" +
+							getClass().getName() + "' not found." +
+							" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried"),
 					ex);
 		}
 	}
@@ -520,7 +519,7 @@ public abstract class MarkupContainer extends Component
 	public void remove(final Component component)
 	{
 		checkHierarchyChange(component);
-		
+
 		if (component == null)
 		{
 			throw new IllegalArgumentException("argument component may not be null");
@@ -550,8 +549,8 @@ public abstract class MarkupContainer extends Component
 		}
 		else
 		{
-			throw new WicketRuntimeException("Unable to find a component with id '" + id
-					+ "' to remove");
+			throw new WicketRuntimeException("Unable to find a component with id '" + id +
+					"' to remove");
 		}
 	}
 
@@ -573,8 +572,8 @@ public abstract class MarkupContainer extends Component
 
 				public String toString()
 				{
-					return "RemoveAllChange[component: " + getPath() + ", removed Children: "
-							+ removedChildren + "]";
+					return "RemoveAllChange[component: " + getPath() + ", removed Children: " +
+							removedChildren + "]";
 				}
 
 				public void undo()
@@ -641,23 +640,23 @@ public abstract class MarkupContainer extends Component
 			setIgnoreAttributeModifier(true);
 			renderComponentTag(associatedMarkupOpenTag);
 			associatedMarkupStream.next();
-			
-			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName()) 
+
+			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 			{
 				getResponse().write("<!-- MARKUP FOR ");
 				getResponse().write(getClass().getName());
 				getResponse().write(" BEGIN -->");
 			}
-				
+
 			renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
-			
+
 			if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 			{
 				getResponse().write("<!-- MARKUP FOR ");
 				getResponse().write(getClass().getName());
 				getResponse().write(" END -->");
 			}
-				
+
 			renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
 			setMarkupStream(originalMarkupStream);
 		}
@@ -679,7 +678,7 @@ public abstract class MarkupContainer extends Component
 	public final MarkupContainer replace(final Component child)
 	{
 		checkHierarchyChange(child);
-		
+
 		if (child == null)
 		{
 			throw new IllegalArgumentException("argument child must be not null");
@@ -699,13 +698,13 @@ public abstract class MarkupContainer extends Component
 			if (replaced == null)
 			{
 				throw new WicketRuntimeException(
-						exceptionMessage("Cannot replace a component which has not been added: id='"
-								+ child.getId() + "', component=" + child));
+						exceptionMessage("Cannot replace a component which has not been added: id='" +
+								child.getId() + "', component=" + child));
 			}
 
 			// first remove the component.
 			removedComponent(replaced);
-			
+
 			// then add the other one.
 			addedComponent(child);
 
@@ -714,7 +713,7 @@ public abstract class MarkupContainer extends Component
 
 			// The generated markup id remains the same
 			String replacedId = (replaced.hasMarkupIdMetaData()) ? replaced.getMarkupId() : null;
-			child.setMarkupIdMetaData(replacedId);
+			child.setMarkupId(replacedId);
 		}
 
 		return this;
@@ -843,23 +842,23 @@ public abstract class MarkupContainer extends Component
 				value = visitor.component(child);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if ((value != IVisitor.CONTINUE_TRAVERSAL)
-						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
+						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
 			}
 
 			// If child is a container
-			if ((child instanceof MarkupContainer)
-					&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+			if ((child instanceof MarkupContainer) &&
+					(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 			{
 				// visit the children in the container
 				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
-				if ((value != IVisitor.CONTINUE_TRAVERSAL)
-						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				if ((value != IVisitor.CONTINUE_TRAVERSAL) &&
+						(value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 				{
 					return value;
 				}
@@ -1236,8 +1235,8 @@ public abstract class MarkupContainer extends Component
 				{
 					if (((WicketTag)tag).isChildTag())
 					{
-						markupStream.throwMarkupException("Found " + tag.toString()
-								+ " but no <wicket:extend>");
+						markupStream.throwMarkupException("Found " + tag.toString() +
+								" but no <wicket:extend>");
 					}
 					else
 					{
@@ -1246,10 +1245,10 @@ public abstract class MarkupContainer extends Component
 				}
 
 				// No one was able to handle the component id
-				markupStream.throwMarkupException("Unable to find component with id '" + id
-						+ "' in " + this + ". This means that you declared wicket:id=" + id
-						+ " in your markup, but that you either did not add the "
-						+ "component to your page at all, or that the hierarchy does not match.");
+				markupStream.throwMarkupException("Unable to find component with id '" + id +
+						"' in " + this + ". This means that you declared wicket:id=" + id +
+						" in your markup, but that you either did not add the " +
+						"component to your page at all, or that the hierarchy does not match.");
 			}
 		}
 		else
@@ -1334,8 +1333,8 @@ public abstract class MarkupContainer extends Component
 			renderNext(markupStream);
 			if (index == markupStream.getCurrentIndex())
 			{
-				markupStream.throwMarkupException("Component at markup stream index " + index
-						+ " failed to advance the markup stream");
+				markupStream.throwMarkupException("Component at markup stream index " + index +
+						" failed to advance the markup stream");
 			}
 		}
 	}
@@ -1372,8 +1371,8 @@ public abstract class MarkupContainer extends Component
 				renderNext(markupStream);
 				if (index == markupStream.getCurrentIndex())
 				{
-					markupStream.throwMarkupException("Markup element at index " + index
-							+ " failed to advance the markup stream");
+					markupStream.throwMarkupException("Markup element at index " + index +
+							" failed to advance the markup stream");
 				}
 			}
 		}
@@ -1407,10 +1406,15 @@ public abstract class MarkupContainer extends Component
 			onAttach();
 			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
 			{
-				throw new IllegalStateException("Component " + this + " of type " + getClass().getName() + " has not been properly attached.  "
-						+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
+				throw new IllegalStateException(
+						"Component " +
+								this +
+								" of type " +
+								getClass().getName() +
+								" has not been properly attached.  " +
+								"Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
 			}
-			
+
 			visitChildren(new IVisitor()
 			{
 				public Object component(Component component)
@@ -1419,13 +1423,18 @@ public abstract class MarkupContainer extends Component
 					component.onAttach();
 					if (!component.getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
 					{
-						throw new IllegalStateException("Component " + component + " of type " + component.getClass().getName() + " has not been properly attached.  "
-								+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
+						throw new IllegalStateException(
+								"Component " +
+										component +
+										" of type " +
+										component.getClass().getName() +
+										" has not been properly attached.  " +
+										"Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
 					}
 					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
-			
+
 			visitChildren(new IVisitor()
 			{
 				public Object component(Component component)
@@ -1480,8 +1489,8 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				throw new WicketRuntimeException("Error attaching this container for rendering: "
-						+ this, ex);
+				throw new WicketRuntimeException("Error attaching this container for rendering: " +
+						this, ex);
 			}
 		}
 	}

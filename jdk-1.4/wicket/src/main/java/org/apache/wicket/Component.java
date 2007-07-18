@@ -461,8 +461,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		 */
 		public String toString()
 		{
-			return "VisibilityChange[component: " + component.getPath() + ", visible: " + visible
-					+ "]";
+			return "VisibilityChange[component: " + component.getPath() + ", visible: " + visible +
+					"]";
 		}
 
 		/**
@@ -680,8 +680,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private ArrayList behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
-			| FLAG_IS_RENDER_ALLOWED;
+	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
+			FLAG_IS_RENDER_ALLOWED;
 
 	/** Component id. */
 	private String id;
@@ -808,11 +808,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 			getApplication().notifyComponentOnAfterRenderListeners(this);
 			if (getFlag(FLAG_AFTER_RENDERING))
 			{
-				throw new IllegalStateException(
-						Component.class.getName()
-								+ " has not been properly detached. Something in the hierarchy of "
-								+ getClass().getName()
-								+ " has not called super.onAfterRender() in the override of onAfterRender() method");
+				throw new IllegalStateException(Component.class.getName() +
+						" has not been properly detached. Something in the hierarchy of " +
+						getClass().getName() +
+						" has not called super.onAfterRender() in the override of onAfterRender() method");
 			}
 			// always detach children because components can be attached
 			// independently of their parents
@@ -847,11 +846,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 			getApplication().notifyComponentOnBeforeRenderListeners(this);
 			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
 			{
-				throw new IllegalStateException(
-						Component.class.getName()
-								+ " has not been properly rendered. Something in the hierarchy of "
-								+ getClass().getName()
-								+ " has not called super.onBeforeRender() in the override of onBeforeRender() method");
+				throw new IllegalStateException(Component.class.getName() +
+						" has not been properly rendered. Something in the hierarchy of " +
+						getClass().getName() +
+						" has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
 			onBeforeRenderChildren();
 			setFlag(FLAG_RENDERING, true);
@@ -893,10 +891,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 		onDetach();
 		if (getFlag(FLAG_DETACHING))
 		{
-			throw new IllegalStateException(Component.class.getName()
-					+ " has not been properly detached. Something in the hierarchy of "
-					+ getClass().getName()
-					+ " has not called super.onDetach() in the override of onDetach() method");
+			throw new IllegalStateException(Component.class.getName() +
+					" has not been properly detached. Something in the hierarchy of " +
+					getClass().getName() +
+					" has not called super.onDetach() in the override of onDetach() method");
 		}
 		setFlag(FLAG_ATTACHED, false);
 
@@ -1181,13 +1179,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Retrieves id by which this component is represented within the markup.
-	 * This is either the id attribute if it is set explicitly in the markup, or
-	 * a generated id.
+	 * This is either the id attribute set explicitly via a call to
+	 * {@link #setMarkupId(String)}, id attribute defined in the markup, or an
+	 * automatically generated id - in that order.
 	 * <p>
-	 * The point of this function is to generate a unique id to make it easy to
-	 * locate this component in the generated markup for post-wicket processing
-	 * such as javascript or an xslt transform in case no explicit id was set
-	 * yet.
+	 * If no explicit id is set this function will generate an id value that
+	 * will be unique in the page. This is the preferred way as there is no
+	 * chance of id collision.
 	 * <p>
 	 * Note: This method should only be called after the component or its parent
 	 * have been added to the page.
@@ -1219,8 +1217,36 @@ public abstract class Component implements IClusterable, IConverterLocator
 			markupId = getId() + page.getAutoIndex();
 			// }
 			setMetaData(MARKUP_ID_KEY, markupId);
+
 		}
 		return markupId;
+	}
+
+	/**
+	 * Sets this component's markup id to a user defined value. It is up to the
+	 * user to ensure this value is unique.
+	 * <p>
+	 * The recommended way is to let wicket generate the value automatically,
+	 * this method is here to serve as an override for that value in cases where
+	 * a specific id must be used.
+	 * <p>
+	 * If null is passed in the user defined value is cleared and markup id
+	 * value will fall back on automatically generated value
+	 * 
+	 * @see #getMarkupId()
+	 * 
+	 * @param markupId
+	 *            markup id value or null to clear any previous user defined
+	 *            value
+	 */
+	public void setMarkupId(String markupId)
+	{
+		if (markupId != null && Strings.isEmpty(markupId))
+		{
+			throw new IllegalArgumentException("Markup id cannot be an empty string");
+		}
+		setMetaData(MARKUP_ID_KEY, markupId);
+
 	}
 
 	/**
@@ -1866,8 +1892,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (behaviors == null || !behaviors.contains(behavior))
 		{
 			throw new IllegalStateException(
-					"Tried to remove a behavior that was not added to the component. Behavior: "
-							+ behavior.toString());
+					"Tried to remove a behavior that was not added to the component. Behavior: " +
+							behavior.toString());
 		}
 
 		if (!behavior.isTemporary())
@@ -2089,8 +2115,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			// We were something other than <tag> or <tag/>
 			markupStream
-					.throwMarkupException("Method renderComponent called on bad markup element: "
-							+ tag);
+					.throwMarkupException("Method renderComponent called on bad markup element: " +
+							tag);
 		}
 
 		if (tag.isOpenClose() && openTag.isOpen())
@@ -2130,7 +2156,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 					// rendered.
 					if (getRenderBodyOnly() == false)
 					{
-						final boolean stripWicketTags = Application.get().getMarkupSettings().getStripWicketTags();
+						final boolean stripWicketTags = Application.get().getMarkupSettings()
+								.getStripWicketTags();
 						if (!(openTag instanceof WicketTag) || !stripWicketTags)
 						{
 							// Close the manually opened panel tag.
@@ -2224,8 +2251,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!getId().equals(replacement.getId()))
 		{
 			throw new IllegalArgumentException(
-					"Replacement component must have the same id as the component it will replace. Replacement id [["
-							+ replacement.getId() + "]], replaced id [[" + getId() + "]].");
+					"Replacement component must have the same id as the component it will replace. Replacement id [[" +
+							replacement.getId() + "]], replaced id [[" + getId() + "]].");
 		}
 		if (parent == null)
 		{
@@ -2407,8 +2434,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (model == null)
 		{
 			throw new IllegalStateException(
-					"Attempt to set model object on null model of component: "
-							+ getPageRelativePath());
+					"Attempt to set model object on null model of component: " +
+							getPageRelativePath());
 		}
 
 		// Check authorization
@@ -2837,8 +2864,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!tag.getName().equalsIgnoreCase(name))
 		{
 			findMarkupStream().throwMarkupException(
-					"Component " + getId() + " must be applied to a tag of type '" + name
-							+ "', not " + tag.toUserDebugString());
+					"Component " + getId() + " must be applied to a tag of type '" + name +
+							"', not " + tag.toUserDebugString());
 		}
 	}
 
@@ -2863,9 +2890,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
 			{
 				findMarkupStream().throwMarkupException(
-						"Component " + getId() + " must be applied to a tag with '" + key
-								+ "' attribute matching '" + value + "', not '" + tagAttributeValue
-								+ "'");
+						"Component " + getId() + " must be applied to a tag with '" + key +
+								"' attribute matching '" + value + "', not '" + tagAttributeValue +
+								"'");
 			}
 		}
 	}
@@ -2903,7 +2930,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			model.detach();
 		}
-		// also detach the wrapped model of a component assignet wrap (not inherited)
+		// also detach the wrapped model of a component assignet wrap (not
+		// inherited)
 		if (model instanceof IWrapModel && !getFlag(FLAG_INHERITABLE_MODEL))
 		{
 			((IWrapModel)model).getWrappedModel().detach();
@@ -2934,8 +2962,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (parent == null)
 		{
-			throw new IllegalStateException("Cannot find markupstream for " + this
-					+ " as there is no parent");
+			throw new IllegalStateException("Cannot find markupstream for " + this +
+					" as there is no parent");
 		}
 
 		return parent.findMarkupStream();
@@ -3152,8 +3180,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected boolean isBehaviorAccepted(final IBehavior behavior)
 	{
 		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
-		if ((behavior instanceof AttributeModifier)
-				&& (getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false))
+		if ((behavior instanceof AttributeModifier) &&
+				(getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false))
 		{
 			return false;
 		}
@@ -3310,8 +3338,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behavior modifiers
-			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose()
-					&& (isIgnoreAttributeModifier() == false))
+			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
+					(isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
 
@@ -3393,9 +3421,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if ((markupOpenTag != null) && markupOpenTag.isOpen() && !markupStream.atCloseTag())
 			{
 				// There must be a component in this discarded body
-				markupStream.throwMarkupException("Expected close tag for '" + markupOpenTag
-						+ "' Possible attempt to embed component(s) '" + markupStream.get()
-						+ "' in the body of this component which discards its body");
+				markupStream.throwMarkupException("Expected close tag for '" + markupOpenTag +
+						"' Possible attempt to embed component(s) '" + markupStream.get() +
+						"' in the body of this component which discards its body");
 			}
 		}
 	}
@@ -3511,10 +3539,16 @@ public abstract class Component implements IClusterable, IConverterLocator
 			return this;
 		}
 		throw new IllegalArgumentException(
-				exceptionMessage("Component is not a container and so does "
-						+ "not contain the path " + path));
+				exceptionMessage("Component is not a container and so does " +
+						"not contain the path " + path));
 	}
 
+	/**
+	 * Checks whether or not this component has a markup id value generated,
+	 * whether it is automatic or user defined
+	 * 
+	 * @return true if this component has a markup id value generated
+	 */
 	final boolean hasMarkupIdMetaData()
 	{
 		return getMetaData(MARKUP_ID_KEY) != null;
@@ -3538,12 +3572,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(
-						"Component "
-								+ this
-								+ " of type "
-								+ getClass().getName()
-								+ " has not been properly attached.  "
-								+ "Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
+						"Component " +
+								this +
+								" of type " +
+								getClass().getName() +
+								" has not been properly attached.  " +
+								"Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
 			}
 			setFlag(FLAG_ATTACHING, false);
 			setFlag(FLAG_ATTACHED, true);
@@ -3642,11 +3676,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 			throw new WicketRuntimeException("Null component id is not allowed.");
 		}
 		this.id = id;
-	}
-
-	final void setMarkupIdMetaData(String markupId)
-	{
-		setMetaData(MARKUP_ID_KEY, markupId);
 	}
 
 	/**
