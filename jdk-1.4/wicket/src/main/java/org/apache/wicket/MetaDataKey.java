@@ -104,7 +104,7 @@ public abstract class MetaDataKey implements IClusterable
 					}
 					else
 					{
-						// remove value and schrink or null array
+						// remove value and shrink or null array
 						if (metaData.length > 1)
 						{
 							int l = metaData.length - 1;
