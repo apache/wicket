@@ -176,10 +176,6 @@ public class AjaxEditableLabel extends Panel
 	{
 		super(id, model);
 		setOutputMarkupId(true);
-		if (model != null)
-		{
-			initLabelAndEditor(model);
-		}
 	}
 
 	/**
@@ -328,8 +324,7 @@ public class AjaxEditableLabel extends Panel
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		// if tempModel - set on construction - is not-null, the label and
-		// editor components have not yet been set.
+		// lazily add label and editor
 		if (editor == null)
 		{
 			initLabelAndEditor(getParentModel());
