@@ -154,7 +154,10 @@ Wicket.Event = {
 				}, 1);
 			} else if (document.readyState && Wicket.Browser.isIE()) { 
 				if (document.getElementById('ie_ready') == null) {
-					var src = (window.location.protocol == 'https:') ? ':\/\/0' : 'javascript:void(0)';
+					// for internet explorer we need to load a "dummy" scrip from ::/ to get the 
+					// readystatechangeevernt - that means the main page being loaded and now the browser
+					// is loading dependencies
+					var src = (window.location.protocol == 'https:') ? '\/\/:' : 'javascript:void(0)';
 					document.write('<script id="ie_ready" defer src="' + src + '"><\/script>');
 					document.getElementById('ie_ready').onreadystatechange = function() {
 						if (this.readyState == 'complete') domReady();
