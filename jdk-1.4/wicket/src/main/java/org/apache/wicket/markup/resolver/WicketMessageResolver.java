@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This is a tag resolver which handles &lt;wicket:message
- * attr="myKey"&gt;Default Text&lt;/wicket:message&gt;. The resolver
+ * key="myKey"&gt;Default Text&lt;/wicket:message&gt;. The resolver
  * will replace the whole tag with the message found in the properties file
  * associated with the Page. If no message is found, the default body text will
  * remain.

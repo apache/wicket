@@ -181,7 +181,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * And where the resource bundle entry is:
  * 
  * <pre>
- * weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
+ * weather.detail=The report for {0,date}, shows the temperature as {2,number,###.##} {3} \
  *     and the weather to be {1}
  * </pre>
  * 

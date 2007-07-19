@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A Resource is something that implements IResourceListener and provides a
- * getResource() method which returns the raw IResource to be rendered back to
- * the client browser.
+ * getResourceStream() method which returns the raw IResourceStream to be
+ * rendered back to the client browser.
  * <p>
  * Resources themselves do not currently have URLs. Instead, they are referred
  * to by components that have URLs.

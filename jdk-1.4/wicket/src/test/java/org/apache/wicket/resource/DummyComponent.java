@@ -21,7 +21,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.MarkupStream;
 
 /**
- * Dummy component used for testing or resource loading funationality.
+ * Dummy component used for testing or resource loading functionality.
  * 
  * @author Chris Turner
  */

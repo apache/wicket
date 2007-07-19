@@ -322,7 +322,7 @@ public abstract class WebApplication extends Application
 	 * Mounts a shared resource class to the given path.
 	 * 
 	 * @param path
-	 *            the path to mount the bookmarkable page class on
+	 *            the path to mount the resource class on
 	 * @param resourceKey
 	 *            the shared key of the resource being mounted
 	 */
