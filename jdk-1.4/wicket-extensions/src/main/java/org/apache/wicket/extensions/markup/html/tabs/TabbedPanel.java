@@ -106,13 +106,7 @@ public class TabbedPanel extends Panel
 		{
 			throw new IllegalArgumentException("argument [tabs] cannot be null");
 		}
-
-		if (tabs.size() < 1)
-		{
-			throw new IllegalArgumentException(
-					"argument [tabs] must contain a list of at least one tab");
-		}
-
+		
 		this.tabs = tabs;
 
 		final IModel tabCount = new AbstractReadOnlyModel()
@@ -185,10 +179,16 @@ public class TabbedPanel extends Panel
 			}
 
 		});
-
-		// select the first tab by default
-		setSelectedTab(0);
-
+	}
+	
+	//@see org.apache.wicket.Component#onAttach()
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+		if (!hasBeenRendered() && getSelectedTab() == -1) {
+			// select the first tab by default
+			setSelectedTab(0);
+		}
 	}
 
 	/**
