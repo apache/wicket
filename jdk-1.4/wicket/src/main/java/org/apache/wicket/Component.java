@@ -877,6 +877,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void debug(final String message)
 	{
 		Session.get().getFeedbackMessages().debug(this, message);
+		Session.get().dirty();
 	}
 
 	/**
@@ -970,6 +971,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void error(final Serializable message)
 	{
 		Session.get().getFeedbackMessages().error(this, message);
+		Session.get().dirty();
 	}
 
 	/**
@@ -981,6 +983,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void fatal(final String message)
 	{
 		Session.get().getFeedbackMessages().fatal(this, message);
+		Session.get().dirty();
 	}
 
 	/**
@@ -1608,6 +1611,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void info(final String message)
 	{
 		Session.get().getFeedbackMessages().info(this, message);
+		Session.get().dirty();
 	}
 
 	/**
@@ -2792,6 +2796,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public final void warn(final String message)
 	{
 		Session.get().getFeedbackMessages().warn(this, message);
+		Session.get().dirty();
 	}
 
 	/**
