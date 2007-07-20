@@ -273,7 +273,7 @@ public class AjaxEditableLabel extends Panel
 	 */
 	protected Component newLabel(MarkupContainer parent, String componentId, IModel model)
 	{
-		Label label = new Label("label", model)
+		Label label = new Label(componentId, model)
 		{
 			private static final long serialVersionUID = 1L;
 
