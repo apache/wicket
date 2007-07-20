@@ -1217,7 +1217,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// if (markupId == null)
 			// {
 			// if not in the markup, generate one
+
 			markupId = getId() + page.getAutoIndex();
+			// make sure id is compliant with w3c requirements (starts with a letter)
+			char c = markupId.charAt(0);
+			if (!Character.isLetter(c))
+			{
+				markupId = "id" + markupId;
+			}
+
 			// }
 			setMetaData(MARKUP_ID_KEY, markupId);
 
