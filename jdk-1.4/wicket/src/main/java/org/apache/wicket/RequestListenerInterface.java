@@ -170,8 +170,6 @@ public class RequestListenerInterface
 	 */
 	public final void invoke(final Page page, final Component component)
 	{
-		page.beforeCallComponent(component, this);
-
 		if (!component.isEnabled() || !component.isVisibleInHierarchy())
 		{
 			// just return so that we have a silent fail and just re-render the
@@ -179,6 +177,8 @@ public class RequestListenerInterface
 			log.info("component not enabled or visible; ignoring call. Component: " + component);
 			return;
 		}
+
+		page.beforeCallComponent(component, this);
 
 		try
 		{
