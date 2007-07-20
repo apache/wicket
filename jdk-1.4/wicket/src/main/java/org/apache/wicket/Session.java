@@ -37,6 +37,7 @@ import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.protocol.http.IgnoreAjaxRequestException;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
@@ -441,15 +442,24 @@ public abstract class Session implements IClusterable
 	 */
 	public void cleanupFeedbackMessages()
 	{
-		// If session scoped, rendered messages got indeed cleaned up, mark the
-		// session as dirty
-		if (feedbackMessages.clear(RENDERED_SESSION_SCOPED_MESSAGES) > 0)
+		// remove all component feedback messages if we are either using one
+		// pass or render to buffer render strategy (in which case we can remove
+		// without further delay) or in case the redirect to render strategy is
+		// used, when we're doing the render request (isRedirect should return
+		// false in that case)
+		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.REDIRECT_TO_RENDER ||
+				(!RequestCycle.get().isRedirect()))
 		{
-			dirty();
-		}
+			// If session scoped, rendered messages got indeed cleaned up, mark
+			// the session as dirty
+			if (feedbackMessages.clear(RENDERED_SESSION_SCOPED_MESSAGES) > 0)
+			{
+				dirty();
+			}
 
-		// clean up all component related feedback messages
-		feedbackMessages.clear(MESSAGES_FOR_COMPONENTS);
+			// clean up all component related feedback messages
+			feedbackMessages.clear(MESSAGES_FOR_COMPONENTS);
+		}
 	}
 
 	/**
@@ -700,15 +710,15 @@ public abstract class Session implements IClusterable
 					entry = (PageMapsUsedInRequestEntry)pageMapsUsedInRequest.get(pageMap);
 					t = entry != null ? entry.thread : null;
 
-					if (t != null && t != Thread.currentThread()
-							&& (startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
+					if (t != null && t != Thread.currentThread() &&
+							(startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
 					{
 						// if it is still not the right thread..
 						// This either points to long running code (a report
 						// page?) or a deadlock or such
-						throw new WicketRuntimeException("After " + timeout + " the Pagemap "
-								+ pageMapName + " is still locked by: " + t
-								+ ", giving up trying to get the page for path: " + path);
+						throw new WicketRuntimeException("After " + timeout + " the Pagemap " +
+								pageMapName + " is still locked by: " + t +
+								", giving up trying to get the page for path: " + path);
 					}
 				}
 
@@ -1353,7 +1363,7 @@ public abstract class Session implements IClusterable
 		Session.dirtyObjects.set(null);
 
 		Map tempMap = new HashMap();
-		
+
 		// Go through all dirty entries, replicating any dirty objects
 		if (dirtyObjects != null)
 		{
@@ -1389,14 +1399,14 @@ public abstract class Session implements IClusterable
 				tempMap.put(attribute, object);
 			}
 		}
-		
+
 		// in case we have dirty attributes, set them to session
 		if (tempMap.isEmpty() == false)
 		{
-			for (Iterator i = tempMap.entrySet().iterator(); i.hasNext(); )
+			for (Iterator i = tempMap.entrySet().iterator(); i.hasNext();)
 			{
 				Map.Entry entry = (Map.Entry)i.next();
-				setAttribute((String) entry.getKey(), entry.getValue());
+				setAttribute((String)entry.getKey(), entry.getValue());
 			}
 		}
 
