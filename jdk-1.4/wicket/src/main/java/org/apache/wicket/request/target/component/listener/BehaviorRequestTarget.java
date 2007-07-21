@@ -85,8 +85,11 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 		}
 
 		final int idAsInt = Integer.parseInt(id);
-		final IBehaviorListener behaviorListener = (IBehaviorListener)component.getBehaviors().get(
-				idAsInt);
+		IBehaviorListener behaviorListener = null;
+		if (component.getBehaviors().size() > idAsInt)
+		{
+			behaviorListener = (IBehaviorListener)component.getBehaviors().get(idAsInt);
+		}
 		if (behaviorListener == null)
 		{
 			throw new IllegalStateException("No behavior listener found with behaviorId " + id
