@@ -452,7 +452,7 @@ Wicket.DOM.containsElement = function(element) {
 /**
  * Channel management
  *
- * Wicket Ajaax requests are organized in channels. A channel maintain the order of 
+ * Wicket Ajax requests are organized in channels. A channel maintain the order of 
  * requests and determines, what should happen when a request is fired while another 
  * one is being processed. The default behavior (stack) puts the all subsequent requests 
  * in a queue, while the drop behavior limits queue size to one, so only the most
