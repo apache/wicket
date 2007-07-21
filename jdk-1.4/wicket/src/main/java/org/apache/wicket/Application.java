@@ -911,6 +911,8 @@ public abstract class Application
 		onDestroy();
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
+		Session.unset();
+		RequestCycle.set(null);
 	}
 
 	/**
