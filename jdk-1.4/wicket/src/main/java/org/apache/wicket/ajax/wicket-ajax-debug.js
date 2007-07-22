@@ -17,8 +17,12 @@
 var WicketAjaxDebug = {
 
 	showResponseText : false,
+	
+	scrollLock : false,
 
 	debugWindowId : "wicketAjaxDebugWindow",
+	
+	debugWindowScrollLockLinkId : "wicketAjaxDebugScrollLock",
 	
 	debugWindowDragHandleId : "wicketAjaxDebugWindowDragHandle",
 	
@@ -59,7 +63,10 @@ var WicketAjaxDebug = {
         c.innerHTML = msg;
         c.setAttribute("style","font-size: 82%; margin: 0px; padding:0px");        
         d.appendChild(c);
-        d.scrollTop = d.scrollHeight;
+        
+        if (WicketAjaxDebug.scrollLock == false) {
+        	d.scrollTop = d.scrollHeight;
+        }
     },
     
     logError : function(msg) {
@@ -91,14 +98,15 @@ var WicketAjaxDebug = {
 			if (firstTime) {
 				
 	            var html = 	        	
-					"<div style='width: 400px; display: none; position: absolute; left: 200px; top: 300px; z-index: 1000;' id='"+dwid+"'>"+
+					"<div style='width: 450px; display: none; position: absolute; left: 200px; top: 300px; z-index: 1000;' id='"+dwid+"'>"+
 					"	<div style='border: 1px solid black; padding: 1px; background-color: #eee'>"+
 					"		<div style='overflow: auto; width: 100%'>"+
 					"			<div style='float: right; padding: 0.2em; padding-right: 1em;'>"+
+					"               <a href='javascript:WicketAjaxDebug.switchScrollLock()' id='"+WicketAjaxDebug.debugWindowScrollLockLinkId+"' style='color:blue'>scroll lock</a> |"+
 					"				<a href='javascript:WicketAjaxDebug.clearLog()' style='color:blue'>clear</a> | "+
 					"				<a href='javascript:WicketAjaxDebug.hideDebugWindow()' style='color:blue'>close</a>"+
 					"			</div>"+
-					"			<div id='"+dwdhid+"' style='padding: 0.2em; background-color: gray; color: white; padding-left: 1em; margin-right: 8em; cursor: move;'>"+
+					"			<div id='"+dwdhid+"' style='padding: 0.2em; background-color: gray; color: white; padding-left: 1em; margin-right: 14em; cursor: move;'>"+
 					"				Wicket Ajax Debug Window (drag me here)"+
 					"			</div>"+
 					"			<div id='"+WicketAjaxDebug.debugWindowLogId+"' style='width: 100%; height: 200px; background-color: white; overflow: auto; white-space: nowrap'>"+
@@ -110,7 +118,9 @@ var WicketAjaxDebug = {
 					"		</div>"+					
 					"	</div>" +
 					"</div>"+
-					"<div id='wicket-debug-link' style='position:absolute; left:10px; top:95%; z-index:100;'>"+
+					"<div id='wicketDebugLink' style='position:fixed; left: 10px; bottom: 10px; z-index:100; _position: absolute; " +
+					"                                  _left: expression(eval(document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft) + 10);"+
+					"                                  _top: expression(-10 - wicketDebugLink.offsetHeight + eval(document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ));'>"+
 					"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"+
 					"</div>";
 												
@@ -121,6 +131,16 @@ var WicketAjaxDebug = {
 			}
 
         }
+	},
+	
+	switchScrollLock: function() {
+		WicketAjaxDebug.scrollLock = !WicketAjaxDebug.scrollLock;
+		var link = Wicket.$(WicketAjaxDebug.debugWindowScrollLockLinkId);
+		if (WicketAjaxDebug.scrollLock) {
+			link.style.color = "red";
+		} else {
+			link.style.color = "blue";
+		}
 	},
 	
 	onResize: function(element, deltaX, deltaY) {
