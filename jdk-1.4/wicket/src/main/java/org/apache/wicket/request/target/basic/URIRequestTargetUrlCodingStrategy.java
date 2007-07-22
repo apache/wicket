@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.protocol.http.UnitTestSettings;
@@ -190,11 +193,6 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 			urlFragment = urlFragment.substring(1);
 		}
 
-		if (urlFragment.length() == 0)
-		{
-			return new ValueMap();
-		}
-
 		ValueMap parameters = new ValueMap();
 		parameters.add(URI, urlFragment);
 
@@ -210,6 +208,11 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	 * Calls decodeParameters() and retrieves the <tt>uri</tt> parameter. If
 	 * you need to access multiple parameters in the request, call
 	 * {@link #decodeParameters(RequestParameters)} directly.
+	 * 
+	 * <p>
+	 * <b>NOTE. </b> the returned URI is kept URL-encoded as per the
+	 * {@link HttpServletRequest#getRequestURI()} specification
+	 * </p>
 	 * 
 	 * @param requestParameters
 	 * @return
