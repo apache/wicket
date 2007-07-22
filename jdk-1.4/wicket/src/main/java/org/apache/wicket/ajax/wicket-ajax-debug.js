@@ -153,13 +153,13 @@ var WicketAjaxDebug = {
 		
 		var res = [0, 0];
 		
-		if (width < 200) {
-			res[0] = -deltaX;
-			width = 200;
+		if (width < 300) {
+			res[0] = 300 - width;
+			width = 300;
 		}
 		
 		if (height < 100) {
-			res[1] = -deltaY;
+			res[1] = 100 - height;
 			height = 100;	
 		}						
 			
