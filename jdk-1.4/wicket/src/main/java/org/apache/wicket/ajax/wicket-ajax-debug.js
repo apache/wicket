@@ -102,7 +102,7 @@ var WicketAjaxDebug = {
 					"	<div style='border: 1px solid black; padding: 1px; background-color: #eee'>"+
 					"		<div style='overflow: auto; width: 100%'>"+
 					"			<div style='float: right; padding: 0.2em; padding-right: 1em;'>"+
-					"               <a href='javascript:WicketAjaxDebug.switchScrollLock()' id='"+WicketAjaxDebug.debugWindowScrollLockLinkId+"' style='color:blue'>scroll lock</a> |"+
+					"               <a href='javascript:WicketAjaxDebug.switchScrollLock()' id='"+WicketAjaxDebug.debugWindowScrollLockLinkId+"' style='color:blue' onfocus='this.blur();'>scroll lock</a> |"+
 					"				<a href='javascript:WicketAjaxDebug.clearLog()' style='color:blue'>clear</a> | "+
 					"				<a href='javascript:WicketAjaxDebug.hideDebugWindow()' style='color:blue'>close</a>"+
 					"			</div>"+
@@ -126,6 +126,7 @@ var WicketAjaxDebug = {
 												
 				
 				WicketAjaxDebug.addElement(html);
+				Wicket.$(WicketAjaxDebug.debugWindowScrollLockLinkId).focusSet = true;
             	Wicket.Drag.init(wicketGet(dwdhid), function() {} , function() { }, WicketAjaxDebug.onDrag);
             	Wicket.Drag.init(wicketGet(dwrhid), function() {} , function() { }, WicketAjaxDebug.onResize);
 			}
