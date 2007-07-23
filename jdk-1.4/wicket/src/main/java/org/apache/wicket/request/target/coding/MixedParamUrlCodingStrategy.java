@@ -110,6 +110,11 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 	/** {@inheritDoc} */
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
+		if (!url.endsWith("/"))
+		{
+			url.append("/");
+		}
+
 		Set parameterNamesToAdd = new HashSet(parameters.keySet());
 		// Find index of last specified parameter
 		boolean foundParameter = false;
@@ -129,7 +134,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 				{
 					value = "";
 				}
-				url.append("/").append(urlEncode(value));
+				url.append(urlEncode(value)).append("/");
 				parameterNamesToAdd.remove(parameterName);
 			}
 		}
@@ -142,7 +147,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 			{
 				iterator = new TreeSet(parameterNamesToAdd).iterator();
 			}
-			else 
+			else
 			{
 				iterator = parameterNamesToAdd.iterator();
 			}

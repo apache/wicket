@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.IRequestTarget;
@@ -143,6 +142,10 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 		if (parameters.get(URI) != null)
 		{
 			url.append("/").append(parameters.get(URI));
+		}
+		if (!url.endsWith("/"))
+		{
+			url.append("/");
 		}
 
 		// Copied from QueryStringUrlCodingStrategy

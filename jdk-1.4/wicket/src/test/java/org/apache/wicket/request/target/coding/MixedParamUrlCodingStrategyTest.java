@@ -64,7 +64,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
 		String urlStr = url.toString();
-		assertTrue("/1?d=4&e=5".equals(urlStr) || "/1?e=5&d=4".equals(urlStr));
+		assertTrue("/1/?d=4&e=5".equals(urlStr) || "/1/?e=5&d=4".equals(urlStr));
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
 		String urlStr = url.toString();
-		assertTrue("/1/2/3?d=4&e=5".equals(urlStr) || "/1/2/3?e=5&d=4".equals(urlStr));
+		assertTrue("/1/2/3/?d=4&e=5".equals(urlStr) || "/1/2/3/?e=5&d=4".equals(urlStr));
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
-		assertEquals("/1/2/3", url.toString());
+		assertEquals("/1/2/3/", url.toString());
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
 		String urlStr = url.toString();
-		assertTrue("/1//3?d=4&e=5".equals(urlStr) || "/1//3?e=5&d=4".equals(urlStr));
+		assertTrue("/1//3/?d=4&e=5".equals(urlStr) || "/1//3/?e=5&d=4".equals(urlStr));
 	}
 
 	/**

@@ -74,8 +74,8 @@ import org.apache.wicket.util.value.ValueMap;
  * </ul>
  * <p>
  * Regardless of which coding strategy is chosen for the mount,
- * {@link org.apache.wicket.markup.html.link.BookmarkablePageLink BookmarkablePageLink} can
- * be used to insert a bookmarkable link to the request target.
+ * {@link org.apache.wicket.markup.html.link.BookmarkablePageLink BookmarkablePageLink}
+ * can be used to insert a bookmarkable link to the request target.
  * <p>
  * This example demonstrates how to mount a path with
  * <code>QueryStringRequestTargetUrlCodingStrategy</code> within the
@@ -120,7 +120,10 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 */
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
-
+		if (!url.endsWith("/"))
+		{
+			url.append("/");
+		}
 		if (parameters != null && parameters.size() > 0)
 		{
 			final Iterator entries;
@@ -130,7 +133,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 			}
 			else
 			{
-				entries = parameters.entrySet().iterator();				
+				entries = parameters.entrySet().iterator();
 			}
 			WebRequestEncoder encoder = new WebRequestEncoder(url);
 			while (entries.hasNext())
@@ -144,21 +147,24 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 			}
 		}
 	}
-	
+
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		String pageMapName = requestParameters.getPageMapName();
 		final PageParameters parameters = new PageParameters(requestParameters.getParameters());
-		
-		// This might be a request to a stateless page, so check for an interface name.
-		if (requestParameters.getInterfaceName() != null) {
+
+		// This might be a request to a stateless page, so check for an
+		// interface name.
+		if (requestParameters.getInterfaceName() != null)
+		{
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
-					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters.getComponentPath(),
-					requestParameters.getInterfaceName());
+					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters
+							.getComponentPath(), requestParameters.getInterfaceName());
 		}
 		else
 		{
-			return new BookmarkablePageRequestTarget(pageMapName, (Class)bookmarkablePageClassRef.get(), parameters);
+			return new BookmarkablePageRequestTarget(pageMapName, (Class)bookmarkablePageClassRef
+					.get(), parameters);
 		}
 	}
 

@@ -139,7 +139,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
-		url.append("/").append(Classes.simpleName(target.getPageClass()));
+		url.append("/").append(Classes.simpleName(target.getPageClass())).append("/");
 
 		PageParameters pageParameters = target.getPageParameters();
 		if (target.getPageMapName() != null)

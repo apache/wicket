@@ -45,6 +45,6 @@ public class QueryStringUrlCodingStrategyTest extends WicketTestCase
 		IRequestTarget rt = new BookmarkablePageRequestTarget(TestPage.class, params);
 		String path = ucs.encode(rt).toString();
 		log.debug(path);
-		assertEquals("mount/point?a=1&a=2&b=1", path);
+		assertEquals("mount/point/?a=1&a=2&b=1", path);
 	}
 }

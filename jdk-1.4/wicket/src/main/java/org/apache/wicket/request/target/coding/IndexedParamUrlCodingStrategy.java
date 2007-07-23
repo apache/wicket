@@ -76,7 +76,11 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		while (parameters.containsKey(String.valueOf(i)))
 		{
 			String value = (String)parameters.get(String.valueOf(i));
-			url.append("/").append(urlEncode(value));
+			if (!url.endsWith("/"))
+			{
+				url.append("/");
+			}
+			url.append(urlEncode(value)).append("/");
 			i++;
 		}
 
@@ -85,8 +89,12 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		{
 			i++;
 			pageMap = WebRequestCodingStrategy.encodePageMapName(pageMap);
-			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
-					urlEncode(pageMap));
+			if (!url.endsWith("/"))
+			{
+				url.append("/");
+			}
+			url.append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncode(pageMap))
+					.append("/");
 		}
 
 		if (i != parameters.size())
@@ -107,6 +115,10 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		if (urlFragment.startsWith("/"))
 		{
 			urlFragment = urlFragment.substring(1);
+		}
+		if (urlFragment.length() > 0 && urlFragment.endsWith("/"))
+		{
+			urlFragment = urlFragment.substring(0, urlFragment.length() - 1);
 		}
 
 		String[] parts = urlFragment.split("/");

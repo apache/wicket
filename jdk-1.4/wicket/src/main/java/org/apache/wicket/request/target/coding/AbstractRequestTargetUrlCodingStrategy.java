@@ -129,7 +129,11 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		String escapedValue = urlEncode(value);
 		if (!Strings.isEmpty(escapedValue))
 		{
-			url.append("/").append(key).append("/").append(escapedValue);
+			if (!url.endsWith("/"))
+			{
+				url.append("/");
+			}
+			url.append(key).append("/").append(escapedValue).append("/");
 		}
 	}
 
@@ -149,6 +153,11 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		if (urlFragment.startsWith("/"))
 		{
 			urlFragment = urlFragment.substring(1);
+		}
+		// Hack off any trailing slash
+		if (urlFragment.length() > 0 && urlFragment.endsWith("/"))
+		{
+			urlFragment = urlFragment.substring(0, urlFragment.length() - 1);
 		}
 
 		if (urlFragment.length() == 0)
