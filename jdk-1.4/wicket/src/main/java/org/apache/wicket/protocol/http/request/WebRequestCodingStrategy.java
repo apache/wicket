@@ -303,12 +303,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
-		return mountsOnPath.strategyForPath(path);
-
-		// FIXME: This used to have the following logic, but mountsOnPath is
-		// backed by a TreeMap, which doesn't support null keys, so assuming we
-		// don't get the NPEs, the above and the following are actually equivalent. 
-		/*
 		if (path == null)
 		{ 
 			return mountsOnPath.strategyForMount(null);
@@ -322,7 +316,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 		}
 		return null;
-		*/
 	}
 
 	/**
