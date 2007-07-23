@@ -245,7 +245,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 		 * added/deleted between requests
 		 */
 
-		if (page >= getPageCount())
+		if (page > 0 && page >= getPageCount())
 		{
 			page = Math.max(getPageCount() - 1, 0);
 			currentPage = page;
