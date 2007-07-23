@@ -110,13 +110,13 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
 		String urlStr = url.toString();
-		assertEquals(20, urlStr.length());
+		assertEquals(21, urlStr.length());
 		assertTrue(urlStr.indexOf("a=1") != -1);
 		assertTrue(urlStr.indexOf("b=2") != -1);
 		assertTrue(urlStr.indexOf("c=3") != -1);
 		assertTrue(urlStr.indexOf("d=4") != -1);
 		assertTrue(urlStr.indexOf("e=5") != -1);
-		assertTrue(urlStr.matches("^\\?([abcde]=[12345]&){4}([abcde]=[12345])$"));
+		assertTrue(urlStr.matches("^/\\?([abcde]=[12345]&){4}([abcde]=[12345])$"));
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 
 		AppendingStringBuffer url = new AppendingStringBuffer(40);
 		npucs.appendParameters(url, parameters);
-		assertEquals("", url.toString());
+		assertEquals("/", url.toString());
 	}
 
 	/**
