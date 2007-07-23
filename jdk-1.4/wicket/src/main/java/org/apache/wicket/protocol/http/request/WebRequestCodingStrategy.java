@@ -303,8 +303,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
+		return mountsOnPath.strategyForPath(path);
+
+		// FIXME: This used to have the following logic, but mountsOnPath is
+		// backed by a TreeMap, which doesn't support null keys, so assuming we
+		// don't get the NPEs, the above and the following are actually equivalent. 
+		/*
 		if (path == null)
-		{
+		{ 
 			return mountsOnPath.strategyForMount(null);
 		}
 		else
@@ -316,6 +322,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			}
 		}
 		return null;
+		*/
 	}
 
 	/**
@@ -326,21 +333,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		if (encoder == null)
 		{
-			throw new IllegalArgumentException("Argument encoder must be not-null");
+			throw new IllegalArgumentException("Argument encoder must not be null");
 		}
 
 		String path = encoder.getMountPath();
-		if (Strings.isEmpty(path))
+		if (path == null)
 		{
-			throw new IllegalArgumentException("Argument path must be not-null and not empty");
+			throw new IllegalArgumentException("Argument path must not be null");
 		}
-		if (path.equals("/"))
+		
+		if (path.equals("/") || path.equals(""))
 		{
 			throw new IllegalArgumentException(
 					"The mount path '/' is reserved for the application home page");
 		}
 
-		// sanity check
+		// Sanity check in case someone doesn't read the javadoc while
+		// implementing IRequestTargetUrlCodingStrategy
 		if (path.startsWith("/"))
 		{
 			path = path.substring(1);
@@ -393,9 +402,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 
 		// sanity check
-		if (!path.startsWith("/"))
+		if (path.startsWith("/"))
 		{
-			path = "/" + path;
+			path = path.substring(1);
 		}
 
 		mountsOnPath.unmount(path);
@@ -406,9 +415,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * parameters). Any bookmarkable page alias mount will override this method;
 	 * hence if a mount is found, this method will not be called.
 	 * 
-	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should be
-	 * overridden to by in sync with that behaviour.
+	 * If you override this method to behave differently then
+	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should also be
+	 * overridden to be in sync with that behaviour.
 	 * 
 	 * @param request
 	 *            the incoming request
