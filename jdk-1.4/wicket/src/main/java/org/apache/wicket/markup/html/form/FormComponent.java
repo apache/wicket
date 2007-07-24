@@ -1024,6 +1024,11 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		{
 			convertInput();
 
+			if (isRequired() && getConvertedInput() == null)
+			{
+				reportRequiredError();
+			}
+
 			if (isValid())
 			{
 				validateValidators();
@@ -1371,8 +1376,16 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	{
 		if (!checkRequired())
 		{
-			error((IValidationError)new ValidationError().addMessageKey("Required"));
+			reportRequiredError();
 		}
+	}
+
+	/**
+	 * Reports required error against this component
+	 */
+	private void reportRequiredError()
+	{
+		error((IValidationError)new ValidationError().addMessageKey("Required"));
 	}
 
 	/**
