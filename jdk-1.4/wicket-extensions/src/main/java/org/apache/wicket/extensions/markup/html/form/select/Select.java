@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -69,6 +70,8 @@ public class Select extends FormComponent
 
 	protected void convertInput()
 	{
+		boolean supportsMultiple = getModelObject() instanceof Collection;
+
 		/*
 		 * the input contains an array of full path of the selected option
 		 * components unless nothing was selected in which case the input
@@ -82,6 +85,14 @@ public class Select extends FormComponent
 			return;
 		}
 
+		if (!supportsMultiple && paths.length > 1)
+		{
+			throw new WicketRuntimeException(
+					"The model of Select component ["
+							+ getPath()
+							+ "] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
+		}
+
 		List converted = new ArrayList(paths.length);
 
 		/*
@@ -91,32 +102,46 @@ public class Select extends FormComponent
 		for (int i = 0; i < paths.length; i++)
 		{
 			String path = paths[i];
-
-			/*
-			 * option component path sans select component path = relative path
-			 * from group to option since we know the option is child of select
-			 */
-			path = path.substring(getPath().length() + 1);
-
-			// retrieve the selected option component
-			SelectOption option = (SelectOption)get(path);
-
-			if (option == null)
+			if (!Strings.isEmpty(path))
 			{
-				throw new WicketRuntimeException(
-						"submitted http post value ["
-								+ paths.toString()
-								+ "] for SelectOption component ["
-								+ getPath()
-								+ "] contains an illegal relative path element ["
-								+ path
-								+ "] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
+				/*
+				 * option component path sans select component path = relative
+				 * path from group to option since we know the option is child
+				 * of select
+				 */
+				path = path.substring(getPath().length() + 1);
+
+				// retrieve the selected option component
+				SelectOption option = (SelectOption)get(path);
+
+				if (option == null)
+				{
+					throw new WicketRuntimeException(
+							"submitted http post value ["
+									+ paths.toString()
+									+ "] for SelectOption component ["
+									+ getPath()
+									+ "] contains an illegal relative path element ["
+									+ path
+									+ "] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
+				}
+				converted.add(option.getModelObject());
 			}
 
-			converted.add(option.getModelObject());
 		}
 
-		setConvertedInput(converted);
+		if (converted.isEmpty())
+		{
+			setConvertedInput(null);
+		}
+		else if (!supportsMultiple)
+		{
+			setConvertedInput(converted.get(0));
+		}
+		else
+		{
+			setConvertedInput(converted);
+		}
 	}
 
 
@@ -126,28 +151,20 @@ public class Select extends FormComponent
 	public void updateModel()
 	{
 		Object object = getModelObject();
-		boolean isModelCollection = object instanceof Collection;
+		boolean supportsMultiple = object instanceof Collection;
 
-		List converted = (List)getConvertedInput();
-		if (!isModelCollection && converted.size() > 1)
-		{
-			throw new WicketRuntimeException(
-					"The model of Select component ["
-							+ getPath()
-							+ "] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
-		}
-
+		Object converted = getConvertedInput();
 		/*
 		 * update the model
 		 */
-		if (isModelCollection)
+		if (supportsMultiple)
 		{
 			Collection modelCollection = (Collection)object;
 			modelChanging();
 			modelCollection.clear();
 			if (converted != null)
 			{
-				modelCollection.addAll(converted);
+				modelCollection.addAll((Collection)converted);
 			}
 			modelChanged();
 			// force notify of model update via setObject()
@@ -155,12 +172,7 @@ public class Select extends FormComponent
 		}
 		else
 		{
-			object = null;
-			if (converted != null)
-			{
-				object = converted.get(0);
-			}
-			setModelObject(object);
+			setModelObject(converted);
 		}
 	}
 
