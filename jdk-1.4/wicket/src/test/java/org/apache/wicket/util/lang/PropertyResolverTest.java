@@ -444,7 +444,7 @@ public class PropertyResolverTest extends TestCase
 		
 		// FIXME: We shouldn't need to run this first in order for the getName() stuff to work.
 		// See WICKET-668 for details.
-		PropertyResolver.setValue("number", address, new Integer(1), CONVERTER);
+		//PropertyResolver.setValue("number", address, new Integer(1), CONVERTER);
 		
 		Method method = PropertyResolver.getPropertySetter("number", address);
 		assertEquals(method.getName(), "setNumber");

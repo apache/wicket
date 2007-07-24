@@ -994,6 +994,7 @@ public final class PropertyResolver
 			this.getMethod = getMethod;
 			this.getMethod.setAccessible(true);
 			this.field = field;
+			setMethod = findSetter(getMethod, getMethod.getDeclaringClass());
 		}
 
 		/**
@@ -1027,10 +1028,6 @@ public final class PropertyResolver
 		public final void setValue(final Object object, final Object value,
 				PropertyResolverConverter converter)
 		{
-			if (setMethod == null)
-			{
-				setMethod = findSetter(getMethod, object.getClass());
-			}
 			if (setMethod != null)
 			{
 				Object converted = converter.convert(value, getMethod.getReturnType());
@@ -1104,11 +1101,6 @@ public final class PropertyResolver
 		 */
 		public Object newValue(Object object)
 		{
-			if (setMethod == null)
-			{
-				setMethod = findSetter(getMethod, object.getClass());
-			}
-
 			if (setMethod == null)
 			{
 				log.warn("Null setMethod");
