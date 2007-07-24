@@ -26,9 +26,8 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 
 
 /**
@@ -45,9 +44,6 @@ public final class GuestBook extends WicketExamplePage
 	/** A global list of all comments from all users across all sessions */
 	private static final List commentList = new ArrayList();
 
-	/** The list view that shows comments */
-	private final ListView commentListView;
-
 	/**
 	 * Constructor that is invoked when page is invoked without a session.
 	 */
@@ -57,13 +53,12 @@ public final class GuestBook extends WicketExamplePage
 		add(new CommentForm("commentForm"));
 
 		// Add commentListView of existing comments
-		add(commentListView = new ListView("comments", commentList)
+		add(new PropertyListView("comments", commentList)
 		{
 			public void populateItem(final ListItem listItem)
 			{
-				final Comment comment = (Comment)listItem.getModelObject();
-				listItem.add(new Label("date", new Model(comment.getDate())));
-				listItem.add(new MultiLineLabel("text", comment.getText()));
+				listItem.add(new Label("date"));
+				listItem.add(new MultiLineLabel("text"));
 			}
 		}).setVersioned(false);
 	}
@@ -101,11 +96,7 @@ public final class GuestBook extends WicketExamplePage
 
 			// Set date of comment to add
 			newComment.setDate(new Date());
-
-			// Add the component we edited to the list of comments
-			commentListView.modelChanging();
 			commentList.add(0, newComment);
-			commentListView.modelChanged();
 
 			// Clear out the text component
 			comment.setText("");
