@@ -238,6 +238,14 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     }
 
     function doUpdateChoices(resp){
+    
+    	// check if the input hasn't been cleared in the meanwhile
+    	var input=wicketGet(elementId);
+   		if (input.value == null || input.value == "") {
+   			hideAutoComplete();
+   			return;
+   		}
+    
         var element = getAutocompleteMenu();
         element.innerHTML=resp;
         if(element.firstChild && element.firstChild.childNodes) {
@@ -273,6 +281,17 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
             hideAutoComplete();
         }
         render();
+        
+        scheduleEmptyCheck();
+    }
+    
+    function scheduleEmptyCheck() {
+    	window.setTimeout(function() {
+    		var input=wicketGet(elementId);
+    		if (input.value == null || input.value == "") {
+    			hideAutoComplete();
+    		}
+    	}, 100);
     }
 
     function getSelectedValue(){
