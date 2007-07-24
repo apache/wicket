@@ -1024,7 +1024,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		{
 			convertInput();
 
-			if (isValid() && isRequired() && getConvertedInput() == null)
+			if (isValid() && isRequired() && getConvertedInput() == null && !isInputNullable())
 			{
 				reportRequiredError();
 			}
