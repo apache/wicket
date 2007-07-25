@@ -16,11 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Session;
+import org.apache.wicket.*;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -35,7 +31,9 @@ public class WebSession extends Session
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
 	 * constructor returns.
-	 * 
+	 *
+     * @deprecated Use #WebSession(Request) instead
+     * 
 	 * @param application
 	 *            The application
 	 * @param request
@@ -49,6 +47,8 @@ public class WebSession extends Session
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
 	 * constructor returns.
+     *
+     * @deprecated Use #WebSession(Request)
 	 * 
 	 * @param application
 	 *            The application
@@ -59,8 +59,20 @@ public class WebSession extends Session
 	{
 		super(application, request);
 	}
-	
-	/**
+
+    /**
+     * Constructor. Note that {@link RequestCycle} is not available until this
+     * constructor returns.
+     *
+     * @param request
+     *            The current request
+     */
+    public WebSession(Request request)
+    {
+        super(request);
+    }
+
+    /**
 	 * @see org.apache.wicket.Session#isCurrentRequestValid(org.apache.wicket.RequestCycle)
 	 */
 	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)

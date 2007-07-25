@@ -16,19 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -43,6 +30,10 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 /**
@@ -124,7 +115,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Session implements IClusterable
 {
-	/**
+    /**
 	 * Visitor interface for visiting page maps
 	 * 
 	 * @author Jonathan Locke
@@ -372,25 +363,37 @@ public abstract class Session implements IClusterable
 	/** A linked list for last used pagemap queue */
 	private final LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
 
-	/**
+    /**
+	 * Constructor. Note that {@link RequestCycle} is not available until this
+	 * constructor returns.
+	 *
+	 * @param request
+	 *            The current request
+	 */
+    public Session(Request request)
+    {
+        this.locale = request.getLocale();
+        if (locale == null)
+        {
+            throw new IllegalArgumentException("Parameter 'locale' must not be null");
+        }
+    }
+
+    /**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
 	 * constructor returns.
 	 * 
+     * @deprecated  Use #Session(Request)
+     *
 	 * @param application
 	 *            The application that this is a session of
 	 * @param request
 	 *            The current request
-	 * @param response
-	 *            The current response
 	 */
 	protected Session(Application application, Request request)
 	{
-		this.locale = request.getLocale();
-		if (locale == null)
-		{
-			throw new IllegalArgumentException("Parameter 'locale' must not be null");
-		}
-	}
+        this(request);
+    }
 
 	/**
 	 * Force binding this session to the application's
