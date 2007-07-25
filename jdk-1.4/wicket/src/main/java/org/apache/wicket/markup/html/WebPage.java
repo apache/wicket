@@ -35,7 +35,6 @@ import org.apache.wicket.markup.html.internal.HtmlBodyContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.urlcompressing.UrlCompressingWebRequestProcessor;
@@ -240,6 +239,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	protected WebPage(final PageParameters parameters)
 	{
 		super(parameters);
+		commonInit();
 	}
 
 	/**
@@ -323,7 +323,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	{
 		super.configureResponse();
 
-		if (getWebRequestCycle().getResponse() instanceof WebResponse) {
+		if (getWebRequestCycle().getResponse() instanceof WebResponse)
+		{
 			final WebResponse response = getWebRequestCycle().getWebResponse();
 			response.setHeader("Pragma", "no-cache");
 			response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store

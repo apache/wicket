@@ -304,6 +304,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	protected Page(final PageParameters parameters)
 	{
 		super(null);
+		init();
 	}
 
 	/**
