@@ -315,7 +315,7 @@ public final class PropertyResolver
 						method = findMethod(clz, exp);
 						if (method != null)
 						{
-							getAndSetter = new MethodGetAndSet(method, null);
+							getAndSetter = new MethodGetAndSet(method, MethodGetAndSet.findSetter(method, clz), null);
 						}
 						else
 						{
@@ -403,7 +403,7 @@ public final class PropertyResolver
 						}
 						else
 						{
-							getAndSetter = new MethodGetAndSet(method, field);
+							getAndSetter = new MethodGetAndSet(method, MethodGetAndSet.findSetter(method, clz), field);
 						}
 					}
 					else
@@ -415,7 +415,7 @@ public final class PropertyResolver
 			else
 			{
 				field = findField(clz, exp);
-				getAndSetter = new MethodGetAndSet(method, field);
+				getAndSetter = new MethodGetAndSet(method, MethodGetAndSet.findSetter(method, clz), field);
 			}
 			getAndSetters.put(exp, getAndSetter);
 		}
@@ -989,12 +989,12 @@ public final class PropertyResolver
 		private Method setMethod;
 		private final Field field;
 
-		MethodGetAndSet(Method getMethod, Field field)
+		MethodGetAndSet(Method getMethod, Method setMethod, Field field)
 		{
 			this.getMethod = getMethod;
 			this.getMethod.setAccessible(true);
 			this.field = field;
-			setMethod = findSetter(getMethod, getMethod.getDeclaringClass());
+			this.setMethod = setMethod;
 		}
 
 		/**
