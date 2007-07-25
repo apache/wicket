@@ -652,6 +652,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
 	/**
+	 * Flag that makes we are in before-render callback phase Set after
+	 * component.onBeforeRender is invoked (right before invoking beforeRender
+	 * on children)
+	 */
+	static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
+
+	/**
 	 * Meta data key for line precise error logging for the moment of addition.
 	 * Made package private for access in {@link MarkupContainer} and
 	 * {@link Page}
@@ -669,6 +676,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		private static final long serialVersionUID = 1L;
 	};
+
 
 	static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
 
@@ -839,9 +847,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void beforeRender()
 	{
-		if (!getFlag(FLAG_RENDERING))
+		if (!getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
+
 			onBeforeRender();
 			getApplication().notifyComponentOnBeforeRenderListeners(this);
 			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
@@ -851,9 +860,37 @@ public abstract class Component implements IClusterable, IConverterLocator
 						getClass().getName() +
 						" has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
-			onBeforeRenderChildren();
-			setFlag(FLAG_RENDERING, true);
 		}
+	}
+
+	/**
+	 * Prepares the component and it's children for rendering. On whole page
+	 * render this method must be called on the page. On AJAX request, this
+	 * method must be called on updated component.
+	 */
+	public void prepareForRender()
+	{
+		beforeRender();
+		markRendering();
+	}
+
+	/**
+	 * Sets the RENDERING flag on component and it's children.
+	 */
+	public final void markRendering()
+	{
+		internalMarkRendering();
+	}
+
+	boolean isPreparedForRender()
+	{
+		return getFlag(FLAG_PREPARED_FOR_RENDER);
+	}
+
+	void internalMarkRendering()
+	{
+		setFlag(FLAG_PREPARED_FOR_RENDER, false);
+		setFlag(FLAG_RENDERING, true);
 	}
 
 	/**
@@ -1219,7 +1256,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// if not in the markup, generate one
 
 			markupId = getId() + page.getAutoIndex();
-			// make sure id is compliant with w3c requirements (starts with a letter)
+			// make sure id is compliant with w3c requirements (starts with a
+			// letter)
 			char c = markupId.charAt(0);
 			if (!Character.isLetter(c))
 			{
@@ -1955,6 +1993,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void render(final MarkupStream markupStream)
 	{
+		markRendering();
+
 		setMarkupStream(markupStream);
 		setFlag(FLAG_HAS_BEEN_RENDERED, true);
 
@@ -2067,6 +2107,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				parent.setMarkupStream(markupStream);
 
 				beforeRender();
+				markRendering();
 				// check authorization
 				// first the component itself
 				// (after attach as otherwise list views etc wont work)
@@ -3250,6 +3291,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected void onBeforeRender()
 	{
+		setFlag(FLAG_PREPARED_FOR_RENDER, true);
+		onBeforeRenderChildren();
 		setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, true);
 	}
 

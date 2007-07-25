@@ -530,8 +530,6 @@ public abstract class ListView extends AbstractRepeater
 	 */
 	protected void onBeforeRender()
 	{
-		super.onBeforeRender();
-
 		if (isVisibleInHierarchy())
 		{
 			// Get number of items to be displayed
@@ -589,7 +587,9 @@ public abstract class ListView extends AbstractRepeater
 			{
 				removeAll();
 			}
+
 		}
+		super.onBeforeRender();
 	}
 
 	/**
@@ -665,7 +665,8 @@ public abstract class ListView extends AbstractRepeater
 			{
 				final String id = Integer.toString(firstIndex + index);
 				index++;
-				return get(id);
+				Component c = get(id);
+				return c;
 			}
 		};
 	}

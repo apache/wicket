@@ -302,8 +302,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (childCriteria == null)
 		{
 			throw new IllegalArgumentException(
-					"Argument `childCriteria` cannot be null. If you want to traverse all components use `"
-							+ Component.class.getName() + ".class` as the value for this argument");
+					"Argument `childCriteria` cannot be null. If you want to traverse all components use `" +
+							Component.class.getName() + ".class` as the value for this argument");
 		}
 
 
@@ -334,8 +334,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (component.getOutputMarkupId() == false)
 		{
 			throw new IllegalArgumentException(
-					"cannot update component that does not have setOutputMarkupId property set to true. Component: "
-							+ component.toString());
+					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+							component.toString());
 		}
 		addComponent(component, component.getMarkupId());
 	}
@@ -366,9 +366,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		else if (component instanceof AbstractRepeater)
 		{
 			throw new IllegalArgumentException(
-					"Component "
-							+ component.getClass().getName()
-							+ " has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
+					"Component " +
+							component.getClass().getName() +
+							" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. Instead add its parent or another markup container higher in the hierarchy.");
 		}
 
 		markupIdToComponent.put(markupId, component);
@@ -399,8 +399,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (component != null && component.getOutputMarkupId() == false)
 		{
 			throw new IllegalArgumentException(
-					"cannot update component that does not have setOutputMarkupId property set to true. Component: "
-							+ component.toString());
+					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+							component.toString());
 		}
 		final String id = component != null ? component.getMarkupId() : null;
 		appendJavascript("Wicket.Focus.setFocusOnId('" + id + "');");
@@ -445,9 +445,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (obj instanceof AjaxRequestTarget)
 		{
 			AjaxRequestTarget that = (AjaxRequestTarget)obj;
-			return markupIdToComponent.equals(that.markupIdToComponent)
-					&& prependJavascripts.equals(that.prependJavascripts)
-					&& appendJavascripts.equals(that.appendJavascripts);
+			return markupIdToComponent.equals(that.markupIdToComponent) &&
+					prependJavascripts.equals(that.prependJavascripts) &&
+					appendJavascripts.equals(that.appendJavascripts);
 		}
 		return false;
 	}
@@ -668,9 +668,9 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
-				+ "], prependJavascript [" + prependJavascripts + "], appendJavascript ["
-				+ appendJavascripts + "]";
+		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent +
+				"], prependJavascript [" + prependJavascripts + "], appendJavascript [" +
+				appendJavascripts + "]";
 	}
 
 	/**
@@ -732,8 +732,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (component.getRenderBodyOnly() == true)
 		{
 			throw new IllegalStateException(
-					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: "
-							+ component.toString());
+					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: " +
+							component.toString());
 		}
 
 		component.setOutputMarkupId(true);
@@ -754,11 +754,11 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		page.startComponentRender(component);
 
-		component.beforeRender();
-		
+		component.prepareForRender();
+
 		// render any associated headers of the component
 		respondHeaderContribution(response, component);
-		
+
 		component.renderComponent();
 
 		page.endComponentRender(component);

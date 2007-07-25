@@ -300,7 +300,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		
 		protected void onBeforeRender()
 		{
-			AbstractTree.this.onBeforeRender();
+			AbstractTree.this.onBeforeRenderInternal();
 			super.onBeforeRender();
 			
 			if (isRenderChildren())
@@ -559,13 +559,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 	}
 
-	/**
-	 * Called at the beginning of the request (not ajax request, unless we are
-	 * rendering the entire component)
-	 */
-	public void onBeforeRender()
+	// This is necessary because MarkupContainer.onBeforeRender involves calling
+	// beforeRender on children, which results in stack overflow when called from TreeItem
+	private void onBeforeRenderInternal() 
 	{
-		super.onBeforeRender();
 		if (attached == false)
 		{
 			onBeforeAttach();
@@ -606,7 +603,16 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 			attached = true;
 		}
-
+	}
+	
+	/**
+	 * Called at the beginning of the request (not ajax request, unless we are
+	 * rendering the entire component)
+	 */
+	public void onBeforeRender()
+	{
+		onBeforeRenderInternal();
+		super.onBeforeRender();
 	}
 
 	/**

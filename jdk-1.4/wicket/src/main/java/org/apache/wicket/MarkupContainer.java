@@ -223,6 +223,7 @@ public abstract class MarkupContainer extends Component
 		}
 		add(component);
 		component.beforeRender();
+		component.markRendering();
 		if (markupStream == null)
 		{
 			component.render();
@@ -924,6 +925,14 @@ public abstract class MarkupContainer extends Component
 		{
 			page.componentAdded(component);
 		}
+
+		// if the PREPARED_FOR_RENDER flag is set, we have alrady called
+		// beforeRender on this
+		// component's children. So we need to initialize the newly added one
+		if (isPreparedForRender())
+		{
+			component.beforeRender();
+		}
 	}
 
 	/**
@@ -1465,20 +1474,51 @@ public abstract class MarkupContainer extends Component
 		super.detachChildren();
 	}
 
+	void internalMarkRendering()
+	{
+		super.internalMarkRendering();
+		final int size = children_size();
+		for (int i = 0; i < size; i++)
+		{
+			final Component child = children_get(i);
+			child.internalMarkRendering();
+		}
+	}
+
+	private Component[] copyChildren()
+	{
+		int size = children_size();
+		Component result[] = new Component[size];
+		for (int i = 0; i < size; ++i)
+		{
+			result[i] = children_get(i);
+		}
+		return result;
+	}
+
 	void onBeforeRenderChildren()
 	{
 		super.onBeforeRenderChildren();
+
+		// We need to copy the children list because the children components can
+		// modify the hierarchy in their onBeforeRender.
+		Component[] children = copyChildren();
 		try
 		{
 			// Loop through child components
-			final int size = children_size();
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < children.length; i++)
 			{
 				// Get next child
-				final Component child = children_get(i);
+				final Component child = children[i];
 
 				// Call begin request on the child
-				child.beforeRender();
+				// We need to check whether the child's wasn't removed from the
+				// component in the meanwhile (e.g. from another's child
+				// onBeforeRender)
+				if (child.getParent() == this)
+				{
+					child.beforeRender();
+				}
 			}
 		}
 		catch (RuntimeException ex)
