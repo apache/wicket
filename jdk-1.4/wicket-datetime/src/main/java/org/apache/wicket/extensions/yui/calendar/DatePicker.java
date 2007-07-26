@@ -207,7 +207,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		initBuffer.append("init");
 		initBuffer.append(widgetId + "DpJs");
 		initBuffer.append("();");
-		response.renderOnLoadJavascript(initBuffer.toString());
+		response.renderOnDomReadyJavascript(initBuffer.toString());
 	}
 
 	/**
