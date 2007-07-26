@@ -341,8 +341,9 @@ public class WicketFilter implements Filter
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
+		String filterMapping = filterConfig.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM);
 
-		if (SERVLET_PATH_HOLDER.equals(filterConfig.getInitParameter(FILTER_MAPPING_PARAM)))
+		if (SERVLET_PATH_HOLDER.equals(filterMapping))
 		{
 			servletMode = true;
 		}
@@ -358,8 +359,7 @@ public class WicketFilter implements Filter
 
 			// Try to configure filterPath from web.xml if it's not specified as
 			// an init-param.
-			String filterMapping = filterConfig.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM);
-			if (filterMapping == null || filterMapping.equals(WicketFilter.SERVLET_PATH_HOLDER))
+			if (filterMapping == null)
 			{
 				InputStream is = filterConfig.getServletContext().getResourceAsStream(
 						"/WEB-INF/web.xml");
@@ -498,7 +498,7 @@ public class WicketFilter implements Filter
 			// 302 redirects that require absolute URLs.
 			if (urlPatterns.size() == 0)
 			{
-				throw new IllegalArgumentException("Error initialising Wicket" + prefixUppered
+				throw new IllegalArgumentException("Error initializing Wicket" + prefixUppered
 						+ " - you have no <" + mapping + "> element with a url-pattern that uses "
 						+ prefix + ": " + filterName);
 			}
