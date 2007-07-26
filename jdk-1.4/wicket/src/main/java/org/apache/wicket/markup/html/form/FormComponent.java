@@ -480,7 +480,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 * 
 	 * @return true if the 'required' requirement is met, false otherwise
 	 */
-	public final boolean checkRequired()
+	//TODO 1.4 why is this public?
+	public boolean checkRequired()
 	{
 		if (isRequired())
 		{
