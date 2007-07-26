@@ -1211,10 +1211,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final ValueMap getMarkupAttributes()
 	{
-		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
+		MarkupStream markupStream = locateMarkupStream();
 		ValueMap attrs = new ValueMap(markupStream.getTag().getAttributes());
 		attrs.makeImmutable();
 		return attrs;
+	}
+	
+	/**
+	 * @return Component's markup stream
+	 */
+	protected MarkupStream locateMarkupStream()
+	{
+		return new MarkupFragmentFinder().find(this);
 	}
 
 	/**
@@ -2099,7 +2107,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// Save the parent's markup stream to re-assign it at the end
 			MarkupContainer parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
-			MarkupStream markupStream = new MarkupFragmentFinder().find(this);
+			MarkupStream markupStream = locateMarkupStream();
 
 			try
 			{
