@@ -75,10 +75,11 @@ Wicket.DateTime.padDateFragment = function(value) {
  * @param target id of the dom element to position relative to
  */
 Wicket.DateTime.positionRelativeTo = function(subject, target) {
+	
 	targetPos = YAHOO.util.Dom.getXY(target);
 	targetHeight = YAHOO.util.Dom.get(target).offsetHeight;
-	subject.style.top = targetPos[1] + targetHeight + 1 + "px";
-	subject.style.left = targetPos[0] + "px";
+	YAHOO.util.Dom.setX(subject, targetPos[0]);
+	YAHOO.util.Dom.setY(subject, targetPos[1] + targetHeight + 1);
 	subject.style.overflow = "visible";
 }
 

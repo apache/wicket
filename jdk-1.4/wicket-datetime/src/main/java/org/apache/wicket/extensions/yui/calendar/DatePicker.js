@@ -21,17 +21,17 @@ function init${widgetId}DpJs() {
 
 	YAHOO.wicket.${widgetId}DpJs = new YAHOO.widget.Calendar("${widgetId}DpJs","${widgetId}Dp", { ${calendarInit} });
 	YAHOO.wicket.${widgetId}DpJs.isVisible = function() { return YAHOO.wicket.${widgetId}DpJs.oDomContainer.style.display == 'block'; } 
-	if (${alignWithIcon}) Wicket.DateTime.positionRelativeTo(YAHOO.wicket.${widgetId}DpJs.oDomContainer, "${widgetId}Icon");
  
 	function showCalendar() {
 		Wicket.DateTime.showCalendar(YAHOO.wicket.${widgetId}DpJs, YAHOO.util.Dom.get("${widgetId}").value, '${datePattern}');
+		if (${alignWithIcon}) Wicket.DateTime.positionRelativeTo(YAHOO.wicket.${widgetId}DpJs.oDomContainer, "${widgetId}Icon");
 	}
 
 	YAHOO.util.Event.addListener("${widgetId}Icon", "click", showCalendar, YAHOO.wicket.${widgetId}DpJs, true);
 
 	function selectHandler(type, args, cal) {
-		YAHOO.util.Dom.get("${widgetId}").value = Wicket.DateTime.substituteDate('${datePattern}', args[0][0]); 
-		cal.hide(); 
+		YAHOO.util.Dom.get("${widgetId}").value = Wicket.DateTime.substituteDate('${datePattern}', args[0][0]);
+		cal.hide();
 		if (${fireChangeEvent} && YAHOO.wicket.${widgetId}DpJs.isVisible()) {
 			var field = YAHOO.util.Dom.get("${widgetId}");
 			if (typeof(field.onchange) != 'undefined') field.onchange();
