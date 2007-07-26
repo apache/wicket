@@ -341,6 +341,19 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.ListMultipleChoice#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		// No longer applicable, breaks XHTML validation.
+		tag.remove("multiple");
+		tag.remove("size");
+		tag.remove("disabled");
+		tag.remove("name");
+	}
+	
+	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */

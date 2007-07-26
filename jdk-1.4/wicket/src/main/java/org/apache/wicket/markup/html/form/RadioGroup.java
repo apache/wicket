@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.ConversionException;
@@ -130,6 +131,16 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 		return null;
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		// No longer applicable, breaks XHTML validation.
+		tag.remove("disabled");
+		tag.remove("name");
+	}
 
 	/**
 	 * Called when a selection changes.

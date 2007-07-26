@@ -239,7 +239,7 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
 	 */
-	protected final void onComponentTag(final ComponentTag tag)
+	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 		tag.put("multiple", "multiple");

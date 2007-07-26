@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -187,6 +188,17 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 		return false;
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		// No longer applicable, breaks XHTML validation.
+		tag.remove("disabled");
+		tag.remove("name");
+	}
+	
 	/**
 	 * Called when a selection changes.
 	 */
