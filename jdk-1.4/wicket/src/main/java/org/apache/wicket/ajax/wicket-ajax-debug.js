@@ -118,7 +118,7 @@ var WicketAjaxDebug = {
 					"		</div>"+					
 					"	</div>" +
 					"</div>"+
-					"<div id='wicketDebugLink' style='position:fixed; left: 10px; bottom: 10px; z-index:100; _position: absolute; " +
+					"<div id='wicketDebugLink' style='position:fixed; right: 10px; bottom: 10px; z-index:100; padding: 5px; margin: 5px; border: 1px solid black; background-color: white; _position: absolute; " +
 					"                                  _left: expression(eval(document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft) + 10);"+
 					"                                  _top: expression(-10 - wicketDebugLink.offsetHeight + eval(document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ));'>"+
 					"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"+
