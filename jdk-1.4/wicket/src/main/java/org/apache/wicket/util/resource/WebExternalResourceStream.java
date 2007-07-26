@@ -75,7 +75,9 @@ public class WebExternalResourceStream extends AbstractResourceStream
 
 	public void close() throws IOException
 	{
-		in.close();
+		// getInputStream() is not always called (WICKET-790)
+		if (in != null)
+			in.close();
 	}
 
 	public Time lastModifiedTime()
