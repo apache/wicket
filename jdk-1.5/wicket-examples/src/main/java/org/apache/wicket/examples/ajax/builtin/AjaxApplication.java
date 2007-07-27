@@ -16,15 +16,12 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import org.apache.wicket.cluster.pagestore.ClusteredDiskPageStore;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
 import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
 import org.apache.wicket.examples.ajax.builtin.tree.TreeTablePage;
 import org.apache.wicket.markup.html.AjaxServerAndClientTimeFilter;
-import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 import org.apache.wicket.request.target.coding.HybridUrlCodingStrategy;
-import org.apache.wicket.session.ISessionStore;
 
 
 /**
