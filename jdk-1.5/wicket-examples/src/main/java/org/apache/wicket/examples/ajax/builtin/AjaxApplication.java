@@ -54,15 +54,6 @@ public class AjaxApplication extends WicketExampleApplication
 	}
 	
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSessionStore()
-	 */
-	@Override
-	protected ISessionStore newSessionStore()
-	{
-		return new SecondLevelCacheSessionStore(this, new ClusteredDiskPageStore());
-	}
-
-	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	public Class getHomePage()
