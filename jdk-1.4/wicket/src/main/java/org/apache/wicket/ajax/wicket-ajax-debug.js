@@ -118,11 +118,11 @@ var WicketAjaxDebug = {
 					"		</div>"+					
 					"	</div>" +
 					"</div>"+
-					"<div id='wicketDebugLink' style='position:fixed; right: 10px; bottom: 10px; z-index:100; padding: 5px; margin: 5px; border: 1px solid black; background-color: white; _position: absolute; " +
-					"                                  _left: expression(eval(document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft) + 10);"+
-					"                                  _top: expression(-10 - wicketDebugLink.offsetHeight + eval(document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ));'>"+
-					"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"+
-					"</div>";
+					"<a id='wicketDebugLink' style='position:fixed; right: 10px; bottom: 10px; z-index:100; padding-top: 0.3em; padding-bottom: 0em; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; _position: absolute; text-align: center; opacity: 0.7; filter: alpha(opacity=70);" +
+					"                                  _left: expression(-10 - wicketDebugLink.offsetWidth + eval(document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft) +(document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth));"+
+					"                                  _top: expression(-10 - wicketDebugLink.offsetHeight + eval(document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + (document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight));'"+
+					"  href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>";
+					
 												
 				
 				WicketAjaxDebug.addElement(html);
