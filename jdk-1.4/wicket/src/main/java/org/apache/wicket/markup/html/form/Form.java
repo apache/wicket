@@ -326,6 +326,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public Form(final String id)
 	{
 		super(id);
+		setOutputMarkupId(true);
 	}
 
 	/**
@@ -338,6 +339,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public Form(final String id, IModel model)
 	{
 		super(id, model);
+		setOutputMarkupId(true);
 	}
 
 	/**
@@ -1308,19 +1310,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Returns the javascript/css id of this form that will be used to generated
-	 * the id="xxx" attribute. it will be generated if not set already in the
-	 * onComponentTag. Where it will be tried to load from the markup first
-	 * before it is generated.
+	 * the id="xxx" attribute. 
 	 * 
 	 * @return The javascript/css id of this form.
+	 * @deprecated use {@link #getMarkupId()}
 	 */
 	protected final String getJavascriptId()
 	{
-		if (Strings.isEmpty(javascriptId))
-		{
-			javascriptId = getMarkupId();
-		}
-		return javascriptId;
+		return getMarkupId();
 	}
 
 
@@ -1485,24 +1482,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		super.onComponentTag(tag);
 
 		checkComponentTag(tag, "form");
-
-		// If the javascriptid is already generated then use that on even it
-		// was before the first render. Because there could be a component
-		// which already uses it to submit the forum. This should be fixed
-		// when we pre parse the markup so that we know the id is at front.
-		if (!Strings.isEmpty(javascriptId))
-		{
-			tag.put("id", javascriptId);
-		}
-		else
-		{
-			javascriptId = (String)tag.getAttributes().get("id");
-			if (Strings.isEmpty(javascriptId))
-			{
-				javascriptId = getJavascriptId();
-				tag.put("id", javascriptId);
-			}
-		}
 
 		if (isRootForm())
 		{
