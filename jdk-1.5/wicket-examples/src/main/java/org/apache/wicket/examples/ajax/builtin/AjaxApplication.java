@@ -16,8 +16,15 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import org.apache.wicket.cluster.pagestore.ClusteredDiskPageStore;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
+import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
+import org.apache.wicket.examples.ajax.builtin.tree.TreeTablePage;
 import org.apache.wicket.markup.html.AjaxServerAndClientTimeFilter;
+import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
+import org.apache.wicket.request.target.coding.HybridUrlCodingStrategy;
+import org.apache.wicket.session.ISessionStore;
 
 
 /**
@@ -40,6 +47,19 @@ public class AjaxApplication extends WicketExampleApplication
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 		getDebugSettings().setAjaxDebugModeEnabled(true);
+		mount(new HybridUrlCodingStrategy("tree/simple", SimpleTreePage.class));
+		mount(new HybridUrlCodingStrategy("tree/table", TreeTablePage.class));
+		mount(new HybridUrlCodingStrategy("tree/table/editable", EditableTreeTablePage.class));
+		
+	}
+	
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSessionStore()
+	 */
+	@Override
+	protected ISessionStore newSessionStore()
+	{
+		return new SecondLevelCacheSessionStore(this, new ClusteredDiskPageStore());
 	}
 
 	/**
