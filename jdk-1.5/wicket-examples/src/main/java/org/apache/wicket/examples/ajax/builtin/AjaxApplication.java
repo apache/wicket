@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
 import org.apache.wicket.examples.ajax.builtin.tree.EditableTreeTablePage;
 import org.apache.wicket.examples.ajax.builtin.tree.SimpleTreePage;
 import org.apache.wicket.examples.ajax.builtin.tree.TreeTablePage;
@@ -44,10 +45,26 @@ public class AjaxApplication extends WicketExampleApplication
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 		getDebugSettings().setAjaxDebugModeEnabled(true);
+		
+		mount(new HybridUrlCodingStrategy("autocomplete", AutoCompletePage.class));
+		mount(new HybridUrlCodingStrategy("choice", ChoicePage.class));
+		mount(new HybridUrlCodingStrategy("clock", ClockPage.class));
+		mount(new HybridUrlCodingStrategy("editable-label", EditableLabelPage.class));
+		mount(new HybridUrlCodingStrategy("effects", EffectsPage.class));
+		mount(new HybridUrlCodingStrategy("form", FormPage.class));
+		mount(new HybridUrlCodingStrategy("guest-book", GuestBook.class));
+		mount(new HybridUrlCodingStrategy("lazy-loading", LazyLoadingPage.class));
+		mount(new HybridUrlCodingStrategy("links", LinksPage.class));
+		mount(new HybridUrlCodingStrategy("modal-window", ModalWindowPage.class));
+		mount(new HybridUrlCodingStrategy("on-change-ajax-behavior", OnChangeAjaxBehaviorPage.class));
+		mount(new HybridUrlCodingStrategy("pageables", PageablesPage.class));
+		mount(new HybridUrlCodingStrategy("ratings", RatingsPage.class));
+		mount(new HybridUrlCodingStrategy("tabbed-panel", TabbedPanelPage.class));
+		mount(new HybridUrlCodingStrategy("todo-list", TodoList.class));
+		mount(new HybridUrlCodingStrategy("world-clock", WorldClockPage.class));
 		mount(new HybridUrlCodingStrategy("tree/simple", SimpleTreePage.class));
 		mount(new HybridUrlCodingStrategy("tree/table", TreeTablePage.class));
 		mount(new HybridUrlCodingStrategy("tree/table/editable", EditableTreeTablePage.class));
-		
 	}
 	
 	/**
