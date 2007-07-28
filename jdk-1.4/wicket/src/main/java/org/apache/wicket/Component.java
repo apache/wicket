@@ -3321,7 +3321,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		if (getFlag(FLAG_OUTPUT_MARKUP_ID) && !tag.getAttributes().containsKey(MARKUP_ID_ATTR_NAME))
+		// We can't try to get the ID from markup. This could be different than
+		// id returned from getMarkupId() prior first rendering the component 
+		// (due to transparent resolvers and borders which break the 1:1 
+		// component <-> markup relation) 
+		if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 		{
 			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
 		}
