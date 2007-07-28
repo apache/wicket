@@ -20,19 +20,36 @@ if (typeof(Wicket) == "undefined")
 
 Wicket.Tree = { };
 
+Wicket.Tree.askForReload = function() {
+	if (confirm("There was a problem updating the tree. It might be caused be the old page being cached by the browser. \n"+
+	            "It is recommended to reload the page. Do you want to reload it?")) {
+		window.location.reload();
+	}
+}
+
 Wicket.Tree.removeNodes = function(prefix, nodeList) {
+	var problem = false;
 	for (var i = 0; i < nodeList.length; i++) {
 		var e = document.getElementById(prefix + nodeList[i]);
 		if (e != null) {
 			e.parentNode.removeChild(e);
 		} else {
 			// while developing alert a warning
-			alert("Can't find node with id " + prefix + nodeList[i] + ". This shouldn't happen - possible bug in tree?");
+			problem = true;
+			Wicket.Log.error("Can't find node with id " + prefix + nodeList[i] + ". This shouldn't happen - possible bug in tree?");
 		}
+	}
+	if (problem == true) {
+		Wicket.Tree.askForReload();
 	}
 }
 
 Wicket.Tree.createElement = function(elementId, afterId) {
+	var existing = Wicket.$(elementId);
+	if (typeof(existing) != "undefined" && exiting != null) {
+		Wicket.Tree.askForReload();
+	}
+
 	var after = document.getElementById(afterId);
 	var newNode = document.createElement("script");
 	newNode.setAttribute("id", elementId);
