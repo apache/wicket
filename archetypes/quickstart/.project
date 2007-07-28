@@ -1,6 +1,6 @@
 <projectDescription>
-  <name>wicket-archetype-template</name>
-  <comment/>
+  <name>wicket-archetype-quickstart</name>
+  <comment>Wicket is a Java-based open source component web application framework.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>

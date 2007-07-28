@@ -172,7 +172,7 @@ public class NavigatorLabel extends Label
 			{
 				return 0;
 			}
-			return Math.min(getOf(), getFrom() + table.getRowsPerPage());
+			return Math.min(getOf(), getFrom() + table.getRowsPerPage()-1);
 		}
 		
 	}
