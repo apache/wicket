@@ -36,6 +36,23 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
+ * An URL coding strategy that encodes the mount point, page parameters and page
+ * instance information into the URL. The benefits compared to mounting page
+ * with {@link BookmarkablePageRequestTargetUrlCodingStrategy} are that the
+ * mount point is preserved even after invoking listener interfaces (thus you
+ * don't lose bookmarkability after clicking links) and that for ajax only pages
+ * the state is preserved on refresh.
+ * <p>
+ * The url with {@link HybridUrlCodingStrategy} looks like
+ * /mount/path/param1/value1(3) or /mount/path/param1/value1(3:2) where 3 is
+ * page Id and 2 is version number.
+ * <p>
+ * Also to preserve state on refresh with ajax-only pages the
+ * {@link HybridUrlCodingStrategy} does an immediate redirect after hitting
+ * bookmarkable URL, e.g. it immediately redirects from /mount/path to
+ * /mount/path(3) where 3 is the next page id. This preserves the page instance
+ * on subsequent page refresh.
+ * 
  * @author Matej Knopp
  */
 public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
@@ -56,11 +73,37 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		pageClassRef = new WeakReference(pageClass);
 	}
 
+	/**
+	 * Returns the amount of trailing slashes in the given string
+	 * 
+	 * @param seq
+	 * @return
+	 */
+	private int getTrailingSlashesCount(CharSequence seq)
+	{
+		int count = 0;
+		for (int i = seq.length() - 1; i >= 0; --i)
+		{
+			if (seq.charAt(i) == '/')
+			{
+				++count;
+			}
+			else
+			{
+				break;
+			}
+		}
+		return count;
+	}
 
+	/**
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
+	 */
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
 
+		// try to extract page info
 		PageInfoExtraction extraction = extractPageInfo(parametersFragment);
 
 		PageInfo pageInfo = extraction.getPageInfo();
@@ -68,6 +111,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		Integer pageVersion = pageInfo != null ? pageInfo.getVersionNumber() : null;
 		Integer pageId = pageInfo != null ? pageInfo.getPageId() : null;
 
+		// decode parameters
 		PageParameters parameters = new PageParameters(decodeParameters(extraction
 				.getUrlAfterExtraction(), requestParameters.getParameters()));
 
@@ -86,6 +130,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		final String interfaceParameter = (String)parameters
 				.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
 
+		// we need to remember the amount of trailing slashes after the redirect
+		// (otherwise we'll break relative urls)
+		int originalUrlTrailingSlashesCount = getTrailingSlashesCount(extraction
+				.getUrlAfterExtraction());
+
 		if (interfaceParameter != null)
 		{
 			// stateless listener interface
@@ -98,7 +147,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			// bookmarkable page request
 			return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
-					parameters);
+					parameters, originalUrlTrailingSlashesCount);
 		}
 		else
 		// hybrid url
@@ -115,14 +164,39 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			}
 			else
 			{
+				// we didn't find the page, act as bookmarkable page request -
+				// create new instance
 				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef
-						.get(), parameters);
+						.get(), parameters, originalUrlTrailingSlashesCount);
 			}
 		}
 
 	}
 
+	/**
+	 * Returns the number of traling slashes in the url when the page in request
+	 * target was created or null if the number can't be determined.
+	 * 
+	 * @param requestTarget
+	 * @return
+	 */
+	private Integer getOriginalOriginalTrailingSlashesCount(IRequestTarget requestTarget)
+	{
+		if (requestTarget instanceof ListenerInterfaceRequestTarget)
+		{
+			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
+			Page page = target.getPage();
+			return (Integer)page.getMetaData(ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY);
+		}
+		return null;
+	}
 
+	/**
+	 * Extracts the PageParameters from given request target
+	 * 
+	 * @param requestTarget
+	 * @return
+	 */
 	private PageParameters getPageParameters(IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof BookmarkablePageRequestTarget)
@@ -142,6 +216,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 	}
 
+	/**
+	 * Extracts the PageInfo from given request target
+	 * 
+	 * @param requestTarget
+	 * @return
+	 */
 	private PageInfo getPageInfo(IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof BookmarkablePageRequestTarget)
@@ -170,22 +250,73 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 
-	private static final PageParametersMetadataKey PAGE_PARAMETERS_META_DATA_KEY = new PageParametersMetadataKey();
+	// meta data key to store PageParameters in page instance. This is used to
+	// save the PageParameters that were
+	// used to create the page instance so that later we can used them when
+	// generating page URL
+	private static final PageParametersMetaDataKey PAGE_PARAMETERS_META_DATA_KEY = new PageParametersMetaDataKey();
 
-	private static class PageParametersMetadataKey extends MetaDataKey
+	private static class PageParametersMetaDataKey extends MetaDataKey
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 */
-		public PageParametersMetadataKey()
+		public PageParametersMetaDataKey()
 		{
 			super(PageParameters.class);
 		}
-
-		private static final long serialVersionUID = 1L;
-
 	};
 
+	// used to store number of traling slashes in page url (prior the PageInfo)
+	// part. This is necessary to maintain
+	// the exact number of slashes after page redirect, so that we don't break
+	// things that rely on URL depth
+	// (other mounted URLs)
+	private static final OriginalUrlTrailingSlashesCountMetaDataKey ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY = new OriginalUrlTrailingSlashesCountMetaDataKey();
+
+	private static class OriginalUrlTrailingSlashesCountMetaDataKey extends MetaDataKey
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 */
+		public OriginalUrlTrailingSlashesCountMetaDataKey()
+		{
+			super(Integer.class);
+		}
+
+	}
+
+	/**
+	 * Fix the amount of traling slashes in the speciffied buffer.
+	 * 
+	 * @param buffer
+	 * @param desiredCount
+	 */
+	private void fixTrailingSlashes(AppendingStringBuffer buffer, int desiredCount)
+	{
+		int current = getTrailingSlashesCount(buffer);
+		if (current > desiredCount)
+		{
+			buffer.setLength(buffer.length() - (current - desiredCount));
+		}
+		else if (desiredCount > current)
+		{
+			int toAdd = desiredCount - current;
+			while (toAdd > 0)
+			{
+				buffer.append("/");
+				--toAdd;
+			}
+		}
+	}
+
+	/**
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(org.apache.wicket.IRequestTarget)
+	 */
 	public CharSequence encode(IRequestTarget requestTarget)
 	{
 		if (matches(requestTarget) == false)
@@ -200,9 +331,19 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		url.append(getMountPath());
 		appendParameters(url, parameters);
 
+		// check whether we know if the initial URL ended with slash
+		Integer trailingSlashesCount = getOriginalOriginalTrailingSlashesCount(requestTarget);
+		if (trailingSlashesCount != null)
+		{
+			fixTrailingSlashes(url, trailingSlashesCount.intValue());
+		}
+
 		return addPageInfo(url.toString(), pageInfo);
 	}
 
+	/**
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(org.apache.wicket.IRequestTarget)
+	 */
 	public boolean matches(IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof BookmarkablePageRequestTarget)
@@ -219,6 +360,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		return false;
 	}
 
+	/**
+	 * Class that encapsulates {@link PageInfo} instance and the URL part prior
+	 * the PageInfo part
+	 * 
+	 * @author Matej Knopp
+	 */
 	protected static class PageInfoExtraction
 	{
 		private final String urlAfterExtraction;
@@ -262,9 +409,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	protected PageInfoExtraction extractPageInfo(String url)
 	{
-		int lastIndexLeft = url.lastIndexOf(getBeginSeparator());
 		int lastIndexRight = url.lastIndexOf(getEndSeparator());
-		if (lastIndexLeft != -1 && lastIndexRight != -1 && lastIndexLeft < lastIndexRight &&
+		int lastIndexLeft = url.lastIndexOf(getBeginSeparator(), lastIndexRight - 1);
+		if (lastIndexLeft != -1 && lastIndexRight != -1 &&
 				lastIndexRight - lastIndexLeft > 0 && lastIndexRight == url.length() - 1)
 		{
 			String infoSubstring = url.substring(lastIndexLeft + 1, lastIndexRight);
@@ -279,14 +426,20 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	protected char getBeginSeparator()
 	{
-		return '(';
+		return '|';
 	}
 
 	protected char getEndSeparator()
 	{
-		return ')';
+		return '|';
 	}
 
+	/**
+	 * Encodes the PageInfo part to the URL
+	 * @param url
+	 * @param pageInfo
+	 * @return
+	 */
 	protected String addPageInfo(String url, PageInfo pageInfo)
 	{
 		if (pageInfo != null)
@@ -449,7 +602,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// :pageMapName
 				return new PageInfo(null, null, segments[1]);
 			}
-			else
+			else if (segments.length == 3)
 			{
 				if (segments[2].length() == 0 && isNumber(segments[1]))
 				{
@@ -469,25 +622,36 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	};
 
+	/**
+	 * BookmarkablePage request target that does a redirect after bookmarkable page was rendered 
+	 * (only if the bookmarkable page is stateful though)
+	 * @author Matej Knopp
+	 */
 	private static class HybridBookmarkablePageRequestTarget extends BookmarkablePageRequestTarget
 	{
+		private final int originalUrlTrailingSlashesCount;
+
 		/**
 		 * Construct.
 		 * 
 		 * @param pageMapName
 		 * @param pageClass
 		 * @param pageParameters
+		 * @param originalUrlTrailingSlashesCount
 		 */
 		public HybridBookmarkablePageRequestTarget(String pageMapName, Class pageClass,
-				PageParameters pageParameters)
+				PageParameters pageParameters, int originalUrlTrailingSlashesCount)
 		{
 			super(pageMapName, pageClass, pageParameters);
+			this.originalUrlTrailingSlashesCount = originalUrlTrailingSlashesCount;
 		}
 
 		protected Page newPage(Class pageClass, RequestCycle requestCycle)
 		{
 			Page page = super.newPage(pageClass, requestCycle);
 			page.setMetaData(PAGE_PARAMETERS_META_DATA_KEY, getPageParameters());
+			page.setMetaData(ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY, new Integer(
+					originalUrlTrailingSlashesCount));
 			return page;
 		}
 
