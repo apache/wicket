@@ -66,4 +66,11 @@ public interface IRequestTargetUrlCodingStrategy
 	 *         target
 	 */
 	boolean matches(IRequestTarget requestTarget);
+	
+	/**
+	 * Returns true if this mounter is applicable for the URL path
+	 * @param path
+	 * @return
+	 */
+	boolean matches(String path);
 }

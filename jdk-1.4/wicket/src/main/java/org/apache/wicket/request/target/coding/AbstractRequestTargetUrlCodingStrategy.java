@@ -236,4 +236,21 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		}
 
 	}
+
+	public boolean matches(String path)
+	{
+		if (path.startsWith(mountPath))
+		{
+			/*
+			 * We need to match /mount/point or
+			 * /mount/point/with/extra/path, but not /mount/pointXXX
+			 */
+			String remainder = path.substring(mountPath.length());
+			if (remainder.length() == 0 || remainder.startsWith("/"))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

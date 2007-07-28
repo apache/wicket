@@ -115,8 +115,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			}
 			else
 			{
-				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
-						parameters);
+				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef
+						.get(), parameters);
 			}
 		}
 
@@ -262,31 +262,36 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	protected PageInfoExtraction extractPageInfo(String url)
 	{
-		int lastIndexLeft = url.lastIndexOf('(');
-		int lastIndexRight = url.lastIndexOf(')');
+		int lastIndexLeft = url.lastIndexOf(getBeginSeparator());
+		int lastIndexRight = url.lastIndexOf(getEndSeparator());
 		if (lastIndexLeft != -1 && lastIndexRight != -1 && lastIndexLeft < lastIndexRight &&
-				lastIndexRight - lastIndexLeft > 0 && lastIndexRight == url.length() - 1 &&
-				url.charAt(lastIndexLeft - 1) == '/')
+				lastIndexRight - lastIndexLeft > 0 && lastIndexRight == url.length() - 1)
 		{
 			String infoSubstring = url.substring(lastIndexLeft + 1, lastIndexRight);
 			PageInfo info = PageInfo.parsePageInfo(infoSubstring);
 			if (info != null)
 			{
-				return new PageInfoExtraction(url.substring(0, lastIndexLeft - 1), info);
+				return new PageInfoExtraction(url.substring(0, lastIndexLeft), info);
 			}
 		}
 		return new PageInfoExtraction(url, null);
+	}
+
+	protected char getBeginSeparator()
+	{
+		return '(';
+	}
+
+	protected char getEndSeparator()
+	{
+		return ')';
 	}
 
 	protected String addPageInfo(String url, PageInfo pageInfo)
 	{
 		if (pageInfo != null)
 		{
-			if (url.endsWith("/") == false)
-			{
-				url = url + "/";
-			}
-			return url + "(" + pageInfo.toString() + ")";
+			return url + getBeginSeparator() + pageInfo.toString() + getEndSeparator();
 		}
 		else
 		{
@@ -468,22 +473,24 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	{
 		/**
 		 * Construct.
+		 * 
 		 * @param pageMapName
 		 * @param pageClass
 		 * @param pageParameters
 		 */
-		public HybridBookmarkablePageRequestTarget(String pageMapName, Class pageClass, PageParameters pageParameters)
+		public HybridBookmarkablePageRequestTarget(String pageMapName, Class pageClass,
+				PageParameters pageParameters)
 		{
 			super(pageMapName, pageClass, pageParameters);
 		}
-		
+
 		protected Page newPage(Class pageClass, RequestCycle requestCycle)
 		{
 			Page page = super.newPage(pageClass, requestCycle);
 			page.setMetaData(PAGE_PARAMETERS_META_DATA_KEY, getPageParameters());
 			return page;
 		}
-		
+
 		public void respond(RequestCycle requestCycle)
 		{
 			super.respond(requestCycle);
@@ -497,6 +504,39 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			}
 		}
 	};
+
+	/**
+	 * @see org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy#matches(java.lang.String)
+	 */
+	public boolean matches(String path)
+	{
+		if (path.startsWith(getMountPath()))
+		{
+			/*
+			 * We need to match /mount/point or /mount/point/with/extra/path,
+			 * but not /mount/pointXXX
+			 */
+			String remainder = path.substring(getMountPath().length());
+			if (remainder.length() == 0 || remainder.startsWith("/"))
+			{
+				return true;
+			}
+			/*
+			 * We also need to accept /mount/point(XXX)
+			 */
+			if (remainder.length() > 2 && remainder.charAt(0) == getBeginSeparator() &&
+					remainder.charAt(remainder.length() - 1) == getEndSeparator())
+			{
+				String substring = remainder.substring(1, remainder.length() - 1);
+				PageInfo info = PageInfo.parsePageInfo(substring);
+				if (info != null)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public String toString()
 	{
