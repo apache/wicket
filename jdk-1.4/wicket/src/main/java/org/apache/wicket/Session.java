@@ -115,7 +115,7 @@ import java.util.Map.Entry;
  */
 public abstract class Session implements IClusterable
 {
-    /**
+	/**
 	 * Visitor interface for visiting page maps
 	 * 
 	 * @author Jonathan Locke
@@ -363,28 +363,28 @@ public abstract class Session implements IClusterable
 	/** A linked list for last used pagemap queue */
 	private final LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
 
-    /**
-	 * Constructor. Note that {@link RequestCycle} is not available until this
-	 * constructor returns.
-	 *
-	 * @param request
-	 *            The current request
-	 */
-    public Session(Request request)
-    {
-        this.locale = request.getLocale();
-        if (locale == null)
-        {
-            throw new IllegalArgumentException("Parameter 'locale' must not be null");
-        }
-    }
-
-    /**
+	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
 	 * constructor returns.
 	 * 
-     * @deprecated  Use #Session(Request)
-     *
+	 * @param request
+	 *            The current request
+	 */
+	public Session(Request request)
+	{
+		this.locale = request.getLocale();
+		if (locale == null)
+		{
+			throw new IllegalArgumentException("Parameter 'locale' must not be null");
+		}
+	}
+
+	/**
+	 * Constructor. Note that {@link RequestCycle} is not available until this
+	 * constructor returns.
+	 * 
+	 * @deprecated Use #Session(Request)
+	 * 
 	 * @param application
 	 *            The application that this is a session of
 	 * @param request
@@ -392,8 +392,8 @@ public abstract class Session implements IClusterable
 	 */
 	protected Session(Application application, Request request)
 	{
-        this(request);
-    }
+		this(request);
+	}
 
 	/**
 	 * Force binding this session to the application's
@@ -410,6 +410,8 @@ public abstract class Session implements IClusterable
 	 * By calling this method, the session will be bound (made not-temporary) if
 	 * it was not bound yet. It is useful for cases where you want to be
 	 * absolutely sure this session object will be available in next requests.
+	 * If the session was already bound ({@link ISessionStore#lookup(Request) returns a session}),
+	 * this call will be a noop.
 	 * </p>
 	 */
 	public final void bind()
@@ -432,10 +434,6 @@ public abstract class Session implements IClusterable
 				}
 				temporarySessionAttributes = null;
 			}
-		}
-		else
-		{
-			log.warn("trying to bind an already bound and non-temporary session");
 		}
 	}
 
