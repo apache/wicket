@@ -26,7 +26,7 @@ import org.apache.wicket.settings.IRequestCycleSettings;
 
 
 /**
- * WicketServlet class for example.
+ * Application class for the library example.
  * 
  * @author Jonathan Locke
  */

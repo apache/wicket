@@ -24,7 +24,7 @@ import org.apache.wicket.request.IRequestCycleProcessor;
 
 
 /**
- * WicketServlet class for org.apache.wicket.examples.linkomatic example.
+ * Application class for the linkomatic example.
  * 
  * @author Jonathan Locke
  */

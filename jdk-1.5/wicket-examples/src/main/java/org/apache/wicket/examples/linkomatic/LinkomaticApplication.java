@@ -20,9 +20,8 @@ import org.apache.wicket.examples.ServerHostNameAndTimeFilter;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 
-
 /**
- * WicketServlet class for org.apache.wicket.examples.linkomatic example.
+ * Application class for the linkomatic example.
  * 
  * @author Jonathan Locke
  */

@@ -19,9 +19,9 @@ package org.apache.wicket.examples.stockquote;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for hello world example.
+ * Application class for stock quote example.
  * 
- * @author Jonathan Locke
+ * @author Martijn Dashorst
  */
 public class StockQuoteApplication extends WicketExampleApplication
 {

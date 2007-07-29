@@ -19,7 +19,7 @@ package org.apache.wicket.examples.helloworld;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for hello world example.
+ * Application class for hello world example.
  * 
  * @author Jonathan Locke
  */

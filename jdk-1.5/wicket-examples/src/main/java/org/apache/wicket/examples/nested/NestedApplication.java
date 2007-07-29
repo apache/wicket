@@ -19,7 +19,7 @@ package org.apache.wicket.examples.nested;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for nested structure example.
+ * Application class for the nested structure example.
  * 
  * @author Eelco Hillenius
  */
@@ -31,7 +31,7 @@ public class NestedApplication extends WicketExampleApplication
 	public NestedApplication()
 	{
 	}
-	
+
 	/**
 	 * Initialize the application
 	 */

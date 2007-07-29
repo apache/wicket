@@ -19,9 +19,7 @@ package org.apache.wicket.filtertest;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for hello world example.
- * 
- * @author Jonathan Locke
+ * Application class.
  */
 public class Application extends WicketExampleApplication
 {

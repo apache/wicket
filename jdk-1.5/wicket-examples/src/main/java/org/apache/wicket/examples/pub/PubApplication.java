@@ -19,7 +19,7 @@ package org.apache.wicket.examples.pub;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * WicketServlet class for the linkomatic example.
+ * Application class for the linkomatic example.
  * 
  * @author Jonathan Locke
  */
