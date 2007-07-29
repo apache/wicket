@@ -97,6 +97,17 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
+	 * Returns whether after hitting bookmarkable url the request should be
+	 * redirected to a hybrid URL. This is recommended for pages with Ajax.
+	 * 
+	 * @return
+	 */
+	protected boolean isRedirectOnBookmarkableRequest()
+	{
+		return true;
+	}
+
+	/**
 	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
 	 */
 	public IRequestTarget decode(RequestParameters requestParameters)
@@ -147,7 +158,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			// bookmarkable page request
 			return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
-					parameters, originalUrlTrailingSlashesCount);
+					parameters, originalUrlTrailingSlashesCount, isRedirectOnBookmarkableRequest());
 		}
 		else
 		// hybrid url
@@ -167,7 +178,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// we didn't find the page, act as bookmarkable page request -
 				// create new instance
 				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef
-						.get(), parameters, originalUrlTrailingSlashesCount);
+						.get(), parameters, originalUrlTrailingSlashesCount, isRedirectOnBookmarkableRequest());
 			}
 		}
 
@@ -411,8 +422,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	{
 		int lastIndexRight = url.lastIndexOf(getEndSeparator());
 		int lastIndexLeft = url.lastIndexOf(getBeginSeparator(), lastIndexRight - 1);
-		if (lastIndexLeft != -1 && lastIndexRight != -1 &&
-				lastIndexRight - lastIndexLeft > 0 && lastIndexRight == url.length() - 1)
+		if (lastIndexLeft != -1 && lastIndexRight != -1 && lastIndexRight - lastIndexLeft > 0 &&
+				lastIndexRight == url.length() - 1)
 		{
 			String infoSubstring = url.substring(lastIndexLeft + 1, lastIndexRight);
 			PageInfo info = PageInfo.parsePageInfo(infoSubstring);
@@ -436,6 +447,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	/**
 	 * Encodes the PageInfo part to the URL
+	 * 
 	 * @param url
 	 * @param pageInfo
 	 * @return
@@ -623,13 +635,15 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	};
 
 	/**
-	 * BookmarkablePage request target that does a redirect after bookmarkable page was rendered 
-	 * (only if the bookmarkable page is stateful though)
+	 * BookmarkablePage request target that does a redirect after bookmarkable
+	 * page was rendered (only if the bookmarkable page is stateful though)
+	 * 
 	 * @author Matej Knopp
 	 */
 	private static class HybridBookmarkablePageRequestTarget extends BookmarkablePageRequestTarget
 	{
 		private final int originalUrlTrailingSlashesCount;
+		private final boolean redirect;
 
 		/**
 		 * Construct.
@@ -638,12 +652,14 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * @param pageClass
 		 * @param pageParameters
 		 * @param originalUrlTrailingSlashesCount
+		 * @param redirect
 		 */
 		public HybridBookmarkablePageRequestTarget(String pageMapName, Class pageClass,
-				PageParameters pageParameters, int originalUrlTrailingSlashesCount)
+				PageParameters pageParameters, int originalUrlTrailingSlashesCount, boolean redirect)
 		{
 			super(pageMapName, pageClass, pageParameters);
 			this.originalUrlTrailingSlashesCount = originalUrlTrailingSlashesCount;
+			this.redirect = redirect;
 		}
 
 		protected Page newPage(Class pageClass, RequestCycle requestCycle)
@@ -661,7 +677,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			if (requestCycle.isRedirect() == false)
 			{
 				Page page = getPage(requestCycle);
-				if (page.isPageStateless() == false)
+				if (page.isPageStateless() == false && redirect)
 				{
 					requestCycle.redirectTo(page);
 				}
