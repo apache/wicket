@@ -44,13 +44,13 @@ import org.apache.wicket.util.string.Strings;
  * the state is preserved on refresh.
  * <p>
  * The url with {@link HybridUrlCodingStrategy} looks like
- * /mount/path/param1/value1(3) or /mount/path/param1/value1(3:2) where 3 is
+ * /mount/path/param1/value1|3| or /mount/path/param1/value1|3:2| where 3 is
  * page Id and 2 is version number.
  * <p>
  * Also to preserve state on refresh with ajax-only pages the
  * {@link HybridUrlCodingStrategy} does an immediate redirect after hitting
  * bookmarkable URL, e.g. it immediately redirects from /mount/path to
- * /mount/path(3) where 3 is the next page id. This preserves the page instance
+ * /mount/path|3| where 3 is the next page id. This preserves the page instance
  * on subsequent page refresh.
  * 
  * @author Matej Knopp
@@ -437,12 +437,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 	protected char getBeginSeparator()
 	{
-		return '|';
+		return '(';
 	}
 
 	protected char getEndSeparator()
 	{
-		return '|';
+		return ')';
 	}
 
 	/**
