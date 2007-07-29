@@ -138,18 +138,18 @@ a.none {
 	padding-right: 0px;
 }
 
-#inputForm label {
+.inputForm label {
 	display: block;
 	margin-top: 5px;
 }
 
 #numberRadioChoice label { display: inline !important; }
 
-#inputForm label.non {
+.inputForm label.non {
 	display: inline !important;
 }
 
-#inputFormTable td {
+.inputFormTable td {
 	vertical-align: top;
 	padding: 10px;
 }
