@@ -80,6 +80,9 @@ public final class GuestBook extends WicketExamplePage
 		{
 			// Construct form with no validation listener
 			super(id, new CompoundPropertyModel(new Comment()));
+			
+			// this is just to make the unit test happy
+			setMarkupId("commentForm");
 
 			// Add text entry widget
 			add(new TextArea("text"));
