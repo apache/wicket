@@ -92,16 +92,18 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	}
 
 	/**
-	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * Creates a new DateTextField using the provided date style.
 	 * 
 	 * @param id
 	 *            The id of the text field
 	 * @param model
 	 *            The model
 	 * @param dateStyle
-	 *            style to use in case no pattern is provided. Must be two
-	 *            characters from the set {"S", "M", "L", "F", "-"}. Must be not
-	 *            null. See {@link DateTimeFormat#forStyle(String)} for options.
+	 *            Date style to use. The first character is the date style, and
+	 *            the second character is the time style. Specify a character of
+	 *            'S' for short style, 'M' for medium, 'L' for long, and 'F' for
+	 *            full. A date or time may be ommitted by specifying a style
+	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
@@ -111,14 +113,16 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	}
 
 	/**
-	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * Creates a new DateTextField using the provided date style.
 	 * 
 	 * @param id
 	 *            The id of the text field
 	 * @param dateStyle
-	 *            style to use in case no pattern is provided. Must be two
-	 *            characters from the set {"S", "M", "L", "F", "-"}. Must be not
-	 *            null. See {@link DateTimeFormat#forStyle(String)} for options.
+	 *            Date style to use. The first character is the date style, and
+	 *            the second character is the time style. Specify a character of
+	 *            'S' for short style, 'M' for medium, 'L' for long, and 'F' for
+	 *            full. A date or time may be ommitted by specifying a style
+	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
