@@ -1115,8 +1115,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Marks session state as dirty. THIS METHOD SHOULD TYPICALLY NOT BE CALLED
-	 * BY CLIENTS; IT IS USED FOR INTERNAL BOOK KEEPING.
+	 * Marks session state as dirty so that it will be flushed at the end of the
+	 * request.
 	 */
 	public final void dirty()
 	{
