@@ -46,8 +46,7 @@ public class StyleDateConverter extends DateConverter
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * style to use in case no pattern is provided. Must be two characters from
-	 * the set {"S", "M", "L", "F", "-"}. Defaults to 'S-'.
+	 * Date style to use. See {@link DateTimeFormat#forStyle(String)}.
 	 */
 	private final String dateStyle;
 
@@ -89,9 +88,11 @@ public class StyleDateConverter extends DateConverter
 	 * </p>
 	 * 
 	 * @param dateStyle
-	 *            style to use in case no pattern is provided. Must be two
-	 *            characters from the set {"S", "M", "L", "F", "-"}. Must be not
-	 *            null. See {@link DateTimeFormat#forStyle(String)} for options.
+	 *            Date style to use. The first character is the date style, and
+	 *            the second character is the time style. Specify a character of
+	 *            'S' for short style, 'M' for medium, 'L' for long, and 'F' for
+	 *            full. A date or time may be ommitted by specifying a style
+	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
 	 * @param applyTimeZoneDifference
 	 *            whether to apply the difference in time zones between client
 	 *            and server
