@@ -177,6 +177,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			// bookmarkable page request
 			return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
 					parameters, originalUrlTrailingSlashesCount, isRedirectOnBookmarkableRequest());
+//			return new BookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
+//					parameters);
 		}
 		else
 		// hybrid url
@@ -723,8 +725,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		public void respond(RequestCycle requestCycle)
 		{
-			super.respond(requestCycle);
-			if (requestCycle.isRedirect() == false)
+//			super.respond(requestCycle);
+//			if (requestCycle.isRedirect() == false)
 			{
 				Page page = getPage(requestCycle);
 				if (page.isPageStateless() == false && redirect)
