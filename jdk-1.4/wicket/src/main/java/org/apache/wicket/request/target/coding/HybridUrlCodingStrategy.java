@@ -460,21 +460,23 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	protected PageInfoExtraction extractPageInfo(String url)
 	{
 		int begin = url.lastIndexOf(getBeginSeparator());
-		if (begin != -1)
+		PageInfo last = null;
+		String lastSubstring = "";
+		while (begin != -1)
 		{
-			String substring = url.substring(begin);
-			if (substring.length() > getBeginSeparator().length() + getEndSeparator().length() &&
-					substring.startsWith(getBeginSeparator()) &&
-					substring.endsWith(getEndSeparator()))
+			lastSubstring = url.substring(begin);
+			if (lastSubstring.length() > getBeginSeparator().length() + getEndSeparator().length() &&
+					lastSubstring.startsWith(getBeginSeparator()) &&
+					lastSubstring.endsWith(getEndSeparator()))
 			{
-				String pageInfoString= substring.substring(getBeginSeparator().length(), // 
-						substring.length() - getEndSeparator().length());
+				String pageInfoString= lastSubstring.substring(getBeginSeparator().length(), // 
+						lastSubstring.length() - getEndSeparator().length());
 				PageInfo info = PageInfo.parsePageInfo(pageInfoString);
-				
-				return new PageInfoExtraction(url.substring(0, url.length() - substring.length()), info);
+				last = info;
 			}
+			begin = url.lastIndexOf(getBeginSeparator(), begin - 1);
 		}
-		return new PageInfoExtraction(url, null);
+		return new PageInfoExtraction(url.substring(0, url.length() - lastSubstring.length()), last);
 	}
 
 	protected String getBeginSeparator()
@@ -569,19 +571,25 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			return pageMapName;
 		}
 
+		private static char getPageInfoSeparator() {
+			return '.';
+		}
+		
 		public String toString()
 		{
 			AppendingStringBuffer buffer = new AppendingStringBuffer(5);
+			
+
 			if (pageMapName != null)
 			{
 				if (versionNumber == null && pageId == null)
 				{
-					buffer.append(":");
+					buffer.append(getPageInfoSeparator());
 				}
 				buffer.append(pageMapName);
 				if (pageId != null)
 				{
-					buffer.append(":");
+					buffer.append(getPageInfoSeparator());
 				}
 			}
 			if (pageId != null)
@@ -590,11 +598,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			}
 			if (pageId != null && (versionNumber == null || versionNumber.intValue() == 0) && pageMapName != null)
 			{
-				buffer.append(":");
+				buffer.append(getPageInfoSeparator());
 			}
 			if (versionNumber != null && versionNumber.intValue() != 0)
 			{
-				buffer.append(":");
+				buffer.append(getPageInfoSeparator());
 				buffer.append(versionNumber);
 			}
 			return buffer.toString();
@@ -633,7 +641,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				return null;
 			}
 
-			String segments[] = Strings.split(src, ':');
+			String segments[] = Strings.split(src, getPageInfoSeparator());
 
 			if (segments.length > 3)
 			{
