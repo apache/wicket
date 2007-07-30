@@ -288,7 +288,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	public static void setInitialPageParameters(Page page, PageParameters pageParameters)
 	{
-		setInitialPageParameters(page, pageParameters);
+		page.setMetaData(PAGE_PARAMETERS_META_DATA_KEY, pageParameters);
 	}
 	
 	/**
