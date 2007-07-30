@@ -30,6 +30,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,7 +144,7 @@ public class WebRequestCycle extends RequestCycle
 				{
 					// Get the redirect url and set it in the ServletWebRequest
 					// so that it can be used for relative url calculation.
-					((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(page.urlFor(IRedirectListener.INTERFACE).toString().replaceAll("../", ""));	
+					((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(Strings.replaceAll(page.urlFor(IRedirectListener.INTERFACE).toString(),"../","").toString());	
 				}
 				// create the redirect response.
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(
