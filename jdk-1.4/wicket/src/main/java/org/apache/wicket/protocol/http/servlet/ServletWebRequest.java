@@ -56,6 +56,8 @@ public class ServletWebRequest extends WebRequest
 
 	private String wicketRedirectUrl;
 
+	private int previousUrlDepth;
+
 	/**
 	 * Protected constructor.
 	 * 
@@ -452,8 +454,18 @@ public class ServletWebRequest extends WebRequest
 		depthRelativeToWicketHandler = -1;
 		relativePathPrefixToContextRoot = null;
 		relativePathPrefixToWicketHandler = null;
-
-		getRequestParameters().setUrlDepth(getDepthRelativeToWicketHandler());
+		
+		if (wicketRedirectUrl != null)
+		{
+			this.previousUrlDepth = getRequestParameters().getUrlDepth();
+	
+			getRequestParameters().setUrlDepth(getDepthRelativeToWicketHandler());
+		}
+		else
+		{
+			getRequestParameters().setUrlDepth(previousUrlDepth);
+			getDepthRelativeToWicketHandler();
+		}
 
 	}
 }
