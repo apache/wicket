@@ -214,24 +214,28 @@ public class WicketFilter implements Filter
 			// Are we using REDIRECT_TO_BUFFER?
 			if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
 			{
-				String queryString = servletRequest.getQueryString();
-				if (!Strings.isEmpty(queryString))
+				// Try to see if there is a redirect stored
+				ISessionStore sessionStore = webApplication.getSessionStore();
+				String sessionId = sessionStore.getSessionId(request, false);
+				if (sessionId != null)
 				{
-					// Try to see if there is a redirect stored
-					ISessionStore sessionStore = webApplication.getSessionStore();
-					String sessionId = sessionStore.getSessionId(request, false);
-					if (sessionId != null)
+					BufferedHttpServletResponse bufferedResponse = null;
+					String queryString = servletRequest.getQueryString();
+					if (!Strings.isEmpty(queryString))
 					{
-						BufferedHttpServletResponse bufferedResponse = webApplication
-								.popBufferedResponse(sessionId, queryString);
+						bufferedResponse = webApplication.popBufferedResponse(sessionId, queryString);
+					}
+					else
+					{
+						bufferedResponse = webApplication.popBufferedResponse(sessionId, relativePath);
+					}
 
-						if (bufferedResponse != null)
-						{
-							bufferedResponse.writeTo(servletResponse);
-							// redirect responses are ignored for the request
-							// logger...
-							return;
-						}
+					if (bufferedResponse != null)
+					{
+						bufferedResponse.writeTo(servletResponse);
+						// redirect responses are ignored for the request
+						// logger...
+						return;
 					}
 				}
 			}

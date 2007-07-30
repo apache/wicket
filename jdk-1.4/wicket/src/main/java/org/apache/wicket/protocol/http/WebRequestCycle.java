@@ -196,10 +196,10 @@ public class WebRequestCycle extends RequestCycle
 					}
 					
 					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
-					int index = redirectUrl.indexOf("?");
+					String stripped = Strings.replaceAll(redirectUrl,"../","").toString();
+					int index = stripped.indexOf("?");
 					String sessionId = getApplication().getSessionStore().getSessionId(request, true); 
-					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl
-							.substring(index + 1), servletResponse);
+					((WebApplication)application).addBufferedResponse(sessionId, stripped.substring(index + 1), servletResponse);
 				}
 			}
 			catch (RuntimeException ex)
