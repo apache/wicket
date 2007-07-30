@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
@@ -155,7 +159,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 		// print out the initialization properties
 		Properties p = new Properties();
-		configureWidgetProperties(p);
+		configure(p);
+
 		// ${calendarInit}
 		StringBuffer calendarInit = new StringBuffer();
 		for (Iterator i = p.entrySet().iterator(); i.hasNext();)
@@ -166,7 +171,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 			if (value instanceof CharSequence)
 			{
 				calendarInit.append(":\"");
-				calendarInit.append(value);
+				calendarInit.append(Strings.toEscapedUnicode(value.toString()));
 				calendarInit.append("\"");
 			}
 			else if (value instanceof CharSequence[])
@@ -176,12 +181,15 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				for (int j = 0; j < valueArray.length; j++)
 				{
 					CharSequence tmpValue = valueArray[j];
-					calendarInit.append("\"");
-					calendarInit.append(tmpValue);
-					calendarInit.append("\"");
-					if (j < valueArray.length - 1)
+					if (j > 0)
 					{
 						calendarInit.append(",");
+					}
+					if (tmpValue != null)
+					{
+						calendarInit.append("\"");
+						calendarInit.append(Strings.toEscapedUnicode(tmpValue.toString()));
+						calendarInit.append("\"");
 					}
 				}
 				calendarInit.append("]");
@@ -189,7 +197,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 			else
 			{
 				calendarInit.append(":");
-				calendarInit.append(value);
+				calendarInit.append(Strings.toEscapedUnicode(String.valueOf(value)));
 			}
 			if (i.hasNext())
 			{
@@ -225,6 +233,21 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		if (getDatePattern() == null)
 		{
 			throw new UnableToDetermineFormatException();
+		}
+	}
+
+	/**
+	 * Set widget property if the array is null and has a length greater than 0.
+	 * 
+	 * @param widgetProperties
+	 * @param key
+	 * @param array
+	 */
+	private void setWidgetProperty(Map widgetProperties, String key, String[] array)
+	{
+		if (array != null && array.length > 0)
+		{
+			widgetProperties.put(key, array);
 		}
 	}
 
@@ -265,18 +288,20 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * removing) configuration properties for the javascript widget. See <a
 	 * href="http://developer.yahoo.com/yui/calendar/">the widget's
 	 * documentation</a> for the available options. If you want to override/
-	 * remove properties, you obviously should call
-	 * {@link super#setWidgetProperties(Properties)} first.
+	 * remove properties, you should call
+	 * {@link super#setWidgetProperties(Properties)} first. If you don't call
+	 * that, be aware that you will have to call {@link #localize(Map)} manually
+	 * if you like localized strings to be added.
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
 	 */
-	protected void configureWidgetProperties(Map widgetProperties)
+	protected void configure(Map widgetProperties)
 	{
-		widgetProperties.put("close", Boolean.TRUE);
-		// TODO localize
-		widgetProperties.put("title", "Select a date:");
+		// localize date fields
+		localize(widgetProperties);
 
+		widgetProperties.put("close", Boolean.TRUE);
 		Object modelObject = component.getModelObject();
 		// null and cast check
 		if (modelObject instanceof Date)
@@ -285,6 +310,40 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 			widgetProperties.put("selected", AbstractCalendar.FORMAT_DATE.format(date));
 			widgetProperties.put("pagedate", AbstractCalendar.FORMAT_PAGEDATE.format(date));
 		}
+	}
+
+	/**
+	 * @deprecated Please use {@link #configure(Map)} instead.
+	 */
+	// TODO remove this very ugly named method
+	protected final void configureWidgetProperties(Map widgetProperties)
+	{
+		throw new UnsupportedOperationException("");
+	}
+
+	/**
+	 * Filter all empty elements (workaround for {@link DateFormatSymbols}
+	 * returning arrays with empty elements).
+	 * 
+	 * @param array
+	 *            array to filter
+	 * @return filtered array (without null or empty string elements)
+	 */
+	protected final String[] filterEmpty(String[] array)
+	{
+		if (array == null)
+		{
+			return null;
+		}
+		List l = new ArrayList(array.length);
+		for (int i = 0; i < array.length; i++)
+		{
+			if (!Strings.isEmpty(array[i]))
+			{
+				l.add(array[i]);
+			}
+		}
+		return (String[])l.toArray(new String[l.size()]);
 	}
 
 	/**
@@ -360,6 +419,46 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
+	 * Gets the locale that should be used to configure this widget.
+	 * 
+	 * @return By default the locale of the bound component.
+	 */
+	protected Locale getLocale()
+	{
+		return component.getLocale();
+	}
+
+	/**
+	 * Configure the localized strings for the datepicker widget. This
+	 * implementation uses {@link DateFormatSymbols} and some slight string
+	 * manupilation to get the strings for months and week days. It should work
+	 * well for most locales.
+	 * <p>
+	 * This method is called from {@link #configureWidgetProperties(Map)} and
+	 * can be overriden if you want to customize setting up the localized
+	 * strings but are happy with the rest of
+	 * {@link #configureWidgetProperties(Map)}'s behavior. Note that you can
+	 * call (overridable) method {@link #getLocale()} to get the locale that
+	 * should be used for setting up the widget.
+	 * </p>
+	 * 
+	 * @param widgetProperties
+	 */
+	protected void localize(Map widgetProperties)
+	{
+		DateFormatSymbols dfSymbols = new DateFormatSymbols(getLocale());
+		setWidgetProperty(widgetProperties, "MONTHS_SHORT", filterEmpty(dfSymbols.getShortMonths()));
+		setWidgetProperty(widgetProperties, "MONTHS_LONG", filterEmpty(dfSymbols.getMonths()));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_1CHAR", filterEmpty(substring(dfSymbols
+				.getShortWeekdays(), 1)));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_SHORT", filterEmpty(substring(dfSymbols
+				.getShortWeekdays(), 2)));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_MEDIUM", filterEmpty(dfSymbols
+				.getShortWeekdays()));
+		setWidgetProperty(widgetProperties, "WEEKDAYS_LONG", filterEmpty(dfSymbols.getWeekdays()));
+	}
+
+	/**
 	 * Whether to notify the associated component when a date is selected.
 	 * Notifying is done by calling the associated component's onchange
 	 * Javascript event handler. You can for instance attach an
@@ -372,5 +471,40 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected boolean notifyComponentOnDateSelected()
 	{
 		return true;
+	}
+
+	/**
+	 * Makes a copy of the provided array and for each element copy the
+	 * substring 0..len to the new array
+	 * 
+	 * @param array
+	 *            array to copy from
+	 * @param len
+	 *            size of substring for each element to copy
+	 * @return copy of the array filled with substrings.
+	 */
+	protected final String[] substring(String[] array, int len)
+	{
+		if (array != null)
+		{
+			String[] copy = new String[array.length];
+			for (int i = 0; i < array.length; i++)
+			{
+				String el = array[i];
+				if (el != null)
+				{
+					if (el.length() > len)
+					{
+						copy[i] = el.substring(0, len);
+					}
+					else
+					{
+						copy[i] = el;
+					}
+				}
+			}
+			return copy;
+		}
+		return null;
 	}
 }
