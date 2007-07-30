@@ -60,6 +60,25 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	/** bookmarkable page class. */
 	protected final WeakReference/* <Class> */pageClassRef;
 
+	private final boolean redirectOnBookmarkableRequest;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param mountPath
+	 * @param pageClass
+	 * @param redirectOnBookmarkableRequest
+	 *            whether after hitting the page with URL in bookmarkable form
+	 *            it should be redirected to hybrid URL - needed for ajax to
+	 *            work properly after page refresh
+	 */
+	public HybridUrlCodingStrategy(String mountPath, Class pageClass,
+			boolean redirectOnBookmarkableRequest)
+	{
+		super(mountPath);
+		pageClassRef = new WeakReference(pageClass);
+		this.redirectOnBookmarkableRequest = redirectOnBookmarkableRequest;
+	}
 
 	/**
 	 * Construct.
@@ -69,8 +88,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	public HybridUrlCodingStrategy(String mountPath, Class pageClass)
 	{
-		super(mountPath);
-		pageClassRef = new WeakReference(pageClass);
+		this(mountPath, pageClass, true);
 	}
 
 	/**
@@ -104,7 +122,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	protected boolean isRedirectOnBookmarkableRequest()
 	{
-		return true;
+		return redirectOnBookmarkableRequest;
 	}
 
 	/**
@@ -178,7 +196,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// we didn't find the page, act as bookmarkable page request -
 				// create new instance
 				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef
-						.get(), parameters, originalUrlTrailingSlashesCount, isRedirectOnBookmarkableRequest());
+						.get(), parameters, originalUrlTrailingSlashesCount,
+						isRedirectOnBookmarkableRequest());
 			}
 		}
 
@@ -219,7 +238,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
 			Page page = target.getPage();
-			return (PageParameters)page.getMetaData(PAGE_PARAMETERS_META_DATA_KEY);
+			return getInitialPagePageParameters(page);
 		}
 		else
 		{
@@ -260,6 +279,26 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 	}
 
+	/**
+	 * Sets the initial page parameters for page instance. Use this only if you
+	 * know what you are doing.
+	 * 
+	 * @param page
+	 * @param pageParameters
+	 */
+	public static void setInitialPageParameters(Page page, PageParameters pageParameters)
+	{
+		setInitialPageParameters(page, pageParameters);
+	}
+	
+	/**
+	 * @param page
+	 * @return
+	 */
+	public static PageParameters getInitialPagePageParameters(Page page)
+	{
+		return (PageParameters)page.getMetaData(PAGE_PARAMETERS_META_DATA_KEY);
+	}
 
 	// meta data key to store PageParameters in page instance. This is used to
 	// save the PageParameters that were
