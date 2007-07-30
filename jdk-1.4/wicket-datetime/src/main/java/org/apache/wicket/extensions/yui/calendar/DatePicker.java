@@ -441,8 +441,16 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * call (overridable) method {@link #getLocale()} to get the locale that
 	 * should be used for setting up the widget.
 	 * </p>
+	 * <p>
+	 * See YUI Calendar's <a
+	 * href="http://developer.yahoo.com/yui/examples/calendar/germany/1.html">
+	 * German</a> and <a
+	 * href="http://developer.yahoo.com/yui/examples/calendar/japan/1.html">Japanese</a>
+	 * examples for more info.
+	 * </p>
 	 * 
 	 * @param widgetProperties
+	 *            the current widget properties
 	 */
 	protected void localize(Map widgetProperties)
 	{
