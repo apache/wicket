@@ -83,7 +83,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	public boolean isActionAuthorized(final Component component, final Action action)
 	{
 		// Get component's class
-		final Class< ? extends Component> componentClass = component.getClass();
+		final Class<? extends Component> componentClass = component.getClass();
 
 		// Check for a single action
 		if (!check(action, componentClass.getAnnotation(AuthorizeAction.class)))
@@ -122,7 +122,13 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		{
 			if (action.getName().equals(authorizeActionAnnotation.action()))
 			{
-				if (!hasAny(new Roles(authorizeActionAnnotation.roles())))
+				if (hasAny(new Roles(authorizeActionAnnotation.deny())))
+				{
+					return false;
+				}
+
+				Roles roles = new Roles(authorizeActionAnnotation.roles());
+				if (!(isEmpty(roles) || hasAny(roles)))
 				{
 					return false;
 				}

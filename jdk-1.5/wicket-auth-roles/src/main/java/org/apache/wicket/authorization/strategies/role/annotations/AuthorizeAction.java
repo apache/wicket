@@ -61,4 +61,12 @@ public @interface AuthorizeAction {
 	 *         (annotations do not allow null default values)
 	 */
 	String[] roles() default "";
+
+	/**
+	 * The roles to deny for this action.
+	 * 
+	 * @return the roles to deny for this action. The default is an empty string
+	 *         (annotations do not allow null default values)
+	 */
+	String[] deny() default "";
 }
