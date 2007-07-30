@@ -122,7 +122,13 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		{
 			if (action.getName().equals(authorizeActionAnnotation.action()))
 			{
-				if (!hasAny(new Roles(authorizeActionAnnotation.roles())))
+				if (hasAny(new Roles(authorizeActionAnnotation.deny())))
+				{
+					return false;
+				}
+
+				Roles roles = new Roles(authorizeActionAnnotation.roles());
+				if (!(isEmpty(roles) || hasAny(roles)))
 				{
 					return false;
 				}
