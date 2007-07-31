@@ -8,43 +8,53 @@
 	<body>
 		<section name="Welcome to Wicket">
 			<p>
-				With proper mark-up/logic separation, a POJO data model, and a refreshing lack of XML, Wicket makes developing 
-				web-apps in Java simple and enjoyable again. Swap the boilerplate, complex debugging and brittle code for powerful, 
-				reusable components written with plain Java and HTML.
+
+				With proper mark-up/logic separation, a POJO data model, and a
+                refreshing lack of XML, Wicket makes developing web-apps in
+                Java simple and enjoyable again. Swap the boilerplate, complex
+                debugging and brittle code for powerful, reusable components
+                written with plain Java and HTML.
+
+			</p>
+			<subsection name="Wicket joins Apache Software Foundation">
+				<p>
+
+				Wicket has now <a href="http://wicket.apache.org">joined</a>
+                the Apache Software Foundation. This site is used only for
+                legacy support on older versions of Wicket released prior to
+                the move to Apache. If you are new to Wicket, please continue
+				to our <a href="http://wicket.apache.org">official home</a>.
+
+				</p>
+			</subsection>
+		</section>
+		<section name="Wicket 1.2">
+			<p>
+
+				Wicket 1.2 is the last distribution released outside Apache
+                and as such is not endorsed by nor affiliated with the Apache
+                Software Foundation. Newer versions of Wicket are developed at
+                the Apache Software Foundation, so if you are a new user, or
+                looking for a new version of Wicket, please refer to <a
+                href="http://wicket.apache.org">Apache Wicket</a>.
+
 			</p>
 			<ul>
-				<li>
-					Check the
-					<a href="Features.html">feature list</a>
-				</li>
-				<li>
-					Read
-					<a href="Buzz.html">some Wicket buzz</a>
-					or some
-					<a href="/Blogs.html">Wicket blogs</a>
-				</li>
-				<li>
-					Find out
-					<a href="Introduction.html">
-						why you should use Wicket
-					</a>
-				</li>
+				<li>Read the <a href="apidocs/index.html" target="_blank" class="newwindow">JavaDoc for 1.2</a></li>
 				<li>
 					Check out
 					<a href="Examples.html">some examples</a>
 					and see them in
 					<a
-						href="http://wicketstuff.org/wicket13">
+						href="http://wicketstuff.org/wicket12">
 						live action
 					</a>
 				</li>
+				<li>Find answers to your questions on our <a href="http://www.nabble.com/Wicket-Users-New-f25133.html">user list</a></li>
+				<li>Get in touch with us on irc: ##wicket on irc.freenode.net</li>
 				<li>
-					Download the latest <strong>stable</strong> release
-					<a href="http://sourceforge.net/projects/wicket/files">Wicket 1.2.6</a>
-				</li>
-				<li>
-					Alternatively download the latest <strong>beta</strong> release
-					<a href="http://www.apache.org/dyn/closer.cgi/wicket/1.3.0-beta2/">Wicket 1.3.0 BETA</a>
+					Download the newest version of
+					<a href="http://sourceforge.net/projects/wicket/files">Wicket 1.2</a>
 				</li>
 			</ul>
 			<p>

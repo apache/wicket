@@ -8,13 +8,13 @@
 	<packaging>pom</packaging>
 	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Parent</name>
-	<description>Wicket is a Java open source, component based web application framework.</description>
+	<description>Wicket is a Java open source, component based web application framework currently hosted at http://wicket.apache.org.</description>
 	<url>http://wicketframework.org/${project.artifactId}</url>
 	<inceptionYear>2004</inceptionYear>
 
 	<organization>
 		<name>Wicket developers</name>
-		<url>http://wicketframework.org</url>
+		<url>http://wicket.sf.net/wicket-1.2</url>
 	</organization>
 
 	<licenses>
@@ -30,41 +30,35 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.2.x</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.2.x</developerConnection>
-		<url>http://svn.apache.org/viewvc/incubator/wicket/branches/wicket-1.2.x</url>
+		<connection>scm:svn:https://svn.apache.org/repos/asf/wicket/branches/wicket-1.2.x</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/wicket/branches/wicket-1.2.x</developerConnection>
+		<url>http://svn.apache.org/viewvc/wicket/branches/wicket-1.2.x</url>
 	</scm>
 
 	<mailingLists>
 		<mailingList>
 			<name>Wicket Announcements List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
+			<subscribe>mailto:announce-subscribe at wicket.apache.org</subscribe>
+			<unsubscribe>mailto:announce-unsubscribe at wicket.apache.org</unsubscribe>
+			<archive>http://www.nabble.com/Wicket---Announce-f13975.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket User List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
+			<subscribe>mailto:users-subscribe at wicket.apache.org</subscribe>
+			<unsubscribe>mailto:users-unsubscribe at wicket.apache.org</unsubscribe>
+			<archive>http://www.nabble.com/Apache-Wicket-f13974.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket Development List</name>
-			<subscribe>mailto:wicket-dev-subscribe@incubator.apache.org</subscribe>
-			<unsubscribe>mailto:wicket-dev-unsubscribe@incubator.apache.org</unsubscribe>
+			<subscribe>mailto:dev-subscribe at wicket.apache.org</subscribe>
+			<unsubscribe>mailto:dev-unsubscribe at wicket.apache.org</unsubscribe>
 			<archive>http://www.nabble.com/Wicket---Dev-f13977.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket commit List</name>
-			<subscribe>mailto:wicket-commits-subscribe@incubator.apache.org</subscribe>
-			<unsubscribe>mailto:wicket-commits-unsubscribe@incubator.apache.org</unsubscribe>
+			<subscribe>mailto:commits-subscribe at wicket.apache.org</subscribe>
+			<unsubscribe>mailto:commits-unsubscribe at wicket.apache.org</unsubscribe>
 			<archive>http://mail-archives.apache.org/mod_mbox/incubator-wicket-commits/</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket automated builds List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-builds</archive>
 		</mailingList>
 	</mailingLists>
 
