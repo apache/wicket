@@ -127,10 +127,10 @@ public interface ISessionStore
 	void bind(Request request, Session newSession);
 
 	/**
-	 * Adds the provided new session to this facade using the provided request.
+	 * Removes the specified session from this facade
 	 * 
 	 * @param sessionId
-	 *            The SessionId that must be unbinded.
+	 *            The id of the session that must be unbinded.
 	 */
 	void unbind(String sessionId);
 
