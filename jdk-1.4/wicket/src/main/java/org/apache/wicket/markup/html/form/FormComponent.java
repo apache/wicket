@@ -715,7 +715,9 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Gets current value for a form component.
+	 * Gets current value for a form component, which can be either input data
+	 * entered by the user, or the component's model object if no input was
+	 * provided.
 	 * 
 	 * @return The value
 	 */
