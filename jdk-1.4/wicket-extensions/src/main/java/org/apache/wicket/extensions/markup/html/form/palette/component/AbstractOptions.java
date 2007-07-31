@@ -76,14 +76,6 @@ public abstract class AbstractOptions extends FormComponent
 			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
 			value = getLocalizer().getString(id + "." + value, this, value);
 
-			// A piece of javascript to avoid serializing this during AJAX
-			// serialization.
-			buffer
-					.append(JavascriptUtils.SCRIPT_OPEN_TAG
-							+ "if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")"
-							+ "    Wicket.Form.excludeFromAjaxSerialization." + this.getMarkupId()
-							+ "='true';" + JavascriptUtils.SCRIPT_CLOSE_TAG);
-
 			buffer.append("\n<option value=\"").append(id).append("\"");
 
 			Map additionalAttributesMap = getAdditionalAttributes(choice);
@@ -103,6 +95,7 @@ public abstract class AbstractOptions extends FormComponent
 		}
 
 		buffer.append("\n");
+
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
@@ -132,6 +125,14 @@ public abstract class AbstractOptions extends FormComponent
 		{
 			attrs.put("disabled", "disabled");
 		}
+
+
+		// A piece of javascript to avoid serializing the options during AJAX
+		// serialization.
+		getResponse().write(JavascriptUtils.SCRIPT_OPEN_TAG
+				+ "if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")"
+				+ "    Wicket.Form.excludeFromAjaxSerialization." + this.getMarkupId() + "='true';"
+				+ JavascriptUtils.SCRIPT_CLOSE_TAG);
 	}
 
 	/**
