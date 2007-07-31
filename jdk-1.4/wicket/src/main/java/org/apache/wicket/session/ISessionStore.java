@@ -127,7 +127,7 @@ public interface ISessionStore
 	void bind(Request request, Session newSession);
 
 	/**
-	 * Removes the specified session from this facade
+	 * Removes a session from this facade
 	 * 
 	 * @param sessionId
 	 *            The id of the session that must be unbinded.
