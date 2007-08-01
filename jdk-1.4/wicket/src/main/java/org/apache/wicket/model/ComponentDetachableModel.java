@@ -19,16 +19,22 @@ package org.apache.wicket.model;
 import org.apache.wicket.Component;
 
 /**
- * Quick model that is implements the IComponentAssignedModel and the IModel
- * interfaces. Its a quick replacement for the current
+ * Quick detachable model that is implements the IComponentAssignedModel and the
+ * IModel interfaces. Its a quick replacement for the current
  * setObject(Component,Object) and getObject(Component) methods when the
- * component is needed in the model.
+ * component is needed in a detachable model.
  * 
  * @author jcompagner
  */
-public class ComponentModel implements IModel, IComponentAssignedModel
+public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Transient flag to prevent multiple detach/attach scenario. We need to
+	 * maintain this flag as we allow 'null' model values.
+	 */
+	private transient boolean attached = false;
 
 	/**
 	 * This getObject throws an exception.
@@ -49,34 +55,57 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 	}
 
 	/**
-	 * Returns the object from the model with the use of the component where it
-	 * is attached to.
+	 * Gets whether this model has been attached to the current session.
+	 * 
+	 * @return whether this model has been attached to the current session
+	 */
+	public boolean isAttached()
+	{
+		return attached;
+	}
+
+	/**
+	 * Detaches from the current request. Implement this method with custom
+	 * behavior, such as setting the model object to null.
+	 */
+	public void detach()
+	{
+	}
+
+	/**
+	 * Attaches to the current request. Implement this method with custom
+	 * behavior, such as loading the model object.
+	 */
+	protected void attach()
+	{
+
+	}
+
+	/**
+	 * Called when getObject is called in order to retrieve the detachable
+	 * object. Before this method is called, attach() is always called to ensure
+	 * that the object is attached.
 	 * 
 	 * @param component
-	 *            The component which has this model.
-	 * @return The object of the model.
+	 *            The component asking for the object
+	 * @return The object
 	 */
-	public Object getObject(Component component)
+	protected Object getObject(Component component)
 	{
 		return null;
 	}
 
 	/**
-	 * Sets the model object for this model.
+	 * Called when setObject is called in order to change the detachable object.
+	 * Before this method is called, attach() is always called to ensure that
+	 * the object is attached.
 	 * 
 	 * @param component
-	 *            The component which has this model.
+	 *            The component asking for replacement of the model object
 	 * @param object
-	 *            The object that will be set in the model.
+	 *            The new model object
 	 */
-	public void setObject(Component component, Object object)
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	public void detach()
+	protected void setObject(Component component, Object object)
 	{
 	}
 
@@ -107,7 +136,19 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 		 */
 		public IModel getWrappedModel()
 		{
-			return ComponentModel.this;
+			return ComponentDetachableModel.this;
+		}
+
+		/**
+		 * Attaches the model.
+		 */
+		private void attach()
+		{
+			if (!attached)
+			{
+				attached = true;
+				ComponentDetachableModel.this.attach();
+			}
 		}
 
 		/**
@@ -115,7 +156,8 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 		 */
 		public Object getObject()
 		{
-			return ComponentModel.this.getObject(component);
+			attach();
+			return ComponentDetachableModel.this.getObject(component);
 		}
 
 		/**
@@ -123,7 +165,8 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 		 */
 		public void setObject(Object object)
 		{
-			ComponentModel.this.setObject(component, object);
+			attach();
+			ComponentDetachableModel.this.setObject(component, object);
 		}
 
 		/**
@@ -131,7 +174,19 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 		 */
 		public void detach()
 		{
-			ComponentModel.this.detach();
+			if (attached)
+			{
+				attached = false;
+				ComponentDetachableModel.this.detach();
+			}
+
+// IModel nestedModel = getChainedModel();
+// if (nestedModel != null)
+// {
+// // do detach the nested model because this one could be attached
+// // if the model is used not through this compound model
+// nestedModel.detach();
+// }
 		}
 
 	}
