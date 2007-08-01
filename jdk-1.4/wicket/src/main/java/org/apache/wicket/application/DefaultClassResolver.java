@@ -50,49 +50,50 @@ public final class DefaultClassResolver implements IClassResolver
 	{
 		Class clazz = null;
 		WeakReference ref = (WeakReference)classes.get(classname);
-					
-		// Might be garbage-collected between getting the WeakRef and retrieving the Class from it.
+
+		// Might be garbage-collected between getting the WeakRef and retrieving
+		// the Class from it.
 		if (ref != null)
 		{
 			clazz = (Class)ref.get();
 		}
 		if (clazz == null)
 		{
-			synchronized (classes)
+			if (classname.equals("byte"))
 			{
-				if (classname.equals("byte"))
-				{
-					clazz = byte.class;
-				}
-				else if (classname.equals("short"))
-				{
-					clazz = short.class;
-				}
-				else if (classname.equals("int"))
-				{
-					clazz = int.class;
-				}
-				else if (classname.equals("long"))
-				{
-					clazz = long.class;
-				}
-				else if (classname.equals("float"))
-				{
-					clazz = float.class;
-				}
-				else if (classname.equals("double"))
-				{
-					clazz = double.class;
-				}
-				else if (classname.equals("boolean"))
-				{
-					clazz = boolean.class;
-				}
-				else if (classname.equals("char"))
-				{
-					clazz = char.class;
-				}
-				else
+				clazz = byte.class;
+			}
+			else if (classname.equals("short"))
+			{
+				clazz = short.class;
+			}
+			else if (classname.equals("int"))
+			{
+				clazz = int.class;
+			}
+			else if (classname.equals("long"))
+			{
+				clazz = long.class;
+			}
+			else if (classname.equals("float"))
+			{
+				clazz = float.class;
+			}
+			else if (classname.equals("double"))
+			{
+				clazz = double.class;
+			}
+			else if (classname.equals("boolean"))
+			{
+				clazz = boolean.class;
+			}
+			else if (classname.equals("char"))
+			{
+				clazz = char.class;
+			}
+			else
+			{
+				synchronized (classes)
 				{
 					ClassLoader loader = Thread.currentThread().getContextClassLoader();
 					if (loader == null)
