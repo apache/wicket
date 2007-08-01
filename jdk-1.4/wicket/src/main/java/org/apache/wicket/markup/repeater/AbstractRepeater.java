@@ -22,6 +22,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for repeaters. This container renders each of its children using
@@ -38,6 +40,8 @@ import org.apache.wicket.model.IModel;
 public abstract class AbstractRepeater extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = LoggerFactory.getLogger(AbstractRepeater.class);
 
 	/**
 	 * Constructor
@@ -81,12 +85,42 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 		Iterator it = renderIterator();
 		if (it.hasNext())
 		{
+			boolean atLeastOneChildRendered = false;
 			do
 			{
-				markupStream.setCurrentIndex(markupStart);
-				renderChild((Component)it.next());
+				Component child = (Component)it.next();
+				if (child != null)
+				{
+					markupStream.setCurrentIndex(markupStart);
+					renderChild(child);
+					atLeastOneChildRendered = true;
+				}
+				else
+				{
+					if (log.isWarnEnabled())
+					{
+						StringBuffer b = new StringBuffer(
+								"Encountered a null element in the repeater model. Model: [");
+						for (Iterator i = renderIterator(); i.hasNext();)
+						{
+							Object o = i.next();
+							b.append(o != null ? o : "<NULL>");
+							if (i.hasNext())
+							{
+								b.append(", ");
+							}
+						}
+						b.append("]. Please make sure you don't provide NULL elements");
+						log.warn(b.toString());
+					}
+				}
 			}
 			while (it.hasNext());
+
+			if (!atLeastOneChildRendered)
+			{
+				markupStream.skipComponent();
+			}
 		}
 		else
 		{
