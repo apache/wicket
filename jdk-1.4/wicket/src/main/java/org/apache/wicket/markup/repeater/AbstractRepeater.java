@@ -95,31 +95,29 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 					renderChild(child);
 					atLeastOneChildRendered = true;
 				}
-				else
-				{
-					if (log.isWarnEnabled())
-					{
-						StringBuffer b = new StringBuffer(
-								"Encountered a null element in the repeater model. Model: [");
-						for (Iterator i = renderIterator(); i.hasNext();)
-						{
-							Object o = i.next();
-							b.append(o != null ? o : "<NULL>");
-							if (i.hasNext())
-							{
-								b.append(", ");
-							}
-						}
-						b.append("]. Please make sure you don't provide NULL elements");
-						log.warn(b.toString());
-					}
-				}
 			}
 			while (it.hasNext());
 
 			if (!atLeastOneChildRendered)
 			{
 				markupStream.skipComponent();
+
+				if (log.isWarnEnabled())
+				{
+					StringBuffer b = new StringBuffer(
+							"Encountered a null element in the repeater model. Model: [");
+					for (Iterator i = renderIterator(); i.hasNext();)
+					{
+						Object o = i.next();
+						b.append(o != null ? o : "<NULL>");
+						if (i.hasNext())
+						{
+							b.append(", ");
+						}
+					}
+					b.append("]. Please make sure you don't provide NULL elements");
+					log.warn(b.toString());
+				}
 			}
 		}
 		else
