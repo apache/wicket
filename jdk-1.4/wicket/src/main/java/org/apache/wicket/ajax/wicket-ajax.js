@@ -773,7 +773,25 @@ Wicket.Ajax.Request.prototype = {
 				// the redirect header was set, go to new url
 				if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
 					t.onreadystatechange = Wicket.emptyFunction;
-					window.location = redirectUrl;
+					
+					var urlDepth = 0;
+					while (redirectUrl.substring(0, 3) == "../") {
+						urlDepth++;
+						redirectUrl = redirectUrl.substring(3);
+					}
+					// Make this a string.
+					var calculatedRedirect = window.location.pathname;
+					while (urlDepth > -1) {
+						urlDepth--;
+						alert(calculatedRedirect);
+						i = calculatedRedirect.lastIndexOf("/");
+						if (i > -1) {
+							calculatedRedirect = calculatedRedirect.substring(0, i);
+						}
+					}
+					calculatedRedirect += "/" + redirectUrl;
+					alert(calculatedRedirect);
+					window.location = calculatedRedirect;
 				}
 				else {
 					// no redirect, just regular response
