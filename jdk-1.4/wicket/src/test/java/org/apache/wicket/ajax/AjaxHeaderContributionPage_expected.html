@@ -1,0 +1,32 @@
+<html>
+<head>
+<link href="../test"/>
+<script type="text/javascript" src="javascripturl"></script>
+<script type="text/javascript" src="resources/org.apache.wicket.markup.html.WicketEventReference/wicket-event.js"></script>
+<script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
+Wicket.Event.add(window, "domready", function() { domReady();;});
+/*-->]]>*/</script>
+
+<script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
+Wicket.Event.add(window, "load", function() { onLoad();;});
+/*-->]]>*/</script>
+
+<script type="text/javascript" src="resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax.js"></script>
+<script type="text/javascript" id="wicket-ajax-debug-enable"><!--/*--><![CDATA[/*><!--*/
+wicketAjaxDebugEnable=true;
+/*-->]]>*/</script>
+
+<script type="text/javascript" src="resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+</head><body>
+<span wicket:id="test1" id="test13"><wicket:panel>
+test
+</wicket:panel></span>
+<span wicket:id="test2" id="test24"><wicket:panel>
+test
+</wicket:panel></span>
+<span wicket:id="test3" id="test35"><wicket:panel>
+test
+</wicket:panel></span>
+<a href="?wicket:interface=:0:link::ILinkListener::" wicket:id="link" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:link::IBehaviorListener:0:', function() { }.bind(this), function() { }.bind(this));return !wcall;" id="link6">Test</a>
+</body>
+</html>

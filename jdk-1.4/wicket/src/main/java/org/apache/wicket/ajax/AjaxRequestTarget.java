@@ -232,6 +232,8 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	private final List/* <String> */appendJavascripts = new ArrayList();
 
+	private final List/* <String> */domReadyJavascripts = new ArrayList();
+
 	/**
 	 * Create a response for component body and javascript that will escape
 	 * output to make it safe to use inside a CDATA block
@@ -521,6 +523,14 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		fireOnAfterRespondListeners(response);
 
+		// execute the dom ready javascripts as first javascripts
+		// after component replacement
+		it = domReadyJavascripts.iterator();
+		while (it.hasNext())
+		{
+			String js = (String)it.next();
+			respondInvocation(response, js);
+		}
 		it = appendJavascripts.iterator();
 		while (it.hasNext())
 		{
@@ -864,9 +874,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			List token = Arrays.asList(new Object[] { "javascript-event", "domready", javascript });
 			if (wasRendered(token) == false)
 			{
-				// execute the javascript as first javascript after component
-				// replacement
-				appendJavascripts.add(0, javascript);
+				domReadyJavascripts.add(javascript);
 				markRendered(token);
 			}
 		}
