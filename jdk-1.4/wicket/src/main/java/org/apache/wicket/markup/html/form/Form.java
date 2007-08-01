@@ -1735,6 +1735,21 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			validateFormValidator(formValidators_get(i));
 		}
+		
+		// traverse nested forms and invoke the form validators on them
+		visitChildren(Form.class, new IVisitor() {
+			public Object component(Component component)
+			{
+				final Form form = (Form) component;
+				final int count = form.formValidators_size();
+				for (int i = 0; i < count; i++)
+				{
+					form.validateFormValidator(form.formValidators_get(i));
+				}
+				
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
 	}
 
 	/**
