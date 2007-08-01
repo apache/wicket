@@ -69,5 +69,9 @@ public abstract class WebResource extends Resource
 			response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
 			response.setHeader("Cache-Control","max-age=" + 3600);
 		}
+		else
+		{
+			response.setHeader("Cache-Control", "no-cache, must-revalidate");
+		}
 	}
 }
