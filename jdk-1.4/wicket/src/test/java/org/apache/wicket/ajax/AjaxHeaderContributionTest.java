@@ -37,4 +37,16 @@ public class AjaxHeaderContributionTest extends WicketTestCase
 				"AjaxHeaderContributionPage_ajax_expected.html");
 
 	}
+
+	public void testDoubleAjaxHeaderContribution() throws Exception
+	{
+		tester.processRequestCycle(AjaxHeaderContributionPage2.class);
+		tester.assertResultPage(AjaxHeaderContributionPage2.class,
+				"AjaxHeaderContributionPage2_expected.html");
+
+		tester.executeAjaxEvent("link", "onclick");
+		tester.assertResultPage(AjaxHeaderContributionPage2.class,
+				"AjaxHeaderContributionPage2_ajax_expected.html");
+
+	}
 }
