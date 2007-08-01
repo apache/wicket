@@ -783,14 +783,12 @@ Wicket.Ajax.Request.prototype = {
 					var calculatedRedirect = window.location.pathname;
 					while (urlDepth > -1) {
 						urlDepth--;
-						alert(calculatedRedirect);
 						i = calculatedRedirect.lastIndexOf("/");
 						if (i > -1) {
 							calculatedRedirect = calculatedRedirect.substring(0, i);
 						}
 					}
 					calculatedRedirect += "/" + redirectUrl;
-					alert(calculatedRedirect);
 					window.location = calculatedRedirect;
 				}
 				else {
