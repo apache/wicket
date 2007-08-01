@@ -431,20 +431,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
-		if (header != null)
-		{
-			Page page = header.getPage();
-
-			if (oldHeader == null)
-			{
-				page.remove(header);
-			}
-			else
-			{
-				page.replace(oldHeader);
-			}
-		}
-
 		// detach the page if it was updated
 		if (markupIdToComponent.size() > 0)
 		{
@@ -913,7 +899,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	// whether a header contribution is being rendered
 	private boolean headerRendering = false;
 	private HtmlHeaderContainer header = null;
-	private Component oldHeader = null;
 
 	private IHeaderResponse headerResponse;
 
@@ -977,7 +962,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (header == null)
 		{
 			header = new AjaxHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID, this);
-			oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID);
+			Component oldHeader = component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID);
 
 			// add or replace the container to page
 
