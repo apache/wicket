@@ -34,6 +34,8 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.IComponentOnAfterRenderListener;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.markup.IMarkupCache;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
@@ -1108,6 +1110,53 @@ public abstract class Application
 				IComponentOnAfterRenderListener listener = (IComponentOnAfterRenderListener)i
 						.next();
 				listener.onAfterRender(component);
+			}
+		}
+	}
+	
+	private List renderHeadListeners = null;
+	
+	/**
+	 * Adds a listener that will be invoked for every header response 
+	 * @param listener
+	 */
+	public final void addRenderHeadListener(IHeaderContributor listener) 
+	{
+		if (renderHeadListeners == null)
+		{
+			renderHeadListeners = new ArrayList();
+		}
+		renderHeadListeners.add(listener);
+	}
+	
+	/**
+	 * 
+	 * @param listener
+	 */
+	public void removeRenderHeadListener(IHeaderContributor listener)
+	{
+		if (renderHeadListeners != null)
+		{
+			renderHeadListeners.remove(listener);
+			if (renderHeadListeners.isEmpty())
+			{
+				renderHeadListeners = null;
+			}
+		}
+	}
+	
+	/**
+	 * INTERNAL
+	 * @param response
+	 */
+	public void notifyRenderHeadListener(IHeaderResponse response)
+	{
+		if (renderHeadListeners != null)
+		{
+			for (Iterator i = renderHeadListeners.iterator(); i.hasNext();)
+			{
+				IHeaderContributor listener = (IHeaderContributor) i.next();
+				listener.renderHead(response);
 			}
 		}
 	}
