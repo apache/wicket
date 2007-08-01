@@ -118,7 +118,8 @@ var WicketAjaxDebug = {
 					"		</div>"+					
 					"	</div>" +
 					"</div>";
-				if (Wicket.Browser.isIEQuirks() || !Wicket.Browser.isIE7()) {
+				// Special style for Internet 6 and 7 in quirks mode
+				if (Wicket.Browser.isIE() && (Wicket.Browser.isIEQuirks() || !Wicket.Browser.isIE7())) {
 					html +=	
 						"<a id='wicketDebugLink' style='position:absolute; right: 10px; bottom: 10px; z-index:100; padding-top: 0.3em; padding-bottom: 0.3em; line-height: normal ; _padding-top: 0em; width: 12em; border: 1px solid black; background-color: white; text-align: center; opacity: 0.7; filter: alpha(opacity=70); color: blue; " +
 						"                                  left: expression(-10 - wicketDebugLink.offsetWidth + eval(document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft) +(document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth));"+
