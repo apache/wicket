@@ -30,7 +30,7 @@ import org.apache.wicket.util.string.Strings;
  * Serves as a base class for different kinds of property models. By default,
  * this class uses {@link PropertyResolver} to resolve expressions on the target
  * model object. Note that the property resolver by default provides access to
- * private members and methods. If guaranteeing encapsultion of the target
+ * private members and methods. If guaranteeing encapsulation of the target
  * objects is a big concern, you should consider using an alternative
  * implementation.
  * 
@@ -63,7 +63,7 @@ public abstract class AbstractPropertyModel
 			throw new IllegalArgumentException("Parameter modelObject cannot be null");
 		}
 
-		this.target = modelObject;
+		target = modelObject;
 	}
 
 	/**
