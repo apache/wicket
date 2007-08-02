@@ -118,7 +118,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		Response response = component.getResponse();
 		response
 				.write("\n<span>&nbsp;<div style=\"display:none;position:absolute;z-index: 99999;\" id=\"");
-		response.write(getComponentMarkupId());
+		response.write(getEscapedComponentMarkupId());
 		response.write("Dp\"></div><img style=\"");
 		response.write(getIconStyle());
 		response.write("\" id=\"");
@@ -151,7 +151,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 		// variables for the initialization script
 		Map variables = new HashMap();
-		String widgetId = getComponentMarkupId();
+		String widgetId = getEscapedComponentMarkupId();
+		variables.put("componentId", getComponentMarkupId());
 		variables.put("widgetId", widgetId);
 		variables.put("datePattern", getDatePattern());
 		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
@@ -346,15 +347,27 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		return (String[])l.toArray(new String[l.size()]);
 	}
 
+
 	/**
-	 * Gets the DOM id that the calendar widget will get attached to.
+	 * Gets the id of the component that the calendar widget will get attached
+	 * to.
 	 * 
-	 * @return The DOM id of the calendar widget - same as the component's
-	 *         markup id + 'Dp'}
+	 * @return The DOM id of the component
 	 */
 	protected final String getComponentMarkupId()
 	{
 		return component.getMarkupId();
+	}
+
+	/**
+	 * Gets the escaped DOM id that the calendar widget will get attached to.
+	 * All non word characters (\W) will be removed from the string.
+	 * 
+	 * @return the escaped DOM id
+	 */
+	protected final String getEscapedComponentMarkupId()
+	{
+		return component.getMarkupId().replaceAll("\\W", "");
 	}
 
 	/**
@@ -394,7 +407,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	protected final String getIconId()
 	{
-		return component.getMarkupId() + "Icon";
+		return getEscapedComponentMarkupId() + "Icon";
 	}
 
 	/**
