@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -155,7 +157,15 @@ public class ServletWebRequest extends WebRequest
 		String tmp = getRelativePathPrefixToWicketHandler();
 		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
 
-		String path = Strings.replaceAll(getPath(), "%3A", ":").toString();
+		String path;
+		try
+		{
+			path = URLDecoder.decode(Strings.replaceAll(getPath(), "%3A", ":").toString(), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 		if (path == null || path.length() == 0)
 		{
 			path = "";
@@ -218,9 +228,9 @@ public class ServletWebRequest extends WebRequest
 		{
 			return relativePathPrefixToWicketHandler;
 		}
-		
+
 		PrependingStringBuffer prepender = new PrependingStringBuffer();
-		
+
 		// For AJAX requests, we need to make the URLs relative to the
 		// original page.
 		if (isAjax())
@@ -431,16 +441,16 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public String toString()
 	{
-		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
-				+ httpServletRequest.getProtocol() + ", requestURL = "
-				+ httpServletRequest.getRequestURL() + ", contentType = "
-				+ httpServletRequest.getContentType() + ", contentLength = "
-				+ httpServletRequest.getContentLength() + ", contextPath = "
-				+ httpServletRequest.getContextPath() + ", pathInfo = "
-				+ httpServletRequest.getPathInfo() + ", requestURI = "
-				+ httpServletRequest.getRequestURI() + ", servletPath = "
-				+ httpServletRequest.getServletPath() + ", pathTranslated = "
-				+ httpServletRequest.getPathTranslated() + "]";
+		return "[method = " + httpServletRequest.getMethod() + ", protocol = " +
+				httpServletRequest.getProtocol() + ", requestURL = " +
+				httpServletRequest.getRequestURL() + ", contentType = " +
+				httpServletRequest.getContentType() + ", contentLength = " +
+				httpServletRequest.getContentLength() + ", contextPath = " +
+				httpServletRequest.getContextPath() + ", pathInfo = " +
+				httpServletRequest.getPathInfo() + ", requestURI = " +
+				httpServletRequest.getRequestURI() + ", servletPath = " +
+				httpServletRequest.getServletPath() + ", pathTranslated = " +
+				httpServletRequest.getPathTranslated() + "]";
 	}
 
 	/**
@@ -454,11 +464,11 @@ public class ServletWebRequest extends WebRequest
 		depthRelativeToWicketHandler = -1;
 		relativePathPrefixToContextRoot = null;
 		relativePathPrefixToWicketHandler = null;
-		
+
 		if (wicketRedirectUrl != null)
 		{
-			this.previousUrlDepth = getRequestParameters().getUrlDepth();
-	
+			previousUrlDepth = getRequestParameters().getUrlDepth();
+
 			getRequestParameters().setUrlDepth(getDepthRelativeToWicketHandler());
 		}
 		else
