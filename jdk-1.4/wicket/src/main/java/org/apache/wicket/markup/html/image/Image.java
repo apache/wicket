@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.Resource;
 import org.apache.wicket.ResourceReference;
@@ -98,7 +99,7 @@ public class Image extends WebComponent implements IResourceListener
 			ValueMap resourceParameters)
 	{
 		super(id);
-		setImageResourceReference(resourceReference,resourceParameters);
+		setImageResourceReference(resourceReference, resourceParameters);
 	}
 
 	/**
@@ -154,7 +155,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public void setImageResource(final Resource imageResource)
 	{
-		this.localizedImageResource.setResource(imageResource);
+		localizedImageResource.setResource(imageResource);
 	}
 
 	/**
@@ -163,18 +164,29 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public void setImageResourceReference(final ResourceReference resourceReference)
 	{
-		this.localizedImageResource.setResourceReference(resourceReference);
+		localizedImageResource.setResourceReference(resourceReference);
 	}
 
 	/**
 	 * @param resourceReference
 	 *            The shared ImageResource to set.
-	 * @param parameters 
-	 * 			  Set the resource parameters for the resource.
+	 * @param parameters
+	 *            Set the resource parameters for the resource.
 	 */
-	public void setImageResourceReference(final ResourceReference resourceReference, final ValueMap parameters)
+	public void setImageResourceReference(final ResourceReference resourceReference,
+			final ValueMap parameters)
 	{
-		this.localizedImageResource.setResourceReference(resourceReference,parameters);
+		localizedImageResource.setResourceReference(resourceReference, parameters);
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
+	 */
+	public Component setModel(IModel model)
+	{
+		localizedImageResource.setResourceReference(null);
+		localizedImageResource.setResource(null);
+		return super.setModel(model);
 	}
 
 	/**
@@ -231,9 +243,10 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		return getImageResource() == null && localizedImageResource.isStateless();
 	}
-	
+
 	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream,
+	 *      ComponentTag)
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
