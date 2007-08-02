@@ -216,7 +216,8 @@ public class DateTimeField extends FormComponentPanel
 	private void init()
 	{
 		setType(Date.class);
-		add(dateField = DateTextField.forShortStyle("date", new PropertyModel(this, "date")));
+		PropertyModel dateFieldModel = new PropertyModel(this, "date");
+		add(dateField = newDateTextField(dateFieldModel));
 		dateField.add(new DatePicker());
 		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
@@ -288,6 +289,18 @@ public class DateTimeField extends FormComponentPanel
 		}
 
 		setConvertedInput(convertedInput);
+	}
+
+	/**
+	 * create a new {@link DateTextField} instance to be added to this panel.
+	 * 
+	 * @param dateFieldModel
+	 *            model that should be used by the {@link DateTextField}
+	 * @return a new date text field instance
+	 */
+	protected DateTextField newDateTextField(PropertyModel dateFieldModel)
+	{
+		return DateTextField.forShortStyle("date", dateFieldModel);
 	}
 
 	/**
