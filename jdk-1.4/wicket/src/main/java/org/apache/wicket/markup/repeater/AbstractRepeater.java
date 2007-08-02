@@ -85,40 +85,17 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 		Iterator it = renderIterator();
 		if (it.hasNext())
 		{
-			boolean atLeastOneChildRendered = false;
 			do
 			{
 				Component child = (Component)it.next();
-				if (child != null)
+				if (child == null)
 				{
-					markupStream.setCurrentIndex(markupStart);
-					renderChild(child);
-					atLeastOneChildRendered = true;
+					throw new IllegalStateException("the render iterator returned null for a child");
 				}
+				markupStream.setCurrentIndex(markupStart);
+				renderChild(child);
 			}
 			while (it.hasNext());
-
-			if (!atLeastOneChildRendered)
-			{
-				markupStream.skipComponent();
-
-				if (log.isWarnEnabled())
-				{
-					StringBuffer b = new StringBuffer(
-							"Encountered a null element in the repeater model. Model: [");
-					for (Iterator i = renderIterator(); i.hasNext();)
-					{
-						Object o = i.next();
-						b.append(o != null ? o : "<NULL>");
-						if (i.hasNext())
-						{
-							b.append(", ");
-						}
-					}
-					b.append("]. Please make sure you don't provide NULL elements");
-					log.warn(b.toString());
-				}
-			}
 		}
 		else
 		{
