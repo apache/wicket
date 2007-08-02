@@ -1526,7 +1526,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * 
 	 * @return The Session that this component is in
 	 */
-	public final Session getSession()
+	public Session getSession()
 	{
 		return Session.get();
 	}
