@@ -88,8 +88,7 @@ public class PropertyModel extends AbstractPropertyModel
 
 	/**
 	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
-	 * property expression that works on the given model. Additional formatting
-	 * will be used depending on the configuration setting.
+	 * property expression that works on the given model.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel
