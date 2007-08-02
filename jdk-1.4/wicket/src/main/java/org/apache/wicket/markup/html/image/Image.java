@@ -184,6 +184,8 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public Component setModel(IModel model)
 	{
+		// Null out the image resource, so we reload it (otherwise we'll be
+		// stuck with the old model.
 		localizedImageResource.setResourceReference(null);
 		localizedImageResource.setResource(null);
 		return super.setModel(model);
