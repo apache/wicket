@@ -152,7 +152,7 @@ public abstract class Loop extends AbstractRepeater
 	 */
 	protected Iterator renderIterator()
 	{
-		final int iterations = getIterations();
+		final int iterations = size();
 
 		return new ReadOnlyIterator()
 		{

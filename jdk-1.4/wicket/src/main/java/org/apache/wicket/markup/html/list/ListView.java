@@ -201,7 +201,7 @@ public abstract class ListView extends AbstractRepeater
 	 */
 	public final int getStartIndex()
 	{
-		return this.firstIndex;
+		return firstIndex;
 	}
 
 	/**
@@ -215,7 +215,7 @@ public abstract class ListView extends AbstractRepeater
 	 */
 	public int getViewSize()
 	{
-		int size = this.viewSize;
+		int size = viewSize;
 
 		final Object modelObject = getModelObject();
 		if (modelObject == null)
@@ -461,7 +461,7 @@ public abstract class ListView extends AbstractRepeater
 	 */
 	public ListView setStartIndex(final int startIndex)
 	{
-		this.firstIndex = startIndex;
+		firstIndex = startIndex;
 
 		if (firstIndex < 0)
 		{
@@ -484,7 +484,7 @@ public abstract class ListView extends AbstractRepeater
 	 */
 	public ListView setViewSize(final int size)
 	{
-		this.viewSize = size;
+		viewSize = size;
 
 		if (viewSize < 0)
 		{
@@ -651,7 +651,7 @@ public abstract class ListView extends AbstractRepeater
 	protected Iterator renderIterator()
 	{
 
-		final int size = getViewSize();
+		final int size = size();
 		return new ReadOnlyIterator()
 		{
 			private int index = 0;
