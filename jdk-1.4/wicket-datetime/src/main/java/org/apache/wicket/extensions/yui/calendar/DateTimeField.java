@@ -30,6 +30,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.converters.ZeroPaddingIntegerConverter;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.validation.validator.NumberValidator;
 import org.joda.time.DateTimeFieldType;
@@ -48,6 +50,8 @@ import org.joda.time.MutableDateTime;
 // systems with AM/PM, others have 24 hour systems
 public class DateTimeField extends FormComponentPanel
 {
+	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
+	
 	/**
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
@@ -222,8 +226,16 @@ public class DateTimeField extends FormComponentPanel
 		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
 		hoursField.setLabel(new Model("hours"));
-		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
-				Integer.class));
+        add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
+				Integer.class)
+		{
+			private static final long serialVersionUID = 1L;
+
+			public IConverter getConverter(Class type)
+			{
+				return MINUTES_CONVERTER;
+			}
+		});
 		minutesField.add(NumberValidator.range(0, 59));
 		minutesField.setLabel(new Model("minutes"));
 		add(amOrPmChoice = new DropDownChoice("amOrPmChoice", new PropertyModel(this, "amOrPm"),
