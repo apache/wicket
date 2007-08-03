@@ -14,10 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-YAHOO.namespace("wicket");
+loader = new YAHOO.util.YUILoader({base: "${basePath}"});
 
+function checkWicketDate(name, loaderCallback) {
+	if (typeof(Wicket) != 'undefined') {
+		loaderCallback();
+	} else {
+		setTimeout(function() {
+			checkWicketDate(name, loaderCallback);
+		}, 50);
+	}
+};
+
+loader.addModule({
+	name: "wicket-date",
+	type: "js",
+	fullpath: "${pathToWicketDate}",
+	verifier: checkWicketDate,
+	requires: ['calendar']
+});	
+loader.require("wicket-date");	
+loader.insert(init${widgetId}DpJs);	
+ 
 function init${widgetId}DpJs() {
+
+	YAHOO.namespace("wicket");
 	YAHOO.wicket.${widgetId}DpJs = new YAHOO.widget.Calendar("${widgetId}DpJs","${widgetId}Dp", { ${calendarInit} });
 	YAHOO.wicket.${widgetId}DpJs.isVisible = function() { return YAHOO.wicket.${widgetId}DpJs.oDomContainer.style.display == 'block'; } 
 	
@@ -41,32 +62,3 @@ function init${widgetId}DpJs() {
 	YAHOO.wicket.${widgetId}DpJs.selectEvent.subscribe(selectHandler,YAHOO.wicket.${widgetId}DpJs);
 	YAHOO.wicket.${widgetId}DpJs.render();
 }
-
-YAHOO.wicket.loaderinit = function() {
-	var loader = new YAHOO.util.YUILoader({base: "${basePath}"});
-		
-	
-	function checkWicketDate(name, loaderCallback) {
-		if (typeof(Wicket) != 'undefined') {
-			loaderCallback();
-		} else {
-			setTimeout(function() {
-				checkWicketDate(name, loaderCallback);
-			}, 50);
-		}
-		
-	};
-	
-	
-	loader.addModule({
-		name: "wicket-date",
-		type: "js",
-		fullpath: "${pathToWicketDate}",
-		verifier: checkWicketDate,
-		requires: ['calendar']
-	});	
-	loader.require("wicket-date");	
-	loader.insert(init${widgetId}DpJs);	
-};
-
-YAHOO.wicket.loaderinit();

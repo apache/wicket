@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,6 +84,19 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		}
 	}
 
+	/**
+	 * Format to be used when configuring YUI calendar. Can be used when using
+	 * the &quot;selected&quot; property.
+	 */
+	public static final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
+
+	/**
+	 * For specifying which page (month/year) to show in the calendar, use this
+	 * format for the date. This is to be used together with the property
+	 * &quot;pagedate&quot;
+	 */
+	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
+
 	private static final long serialVersionUID = 1L;
 
 	/** The target component. */
@@ -134,10 +148,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	public void renderHead(IHeaderResponse response)
 	{
 		// add YUILoader
-		// NOTE JavascriptResourceReference takes care of stripping comments
-		// when in deployment (production) mode
 		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
 				"yuiloader-beta.js"));
+
 		// variables for the initialization script
 		Map variables = new HashMap();
 		String widgetId = getEscapedComponentMarkupId();
@@ -204,13 +217,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// render initialization script with the variables interpolated
 		TextTemplateHeaderContributor.forJavaScript(DatePicker.class, "DatePicker.js",
 				Model.valueOf(variables)).renderHead(response);
-
-		// Initialize the calendar.
-		// StringBuffer initBuffer = new StringBuffer();
-		// initBuffer.append("init");
-		// initBuffer.append(widgetId + "DpJs");
-		// initBuffer.append("();");
-		// response.renderOnDomReadyJavascript(initBuffer.toString());
 	}
 
 	/**
@@ -307,8 +313,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		if (modelObject instanceof Date)
 		{
 			Date date = (Date)modelObject;
-			widgetProperties.put("selected", AbstractCalendar.FORMAT_DATE.format(date));
-			widgetProperties.put("pagedate", AbstractCalendar.FORMAT_PAGEDATE.format(date));
+			widgetProperties.put("selected", FORMAT_DATE.format(date));
+			widgetProperties.put("pagedate", FORMAT_PAGEDATE.format(date));
 		}
 	}
 
