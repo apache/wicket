@@ -54,7 +54,7 @@ public class PageWindowManager
 	}
 
 	// list of PageWindowInternal objects
-	private List /* <PageWindowInternal> */windows = new ArrayList();
+	private final List /* <PageWindowInternal> */windows = new ArrayList();
 
 	// map from page id to list of pagewindow indices (refering to the windows
 	// list) - to improve searching speed
@@ -127,7 +127,8 @@ public class PageWindowManager
 		else if (versionNumber == -1)
 		{
 			// we need to find last recently stored page window - that is page
-			// window with index closest to the left of the indexPointer or farthest 
+			// window with index closest to the left of the indexPointer or
+			// farthest
 			// to the right.
 			for (Iterator i = indices.iterator(); i.hasNext();)
 			{
@@ -137,9 +138,9 @@ public class PageWindowManager
 				if (window.pageId == pageId)
 				{
 					if ((result == -1) || /**/
-						(currentIndex <= indexPointer && result > indexPointer) || /**/
-						(currentIndex > result && currentIndex <= indexPointer) || /**/
-						(currentIndex > result && result > indexPointer))
+					(currentIndex <= indexPointer && result > indexPointer) || /**/
+					(currentIndex > result && currentIndex <= indexPointer) || /**/
+					(currentIndex > result && result > indexPointer))
 					{
 						result = currentIndex;
 					}
@@ -155,8 +156,8 @@ public class PageWindowManager
 				int currentIndex = ((Integer)i.next()).intValue();
 				PageWindowInternal window = (PageWindowInternal)windows.get(currentIndex);
 
-				if (window.pageId == pageId && window.versionNumber == versionNumber && 
-					window.ajaxVersionNumber > lastAjaxVersion)
+				if (window.pageId == pageId && window.versionNumber == versionNumber &&
+						window.ajaxVersionNumber > lastAjaxVersion)
 				{
 					result = currentIndex;
 					lastAjaxVersion = window.ajaxVersionNumber;
@@ -513,6 +514,10 @@ public class PageWindowManager
 			{
 				windows.remove(index);
 				totalSize -= window.filePartSize;
+				if (indexPointer == index)
+				{
+					--indexPointer;
+				}
 			}
 			else
 			{
