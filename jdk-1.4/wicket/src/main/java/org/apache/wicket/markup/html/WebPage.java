@@ -130,18 +130,16 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				JavascriptUtils.writeOpenTag(response);
 				response
 						.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
-				response.write(name);
+				response.write("wicket-" + name);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 			else
 			{
 				// Here is our trickery to detect whether the current request
-				// was
-				// made in a new window/ tab, in which case it should go in a
-				// different page map so that we don't intermangle the history
-				// of
-				// those windows
+				// was made in a new window/ tab, in which case it should go in
+				// a different page map so that we don't intermangle the history
+				// of those windows
 				CharSequence url = null;
 				if (target instanceof IBookmarkablePageRequestTarget)
 				{
@@ -158,7 +156,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				JavascriptUtils.writeOpenTag(response);
 				response
 						.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" +
-								name + "')) { window.location=\"");
+								"wicket-" + name + "')) { window.location=\"");
 				response.write(url);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
