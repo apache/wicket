@@ -185,7 +185,7 @@ public class MixedParamUrlCodingStrategy extends BookmarkablePageRequestTargetUr
 
 			for (int i = 0; i < pathParts.length; i++)
 			{
-				params.put(parameterNames[i], pathParts[i]);
+				params.put(parameterNames[i], urlDecode(pathParts[i]));
 			}
 		}
 

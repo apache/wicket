@@ -213,9 +213,9 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 		urlMap.put("d", "4");
 		urlMap.put("e", "5");
 
-		ValueMap parameterMap = npucs.decodeParameters("/1/2/3", urlMap);
+		ValueMap parameterMap = npucs.decodeParameters("/%C3%A8/2/3", urlMap);
 		assertEquals(5, parameterMap.size());
-		assertContains(parameterMap, "a", "1");
+		assertContains(parameterMap, "a", "\u00e8");
 		assertContains(parameterMap, "b", "2");
 		assertContains(parameterMap, "c", "3");
 		assertContains(parameterMap, "d", "4");
