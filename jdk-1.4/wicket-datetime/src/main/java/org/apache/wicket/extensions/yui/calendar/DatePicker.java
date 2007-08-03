@@ -147,6 +147,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
+		// TODO do we really need this? without it, Safari won't eat it
+		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
+				"yahoo/yahoo-min.js"));
 		// add YUILoader
 		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
 				"yuiloader-beta.js"));
