@@ -147,9 +147,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
-		// add YUILoader
-		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
-				"yuiloader-beta.js"));
+		YuiLib.load(response, getConfigureYUIBasePath());
 
 		// variables for the initialization script
 		Map variables = new HashMap();
@@ -353,7 +351,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		return (String[])l.toArray(new String[l.size()]);
 	}
 
-
 	/**
 	 * Gets the id of the component that the calendar widget will get attached
 	 * to.
@@ -363,6 +360,17 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected final String getComponentMarkupId()
 	{
 		return component.getMarkupId();
+	}
+
+
+	/**
+	 * @return if true, the base path for all YUI components will be set to
+	 *         /resources/org.apache.wicket.extensions.yui.YuiLib/. True by
+	 *         default.
+	 */
+	protected boolean getConfigureYUIBasePath()
+	{
+		return true;
 	}
 
 	/**

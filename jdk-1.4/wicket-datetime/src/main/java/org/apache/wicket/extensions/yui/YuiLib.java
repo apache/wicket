@@ -17,15 +17,40 @@
 package org.apache.wicket.extensions.yui;
 
 import org.apache.wicket.IClusterable;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 
 /**
- * Just a trick to serve as a reference for YUI includes.
+ * Use the {@link #load(IHeaderResponse, boolean)} method to initialize the YUI
+ * library using the YUI loader. It is OK to call this multiple times.
  * 
  * @author eelcohillenius
  */
 public final class YuiLib implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Load the YUI loader script. After that, you can declare YUI dependencies
+	 * using YAHOO.util.YUILoader.
+	 * 
+	 * @param response
+	 *            header response
+	 * @param configureBasePath
+	 *            whether to globally configure YUI's base path to be relative
+	 *            to this directory
+	 */
+	// TODO see http://tech.groups.yahoo.com/group/ydn-javascript/message/16209
+	public static void load(IHeaderResponse response, boolean configureBasePath)
+	{
+		if (configureBasePath)
+		{
+			response.renderJavascript("YAHOO_config = { load: { base: 'resources/"
+					+ YuiLib.class.getName() + "/'} } ", "YAHOO_config");
+		}
+		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
+				"yuiloader-beta.js"));
+	}
 
 	/**
 	 * Prevent construction.
