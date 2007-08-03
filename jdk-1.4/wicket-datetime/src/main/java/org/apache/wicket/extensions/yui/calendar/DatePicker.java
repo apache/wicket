@@ -42,11 +42,11 @@ import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.template.TextTemplateHeaderContributor;
+import org.apache.wicket.util.template.PackagedTextTemplate;
+import org.apache.wicket.util.template.TextTemplate;
 import org.joda.time.DateTime;
 
 
@@ -147,9 +147,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
-		// TODO do we really need this? without it, Safari won't eat it
-		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
-				"yahoo/yahoo-min.js"));
 		// add YUILoader
 		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
 				"yuiloader-beta.js"));
@@ -218,8 +215,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("calendarInit", calendarInit.toString());
 
 		// render initialization script with the variables interpolated
-		TextTemplateHeaderContributor.forJavaScript(DatePicker.class, "DatePicker.js",
-				Model.valueOf(variables)).renderHead(response);
+		TextTemplate datePickerJs = new PackagedTextTemplate(DatePicker.class, "DatePicker.js");
+		datePickerJs.interpolate(variables);
+		response.renderOnDomReadyJavascript(datePickerJs.asString());
 	}
 
 	/**
