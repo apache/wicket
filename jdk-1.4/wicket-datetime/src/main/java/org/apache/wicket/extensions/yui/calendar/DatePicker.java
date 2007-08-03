@@ -40,7 +40,6 @@ import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
-import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
@@ -117,7 +116,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
 		response
-				.write("\n<span>&nbsp;<div style=\"display:none;position:absolute;z-index: 99999;\" id=\"");
+				.write("\n<span class=\"yui-skin-sam\">&nbsp;<div style=\"display:none;position:absolute;z-index: 99999;\" id=\"");
 		response.write(getEscapedComponentMarkupId());
 		response.write("Dp\"></div><img style=\"");
 		response.write(getIconStyle());
@@ -134,21 +133,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
-		// add YUI contributions
+		// add YUILoader
 		// NOTE JavascriptResourceReference takes care of stripping comments
 		// when in deployment (production) mode
-		response
-				.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class, "yahoo.js"));
-		response
-				.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class, "event.js"));
-		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class, "dom.js"));
-		response.renderJavascriptReference(new JavascriptResourceReference(DatePicker.class,
-				"calendar.js"));
-		response.renderCSSReference(new CompressedResourceReference(DatePicker.class,
-				"assets/calendar.css"));
-		response.renderJavascriptReference(new JavascriptResourceReference(DatePicker.class,
-				"wicket-date.js"));
-
+		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
+				"yuiloader-beta.js"));
 		// variables for the initialization script
 		Map variables = new HashMap();
 		String widgetId = getEscapedComponentMarkupId();
@@ -157,6 +146,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("datePattern", getDatePattern());
 		variables.put("fireChangeEvent", Boolean.valueOf(notifyComponentOnDateSelected()));
 		variables.put("alignWithIcon", Boolean.valueOf(alignWithIcon()));
+		// variables for YUILoader
+		variables.put("pathToWicketDate", RequestCycle.get().urlFor(
+				new JavascriptResourceReference(DatePicker.class, "wicket-date.js")));
+		variables.put("basePath", RequestCycle.get().urlFor(
+				new JavascriptResourceReference(YuiLib.class, "")));
 
 		// print out the initialization properties
 		Properties p = new Properties();
@@ -212,11 +206,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				Model.valueOf(variables)).renderHead(response);
 
 		// Initialize the calendar.
-		StringBuffer initBuffer = new StringBuffer();
-		initBuffer.append("init");
-		initBuffer.append(widgetId + "DpJs");
-		initBuffer.append("();");
-		response.renderOnDomReadyJavascript(initBuffer.toString());
+		// StringBuffer initBuffer = new StringBuffer();
+		// initBuffer.append("init");
+		// initBuffer.append(widgetId + "DpJs");
+		// initBuffer.append("();");
+		// response.renderOnDomReadyJavascript(initBuffer.toString());
 	}
 
 	/**
@@ -299,10 +293,15 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	protected void configure(Map widgetProperties)
 	{
+		widgetProperties.put("close", Boolean.TRUE);
+		widgetProperties.put("title", "&nbsp;");
+		// TODO we might want to localize the title nicer in the future, but for
+		// now, people can override this method or put "title" in the map in
+		// localize.
+
 		// localize date fields
 		localize(widgetProperties);
 
-		widgetProperties.put("close", Boolean.TRUE);
 		Object modelObject = component.getModelObject();
 		// null and cast check
 		if (modelObject instanceof Date)
@@ -360,17 +359,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Gets the escaped DOM id that the calendar widget will get attached to.
-	 * All non word characters (\W) will be removed from the string.
-	 * 
-	 * @return the escaped DOM id
-	 */
-	protected final String getEscapedComponentMarkupId()
-	{
-		return component.getMarkupId().replaceAll("\\W", "");
-	}
-
-	/**
 	 * Gets the date pattern to use for putting selected values in the coupled
 	 * component.
 	 * 
@@ -398,6 +386,18 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		}
 
 		return format;
+	}
+
+	/**
+	 * Gets the escaped DOM id that the calendar widget will get attached to.
+	 * All non word characters (\W) will be removed from the string.
+	 * 
+	 * @return The DOM id of the calendar widget - same as the component's
+	 *         markup id + 'Dp'}
+	 */
+	protected final String getEscapedComponentMarkupId()
+	{
+		return component.getMarkupId().replaceAll("\\W", "");
 	}
 
 	/**
