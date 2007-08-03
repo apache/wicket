@@ -30,8 +30,9 @@ function init${widgetId}DpJs() {
 
 	function selectHandler(type, args, cal) {
 		YAHOO.util.Dom.get("${componentId}").value = Wicket.DateTime.substituteDate('${datePattern}', args[0][0]);
+		var wasVisible = YAHOO.wicket.${widgetId}DpJs.isVisible();
 		cal.hide();
-		if (${fireChangeEvent} && YAHOO.wicket.${widgetId}DpJs.isVisible()) {
+		if (${fireChangeEvent} && wasVisible) {
 			var field = YAHOO.util.Dom.get("${componentId}");
 			if (typeof(field.onchange) != 'undefined') field.onchange();
 		}
