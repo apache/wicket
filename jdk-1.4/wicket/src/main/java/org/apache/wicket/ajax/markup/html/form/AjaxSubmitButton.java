@@ -37,6 +37,7 @@ public abstract class AjaxSubmitButton extends AjaxButton
 	 * Construct.
 	 * 
 	 * @param id
+	 * @deprecated Use {@link AjaxButton} instead.
 	 */
 	public AjaxSubmitButton(String id)
 	{
@@ -48,6 +49,7 @@ public abstract class AjaxSubmitButton extends AjaxButton
 	 * 
 	 * @param id
 	 * @param form
+	 * @deprecated Use {@link AjaxButton} instead.
 	 */
 	public AjaxSubmitButton(String id, final Form form)
 	{
