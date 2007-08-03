@@ -44,13 +44,13 @@ import org.apache.wicket.util.string.Strings;
  * the state is preserved on refresh.
  * <p>
  * The url with {@link HybridUrlCodingStrategy} looks like
- * /mount/path/param1/value1|3| or /mount/path/param1/value1|3:2| where 3 is
- * page Id and 2 is version number.
+ * /mount/path/param1/value1.3. or /mount/path/param1/value1.3.2 where 3 is page
+ * Id and 2 is version number.
  * <p>
  * Also to preserve state on refresh with ajax-only pages the
  * {@link HybridUrlCodingStrategy} does an immediate redirect after hitting
  * bookmarkable URL, e.g. it immediately redirects from /mount/path to
- * /mount/path|3| where 3 is the next page id. This preserves the page instance
+ * /mount/path.3 where 3 is the next page id. This preserves the page instance
  * on subsequent page refresh.
  * 
  * @author Matej Knopp
@@ -177,8 +177,9 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			// bookmarkable page request
 			return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
 					parameters, originalUrlTrailingSlashesCount, isRedirectOnBookmarkableRequest());
-//			return new BookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
-//					parameters);
+// return new BookmarkablePageRequestTarget(pageMapName,
+// (Class)pageClassRef.get(),
+// parameters);
 		}
 		else
 		// hybrid url
@@ -471,7 +472,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 					lastSubstring.startsWith(getBeginSeparator()) &&
 					lastSubstring.endsWith(getEndSeparator()))
 			{
-				String pageInfoString= lastSubstring.substring(getBeginSeparator().length(), // 
+				String pageInfoString = lastSubstring.substring(getBeginSeparator().length(), // 
 						lastSubstring.length() - getEndSeparator().length());
 				PageInfo info = PageInfo.parsePageInfo(pageInfoString);
 				last = info;
@@ -514,11 +515,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * Possible string representation of PageInfo:
 	 * <ul>
 	 * <li>pageId
-	 * <li>pageId:version
-	 * <li>:pageMap
-	 * <li>pageMap:pageId: (the first colon distingues between this and the
-	 * previous one)
-	 * <li>pageMap:pageId:version
+	 * <li>pageId.version
+	 * <li>pageMap (only if pageMap starts with a letter)
+	 * <li>.pageMap
+	 * <li>pageMap.pageId.version
+	 * <li>pageMap.pageId (only if pageMap name starts with a letter)
 	 * </ul>
 	 * 
 	 * @author Matej Knopp
@@ -573,40 +574,70 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			return pageMapName;
 		}
 
-		private static char getPageInfoSeparator() {
+		private static char getPageInfoSeparator()
+		{
 			return '.';
 		}
-		
+
+		/**
+		 * <ul>
+		 * <li>pageId
+		 * <li>pageId.version
+		 * <li>pageMap (only in if pagemap strats with a letter)
+		 * <li>.pageMap
+		 * <li>pageMap.pageId (only in if pageMap name starts with a letter)
+		 * <li>pageMap.pageId.version
+		 * </ul>
+		 */
 		public String toString()
 		{
 			AppendingStringBuffer buffer = new AppendingStringBuffer(5);
-			
 
-			if (pageMapName != null)
+			final boolean pmEmpty = Strings.isEmpty(pageMapName);
+			final boolean pmStartsWithCharacter = !pmEmpty &&
+					Character.isLetter(pageMapName.charAt(0));
+
+
+			if (pageId != null && pmEmpty && versionNumber.intValue() == 0)
 			{
-				if (versionNumber == null && pageId == null)
-				{
-					buffer.append(getPageInfoSeparator());
-				}
-				buffer.append(pageMapName);
-				if (pageId != null)
-				{
-					buffer.append(getPageInfoSeparator());
-				}
-			}
-			if (pageId != null)
-			{
+				// pageId
 				buffer.append(pageId);
 			}
-			if (pageId != null && (versionNumber == null || versionNumber.intValue() == 0) && pageMapName != null)
+			else if (pageId != null && pmEmpty && versionNumber.intValue() != 0)
 			{
-				buffer.append(getPageInfoSeparator());
-			}
-			if (versionNumber != null && versionNumber.intValue() != 0)
-			{
+				// pageId.version
+				buffer.append(pageId);
 				buffer.append(getPageInfoSeparator());
 				buffer.append(versionNumber);
 			}
+			else if (pageId == null && pmStartsWithCharacter)
+			{
+				// pageMap (must start with letter)
+				buffer.append(pageMapName);
+			}
+			else if (pageId == null && !pmEmpty && !pmStartsWithCharacter)
+			{
+				// .pageMap
+				buffer.append(getPageInfoSeparator());
+				buffer.append(pageMapName);
+			}
+			else if (pmStartsWithCharacter && pageId != null && versionNumber.intValue() == 0)
+			{
+				// pageMap.pageId (pageMap must start with a letter)
+				buffer.append(pageMapName);
+				buffer.append(getPageInfoSeparator());
+				buffer.append(pageId);
+			}
+			else if (!pmEmpty && pageId != null)
+			{
+				// pageMap.pageId.pageVersion
+				buffer.append(pageMapName);
+				buffer.append(getPageInfoSeparator());
+				buffer.append(pageId);
+				buffer.append(getPageInfoSeparator());
+				buffer.append(versionNumber);
+			}
+
 			return buffer.toString();
 		}
 
@@ -633,6 +664,15 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		}
 
 		/**
+		 * <ul>
+		 * <li>pageId
+		 * <li>pageId.version
+		 * <li>pageMap (only in if pagemap strats with a letter)
+		 * <li>.pageMap
+		 * <li>pageMap.pageId (only in if pageMap name starts with a letter)
+		 * <li>pageMap.pageId.version
+		 * </ul>
+		 * 
 		 * @param src
 		 * @return
 		 */
@@ -661,21 +701,33 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				return new PageInfo(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]),
 						null);
 			}
+			else if (segments.length == 1 && !isNumber(segments[0]))
+			{
+				// pageMap (starts with leter)
+				return new PageInfo(null, null, segments[0]);
+			}
 			else if (segments.length == 2 && segments[0].length() == 0)
 			{
-				// :pageMapName
+				// .pageMap
 				return new PageInfo(null, null, segments[1]);
+			}
+			else if (segments.length == 2 && !isNumber(segments[0]))
+			{
+				// pageMap.pageId (pageMap starts with letter)
+				return new PageInfo(Integer.valueOf(segments[1]), new Integer(0), segments[0]);
 			}
 			else if (segments.length == 3)
 			{
 				if (segments[2].length() == 0 && isNumber(segments[1]))
 				{
-					// pageMapName:pageId:
+					// we don't encode it like this, but we still should be able
+					// to parse it
+					// pageMapName.pageId.
 					return new PageInfo(Integer.valueOf(segments[1]), new Integer(0), segments[0]);
 				}
 				else if (isNumber(segments[1]) && isNumber(segments[2]))
 				{
-					// pageMapName:pageId:pageVersion
+					// pageMapName.pageId.pageVersion
 					return new PageInfo(Integer.valueOf(segments[1]), Integer.valueOf(segments[2]),
 							segments[0]);
 				}
@@ -725,8 +777,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		public void respond(RequestCycle requestCycle)
 		{
-//			super.respond(requestCycle);
-//			if (requestCycle.isRedirect() == false)
+// super.respond(requestCycle);
+// if (requestCycle.isRedirect() == false)
 			{
 				Page page = getPage(requestCycle);
 				if (page.isPageStateless() == false && redirect)
