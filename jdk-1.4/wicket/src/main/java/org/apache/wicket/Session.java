@@ -16,6 +16,19 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -30,10 +43,6 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.Map.Entry;
 
 
 /**
@@ -372,7 +381,7 @@ public abstract class Session implements IClusterable
 	 */
 	public Session(Request request)
 	{
-		this.locale = request.getLocale();
+		locale = request.getLocale();
 		if (locale == null)
 		{
 			throw new IllegalArgumentException("Parameter 'locale' must not be null");
@@ -421,7 +430,7 @@ public abstract class Session implements IClusterable
 		if (store.lookup(request) == null)
 		{
 			// explicitly create a session
-			this.id = store.getSessionId(request, true);
+			id = store.getSessionId(request, true);
 			// bind it
 			store.bind(request, this);
 
@@ -499,15 +508,23 @@ public abstract class Session implements IClusterable
 	 */
 	public synchronized final String createAutoPageMapName()
 	{
-		String name = "wicket-" + autoCreatePageMapCounter;
+		String name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter;
 		IPageMap pm = pageMapForName(name, false);
 		while (pm != null)
 		{
 			autoCreatePageMapCounter++;
-			name = "wicket-" + autoCreatePageMapCounter;
+			name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter;
 			pm = pageMapForName(name, false);
 		}
 		return name;
+	}
+
+	/**
+	 * @return
+	 */
+	protected String getAutoPageMapNamePrefix()
+	{
+		return "wicket-";
 	}
 
 	/**
@@ -562,7 +579,7 @@ public abstract class Session implements IClusterable
 	{
 		if (clientInfo == null)
 		{
-			this.clientInfo = RequestCycle.get().newClientInfo();
+			clientInfo = RequestCycle.get().newClientInfo();
 		}
 		return clientInfo;
 	}
@@ -1120,7 +1137,7 @@ public abstract class Session implements IClusterable
 	 */
 	public final void dirty()
 	{
-		this.dirty = true;
+		dirty = true;
 	}
 
 	/**
@@ -1348,7 +1365,7 @@ public abstract class Session implements IClusterable
 		if (dirty)
 		{
 			// State is no longer dirty
-			this.dirty = false;
+			dirty = false;
 
 			// Set attribute.
 			setAttribute(SESSION_ATTRIBUTE_NAME, this);
