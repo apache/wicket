@@ -1144,14 +1144,21 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets the locale for the session holding this component.
+	 * Gets the locale for this component. By default, it searches it parent for
+	 * a locale. If no parents (it's a recursive search) returns a locale, it
+	 * gets one from the session.
 	 * 
-	 * @return The locale for the session holding this component
-	 * @see Component#getSession()
+	 * @return The locale to be used for this component
+	 * @see Session#getLocale()
 	 */
 	public Locale getLocale()
 	{
-		return getSession().getLocale();
+		Locale locale = null;
+		if (parent != null)
+		{
+			locale = parent.getLocale();
+		}
+		return (locale != null) ? locale : getSession().getLocale();
 	}
 
 	/**
@@ -1555,13 +1562,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Gets the variation string of this component that will be used to look up
 	 * markup for this component. Subclasses can override this method to define
 	 * by an instance what markup variation should be picked up. By default it
-	 * will return null.
+	 * will return null or the value of a parent.
 	 * 
 	 * @return The variation of this component.
 	 */
 	public String getVariation()
 	{
-		return null;
+		String variation = null;
+		if (parent != null)
+		{
+			variation = parent.getVariation();
+		}
+		return variation;
 	}
 
 	/**
