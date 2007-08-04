@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.ClientInfo;
@@ -52,6 +53,11 @@ public abstract class DateConverter implements IConverter
 	private final boolean applyTimeZoneDifference;
 
 	/**
+	 * Optional component to use for determining the locale.
+	 */
+	private Component component = null;
+
+	/**
 	 * Construct.
 	 * </p>
 	 * When applyTimeZoneDifference is true, the current time is applied on the
@@ -70,6 +76,18 @@ public abstract class DateConverter implements IConverter
 	public DateConverter(boolean applyTimeZoneDifference)
 	{
 		this.applyTimeZoneDifference = applyTimeZoneDifference;
+	}
+
+	/**
+	 * Gets the locale to use.
+	 * 
+	 * @return the locale from either the component if that is set, or from the
+	 *         session
+	 */
+	protected Locale getLocale()
+	{
+		Component c = getComponent();
+		return (c != null) ? c.getLocale() : Session.get().getLocale();
 	}
 
 	/**
@@ -208,5 +226,24 @@ public abstract class DateConverter implements IConverter
 	protected DateTimeZone getTimeZone()
 	{
 		return DateTimeZone.getDefault();
+	}
+
+	/**
+	 * @return optional component to use for determining the locale.
+	 */
+	public final Component getComponent()
+	{
+		return component;
+	}
+
+	/**
+	 * Sets component for getting the locale
+	 * 
+	 * @param component
+	 *            optional component to use for determining the locale.
+	 */
+	public final void setComponent(Component component)
+	{
+		this.component = component;
 	}
 }

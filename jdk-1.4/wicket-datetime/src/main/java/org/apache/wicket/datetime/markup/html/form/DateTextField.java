@@ -30,7 +30,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
-
 /**
  * A TextField that is mapped to a <code>java.util.Date</code> object and that
  * uses Joda time to parse and format values.
@@ -213,6 +212,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 		{
 			throw new IllegalStateException("converter may not be null");
 		}
+		converter.setComponent(this);
 		this.converter = converter;
 	}
 

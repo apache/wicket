@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.datetime;
 
-import org.apache.wicket.Session;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -116,7 +115,7 @@ public class StyleDateConverter extends DateConverter
 	 */
 	public final String getDatePattern()
 	{
-		return DateTimeFormat.patternForStyle(dateStyle, Session.get().getLocale());
+		return DateTimeFormat.patternForStyle(dateStyle, getLocale());
 	}
 
 	/**

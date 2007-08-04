@@ -18,7 +18,6 @@ package org.apache.wicket.datetime;
 
 import java.text.SimpleDateFormat;
 
-import org.apache.wicket.Session;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -99,7 +98,6 @@ public class PatternDateConverter extends DateConverter
 	 */
 	protected DateTimeFormatter getFormat()
 	{
-		return DateTimeFormat.forPattern(datePattern).withLocale(Session.get().getLocale())
-				.withPivotYear(2000);
+		return DateTimeFormat.forPattern(datePattern).withLocale(getLocale()).withPivotYear(2000);
 	}
 }
