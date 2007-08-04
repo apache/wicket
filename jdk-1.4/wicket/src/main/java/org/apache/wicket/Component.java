@@ -258,7 +258,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		 */
 		public void undo()
 		{
-			setModel(this.model);
+			setModel(model);
 		}
 	}
 
@@ -412,7 +412,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		EnabledChange(final Component component)
 		{
 			this.component = component;
-			this.enabled = component.getFlag(FLAG_ENABLED);
+			enabled = component.getFlag(FLAG_ENABLED);
 		}
 
 		/**
@@ -453,7 +453,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		VisibilityChange(final Component component)
 		{
 			this.component = component;
-			this.visible = component.getFlag(FLAG_VISIBLE);
+			visible = component.getFlag(FLAG_VISIBLE);
 		}
 
 		/**
@@ -652,13 +652,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
 	/**
-	 * Flag that makes we are in before-render callback phase Set after
-	 * component.onBeforeRender is invoked (right before invoking beforeRender
-	 * on children)
-	 */
-	static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
-
-	/**
 	 * Meta data key for line precise error logging for the moment of addition.
 	 * Made package private for access in {@link MarkupContainer} and
 	 * {@link Page}
@@ -677,12 +670,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 		private static final long serialVersionUID = 1L;
 	};
 
-
 	static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
+
 
 	static final int FLAG_ATTACHED = 0x20000000;
 
 	static final int FLAG_ATTACHING = 0x40000000;
+
+	/**
+	 * Flag that makes we are in before-render callback phase Set after
+	 * component.onBeforeRender is invoked (right before invoking beforeRender
+	 * on children)
+	 */
+	static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
 
 	/** List of behaviors to be applied for this Component */
 	private ArrayList behaviors = null;
@@ -861,36 +861,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 						" has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
 		}
-	}
-
-	/**
-	 * Prepares the component and it's children for rendering. On whole page
-	 * render this method must be called on the page. On AJAX request, this
-	 * method must be called on updated component.
-	 */
-	public void prepareForRender()
-	{
-		beforeRender();
-		markRendering();
-	}
-
-	/**
-	 * Sets the RENDERING flag on component and it's children.
-	 */
-	public final void markRendering()
-	{
-		internalMarkRendering();
-	}
-
-	boolean isPreparedForRender()
-	{
-		return getFlag(FLAG_PREPARED_FOR_RENDER);
-	}
-
-	void internalMarkRendering()
-	{
-		setFlag(FLAG_PREPARED_FOR_RENDER, false);
-		setFlag(FLAG_RENDERING, true);
 	}
 
 	/**
@@ -1216,14 +1186,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		attrs.makeImmutable();
 		return attrs;
 	}
-	
-	/**
-	 * @return Component's markup stream
-	 */
-	protected MarkupStream locateMarkupStream()
-	{
-		return new MarkupFragmentFinder().find(this);
-	}
 
 	/**
 	 * Retrieves id by which this component is represented within the markup.
@@ -1280,33 +1242,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Sets this component's markup id to a user defined value. It is up to the
-	 * user to ensure this value is unique.
-	 * <p>
-	 * The recommended way is to let wicket generate the value automatically,
-	 * this method is here to serve as an override for that value in cases where
-	 * a specific id must be used.
-	 * <p>
-	 * If null is passed in the user defined value is cleared and markup id
-	 * value will fall back on automatically generated value
-	 * 
-	 * @see #getMarkupId()
-	 * 
-	 * @param markupId
-	 *            markup id value or null to clear any previous user defined
-	 *            value
-	 */
-	public void setMarkupId(String markupId)
-	{
-		if (markupId != null && Strings.isEmpty(markupId))
-		{
-			throw new IllegalArgumentException("Markup id cannot be an empty string");
-		}
-		setMetaData(MARKUP_ID_KEY, markupId);
-
-	}
-
-	/**
 	 * Gets metadata for this component using the given key.
 	 * 
 	 * @param key
@@ -1330,7 +1265,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (model == null)
 		{
 			// give subclass a chance to lazy-init model
-			this.model = initModel();
+			model = initModel();
 		}
 
 		return model;
@@ -1536,8 +1471,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public long getSizeInBytes()
 	{
-		final MarkupContainer originalParent = this.parent;
-		this.parent = null;
+		final MarkupContainer originalParent = parent;
+		parent = null;
 		long size = -1;
 		try
 		{
@@ -1547,7 +1482,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			log.error("Exception getting size for component " + this, e);
 		}
-		this.parent = originalParent;
+		parent = originalParent;
 		return size;
 	}
 
@@ -1755,6 +1690,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Checks the security strategy if the {@link Component#RENDER} action is
+	 * allowed on this component
+	 * 
+	 * @return ture if {@link Component#RENDER} action is allowed, false
+	 *         otherwise
+	 */
+	public final boolean isRenderAllowed()
+	{
+		return getFlag(FLAG_IS_RENDER_ALLOWED);
+	}
+
+	/**
 	 * Returns if the component is stateless or not. It checks the stateless
 	 * hint if that is false it returns directly false. If that is still true it
 	 * checks all its behaviours if they can be stateless.
@@ -1845,6 +1792,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Sets the RENDERING flag on component and it's children.
+	 */
+	public final void markRendering()
+	{
+		internalMarkRendering();
+	}
+
+	/**
 	 * Called to indicate that the model content for this component has been
 	 * changed
 	 */
@@ -1901,6 +1856,17 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Prepares the component and it's children for rendering. On whole page
+	 * render this method must be called on the page. On AJAX request, this
+	 * method must be called on updated component.
+	 */
+	public void prepareForRender()
+	{
+		beforeRender();
+		markRendering();
+	}
+
+	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
 	 * current request's url is saved for future use by method
 	 * continueToOriginalDestination(); Only use this method when you plan to
@@ -1917,7 +1883,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		getPage().getPageMap().redirectToInterceptPage(page);
 	}
-
 
 	/**
 	 * Removes this component from its parent. It's important to remember that a
@@ -1968,7 +1933,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return this;
 	}
 
-
 	/**
 	 * Performs a render of this component as part of a Page level render
 	 * process.
@@ -1988,6 +1952,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		render(markupStream);
 	}
+
 
 	/**
 	 * Performs a render of this component as part of a Page level render
@@ -2149,6 +2114,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 	}
 
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * <p>
@@ -2162,7 +2128,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void renderComponent(final MarkupStream markupStream)
 	{
-		this.markupIndex = markupStream.getCurrentIndex();
+		markupIndex = markupStream.getCurrentIndex();
 
 		// Get mutable copy of next tag
 		final ComponentTag openTag = markupStream.getTag();
@@ -2277,9 +2243,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
-			if (this.behaviors != null)
+			if (behaviors != null)
 			{
-				final Iterator iter = this.behaviors.iterator();
+				final Iterator iter = behaviors.iterator();
 				while (iter.hasNext())
 				{
 					IBehavior behavior = (IBehavior)iter.next();
@@ -2418,6 +2384,33 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		setFlag(FLAG_ESCAPE_MODEL_STRINGS, escapeMarkup);
 		return this;
+	}
+
+	/**
+	 * Sets this component's markup id to a user defined value. It is up to the
+	 * user to ensure this value is unique.
+	 * <p>
+	 * The recommended way is to let wicket generate the value automatically,
+	 * this method is here to serve as an override for that value in cases where
+	 * a specific id must be used.
+	 * <p>
+	 * If null is passed in the user defined value is cleared and markup id
+	 * value will fall back on automatically generated value
+	 * 
+	 * @see #getMarkupId()
+	 * 
+	 * @param markupId
+	 *            markup id value or null to clear any previous user defined
+	 *            value
+	 */
+	public void setMarkupId(String markupId)
+	{
+		if (markupId != null && Strings.isEmpty(markupId))
+		{
+			throw new IllegalArgumentException("Markup id cannot be an empty string");
+		}
+		setMetaData(MARKUP_ID_KEY, markupId);
+
 	}
 
 	/**
@@ -2581,7 +2574,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		getRequestCycle().setRedirect(redirect);
 	}
 
-
 	/**
 	 * If false the component's tag will be printed as well as its body (which
 	 * is default). If true only the body will be printed, but not the
@@ -2608,6 +2600,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		getRequestCycle().setResponsePage(cls);
 	}
+
 
 	/**
 	 * Sets the page class and its parameters that will respond to this request
@@ -3084,7 +3077,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected final boolean getFlag(final int flag)
 	{
-		return (this.flags & flag) != 0;
+		return (flags & flag) != 0;
 	}
 
 	/**
@@ -3262,15 +3255,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Checks the security strategy if the {@link Component#RENDER} action is
-	 * allowed on this component
-	 * 
-	 * @return ture if {@link Component#RENDER} action is allowed, false
-	 *         otherwise
+	 * @return Component's markup stream
 	 */
-	public final boolean isRenderAllowed()
+	protected MarkupStream locateMarkupStream()
 	{
-		return getFlag(FLAG_IS_RENDER_ALLOWED);
+		return new MarkupFragmentFinder().find(this);
 	}
 
 	/**
@@ -3322,9 +3311,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// We can't try to get the ID from markup. This could be different than
-		// id returned from getMarkupId() prior first rendering the component 
-		// (due to transparent resolvers and borders which break the 1:1 
-		// component <-> markup relation) 
+		// id returned from getMarkupId() prior first rendering the component
+		// (due to transparent resolvers and borders which break the 1:1
+		// component <-> markup relation)
 		if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 		{
 			tag.put(MARKUP_ID_ATTR_NAME, getMarkupId());
@@ -3435,8 +3424,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 
 			// Write the tag
-			tag.writeOutput(getResponse(), stripWicketTags, this.findMarkupStream()
-					.getWicketNamespace());
+			tag
+					.writeOutput(getResponse(), stripWicketTags, findMarkupStream()
+							.getWicketNamespace());
 		}
 	}
 
@@ -3517,11 +3507,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (set)
 		{
-			this.flags |= flag;
+			flags |= flag;
 		}
 		else
 		{
-			this.flags &= ~flag;
+			flags &= ~flag;
 		}
 	}
 
@@ -3652,6 +3642,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 	}
 
+	void internalMarkRendering()
+	{
+		setFlag(FLAG_PREPARED_FOR_RENDER, false);
+		setFlag(FLAG_RENDERING, true);
+	}
+
 	/**
 	 * @return True if this component or any of its parents is in auto-add mode
 	 */
@@ -3666,6 +3662,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 		}
 		return false;
+	}
+
+	boolean isPreparedForRender()
+	{
+		return getFlag(FLAG_PREPARED_FOR_RENDER);
 	}
 
 	void onAfterRenderChildren()
