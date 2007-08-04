@@ -36,18 +36,12 @@ public final class YuiLib implements IClusterable
 	 * 
 	 * @param response
 	 *            header response
-	 * @param configureBasePath
-	 *            whether to globally configure YUI's base path to be relative
-	 *            to this directory
 	 */
 	// TODO see http://tech.groups.yahoo.com/group/ydn-javascript/message/16209
-	public static void load(IHeaderResponse response, boolean configureBasePath)
+	public static void load(IHeaderResponse response)
 	{
-		if (configureBasePath)
-		{
-			response.renderJavascript("YAHOO_config = { load: { base: 'resources/"
-					+ YuiLib.class.getName() + "/'} } ", "YAHOO_config");
-		}
+		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
+				"yahoo/yahoo-min.js"));
 		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
 				"yuiloader-beta.js"));
 	}

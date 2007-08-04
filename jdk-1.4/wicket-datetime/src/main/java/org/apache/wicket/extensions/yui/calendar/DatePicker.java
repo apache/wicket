@@ -147,7 +147,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
-		YuiLib.load(response, getConfigureYUIBasePath());
+		YuiLib.load(response);
 
 		// variables for the initialization script
 		Map variables = new HashMap();
