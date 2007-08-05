@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -26,6 +27,7 @@ import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.markup.resolver.BorderBodyResolver;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 
@@ -83,6 +85,9 @@ import org.apache.wicket.model.IModel;
  * &lt;wicket:body&gt;preview region&lt;/wicket:body&gt; in your border's
  * markup. The preview region (everything in between the open and close tag)
  * will automatically be removed.
+ * 
+ * @see BorderBodyResolver
+ * @see BorderBodyContainer
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -165,7 +170,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	public Border setBorderBodyVisible(boolean bodyVisible)
 	{
-		this.body.setVisible(false);
+		body.setVisible(false);
 		return this;
 	}
 
@@ -181,7 +186,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	public final Border setTransparentResolver(final boolean enable)
 	{
-		this.transparentResolver = enable;
+		transparentResolver = enable;
 		return this;
 	}
 
@@ -191,7 +196,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	public boolean isTransparentResolver()
 	{
-		return this.transparentResolver;
+		return transparentResolver;
 	}
 
 	/**
@@ -238,8 +243,23 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			return false;
 		}
 
-		this.body.render(markupStream);
+		body.render(markupStream);
 		return true;
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		if (tag.isOpen() == false)
+		{
+			throw new WicketRuntimeException(
+					"The border tag must be an open tag. Open-close is not allowed: " +
+							tag.toString());
+		}
+
+		super.onComponentTag(tag);
 	}
 
 	/**
@@ -251,13 +271,13 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	{
 		// Remember the data for easy access by the Body component
 		this.openTag = openTag;
-		this.originalMarkupStream = getMarkupStream();
+		originalMarkupStream = getMarkupStream();
 
 		// body.isVisible(false) needs a little extra work. We must skip the
 		// markup between <span wicket:id="myBorder"> and </span>
-		if (this.body.isVisible() == false)
+		if (body.isVisible() == false)
 		{
-			this.originalMarkupStream.skipToMatchingCloseTag(openTag);
+			originalMarkupStream.skipToMatchingCloseTag(openTag);
 		}
 
 		// Render the associated markup
@@ -270,7 +290,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 */
 	public void renderHead(HtmlHeaderContainer container)
 	{
-		this.renderHeadFromAssociatedMarkupFile(container);
+		renderHeadFromAssociatedMarkupFile(container);
 		super.renderHead(container);
 	}
 
@@ -304,7 +324,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			{
 				tag.setType(XmlTag.OPEN);
 				tag.setModified(true);
-				this.wasOpenCloseTag = true;
+				wasOpenCloseTag = true;
 			}
 
 			super.onComponentTag(tag);
@@ -317,17 +337,17 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		protected void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 		{
-			if (this.wasOpenCloseTag == false)
+			if (wasOpenCloseTag == false)
 			{
 				// It is open-preview-close. Only RawMarkup is allowed within
 				// the preview region, which gets stripped from output
 				markupStream.skipRawMarkup();
 			}
 
-			super.onComponentTagBody(Border.this.originalMarkupStream, Border.this.openTag);
+			super.onComponentTagBody(originalMarkupStream, Border.this.openTag);
 
 			// no longer needed.
-			Border.this.originalMarkupStream = null;
+			originalMarkupStream = null;
 			Border.this.openTag = null;
 		}
 
@@ -342,7 +362,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			// Usually you add child components to Border instead of Body. Hence
 			// we need to help Body to properly resolve the children.
 			String id = tag.getId();
-			if (!id.equals(Border.this.BODY_ID))
+			if (!id.equals(BODY_ID))
 			{
 				Component component = Border.this.get(id);
 				if (component != null)

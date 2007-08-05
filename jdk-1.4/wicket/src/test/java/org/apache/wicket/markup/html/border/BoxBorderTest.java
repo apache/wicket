@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.form.Form;
@@ -155,11 +156,11 @@ public class BoxBorderTest extends WicketTestCase
 	public void test7() throws Exception
 	{
 		final IMarkupSettings markupSettings = Application.get().getMarkupSettings();
-	    markupSettings.setCompressWhitespace(true);
-	    markupSettings.setStripComments(true);
-	    markupSettings.setStripWicketTags(true);
-	    markupSettings.setStripXmlDeclarationFromOutput(true);
-	    
+		markupSettings.setCompressWhitespace(true);
+		markupSettings.setStripComments(true);
+		markupSettings.setStripWicketTags(true);
+		markupSettings.setStripXmlDeclarationFromOutput(true);
+
 		executeTest(BoxBorderTestPage_1.class, "BoxBorderTestPage_ExpectedResult_7.html");
 	}
 
@@ -181,5 +182,27 @@ public class BoxBorderTest extends WicketTestCase
 	public void test9() throws Exception
 	{
 		executeTest(BoxBorderTestPage_9.class, "BoxBorderTestPage_ExpectedResult_9.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void test10() throws Exception
+	{
+		Exception e = null;
+		try
+		{
+			executeTest(BoxBorderTestPage_10.class, "BoxBorderTestPage_ExpectedResult_10.html");
+		}
+		catch (WicketRuntimeException ex)
+		{
+			if (ex.getMessage().startsWith("The border tag must be an open tag."))
+			{
+				e = ex;
+			}
+		}
+		assertNotNull(
+				"Expected a WicketRuntimeException. Border tag must be open tags. Open-close tags are not allowed",
+				e);
 	}
 }
