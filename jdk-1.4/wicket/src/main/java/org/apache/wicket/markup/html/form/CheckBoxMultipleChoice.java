@@ -105,7 +105,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		 */
 		PrefixChange(String prevSuffix)
 		{
-			this.prevPrefix = prevSuffix;
+			prevPrefix = prevSuffix;
 		}
 
 		/**
@@ -184,9 +184,10 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
-	 *      java.util.List)
+	 * @see org.apache.wicket.Component#Component(String,
+	 *      org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String,
+	 *      org.apache.wicket.model.IModel, java.util.List)
 	 */
 	public CheckBoxMultipleChoice(final String id, IModel model, final List choices)
 	{
@@ -204,8 +205,10 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
+	 * @see org.apache.wicket.Component#Component(String,
+	 *      org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String,
+	 *      org.apache.wicket.model.IModel,
 	 *      java.util.List,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(final String id, IModel model, final List choices,
@@ -222,7 +225,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
-	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String,
+	 *      org.apache.wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel choices)
 	{
@@ -241,7 +245,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *            The collection of choices in the radio choice
 	 * @see AbstractChoice#AbstractChoice(String,
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.model.IModel)
-	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#Component(String,
+	 *      org.apache.wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel model, IModel choices)
 	{
@@ -279,8 +284,10 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
+	 * @see org.apache.wicket.Component#Component(String,
+	 *      org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String,
+	 *      org.apache.wicket.model.IModel,
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
@@ -352,7 +359,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		tag.remove("disabled");
 		tag.remove("name");
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
@@ -406,7 +413,16 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 				{
 					display = getLocalizer().getString(label, this, label);
 				}
-				CharSequence escaped = Strings.escapeMarkup(display, false, true);
+
+				CharSequence escaped;
+				if (isEscapeLabelMarkup())
+				{
+					escaped = Strings.escapeMarkup(display, false, true);
+				}
+				else
+				{
+					escaped = display;
+				}
 
 				buffer.append("<label for=\"");
 				buffer.append(idAttr);
@@ -421,5 +437,14 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
-
+	/**
+	 * Overridable method to determine whether the label markup should be
+	 * escaped.
+	 * 
+	 * @return
+	 */
+	protected boolean isEscapeLabelMarkup()
+	{
+		return true;
+	}
 }
