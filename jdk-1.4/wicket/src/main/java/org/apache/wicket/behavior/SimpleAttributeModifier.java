@@ -32,7 +32,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 
 	/** The attribute */
 	private final String attribute;
-	
+
 	/** The value to set */
 	private final CharSequence value;
 
@@ -59,6 +59,33 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	}
 
 	/**
+	 * @return the attribute
+	 */
+	public final String getAttribute()
+	{
+		return attribute;
+	}
+
+	/**
+	 * @return the value to set
+	 */
+	public final CharSequence getValue()
+	{
+		return value;
+	}
+
+	/**
+	 * This method is deprecated, use the isEnabled(Component)
+	 * 
+	 * @return true
+	 * @deprecated use isEnabled(Component) now.
+	 */
+	public final boolean isEnabled()
+	{
+		return true;
+	}
+
+	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onComponentTag(org.apache.wicket.Component,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
@@ -68,15 +95,5 @@ public class SimpleAttributeModifier extends AbstractBehavior
 		{
 			tag.getAttributes().put(attribute, value);
 		}
-	}
-	
-	/**
-	 * This method is deprecated, use the isEnabled(Component)
-	 * @return true
-	 * @deprecated use isEnabled(Component) now.
-	 */
-	public final boolean isEnabled()
-	{
-		return true;
 	}
 }

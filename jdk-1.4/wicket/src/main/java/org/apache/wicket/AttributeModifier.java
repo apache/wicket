@@ -44,8 +44,8 @@ import org.apache.wicket.util.value.IValueMap;
  * </p>
  * <p>
  * Instances of this class should be added to components via the
- * {@link org.apache.wicket.Component#add(AttributeModifier)} method after the component
- * has been constucted.
+ * {@link org.apache.wicket.Component#add(AttributeModifier)} method after the
+ * component has been constucted.
  * <p>
  * It is possible to create new subclasses of AttributeModifier by overriding
  * the newValue(String, String) method. For example, you could create an
@@ -149,7 +149,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 
 		this.attribute = attribute;
 		this.pattern = pattern;
-		this.enabled = true;
+		enabled = true;
 		this.addAttributeIfNotPresent = addAttributeIfNotPresent;
 		this.replaceModel = replaceModel;
 	}
@@ -189,13 +189,28 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Made final to support the parameterless variant.
-	 * 
-	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
+	 * @return whether to add the attribute if it is not an attribute in the
+	 *         markup
 	 */
-	public boolean isEnabled(Component component)
+	public final boolean getAddAttributeIfNotPresent()
 	{
-		return enabled;
+		return addAttributeIfNotPresent;
+	}
+
+	/**
+	 * @return the attribute name to replace the value for
+	 */
+	public final String getAttribute()
+	{
+		return attribute;
+	}
+
+	/**
+	 * @return the pattern of the current attribute value to match
+	 */
+	public final String getPattern()
+	{
+		return pattern;
 	}
 
 	/**
@@ -205,6 +220,16 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 * @deprecated
 	 */
 	public final boolean isEnabled()
+	{
+		return enabled;
+	}
+
+	/**
+	 * Made final to support the parameterless variant.
+	 * 
+	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
+	 */
+	public boolean isEnabled(Component component)
 	{
 		return enabled;
 	}
@@ -288,8 +313,25 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	 */
 	public String toString()
 	{
-		return "[AttributeModifier attribute=" + attribute + ", enabled=" + enabled + ", pattern="
-				+ pattern + ", replacementModel=" + replaceModel + "]";
+		return "[AttributeModifier attribute=" + attribute + ", enabled=" + enabled + ", pattern=" +
+				pattern + ", replacementModel=" + replaceModel + "]";
+	}
+
+	/* gets replacement with null check. */
+	private Object getReplacementOrNull(final Component component)
+	{
+		IModel model = replaceModel;
+		if (model instanceof IComponentAssignedModel)
+		{
+			model = ((IComponentAssignedModel)model).wrapOnAssignment(component);
+		}
+		return (model != null) ? model.getObject() : null;
+	}
+
+	/* gets replacement as a string with null check. */
+	private String toStringOrNull(final Object replacementValue)
+	{
+		return (replacementValue != null) ? replacementValue.toString() : null;
 	}
 
 	/**
@@ -317,22 +359,5 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	protected String newValue(final String currentValue, final String replacementValue)
 	{
 		return replacementValue;
-	}
-
-	/* gets replacement with null check. */
-	private Object getReplacementOrNull(final Component component)
-	{
-		IModel model = replaceModel;
-		if (model instanceof IComponentAssignedModel)
-		{
-			model = ((IComponentAssignedModel)model).wrapOnAssignment(component);
-		}
-		return (model != null) ? model.getObject() : null;
-	}
-
-	/* gets replacement as a string with null check. */
-	private String toStringOrNull(final Object replacementValue)
-	{
-		return (replacementValue != null) ? replacementValue.toString() : null;
 	}
 }
