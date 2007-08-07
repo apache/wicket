@@ -349,7 +349,7 @@ public abstract class MarkupContainer extends Component
 	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	public final MarkupStream getAssociatedMarkupStream(final boolean throwException)
+	public MarkupStream getAssociatedMarkupStream(final boolean throwException)
 	{
 		try
 		{
@@ -569,7 +569,7 @@ public abstract class MarkupContainer extends Component
 			{
 				private static final long serialVersionUID = 1L;
 
-				final Object removedChildren = MarkupContainer.this.children;
+				final Object removedChildren = children;
 
 				public String toString()
 				{
@@ -579,7 +579,7 @@ public abstract class MarkupContainer extends Component
 
 				public void undo()
 				{
-					MarkupContainer.this.children = removedChildren;
+					children = removedChildren;
 					int size = children_size();
 					for (int i = 0; i < size; i++)
 					{
@@ -603,7 +603,7 @@ public abstract class MarkupContainer extends Component
 				child.setParent(null);
 			}
 
-			this.children = null;
+			children = null;
 		}
 	}
 
@@ -941,9 +941,9 @@ public abstract class MarkupContainer extends Component
 	 */
 	private final void children_add(final Component child)
 	{
-		if (this.children == null)
+		if (children == null)
 		{
-			this.children = child;
+			children = child;
 		}
 		else
 		{
@@ -1056,7 +1056,7 @@ public abstract class MarkupContainer extends Component
 			if (index == 0)
 			{
 				final Component removed = (Component)children;
-				this.children = null;
+				children = null;
 				return removed;
 			}
 			else
@@ -1072,11 +1072,11 @@ public abstract class MarkupContainer extends Component
 			{
 				if (index == 0)
 				{
-					this.children = c[1];
+					children = c[1];
 				}
 				else if (index == 1)
 				{
-					this.children = c[0];
+					children = c[0];
 				}
 				else
 				{
@@ -1094,7 +1094,7 @@ public abstract class MarkupContainer extends Component
 						newChildren[j++] = c[i];
 					}
 				}
-				this.children = newChildren;
+				children = newChildren;
 			}
 			return removed;
 		}
@@ -1228,7 +1228,7 @@ public abstract class MarkupContainer extends Component
 				}
 
 				// 3rd try: Try application's component resolvers
-				final List componentResolvers = this.getApplication().getPageSettings()
+				final List componentResolvers = getApplication().getPageSettings()
 						.getComponentResolvers();
 				final Iterator iterator = componentResolvers.iterator();
 				while (iterator.hasNext())
@@ -1553,7 +1553,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @return True if this markup container has associated markup
 	 */
-	final boolean hasAssociatedMarkup()
+	public boolean hasAssociatedMarkup()
 	{
 		return getApplication().getMarkupSettings().getMarkupCache().hasAssociatedMarkup(this);
 	}

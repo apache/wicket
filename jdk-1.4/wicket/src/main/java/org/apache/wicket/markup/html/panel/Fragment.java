@@ -20,7 +20,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Objects;
@@ -38,18 +38,18 @@ import org.apache.wicket.version.undo.Change;
  * <p>
  * 
  * <pre>
- *             &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *            
- *             &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *             &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *  &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *  
+ *  &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *  &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *             add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *  add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @author Juergen Donnerstag
  */
-public class Fragment extends WebMarkupContainer
+public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 {
 	private static final long serialVersionUID = 1L;
 
@@ -210,14 +210,14 @@ public class Fragment extends WebMarkupContainer
 	{
 		MarkupStream stream = null;
 
-		if (this.markupProvider == null)
+		if (markupProvider == null)
 		{
 			stream = markupStream;
 		}
 		else
 		{
 
-			stream = this.markupProvider.getAssociatedMarkupStream(false);
+			stream = markupProvider.getAssociatedMarkupStream(false);
 			if (stream == null)
 			{
 				// The following statement assumes that the markup provider is a
@@ -246,10 +246,10 @@ public class Fragment extends WebMarkupContainer
 		int index = providerMarkupStream.findComponentIndex(null, markupId);
 		if (index == -1)
 		{
-			throw new MarkupException("Markup of component class `"
-					+ providerMarkupStream.getContainerClass().getName()
-					+ "` does not contain a fragment with wicket:id `" + markupId + "`. Context: "
-					+ toString());
+			throw new MarkupException("Markup of component class `" +
+					providerMarkupStream.getContainerClass().getName() +
+					"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
+					toString());
 		}
 
 		// Set the markup stream position to where the fragment begins
@@ -273,5 +273,32 @@ public class Fragment extends WebMarkupContainer
 			// at the original component
 			providerMarkupStream.setCurrentIndex(currentIndex);
 		}
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#hasAssociatedMarkup()
+	 */
+	public boolean hasAssociatedMarkup()
+	{
+		return true;
+	}
+
+	/**
+	 * @see org.apache.wicket.MarkupContainer#getAssociatedMarkupStream(boolean)
+	 */
+	public MarkupStream getAssociatedMarkupStream(boolean throwException)
+	{
+		MarkupStream stream = null;
+
+		if (markupProvider != null)
+		{
+			stream = markupProvider.getAssociatedMarkupStream(false);
+		}
+
+		if (stream == null)
+		{
+			stream = super.getAssociatedMarkupStream(throwException);
+		}
+		return stream;
 	}
 }

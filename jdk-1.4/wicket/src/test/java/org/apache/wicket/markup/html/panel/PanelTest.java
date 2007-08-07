@@ -87,7 +87,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel() throws Exception
 	{
-		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_1.class, "InlinePanelPageExpectedResult_1.html");
 	}
 
@@ -96,7 +95,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_2() throws Exception
 	{
-		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_2.class, "InlinePanelPageExpectedResult_2.html");
 	}
 
@@ -105,7 +103,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_3() throws Exception
 	{
-		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_3.class, "InlinePanelPageExpectedResult_3.html");
 	}
 
@@ -123,7 +120,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_5() throws Exception
 	{
-		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_5.class, "InlinePanelPageExpectedResult_5.html");
 	}
 
@@ -131,12 +127,10 @@ public class PanelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	// TODO FIX this test.
-//	public void testInlinePanel_6() throws Exception
-//	{
-//		tester.getPageSettings().addComponentResolver(new FragmentResolver());
-//		executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
-//	}
-
+// public void testInlinePanel_6() throws Exception
+// {
+// executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
+// }
 	/**
 	 * @throws Exception
 	 */
@@ -144,5 +138,13 @@ public class PanelTest extends WicketTestCase
 	{
 		executeTest(PanelWithAttributeModifierPage.class,
 				"PanelWithAttributeModifierPageExpectedResult_1.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testInlinePanel_7() throws Exception
+	{
+		executeTest(InlinePanelPage_7.class, "InlinePanelPageExpectedResult_7.html");
 	}
 }
