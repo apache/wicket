@@ -21,7 +21,6 @@ import java.util.Iterator;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.repeater.AbstractPageableView;
 import org.apache.wicket.markup.repeater.RefreshingView;
-import org.apache.wicket.model.IDetachable;
 
 
 /**
@@ -99,9 +98,9 @@ public abstract class DataViewBase extends AbstractPageableView
 		 */
 		public ModelIterator(IDataProvider dataProvider, int offset, int count)
 		{
-			this.items = dataProvider.iterator(offset, count);
+			items = dataProvider.iterator(offset, count);
 			this.dataProvider = dataProvider;
-			this.max = count;
+			max = count;
 		}
 
 		/**
@@ -140,10 +139,7 @@ public abstract class DataViewBase extends AbstractPageableView
 	 */
 	protected void onDetach()
 	{
+		dataProvider.detach();
 		super.onDetach();
-		if (dataProvider instanceof IDetachable)
-		{
-			((IDetachable)dataProvider).detach();
-		}
 	}
 }
