@@ -75,14 +75,14 @@ public class DataTable extends Panel implements IPageable
 	static abstract class CssAttributeBehavior extends AbstractBehavior
 	{
 		protected abstract String getCssClass();
-		
+
 		/**
 		 * @see IBehavior#onComponentTag(Component, ComponentTag)
 		 */
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			String className = getCssClass();
-			if (!Strings.isEmpty(className)) 
+			if (!Strings.isEmpty(className))
 			{
 				CharSequence oldClassName = tag.getString("class");
 				if (Strings.isEmpty(oldClassName))
@@ -128,6 +128,11 @@ public class DataTable extends Panel implements IPageable
 	{
 		super(id);
 
+		if (columns == null || columns.length < 1)
+		{
+			throw new IllegalArgumentException("Argument `columns` cannot be null or empty");
+		}
+
 		this.columns = columns;
 
 		datagrid = new DataGridView("rows", columns, dataProvider)
@@ -140,10 +145,10 @@ public class DataTable extends Panel implements IPageable
 				final IColumn column = DataTable.this.columns[index];
 				if (column instanceof IStyledColumn)
 				{
-					item.add(new DataTable.CssAttributeBehavior() 
+					item.add(new DataTable.CssAttributeBehavior()
 					{
 						private static final long serialVersionUID = 1L;
-		
+
 						protected String getCssClass()
 						{
 							return ((IStyledColumn)column).getCssClass();
