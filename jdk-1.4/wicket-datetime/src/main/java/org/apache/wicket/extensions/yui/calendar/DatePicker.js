@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-loader = new YAHOO.util.YUILoader({base: "${basePath}"});
+ if (typeof wicketYuiLoader == 'undefined')	wicketYuiLoader = new YAHOO.util.YUILoader({base: "${basePath}", filter: "RAW"});
 
 function checkWicketDate(name, loaderCallback) {
-	if (typeof(Wicket) != 'undefined') {
+	if (typeof(Wicket) != 'undefined' && typeof(Wicket.DateTime) != 'undefined') {
 		loaderCallback();
 	} else {
 		setTimeout(function() {
@@ -26,21 +26,35 @@ function checkWicketDate(name, loaderCallback) {
 	}
 };
 
-loader.addModule({
+wicketYuiLoader.addModule({
 	name: "wicket-date",
 	type: "js",
 	fullpath: "${pathToWicketDate}",
 	verifier: checkWicketDate,
 	requires: ['calendar']
 });	
-loader.require("wicket-date");	
-loader.insert(init${widgetId}DpJs);	
+
+
+function check${widgetId}Loader() {
+	if (!wicketYuiLoader.initializing) {
+		wicketYuiLoader.initializing = true;	
+		wicketYuiLoader.require("wicket-date");
+		wicketYuiLoader.insert(function() {
+			wicketYuiLoader.initializing = false;
+			init${widgetId}DpJs();
+		});
+	}  else {
+		setTimeout(check${widgetId}Loader, 50);
+	}
+ }
+
+check${widgetId}Loader();	
  
 function init${widgetId}DpJs() {
 
 	YAHOO.namespace("wicket");
 	YAHOO.wicket.${widgetId}DpJs = new YAHOO.widget.Calendar("${widgetId}DpJs","${widgetId}Dp", { ${calendarInit} });
-	YAHOO.wicket.${widgetId}DpJs.isVisible = function() { return YAHOO.wicket.${widgetId}DpJs.oDomContainer.style.display == 'block'; } 
+	YAHOO.wicket.${widgetId}DpJs.isVisible = function() { return YAHOO.wicket.${widgetId}DpJs.oDomContainer.style.display == 'block'; }
 	
 	function showCalendar() {
 		Wicket.DateTime.showCalendar(YAHOO.wicket.${widgetId}DpJs, YAHOO.util.Dom.get("${componentId}").value, '${datePattern}');

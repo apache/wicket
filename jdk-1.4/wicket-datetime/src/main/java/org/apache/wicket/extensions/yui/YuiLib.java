@@ -41,7 +41,7 @@ public final class YuiLib implements IClusterable
 	public static void load(IHeaderResponse response)
 	{
 		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
-				"yahoo/yahoo-min.js"));
+				"yahoo/yahoo.js"));
 		response.renderJavascriptReference(new JavascriptResourceReference(YuiLib.class,
 				"yuiloader-beta.js"));
 	}
