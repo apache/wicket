@@ -47,57 +47,65 @@ public class ReloadingClassLoader extends URLClassLoader
 	private static final Set urls = new HashSet();
 	private static final List patterns = new ArrayList();
 
-    protected boolean tryClassHere(String name) {
-        // don't include classes in the java or javax.servlet package
-        if ( name != null && (name.startsWith("java.") || name.startsWith("javax.servlet") ) ) {
-            return false;
-        }
-        // Scan includes, then excludes
-        boolean tryHere;
+	protected boolean tryClassHere(String name)
+	{
+		// don't include classes in the java or javax.servlet package
+		if (name != null && (name.startsWith("java.") || name.startsWith("javax.servlet")))
+		{
+			return false;
+		}
+		// Scan includes, then excludes
+		boolean tryHere;
 
-        // If no explicit includes, try here
-        if (patterns == null || patterns.size() == 0) {
-            tryHere = true;
-        } else {
-            // See if it matches include patterns
-            tryHere = false;
-            Iterator includesIterator = patterns.iterator();
-            while (includesIterator.hasNext())
-            {
-            	String rawpattern = (String) includesIterator.next();
-            	if (rawpattern.length()<=1)
+		// If no explicit includes, try here
+		if (patterns == null || patterns.size() == 0)
+		{
+			tryHere = true;
+		}
+		else
+		{
+			// See if it matches include patterns
+			tryHere = false;
+			Iterator includesIterator = patterns.iterator();
+			while (includesIterator.hasNext())
+			{
+				String rawpattern = (String)includesIterator.next();
+				if (rawpattern.length() <= 1)
 				{
 					continue;
 				}
-            	boolean isInclude = rawpattern.substring(0, 1).equals("+");
-            	String pattern = rawpattern.substring(1);
-                if (WildcardMatcherHelper.match(pattern, name) != null) {
-                    tryHere = isInclude;
-                }
-            }
-        }
+				boolean isInclude = rawpattern.substring(0, 1).equals("+");
+				String pattern = rawpattern.substring(1);
+				if (WildcardMatcherHelper.match(pattern, name) != null)
+				{
+					tryHere = isInclude;
+				}
+			}
+		}
 
-        return tryHere;
-    }
+		return tryHere;
+	}
 
 	/**
 	 * Include a pattern
 	 * 
-	 * @param pattern the pattern to include
+	 * @param pattern
+	 *            the pattern to include
 	 */
 	public static void includePattern(String pattern)
 	{
-		patterns.add("+"+pattern);
+		patterns.add("+" + pattern);
 	}
 
 	/**
 	 * Exclude a pattern
 	 * 
-	 * @param pattern the pattern to exclude
+	 * @param pattern
+	 *            the pattern to exclude
 	 */
 	public static void excludePattern(String pattern)
 	{
-		patterns.add("-"+pattern);
+		patterns.add("-" + pattern);
 	}
 
 	/**
@@ -192,7 +200,7 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			addURL((URL)i.next());
 		}
-		this.watcher = new ModificationWatcher(pollFrequency);
+		watcher = new ModificationWatcher(pollFrequency);
 	}
 
 	/**
@@ -207,7 +215,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	public final URL getResource(final String name)
 	{
 		URL resource = findResource(name);
-		ClassLoader parent = this.getParent();
+		ClassLoader parent = getParent();
 		if (resource == null && parent != null)
 		{
 			resource = parent.getResource(name);
@@ -238,7 +246,8 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			final ClassLoader parent = getParent();
 
-			if (tryClassHere(name)) {
+			if (tryClassHere(name))
+			{
 				try
 				{
 					clazz = findClass(name);
@@ -304,8 +313,8 @@ public class ReloadingClassLoader extends URLClassLoader
 			// FIXME only works for directories, but JARs etc could be checked
 			// as well
 			URL location = (URL)locationsIterator.next();
-			String clzLocation = location.getFile() + clz.getName().replaceAll("\\.", "/")
-					+ ".class";
+			String clzLocation = location.getFile() + clz.getName().replaceAll("\\.", "/") +
+					".class";
 			log.debug("clzLocation=" + clzLocation);
 			clzFile = new File(clzLocation);
 			final File finalClzFile = clzFile;
