@@ -20,8 +20,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,13 +55,13 @@ public class ComponentTag extends MarkupElement
 	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
 
 	/** an empty list */
-	private static final List EMPTY_LIST = new LinkedList();
+	private static final List EMPTY_LIST = new ArrayList();
 
 	/**
 	 * Assuming this is a open (or open-close) tag, 'closes' refers to the
 	 * ComponentTag which closes it.
 	 */
-	protected ComponentTag closes;
+	private ComponentTag closes;
 
 	/** The underlying xml tag */
 	protected final XmlTag xmlTag;
@@ -69,7 +69,10 @@ public class ComponentTag extends MarkupElement
 	/** True if a href attribute is available and autolinking is on */
 	private boolean autolink = false;
 
-	/** The component's id identified by wicket:id="xxx" */
+	/**
+	 * By default this is equal to the wicket:id="xxx" attribute value, but may
+	 * be provided e.g. for auto-tags
+	 */
 	private String id;
 
 	/** The component's path in the markup */
@@ -78,15 +81,21 @@ public class ComponentTag extends MarkupElement
 	/** True, if attributes have been modified or added */
 	private boolean modified = false;
 
-	/** If true, than the MarkupParser will ignore (remove) it. */
-	private boolean ignore = false;
+	/**
+	 * If true, than the MarkupParser will ignore (remove) it. Temporary working
+	 * variable
+	 */
+	private transient boolean ignore = false;
+
+	/** If true, than the tag contain an automatically created wicket id */
+	private boolean autoComponent = false;
 
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged
 	 * and the information about the tags origin is lost. In some cases like
 	 * wicket:head and wicket:link this information however is required.
 	 */
-	private WeakReference/*<Class>*/ markupClassRef = new WeakReference(null);
+	private WeakReference/* <Class> */markupClassRef = null;
 
 	/**
 	 * Tags which are detected to have only an open tag, which is allowed with
@@ -95,13 +104,10 @@ public class ComponentTag extends MarkupElement
 	private boolean hasNoCloseTag = false;
 
 	/** added behaviors */
-	// FIXME these behaviors here are merely for wicket:message attributes on
-	// tags that are also wicket components. since this addition behavors have
-	// gained a significantly more sophisticated lifecycle and so managing
-	// behaviors attached to markup tags like this is much harder. this should
-	// be refactored into some interface that only has oncomponenttag method
-	// because a full behavior is not supported nor desired imho.
-	private Collection behaviors;
+	private List behaviors;
+
+	/** Filters and Handlers may add their own attributes to the tag */
+	private Map userData;
 
 	/**
 	 * Automatically create a XmlTag, assign the name and the type, and
@@ -146,7 +152,7 @@ public class ComponentTag extends MarkupElement
 
 		if (behaviors == null)
 		{
-			behaviors = new LinkedList();
+			behaviors = new ArrayList();
 		}
 		behaviors.add(behavior);
 	}
@@ -308,7 +314,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isAutolinkEnabled()
 	{
-		return this.autolink;
+		return autolink;
 	}
 
 	/**
@@ -409,12 +415,16 @@ public class ComponentTag extends MarkupElement
 	 * @param dest
 	 *            tag whose properties will be set
 	 */
-	void copyPropertiesTo(ComponentTag dest)
+	void copyPropertiesTo(final ComponentTag dest)
 	{
 		dest.id = id;
-		dest.setMarkupClass((Class)this.markupClassRef.get());
-		dest.setHasNoCloseTag(this.hasNoCloseTag);
-		dest.setPath(this.path);
+		dest.setHasNoCloseTag(hasNoCloseTag);
+		dest.setPath(path);
+		dest.setAutoComponentTag(autoComponent);
+		if (markupClassRef != null)
+		{
+			dest.setMarkupClass((Class)markupClassRef.get());
+		}
 		if (behaviors != null)
 		{
 			dest.behaviors = new ArrayList(behaviors.size());
@@ -429,7 +439,7 @@ public class ComponentTag extends MarkupElement
 	 * @param value
 	 *            The value
 	 */
-	public final void put(String key, boolean value)
+	public final void put(final String key, final boolean value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -441,7 +451,7 @@ public class ComponentTag extends MarkupElement
 	 * @param value
 	 *            The value
 	 */
-	public final void put(String key, int value)
+	public final void put(final String key, final int value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -549,7 +559,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void setOpenTag(final ComponentTag tag)
 	{
-		this.closes = tag;
+		closes = tag;
 		getXmlTag().setOpenTag(tag.getXmlTag());
 	}
 
@@ -706,7 +716,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isModified()
 	{
-		return this.modified;
+		return modified;
 	}
 
 	/**
@@ -758,7 +768,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public Class getMarkupClass()
 	{
-		return (Class)markupClassRef.get();
+		return (markupClassRef == null ? null : (Class)markupClassRef.get());
 	}
 
 	/**
@@ -769,7 +779,14 @@ public class ComponentTag extends MarkupElement
 	 */
 	public void setMarkupClass(Class wicketHeaderClass)
 	{
-		this.markupClassRef = new WeakReference(wicketHeaderClass);
+		if (wicketHeaderClass == null)
+		{
+			markupClassRef = null;
+		}
+		else
+		{
+			markupClassRef = new WeakReference(wicketHeaderClass);
+		}
 	}
 
 	/**
@@ -792,7 +809,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public boolean isIgnore()
 	{
-		return this.ignore;
+		return ignore;
 	}
 
 	/**
@@ -804,5 +821,58 @@ public class ComponentTag extends MarkupElement
 	public void setIgnore(boolean ignore)
 	{
 		this.ignore = ignore;
+	}
+
+	/**
+	 * @return True, if wicket:id has been automatically created (internal
+	 *         component)
+	 */
+	public boolean isAutoComponentTag()
+	{
+		return autoComponent;
+	}
+
+	/**
+	 * @param auto
+	 *            True, if wicket:id has been automatically created (internal
+	 *            component)
+	 */
+	public void setAutoComponentTag(boolean auto)
+	{
+		autoComponent = auto;
+	}
+
+	/**
+	 * Gets userData.
+	 * 
+	 * @param key
+	 *            The key to store and retrieve the value
+	 * @return userData
+	 */
+	public Object getUserData(final String key)
+	{
+		if (userData == null)
+		{
+			return null;
+		}
+
+		return userData.get(key);
+	}
+
+	/**
+	 * Sets userData.
+	 * 
+	 * @param key
+	 *            The key to store and retrieve the value
+	 * @param value
+	 *            The user specific value to store
+	 */
+	public void setUserData(final String key, final Object value)
+	{
+		if (userData == null)
+		{
+			userData = new HashMap();
+		}
+		userData.put(key, value);
 	}
 }

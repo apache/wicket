@@ -111,11 +111,11 @@ public class MarkupParser
 	public MarkupParser(final IXmlPullParser xmlParser, final MarkupResourceStream resource)
 	{
 		this.xmlParser = xmlParser;
-		this.markupSettings = Application.get().getMarkupSettings();
+		markupSettings = Application.get().getMarkupSettings();
 
 		MarkupResourceData markup = new MarkupResourceData();
 		markup.setResource(resource);
-		
+
 		this.markup = new Markup(markup);
 
 		// Initialize the markup filter chain
@@ -130,7 +130,7 @@ public class MarkupParser
 	 */
 	public final void setWicketNamespace(final String namespace)
 	{
-		this.markup.getMarkupResourceData().setWicketNamespace(namespace);
+		markup.getMarkupResourceData().setWicketNamespace(namespace);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class MarkupParser
 	 */
 	protected MarkupResourceStream getMarkupResourceStream()
 	{
-		return this.markup.getMarkupResourceData().getResource();
+		return markup.getMarkupResourceData().getResource();
 	}
 
 	/**
@@ -151,10 +151,10 @@ public class MarkupParser
 	private final void initializeMarkupFilters()
 	{
 		// Chain together all the different markup filters and configure them
-		this.markupFilterChain = xmlParser;
+		markupFilterChain = xmlParser;
 
-		MarkupResourceData markupResourceData = this.markup.getMarkupResourceData();
-		
+		MarkupResourceData markupResourceData = markup.getMarkupResourceData();
+
 		appendMarkupFilter(new WicketTagIdentifier(markupResourceData));
 		appendMarkupFilter(new TagTypeHandler());
 		appendMarkupFilter(new HtmlHandler());
@@ -206,8 +206,6 @@ public class MarkupParser
 	 */
 	public final void appendMarkupFilter(final IMarkupFilter filter)
 	{
-		// PrependContextPathHandler should always be close to the end.
-		// It doesn't have to be last though.
 		appendMarkupFilter(filter, RelativePathPrefixHandler.class);
 	}
 
@@ -225,14 +223,14 @@ public class MarkupParser
 	 */
 	public final void appendMarkupFilter(final IMarkupFilter filter, final Class beforeFilter)
 	{
-		if ((beforeFilter == null) || (this.markupFilterChain == null))
+		if ((beforeFilter == null) || (markupFilterChain == null))
 		{
-			filter.setParent(this.markupFilterChain);
-			this.markupFilterChain = filter;
+			filter.setParent(markupFilterChain);
+			markupFilterChain = filter;
 		}
 		else
 		{
-			IMarkupFilter current = this.markupFilterChain;
+			IMarkupFilter current = markupFilterChain;
 			while (current != null)
 			{
 				if (current.getClass() == beforeFilter)
@@ -246,8 +244,8 @@ public class MarkupParser
 
 			if (current == null)
 			{
-				filter.setParent(this.markupFilterChain);
-				this.markupFilterChain = filter;
+				filter.setParent(markupFilterChain);
+				markupFilterChain = filter;
 			}
 		}
 	}
@@ -261,10 +259,10 @@ public class MarkupParser
 	 */
 	public final Markup parse() throws IOException, ResourceStreamNotFoundException
 	{
-		MarkupResourceData markupResourceData = this.markup.getMarkupResourceData();
-		
+		MarkupResourceData markupResourceData = markup.getMarkupResourceData();
+
 		// Initialize the xml parser
-		this.xmlParser.parse(markupResourceData.getResource().getInputStream(), this.markupSettings
+		xmlParser.parse(markupResourceData.getResource().getInputStream(), markupSettings
 				.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
@@ -274,7 +272,7 @@ public class MarkupParser
 		markupResourceData.setEncoding(xmlParser.getEncoding());
 		markupResourceData.setXmlDeclaration(xmlParser.getXmlDeclaration());
 
-		return this.markup;
+		return markup;
 	}
 
 	/**
@@ -285,7 +283,7 @@ public class MarkupParser
 	 */
 	public ComponentTag getNextTag() throws ParseException
 	{
-		return (ComponentTag)this.markupFilterChain.nextTag();
+		return (ComponentTag)markupFilterChain.nextTag();
 	}
 
 	/**
@@ -295,13 +293,13 @@ public class MarkupParser
 	private void parseMarkup()
 	{
 		// Get relevant settings from the Application
-		final boolean stripComments = this.markupSettings.getStripComments();
-		final boolean compressWhitespace = this.markupSettings.getCompressWhitespace();
+		final boolean stripComments = markupSettings.getStripComments();
+		final boolean compressWhitespace = markupSettings.getCompressWhitespace();
 
 		try
 		{
 			// always remember the latest index (size)
-			int size = this.markup.size();
+			int size = markup.size();
 
 			// Loop through tags
 			ComponentTag tag;
@@ -334,7 +332,7 @@ public class MarkupParser
 
 						// Make sure you add it at the correct location.
 						// IMarkupFilters might have added elements as well.
-						this.markup.addMarkupElement(size, new RawMarkup(rawMarkup));
+						markup.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
 					if (add)
@@ -343,19 +341,19 @@ public class MarkupParser
 						// to be removed from the markup. (e.g. <wicket:remove>
 						if (tag.isIgnore() == false)
 						{
-							this.markup.addMarkupElement(tag);
+							markup.addMarkupElement(tag);
 						}
 					}
 					else if (tag.isModified())
 					{
-						this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+						markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
 
 					xmlParser.setPositionMarker();
 				}
 
 				// always remember the latest index (size)
-				size = this.markup.size();
+				size = markup.size();
 			}
 		}
 		catch (final ParseException ex)
@@ -364,14 +362,14 @@ public class MarkupParser
 			final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
 			if (text.length() > 0)
 			{
-				this.markup.addMarkupElement(new RawMarkup(text));
+				markup.addMarkupElement(new RawMarkup(text));
 			}
 
-			this.markup.getMarkupResourceData().setEncoding(xmlParser.getEncoding());
-			this.markup.getMarkupResourceData().setXmlDeclaration(xmlParser.getXmlDeclaration());
+			markup.getMarkupResourceData().setEncoding(xmlParser.getEncoding());
+			markup.getMarkupResourceData().setXmlDeclaration(xmlParser.getXmlDeclaration());
 
-			final MarkupStream markupStream = new MarkupStream(this.markup);
-			markupStream.setCurrentIndex(this.markup.size() - 1);
+			final MarkupStream markupStream = new MarkupStream(markup);
+			markupStream.setCurrentIndex(markup.size() - 1);
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
 
@@ -393,13 +391,13 @@ public class MarkupParser
 
 			// Make sure you add it at the correct location.
 			// IMarkupFilters might have added elements as well.
-			this.markup.addMarkupElement(new RawMarkup(rawMarkup));
+			markup.addMarkupElement(new RawMarkup(rawMarkup));
 		}
 
 		// Make all tags immutable and the list of elements unmodifable
-		this.markup.makeImmutable();
+		markup.makeImmutable();
 	}
-	
+
 	/**
 	 * Remove whitespaces from the raw markup
 	 * 

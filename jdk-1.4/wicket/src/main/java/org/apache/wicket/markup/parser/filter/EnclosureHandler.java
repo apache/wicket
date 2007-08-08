@@ -90,49 +90,49 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 			// If open tag, than put the tag onto the stack
 			if (tag.isOpen())
 			{
-				if (this.stack == null)
+				if (stack == null)
 				{
-					this.stack = new Stack/* <ComponentTag> */();
+					stack = new Stack/* <ComponentTag> */();
 				}
-				this.stack.push(tag);
+				stack.push(tag);
 			}
 			// If close tag, than remove the tag from the stack and update
 			// the child attribute of the open tag if required
 			else if (tag.isClose())
 			{
-				if (this.stack == null)
+				if (stack == null)
 				{
 					throw new ParseException("Missing open tag for Enclosure: " + tag.toString(),
 							tag.getPos());
 				}
 
 				// Remove the open tag from the stack
-				ComponentTag lastEnclosure = (ComponentTag)this.stack.pop();
+				ComponentTag lastEnclosure = (ComponentTag)stack.pop();
 
 				// If the child attribute has not been given by the user,
 				// than ...
-				if (this.childId != null)
+				if (childId != null)
 				{
-					lastEnclosure.put(CHILD_ATTRIBUTE, this.childId);
+					lastEnclosure.put(CHILD_ATTRIBUTE, childId);
 					lastEnclosure.setModified(true);
-					this.childId = null;
+					childId = null;
 				}
 
-				if (this.stack.size() == 0)
+				if (stack.size() == 0)
 				{
-					this.stack = null;
+					stack = null;
 				}
 			}
 			else
 			{
-				throw new ParseException("Open-close tag not allowed for Enclosure: "
-						+ tag.toString(), tag.getPos());
+				throw new ParseException("Open-close tag not allowed for Enclosure: " +
+						tag.toString(), tag.getPos());
 			}
 		}
 		// Are we inside a wicket:enclosure tag?
 		else if ((tag.getId() != null) && (isWicketTag == false) && (stack != null))
 		{
-			ComponentTag lastEnclosure = (ComponentTag)this.stack.lastElement();
+			ComponentTag lastEnclosure = (ComponentTag)stack.lastElement();
 
 			// If the enclosure tag has NO child attribute, than ...
 			if (lastEnclosure.getString(CHILD_ATTRIBUTE) == null)
@@ -141,7 +141,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 				// the enclosure and are not able to automatically
 				// determine the child component to delegate the
 				// isVisible() to => Exception
-				if (this.childId != null)
+				if (childId != null)
 				{
 					throw new ParseException(
 							"Use <wicket:enclosure child='xxx'> to name the child component", tag
@@ -149,7 +149,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 				}
 				// Remember the child id. The open tag will be updated
 				// once the close tag is found. See above.
-				this.childId = tag.getId();
+				childId = tag.getId();
 			}
 		}
 

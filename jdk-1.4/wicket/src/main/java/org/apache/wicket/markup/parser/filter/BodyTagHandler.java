@@ -64,6 +64,8 @@ public final class BodyTagHandler extends AbstractMarkupFilter
 			if (tag.getId() == null)
 			{
 				tag.setId(HtmlBodyContainer.BODY_ID);
+				tag.setAutoComponentTag(true);
+				tag.setModified(true);
 			}
 		}
 

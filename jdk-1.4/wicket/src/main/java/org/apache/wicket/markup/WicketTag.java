@@ -64,7 +64,7 @@ public class WicketTag extends ComponentTag
 	 */
 	public final String getNameAttribute()
 	{
-		return this.getAttributes().getString("name");
+		return getAttributes().getString("name");
 	}
 
 	/**
@@ -188,6 +188,7 @@ public class WicketTag extends ComponentTag
 		{
 			final WicketTag tag = new WicketTag(xmlTag.mutable());
 			tag.setId(getId());
+			tag.setAutoComponentTag(isAutoComponentTag());
 			return tag;
 		}
 	}

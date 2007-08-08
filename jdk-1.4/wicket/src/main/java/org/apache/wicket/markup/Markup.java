@@ -75,25 +75,7 @@ public class Markup
 	Markup(final MarkupResourceData markupResourceData)
 	{
 		this.markupResourceData = markupResourceData;
-		this.markupElements = new ArrayList();
-	}
-
-	/**
-	 * @return String representation of markup list
-	 */
-	public final String toString()
-	{
-		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
-		buf.append(this.markupResourceData.toString());
-		buf.append("\n");
-
-		final Iterator iter = this.markupElements.iterator();
-		while (iter.hasNext())
-		{
-			buf.append(iter.next());
-		}
-
-		return buf.toString();
+		markupElements = new ArrayList();
 	}
 
 	/**
@@ -117,7 +99,7 @@ public class Markup
 	 */
 	public final MarkupResourceData getMarkupResourceData()
 	{
-		return this.markupResourceData;
+		return markupResourceData;
 	}
 
 	/**
@@ -139,7 +121,7 @@ public class Markup
 	 */
 	final public void addMarkupElement(final MarkupElement markupElement)
 	{
-		this.markupElements.add(markupElement);
+		markupElements.add(markupElement);
 	}
 
 	/**
@@ -150,7 +132,7 @@ public class Markup
 	 */
 	final public void addMarkupElement(final int pos, final MarkupElement markupElement)
 	{
-		this.markupElements.add(pos, markupElement);
+		markupElements.add(pos, markupElement);
 	}
 
 	/**
@@ -158,9 +140,9 @@ public class Markup
 	 */
 	final void makeImmutable()
 	{
-		for (int i = 0; i < this.markupElements.size(); i++)
+		for (int i = 0; i < markupElements.size(); i++)
 		{
-			MarkupElement elem = (MarkupElement)this.markupElements.get(i);
+			MarkupElement elem = (MarkupElement)markupElements.get(i);
 			if (elem instanceof ComponentTag)
 			{
 				// Make the tag immutable
@@ -168,70 +150,9 @@ public class Markup
 			}
 		}
 
-		this.markupElements = Collections.unmodifiableList(this.markupElements);
-		
+		markupElements = Collections.unmodifiableList(markupElements);
 		initialize();
 	}
-
-	/**
-	 * Reset the markup to its defaults, except for the wicket namespace which
-	 * remains unchanged.
-	 */
-	final void reset()
-	{
-		this.markupElements = new ArrayList();
-	}
-//
-//	/**
-//	 * Create an iterator for the markup elements
-//	 * 
-//	 * @return Iterator
-//	 */
-//	public final Iterator iterator()
-//	{
-//		return iterator(0, null);
-//	}
-//
-//	/**
-//	 * Create an iterator for the tags being an istance of 'matchClass'
-//	 * 
-//	 * @param startIndex
-//	 *            The index to start with
-//	 * @param matchClass
-//	 *            Iterate over elements matching the class
-//	 * @return Iterator
-//	 */
-//	public final Iterator iterator(final int startIndex, final Class matchClass)
-//	{
-//		return new Iterator()
-//		{
-//			int index = startIndex - 1;
-//
-//			public boolean hasNext()
-//			{
-//				while (++index < size())
-//				{
-//					MarkupElement element = get(index);
-//					if ((matchClass == null) || matchClass.isInstance(element))
-//					{
-//						return true;
-//					}
-//				}
-//				return false;
-//			}
-//
-//			public Object next()
-//			{
-//				return get(index);
-//			}
-//
-//			public void remove()
-//			{
-//				markupElements.remove(index);
-//				index -= 1;
-//			}
-//		};
-//	}
 
 	/**
 	 * Add the tag to the local cache if open or open-close and if wicket:id is
@@ -243,12 +164,13 @@ public class Markup
 	private void addToCache(final int index, final ComponentTag tag)
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
-		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(getMarkupResourceData().getWicketId()))
+		if ((tag.isOpen() || tag.isOpenClose()) &&
+				tag.getAttributes().containsKey(getMarkupResourceData().getWicketId()))
 		{
 			// Add the tag to the cache
-			if (this.componentMap == null)
+			if (componentMap == null)
 			{
-				this.componentMap = new HashMap();
+				componentMap = new HashMap();
 			}
 
 			/*
@@ -268,7 +190,7 @@ public class Markup
 			{
 				key = tag.getId();
 			}
-			this.componentMap.put(key, new Integer(index));
+			componentMap.put(key, new Integer(index));
 		}
 	}
 
@@ -284,7 +206,8 @@ public class Markup
 			final ComponentTag tag)
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
-		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(markupResourceData.getWicketId()))
+		if ((tag.isOpen() || tag.isOpenClose()) &&
+				tag.getAttributes().containsKey(markupResourceData.getWicketId()))
 		{
 			// With open-close the path does not change. It can/will not have
 			// children. The same is true for HTML tags like <br> or <img>
@@ -292,65 +215,51 @@ public class Markup
 			if (tag.isOpenClose() || tag.hasNoCloseTag())
 			{
 				// Set the components path.
-				if ((this.currentPath != null) && (this.currentPath.length() > 0))
+				if ((currentPath != null) && (currentPath.length() > 0))
 				{
-					tag.setPath(this.currentPath.toString());
+					tag.setPath(currentPath.toString());
 				}
 			}
 			else
 			{
 				// Set the components path.
-				if (this.currentPath == null)
+				if (currentPath == null)
 				{
-					this.currentPath = new StringBuffer(100);
+					currentPath = new StringBuffer(100);
 				}
-				else if (this.currentPath.length() > 0)
+				else if (currentPath.length() > 0)
 				{
-					tag.setPath(this.currentPath.toString());
-					this.currentPath.append(':');
+					tag.setPath(currentPath.toString());
+					currentPath.append(':');
 				}
 
 				// .. and append the tags id to the component path for the
 				// children to come
-				this.currentPath.append(tag.getId());
+				currentPath.append(tag.getId());
 			}
 		}
-		else if (tag.isClose() && (this.currentPath != null))
+		else if (tag.isClose() && (currentPath != null))
 		{
 			// For example <wicket:message> does not have an id
-			if ((tag.getOpenTag() == null)
-					|| tag.getOpenTag().getAttributes().containsKey(markupResourceData.getWicketId()))
+			if ((tag.getOpenTag() == null) ||
+					tag.getOpenTag().getAttributes().containsKey(markupResourceData.getWicketId()))
 			{
 				// Remove the last element from the component path
-				int index = this.currentPath.lastIndexOf(":");
+				int index = currentPath.lastIndexOf(":");
 				if (index != -1)
 				{
-					this.currentPath.setLength(index);
+					currentPath.setLength(index);
 				}
 				else
 				{
-					this.currentPath.setLength(0);
+					currentPath.setLength(0);
 				}
 			}
 		}
 
-		return this.currentPath;
+		return currentPath;
 	}
-//
-//	/**
-//	 * Create an iterator for the component tags in the markup.
-//	 * 
-//	 * @param startIndex
-//	 *            The index to start with
-//	 * @param matchClass
-//	 *            Iterate over elements matching the class
-//	 * @return ComponentTagIterator
-//	 */
-//	public Iterator componentTagIterator(final int startIndex, final Class matchClass)
-//	{
-//		return iterator(startIndex, matchClass);
-//	}
-	
+
 	/**
 	 * Find the markup element index of the component with 'path'
 	 * 
@@ -383,13 +292,13 @@ public class Markup
 		completePath = matcher.replaceAll("");
 
 		// All component tags are registered with the cache
-		if (this.componentMap == null)
+		if (componentMap == null)
 		{
 			// not found
 			return -1;
 		}
 
-		final Integer value = (Integer)this.componentMap.get(completePath);
+		final Integer value = (Integer)componentMap.get(completePath);
 		if (value == null)
 		{
 			// not found
@@ -420,7 +329,7 @@ public class Markup
 	protected void initialize()
 	{
 		// Reset
-		this.componentMap = null;
+		componentMap = null;
 
 		if (markupElements != null)
 		{
@@ -447,6 +356,24 @@ public class Markup
 
 		// The variable is only needed while adding markup elements.
 		// initialize() is invoked after all elements have been added.
-		this.currentPath = null;
+		currentPath = null;
+	}
+
+	/**
+	 * @return String representation of markup list
+	 */
+	public final String toString()
+	{
+		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
+		buf.append(markupResourceData.toString());
+		buf.append("\n");
+
+		final Iterator iter = markupElements.iterator();
+		while (iter.hasNext())
+		{
+			buf.append(iter.next());
+		}
+
+		return buf.toString();
 	}
 }

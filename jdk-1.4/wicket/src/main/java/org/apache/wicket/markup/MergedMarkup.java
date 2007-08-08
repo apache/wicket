@@ -359,6 +359,7 @@ public class MergedMarkup extends Markup
 				headOpenTag.setType(XmlTag.OPEN);
 				final ComponentTag openTag = new ComponentTag(headOpenTag);
 				openTag.setId(HtmlHeaderSectionHandler.HEADER_ID);
+				openTag.setAutoComponentTag(true);
 
 				final XmlTag headCloseTag = new XmlTag();
 				headCloseTag.setName(headOpenTag.getName());

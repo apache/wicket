@@ -26,6 +26,7 @@ import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
@@ -34,12 +35,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The purpose of this filter is to make all "href", "src" and "background" src
+ * The purpose of this filter is to make all "href", "src" and "background"
  * attributes found in the markup which contain a relative URL like
  * "myDir/myPage.gif" actually resolve in the output HTML, by prefixing them
  * with with an appropriate path to make the link work properly, even if the
  * current page is being displayed at a mounted URL or whatever. It is applied
- * to all non wicket component tags' attributes.
+ * to all non wicket component tags, except for auto-linked tags.
  * 
  * It achieves this by being both an IMarkupFilter and IComponentResolver, and
  * works similarly to the &lt;wicket:message&gt; code. For each tag, we look to
@@ -65,7 +66,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	 * The id automatically assigned to tags without an id which we need to
 	 * prepend a relative path to.
 	 */
-	public static final String WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID = "-relative_path_prefix";
+	public static final String WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID = "_relative_path_prefix_";
 
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src", "background" };
@@ -93,7 +94,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 				{
 					if (prefix == null)
 					{
-						prefix = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot();
+						prefix = RequestCycle.get().getRequest()
+								.getRelativePathPrefixToContextRoot();
 					}
 					attrValue = prefix + attrValue;
 					tag.getAttributes().put(attrName, attrValue);
@@ -121,7 +123,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		}
 
 		// Don't touch any wicket:id component and any auto-components
-		if ((tag.getId() != null) && (tag.getId().startsWith("-") == false))
+		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true) ||
+				(tag.getAttributes().get("wicket:id") != null))
 		{
 			return tag;
 		}
@@ -135,7 +138,11 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
 					(attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 			{
-				tag.setId(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID);
+				if (tag.getId() == null)
+				{
+					tag.setId(WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID);
+					tag.setAutoComponentTag(true);
+				}
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
 				tag.setModified(true);
 				break;
@@ -147,7 +154,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 	/**
 	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer, org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream,
+	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{

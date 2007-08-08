@@ -25,9 +25,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because
- * autolinks are already detected and handled, the only task of this
- * resolver will be to add a "transparent" WebMarkupContainer to 
- * transparently handling child components. 
+ * autolinks are already detected and handled, the only task of this resolver
+ * will be to add a "transparent" WebMarkupContainer to transparently handling
+ * child components.
  * 
  * @author Juergen Donnerstag
  */
@@ -39,8 +39,8 @@ public class WicketLinkResolver implements IComponentResolver
 	 * Try to resolve the tag, then create a component, add it to the container
 	 * and render it.
 	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
-	 *      ComponentTag)
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
+	 *      MarkupStream, ComponentTag)
 	 * 
 	 * @param container
 	 *            The container parsing its markup
@@ -55,25 +55,25 @@ public class WicketLinkResolver implements IComponentResolver
 	{
 		if (tag instanceof WicketTag)
 		{
-			WicketTag wtag = (WicketTag) tag;
+			WicketTag wtag = (WicketTag)tag;
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
-				final String id = "_link_" + container.getPage().getAutoIndex();
+				final String id = tag.getId() + container.getPage().getAutoIndex();
 				final Component component = new WebMarkupContainer(id)
-					{
-						private static final long serialVersionUID = 1L;
+				{
+					private static final long serialVersionUID = 1L;
 
-						/**
-						 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
-						 */
-						public boolean isTransparentResolver()
-						{
-							return true;
-						}
-					};
-				
+					/**
+					 * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
+					 */
+					public boolean isTransparentResolver()
+					{
+						return true;
+					}
+				};
+
 				container.autoAdd(component, markupStream);
-	
+
 				// Yes, we handled the tag
 				return true;
 			}

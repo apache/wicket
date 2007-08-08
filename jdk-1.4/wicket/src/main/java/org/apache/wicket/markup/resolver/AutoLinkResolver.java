@@ -141,14 +141,14 @@ public final class AutoLinkResolver implements IComponentResolver
 
 		private final String anchor;
 
-		/** 
-		 * When using <wicket:link> to let Wicket lookup for pages and create 
+		/**
+		 * When using <wicket:link> to let Wicket lookup for pages and create
 		 * the related links, it's not possible to change the "setAutoEnable"
-		 * property, which defaults to true. This affects the prototype 
-		 * because, sometimes designers _want_ links to be enabled.
+		 * property, which defaults to true. This affects the prototype because,
+		 * sometimes designers _want_ links to be enabled.
 		 */
 		public static boolean autoEnable = true;
-		
+
 		/**
 		 * Construct
 		 * 
@@ -219,9 +219,9 @@ public final class AutoLinkResolver implements IComponentResolver
 
 	/**
 	 * Encapsulates different aspects of a path. For instance, the path
-	 * <code>org.apache.wicket.markup.html.tree.Tree/tree.css</code> has extension
-	 * <code>css</code>, is relative (absolute == true) and has no page
-	 * parameters.
+	 * <code>org.apache.wicket.markup.html.tree.Tree/tree.css</code> has
+	 * extension <code>css</code>, is relative (absolute == true) and has no
+	 * page parameters.
 	 */
 	public static final class PathInfo
 	{
@@ -270,7 +270,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				infoPath = reference;
 			}
 
-			this.absolute = (infoPath.startsWith("/") || infoPath.startsWith("\\"));
+			absolute = (infoPath.startsWith("/") || infoPath.startsWith("\\"));
 
 			// remove file extension, but remember it
 			String extension = null;
@@ -292,7 +292,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				}
 			}
 
-			this.path = infoPath;
+			path = infoPath;
 			this.extension = extension;
 			this.anchor = anchor;
 		}
@@ -394,8 +394,8 @@ public final class AutoLinkResolver implements IComponentResolver
 		public Component newAutoComponent(final MarkupContainer container, final String autoId,
 				PathInfo pathInfo)
 		{
-			if ((pathInfo.extension != null)
-					&& supportedPageExtensions.contains(pathInfo.extension))
+			if ((pathInfo.extension != null) &&
+					supportedPageExtensions.contains(pathInfo.extension))
 			{
 				// Obviously a href like href="myPkg.MyLabel.html" will do as
 				// well. Wicket will not throw an exception. It accepts it.
@@ -433,8 +433,8 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				// Make sure base markup pages (inheritance) are handled correct
 				MarkupContainer parentWithContainer = container.findParentWithAssociatedMarkup();
-				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
-						&& page.getMarkupStream().isMergedMarkup())
+				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".") &&
+						page.getMarkupStream().isMergedMarkup())
 				{
 					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
 					if (clazz != null)
@@ -690,7 +690,6 @@ public final class AutoLinkResolver implements IComponentResolver
 	 */
 	public AutoLinkResolver()
 	{
-
 		// register tag reference resolvers
 		TagReferenceResolver hrefTagReferenceResolver = new TagReferenceResolver("href");
 		TagReferenceResolver srcTagReferenceResolver = new TagReferenceResolver("src");
@@ -813,6 +812,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		if (tag.getId() == null)
 		{
 			tag.setId(autoId);
+			tag.setAutoComponentTag(true);
 		}
 
 		// get the reference resolver

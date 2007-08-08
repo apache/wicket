@@ -43,21 +43,23 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	private static final String HEAD = "head";
 
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
-	public static final String HEADER_ID = "-header";
+	public static final String HEADER_ID = "_header_";
 
 	/** True if <head> has been found already */
 	private boolean foundHead = false;
 
 	/** True if all the rest of the markup file can be ignored */
 	private boolean ignoreTheRest = false;
-	
+
 	/** The Markup available so far for the resource */
 	private final Markup markup;
-	
+
 	/**
 	 * Construct.
 	 * 
-	 * @param markup The Markup object being filled while reading the markup resource
+	 * @param markup
+	 *            The Markup object being filled while reading the markup
+	 *            resource
 	 */
 	public HtmlHeaderSectionHandler(final Markup markup)
 	{
@@ -102,11 +104,13 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 				else if (tag.getId() == null)
 				{
 					tag.setId(HEADER_ID);
+					tag.setAutoComponentTag(true);
+					tag.setModified(true);
 				}
-	
+
 				return tag;
 			}
-			else 
+			else
 			{
 				// we found <wicket:head>
 				foundHead = true;
@@ -137,12 +141,15 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		// Note: only the open-tag must be a AutoComponentTag
 		final ComponentTag openTag = new ComponentTag(HEAD, XmlTag.OPEN);
 		openTag.setId(HEADER_ID);
-		
+		openTag.setAutoComponentTag(true);
+		openTag.setModified(true);
+
 		final ComponentTag closeTag = new ComponentTag(HEAD, XmlTag.CLOSE);
 		closeTag.setOpenTag(openTag);
+		closeTag.setModified(true);
 
 		// insert the tags into the markup stream
-		this.markup.addMarkupElement(openTag);
-		this.markup.addMarkupElement(closeTag);
+		markup.addMarkupElement(openTag);
+		markup.addMarkupElement(closeTag);
 	}
 }

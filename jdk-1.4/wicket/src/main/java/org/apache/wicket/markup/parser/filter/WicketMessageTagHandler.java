@@ -60,7 +60,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * The id automatically assigned to tags with wicket:message attribute but
 	 * without id
 	 */
-	public final static String WICKET_MESSAGE_CONTAINER_ID = "-message_attr";
+	public final static String WICKET_MESSAGE_CONTAINER_ID = "_message_attr_";
 
 	/** singleton instance of {@link AttributeLocalizer} */
 	public static final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
@@ -83,7 +83,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		// Get the next tag from the next MarkupFilter in the chain
 		// If null, no more tags are available
 		final ComponentTag tag = nextComponentTag();
-		if (tag == null)
+		if ((tag == null) || tag.isClose())
 		{
 			return tag;
 		}
@@ -100,6 +100,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				// that wicket will not merge this as raw markup and instead
 				// pass it on to a resolver
 				tag.setId(WICKET_MESSAGE_CONTAINER_ID);
+				tag.setAutoComponentTag(true);
+				tag.setModified(true);
 			}
 			tag.addBehavior(new AttributeLocalizer());
 		}
@@ -138,8 +140,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 					if (attrAndKey.length() < 3 || colon < 1 || colon > attrAndKey.length() - 2)
 					{
 						throw new WicketRuntimeException(
-								"wicket:message attribute contains an invalid value [[" + expr
-										+ "]], must be of form (attr:key)+");
+								"wicket:message attribute contains an invalid value [[" + expr +
+										"]], must be of form (attr:key)+");
 					}
 
 					String attr = attrAndKey.substring(0, colon);
@@ -164,7 +166,9 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 
 	/**
 	 * 
-	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer, org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
+	 *      org.apache.wicket.markup.MarkupStream,
+	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
@@ -175,15 +179,15 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 			Component wc = null;
 			if (tag.isOpenClose())
 			{
-				wc = new WebComponent(WICKET_MESSAGE_CONTAINER_ID
-						+ container.getPage().getAutoIndex());
+				wc = new WebComponent(WICKET_MESSAGE_CONTAINER_ID +
+						container.getPage().getAutoIndex());
 			}
 			else
 			{
-				wc = new WebMarkupContainer(WICKET_MESSAGE_CONTAINER_ID
-						+ container.getPage().getAutoIndex());
+				wc = new WebMarkupContainer(WICKET_MESSAGE_CONTAINER_ID +
+						container.getPage().getAutoIndex());
 			}
-			
+
 			container.autoAdd(wc, markupStream);
 			return true;
 		}

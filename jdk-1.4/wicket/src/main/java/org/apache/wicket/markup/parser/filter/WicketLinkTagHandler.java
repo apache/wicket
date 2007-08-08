@@ -62,7 +62,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 	/** Current status */
 	private boolean autolinking = true;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -79,7 +79,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	 */
 	public void setAutomaticLinking(final boolean enable)
 	{
-		this.autolinking = enable;
+		autolinking = enable;
 	}
 
 	/**
@@ -104,9 +104,9 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 		// considered for autolinking. This is because it is assumed that Wicket
 		// components like images or all other kind of Wicket Links will handle
 		// it themselves.
-		// Subclass analyzeAutolinkCondition() to implement you own implementation
-		// and register the new tag handler with the markup parser through
-		// Application.newMarkupParser().
+		// Subclass analyzeAutolinkCondition() to implement you own
+		// implementation and register the new tag handler with the markup
+		// parser through Application.newMarkupParser().
 		if ((autolinking == true) && (analyzeAutolinkCondition(tag) == true))
 		{
 			// Mark it as autolink enabled
@@ -114,6 +114,8 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 			// Just a dummy name. The ComponentTag will not be forwarded.
 			tag.setId(AUTOLINK_ID);
+			tag.setAutoComponentTag(true);
+			tag.setModified(true);
 			return tag;
 		}
 
@@ -147,7 +149,8 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					}
 					catch (StringValueConversionException e)
 					{
-						throw new WicketRuntimeException("Invalid autolink attribute value \"" + autolink + "\"");
+						throw new WicketRuntimeException("Invalid autolink attribute value \"" +
+								autolink + "\"");
 					}
 				}
 				else if (tag.isClose())
@@ -162,7 +165,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 		return tag;
 	}
-	
+
 	/**
 	 * Analyze the tag. If return value == true, a autolink component will be
 	 * created.
@@ -195,6 +198,11 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param ref
+	 * @return
+	 */
 	private final boolean checkRef(String ref)
 	{
 		return (ref != null) && (ref.indexOf(":") == -1);
