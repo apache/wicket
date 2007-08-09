@@ -183,7 +183,10 @@ public abstract class AbstractPropertyModel
 		Object object = target;
 		while (object instanceof IModel)
 		{
-			object = ((IModel)object).getObject();
+			Object tmp = ((IModel)object).getObject();
+			if (tmp == object)
+				break;
+			object = tmp;
 		}
 		return object;
 	}
