@@ -149,7 +149,7 @@ abstract class AbstractChoice extends FormComponent
 	public AbstractChoice(final String id, final IModel choices, final IChoiceRenderer renderer)
 	{
 		super(id);
-		this.choices = choices;
+		this.choices = wrap(choices);
 		setChoiceRenderer(renderer);
 	}
 
@@ -186,7 +186,7 @@ abstract class AbstractChoice extends FormComponent
 			final IChoiceRenderer renderer)
 	{
 		super(id, model);
-		this.choices = choices;
+		this.choices = wrap(choices);
 		setChoiceRenderer(renderer);
 	}
 
@@ -222,7 +222,7 @@ abstract class AbstractChoice extends FormComponent
 				addStateChange(new ChoicesListChange());
 			}
 		}
-		this.choices = choices;
+		this.choices = wrap(choices);
 		return this;
 	}
 
@@ -309,8 +309,9 @@ abstract class AbstractChoice extends FormComponent
 	protected abstract boolean isSelected(final Object object, int index, String selected);
 
 	/**
-	 * Gets whether the given value is disabled.  This default implementation always returns false.
-	 *
+	 * Gets whether the given value is disabled. This default implementation
+	 * always returns false.
+	 * 
 	 * @param object
 	 *            The object to check
 	 * @param index
@@ -320,18 +321,19 @@ abstract class AbstractChoice extends FormComponent
 	 * @return Whether the given value represents the current selection
 	 */
 	protected boolean isDisabled(final Object object, int index, String selected)
-    {
-        return false;
-    }
+	{
+		return false;
+	}
 
-    /**
+	/**
 	 * Handle the container's body.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream,
+	 *      ComponentTag)
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -449,8 +451,8 @@ abstract class AbstractChoice extends FormComponent
 		 */
 		public String toString()
 		{
-			return "ChoiceListChange[component: " + getPath() + ", old choices: " + oldChoices
-					+ "]";
+			return "ChoiceListChange[component: " + getPath() + ", old choices: " + oldChoices +
+					"]";
 		}
 
 
