@@ -74,8 +74,8 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		if (obj instanceof ResourceStreamRequestTarget)
 		{
 			ResourceStreamRequestTarget that = (ResourceStreamRequestTarget)obj;
-			return resourceStream.equals(that.resourceStream)
-					&& ((fileName != null) ? fileName.equals(that.fileName) : true);
+			return resourceStream.equals(that.resourceStream) &&
+					((fileName != null) ? fileName.equals(that.fileName) : true);
 		}
 		return false;
 	}
@@ -128,7 +128,8 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
-			requestCycle.setRequestTarget(new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND));
+			requestCycle.setRequestTarget(new WebErrorCodeResponseTarget(
+					HttpServletResponse.SC_NOT_FOUND));
 		}
 	}
 
@@ -136,7 +137,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 * @param fileName
 	 *            Optional filename, used to set the content disposition header.
 	 *            Only meaningful when using with web requests.
-	 *            
+	 * 
 	 * @return The this.
 	 */
 	public ResourceStreamRequestTarget setFileName(String fileName)
@@ -150,8 +151,8 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "[ResourceStreamRequestTarget[resourceStream=" + resourceStream + ",fileName="
-				+ fileName + "]";
+		return "[ResourceStreamRequestTarget[resourceStream=" + resourceStream + ",fileName=" +
+				fileName + "]";
 	}
 
 	/**
@@ -164,11 +165,13 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 * @param resourceStream
 	 *            the resource stream that will be rendered
 	 */
-	protected void configure(final RequestCycle requestCycle, final Response response, final IResourceStream resourceStream)
+	protected void configure(final RequestCycle requestCycle, final Response response,
+			final IResourceStream resourceStream)
 	{
 		// Configure response with content type of resource, if available
 		String responseType = resourceStream.getContentType();
-		if (responseType != null) {
+		if (responseType != null)
+		{
 			response.setContentType(responseType + "; charset=" + response.getCharacterEncoding());
 		}
 		else
@@ -185,10 +188,11 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 		}
 
 		// WICKET-473 Allow IResourceStream.length() to return -1
-		if (resourceStream.length() >= 0)
+		long len = resourceStream.length();
+		if (len >= 0)
 		{
 			// and the content length
-			response.setContentLength(resourceStream.length());
+			response.setContentLength(len);
 		}
 
 		// and content disposition if any
