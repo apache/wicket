@@ -25,7 +25,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
+import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
@@ -114,14 +116,8 @@ import org.slf4j.LoggerFactory;
  * an instance of UndoPageVersionManager, which manages versions of a page by
  * keeping change records that can be reversed at a later time.
  * 
- * <li><b>Security </b>- Pages can be secured by overriding checkAccess(). If
- * checkAccess() returns ACCESS_ALLOWED (true), then onRender() will render the
- * page. If it returns false (ACCESS_DENIED), then onRender() will not render
- * the page. Besides returning true or false, an implementation of checkAccess()
- * may also choose to send the user to another page with
- * Component.setResponsePage() or Component.redirectToInterceptPage(). This can
- * be used to allow a user to authenticate themselves if they were denied
- * access.
+ * <li><b>Security </b>- See {@link IAuthorizationStrategy},
+ * {@link SimplePageAuthorizationStrategy}
  * 
  * @see org.apache.wicket.markup.html.WebPage
  * @see org.apache.wicket.MarkupContainer
@@ -462,7 +458,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final short getAutoIndex()
 	{
-		return this.autoIndex++;
+		return autoIndex++;
 	}
 
 	/**
@@ -538,7 +534,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final long getSizeInBytes()
 	{
-		this.pageMap = null;
+		pageMap = null;
 		return Objects.sizeof(this);
 	}
 
@@ -857,7 +853,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		renderedComponents = null;
 
 		// Reset it to stateless so that it can be tested again
-		this.stateless = null;
+		stateless = null;
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
@@ -985,7 +981,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void setNumericId(final int id)
 	{
-		this.numericId = (short)id;
+		numericId = (short)id;
 	}
 
 	/**
@@ -1507,7 +1503,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		this.pageMap = pageMap;
 
 		// Save name for restoring transient
-		this.pageMapName = pageMap.getName();
+		pageMapName = pageMap.getName();
 	}
 
 	/**
