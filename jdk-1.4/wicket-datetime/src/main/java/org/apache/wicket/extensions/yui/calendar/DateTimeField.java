@@ -51,7 +51,7 @@ import org.joda.time.MutableDateTime;
 public class DateTimeField extends FormComponentPanel
 {
 	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
-	
+
 	/**
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
@@ -226,7 +226,7 @@ public class DateTimeField extends FormComponentPanel
 		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
 		hoursField.setLabel(new Model("hours"));
-        add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
+		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
 				Integer.class)
 		{
 			private static final long serialVersionUID = 1L;
@@ -353,5 +353,18 @@ public class DateTimeField extends FormComponentPanel
 		}
 
 		super.onBeforeRender();
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#getInput()
+	 */
+	public String getInput()
+	{
+		// FIXME figure out how to remove this hack. currently required check is
+		// not overridable and fails if input is empty - which it is for
+		// formcomponentpanels
+
+		// hack to make required check not freak out
+		return "hack";
 	}
 }
