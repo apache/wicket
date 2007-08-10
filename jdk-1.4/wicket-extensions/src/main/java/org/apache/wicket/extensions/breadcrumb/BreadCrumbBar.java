@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -196,61 +195,18 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	private final BreadCrumbModelListenerSupport listenerSupport = new BreadCrumbModelListenerSupport();
 
 	/**
-	 * Construct. Adds the default style.
+	 * Construct.
 	 * 
 	 * @param id
 	 *            Component id
 	 */
 	public BreadCrumbBar(String id)
 	{
-		this(id, true);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 *            Component id
-	 * @param addDefaultCssStyle
-	 *            Whether the {@link #addDefaultCssStyle() default style} should
-	 *            be added *
-	 * @deprecated As of 1.2.1 calling this method with addDefaultCssStyle ==
-	 *             true doesn't add any style anymore. Use your own markup file
-	 *             or
-	 *             {@link HeaderContributor#forCss(Class, String) css header contribution}
-	 *             if you want a different style/ look. The default
-	 *             implementation doesn't use unnumbered lists anymore because
-	 *             of the issues described <a
-	 *             href="http://tagsoup.com/-dev/null-/css/list/indent/">here</a>
-	 *             This method will be removed in 2.0
-	 */
-	public BreadCrumbBar(String id, boolean addDefaultCssStyle)
-	{
 		super(id);
-
 		BreadCrumbsListView breadCrumbsListView = new BreadCrumbsListView("crumbs");
 		addListener(breadCrumbsListView);
 		add(breadCrumbsListView);
 	}
-
-	/**
-	 * Will let the bread crumb bar contribute a CSS include to the page's
-	 * header. It will add BreadCrumbBar.css from this package. This method is
-	 * typically called by the class that creates the bread crumb bar.
-	 * 
-	 * @deprecated As of 1.2.1 calling this method is a no-op. Use your own
-	 *             markup file or
-	 *             {@link HeaderContributor#forCss(Class, String) css header contribution}
-	 *             if you want a different style/ look. The default
-	 *             implementation doesn't use unnumbered lists anymore because
-	 *             of the issues described <a
-	 *             href="http://tagsoup.com/-dev/null-/css/list/indent/">here</a>
-	 *             This method will be removed in 2.0
-	 */
-	public final void addDefaultCssStyle()
-	{
-	}
-
 
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
