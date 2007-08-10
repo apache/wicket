@@ -1924,7 +1924,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			throw new IllegalArgumentException("Argument `behavior` cannot be null");
 		}
-		if (behaviors == null || !behaviors.contains(behavior))
+		if (!behaviors.contains(behavior))
 		{
 			throw new IllegalStateException(
 					"Tried to remove a behavior that was not added to the component. Behavior: " +
