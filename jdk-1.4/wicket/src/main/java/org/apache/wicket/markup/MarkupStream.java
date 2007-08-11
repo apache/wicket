@@ -124,19 +124,6 @@ public final class MarkupStream
 	{
 		return current instanceof ComponentTag;
 	}
-//
-//	/**
-//	 * Create an iterator for the component tags in the stream.
-//	 * <p>
-//	 * Note: it will not modify the current index of the underlying markup
-//	 * stream
-//	 * 
-//	 * @return ComponentTagIterator
-//	 */
-//	public final Iterator componentTagIterator()
-//	{
-//		return markup.componentTagIterator(0, ComponentTag.class);
-//	}
 
 	/**
 	 * Compare this markup stream with another one
@@ -148,12 +135,12 @@ public final class MarkupStream
 	public boolean equalTo(final MarkupStream that)
 	{
 		// While a has more markup elements
-		while (this.hasMore())
+		while (hasMore())
 		{
 			// Get an element from each
 			final MarkupElement thisElement = this.get();
 			final MarkupElement thatElement = that.get();
-			
+
 			// and if the elements are not equal
 			if (thisElement != null && thatElement != null)
 			{
@@ -172,7 +159,7 @@ public final class MarkupStream
 					return false;
 				}
 			}
-			this.next();
+			next();
 			that.next();
 		}
 
@@ -201,7 +188,7 @@ public final class MarkupStream
 		{
 			return false;
 		}
-		return this.markup == markupStream.markup;
+		return markup == markupStream.markup;
 	}
 
 	/**
@@ -215,7 +202,7 @@ public final class MarkupStream
 	 */
 	public final int findComponentIndex(final String path, final String id)
 	{
-		return this.markup.findComponentIndex(path, id);
+		return markup.findComponentIndex(path, id);
 	}
 
 	/**
@@ -231,7 +218,7 @@ public final class MarkupStream
 	 *            The index of a markup element
 	 * @return The MarkupElement element
 	 */
-	private MarkupElement get(final int index)
+	public MarkupElement get(final int index)
 	{
 		return markup.get(index);
 	}
@@ -324,7 +311,7 @@ public final class MarkupStream
 	 */
 	public final boolean isMergedMarkup()
 	{
-		return this.markup instanceof MergedMarkup;
+		return markup instanceof MergedMarkup;
 	}
 
 	/**
@@ -395,13 +382,16 @@ public final class MarkupStream
 	{
 		while (current instanceof RawMarkup)
 		{
-			next();
+			if (next() == null)
+			{
+				break;
+			}
 		}
 	}
 
 	/**
-	 * Skips any markup at the current position until the wicket tag
-	 * name is found.
+	 * Skips any markup at the current position until the wicket tag name is
+	 * found.
 	 * 
 	 * @param wicketTagName
 	 *            wicket tag name to seek
@@ -410,8 +400,8 @@ public final class MarkupStream
 	{
 		while (true)
 		{
-			if ((current instanceof WicketTag)
-					&& ((WicketTag)current).getName().equals(wicketTagName))
+			if ((current instanceof WicketTag) &&
+					((WicketTag)current).getName().equals(wicketTagName))
 			{
 				return;
 			}
@@ -493,7 +483,7 @@ public final class MarkupStream
 	 */
 	public String toString()
 	{
-		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex + ", current = "
-				+ ((current == null) ? "null" : current.toUserDebugString()) + "]";
+		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex +
+				", current = " + ((current == null) ? "null" : current.toUserDebugString()) + "]";
 	}
 }
