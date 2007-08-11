@@ -321,13 +321,7 @@ public abstract class MarkupContainer extends Component
 		// optimization.
 		if ((child == null) && isTransparentResolver() && (getParent() != null))
 		{
-			// Special tags like "_body", "_panel" must implement
-			// IComponentResolver
-			// if they want to be transparent.
-			if (path.startsWith("_") == false)
-			{
-				child = getParent().get(path);
-			}
+			child = getParent().get(path);
 		}
 
 		// Found child?
