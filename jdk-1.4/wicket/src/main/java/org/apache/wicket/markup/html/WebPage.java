@@ -27,11 +27,6 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.behavior.AbstractBehavior;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.TagUtils;
-import org.apache.wicket.markup.html.internal.HtmlBodyContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.model.IModel;
@@ -172,12 +167,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			"cookies.js");
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Boolean flag that represents whether or not we have already added a
-	 * {@link HtmlBodyContainer} to this page or not
-	 */
-	private boolean bodyContainerAdded = false;
 
 	/**
 	 * The url compressor that will compress the urls by collapsing the
@@ -348,45 +337,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	protected final BookmarkablePageLink homePageLink(final String id)
 	{
 		return new BookmarkablePageLink(id, getApplication().getHomePage());
-	}
-
-	protected void onBeforeRender()
-	{
-		super.onBeforeRender();
-
-		if (!bodyContainerAdded)
-		{
-			// Add a Body container if the associated markup contains a <body>
-			// tag get markup stream gracefully
-			MarkupStream markupStream = getAssociatedMarkupStream(false);
-			if (markupStream != null)
-			{
-				// The default <body> container. It can be accessed, replaced
-				// and attribute modifiers can be attached. <body> tags without
-				// wicket:id get automatically a wicket:id="body" assigned.
-				// find the body tag
-				while (markupStream.hasMore())
-				{
-					final MarkupElement element = markupStream.next();
-					if (element instanceof ComponentTag)
-					{
-						final ComponentTag tag = (ComponentTag)element;
-						if (tag.isOpen() && TagUtils.isBodyTag(tag))
-						{
-							// Add a default container if the tag has the
-							// default name
-							if (HtmlBodyContainer.BODY_ID.equals(tag.getId()))
-							{
-								add(new HtmlBodyContainer(tag.getId()));
-							}
-							bodyContainerAdded = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-
 	}
 
 	/**

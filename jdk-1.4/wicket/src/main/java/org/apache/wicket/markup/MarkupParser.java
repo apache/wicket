@@ -27,7 +27,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
-import org.apache.wicket.markup.parser.filter.BodyTagHandler;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
@@ -170,7 +169,6 @@ public class MarkupParser
 			if (containerInfo != null)
 			{
 				appendMarkupFilter(new WicketMessageTagHandler());
-				appendMarkupFilter(new BodyTagHandler());
 
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
@@ -312,7 +310,7 @@ public class MarkupParser
 				}
 
 				// Add tag to list?
-				if (add || tag.isModified())
+				if (add || tag.isModified() || (markup.size() != size))
 				{
 					// Add text from last position to the current tag position
 					final CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
@@ -335,6 +333,8 @@ public class MarkupParser
 						markup.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
+					xmlParser.setPositionMarker();
+
 					if (add)
 					{
 						// Add to the markup unless the tag has been flagged as
@@ -348,8 +348,10 @@ public class MarkupParser
 					{
 						markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
-
-					xmlParser.setPositionMarker();
+					else
+					{
+						xmlParser.setPositionMarker(tag.getPos());
+					}
 				}
 
 				// always remember the latest index (size)

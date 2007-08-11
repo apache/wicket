@@ -38,9 +38,7 @@ public class SimplePage_14 extends WebPage
 	{
 		WebMarkupContainer container = new WebMarkupContainer("html");
 		container.add(new AttributeModifier("lang", new Model("de")));
-		//THIS doesn't work.. but in the markup it is child!
-		//container.add(new Label("label","label")); 
-		add(new Label("label","label"));
+		container.add(new Label("label", "label"));
 		add(container);
 	}
 }

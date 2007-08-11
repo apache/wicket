@@ -22,7 +22,6 @@ import org.apache.wicket.Request;
 import org.apache.wicket.Response;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebResponse;
@@ -53,23 +52,6 @@ public class InheritanceHeadTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
-	public void test_1() throws Exception
-	{
-		try
-		{
-			executeTest(ConcretePage.class, "ExpectedResult.html");
-			fail("Expected an exception: <wicket:head> are not allowed after <body> tags");
-		}
-		catch (MarkupException ex)
-		{
-			// Ignore
-		}
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	public void test_2() throws Exception
 	{
 		executeTest(ConcretePage2.class, "ExpectedResult2.html");
@@ -84,35 +66,37 @@ public class InheritanceHeadTest extends WicketTestCase
 		tester = new WicketTester(new WebApplication()
 		{
 			/**
-			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
+			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request,
+			 *      Response)
 			 */
 			public Session newSession(Request request, Response response)
 			{
-				return new WebSession(this, request).setStyle("myStyle");
+				return new WebSession(request).setStyle("myStyle");
 			}
-			
+
 			public Class getHomePage()
 			{
 				return ConcretePage2.class;
 			}
-			
+
 			protected WebResponse newWebResponse(HttpServletResponse servletResponse)
 			{
 				return new WebResponse(servletResponse);
 			}
-			
+
 			protected void outputDevelopmentModeWarning()
 			{
 				// Do nothing.
 			}
-			
+
 			protected ISessionStore newSessionStore()
 			{
-				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
+				// Don't use a filestore, or we spawn lots of threads, which
+				// makes things slow.
 				return new HttpSessionStore(this);
 			}
 		});
-		
+
 		executeTest(ConcretePage2.class, "ExpectedResult3.html");
 	}
 }
