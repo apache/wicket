@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.panel;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -186,13 +187,17 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Skip the components body. It will be replaced by the fragment
-		markupStream.skipRawMarkup();
+		if (((ComponentTag)markupStream.get(markupStream.getCurrentIndex() - 1)).isOpen())
+		{
+			markupStream.skipRawMarkup();
+		}
 
 		final MarkupStream providerMarkupStream = chooseMarkupStream(markupStream);
 		if (providerMarkupStream == null)
 		{
-			throw new IllegalStateException(
-					"no markup stream found for providing markup container " + markupProvider);
+			throw new MarkupNotFoundException(
+					"Fragment: No markup stream found for providing markup container " +
+							markupProvider.toString() + ". Fragment: " + toString());
 		}
 
 		renderFragment(providerMarkupStream, openTag);
