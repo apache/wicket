@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.markup.resolver.FragmentResolver;
 
 
 /**
@@ -111,7 +110,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_4() throws Exception
 	{
-		tester.getApplication().getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_4.class, "InlinePanelPageExpectedResult_4.html");
 	}
 
@@ -126,7 +124,8 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	// TODO FIX this test.
+	// TODO FIX the implementation. Fragment markup provider can not be a
+	// sibling of the panel.
 // public void testInlinePanel_6() throws Exception
 // {
 // executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
