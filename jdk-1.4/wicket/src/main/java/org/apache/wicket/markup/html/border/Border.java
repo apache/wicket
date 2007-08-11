@@ -345,10 +345,6 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			}
 
 			super.onComponentTagBody(originalMarkupStream, Border.this.openTag);
-
-			// no longer needed.
-			originalMarkupStream = null;
-			Border.this.openTag = null;
 		}
 
 		/**

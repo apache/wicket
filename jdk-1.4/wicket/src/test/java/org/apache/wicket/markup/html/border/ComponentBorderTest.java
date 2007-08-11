@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 
 /**
  * @author jcompagner
@@ -33,12 +35,32 @@ public class ComponentBorderTest extends WicketTestCase
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
 	public void testMarkupComponentBorder() throws Exception
 	{
-		executeTest(MarkupComponentBorderTestPage.class, "MarkupComponentBorderTestPage_ExpectedResult.html");
+		executeTest(MarkupComponentBorderTestPage.class,
+				"MarkupComponentBorderTestPage_ExpectedResult.html");
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testHideableBorder() throws Exception
+	{
+		executeTest(HideableBorderPage.class, "HideableBorderPage_ExpectedResult.html");
+
+		Page page = tester.getLastRenderedPage();
+		Border border = (Border)page.get("hideable");
+		assertNotNull(border);
+		AjaxLink link = (AjaxLink)border.get("hideLink");
+		assertNotNull(link);
+		tester.clickLink("hideable:hideLink");
+		tester.assertComponentOnAjaxResponse(border.getBodyContainer());
+		tester.clickLink("hideable:hideLink");
+		tester.assertComponentOnAjaxResponse(border.getBodyContainer());
 	}
 }
