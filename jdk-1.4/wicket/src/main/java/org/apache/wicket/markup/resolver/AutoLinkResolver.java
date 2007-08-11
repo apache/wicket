@@ -432,7 +432,11 @@ public final class AutoLinkResolver implements IComponentResolver
 				}
 
 				// Make sure base markup pages (inheritance) are handled correct
-				MarkupContainer parentWithContainer = container.findParentWithAssociatedMarkup();
+				MarkupContainer parentWithContainer = container;
+				if (container.getParent() != null)
+				{
+					parentWithContainer = container.findParentWithAssociatedMarkup();
+				}
 				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".") &&
 						page.getMarkupStream().isMergedMarkup())
 				{
