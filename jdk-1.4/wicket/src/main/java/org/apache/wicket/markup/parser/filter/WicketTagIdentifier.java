@@ -84,7 +84,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			return xmlTag;
 		}
 
-		final String namespace = this.markup.getWicketNamespace();
+		final String namespace = markup.getWicketNamespace();
 
 		// Identify tags with Wicket namespace
 		ComponentTag tag;
@@ -95,15 +95,16 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 			// Make it a Wicket component. Otherwise it would be RawMarkup
 			tag.setId("_" + tag.getName());
+			tag.setAutoComponentTag(true);
+			tag.setModified(true);
 
 			// If the tag is not a well-known wicket namespace tag
 			if (!isWellKnown(xmlTag))
 			{
 				// give up
-				throw new ParseException("Unknown tag name with Wicket namespace: '"
-						+ xmlTag.getName()
-						+ "'. Might be you haven't installed the appropriate resolver?", tag
-						.getPos());
+				throw new ParseException("Unknown tag name with Wicket namespace: '" +
+						xmlTag.getName() +
+						"'. Might be you haven't installed the appropriate resolver?", tag.getPos());
 			}
 		}
 		else
