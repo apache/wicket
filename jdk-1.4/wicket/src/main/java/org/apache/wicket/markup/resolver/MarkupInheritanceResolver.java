@@ -24,8 +24,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
- * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags,
- * which are silently ignored, because they have already been processed.
+ * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags, which are
+ * silently ignored, because they have already been processed.
  * 
  * @author Juergen Donnerstag
  */
@@ -58,19 +58,20 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		if (tag instanceof WicketTag)
 		{
 			final WicketTag wicketTag = (WicketTag)tag;
-			
+			final String id = wicketTag.getId() + container.getPage().getAutoIndex();
+
 			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()), markupStream);
-			    return true;
+				container.autoAdd(new TransparentWebMarkupContainer(id), markupStream);
+				return true;
 			}
-			
+
 			// It must be <wicket:child...>
 			if (wicketTag.isChildTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(wicketTag.getId()), markupStream);
-			    return true;
+				container.autoAdd(new TransparentWebMarkupContainer(id), markupStream);
+				return true;
 			}
 		}
 		// We were not able to handle the componentId
@@ -78,13 +79,13 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	}
 
 	/**
-	 * This is a WebMarkupContainer, except that it is transparent for
-	 * it child components.
+	 * This is a WebMarkupContainer, except that it is transparent for it child
+	 * components.
 	 */
 	private static class TransparentWebMarkupContainer extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * @param id
 		 */
