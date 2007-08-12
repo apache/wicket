@@ -158,6 +158,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
 
+	/**
+	 * Constant for specifying how a form is submitted, in this case using get.
+	 */
+	public static final String METHOD_GET = "get";
+
+	/**
+	 * Constant for specifying how a form is submitted, in this case using post.
+	 */
+	public static final String METHOD_POST = "post";
+
 	/** Flag that indicates this form has been submitted during this request */
 	private static final short FLAG_SUBMITTED = FLAG_RESERVED1;
 
@@ -765,7 +775,23 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// render the hidden field
 		AppendingStringBuffer buffer = new AppendingStringBuffer(
 				"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
-				.append("\" id=\"").append(nameAndId).append("\" /></div>");
+				.append("\" id=\"").append(nameAndId).append("\" />");
+		String method = getMethod().toLowerCase();
+		// if it's a get, did put the parameters in the action attribute,
+		// and have to write the url parameters as hidden fields
+		if (method.equals("get"))
+		{
+			String url = urlFor(IFormSubmitListener.INTERFACE).toString();
+			int i = url.indexOf('?');
+			String[] params = ((i > -1) ? url.substring(i + 1) : url).split("&");
+			for (int j = 0; j < params.length; j++)
+			{
+				String[] pair = params[j].split("=");
+				buffer.append("<input type=\"hidden\" name=\"").append(pair[0]).append(
+						"\" value=\"").append(pair.length > 1 ? pair[1] : "").append("\" />");
+			}
+		}
+		buffer.append("</div>");
 		getResponse().write(buffer);
 
 		// if a default button was set, handle the rendering of that
@@ -804,8 +830,21 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				tag.put("id", javascriptId);
 			}
 		}
-		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
+
+		String method = getMethod().toLowerCase();
+		tag.put("method", method);
+		String url = urlFor(wicket.markup.html.form.IFormSubmitListener.INTERFACE).toString();
+		if (method.equals("get"))
+		{
+			int i = url.indexOf('?');
+			String action = (i > -1) ? url.substring(0, i) : "";
+			tag.put("action", action);
+		}
+		else
+		{
+			tag.put("action", Strings.replaceAll(url, "&", "&amp;"));
+		}
+
 		if (multiPart)
 		{
 			tag.put("enctype", "multipart/form-data");
@@ -820,6 +859,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				setMultiPart(true);
 			}
 		}
+	}
+
+	/**
+	 * Gets the method used to submit the form. Defaults to either what is
+	 * explicitly defined in the markup or 'post'. Override this if you have a
+	 * requirement to alter this behavior.
+	 * 
+	 * @return the method used to submit the form.
+	 */
+	protected String getMethod()
+	{
+		String method = getMarkupAttributes().getString("method");
+		return (method != null) ? method : METHOD_POST;
 	}
 
 	/**
