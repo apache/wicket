@@ -62,11 +62,7 @@ import org.apache.wicket.util.upload.FileItem;
  */
 public class MultiFileUploadField extends FormComponentPanel implements IHeaderContributor
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 
 	/**
 	 * Represents an unlimited max count of uploads
@@ -193,8 +189,8 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		if (form == null)
 		{
 			// woops
-			throw new IllegalStateException("Component " + getClass().getName() + " must have a "
-					+ Form.class.getName() + " component above in the hierarchy");
+			throw new IllegalStateException("Component " + getClass().getName() + " must have a " +
+					Form.class.getName() + " component above in the hierarchy");
 		}
 		form.setMultiPart(true);
 	}
@@ -207,9 +203,9 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	{
 		// initialize the javascript library
 		response.renderJavascriptReference(JS);
-		response.renderOnDomReadyJavascript("new MultiSelector('" + getInputName()
-				+ "', document.getElementById('" + container.getMarkupId() + "'), " + max
-				+ ").addElement(document.getElementById('" + upload.getMarkupId() + "'));");
+		response.renderOnDomReadyJavascript("new MultiSelector('" + getInputName() +
+				"', document.getElementById('" + container.getMarkupId() + "'), " + max +
+				").addElement(document.getElementById('" + upload.getMarkupId() + "'));");
 	}
 
 	/**
@@ -239,8 +235,9 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 					final String name = (String)entry.getKey();
 					final FileItem item = (FileItem)entry.getValue();
 
-					if (!Strings.isEmpty(name) && name.startsWith(getInputName() + MAGIC_SEPARATOR)
-							&& !Strings.isEmpty(item.getName()))
+					if (!Strings.isEmpty(name) &&
+							name.startsWith(getInputName() + MAGIC_SEPARATOR) &&
+							!Strings.isEmpty(item.getName()))
 					{
 
 						// make sure the fileitem belongs to this component and
@@ -307,10 +304,10 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 			if (!(object instanceof Collection))
 			{
 				// fail early if there is something interesting in the model
-				throw new IllegalStateException("Model object of " + getClass().getName()
-						+ " component must be of type `" + Collection.class.getName() + "<"
-						+ FileUpload.class.getName() + ">` but is of type `"
-						+ object.getClass().getName() + "`");
+				throw new IllegalStateException("Model object of " + getClass().getName() +
+						" component must be of type `" + Collection.class.getName() + "<" +
+						FileUpload.class.getName() + ">` but is of type `" +
+						object.getClass().getName() + "`");
 			}
 			else
 			{
@@ -357,6 +354,14 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 		}
 
 		super.onDetach();
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
+	 */
+	public boolean checkRequired()
+	{
+		return true;
 	}
 
 	/**

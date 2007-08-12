@@ -145,4 +145,12 @@ public class DateField extends FormComponentPanel
 
 		super.onBeforeRender();
 	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
+	 */
+	public boolean checkRequired()
+	{
+		return dateField.checkRequired();
+	}
 }

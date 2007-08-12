@@ -22,7 +22,6 @@ import org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper;
 import org.apache.wicket.markup.html.HeaderPartContainer;
 import org.apache.wicket.markup.html.IHeaderPartContainerProvider;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 
@@ -35,12 +34,27 @@ import org.apache.wicket.model.IModel;
  * component would then use these nested components to handle it's internal
  * state, and would use that internal state to get to one model object.
  * <p>
- * It is recommended that you override {@link #getConvertedInput()} and let it
- * return the value that represents the compound value of the nested components.
- * This value will then be set as the model value of the component. Often, this
- * goes hand-in-hand with overriding {@link #onBeforeRender()}, where you would
- * analyse the model value, break it up and distribute the appropriate values
- * over the child components.
+ * It is recommended that you override {@link #convertInput()} and let it set
+ * the value that represents the compound value of the nested components. Often,
+ * this goes hand-in-hand with overriding {@link #onBeforeRender()}, where you
+ * would analyse the model value, break it up and distribute the appropriate
+ * values over the child components.
+ * </p>
+ * <p>
+ * FormComponentPanel implementations have to provide meaningful implementations
+ * for the {@link #checkRequired() required check}. Typically, this means
+ * executing the check on nested components. For instance, a panel that embeds a
+ * date text field and a date picker, would simply check it's text field:
+ * 
+ * <pre>
+ * private TextField dateField;
+ * ...
+ * public boolean checkRequired()
+ * {
+ * 	return dateField.checkRequired();
+ * }
+ * </pre>
+ * 
  * </p>
  * 
  * <p>
@@ -70,11 +84,16 @@ import org.apache.wicket.model.IModel;
  * 		init();
  * 	}
  * 
- * 	public Object getConvertedInput()
+ * 	public boolean checkRequired()
+ * 	{
+ * 		return left.checkRequired() &amp;&amp; right.checkRequired();
+ * 	}
+ * 
+ * 	protected void convertInput()
  * 	{
  * 		Integer lhs = (Integer)left.getConvertedInput();
  * 		Integer rhs = (Integer)right.getConvertedInput();
- * 		return lhs * rhs;
+ * 		setConvertedInput(lhs * rhs);
  * 	}
  * 
  * 	private void init()
@@ -113,13 +132,11 @@ import org.apache.wicket.model.IModel;
  * 
  * @author eelcohillenius
  */
-public class FormComponentPanel extends FormComponent implements IHeaderPartContainerProvider
+public abstract class FormComponentPanel extends FormComponent
+		implements
+			IHeaderPartContainerProvider
 {
 	private static final long serialVersionUID = 1L;
-
-	static
-	{
-	}
 
 	private ContainerWithAssociatedMarkupHelper markupHelper;
 
@@ -146,6 +163,24 @@ public class FormComponentPanel extends FormComponent implements IHeaderPartCont
 	{
 		super(id, model);
 	}
+
+	/**
+	 * Subclasses need to pass this check to the appropriate nested
+	 * component(s). For instance, a panel that embeds a date text field and a
+	 * date picker, would simply check it's text field:
+	 * 
+	 * <pre>
+	 * private TextField dateField;
+	 * ...
+	 * public boolean checkRequired()
+	 * {
+	 * 	return dateField.checkRequired();
+	 * }
+	 * </pre>
+	 * 
+	 * @see org.apache.wicket.markup.html.form.FormComponent#checkRequired()
+	 */
+	public abstract boolean checkRequired();
 
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderPartContainerProvider#newHeaderPartContainer(java.lang.String,
@@ -181,7 +216,7 @@ public class FormComponentPanel extends FormComponent implements IHeaderPartCont
 	{
 		if (tag.isOpenClose())
 		{
-			this.wasOpenCloseTag = true;
+			wasOpenCloseTag = true;
 
 			// Convert <span wicket:id="myPanel" /> into
 			// <span wicket:id="myPanel">...</span>
@@ -201,7 +236,7 @@ public class FormComponentPanel extends FormComponent implements IHeaderPartCont
 		renderAssociatedMarkup("panel",
 				"Markup for a panel component has to contain part '<wicket:panel>'");
 
-		if (this.wasOpenCloseTag == false)
+		if (wasOpenCloseTag == false)
 		{
 			// Skip any raw markup in the body
 			markupStream.skipRawMarkup();

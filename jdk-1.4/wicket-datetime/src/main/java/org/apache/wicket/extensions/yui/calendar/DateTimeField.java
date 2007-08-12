@@ -356,15 +356,10 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#getInput()
+	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
 	 */
-	public String getInput()
+	public boolean checkRequired()
 	{
-		// FIXME figure out how to remove this hack. currently required check is
-		// not overridable and fails if input is empty - which it is for
-		// formcomponentpanels
-
-		// hack to make required check not freak out
-		return "hack";
+		return dateField.checkRequired();
 	}
 }

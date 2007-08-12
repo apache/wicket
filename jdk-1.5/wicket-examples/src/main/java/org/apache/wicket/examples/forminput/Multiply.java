@@ -70,6 +70,15 @@ public class Multiply extends FormComponentPanel
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
+	 */
+	@Override
+	public boolean checkRequired()
+	{
+		return left.checkRequired() && right.checkRequired();
+	}
+
+	/**
 	 * @return gets lhs
 	 */
 	public int getLhs()
@@ -103,6 +112,14 @@ public class Multiply extends FormComponentPanel
 		this.rhs = rhs;
 	}
 
+	private void init()
+	{
+		add(left = new TextField("left", new PropertyModel(this, "lhs")));
+		add(right = new TextField("right", new PropertyModel(this, "rhs")));
+		left.setRequired(true);
+		right.setRequired(true);
+	}
+
 	/**
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()
 	 */
@@ -115,13 +132,5 @@ public class Multiply extends FormComponentPanel
 		Integer lhs = (Integer)left.getConvertedInput();
 		Integer rhs = (Integer)right.getConvertedInput();
 		setConvertedInput(lhs * rhs);
-	}
-
-	private void init()
-	{
-		add(left = new TextField("left", new PropertyModel(this, "lhs"), Integer.class));
-		add(right = new TextField("right", new PropertyModel(this, "rhs"), Integer.class));
-		left.setRequired(true);
-		right.setRequired(true);
 	}
 }
