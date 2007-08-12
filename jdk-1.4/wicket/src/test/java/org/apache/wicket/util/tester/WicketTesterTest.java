@@ -43,7 +43,7 @@ import org.apache.wicket.util.tester.apps_1.SuccessPage;
 import org.apache.wicket.util.tester.apps_1.ViewBook;
 
 /**
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class WicketTesterTest extends TestCase
@@ -63,7 +63,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void testViewBook() throws Exception
@@ -88,7 +88,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void testCreateBook_validateFail() throws Exception
@@ -109,7 +109,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void testCreateBook_validatePass() throws Exception
@@ -173,6 +173,7 @@ public class WicketTesterTest extends TestCase
 
 	/**
 	 * Test instance constructor and inner page class
+	 * 
 	 * @throws Exception
 	 */
 	public void testConstructorAndInnerPage() throws Exception
@@ -186,7 +187,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void testAssertComponentOnAjaxResponse()
 	{
@@ -306,8 +307,8 @@ public class WicketTesterTest extends TestCase
 		Pojo pojo = page.getPojo();
 
 		assertEquals("Mock name", pojo.getName());
-		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form"
-				+ Component.PATH_SEPARATOR + "name")).getValue());
+		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form" +
+				Component.PATH_SEPARATOR + "name")).getValue());
 
 		assertFalse(page.isExecuted());
 
@@ -315,10 +316,11 @@ public class WicketTesterTest extends TestCase
 		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
 				"onclick");
 
-		assertTrue("AjaxFormSubmitBehavior.onSubmit() has not been executed in "
-				+ MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
+		assertTrue("AjaxFormSubmitBehavior.onSubmit() has not been executed in " +
+				MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
 
-		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form" + Component.PATH_SEPARATOR + "name")).getValue());
+		assertEquals("Mock name", ((TextField)tester.getComponentFromLastRenderedPage("form" +
+				Component.PATH_SEPARATOR + "name")).getValue());
 
 		// The name of the pojo should still be the same. If the
 		// executeAjaxEvent weren't submitting the form the name would have been
@@ -329,7 +331,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void testRedirectWithPageParameters()
 	{
@@ -349,17 +351,20 @@ public class WicketTesterTest extends TestCase
 	/**
 	 * Test that clickLink on a ResourceLink with a ResourceReference on it
 	 * works.
-	 *
-	 * <p>See also WICKET-280 Allow to access html resources</p>
+	 * 
+	 * <p>
+	 * See also WICKET-280 Allow to access html resources
+	 * </p>
 	 */
 	public void testClickResourceLink()
 	{
 		try
 		{
 			tester.startPage(BlockedResourceLinkPage.class);
-			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " + PackageResourceBlockedException.class);
+			fail("Accessing " + BlockedResourceLinkPage.class + " should have raised a " +
+					PackageResourceBlockedException.class);
 		}
-		catch(PackageResourceBlockedException e)
+		catch (PackageResourceBlockedException e)
 		{
 
 		}
@@ -368,9 +373,13 @@ public class WicketTesterTest extends TestCase
 		tester.clickLink("link");
 		assertNull(getRequestCodingStrategy());
 	}
-	IRequestTargetUrlCodingStrategy getRequestCodingStrategy() {
-		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(tester.getServletRequest());
-		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy().urlCodingStrategyForPath(relativePath);
+
+	IRequestTargetUrlCodingStrategy getRequestCodingStrategy()
+	{
+		String relativePath = tester.getApplication().getWicketFilter().getRelativePath(
+				tester.getServletRequest());
+		return tester.getApplication().getRequestCycleProcessor().getRequestCodingStrategy()
+				.urlCodingStrategyForPath(relativePath);
 	}
 
 	/**
@@ -414,12 +423,12 @@ public class WicketTesterTest extends TestCase
 	{
 		tester.executeAjaxEvent("form:text", "onkeyup");
 		Button submit = getSubmitButton();
-		System.out.println(Session.get().getFeedbackMessages());
+// System.out.println(Session.get().getFeedbackMessages());
 		assertEquals(expected, submit.isEnabled());
 	}
 
 	private Button getSubmitButton()
 	{
-		return (Button) tester.getComponentFromLastRenderedPage("form:submit");
+		return (Button)tester.getComponentFromLastRenderedPage("form:submit");
 	}
 }

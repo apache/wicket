@@ -77,18 +77,18 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		executeHeaderTest(MockComponent3.class, "MockComponent3-expected.html");
 	}
 
-	private void executeHeaderTest(final Class componentClass)
-			throws IOException
+	private void executeHeaderTest(final Class componentClass) throws IOException
 	{
 		executeHeaderTest(componentClass, null);
 	}
 
-	private void executeHeaderTest(final Class componentClass,
-			String expectedFile) throws IOException
+	private void executeHeaderTest(final Class componentClass, String expectedFile)
+			throws IOException
 	{
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
-		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID).setOutputMarkupId(true));
+		page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID)
+				.setOutputMarkupId(true));
 
 
 		page.add(new AjaxLink(MockPageWithLinkAndComponent.LINK_ID)
@@ -100,10 +100,10 @@ public class AjaxRequestTargetTest extends WicketTestCase
 				// Create an instance of the component
 				try
 				{
-					Constructor con = componentClass
-							.getConstructor(new Class[] { String.class });
+					Constructor con = componentClass.getConstructor(new Class[] { String.class });
 
-					Component comp = (Component) con.newInstance(new Object[] { MockPageWithLinkAndComponent.COMPONENT_ID });
+					Component comp = (Component)con
+							.newInstance(new Object[] { MockPageWithLinkAndComponent.COMPONENT_ID });
 					page.replace(comp);
 					comp.setOutputMarkupId(true);
 
@@ -116,7 +116,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			}
 		});
 
-		tester.startPage(new ITestPageSource() {
+		tester.startPage(new ITestPageSource()
+		{
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -124,10 +125,10 @@ public class AjaxRequestTargetTest extends WicketTestCase
 				return page;
 			}
 		});
-		
-		System.out.println(tester.getServletResponse().getDocument());
+
+// System.out.println(tester.getServletResponse().getDocument());
 		tester.debugComponentTrees();
-		
+
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		String document = tester.getServletResponse().getDocument();
@@ -148,12 +149,12 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		// This means that it doesn't exist at all
 		if (expectedFile == null)
 		{
-			assertNull("There was a header contribution on the response: <" + headerContribution
-					+ ">", headerContribution);
+			assertNull("There was a header contribution on the response: <" + headerContribution +
+					">", headerContribution);
 		}
 		else
 		{
-			DiffUtil.validatePage(headerContribution, this.getClass(), expectedFile, true);
+			DiffUtil.validatePage(headerContribution, getClass(), expectedFile, true);
 		}
 	}
 }
