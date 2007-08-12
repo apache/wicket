@@ -224,13 +224,13 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 			// add the input param if not already present
 			if (!fullParams.containsKey("input"))
 			{
-				fullParams.put("input", FormComponent.this.getInput());
+				fullParams.put("input", getInput());
 			}
 
 			// add the name param if not already present
 			if (!fullParams.containsKey("name"))
 			{
-				fullParams.put("name", FormComponent.this.getId());
+				fullParams.put("name", getId());
 			}
 
 			// add the label param if not already present
@@ -307,7 +307,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		 */
 		public Object getValue()
 		{
-			return FormComponent.this.getConvertedInput();
+			return getConvertedInput();
 		}
 
 		public boolean isValid()
@@ -476,34 +476,27 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Checks if the form component's 'required' requirement is met
+	 * Checks if the form component's 'required' requirement is met. This method
+	 * should typically only be called when {@link #isRequired()} returns true.
 	 * 
 	 * @return true if the 'required' requirement is met, false otherwise
 	 */
-	//TODO 1.4 why is this public?
 	public boolean checkRequired()
 	{
-		if (isRequired())
+		final String input = getInput();
+
+		// when null, check whether this is natural for that component, or
+		// whether - as is the case with text fields - this can only happen
+		// when the component was disabled
+		if (input == null && !isInputNullable())
 		{
-			final String input = getInput();
-
-			// when null, check whether this is natural for that component, or
-			// whether - as is the case with text fields - this can only happen
-			// when the component was disabled
-			if (input == null && !isInputNullable())
-			{
-				// this value must have come from a disabled field
-				// do not perform validation
-				return true;
-			}
-
-			// peform validation by looking whether the value is null or empty
-			if (Strings.isEmpty(input))
-			{
-				return false;
-			}
+			// this value must have come from a disabled field
+			// do not perform validation
+			return true;
 		}
-		return true;
+
+		// peform validation by looking whether the value is null or empty
+		return !Strings.isEmpty(input);
 	}
 
 	/**
@@ -978,7 +971,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	public final FormComponent setType(Class type)
 	{
-		this.typeName = type == null ? null : type.getName();
+		typeName = type == null ? null : type.getName();
 		if (type != null && type.isPrimitive())
 		{
 			setRequired(true);
@@ -1046,9 +1039,9 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	private void validators_add(final IValidator validator)
 	{
-		if (this.validators == null)
+		if (validators == null)
 		{
-			this.validators = validator;
+			validators = validator;
 		}
 		else
 		{
@@ -1082,11 +1075,11 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	private IValidator validators_get(int index)
 	{
-		if (this.validators == null)
+		if (validators == null)
 		{
 			throw new IndexOutOfBoundsException();
 		}
-		if (this.validators instanceof IValidator[])
+		if (validators instanceof IValidator[])
 		{
 			return ((IValidator[])validators)[index];
 		}
@@ -1099,11 +1092,11 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	private int validators_size()
 	{
-		if (this.validators == null)
+		if (validators == null)
 		{
 			return 0;
 		}
-		if (this.validators instanceof IValidator[])
+		if (validators instanceof IValidator[])
 		{
 			return ((IValidator[])validators).length;
 		}
@@ -1373,11 +1366,11 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Checks if the raw input value is not null if this component is required
+	 * Checks if the raw input value is not null if this component is required.
 	 */
 	protected final void validateRequired()
 	{
-		if (!checkRequired())
+		if (isRequired() && !checkRequired())
 		{
 			reportRequiredError();
 		}
@@ -1424,7 +1417,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Exception '" + e + "' occurred during validation " +
-					validator.getClass().getName() + " on component " + this.getPath(), e);
+					validator.getClass().getName() + " on component " + getPath(), e);
 		}
 	}
 
