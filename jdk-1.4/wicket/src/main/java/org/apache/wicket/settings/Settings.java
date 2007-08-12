@@ -92,7 +92,7 @@ public final class Settings
 			IRequestLoggerSettings
 {
 	/** Class of access denied page. */
-	private WeakReference/*<Class<? extends Page>*/ accessDeniedPage;
+	private WeakReference/* <Class<? extends Page> */accessDeniedPage;
 
 	/** ajax debug mode status */
 	private boolean ajaxDebugModeEnabled = false;
@@ -146,7 +146,7 @@ public final class Settings
 	 * Whether we should disable gzip compression for resources.
 	 */
 	private boolean disableGZipCompression = false;
-	
+
 	/**
 	 * Whether mounts should be enforced. If true, requests for mounted targets
 	 * have to done through the mounted paths. If, for instance, a bookmarkable
@@ -165,7 +165,7 @@ public final class Settings
 	private boolean gatherExtendedBrowserInfo = false;
 
 	/** Class of internal error page. */
-	private WeakReference/*<Class<? extends Page>*/ internalErrorPage;
+	private WeakReference/* <Class<? extends Page> */internalErrorPage;
 
 	/** I18N support */
 	private Localizer localizer;
@@ -175,7 +175,7 @@ public final class Settings
 
 	/** A markup cache which will load the markup if required. */
 	private IMarkupCache markupCache;
-	
+
 	/** To help prevent denial of service attacks */
 	private int maxPageMaps = 5;
 
@@ -189,7 +189,7 @@ public final class Settings
 	private IPackageResourceGuard packageResourceGuard = new PackageResourceGuard();
 
 	/** The error page displayed when an expired page is accessed. */
-	private WeakReference/*<Class<? extends Page>*/ pageExpiredErrorPage;
+	private WeakReference/* <Class<? extends Page> */pageExpiredErrorPage;
 
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
@@ -295,10 +295,11 @@ public final class Settings
 	private boolean stripJavascriptCommentsAndWhitespace;
 
 	/**
-	 * Whether the container's class name should be printed to response (in a html comment).
+	 * Whether the container's class name should be printed to response (in a
+	 * html comment).
 	 */
 	private boolean outputMarkupContainerClassName = false;
-	
+
 	/**
 	 * Create the application settings, carrying out any necessary
 	 * initialisations.
@@ -439,7 +440,7 @@ public final class Settings
 	 */
 	public boolean getComponentUseCheck()
 	{
-		return this.componentUseCheck;
+		return componentUseCheck;
 	}
 
 	/**
@@ -501,7 +502,7 @@ public final class Settings
 	{
 		return disableGZipCompression;
 	}
-	
+
 	/**
 	 * @see wicket.settings.ISecuritySettings#getEnforceMounts()
 	 */
@@ -533,9 +534,17 @@ public final class Settings
 	{
 		if (localizer == null)
 		{
-			this.localizer = new Localizer();
+			localizer = new Localizer();
 		}
 		return localizer;
+	}
+
+	/**
+	 * @see org.apache.wicket.settings.IResourceSettings#setLocalizer(org.apache.wicket.Localizer)
+	 */
+	public void setLocalizer(final Localizer localizer)
+	{
+		this.localizer = localizer;
 	}
 
 	/**
@@ -543,9 +552,9 @@ public final class Settings
 	 */
 	public IMarkupParserFactory getMarkupParserFactory()
 	{
-		if (this.markupParserFactory == null)
+		if (markupParserFactory == null)
 		{
-			this.markupParserFactory = new MarkupParserFactory();
+			markupParserFactory = new MarkupParserFactory();
 		}
 		return markupParserFactory;
 	}
@@ -708,7 +717,7 @@ public final class Settings
 	 */
 	public boolean getStripWicketTags()
 	{
-		return this.stripWicketTags;
+		return stripWicketTags;
 	}
 
 	/**
@@ -716,7 +725,7 @@ public final class Settings
 	 */
 	public boolean getStripXmlDeclarationFromOutput()
 	{
-		return this.stripXmlDeclarationFromOutput;
+		return stripXmlDeclarationFromOutput;
 	}
 
 	/**
@@ -766,7 +775,7 @@ public final class Settings
 	public String getVersion()
 	{
 		String implVersion = null;
-		Package pkg = this.getClass().getPackage();
+		Package pkg = getClass().getPackage();
 		if (pkg != null)
 		{
 			implVersion = pkg.getImplementationVersion();
@@ -821,7 +830,7 @@ public final class Settings
 		{
 			throw new IllegalArgumentException("authorization strategy cannot be set to null");
 		}
-		this.authorizationStrategy = strategy;
+		authorizationStrategy = strategy;
 	}
 
 	/**
@@ -853,7 +862,7 @@ public final class Settings
 	 */
 	public void setClassResolver(final IClassResolver defaultClassResolver)
 	{
-		this.classResolver = defaultClassResolver;
+		classResolver = defaultClassResolver;
 	}
 
 	/**
@@ -914,7 +923,7 @@ public final class Settings
 	 */
 	public void setDefaultMarkupEncoding(final String encoding)
 	{
-		this.defaultMarkupEncoding = encoding;
+		defaultMarkupEncoding = encoding;
 	}
 
 	/**
@@ -924,13 +933,13 @@ public final class Settings
 	{
 		this.disableGZipCompression = disableGZipCompression;
 	}
-	
+
 	/**
 	 * @see wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
 	 */
 	public void setEnforceMounts(boolean enforce)
 	{
-		this.enforceMounts = enforce;
+		enforceMounts = enforce;
 	}
 
 	/**
@@ -965,7 +974,7 @@ public final class Settings
 			throw new IllegalArgumentException("markup parser factory cannot be null");
 		}
 
-		this.markupParserFactory = factory;
+		markupParserFactory = factory;
 	}
 
 	/**
@@ -1007,7 +1016,7 @@ public final class Settings
 	 */
 	public void setPageFactory(final IPageFactory defaultPageFactory)
 	{
-		this.pageFactory = defaultPageFactory;
+		pageFactory = defaultPageFactory;
 	}
 
 	/**
@@ -1023,7 +1032,7 @@ public final class Settings
 	 */
 	public void setPropertiesFactory(org.apache.wicket.resource.IPropertiesFactory factory)
 	{
-		this.propertiesFactory = factory;
+		propertiesFactory = factory;
 	}
 
 	/**
@@ -1042,7 +1051,7 @@ public final class Settings
 		this.resourceFinder = resourceFinder;
 
 		// Cause resource locator to get recreated
-		this.resourceStreamLocator = null;
+		resourceStreamLocator = null;
 	}
 
 	/**
@@ -1090,7 +1099,7 @@ public final class Settings
 	 */
 	public void setStripXmlDeclarationFromOutput(final boolean strip)
 	{
-		this.stripXmlDeclarationFromOutput = strip;
+		stripXmlDeclarationFromOutput = strip;
 	}
 
 	/**
@@ -1144,7 +1153,7 @@ public final class Settings
 	 */
 	public void setVersionPagesByDefault(boolean pagesVersionedByDefault)
 	{
-		this.versionPagesByDefault = pagesVersionedByDefault;
+		versionPagesByDefault = pagesVersionedByDefault;
 	}
 
 	/**
@@ -1163,8 +1172,8 @@ public final class Settings
 		// IPageFactory implementation
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
-			throw new IllegalArgumentException("argument " + pageClass
-					+ " must be a subclass of Page");
+			throw new IllegalArgumentException("argument " + pageClass +
+					" must be a subclass of Page");
 		}
 	}
 
@@ -1231,7 +1240,7 @@ public final class Settings
 	{
 		stripJavascriptCommentsAndWhitespace = value;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.settings.IDebugSettings#setOutputMarkupContainerClassName(boolean)
 	 */
@@ -1253,13 +1262,13 @@ public final class Settings
 	 */
 	public IMarkupCache getMarkupCache()
 	{
-		if (this.markupCache == null)
+		if (markupCache == null)
 		{
 			// Construct markup cache for this application
-			this.markupCache = new MarkupCache(application);
+			markupCache = new MarkupCache(application);
 		}
 
-		return this.markupCache;
+		return markupCache;
 	}
 
 	/**
@@ -1274,7 +1283,7 @@ public final class Settings
 
 	public Bytes getDefaultMaximumUploadSize()
 	{
-		return this.defaultMaximumUploadSize;
+		return defaultMaximumUploadSize;
 	}
 
 	public void setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)

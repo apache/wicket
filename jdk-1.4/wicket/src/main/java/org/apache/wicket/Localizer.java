@@ -16,8 +16,10 @@
  */
 package org.apache.wicket;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 
 import org.apache.wicket.model.IModel;
@@ -44,16 +46,26 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
- * @todo implement properties caching
  */
 public class Localizer
 {
+	/** Cache properties */
+	private Map cache = new HashMap();
+
 	/**
 	 * Create the utils instance class backed by the configuration information
 	 * contained within the supplied application object.
 	 */
 	public Localizer()
 	{
+	}
+
+	/**
+	 * Clear all cache entries
+	 */
+	public final void clearCache()
+	{
+		cache = new HashMap();
 	}
 
 	/**
@@ -160,20 +172,35 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model,
 			final String defaultValue) throws MissingResourceException
 	{
-		// Iterate over all registered string resource loaders until the
-		// property has been found
+		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
+
+		// Check the cache first
+		String cacheKey = getCacheKey(key, component);
 		String string = null;
 
-		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
-		Iterator iter = resourceSettings.getStringResourceLoaders().iterator();
-		while (iter.hasNext())
+		// Value not found are cached as well (value = null)
+		if (cache.containsKey(cacheKey))
 		{
-			IStringResourceLoader loader = (IStringResourceLoader)iter.next();
-			string = loader.loadStringResource(component, key);
-			if (string != null)
+			string = getFromCache(cacheKey);
+		}
+		else
+		{
+			// Iterate over all registered string resource loaders until the
+			// property has been found
+
+			Iterator iter = resourceSettings.getStringResourceLoaders().iterator();
+			while (iter.hasNext())
 			{
-				break;
+				IStringResourceLoader loader = (IStringResourceLoader)iter.next();
+				string = loader.loadStringResource(component, key);
+				if (string != null)
+				{
+					break;
+				}
 			}
+
+			// Cache the result incl null if not found
+			putIntoCache(cacheKey, string);
 		}
 
 		if ((string == null) && (defaultValue != null))
@@ -208,6 +235,54 @@ public class Localizer
 		}
 
 		return "[Warning: String resource for '" + key + "' not found]";
+	}
+
+	/**
+	 * Put the value into the cache and associate it with the cache key
+	 * 
+	 * @param cacheKey
+	 * @param string
+	 */
+	protected void putIntoCache(final String cacheKey, final String string)
+	{
+		if (cacheKey != null)
+		{
+			cache.put(cacheKey, string);
+		}
+	}
+
+	/**
+	 * Get the value associated with the key from the cache.
+	 * 
+	 * @param cacheKey
+	 * @return
+	 */
+	protected String getFromCache(final String cacheKey)
+	{
+		return (String)cache.get(cacheKey);
+	}
+
+	/**
+	 * Gets the cache key
+	 * 
+	 * @param key
+	 * @param component
+	 * @return
+	 */
+	protected String getCacheKey(final String key, final Component component)
+	{
+		String cacheKey = key;
+		if (component != null)
+		{
+			cacheKey += '-' + component.getPageRelativePath();
+
+			Page page = component.findPage();
+			if (page != null)
+			{
+				cacheKey += '-' + page.getClass().getName();
+			}
+		}
+		return cacheKey;
 	}
 
 	/**

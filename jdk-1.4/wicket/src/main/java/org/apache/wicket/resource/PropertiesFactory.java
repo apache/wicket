@@ -73,7 +73,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	 */
 	public PropertiesFactory()
 	{
-		this.resourceSettings = Application.get().getResourceSettings();
+		resourceSettings = Application.get().getResourceSettings();
 	}
 
 	/**
@@ -124,13 +124,13 @@ public class PropertiesFactory implements IPropertiesFactory
 			properties = loadPropertiesFileAndWatchForChanges(path, stream);
 			if (properties != null)
 			{
-				this.propertiesCache.put(path, properties);
+				propertiesCache.put(path, properties);
 				return properties;
 			}
 		}
 
 		// Add a placeholder to the cache. Null is not a valid value to add.
-		this.propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
+		propertiesCache.put(path, Properties.EMPTY_PROPERTIES);
 		return null;
 	}
 
@@ -250,12 +250,15 @@ public class PropertiesFactory implements IPropertiesFactory
 			{
 				public void onChange()
 				{
-					log.info("A properties files has changed. Remove all entries "
-							+ "from the cache. Resource: " + resourceStream);
+					log.info("A properties files has changed. Remove all entries " +
+							"from the cache. Resource: " + resourceStream);
 
 					// Clear the whole cache as associated localized files may
 					// be affected and may need reloading as well.
 					clearCache();
+
+					// clear the localizer cache as well
+					Application.get().getResourceSettings().getLocalizer().clearCache();
 
 					// Inform all listeners
 					Iterator iter = afterReloadListeners.iterator();
@@ -268,8 +271,8 @@ public class PropertiesFactory implements IPropertiesFactory
 						}
 						catch (Throwable ex)
 						{
-							log.error("PropertiesReloadListener has thrown an exception: "
-									+ ex.getMessage());
+							log.error("PropertiesReloadListener has thrown an exception: " +
+									ex.getMessage());
 						}
 					}
 				}
@@ -287,6 +290,6 @@ public class PropertiesFactory implements IPropertiesFactory
 	 */
 	protected final Map getCache()
 	{
-		return this.propertiesCache;
+		return propertiesCache;
 	}
 }
