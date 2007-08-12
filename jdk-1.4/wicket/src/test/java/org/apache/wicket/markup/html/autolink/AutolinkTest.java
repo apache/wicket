@@ -67,4 +67,13 @@ public class AutolinkTest extends WicketTestCase
 	{
 		executeTest(PageB.class, "PageBExpectedResult.html");
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void test_4() throws Exception
+	{
+		executeTest(Index.class, "Index_ExpectedResult.html");
+	}
 }

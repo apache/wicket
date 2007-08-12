@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>QuickStart</title>
+    </head>
+    <body>
+    	<wicket:child><wicket:extend>
+        <h1>QuickStart - Index</h1>
+        <p>This is your first Wicket application.</p>
+        </wicket:extend></wicket:child>
+        
+		<!-- ensure offline preview -->
+        <div wicket:id="linkPanel"><wicket:panel>
+	<ul>
+		<li>
+			<a href="?wicket:bookmarkablePage=%3Aorg.apache.wicket.markup.html.autolink.Index" wicket:id="indexLink">Index</a>
+		</li>
+		<li>
+			<a href="?wicket:bookmarkablePage=%3Aorg.apache.wicket.markup.html.autolink.SubPage" wicket:id="subPageLink">SubPage</a>
+		</li>
+	</ul>
+</wicket:panel></div>
+    </body>
+</html>
+

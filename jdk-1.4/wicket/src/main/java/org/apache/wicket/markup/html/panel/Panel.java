@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -28,6 +29,7 @@ import org.apache.wicket.model.IModel;
  * A panel is a reusable component that holds markup and other components.
  * <p>
  * Whereas WebMarkupContainer is an inline container like
+ * 
  * <pre>
  *  ...
  *  &lt;span wicket:id=&quot;xxx&quot;&gt;
@@ -36,8 +38,10 @@ import org.apache.wicket.model.IModel;
  *  &lt;/span&gt;
  *  ...
  * </pre>
- * a Panel has its own associated markup file and the container content is
- * taken from that file, like:
+ * 
+ * a Panel has its own associated markup file and the container content is taken
+ * from that file, like:
+ * 
  * <pre>
  *  &lt;span wicket:id=&quot;mypanel&quot;/&gt;
  * 
@@ -60,68 +64,74 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
 		// register "wicket:panel"
 		WicketTagIdentifier.registerWellKnownTagName("panel");
 	}
-	
+
 	/** If if tag was an open-close tag */
 	private boolean wasOpenCloseTag = false;
-	
+
 	/**
-     * @see org.apache.wicket.Component#Component(String)
-     */
-    public Panel(final String id)
-    {
-        super(id);
-    }
-    
-    /**
-     * @see org.apache.wicket.Component#Component(String, IModel)
-     */
-    public Panel(final String id, final IModel model)
-    {
-        super(id, model);
-    }    
+	 * @see org.apache.wicket.Component#Component(String)
+	 */
+	public Panel(final String id)
+	{
+		super(id);
+	}
 
-    /**
-     * 
-     * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-     */
-    protected void onComponentTag(final ComponentTag tag)
-    {
-    	if (tag.isOpenClose())
-    	{
-    		this.wasOpenCloseTag = true;
-    		
-    		// Convert <span wicket:id="myPanel" /> into 
-    		// <span wicket:id="myPanel">...</span>  
-    		tag.setType(XmlTag.OPEN);
-    	}
-    	super.onComponentTag(tag);
-    }
+	/**
+	 * @see org.apache.wicket.Component#Component(String, IModel)
+	 */
+	public Panel(final String id, final IModel model)
+	{
+		super(id, model);
+	}
 
-    /**
-     * 
-     * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-     */
-    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-    {
-        // Render the associated markup
-        renderAssociatedMarkup("panel",
-                "Markup for a panel component has to contain part '<wicket:panel>'");
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(final ComponentTag tag)
+	{
+		if (tag.isOpenClose())
+		{
+			wasOpenCloseTag = true;
 
-        if (this.wasOpenCloseTag == false)
-        {
+			// Convert <span wicket:id="myPanel" /> into
+			// <span wicket:id="myPanel">...</span>
+			tag.setType(XmlTag.OPEN);
+		}
+		super.onComponentTag(tag);
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
+	 *      org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		// Render the associated markup
+		renderAssociatedMarkup("panel",
+				"Markup for a panel component has to contain part '<wicket:panel>'");
+
+		if (wasOpenCloseTag == false)
+		{
 			// Skip any raw markup in the body
 			markupStream.skipRawMarkup();
-        }
-    }
+			if (markupStream.get().closes(openTag) == false)
+			{
+				throw new MarkupException("close tag not found for tag: " + openTag.toString() +
+						". Component: " + this.toString());
+			}
+		}
+	}
 
-    /**
-     * Check the associated markup file for a wicket header tag
-     * 
-     * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
-     */
-    public void renderHead(HtmlHeaderContainer container)
-    {
-    	this.renderHeadFromAssociatedMarkupFile(container);
-    	super.renderHead(container);
-    }
+	/**
+	 * Check the associated markup file for a wicket header tag
+	 * 
+	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
+	 */
+	public void renderHead(HtmlHeaderContainer container)
+	{
+		renderHeadFromAssociatedMarkupFile(container);
+		super.renderHead(container);
+	}
 }

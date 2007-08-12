@@ -380,12 +380,34 @@ public final class MarkupStream
 	 */
 	public void skipRawMarkup()
 	{
-		while (current instanceof RawMarkup)
+		while (true)
 		{
-			if (next() == null)
+			if (current instanceof RawMarkup)
 			{
-				break;
+				if (next() != null)
+				{
+					continue;
+				}
 			}
+			else if ((current instanceof ComponentTag) && !(current instanceof WicketTag))
+			{
+				ComponentTag tag = (ComponentTag)current;
+				if (tag.isAutoComponentTag())
+				{
+					if (next() != null)
+					{
+						continue;
+					}
+				}
+				else if (tag.isClose() && tag.getOpenTag().isAutoComponentTag())
+				{
+					if (next() != null)
+					{
+						continue;
+					}
+				}
+			}
+			break;
 		}
 	}
 
