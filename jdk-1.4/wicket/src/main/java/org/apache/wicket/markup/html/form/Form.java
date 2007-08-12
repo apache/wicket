@@ -468,7 +468,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 						newValidators[j++] = validators[i];
 					}
 				}
-				this.formValidators = newValidators;
+				formValidators = newValidators;
 			}
 			return removed;
 		}
@@ -901,7 +901,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		if (isRootForm())
 		{
-			this.defaultButton = button;
+			defaultButton = button;
 		}
 		else
 		{
@@ -1090,9 +1090,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void formValidators_add(final IFormValidator validator)
 	{
-		if (this.formValidators == null)
+		if (formValidators == null)
 		{
-			this.formValidators = validator;
+			formValidators = validator;
 		}
 		else
 		{
@@ -1112,7 +1112,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			validators[size] = validator;
 
 			// Save new validator list
-			this.formValidators = validators;
+			formValidators = validators;
 		}
 	}
 
@@ -1126,11 +1126,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private IFormValidator formValidators_get(int index)
 	{
-		if (this.formValidators == null)
+		if (formValidators == null)
 		{
 			throw new IndexOutOfBoundsException();
 		}
-		if (this.formValidators instanceof IFormValidator[])
+		if (formValidators instanceof IFormValidator[])
 		{
 			return ((IFormValidator[])formValidators)[index];
 		}
@@ -1144,11 +1144,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private int formValidators_size()
 	{
-		if (this.formValidators == null)
+		if (formValidators == null)
 		{
 			return 0;
 		}
-		if (this.formValidators instanceof IFormValidator[])
+		if (formValidators instanceof IFormValidator[])
 		{
 			return ((IFormValidator[])formValidators).length;
 		}
@@ -1310,7 +1310,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Returns the javascript/css id of this form that will be used to generated
-	 * the id="xxx" attribute. 
+	 * the id="xxx" attribute.
 	 * 
 	 * @return The javascript/css id of this form.
 	 * @deprecated use {@link #getMarkupId()}
@@ -1322,14 +1322,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 
 	/**
-	 * Gets the method used to submit the form. Defaults to 'post'. Override
-	 * this if you have a requirement to alter this behavior.
+	 * Gets the method used to submit the form. Defaults to either what is
+	 * explicitly defined in the markup or 'post'. Override this if you have a
+	 * requirement to alter this behavior.
 	 * 
 	 * @return the method used to submit the form.
 	 */
 	protected String getMethod()
 	{
-		return METHOD_POST;
+		String method = getMarkupAttributes().getString("method");
+		return (method != null) ? method : METHOD_POST;
 	}
 
 	protected boolean getStatelessHint()
@@ -1485,9 +1487,23 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		if (isRootForm())
 		{
-			tag.put("method", getMethod());
-			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
-					"&amp;"));
+			String method = getMethod().toLowerCase();
+			tag.put("method", method);
+			String url = urlFor(IFormSubmitListener.INTERFACE).toString();
+			if (method.equals("get"))
+			{
+				int i = url.indexOf('?');
+				String action = (i > -1) ? url.substring(0, i) : "";
+				tag.put("action", action);
+				// alternatively, we could just put an empty string here, so
+				// that mounted paths stay in good order. I decided against this
+				// as I'm not sure whether that could have side effects with
+				// other encoders
+			}
+			else
+			{
+				tag.put("action", Strings.replaceAll(url, "&", "&amp;"));
+			}
 
 			if (multiPart)
 			{
@@ -1533,7 +1549,23 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			// render the hidden field
 			AppendingStringBuffer buffer = new AppendingStringBuffer(
 					"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
-					.append("\" id=\"").append(nameAndId).append("\" /></div>");
+					.append("\" id=\"").append(nameAndId).append("\" />");
+			String method = getMethod().toLowerCase();
+			// if it's a get, did put the parameters in the action attribute,
+			// and have to write the url parameters as hidden fields
+			if (method.equals("get"))
+			{
+				String url = urlFor(IFormSubmitListener.INTERFACE).toString();
+				int i = url.indexOf('?');
+				String[] params = ((i > -1) ? url.substring(i + 1) : url).split("&");
+				for (int j = 0; j < params.length; j++)
+				{
+					String[] pair = params[j].split("=");
+					buffer.append("<input type=\"hidden\" name=\"").append(pair[0]).append(
+							"\" value=\"").append(pair.length > 1 ? pair[1] : "").append("\" />");
+				}
+			}
+			buffer.append("</div>");
 			getResponse().write(buffer);
 
 			// if a default button was set, handle the rendering of that
@@ -1670,7 +1702,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				return false;
 			}
 		}
-		return last == this.findPage();
+		return last == findPage();
 	}
 
 
@@ -1735,18 +1767,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			validateFormValidator(formValidators_get(i));
 		}
-		
+
 		// traverse nested forms and invoke the form validators on them
-		visitChildren(Form.class, new IVisitor() {
+		visitChildren(Form.class, new IVisitor()
+		{
 			public Object component(Component component)
 			{
-				final Form form = (Form) component;
+				final Form form = (Form)component;
 				final int count = form.formValidators_size();
 				for (int i = 0; i < count; i++)
 				{
 					form.validateFormValidator(form.formValidators_get(i));
 				}
-				
+
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
