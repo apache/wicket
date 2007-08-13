@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 
@@ -145,5 +147,18 @@ public class PanelTest extends WicketTestCase
 	public void testInlinePanel_7() throws Exception
 	{
 		executeTest(InlinePanelPage_7.class, "InlinePanelPageExpectedResult_7.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testInlinePanel_8() throws Exception
+	{
+		executeTest(InlinePanelPage_8.class, "InlinePanelPageExpectedResult_8.html");
+		Page page = tester.getLastRenderedPage();
+		MarkupContainer node = (MarkupContainer)page.get("first:nextContainer");
+		assertNotNull(node);
+		tester.clickLink("add");
+		tester.assertComponentOnAjaxResponse(node);
 	}
 }

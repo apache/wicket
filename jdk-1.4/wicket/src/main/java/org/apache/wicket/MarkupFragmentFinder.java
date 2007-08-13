@@ -20,6 +20,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.panel.Fragment;
 
 /**
  * Responding to an AJAX request requires that we position the markup stream at
@@ -98,6 +99,13 @@ final class MarkupFragmentFinder
 				return markupStream;
 			}
 
+			if (parentWithAssociatedMarkup instanceof Fragment)
+			{
+				markupStream = ((Fragment)parentWithAssociatedMarkup).findComponentIndex(component
+						.getId());
+				return markupStream;
+			}
+
 			// Yet another exception for Border in the code base.
 			// However if the container with the markup is a Border, than
 			// ...
@@ -109,8 +117,8 @@ final class MarkupFragmentFinder
 			else
 			{
 				throw new WicketRuntimeException(
-						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: "
-								+ component.toString());
+						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: " +
+								component.toString());
 			}
 
 			// Not found, reset the stream

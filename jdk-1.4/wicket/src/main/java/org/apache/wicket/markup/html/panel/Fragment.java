@@ -221,7 +221,6 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		}
 		else
 		{
-
 			stream = markupProvider.getAssociatedMarkupStream(false);
 			if (stream == null)
 			{
@@ -278,6 +277,28 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			// at the original component
 			providerMarkupStream.setCurrentIndex(currentIndex);
 		}
+	}
+
+	/**
+	 * Position the markup stream at the child component relative to the
+	 * <b>provider</b> markup
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public MarkupStream findComponentIndex(final String path)
+	{
+		MarkupStream markupStream = getAssociatedMarkupStream(true);
+		int index = markupStream.findComponentIndex(markupId, path);
+		if (index == -1)
+		{
+			throw new MarkupException("Markup of component class `" +
+					markupStream.getContainerClass().getName() +
+					"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
+					toString());
+		}
+		markupStream.setCurrentIndex(index);
+		return markupStream;
 	}
 
 	/**
