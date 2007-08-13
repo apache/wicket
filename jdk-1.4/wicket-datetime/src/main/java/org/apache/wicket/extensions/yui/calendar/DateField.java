@@ -73,6 +73,15 @@ public class DateField extends FormComponentPanel
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#isRequired()
+	 */
+	public final boolean isRequired()
+	{
+		// prevent clients from overriding
+		return super.isRequired();
+	}
+
+	/**
 	 * Sets date.
 	 * 
 	 * @param date

@@ -159,6 +159,15 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#isRequired()
+	 */
+	public final boolean isRequired()
+	{
+		// prevent clients from overriding
+		return super.isRequired();
+	}
+
+	/**
 	 * Sets amOrPm.
 	 * 
 	 * @param amOrPm
@@ -342,7 +351,6 @@ public class DateTimeField extends FormComponentPanel
 
 		if (date != null)
 		{
-
 			// convert date to the client's time zone if we have that info
 			TimeZone zone = getClientTimeZone();
 			// instantiate with the previously set date
