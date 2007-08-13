@@ -483,20 +483,24 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	public boolean checkRequired()
 	{
-		final String input = getInput();
-
-		// when null, check whether this is natural for that component, or
-		// whether - as is the case with text fields - this can only happen
-		// when the component was disabled
-		if (input == null && !isInputNullable())
+		if (isRequired())
 		{
-			// this value must have come from a disabled field
-			// do not perform validation
-			return true;
-		}
+			final String input = getInput();
 
-		// peform validation by looking whether the value is null or empty
-		return !Strings.isEmpty(input);
+			// when null, check whether this is natural for that component, or
+			// whether - as is the case with text fields - this can only happen
+			// when the component was disabled
+			if (input == null && !isInputNullable())
+			{
+				// this value must have come from a disabled field
+				// do not perform validation
+				return true;
+			}
+
+			// peform validation by looking whether the value is null or empty
+			return !Strings.isEmpty(input);
+		}
+		return true;
 	}
 
 	/**
@@ -1370,7 +1374,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	protected final void validateRequired()
 	{
-		if (isRequired() && !checkRequired())
+		if (!checkRequired())
 		{
 			reportRequiredError();
 		}
