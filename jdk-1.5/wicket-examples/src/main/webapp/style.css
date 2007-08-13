@@ -233,6 +233,10 @@ div.tabpanel div.tab-row a {
   color:#eee;
   }
   
+div.tab-panel {
+	clear: left;
+}
+  
 div.tabpanel div.tab-row a:hover {
   color:#fff;
   }
