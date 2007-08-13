@@ -508,12 +508,14 @@ public abstract class Session implements IClusterable
 	 */
 	public synchronized final String createAutoPageMapName()
 	{
-		String name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter;
+		String name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter +
+				getAutoPageMapNameSuffix();
 		IPageMap pm = pageMapForName(name, false);
 		while (pm != null)
 		{
 			autoCreatePageMapCounter++;
-			name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter;
+			name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter +
+					getAutoPageMapNameSuffix();
 			pm = pageMapForName(name, false);
 		}
 		return name;
@@ -525,6 +527,14 @@ public abstract class Session implements IClusterable
 	protected String getAutoPageMapNamePrefix()
 	{
 		return "wicket-";
+	}
+
+	/**
+	 * @return
+	 */
+	protected String getAutoPageMapNameSuffix()
+	{
+		return "";
 	}
 
 	/**
@@ -657,6 +667,38 @@ public abstract class Session implements IClusterable
 	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
 	{
 		return true;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * Returns the page with given id and versionNumber. It keeps asking
+	 * pageMaps for given page until it finds one that contains it.
+	 * 
+	 * @param pageId
+	 * @param versionNumber
+	 * @return
+	 */
+	public final Page getPage(final int pageId, final int versionNumber)
+	{
+		if (Application.get().getSessionSettings().isPageIdUniquePerSession() == false)
+		{
+			throw new IllegalStateException(
+					"To call this method ISessionSettings.setPageIdUniquePerSession must be set to true");
+		}
+
+		List pageMaps = getPageMaps();
+
+		for (Iterator i = pageMaps.iterator(); i.hasNext();)
+		{
+			IPageMap pm = (IPageMap)i.next();
+			if (pm.containsPage(pageId, versionNumber))
+			{
+				return getPage(pm.getName(), "" + pageId, versionNumber);
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -1446,5 +1488,12 @@ public abstract class Session implements IClusterable
 				pageMapsUsedInRequest.notifyAll();
 			}
 		}
+	}
+
+	private int pageIdCounter = 0;
+
+	synchronized int nextPageId()
+	{
+		return pageIdCounter++;
 	}
 }

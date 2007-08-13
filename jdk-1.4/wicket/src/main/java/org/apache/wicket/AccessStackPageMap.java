@@ -184,9 +184,10 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 */
 	public final void removeEntry(final IPageMapEntry entry)
 	{
-		if(entry == null)
+		if (entry == null)
 		{
-			// TODO this shouldn't happen but to many people are still getting this now and then/
+			// TODO this shouldn't happen but to many people are still getting
+			// this now and then/
 			// so first this "fix"
 			log.warn("PageMap.removeEntry called with an null entry");
 			return;
@@ -245,7 +246,6 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 
 			// Get the version of the page requested from the page
 			final Page version = page.getVersion(versionNumber);
-
 
 
 			// Is the requested version available?
@@ -357,7 +357,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 							remove(topPage);
 						}
 					}
-					else if(top != null)
+					else if (top != null)
 					{
 						// Remove entry
 						removeEntry(top);
@@ -417,6 +417,19 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 		}
 		accessStack.push(access);
 		dirty();
+	}
+
+	public boolean containsPage(int id, int versionNumber)
+	{
+		for (Iterator i = accessStack.iterator(); i.hasNext();)
+		{
+			Access access = (Access)i.next();
+			if (access.id == id && access.version == versionNumber)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

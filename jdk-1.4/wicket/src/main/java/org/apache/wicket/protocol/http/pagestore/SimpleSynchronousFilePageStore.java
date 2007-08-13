@@ -54,7 +54,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	 */
 	public SimpleSynchronousFilePageStore(File workDir)
 	{
-		this.defaultWorkDir = workDir;
+		defaultWorkDir = workDir;
 		defaultWorkDir.mkdirs();
 
 		appName = Application.get().getApplicationKey();
@@ -353,6 +353,13 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	public void unbind(String sessionId)
 	{
 		removeSession(sessionId);
+	}
+
+	public boolean containsPage(String sessionId, String pageMapName, int pageId, int pageVersion)
+	{
+		File sessionDir = new File(defaultWorkDir, sessionId);
+		File pageFile = getPageFile(sessionDir, pageMapName, pageId, pageVersion, -1);
+		return pageFile.exists();
 	}
 
 	private static final Logger log = LoggerFactory.getLogger(SimpleSynchronousFilePageStore.class);

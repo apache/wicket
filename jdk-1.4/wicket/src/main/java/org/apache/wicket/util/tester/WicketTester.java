@@ -223,6 +223,12 @@ public class WicketTester extends BaseWicketTester
 				public void unbind(String sessionId)
 				{
 				}
+
+				public boolean containsPage(String sessionId, String pageMapName, int pageId,
+						int pageVersion)
+				{
+					return false;
+				}
 			});
 		}
 	}

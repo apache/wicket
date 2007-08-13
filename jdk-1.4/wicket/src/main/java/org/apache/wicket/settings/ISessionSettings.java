@@ -80,4 +80,20 @@ public interface ISessionSettings
 	 *            the strategy for evicting pages from the page map
 	 */
 	void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy);
+
+	/**
+	 * Sets whether the id of a page should be unique across the entire session.
+	 * Default is false, which means that a page id is unique per pagemap.
+	 * 
+	 * @param value
+	 */
+	void setPageIdUniquePerSession(boolean value);
+
+	/**
+	 * Returns whether the page id is unique per session. If the page id is not
+	 * unique per session, it is only unique per pagemap.
+	 * 
+	 * @return
+	 */
+	boolean isPageIdUniquePerSession();
 }

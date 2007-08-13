@@ -328,9 +328,9 @@ public class FilePageStore implements IPageStore
 			this.id = id;
 			this.versionNumber = versionNumber;
 			this.ajaxVersionNumber = ajaxVersionNumber;
-			this.pageClassName = pageClass == null ? null : pageClass.getName();
-			this.pageMap = pagemap;
-			this.data = page;
+			pageClassName = pageClass == null ? null : pageClass.getName();
+			pageMap = pagemap;
+			data = page;
 		}
 
 		SessionPageKey(String sessionId, Page page)
@@ -527,7 +527,8 @@ public class FilePageStore implements IPageStore
 	public Page getPage(String sessionId, String pagemapName, int id, int versionNumber,
 			int ajaxVersionNumber)
 	{
-		// first try to figure out correct versionNumber and ajaxVersionNumeber if necessary
+		// first try to figure out correct versionNumber and ajaxVersionNumeber
+		// if necessary
 		if (versionNumber == -1 || ajaxVersionNumber == -1)
 		{
 			PageVersions versions = findPageVersion(sessionId, pagemapName, id, versionNumber);
@@ -541,7 +542,7 @@ public class FilePageStore implements IPageStore
 				ajaxVersionNumber = versions.ajaxversionid;
 			}
 		}
-		
+
 		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber,
 				ajaxVersionNumber, pagemapName, null);
 		long t1 = System.currentTimeMillis();
@@ -692,7 +693,8 @@ public class FilePageStore implements IPageStore
 			{
 				listFiles[i].delete();
 			}
-			if (id == -1) {
+			if (id == -1)
+			{
 				removePageVersions(sessionId, pageMap);
 			}
 		}
@@ -885,7 +887,7 @@ public class FilePageStore implements IPageStore
 		 */
 		public PageSerializer(SessionPageKey key)
 		{
-			this.current = key;
+			current = key;
 		}
 
 		/**
@@ -957,8 +959,8 @@ public class FilePageStore implements IPageStore
 
 		PageHolder(Page page)
 		{
-			this.pageid = page.getNumericId();
-			this.pagemap = page.getPageMapName();
+			pageid = page.getNumericId();
+			pagemap = page.getPageMapName();
 		}
 
 		protected Object readResolve() throws ObjectStreamException
@@ -1007,14 +1009,14 @@ public class FilePageStore implements IPageStore
 	}
 
 	// sessionId->(pageMapName->List<PageVersion>)
-	private Map /* <String, Map<String, List<PageVersions>> */pageVersionMap = new ConcurrentHashMap();
+	private final Map /* <String, Map<String, List<PageVersions>> */pageVersionMap = new ConcurrentHashMap();
 
 	private List /* <PageVersions> */getPageVersions(String sessionId, String pageMapName,
 			boolean createIfDoesNotExist)
 	{
 		if (pageMapName == null)
 			pageMapName = "";
-		
+
 		Map pageMapToList = (Map)pageVersionMap.get(sessionId);
 		if (pageMapToList == null && createIfDoesNotExist == false)
 		{
@@ -1039,7 +1041,7 @@ public class FilePageStore implements IPageStore
 	{
 		pageVersionMap.remove(sessionId);
 	}
-	
+
 	private void removePageVersions(String sessionId, String pageMapName)
 	{
 		if (pageMapName == null)
@@ -1121,5 +1123,25 @@ public class FilePageStore implements IPageStore
 				list.remove(0);
 			}
 		}
+	}
+
+	public boolean containsPage(String sessionId, String pageMapName, int pageId, int pageVersion)
+	{
+		List list = getPageVersions(sessionId, pageMapName, false);
+		if (list != null)
+		{
+			synchronized (list)
+			{
+				for (Iterator i = list.iterator(); i.hasNext();)
+				{
+					PageVersions v = (PageVersions)i.next();
+					if (v.pageid == pageId && v.versionid == pageVersion)
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

@@ -251,6 +251,12 @@ public final class Settings
 	private boolean throwExceptionOnMissingResource = true;
 
 	/**
+	 * Whether the generated page id must be unique per session, or it's enough
+	 * if it is unique per page map;
+	 */
+	private boolean pageIdUniquePerSession = false;
+
+	/**
 	 * The time that a request will by default be waiting for the previous
 	 * request to be handled before giving up. Defaults to one minute.
 	 */
@@ -1289,5 +1295,15 @@ public final class Settings
 	public void setDefaultMaximumUploadSize(Bytes defaultMaximumUploadSize)
 	{
 		this.defaultMaximumUploadSize = defaultMaximumUploadSize;
+	}
+
+	public void setPageIdUniquePerSession(boolean value)
+	{
+		pageIdUniquePerSession = value;
+	}
+
+	public boolean isPageIdUniquePerSession()
+	{
+		return pageIdUniquePerSession;
 	}
 }

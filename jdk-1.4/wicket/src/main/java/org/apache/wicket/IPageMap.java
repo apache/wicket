@@ -138,4 +138,13 @@ public interface IPageMap extends IClusterable
 	 *            The entry to remove
 	 */
 	void removeEntry(final IPageMapEntry entry);
+
+	/**
+	 * Returns true if the PageMap contains page with given id and versonNumber
+	 * 
+	 * @param id
+	 * @param versionNumber
+	 * @return
+	 */
+	public boolean containsPage(int id, int versionNumber);
 }

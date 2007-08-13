@@ -1188,14 +1188,26 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			throw new IllegalStateException("PageMap cannot be null");
 		}
 
-		// Set the numeric id on this page
-		setNumericId(getPageMap().nextId());
+		setNextAvailableId();
 
 		// Set versioning of page based on default
 		setVersioned(Application.get().getPageSettings().getVersionPagesByDefault());
 
 		// All Pages are born dirty so they get clustered right away
 		dirty();
+	}
+
+	private void setNextAvailableId()
+	{
+		if (getApplication().getSessionSettings().isPageIdUniquePerSession())
+		{
+			setNumericId(getSession().nextPageId());
+		}
+		else
+		{
+			// Set the numeric id on this page
+			setNumericId(getPageMap().nextId());
+		}
 	}
 
 	/**
@@ -1372,7 +1384,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// This should be done if the page was not cloned first, but shouldn't
 		// be done if it was cloned..
 		setPageMap(map);
-		numericId = (short)map.nextId();
+
+		setNextAvailableId();
 	}
 
 	/**

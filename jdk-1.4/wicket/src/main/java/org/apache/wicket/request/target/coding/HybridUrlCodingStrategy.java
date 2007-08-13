@@ -18,6 +18,7 @@ package org.apache.wicket.request.target.coding;
 
 import java.lang.ref.WeakReference;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MetaDataKey;
@@ -126,6 +127,20 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
+	 * Returns whether to redirect when there is pageMap specified in
+	 * bookmarkable URL
+	 * 
+	 * @return
+	 */
+	protected boolean alwaysRedirectWhenPageMapIsSpecified()
+	{
+		// returns true if the pageId is unique, so we can get rid of the
+		// pageMap name in the url this way
+		return Application.exists() &&
+				Application.get().getSessionSettings().isPageIdUniquePerSession();
+	}
+
+	/**
 	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
 	 */
 	public IRequestTarget decode(RequestParameters requestParameters)
@@ -164,6 +179,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		int originalUrlTrailingSlashesCount = getTrailingSlashesCount(extraction
 				.getUrlAfterExtraction());
 
+		boolean redirect = isRedirectOnBookmarkableRequest();
+		if (Strings.isEmpty(pageMapName) != true && alwaysRedirectWhenPageMapIsSpecified())
+		{
+			redirect = true;
+		}
+
 		if (interfaceParameter != null)
 		{
 			// stateless listener interface
@@ -176,16 +197,24 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			// bookmarkable page request
 			return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
-					parameters, originalUrlTrailingSlashesCount, isRedirectOnBookmarkableRequest());
-// return new BookmarkablePageRequestTarget(pageMapName,
-// (Class)pageClassRef.get(),
-// parameters);
+					parameters, originalUrlTrailingSlashesCount, redirect);
 		}
 		else
 		// hybrid url
 		{
-			Page page = Session.get().getPage(pageMapName, "" + pageId,
-					pageVersion != null ? pageVersion.intValue() : 0);
+			Page page;
+
+			if (Strings.isEmpty(pageMapName) && Application.exists() &&
+					Application.get().getSessionSettings().isPageIdUniquePerSession())
+			{
+				page = Session.get().getPage(pageId.intValue(),
+						pageVersion != null ? pageVersion.intValue() : 0);
+			}
+			else
+			{
+				page = Session.get().getPage(pageMapName, "" + pageId,
+						pageVersion != null ? pageVersion.intValue() : 0);
+			}
 
 			// check if the found page match the required class
 			if (page != null && page.getClass().equals(pageClassRef.get()))
@@ -199,8 +228,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// we didn't find the page, act as bookmarkable page request -
 				// create new instance
 				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef
-						.get(), parameters, originalUrlTrailingSlashesCount,
-						isRedirectOnBookmarkableRequest());
+						.get(), parameters, originalUrlTrailingSlashesCount, redirect);
 			}
 		}
 
@@ -591,11 +619,20 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 */
 		public String toString()
 		{
+			String pageMapName = this.pageMapName;
+
+			// we don't need to encode the pageMapName when the pageId is unique
+			// per session
+			if (pageMapName != null && pageId != null && Application.exists() &&
+					Application.get().getSessionSettings().isPageIdUniquePerSession())
+			{
+				pageMapName = null;
+			}
+
 			AppendingStringBuffer buffer = new AppendingStringBuffer(5);
 
 			final boolean pmEmpty = Strings.isEmpty(pageMapName);
-			final boolean pmStartsWithCharacter = !pmEmpty &&
-					Character.isLetter(pageMapName.charAt(0));
+			final boolean pmContainsLetter = !pmEmpty && !isNumber(pageMapName);
 
 
 			if (pageId != null && pmEmpty && versionNumber.intValue() == 0)
@@ -610,18 +647,18 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				buffer.append(getPageInfoSeparator());
 				buffer.append(versionNumber);
 			}
-			else if (pageId == null && pmStartsWithCharacter)
+			else if (pageId == null && pmContainsLetter)
 			{
 				// pageMap (must start with letter)
 				buffer.append(pageMapName);
 			}
-			else if (pageId == null && !pmEmpty && !pmStartsWithCharacter)
+			else if (pageId == null && !pmEmpty && !pmContainsLetter)
 			{
 				// .pageMap
 				buffer.append(getPageInfoSeparator());
 				buffer.append(pageMapName);
 			}
-			else if (pmStartsWithCharacter && pageId != null && versionNumber.intValue() == 0)
+			else if (pmContainsLetter && pageId != null && versionNumber.intValue() == 0)
 			{
 				// pageMap.pageId (pageMap must start with a letter)
 				buffer.append(pageMapName);
@@ -777,13 +814,15 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		public void respond(RequestCycle requestCycle)
 		{
-// super.respond(requestCycle);
-// if (requestCycle.isRedirect() == false)
 			{
 				Page page = getPage(requestCycle);
 				if (page.isPageStateless() == false && redirect)
 				{
 					requestCycle.redirectTo(page);
+				}
+				else
+				{
+					super.respond(requestCycle);
 				}
 			}
 		}

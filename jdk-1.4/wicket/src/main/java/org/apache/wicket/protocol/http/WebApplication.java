@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
+import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
@@ -400,7 +401,7 @@ public abstract class WebApplication extends Application
 	public final void setWicketFilter(final WicketFilter wicketFilter)
 	{
 		this.wicketFilter = wicketFilter;
-		this.applicationKey = wicketFilter.getFilterConfig().getFilterName();
+		applicationKey = wicketFilter.getFilterConfig().getFilterName();
 	}
 
 	/**
@@ -559,7 +560,7 @@ public abstract class WebApplication extends Application
 	 */
 	protected ISessionStore newSessionStore()
 	{
-		return new SecondLevelCacheSessionStore(this, new FilePageStore());
+		return new SecondLevelCacheSessionStore(this, new DiskPageStore());
 	}
 
 	/**

@@ -50,14 +50,14 @@ public class TestFilePageStore implements IPageStore
 
 	private final File defaultWorkDir;
 	private final String appName;
-	
+
 	volatile long totalSavingTime = 0;
 	volatile long totalSerializationTime = 0;
 
 	private volatile int saved;
 
 	private volatile int bytesSaved;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -78,7 +78,7 @@ public class TestFilePageStore implements IPageStore
 		defaultWorkDir = dir;
 		appName = Application.get().getApplicationKey();
 	}
-	
+
 	private class SessionPageKey
 	{
 		private final String sessionId;
@@ -101,8 +101,8 @@ public class TestFilePageStore implements IPageStore
 			this.id = id;
 			this.versionNumber = versionNumber;
 			this.ajaxVersionNumber = ajaxVersionNumber;
-			this.pageClassName = pageClass.getName();
-			this.pageMap = pagemap;
+			pageClassName = pageClass.getName();
+			pageMap = pagemap;
 		}
 
 		/**
@@ -121,11 +121,11 @@ public class TestFilePageStore implements IPageStore
 			if (obj instanceof SessionPageKey)
 			{
 				SessionPageKey key = (SessionPageKey)obj;
-				return id == key.id
-						&& versionNumber == key.versionNumber
-						&& ajaxVersionNumber == key.ajaxVersionNumber
-						&& ((pageMap != null && pageMap.equals(key.pageMap)) || (pageMap == null && key.pageMap == null))
-						&& sessionId.equals(key.sessionId);
+				return id == key.id &&
+						versionNumber == key.versionNumber &&
+						ajaxVersionNumber == key.ajaxVersionNumber &&
+						((pageMap != null && pageMap.equals(key.pageMap)) || (pageMap == null && key.pageMap == null)) &&
+						sessionId.equals(key.sessionId);
 			}
 			return false;
 		}
@@ -135,14 +135,16 @@ public class TestFilePageStore implements IPageStore
 		 */
 		public String toString()
 		{
-			return "SessionPageKey[" + sessionId + "," + id + "," + versionNumber + ","
-					+ ajaxVersionNumber + ", " + pageMap + "]";
+			return "SessionPageKey[" + sessionId + "," + id + "," + versionNumber + "," +
+					ajaxVersionNumber + ", " + pageMap + "]";
 		}
 	}
-	
-	public Page getPage(String sessionId, String pagemap, int id, int versionNumber, int ajaxVersionNumber)
+
+	public Page getPage(String sessionId, String pagemap, int id, int versionNumber,
+			int ajaxVersionNumber)
 	{
-		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber, ajaxVersionNumber, pagemap, null);
+		SessionPageKey currentKey = new SessionPageKey(sessionId, id, versionNumber,
+				ajaxVersionNumber, pagemap, null);
 		File sessionDir = new File(getWorkDir(), sessionId);
 		File pageFile = getPageFile(currentKey, sessionDir);
 		if (pageFile.exists())
@@ -171,11 +173,11 @@ public class TestFilePageStore implements IPageStore
 				if (page != null && log.isDebugEnabled())
 				{
 					long t3 = System.currentTimeMillis();
-					log.debug("restoring page " + page.getClass() + "[" + page.getNumericId()
-							+ "," + page.getCurrentVersionNumber() + "] size: "
-							+ pageData.length + " for session " + sessionId + " took "
-							+ (t2 - t1) + " miliseconds to read in and " + (t3 - t2)
-							+ " miliseconds to deserialize");
+					log.debug("restoring page " + page.getClass() + "[" + page.getNumericId() +
+							"," + page.getCurrentVersionNumber() + "] size: " + pageData.length +
+							" for session " + sessionId + " took " + (t2 - t1) +
+							" miliseconds to read in and " + (t3 - t2) +
+							" miliseconds to deserialize");
 				}
 				return page;
 			}
@@ -189,7 +191,7 @@ public class TestFilePageStore implements IPageStore
 
 	public void pageAccessed(String sessionId, Page page)
 	{
-		
+
 	}
 
 	public void removePage(String sessionId, String pageMapName, int pageId)
@@ -200,7 +202,7 @@ public class TestFilePageStore implements IPageStore
 	{
 		SessionPageKey key = new SessionPageKey(sessionId, page);
 		byte[] serialized = Objects.objectToByteArray(page);
-		//map.put(key, serialized);
+		// map.put(key, serialized);
 		savePage(key, serialized);
 	}
 
@@ -210,15 +212,15 @@ public class TestFilePageStore implements IPageStore
 
 	private File getPageFile(SessionPageKey key, File sessionDir)
 	{
-		return new File(sessionDir, appName + "-pm-" + key.pageMap + "-p-" + key.id + "-v-"
-				+ key.versionNumber + "-a-" + key.ajaxVersionNumber);
+		return new File(sessionDir, appName + "-pm-" + key.pageMap + "-p-" + key.id + "-v-" +
+				key.versionNumber + "-a-" + key.ajaxVersionNumber);
 	}
 
 	private File getWorkDir()
 	{
 		return defaultWorkDir;
 	}
-	
+
 	private void savePage(SessionPageKey key, byte[] bytes)
 	{
 		File sessionDir = new File(getWorkDir(), key.sessionId);
@@ -237,8 +239,8 @@ public class TestFilePageStore implements IPageStore
 		}
 		catch (Exception e)
 		{
-			log.error("Error saving page " + key.pageClassName + " [" + key.id + ","
-					+ key.versionNumber + "] for the sessionid " + key.sessionId);
+			log.error("Error saving page " + key.pageClassName + " [" + key.id + "," +
+					key.versionNumber + "] for the sessionid " + key.sessionId);
 		}
 		finally
 		{
@@ -257,12 +259,17 @@ public class TestFilePageStore implements IPageStore
 		long t3 = System.currentTimeMillis();
 		if (log.isDebugEnabled())
 		{
-			log.debug("storing page " + key.pageClassName + "[" + key.id + "," + key.versionNumber
-					+ "] size: " + length + " for session " + key.sessionId + " took " + (t3 - t1)
-					+ " miliseconds to save");
+			log.debug("storing page " + key.pageClassName + "[" + key.id + "," + key.versionNumber +
+					"] size: " + length + " for session " + key.sessionId + " took " + (t3 - t1) +
+					" miliseconds to save");
 		}
 		totalSavingTime += (t3 - t1);
 		saved++;
 		bytesSaved += length;
+	}
+
+	public boolean containsPage(String sessionId, String pageMapName, int pageId, int pageVersion)
+	{
+		return false;
 	}
 }

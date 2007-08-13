@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -206,7 +207,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	public final int nextId()
 	{
 		dirty();
-		return this.pageId++;
+		return pageId++;
 	}
 
 	/**
@@ -341,6 +342,42 @@ public abstract class PageMap implements IClusterable, IPageMap
 				visitor.entry((IPageMapEntry)session.getAttribute(attribute));
 			}
 		}
+	}
+
+	/**
+	 * MetaDataEntry array.
+	 */
+	private MetaDataEntry[] metaData;
+
+	/**
+	 * Sets the metadata for this PageMap using the given key. If the metadata
+	 * object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * 
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	{
+		metaData = key.set(metaData, object);
+	}
+
+	/**
+	 * Gets metadata for this PageMap using the given key.
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata or null of no metadata was found for the given key
+	 * @see MetaDataKey
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		return key.get(metaData);
 	}
 
 	/**

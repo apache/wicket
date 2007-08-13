@@ -117,13 +117,24 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param sessionId
 		 */
 		void unbind(String sessionId);
+
+		/**
+		 * Returns whether the PageStore contains given page.
+		 * 
+		 * @param sessionId
+		 * @param pageMapName
+		 * @param pageId
+		 * @param pageVersion
+		 * @return
+		 */
+		boolean containsPage(String sessionId, String pageMapName, int pageId, int pageVersion);
 	}
 
-	protected boolean isPageStoreClustered() 
+	protected boolean isPageStoreClustered()
 	{
 		return pageStore instanceof IClusteredPageStore;
 	}
-	
+
 	/**
 	 * Marker interface for PageStores that support replication of serialized
 	 * pages across cluster, which means that the lastPage attribute of
@@ -131,11 +142,11 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface IClusteredPageStore extends IPageStore 
+	public static interface IClusteredPageStore extends IPageStore
 	{
-		
+
 	};
-	
+
 	/**
 	 * Some PageStores might want to preprocess page before serialization. For
 	 * example if the PageStore serializes page, it might keep the serialized
@@ -145,23 +156,25 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface ISerializationAwarePageStore extends IPageStore 
+	public static interface ISerializationAwarePageStore extends IPageStore
 	{
 		/**
 		 * Process the page before the it gets serialized
+		 * 
 		 * @param page
 		 * @return
 		 */
 		public Serializable prepareForSerialization(Page page);
-		
+
 		/**
 		 * This method should restore the given object to the original page.
+		 * 
 		 * @param serializable
 		 * @return
 		 */
 		public Page restoreAfterSerialization(Serializable serializable);
 	};
-	
+
 	/**
 	 * Page map implementation for this session store.
 	 */
@@ -175,19 +188,20 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		// whether the last page instance should be serialized together with the
 		// pagemap
-		private boolean serializeLastPage;
-		
+		private final boolean serializeLastPage;
+
 		// when the last page is deserialized, it's actually placed here
-		// then on first demand, it's postprocessed (if the session store implements
+		// then on first demand, it's postprocessed (if the session store
+		// implements
 		// ISerializationAwareSessionStore) and set as lastPage
 		private Serializable lastPageDeserialized;
-		
+
 		private transient SecondLevelCacheSessionStore sessionStore;
-		
+
 		private IPageStore getPageStore()
 		{
 			if (sessionStore == null)
-			{				
+			{
 				Application app = Application.exists() ? Application.get() : null;
 				if (app != null)
 				{
@@ -203,32 +217,34 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				return null;
 			}
 		}
-		
+
 		private Page getLastPage()
 		{
 			if (lastPage == null && lastPageDeserialized != null)
 			{
 				IPageStore store = getPageStore();
-				// initialize lastPage if necessary (we intentionally delay this until the first demand)
+				// initialize lastPage if necessary (we intentionally delay this
+				// until the first demand)
 				if (store instanceof ISerializationAwarePageStore)
 				{
-					lastPage = ((ISerializationAwarePageStore)store).restoreAfterSerialization(lastPageDeserialized);
+					lastPage = ((ISerializationAwarePageStore)store)
+							.restoreAfterSerialization(lastPageDeserialized);
 				}
 				else if (lastPageDeserialized instanceof Page)
 				{
-					lastPage = (Page) lastPageDeserialized;
+					lastPage = (Page)lastPageDeserialized;
 				}
 				lastPageDeserialized = null;
 			}
 			return lastPage;
 		}
-		
+
 		private void setLastPage(Page lastPage)
 		{
 			this.lastPage = lastPage;
-			this.lastPageDeserialized = null;
+			lastPageDeserialized = null;
 		}
-		
+
 		/**
 		 * Construct.
 		 * 
@@ -240,9 +256,23 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			super(name);
 			this.sessionStore = sessionStore;
-			this.serializeLastPage = sessionStore.isPageStoreClustered() == false;
+			serializeLastPage = sessionStore.isPageStoreClustered() == false;
 		}
-		
+
+		public boolean containsPage(int id, int versionNumber)
+		{
+			Page lastPage = this.lastPage;
+			if (lastPage != null && lastPage.getNumericId() == id &&
+					lastPage.getCurrentVersionNumber() == versionNumber)
+			{
+				return true;
+			}
+			else
+			{
+				return getStore().containsPage(getSession().getId(), getName(), id, versionNumber);
+			}
+		}
+
 		/**
 		 * @see org.apache.wicket.PageMap#get(int, int)
 		 */
@@ -274,7 +304,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			String sessionId = getSession().getId();
 			if (getLastPage() != null && getLastPage().getNumericId() == id)
 			{
-				page = versionNumber != -1 ? getLastPage().getVersion(versionNumber) : getLastPage();
+				page = versionNumber != -1
+						? getLastPage().getVersion(versionNumber)
+						: getLastPage();
 				if (page != null)
 				{
 					// ask the page store if it is ready saving the page.
@@ -286,8 +318,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			if (sessionId != null)
 			{
 				setLastPage(null);
-				page = getStore().getPage(sessionId, getName(), id, versionNumber,
-						-1);
+				page = getStore().getPage(sessionId, getName(), id, versionNumber, -1);
 				pages.put(id, page);
 				return page;
 
@@ -341,28 +372,29 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
 		}
-		
-		private void writeObject(java.io.ObjectOutputStream s) throws IOException 
+
+		private void writeObject(java.io.ObjectOutputStream s) throws IOException
 		{
 			s.defaultWriteObject();
-			
+
 			// if the pagestore is not clustered, we need to serialize the
 			// lastPage instance
-			if (serializeLastPage) 
+			if (serializeLastPage)
 			{
 				Serializable page = lastPage;
-				
+
 				IPageStore store = getPageStore();
 				if (page != null && store instanceof ISerializationAwarePageStore)
 				{
 					page = ((ISerializationAwarePageStore)store).prepareForSerialization(lastPage);
 				}
-				
+
 				s.writeObject(page);
 			}
 		}
-		
-		private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException 
+
+		private void readObject(java.io.ObjectInputStream s) throws IOException,
+				ClassNotFoundException
 		{
 			s.defaultReadObject();
 
@@ -370,7 +402,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			// instance
 			if (serializeLastPage)
 			{
-				Serializable page = (Serializable) s.readObject();
+				Serializable page = (Serializable)s.readObject();
 				if (page != null)
 				{
 					lastPageDeserialized = page;
@@ -405,7 +437,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			this.page = page;
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.version.IPageVersionManager#beginVersion(boolean)
 		 */
@@ -430,7 +462,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			else
 			{
 				if (RequestCycle.get().getRequest() instanceof WebRequest &&
-					((WebRequest)RequestCycle.get().getRequest()).isAjax())
+						((WebRequest)RequestCycle.get().getRequest()).isAjax())
 				{
 					currentAjaxVersionNumber++;
 				}
@@ -593,11 +625,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 			// versionStarted = true;
 		}
-
 	}
 
 	static final ThreadLocal usedPages = new ThreadLocal();
-	
+
 	/**
 	 * @return
 	 */
