@@ -947,7 +947,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 * @param required
 	 * @return this for chaining
 	 */
-	public final FormComponent setRequired(final boolean required)
+	public FormComponent setRequired(final boolean required)
 	{
 		if (!required && getType() != null && getType().isPrimitive())
 		{

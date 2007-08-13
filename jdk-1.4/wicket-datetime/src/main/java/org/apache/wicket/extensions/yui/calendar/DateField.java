@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.yui.calendar;
 import java.util.Date;
 
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -84,6 +85,15 @@ public class DateField extends FormComponentPanel
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#setRequired(boolean)
+	 */
+	public FormComponent setRequired(boolean required)
+	{
+		dateField.setRequired(required);
+		return this;
+	}
+
+	/**
 	 * Initialize.
 	 */
 	private void init()
@@ -144,13 +154,5 @@ public class DateField extends FormComponentPanel
 		}
 
 		super.onBeforeRender();
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
-	 */
-	public boolean checkRequired()
-	{
-		return dateField.checkRequired();
 	}
 }

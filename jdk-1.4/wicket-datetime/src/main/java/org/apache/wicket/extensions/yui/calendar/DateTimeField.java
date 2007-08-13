@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import org.apache.wicket.Session;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -50,8 +51,6 @@ import org.joda.time.MutableDateTime;
 // systems with AM/PM, others have 24 hour systems
 public class DateTimeField extends FormComponentPanel
 {
-	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
-
 	/**
 	 * Enumerated type for different ways of handling the render part of
 	 * requests.
@@ -75,6 +74,8 @@ public class DateTimeField extends FormComponentPanel
 			super(name);
 		}
 	}
+
+	private static final IConverter MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
 
 	private static final long serialVersionUID = 1L;
 
@@ -200,6 +201,15 @@ public class DateTimeField extends FormComponentPanel
 	public void setMinutes(Integer minutes)
 	{
 		this.minutes = minutes;
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#setRequired(boolean)
+	 */
+	public FormComponent setRequired(boolean required)
+	{
+		dateField.setRequired(required);
+		return this;
 	}
 
 	/**
@@ -353,13 +363,5 @@ public class DateTimeField extends FormComponentPanel
 		}
 
 		super.onBeforeRender();
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
-	 */
-	public boolean checkRequired()
-	{
-		return dateField.checkRequired();
 	}
 }

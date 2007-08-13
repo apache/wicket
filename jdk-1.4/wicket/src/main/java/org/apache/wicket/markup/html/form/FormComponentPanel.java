@@ -40,22 +40,6 @@ import org.apache.wicket.model.IModel;
  * would analyse the model value, break it up and distribute the appropriate
  * values over the child components.
  * </p>
- * <p>
- * FormComponentPanel implementations have to provide meaningful implementations
- * for the {@link #checkRequired() required check}. Typically, this means
- * executing the check on nested components. For instance, a panel that embeds a
- * date text field and a date picker, would simply check it's text field:
- * 
- * <pre>
- * private TextField dateField;
- * ...
- * public boolean checkRequired()
- * {
- * 	return dateField.checkRequired();
- * }
- * </pre>
- * 
- * </p>
  * 
  * <p>
  * Here is a simple example of a panel with two components that multiplies and
@@ -63,6 +47,7 @@ import org.apache.wicket.model.IModel;
  * setting the model value wouldn't make sense, as the lhs and rhs cannot be
  * known. For more complete examples of using this class, see the
  * wicket-datetime project.
+ * </p>
  * 
  * <pre>
  * public class Multiply extends FormComponentPanel
@@ -82,11 +67,6 @@ import org.apache.wicket.model.IModel;
  * 	{
  * 		super(id, model);
  * 		init();
- * 	}
- * 
- * 	public boolean checkRequired()
- * 	{
- * 		return left.checkRequired() &amp;&amp; right.checkRequired();
  * 	}
  * 
  * 	protected void convertInput()
@@ -163,24 +143,6 @@ public abstract class FormComponentPanel extends FormComponent
 	{
 		super(id, model);
 	}
-
-	/**
-	 * Subclasses need to pass this check to the appropriate nested
-	 * component(s). For instance, a panel that embeds a date text field and a
-	 * date picker, would simply check it's text field:
-	 * 
-	 * <pre>
-	 * private TextField dateField;
-	 * ...
-	 * public boolean checkRequired()
-	 * {
-	 * 	return dateField.checkRequired();
-	 * }
-	 * </pre>
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#checkRequired()
-	 */
-	public abstract boolean checkRequired();
 
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderPartContainerProvider#newHeaderPartContainer(java.lang.String,

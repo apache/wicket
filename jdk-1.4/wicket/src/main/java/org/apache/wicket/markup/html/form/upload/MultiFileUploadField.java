@@ -357,14 +357,6 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
-	 */
-	public boolean checkRequired()
-	{
-		return true;
-	}
-
-	/**
 	 * Model that will construct the caption string
 	 * 
 	 * @author ivaynberg

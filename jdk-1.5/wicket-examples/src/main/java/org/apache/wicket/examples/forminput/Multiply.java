@@ -70,15 +70,6 @@ public class Multiply extends FormComponentPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponentPanel#checkRequired()
-	 */
-	@Override
-	public boolean checkRequired()
-	{
-		return left.checkRequired() && right.checkRequired();
-	}
-
-	/**
 	 * @return gets lhs
 	 */
 	public int getLhs()
