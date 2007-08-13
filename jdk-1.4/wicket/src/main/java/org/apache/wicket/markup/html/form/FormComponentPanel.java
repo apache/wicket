@@ -145,6 +145,14 @@ public abstract class FormComponentPanel extends FormComponent
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#checkRequired()
+	 */
+	public boolean checkRequired()
+	{
+		return true;
+	}
+
+	/**
 	 * @see org.apache.wicket.markup.html.IHeaderPartContainerProvider#newHeaderPartContainer(java.lang.String,
 	 *      java.lang.String)
 	 */
