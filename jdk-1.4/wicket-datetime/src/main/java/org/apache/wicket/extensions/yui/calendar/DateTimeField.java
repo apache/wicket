@@ -23,7 +23,6 @@ import java.util.TimeZone;
 import org.apache.wicket.Session;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -159,15 +158,6 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#isRequired()
-	 */
-	public final boolean isRequired()
-	{
-		// prevent clients from overriding
-		return super.isRequired();
-	}
-
-	/**
 	 * Sets amOrPm.
 	 * 
 	 * @param amOrPm
@@ -210,16 +200,6 @@ public class DateTimeField extends FormComponentPanel
 	public void setMinutes(Integer minutes)
 	{
 		this.minutes = minutes;
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#setRequired(boolean)
-	 */
-	public FormComponent setRequired(boolean required)
-	{
-		super.setRequired(required);
-		dateField.setRequired(required);
-		return this;
 	}
 
 	/**
@@ -333,6 +313,15 @@ public class DateTimeField extends FormComponentPanel
 	protected DateTextField newDateTextField(PropertyModel dateFieldModel)
 	{
 		return DateTextField.forShortStyle("date", dateFieldModel);
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onAttach()
+	 */
+	protected void onAttach()
+	{
+		super.onAttach();
+		dateField.setRequired(isRequired());
 	}
 
 	/**
