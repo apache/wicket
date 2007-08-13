@@ -316,19 +316,12 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAttach()
-	 */
-	protected void onAttach()
-	{
-		super.onAttach();
-		dateField.setRequired(isRequired());
-	}
-
-	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
 	protected void onBeforeRender()
 	{
+		dateField.setRequired(isRequired());
+
 		Date d = (Date)getModelObject();
 		if (d != null)
 		{
