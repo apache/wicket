@@ -156,71 +156,69 @@ Wicket.FunctionsExecuter.prototype = {
  * on browser where it's not supported when using outerHTML (IE, Opera).
  */
 Wicket.replaceOuterHtml = function(element, text) {	
+
     if (element.outerHTML) { // internet explorer or opera support outerHtml
-		var parent = element.parentNode;
-       
-		// find out the element's index and next element (if any). 
-		// outerHtml can replace element with multiple elements and we need
-		// to track the new elements in order to execute the script elements
-		// they contain
-		var i;
-		var next = null; // next element will be stored here
-		for (i = 0; i < parent.childNodes.length; ++i) {
-			if (parent.childNodes[i] == element) {
-				if (i != parent.childNodes.length - 1) {
-       				next = parent.childNodes[i+1]
-       			}
-       			break;       			
-       		}
-		}
-			   
-		var tn = element.tagName;
-
-		// elements inside tables have to be treated special
-		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
-			// not inside table - regular replace
-			element.outerHTML = text;						
-		} else {	  		
-			// this is a hack to get around the fact that internet explorer doesn't allow the
-			// outerHtml attribute on table elements				
-			var tempDiv = document.createElement("div");
-			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';	
-			
-			// we may have inserted multiple elements, so we need to take care of all of them
-			var tempParent = tempDiv.getElementsByTagName(tn).item(0).parentNode;
-
-			while(tempParent.childNodes.length > 0) {
-				var tempElement = tempParent.childNodes[0];
-				element.parentNode.insertBefore(tempElement, element);
-			}
-
-			//element.parentNode.replaceChild(tempDiv.getElementsByTagName(tn).item(0), element);
-			element.parentNode.removeChild(element);						
-		}
-
-       
-	    // execute inserted javascripts
-	    
-    	var elements = new Array();
     
-		for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {	   		
-			// add the inserted elements to array
-			elements.push(parent.childNodes[j]);
+		var parent = element.parentNode;
+		var tn = element.tagName;
+					
+		var tempDiv = document.createElement("div");
+		var tempParent;
+		
+		// array for javascripts that were in the text
+		var scripts = new Array();
+		
+		
+		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
+			// in case the element is not any of these
+			
+			// this is not exactly nice, but we need to get invalid markup inside innerHTML,
+			// because otherwise IE just swallows the <script> tags (sometimes) 
+			tempDiv.innerHTML = '<table style="display:none">' + text + '</table>';
+			
+			// now copy the script tags to array (needed later for script execution)
+			var s = tempDiv.getElementsByTagName("script");
+			for (var i = 0; i < s.length; ++i) {
+				scripts.push(s[i]);
+			}
+			
+			// now use regular div so that we won't mess the DOM
+			tempDiv.innerHTML = '<div style="display:none">' + text + '</div>'; 
+			
+			// set the outer <div> as parent
+			tempParent = tempDiv.childNodes[0];
+		} else {
+		
+			// hack to get around the fact that IE doesn't allow to replace table elements
+			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';
+			
+			// get the parent element of new elements
+			tempParent = tempDiv.getElementsByTagName(tn).item(0).parentNode;
+			
+			// collect the scrips
+			scripts = tempDiv.getElementsByTagName("script");	
+		}	
+
+		// place all newly created elements before the old element	
+		while(tempParent.childNodes.length > 0) {
+			var tempElement = tempParent.childNodes[0];
+			parent.insertBefore(tempElement, element);
 		}
+       
+	    // remove the original element
+		parent.removeChild(element);
+		
 			
 		// we need to execute the javascript in reverse order to be consistent with firefox 
-
 		if (element.tagName == "SCRIPT") {
 			// in case we replaced the script element
 			Wicket.Head.addJavascripts(element);
 		} else {
-			for (i = elements.length - 1; i >= 0; --i) {
-				Wicket.Head.addJavascripts(elements[i]); 
+			for (i = scripts.length - 1; i >= 0; --i) {
+				Wicket.Head.addJavascripts(scripts[i]); 
 			}						
 		} 
-							
-		
-
+					
     } else {
     	// create range and fragment
         var range = element.ownerDocument.createRange();
@@ -234,6 +232,7 @@ Wicket.replaceOuterHtml = function(element, text) {
 
         element.parentNode.replaceChild(fragment, element);        
 
+		// for certain browsers we need to execute the javascript manually
 		if (document.all != null) {
 			for (var i in elements) {
 				Wicket.Head.addJavascripts(elements[i]);
@@ -1672,8 +1671,10 @@ Wicket.Focus = {
 	    // IE doesn't have the property "target".
 	    // Use "srcElement" instead.
 	    var target = event.target ? event.target : event.srcElement;
-		lastFocusId=target.id;
-		Wicket.Log.info("focus set on " + lastFocusId);
+	    if (target) {
+			lastFocusId=target.id;
+			Wicket.Log.info("focus set on " + lastFocusId);
+		}
 	},
 	
 	setFocusOnId: function(id)
