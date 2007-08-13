@@ -98,6 +98,7 @@ public class DateField extends FormComponentPanel
 	 */
 	public FormComponent setRequired(boolean required)
 	{
+		super.setRequired(required);
 		dateField.setRequired(required);
 		return this;
 	}
