@@ -29,6 +29,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.version.IPageVersionManager;
@@ -48,7 +49,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * that it gets under the id and version number. So that every page version
 	 * can be reconstructed when asked for.
 	 * 
-	 * @see FilePageStore as default implementation.
+	 * @see DiskPageStore as default implementation.
 	 */
 	public static interface IPageStore
 	{
@@ -453,7 +454,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			versionStarted = true;
 			if (!mergeVersion)
 			{
-				// TODO: Skip existing versions! (Ask filepagestore for last
+				// TODO: Skip existing versions! (Ask pagestore for last
 				// version)
 				currentVersionNumber++;
 				lastAjaxVersionNumber = currentAjaxVersionNumber;
