@@ -497,6 +497,16 @@ public abstract class Session implements IClusterable
 		return newPageMap(createAutoPageMapName());
 	}
 
+	protected int currentCreateAutoPageMapCounter()
+	{
+		return autoCreatePageMapCounter;
+	}
+
+	protected void incrementCreateAutoPageMapCounter()
+	{
+		++autoCreatePageMapCounter;
+	}
+
 	/**
 	 * With this call you can create a pagemap name but not create the pagemap
 	 * itself already. It will give the first pagemap name where it couldn't
@@ -508,13 +518,13 @@ public abstract class Session implements IClusterable
 	 */
 	public synchronized final String createAutoPageMapName()
 	{
-		String name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter +
+		String name = getAutoPageMapNamePrefix() + currentCreateAutoPageMapCounter() +
 				getAutoPageMapNameSuffix();
 		IPageMap pm = pageMapForName(name, false);
 		while (pm != null)
 		{
-			autoCreatePageMapCounter++;
-			name = getAutoPageMapNamePrefix() + autoCreatePageMapCounter +
+			incrementCreateAutoPageMapCounter();
+			name = getAutoPageMapNamePrefix() + currentCreateAutoPageMapCounter() +
 					getAutoPageMapNameSuffix();
 			pm = pageMapForName(name, false);
 		}
@@ -1492,7 +1502,7 @@ public abstract class Session implements IClusterable
 
 	private int pageIdCounter = 0;
 
-	synchronized int nextPageId()
+	synchronized protected int nextPageId()
 	{
 		return pageIdCounter++;
 	}
