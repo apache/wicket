@@ -210,7 +210,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private short autoIndex;
 
 	/** Numeric version of this page's id */
-	private short numericId;
+	private int numericId;
 
 	/** The PageMap within the session that this page is stored in */
 	private transient IPageMap pageMap;
@@ -981,7 +981,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void setNumericId(final int id)
 	{
-		numericId = (short)id;
+		numericId = id;
 	}
 
 	/**
