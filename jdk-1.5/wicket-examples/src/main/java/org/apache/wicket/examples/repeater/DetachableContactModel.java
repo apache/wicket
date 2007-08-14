@@ -27,7 +27,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 public class DetachableContactModel extends LoadableDetachableModel
 {
 	private long id;
-	private transient Contact contact;
 
 	protected ContactsDatabase getContactsDB()
 	{
@@ -40,7 +39,6 @@ public class DetachableContactModel extends LoadableDetachableModel
 	public DetachableContactModel(Contact c)
 	{
 		this(c.getId());
-		contact = c;
 	}
 
 	/**
