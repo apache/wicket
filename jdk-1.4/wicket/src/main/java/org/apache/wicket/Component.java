@@ -1978,6 +1978,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void render(final MarkupStream markupStream)
 	{
+		// We need to know the index before we do the visibility check.
+		// Otherwise
+		// we wouldn't know the markup index for invisible components
+		if (markupStream != null)
+		{
+			markupIndex = markupStream.getCurrentIndex();
+		}
+
 		markRendering();
 
 		setMarkupStream(markupStream);
