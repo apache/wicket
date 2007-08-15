@@ -21,14 +21,14 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
 
 
 /**
- * Convinience implementation of a data provider that can also act as a locator
+ * Convenience implementation of a data provider that can also act as a locator
  * for a {@link SingleSortState} object.
  * 
  * Most times it is convenient to keep sort and filtering information inside the
  * data provider implementation because it makes that information easy to access
  * within the data provider.
  * 
- * @author Igor Vaynberg
+ * @author Igor Vaynberg (ivaynberg at apache dot org)
  */
 public abstract class SortableDataProvider implements ISortableDataProvider
 {
