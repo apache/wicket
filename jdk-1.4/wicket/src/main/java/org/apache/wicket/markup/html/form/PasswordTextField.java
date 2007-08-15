@@ -110,7 +110,10 @@ public class PasswordTextField extends TextField
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
+		if (getResetPassword())
+		{
+			tag.put("value", "");
+		}
 	}
 
 	protected String getInputType()
