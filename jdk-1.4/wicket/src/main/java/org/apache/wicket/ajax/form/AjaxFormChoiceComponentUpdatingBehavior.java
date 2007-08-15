@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.ajax.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -26,6 +25,8 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -35,8 +36,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
-
-	protected Component component;
 
 	/**
 	 * Default constructor
@@ -67,9 +66,10 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		asb.append("}\n");
 		
 		response.renderJavascript(asb, "attachChoice");
-		
-		response.renderOnLoadJavascript("attachChoiceHandlers('" + component.getMarkupId()+ "', function() {" + getEventHandler()+ "});");
-		
+
+		response.renderOnLoadJavascript("attachChoiceHandlers('" + getComponent().getMarkupId()
+				+ "', function() {" + getEventHandler() + "});");
+
 	}
 	
 	/**
@@ -115,6 +115,16 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 		{
 			throw new WicketRuntimeException("Behavior " + getClass().getName()
 					+ " can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
+		}
+
+		if (getComponent() instanceof RadioGroup || getComponent() instanceof CheckGroup)
+		{
+			getComponent().setRenderBodyOnly(false);
+			IModel model = getComponent().getModel();
+			if (model == null)
+			{
+				getComponent().setModel(new Model(null));
+			}
 		}
 	}
 
