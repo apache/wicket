@@ -49,8 +49,7 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
-			boolean autoSubmit)
+	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices, boolean autoSubmit)
 	{
 		this(id, model, form, choices, defaultRenderer, autoSubmit);
 	}
@@ -62,8 +61,7 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, List choices,
-			boolean autoSubmit)
+	public ChoiceFilter(String id, IModel model, FilterForm form, List choices, boolean autoSubmit)
 	{
 		this(id, model, form, new Model((Serializable)choices), defaultRenderer, autoSubmit);
 	}
@@ -103,15 +101,34 @@ public class ChoiceFilter extends AbstractFilter
 	{
 		super(id, form);
 
-		choice = new DropDownChoice("filter", model, choices, renderer);
-		
+		choice = newDropDownChoice("filter", model, choices, renderer);
+
 		if (autoSubmit)
 		{
 			choice.add(new AttributeModifier("onchange", true, new Model("this.form.submit();")));
 		}
 		enableFocusTracking(choice);
-		
+
 		add(choice);
+	}
+
+	/**
+	 * Factory method for the drop down choice component
+	 * 
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            component model
+	 * @param choices
+	 *            choices model
+	 * @param renderer
+	 *            choice renderer
+	 * @return created drop down component
+	 */
+	protected DropDownChoice newDropDownChoice(String id, IModel model, IModel choices,
+			IChoiceRenderer renderer)
+	{
+		return new DropDownChoice(id, model, choices, renderer);
 	}
 
 	/**
@@ -122,5 +139,5 @@ public class ChoiceFilter extends AbstractFilter
 	{
 		return choice;
 	}
-	
+
 }
