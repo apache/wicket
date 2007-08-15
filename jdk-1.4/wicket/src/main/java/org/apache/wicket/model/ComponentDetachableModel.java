@@ -59,10 +59,20 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	 * 
 	 * @return whether this model has been attached to the current session
 	 */
-	public boolean isAttached()
+	public final boolean isAttached()
 	{
 		return attached;
 	}
+
+	/**
+	 * Set this model in an attached state. Called if the constructor sets the
+	 * data. (attached)
+	 */
+	protected final void setAttached()
+	{
+		attached = true;
+	}
+
 
 	/**
 	 * Detaches from the current request. Implement this method with custom

@@ -56,7 +56,7 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 	 *            The component which has this model.
 	 * @return The object of the model.
 	 */
-	public Object getObject(Component component)
+	protected Object getObject(Component component)
 	{
 		return null;
 	}
@@ -69,7 +69,7 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 	 * @param object
 	 *            The object that will be set in the model.
 	 */
-	public void setObject(Component component, Object object)
+	protected void setObject(Component component, Object object)
 	{
 	}
 
