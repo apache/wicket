@@ -104,7 +104,7 @@ Wicket.Log = {
 /**
  * Functions executer takes array of functions and executes them. Each function gets
  * the notify object, which needs to be called for the next function to be executed.
- * This way the functions can be executed asynchronously. Each function has to call
+ * This way the functions can be executed synchronously. Each function has to call
  * the notify object at some point, otherwise the functions after it wont be executed.
  * After the FunctionExecuter is initiatialized, the start methods triggers the
  * first function.
