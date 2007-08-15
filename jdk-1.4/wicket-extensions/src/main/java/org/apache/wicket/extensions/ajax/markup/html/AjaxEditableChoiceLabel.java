@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -169,7 +170,17 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 	 */
 	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
 	{
-		DropDownChoice editor = new DropDownChoice(componentId, model, choices, renderer);
+		DropDownChoice editor = new DropDownChoice(componentId, model, new AbstractReadOnlyModel()
+		{
+
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject()
+			{
+				return choices.getObject();
+			}
+
+		}, renderer);
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior()
