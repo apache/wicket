@@ -83,27 +83,6 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see FormComponent#getModelValue()
-	 */
-	public final String getModelValue()
-	{
-		final String value = getModelObjectAsString();
-		if (value != null)
-		{
-			try
-			{
-				return getApplication().getSecuritySettings().getCryptFactory().newCrypt()
-						.encryptUrlSafe(value);
-			}
-			catch (Exception e)
-			{
-				log.error("Problem applying encryption; go on without for now", e);
-			}
-		}
-		return value;
-	}
-
-	/**
 	 * Flag indicating whether the contents of the field should be reset each
 	 * time it is rendered. If <code>true</code>, the contents are emptied
 	 * when the field is rendered. This is useful for login forms. If
@@ -119,27 +98,6 @@ public class PasswordTextField extends TextField
 	{
 		this.resetPassword = resetPassword;
 		return this;
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#setModelValue(java.lang.String[])
-	 */
-	public final void setModelValue(String[] valueArray)
-	{
-		String value = valueArray != null && valueArray.length > 0 ? valueArray[0] : null;
-		String decryptedValue;
-		try
-		{
-			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
-					.decryptUrlSafe(value);
-		}
-		catch (Exception e)
-		{
-			decryptedValue = value;
-			log.error("Problem applying encryption; go on without for now", e);
-		}
-
-		setModelObject(decryptedValue);
 	}
 
 	/**
