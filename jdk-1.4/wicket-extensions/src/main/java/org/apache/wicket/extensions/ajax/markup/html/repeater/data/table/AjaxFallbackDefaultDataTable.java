@@ -21,9 +21,9 @@ import java.util.List;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
@@ -62,7 +62,7 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 	 *            number of rows per page
 	 */
 	public AjaxFallbackDefaultDataTable(String id, final List/* <IColumn> */columns,
-			SortableDataProvider dataProvider, int rowsPerPage)
+			ISortableDataProvider dataProvider, int rowsPerPage)
 	{
 		this(id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
 	}
@@ -80,7 +80,7 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 	 *            number of rows per page
 	 */
 	public AjaxFallbackDefaultDataTable(String id, final IColumn[] columns,
-			SortableDataProvider dataProvider, int rowsPerPage)
+			ISortableDataProvider dataProvider, int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
 		setOutputMarkupId(true);

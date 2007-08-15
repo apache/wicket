@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.List;
 
-import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.OddEvenItem;
 import org.apache.wicket.model.IModel;
@@ -57,7 +56,7 @@ public class DefaultDataTable extends DataTable
 	 *            number of rows per page
 	 */
 	public DefaultDataTable(String id, final List/* <IColumn> */columns,
-			SortableDataProvider dataProvider, int rowsPerPage)
+			ISortableDataProvider dataProvider, int rowsPerPage)
 	{
 		this(id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
 	}
@@ -74,7 +73,7 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final IColumn[] columns, SortableDataProvider dataProvider,
+	public DefaultDataTable(String id, final IColumn[] columns, ISortableDataProvider dataProvider,
 			int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);

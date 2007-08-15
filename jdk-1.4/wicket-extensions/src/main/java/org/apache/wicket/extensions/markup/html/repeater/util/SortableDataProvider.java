@@ -17,9 +17,7 @@
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.IDetachable;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
 
 
 /**
@@ -32,12 +30,12 @@ import org.apache.wicket.model.IDetachable;
  * 
  * @author Igor Vaynberg
  */
-public abstract class SortableDataProvider implements IDataProvider, ISortStateLocator, IDetachable
+public abstract class SortableDataProvider implements ISortableDataProvider
 {
 	private SingleSortState state = new SingleSortState();
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator#getSortState()
+	 * @see ISortableDataProvider#getSortState()
 	 */
 	public final ISortState getSortState()
 	{
@@ -45,7 +43,7 @@ public abstract class SortableDataProvider implements IDataProvider, ISortStateL
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator#setSortState(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState)
+	 * @see ISortableDataProvider#setSortState(org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState)
 	 */
 	public final void setSortState(ISortState state)
 	{
@@ -93,7 +91,7 @@ public abstract class SortableDataProvider implements IDataProvider, ISortStateL
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
+	 * @see ISortableDataProvider#detach()
 	 */
 	public void detach()
 	{
