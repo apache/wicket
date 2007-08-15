@@ -905,7 +905,7 @@ public abstract class MarkupContainer extends Component
 		}
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
 		{
 			component.setMetaData(ADDED_AT_KEY, Strings.toString(component, new MarkupException(
 					"added")));

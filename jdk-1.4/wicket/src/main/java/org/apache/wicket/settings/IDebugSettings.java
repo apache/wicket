@@ -60,22 +60,63 @@ public interface IDebugSettings
 	 * 
 	 */
 	boolean isAjaxDebugModeEnabled();
-	
+
 	/**
-	 * Enables wrapping output of markup container in html comments that
-	 * contain markup container's class name. (Useful for determining which
-	 * part of page belongs to which markup file).
+	 * Enables wrapping output of markup container in html comments that contain
+	 * markup container's class name. (Useful for determining which part of page
+	 * belongs to which markup file).
 	 * 
 	 * @param enable
 	 */
 	void setOutputMarkupContainerClassName(boolean enable);
-	
+
 	/**
-	 * Returns whether the output of markup container's should be wrapped
-	 * by comments containing the container's class name.
+	 * Returns whether the output of markup container's should be wrapped by
+	 * comments containing the container's class name.
 	 * 
-	 * @return true if the markup container's class name should be written
-	 *         to response
+	 * @return true if the markup container's class name should be written to
+	 *         response
 	 */
 	public boolean isOutputMarkupContainerClassName();
+
+	/**
+	 * Returns status of line precise error reporting for added components that
+	 * are not present in the markup: it points to the line where the component
+	 * was added to the hierarchy in your Java classes. This can cause a
+	 * significant decrease in performance, do not use in customer facing
+	 * applications.
+	 * 
+	 * @return true if the line precise error reporting is enabled
+	 */
+	public boolean isLinePreciseReportingOnAddComponentEnabled();
+
+	/**
+	 * Enables line precise error reporting for added components that are not
+	 * present in the markup: it points to the line where the component was
+	 * added to the hierarchy in your Java classes. This can cause a significant
+	 * decrease in performance, do not use in customer facing applications.
+	 * 
+	 * @param enable
+	 */
+	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable);
+
+	/**
+	 * Returns status of line precise error reporting for new components that
+	 * are not present in the markup: it points to the line where the component
+	 * was created in your Java classes. This can cause a significant decrease
+	 * in performance, do not use in customer facing applications.
+	 * 
+	 * @return true if the line precise error reporting is enabled
+	 */
+	public boolean isLinePreciseReportingOnNewComponentEnabled();
+
+	/**
+	 * Enables line precise error reporting for new components that are not
+	 * present in the markup: it points to the line where the component was
+	 * created in your Java classes. This can cause a significant decrease in
+	 * performance, do not use in customer facing applications.
+	 * 
+	 * @param enable
+	 */
+	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable);
 }

@@ -728,7 +728,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		getApplication().notifyComponentInstantiationListeners(this);
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
 					"constructed")));
@@ -754,7 +754,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		this.model = wrap(model);
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.getComponentUseCheck())
+		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
 					"constructed")));

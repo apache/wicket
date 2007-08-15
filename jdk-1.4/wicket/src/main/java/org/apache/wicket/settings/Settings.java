@@ -167,6 +167,18 @@ public final class Settings
 	/** Class of internal error page. */
 	private WeakReference/* <Class<? extends Page> */internalErrorPage;
 
+	/**
+	 * whether wicket should track line precise additions of components for
+	 * error reporting.
+	 */
+	private boolean linePreciseReportingOnAddComponentEnabled = false;
+
+	/**
+	 * whether wicket should track line precise instantiations of components for
+	 * error reporting.
+	 */
+	private boolean linePreciseReportingOnNewComponentEnabled = false;
+
 	/** I18N support */
 	private Localizer localizer;
 
@@ -1305,5 +1317,25 @@ public final class Settings
 	public boolean isPageIdUniquePerSession()
 	{
 		return pageIdUniquePerSession;
+	}
+
+	public boolean isLinePreciseReportingOnAddComponentEnabled()
+	{
+		return linePreciseReportingOnAddComponentEnabled;
+	}
+
+	public boolean isLinePreciseReportingOnNewComponentEnabled()
+	{
+		return linePreciseReportingOnNewComponentEnabled;
+	}
+
+	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable)
+	{
+		linePreciseReportingOnAddComponentEnabled = enable;
+	}
+
+	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
+	{
+		linePreciseReportingOnNewComponentEnabled = enable;
 	}
 }
