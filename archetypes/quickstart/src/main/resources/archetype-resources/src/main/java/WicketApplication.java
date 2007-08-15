@@ -1,4 +1,4 @@
-package ${groupId};
+package ${packageName};
 
 import org.apache.wicket.protocol.http.WebApplication;
 

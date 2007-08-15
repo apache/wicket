@@ -1,4 +1,4 @@
-package ${groupId};
+package ${packageName};
 
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
