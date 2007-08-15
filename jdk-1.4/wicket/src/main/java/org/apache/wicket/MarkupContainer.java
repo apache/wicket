@@ -121,10 +121,6 @@ public abstract class MarkupContainer extends Component
 
 	/**
 	 * Adds a child component to this container.
-	 * <p>
-	 * Be careful when overriding this method, if not implemented properly it
-	 * may lead to a java component hierarchy which no longer matches the
-	 * template hierarchy, which in turn will lead to an error.
 	 * 
 	 * @param child
 	 *            The child
