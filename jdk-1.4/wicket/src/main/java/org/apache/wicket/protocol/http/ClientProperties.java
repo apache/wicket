@@ -29,11 +29,21 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * properties with values from the user agent you need to probe the browser
  * using javascript and request header analysis. Wicket provides a default
  * implementation of this in {@link BrowserInfoPage}.
+ * <p>
+ * A convenient way of letting Wicket do a sneaky redirect to
+ * {@link BrowserInfoPage} (and back again) is to put this in your Application's
+ * init method:
  * 
- * WARNING: Be sure you think about the dangers of depending on
- * information you pull from the client too much. They may be easily
- * spoofed or inaccurate in other ways, and properties like
- * window and browser size are all too easy to be used naively.
+ * <pre>
+ * getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+ * </pre>
+ * 
+ * </p>
+ * 
+ * WARNING: Be sure you think about the dangers of depending on information you
+ * pull from the client too much. They may be easily spoofed or inaccurate in
+ * other ways, and properties like window and browser size are all too easy to
+ * be used naively.
  * 
  * @see BrowserInfoPage
  * @author Frank Bille (frankbille)
@@ -728,7 +738,7 @@ public class ClientProperties implements IClusterable
 	 */
 	public void setJavaEnabled(boolean navigatorJavaEnabled)
 	{
-		this.javaEnabled = navigatorJavaEnabled;
+		javaEnabled = navigatorJavaEnabled;
 	}
 
 	/**
@@ -988,9 +998,9 @@ public class ClientProperties implements IClusterable
 			Field field = fields[i];
 
 			// Ignore these fields
-			if (field.getName().equals("serialVersionUID") == false
-					&& field.getName().startsWith("class$") == false
-					&& field.getName().startsWith("timeZone") == false)
+			if (field.getName().equals("serialVersionUID") == false &&
+					field.getName().startsWith("class$") == false &&
+					field.getName().startsWith("timeZone") == false)
 			{
 
 				field.setAccessible(true);
