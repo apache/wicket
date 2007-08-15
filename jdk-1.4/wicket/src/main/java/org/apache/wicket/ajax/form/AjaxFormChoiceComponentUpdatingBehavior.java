@@ -25,13 +25,11 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDefaultAjaxBehavior
 {
@@ -51,27 +49,28 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		
+
 		AppendingStringBuffer asb = new AppendingStringBuffer();
 		asb.append("function attachChoiceHandlers(markupid, callbackscript) {\n");
 		asb.append(" var choiceElement = document.getElementById(markupid);\n");
 		asb.append(" for( var x = 0; x < choiceElement.childNodes.length; x++ ) {\n");
-		asb.append("   if (choiceElement.childNodes[x] && choiceElement.childNodes[x].tagName) {\n");
+		asb
+				.append("   if (choiceElement.childNodes[x] && choiceElement.childNodes[x].tagName) {\n");
 		asb.append("     var tag = choiceElement.childNodes[x].tagName.toLowerCase();\n");
 		asb.append("     if (tag == 'input') {\n");
 		asb.append("       Wicket.Event.add(choiceElement.childNodes[x],'click', callbackscript);");
-		asb.append("     }\n");		
+		asb.append("     }\n");
 		asb.append("   }\n");
 		asb.append(" }\n");
 		asb.append("}\n");
-		
+
 		response.renderJavascript(asb, "attachChoice");
 
-		response.renderOnLoadJavascript("attachChoiceHandlers('" + getComponent().getMarkupId()
-				+ "', function() {" + getEventHandler() + "});");
+		response.renderOnLoadJavascript("attachChoiceHandlers('" + getComponent().getMarkupId() +
+				"', function() {" + getEventHandler() + "});");
 
 	}
-	
+
 	/**
 	 * Listener invoked on the ajax request. This listener is invoked after the
 	 * component's model has been updated.
@@ -79,20 +78,20 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	 * @param target
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
-	
+
 	/**
 	 * Called to handle any error resulting from updating form component. Errors
 	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
 	 * 
-	 * The RuntimeException will be null if it was just a validation or conversion 
-	 * error of the FormComponent
+	 * The RuntimeException will be null if it was just a validation or
+	 * conversion error of the FormComponent
 	 * 
 	 * @param target
 	 * @param e
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{
-		if(e != null)
+		if (e != null)
 		{
 			throw e;
 		}
@@ -110,21 +109,15 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 		if (!(getComponent() instanceof RadioChoice) &&
 				!(getComponent() instanceof CheckBoxMultipleChoice) &&
-				!(getComponent() instanceof RadioGroup) &&
-				!(getComponent() instanceof CheckGroup))
+				!(getComponent() instanceof RadioGroup) && !(getComponent() instanceof CheckGroup))
 		{
-			throw new WicketRuntimeException("Behavior " + getClass().getName()
-					+ " can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
+			throw new WicketRuntimeException("Behavior " + getClass().getName() +
+					" can only be added to an instance of a RadioChoice/CheckboxChoice/RadioGroup/CheckGroup");
 		}
 
 		if (getComponent() instanceof RadioGroup || getComponent() instanceof CheckGroup)
 		{
 			getComponent().setRenderBodyOnly(false);
-			IModel model = getComponent().getModel();
-			if (model == null)
-			{
-				getComponent().setModel(new Model(null));
-			}
 		}
 	}
 
@@ -144,8 +137,8 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	{
 		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
 				getCallbackUrl()).append(
-				"', wicketSerializeForm(document.getElementById('" + getComponent().getMarkupId()
-						+ "',false))"));
+				"', wicketSerializeForm(document.getElementById('" + getComponent().getMarkupId() +
+						"',false))"));
 	}
 
 	/**
@@ -163,7 +156,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 			if (formComponent.hasErrorMessage())
 			{
 				formComponent.invalid();
-				
+
 				onError(target, null);
 			}
 			else
