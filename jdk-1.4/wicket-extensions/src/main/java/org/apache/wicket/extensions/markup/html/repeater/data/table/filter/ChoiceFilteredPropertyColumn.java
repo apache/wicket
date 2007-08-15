@@ -66,7 +66,7 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
 	public void detach()
-	{	
+	{
 		super.detach();
 		if (filterChoices != null)
 		{
@@ -124,4 +124,14 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	{
 		return null;
 	}
+
+	/**
+	 * @return filter choices model
+	 */
+	protected final IModel getFilterChoices()
+	{
+		return filterChoices;
+	}
+
+
 }
