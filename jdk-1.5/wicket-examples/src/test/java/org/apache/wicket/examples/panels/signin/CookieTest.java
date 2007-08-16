@@ -121,15 +121,12 @@ public class CookieTest extends TestCase
 
 		// validate
 		FormComponent username = (FormComponent)panel.get("signInForm:username");
-		FormComponent password = (FormComponent)panel.get("signInForm:password");
 
 		Assert.assertNotNull(username);
-		Assert.assertNotNull(password);
 
 		Assert.assertNotNull(cookieUsername);
 
 		Assert.assertEquals(cookieUsername.getValue(), username.getModelObjectAsString());
-		Assert.assertEquals("test", password.getModelObjectAsString());
 	}
 
 	/**
