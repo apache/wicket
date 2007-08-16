@@ -148,7 +148,7 @@ public final class PageParameters extends ValueMap
 		}
 		else
 		{
-			throw new WicketRuntimeException("You tried to add an object of type " +
+			throw new IllegalArgumentException("You tried to add an object of type " +
 					value.getClass().getName() + " to your PageParameters for key " + key +
 					", but you are only allowed to use String or String[].");
 		}
