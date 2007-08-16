@@ -140,6 +140,20 @@ public final class PageParameters extends ValueMap
 		}
 	}
 
+	public Object put(Object key, Object value)
+	{
+		if (value instanceof String || value instanceof String[])
+		{
+			return super.put(key, value);
+		}
+		else
+		{
+			throw new WicketRuntimeException("You tried to add an object of type " +
+					value.getClass().getName() + " to your PageParameters for key " + key +
+					", but you are only allowed to use String or String[].");
+		}
+	}
+
 	/**
 	 * Set this on request cycle. The RequestCycle will decide whether to keep
 	 * it as a reference or not.
