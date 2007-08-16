@@ -197,7 +197,6 @@ public abstract class SignInPanel extends Panel
 	public void setPersistent(boolean enable)
 	{
 		username.setPersistent(enable);
-		password.setPersistent(enable);
 	}
 
 	/**
