@@ -142,6 +142,12 @@ public final class PageParameters extends ValueMap
 
 	public Object put(Object key, Object value)
 	{
+		if (!(key instanceof String))
+		{
+			throw new IllegalArgumentException(
+					"PageParameter keys must be of type String, but you supplied a " +
+							key.getClass().getName());
+		}
 		if (value instanceof String || value instanceof String[])
 		{
 			return super.put(key, value);
