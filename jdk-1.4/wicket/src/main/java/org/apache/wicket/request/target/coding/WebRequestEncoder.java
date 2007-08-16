@@ -54,9 +54,9 @@ public class WebRequestEncoder
 	 */
 	public void addValue(String key, Object value)
 	{
-		if (value.getClass().isArray())
+		if (value instanceof String[])
 		{
-			Object[] values = (Object[])value;
+			String[] values = (String[])value;
 			for (int i = 0; i < values.length; i++)
 			{
 				addValue(key, values[i]);
