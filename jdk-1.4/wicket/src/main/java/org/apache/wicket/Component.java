@@ -2628,7 +2628,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @param cls
 	 *            The response page class
 	 * @param parameters
-	 *            The parameters for thsi bookmarkable page.
+	 *            The parameters for this bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
 	public final void setResponsePage(final Class cls, PageParameters parameters)
