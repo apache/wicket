@@ -321,9 +321,9 @@ public abstract class Link extends AbstractLink implements ILinkListener
 					}
 					else
 					{
-						throw new WicketRuntimeException("an achor component was set on " + this
-								+ " but it neither has outputMarkupId set to true "
-								+ "nor has a id set explicitly");
+						throw new WicketRuntimeException("an achor component was set on " + this +
+								" but it neither has outputMarkupId set to true " +
+								"nor has a id set explicitly");
 					}
 				}
 			}
@@ -391,7 +391,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	}
 
 	/**
-	 * Handles this link's tag.
+	 * Handles this link's tag. OVERRIDES MUST CALL SUPER.
 	 * 
 	 * @param tag
 	 *            the component tag
@@ -416,8 +416,8 @@ public abstract class Link extends AbstractLink implements ILinkListener
 		else
 		{
 			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
-					|| tag.getName().equalsIgnoreCase("area"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
+					tag.getName().equalsIgnoreCase("area"))
 			{
 				// generate the href attribute
 				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
@@ -430,8 +430,8 @@ public abstract class Link extends AbstractLink implements ILinkListener
 					tag.put("onclick", popupSettings.getPopupJavaScript());
 				}
 			}
-			else if (tag.getName().equalsIgnoreCase("script")
-					|| tag.getName().equalsIgnoreCase("style"))
+			else if (tag.getName().equalsIgnoreCase("script") ||
+					tag.getName().equalsIgnoreCase("style"))
 			{
 				tag.put("src", Strings.replaceAll(url, "&", "&amp;"));
 			}
@@ -450,7 +450,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 					tag.put("onclick", "window.location.href='" + url + "';return false;");
 				}
 			}
-			
+
 			// If the subclass specified javascript, use that
 			final CharSequence onClickJavaScript = getOnClickScript(url);
 			if (onClickJavaScript != null)
