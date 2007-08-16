@@ -92,9 +92,10 @@ public abstract class AbstractTextComponent extends FormComponent
 		return false;
 	}
 
-	
+
 	/**
 	 * If the type is not set try to guess it if the model supports it.
+	 * 
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
 	protected void onBeforeRender()
@@ -112,9 +113,9 @@ public abstract class AbstractTextComponent extends FormComponent
 		}
 	}
 
-	private Class getModelType(IModel model) 
+	private Class getModelType(IModel model)
 	{
-		if (model instanceof IObjectClassAwareModel) 
+		if (model instanceof IObjectClassAwareModel)
 		{
 			return ((IObjectClassAwareModel)model).getObjectClass();
 		}
@@ -154,7 +155,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
-	protected final boolean supportsPersistence()
+	protected boolean supportsPersistence()
 	{
 		return true;
 	}

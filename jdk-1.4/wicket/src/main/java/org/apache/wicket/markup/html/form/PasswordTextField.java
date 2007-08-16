@@ -54,8 +54,7 @@ public class PasswordTextField extends TextField
 	 */
 	public PasswordTextField(final String id)
 	{
-		super(id);
-		setRequired(true);
+		this(id, null);
 	}
 
 	/**
@@ -116,9 +115,19 @@ public class PasswordTextField extends TextField
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.form.TextField#getInputType()
+	 */
 	protected String getInputType()
 	{
 		return "password";
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent#supportsPersistence()
+	 */
+	protected boolean supportsPersistence()
+	{
+		return false;
+	}
 }
