@@ -23,7 +23,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * {@link AppendingStringBuffer}-based query string encoder, handles String[] and String properly, and properly URL-encodes the values
+ * {@link AppendingStringBuffer}-based query string encoder, handles String[]
+ * and String properly, and properly URL-encodes the values
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
@@ -35,24 +36,27 @@ public class WebRequestEncoder
 
 	/**
 	 * Construct.
-	 * @param url the {@link AppendingStringBuffer} where to append query string
+	 * 
+	 * @param url
+	 *            the {@link AppendingStringBuffer} where to append query string
 	 */
 	public WebRequestEncoder(AppendingStringBuffer url)
 	{
 		this.url = url;
-		this.application = Application.get();
+		application = Application.get();
 	}
 
 	/**
 	 * Add an {@link Object}
+	 * 
 	 * @param key
 	 * @param value
 	 */
 	public void addValue(String key, Object value)
 	{
-		if (value instanceof String[])
+		if (value.getClass().isArray())
 		{
-			String[] values = (String[])value;
+			Object[] values = (Object[])value;
 			for (int i = 0; i < values.length; i++)
 			{
 				addValue(key, values[i]);
@@ -70,6 +74,7 @@ public class WebRequestEncoder
 
 	/**
 	 * Add a {@link String}
+	 * 
 	 * @param key
 	 * @param value
 	 */
