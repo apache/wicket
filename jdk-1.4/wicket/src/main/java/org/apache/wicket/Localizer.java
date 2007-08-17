@@ -27,6 +27,8 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -49,6 +51,9 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  */
 public class Localizer
 {
+	private static final Logger logger = LoggerFactory.getLogger(Localizer.class);
+
+
 	/** Cache properties */
 	private Map cache = new HashMap();
 
@@ -173,6 +178,16 @@ public class Localizer
 			final String defaultValue) throws MissingResourceException
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
+
+		if (component.findParent(Page.class) == null)
+		{
+			logger
+					.warn(
+							"Tried to retrieve a localized string for a component that has not yet been added to the page. "
+									+ "This can sometimes lead to an invalid localized resource returned. "
+									+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
+									+ "Offeding component: {}", component);
+		}
 
 		// Check the cache first
 		String cacheKey = getCacheKey(key, component);
