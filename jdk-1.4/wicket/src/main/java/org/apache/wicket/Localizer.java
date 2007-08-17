@@ -179,22 +179,29 @@ public class Localizer
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 
-		if (component.findParent(Page.class) == null)
+		boolean addedToPage = (null != component.findParent(Page.class));
+		if (!addedToPage)
 		{
 			logger
 					.warn(
 							"Tried to retrieve a localized string for a component that has not yet been added to the page. "
-									+ "This can sometimes lead to an invalid localized resource returned. "
+									+ "This can sometimes lead to an invalid or no localized resource returned. "
 									+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
 									+ "Offeding component: {}", component);
 		}
 
-		// Check the cache first
-		String cacheKey = getCacheKey(key, component);
+		String cacheKey = null;
 		String string = null;
 
+		// If this component is not yet added to page we do not want to check
+		// cache as we can generate an invalid cache key
+		if (addedToPage)
+		{
+			cacheKey = getCacheKey(key, component);
+		}
+
 		// Value not found are cached as well (value = null)
-		if (cache.containsKey(cacheKey))
+		if (cacheKey != null && cache.containsKey(cacheKey))
 		{
 			string = getFromCache(cacheKey);
 		}
@@ -215,7 +222,10 @@ public class Localizer
 			}
 
 			// Cache the result incl null if not found
-			putIntoCache(cacheKey, string);
+			if (cacheKey != null)
+			{
+				putIntoCache(cacheKey, string);
+			}
 		}
 
 		if ((string == null) && (defaultValue != null))
@@ -260,10 +270,7 @@ public class Localizer
 	 */
 	protected void putIntoCache(final String cacheKey, final String string)
 	{
-		if (cacheKey != null)
-		{
-			cache.put(cacheKey, string);
-		}
+		cache.put(cacheKey, string);
 	}
 
 	/**
