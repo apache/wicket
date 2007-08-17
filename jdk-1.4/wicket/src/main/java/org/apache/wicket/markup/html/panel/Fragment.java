@@ -321,10 +321,26 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			stream = markupProvider.getAssociatedMarkupStream(false);
 		}
 
+		// try self's markup stream
 		if (stream == null)
 		{
-			stream = super.getAssociatedMarkupStream(throwException);
+			stream = super.getAssociatedMarkupStream(false);
 		}
+
+		// if self doesnt have markup stream try the parent's
+		if (stream == null && getParent() != null)
+		{
+			stream = getParent().getAssociatedMarkupStream(false);
+		}
+
+		// if we cant find any markup stream
+		if (stream == null && throwException)
+		{
+			// fail, but fail with an error message that will point to this
+			// component
+			super.getAssociatedMarkupStream(true);
+		}
+
 		return stream;
 	}
 }
