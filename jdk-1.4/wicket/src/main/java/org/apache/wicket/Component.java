@@ -847,7 +847,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void beforeRender()
 	{
-		if (!getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
+		if (isVisible() && !getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 
