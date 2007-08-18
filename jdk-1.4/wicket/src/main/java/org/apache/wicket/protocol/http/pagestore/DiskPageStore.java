@@ -343,7 +343,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		public synchronized boolean exists(String pageMapName, int pageId, int versionNumber)
 		{
 			PageMapEntry entry = getPageMapEntry(pageMapName, false);
-			return entry.getManager().getPageWindow(pageId, versionNumber, -1) != null;
+			return entry != null &&
+					entry.getManager().getPageWindow(pageId, versionNumber, -1) != null;
 		}
 	}
 
