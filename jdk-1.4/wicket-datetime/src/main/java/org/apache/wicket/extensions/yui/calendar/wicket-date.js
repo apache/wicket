@@ -113,3 +113,102 @@ Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
 	}
 	widget.show();
 }
+
+/**
+ * Renders the Month-Year-label as two select boxes.
+ * The year-select uses the following pattern for the widget.
+ */
+Wicket.DateTime.enableMonthYearSelection = function(widget) {
+	var monthSelectId = widget.id + "MonthSelect";	
+	var yearInputId = widget.id + "YearInput";
+	var yearUpId = widget.id + "YearUp";
+	var yearDownId = widget.id + "YearDown";
+	
+	// sets the select boxes to the proper values after navigating the datepicker with the arrows
+	var sync = function(type) {
+		var month = parseInt(widget.cfg.getProperty(YAHOO.widget.Calendar._DEFAULT_CONFIG.PAGEDATE.key).getMonth());
+		var year = parseInt(widget.cfg.getProperty(YAHOO.widget.Calendar._DEFAULT_CONFIG.PAGEDATE.key).getFullYear());
+		YAHOO.util.Dom.get(monthSelectId).selectedIndex = month;
+		YAHOO.util.Dom.get(yearInputId).value = year;
+	}
+	
+	widget.renderEvent.subscribe(sync);		
+	
+	// override the default applyListeners method to register onChange-listeners for the select boxes 
+	if (typeof(widget.YUIApplyListeners) == 'undefined') {
+		widget.YUIApplyListeners = widget.applyListeners;
+	}
+	widget.applyListeners = function () {
+		widget.YUIApplyListeners();
+		var E = YAHOO.util.Event;
+		E.on(monthSelectId, "change", function() {
+			widget.setMonth(YAHOO.util.Dom.get(monthSelectId).value);
+			widget.render();
+		});
+		
+		widget.yearChanged = new YAHOO.util.CustomEvent("yearChanged", widget);
+		widget.yearChanged.subscribe(function() {			
+			widget.setYear(YAHOO.util.Dom.get(yearInputId).value);
+			widget.render();
+		});				
+		
+		E.on(yearInputId, "blur", function() { processNumber(0); }, this);		
+		
+		var processNumber = function(offset) {
+			var field = YAHOO.util.Dom.get(yearInputId);
+			field.value = field.value.replace(/\D*/, "");
+			field.value = parseInt(field.value, 10) + offset; 
+			if (/\d+/.test(field.value)) {
+				widget.yearChanged.fire();				
+			}   
+		};
+		
+		E.on(yearUpId, "click", function() {
+			var field = YAHOO.util.Dom.get(yearInputId);
+			processNumber(1);
+		});
+		
+		E.on(yearDownId, "click", function() {
+			var field = YAHOO.util.Dom.get(yearInputId);
+			processNumber(-1);
+		});
+						
+		// disable text selection for the up/down spinner"buttons"
+		var ua = YAHOO.env.ua;
+		if (ua.gecko) {
+			YAHOO.util.Dom.get(yearUpId).style.MozUserSelect = "none";
+			YAHOO.util.Dom.get(yearDownId).style.MozUserSelect = "none";
+		} else if (ua.ie) {
+			E.on(yearUpId, "selectstart", function() { return false; });
+			E.on(yearDownId, "selectstart", function() { return false; });
+		} else {
+			E.on(yearUpId, "mousedown", function() { return false; });
+			E.on(yearDownId, "mousedown", function() { return false; });
+		}
+	}
+		
+	// override the function which is used to generate the month label and render two select boxes instead
+  	widget.buildMonthLabel = function () {
+		var pageDate = widget.cfg.getProperty(YAHOO.widget.Calendar._DEFAULT_CONFIG.PAGEDATE.key);
+
+		// generate month select box using localized strings
+		var selectHtml = "<select id=\"" + monthSelectId + "\">";
+		var i;
+		for (i = 0; i < 12; i++) {
+			selectHtml += "<option value=\"" + i + "\"";
+			if (i == pageDate.getMonth()) {
+				selectHtml += " selected=\"selected\"";
+			} 	
+			selectHtml += ">" + widget.Locale.LOCALE_MONTHS[i] + "</option>";
+		}
+		selectHtml += "</select>";
+
+		// generate year input and spinner buttons
+		selectHtml += "<span class=\"yearInputContainer\">";
+		selectHtml += "<span id=\"" + yearDownId + "\">&ndash;</span>";
+		selectHtml += "<input type=\"text\" id=\"" + yearInputId +"\" size=\"4\" onchange=\"\"/>";
+		selectHtml += "<span id=\"" + yearUpId + "\">+</span>";
+		selectHtml += "</span>";								
+		return selectHtml;  
+	}
+}

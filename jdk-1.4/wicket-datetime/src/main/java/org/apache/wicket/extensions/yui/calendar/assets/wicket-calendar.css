@@ -1,0 +1,32 @@
+.yui-calendar .calnavleft {
+	display: none;
+}
+
+.yui-calendar .calnavright {
+	display: none;
+}
+
+.yui.calendar {
+	border-width: 0px;
+    text-align: center;
+}
+
+.yearInputContainer {
+    border: 1px solid #999;
+}
+
+.yearInputContainer span {
+    cursor: default;
+    background-color: #EEE;
+    padding: 0em 0.4em;
+    font-weight: normal;
+}
+
+.yearInputContainer span:hover {
+	background-color: #E0E0E0;	
+}
+
+.yearInputContainer input {
+	text-align: center;
+	border-width: 0px;	
+}

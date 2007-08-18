@@ -55,10 +55,12 @@ function init${widgetId}DpJs() {
 	YAHOO.namespace("wicket");
 	YAHOO.wicket.${widgetId}DpJs = new YAHOO.widget.Calendar("${widgetId}DpJs","${widgetId}Dp", { ${calendarInit} });
 	YAHOO.wicket.${widgetId}DpJs.isVisible = function() { return YAHOO.wicket.${widgetId}DpJs.oDomContainer.style.display == 'block'; }
+	if (${enableMonthYearSelection}) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket.${widgetId}DpJs); 
 	
 	function showCalendar() {
 		Wicket.DateTime.showCalendar(YAHOO.wicket.${widgetId}DpJs, YAHOO.util.Dom.get("${componentId}").value, '${datePattern}');
 		if (${alignWithIcon}) Wicket.DateTime.positionRelativeTo(YAHOO.wicket.${widgetId}DpJs.oDomContainer, "${widgetId}Icon");
+		if (${enableMonthYearSelection}) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket.${widgetId}DpJs); 
 	}
 
 	YAHOO.util.Event.addListener("${widgetId}Icon", "click", showCalendar, YAHOO.wicket.${widgetId}DpJs, true);

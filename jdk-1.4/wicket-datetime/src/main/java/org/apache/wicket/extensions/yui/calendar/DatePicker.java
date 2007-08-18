@@ -41,6 +41,7 @@ import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
@@ -148,6 +149,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	public void renderHead(IHeaderResponse response)
 	{
 		YuiLib.load(response);
+		if (enableMonthYearSelection())
+		{
+			response.renderCSSReference(new CompressedResourceReference(DatePicker.class,
+					"assets/wicket-calendar.css"));
+		}
 
 		// variables for the initialization script
 		Map variables = new HashMap();
@@ -162,6 +168,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				new JavascriptResourceReference(DatePicker.class, "wicket-date.js")));
 		variables.put("basePath", RequestCycle.get().urlFor(
 				new JavascriptResourceReference(YuiLib.class, "")));
+		variables.put("enableMonthYearSelection", Boolean.valueOf(enableMonthYearSelection()));
 
 		// print out the initialization properties
 		Properties p = new Properties();
@@ -542,5 +549,18 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 			return copy;
 		}
 		return null;
+	}
+
+	/**
+	 * Indicates whether plain text is rendered or two select boxes are used to
+	 * allow direct selection of month and year.
+	 * 
+	 * @return <code>true</code> if select boxes should be rendered to allow
+	 *         month and year selection.<br/><code>false</code> to render
+	 *         just plain text.
+	 */
+	protected boolean enableMonthYearSelection()
+	{
+		return false;
 	}
 }

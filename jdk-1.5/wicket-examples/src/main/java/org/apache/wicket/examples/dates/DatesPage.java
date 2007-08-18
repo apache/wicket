@@ -33,8 +33,10 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.validation.validator.DateValidator;
 
 /**
  * Demonstrates components from the wicket-date project and a bunch of locale
@@ -155,10 +157,26 @@ public class DatesPage extends WicketExamplePage
 				selectedLocale = LOCALE_EN;
 			}
 		});
-		Form form = new Form("form");
+		Form form = new Form("form")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				info("set date to " + date);
+			}
+		};
 		add(form);
 		form.add(dateTextField);
-		dateTextField.add(new DatePicker());
+		dateTextField.add(new DatePicker()
+		{
+			@Override
+			protected boolean enableMonthYearSelection()
+			{
+				return false;
+			}
+		});
+		dateTextField.add(DateValidator.minimum(new Date()));
+		add(new FeedbackPanel("feedback"));
 	}
 
 	/**
