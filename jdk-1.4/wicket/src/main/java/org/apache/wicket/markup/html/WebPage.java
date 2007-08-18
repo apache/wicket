@@ -153,7 +153,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 						.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" +
 								"wicket-" + name + "')) { window.location=\"");
 				response.write(url);
-				response.write("\"; }");
+				response
+						.write("\" + (window.location.hash != null ? window.location.hash : \"\"); }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 		}
