@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.MarkupContainer;
@@ -196,7 +197,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		 */
 		public String substitute(String string, Map vars) throws IllegalStateException
 		{
-			return new MapVariableInterpolator(string, addDefaultVars(vars), true).toString();
+			return new MapVariableInterpolator(string, addDefaultVars(vars), Application.get()
+					.getResourceSettings().getThrowExceptionOnMissingResource()).toString();
 		}
 
 		/**
