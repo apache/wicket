@@ -36,7 +36,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.validation.validator.DateValidator;
 
 /**
  * Demonstrates components from the wicket-date project and a bunch of locale
@@ -175,7 +174,6 @@ public class DatesPage extends WicketExamplePage
 				return false;
 			}
 		});
-		dateTextField.add(DateValidator.minimum(new Date()));
 		add(new FeedbackPanel("feedback"));
 	}
 
