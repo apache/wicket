@@ -259,7 +259,6 @@ public class DateTimeField extends FormComponentPanel
 	 */
 	protected void convertInput()
 	{
-		Object convertedInput = null;
 		Object dateFieldInput = dateField.getConvertedInput();
 		if (dateFieldInput != null)
 		{
@@ -291,7 +290,7 @@ public class DateTimeField extends FormComponentPanel
 				}
 
 				// the date will be in the server's timezone
-				convertedInput = date.toDate();
+				setConvertedInput(date.toDate());
 			}
 			catch (RuntimeException e)
 			{
@@ -299,8 +298,10 @@ public class DateTimeField extends FormComponentPanel
 				invalid();
 			}
 		}
-
-		setConvertedInput(convertedInput);
+		else
+		{
+			setConvertedInput(null);
+		}
 	}
 
 	/**
