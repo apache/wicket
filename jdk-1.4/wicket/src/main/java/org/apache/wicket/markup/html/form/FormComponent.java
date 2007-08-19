@@ -774,7 +774,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Called to indicate that
+	 * Indicate that validation of this form component failed.
 	 */
 	public final void invalid()
 	{
