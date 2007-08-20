@@ -148,6 +148,16 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.form.FormComponent#getInput()
+	 */
+	public String getInput()
+	{
+		// since we override convertInput, we can let this method return a value
+		// that is just suitable for error reporting
+		return dateField.getInput() + ", " + hoursField.getInput() + ":" + minutesField.getInput();
+	}
+
+	/**
 	 * Gets minutes.
 	 * 
 	 * @return minutes
