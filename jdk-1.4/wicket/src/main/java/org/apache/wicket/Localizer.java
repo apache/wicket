@@ -179,7 +179,15 @@ public class Localizer
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 
-		boolean addedToPage = (component != null && null != component.findParent(Page.class));
+		boolean addedToPage = false;
+		if (component != null)
+		{
+			if ((component instanceof Page) || null != component.findParent(Page.class))
+			{
+				addedToPage = true;
+			}
+		}
+
 		if (!addedToPage)
 		{
 			logger
