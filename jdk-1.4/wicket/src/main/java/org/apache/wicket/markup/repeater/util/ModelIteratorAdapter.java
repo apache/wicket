@@ -23,7 +23,7 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Iterator adapter that wraps adaptee's elements with a model. Convinient when
+ * Iterator adapter that wraps adaptee's elements with a model. Convenient when
  * implementing {@link RefreshingView}.
  * 
  * @author Igor Vaynberg (ivaynberg)
