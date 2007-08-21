@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.util.Locale;
+
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
@@ -95,7 +98,28 @@ public class FormTesterTest extends WicketTestCase
 		FileUpload fileUpload = page.getFileUpload();
 		assertNotNull(fileUpload);
 
+		assertTrue("setFile failed, no upload content detected.", fileUpload.getBytes().length > 0);
 		assertEquals("pom.xml", fileUpload.getClientFileName());
 		assertEquals("text/xml", fileUpload.getContentType());
 	}
+
+	/**
+	 * Test that formTester deal with Multipart form correctly when no actual
+	 * upload
+	 */
+	public void bugTestSubmitWithoutUploadFile()
+	{
+		tester.startPage(MockFormFileUploadPage.class);
+		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
+
+		Session.get().setLocale(Locale.US);
+
+		FormTester formTester = tester.newFormTester("form");
+		// without file upload
+		formTester.submit();
+		assertNull(page.getFileUpload());
+
+		tester.assertErrorMessages(new String[] { "Field 'file' is required." });
+	}
+
 }
