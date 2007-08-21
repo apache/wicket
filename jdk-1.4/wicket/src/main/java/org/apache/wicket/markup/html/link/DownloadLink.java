@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html.link;
 
 import java.io.File;
 
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -38,14 +40,9 @@ public class DownloadLink extends Link
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * File to stream
-	 */
-	private final File file;
-
-	/**
 	 * File name to stream
 	 */
-	private final String fileName;
+	private String fileName;
 
 
 	/**
@@ -64,9 +61,40 @@ public class DownloadLink extends Link
 		{
 			throw new IllegalArgumentException("file cannot be null");
 		}
-		this.file = file;
-		this.fileName = file.getName();
+		setModel(new Model(file));
 	}
+
+	/**
+	 * Constructor. File name used will be the result of
+	 * <code>file.getName()</code>
+	 * 
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            model that contains the file object
+	 */
+	public DownloadLink(String id, IModel model)
+	{
+		super(id, model);
+	}
+
+	/**
+	 * Constructor. File name used will be the result of
+	 * <code>file.getName()</code>
+	 * 
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            model that contains the file object
+	 * @param fileName
+	 *            name of the file
+	 */
+	public DownloadLink(String id, IModel model, String fileName)
+	{
+		super(id, model);
+		this.fileName = fileName;
+	}
+
 
 	/**
 	 * Constructor
@@ -89,7 +117,7 @@ public class DownloadLink extends Link
 		{
 			throw new IllegalArgumentException("fileName cannot be an empty string");
 		}
-		this.file = file;
+		setModel(new Model(file));
 		this.fileName = fileName;
 	}
 
@@ -100,11 +128,21 @@ public class DownloadLink extends Link
 	 */
 	public void onClick()
 	{
-		IResourceStream resourceStream = new FileResourceStream(new org.apache.wicket.util.file.File(file));
-		getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(resourceStream) {
+		final File file = (File)getModelObject();
+		if (file == null)
+		{
+			throw new IllegalStateException(getClass().getName() +
+					" failed to retrieve a File object from model");
+		}
+		final String fn = (fileName != null) ? fileName : file.getName();
+
+		IResourceStream resourceStream = new FileResourceStream(
+				new org.apache.wicket.util.file.File(file));
+		getRequestCycle().setRequestTarget(new ResourceStreamRequestTarget(resourceStream)
+		{
 			public String getFileName()
 			{
-				return fileName;
+				return fn;
 			}
 		});
 	}
