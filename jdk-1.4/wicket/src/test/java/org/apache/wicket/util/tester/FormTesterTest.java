@@ -107,7 +107,7 @@ public class FormTesterTest extends WicketTestCase
 	 * Test that formTester deal with Multipart form correctly when no actual
 	 * upload
 	 */
-	public void bugTestSubmitWithoutUploadFile()
+	public void testSubmitWithoutUploadFile()
 	{
 		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();

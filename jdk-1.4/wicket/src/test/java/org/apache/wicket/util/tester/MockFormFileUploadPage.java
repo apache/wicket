@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.io.Serializable;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -38,8 +40,10 @@ public class MockFormFileUploadPage extends WebPage
 	 * 
 	 * @author frankbille
 	 */
-	public static class MockDomainObjectFileUpload
+	public static class MockDomainObjectFileUpload implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private String text;
 
 		/**
@@ -85,6 +89,7 @@ public class MockFormFileUploadPage extends WebPage
 		form.setMaxSize(Bytes.kilobytes(100));
 		form.add(new TextField("text"));
 		fileUploadField = new FileUploadField("file");
+		fileUploadField.setRequired(true);
 		form.add(fileUploadField);
 	}
 

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.io.Serializable;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -36,8 +38,10 @@ public class MockFormPage extends WebPage
 	/**
 	 * Domain object
 	 */
-	public class MockDomainObject
+	public class MockDomainObject implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		private String text;
 		private boolean checkbox;
 		private String textarea;

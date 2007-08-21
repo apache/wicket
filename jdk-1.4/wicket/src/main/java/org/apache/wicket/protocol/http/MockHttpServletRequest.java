@@ -178,6 +178,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private Map/* <String, UploadedFile> */uploadedFiles;
 
+	private boolean useMultiPartContentType;
+
 	/**
 	 * Create the request using the supplied session object.
 	 * 
@@ -313,16 +315,27 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Return the length of the content. This is always -1 except if there has
-	 * been added uploaded files. Then the length will be the length of the
-	 * generated request.
+	 * true will force Request genarate multiPart ContentType and ContentLength
 	 * 
-	 * @return -1 if no uploaded files has been added. Else the length of the
+	 * @param useMultiPartContentType
+	 */
+	public void setUseMultiPartContentType(boolean useMultiPartContentType)
+	{
+		this.useMultiPartContentType = useMultiPartContentType;
+	}
+
+
+	/**
+	 * Return the length of the content. This is always -1 except if
+	 * useMultiPartContentType set as true. Then the length will be the length
+	 * of the generated request.
+	 * 
+	 * @return -1 if useMultiPartContentType is false. Else the length of the
 	 *         generated request.
 	 */
 	public int getContentLength()
 	{
-		if (uploadedFiles != null && uploadedFiles.size() > 0)
+		if (useMultiPartContentType)
 		{
 			String request = buildRequest();
 			return request.length();
@@ -332,14 +345,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * If there has been added uploaded files return the correct content-type.
+	 * If useMultiPartContentType set as true return the correct content-type.
 	 * 
-	 * @return The correct multipart content-type if there has been added
-	 *         uploaded files. Else null.
+	 * @return The correct multipart content-type if useMultiPartContentType is
+	 *         true. Else null.
 	 */
 	public String getContentType()
 	{
-		if (uploadedFiles != null && uploadedFiles.size() > 0)
+		if (useMultiPartContentType)
 		{
 			return FileUploadBase.MULTIPART_FORM_DATA + "; boundary=abcdefgABCDEFG";
 		}

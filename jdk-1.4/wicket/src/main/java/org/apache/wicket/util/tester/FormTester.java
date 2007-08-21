@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -43,10 +44,8 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.protocol.http.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.upload.FileUploadException;
 
 
 /**
@@ -556,24 +555,38 @@ public class FormTester
 		try
 		{
 			MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
+
 			WebRequestCycle requestCycle = baseWicketTester.createRequestCycle();
 			servletRequest.setRequestToComponent(workingForm);
 
-			if (servletRequest.hasUploadedFiles())
-			{
-				requestCycle.setRequest(new MultipartServletWebRequest(servletRequest, workingForm
-						.getMaxSize()));
-			}
-
+			servletRequest.setUseMultiPartContentType(isMultiPart());
 			baseWicketTester.processRequestCycle(requestCycle);
-		}
-		catch (FileUploadException e)
-		{
-			throw new WicketRuntimeException(e);
 		}
 		finally
 		{
 			closed = true;
+		}
+	}
+
+	private boolean isMultiPart()
+	{
+		try
+		{
+			Field multiPart = Form.class.getDeclaredField("multiPart");
+			multiPart.setAccessible(true);
+			return multiPart.getBoolean(workingForm);
+		}
+		catch (SecurityException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (NoSuchFieldException e)
+		{
+			throw new RuntimeException(e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new RuntimeException(e);
 		}
 	}
 
