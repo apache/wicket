@@ -722,7 +722,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	 */
 	public final String getValue()
 	{
-		if (NO_RAW_INPUT.equals(rawInput))
+		if (NO_RAW_INPUT == rawInput)
 		{
 			return getModelValue();
 		}
