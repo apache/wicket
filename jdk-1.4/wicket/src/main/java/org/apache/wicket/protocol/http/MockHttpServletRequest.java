@@ -18,9 +18,11 @@ package org.apache.wicket.protocol.http;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -58,6 +60,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.util.file.File;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.upload.FileUploadBase;
 import org.apache.wicket.util.value.ValueMap;
@@ -337,8 +340,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		if (useMultiPartContentType)
 		{
-			String request = buildRequest();
-			return request.length();
+			byte[] request = buildRequest();
+			return request.length;
 		}
 
 		return -1;
@@ -474,11 +477,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		if (uploadedFiles != null && uploadedFiles.size() > 0)
 		{
-			String request = buildRequest();
+			byte[] request = buildRequest();
 
 			// Ok lets make an input stream to return
-			final ByteArrayInputStream bais = new ByteArrayInputStream(request
-					.getBytes("ISO-8859-1"));
+			final ByteArrayInputStream bais = new ByteArrayInputStream(request);
 
 			return new ServletInputStream()
 			{
@@ -1300,32 +1302,39 @@ public class MockHttpServletRequest implements HttpServletRequest
 		addHeader("User-Agent",
 				"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
 	}
-
+	private static final String crlf = "\r\n";
+	private static final String boundary = "--abcdefgABCDEFG";
+	private void newAttachment(OutputStream out) throws IOException {
+		out.write(boundary.getBytes());
+		out.write(crlf.getBytes());
+		out.write("Content-Disposition: form-data".getBytes());
+	}
 	/**
 	 * Build the request based on the uploaded files and the parameters.
 	 * 
 	 * @return The request as a string.
 	 */
-	private String buildRequest()
+	private byte[] buildRequest()
 	{
-		// Build up the input stream based on the files and parameters
-		StringBuffer issb = new StringBuffer();
-		String crlf = "\r\n";
-		String boundary = "--abcdefgABCDEFG";
-
-		// Add parameters
-		for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
-		{
-			final String name = (String)iterator.next();
-			issb.append(boundary).append(crlf);
-			issb.append("Content-Disposition: form-data; name=\"").append(name).append("\"")
-					.append(crlf).append(crlf);
-			issb.append(parameters.get(name)).append(crlf);
-		}
-
-
 		try
 		{
+			// Build up the input stream based on the files and parameters
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+	
+			// Add parameters
+			for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			{
+				final String name = (String)iterator.next();
+				newAttachment(out);
+				out.write("; name=\"".getBytes());
+				out.write(name.getBytes());
+				out.write("\"".getBytes());
+				out.write(crlf.getBytes());
+				out.write(crlf.getBytes());
+				out.write(parameters.get(name).toString().getBytes());
+				out.write(crlf.getBytes());
+			}
+
 			// Add files
 			if (uploadedFiles != null)
 			{
@@ -1335,40 +1344,35 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 					UploadedFile uf = (UploadedFile)uploadedFiles.get(fieldName);
 
-					issb.append(boundary).append(crlf);
-					issb.append("Content-Disposition: form-data; name=\"").append(fieldName)
-							.append("\"; filename=\"").append(uf.getFile().getName()).append("\"")
-							.append(crlf);
-					issb.append("Content-Type: ").append(uf.getContentType()).append(crlf).append(
-							crlf);
+					newAttachment(out);
+					out.write("; name=\"".getBytes());
+					out.write(fieldName.getBytes());
+					out.write("\"; filename=\"".getBytes());
+					out.write(uf.getFile().getName().getBytes());
+					out.write("\"".getBytes());
+					out.write(crlf.getBytes());
+					out.write("Content-Type: ".getBytes());
+					out.write(uf.getContentType().getBytes());
+					out.write(crlf.getBytes());
+					out.write(crlf.getBytes());
 
 					// Load the file and put it into the the inputstream
 					FileInputStream fis = new FileInputStream(uf.getFile());
-					StringWriter sw = new StringWriter();
-
-					byte[] data = new byte[1024];
-					int read = 0;
-					while ((read = fis.read(data)) > 0)
-					{
-						sw.write(new String(data, 0, read));
-					}
-
+					IOUtils.copy(fis, out);
 					fis.close();
-
-					issb.append(sw.getBuffer()).append(crlf);
-
-					sw.close();
+					out.write(crlf.getBytes());
 				}
 			}
+
+			out.write(boundary.getBytes());
+			out.write("--".getBytes());
+			out.write(crlf.getBytes());
+			return out.toByteArray();
 		}
 		catch (IOException e)
 		{
 			// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
 			throw new WicketRuntimeException(e);
 		}
-
-		issb.append(boundary).append("--").append(crlf);
-
-		return issb.toString();
 	}
 }

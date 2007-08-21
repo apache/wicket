@@ -108,7 +108,7 @@ public class FormTesterTest extends WicketTestCase
 	 * {@link FormTester#setFile(String, org.apache.wicket.util.file.File, String)} to test
 	 * that upload to a FileUploadField works.
 	 */
-	public void bugTestAddBinaryFile()
+	public void testAddBinaryFile()
 	{
 		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
