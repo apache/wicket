@@ -29,13 +29,28 @@ public class MockPageWithFormAndUploadField extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private final Form form;
-	
+	private final FileUploadField fileUploadField;
+	private FileUpload fileUpload;
+
 	/**
 	 * Construct.
 	 */
 	public MockPageWithFormAndUploadField()
 	{
-		form = new Form("form");
+		form = new Form("form")
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			protected void onSubmit()
+			{
+				fileUpload = fileUploadField.getFileUpload();
+			}
+		};
+		fileUploadField = new FileUploadField("upload");
+		form.add(fileUploadField);
 		add(form);
 	}
 
@@ -45,5 +60,13 @@ public class MockPageWithFormAndUploadField extends WebPage
 	public Form getForm()
 	{
 		return form;
+	}
+
+	/**
+	 * @return fileUpload
+	 */
+	public FileUpload getFileUpload()
+	{
+		return fileUpload;
 	}
 }

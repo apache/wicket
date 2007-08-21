@@ -23,12 +23,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
+import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.file.File;
-import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.ITestPageSource;
 
 
@@ -47,22 +46,15 @@ public class FileUploadFieldTest extends WicketTestCase
 	{
 		super("Test of FileUploadField");
 	}
-	
-	public void testDummy() {
-		// FIXME WICKET-728 broke this
-	}
 
 	/**
 	 * Test that detach closes the streams
 	 * 
 	 * @throws Exception 
 	 */
-	public void bugTestInternalDetach() throws Exception
+	public void testInternalDetach() throws Exception
 	{
 		final MockPageWithFormAndUploadField page = new MockPageWithFormAndUploadField();
-		
-		FileUploadField field = new FileUploadField("upload");
-		page.getForm().add(field);
 
 		tester.startPage(new ITestPageSource() 
 		{
@@ -74,13 +66,6 @@ public class FileUploadFieldTest extends WicketTestCase
 			}
 		});
 
-		// Setup the request. It should be a IMultipartWebRequest
-		RequestCycle requestCycle = tester.createRequestCycle();
-		MockHttpServletRequest servletRequest = tester.getServletRequest();
-		servletRequest.setMethod("POST");
-		servletRequest.setParameter("form2:hf:fs", "");
-		servletRequest.setParameter("wicketState", "");
-		
 		File tmp = null;
 		try {
 			// Write out a large text file. We need to make this file reasonably sizable,
@@ -100,15 +85,12 @@ public class FileUploadFieldTest extends WicketTestCase
 			os.close();
 		
 			// Let's upload the dtd file. It's large enough to avoid being in memory.
-			servletRequest.addFile("upload", tmp, "text/plain");
-	
-			requestCycle.setRequest(new MultipartServletWebRequest(servletRequest, Bytes.MAX));
-
-			// attach manually for the test
-			field.attach();
+			FormTester formtester = tester.newFormTester("form");
+			formtester.setFile("upload", tmp, "text/plain");
+		    formtester.submit();
 			
 			// Get the file upload
-			FileUpload fileUpload = field.getFileUpload();
+			FileUpload fileUpload = page.getFileUpload();
 			
 			assertNotNull(fileUpload);
 			
@@ -118,13 +100,13 @@ public class FileUploadFieldTest extends WicketTestCase
 			// We should be able to read a byte
 			assertTrue(is.read() != -1);
 			
-			field.detach();
+			fileUpload.closeStreams();
 			
 			// The input stream should be closed so we shouldn't be able to read any more bytes
 			try 
 			{
 				is.read();
-				fail();
+				fail("The input stream should be closed so we shouldn't be able to read any more bytes");
 			} 
 			catch (IOException e)
 			{
