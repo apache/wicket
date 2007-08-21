@@ -54,6 +54,10 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty-management</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
