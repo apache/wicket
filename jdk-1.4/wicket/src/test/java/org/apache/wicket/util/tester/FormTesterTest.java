@@ -77,6 +77,42 @@ public class FormTesterTest extends WicketTestCase
 		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 		MockDomainObjectFileUpload domainObject = page.getDomainObject();
+	
+		tester.createRequestCycle();
+	
+		assertNull(page.getFileUpload());
+		assertNotNull(domainObject);
+		assertNull(domainObject.getText());
+	
+	
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setFile("file", new File("pom.xml"), "text/xml");
+		formTester.setValue("text", "Mock value");
+		formTester.submit();
+	
+	
+		assertNotNull(domainObject);
+		assertNotNull(domainObject.getText());
+		assertEquals("Mock value", domainObject.getText());
+	
+		FileUpload fileUpload = page.getFileUpload();
+		assertNotNull(fileUpload);
+	
+		assertTrue("setFile failed, no upload content detected.", fileUpload.getBytes().length > 0);
+		assertEquals("pom.xml", fileUpload.getClientFileName());
+		assertEquals("text/xml", fileUpload.getContentType());
+	}
+
+	/**
+	 * Test that the user can use
+	 * {@link FormTester#setFile(String, org.apache.wicket.util.file.File, String)} to test
+	 * that upload to a FileUploadField works.
+	 */
+	public void bugTestAddBinaryFile()
+	{
+		tester.startPage(MockFormFileUploadPage.class);
+		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
+		MockDomainObjectFileUpload domainObject = page.getDomainObject();
 
 		tester.createRequestCycle();
 
@@ -86,7 +122,7 @@ public class FormTesterTest extends WicketTestCase
 
 
 		FormTester formTester = tester.newFormTester("form");
-		formTester.setFile("file", new File("pom.xml"), "text/xml");
+		formTester.setFile("file", new File("src/test/java/org/apache/wicket/util/tester/bg.jpg"), "image/jpeg");
 		formTester.setValue("text", "Mock value");
 		formTester.submit();
 
@@ -98,9 +134,9 @@ public class FormTesterTest extends WicketTestCase
 		FileUpload fileUpload = page.getFileUpload();
 		assertNotNull(fileUpload);
 
-		assertTrue("setFile failed, no upload content detected.", fileUpload.getBytes().length > 0);
-		assertEquals("pom.xml", fileUpload.getClientFileName());
-		assertEquals("text/xml", fileUpload.getContentType());
+		assertTrue("uploaded content does not have the right size, expected 428, got " + fileUpload.getBytes().length, fileUpload.getBytes().length == 428);
+		assertEquals("bg.jpg", fileUpload.getClientFileName());
+		assertEquals("image/jpeg", fileUpload.getContentType());
 	}
 
 	/**
