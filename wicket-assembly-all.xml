@@ -24,6 +24,24 @@
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
+			<directory>archetypes</directory>
+			<outputDirectory>src/archetypes</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<excludes>
+				<exclude>**/wicket/target</exclude>
+				<exclude>**/wicket-*/target</exclude>
+				<exclude>**/wicket/target/**</exclude>
+				<exclude>**/wicket-*/target/**</exclude>
+				<exclude>**/*gz</exclude>
+				<exclude>**/*zip</exclude>
+				<exclude>**/archive-tmp</exclude>
+				<exclude>**/sessions</exclude>
+				<exclude>target</exclude>
+				<exclude>target/**</exclude>
+				<exclude>${basedir}/target</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
 			<directory>jdk-1.4</directory>
 			<outputDirectory>src/jdk-1.4</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
