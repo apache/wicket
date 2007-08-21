@@ -37,7 +37,8 @@
 			  document.postback.screenHeight.value = window.screen.height;
 			  document.postback.screenColorDepth.value = window.screen.colorDepth;
 		  }
-		  document.postback.utcOffset.value = (new Date().getTimezoneOffset() / -60);
+		  document.postback.utcOffset.value = (new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
+		  document.postback.utcDSTOffset.value = (new Date(new Date().getFullYear(), 6, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
           document.postback.browserWidth.value =  window.innerWidth || document.body.offsetWidth;
           document.postback.browserHeight.value =  window.innerHeight || document.body.offsetHeight;
  		  document.postback.submit();
@@ -58,6 +59,7 @@
 			<input type="text" wicket:id="screenHeight" />
 			<input type="text" wicket:id="screenColorDepth" />
 			<input type="text" wicket:id="utcOffset" />
+			<input type="text" wicket:id="utcDSTOffset" />
 			<input type="text" wicket:id="browserWidth" />
 			<input type="text" wicket:id="browserHeight" />
 		</form>

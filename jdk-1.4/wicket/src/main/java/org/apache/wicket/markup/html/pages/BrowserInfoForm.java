@@ -96,12 +96,13 @@ public class BrowserInfoForm extends Panel
 		form.add(new TextField("screenHeight"));
 		form.add(new TextField("screenColorDepth"));
 		form.add(new TextField("utcOffset"));
+		form.add(new TextField("utcDSTOffset"));
 		form.add(new TextField("browserWidth"));
 		form.add(new TextField("browserHeight"));
 		add(form);
 	}
 
-	
+
 	/**
 	 * Log a warning that for in order to use this page, you should really be
 	 * using {@link WebClientInfo}.
@@ -111,16 +112,16 @@ public class BrowserInfoForm extends Panel
 	 */
 	void warnNotUsingWebClientInfo(ClientInfo clientInfo)
 	{
-		log.warn("using " + getClass().getName() + " makes no sense if you are not using "
-				+ WebClientInfo.class.getName() + " (you are using "
-				+ clientInfo.getClass().getName() + " instead)");
+		log.warn("using " + getClass().getName() + " makes no sense if you are not using " +
+				WebClientInfo.class.getName() + " (you are using " +
+				clientInfo.getClass().getName() + " instead)");
 	}
-	
+
 	protected void afterSubmit()
 	{
-		
+
 	}
-	
+
 	/**
 	 * Holds properties of the client.
 	 */
@@ -140,6 +141,7 @@ public class BrowserInfoForm extends Panel
 		private String screenHeight;
 		private String screenWidth;
 		private String utcOffset;
+		private String utcDSTOffset;
 		private String browserWidth;
 		private String browserHeight;
 
@@ -307,6 +309,7 @@ public class BrowserInfoForm extends Panel
 			properties.setBrowserHeight(getInt(browserHeight));
 			properties.setScreenColorDepth(getInt(screenColorDepth));
 			properties.setUtcOffset(utcOffset);
+			properties.setUtcDSTOffset(utcDSTOffset);
 		}
 
 		/**
@@ -461,6 +464,27 @@ public class BrowserInfoForm extends Panel
 		public void setUtcOffset(String utcOffset)
 		{
 			this.utcOffset = utcOffset;
+		}
+
+		/**
+		 * Sets utcDSTOffset.
+		 * 
+		 * @param utcDSTOffset
+		 *            utcDSTOffset
+		 */
+		private void setUtcDSTOffset(String utcDSTOffset)
+		{
+			this.utcDSTOffset = utcDSTOffset;
+		}
+
+		/**
+		 * Gets utcDSTOffset.
+		 * 
+		 * @return utcDSTOffset
+		 */
+		private String getUtcDSTOffset()
+		{
+			return utcDSTOffset;
 		}
 
 		private int getInt(String value)
