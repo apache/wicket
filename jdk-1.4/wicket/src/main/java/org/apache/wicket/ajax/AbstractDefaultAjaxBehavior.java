@@ -114,8 +114,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @return javascript that will run when the ajax call finishes
-	 *            successfully
+	 * @return an optional javacript expression that determines whether the request
+	 *            will actually execute (in form of return XXX;);
 	 */
 	protected CharSequence getPreconditionScript()
 	{
@@ -132,8 +132,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @return an optional javacript expression that determines whether the request
-	 *            will actually execute (in form of return XXX;);
+	 * @return javascript that will run when the ajax call finishes
+	 *            successfully
 	 */
 	protected CharSequence getSuccessScript()
 	{
