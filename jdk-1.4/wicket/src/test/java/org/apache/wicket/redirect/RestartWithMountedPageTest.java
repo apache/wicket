@@ -41,27 +41,20 @@ public class RestartWithMountedPageTest extends WicketTestCase
 	}
 
     /**
-     * FIXME fix this test
      * Tests that a protected page can redirect to a login page from a mounted package.
      */
-    public void bugTestWithMountedPackage() {
+    public void testWithMountedPackage() {
         tester.getApplication().mount("/test", PackageName.forPackage(ProtectedPage.class.getPackage()));
         tester.startPage(ProtectedPage.class);
         tester.assertRenderedPage(LoginPage.class);
     }
 
     /**
-     * FIXME fix this test
      * Tests that a protected page can redirect to a login page from mounted pages.
      */
-    public void bugTestWithMountedLoginPage() {
+    public void testWithMountedLoginPage() {
         tester.getApplication().mountBookmarkablePage("/login", LoginPage.class);
         tester.startPage(ProtectedPage.class);
         tester.assertRenderedPage(LoginPage.class);
     }
-    
-    /**
-     * FIXME remove this dummy test
-     */
-    public void testDummy() {}
 }

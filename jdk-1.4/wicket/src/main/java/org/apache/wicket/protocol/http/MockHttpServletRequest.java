@@ -1283,8 +1283,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		parameters.clear();
 
-		final String queryString = redirect.substring(redirect.indexOf('?') + 1);
-		RequestUtils.decodeParameters(queryString, parameters);
+		int queryStringPos = redirect.indexOf('?');
+		
+		// Decode the parameters
+		if (queryStringPos != -1) {
+			final String queryString = redirect.substring(queryStringPos + 1);
+			RequestUtils.decodeParameters(queryString, parameters);
+		}
+
+		// We need to absolutize the redirect URL as we are not as smart as a web-browser (WICKET-702)
+		url = getContextPath() + getServletPath() + "/" + redirect;
+		log.debug("Redirecting to " + url);
 	}
 
 	/**
