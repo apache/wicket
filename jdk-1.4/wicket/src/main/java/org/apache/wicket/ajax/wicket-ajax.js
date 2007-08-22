@@ -147,79 +147,135 @@ Wicket.FunctionsExecuter.prototype = {
 	}
 }
 
+Wicket.replaceOuterHtmlIE = function(element, text) {
+	
+	if (element.tagName == "SCRIPT") {
+		// we need to get the javascript content, so we create an invalid DOM structure,
+		// (that is necessary for IE to let us see the innerHTML of the script tag	
+		var tempDiv = document.createElement("div");
+		tempDiv.innerHTML = "<table>" + text + "</table>";		
+		var script = tempDiv.childNodes[0].childNodes[0].innerHTML;
+		
+		element.outerHtml = text;
+		eval(script);
+		return;
+	}  
+	
+	var parent = element.parentNode;
+	var tn = element.tagName;
+				
+	var tempDiv = document.createElement("div");
+	var tempParent;
+	
+	// array for javascripts that were in the text
+	var scripts = new Array();
+		
+	if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
+		// in case the element is not any of these
+		
+		// this is not exactly nice, but we need to get invalid markup inside innerHTML,
+		// because otherwise IE just swallows the <script> tags (sometimes) 
+		tempDiv.innerHTML = '<table style="display:none">' + text + '</table>';
+		
+		// now copy the script tags to array (needed later for script execution)
+		var s = tempDiv.getElementsByTagName("script");
+		for (var i = 0; i < s.length; ++i) {
+			scripts.push(s[i]);
+		}
+		
+		// now use regular div so that we won't mess the DOM
+		tempDiv.innerHTML = '<div style="display:none">' + text + '</div>'; 
+		
+		// set the outer <div> as parent
+		tempParent = tempDiv.childNodes[0];
+	} else {
+	
+		// same trick as with before, this time we need a div to to create invalid markup
+		// (otherwise we wouldn't be able to get the script tags)
+		tempDiv.innerHTML = '<div style="display:none">' + text + '</div>';
+	
+		// now copy the script tags to array (needed later for script execution)
+		var s = tempDiv.getElementsByTagName("script");
+		for (var i = 0; i < s.length; ++i) {
+			scripts.push(s[i]);
+		}
+	
+		// hack to get around the fact that IE doesn't allow to replace table elements
+		tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';
+		
+		// get the parent element of new elements
+		tempParent = tempDiv.getElementsByTagName(tn).item(0).parentNode;					
+	}	
+
+	// place all newly created elements before the old element	
+	while(tempParent.childNodes.length > 0) {
+		var tempElement = tempParent.childNodes[0];
+		parent.insertBefore(tempElement, element);
+	}
+      
+    // remove the original element
+	parent.removeChild(element);
+		
+	{
+		for (i = 0; i < scripts.length; ++i) {
+			Wicket.Head.addJavascripts(scripts[i]); 
+		}						
+	} 
+}
+
+Wicket.replaceOuterHtmlSafari = function(element, text) {
+	// if we are replacing a single <script> element
+	if (element.tagName == "SCRIPT") {
+
+		// create temporal div and add script as inner HTML		
+		var tempDiv = document.createElement("div");
+		tempDiv.innerHTML = text;
+
+		// try to get script content
+		var script = tempDiv.childNodes[0].innerHTML;
+		if (typeof(script) != "string") {
+			script = tempDiv.childNodes[0].text;
+		}
+		
+		element.outerHTML = text;
+		eval(script);
+		return;
+	}
+	var parent = element.parentNode;	
+	var next = element.nextSibling;
+	
+	var index = 0;
+	while (parent.childNodes[index] != element) {
+		++index;
+	}
+	
+	element.outerHTML = text;	
+		
+	element = parent.childNodes[index];	
+	
+	// go through newly added elements and try to find javascripts that 
+	// need to be executed	
+	while (element != next) {
+		Wicket.Head.addJavascripts(element);
+		element = element.nextSibling;
+	}
+}
+
 /**
  * A cross-browser method that replaces the markup of an element. The behavior
- * is similiar to calling element.outerHtml=text in internet explorer. However
+ * is similar to calling element.outerHtml=text in internet explorer. However
  * this method also takes care of executing javascripts within the markup on
  * browsers that don't do that automatically.
  * Also this method takes care of replacing table elements (tbody, tr, td, thead)
- * on browser where it's not supported when using outerHTML (IE, Opera).
+ * on browser where it's not supported when using outerHTML (IE).
  */
 Wicket.replaceOuterHtml = function(element, text) {	
 
-    if (element.outerHTML) { // internet explorer or opera support outerHtml
-    
-		var parent = element.parentNode;
-		var tn = element.tagName;
-					
-		var tempDiv = document.createElement("div");
-		var tempParent;
-		
-		// array for javascripts that were in the text
-		var scripts = new Array();
-		
-		
-		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {
-			// in case the element is not any of these
-			
-			// this is not exactly nice, but we need to get invalid markup inside innerHTML,
-			// because otherwise IE just swallows the <script> tags (sometimes) 
-			tempDiv.innerHTML = '<table style="display:none">' + text + '</table>';
-			
-			// now copy the script tags to array (needed later for script execution)
-			var s = tempDiv.getElementsByTagName("script");
-			for (var i = 0; i < s.length; ++i) {
-				scripts.push(s[i]);
-			}
-			
-			// now use regular div so that we won't mess the DOM
-			tempDiv.innerHTML = '<div style="display:none">' + text + '</div>'; 
-			
-			// set the outer <div> as parent
-			tempParent = tempDiv.childNodes[0];
-		} else {
-		
-			// hack to get around the fact that IE doesn't allow to replace table elements
-			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';
-			
-			// get the parent element of new elements
-			tempParent = tempDiv.getElementsByTagName(tn).item(0).parentNode;
-			
-			// collect the scrips
-			scripts = tempDiv.getElementsByTagName("script");	
-		}	
-
-		// place all newly created elements before the old element	
-		while(tempParent.childNodes.length > 0) {
-			var tempElement = tempParent.childNodes[0];
-			parent.insertBefore(tempElement, element);
-		}
-       
-	    // remove the original element
-		parent.removeChild(element);
-		
-			
-		// we need to execute the javascript in reverse order to be consistent with firefox 
-		if (element.tagName == "SCRIPT") {
-			// in case we replaced the script element
-			Wicket.Head.addJavascripts(element);
-		} else {
-			for (i = scripts.length - 1; i >= 0; --i) {
-				Wicket.Head.addJavascripts(scripts[i]); 
-			}						
-		} 
-					
-    } else {
+	if (Wicket.Browser.isIE()) {		
+		Wicket.replaceOuterHtmlIE(element, text);				
+    } else if (Wicket.Browser.isSafari() || Wicket.Browser.isOpera()) {
+    	Wicket.replaceOuterHtmlSafari(element, text);    	
+    } else /* GECKO */ {
     	// create range and fragment
         var range = element.ownerDocument.createRange();
         range.selectNode(element);
@@ -231,13 +287,6 @@ Wicket.replaceOuterHtml = function(element, text) {
 			elements.push(fragment.childNodes[i]);
 
         element.parentNode.replaceChild(fragment, element);        
-
-		// for certain browsers we need to execute the javascript manually
-		if (document.all != null) {
-			for (var i in elements) {
-				Wicket.Head.addJavascripts(elements[i]);
-			}
-		}
     }		
 }	
 
