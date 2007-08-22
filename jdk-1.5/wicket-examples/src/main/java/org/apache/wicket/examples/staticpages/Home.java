@@ -33,8 +33,6 @@ import org.apache.wicket.model.Model;
  * {@link RelativePathPrefixHandler} would prepend the servlet context path but
  * without Wicket's filter path.
  * 
- * TODO provide an example using a bookmarkable page
- * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class Home extends WicketExamplePage
