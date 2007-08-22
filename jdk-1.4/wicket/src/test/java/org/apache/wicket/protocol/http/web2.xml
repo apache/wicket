@@ -55,7 +55,9 @@
 		</init-param>
 	</filter>
 	<filter-mapping>
-		<filter-name>FilterTestApplication</filter-name>
+		<filter-name>
+		  FilterTestApplication
+		</filter-name>
 		<url-pattern>
 		  /filtertest/*
 		</url-pattern>
