@@ -114,7 +114,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * {@link IErrorMessageSource} used for error messags against this form components.
+	 * {@link IErrorMessageSource} used for error messages against this form components.
 	 * 
 	 * @author ivaynberg
 	 */
