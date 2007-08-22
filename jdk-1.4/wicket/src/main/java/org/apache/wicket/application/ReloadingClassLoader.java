@@ -353,4 +353,12 @@ public class ReloadingClassLoader extends URLClassLoader
 			log.debug("Could not locate class " + clz.getName());
 		}
 	}
+
+	/**
+	 * Remove the ModificationWatcher from the current reloading class loader
+	 */
+	public void destroy()
+	{
+		watcher.destroy();
+	}
 }

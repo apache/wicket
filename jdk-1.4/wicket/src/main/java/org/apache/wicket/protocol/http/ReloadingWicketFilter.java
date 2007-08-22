@@ -149,6 +149,9 @@ public class ReloadingWicketFilter extends WicketFilter
 		{
 			public void onChange()
 			{
+				// Remove the ModificationWatcher from the current reloading class loader
+				reloadingClassLoader.destroy();
+
 				/*
 				 * Create a new classloader, as there is no way to clear a
 				 * ClassLoader's cache. This supposes that we don't share

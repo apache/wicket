@@ -24,10 +24,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Examples for serving static files. XXX Notice the use of a WebMarkupContainer
- * to produce the static links, since with plain <tt>href</tt> attribute
- * Wicket's {@link RelativePathPrefixHandler} would prepend the servlet context
- * path but without Wicket's filter path.
+ * Examples for serving static files. These examples show how to serve files (or
+ * more generally data streams) by reusing the powerful Wicket concepts like
+ * IResourceStream, IRequestTarget and IRequestTargetUrlCodingStrategy.
+ * 
+ * XXX Notice the use of a WebMarkupContainer to produce the static links, since
+ * with plain <tt>href</tt> attribute Wicket's
+ * {@link RelativePathPrefixHandler} would prepend the servlet context path but
+ * without Wicket's filter path.
  * 
  * TODO provide an example using a bookmarkable page
  * 
