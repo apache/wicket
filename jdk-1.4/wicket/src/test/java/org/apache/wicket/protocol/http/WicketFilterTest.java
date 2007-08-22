@@ -30,7 +30,7 @@ public class WicketFilterTest extends TestCase
 			assertEquals("filtertest/", filterPath);
 	}
 
-	public void bugTestFilterPath2() {
+	public void testFilterPath2() {
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web2.xml");
 		String filterPath = getFilterPath("FilterTestApplication", in);
 		assertEquals("filtertest/", filterPath);

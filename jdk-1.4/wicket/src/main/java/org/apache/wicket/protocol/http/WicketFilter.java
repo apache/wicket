@@ -481,7 +481,7 @@ public class WicketFilter implements Filter
 					}
 					else if (elem.isClose() && elem.getName().equals("url-pattern"))
 					{
-						urlPattern = parser.getInputFromPositionMarker(elem.getPos()).toString();
+						urlPattern = parser.getInputFromPositionMarker(elem.getPos()).toString().trim();
 					}
 				}
 				while (urlPattern == null || encounteredFilterName == null);
