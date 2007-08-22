@@ -32,15 +32,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A utility class that encapsulates all of the localization related
- * functionality in a way that it can be accessed by all areas of the framework
- * in a consistent way. A singleton instance of this class is available via the
- * <code>Application</code> object.
+ * A utility class that encapsulates all of the localization related functionality in a way that it
+ * can be accessed by all areas of the framework in a consistent way. A singleton instance of this
+ * class is available via the <code>Application</code> object.
  * <p>
- * You may register additional IStringResourceLoader to extend or replace
- * Wickets default search strategy for the properties. E.g. string resource
- * loaders which load the properties from a database. There should be no need to
- * extend Localizer.
+ * You may register additional IStringResourceLoader to extend or replace Wickets default search
+ * strategy for the properties. E.g. string resource loaders which load the properties from a
+ * database. There should be no need to extend Localizer.
  * 
  * @see org.apache.wicket.settings.Settings#getLocalizer()
  * @see org.apache.wicket.resource.loader.IStringResourceLoader
@@ -58,8 +56,8 @@ public class Localizer
 	private Map cache = new HashMap();
 
 	/**
-	 * Create the utils instance class backed by the configuration information
-	 * contained within the supplied application object.
+	 * Create the utils instance class backed by the configuration information contained within the
+	 * supplied application object.
 	 */
 	public Localizer()
 	{
@@ -82,8 +80,7 @@ public class Localizer
 	 *            The component to get the resource for
 	 * @return The string resource
 	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
+	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component)
 			throws MissingResourceException
@@ -99,12 +96,10 @@ public class Localizer
 	 * @param component
 	 *            The component to get the resource for
 	 * @param model
-	 *            The model to use for property substitutions in the strings
-	 *            (optional)
+	 *            The model to use for property substitutions in the strings (optional)
 	 * @return The string resource
 	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
+	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final IModel model)
 			throws MissingResourceException
@@ -123,8 +118,7 @@ public class Localizer
 	 *            The default value (optional)
 	 * @return The string resource
 	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
+	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final String defaultValue)
 			throws MissingResourceException
@@ -144,8 +138,7 @@ public class Localizer
 	 * @return String
 	 * @throws MissingResourceException
 	 * 
-	 * @Deprecated please use
-	 *             {@link #getString(String, Component, IModel, String)}
+	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
 	 */
 	public String getString(final String key, final Component component, final IModel model,
 			final Locale locale, final String style, final String defaultValue)
@@ -155,10 +148,9 @@ public class Localizer
 	}
 
 	/**
-	 * Get the localized string using all of the supplied parameters. This
-	 * method is left public to allow developers full control over string
-	 * resource loading. However, it is recommended that one of the other
-	 * convenience methods in the class are used as they handle all of the work
+	 * Get the localized string using all of the supplied parameters. This method is left public to
+	 * allow developers full control over string resource loading. However, it is recommended that
+	 * one of the other convenience methods in the class are used as they handle all of the work
 	 * related to obtaining the current user locale and style information.
 	 * 
 	 * @param key
@@ -171,8 +163,7 @@ public class Localizer
 	 *            The default value (optional)
 	 * @return The string resource
 	 * @throws MissingResourceException
-	 *             If resource not found and configuration dictates that
-	 *             exception should be thrown
+	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final IModel model,
 			final String defaultValue) throws MissingResourceException
@@ -186,17 +177,18 @@ public class Localizer
 			{
 				addedToPage = true;
 			}
+
+			if (!addedToPage)
+			{
+				logger
+						.warn(
+								"Tried to retrieve a localized string for a component that has not yet been added to the page. "
+										+ "This can sometimes lead to an invalid or no localized resource returned. "
+										+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
+										+ "Offending component: {}", component);
+			}
 		}
 
-		if (!addedToPage)
-		{
-			logger
-					.warn(
-							"Tried to retrieve a localized string for a component that has not yet been added to the page. "
-									+ "This can sometimes lead to an invalid or no localized resource returned. "
-									+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
-									+ "Offending component: {}", component);
-		}
 
 		String cacheKey = null;
 		String string = null;
