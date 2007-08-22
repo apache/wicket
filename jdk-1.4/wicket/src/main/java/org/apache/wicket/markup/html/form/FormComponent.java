@@ -52,18 +52,17 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * An HTML form component knows how to validate itself. Validators that
- * implement IValidator can be added to the component. They will be evaluated in
- * the order they were added and the first Validator that returns an error
- * message determines the error message returned by the component.
+ * An HTML form component knows how to validate itself. Validators that implement IValidator can be
+ * added to the component. They will be evaluated in the order they were added and the first
+ * Validator that returns an error message determines the error message returned by the component.
  * <p>
- * FormComponents are not versioned by default. If you need versioning for your
- * FormComponents, you will need to call Form.setVersioned(true), which will set
- * versioning on for the form and all form component children.
+ * FormComponents are not versioned by default. If you need versioning for your FormComponents, you
+ * will need to call Form.setVersioned(true), which will set versioning on for the form and all form
+ * component children.
  * <p>
- * If this component is required and that fails, the error key that is used is
- * the "Required"; if the type conversion fails, it will use the key
- * "IConverter". The keys that can be used in both are:
+ * If this component is required and that fails, the error key that is used is the "Required"; if
+ * the type conversion fails, it will use the key "IConverter". The keys that can be used in both
+ * are:
  * <ul>
  * <li>${input}: the input the user did give</li>
  * <li>${name}: the name of the component that failed</li>
@@ -115,8 +114,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * {@link IErrorMessageSource} used for error messags against this form
-	 * components.
+	 * {@link IErrorMessageSource} used for error messags against this form components.
 	 * 
 	 * @author ivaynberg
 	 */
@@ -202,8 +200,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		}
 
 		/**
-		 * Creates a new params map that additionaly contains the default input,
-		 * name, label parameters
+		 * Creates a new params map that additionaly contains the default input, name, label
+		 * parameters
 		 * 
 		 * @param params
 		 *            original params map
@@ -327,8 +325,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	private static final String[] EMPTY_STRING_ARRAY = new String[] { "" };
 
 	/**
-	 * Whether this form component should save and restore state between
-	 * sessions. This is false by default.
+	 * Whether this form component should save and restore state between sessions. This is false by
+	 * default.
 	 */
 	private static final short FLAG_PERSISTENT = FLAG_RESERVED2;
 
@@ -341,14 +339,13 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Make empty strings null values boolean. Used by AbstractTextComponent
-	 * subclass.
+	 * Make empty strings null values boolean. Used by AbstractTextComponent subclass.
 	 */
 	protected static final short FLAG_CONVERT_EMPTY_INPUT_STRING_TO_NULL = FLAG_RESERVED1;
 
 	/**
-	 * Visits any form components inside component if it is a container, or
-	 * component itself if it is itself a form component
+	 * Visits any form components inside component if it is a container, or component itself if it
+	 * is itself a form component
 	 * 
 	 * @param component
 	 *            starting point of the traversal
@@ -419,8 +416,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	private String typeName;
 
 	/**
-	 * The list of validators for this form component as either an IValidator
-	 * instance or an array of IValidator instances.
+	 * The list of validators for this form component as either an IValidator instance or an array
+	 * of IValidator instances.
 	 */
 	private Object validators = null;
 
@@ -478,8 +475,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Checks if the form component's 'required' requirement is met. This method
-	 * should typically only be called when {@link #isRequired()} returns true.
+	 * Checks if the form component's 'required' requirement is met. This method should typically
+	 * only be called when {@link #isRequired()} returns true.
 	 * 
 	 * @return true if the 'required' requirement is met, false otherwise
 	 */
@@ -516,9 +513,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	/**
 	 * Reports a validation error against this form component.
 	 * 
-	 * The actual error is reported by creating a
-	 * {@link ValidationErrorFeedback} object that holds both the validation
-	 * error and the generated error message - so a custom feedback panel can
+	 * The actual error is reported by creating a {@link ValidationErrorFeedback} object that holds
+	 * both the validation error and the generated error message - so a custom feedback panel can
 	 * have access to both.
 	 * 
 	 * @param error
@@ -543,8 +539,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Gets the converted input. The converted input is set earlier though the
-	 * implementation of {@link #convertInput()}.
+	 * Gets the converted input. The converted input is set earlier though the implementation of
+	 * {@link #convertInput()}.
 	 * 
 	 * @return value of input possibly converted into an appropriate type
 	 */
@@ -554,9 +550,9 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Sets the converted input. This method is typically not called by clients,
-	 * unless they override {@link #convertInput()}, in which case they should
-	 * call this method to update the input for this component instance.
+	 * Sets the converted input. This method is typically not called by clients, unless they
+	 * override {@link #convertInput()}, in which case they should call this method to update the
+	 * input for this component instance.
 	 * 
 	 * @param convertedInput
 	 *            the converted input
@@ -623,10 +619,9 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Gets the string to be used for the <tt>name</tt> attribute of the form
-	 * element. Generated using the path from the form to the component,
-	 * excluding the form itself. Override it if you want even a smaller name.
-	 * E.g. if you know for sure that the id is unique within a form.
+	 * Gets the string to be used for the <tt>name</tt> attribute of the form element. Generated
+	 * using the path from the form to the component, excluding the form itself. Override it if you
+	 * want even a smaller name. E.g. if you know for sure that the id is unique within a form.
 	 * 
 	 * @return The string to use as the form element's name attribute
 	 */
@@ -657,15 +652,14 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Use hasRawInput() to check if this component has raw input because null
-	 * can mean 2 things: It doesn't have rawinput or the rawinput is really
-	 * null.
+	 * Use hasRawInput() to check if this component has raw input because null can mean 2 things: It
+	 * doesn't have rawinput or the rawinput is really null.
 	 * 
 	 * @return The raw form input that is stored for this formcomponent
 	 */
 	public final String getRawInput()
 	{
-		return rawInput == NO_RAW_INPUT ? null : rawInput;
+		return NO_RAW_INPUT.equals(rawInput) ? null : rawInput;
 	}
 
 	/**
@@ -714,15 +708,14 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Gets current value for a form component, which can be either input data
-	 * entered by the user, or the component's model object if no input was
-	 * provided.
+	 * Gets current value for a form component, which can be either input data entered by the user,
+	 * or the component's model object if no input was provided.
 	 * 
 	 * @return The value
 	 */
 	public final String getValue()
 	{
-		if (NO_RAW_INPUT == rawInput)
+		if (NO_RAW_INPUT.equals(rawInput))
 		{
 			return getModelValue();
 		}
@@ -737,14 +730,14 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Returns whether this component has raw input. Raw input is unconverted
-	 * input straight from the client.
+	 * Returns whether this component has raw input. Raw input is unconverted input straight from
+	 * the client.
 	 * 
 	 * @return boolean whether this component has raw input.
 	 */
 	public final boolean hasRawInput()
 	{
-		return rawInput != NO_RAW_INPUT;
+		return !NO_RAW_INPUT.equals(rawInput);
 	}
 
 	/**
@@ -784,14 +777,12 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Gets whether this component's input can be null. By default, components
-	 * that do not get input will have null values passed in for input. However,
-	 * component TextField is an example (possibly the only one) that never gets
-	 * a null passed in, even if the field is left empty UNLESS it had attribute
-	 * <code>disabled="disabled"</code> set.
+	 * Gets whether this component's input can be null. By default, components that do not get input
+	 * will have null values passed in for input. However, component TextField is an example
+	 * (possibly the only one) that never gets a null passed in, even if the field is left empty
+	 * UNLESS it had attribute <code>disabled="disabled"</code> set.
 	 * 
-	 * @return True if this component's input can be null. Returns true by
-	 *         default.
+	 * @return True if this component's input can be null. Returns true by default.
 	 */
 	public boolean isInputNullable()
 	{
@@ -807,8 +798,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * @return True if this component supports persistence AND it has been asked
-	 *         to persist itself with setPersistent().
+	 * @return True if this component supports persistence AND it has been asked to persist itself
+	 *         with setPersistent().
 	 */
 	public final boolean isPersistent()
 	{
@@ -825,11 +816,10 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 
 
 	/**
-	 * Gets whether this component is 'valid'. Valid in this context means that
-	 * no validation errors were reported the last time the form component was
-	 * processed. This variable not only is convenient for 'business' use, but
-	 * is also nescesarry as we don't want the form component models updated
-	 * with invalid input.
+	 * Gets whether this component is 'valid'. Valid in this context means that no validation errors
+	 * were reported the last time the form component was processed. This variable not only is
+	 * convenient for 'business' use, but is also nescesarry as we don't want the form component
+	 * models updated with invalid input.
 	 * 
 	 * @return valid whether this component is 'valid'
 	 */
@@ -864,9 +854,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * This method will retrieve the request parameter, validate it, and if
-	 * valid update the model. These are the same steps as would be performed by
-	 * the form.
+	 * This method will retrieve the request parameter, validate it, and if valid update the model.
+	 * These are the same steps as would be performed by the form.
 	 * 
 	 * This is useful when a formcomponent is used outside a form.
 	 * 
@@ -887,8 +876,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 * The value will be made available to the validator property by means of ${label}. It does not
+	 * have any specific meaning to FormComponent itself.
 	 * 
 	 * @param labelModel
 	 * @return this for chaining
@@ -900,9 +889,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Sets the value for a form component this value will be split the string
-	 * with {@link FormComponent#VALUE_SEPARATOR} and calls
-	 * setModelValue(String[]) with that.
+	 * Sets the value for a form component this value will be split the string with
+	 * {@link FormComponent#VALUE_SEPARATOR} and calls setModelValue(String[]) with that.
 	 * 
 	 * @param value
 	 *            The value
@@ -969,8 +957,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Sets the type that will be used when updating the model for this
-	 * component. If no type is specified String type is assumed.
+	 * Sets the type that will be used when updating the model for this component. If no type is
+	 * specified String type is assumed.
 	 * 
 	 * @param type
 	 * @return this for chaining
@@ -986,16 +974,15 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Updates this components' model from the request, it expect that the
-	 * object is already converted through the convert() call. By default it
-	 * just does this:
+	 * Updates this components' model from the request, it expect that the object is already
+	 * converted through the convert() call. By default it just does this:
 	 * 
 	 * <pre>
 	 * setModelObject(getConvertedInput());
 	 * </pre>
 	 * 
-	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING.
-	 * USUALLY UPDATING YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
+	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING. USUALLY UPDATING
+	 * YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
 	 */
 	public void updateModel()
 	{
@@ -1014,10 +1001,9 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Performs full validation of the form component, which consists of calling
-	 * validateRequired(), validateTypeConversion(), and validateValidators().
-	 * This method should only be used if the form component needs to be fully
-	 * validated outside the form process.
+	 * Performs full validation of the form component, which consists of calling validateRequired(),
+	 * validateTypeConversion(), and validateValidators(). This method should only be used if the
+	 * form component needs to be fully validated outside the form process.
 	 */
 	public final void validate()
 	{
@@ -1040,8 +1026,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 
 	/**
 	 * @param validator
-	 *            The validator to add to the validators Object (which may be an
-	 *            array of IValidators or a single instance, for efficiency)
+	 *            The validator to add to the validators Object (which may be an array of
+	 *            IValidators or a single instance, for efficiency)
 	 */
 	private void validators_add(final IValidator validator)
 	{
@@ -1072,8 +1058,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Gets validator from validators Object (which may be an array of
-	 * IValidators or a single instance, for efficiency) at the given index
+	 * Gets validator from validators Object (which may be an array of IValidators or a single
+	 * instance, for efficiency) at the given index
 	 * 
 	 * @param index
 	 *            The index of the validator to get
@@ -1093,8 +1079,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * @return The number of validators in the validators Object (which may be
-	 *         an array of IValidators or a single instance, for efficiency)
+	 * @return The number of validators in the validators Object (which may be an array of
+	 *         IValidators or a single instance, for efficiency)
 	 */
 	private int validators_size()
 	{
@@ -1110,9 +1096,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Converts and validates the conversion of the raw input string into the
-	 * object specified by {@link FormComponent#getType()} and records any
-	 * errors. Converted value is available through
+	 * Converts and validates the conversion of the raw input string into the object specified by
+	 * {@link FormComponent#getType()} and records any errors. Converted value is available through
 	 * {@link FormComponent#getConvertedInput()}
 	 */
 	protected void convertInput()
@@ -1189,9 +1174,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Subclasses should overwrite this if the conversion is not done through
-	 * the type field and the IConverter. <strong>WARNING: this method may be
-	 * removed in future versions.</strong>
+	 * Subclasses should overwrite this if the conversion is not done through the type field and the
+	 * IConverter. <strong>WARNING: this method may be removed in future versions.</strong>
 	 * 
 	 * If conversion fails then a ConversionException should be thrown
 	 * 
@@ -1245,12 +1229,11 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Gets the request parameter for this component as an int, using the given
-	 * default in case no corresponding request parameter was found.
+	 * Gets the request parameter for this component as an int, using the given default in case no
+	 * corresponding request parameter was found.
 	 * 
 	 * @param defaultValue
-	 *            Default value to return if request does not have an integer
-	 *            for this component
+	 *            Default value to return if request does not have an integer for this component
 	 * @return The value in the request for this component
 	 */
 	protected final int inputAsInt(final int defaultValue)
@@ -1336,10 +1319,9 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 
 
 	/**
-	 * Called by {@link #onComponentTag(ComponentTag)} when the component is
-	 * disabled. By default, this method will add a disabled="disabled"
-	 * attribute to the tag. Components may override this method to tweak the
-	 * tag as they think is fit.
+	 * Called by {@link #onComponentTag(ComponentTag)} when the component is disabled. By default,
+	 * this method will add a disabled="disabled" attribute to the tag. Components may override this
+	 * method to tweak the tag as they think is fit.
 	 * 
 	 * @param tag
 	 *            the tag that is being rendered
