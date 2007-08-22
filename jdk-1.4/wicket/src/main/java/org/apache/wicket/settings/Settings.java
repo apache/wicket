@@ -307,6 +307,8 @@ public final class Settings
 	 */
 	private boolean outputMarkupContainerClassName = false;
 
+	private boolean addLastModifiedTimeToResourceReferenceUrl = false;
+
 	/**
 	 * Create the application settings, carrying out any necessary initialisations.
 	 * 
@@ -1324,5 +1326,15 @@ public final class Settings
 	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable)
 	{
 		linePreciseReportingOnNewComponentEnabled = enable;
+	}
+
+	public void setAddLastModifiedTimeToResourceReferenceUrl(boolean value)
+	{
+		addLastModifiedTimeToResourceReferenceUrl = value;
+	}
+
+	public boolean getAddLastModifiedTimeToResourceReferenceUrl()
+	{
+		return addLastModifiedTimeToResourceReferenceUrl;
 	}
 }

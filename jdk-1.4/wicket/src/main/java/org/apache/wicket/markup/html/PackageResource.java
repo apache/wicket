@@ -45,6 +45,8 @@ import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Time;
+import org.apache.wicket.util.watch.IModifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,14 +60,14 @@ import org.slf4j.LoggerFactory;
  * PackageResource IMG_UNKNOWN = PackageResource.get(EditPage.class, &quot;questionmark.gif&quot;);
  * </pre>
  * 
- * where the static resource references image 'questionmark.gif' from the the
- * package that EditPage is in to get a package resource.
+ * where the static resource references image 'questionmark.gif' from the the package that EditPage
+ * is in to get a package resource.
  * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class PackageResource extends WebResource
+public class PackageResource extends WebResource implements IModifiable
 {
 	/**
 	 * Exception thrown when the creation of a package resource is not allowed.
@@ -86,20 +88,16 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * common extension pattern for css files; matches all files with extension
-	 * 'css'.
+	 * common extension pattern for css files; matches all files with extension 'css'.
 	 * 
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
+	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
 	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
 
 	/**
-	 * common extension pattern for javascript files; matches all files with
-	 * extension 'js'.
+	 * common extension pattern for javascript files; matches all files with extension 'js'.
 	 * 
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
+	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
 	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
 
@@ -109,61 +107,56 @@ public class PackageResource extends WebResource
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Binds the resources that match the provided pattern to the given
-	 * application object. Will create any resources if not already in the
-	 * shared resources of the application object.
+	 * Binds the resources that match the provided pattern to the given application object. Will
+	 * create any resources if not already in the shared resources of the application object.
 	 * 
 	 * @param application
 	 *            The application to bind to.
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param pattern
-	 *            A regular expression to match against the contents of the
-	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
-	 *            will add all the files with extension &quot;js&quot; from that
-	 *            package).
+	 *            A regular expression to match against the contents of the package of the provided
+	 *            scope class (eg &quot;.*\\.js&quot; will add all the files with extension
+	 *            &quot;js&quot; from that package).
 	 * 
 	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op.
-	 *             {@link PackageResource package resources} are automatically
-	 *             tried and bound as shared resources so that they don't have
-	 *             to be pre-registered anymore. Will be removed in 2.0
+	 *             {@link PackageResource package resources} are automatically tried and bound as
+	 *             shared resources so that they don't have to be pre-registered anymore. Will be
+	 *             removed in 2.0
 	 */
 	public static void bind(Application application, Class scope, Pattern pattern)
 	{
 	}
 
 	/**
-	 * Binds the resources that match the provided pattern to the given
-	 * application object. Will create any resources if not already in the
-	 * shared resources of the application object and does that recursively when
-	 * the recurse parameter is true, or just for the scoped package if that
-	 * parameter is false
+	 * Binds the resources that match the provided pattern to the given application object. Will
+	 * create any resources if not already in the shared resources of the application object and
+	 * does that recursively when the recurse parameter is true, or just for the scoped package if
+	 * that parameter is false
 	 * 
 	 * @param application
 	 *            The application to bind to.
 	 * @param scope
 	 *            The scope of the resource.
 	 * @param pattern
-	 *            A regular expression to match against the contents of the
-	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
-	 *            will add all the files with extension &quot;js&quot; from that
-	 *            package).
+	 *            A regular expression to match against the contents of the package of the provided
+	 *            scope class (eg &quot;.*\\.js&quot; will add all the files with extension
+	 *            &quot;js&quot; from that package).
 	 * @param recurse
 	 *            Whether this method should recurse into sub packages
 	 * 
 	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op.
-	 *             {@link PackageResource package resources} are automatically
-	 *             tried and bound as shared resources so that they don't have
-	 *             to be pre-registered anymore. Will be removed in 2.0
+	 *             {@link PackageResource package resources} are automatically tried and bound as
+	 *             shared resources so that they don't have to be pre-registered anymore. Will be
+	 *             removed in 2.0
 	 */
 	public static void bind(Application application, Class scope, Pattern pattern, boolean recurse)
 	{
 	}
 
 	/**
-	 * Binds a resource to the given application object. Will create the
-	 * resource if not already in the shared resources of the application
-	 * object.
+	 * Binds a resource to the given application object. Will create the resource if not already in
+	 * the shared resources of the application object.
 	 * 
 	 * @param application
 	 *            The application to bind to.
@@ -171,8 +164,7 @@ public class PackageResource extends WebResource
 	 *            The scope of the resource.
 	 * @param name
 	 *            The name of the resource (like &quot;myfile.js&quot;)
-	 * @throw IllegalArgumentException when the requested package resource was
-	 *        not found
+	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
 	public static void bind(Application application, Class scope, String name)
 	{
@@ -180,9 +172,8 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Binds a resource to the given application object. Will create the
-	 * resource if not already in the shared resources of the application
-	 * object.
+	 * Binds a resource to the given application object. Will create the resource if not already in
+	 * the shared resources of the application object.
 	 * 
 	 * @param application
 	 *            The application to bind to.
@@ -192,8 +183,7 @@ public class PackageResource extends WebResource
 	 *            The name of the resource (like &quot;myfile.js&quot;)
 	 * @param locale
 	 *            The locale of the resource.
-	 * @throw IllegalArgumentException when the requested package resource was
-	 *        not found
+	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
 	public static void bind(Application application, Class scope, String name, Locale locale)
 	{
@@ -201,9 +191,8 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Binds a resource to the given application object. Will create the
-	 * resource if not already in the shared resources of the application
-	 * object.
+	 * Binds a resource to the given application object. Will create the resource if not already in
+	 * the shared resources of the application object.
 	 * 
 	 * @param application
 	 *            The application to bind to.
@@ -215,8 +204,7 @@ public class PackageResource extends WebResource
 	 *            The locale of the resource.
 	 * @param style
 	 *            The style of the resource.
-	 * @throw IllegalArgumentException when the requested package resource was
-	 *        not found
+	 * @throw IllegalArgumentException when the requested package resource was not found
 	 */
 	public static void bind(Application application, Class scope, String name, Locale locale,
 			String style)
@@ -236,8 +224,8 @@ public class PackageResource extends WebResource
 		}
 		else
 		{
-			throw new IllegalArgumentException("no package resource was found for scope " + scope
-					+ ", name " + name + ", locale " + locale + ", style " + style);
+			throw new IllegalArgumentException("no package resource was found for scope " + scope +
+					", name " + name + ", locale " + locale + ", style " + style);
 		}
 	}
 
@@ -245,9 +233,9 @@ public class PackageResource extends WebResource
 	 * Gets whether a resource for a given set of criteria exists.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the class in which you call this method
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the class in
+	 *            which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -265,20 +253,18 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Gets non-localized resources for a given set of criteria. Multiple
-	 * resource can be loaded for the same criteria if they match the pattern.
-	 * If no resources were found, this method returns null.
+	 * Gets non-localized resources for a given set of criteria. Multiple resource can be loaded for
+	 * the same criteria if they match the pattern. If no resources were found, this method returns
+	 * null.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the calling class/ the class in which you
-	 *            call this method
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the calling
+	 *            class/ the class in which you call this method
 	 * @param pattern
 	 *            Regexp pattern to match resources
 	 * @return The resources, never null but may be empty
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
+	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
 	public static PackageResource[] get(Class scope, Pattern pattern)
 	{
@@ -286,22 +272,20 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Gets non-localized resources for a given set of criteria. Multiple
-	 * resource can be loaded for the same criteria if they match the pattern.
-	 * If no resources were found, this method returns null.
+	 * Gets non-localized resources for a given set of criteria. Multiple resource can be loaded for
+	 * the same criteria if they match the pattern. If no resources were found, this method returns
+	 * null.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the calling class/ the class in which you
-	 *            call this method
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the calling
+	 *            class/ the class in which you call this method
 	 * @param pattern
 	 *            Regexp pattern to match resources
 	 * @param recurse
 	 *            Whether this method should recurse into sub packages
 	 * @return The resources, never null but may be empty
-	 * @deprecated Will be removed in 2.0; contribute resources one by one
-	 *             instead
+	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
 	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
 	{
@@ -368,8 +352,8 @@ public class PackageResource extends WebResource
 					}
 					if (!basedir.isDirectory())
 					{
-						throw new IllegalStateException("unable to read resources from directory "
-								+ basedir);
+						throw new IllegalStateException("unable to read resources from directory " +
+								basedir);
 					}
 				}
 			}
@@ -383,14 +367,13 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Gets a non-localized resource for a given set of criteria. Only one
-	 * resource will be loaded for the same criteria.
+	 * Gets a non-localized resource for a given set of criteria. Only one resource will be loaded
+	 * for the same criteria.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the calling class/ the class in which you
-	 *            call this method
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the calling
+	 *            class/ the class in which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @return The resource
@@ -401,13 +384,13 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Gets the resource for a given set of criteria. Only one resource will be
-	 * loaded for the same criteria.
+	 * Gets the resource for a given set of criteria. Only one resource will be loaded for the same
+	 * criteria.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the class in which you call this method
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the class in
+	 *            which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -470,8 +453,8 @@ public class PackageResource extends WebResource
 	 * Hidden constructor.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -483,17 +466,17 @@ public class PackageResource extends WebResource
 			final String style)
 	{
 		// Convert resource path to absolute path relative to base package
-		this.absolutePath = Packages.absolutePath(scope, path);
+		absolutePath = Packages.absolutePath(scope, path);
 
 		IPackageResourceGuard guard = Application.get().getResourceSettings()
 				.getPackageResourceGuard();
 		if (!guard.accept(scope, path))
 		{
-			throw new PackageResourceBlockedException("package resource " + absolutePath
-					+ " may not be accessed");
+			throw new PackageResourceBlockedException("package resource " + absolutePath +
+					" may not be accessed");
 		}
 
-		this.scopeName = scope.getName();
+		scopeName = scope.getName();
 		this.path = path;
 		this.locale = locale;
 		this.style = style;
@@ -551,8 +534,8 @@ public class PackageResource extends WebResource
 		// Check that resource was found
 		if (resourceStream == null)
 		{
-			String msg = "Unable to find package resource [path = " + absolutePath + ", style = "
-					+ style + ", locale = " + locale + "]";
+			String msg = "Unable to find package resource [path = " + absolutePath + ", style = " +
+					style + ", locale = " + locale + "]";
 			log.warn(msg);
 			if (RequestCycle.get() instanceof WebRequestCycle)
 			{
@@ -563,13 +546,20 @@ public class PackageResource extends WebResource
 				throw new AbortException();
 			}
 		}
-		this.locale = resourceStream.getLocale();
+
+		locale = resourceStream.getLocale();
+
+		if (resourceStream != null)
+		{
+			lastModifiedTime = resourceStream.lastModifiedTime();
+			lastModifiedTimeUpdate = System.currentTimeMillis();
+		}
+
 		return resourceStream;
 	}
 
 	/**
-	 * Gets the scoping class, used for class loading and to determine the
-	 * package.
+	 * Gets the scoping class, used for class loading and to determine the package.
 	 * 
 	 * @return the scoping class
 	 */
@@ -586,5 +576,25 @@ public class PackageResource extends WebResource
 	public final String getStyle()
 	{
 		return style;
+	}
+
+	private transient Time lastModifiedTime = null;
+	private transient long lastModifiedTimeUpdate = 0;
+
+	/**
+	 * Returns the last modified time of resource
+	 * 
+	 * @return last modified time or nulll if the time can not be determined
+	 */
+	public Time lastModifiedTime()
+	{
+		if (lastModifiedTimeUpdate == 0 ||
+				lastModifiedTimeUpdate < System.currentTimeMillis() - 5 * (1000 * 60))
+		{
+			lastModifiedTime = getResourceStream().lastModifiedTime();
+			lastModifiedTimeUpdate = System.currentTimeMillis();
+		}
+		return lastModifiedTime;
+
 	}
 }

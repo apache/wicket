@@ -21,35 +21,34 @@ import java.util.Locale;
 import org.apache.wicket.markup.html.PackageResource;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.time.Time;
+import org.apache.wicket.util.watch.IModifiable;
 
 
 /**
- * ResourceReference is essentially a reference to an actual resource which is
- * shared through the Application. A ResourceReference has a name and a scope
- * (within which the name must be unique). It may also have a locale or style.
- * The locale and/or style do not need to be set on a resource reference because
- * those values will automatically be determined based on the context in which
- * the resource is being used. For example, if a ResourceReference is attached
- * to an Image component, when the locale for the page switches, the Image
- * component will notice this and automatically change the locale for the
- * referenced resource as appropriate. It's for this reason that you don't
- * typically have to use the constructor overloads taking a Locale or style
- * (these details are essentially internal and so the framework uses
- * setLocale/setStyle internally so you don't have to worry about it).
+ * ResourceReference is essentially a reference to an actual resource which is shared through the
+ * Application. A ResourceReference has a name and a scope (within which the name must be unique).
+ * It may also have a locale or style. The locale and/or style do not need to be set on a resource
+ * reference because those values will automatically be determined based on the context in which the
+ * resource is being used. For example, if a ResourceReference is attached to an Image component,
+ * when the locale for the page switches, the Image component will notice this and automatically
+ * change the locale for the referenced resource as appropriate. It's for this reason that you don't
+ * typically have to use the constructor overloads taking a Locale or style (these details are
+ * essentially internal and so the framework uses setLocale/setStyle internally so you don't have to
+ * worry about it).
  * <p>
- * Package resources (resources which can be pulled from the classpath) do not
- * have to be pre-registered. For custom situations though, resources may be
- * added to the Application when the Application is constructed using
- * {@link Application#getSharedResources()} followed by
+ * Package resources (resources which can be pulled from the classpath) do not have to be
+ * pre-registered. For custom situations though, resources may be added to the Application when the
+ * Application is constructed using {@link Application#getSharedResources()} followed by
  * {@link SharedResources#add(Class, String, Locale, String, Resource)},
  * {@link SharedResources#add(String, Locale, Resource)}or
  * {@link SharedResources#add(String, Resource)}.
  * <p>
- * If a component has its own shared resource which should not be added to the
- * application construction logic in this way, it can lazy-initialize the
- * resource by overriding the {@link #newResource()} method. In this method, the
- * component should supply logic that creates the shared resource. By default
- * the {@link #newResource()} method tries to resolve to a package resource.
+ * If a component has its own shared resource which should not be added to the application
+ * construction logic in this way, it can lazy-initialize the resource by overriding the
+ * {@link #newResource()} method. In this method, the component should supply logic that creates the
+ * shared resource. By default the {@link #newResource()} method tries to resolve to a package
+ * resource.
  * 
  * @author Jonathan Locke
  */
@@ -65,7 +64,7 @@ public class ResourceReference implements IClusterable
 
 	/** The actual resource */
 	private transient Resource resource;
-	
+
 	/** The scope of the named resource */
 	private final String scopeName;
 
@@ -73,9 +72,8 @@ public class ResourceReference implements IClusterable
 	private String style;
 
 	/**
-	 * Constructs a ResourceReference with the given scope and name. The scope
-	 * is used as a namespace and the scope together with the name must uniquely
-	 * identify the reference.
+	 * Constructs a ResourceReference with the given scope and name. The scope is used as a
+	 * namespace and the scope together with the name must uniquely identify the reference.
 	 * 
 	 * @param scope
 	 *            The scope of the name
@@ -88,35 +86,32 @@ public class ResourceReference implements IClusterable
 	}
 
 	/**
-	 * Constructs a ResourceReference with the given scope and name. The scope
-	 * is used as a namespace and the scope together with the name must uniquely
-	 * identify the reference. This constructor takes in the locale and style
-	 * arguments. The locale might be overruled if this resource resolves to a
-	 * package resource.
+	 * Constructs a ResourceReference with the given scope and name. The scope is used as a
+	 * namespace and the scope together with the name must uniquely identify the reference. This
+	 * constructor takes in the locale and style arguments. The locale might be overruled if this
+	 * resource resolves to a package resource.
 	 * 
 	 * @param scope
 	 *            The scope of the name
 	 * @param name
 	 *            The name of the resource
 	 * @param locale
-	 *            The Locale from which the search for the PackageResource must
-	 *            start
+	 *            The Locale from which the search for the PackageResource must start
 	 * @param style
 	 *            The Style of the PackageResource
 	 */
 	public ResourceReference(final Class scope, final String name, Locale locale, String style)
 	{
-		this.scopeName = scope.getName();
+		scopeName = scope.getName();
 		this.name = name;
 		this.locale = locale;
 		this.style = style;
 	}
 
 	/**
-	 * Contructs a resource reference with Application.class scope and the given
-	 * name. All resource references constructed with this constructor must have
-	 * unique names since they all have the same Application-wide scope that is
-	 * the org.apache.wicket.Application.class
+	 * Contructs a resource reference with Application.class scope and the given name. All resource
+	 * references constructed with this constructor must have unique names since they all have the
+	 * same Application-wide scope that is the org.apache.wicket.Application.class
 	 * 
 	 * @param name
 	 *            The name of the resource
@@ -177,9 +172,9 @@ public class ResourceReference implements IClusterable
 		if (obj instanceof ResourceReference)
 		{
 			ResourceReference that = (ResourceReference)obj;
-			return Objects.equal(this.getScope().getName(), that.getScope().getName()) && Objects.equal(this.name, that.name)
-					&& Objects.equal(this.locale, that.locale)
-					&& Objects.equal(this.style, that.style);
+			return Objects.equal(getScope().getName(), that.getScope().getName()) &&
+					Objects.equal(name, that.name) && Objects.equal(locale, that.locale) &&
+					Objects.equal(style, that.style);
 		}
 		return false;
 	}
@@ -201,12 +196,11 @@ public class ResourceReference implements IClusterable
 	}
 
 	/**
-	 * Gets the resource for this resource reference. If the ResourceReference
-	 * has not yet been bound to the application via
-	 * {@link ResourceReference#bind(Application)}this method may return null.
+	 * Gets the resource for this resource reference. If the ResourceReference has not yet been
+	 * bound to the application via {@link ResourceReference#bind(Application)}this method may
+	 * return null.
 	 * 
-	 * @return The resource, or null if the ResourceReference has not yet been
-	 *         bound.
+	 * @return The resource, or null if the ResourceReference has not yet been bound.
 	 */
 	public final Resource getResource()
 	{
@@ -253,12 +247,11 @@ public class ResourceReference implements IClusterable
 	}
 
 	/**
-	 * Sets any loaded resource to null, thus forcing a reload on the next
-	 * request.
+	 * Sets any loaded resource to null, thus forcing a reload on the next request.
 	 */
 	public final void invalidate()
 	{
-		this.resource = null;
+		resource = null;
 	}
 
 	/**
@@ -286,8 +279,8 @@ public class ResourceReference implements IClusterable
 	 */
 	public String toString()
 	{
-		return "[ResourceReference name = " + name + ", scope = " + scopeName + ", locale = " + locale
-				+ ", style = " + style + "]";
+		return "[ResourceReference name = " + name + ", scope = " + scopeName + ", locale = " +
+				locale + ", style = " + style + "]";
 	}
 
 	/**
@@ -305,9 +298,27 @@ public class ResourceReference implements IClusterable
 		}
 		else
 		{
-			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name="
-					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
+					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
+	}
+
+	/**
+	 * Returns the last modified time of resource referenced by this reference.
+	 * 
+	 * @return last modified time or null if the time couldn't have been determined
+	 */
+	public Time lastModifiedTime()
+	{
+		Resource resource = getResource();
+		if (resource instanceof IModifiable)
+		{
+			return ((IModifiable)resource).lastModifiedTime();
+		}
+		else
+		{
+			return null;
+		}
 	}
 }
