@@ -97,6 +97,12 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			final WebRequestCycle cycle = (WebRequestCycle)RequestCycle.get();
 			final IRequestTarget target = cycle.getRequestTarget();
 
+			// we don't want to render this for stateless pages
+			if (webPage.getStatelessHint())
+			{
+				return;
+			}
+
 			IPageMap pageMap = webPage.getPageMap();
 			String name = pageMap.getName();
 			if (name == null)
