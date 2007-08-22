@@ -42,9 +42,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link IPropertiesFactory} which uses the
- * {@link IResourceStreamLocator} as defined by
- * {@link IResourceSettings#getResourceStreamLocator()} to load the
- * {@link Properties} objects. Depending on the settings, it will assign
+ * {@link IResourceStreamLocator} as defined by {@link IResourceSettings#getResourceStreamLocator()}
+ * to load the {@link Properties} objects. Depending on the settings, it will assign
  * {@link ModificationWatcher}s to the loaded resources to support reloading.
  * 
  * @see org.apache.wicket.settings.IResourceSettings#getPropertiesFactory()
@@ -57,23 +56,25 @@ public class PropertiesFactory implements IPropertiesFactory
 	private static final Logger log = LoggerFactory.getLogger(PropertiesFactory.class);
 
 	/**
-	 * Listeners will be invoked after changes to property file have been
-	 * detected
+	 * Listeners will be invoked after changes to property file have been detected
 	 */
 	private final List afterReloadListeners = new ArrayList();
 
 	/** Cache for all property files loaded */
 	private final Map propertiesCache = new ConcurrentHashMap();
 
-	/** Resource Settings */
-	private final IResourceSettings resourceSettings;
+	/** Application */
+	private final Application application;
 
 	/**
 	 * Construct.
+	 * 
+	 * @param application
+	 *            Application for this properties factory.
 	 */
-	public PropertiesFactory()
+	public PropertiesFactory(Application application)
 	{
-		resourceSettings = Application.get().getResourceSettings();
+		this.application = application;
 	}
 
 	/**
@@ -98,8 +99,7 @@ public class PropertiesFactory implements IPropertiesFactory
 
 	/**
 	 * 
-	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class, java.lang.String)
 	 */
 	public Properties load(final Class clazz, final String path)
 	{
@@ -116,7 +116,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		}
 
 		// If not in the cache than try to load the resource stream
-		IResourceStream stream = Application.get().getResourceSettings().getResourceStreamLocator()
+		IResourceStream stream = application.getResourceSettings().getResourceStreamLocator()
 				.locate(clazz, path);
 		if (stream != null)
 		{
@@ -229,9 +229,8 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * Load properties file from an IResourceStream and add an
-	 * {@link IChangeListener}to the {@link ModificationWatcher} so that if the
-	 * resource changes, we can reload it automatically.
+	 * Load properties file from an IResourceStream and add an {@link IChangeListener}to the
+	 * {@link ModificationWatcher} so that if the resource changes, we can reload it automatically.
 	 * 
 	 * @param key
 	 *            The key for the resource
@@ -243,14 +242,15 @@ public class PropertiesFactory implements IPropertiesFactory
 			final IResourceStream resourceStream)
 	{
 		// Watch file modifications
-		final ModificationWatcher watcher = resourceSettings.getResourceWatcher(true);
+		final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(
+				true);
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()
 			{
 				public void onChange()
 				{
-					log.info("A properties files has changed. Remove all entries " +
+					log.info("A properties files has changed. Removing all entries " +
 							"from the cache. Resource: " + resourceStream);
 
 					// Clear the whole cache as associated localized files may
@@ -258,7 +258,7 @@ public class PropertiesFactory implements IPropertiesFactory
 					clearCache();
 
 					// clear the localizer cache as well
-					Application.get().getResourceSettings().getLocalizer().clearCache();
+					application.getResourceSettings().getLocalizer().clearCache();
 
 					// Inform all listeners
 					Iterator iter = afterReloadListeners.iterator();

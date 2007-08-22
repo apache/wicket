@@ -66,8 +66,8 @@ import org.apache.wicket.util.watch.ModificationWatcher;
 
 
 /**
- * Contains settings exposed via IXXXSettings interfaces. It is not a good idea
- * to use this class directly, instead use the provided IXXXSettings interfaces.
+ * Contains settings exposed via IXXXSettings interfaces. It is not a good idea to use this class
+ * directly, instead use the provided IXXXSettings interfaces.
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -107,8 +107,7 @@ public final class Settings
 	private boolean automaticLinking = false;
 
 	/**
-	 * Whether Wicket should try to support multiple windows transparently, true
-	 * by default.
+	 * Whether Wicket should try to support multiple windows transparently, true by default.
 	 */
 	private boolean automaticMultiWindowSupport = true;
 
@@ -148,19 +147,17 @@ public final class Settings
 	private boolean disableGZipCompression = false;
 
 	/**
-	 * Whether mounts should be enforced. If true, requests for mounted targets
-	 * have to done through the mounted paths. If, for instance, a bookmarkable
-	 * page is mounted to a path, a request to that same page via the
-	 * bookmarkablePage parameter will be denied.
+	 * Whether mounts should be enforced. If true, requests for mounted targets have to done through
+	 * the mounted paths. If, for instance, a bookmarkable page is mounted to a path, a request to
+	 * that same page via the bookmarkablePage parameter will be denied.
 	 */
 	private boolean enforceMounts = false;
 
 	/**
 	 * Whether Wicket should try to get extensive client info by redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
-	 * method is used by the default implementation of {@link #newClientInfo()},
-	 * so if that method is overriden, there is no guarantee this method will be
-	 * taken into account. False by default.
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
+	 * the default implementation of {@link #newClientInfo()}, so if that method is overriden,
+	 * there is no guarantee this method will be taken into account. False by default.
 	 */
 	private boolean gatherExtendedBrowserInfo = false;
 
@@ -168,14 +165,12 @@ public final class Settings
 	private WeakReference/* <Class<? extends Page> */internalErrorPage;
 
 	/**
-	 * whether wicket should track line precise additions of components for
-	 * error reporting.
+	 * whether wicket should track line precise additions of components for error reporting.
 	 */
 	private boolean linePreciseReportingOnAddComponentEnabled = false;
 
 	/**
-	 * whether wicket should track line precise instantiations of components for
-	 * error reporting.
+	 * whether wicket should track line precise instantiations of components for error reporting.
 	 */
 	private boolean linePreciseReportingOnNewComponentEnabled = false;
 
@@ -214,10 +209,9 @@ public final class Settings
 	private org.apache.wicket.resource.IPropertiesFactory propertiesFactory;
 
 	/**
-	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'. This property
-	 * influences the default way in how a logical request that consists of an
-	 * 'action' and a 'render' part is handled, and is mainly used to have a
-	 * means to circumvent the 'refresh' problem.
+	 * The render strategy, defaults to 'REDIRECT_TO_BUFFER'. This property influences the default
+	 * way in how a logical request that consists of an 'action' and a 'render' part is handled, and
+	 * is mainly used to have a means to circumvent the 'refresh' problem.
 	 */
 	private IRequestCycleSettings.RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
 
@@ -237,10 +231,9 @@ public final class Settings
 	private List responseFilters;
 
 	/**
-	 * In order to do proper form parameter decoding it is important that the
-	 * response and the following request have the same encoding. see
-	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
-	 * additional information.
+	 * In order to do proper form parameter decoding it is important that the response and the
+	 * following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for additional information.
 	 */
 	private String responseRequestEncoding = "UTF-8";
 
@@ -251,8 +244,7 @@ public final class Settings
 	private boolean stripComments = false;
 
 	/**
-	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
-	 * removed from output
+	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be removed from output
 	 */
 	private boolean stripWicketTags = false;
 
@@ -263,14 +255,14 @@ public final class Settings
 	private boolean throwExceptionOnMissingResource = true;
 
 	/**
-	 * Whether the generated page id must be unique per session, or it's enough
-	 * if it is unique per page map;
+	 * Whether the generated page id must be unique per session, or it's enough if it is unique per
+	 * page map;
 	 */
 	private boolean pageIdUniquePerSession = false;
 
 	/**
-	 * The time that a request will by default be waiting for the previous
-	 * request to be handled before giving up. Defaults to one minute.
+	 * The time that a request will by default be waiting for the previous request to be handled
+	 * before giving up. Defaults to one minute.
 	 */
 	private Duration timeout = Duration.ONE_MINUTE;
 
@@ -278,12 +270,11 @@ public final class Settings
 	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
 	{
 		/**
-		 * Called when an unauthorized component instantiation is about to take
-		 * place (but before it happens).
+		 * Called when an unauthorized component instantiation is about to take place (but before it
+		 * happens).
 		 * 
 		 * @param component
-		 *            The partially constructed component (only the id is
-		 *            guaranteed to be valid).
+		 *            The partially constructed component (only the id is guaranteed to be valid).
 		 */
 		public void onUnauthorizedInstantiation(final Component component)
 		{
@@ -307,20 +298,17 @@ public final class Settings
 	private boolean requestLoggerEnabled;
 
 	/**
-	 * Whether the comments and whitespaces will be stripped from javascript
-	 * resources
+	 * Whether the comments and whitespaces will be stripped from javascript resources
 	 */
 	private boolean stripJavascriptCommentsAndWhitespace;
 
 	/**
-	 * Whether the container's class name should be printed to response (in a
-	 * html comment).
+	 * Whether the container's class name should be printed to response (in a html comment).
 	 */
 	private boolean outputMarkupContainerClassName = false;
 
 	/**
-	 * Create the application settings, carrying out any necessary
-	 * initialisations.
+	 * Create the application settings, carrying out any necessary initialisations.
 	 * 
 	 * @param application
 	 *            The application that these settings are for
@@ -624,7 +612,7 @@ public final class Settings
 	{
 		if (propertiesFactory == null)
 		{
-			propertiesFactory = new PropertiesFactory();
+			propertiesFactory = new PropertiesFactory(Application.get());
 		}
 		return propertiesFactory;
 	}
@@ -1175,8 +1163,7 @@ public final class Settings
 	}
 
 	/**
-	 * Throws an IllegalArgumentException if the given class is not a subclass
-	 * of Page.
+	 * Throws an IllegalArgumentException if the given class is not a subclass of Page.
 	 * 
 	 * @param pageClass
 	 *            the page class to check
