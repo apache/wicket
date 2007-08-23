@@ -46,7 +46,7 @@ Wicket.Tree.removeNodes = function(prefix, nodeList) {
 
 Wicket.Tree.createElement = function(elementId, afterId) {
 	var existing = Wicket.$(elementId);
-	if (typeof(existing) != "undefined" && exiting != null) {
+	if (typeof(existing) != "undefined" && existing != null) {
 		Wicket.Tree.askForReload();
 	}
 
