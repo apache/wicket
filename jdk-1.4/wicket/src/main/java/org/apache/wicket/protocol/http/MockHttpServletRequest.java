@@ -1293,7 +1293,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		// We need to absolutize the redirect URL as we are not as smart as a web-browser (WICKET-702)
 		url = getContextPath() + getServletPath() + "/" + redirect;
-		log.debug("Redirecting to " + url);
+
+		try
+		{
+			// Remove occurences of ".." from the path
+			url = new File(url).getCanonicalPath();
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		log.info("Redirecting to " + url);
 	}
 
 	/**
