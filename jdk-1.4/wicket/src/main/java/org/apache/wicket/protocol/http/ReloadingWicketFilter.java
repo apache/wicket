@@ -59,6 +59,15 @@ import org.apache.wicket.util.listener.IChangeListener;
  * </pre>
  * 
  * <p>
+ * <b>NOTE. </b> If you wish to reload <tt>com.company.search.Form</tt>, you
+ * have to make sure to include all classes that <b>reference</b>
+ * <tt>com.company.search.Form</tt>. In particular, if it is referenced in
+ * com.company.Application, you will also have to include the latter. And this
+ * is viral, as for every class you include, you must check that all classes
+ * that reference it are also included.
+ * </p>
+ * 
+ * <p>
  * It is also possible to add an extra URL to watch for changes using
  * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URLs
  * returned by the parent class loader (ie all {@link URL} returned by
