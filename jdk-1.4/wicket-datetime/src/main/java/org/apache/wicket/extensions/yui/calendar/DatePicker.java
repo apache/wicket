@@ -36,12 +36,12 @@ import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.behavior.StringHeaderContributor;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
-import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
@@ -151,8 +151,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		YuiLib.load(response);
 		if (enableMonthYearSelection())
 		{
-			response.renderCSSReference(new CompressedResourceReference(DatePicker.class,
-					"assets/wicket-calendar.css"));
+			response.renderCSSReference(new ResourceReference(YuiLib.class,
+					"calendar/assets/wicket-calendar.css"));
+			String idSelector = "#" + getEscapedComponentMarkupId() + "DpJs";
+			new StringHeaderContributor("<style>" + idSelector + ".yui-calendar .calnavleft, "
+					+ idSelector + ".yui-calendar .calnavright {display: none;}</style>")
+					.renderHead(response);
 		}
 
 		// variables for the initialization script

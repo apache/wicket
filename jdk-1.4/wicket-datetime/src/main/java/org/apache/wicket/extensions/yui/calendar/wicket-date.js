@@ -172,19 +172,6 @@ Wicket.DateTime.enableMonthYearSelection = function(widget) {
 			var field = YAHOO.util.Dom.get(yearInputId);
 			processNumber(-1);
 		});
-						
-		// disable text selection for the up/down spinner"buttons"
-		var ua = YAHOO.env.ua;
-		if (ua.gecko) {
-			YAHOO.util.Dom.get(yearUpId).style.MozUserSelect = "none";
-			YAHOO.util.Dom.get(yearDownId).style.MozUserSelect = "none";
-		} else if (ua.ie) {
-			E.on(yearUpId, "selectstart", function() { return false; });
-			E.on(yearDownId, "selectstart", function() { return false; });
-		} else {
-			E.on(yearUpId, "mousedown", function() { return false; });
-			E.on(yearDownId, "mousedown", function() { return false; });
-		}
 	}
 		
 	// override the function which is used to generate the month label and render two select boxes instead
@@ -203,12 +190,12 @@ Wicket.DateTime.enableMonthYearSelection = function(widget) {
 		}
 		selectHtml += "</select>";
 
-		// generate year input and spinner buttons
-		selectHtml += "<span class=\"yearInputContainer\">";
-		selectHtml += "<span id=\"" + yearDownId + "\">&ndash;</span>";
-		selectHtml += "<input type=\"text\" id=\"" + yearInputId +"\" size=\"4\" onchange=\"\"/>";
-		selectHtml += "<span id=\"" + yearUpId + "\">+</span>";
-		selectHtml += "</span>";								
+		// generate year input and spinner buttons	
+		selectHtml += "<table class='yearInputContainer'>";	
+		selectHtml += "<tr><td><input type='button' class='yearDown' id='" + yearDownId + "'/></td>";
+		selectHtml += "<td><input type='text' size='4' id='" + yearInputId + "'/></td>";
+		selectHtml += "<td><input type='button' class='yearUp' id='" + yearUpId + "'/></td>";			
+		selectHtml += "</tr></table>";
 		return selectHtml;  
 	}
 }

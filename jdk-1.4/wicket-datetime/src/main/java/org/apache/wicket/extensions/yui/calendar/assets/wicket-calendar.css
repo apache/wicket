@@ -14,35 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.yui-calendar .calnavleft {
-	display: none;
-}
-
-.yui-calendar .calnavright {
-	display: none;
-}
-
-.yui.calendar {
+.yui-calendar {
 	border-width: 0px;
-    text-align: center;
-}
-
-.yearInputContainer {
-    border: 1px solid #999;
-}
-
-.yearInputContainer span {
-    cursor: default;
-    background-color: #EEE;
-    padding: 0em 0.4em;
-    font-weight: normal;
-}
-
-.yearInputContainer span:hover {
-	background-color: #E0E0E0;	
-}
-
-.yearInputContainer input {
 	text-align: center;
+}
+
+.yui-calendar .calheader select {
+	float: left;
+}
+
+.yui-calendar .calheader table {
 	border-width: 0px;	
+	border-collapse: collapse;
+	border-spacing: 0px;
+	float: right;	
+}
+
+.yui-calendar input {
+	text-align: center;
+	border: 1px solid #999;
+	vertical-align: middle;	
+}
+
+.yui-calendar input.yearDown {
+	background: url(../../assets/skins/sam/sprite.png) no-repeat 0 -400px;
+	border-width: 0px;
+	width: 15px;
+	height: 15px;
+	cursor: pointer;	
+}
+
+.yui-calendar input.yearUp {
+	background: url(../../assets/skins/sam/sprite.png) no-repeat 0 -350px;
+	border-width: 0px;
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
 }
