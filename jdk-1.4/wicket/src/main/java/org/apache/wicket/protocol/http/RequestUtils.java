@@ -18,7 +18,11 @@ package org.apache.wicket.protocol.http;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
@@ -59,6 +63,36 @@ public final class RequestUtils
 				// Should never happen
 			}
 		}
+	}
+
+	/**
+	 * Remove occurences of ".." from the path
+	 * @param path
+	 * @return
+	 */
+	static String removeDoubleDots(String path)
+	{
+		String[] components = path.split("/");
+		List newcomponents = new ArrayList(Arrays.asList(components));
+
+		for (int i=0; i<components.length; i++)
+		{
+			if (i<components.length-1)
+			{
+				// Verify for a ".." component at next iteration
+				if (components[i].length() > 0 && components[i+1].equals(".."))
+				{
+					newcomponents.remove(i);
+					newcomponents.remove(i);
+					// Skip the ".." component
+					i++;
+				}
+			}
+		}
+		String newpath = Strings.join("/", (String[])newcomponents.toArray(new String[0]));
+		if (path.endsWith("/"))
+			return newpath + "/";
+		return newpath;
 	}
 
 	/**

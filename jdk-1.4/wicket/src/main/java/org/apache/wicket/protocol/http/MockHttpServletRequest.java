@@ -23,7 +23,6 @@ import java.io.CharArrayReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.Principal;
@@ -1294,18 +1293,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 		// We need to absolutize the redirect URL as we are not as smart as a web-browser (WICKET-702)
 		url = getContextPath() + getServletPath() + "/" + redirect;
 
-		try
-		{
-			// Remove occurences of ".." from the path
-			url = new File(url).getCanonicalPath();
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
+		// Remove occurences of ".." from the path
+		url = RequestUtils.removeDoubleDots(url);
 		log.info("Redirecting to " + url);
 	}
-
+	
 	/**
 	 * Helper method to create some default headers for the request
 	 */
