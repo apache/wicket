@@ -192,9 +192,9 @@ Wicket.DateTime.enableMonthYearSelection = function(widget) {
 
 		// generate year input and spinner buttons	
 		selectHtml += "<table class='yearInputContainer'>";	
-		selectHtml += "<tr><td><input type='button' class='yearDown' id='" + yearDownId + "'/></td>";
+		selectHtml += "<tr><td><a class='yearDown' id='" + yearDownId + "'/></td>";
 		selectHtml += "<td><input type='text' size='4' id='" + yearInputId + "'/></td>";
-		selectHtml += "<td><input type='button' class='yearUp' id='" + yearUpId + "'/></td>";			
+		selectHtml += "<td><a class='yearUp' id='" + yearUpId + "'/></td>";			
 		selectHtml += "</tr></table>";
 		return selectHtml;  
 	}
