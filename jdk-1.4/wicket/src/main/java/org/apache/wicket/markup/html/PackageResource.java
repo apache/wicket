@@ -494,6 +494,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 			// Invalidate it again so that it won't hold up resources
 			invalidate();
+			probingOnly = false;
 		}
 	}
 
