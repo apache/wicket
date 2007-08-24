@@ -105,6 +105,8 @@ public class PackageResource extends WebResource implements IModifiable
 	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	private boolean probingOnly = false;
 
 	/**
 	 * Binds the resources that match the provided pattern to the given application object. Will
@@ -483,6 +485,9 @@ public class PackageResource extends WebResource implements IModifiable
 
 		if (locale != null)
 		{
+			// Request to silently ignore unresolvable resources as we are not serving the resource for now
+			probingOnly = true;
+
 			// Get the resource stream so that the real locale that could be
 			// resolved is set.
 			getResourceStream();
@@ -534,6 +539,12 @@ public class PackageResource extends WebResource implements IModifiable
 		// Check that resource was found
 		if (resourceStream == null)
 		{
+			if (probingOnly)
+			{
+				// Do not abort the request, as we are not yet serving the resource
+				return null;
+			}
+
 			String msg = "Unable to find package resource [path = " + absolutePath + ", style = " +
 					style + ", locale = " + locale + "]";
 			log.warn(msg);
