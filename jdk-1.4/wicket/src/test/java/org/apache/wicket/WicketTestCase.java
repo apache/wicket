@@ -120,4 +120,16 @@ public abstract class WicketTestCase extends TestCase
 		tester.executeBehavior(behavior);
 		tester.assertResultPage(clazz, filename);
 	}
+
+	/**
+	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or null if not set
+	 * @return path with a trailing slash
+	 */
+	public static String getBasedir()
+	{
+		String basedir = System.getProperty("basedir");
+		if (basedir != null)
+			basedir = basedir + "/";
+		return basedir;
+	}
 }

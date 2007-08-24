@@ -122,7 +122,7 @@ public class FormTesterTest extends WicketTestCase
 
 
 		FormTester formTester = tester.newFormTester("form");
-		formTester.setFile("file", new File("src/test/java/org/apache/wicket/util/tester/bg.jpg"), "image/jpeg");
+		formTester.setFile("file", new File(getBasedir() + "src/test/java/org/apache/wicket/util/tester/bg.jpg"), "image/jpeg");
 		formTester.setValue("text", "Mock value");
 		formTester.submit();
 
