@@ -42,15 +42,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * {@link IPageStore} implementation that stores the serialized pages grouped in
- * a single file per pagemap.
+ * {@link IPageStore} implementation that stores the serialized pages grouped in a single file per
+ * pagemap.
  * <p>
- * This store was designed to overcome the problems of {@link FilePageStore}
- * which stores the pages in separate files per page.
+ * This store was designed to overcome the problems of {@link FilePageStore} which stores the pages
+ * in separate files per page.
  * <p>
- * {@link DiskPageStore} allows to set maximum size for pagemap file and maximum
- * size for session. If the maximum size for session is exceeded, the last
- * recently used pagemap file is removed.
+ * {@link DiskPageStore} allows to set maximum size for pagemap file and maximum size for session.
+ * If the maximum size for session is exceeded, the last recently used pagemap file is removed.
  * 
  * @author Matej Knopp
  */
@@ -84,8 +83,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		}
 
 		/**
-		 * @return manager that maintains information about pages inside the
-		 *         file
+		 * @return manager that maintains information about pages inside the file
 		 */
 		public PageWindowManager getManager()
 		{
@@ -137,9 +135,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		}
 
 		/**
-		 * Returns a {@link PageMapEntry} for specified pagemap. If the create
-		 * attribute is set and the pagemap does not exist, new
-		 * {@link PageMapEntry} will be created.
+		 * Returns a {@link PageMapEntry} for specified pagemap. If the create attribute is set and
+		 * the pagemap does not exist, new {@link PageMapEntry} will be created.
 		 * 
 		 * @param pageMapName
 		 * @param create
@@ -349,8 +346,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	/**
-	 * Returns the folder for the specified sessions. If the folder doesn't
-	 * exist and the create flag is set, the folder will be created.
+	 * Returns the folder for the specified sessions. If the folder doesn't exist and the create
+	 * flag is set, the folder will be created.
 	 * 
 	 * @param sessionId
 	 * @param create
@@ -397,9 +394,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	/**
-	 * Returns the file name for specified pagemap. If the session folder
-	 * (folder that contains the file) does not exist and createSessionFolder is
-	 * true, the folder will becreated.
+	 * Returns the file name for specified pagemap. If the session folder (folder that contains the
+	 * file) does not exist and createSessionFolder is true, the folder will becreated.
 	 * 
 	 * @param sessionId
 	 * @param pageMapName
@@ -428,9 +424,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private final int maxSizePerSession;
 
 	/**
-	 * Returns maximum size per session (in bytes). After the session exceeds
-	 * this size, appropriate number of last recently used pagemap files will be
-	 * removed.
+	 * Returns maximum size per session (in bytes). After the session exceeds this size, appropriate
+	 * number of last recently used pagemap files will be removed.
 	 * 
 	 * @return
 	 */
@@ -459,15 +454,14 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * Creates a new {@link DiskPageStore} instance.
 	 * 
 	 * @param fileStoreFolder
-	 *            folder in which the session folders containing pagemap files
-	 *            will be stored
+	 *            folder in which the session folders containing pagemap files will be stored
 	 * @param maxSizePerPagemap
 	 *            the maximum size of pagemap file (in bytes)
 	 * @param maxSizePerSession
 	 *            the maximum size of session (in bytes)
 	 * @param fileChannelPoolCapacity
-	 *            the maximum number of concurrently opened files (higher number
-	 *            improves performance under heavy load).
+	 *            the maximum number of concurrently opened files (higher number improves
+	 *            performance under heavy load).
 	 */
 	public DiskPageStore(File fileStoreFolder, int maxSizePerPagemap, int maxSizePerSession,
 			int fileChannelPoolCapacity)
@@ -503,8 +497,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param maxSizePerSession
 	 *            the maximum size of session (in bytes)
 	 * @param fileChannelPoolCapacity
-	 *            the maximum number of concurrently opened files (higher number
-	 *            improves performance under heavy load).
+	 *            the maximum number of concurrently opened files (higher number improves
+	 *            performance under heavy load).
 	 * 
 	 */
 	public DiskPageStore(int maxSizePerPagemap, int maxSizePerSession, int fileChannelPoolCapacity)
@@ -536,9 +530,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private final Map /* <String, SessionEntry> */sessionIdToEntryMap = new ConcurrentHashMap();
 
 	/**
-	 * Returns the SessionEntry for session with given id. If the entry does not
-	 * yet exist and the createIfDoesNotExist attribute is set, new SessionEntry
-	 * will be created.
+	 * Returns the SessionEntry for session with given id. If the entry does not yet exist and the
+	 * createIfDoesNotExist attribute is set, new SessionEntry will be created.
 	 * 
 	 * @param sessionId
 	 * @param createIfDoesNotExist
@@ -656,8 +649,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	/**
-	 * Stores the serialized pages. The storing is done either immediately (in
-	 * synchronous mode) or it's scheduled to be stored by the worker thread.
+	 * Stores the serialized pages. The storing is done either immediately (in synchronous mode) or
+	 * it's scheduled to be stored by the worker thread.
 	 * 
 	 * @param sessionId
 	 * @param pages
@@ -739,8 +732,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private final Map /* <String, List<SerializedPage>> */pagesToSaveActive = new ConcurrentHashMap();
 
 	/**
-	 * Returns the list of pages to be saved for the specified session id. If
-	 * the list is not found, new list is created.
+	 * Returns the list of pages to be saved for the specified session id. If the list is not found,
+	 * new list is created.
 	 * 
 	 * @param sessionId
 	 * @return
@@ -803,8 +796,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	/**
-	 * Worker thread that saves the serialized pages. Saving pages in the
-	 * separate thread results in smoother performance under load.
+	 * Worker thread that saves the serialized pages. Saving pages in the separate thread results in
+	 * smoother performance under load.
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -881,8 +874,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private PageSavingThread pageSavingThread = null;
 
 	/**
-	 * Returns the amount time in milliseconds for the saving thread to sleep
-	 * between checking whether there are pending serialized pages to be saved.
+	 * Returns the amount time in milliseconds for the saving thread to sleep between checking
+	 * whether there are pending serialized pages to be saved.
 	 * 
 	 * @return
 	 */
@@ -892,9 +885,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	/**
-	 * Returns whether the {@link DiskPageStore} should work in synchronous or
-	 * asynchronous mode. Asynchronous mode uses a worker thread to save pages,
-	 * which results in smoother performance.
+	 * Returns whether the {@link DiskPageStore} should work in synchronous or asynchronous mode.
+	 * Asynchronous mode uses a worker thread to save pages, which results in smoother performance.
 	 * 
 	 * @return
 	 */
@@ -906,8 +898,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private int lastRecentlySerializedPagesCacheSize = 50;
 
 	/**
-	 * Sets the number of last recently serialized pages kept in cache. The
-	 * cache is used to aid performance on session replication.
+	 * Sets the number of last recently serialized pages kept in cache. The cache is used to aid
+	 * performance on session replication.
 	 * 
 	 * @param lastRecentlySerializedPagesCacheSize
 	 */
