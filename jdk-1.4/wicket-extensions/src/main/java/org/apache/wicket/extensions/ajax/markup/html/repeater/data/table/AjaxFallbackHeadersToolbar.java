@@ -65,7 +65,12 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 			protected void onAjaxClick(AjaxRequestTarget target)
 			{
 				target.addComponent(getTable());
+			}
 
+			protected void onSortChanged()
+			{
+				super.onSortChanged();
+				getTable().setCurrentPage(0);
 			}
 
 		};
