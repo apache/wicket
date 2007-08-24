@@ -1297,7 +1297,7 @@ public abstract class Session implements IClusterable
 			if (cycle == null)
 			{
 				throw new IllegalStateException(
-						"Cannot set the attribute: no RequestCycle available");
+						"Cannot set the attribute: no RequestCycle available.  If you get this error when using WicketTester.startPage(Page), make sure to call WicketTester.createRequestCycle() beforehand.");
 			}
 
 			ISessionStore store = getSessionStore();
