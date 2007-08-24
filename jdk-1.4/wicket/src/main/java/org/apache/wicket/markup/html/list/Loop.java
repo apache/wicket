@@ -113,26 +113,30 @@ public abstract class Loop extends AbstractRepeater
 	 */
 	protected void onBeforeRender()
 	{
-		super.onBeforeRender();
-
-		// Remove any previous loop contents
-		removeAll();
-
-		// Get number of iterations
-		final int iterations = getIterations();
-		if (iterations > 0)
+		if (isVisibleInHierarchy())
 		{
-			// Create LoopItems for each iteration
-			for (int iteration = 0; iteration < iterations; iteration++)
-			{
-				// Create item for loop iteration
-				LoopItem item = newItem(iteration);
+			// Remove any previous loop contents
+			removeAll();
 
-				// Add and populate item
-				add(item);
-				populateItem(item);
+			// Get number of iterations
+			final int iterations = getIterations();
+			if (iterations > 0)
+			{
+				// Create LoopItems for each iteration
+				for (int iteration = 0; iteration < iterations; iteration++)
+				{
+					// Create item for loop iteration
+					LoopItem item = newItem(iteration);
+
+					// Add and populate item
+					add(item);
+					populateItem(item);
+				}
 			}
 		}
+
+		super.onBeforeRender();
+
 	}
 
 	/**

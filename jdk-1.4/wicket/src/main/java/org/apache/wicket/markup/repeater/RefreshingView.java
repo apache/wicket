@@ -91,8 +91,6 @@ public abstract class RefreshingView extends RepeatingView
 	 */
 	protected void onBeforeRender()
 	{
-		super.onBeforeRender();
-
 		if (isVisibleInHierarchy())
 		{
 
@@ -114,7 +112,7 @@ public abstract class RefreshingView extends RepeatingView
 			removeAll();
 			addItems(items);
 		}
-
+		super.onBeforeRender();
 	}
 
 	/**
@@ -243,8 +241,8 @@ public abstract class RefreshingView extends RepeatingView
 
 					public String toString()
 					{
-						return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: "
-								+ old + "]";
+						return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: " +
+								old + "]";
 					}
 				});
 			}

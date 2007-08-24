@@ -3303,8 +3303,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Called just before a component is rendered. If you override this, you
-	 * *must* call super.onBeforeRender() within your implementation.
+	 * Called just before a component is rendered.
+	 * <p>
+	 * *NOTE* If you override this, you *must* call super.onBeforeRender()
+	 * within your implementation.
+	 * 
+	 * Because this method is responsible for cascading
+	 * {@link #onBeforeRender()} call to its children it is strongly recommended
+	 * that super call is made at the end of the override.
+	 * </p>
 	 */
 	protected void onBeforeRender()
 	{
