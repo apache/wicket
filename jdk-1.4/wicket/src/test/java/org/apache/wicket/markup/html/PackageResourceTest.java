@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.util.Locale;
+
 import junit.framework.TestCase;
 
+import org.apache.wicket.AbortException;
 import org.apache.wicket.Application;
+import org.apache.wicket.Resource;
 import org.apache.wicket.SharedResources;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
@@ -85,6 +89,23 @@ public class PackageResourceTest extends TestCase
 		assertTrue(guard.accept(PackageResourceTest.class, ".Bar"));
 		assertTrue(guard.accept(PackageResourceTest.class, ".java"));
 		assertFalse(guard.accept(PackageResourceTest.class, "Bar.java"));
+	}
+
+	public void testInvalidPackageResource() throws Exception
+	{
+		final SharedResources sharedResources = Application.get().getSharedResources();
+		Resource invalidResource = new PackageResource(PackageResourceTest.class, "packaged3.txt", Locale.ENGLISH, null); 
+		assertNotNull("resource packaged3.txt SHOULD be available as a packaged resource even if it doesn't exist",
+				invalidResource);
+
+		try
+		{
+			invalidResource.getResourceStream();
+			fail("Should have raised an AbortException");
+		}
+		catch (AbortException e)
+		{
+		}
 	}
 
 	/**
