@@ -79,18 +79,6 @@ public abstract class DateConverter implements IConverter
 	}
 
 	/**
-	 * Gets the locale to use.
-	 * 
-	 * @return the locale from either the component if that is set, or from the
-	 *         session
-	 */
-	protected Locale getLocale()
-	{
-		Component c = getComponent();
-		return (c != null) ? c.getLocale() : Session.get().getLocale();
-	}
-
-	/**
 	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 	 *      java.util.Locale)
 	 */
@@ -193,9 +181,28 @@ public abstract class DateConverter implements IConverter
 	}
 
 	/**
+	 * @return optional component to use for determining the locale.
+	 */
+	public final Component getComponent()
+	{
+		return component;
+	}
+
+	/**
 	 * @return Gets the pattern that is used for printing and parsing
 	 */
 	public abstract String getDatePattern();
+
+	/**
+	 * Sets component for getting the locale
+	 * 
+	 * @param component
+	 *            optional component to use for determining the locale.
+	 */
+	public final void setComponent(Component component)
+	{
+		this.component = component;
+	}
 
 	/**
 	 * Gets the client's time zone.
@@ -218,6 +225,18 @@ public abstract class DateConverter implements IConverter
 	protected abstract DateTimeFormatter getFormat();
 
 	/**
+	 * Gets the locale to use.
+	 * 
+	 * @return the locale from either the component if that is set, or from the
+	 *         session
+	 */
+	protected Locale getLocale()
+	{
+		Component c = getComponent();
+		return (c != null) ? c.getLocale() : Session.get().getLocale();
+	}
+
+	/**
 	 * Gets the server time zone. Override this method if you want to fix to a
 	 * certain time zone, regardless of what actual time zone the server is in.
 	 * 
@@ -226,24 +245,5 @@ public abstract class DateConverter implements IConverter
 	protected DateTimeZone getTimeZone()
 	{
 		return DateTimeZone.getDefault();
-	}
-
-	/**
-	 * @return optional component to use for determining the locale.
-	 */
-	public final Component getComponent()
-	{
-		return component;
-	}
-
-	/**
-	 * Sets component for getting the locale
-	 * 
-	 * @param component
-	 *            optional component to use for determining the locale.
-	 */
-	public final void setComponent(Component component)
-	{
-		this.component = component;
 	}
 }
