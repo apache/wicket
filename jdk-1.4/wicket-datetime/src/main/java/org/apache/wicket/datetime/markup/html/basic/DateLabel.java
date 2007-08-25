@@ -200,6 +200,19 @@ public class DateLabel extends Label
 	 * 
 	 * @param The
 	 *            component id
+	 * @param converter
+	 *            The converter to use
+	 */
+	public DateLabel(String id, DateConverter converter)
+	{
+		this(id, null, converter);
+	}
+
+	/**
+	 * Construct with a converter.
+	 * 
+	 * @param The
+	 *            component id
 	 * @param The
 	 *            model
 	 * @param converter
