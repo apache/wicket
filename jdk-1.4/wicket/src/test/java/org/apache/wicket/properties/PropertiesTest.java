@@ -43,14 +43,13 @@ public class PropertiesTest extends WicketTestCase
 	{
 		tester = new WicketTester(new MyApplication());
 	}
+
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
 
 	/**
-	 * 
-	 * 
 	 */
 	public void test_1()
 	{
@@ -60,15 +59,18 @@ public class PropertiesTest extends WicketTestCase
 		cycle.getSession().setLocale(Locale.GERMANY);
 		cycle.getSession().setStyle("mystyle");
 
-		String str = page.getString("test1");
-		str = page.getString("test2");
-		str = page.getString("test3");
-		str = page.getString("test4");
+		assertEquals("MyApplication", page.getString("test1"));
+		assertEquals("MyApplication_de", page.getString("test2"));
+		assertEquals("MyApplication_mystyle", page.getString("test3"));
+		assertEquals("MyApplication_mystyle_de", page.getString("test4"));
+
+		cycle.getSession().setLocale(Locale.ENGLISH);
+
+		assertEquals("MyApplication_en", page.getString("test2"));
+		assertEquals("MyApplication_mystyle_en", page.getString("test4"));
 	}
 
 	/**
-	 * 
-	 * 
 	 */
 	public void test_2()
 	{
@@ -85,9 +87,14 @@ public class PropertiesTest extends WicketTestCase
 			}
 		};
 
-		String str = page.getString("test1");
-		str = page.getString("test2");
-		str = page.getString("test3");
-		str = page.getString("test4");
+		assertEquals("MyApplication", page.getString("test1"));
+		assertEquals("MyApplication_de", page.getString("test2"));
+		assertEquals("MyApplication_mystyle", page.getString("test3"));
+		assertEquals("MyApplication_mystyle_de", page.getString("test4"));
+
+		cycle.getSession().setLocale(Locale.ENGLISH);
+
+		assertEquals("MyApplication_en", page.getString("test2"));
+		assertEquals("MyApplication_mystyle_en", page.getString("test4"));
 	}
 }
