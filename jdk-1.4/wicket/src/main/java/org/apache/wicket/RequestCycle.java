@@ -39,6 +39,7 @@ import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget
 import org.apache.wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import org.apache.wicket.request.target.resource.SharedResourceRequestTarget;
 import org.apache.wicket.util.collections.ArrayListStack;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -847,7 +848,8 @@ public abstract class RequestCycle
 	{
 		RequestParameters requestParameters = new RequestParameters();
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
-		if (getApplication().getResourceSettings().getAddLastModifiedTimeToResourceReferenceUrl())
+		if (getApplication().getResourceSettings().getAddLastModifiedTimeToResourceReferenceUrl() &&
+				!Strings.isEmpty(resourceReference.getName()))
 		{
 			Time time = resourceReference.lastModifiedTime();
 			if (time != null)
