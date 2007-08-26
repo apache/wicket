@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin.modal;
 
+import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -28,6 +29,8 @@ public class ModalPanel1 extends Panel {
 	 */
 	public ModalPanel1(String id) {
 		super(id);
+		
+		add(new DateTimeField("dateTimeField"));
 	}
 
 }
