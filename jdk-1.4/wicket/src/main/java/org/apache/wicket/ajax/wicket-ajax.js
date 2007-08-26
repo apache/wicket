@@ -1651,21 +1651,37 @@ function wicketAjaxGet(url, successHandler, failureHandler, precondition, channe
 	if (typeof(precondition) != "undefined" && precondition != null) {
 		call.request.precondition = precondition;
 	}
+	
 	return call.call();
 }
 
-function wicketAjaxPost(url, body, successHandler, failureHandler, channel) {
+function wicketAjaxPost(url, body, successHandler, failureHandler, precondition, channel) {
 	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
+	
+	if (typeof(precondition) != "undefined" && precondition != null) {
+		call.request.precondition = precondition;
+	}
+	
 	return call.post(body);
 }
 
-function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler, channel) {
+function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler, precondition, channel) {
 	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
+	
+	if (typeof(precondition) != "undefined" && precondition != null) {
+		call.request.precondition = precondition;
+	}
+	
 	return call.submitForm(form, submitButton);
 }
 
-function wicketSubmitFormById(formId, url, submitButton, successHandler, failureHandler, channel) {
+function wicketSubmitFormById(formId, url, submitButton, successHandler, failureHandler, precondition, channel) {
 	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
+	
+	if (typeof(precondition) != "undefined" && precondition != null) {
+		call.request.precondition = precondition;
+	}
+	
 	return call.submitFormById(formId, submitButton);
 }
 
