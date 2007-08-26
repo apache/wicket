@@ -3045,9 +3045,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Returns whether the component can be stateless. Being able to be stateless doesn't necessary
-	 * mean, that the component should be stateless. Whether the component should be stateless
-	 * depends on
+	 * Returns whether the component can be stateless. Also the component behaviors must be
+	 * stateless, otherwise the component will be treat as statefull. In order for page to be
+	 * stateless (and not to be stored in session), all components (and component behaviors) must be
+	 * stateless.
 	 * 
 	 * @return whether the component can be stateless
 	 */
