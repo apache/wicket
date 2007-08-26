@@ -869,6 +869,9 @@ Wicket.Ajax.Request.prototype = {
         		// when an error happened
         		var log = Wicket.Log.error;
         		log("Received Ajax response with code: " + status);
+        		if (status == 500) {
+					log("500 error had text: " + t.responseText);
+				}
 		   		this.done();        		
         		this.failure();
         	}    	
