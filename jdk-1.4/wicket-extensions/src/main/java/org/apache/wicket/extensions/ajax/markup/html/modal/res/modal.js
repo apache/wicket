@@ -493,22 +493,56 @@ Wicket.Window.prototype = {
 		this.window.style.top = top + "px";
 	},
 	
+	cookieKey: "wicket-modal-window-positions",
+	cookieExp: 31,
+	
+	findPositionString: function(remove) {
+		var cookie = Wicket.Cookie.get(this.cookieKey);
+	
+		var entries = cookie != null ? cookie.split("|") : new Array();
+		
+		for (var i = 0; i < entries.length; ++i) {
+			if (entries[i].indexOf(this.settings.cookieId + "::") == 0) {
+				var string = entries[i];
+				if (remove) {
+					entries.splice(i, 1);					
+					Wicket.Cookie.set(this.cookieKey, entries.join("|"), this.cookieExp);
+										
+				}
+				return string;
+			}
+		}
+		return null;
+	},
+	
 	/**
 	 * Saves the position (and size if resizable) as a cookie.
 	 */
 	savePosition: function() {
-		if (typeof(this.settings.cookieId) != "undefined" &&
-		    this.settings.cookieId != null) {
-			var key = "wicket-modal-" + this.settings.cookieId + "-";
-			var exp = 31;
+		
+		if (typeof(this.settings.cookieId) != "undefined" &&  this.settings.cookieId != null) {
+	
+			this.findPositionString(true);
 			
-			var s = Wicket.Cookie.set;
-			s(key + "left", this.window.style.left, exp);
-			s(key + "top", this.window.style.top, exp);
-			if (this.settings.resizable) {
-				s(key + "width", this.window.style.width, exp);
-				s(key + "height", this.content.style.height, exp);
+			if (cookie == null || cookie.length == 0)
+				cookie = "";
+			else
+				cookie = cookie + "|";
+			
+			var cookie = this.settings.cookieId;
+			cookie += "::";
+			
+			cookie += this.window.style.left + ",";
+			cookie += this.window.style.top + ",";
+			cookie += this.window.style.width + ",";
+			cookie += this.content.style.height;
+					
+			var rest = Wicket.Cookie.get(this.cookieKey);
+			if (rest != null) {
+				cookie += "|" + rest;
 			}
+			Wicket.Cookie.set(this.cookieKey, cookie, this.cookieExp);
+			
 		};
 	},
 	
@@ -516,26 +550,20 @@ Wicket.Window.prototype = {
 	 * Restores the position (and size if resizable) from the cookie.
 	 */
 	loadPosition: function() {
-		if (typeof(this.settings.cookieId) != "undefined" &&
-		    this.settings.cookieId != null) {
-			var key = "wicket-modal-" + this.settings.cookieId + "-";			
+		if (typeof(this.settings.cookieId) != "undefined" && this.settings.cookieId != null) {
 			
-			var g = Wicket.Cookie.get;
-			var left = g(key + "left");
-			var top = g(key + "top");
-			if (this.settings.resizable) {
-				var width = g(key + "width");
-				var height = g(key + "height");
+			var string = this.findPositionString(false);
+			
+			if (string != null) {
+				var array = string.split("::");
+				var positions = array[1].split(",");
+				if (positions.length == 4) {					
+					this.window.style.left = positions[0];
+					this.window.style.top = positions[1];
+					this.window.style.width = positions[2];
+					this.content.style.height = positions[3];
+				}
 			}
-			
-			if (left != null)
-				this.window.style.left = left;
-			if (top != null)
-				this.window.style.top = top;
-			if (width != null)
-				this.window.style.width = width;
-			if (height != null)
-				this.content.style.height = height; 
 		}
 	},
 	
@@ -572,7 +600,7 @@ Wicket.Window.prototype = {
 		this.content.src = this.settings.src;
 	
 		// opera seems to have problem accessing contentWindow here
-		if (Wicket.Browser.isOpera()) {
+		if (Wicket.Browser.isOpera() || Wicket.Browser.isSafari()) {
 			this.content.onload = function() {
 				this.content.contentWindow.name = this.settings.iframeName;
 			}

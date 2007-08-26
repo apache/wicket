@@ -129,8 +129,8 @@ public class ModalWindow extends Panel
 	private static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
 			ModalWindow.class, "res/modal.js");
 
-	private static ResourceReference CSS = new CompressedResourceReference(
-			ModalWindow.class, "res/modal.css");
+	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
+			"res/modal.css");
 
 	/**
 	 * Creates a new modal window component.
@@ -215,7 +215,7 @@ public class ModalWindow extends Panel
 		public void onClose(AjaxRequestTarget target);
 	}
 
-	
+
 	/**
 	 * Is this window currently showing.
 	 * 
@@ -225,6 +225,7 @@ public class ModalWindow extends Panel
 	{
 		return shown;
 	}
+
 	/**
 	 * Sets the name of the page ma for the content page. This makes only sense
 	 * when the content is a page, not a component and if wicket multiwindow
@@ -290,7 +291,8 @@ public class ModalWindow extends Panel
 	 */
 	public void show(AjaxRequestTarget target)
 	{
-		if (shown == false) {
+		if (shown == false)
+		{
 			target.addComponent(this);
 			target.appendJavascript(getWindowOpenJavascript());
 			shown = true;
@@ -298,10 +300,9 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Hides the modal window. 
-	 * This can be called from within the modal window, however, the
-	 * modal window must have configured WindowClosedCallback. Otherwise
-	 * use the {@link #close(AjaxRequestTarget)} method.
+	 * Hides the modal window. This can be called from within the modal window,
+	 * however, the modal window must have configured WindowClosedCallback.
+	 * Otherwise use the {@link #close(AjaxRequestTarget)} method.
 	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.
@@ -310,14 +311,15 @@ public class ModalWindow extends Panel
 	{
 		target.appendJavascript(getCloseJavacript());
 	}
-	
+
 	/**
 	 * Closes the modal window.
 	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public void close(AjaxRequestTarget target) {
+	public void close(AjaxRequestTarget target)
+	{
 		target.appendJavascript(getCloseJavacript());
 		shown = false;
 	}
@@ -591,6 +593,10 @@ public class ModalWindow extends Panel
 	 */
 	public void setCookieName(String cookieName)
 	{
+		if (cookieName != null && cookieName.indexOf(",") != -1 && cookieName.indexOf("|") != -1)
+		{
+			throw new IllegalArgumentException("Cookie name may not contain ',' or '|' characters.");
+		}
 		this.cookieName = cookieName;
 	}
 
@@ -732,12 +738,13 @@ public class ModalWindow extends Panel
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		
-		// if user is refreshing whole page, the window will not be shown 
-		if (((WebRequest)getRequest()).isAjax() == false) {
+
+		// if user is refreshing whole page, the window will not be shown
+		if (((WebRequest)getRequest()).isAjax() == false)
+		{
 			shown = false;
 		}
-		
+
 		getContent().setOutputMarkupId(true);
 		getContent().setVisible(shown);
 	}
@@ -968,19 +975,22 @@ public class ModalWindow extends Panel
 		// set true if we set a windowclosedcallback
 		boolean haveCloseCallback = false;
 
-		// in case user is interested in window close callback or we have a pagemap to clean
+		// in case user is interested in window close callback or we have a
+		// pagemap to clean
 		// attach notification request
-		if ((isCustomComponent() == false && deletePageMap) || windowClosedCallback != null) 
+		if ((isCustomComponent() == false && deletePageMap) || windowClosedCallback != null)
 		{
 			WindowClosedBehavior behavior = (WindowClosedBehavior)getBehaviors(
 					WindowClosedBehavior.class).get(0);
-			buffer.append("settings.onClose = function() { " + behavior.getCallbackScript() + " };\n");
-			
+			buffer.append("settings.onClose = function() { " + behavior.getCallbackScript()
+					+ " };\n");
+
 			haveCloseCallback = true;
 		}
 
-		// in case we didn't set windowclosecallback, we need at least callback on close button,
-		// to close window property (thus cleaning the shown flag) 
+		// in case we didn't set windowclosecallback, we need at least callback
+		// on close button,
+		// to close window property (thus cleaning the shown flag)
 		if (closeButtonCallback != null || haveCloseCallback == false)
 		{
 			CloseButtonBehavior behavior = (CloseButtonBehavior)getBehaviors(
@@ -988,9 +998,9 @@ public class ModalWindow extends Panel
 			buffer.append("settings.onCloseButton = function() { " + behavior.getCallbackScript()
 					+ "};\n");
 		}
-	
+
 		postProcessSettings(buffer);
-		
+
 		buffer.append("Wicket.Window.create(settings).show();\n");
 
 		return buffer.toString();
@@ -998,6 +1008,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Method that allows tweaking the settings
+	 * 
 	 * @param settings
 	 * @return settings javascript
 	 */
