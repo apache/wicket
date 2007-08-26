@@ -26,12 +26,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
 
 /**
- * A very simple loop component whose model is an Integer defining the number of
- * iterations the loop should render. During rendering, Loop iterates from 0 to
- * getIterations() - 1, creating a new MarkupContainer for each iteration. The
- * MarkupContainer is populated by the Loop subclass by implementing the
- * abstract method populate(LoopItem). The populate() method is called just
- * before the LoopItem container is rendered.
+ * A very simple loop component whose model is an Integer defining the number of iterations the loop
+ * should render. During rendering, Loop iterates from 0 to getIterations() - 1, creating a new
+ * MarkupContainer for each iteration. The MarkupContainer is populated by the Loop subclass by
+ * implementing the abstract method populate(LoopItem). The populate() method is called just before
+ * the LoopItem container is rendered.
  * 
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
@@ -111,31 +110,26 @@ public abstract class Loop extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onBeforeRender()
+	protected void onPopulate()
 	{
-		if (isVisibleInHierarchy())
+		// Remove any previous loop contents
+		removeAll();
+
+		// Get number of iterations
+		final int iterations = getIterations();
+		if (iterations > 0)
 		{
-			// Remove any previous loop contents
-			removeAll();
-
-			// Get number of iterations
-			final int iterations = getIterations();
-			if (iterations > 0)
+			// Create LoopItems for each iteration
+			for (int iteration = 0; iteration < iterations; iteration++)
 			{
-				// Create LoopItems for each iteration
-				for (int iteration = 0; iteration < iterations; iteration++)
-				{
-					// Create item for loop iteration
-					LoopItem item = newItem(iteration);
+				// Create item for loop iteration
+				LoopItem item = newItem(iteration);
 
-					// Add and populate item
-					add(item);
-					populateItem(item);
-				}
+				// Add and populate item
+				add(item);
+				populateItem(item);
 			}
 		}
-
-		super.onBeforeRender();
 
 	}
 

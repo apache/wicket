@@ -24,23 +24,19 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * An abstract repeater view that provides refreshing functionality to its
- * subclasses. The view is refreshed every request, making it well suited for
- * displaying dynamic data.
+ * An abstract repeater view that provides refreshing functionality to its subclasses. The view is
+ * refreshed every request, making it well suited for displaying dynamic data.
  * <p>
- * The view is populated by implementing {@link RefreshingView#getItemModels() }
- * and {@link RefreshingView#populateItem(Item) } methods. RefreshingView builds
- * the items that will be rendered by looping over the models retrieved from
- * {@link RefreshingView#getItemModels() } and calling the
- * {@link RefreshingView#newItem(String, int, IModel) } to generate the child
- * item container followed by a call to
- * {@link RefreshingView#populateItem(Item) } to let the user populate the newly
- * created item container with custom components.
+ * The view is populated by implementing {@link RefreshingView#getItemModels() } and
+ * {@link RefreshingView#populateItem(Item) } methods. RefreshingView builds the items that will be
+ * rendered by looping over the models retrieved from {@link RefreshingView#getItemModels() } and
+ * calling the {@link RefreshingView#newItem(String, int, IModel) } to generate the child item
+ * container followed by a call to {@link RefreshingView#populateItem(Item) } to let the user
+ * populate the newly created item container with custom components.
  * </p>
  * <p>
  * The provided {@link ModelIteratorAdapter} can make implementing
- * {@link RefreshingView#getItemModels() } easier if you have an iterator over
- * item objects.
+ * {@link RefreshingView#getItemModels() } easier if you have an iterator over item objects.
  * </p>
  * 
  * @see RepeatingView
@@ -54,8 +50,8 @@ public abstract class RefreshingView extends RepeatingView
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The item reuse strategy that will be used to recycle items when the page
-	 * is changed or the view is redrawn.
+	 * The item reuse strategy that will be used to recycle items when the page is changed or the
+	 * view is redrawn.
 	 * 
 	 * @see IItemReuseStrategy
 	 */
@@ -86,33 +82,29 @@ public abstract class RefreshingView extends RepeatingView
 	}
 
 	/**
-	 * Refresh the items in the view. Delegates the creation of items to the
-	 * selected item reuse strategy
+	 * Refresh the items in the view. Delegates the creation of items to the selected item reuse
+	 * strategy
 	 */
-	protected void onBeforeRender()
+	protected void onPopulate()
 	{
-		if (isVisibleInHierarchy())
+
+		IItemFactory itemFactory = new IItemFactory()
 		{
 
-			IItemFactory itemFactory = new IItemFactory()
+			public Item newItem(int index, IModel model)
 			{
+				String id = RefreshingView.this.newChildId();
+				Item item = RefreshingView.this.newItem(id, index, model);
+				RefreshingView.this.populateItem(item);
+				return item;
+			}
 
-				public Item newItem(int index, IModel model)
-				{
-					String id = RefreshingView.this.newChildId();
-					Item item = RefreshingView.this.newItem(id, index, model);
-					RefreshingView.this.populateItem(item);
-					return item;
-				}
+		};
 
-			};
-
-			Iterator models = getItemModels();
-			Iterator items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
-			removeAll();
-			addItems(items);
-		}
-		super.onBeforeRender();
+		Iterator models = getItemModels();
+		Iterator items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
+		removeAll();
+		addItems(items);
 	}
 
 	/**
@@ -125,8 +117,7 @@ public abstract class RefreshingView extends RepeatingView
 	/**
 	 * Populate the given Item container.
 	 * <p>
-	 * <b>be carefull</b> to add any components to the item and not the view
-	 * itself. So, don't do:
+	 * <b>be carefull</b> to add any components to the item and not the view itself. So, don't do:
 	 * 
 	 * <pre>
 	 * add(new Label(&quot;foo&quot;, &quot;bar&quot;));
@@ -146,9 +137,8 @@ public abstract class RefreshingView extends RepeatingView
 	protected abstract void populateItem(final Item item);
 
 	/**
-	 * Factory method for Item container. Item containers are simple
-	 * MarkupContainer used to aggregate the user added components for a row
-	 * inside the view.
+	 * Factory method for Item container. Item containers are simple MarkupContainer used to
+	 * aggregate the user added components for a row inside the view.
 	 * 
 	 * @see Item
 	 * @param id
@@ -174,8 +164,8 @@ public abstract class RefreshingView extends RepeatingView
 	}
 
 	/**
-	 * Add items to the view. Prior to this all items were removed so every
-	 * request this function starts from a clean slate.
+	 * Add items to the view. Prior to this all items were removed so every request this function
+	 * starts from a clean slate.
 	 * 
 	 * @param items
 	 *            item instances to be added to this view
@@ -193,8 +183,8 @@ public abstract class RefreshingView extends RepeatingView
 	// /////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * @return currently set item reuse strategy. Defaults to
-	 *         <code>DefaultItemReuseStrategy</code> if none was set.
+	 * @return currently set item reuse strategy. Defaults to <code>DefaultItemReuseStrategy</code>
+	 *         if none was set.
 	 * 
 	 * @see DefaultItemReuseStrategy
 	 */
@@ -208,8 +198,7 @@ public abstract class RefreshingView extends RepeatingView
 	}
 
 	/**
-	 * Sets the item reuse strategy. This strategy controls the creation of
-	 * {@link Item}s.
+	 * Sets the item reuse strategy. This strategy controls the creation of {@link Item}s.
 	 * 
 	 * @see IItemReuseStrategy
 	 * 

@@ -24,8 +24,8 @@ import org.apache.wicket.model.IModel;
 
 /**
  * <p>
- * A repeater view that renders all of its children, using its body markup, in
- * the order they were added.
+ * A repeater view that renders all of its children, using its body markup, in the order they were
+ * added.
  * 
  * </p>
  * Example:
@@ -55,17 +55,15 @@ import org.apache.wicket.model.IModel;
  *  &lt;ul&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
- * To expand a bit: the repeater itself produces no markup, instead every direct
- * child inherits the entire markup of the repeater. In the example above
- * reeaters's markup is:
+ * To expand a bit: the repeater itself produces no markup, instead every direct child inherits the
+ * entire markup of the repeater. In the example above reeaters's markup is:
  * 
  * <pre>
  *  &lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;
  * </pre>
  * 
- * and so this is the markup that is available to the direct children - the
- * Label components. So as each label renders it produces a line of the output
- * that has the <code>li</code>tag.
+ * and so this is the markup that is available to the direct children - the Label components. So as
+ * each label renders it produces a line of the output that has the <code>li</code>tag.
  * 
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -94,9 +92,8 @@ public class RepeatingView extends AbstractRepeater
 	}
 
 	/**
-	 * Generates a unique id string. This makes it easy to add items to be
-	 * rendered w/out having to worry about generating unique id strings in your
-	 * code.
+	 * Generates a unique id string. This makes it easy to add items to be rendered w/out having to
+	 * worry about generating unique id strings in your code.
 	 * 
 	 * @return unique child id
 	 */
@@ -121,6 +118,14 @@ public class RepeatingView extends AbstractRepeater
 	protected Iterator renderIterator()
 	{
 		return iterator();
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#onPopulate()
+	 */
+	protected void onPopulate()
+	{
+		// noop - population of this repeater is manual
 	}
 
 }

@@ -31,21 +31,19 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * A ListView is a repeater that makes it easy to display/work with {@link List}s.
- * However, there are situations where it is necessary to work with other
- * collection types, for repeaters that might work better with non-list or
- * database-driven collections see the org.apache.wicket.markup.repeater
- * package.
+ * A ListView is a repeater that makes it easy to display/work with {@link List}s. However, there
+ * are situations where it is necessary to work with other collection types, for repeaters that
+ * might work better with non-list or database-driven collections see the
+ * org.apache.wicket.markup.repeater package.
  * 
- * Also notice that in a list the item's uniqueness/primary key/id is identified
- * as its index in the list. If this is not the case you should either override
- * {@link #getListItemModel(IModel, int)} to return a model that will work with
- * the item's true primary key, or use a different repeater that does not rely
- * on the list index.
+ * Also notice that in a list the item's uniqueness/primary key/id is identified as its index in the
+ * list. If this is not the case you should either override {@link #getListItemModel(IModel, int)}
+ * to return a model that will work with the item's true primary key, or use a different repeater
+ * that does not rely on the list index.
  * 
  * 
- * A ListView holds ListItem children. Items can be re-ordered and deleted,
- * either one at a time or many at a time.
+ * A ListView holds ListItem children. Items can be re-ordered and deleted, either one at a time or
+ * many at a time.
  * <p>
  * Example:
  * 
@@ -57,8 +55,8 @@ import org.apache.wicket.version.undo.Change;
  * </pre>
  * 
  * <p>
- * Though this example is about a HTML table, ListView is not at all limited to
- * HTML tables. Any kind of list can be rendered using ListView.
+ * Though this example is about a HTML table, ListView is not at all limited to HTML tables. Any
+ * kind of list can be rendered using ListView.
  * <p>
  * The related Java code:
  * 
@@ -76,29 +74,26 @@ import org.apache.wicket.version.undo.Change;
  * <p>
  * <strong>NOTE:</strong>
  * 
- * When you want to change the default generated markup it is important to
- * realise that the ListView instance itself does not correspond to any markup,
- * however, the generated ListItems do.<br/>
+ * When you want to change the default generated markup it is important to realise that the ListView
+ * instance itself does not correspond to any markup, however, the generated ListItems do.<br/>
  * 
  * This means that methods like {@link #setRenderBodyOnly(boolean)} and
- * {@link #add(org.apache.wicket.behavior.IBehavior)} should be invoked on the
- * {@link ListItem} that is given in {@link #populateItem(ListItem)} method.
+ * {@link #add(org.apache.wicket.behavior.IBehavior)} should be invoked on the {@link ListItem} that
+ * is given in {@link #populateItem(ListItem)} method.
  * </p>
  * 
  * <p>
- * <strong>WARNING:</strong> though you can nest ListViews within Forms, you
- * HAVE to set the setReuseItems property to true in order to have validation
- * work properly. By default, setReuseItems is false, which has the effect that
- * ListView replaces all child components by new instances. The idea behind this
- * is that you always render the fresh data, and as people usually use ListViews
- * for displaying read-only lists (at least, that's what we think), this is good
+ * <strong>WARNING:</strong> though you can nest ListViews within Forms, you HAVE to set the
+ * setReuseItems property to true in order to have validation work properly. By default,
+ * setReuseItems is false, which has the effect that ListView replaces all child components by new
+ * instances. The idea behind this is that you always render the fresh data, and as people usually
+ * use ListViews for displaying read-only lists (at least, that's what we think), this is good
  * default behavior. <br />
- * However, as the components are replaced before the rendering starts, the
- * search for specific messages for these components fails as they are replaced
- * with other instances. Another problem is that 'wrong' user input is kept as
- * (temporary) instance data of the components. As these components are replaced
- * by new ones, your user will never see the wrong data when setReuseItems is
- * false.
+ * However, as the components are replaced before the rendering starts, the search for specific
+ * messages for these components fails as they are replaced with other instances. Another problem is
+ * that 'wrong' user input is kept as (temporary) instance data of the components. As these
+ * components are replaced by new ones, your user will never see the wrong data when setReuseItems
+ * is false.
  * </p>
  * 
  * @author Jonathan Locke
@@ -112,12 +107,11 @@ public abstract class ListView extends AbstractRepeater
 	private int firstIndex = 0;
 
 	/**
-	 * If true, re-rendering the list view is more efficient if the window
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALWAYS set this property to true, as otherwise
-	 * validation will not work properly.
+	 * If true, re-rendering the list view is more efficient if the window doesn't get changed at
+	 * all or if it gets scrolled (compared to paging). But if you modify the listView model object,
+	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
+	 * nest a ListView in a Form, ALWAYS set this property to true, as otherwise validation will not
+	 * work properly.
 	 */
 	private boolean reuseItems = false;
 
@@ -163,9 +157,9 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Gets the list of items in the listView. This method is final because it
-	 * is not designed to be overridden. If it were allowed to be overridden,
-	 * the values returned by getModelObject() and getList() might not coincide.
+	 * Gets the list of items in the listView. This method is final because it is not designed to be
+	 * overridden. If it were allowed to be overridden, the values returned by getModelObject() and
+	 * getList() might not coincide.
 	 * 
 	 * @return The list of items in this list view.
 	 */
@@ -180,12 +174,11 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
-	 * validation will not work properly.
+	 * If true re-rendering the list view is more efficient if the windows doesn't get changed at
+	 * all or if it gets scrolled (compared to paging). But if you modify the listView model object,
+	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
+	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
+	 * not work properly.
 	 * 
 	 * @return Whether to reuse items
 	 */
@@ -205,10 +198,9 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Based on the model object's list size, firstIndex and view size,
-	 * determine what the view size really will be. E.g. default for viewSize is
-	 * Integer.MAX_VALUE, if not set via setViewSize(). If the underlying list
-	 * has 10 elements, the value returned by getViewSize() will be 10 if
+	 * Based on the model object's list size, firstIndex and view size, determine what the view size
+	 * really will be. E.g. default for viewSize is Integer.MAX_VALUE, if not set via setViewSize().
+	 * If the underlying list has 10 elements, the value returned by getViewSize() will be 10 if
 	 * startIndex = 0.
 	 * 
 	 * @return The number of items to be populated and rendered.
@@ -246,8 +238,7 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Returns a link that will move the given item "down" (towards the end) in
-	 * the listView.
+	 * Returns a link that will move the given item "down" (towards the end) in the listView.
 	 * 
 	 * @param id
 	 *            Name of move-down link component to create
@@ -303,8 +294,7 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Returns a link that will move the given item "up" (towards the beginning)
-	 * in the listView.
+	 * Returns a link that will move the given item "up" (towards the beginning) in the listView.
 	 * 
 	 * @param id
 	 *            Name of move-up link component to create
@@ -361,8 +351,7 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Returns a link that will remove this ListItem from the ListView that
-	 * holds it.
+	 * Returns a link that will remove this ListItem from the ListView that holds it.
 	 * 
 	 * @param id
 	 *            Name of remove link component to create
@@ -406,12 +395,11 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Sets the model as the provided list and removes all children, so that the
-	 * next render will be using the contents of the model.
+	 * Sets the model as the provided list and removes all children, so that the next render will be
+	 * using the contents of the model.
 	 * 
 	 * @param list
-	 *            The list for the new model. The list must implement
-	 *            {@link Serializable}.
+	 *            The list for the new model. The list must implement {@link Serializable}.
 	 * @return This for chaining
 	 */
 	public Component setList(List list)
@@ -420,8 +408,8 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Sets the model and removes all current children, so that the next render
-	 * will be using the contents of the model.
+	 * Sets the model and removes all current children, so that the next render will be using the
+	 * contents of the model.
 	 * 
 	 * @param model
 	 *            The new model
@@ -435,12 +423,11 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
-	 * validation will not work properly.
+	 * If true re-rendering the list view is more efficient if the windows doesn't get changed at
+	 * all or if it gets scrolled (compared to paging). But if you modify the listView model object,
+	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
+	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
+	 * not work properly.
 	 * 
 	 * @param reuseItems
 	 *            Whether to reuse the child items.
@@ -495,13 +482,11 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * Subclasses may provide their own ListItemModel with extended
-	 * functionality. The default ListItemModel works fine with mostly static
-	 * lists where index remains valid. In cases where the underlying list
-	 * changes a lot (many users using the application), it may not longer be
-	 * appropriate. In that case your own ListItemModel implementation should
-	 * use an id (e.g. the database' record id) to identify and load the list
-	 * item model object.
+	 * Subclasses may provide their own ListItemModel with extended functionality. The default
+	 * ListItemModel works fine with mostly static lists where index remains valid. In cases where
+	 * the underlying list changes a lot (many users using the application), it may not longer be
+	 * appropriate. In that case your own ListItemModel implementation should use an id (e.g. the
+	 * database' record id) to identify and load the list item model object.
 	 * 
 	 * @param listViewModel
 	 *            The ListView's model
@@ -526,76 +511,72 @@ public abstract class ListView extends AbstractRepeater
 	}
 
 	/**
-	 * @see org.apache.wicket.MarkupContainer#onBeforeRender()
+	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#onPopulate()
 	 */
-	protected void onBeforeRender()
+	protected void onPopulate()
 	{
-		if (isVisibleInHierarchy())
+		// Get number of items to be displayed
+		final int size = getViewSize();
+		if (size > 0)
 		{
-			// Get number of items to be displayed
-			final int size = getViewSize();
-			if (size > 0)
+			if (getReuseItems())
 			{
-				if (getReuseItems())
+				// Remove all ListItems no longer required
+				final int maxIndex = firstIndex + size;
+				for (final Iterator iterator = iterator(); iterator.hasNext();)
 				{
-					// Remove all ListItems no longer required
-					final int maxIndex = firstIndex + size;
-					for (final Iterator iterator = iterator(); iterator.hasNext();)
+					// Get next child component
+					final ListItem child = (ListItem)iterator.next();
+					if (child != null)
 					{
-						// Get next child component
-						final ListItem child = (ListItem)iterator.next();
-						if (child != null)
+						final int index = child.getIndex();
+						if (index < firstIndex || index >= maxIndex)
 						{
-							final int index = child.getIndex();
-							if (index < firstIndex || index >= maxIndex)
-							{
-								iterator.remove();
-							}
+							iterator.remove();
 						}
-					}
-				}
-				else
-				{
-					// Automatically rebuild all ListItems before rendering the
-					// list view
-					removeAll();
-				}
-
-				// Loop through the markup in this container for each item
-				for (int i = 0; i < size; i++)
-				{
-					// Get index
-					final int index = firstIndex + i;
-
-					// If this component does not already exist, populate it
-					ListItem item = (ListItem)get(Integer.toString(index));
-					if (item == null)
-					{
-						// Create item for index
-						item = newItem(index);
-
-						// Add list item
-						add(item);
-
-						// Populate the list item
-						onBeginPopulateItem(item);
-						populateItem(item);
 					}
 				}
 			}
 			else
 			{
+				// Automatically rebuild all ListItems before rendering the
+				// list view
 				removeAll();
 			}
 
+			// Loop through the markup in this container for each item
+			for (int i = 0; i < size; i++)
+			{
+				// Get index
+				final int index = firstIndex + i;
+
+				// If this component does not already exist, populate it
+				ListItem item = (ListItem)get(Integer.toString(index));
+				if (item == null)
+				{
+					// Create item for index
+					item = newItem(index);
+
+					// Add list item
+					add(item);
+
+					// Populate the list item
+					onBeginPopulateItem(item);
+					populateItem(item);
+				}
+			}
 		}
-		super.onBeforeRender();
+		else
+		{
+			removeAll();
+		}
+
 	}
 
 	/**
-	 * Comes handy for ready made ListView based components which must implement
-	 * populateItem() but you don't want to lose compile time error checking
-	 * reminding the user to implement abstract populateItem().
+	 * Comes handy for ready made ListView based components which must implement populateItem() but
+	 * you don't want to lose compile time error checking reminding the user to implement abstract
+	 * populateItem().
 	 * 
 	 * @param item
 	 */

@@ -21,12 +21,10 @@ import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.version.undo.Change;
 
 /**
- * A navigation for a PageableListView that holds links to other pages of the
- * PageableListView.
+ * A navigation for a PageableListView that holds links to other pages of the PageableListView.
  * <p>
- * For each row (one page of the list of pages) a {@link PagingNavigationLink}will
- * be added that contains a {@link Label} with the page number of that link
- * (1..n).
+ * For each row (one page of the list of pages) a {@link PagingNavigationLink}will be added that
+ * contains a {@link Label} with the page number of that link (1..n).
  * 
  * <pre>
  *  
@@ -46,58 +44,60 @@ import org.apache.wicket.version.undo.Change;
  * 
  * </p>
  * <p>
- * Override method populateItem to customize the rendering of the navigation.
- * For instance:
+ * Override method populateItem to customize the rendering of the navigation. For instance:
  * 
  * <pre>
- * 	protected void populateItem(LoopItem loopItem) {
- * 		final int page = loopItem.getIteration();
- *		final PagingNavigationLink link = new PagingNavigationLink(&quot;pageLink&quot;, pageableListView, page);
- *		if (page &gt; 0) {
- *			loopItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
- *		} else {
- *			loopItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
- *		}
- *		link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
- *		link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
- *		loopItem.add(link);
- *	}
+ * protected void populateItem(LoopItem loopItem)
+ * {
+ * 	final int page = loopItem.getIteration();
+ * 	final PagingNavigationLink link = new PagingNavigationLink(&quot;pageLink&quot;, pageableListView, page);
+ * 	if (page &gt; 0)
+ * 	{
+ * 		loopItem.add(new Label(&quot;separator&quot;, &quot;|&quot;));
+ * 	}
+ * 	else
+ * 	{
+ * 		loopItem.add(new Label(&quot;separator&quot;, &quot;&quot;));
+ * 	}
+ * 	link.add(new Label(&quot;pageNumber&quot;, String.valueOf(page + 1)));
+ * 	link.add(new Label(&quot;pageLabel&quot;, &quot;page&quot;));
+ * 	loopItem.add(link);
+ * }
  * </pre>
  * 
  * With:
  * 
  * <pre>
- *	&lt;span wicket:id=&quot;navigation&quot;&gt;
- *		&lt;span wicket:id=&quot;separator&quot;&gt;&lt;/span&gt;
- *		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- *			&lt;span wicket:id=&quot;pageLabel&quot;&gt;&lt;/span&gt;&lt;span wicket:id=&quot;pageNumber&quot;&gt;&lt;/span&gt;
- *		&lt;/a&gt;
- *	&lt;/span&gt;
+ * &lt;span wicket:id=&quot;navigation&quot;&gt;
+ * 	&lt;span wicket:id=&quot;separator&quot;&gt;&lt;/span&gt;
+ * 	&lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ * 		&lt;span wicket:id=&quot;pageLabel&quot;&gt;&lt;/span&gt;&lt;span wicket:id=&quot;pageNumber&quot;&gt;&lt;/span&gt;
+ * 	&lt;/a&gt;
+ * &lt;/span&gt;
  * </pre>
  * 
  * renders like:
  * 
  * <pre>
- *	page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
+ * page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
  * </pre>
  * 
  * </p>
- * Assuming a PageableListView with 1000 entries and not more than 10 lines
- * shall be printed per page, the navigation bar would have 100 entries. Because
- * this is not feasible PagingNavigation's navigation bar is pageable as well.
+ * Assuming a PageableListView with 1000 entries and not more than 10 lines shall be printed per
+ * page, the navigation bar would have 100 entries. Because this is not feasible PagingNavigation's
+ * navigation bar is pageable as well.
  * <p>
- * The page links displayed are automatically adjusted based on the number of
- * page links to be displayed and a margin. The margin makes sure that the page
- * link pointing to the current page is not at the left or right end of the page
- * links currently printed and thus providing a better user experience.
+ * The page links displayed are automatically adjusted based on the number of page links to be
+ * displayed and a margin. The margin makes sure that the page link pointing to the current page is
+ * not at the left or right end of the page links currently printed and thus providing a better user
+ * experience.
  * <p>
- * Use setMargin() and setViewSize() to adjust the navigation's bar view size
- * and margin.
+ * Use setMargin() and setViewSize() to adjust the navigation's bar view size and margin.
  * <p>
  * Please
  * 
- * @see PagingNavigator for a ready made component which already includes links
- *      to the first, previous, next and last page.
+ * @see PagingNavigator for a ready made component which already includes links to the first,
+ *      previous, next and last page.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -108,8 +108,8 @@ public class PagingNavigation extends Loop
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Undo change for navigation start index. Makes certain that back button
-	 * works with paging in the navigator.
+	 * Undo change for navigation start index. Makes certain that back button works with paging in
+	 * the navigator.
 	 */
 	private final class StartIndexChange extends Change
 	{
@@ -155,8 +155,8 @@ public class PagingNavigation extends Loop
 	private int startIndex;
 
 	/**
-	 * Number of links on the left and/or right to keep the current page link
-	 * somewhere near the middle.
+	 * Number of links on the left and/or right to keep the current page link somewhere near the
+	 * middle.
 	 */
 	private int margin = -1;
 
@@ -190,8 +190,7 @@ public class PagingNavigation extends Loop
 	 * @param pageable
 	 *            The underlying pageable component to navigate
 	 * @param labelProvider
-	 *            The label provider for the text that the links should be
-	 *            displaying.
+	 *            The label provider for the text that the links should be displaying.
 	 */
 	public PagingNavigation(final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
@@ -203,8 +202,7 @@ public class PagingNavigation extends Loop
 	}
 
 	/**
-	 * Gets the margin, default value is half the view size, unless explicitly
-	 * set.
+	 * Gets the margin, default value is half the view size, unless explicitly set.
 	 * 
 	 * @return the margin
 	 */
@@ -244,7 +242,7 @@ public class PagingNavigation extends Loop
 	 */
 	public void setViewSize(final int size)
 	{
-		this.viewSize = size;
+		viewSize = size;
 	}
 
 	/**
@@ -270,35 +268,34 @@ public class PagingNavigation extends Loop
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onBeforeRender()
+	 * @see org.apache.wicket.markup.html.list.Loop#onPopulate()
 	 */
-	protected void onBeforeRender()
+	protected void onPopulate()
 	{
-		
+
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
 		// The index of the first page link depends on the PageableListView's
 		// page currently printed.
-		this.setStartIndex();
-		super.onBeforeRender();
+		setStartIndex();
+		super.onPopulate();
 	}
 
 	/**
-	 * Allow subclasses replacing populateItem to calculate the current page
-	 * number
+	 * Allow subclasses replacing populateItem to calculate the current page number
 	 * 
 	 * @return start index
 	 */
 	protected final int getStartIndex()
 	{
-		return this.startIndex;
+		return startIndex;
 	}
 
 	/**
-	 * Populate the current cell with a page link (PagingNavigationLink)
-	 * enclosing the page number the link is pointing to. Subclasses may provide
-	 * there own implementation adding more sophisticated page links.
+	 * Populate the current cell with a page link (PagingNavigationLink) enclosing the page number
+	 * the link is pointing to. Subclasses may provide there own implementation adding more
+	 * sophisticated page links.
 	 * 
 	 * @see org.apache.wicket.markup.html.list.Loop#populateItem(Loop.LoopItem)
 	 */
@@ -359,13 +356,13 @@ public class PagingNavigation extends Loop
 	}
 
 	/**
-	 * Get the first page link to render. Adjust the first page link based on
-	 * the current PageableListView page displayed.
+	 * Get the first page link to render. Adjust the first page link based on the current
+	 * PageableListView page displayed.
 	 */
 	private void setStartIndex()
 	{
 		// Which startIndex are we currently using
-		int firstListItem = this.startIndex;
+		int firstListItem = startIndex;
 
 		// How many page links shall be displayed
 		int viewSize = Math.min(getViewSize(), pageable.getPageCount());
@@ -398,17 +395,17 @@ public class PagingNavigation extends Loop
 			firstListItem = 0;
 		}
 
-		if ((viewSize != getIterations()) || (this.startIndex != firstListItem))
+		if ((viewSize != getIterations()) || (startIndex != firstListItem))
 		{
-			this.modelChanging();
+			modelChanging();
 
 			// Tell the ListView what the new start index shall be
-			addStateChange(new StartIndexChange(this.startIndex));
-			this.startIndex = firstListItem;
+			addStateChange(new StartIndexChange(startIndex));
+			startIndex = firstListItem;
 
-			this.setIterations(Math.min(viewSize, pageable.getPageCount()));
+			setIterations(Math.min(viewSize, pageable.getPageCount()));
 
-			this.modelChanged();
+			modelChanged();
 
 			// force all children to be re-rendered
 			removeAll();

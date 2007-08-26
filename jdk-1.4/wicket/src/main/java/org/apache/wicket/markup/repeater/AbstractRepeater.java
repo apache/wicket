@@ -26,14 +26,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Base class for repeaters. This container renders each of its children using
- * its own markup.
+ * Base class for repeaters. This container renders each of its children using its own markup.
  * 
- * The children are collected using {@link #renderIterator()} method. This class
- * will take care of properly positioning and rewinding its markup stream so
- * before each child renders it points to the beginning of this component. Each
- * child is rendered by a call to {@link #renderChild(Component)}. A typical
- * implementation simply does <code>child.render(getMarkupStream());</code>.
+ * The children are collected using {@link #renderIterator()} method. This class will take care of
+ * properly positioning and rewinding its markup stream so before each child renders it points to
+ * the beginning of this component. Each child is rendered by a call to
+ * {@link #renderChild(Component)}. A typical implementation simply does
+ * <code>child.render(getMarkupStream());</code>.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -65,8 +64,8 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns an iterator for the collection of child components to be
-	 * rendered. Users can override this to change order of rendered children.
+	 * Returns an iterator for the collection of child components to be rendered. Users can override
+	 * this to change order of rendered children.
 	 * 
 	 * @return iterator over child components to be rendered
 	 */
@@ -104,8 +103,8 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	}
 
 	/**
-	 * Render a single child. This method can be overridden to modify how a
-	 * single child component is rendered.
+	 * Render a single child. This method can be overridden to modify how a single child component
+	 * is rendered.
 	 * 
 	 * @param child
 	 *            Child component to be rendered
@@ -114,5 +113,22 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	{
 		child.render(getMarkupStream());
 	}
+
+	/**
+	 * @see org.apache.wicket.Component#onBeforeRender()
+	 */
+	protected final void onBeforeRender()
+	{
+		if (isVisibleInHierarchy())
+		{
+			onPopulate();
+		}
+		super.onBeforeRender();
+	}
+
+	/**
+	 * Callback to let the repeater know it should populate itself with its items.
+	 */
+	protected abstract void onPopulate();
 
 }
