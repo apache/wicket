@@ -82,10 +82,8 @@ public class SelectOptions extends RepeatingView
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onBeforeRender()
+	protected void onPopulate()
 	{
-		super.onBeforeRender();
-
 		if (size() == 0 || recreateChoices)
 		{
 			// populate this repeating view with SelectOption components
