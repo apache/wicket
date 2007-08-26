@@ -131,9 +131,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
 		response
-				.write("\n<span class=\"yui-skin-sam\">&nbsp;<div style=\"display:none;position:absolute;z-index: 99999;\" id=\"");
+				.write("\n<span class=\"yui-skin-sam\">&nbsp;<span style=\"display:none;position:absolute;z-index: 99999;\" id=\"");
 		response.write(getEscapedComponentMarkupId());
-		response.write("Dp\"></div><img style=\"");
+		response.write("Dp\"></span><img style=\"");
 		response.write(getIconStyle());
 		response.write("\" id=\"");
 		response.write(getIconId());
