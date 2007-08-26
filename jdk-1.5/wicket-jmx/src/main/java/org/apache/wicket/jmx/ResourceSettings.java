@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.jmx;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.util.time.Duration;
-
 
 
 /**
@@ -99,7 +100,12 @@ public class ResourceSettings implements ResourceSettingsMBean
 		List loaders = application.getResourceSettings().getStringResourceLoaders();
 		if (loaders != null)
 		{
-			return (String[])loaders.toArray(new String[loaders.size()]);
+			List list = new ArrayList();
+			for (Iterator iter = loaders.iterator(); iter.hasNext();)
+			{
+				list.add(iter.next().toString());
+			}
+			return (String[])list.toArray(new String[loaders.size()]);
 		}
 		return null;
 	}
