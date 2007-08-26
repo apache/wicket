@@ -570,8 +570,15 @@ Wicket.Window.prototype = {
 			this.update = window.setInterval(this.updateTitle.bind(this), 100);
 		
 		this.content.src = this.settings.src;
-
-		this.content.contentWindow.name = this.settings.iframeName;
+	
+		// opera seems to have problem accessing contentWindow here
+		if (Wicket.Browser.isOpera()) {
+			this.content.onload = function() {
+				this.content.contentWindow.name = this.settings.iframeName;
+			}
+		} else {
+			this.content.contentWindow.name = this.settings.iframeName;
+		}
 	},
 	
 	/**

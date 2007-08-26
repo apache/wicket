@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.util.lang.EnumeratedType;
@@ -731,6 +732,12 @@ public class ModalWindow extends Panel
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
+		
+		// if user is refreshing whole page, the window will not be shown 
+		if (((WebRequest)getRequest()).isAjax() == false) {
+			shown = false;
+		}
+		
 		getContent().setOutputMarkupId(true);
 		getContent().setVisible(shown);
 	}
