@@ -53,22 +53,18 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A web application is a subclass of Application which associates with an
- * instance of WicketServlet to serve pages over the HTTP protocol. This class
- * is intended to be subclassed by framework clients to define a web
- * application.
+ * A web application is a subclass of Application which associates with an instance of WicketServlet
+ * to serve pages over the HTTP protocol. This class is intended to be subclassed by framework
+ * clients to define a web application.
  * <p>
- * Application settings are given defaults by the WebApplication() constructor
- * and internalInit method, such as error page classes appropriate for HTML.
- * WebApplication subclasses can override these values and/or modify other
- * application settings by overriding the init() method and then by calling
- * getXXXSettings() to retrieve an interface to a mutable Settings object. Do
- * not do this in the constructor itself because the defaults will then override
- * your settings.
+ * Application settings are given defaults by the WebApplication() constructor and internalInit
+ * method, such as error page classes appropriate for HTML. WebApplication subclasses can override
+ * these values and/or modify other application settings by overriding the init() method and then by
+ * calling getXXXSettings() to retrieve an interface to a mutable Settings object. Do not do this in
+ * the constructor itself because the defaults will then override your settings.
  * <p>
- * If you want to use a filter specific configuration, e.g. using init
- * parameters from the {@link javax.servlet.FilterConfig} object, you should
- * override the init() method. For example:
+ * If you want to use a filter specific configuration, e.g. using init parameters from the
+ * {@link javax.servlet.FilterConfig} object, you should override the init() method. For example:
  * 
  * <pre>
  *  public void init() {
@@ -103,14 +99,14 @@ public abstract class WebApplication extends Application
 	private static final Logger log = LoggerFactory.getLogger(WebApplication.class);
 
 	/**
-	 * The cached application key. Will be set in
-	 * {@link #setWicketFilter(WicketFilter)} based on the filter name.
+	 * The cached application key. Will be set in {@link #setWicketFilter(WicketFilter)} based on
+	 * the filter name.
 	 */
 	private String applicationKey;
 
 	/**
-	 * Map of buffered responses that are in progress per session. Buffered
-	 * responses are temporarily stored
+	 * Map of buffered responses that are in progress per session. Buffered responses are
+	 * temporarily stored
 	 */
 	private final Map bufferedResponses = new HashMap();
 
@@ -118,8 +114,8 @@ public abstract class WebApplication extends Application
 	private IRequestCycleProcessor requestCycleProcessor;
 
 	/**
-	 * the prefix for storing variables in the actual session (typically
-	 * {@link HttpSession} for this application instance.
+	 * the prefix for storing variables in the actual session (typically {@link HttpSession} for
+	 * this application instance.
 	 */
 	private String sessionAttributePrefix;
 
@@ -127,8 +123,8 @@ public abstract class WebApplication extends Application
 	private WicketFilter wicketFilter;
 
 	/**
-	 * Constructor. <strong>Use {@link #init()} for any configuration of your
-	 * application instead of overriding the constructor.</strong>
+	 * Constructor. <strong>Use {@link #init()} for any configuration of your application instead of
+	 * overriding the constructor.</strong>
 	 */
 	public WebApplication()
 	{
@@ -167,10 +163,9 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
+	 * Gets the default request cycle processor (with lazy initialization). This is the
+	 * {@link IRequestCycleProcessor} that will be used by {@link RequestCycle}s when custom
+	 * implementations of the request cycle do not provide their own customized versions.
 	 * 
 	 * @return the default request cycle processor
 	 */
@@ -184,8 +179,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets the servlet context for this application. Use this to get references
-	 * to absolute paths, global web.xml parameters (<context-param>), etc.
+	 * Gets the servlet context for this application. Use this to get references to absolute paths,
+	 * global web.xml parameters (<context-param>), etc.
 	 * 
 	 * @return The servlet context for this application
 	 */
@@ -201,8 +196,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets the prefix for storing variables in the actual session (typically
-	 * {@link HttpSession} for this application instance.
+	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
+	 * for this application instance.
 	 * 
 	 * @param request
 	 *            the request
@@ -277,8 +272,8 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param packageName
-	 *            the name of the package for which all bookmarkable pages or
-	 *            sharedresources should be mounted
+	 *            the name of the package for which all bookmarkable pages or sharedresources should
+	 *            be mounted
 	 */
 	public final void mount(final String path, final PackageName packageName)
 	{
@@ -342,8 +337,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Create new Wicket Session object. Note, this method is not called if you
-	 * registered your own ISessionFactory with the Application.
+	 * Create new Wicket Session object. Note, this method is not called if you registered your own
+	 * ISessionFactory with the Application.
 	 * 
 	 * @return The created session
 	 * @deprecated see {@link WebApplication#newSession(Request, Response)}.
@@ -355,8 +350,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Create new Wicket Session object. Note, this method is not called if you
-	 * registered your own ISessionFactory with the Application.
+	 * Create new Wicket Session object. Note, this method is not called if you registered your own
+	 * ISessionFactory with the Application.
 	 * 
 	 * @param request
 	 * @return The created session
@@ -374,7 +369,7 @@ public abstract class WebApplication extends Application
 	 */
 	public Session newSession(Request request, Response response)
 	{
-		return new WebSession(WebApplication.this, request);
+		return new WebSession(request);
 	}
 
 	/**
@@ -426,13 +421,11 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Initialize; if you need the wicket servlet for initialization, e.g.
-	 * because you want to read an initParameter from web.xml or you want to
-	 * read a resource from the servlet's context path, you can override this
-	 * method and provide custom initialization. This method is called right
-	 * after this application class is constructed, and the wicket servlet is
-	 * set. <strong>Use this method for any application setup instead of the
-	 * constructor.</strong>
+	 * Initialize; if you need the wicket servlet for initialization, e.g. because you want to read
+	 * an initParameter from web.xml or you want to read a resource from the servlet's context path,
+	 * you can override this method and provide custom initialization. This method is called right
+	 * after this application class is constructed, and the wicket servlet is set. <strong>Use this
+	 * method for any application setup instead of the constructor.</strong>
 	 */
 	protected void init()
 	{
@@ -458,16 +451,14 @@ public abstract class WebApplication extends Application
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * Internal intialization. First determine the deployment mode. First check
-	 * the system property -Dwicket.configuration. If it does not exist check
-	 * the servlet init parameter (
-	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>).
-	 * If not found check the servlet context init paramert
-	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>).
-	 * If the parameter is "development" (which is default), settings
-	 * appropriate for development are set. If it's "deployment" , deployment
-	 * settings are used. If development is specified and a "sourceFolder" init
-	 * parameter is also set, then resources in that folder will be polled for
+	 * Internal intialization. First determine the deployment mode. First check the system property
+	 * -Dwicket.configuration. If it does not exist check the servlet init parameter (
+	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>). If not
+	 * found check the servlet context init paramert
+	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). If
+	 * the parameter is "development" (which is default), settings appropriate for development are
+	 * set. If it's "deployment" , deployment settings are used. If development is specified and a
+	 * "sourceFolder" init parameter is also set, then resources in that folder will be polled for
 	 * changes.
 	 */
 	protected void internalInit()
@@ -540,13 +531,11 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets a new request cycle processor for web requests. May be replaced by
-	 * subclasses which whishes to uses there own implementation of
-	 * IRequestCycleProcessor.
+	 * Gets a new request cycle processor for web requests. May be replaced by subclasses which
+	 * whishes to uses there own implementation of IRequestCycleProcessor.
 	 * 
-	 * NOTE this can't be moved to application as portlets use two different
-	 * request cycle processors, and hence have two different methods for them,
-	 * depending on the kind of request.
+	 * NOTE this can't be moved to application as portlets use two different request cycle
+	 * processors, and hence have two different methods for them, depending on the kind of request.
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
@@ -564,8 +553,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and
-	 * obfuscated URL which has been encoded by an appropriate WebResponse.
+	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and obfuscated URL which
+	 * has been encoded by an appropriate WebResponse.
 	 * 
 	 * @param servletRequest
 	 * @return a WebRequest object
@@ -576,9 +565,9 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's
-	 * default URL and hide the details from the user. A appropriate WebRequest
-	 * must be implemented and configured to decode the encoded URL.
+	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's default URL and
+	 * hide the details from the user. A appropriate WebRequest must be implemented and configured
+	 * to decode the encoded URL.
 	 * 
 	 * @param servletResponse
 	 * @return a WebResponse object
@@ -640,12 +629,11 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * This method prints a warning to stderr that we are starting in
-	 * development mode.
+	 * This method prints a warning to stderr that we are starting in development mode.
 	 * <p>
-	 * If you really need to test Wicket in development mode on a staging server
-	 * somewhere and are annoying the sysadmin for it with stderr messages, you
-	 * can override this to make it do something else.
+	 * If you really need to test Wicket in development mode on a staging server somewhere and are
+	 * annoying the sysadmin for it with stderr messages, you can override this to make it do
+	 * something else.
 	 */
 	protected void outputDevelopmentModeWarning()
 	{
@@ -660,16 +648,16 @@ public abstract class WebApplication extends Application
 	// TODO remove after deprecation release
 
 	/**
-	 * Returns the redirect map where the buffered render pages are stored in
-	 * and removes it immediately.
+	 * Returns the redirect map where the buffered render pages are stored in and removes it
+	 * immediately.
 	 * 
 	 * @param sessionId
 	 *            the session id
 	 * 
 	 * @param bufferId
 	 *            the id of the buffer as passed in as a request parameter
-	 * @return the buffered response or null if not found (when this request is
-	 *         on a different box than the original request came in
+	 * @return the buffered response or null if not found (when this request is on a different box
+	 *         than the original request came in
 	 */
 	final BufferedHttpServletResponse popBufferedResponse(String sessionId, String bufferId)
 	{
