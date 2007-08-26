@@ -19,10 +19,13 @@ package org.apache.wicket;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTester;
 
+/**
+ * Test for calling {@link Component#setResponsePage(Class)} in constructor.
+ */
 public class SetResponsePageTest extends WicketTestCase
 {
-	// FIXME This test fails currently. We need to fix this bug.
-	public void failing_testSetResponsePage()
+	/** Fixe setting response page in constructor. */
+	public void testSetResponsePage()
 	{
 		WicketTester tester = new WicketTester(Page1.class);
 		tester.setupRequestAndResponse();
@@ -33,35 +36,36 @@ public class SetResponsePageTest extends WicketTestCase
 		tester.destroy();
 	}
 
-	public void testFoo()
-	{
-		// FIXME remove this when turning on the above test
-	}
-
+	/** first page, redirects to page 2. */
 	public static class Page1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
+		/** Construct. */
 		public Page1()
 		{
 			setResponsePage(Page2.class);
 		}
 	}
 
+	/** second page, redirects to page 3. */
 	public static class Page2 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
+		/** Construct. */
 		public Page2()
 		{
-			setResponsePage(Page3.class);
+			setResponsePage(new Page3());
 		}
 	}
 
+	/** final target page. */
 	public static class Page3 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
+		/** Construct. */
 		public Page3()
 		{
 		}
