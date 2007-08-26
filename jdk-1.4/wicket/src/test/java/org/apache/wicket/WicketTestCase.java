@@ -24,8 +24,8 @@ import org.apache.wicket.util.tester.WicketTester;
 /**
  * Base class for tests which require comparing wicket response with a file.
  * <p>
- * To create/replace the expected result file with the new content, define the
- * system property like -Dwicket.replace.expected.results=true
+ * To create/replace the expected result file with the new content, define the system property like
+ * -Dwicket.replace.expected.results=true
  * 
  */
 public abstract class WicketTestCase extends TestCase
@@ -68,8 +68,8 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to
-	 * automatically replace the expected output file.
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the
+	 * expected output file.
 	 * 
 	 * @param pageClass
 	 * @param filename
@@ -81,7 +81,7 @@ public abstract class WicketTestCase extends TestCase
 
 		tester.startPage(pageClass);
 		tester.assertRenderedPage(pageClass);
-		tester.assertResultPage(this.getClass(), filename);
+		tester.assertResultPage(getClass(), filename);
 	}
 
 	/**
@@ -96,8 +96,8 @@ public abstract class WicketTestCase extends TestCase
 	{
 		assertNotNull(component);
 
-		System.out.println("=== " + clazz.getName() + " : " + component.getPageRelativePath()
-				+ " ===");
+		System.out.println("=== " + clazz.getName() + " : " + component.getPageRelativePath() +
+				" ===");
 
 		tester.executeListener(component);
 		tester.assertResultPage(clazz, filename);
@@ -122,7 +122,9 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
-	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or null if not set
+	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property,
+	 * or null if not set
+	 * 
 	 * @return path with a trailing slash
 	 */
 	public static String getBasedir()
@@ -130,6 +132,8 @@ public abstract class WicketTestCase extends TestCase
 		String basedir = System.getProperty("basedir");
 		if (basedir != null)
 			basedir = basedir + "/";
+		else
+			basedir = "";
 		return basedir;
 	}
 }
