@@ -21,11 +21,12 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Automatically generates a basic button image. The model for the component
- * determines the label displayed on the button.
+ * Automatically generates a basic button image. The model for the component determines the label
+ * displayed on the button.
  * 
  * @author Jonathan Locke
  */
@@ -49,7 +50,8 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	private static final int DEFAULT_TEXT_COLOR = Color.WHITE.getRGB();
 
 	/** default font: Helvetica bold 16. */
-	private static final Map DEFAULT_FONT = new Font("Helvetica", Font.BOLD, 16).getAttributes();
+	private static final Map DEFAULT_FONT = new HashMap(new Font("Helvetica", Font.BOLD, 16)
+			.getAttributes());
 
 	/**
 	 * @param defaultHeight
@@ -189,7 +191,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setBackgroundColor(Color backgroundColor)
 	{
-		this.backgroundColorRgb = backgroundColor.getRGB();
+		backgroundColorRgb = backgroundColor.getRGB();
 		invalidate();
 	}
 
@@ -199,7 +201,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setColor(Color color)
 	{
-		this.colorRgb = color.getRGB();
+		colorRgb = color.getRGB();
 		invalidate();
 	}
 
@@ -209,7 +211,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setFont(Font font)
 	{
-		this.fontAttributes = font.getAttributes();
+		fontAttributes = new HashMap(font.getAttributes());
 		invalidate();
 	}
 
@@ -219,7 +221,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public synchronized void setTextColor(Color textColor)
 	{
-		this.textColorRgb = textColor.getRGB();
+		textColorRgb = textColor.getRGB();
 		invalidate();
 	}
 
