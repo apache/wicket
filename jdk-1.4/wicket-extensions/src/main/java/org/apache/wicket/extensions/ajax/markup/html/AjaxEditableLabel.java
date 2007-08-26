@@ -179,7 +179,11 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
-	 * Adds a validator to this form component.
+	 * Adds a validator to this form component. A model must be available for
+	 * this component before Validators can be added. Either add this Component
+	 * to its parent (already having a Model), or provide one before this call
+	 * via constructor {@link #AjaxEditableLabel(String,IModel)} or
+	 * {@link #setModel(IModel)}.
 	 * 
 	 * @param validator
 	 *            The validator
