@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.yui.calendar;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.wicket.Session;
@@ -103,7 +104,7 @@ public class DateTimeField extends FormComponentPanel
 	{
 		this(id, null);
 	}
-
+	
 	/**
 	 * Construct.
 	 * 
@@ -116,7 +117,15 @@ public class DateTimeField extends FormComponentPanel
 		setType(Date.class);
 		PropertyModel dateFieldModel = new PropertyModel(this, "date");
 		add(dateField = newDateTextField("date", dateFieldModel));
-		dateField.add(new DatePicker());
+		dateField.add(new DatePicker() {			
+			private static final long serialVersionUID = 1L;
+
+			protected void configure(Map widgetProperties)
+			{				
+				super.configure(widgetProperties);
+				DateTimeField.this.configure(widgetProperties);
+			}
+		});
 		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
 		hoursField.add(NumberValidator.range(0, 12));
 		hoursField.setLabel(new Model("hours"));
@@ -164,6 +173,10 @@ public class DateTimeField extends FormComponentPanel
 	public Integer getHours()
 	{
 		return hours;
+	}
+	
+	protected void configure(Map widgetProperties) {
+		
 	}
 
 	/**
