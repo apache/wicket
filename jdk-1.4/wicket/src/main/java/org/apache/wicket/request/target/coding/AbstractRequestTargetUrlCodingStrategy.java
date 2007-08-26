@@ -19,6 +19,7 @@ package org.apache.wicket.request.target.coding;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -79,8 +80,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * Encodes Map into a url fragment and append that to the provided url
-	 * buffer.
+	 * Encodes Map into a url fragment and append that to the provided url buffer.
 	 * 
 	 * @param url
 	 *            url so far
@@ -141,8 +141,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * Decodes parameters object from the provided url fragment
 	 * 
 	 * @param urlFragment
-	 *            fragment of the url after the decoded path and before the
-	 *            query string
+	 *            fragment of the url after the decoded path and before the query string
 	 * @param urlParameters
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
@@ -162,7 +161,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 
 		if (urlFragment.length() == 0)
 		{
-			return new ValueMap();
+			return new ValueMap(urlParameters != null ? urlParameters : Collections.EMPTY_MAP);
 		}
 
 		// Split into pairs
@@ -242,8 +241,8 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 		if (path.startsWith(mountPath))
 		{
 			/*
-			 * We need to match /mount/point or
-			 * /mount/point/with/extra/path, but not /mount/pointXXX
+			 * We need to match /mount/point or /mount/point/with/extra/path, but not
+			 * /mount/pointXXX
 			 */
 			String remainder = path.substring(mountPath.length());
 			if (remainder.length() == 0 || remainder.startsWith("/"))
