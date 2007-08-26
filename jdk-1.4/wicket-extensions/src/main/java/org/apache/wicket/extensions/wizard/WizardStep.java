@@ -473,12 +473,12 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	protected void onBeforeRender()
 	{
-		super.onBeforeRender();
 		if (onAttachAction != null)
 		{
 			onAttachAction.execute();
 			onAttachAction = null;
 		}
+		super.onBeforeRender();
 	}
 
 	/**

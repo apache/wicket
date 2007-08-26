@@ -77,7 +77,7 @@ public final class NextButton extends WizardButton
 	 */
 	protected final void onBeforeRender()
 	{
-		super.onBeforeRender();
 		getForm().setDefaultButton(this);
+		super.onBeforeRender();
 	}
 }
