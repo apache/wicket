@@ -34,6 +34,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.settings.IPageSettings;
@@ -621,6 +623,19 @@ public class ModalWindow extends Panel
 	 */
 	public void setTitle(String title)
 	{
+		this.title = new Model(title);
+	}
+	
+	/**
+	 * Sets the title of window. If the window is a page, title can be
+	 * <code>null</code>. In that case it will display the title document
+	 * inside the window.
+	 * 
+	 * @param title
+	 *            Title of the window
+	 */
+	public void setTitle(Model title)
+	{
 		this.title = title;
 	}
 
@@ -629,7 +644,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @return Title of the window
 	 */
-	public String getTitle()
+	public IModel getTitle()
 	{
 		return title;
 	}
@@ -958,9 +973,11 @@ public class ModalWindow extends Panel
 			buffer.append("settings.cookieId=\"" + getCookieName() + "\";\n");
 		}
 
-		if (getTitle() != null)
+		
+		Object title = getTitle() != null ? getTitle().getObject() : null;
+		if (title != null)
 		{
-			buffer.append("settings.title=\"" + escapeQuotes(getTitle()) + "\";\n");
+			buffer.append("settings.title=\"" + escapeQuotes(title.toString()) + "\";\n");
 		}
 
 		if (getMaskType() == MaskType.TRANSPARENT)
@@ -1033,7 +1050,7 @@ public class ModalWindow extends Panel
 	private String widthUnit = "px";
 	private String heightUnit = "px";
 	private String cookieName;
-	private String title = null;
+	private IModel title = null;
 	private MaskType maskType = MaskType.SEMI_TRANSPARENT;
 
 	private String pageMapName = "modal-dialog-pagemap";
