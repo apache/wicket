@@ -16,13 +16,17 @@
  */
 package org.apache.wicket;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
 import junit.framework.Assert;
 
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.resource.DummyApplication;
@@ -38,6 +42,31 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class LocalizerTest extends WicketTestCase
 {
+
+	private static class MyMockPage extends WebPage
+	{
+		private static final long serialVersionUID = 1L;
+
+		DropDownChoice drop1;
+		DropDownChoice drop2;
+
+		/**
+		 * Construct.
+		 */
+		public MyMockPage()
+		{
+			final Form form = new Form("form");
+			add(form);
+
+			String[] choices = { "choice1", "choice2" };
+			drop1 = new DropDownChoice("drop1", Arrays.asList(choices));
+			drop2 = new DropDownChoice("drop2", Arrays.asList(choices));
+
+			form.add(drop1);
+			form.add(drop2);
+		}
+	}
+
 	private IResourceSettings settings;
 
 	private Localizer localizer;
