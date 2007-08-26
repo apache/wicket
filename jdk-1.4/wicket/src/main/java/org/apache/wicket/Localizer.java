@@ -303,6 +303,8 @@ public class Localizer
 			{
 				cacheKey += '-' + page.getClass().getName();
 			}
+
+			cacheKey += "-" + component.getLocale();
 		}
 		return cacheKey;
 	}
