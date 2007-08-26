@@ -62,7 +62,6 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 
 		page.form.onFormSubmitted();
 
-		// strange: I get two Dutch messages, where I expect only one English message
 		tester.assertErrorMessages(new String[] { "'foo' is not a valid Integer." });
 	}
 }
