@@ -101,8 +101,7 @@ public class DateTimeField extends FormComponentPanel
 	 */
 	public DateTimeField(String id)
 	{
-		super(id);
-		init();
+		this(id, null);
 	}
 
 	/**
@@ -114,7 +113,27 @@ public class DateTimeField extends FormComponentPanel
 	public DateTimeField(String id, IModel model)
 	{
 		super(id, model);
-		init();
+		setType(Date.class);
+		PropertyModel dateFieldModel = new PropertyModel(this, "date");
+		add(dateField = newDateTextField("date", dateFieldModel));
+		dateField.add(new DatePicker());
+		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
+		hoursField.add(NumberValidator.range(0, 12));
+		hoursField.setLabel(new Model("hours"));
+		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
+				Integer.class)
+		{
+			private static final long serialVersionUID = 1L;
+
+			public IConverter getConverter(Class type)
+			{
+				return MINUTES_CONVERTER;
+			}
+		});
+		minutesField.add(NumberValidator.range(0, 59));
+		minutesField.setLabel(new Model("minutes"));
+		add(amOrPmChoice = new DropDownChoice("amOrPmChoice", new PropertyModel(this, "amOrPm"),
+				Arrays.asList(AM_PM.values())));
 	}
 
 	/**
@@ -225,31 +244,6 @@ public class DateTimeField extends FormComponentPanel
 			return ((WebClientInfo)info).getProperties().getTimeZone();
 		}
 		return null;
-	}
-
-	private void init()
-	{
-		setType(Date.class);
-		PropertyModel dateFieldModel = new PropertyModel(this, "date");
-		add(dateField = newDateTextField("date", dateFieldModel));
-		dateField.add(new DatePicker());
-		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
-		hoursField.add(NumberValidator.range(0, 12));
-		hoursField.setLabel(new Model("hours"));
-		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
-				Integer.class)
-		{
-			private static final long serialVersionUID = 1L;
-
-			public IConverter getConverter(Class type)
-			{
-				return MINUTES_CONVERTER;
-			}
-		});
-		minutesField.add(NumberValidator.range(0, 59));
-		minutesField.setLabel(new Model("minutes"));
-		add(amOrPmChoice = new DropDownChoice("amOrPmChoice", new PropertyModel(this, "amOrPm"),
-				Arrays.asList(AM_PM.values())));
 	}
 
 	/**

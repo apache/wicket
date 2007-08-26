@@ -36,7 +36,7 @@ public class DateField extends FormComponentPanel
 
 	private MutableDateTime date;
 
-	private DateTextField dateField;
+	private final DateTextField dateField;
 
 	/**
 	 * Construct.
@@ -45,8 +45,7 @@ public class DateField extends FormComponentPanel
 	 */
 	public DateField(String id)
 	{
-		super(id);
-		init();
+		this(id, null);
 	}
 
 	/**
@@ -58,7 +57,10 @@ public class DateField extends FormComponentPanel
 	public DateField(String id, IModel model)
 	{
 		super(id, model);
-		init();
+		setType(Date.class);
+		PropertyModel dateFieldModel = new PropertyModel(this, "date");
+		add(dateField = newDateTextField("date", dateFieldModel));
+		dateField.add(new DatePicker());
 	}
 
 	/**
@@ -91,17 +93,6 @@ public class DateField extends FormComponentPanel
 	{
 		this.date = (date != null) ? new MutableDateTime(date) : null;
 		setModelObject(date);
-	}
-
-	/**
-	 * Initialize.
-	 */
-	private void init()
-	{
-		setType(Date.class);
-		PropertyModel dateFieldModel = new PropertyModel(this, "date");
-		add(dateField = newDateTextField("date", dateFieldModel));
-		dateField.add(new DatePicker());
 	}
 
 	/**
