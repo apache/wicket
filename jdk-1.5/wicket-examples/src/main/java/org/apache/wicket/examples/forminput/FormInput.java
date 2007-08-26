@@ -258,7 +258,7 @@ public class FormInput extends WicketExamplePage
 		 */
 		public LocaleDropDownChoice(String id)
 		{
-			super(id, LOCALES, new LocaleChoiceRenderer());
+			super(id, FormInputApplication.LOCALES, new LocaleChoiceRenderer());
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
@@ -289,12 +289,6 @@ public class FormInput extends WicketExamplePage
 			return true;
 		}
 	}
-
-	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
-			new Locale("nl", "NL"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
-			new Locale("th", "TH"), new Locale("ru") });
 
 	/** available sites for the multiple select. */
 	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",

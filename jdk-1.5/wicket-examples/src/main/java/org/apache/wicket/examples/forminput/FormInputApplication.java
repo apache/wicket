@@ -17,11 +17,17 @@
 package org.apache.wicket.examples.forminput;
 
 import java.awt.Font;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
+import org.apache.wicket.Request;
+import org.apache.wicket.Response;
+import org.apache.wicket.Session;
 import org.apache.wicket.SharedResources;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
+import org.apache.wicket.protocol.http.WebSession;
 
 
 /**
@@ -31,6 +37,12 @@ import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
  */
 public class FormInputApplication extends WicketExampleApplication
 {
+	/** Relevant locales wrapped in a list. */
+	public static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
+			new Locale("nl", "NL"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
+			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
+			new Locale("th", "TH"), new Locale("ru") });
+
 	/**
 	 * Constructor.
 	 */
@@ -44,6 +56,22 @@ public class FormInputApplication extends WicketExampleApplication
 	public Class getHomePage()
 	{
 		return FormInput.class;
+	}
+
+	/**
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+	 *      org.apache.wicket.Response)
+	 */
+	@Override
+	public Session newSession(Request request, Response response)
+	{
+		WebSession session = new WebSession(request);
+		Locale locale = session.getLocale();
+		if (!LOCALES.contains(locale))
+		{
+			session.setLocale(Locale.ENGLISH);
+		}
+		return session;
 	}
 
 	/**
@@ -62,7 +90,7 @@ public class FormInputApplication extends WicketExampleApplication
 		SharedResources sharedResources = getSharedResources();
 		sharedResources.add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
 		sharedResources.add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
-		
+
 		// Japanese buttons
 		Font fontJa = new Font("Serif", Font.BOLD, 16);
 		DefaultButtonImageResource imgSaveJa = new DefaultButtonImageResource("\u4fdd\u5b58");
