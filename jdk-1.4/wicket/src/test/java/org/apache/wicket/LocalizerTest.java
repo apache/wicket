@@ -157,11 +157,13 @@ public class LocalizerTest extends WicketTestCase
 				new ComponentStringResourceLoader());
 
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
-		String drop1 = localizer.getString("null", page.drop1);
-		String drop2 = localizer.getString("null", page.drop2);
+		assertEquals("value 1", localizer.getString("null", page.drop1));
+		assertEquals("value 2", localizer.getString("null", page.drop2));
 
-		assertEquals("value 1", drop1);
-		assertEquals("value 2", drop2);
+		Session.get().setLocale(new Locale("nl"));
+		assertEquals("waarde 1", localizer.getString("null", page.drop1));
+		assertEquals("waarde 2", localizer.getString("null", page.drop2));
+
 	}
 
 	/**
@@ -171,12 +173,14 @@ public class LocalizerTest extends WicketTestCase
 	{
 		HashMap model = new HashMap();
 		model.put("user", "juergen");
-		
+
 		Assert.assertEquals("Expected string should be returned", "Welcome, juergen", localizer
-				.getString("test.substitute", null, new PropertyModel(model, null), "DEFAULT {user}"));
-		
+				.getString("test.substitute", null, new PropertyModel(model, null),
+						"DEFAULT {user}"));
+
 		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen", localizer
-				.getString("test.substituteDoesNotExist", null, new PropertyModel(model, null), "DEFAULT ${user}"));
+				.getString("test.substituteDoesNotExist", null, new PropertyModel(model, null),
+						"DEFAULT ${user}"));
 	}
 
 	/**
