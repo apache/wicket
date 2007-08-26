@@ -72,6 +72,23 @@ public class PageMarkupLoadingTest extends WicketTestCase
 		tester.assertResultPage(getClass(), "PageMarkupLoadingTest$Page1_mystyle_nl_expected.html");
 	}
 
+	/**
+	 * Test Dutch/ my style locale loaded page.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDutchMyStyleMyVar() throws Exception
+	{
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
+		cycle.getSession().setLocale(new Locale("nl"));
+		cycle.getSession().setStyle("mystyle");
+		tester.startPage(Page2.class);
+		tester.assertRenderedPage(Page2.class);
+		tester.assertResultPage(getClass(),
+				"PageMarkupLoadingTest$Page2_myvar_mystyle_nl_expected.html");
+	}
+
 	/** simple test page */
 	public static class Page1 extends WebPage
 	{
@@ -80,6 +97,22 @@ public class PageMarkupLoadingTest extends WicketTestCase
 		/** Construct. */
 		public Page1()
 		{
+		}
+	}
+
+	/** simple test page */
+	public static class Page2 extends WebPage
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** Construct. */
+		public Page2()
+		{
+		}
+
+		public String getVariation()
+		{
+			return "myvar";
 		}
 	}
 }
