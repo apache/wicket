@@ -48,6 +48,8 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 		tester.assertErrorMessages(new String[] { "'foo' is geen valide type van Integer." });
 		tester.getWicketSession().setLocale(new Locale("us"));
 
+		tester.getWicketSession().cleanupFeedbackMessages();
+
 		tester.setupRequestAndResponse();
 
 		page = new LocalizedMessagePage();
