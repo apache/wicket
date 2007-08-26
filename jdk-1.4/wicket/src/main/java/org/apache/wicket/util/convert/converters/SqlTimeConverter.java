@@ -17,8 +17,12 @@
 package org.apache.wicket.util.convert.converters;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
+
+import org.apache.wicket.util.convert.ConversionException;
 
 /**
  * Converts to {@link Time}.
@@ -28,21 +32,40 @@ public class SqlTimeConverter extends DateConverter
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,
-	 *      java.util.Locale)
-	 */
+	/** @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
 	public Object convertToObject(String value, Locale locale)
 	{
-		return new Time(((Date)super.convertToObject(value, locale)).getTime());
+		if (value == null)
+			return null;
+		if (locale == null)
+			locale = Locale.getDefault();
+		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		try
+		{
+			Date date = format.parse(value);
+			return new Time(date.getTime());
+		}
+		catch (ParseException e)
+		{
+			throw new ConversionException("Cannot parse '" + value + "' using format " + format)
+					.setSourceValue(value).setTargetType(getTargetType()).setConverter(this)
+					.setLocale(locale);
+		}
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.converters.DateConverter#getTargetType()
-	 */
+	public String convertToString(final Object value, Locale locale)
+	{
+		if (value == null)
+			return null;
+		if (locale == null)
+			locale = Locale.getDefault();
+		Time time = (Time)value;
+		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		return format.format(time);
+	}
+
 	protected Class getTargetType()
 	{
 		return Time.class;
 	}
-
 }

@@ -17,30 +17,55 @@
 package org.apache.wicket.util.convert.converters;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
+
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 
 /**
  * Converts to {@link Timestamp}.
  * 
  * @author eelcohillenius
  */
-public class SqlTimestampConverter extends DateConverter
+public class SqlTimestampConverter implements IConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,
-	 *      java.util.Locale)
-	 */
+	/** @see org.apache.wicket.util.convert.converters.DateConverter#convertToObject(java.lang.String,java.util.Locale) */
 	public Object convertToObject(String value, Locale locale)
 	{
-		return new Timestamp(((Date)super.convertToObject(value, locale)).getTime());
+		if (value == null)
+			return null;
+		if (locale == null)
+			locale = Locale.getDefault();
+		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		try
+		{
+			Date date = format.parse(value);
+			return new Timestamp(date.getTime());
+		}
+		catch (ParseException e)
+		{
+			throw new ConversionException("Cannot parse '" + value + "' using format " + format)
+					.setSourceValue(value).setTargetType(getTargetType()).setConverter(this)
+					.setLocale(locale);
+		}
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.converters.DateConverter#getTargetType()
-	 */
+	public String convertToString(final Object value, Locale locale)
+	{
+		if (value == null)
+			return null;
+		if (locale == null)
+			locale = Locale.getDefault();
+		Timestamp timestamp = (Timestamp)value;
+		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		return format.format(timestamp);
+	}
+
 	protected Class getTargetType()
 	{
 		return Timestamp.class;
