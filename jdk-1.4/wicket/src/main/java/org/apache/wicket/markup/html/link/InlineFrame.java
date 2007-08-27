@@ -35,6 +35,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Sven Meier
  * @author Ralf Ebert
  */
+
 public class InlineFrame extends WebMarkupContainer implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
@@ -220,5 +221,22 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	public final IPageMap getPageMap()
 	{
 		return PageMap.forName(pageMapName);
+	}
+
+	protected boolean getStatelessHint()
+	{
+		/*
+		 * TODO optimization: the inlineframe component does not always have to be stateless.
+		 * 
+		 * unfortunately due to current implementation always using ipagelink and a ilinklistener
+		 * callback it has to always be *stateful* because it can be put inside a listview item
+		 * which will not be built upon a stateless callback causing a "component at path
+		 * listview:0:iframe not found" error.
+		 * 
+		 * eventually variant such as (string, ipagemap, class<? extends Page>) can be made
+		 * stateless because they can generate a bookmarkable url. another advantage of a
+		 * bookmarkable url is that multiple iframes will not block.
+		 */
+		return false;
 	}
 }
