@@ -27,7 +27,7 @@ import org.apache.wicket.model.IModel;
 public class TextField extends AbstractTextComponent
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
@@ -85,30 +85,29 @@ public class TextField extends AbstractTextComponent
 
 		// check for text type
 		String inputType = getInputType();
-		if(inputType != null)
+		if (inputType != null)
 		{
 			checkComponentTagAttribute(tag, "type", inputType);
 		}
 		else
 		{
-			if(tag.getAttributes().containsKey("type"))
+			if (tag.getAttributes().containsKey("type"))
 			{
 				checkComponentTagAttribute(tag, "type", "text");
 			}
 		}
 
-		// No validation errors
 		tag.put("value", getValue());
-		
+
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
 
 	/**
-	 * Subclass should override this method if this textfields mappes on a different
-	 * input type as text. Like PasswordField or HiddenField.
+	 * Subclass should override this method if this textfields mappes on a different input type as
+	 * text. Like PasswordField or HiddenField.
 	 * 
-	 * @return The input type of this textfield, default is 'text'
+	 * @return The input type of this textfield, default is null
 	 */
 	protected String getInputType()
 	{
