@@ -883,9 +883,10 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Clean up the request cycle.
+	 * THIS METHOD IS WICKET PRIVATE API. DO NOT CALL UNLESS YOU KNOW WHAT YOU ARE DOING. Clean up
+	 * the request cycle.
 	 */
-	private void detach()
+	public void detach()
 	{
 		// clean up target stack; calling detach has effects like
 		// NOTE: don't remove the targets as testing code might need them

@@ -139,6 +139,12 @@ public class WicketFilter implements Filter
 					httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 				}
 			}
+			// we might have created a request cycle inside getLastModified, so we need to
+			// clean it here (in case the doGet method was not called
+			if (RequestCycle.get() != null)
+			{
+				RequestCycle.get().detach();
+			}
 		}
 		else
 		{
