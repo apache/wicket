@@ -36,9 +36,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Abstract implementation of {@link ISessionStore} that works with web
- * applications and that provided some speficic http servlet/ session related
- * functionality.
+ * Abstract implementation of {@link ISessionStore} that works with web applications and that
+ * provided some speficic http servlet/ session related functionality.
  * 
  * @author jcompagner
  * @author Eelco Hillenius
@@ -47,8 +46,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 {
 
 	/**
-	 * Reacts on unbinding from the session by cleaning up the session related
-	 * application data.
+	 * Reacts on unbinding from the session by cleaning up the session related application data.
 	 */
 	protected static final class SessionBindingListener
 			implements
@@ -57,11 +55,11 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	{
 		private static final long serialVersionUID = 1L;
 
-		/** Session id. */
-		private final String sessionId;
-
 		/** The unique key of the application within this web application. */
 		private final String applicationKey;
+
+		/** Session id. */
+		private final String sessionId;
 
 		/** Whether it is already unbound. */
 		private boolean unbound = false;
@@ -70,8 +68,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		 * Construct.
 		 * 
 		 * @param applicationKey
-		 *            The unique key of the application within this web
-		 *            application
+		 *            The unique key of the application within this web application
 		 * @param sessionId
 		 *            The session's id
 		 */
@@ -106,7 +103,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/** log. */
-	protected static Logger log = LoggerFactory.getLogger(AbstractHttpSessionStore.class);
+	private static Logger log = LoggerFactory.getLogger(AbstractHttpSessionStore.class);
 
 	/** The web application for this store. Is never null. */
 	protected final WebApplication application;
@@ -126,8 +123,8 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		// sanity check
 		if (!(application instanceof WebApplication))
 		{
-			throw new IllegalStateException(getClass().getName()
-					+ " can only operate in the context of web applications");
+			throw new IllegalStateException(getClass().getName() +
+					" can only operate in the context of web applications");
 		}
 		this.application = (WebApplication)application;
 	}
@@ -154,6 +151,19 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
+	 * DO NOT USE.
+	 * 
+	 * @param name
+	 * @param session
+	 * @return
+	 * @deprecated remove after deprecation release
+	 */
+	public final IPageMap createPageMap(String name, Session session)
+	{
+		throw new UnsupportedOperationException("obsolete method");
+	}
+
+	/**
 	 * @see org.apache.wicket.session.ISessionStore#destroy()
 	 */
 	public void destroy()
@@ -162,8 +172,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.Request,
-	 *      boolean)
+	 * @see org.apache.wicket.session.ISessionStore#getSessionId(org.apache.wicket.Request, boolean)
 	 */
 	public final String getSessionId(Request request, boolean create)
 	{
@@ -273,11 +282,10 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	/**
 	 * Gets the underlying HttpSession object or null.
 	 * <p>
-	 * WARNING: it is a bad idea to depend on the http session object directly.
-	 * Please use the classes and methods that are exposed by Wicket instead.
-	 * Send an email to the mailing list in case it is not clear how to do
-	 * things or you think you miss funcionality which causes you to depend on
-	 * this directly.
+	 * WARNING: it is a bad idea to depend on the http session object directly. Please use the
+	 * classes and methods that are exposed by Wicket instead. Send an email to the mailing list in
+	 * case it is not clear how to do things or you think you miss funcionality which causes you to
+	 * depend on this directly.
 	 * </p>
 	 * 
 	 * @param request
@@ -290,10 +298,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * Template method that is called when a session is being bound to the
-	 * session store. It is called <strong>before</strong> the session object
-	 * itself is added to this store (which is done by calling
-	 * {@link ISessionStore#setAttribute(Request, String, Object)} with key
+	 * Template method that is called when a session is being bound to the session store. It is
+	 * called <strong>before</strong> the session object itself is added to this store (which is
+	 * done by calling {@link ISessionStore#setAttribute(Request, String, Object)} with key
 	 * {@link Session#SESSION_ATTRIBUTE_NAME}.
 	 * 
 	 * @param request
@@ -306,8 +313,8 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * Template method that is called when the session is being detached from
-	 * the store, which typically happens when the httpsession was invalidated.
+	 * Template method that is called when the session is being detached from the store, which
+	 * typically happens when the httpsession was invalidated.
 	 * 
 	 * @param sessionId
 	 *            The session id of the session that was invalidated.
@@ -315,6 +322,8 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	protected void onUnbind(String sessionId)
 	{
 	}
+
+	// TODO remove after deprecation release
 
 	/**
 	 * Cast {@link Request} to {@link WebRequest}.
@@ -331,24 +340,9 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 		}
 		if (!(request instanceof WebRequest))
 		{
-			throw new IllegalArgumentException(getClass().getName()
-					+ " can only work with WebRequests");
+			throw new IllegalArgumentException(getClass().getName() +
+					" can only work with WebRequests");
 		}
 		return (WebRequest)request;
-	}
-
-	// TODO remove after deprecation release
-
-	/**
-	 * DO NOT USE.
-	 * 
-	 * @param name
-	 * @param session
-	 * @return
-	 * @deprecated remove after deprecation release
-	 */
-	public final IPageMap createPageMap(String name, Session session)
-	{
-		throw new UnsupportedOperationException("obsolete method");
 	}
 }

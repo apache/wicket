@@ -34,6 +34,8 @@ import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.Change;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -43,11 +45,12 @@ import org.apache.wicket.version.undo.Change;
  */
 public class SecondLevelCacheSessionStore extends HttpSessionStore
 {
+	private static Logger log = LoggerFactory.getLogger(SecondLevelCacheSessionStore.class);
+
 	/**
-	 * This interface is used by the SecondLevelCacheSessionStore so that pages
-	 * can be stored to a persistent layer. Implementation should store the page
-	 * that it gets under the id and version number. So that every page version
-	 * can be reconstructed when asked for.
+	 * This interface is used by the SecondLevelCacheSessionStore so that pages can be stored to a
+	 * persistent layer. Implementation should store the page that it gets under the id and version
+	 * number. So that every page version can be reconstructed when asked for.
 	 * 
 	 * @see DiskPageStore as default implementation.
 	 */
@@ -62,13 +65,12 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * Restores a page version from the persistent layer.
 		 * <p>
-		 * Note that the versionNumber and ajaxVersionNumber parameters may be
-		 * -1.
+		 * Note that the versionNumber and ajaxVersionNumber parameters may be -1.
 		 * <ul>
-		 * <li>If ajaxVersionNumber is -1 and versionNumber is specified, the
-		 * page store must return the page with highest ajax version.
-		 * <li>If both versionNumber and ajaxVersioNumber are -1, the pagestore
-		 * must return last touched (saved) page version with given id.
+		 * <li>If ajaxVersionNumber is -1 and versionNumber is specified, the page store must
+		 * return the page with highest ajax version.
+		 * <li>If both versionNumber and ajaxVersioNumber are -1, the pagestore must return last
+		 * touched (saved) page version with given id.
 		 * </ul>
 		 * 
 		 * @param sessionId
@@ -82,9 +84,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				int ajaxVersionNumber);
 
 		/**
-		 * This method is called when the page is accessed. A IPageStore
-		 * implementation can block until a save of that page version is done.
-		 * So that a specific page version is always restore able.
+		 * This method is called when the page is accessed. A IPageStore implementation can block
+		 * until a save of that page version is done. So that a specific page version is always
+		 * restore able.
 		 * 
 		 * @param sessionId
 		 * @param page
@@ -104,8 +106,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		void removePage(String sessionId, String pagemap, int id);
 
 		/**
-		 * Stores the page to a persistent layer. The page should be stored
-		 * under the id and the version number.
+		 * Stores the page to a persistent layer. The page should be stored under the id and the
+		 * version number.
 		 * 
 		 * @param sessionId
 		 * @param page
@@ -137,9 +139,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	}
 
 	/**
-	 * Marker interface for PageStores that support replication of serialized
-	 * pages across cluster, which means that the lastPage attribute of
-	 * {@link SecondLevelCachePageMap} does not have to be serialized;
+	 * Marker interface for PageStores that support replication of serialized pages across cluster,
+	 * which means that the lastPage attribute of {@link SecondLevelCachePageMap} does not have to
+	 * be serialized;
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -149,11 +151,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	};
 
 	/**
-	 * Some PageStores might want to preprocess page before serialization. For
-	 * example if the PageStore serializes page, it might keep the serialized
-	 * page during the request. So when the pagemap gets serialized (for session
-	 * replication) in the request thread, the pagestore can provide the already
-	 * serialized data.
+	 * Some PageStores might want to preprocess page before serialization. For example if the
+	 * PageStore serializes page, it might keep the serialized page during the request. So when the
+	 * pagemap gets serialized (for session replication) in the request thread, the pagestore can
+	 * provide the already serialized data.
 	 * 
 	 * @author Matej Knopp
 	 */
