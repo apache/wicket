@@ -28,20 +28,18 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * Holds an immutable String value and optionally a Locale, with methods to
- * convert to various types. Also provides some handy parsing methods and a
- * variety of static factory methods.
+ * Holds an immutable String value and optionally a Locale, with methods to convert to various
+ * types. Also provides some handy parsing methods and a variety of static factory methods.
  * <p>
- * Objects can be constructed directly from Strings or by using the valueOf()
- * static factory methods. The repeat() static factory methods provide a way of
- * generating a String value that repeats a given char or String a number of
- * times.
+ * Objects can be constructed directly from Strings or by using the valueOf() static factory
+ * methods. The repeat() static factory methods provide a way of generating a String value that
+ * repeats a given char or String a number of times.
  * <p>
- * Conversions to a wide variety of types can be found in the to*() methods. A
- * generic conversion can be achieved with to(Class).
+ * Conversions to a wide variety of types can be found in the to*() methods. A generic conversion
+ * can be achieved with to(Class).
  * <P>
- * The beforeFirst(), afterFirst(), beforeLast() and afterLast() methods are
- * handy for parsing things like paths and filenames.
+ * The beforeFirst(), afterFirst(), beforeLast() and afterLast() methods are handy for parsing
+ * things like paths and filenames.
  * 
  * @author Jonathan Locke
  */
@@ -51,7 +49,7 @@ public class StringValue implements IClusterable
 
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
-	
+
 	/** The underlying string. */
 	private final String text;
 
@@ -114,8 +112,7 @@ public class StringValue implements IClusterable
 	 *            Number of places after decimal
 	 * @param locale
 	 *            Locale to be used for formatting
-	 * @return String value formatted with the given number of places after
-	 *         decimal
+	 * @return String value formatted with the given number of places after decimal
 	 */
 	public static StringValue valueOf(final double value, final int places, final Locale locale)
 	{
@@ -218,7 +215,7 @@ public class StringValue implements IClusterable
 	protected StringValue(final String text)
 	{
 		this.text = text;
-		this.locale = Locale.getDefault();
+		locale = Locale.getDefault();
 	}
 
 	/**
@@ -292,7 +289,8 @@ public class StringValue implements IClusterable
 	 *            What to replace with
 	 * @return This string value with searchFor replaces with replaceWith
 	 */
-	public final CharSequence replaceAll(final CharSequence searchFor, final CharSequence replaceWith)
+	public final CharSequence replaceAll(final CharSequence searchFor,
+			final CharSequence replaceWith)
 	{
 		return Strings.replaceAll(text, searchFor, replaceWith);
 	}
@@ -347,8 +345,8 @@ public class StringValue implements IClusterable
 			return toDuration();
 		}
 
-		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type "
-				+ type);
+		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type " +
+				type);
 	}
 
 	/**
@@ -377,8 +375,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a boolean and convert unchecked
-	 * NumberFormatExceptions to checked.
+	 * Convert this text to a boolean.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -413,8 +410,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a Character and convert unchecked
-	 * NumberFormatExceptions to checked.
+	 * Convert this text to a Character.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -425,8 +421,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a double and convert unchecked
-	 * NumberFormatExceptions to checked.
+	 * Convert this text to a double.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -435,12 +430,12 @@ public class StringValue implements IClusterable
 	{
 		try
 		{
-			return NumberFormat.getNumberInstance(this.locale).parse(text).doubleValue();
+			return NumberFormat.getNumberInstance(locale).parse(text).doubleValue();
 		}
 		catch (ParseException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-					+ "' to a double value", e);
+			throw new StringValueConversionException("Unable to convert '" + text +
+					"' to a double value", e);
 		}
 	}
 
@@ -458,8 +453,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a Double and convert unchecked
-	 * NumberFormatExceptions to checked.
+	 * Convert this text to a Double.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -470,15 +464,14 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a Duration instance and convert unchecked
-	 * NumberFormatExceptions to checked.
+	 * Convert this text to a Duration instance.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
 	public final Duration toDuration() throws StringValueConversionException
 	{
-		return Duration.valueOf(text, this.locale);
+		return Duration.valueOf(text, locale);
 	}
 
 	/**
@@ -496,8 +489,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to an int and convert unchecked NumberFormatExceptions
-	 * to checked.
+	 * Convert this text to an int.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -510,8 +502,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-					+ "' to an int value", e);
+			throw new StringValueConversionException("Unable to convert '" + text +
+					"' to an int value", e);
 		}
 	}
 
@@ -529,8 +521,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to an Integer and convert unchecked
-	 * NumberFormatExceptions to checked.
+	 * Convert this text to an Integer.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -543,14 +534,13 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-					+ "' to an Integer value", e);
+			throw new StringValueConversionException("Unable to convert '" + text +
+					"' to an Integer value", e);
 		}
 	}
 
 	/**
-	 * Convert this text to a long and convert unchecked NumberFormatExceptions
-	 * to checked.
+	 * Convert this text to a long.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -563,8 +553,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-					+ "' to a long value", e);
+			throw new StringValueConversionException("Unable to convert '" + text +
+					"' to a long value", e);
 		}
 	}
 
@@ -582,8 +572,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a Long and convert unchecked NumberFormatExceptions
-	 * to checked.
+	 * Convert this text to a Long.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -596,8 +585,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-					+ "' to a Long value", e);
+			throw new StringValueConversionException("Unable to convert '" + text +
+					"' to a Long value", e);
 		}
 	}
 
@@ -709,8 +698,7 @@ public class StringValue implements IClusterable
 	}
 
 	/**
-	 * Convert this text to a time instance and convert unchecked
-	 * NumberFormatExceptions to checked.
+	 * Convert this text to a time instance.
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
@@ -723,8 +711,8 @@ public class StringValue implements IClusterable
 		}
 		catch (ParseException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-					+ "' to a Time value", e);
+			throw new StringValueConversionException("Unable to convert '" + text +
+					"' to a Time value", e);
 		}
 	}
 
