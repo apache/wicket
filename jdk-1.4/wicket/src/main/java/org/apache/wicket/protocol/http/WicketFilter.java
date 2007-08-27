@@ -115,35 +115,55 @@ public class WicketFilter implements Filter
 
 		if (isWicketRequest(relativePath))
 		{
-			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-			long lastModified = getLastModified(httpServletRequest, httpServletResponse);
-			if (lastModified == -1)
+			// Set the webapplication for this thread
+			Application.set(webApplication);
+
+			try
 			{
-				// servlet doesn't support if-modified-since, no reason
-				// to go through further expensive logic
-				doGet(httpServletRequest, httpServletResponse);
-			}
-			else
-			{
-				long ifModifiedSince = httpServletRequest.getDateHeader("If-Modified-Since");
-				if (ifModifiedSince < (lastModified / 1000 * 1000))
+				HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+				long lastModified = getLastModified(httpServletRequest, httpServletResponse);
+				if (lastModified == -1)
 				{
-					// If the servlet mod time is later, call doGet()
-					// Round down to the nearest second for a proper compare
-					// A ifModifiedSince of -1 will always be less
-					maybeSetLastModified(httpServletResponse, lastModified);
+					// servlet doesn't support if-modified-since, no reason
+					// to go through further expensive logic
 					doGet(httpServletRequest, httpServletResponse);
 				}
 				else
 				{
-					httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					long ifModifiedSince = httpServletRequest.getDateHeader("If-Modified-Since");
+					if (ifModifiedSince < (lastModified / 1000 * 1000))
+					{
+						// If the servlet mod time is later, call doGet()
+						// Round down to the nearest second for a proper compare
+						// A ifModifiedSince of -1 will always be less
+						maybeSetLastModified(httpServletResponse, lastModified);
+						doGet(httpServletRequest, httpServletResponse);
+					}
+					else
+					{
+						httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					}
 				}
 			}
-			// we might have created a request cycle inside getLastModified, so we need to
-			// clean it here (in case the doGet method was not called
-			if (RequestCycle.get() != null)
+			finally
 			{
-				RequestCycle.get().detach();
+				// we might have created a request cycle inside getLastModified, so we need to
+				// clean it here (in case the doGet method was not called
+				if (RequestCycle.get() != null)
+				{
+					try
+					{
+						RequestCycle.get().detach();
+					}
+					catch (RuntimeException e)
+					{
+						log.error("error detaching request cycle " + RequestCycle.get() + ": " +
+								e.getMessage(), e);
+					}
+				}
+
+				// always unset the application thread local
+				Application.unset();
 			}
 		}
 		else
@@ -248,9 +268,6 @@ public class WicketFilter implements Filter
 					}
 				}
 			}
-
-			// First, set the webapplication for this thread
-			Application.set(webApplication);
 
 			// Create a response object and set the output encoding according to
 			// wicket's application setttings.
@@ -418,6 +435,7 @@ public class WicketFilter implements Filter
 			String contextKey = "wicket:" + filterConfig.getFilterName();
 			filterConfig.getServletContext().setAttribute(contextKey, webApplication);
 
+			// set the application thread local in case initialization code uses it
 			Application.set(webApplication);
 
 			// Call internal init method of web application for default
@@ -721,19 +739,19 @@ public class WicketFilter implements Filter
 			final String resourceReferenceKey = pathInfo
 					.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
 
-			final WebRequest request = webApplication.newWebRequest(servletRequest);
-			final WebResponse response = webApplication.newWebResponse(servletResponse);
-			RequestCycle cycle = webApplication.newRequestCycle(request, response);
-
-			// Try to find shared resource
-			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
-
-			// If resource found and it is cacheable
-			if ((resource != null) && resource.isCacheable())
+			Resource resource = null;
+			try
 			{
-				try
+				final WebRequest request = webApplication.newWebRequest(servletRequest);
+				final WebResponse response = webApplication.newWebResponse(servletResponse);
+				RequestCycle cycle = webApplication.newRequestCycle(request, response);
+
+				// Try to find shared resource
+				resource = webApplication.getSharedResources().get(resourceReferenceKey);
+
+				// If resource found and it is cacheable
+				if ((resource != null) && resource.isCacheable())
 				{
-					Application.set(webApplication);
 
 					// Set parameters from servlet request
 					resource.setParameters(request.getParameterMap());
@@ -755,14 +773,16 @@ public class WicketFilter implements Filter
 
 					return time != null ? time.getMilliseconds() : -1;
 				}
-				catch (AbortException e)
-				{
-					return -1;
-				}
-				finally
+			}
+			catch (AbortException e)
+			{
+				return -1;
+			}
+			finally
+			{
+				if (resource != null)
 				{
 					resource.setParameters(null);
-					Application.unset();
 				}
 			}
 		}
