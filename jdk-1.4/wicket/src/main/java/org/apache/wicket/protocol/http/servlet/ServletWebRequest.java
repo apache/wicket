@@ -82,10 +82,9 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * Returns the preferred <code>Locale</code> that the client will accept
-	 * content in, based on the Accept-Language header. If the client request
-	 * doesn't provide an Accept-Language header, this method returns the
-	 * default locale for the server.
+	 * Returns the preferred <code>Locale</code> that the client will accept content in, based on
+	 * the Accept-Language header. If the client request doesn't provide an Accept-Language header,
+	 * this method returns the default locale for the server.
 	 * 
 	 * @return the preferred <code>Locale</code> for the client
 	 */
@@ -177,7 +176,16 @@ public class ServletWebRequest extends WebRequest
 		String wicketPath = "";
 
 		// We're running as a filter.
-		String servletPath = Strings.replaceAll(getServletPath(), "%3A", ":").toString();
+		String servletPath;
+		try
+		{
+			servletPath = URLDecoder.decode(Strings.replaceAll(getServletPath(), "%3A", ":")
+					.toString(), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 
 		// We need to substibute the %3A (or the other way around) to be able to
 		// get a good match, as parts of the path may have been escaped while
@@ -247,15 +255,15 @@ public class ServletWebRequest extends WebRequest
 		/*
 		 * We might be serving an error page.
 		 * 
-		 * In this case, the request will appear to be for something like
-		 * "/ErrorPage", whereas the URL in the user's browser will actually be
-		 * something like "/foo/page/where/the/error/actually/happened".
+		 * In this case, the request will appear to be for something like "/ErrorPage", whereas the
+		 * URL in the user's browser will actually be something like
+		 * "/foo/page/where/the/error/actually/happened".
 		 * 
-		 * We need to generate links and resource URLs relative to the URL in
-		 * the browser window, not the internal request for the error page.
+		 * We need to generate links and resource URLs relative to the URL in the browser window,
+		 * not the internal request for the error page.
 		 * 
-		 * This original URL is available from request attributes, so we look in
-		 * there and use that for the relative path if it's available.
+		 * This original URL is available from request attributes, so we look in there and use that
+		 * for the relative path if it's available.
 		 */
 
 		HttpServletRequest httpRequest = getHttpServletRequest();
@@ -334,14 +342,13 @@ public class ServletWebRequest extends WebRequest
 		/*
 		 * Servlet 2.3 specification :
 		 * 
-		 * Servlet Path: The path section that directly corresponds to the
-		 * mapping which activated this request. This path starts with a "/"
-		 * character except in the case where the request is matched with the
-		 * "/*" pattern, in which case it is the empty string.
+		 * Servlet Path: The path section that directly corresponds to the mapping which activated
+		 * this request. This path starts with a "/" character except in the case where the request
+		 * is matched with the "/*" pattern, in which case it is the empty string.
 		 * 
-		 * PathInfo: The part of the request path that is not part of the
-		 * Context Path or the Servlet Path. It is either null if there is no
-		 * extra path, or is a string with a leading "/".
+		 * PathInfo: The part of the request path that is not part of the Context Path or the
+		 * Servlet Path. It is either null if there is no extra path, or is a string with a leading
+		 * "/".
 		 */
 		String url = getServletPath();
 		final String pathInfo = httpServletRequest.getPathInfo();
@@ -406,12 +413,11 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	/**
-	 * This method by default calls isAjax(), wicket ajax request do have an
-	 * header set. And for all the ajax request the versioning should be merged
-	 * with the previous one. And when it sees that the current request is a
-	 * redirect to page request the version will also be merged with the
-	 * previous one because refresh in the browser or redirects to a page
-	 * shouldn't generate a new version.
+	 * This method by default calls isAjax(), wicket ajax request do have an header set. And for all
+	 * the ajax request the versioning should be merged with the previous one. And when it sees that
+	 * the current request is a redirect to page request the version will also be merged with the
+	 * previous one because refresh in the browser or redirects to a page shouldn't generate a new
+	 * version.
 	 * 
 	 * @see org.apache.wicket.Request#mergeVersion()
 	 */
