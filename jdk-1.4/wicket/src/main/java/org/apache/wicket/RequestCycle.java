@@ -164,13 +164,10 @@ public abstract class RequestCycle
 	private static final ThreadLocal current = new ThreadLocal();
 
 	/** Cleaning up after responding to a request. */
-	private static final int DETACH_REQUEST = 6;
+	private static final int DETACH_REQUEST = 5;
 
 	/** Request cycle processing is done. */
-	private static final int DONE = 7;
-
-	/** Responding to an uncaught exception. */
-	private static final int HANDLE_EXCEPTION = 5;
+	private static final int DONE = 6;
 
 	/** Log */
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
@@ -222,6 +219,8 @@ public abstract class RequestCycle
 
 	/** The current stage of event processing. */
 	private int currentStep = NOT_STARTED;
+
+	private boolean handlingException = false;
 
 	/** The original response the request cycle was created with. */
 	private final Response originalResponse;
@@ -1112,23 +1111,31 @@ public abstract class RequestCycle
 		}
 		catch (RuntimeException e)
 		{
-			// set step manually to handle exception
-			currentStep = HANDLE_EXCEPTION;
-
-			// probably our last chance the exception can be logged.
-			// Note that a PageExpiredException should not be logged, because
-			// it's not an internal error
-			if (!(e instanceof PageExpiredException))
+			if (!handlingException)
 			{
-				logRuntimeException(e);
+				// set step manually to handle exception
+				handlingException = true;
+
+				// probably our last chance the exception can be logged.
+				// Note that a PageExpiredException should not be logged, because
+				// it's not an internal error
+				if (!(e instanceof PageExpiredException))
+				{
+					logRuntimeException(e);
+				}
+
+				// try to play nicely and let the request processor handle the
+				// exception response. If that doesn't work, any runtime exception
+				// will automatically be bubbled up
+				if (processor != null)
+				{
+					processor.respond(e, this);
+				}
 			}
-
-			// try to play nicely and let the request processor handle the
-			// exception response. If that doesn't work, any runtime exception
-			// will automatically be bubbled up
-			if (processor != null)
+			else
 			{
-				processor.respond(e, this);
+				// hmmm, we were already handling an exception! give up
+				log.error("unexpected exception when handling another exception", e);
 			}
 		}
 	}
