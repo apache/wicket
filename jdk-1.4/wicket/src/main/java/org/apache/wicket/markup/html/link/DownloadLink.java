@@ -27,8 +27,13 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * A link that streams a file to the client. When clicked this link will prompt
- * the save as dialog in the browser.
+ * A link that streams a file to the client. When clicked this link will prompt the save as dialog
+ * in the browser.
+ * 
+ * NOTICE that this link will block the pagemap. That means only one link from the pagemap can be
+ * downloaded at a time, and also while the download happens no pages from this pagemap can be
+ * accessed. If you need to stream multiple files concurrently without blocking then you should use
+ * shared resources or a non-wicket servlet.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -46,8 +51,7 @@ public class DownloadLink extends Link
 
 
 	/**
-	 * Constructor. File name used will be the result of
-	 * <code>file.getName()</code>
+	 * Constructor. File name used will be the result of <code>file.getName()</code>
 	 * 
 	 * @param id
 	 *            component id
@@ -65,8 +69,7 @@ public class DownloadLink extends Link
 	}
 
 	/**
-	 * Constructor. File name used will be the result of
-	 * <code>file.getName()</code>
+	 * Constructor. File name used will be the result of <code>file.getName()</code>
 	 * 
 	 * @param id
 	 *            component id
@@ -79,8 +82,7 @@ public class DownloadLink extends Link
 	}
 
 	/**
-	 * Constructor. File name used will be the result of
-	 * <code>file.getName()</code>
+	 * Constructor. File name used will be the result of <code>file.getName()</code>
 	 * 
 	 * @param id
 	 *            component id
