@@ -17,16 +17,14 @@
 package org.apache.wicket.util.string.interpolator;
 
 /**
- * Base class for variable interpolators. An interpolator substitutes values
- * into a string. So a variable interpolator substitutes the values of one or
- * more variables into a string.
+ * Base class for variable interpolators. An interpolator substitutes values into a string. So a
+ * variable interpolator substitutes the values of one or more variables into a string.
  * <p>
- * The String to interpolate (substitute in) is passed to the
- * VariableInterpolator constructor. Variables are denoted in this string by the
- * syntax ${variableName}. A subclass provides an implementation for the
- * abstract method getValue(String variableName). The toString() method then
- * performs an interpolation by replacing each variable of the form
- * ${variableName} with the value returned by getValue("variableName").
+ * The String to interpolate (substitute in) is passed to the VariableInterpolator constructor.
+ * Variables are denoted in this string by the syntax ${variableName}. A subclass provides an
+ * implementation for the abstract method getValue(String variableName). The toString() method then
+ * performs an interpolation by replacing each variable of the form ${variableName} with the value
+ * returned by getValue("variableName").
  * 
  * @author Jonathan Locke
  */
@@ -55,9 +53,8 @@ public abstract class VariableInterpolator
 	 *            String to interpolate with variable values
 	 * @param exceptionOnNullVarValue
 	 *            if true an {@link IllegalStateException} will be thrown if a
-	 *            {@link #getValue(String)} returns null, otherwise the
-	 *            ${varname} string will be left in the <code>string</code> so
-	 *            multiple interpolators can be chained
+	 *            {@link #getValue(String)} returns null, otherwise the ${varname} string will be
+	 *            left in the <code>string</code> so multiple interpolators can be chained
 	 */
 	public VariableInterpolator(final String string, boolean exceptionOnNullVarValue)
 	{
@@ -74,6 +71,16 @@ public abstract class VariableInterpolator
 	 */
 	protected abstract String getValue(String variableName);
 
+	private int lowerPositive(int i1, int i2)
+	{
+		if (i2 < 0)
+			return i1;
+		else if (i1 < 0)
+			return i2;
+		else
+			return i1 < i2 ? i1 : i2;
+	}
+
 	/**
 	 * Interpolate using variables
 	 * 
@@ -84,14 +91,22 @@ public abstract class VariableInterpolator
 		// Result buffer
 		final StringBuffer buffer = new StringBuffer();
 
-		// For each occurrences of "${"
+		// For each occurrences of "${"or "$$"
 		int start;
 		int pos = 0;
 
-		while ((start = string.indexOf("${", pos)) != -1)
+		while ((start = lowerPositive(string.indexOf("$$", pos), string.indexOf("${", pos))) != -1)
 		{
 			// Append text before possible variable
 			buffer.append(string.substring(pos, start));
+
+			if (string.charAt(start + 1) == '$')
+			{
+				buffer.append("$");
+				pos = start + 2;
+				continue;
+			}
+
 
 			// Position is now where we found the "${"
 			pos = start;
@@ -114,8 +129,8 @@ public abstract class VariableInterpolator
 				{
 					if (exceptionOnNullVarValue)
 					{
-						throw new IllegalArgumentException("Value of variable [[" + variableName
-								+ "]] could not be resolved while interpolating [[" + string + "]]");
+						throw new IllegalArgumentException("Value of variable [[" + variableName +
+								"]] could not be resolved while interpolating [[" + string + "]]");
 					}
 					else
 					{
