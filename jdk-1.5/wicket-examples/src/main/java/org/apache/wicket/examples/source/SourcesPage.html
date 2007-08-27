@@ -7,47 +7,89 @@
 	<script language="JavaScript" type="text/javascript" src="scriptaculous.js"></script>
 	<script language="JavaScript" type="text/javascript" src="effects.js"></script>
 	<style type="text/css">
-		body {
+		html, body { 
 			padding: 0;
 			margin: 0;
+			height: 100%;
 		}
-		.left {
-			width : 220px;
-		}
+		
 		#header {
-			height: 20px;
-			background-color : #888;
-			color : #fff;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			margin-left: -17px;
+			height: 2em;
+			z-index: 11;
+			background-color: gray;
 		}
-		#body .left,
-		#body .right {
-			position : absolute;
-			top : 20px;
-			bottom: 90px;
+		
+		#header .inner {
+			margin-left: 17px;
 		}
-		#body .left {
-			overflow: auto;
-			border-right: 1px solid #aaa;
+		
+		#header .left {
+			float: left;
+			padding-left: 10px;
+			color: white;
 		}
-		#body .right {
-			right: 0;
-			left: 221px;
-			padding-left : 5px;
-			overflow: auto;
-			line-height: normal;
+		
+		#header .right {
+			margin-left: 17em;
+			color: white;
 		}
+		
+		#header span.close {
+			float: right;
+			padding-right: 1em;
+			color: white;
+		}
+		
+		#header span.close a {
+			color: #ff5555;
+		}
+		
 		#footer {
-		    text-align : center;
-		    position : absolute;
-		    bottom : 0;
-		    height : 90px;
-		    width : 100%;
-		    border-top: 1px solid #aaa;
+			display: none;
 		}
+				
+		#body .left {
+			position: absolute;
+			top: 2em;
+			left: 0px;
+			width: 16.5em;
+			background-color: #eee;
+			_height: 90%;
+			bottom: 0px;		
+			z-index: 10;
+			
+			overflow: auto;
+		}
+		
+		#body .right {
+			position: absolute;
+			top: 0px;
+			left: 17em;
+			right: 0px;
+			bottom: 0px;
+			_left: 0px;
+			_height: 100%;
+			_width: 100%;					
+			overflow: auto;
+			z-index: 9;
+		}
+		
+		
 		ul {
 			list-style-type : none;
+			font-size: 85%;
 			margin : 0px;
 			padding : 10px;
+		}
+		
+		.code-container {
+			_margin-left: 17em;
+			margin-top: 2em;
 		}
 		
 		code {
@@ -121,8 +163,12 @@
 </head>
 <body>
 	<div id="header">
-		<div class="left">Files</div>
-		<div class="right">Code for <span wicket:id="filename"></span></div>
+		<div class="inner">
+			<div class="left">Files</div>
+			<span class="close">[<a href="#" wicket:id="close">Close</a>]</span>
+			<div class="right">Code for <span wicket:id="filename"></span></div>
+			
+		</div>
 	</div>
 	<div id="body">
 		<div class="left" wicket:id="filespanel">
@@ -133,11 +179,10 @@
 			</ul>
 		</div>
 		<div class="right" wicket:id="codepanel">
-			<code wicket:id="code"></code>
+			<div class="code-container">
+				<code wicket:id="code"></code>
+			</div>
 		</div>
-	</div>
-	<div id="footer">
-		[<a href="#" wicket:id="close">Close</a>]
 	</div>
 </body>
 </html>
