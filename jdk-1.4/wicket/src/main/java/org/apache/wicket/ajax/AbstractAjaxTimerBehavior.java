@@ -66,13 +66,23 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * 
 	 * @param updateInterval
 	 */
-	protected void setUpdateInterval(Duration updateInterval)
+	protected final void setUpdateInterval(Duration updateInterval)
 	{
 		if (updateInterval == null || updateInterval.getMilliseconds() <= 0)
 		{
 			throw new IllegalArgumentException("Invalid update interval");
 		}
 		this.updateInterval = updateInterval;
+	}
+
+	/**
+	 * Returns the update interval
+	 * 
+	 * @return
+	 */
+	public final Duration getUpdateInterval()
+	{
+		return updateInterval;
 	}
 
 	/**
