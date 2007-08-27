@@ -156,8 +156,6 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-// TODO if it were up to me (Eelco), we could get rid of the application and
-// session members and accessors. They can be accessed from the thread locals
 public abstract class RequestCycle
 {
 	/** Thread-local that holds the current request cycle. */
@@ -1135,7 +1133,9 @@ public abstract class RequestCycle
 			else
 			{
 				// hmmm, we were already handling an exception! give up
-				log.error("unexpected exception when handling another exception", e);
+				log.error(
+						"unexpected exception when handling another exception: " + e.getMessage(),
+						e);
 			}
 		}
 	}
