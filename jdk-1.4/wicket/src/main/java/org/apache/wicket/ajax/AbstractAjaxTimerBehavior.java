@@ -33,7 +33,7 @@ import org.apache.wicket.util.time.Duration;
 public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehavior
 {
 	/** The update interval */
-	private final Duration updateInterval;
+	private Duration updateInterval;
 
 	private boolean stopped = false;
 
@@ -45,6 +45,10 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	public AbstractAjaxTimerBehavior(final Duration updateInterval)
 	{
+		if (updateInterval == null || updateInterval.getMilliseconds() <= 0)
+		{
+			throw new IllegalArgumentException("Invalid update interval");
+		}
 		this.updateInterval = updateInterval;
 	}
 
@@ -54,6 +58,21 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	public final void stop()
 	{
 		stopped = true;
+	}
+
+	/**
+	 * Sets the update interval duration. This method should only be called within the
+	 * {@link #onTimer(AjaxRequestTarget)} method.
+	 * 
+	 * @param updateInterval
+	 */
+	protected void setUpdateInterval(Duration updateInterval)
+	{
+		if (updateInterval == null || updateInterval.getMilliseconds() <= 0)
+		{
+			throw new IllegalArgumentException("Invalid update interval");
+		}
+		this.updateInterval = updateInterval;
 	}
 
 	/**
