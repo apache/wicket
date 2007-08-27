@@ -44,13 +44,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
-import sun.reflect.generics.tree.Tree;
-
 
 /**
  * This class encapsulates the logic for displaying and (partial) updating the tree. Actual
  * presentation is out of scope of this class. User should derive they own tree (if needed) from
- * {@link DefaultAbstractTree} or {@link Tree} (recommended).
+ * {@link BaseTree} (recommended).
  * 
  * @author Matej Knopp
  */
