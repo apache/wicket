@@ -28,10 +28,9 @@ import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Implementation of an <a
- * href="http://www.w3.org/TR/REC-html40/present/frames.html#h-16.5">inline
- * frame</a> component. Must be used with an iframe (&lt;iframe src...)
- * element. The src attribute will be generated.
+ * Implementation of an <a href="http://www.w3.org/TR/REC-html40/present/frames.html#h-16.5">inline
+ * frame</a> component. Must be used with an iframe (&lt;iframe src...) element. The src attribute
+ * will be generated.
  * 
  * @author Sven Meier
  * @author Ralf Ebert
@@ -44,15 +43,13 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	private final IPageLink pageLink;
 
 	/**
-	 * The pagemap name where the page that will be created by this inline frame
-	 * will be created in.
+	 * The pagemap name where the page that will be created by this inline frame will be created in.
 	 */
 	private final String pageMapName;
 
 	/**
-	 * Constructs an inline frame that instantiates the given Page class when
-	 * the content of the inline frame is requested. The instantiated Page is
-	 * used to render a response to the user.
+	 * Constructs an inline frame that instantiates the given Page class when the content of the
+	 * inline frame is requested. The instantiated Page is used to render a response to the user.
 	 * 
 	 * @param id
 	 *            See Component
@@ -65,11 +62,10 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	{
 		this(id, pageMap, c, null);
 	}
-	
+
 	/**
-	 * Constructs an inline frame that instantiates the given Page class when
-	 * the content of the inline frame is requested. The instantiated Page is
-	 * used to render a response to the user.
+	 * Constructs an inline frame that instantiates the given Page class when the content of the
+	 * inline frame is requested. The instantiated Page is used to render a response to the user.
 	 * 
 	 * @param id
 	 *            See Component
@@ -80,7 +76,8 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param params
 	 *            Page parameters
 	 */
-	public InlineFrame(final String id, final IPageMap pageMap, final Class c, final PageParameters params)
+	public InlineFrame(final String id, final IPageMap pageMap, final Class c,
+			final PageParameters params)
 	{
 		this(id, pageMap, new IPageLink()
 		{
@@ -113,8 +110,8 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * This constructor is ideal if a Page object was passed in from a previous
-	 * Page. Construct an inline frame containing the given Page.
+	 * This constructor is ideal if a Page object was passed in from a previous Page. Construct an
+	 * inline frame containing the given Page.
 	 * 
 	 * @param id
 	 *            See component
@@ -123,7 +120,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public InlineFrame(final String id, final Page page)
 	{
-		this(id, null, new IPageLink()
+		this(id, page.getPageMap(), new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -143,25 +140,23 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	/**
 	 * This constructor is ideal for constructing pages lazily.
 	 * 
-	 * Constructs an inline frame which invokes the getPage() method of the
-	 * IPageLink interface when the content of the inline frame is requested.
-	 * Whatever Page objects is returned by this method will be rendered back to
-	 * the user.
+	 * Constructs an inline frame which invokes the getPage() method of the IPageLink interface when
+	 * the content of the inline frame is requested. Whatever Page objects is returned by this
+	 * method will be rendered back to the user.
 	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageMap
 	 *            the pagemap where the page of the inline frame must be in
 	 * @param pageLink
-	 *            An implementation of IPageLink which will create the page to
-	 *            be contained in the inline frame if and when the content is
-	 *            requested
+	 *            An implementation of IPageLink which will create the page to be contained in the
+	 *            inline frame if and when the content is requested
 	 */
 	public InlineFrame(final String id, final IPageMap pageMap, IPageLink pageLink)
 	{
 		super(id);
 
-		this.pageMapName = pageMap.getName();
+		pageMapName = pageMap.getName();
 
 		this.pageLink = pageLink;
 	}
@@ -224,6 +219,6 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	public final IPageMap getPageMap()
 	{
-		return PageMap.forName(this.pageMapName);
+		return PageMap.forName(pageMapName);
 	}
 }
