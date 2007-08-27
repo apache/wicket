@@ -116,7 +116,7 @@ public class WicketFilter implements Filter
 		if (isWicketRequest(relativePath))
 		{
 			HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-			long lastModified = getLastModified(httpServletRequest);
+			long lastModified = getLastModified(httpServletRequest, httpServletResponse);
 			if (lastModified == -1)
 			{
 				// servlet doesn't support if-modified-since, no reason
@@ -205,8 +205,12 @@ public class WicketFilter implements Filter
 				}
 			}
 
+			final RequestCycle existingRequestCycle = RequestCycle.get();
+
 			// Create a new webrequest
-			final WebRequest request = webApplication.newWebRequest(servletRequest);
+			final WebRequest request = existingRequestCycle != null
+					? (WebRequest)existingRequestCycle.getRequest()
+					: webApplication.newWebRequest(servletRequest);
 
 			// Are we using REDIRECT_TO_BUFFER?
 			if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
@@ -244,7 +248,9 @@ public class WicketFilter implements Filter
 
 			// Create a response object and set the output encoding according to
 			// wicket's application setttings.
-			final WebResponse response = webApplication.newWebResponse(servletResponse);
+			final WebResponse response = existingRequestCycle != null
+					? (WebResponse)existingRequestCycle.getResponse()
+					: webApplication.newWebResponse(servletResponse);
 			response.setAjax(request.isAjax());
 			response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 					.getResponseRequestEncoding());
@@ -252,7 +258,9 @@ public class WicketFilter implements Filter
 			try
 			{
 				// Create request cycle
-				RequestCycle cycle = webApplication.newRequestCycle(request, response);
+				RequestCycle cycle = existingRequestCycle != null
+						? existingRequestCycle
+						: webApplication.newRequestCycle(request, response);
 
 				try
 				{
@@ -692,18 +700,24 @@ public class WicketFilter implements Filter
 	/**
 	 * Gets the last modified time stamp for the given request.
 	 * 
-	 * @param request
+	 * @param servletRequest
+	 * @param servletResponse
 	 * @return The last modified time stamp
 	 */
-	long getLastModified(final HttpServletRequest request)
+	long getLastModified(final HttpServletRequest servletRequest,
+			final HttpServletResponse servletResponse)
 	{
-		final String pathInfo = getRelativePath(request);
+		final String pathInfo = getRelativePath(servletRequest);
 
 		if (pathInfo.startsWith(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX))
 		{
 
 			final String resourceReferenceKey = pathInfo
 					.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
+
+			final WebRequest request = webApplication.newWebRequest(servletRequest);
+			final WebResponse response = webApplication.newWebResponse(servletResponse);
+			RequestCycle cycle = webApplication.newRequestCycle(request, response);
 
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
@@ -715,10 +729,8 @@ public class WicketFilter implements Filter
 				{
 					Application.set(webApplication);
 
-					final WebRequest webRequest = webApplication.newWebRequest(request);
-
 					// Set parameters from servlet request
-					resource.setParameters(webRequest.getParameterMap());
+					resource.setParameters(request.getParameterMap());
 
 					// Get resource stream
 					IResourceStream stream = resource.getResourceStream();

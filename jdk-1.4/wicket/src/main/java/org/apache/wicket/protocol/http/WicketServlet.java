@@ -33,11 +33,10 @@ import org.slf4j.LoggerFactory;
  * 
  * Please use {@link WicketFilter} if you require advanced chaining of resources.
  * 
- * Servlet class for all wicket applications. The specific application class to
- * instantiate should be specified to the application server via an init-params
- * argument named "applicationClassName" in the servlet declaration, which is
- * typically in a <i>web.xml </i> file. The servlet declaration may vary from
- * one application server to another, but should look something like this:
+ * Servlet class for all wicket applications. The specific application class to instantiate should
+ * be specified to the application server via an init-params argument named "applicationClassName"
+ * in the servlet declaration, which is typically in a <i>web.xml </i> file. The servlet declaration
+ * may vary from one application server to another, but should look something like this:
  * 
  * <pre>
  * &lt;servlet&gt;
@@ -51,13 +50,11 @@ import org.slf4j.LoggerFactory;
  * &lt;/servlet&gt;
  * </pre>
  * 
- * Note that the applicationClassName parameter you specify must be the fully
- * qualified name of a class that extends WebApplication. If your class cannot
- * be found, does not extend WebApplication or cannot be instantiated, a runtime
- * exception of type WicketRuntimeException will be thrown.
+ * Note that the applicationClassName parameter you specify must be the fully qualified name of a
+ * class that extends WebApplication. If your class cannot be found, does not extend WebApplication
+ * or cannot be instantiated, a runtime exception of type WicketRuntimeException will be thrown.
  * </p>
- * As an alternative, you can configure an application factory instead. This
- * looks like:
+ * As an alternative, you can configure an application factory instead. This looks like:
  * 
  * <pre>
  * &lt;init-param&gt;
@@ -66,18 +63,16 @@ import org.slf4j.LoggerFactory;
  * &lt;/init-param&gt;
  * </pre>
  * 
- * and it has to satisfy interface
- * {@link org.apache.wicket.protocol.http.IWebApplicationFactory}.
+ * and it has to satisfy interface {@link org.apache.wicket.protocol.http.IWebApplicationFactory}.
  * 
  * <p>
- * When GET/POST requests are made via HTTP, a WebRequestCycle object is
- * created from the request, response and session objects (after wrapping them
- * in the appropriate wicket wrappers). The RequestCycle's render() method is
- * then called to produce a response to the HTTP request.
+ * When GET/POST requests are made via HTTP, a WebRequestCycle object is created from the request,
+ * response and session objects (after wrapping them in the appropriate wicket wrappers). The
+ * RequestCycle's render() method is then called to produce a response to the HTTP request.
  * <p>
- * If you want to use servlet specific configuration, e.g. using init parameters
- * from the {@link javax.servlet.ServletConfig}object, you should override the
- * init() method of {@link javax.servlet.GenericServlet}. For example:
+ * If you want to use servlet specific configuration, e.g. using init parameters from the
+ * {@link javax.servlet.ServletConfig}object, you should override the init() method of
+ * {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
  * public void init() throws ServletException
@@ -88,9 +83,9 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * </p>
- * In order to support frameworks like Spring, the class is non-final and the
- * variable webApplication is protected instead of private. Thus subclasses may
- * provide their own means of providing the application object.
+ * In order to support frameworks like Spring, the class is non-final and the variable
+ * webApplication is protected instead of private. Thus subclasses may provide their own means of
+ * providing the application object.
  * 
  * @see org.apache.wicket.RequestCycle
  * @author Jonathan Locke
@@ -191,7 +186,7 @@ public class WicketServlet extends HttpServlet
 	}
 
 	/**
-	 * @return The wicket filter 
+	 * @return The wicket filter
 	 */
 	protected WicketFilter newWicketFilter()
 	{
@@ -212,6 +207,9 @@ public class WicketServlet extends HttpServlet
 	 */
 	protected long getLastModified(final HttpServletRequest servletRequest)
 	{
-		return wicketFilter.getLastModified(servletRequest);
+		// Right now I don't see any other way. wicketFilter.getLastModified takes now also
+		// servletResponse, which we don't have at this point
+		return -1;
+		// return wicketFilter.getLastModified(servletRequest);
 	}
 }
