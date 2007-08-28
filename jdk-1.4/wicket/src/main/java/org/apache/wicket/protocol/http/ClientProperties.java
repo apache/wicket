@@ -49,6 +49,7 @@ public class ClientProperties implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
+	private int browserHeight = -1;
 	private boolean browserInternetExplorer;
 	private boolean browserKonqueror;
 	private boolean browserMozilla;
@@ -57,11 +58,12 @@ public class ClientProperties implements IClusterable
 	private boolean browserSafari;
 	private int browserVersionMajor = -1;
 	private int browserVersionMinor = -1;
+	private int browserWidth = -1;
+	private boolean cookiesEnabled;
+	private boolean javaEnabled;
 	private String navigatorAppCodeName;
 	private String navigatorAppName;
 	private String navigatorAppVersion;
-	private boolean cookiesEnabled;
-	private boolean javaEnabled;
 	private String navigatorLanguage;
 	private String navigatorPlatform;
 	private String navigatorUserAgent;
@@ -79,17 +81,15 @@ public class ClientProperties implements IClusterable
 	private boolean quirkIETextareaNewlineObliteration;
 	private boolean quirkMozillaPerformanceLargeDomRemove;
 	private boolean quirkMozillaTextInputRepaint;
+	private String remoteAddress;
 	private int screenColorDepth = -1;
 	private int screenHeight = -1;
 	private int screenWidth = -1;
-	private int browserWidth = -1;
-	private int browserHeight = -1;
-	private String utcOffset;
-	private String utcDSTOffset;
-	private String remoteAddress;
-
 	/** Cached timezone for repeating calls to {@link #getTimeZone()} */
 	private TimeZone timeZone;
+	private String utcDSTOffset;
+
+	private String utcOffset;
 
 
 	/**
@@ -330,17 +330,6 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @return The client's time offset from UTC in minutes (note: if you do this yourself, use 'new
-	 *         Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60' (note the
-	 *         -)).
-	 */
-	public String getUtcOffset()
-	{
-		return utcOffset;
-	}
-
-
-	/**
 	 * @return The client's time DST offset from UTC in minutes (note: if you do this yourself, use
 	 *         'new Date(new Date().getFullYear(), 0, 6, 0, 0, 0, 0).getTimezoneOffset() / -60'
 	 *         (note the -)).
@@ -348,6 +337,17 @@ public class ClientProperties implements IClusterable
 	public String getUtcDSTOffset()
 	{
 		return utcDSTOffset;
+	}
+
+
+	/**
+	 * @return The client's time offset from UTC in minutes (note: if you do this yourself, use 'new
+	 *         Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60' (note the
+	 *         -)).
+	 */
+	public String getUtcOffset()
+	{
+		return utcOffset;
 	}
 
 	/**
@@ -1016,13 +1016,13 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @param utcOffset
-	 *            The client's time offset from UTC in minutes (note: if you do this yourself, use
-	 *            'new Date().getTimezoneOffset() / -60' (note the -)).
+	 * Sets time zone.
+	 * 
+	 * @param timeZone
 	 */
-	public void setUtcOffset(String utcOffset)
+	public void setTimeZone(TimeZone timeZone)
 	{
-		this.utcOffset = utcOffset;
+		this.timeZone = timeZone;
 	}
 
 	/**
@@ -1031,6 +1031,16 @@ public class ClientProperties implements IClusterable
 	public void setUtcDSTOffset(String utcDSTOffset)
 	{
 		this.utcDSTOffset = utcDSTOffset;
+	}
+
+	/**
+	 * @param utcOffset
+	 *            The client's time offset from UTC in minutes (note: if you do this yourself, use
+	 *            'new Date().getTimezoneOffset() / -60' (note the -)).
+	 */
+	public void setUtcOffset(String utcOffset)
+	{
+		this.utcOffset = utcOffset;
 	}
 
 	public String toString()
