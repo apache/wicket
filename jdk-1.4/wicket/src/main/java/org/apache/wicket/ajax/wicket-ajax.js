@@ -37,7 +37,7 @@ if (typeof(Wicket) == "undefined")
 	Wicket = { };
 
 
-Wicket.$=function(arg) {
+Wicket.$ = function(arg) {
 	if (arguments.length > 1) {
 		var e=[];
 		for (var i=0; i<arguments.length; i++) {
@@ -49,6 +49,16 @@ Wicket.$=function(arg) {
 	} else {
 		return arg;
 	}
+}
+
+// returns if the element belongs to current document
+// if the argument is not element, function returns true
+Wicket.$$ = function(element) {
+	if (element == null || typeof(element) == "undefined" ||
+	    element.tagName == null || typeof(element.tagName)) {
+	    return true;
+	} 
+	return element.ownerDocument == document;
 }
 
 Wicket.emptyFunction = function() { };
