@@ -22,7 +22,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -35,12 +35,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * RequestCycle implementation for HTTP protocol. Holds the application,
- * session, request and response objects for a given HTTP request. Contains
- * methods (urlFor*) which yield a URL for bookmarkable pages as well as
- * non-bookmarkable component interfaces. The protected handleRender method is
- * the internal entrypoint which takes care of the details of rendering a
- * response to an HTTP request.
+ * RequestCycle implementation for HTTP protocol. Holds the application, session, request and
+ * response objects for a given HTTP request. Contains methods (urlFor*) which yield a URL for
+ * bookmarkable pages as well as non-bookmarkable component interfaces. The protected handleRender
+ * method is the internal entrypoint which takes care of the details of rendering a response to an
+ * HTTP request.
  * 
  * @see RequestCycle
  * @author Jonathan Locke
@@ -59,8 +58,8 @@ public class WebRequestCycle extends RequestCycle
 	};
 
 	/**
-	 * Constructor which simply passes arguments to superclass for storage
-	 * there. This instance will be set as the current one for this thread.
+	 * Constructor which simply passes arguments to superclass for storage there. This instance will
+	 * be set as the current one for this thread.
 	 * 
 	 * @param application
 	 *            The applicaiton
@@ -76,14 +75,13 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * By default returns the WebApplication's default request cycle processor.
-	 * Typically, you don't override this method but instead override
-	 * {@link WebApplication#getRequestCycleProcessor()}.
+	 * By default returns the WebApplication's default request cycle processor. Typically, you don't
+	 * override this method but instead override {@link WebApplication#getRequestCycleProcessor()}.
 	 * <p>
-	 * <strong>if you decide to override this method to provide a custom
-	 * processor per request cycle, any mounts done via WebApplication will not
-	 * work and and {@link #onRuntimeException(Page, RuntimeException)} is not
-	 * called unless you deliberately put effort in it to make it work.</strong>
+	 * <strong>if you decide to override this method to provide a custom processor per request
+	 * cycle, any mounts done via WebApplication will not work and and
+	 * {@link #onRuntimeException(Page, RuntimeException)} is not called unless you deliberately put
+	 * effort in it to make it work.</strong>
 	 * </p>
 	 * 
 	 * @see org.apache.wicket.RequestCycle#getProcessor()
@@ -118,11 +116,10 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * Redirects browser to the given page. NOTE: Usually, you should never call
-	 * this method directly, but work with setResponsePage instead. This method
-	 * is part of Wicket's internal behavior and should only be used when you
-	 * want to circumvent the normal framework behavior and issue the redirect
-	 * directly.
+	 * Redirects browser to the given page. NOTE: Usually, you should never call this method
+	 * directly, but work with setResponsePage instead. This method is part of Wicket's internal
+	 * behavior and should only be used when you want to circumvent the normal framework behavior
+	 * and issue the redirect directly.
 	 * 
 	 * @param page
 	 *            The page to redirect to
@@ -133,8 +130,8 @@ public class WebRequestCycle extends RequestCycle
 
 		// Check if use serverside response for client side redirects
 		IRequestCycleSettings settings = application.getRequestCycleSettings();
-		if ((settings.getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
-				&& (application instanceof WebApplication))
+		if ((settings.getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER) &&
+				(application instanceof WebApplication))
 		{
 			// remember the current response
 			final WebResponse currentResponse = getWebResponse();
@@ -144,7 +141,9 @@ public class WebRequestCycle extends RequestCycle
 				{
 					// Get the redirect url and set it in the ServletWebRequest
 					// so that it can be used for relative url calculation.
-					((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(Strings.replaceAll(page.urlFor(IRedirectListener.INTERFACE).toString(),"../","").toString());	
+					((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(Strings.replaceAll(
+							page.urlFor(IRedirectListener.INTERFACE).toString(), "../", "")
+							.toString());
 				}
 				// create the redirect response.
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(
@@ -192,14 +191,16 @@ public class WebRequestCycle extends RequestCycle
 					{
 						// Get the redirect url and set it in the ServletWebRequest
 						// so that it can be used for relative url calculation.
-						((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(null);	
+						((ServletWebRequest)getWebRequest()).setWicketRedirectUrl(null);
 					}
-					
+
 					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
-					String stripped = Strings.replaceAll(redirectUrl,"../","").toString();
+					String stripped = Strings.replaceAll(redirectUrl, "../", "").toString();
 					int index = stripped.indexOf("?");
-					String sessionId = getApplication().getSessionStore().getSessionId(request, true); 
-					((WebApplication)application).addBufferedResponse(sessionId, stripped.substring(index + 1), servletResponse);
+					String sessionId = getApplication().getSessionStore().getSessionId(request,
+							true);
+					((WebApplication)application).addBufferedResponse(sessionId, stripped
+							.substring(index + 1), servletResponse);
 				}
 			}
 			catch (RuntimeException ex)
@@ -258,7 +259,8 @@ public class WebRequestCycle extends RequestCycle
 				// we haven't done the redirect yet; record that we will be
 				// doing that now and redirect
 				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
-				throw new RestartResponseAtInterceptPageException(new BrowserInfoPage(getRequest().getRelativePathPrefixToContextRoot() + getRequest().getURL()));
+				String url = "/" + getRequest().getURL();
+				throw new RestartResponseException(new BrowserInfoPage(url));
 			}
 			// if we get here, the redirect already has been done; clear
 			// the meta data entry; we don't need it any longer is the client
