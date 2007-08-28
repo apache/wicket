@@ -55,8 +55,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Request parameters factory implementation that uses http request parameters
- * and path info to construct the request parameters object.
+ * Request parameters factory implementation that uses http request parameters and path info to
+ * construct the request parameters object.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -81,10 +81,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * Url name of the default pagemap
 	 * 
-	 * When we encode the default pagemap name in a url we cannot always use
-	 * null or "" because it breaks urls which are encoded with /param1/value1/
-	 * eg /product/14/wicket:pageMapName/ split on / will split into
-	 * {product,14,wicket:pageMapName}
+	 * When we encode the default pagemap name in a url we cannot always use null or "" because it
+	 * breaks urls which are encoded with /param1/value1/ eg /product/14/wicket:pageMapName/ split
+	 * on / will split into {product,14,wicket:pageMapName}
 	 */
 	public static final String DEFAULT_PAGEMAP_NAME = "wicketdef";
 
@@ -92,10 +91,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	public static final String RESOURCES_PATH_PREFIX = "resources/";
 
 	/**
-	 * Parameter name that tells decode to ignore this request if the
-	 * page+version encoded in the url is not on top of the stack. The value of
-	 * this parameter is not important, it simply has to be present to enable
-	 * the behavior
+	 * Parameter name that tells decode to ignore this request if the page+version encoded in the
+	 * url is not on top of the stack. The value of this parameter is not important, it simply has
+	 * to be present to enable the behavior
 	 */
 	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE +
 			"ignoreIfNotActive";
@@ -145,17 +143,15 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * map of path mounts for mount encoders on paths.
 	 * <p>
-	 * mountsOnPath is sorted by longest paths first to improve resolution of
-	 * possible path conflicts. <br />
+	 * mountsOnPath is sorted by longest paths first to improve resolution of possible path
+	 * conflicts. <br />
 	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
 	 * Page1 uses a parameters encoder that only encodes parameter values <br />
-	 * now suppose we want to access Page1 with a single paramter param="test".
-	 * we have a url collision since both pages can be access with /page/test
-	 * <br />
-	 * the sorting by longest path first guarantees that the iterator will
-	 * return the mount /page/test before it returns mount /page therefore
-	 * giving deterministic behavior to path resolution by always trying to
-	 * match the longest possible path first.
+	 * now suppose we want to access Page1 with a single paramter param="test". we have a url
+	 * collision since both pages can be access with /page/test <br />
+	 * the sorting by longest path first guarantees that the iterator will return the mount
+	 * /page/test before it returns mount /page therefore giving deterministic behavior to path
+	 * resolution by always trying to match the longest possible path first.
 	 * </p>
 	 */
 	private final MountsMap mountsOnPath;
@@ -216,14 +212,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * Encode the given request target. If a mount is found, that mounted url
-	 * will be returned. Otherwise, one of the delegation methods will be
-	 * called. In case you are using custom targets that are not part of the
-	 * default target hierarchy, you need to override
-	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called
-	 * after the defaults have been tried. When that doesn't provide a url
-	 * either, and exception will be thrown saying that encoding could not be
-	 * done.
+	 * Encode the given request target. If a mount is found, that mounted url will be returned.
+	 * Otherwise, one of the delegation methods will be called. In case you are using custom targets
+	 * that are not part of the default target hierarchy, you need to override
+	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults
+	 * have been tried. When that doesn't provide a url either, and exception will be thrown saying
+	 * that encoding could not be done.
 	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.IRequestTarget)
@@ -304,7 +298,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
 		if (path == null)
-		{ 
+		{
 			return mountsOnPath.strategyForMount(null);
 		}
 		else
@@ -334,7 +328,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			throw new IllegalArgumentException("Argument path must not be null");
 		}
-		
+
 		if (path.equals("/") || path.equals(""))
 		{
 			throw new IllegalArgumentException(
@@ -404,13 +398,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * Adds bookmarkable page related parameters (page alias and optionally page
-	 * parameters). Any bookmarkable page alias mount will override this method;
-	 * hence if a mount is found, this method will not be called.
+	 * Adds bookmarkable page related parameters (page alias and optionally page parameters). Any
+	 * bookmarkable page alias mount will override this method; hence if a mount is found, this
+	 * method will not be called.
 	 * 
 	 * If you override this method to behave differently then
-	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should also be
-	 * overridden to be in sync with that behaviour.
+	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should also be overridden to be
+	 * in sync with that behaviour.
 	 * 
 	 * @param request
 	 *            the incoming request
@@ -444,12 +438,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * Adds page related parameters (path and pagemap and optionally version and
-	 * interface).
+	 * Adds page related parameters (path and pagemap and optionally version and interface).
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be
-	 * overridden to by in sync with that behaviour.
+	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be overridden to by in
+	 * sync with that behaviour.
 	 * 
 	 * @param request
 	 *            the incoming request
@@ -462,8 +455,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * Analyses the passed in interfaceParameter for the relevant parts and puts
-	 * the parts as parameters in the provided request parameters object.
+	 * Analyses the passed in interfaceParameter for the relevant parts and puts the parts as
+	 * parameters in the provided request parameters object.
 	 * 
 	 * @param interfaceParameter
 	 *            The format of the interfaceParameter is: <code>
@@ -514,8 +507,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		// Extract URL depth after last colon
 		final String urlDepthString = pathComponents[pathComponents.length - 1];
-		final int urlDepth = Strings.isEmpty(urlDepthString) ? -1 : Integer
-				.parseInt(urlDepthString);
+		final int urlDepth;
+		try
+		{
+			urlDepth = Strings.isEmpty(urlDepthString) ? -1 : Integer.parseInt(urlDepthString);
+		}
+		catch (NumberFormatException e)
+		{
+			throw new WicketRuntimeException("Internal error parsing " + INTERFACE_PARAMETER_NAME +
+					" = " + interfaceParameter +
+					"; wrong format for url depth argument. Expected a number but was '" +
+					urlDepthString + "'", e);
+		}
 		parameters.setUrlDepth(urlDepth);
 
 		// Extract behaviour ID after last colon
@@ -537,13 +540,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * Adds (shared) resource related parameters (resource key). Any shared
-	 * resource key mount will override this method; hence if a mount is found,
-	 * this method will not be called.
+	 * Adds (shared) resource related parameters (resource key). Any shared resource key mount will
+	 * override this method; hence if a mount is found, this method will not be called.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be
-	 * overridden to by in sync with that behaviour.
+	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be overridden to by in
+	 * sync with that behaviour.
 	 * 
 	 * @param request
 	 *            the incomming request
@@ -576,19 +578,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * In case you are using custom targets that are not part of the default
-	 * target hierarchy, you need to override this method, which will be called
-	 * after the defaults have been tried. When this doesn't provide a url
-	 * either (returns null), an exception will be thrown by the encode method
-	 * saying that encoding could not be done.
+	 * In case you are using custom targets that are not part of the default target hierarchy, you
+	 * need to override this method, which will be called after the defaults have been tried. When
+	 * this doesn't provide a url either (returns null), an exception will be thrown by the encode
+	 * method saying that encoding could not be done.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle (for efficient access)
 	 * 
 	 * @param requestTarget
 	 *            the request target
-	 * @return the url to the provided target, as a relative path from the
-	 *         filter root.
+	 * @return the url to the provided target, as a relative path from the filter root.
 	 */
 	protected String doEncode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
@@ -599,8 +599,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a page class target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should
-	 * be overridden to by in sync with that behaviour.
+	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should be overridden to by
+	 * in sync with that behaviour.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -650,13 +650,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			/*
 			 * Add <page-map-name>:<bookmarkable-page-class>
 			 * 
-			 * Encode the url so it is correct even for class names containing
-			 * non ASCII characters, like ä, æ, ø, å etc.
+			 * Encode the url so it is correct even for class names containing non ASCII characters,
+			 * like ä, æ, ø, å etc.
 			 * 
-			 * The reason for this is that when redirecting to these
-			 * bookmarkable pages, we need to have the url encoded correctly
-			 * because we can't rely on the browser to interpret the unencoded
-			 * url correctly.
+			 * The reason for this is that when redirecting to these bookmarkable pages, we need to
+			 * have the url encoded correctly because we can't rely on the browser to interpret the
+			 * unencoded url correctly.
 			 */
 			encoder.addValue(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
 					pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
@@ -695,8 +694,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a shared resource target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addResourceParameters(Request, RequestParameters)} should be
-	 * overridden to by in sync with that behaviour.
+	 * {@link #addResourceParameters(Request, RequestParameters)} should be overridden to by in sync
+	 * with that behaviour.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -743,8 +742,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a listener interface target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be
-	 * overridden to by in sync with that behaviour.
+	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be overridden to by in
+	 * sync with that behaviour.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -864,9 +863,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * Gets the request info path. This is an overridable method in order to
-	 * provide users with a means to implement e.g. a path encryption scheme.
-	 * This method by default returns {@link Request#getPath()}.
+	 * Gets the request info path. This is an overridable method in order to provide users with a
+	 * means to implement e.g. a path encryption scheme. This method by default returns
+	 * {@link Request#getPath()}.
 	 * 
 	 * @param request
 	 *            the request
@@ -878,8 +877,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * Map used to store mount paths and their corresponding url coding
-	 * strategies.
+	 * Map used to store mount paths and their corresponding url coding strategies.
 	 * 
 	 * @author ivaynberg
 	 */
@@ -906,9 +904,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 
 		/**
-		 * Checks if the specified path matches any mount, and if so returns the
-		 * coding strategy for that mount. Returns null if the path doesnt match
-		 * any mounts.
+		 * Checks if the specified path matches any mount, and if so returns the coding strategy for
+		 * that mount. Returns null if the path doesnt match any mounts.
 		 * 
 		 * NOTE: path here is not the mount - it is the full url path
 		 * 
@@ -932,7 +929,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				final String key = (String)entry.getKey();
 				if (path.startsWith(key))
 				{
-					IRequestTargetUrlCodingStrategy strategy = (IRequestTargetUrlCodingStrategy)entry.getValue();
+					IRequestTargetUrlCodingStrategy strategy = (IRequestTargetUrlCodingStrategy)entry
+							.getValue();
 					if (strategy.matches(path))
 					{
 						return strategy;
@@ -998,8 +996,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		 * 
 		 * @param mount
 		 * @param encoder
-		 * @return previous coding strategy associated with the mount, or null
-		 *         if none
+		 * @return previous coding strategy associated with the mount, or null if none
 		 */
 		public IRequestTargetUrlCodingStrategy mount(String mount,
 				IRequestTargetUrlCodingStrategy encoder)
@@ -1043,10 +1040,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * Makes page map name url safe.
 	 * 
-	 * Since the default page map name in wicket is null and null does not
-	 * encode well into urls this method will substitute null for a known token.
-	 * If the <code>pageMapName</code> passed in is not null it is returned
-	 * without modification.
+	 * Since the default page map name in wicket is null and null does not encode well into urls
+	 * this method will substitute null for a known token. If the <code>pageMapName</code> passed
+	 * in is not null it is returned without modification.
 	 * 
 	 * @param pageMapName
 	 *            page map name
