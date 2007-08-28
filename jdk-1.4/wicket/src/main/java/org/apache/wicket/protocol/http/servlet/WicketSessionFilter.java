@@ -31,65 +31,69 @@ import org.apache.wicket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * <p>
- * This filter can be used to make the Wicket
- * {@link org.apache.wicket.protocol.http.WebSession} instances available to
- * non-wicket servlets.
+ * This filter can be used to make the Wicket {@link org.apache.wicket.protocol.http.WebSession}
+ * instances available to non-wicket servlets.
  * </p>
  * <p>
- * The following example displays how you can make the Wicket session object of
- * application SessionApplication, mapped on <code>/sessiontest/*</code>
- * available for servlet WicketSessionServlet, mapped under
- * <code>/servlet/sessiontest</code>:
+ * The following example shows how this filter is setup to for a servlet. You can find the example
+ * in the wicket-examples project.
  * 
  * <pre>
- *    &lt;filter&gt;
- *      &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
- *      &lt;filter-class&gt;org.apache.wicket.protocol.http.servlet.WicketSessionFilter&lt;/filter-class&gt;
- *      &lt;init-param&gt;
- *        &lt;param-name&gt;servletPath&lt;/param-name&gt;
- *        &lt;param-value&gt;sessiontest&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *    &lt;/filter&gt;
- *   
- *    &lt;filter-mapping&gt;
- *      &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
- *      &lt;url-pattern&gt;/servlet/sessiontest&lt;/url-pattern&gt;
- *    &lt;/filter-mapping&gt;
- *   
- *    &lt;servlet&gt;
- *      &lt;servlet-name&gt;SessionApplication&lt;/servlet-name&gt;
- *      &lt;servlet-class&gt;org.apache.wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *      &lt;init-param&gt;
- *        &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *        &lt;param-value&gt;session.SessionApplication&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *    &lt;/servlet&gt;
- *   
- *    &lt;servlet&gt;
- *      &lt;servlet-name&gt;WicketSessionServlet&lt;/servlet-name&gt;
- *      &lt;servlet-class&gt;session.WicketSessionServlet&lt;/servlet-class&gt;
- *      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *    &lt;/servlet&gt;
- *   
- *    &lt;servlet-mapping&gt;
- *      &lt;servlet-name&gt;SessionApplication&lt;/servlet-name&gt;
- *      &lt;url-pattern&gt;/sessiontest/*&lt;/url-pattern&gt;
- *    &lt;/servlet-mapping&gt;
- *   
- *    &lt;servlet-mapping&gt;
- *      &lt;servlet-name&gt;WicketSessionServlet&lt;/servlet-name&gt;
- *      &lt;url-pattern&gt;/servlet/sessiontest&lt;/url-pattern&gt;
- *    &lt;/servlet-mapping&gt;
+ *  &lt;!-- The WicketSesionFilter can be used to provide thread local access to servlets/ JSPs/ etc --&gt;
+ *  &lt;filter&gt;
+ *    &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
+ *    &lt;filter-class&gt;org.apache.wicket.protocol.http.servlet.WicketSessionFilter&lt;/filter-class&gt;
+ *    &lt;init-param&gt;
+ *      &lt;param-name&gt;filterName&lt;/param-name&gt;
+ *      &lt;!-- expose the session of the input example app --&gt;
+ *      &lt;param-value&gt;FormInputApplication&lt;/param-value&gt;
+ *    &lt;/init-param&gt;
+ *  &lt;/filter&gt;
+ * 
+ *  &lt;!-- couple the session filter to the helloworld servlet --&gt;
+ *  &lt;filter-mapping&gt;
+ *    &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
+ *    &lt;url-pattern&gt;/helloworldservlet/*&lt;/url-pattern&gt;
+ *  &lt;/filter-mapping&gt;
+ *  ...
+ * 
+ *  &lt;servlet&gt;
+ *    &lt;servlet-name&gt;HelloWorldServlet&lt;/servlet-name&gt;
+ *    &lt;servlet-class&gt;org.apache.wicket.examples.HelloWorldServlet&lt;/servlet-class&gt;
+ *  &lt;/servlet&gt;
+ * 
+ *  &lt;servlet-mapping&gt;
+ *    &lt;servlet-name&gt;HelloWorldServlet&lt;/servlet-name&gt;
+ *    &lt;url-pattern&gt;/helloworldservlet/*&lt;/url-pattern&gt;
+ *  &lt;/servlet-mapping&gt;
  * </pre>
  * 
  * After that, you can get to the Wicket session in the usual fashion:
  * 
  * <pre>
- * org.apache.wicket.Session wicketSession = org.apache.wicket.Session.get();
+ * Session wicketSession = Session.get();
+ * </pre>
+ * 
+ * like the HelloWorldServlet does:
+ * 
+ * <pre>
+ * public class HelloWorldServlet extends HttpServlet
+ * {
+ * 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
+ * 			IOException
+ * 	{
+ * 		res.setContentType(&quot;text/html&quot;);
+ * 		PrintWriter out = res.getWriter();
+ * 		String message = &quot;Hi. &quot; +
+ * 				(Session.exists()
+ * 						? &quot; I know Wicket session &quot; + Session.get() + &quot;.&quot;
+ * 						: &quot; I can't find a Wicket session.&quot;);
+ * 		out.println(message);
+ * 		out.close();
+ * 	}
+ * }
  * </pre>
  * 
  * </p>
@@ -103,8 +107,8 @@ public class WicketSessionFilter implements Filter
 
 	private FilterConfig filterConfig;
 
-	/** the servlet path. */
-	private String servletPath;
+	/** the filter name/ application key. */
+	private String filterName;
 
 	/** the session key where the Wicket session should be stored. */
 	private String sessionKey;
@@ -123,26 +127,21 @@ public class WicketSessionFilter implements Filter
 	{
 		this.filterConfig = filterConfig;
 
-		servletPath = filterConfig.getInitParameter("servletPath");
+		filterName = filterConfig.getInitParameter("filterName");
 
-		if (servletPath == null)
+		if (filterName == null)
 		{
 			throw new ServletException(
-					"you must provide init parameter servlet-path if you want to use " +
+					"you must provide init parameter 'filterName if you want to use " +
 							getClass().getName());
-		}
-
-		if (servletPath.charAt(0) != '/')
-		{
-			servletPath = '/' + servletPath;
 		}
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("servlet path set to " + servletPath);
+			log.debug("filterName/ application key set to " + filterName);
 		}
 
-		sessionKey = "wicket:" + servletPath + ":" + Session.SESSION_ATTRIBUTE_NAME;
+		sessionKey = "wicket:" + filterName + ":" + Session.SESSION_ATTRIBUTE_NAME;
 
 		if (log.isDebugEnabled())
 		{

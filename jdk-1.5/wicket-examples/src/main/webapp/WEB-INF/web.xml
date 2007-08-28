@@ -387,6 +387,23 @@
             <param-value>org.apache.wicket.examples.dates.DatesApplication</param-value>
 		</init-param>
 	</filter>
+	
+	<!-- The WicketSesionFilter can be used to provide thread local access to servlets/ JSPs/ etc -->
+	<filter>
+		<filter-name>WicketSessionFilter</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.servlet.WicketSessionFilter</filter-class>
+		<init-param>
+            <param-name>filterName</param-name>
+            <!-- expose the session of the input example app -->
+            <param-value>FormInputApplication</param-value>
+		</init-param>
+	</filter>
+
+	<!-- couple the session filter to the helloworld servlet -->
+	<filter-mapping>
+		<filter-name>WicketSessionFilter</filter-name>
+		<url-pattern>/helloworldservlet/*</url-pattern>
+	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>AjaxApplication</filter-name>
@@ -576,6 +593,16 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+
+	<servlet>
+		<servlet-name>HelloWorldServlet</servlet-name>
+		<servlet-class>org.apache.wicket.examples.HelloWorldServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>HelloWorldServlet</servlet-name>
+		<url-pattern>/helloworldservlet/*</url-pattern>
+	</servlet-mapping>
 
 	<session-config>
 		<session-timeout>5</session-timeout>
