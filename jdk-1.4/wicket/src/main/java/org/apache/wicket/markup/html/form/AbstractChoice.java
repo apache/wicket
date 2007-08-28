@@ -205,6 +205,16 @@ abstract class AbstractChoice extends FormComponent
 		return choices;
 	}
 
+	/**
+	 * Returns the model for this AbastractChoice choices.
+	 * 
+	 * @return
+	 */
+	public IModel getChoicesModel()
+	{
+		return choices;
+	}
+
 
 	/**
 	 * Sets the list of choices
@@ -287,8 +297,7 @@ abstract class AbstractChoice extends FormComponent
 	 * 
 	 * @param selected
 	 *            The object that's currently selected
-	 * @return Any default choice, such as "Choose One", depending on the
-	 *         subclass
+	 * @return Any default choice, such as "Choose One", depending on the subclass
 	 */
 	protected CharSequence getDefaultChoice(final Object selected)
 	{
@@ -309,8 +318,7 @@ abstract class AbstractChoice extends FormComponent
 	protected abstract boolean isSelected(final Object object, int index, String selected);
 
 	/**
-	 * Gets whether the given value is disabled. This default implementation
-	 * always returns false.
+	 * Gets whether the given value is disabled. This default implementation always returns false.
 	 * 
 	 * @param object
 	 *            The object to check
@@ -332,8 +340,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The markup stream
 	 * @param openTag
 	 *            The open tag for the body
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream,
-	 *      ComponentTag)
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -358,8 +365,7 @@ abstract class AbstractChoice extends FormComponent
 	 * Generats and appends html for a single choice into the provided buffer
 	 * 
 	 * @param buffer
-	 *            Appending string buffer that will have the generated html
-	 *            appended
+	 *            Appending string buffer that will have the generated html appended
 	 * @param choice
 	 *            Choice object
 	 * @param index
@@ -406,9 +412,9 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Override this method if you want to localize the display values of the
-	 * generated options. By default false is returned so that the display
-	 * values of options are not tested if they have a i18n key.
+	 * Override this method if you want to localize the display values of the generated options. By
+	 * default false is returned so that the display values of options are not tested if they have a
+	 * i18n key.
 	 * 
 	 * @return true If you want to localize the display values, default == false
 	 */
