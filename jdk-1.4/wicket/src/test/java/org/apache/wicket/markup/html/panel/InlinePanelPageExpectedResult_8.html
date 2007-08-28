@@ -12,7 +12,7 @@ wicketAjaxDebugEnable=true;
   <span wicket:id="number">0</span><br/>
   <div id="nextContainer1" style="display:none"></div>
 </div>
-<a href="#" wicket:id="add" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:add::IBehaviorListener:0:', function() { }.bind(this), function() { }.bind(this));return !wcall;" id="add2">Add</a>
+<a href="#" wicket:id="add" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:add::IBehaviorListener:0:', function() { }.bind(this), function() { }.bind(this), function() {return Wicket.$$(this)}.bind(this));return !wcall;" id="add2">Add</a>
 
 
 

@@ -20,7 +20,7 @@ wicketAjaxDebugEnable=true;
 
 
 
-<a href="#" wicket:id="ajaxRefresh" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:provider:ajaxRefresh::IBehaviorListener:0:', function() { }.bind(this), function() { }.bind(this));return !wcall;" id="ajaxRefresh3">AJAX refresh</a>
+<a href="#" wicket:id="ajaxRefresh" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:provider:ajaxRefresh::IBehaviorListener:0:', function() { }.bind(this), function() { }.bind(this), function() {return Wicket.$$(this)}.bind(this));return !wcall;" id="ajaxRefresh3">AJAX refresh</a>
 
 </wicket:panel></div>
 

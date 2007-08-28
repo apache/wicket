@@ -15,6 +15,6 @@ Wicket.Event.add(window, "domready", function() { test2();;});
 /*-->]]>*/</script>
 
 </head><body>
-<a href="?wicket:interface=:0:test::ILinkListener::" wicket:id="test" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:test::IBehaviorListener:0:', function() { }.bind(this), function() { }.bind(this));return !wcall;" id="test1">Test</a>
+<a href="?wicket:interface=:0:test::ILinkListener::" wicket:id="test" onclick="var wcall=wicketAjaxGet('?wicket:interface=:0:test::IBehaviorListener:0:', function() { }.bind(this), function() { }.bind(this), function() {return Wicket.$$(this)}.bind(this));return !wcall;" id="test1">Test</a>
 </body>
 </html>
