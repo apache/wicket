@@ -32,17 +32,6 @@ public class HelloWorld extends WicketExamplePage
 	 */
 	public HelloWorld()
 	{
-		add(new Label("message", "Hello World!")
-		{
-			/**
-			 * @see org.apache.wicket.Component#onBeforeRender()
-			 */
-			@Override
-			protected void onBeforeRender()
-			{
-				super.onBeforeRender();
-				System.err.println("id: " + getMarkupId());
-			}
-		});
+		add(new Label("message", "Hello World!"));
 	}
 }
