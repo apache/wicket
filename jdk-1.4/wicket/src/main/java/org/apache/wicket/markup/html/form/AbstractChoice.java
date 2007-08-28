@@ -205,16 +205,6 @@ abstract class AbstractChoice extends FormComponent
 		return choices;
 	}
 
-	/**
-	 * Returns the model for this AbastractChoice choices.
-	 * 
-	 * @return
-	 */
-	public IModel getChoicesModel()
-	{
-		return choices;
-	}
-
 
 	/**
 	 * Sets the list of choices
