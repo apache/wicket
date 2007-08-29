@@ -14,109 +14,111 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-	function paletteResolve( id) {
-		return document.getElementById(id);
-	}
+if (typeof(Wicket) == "undefined") Wicket = { };
+if (typeof(Wicket.Palette) == "undefined") Wicket.Palette = { };
 
-	function paletteChoicesOnFocus(choicesId, selectionId, recorderId) {
-		paletteClearSelectionHelper(paletteResolve(selectionId));
-	}
-	
-	function paletteSelectionOnFocus(choicesId, selectionId, recorderId) {
-		paletteClearSelectionHelper(paletteResolve(choicesId));
-	}
-		
-	
-	function paletteAdd(choicesId, selectionId, recorderId) {
-		var choices=paletteResolve(choicesId);
-		var selection=paletteResolve(selectionId);
+Wicket.Palette.$ = function(id) {
+	return document.getElementById(id);
+}
 
-		if (paletteMoveHelper(choices, selection)) {
-			var recorder=paletteResolve(recorderId);
-			paletteUpdateRecorder(selection, recorder);
+Wicket.Palette.choicesOnFocus=function(choicesId, selectionId, recorderId) {
+	Wicket.Palette.clearSelectionHelper(Wicket.Palette.$(selectionId));
+}
+	
+Wicket.Palette.selectionOnFocus=function(choicesId, selectionId, recorderId) {
+	Wicket.Palette.clearSelectionHelper(Wicket.Palette.$(choicesId));
+}
+	
+Wicket.Palette.add=function(choicesId, selectionId, recorderId) {
+		var choices=Wicket.Palette.$(choicesId);
+		var selection=Wicket.Palette.$(selectionId);
+
+		if (Wicket.Palette.moveHelper(choices, selection)) {
+			var recorder=Wicket.Palette.$(recorderId);
+			Wicket.Palette.updateRecorder(selection, recorder);
 		}
 	}
 	
-	function paletteRemove(choicesId, selectionId, recorderId) {
-		var choices=paletteResolve(choicesId);
-		var selection=paletteResolve(selectionId);
+Wicket.Palette.remove=function(choicesId, selectionId, recorderId) {
+	var choices=Wicket.Palette.$(choicesId);
+	var selection=Wicket.Palette.$(selectionId);
 
-		if (paletteMoveHelper(selection, choices)) {
-			var recorder=paletteResolve(recorderId);
-			paletteUpdateRecorder(selection, recorder);
+	if (Wicket.Palette.moveHelper(selection, choices)) {
+		var recorder=Wicket.Palette.$(recorderId);
+		Wicket.Palette.updateRecorder(selection, recorder);
+	}
+}
+
+Wicket.Palette.moveHelper=function(source, dest) {
+	var dirty=false;
+	for (var i=0;i<source.options.length;i++) {
+		if (source.options[i].selected) {	
+			dest.appendChild(source.options[i]);
+			i--;
+			dirty=true;
 		}
 	}
+	return dirty;
+}
+	
+Wicket.Palette.moveUp=function(choicesId, selectionId, recorderId) {
+		var selection=Wicket.Palette.$(selectionId);
 
-	function paletteMoveHelper(source, dest) {
-		var dirty=false;
-		for (var i=0;i<source.options.length;i++) {
-			if (source.options[i].selected) {	
-				dest.appendChild(source.options[i]);
-				i--;
+		if (Wicket.Palette.moveUpHelper(selection)) {
+			var recorder=Wicket.Palette.$(recorderId);
+			Wicket.Palette.updateRecorder(selection, recorder);
+		}
+	}
+	
+Wicket.Palette.moveUpHelper=function(box) {
+	var dirty=false;
+	for (var i=0;i<box.options.length;i++) {
+		if (box.options[i].selected && i>0) {
+			if(!box.options[i-1].selected) {
+				box.insertBefore(box.options[i],box.options[i-1]);
 				dirty=true;
 			}
 		}
-		return dirty;
 	}
+	return dirty;
+}
 	
-	function paletteMoveUp(choicesId, selectionId, recorderId) {
-		var selection=paletteResolve(selectionId);
+Wicket.Palette.moveDown=function(choicesId, selectionId, recorderId) {
+	var selection=Wicket.Palette.$(selectionId);
 
-		if (paletteMoveUpHelper(selection)) {
-			var recorder=paletteResolve(recorderId);
-			paletteUpdateRecorder(selection, recorder);
-		}
+	if (Wicket.Palette.moveDownHelper(selection)) {
+		var recorder=Wicket.Palette.$(recorderId);
+		Wicket.Palette.updateRecorder(selection, recorder);
 	}
-	
-	function paletteMoveUpHelper(box) {
-		var dirty=false;
-		for (var i=0;i<box.options.length;i++) {
-			if (box.options[i].selected && i>0) {
-				if(!box.options[i-1].selected) {
-					box.insertBefore(box.options[i],box.options[i-1]);
-					dirty=true;
-				}
+}
+
+Wicket.Palette.moveDownHelper=function(box) {
+	var dirty=false;
+	for (var i=box.options.length-1;i>=0;i--) {
+		if (box.options[i].selected && i<box.options.length-1) {
+			if(!box.options[i+1].selected) {
+				box.insertBefore(box.options[i+1],box.options[i]);
+				dirty=true;
 			}
 		}
-		return dirty;
+	}
+	return dirty;
+}	
+	
+Wicket.Palette.updateRecorder=function(selection, recorder) {
+	recorder.value="";
+	for (var i=0;i<selection.options.length;i++) {
+		recorder.value=recorder.value+selection.options[i].value;
+		if (i+1<selection.options.length) {
+			recorder.value=recorder.value+",";
+		}
 	}
 	
-	function paletteMoveDown(choicesId, selectionId, recorderId) {
-		var selection=paletteResolve(selectionId);
-
-		if (paletteMoveDownHelper(selection)) {
-			var recorder=paletteResolve(recorderId);
-			paletteUpdateRecorder(selection, recorder);
-		}
-	}
-
-	function paletteMoveDownHelper(box) {
-		var dirty=false;
-		for (var i=box.options.length-1;i>=0;i--) {
-			if (box.options[i].selected && i<box.options.length-1) {
-				if(!box.options[i+1].selected) {
-					box.insertBefore(box.options[i+1],box.options[i]);
-					dirty=true;
-				}
-			}
-		}
-		return dirty;
+	if (recorder.onchange!=null) { recorder.onchange(); }
+}
+	
+Wicket.Palette.clearSelectionHelper=function(box) {
+	for (var i=0;i<box.options.length;i++) {
+		box.options[i].selected=false;
 	}	
-	
-	function paletteUpdateRecorder(selection, recorder) {
-		recorder.value="";
-		for (var i=0;i<selection.options.length;i++) {
-			recorder.value=recorder.value+selection.options[i].value;
-			if (i+1<selection.options.length) {
-				recorder.value=recorder.value+",";
-			}
-		}
-		
-		if (recorder.onchange!=null) { recorder.onchange(); }
-	}
-	
-	function paletteClearSelectionHelper(box) {
-		for (var i=0;i<box.options.length;i++) {
-			box.options[i].selected=false;
-		}	
-	}
+}

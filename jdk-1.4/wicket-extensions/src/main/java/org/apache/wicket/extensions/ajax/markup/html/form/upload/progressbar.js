@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var wupb= {
+if (typeof(Wicket) == "undefined") Wicket = { };
+
+Wicket.WUPB= {
 
     Def : function(formid, statusid, barid, url) {
         this.formid=formid;
@@ -28,14 +30,14 @@ var wupb= {
 	},
 	
 	start : function(def) {
-		wupb.get(def.formid).submit();
-		wupb.get(def.statusid).innerHTML='Upload starting...';
-	    wupb.get(def.barid).firstChild.firstChild.style.width='0%';
+		Wicket.WUPB.get(def.formid).submit();
+		Wicket.WUPB.get(def.statusid).innerHTML='Upload starting...';
+	    Wicket.WUPB.get(def.barid).firstChild.firstChild.style.width='0%';
 	    
-		wupb.get(def.statusid).style.display='block';
-	    wupb.get(def.barid).style.display='block';
+		Wicket.WUPB.get(def.statusid).style.display='block';
+	    Wicket.WUPB.get(def.barid).style.display='block';
 	    
-	    window.setTimeout(function() { wupb.ajax(def); }, 1000);
+	    window.setTimeout(function() { Wicket.WUPB.ajax(def); }, 1000);
 	},
 	
 	ajax : function(def) {
@@ -67,7 +69,7 @@ var wupb= {
 			return false;
 		}
 	
-		transport.onreadystatechange = function() { wupb.update(transport, def); };
+		transport.onreadystatechange = function() { Wicket.WUPB.update(transport, def); };
 		transport.open('GET', def.url+'?anticache='+Math.random(), true);
 		transport.send(null);
 	},
@@ -90,8 +92,8 @@ var wupb= {
 
                 if ((completed_upload_size != "") && (completed_upload_size != 0))
                 {
-                    wupb.get(def.barid).firstChild.firstChild.style.width=progressPercent+'%';
-                    wupb.get(def.statusid).innerHTML=progressPercent + '% finished, '
+                    Wicket.WUPB.get(def.barid).firstChild.firstChild.style.width=progressPercent+'%';
+                    Wicket.WUPB.get(def.statusid).innerHTML=progressPercent + '% finished, '
                             + completed_upload_size + ' of '
                             + total_upload_size + ' at '
                             + transferRate  
@@ -101,16 +103,16 @@ var wupb= {
                 if (progressPercent == 100)
                 {
 
-                    wupb.get(def.barid).firstChild.firstChild.style.width='100%';
+                    Wicket.WUPB.get(def.barid).firstChild.firstChild.style.width='100%';
                     
-					wupb.get(def.statusid).style.display='none';
-				    wupb.get(def.barid).style.display='none';
+					Wicket.WUPB.get(def.statusid).style.display='none';
+				    Wicket.WUPB.get(def.barid).style.display='none';
 
                     return null;
                 }
 
 
-                window.setTimeout(function() { wupb.ajax(def); }, 1000);
+                window.setTimeout(function() { Wicket.WUPB.ajax(def); }, 1000);
             } else {
                 alert('Error: got a not-OK status code...');
             }

@@ -115,9 +115,9 @@ public class UploadProgressBar extends Panel
 			{
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 
-				return "var def=new wupb.Def('" + form.getMarkupId() + "', '"
+				return "var def=new Wicket.WUPB.Def('" + form.getMarkupId() + "', '"
 						+ statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '"
-						+ getPage().urlFor(ref) + "'); wupb.start(def); return false;";
+						+ getPage().urlFor(ref) + "'); Wicket.WUPB.start(def); return false;";
 			}
 		}));
 	}

@@ -517,7 +517,7 @@ public class Palette extends Panel
 	 */
 	public String getChoicesOnFocusJS()
 	{
-		return buildJSCall("paletteChoicesOnFocus");
+		return buildJSCall("Wicket.Palette.choicesOnFocus");
 	}
 
 	/**
@@ -525,7 +525,7 @@ public class Palette extends Panel
 	 */
 	public String getSelectionOnFocusJS()
 	{
-		return buildJSCall("paletteSelectionOnFocus");
+		return buildJSCall("Wicket.Palette.selectionOnFocus");
 	}
 
 	/**
@@ -533,7 +533,7 @@ public class Palette extends Panel
 	 */
 	public String getAddOnClickJS()
 	{
-		return buildJSCall("paletteAdd");
+		return buildJSCall("Wicket.Palette.add");
 	}
 
 	/**
@@ -541,7 +541,7 @@ public class Palette extends Panel
 	 */
 	public String getRemoveOnClickJS()
 	{
-		return buildJSCall("paletteRemove");
+		return buildJSCall("Wicket.Palette.remove");
 	}
 
 	/**
@@ -549,7 +549,7 @@ public class Palette extends Panel
 	 */
 	public String getUpOnClickJS()
 	{
-		return buildJSCall("paletteMoveUp");
+		return buildJSCall("Wicket.Palette.moveUp");
 	}
 
 	/**
@@ -557,7 +557,7 @@ public class Palette extends Panel
 	 */
 	public String getDownOnClickJS()
 	{
-		return buildJSCall("paletteMoveDown");
+		return buildJSCall("Wicket.Palette.moveDown");
 	}
 
 	protected void onDetach()
