@@ -186,6 +186,14 @@ public class WicketFilter implements Filter
 	public void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
+		// if called externally (i.e. WicketServlet) we need to set the thread local here
+		// AND clean it up at the end of the request
+		boolean externalCall = !Application.exists();
+		if (externalCall)
+		{
+			Application.set(webApplication);
+		}
+
 		String relativePath = getRelativePath(servletRequest);
 
 		// Special-case for home page - we redirect to add a trailing slash.
@@ -303,8 +311,12 @@ public class WicketFilter implements Filter
 				// Clean up thread local session
 				Session.unset();
 
-				// Clean up thread local application
-				Application.unset();
+				if (externalCall)
+				{
+					// Clean up thread local application if this was an external call
+					// (if not, doFilter will clean it up)
+					Application.unset();
+				}
 			}
 		}
 		finally
