@@ -144,7 +144,7 @@ public class Localizer
 			final Locale locale, final String style, final String defaultValue)
 			throws MissingResourceException
 	{
-		return null;
+		return getString(key, component, model, defaultValue);
 	}
 
 	/**
