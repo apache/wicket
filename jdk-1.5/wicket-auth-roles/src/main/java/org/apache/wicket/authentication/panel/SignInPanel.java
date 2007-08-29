@@ -192,7 +192,6 @@ public class SignInPanel extends Panel
 	public void setPersistent(final boolean enable)
 	{
 		username.setPersistent(enable);
-		password.setPersistent(enable);
 	}
 
 	/**
