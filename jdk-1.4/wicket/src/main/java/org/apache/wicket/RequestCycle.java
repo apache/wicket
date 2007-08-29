@@ -873,6 +873,7 @@ public abstract class RequestCycle
 	{
 		if (currentStep != NOT_STARTED)
 		{
+			detach();
 			throw new WicketRuntimeException(
 					"RequestCycles are non-reusable objects. This instance (" + this +
 							") already executed");
@@ -1204,7 +1205,14 @@ public abstract class RequestCycle
 		// Detach from session
 		if (sessionExists())
 		{
-			getSession().detach();
+			try
+			{
+				getSession().detach();
+			}
+			catch (RuntimeException re)
+			{
+				log.error("there was an error detaching the session", re);
+			}
 		}
 
 		if (isRedirect())
