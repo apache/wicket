@@ -742,16 +742,19 @@ public class WicketFilter implements Filter
 			Resource resource = null;
 			try
 			{
-				final WebRequest request = webApplication.newWebRequest(servletRequest);
-				final WebResponse response = webApplication.newWebResponse(servletResponse);
-				RequestCycle cycle = webApplication.newRequestCycle(request, response);
-
 				// Try to find shared resource
 				resource = webApplication.getSharedResources().get(resourceReferenceKey);
 
 				// If resource found and it is cacheable
 				if ((resource != null) && resource.isCacheable())
 				{
+					final WebRequest request = webApplication.newWebRequest(servletRequest);
+					// by pass the webApplication.newWebResponse, this makes a buffered response
+					// that
+					// should be done for head requests
+					final WebResponse response = new WebResponse(servletResponse);
+					RequestCycle cycle = webApplication.newRequestCycle(request, response);
+
 
 					// Set parameters from servlet request
 					resource.setParameters(request.getParameterMap());
