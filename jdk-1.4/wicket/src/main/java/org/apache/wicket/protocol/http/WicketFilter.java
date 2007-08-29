@@ -823,6 +823,12 @@ public class WicketFilter implements Filter
 					// (if not, doFilter will clean it up)
 					Application.unset();
 				}
+				if (Session.exists())
+				{
+					// TODO should we also call detach? (or requestdetach?)
+					// But that does a lot more and expects a lot more (pages/dirtymap)
+					Session.unset();
+				}
 			}
 		}
 		return -1;
