@@ -23,20 +23,18 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Runs a block of code periodically. The Task can be started at a given time in
- * the future and can be a daemon. The block of code will be passed a Log object
- * each time it is run through its ICode interface.
+ * Runs a block of code periodically. The Task can be started at a given time in the future and can
+ * be a daemon. The block of code will be passed a Log object each time it is run through its ICode
+ * interface.
  * <p>
- * If the code block takes longer than the period to run, the next task
- * invocation will occur immediately. In this case, tasks will not occur at
- * precise multiples of the period. For example, if you run a task every 30
- * seconds, and the first run takes 40 seconds but the second takes 20 seconds,
- * your task will be invoked at 0 seconds, 40 seconds and 70 seconds (40 seconds +
- * 30 seconds), which is not an even multiple of 30 seconds.
+ * If the code block takes longer than the period to run, the next task invocation will occur
+ * immediately. In this case, tasks will not occur at precise multiples of the period. For example,
+ * if you run a task every 30 seconds, and the first run takes 40 seconds but the second takes 20
+ * seconds, your task will be invoked at 0 seconds, 40 seconds and 70 seconds (40 seconds + 30
+ * seconds), which is not an even multiple of 30 seconds.
  * <p>
- * In general, this is a simple task class designed for polling activities. If
- * you need precise guarantees, you probably should be using a different task
- * class.
+ * In general, this is a simple task class designed for polling activities. If you need precise
+ * guarantees, you probably should be using a different task class.
  * 
  * @author Jonathan Locke
  */
@@ -50,7 +48,7 @@ public final class Task
 
 	/** The log to give to the user's code. */
 	private transient Logger log = null;
-	
+
 	/** The name of this task. */
 	private final String name;
 
@@ -62,7 +60,7 @@ public final class Task
 
 	/** Each task has an associated Thread */
 	private Thread thread;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -75,9 +73,8 @@ public final class Task
 	}
 
 	/**
-	 * Runs this task at the given frequency. You may only call this method if
-	 * the task has not yet been started. If the task is already running, an
-	 * IllegalStateException will be thrown.
+	 * Runs this task at the given frequency. You may only call this method if the task has not yet
+	 * been started. If the task is already running, an IllegalStateException will be thrown.
 	 * 
 	 * @param frequency
 	 *            The frequency at which to run the code
@@ -103,11 +100,11 @@ public final class Task
 						// Get the start of the current period
 						final Time startOfPeriod = Time.now();
 
-						if (log.isDebugEnabled())
+						if (log.isTraceEnabled())
 						{
-							log.debug("Run the job: " + code.toString());
+							log.trace("Run the job: " + code.toString());
 						}
-						
+
 						try
 						{
 							// Run the user's code
@@ -115,13 +112,12 @@ public final class Task
 						}
 						catch (Exception e)
 						{
-							log.error("Unhandled exception thrown by user code in task " 
-									+ name, e);
+							log.error("Unhandled exception thrown by user code in task " + name, e);
 						}
-						
-						if (log.isDebugEnabled())
+
+						if (log.isTraceEnabled())
 						{
-							log.debug("Finished with job: " + code.toString());
+							log.trace("Finished with job: " + code.toString());
 						}
 
 						// Sleep until the period is over (or not at all if it's
@@ -132,9 +128,9 @@ public final class Task
 			};
 
 			// Start the thread
-			this.thread = new Thread(runnable, name + " Task");
-			this.thread.setDaemon(isDaemon);
-			this.thread.start();
+			thread = new Thread(runnable, name + " Task");
+			thread.setDaemon(isDaemon);
+			thread.start();
 
 			// We're started all right!
 			isStarted = true;
@@ -146,9 +142,9 @@ public final class Task
 	}
 
 	/**
-	 * Set daemon or not. For obvious reasons, this value can only be set before
-	 * the task starts running. If you attempt to set this value after the task
-	 * starts running, an IllegalStateException will be thrown.
+	 * Set daemon or not. For obvious reasons, this value can only be set before the task starts
+	 * running. If you attempt to set this value after the task starts running, an
+	 * IllegalStateException will be thrown.
 	 * 
 	 * @param daemon
 	 *            True if this task's thread should be a daemon
@@ -178,9 +174,8 @@ public final class Task
 	}
 
 	/**
-	 * Sets start time for this task. You cannot set the start time for a task
-	 * which is already running. If you attempt to, an IllegalStateException
-	 * will be thrown.
+	 * Sets start time for this task. You cannot set the start time for a task which is already
+	 * running. If you attempt to, an IllegalStateException will be thrown.
 	 * 
 	 * @param startTime
 	 *            The time this task should start running
@@ -203,8 +198,8 @@ public final class Task
 	 */
 	public String toString()
 	{
-		return "[name=" + name + ", startTime=" + startTime + ", isDaemon=" + isDaemon
-				+ ", isStarted=" + isStarted + ", codeListener=" + log + "]";
+		return "[name=" + name + ", startTime=" + startTime + ", isDaemon=" + isDaemon +
+				", isStarted=" + isStarted + ", codeListener=" + log + "]";
 	}
 
 	/**
@@ -222,7 +217,7 @@ public final class Task
 	}
 
 	/**
-	 * Will stop the task as soon as it does have that opportunity  
+	 * Will stop the task as soon as it does have that opportunity
 	 */
 	public void stop()
 	{
@@ -230,12 +225,12 @@ public final class Task
 	}
 
 	/**
-	 * Will stop the task as soon as it does have that opportunity  
+	 * Will stop the task as soon as it does have that opportunity
 	 */
 	public void interrupt()
 	{
 		stop();
-		if (this.thread != null)
+		if (thread != null)
 		{
 			thread.interrupt();
 		}
