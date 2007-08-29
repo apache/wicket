@@ -147,21 +147,6 @@ public class WicketFilter implements Filter
 			}
 			finally
 			{
-				// we might have created a request cycle inside getLastModified, so we need to
-				// clean it here (in case the doGet method was not called
-				if (RequestCycle.get() != null)
-				{
-					try
-					{
-						RequestCycle.get().detach();
-					}
-					catch (RuntimeException e)
-					{
-						log.error("error detaching request cycle " + RequestCycle.get() + ": " +
-								e.getMessage(), e);
-					}
-				}
-
 				// always unset the application thread local
 				Application.unset();
 			}
@@ -231,12 +216,8 @@ public class WicketFilter implements Filter
 				}
 			}
 
-			final RequestCycle existingRequestCycle = RequestCycle.get();
-
 			// Create a new webrequest
-			final WebRequest request = existingRequestCycle != null
-					? (WebRequest)existingRequestCycle.getRequest()
-					: webApplication.newWebRequest(servletRequest);
+			final WebRequest request = webApplication.newWebRequest(servletRequest);
 
 			// Are we using REDIRECT_TO_BUFFER?
 			if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
@@ -288,19 +269,7 @@ public class WicketFilter implements Filter
 						.getResponseRequestEncoding());
 
 				// Create request cycle
-				RequestCycle cycle = null;
-
-				if (existingRequestCycle != null)
-				{
-					// set the real (maybe) buffered response instead of the empty one
-					// that is created by the last modified call.
-					existingRequestCycle.setResponse(response);
-					cycle = existingRequestCycle;
-				}
-				else
-				{
-					cycle = webApplication.newRequestCycle(request, response);
-				}
+				final RequestCycle cycle = webApplication.newRequestCycle(request, response);
 
 				try
 				{
@@ -780,10 +749,8 @@ public class WicketFilter implements Filter
 				{
 
 					final WebRequest request = webApplication.newWebRequest(servletRequest);
-					// by pass the webApplication.newWebResponse, this makes a buffered response
-					// that shouldn't be done for head requests.
-					final WebResponse response = new WebResponse();
-					RequestCycle cycle = webApplication.newRequestCycle(request, response);
+					// make the session available.
+					Session.findOrCreate(request, new WebResponse());
 
 
 					// Set parameters from servlet request
@@ -825,8 +792,6 @@ public class WicketFilter implements Filter
 				}
 				if (Session.exists())
 				{
-					// TODO should we also call detach? (or requestdetach?)
-					// But that does a lot more and expects a lot more (pages/dirtymap)
 					Session.unset();
 				}
 			}
