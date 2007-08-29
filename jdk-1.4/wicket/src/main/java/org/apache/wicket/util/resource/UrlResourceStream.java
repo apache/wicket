@@ -39,7 +39,9 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public class UrlResourceStream extends AbstractResourceStream implements IFixedLocationResourceStream
+public class UrlResourceStream extends AbstractResourceStream
+		implements
+			IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -89,8 +91,8 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 			}
 			catch (Exception ex)
 			{
-				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage()
-						+ "), falling back to the inputstream for polling");
+				log.debug("cannot convert url: " + url + " to file (" + ex.getMessage() +
+						"), falling back to the inputstream for polling");
 			}
 			if (file != null && !file.exists())
 			{
@@ -146,8 +148,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	}
 
 	/**
-	 * @return The content type of this resource, such as "image/jpeg" or
-	 *         "text/html"
+	 * @return The content type of this resource, such as "image/jpeg" or "text/html"
 	 */
 	public String getContentType()
 	{
@@ -156,8 +157,8 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 	}
 
 	/**
-	 * Method to test the content type on null or unknown. if this is the case
-	 * the content type is tried to be resolved throw the servlet context
+	 * Method to test the content type on null or unknown. if this is the case the content type is
+	 * tried to be resolved throw the servlet context
 	 */
 	private void testContentType()
 	{
@@ -168,8 +169,8 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 			{
 				// TODO Post 1.2: General: For non webapplication another method
 				// should be implemented (getMimeType on application?)
-				contentType = ((WebApplication)application).getServletContext()
-						.getMimeType(url.getFile());
+				contentType = ((WebApplication)application).getServletContext().getMimeType(
+						url.getFile());
 				if (contentType == null)
 				{
 					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
@@ -196,8 +197,8 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 			}
 			catch (IOException e)
 			{
-				throw new ResourceStreamNotFoundException("Resource " + url
-						+ " could not be opened", e);
+				throw new ResourceStreamNotFoundException("Resource " + url +
+						" could not be opened", e);
 			}
 		}
 
@@ -224,7 +225,7 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 			if (lastModified != this.lastModified)
 			{
 				this.lastModified = lastModified;
-				this.contentLength = (int)file.length();
+				contentLength = (int)file.length();
 			}
 		}
 		else
@@ -259,12 +260,22 @@ public class UrlResourceStream extends AbstractResourceStream implements IFixedL
 				{
 					this.lastModified = lastModified;
 					close = true;
-					this.contentLength = urlConnection.getContentLength();
+					contentLength = urlConnection.getContentLength();
 				}
 			}
 			catch (IOException e)
 			{
-				log.error("getLastModified for " + url + " failed: " + e.getMessage());
+				if (url.toString().contains(".jar!"))
+				{
+					if (log.isDebugEnabled())
+					{
+						log.debug("getLastModified for " + url + " failed: " + e.getMessage());
+					}
+				}
+				else
+				{
+					log.error("getLastModified for " + url + " failed: " + e.getMessage());
+				}
 			}
 			finally
 			{
