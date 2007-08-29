@@ -408,7 +408,10 @@ public class StringResourceModel extends LoadableDetachableModel
 		sb.append(",default:");
 		sb.append(defaultValue);
 		sb.append(",params:");
-		sb.append(Arrays.asList(parameters));
+		if (parameters != null)
+		{
+			sb.append(Arrays.asList(parameters));
+		}
 		sb.append("]");
 		return sb.toString();
 	}
