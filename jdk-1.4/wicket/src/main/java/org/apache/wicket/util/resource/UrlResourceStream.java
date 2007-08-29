@@ -265,7 +265,7 @@ public class UrlResourceStream extends AbstractResourceStream
 			}
 			catch (IOException e)
 			{
-				if (url.toString().contains(".jar!"))
+				if (url.toString().indexOf(".jar!") >= 0)
 				{
 					if (log.isDebugEnabled())
 					{
