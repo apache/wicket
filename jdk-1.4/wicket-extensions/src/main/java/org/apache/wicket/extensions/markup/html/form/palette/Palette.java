@@ -36,6 +36,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.resources.StyleSheetReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 
 
 /**
@@ -270,7 +271,7 @@ public class Palette extends Panel
 	 */
 	protected Component newAvailableHeader(String componentId)
 	{
-		return new Label(componentId, getString("palette.available", null, "Available"));
+		return new Label(componentId, new ResourceModel("palette.available", "Available"));
 	}
 
 	/**
@@ -283,7 +284,7 @@ public class Palette extends Panel
 	 */
 	protected Component newSelectedHeader(String componentId)
 	{
-		return new Label(componentId, getString("palette.selected", null, "Selected"));
+		return new Label(componentId, new ResourceModel("palette.selected", "Selected"));
 	}
 
 
