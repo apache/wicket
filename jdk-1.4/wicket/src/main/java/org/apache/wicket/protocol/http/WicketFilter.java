@@ -115,13 +115,13 @@ public class WicketFilter implements Filter
 
 		if (isWicketRequest(relativePath))
 		{
-			// Set the webapplication for this thread
-			Application.set(webApplication);
-
 			try
 			{
+				// Set the webapplication for this thread
+				Application.set(webApplication);
+
 				HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-				long lastModified = getLastModified(httpServletRequest, httpServletResponse);
+				long lastModified = getLastModified(httpServletRequest);
 				if (lastModified == -1)
 				{
 					// servlet doesn't support if-modified-since, no reason
@@ -186,14 +186,6 @@ public class WicketFilter implements Filter
 	public void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		// if called externally (i.e. WicketServlet) we need to set the thread local here
-		// AND clean it up at the end of the request
-		boolean externalCall = !Application.exists();
-		if (externalCall)
-		{
-			Application.set(webApplication);
-		}
-
 		String relativePath = getRelativePath(servletRequest);
 
 		// Special-case for home page - we redirect to add a trailing slash.
@@ -277,21 +269,38 @@ public class WicketFilter implements Filter
 				}
 			}
 
-			// Create a response object and set the output encoding according to
-			// wicket's application setttings.
-			final WebResponse response = existingRequestCycle != null
-					? (WebResponse)existingRequestCycle.getResponse()
-					: webApplication.newWebResponse(servletResponse);
-			response.setAjax(request.isAjax());
-			response.setCharacterEncoding(webApplication.getRequestCycleSettings()
-					.getResponseRequestEncoding());
-
+			WebResponse response = null;
+			boolean externalCall = !Application.exists();
 			try
 			{
+				// if called externally (i.e. WicketServlet) we need to set the thread local here
+				// AND clean it up at the end of the request
+				if (externalCall)
+				{
+					Application.set(webApplication);
+				}
+
+				// Create a response object and set the output encoding according to
+				// wicket's application setttings.
+				response = webApplication.newWebResponse(servletResponse);
+				response.setAjax(request.isAjax());
+				response.setCharacterEncoding(webApplication.getRequestCycleSettings()
+						.getResponseRequestEncoding());
+
 				// Create request cycle
-				RequestCycle cycle = existingRequestCycle != null
-						? existingRequestCycle
-						: webApplication.newRequestCycle(request, response);
+				RequestCycle cycle = null;
+
+				if (existingRequestCycle != null)
+				{
+					// set the real (maybe) buffered response instead of the empty one
+					// that is created by the last modified call.
+					existingRequestCycle.setResponse(response);
+					cycle = existingRequestCycle;
+				}
+				else
+				{
+					cycle = webApplication.newRequestCycle(request, response);
+				}
 
 				try
 				{
@@ -306,7 +315,8 @@ public class WicketFilter implements Filter
 			finally
 			{
 				// Close response
-				response.close();
+				if (response != null)
+					response.close();
 
 				// Clean up thread local session
 				Session.unset();
@@ -740,8 +750,7 @@ public class WicketFilter implements Filter
 	 * @param servletResponse
 	 * @return The last modified time stamp
 	 */
-	long getLastModified(final HttpServletRequest servletRequest,
-			final HttpServletResponse servletResponse)
+	long getLastModified(final HttpServletRequest servletRequest)
 	{
 		final String pathInfo = getRelativePath(servletRequest);
 
@@ -752,19 +761,28 @@ public class WicketFilter implements Filter
 					.substring(WebRequestCodingStrategy.RESOURCES_PATH_PREFIX.length());
 
 			Resource resource = null;
+
+			boolean externalCall = !Application.exists();
 			try
 			{
+				// if called externally (i.e. WicketServlet) we need to set the thread local here
+				// AND clean it up at the end of the request
+				if (externalCall)
+				{
+					Application.set(webApplication);
+				}
+
 				// Try to find shared resource
 				resource = webApplication.getSharedResources().get(resourceReferenceKey);
 
 				// If resource found and it is cacheable
 				if ((resource != null) && resource.isCacheable())
 				{
+
 					final WebRequest request = webApplication.newWebRequest(servletRequest);
 					// by pass the webApplication.newWebResponse, this makes a buffered response
-					// that
-					// should be done for head requests
-					final WebResponse response = new WebResponse(servletResponse);
+					// that shouldn't be done for head requests.
+					final WebResponse response = new WebResponse();
 					RequestCycle cycle = webApplication.newRequestCycle(request, response);
 
 
@@ -798,6 +816,12 @@ public class WicketFilter implements Filter
 				if (resource != null)
 				{
 					resource.setParameters(null);
+				}
+				if (externalCall)
+				{
+					// Clean up thread local application if this was an external call
+					// (if not, doFilter will clean it up)
+					Application.unset();
 				}
 			}
 		}

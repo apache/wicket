@@ -207,9 +207,6 @@ public class WicketServlet extends HttpServlet
 	 */
 	protected long getLastModified(final HttpServletRequest servletRequest)
 	{
-		// Right now I don't see any other way. wicketFilter.getLastModified takes now also
-		// servletResponse, which we don't have at this point
-		return -1;
-		// return wicketFilter.getLastModified(servletRequest);
+		return wicketFilter.getLastModified(servletRequest);
 	}
 }
