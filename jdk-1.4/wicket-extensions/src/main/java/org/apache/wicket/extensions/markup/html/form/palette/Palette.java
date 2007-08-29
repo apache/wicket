@@ -22,11 +22,12 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ResourceReference;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -63,7 +64,7 @@ import org.apache.wicket.model.ResourceModel;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class Palette extends Panel
+public class Palette extends Panel implements IHeaderContributor
 {
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
@@ -82,6 +83,9 @@ public class Palette extends Panel
 
 	/** number of rows to show in the select boxes */
 	private int rows;
+
+	/** if reordering of selected items is allowed in */
+	private final boolean allowOrder;
 
 	/**
 	 * recorder component used to track user's selection. it is updated by
@@ -130,7 +134,8 @@ public class Palette extends Panel
 	 * @param choicesModel
 	 *            Model representing collection of all available choices
 	 * @param choiceRenderer
-	 *            Render used to render choices. This must use unique IDs for the objects, not the index.
+	 *            Render used to render choices. This must use unique IDs for
+	 *            the objects, not the index.
 	 * @param rows
 	 *            Number of choices to be visible on the screen with out
 	 *            scrolling
@@ -151,7 +156,8 @@ public class Palette extends Panel
 	 * @param choicesModel
 	 *            Model representing collection of all available choices
 	 * @param choiceRenderer
-	 *            Render used to render choices. This must use unique IDs for the objects, not the index.
+	 *            Render used to render choices. This must use unique IDs for
+	 *            the objects, not the index.
 	 * @param rows
 	 *            Number of choices to be visible on the screen with out
 	 *            scrolling
@@ -166,6 +172,26 @@ public class Palette extends Panel
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
+		this.allowOrder = allowOrder;
+	}
+
+	protected void onBeforeRender()
+	{
+		if (!hasBeenRendered())
+		{
+			initFactories();
+		}
+		super.onBeforeRender();
+	}
+
+
+	/**
+	 * One-time init method for components that are created via overridable
+	 * factories. This method is here because we do not want to call overridable
+	 * methods form palette's constructor.
+	 */
+	private void initFactories()
+	{
 		recorderComponent = newRecorderComponent();
 		add(recorderComponent);
 
@@ -183,13 +209,6 @@ public class Palette extends Panel
 
 		add(newAvailableHeader(AVAILABLE_HEADER_ID));
 		add(newSelectedHeader(SELECTED_HEADER_ID));
-
-		add(HeaderContributor.forJavaScript(JAVASCRIPT));
-		ResourceReference css = getCSS();
-		if (css != null)
-		{
-			add(HeaderContributor.forCss(css));
-		}
 	}
 
 	/**
@@ -383,7 +402,7 @@ public class Palette extends Panel
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+	 * @see org.apache.wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
 	 */
 	protected Map getAdditionalAttributesForSelection(Object choice)
 	{
@@ -409,7 +428,7 @@ public class Palette extends Panel
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
+	 * @see org.apache.wicket.extensions.markup.html.form.palette.component#getAdditionalAttributes()
 	 */
 	protected Map getAdditionalAttributesForChoices(Object choice)
 	{
@@ -593,6 +612,21 @@ public class Palette extends Panel
 			{
 				tag.getAttributes().put("disabled", "disabled");
 			}
+		}
+	}
+
+	/**
+	 * Renders header contributions
+	 * 
+	 * @param response
+	 */
+	public void renderHead(IHeaderResponse response)
+	{
+		response.renderJavascriptReference(JAVASCRIPT);
+		ResourceReference css = getCSS();
+		if (css != null)
+		{
+			response.renderCSSReference(css);
 		}
 	}
 }
