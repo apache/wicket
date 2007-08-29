@@ -46,42 +46,37 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Holds information about a user session, including some fixed number of most
- * recent pages (and all their nested component information).
+ * Holds information about a user session, including some fixed number of most recent pages (and all
+ * their nested component information).
  * <ul>
- * <li><b>Access via RequestCycle </b>- The Session for a {@link RequestCycle}
- * can be retrieved by calling {@link RequestCycle#getSession()}.
+ * <li><b>Access via RequestCycle </b>- The Session for a {@link RequestCycle} can be retrieved by
+ * calling {@link RequestCycle#getSession()}.
  * 
- * <li><b>Access via Component </b>- If a RequestCycle object is not available,
- * the Session can be retrieved for a Component by calling
- * {@link Component#getSession()}. As currently implemented, each Component
- * does not itself have a reference to the session that contains it. However,
- * the Page component at the root of the containment hierarchy does have a
- * reference to the Session that holds the Page. So
- * {@link Component#getSession()} traverses the component hierarchy to the root
+ * <li><b>Access via Component </b>- If a RequestCycle object is not available, the Session can be
+ * retrieved for a Component by calling {@link Component#getSession()}. As currently implemented,
+ * each Component does not itself have a reference to the session that contains it. However, the
+ * Page component at the root of the containment hierarchy does have a reference to the Session that
+ * holds the Page. So {@link Component#getSession()} traverses the component hierarchy to the root
  * Page and then calls {@link Page#getSession()}.
  * 
- * <li><b>Access via Thread Local </b>- In the odd case where neither a
- * RequestCycle nor a Component is available, the currently active Session for
- * the calling thread can be retrieved by calling the static method
- * Session.get(). This last form should only be used if the first two forms
- * cannot be used since thread local access can involve a potentially more
- * expensive hash map lookup.
+ * <li><b>Access via Thread Local </b>- In the odd case where neither a RequestCycle nor a
+ * Component is available, the currently active Session for the calling thread can be retrieved by
+ * calling the static method Session.get(). This last form should only be used if the first two
+ * forms cannot be used since thread local access can involve a potentially more expensive hash map
+ * lookup.
  * 
- * <li><b>Locale </b>- A session has a Locale property to support localization.
- * The Locale for a session can be set by calling
- * {@link Session#setLocale(Locale)}. The Locale for a Session determines how
- * localized resources are found and loaded.
+ * <li><b>Locale </b>- A session has a Locale property to support localization. The Locale for a
+ * session can be set by calling {@link Session#setLocale(Locale)}. The Locale for a Session
+ * determines how localized resources are found and loaded.
  * 
- * <li><b>Style </b>- Besides having an appearance based on locale, resources
- * can also have different looks in the same locale (a.k.a. "skins"). The style
- * for a session determines the look which is used within the appopriate locale.
- * The session style ("skin") can be set with the setStyle() method.
+ * <li><b>Style </b>- Besides having an appearance based on locale, resources can also have
+ * different looks in the same locale (a.k.a. "skins"). The style for a session determines the look
+ * which is used within the appopriate locale. The session style ("skin") can be set with the
+ * setStyle() method.
  * 
- * <li><b>Resource Loading </b>- Based on the Session locale and style,
- * searching for resources occurs in the following order (where sourcePath is
- * set via the ApplicationSettings object for the current Application, and style
- * and locale are Session properties):
+ * <li><b>Resource Loading </b>- Based on the Session locale and style, searching for resources
+ * occurs in the following order (where sourcePath is set via the ApplicationSettings object for the
+ * current Application, and style and locale are Session properties):
  * <ul>
  * 1. [sourcePath]/name[style][locale].[extension] <br>
  * 2. [sourcePath]/name[locale].[extension] <br>
@@ -93,30 +88,26 @@ import org.slf4j.LoggerFactory;
  * 8. [classPath]/name.[extension] <br>
  * </ul>
  * 
- * <li><b>Session Properties </b>- Arbitrary objects can be attached to a
- * Session by installing a session factory on your Application class which
- * creates custom Session subclasses that have typesafe properties specific to
- * the application (see {@link Application} for details). To discourage
- * non-typesafe access to Session properties, no setProperty() or getProperty()
- * method is provided. In a clustered environment, you should take care to call
- * the dirty() method when you change a property or youre own. This way the
- * session will be reset again in the http session so that the http session
- * knows the session is changed.
+ * <li><b>Session Properties </b>- Arbitrary objects can be attached to a Session by installing a
+ * session factory on your Application class which creates custom Session subclasses that have
+ * typesafe properties specific to the application (see {@link Application} for details). To
+ * discourage non-typesafe access to Session properties, no setProperty() or getProperty() method is
+ * provided. In a clustered environment, you should take care to call the dirty() method when you
+ * change a property or youre own. This way the session will be reset again in the http session so
+ * that the http session knows the session is changed.
  * 
- * <li><b>Class Resolver </b>- Sessions have a class resolver (
- * {@link IClassResolver}) implementation that is used to locate classes for
- * components such as pages.
+ * <li><b>Class Resolver </b>- Sessions have a class resolver ( {@link IClassResolver})
+ * implementation that is used to locate classes for components such as pages.
  * 
- * <li><b>Page Factory </b>- A pluggable implementation of {@link IPageFactory}
- * is used to instantiate pages for the session.
+ * <li><b>Page Factory </b>- A pluggable implementation of {@link IPageFactory} is used to
+ * instantiate pages for the session.
  * 
- * <li><b>Removal </b>- Pages can be removed from the Session forcibly by
- * calling remove(Page) or removeAll(), although such an action should rarely be
- * necessary.
+ * <li><b>Removal </b>- Pages can be removed from the Session forcibly by calling remove(Page) or
+ * removeAll(), although such an action should rarely be necessary.
  * 
- * <li><b>Flash Messages</b>- Flash messages are messages that are stored in
- * session and are removed after they are displayed to the user. Session acts as
- * a store for these messages because they can last across requests.
+ * <li><b>Flash Messages</b>- Flash messages are messages that are stored in session and are
+ * removed after they are displayed to the user. Session acts as a store for these messages because
+ * they can last across requests.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -150,8 +141,7 @@ public abstract class Session implements IClusterable
 		/**
 		 * @param pagemap
 		 *            the pagemap to add as used.
-		 * @return the boolean if it was added (didn't already contain the
-		 *         pagemap)
+		 * @return the boolean if it was added (didn't already contain the pagemap)
 		 */
 		public boolean add(IPageMap pagemap)
 		{
@@ -220,8 +210,7 @@ public abstract class Session implements IClusterable
 	/**
 	 * Checks if the <code>Session</code> threadlocal is set in this thread
 	 * 
-	 * @return true if {@link Session#get()} can return the instance of session,
-	 *         false otherwise
+	 * @return true if {@link Session#get()} can return the instance of session, false otherwise
 	 */
 	public static boolean exists()
 	{
@@ -229,12 +218,10 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Locate the session for the client of this request in the
-	 * {@link ISessionStore} or create a new one and attach it when none could
-	 * be located and sets it as the current instance for this thread.
-	 * Typically, clients never touch this method, but rather use
-	 * {@link Session#get()}, which does the locating implicitly when not yet
-	 * set as a thread local.
+	 * Locate the session for the client of this request in the {@link ISessionStore} or create a
+	 * new one and attach it when none could be located and sets it as the current instance for this
+	 * thread. Typically, clients never touch this method, but rather use {@link Session#get()},
+	 * which does the locating implicitly when not yet set as a thread local.
 	 * 
 	 * @return The session for the client of this request or a new, unbound
 	 */
@@ -246,14 +233,26 @@ public abstract class Session implements IClusterable
 			throw new IllegalStateException(
 					"you can only locate or create sessions in the context of a request cycle");
 		}
+		Response response = requestCycle.getResponse();
+		Request request = requestCycle.getRequest();
+		return findOrCreate(request, response);
+	}
+
+	/**
+	 * @param response
+	 * @param request
+	 * @return
+	 */
+	public static Session findOrCreate(Request request, Response response)
+	{
 		Application application = Application.get();
 		ISessionStore sessionStore = application.getSessionStore();
-		Session session = sessionStore.lookup(requestCycle.getRequest());
+		Session session = sessionStore.lookup(request);
 
 		if (session == null)
 		{
 			// Create session using session factory
-			session = application.newSession(requestCycle.getRequest(), requestCycle.getResponse());
+			session = application.newSession(request, response);
 		}
 
 		// set thread local
@@ -280,8 +279,7 @@ public abstract class Session implements IClusterable
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Sets session for calling thread. Also triggers {@link #attach()} being
-	 * called.
+	 * Sets session for calling thread. Also triggers {@link #attach()} being called.
 	 * 
 	 * @param session
 	 *            The session
@@ -335,8 +333,7 @@ public abstract class Session implements IClusterable
 	private MetaDataEntry[] metaData;
 
 	/**
-	 * We need to know both thread that keeps the pagemap lock and the
-	 * RequestCycle
+	 * We need to know both thread that keeps the pagemap lock and the RequestCycle
 	 */
 	private static class PageMapsUsedInRequestEntry
 	{
@@ -350,8 +347,8 @@ public abstract class Session implements IClusterable
 	private transient boolean sessionInvalidated = false;
 
 	/**
-	 * Temporary instance of the session store. Should be set on each request as
-	 * it is not supposed to go in the session.
+	 * Temporary instance of the session store. Should be set on each request as it is not supposed
+	 * to go in the session.
 	 */
 	private transient ISessionStore sessionStore;
 
@@ -359,12 +356,12 @@ public abstract class Session implements IClusterable
 	private String style;
 
 	/**
-	 * Holds attributes for sessions that are still temporary/ not bound to a
-	 * session store. Only used when {@link #isTemporary()} is true.
+	 * Holds attributes for sessions that are still temporary/ not bound to a session store. Only
+	 * used when {@link #isTemporary()} is true.
 	 * <p>
-	 * Note: this doesn't have to be synchronized, as the only time when this
-	 * map is used is when a session is temporary, in which case it won't be
-	 * shared between requests (it's a per request instance).
+	 * Note: this doesn't have to be synchronized, as the only time when this map is used is when a
+	 * session is temporary, in which case it won't be shared between requests (it's a per request
+	 * instance).
 	 * </p>
 	 */
 	private transient Map temporarySessionAttributes;
@@ -373,8 +370,7 @@ public abstract class Session implements IClusterable
 	private final LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
 
 	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this
-	 * constructor returns.
+	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
 	 * 
 	 * @param request
 	 *            The current request
@@ -389,8 +385,7 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this
-	 * constructor returns.
+	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
 	 * 
 	 * @deprecated Use #Session(Request)
 	 * 
@@ -405,21 +400,19 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Force binding this session to the application's
-	 * {@link ISessionStore session store} if not already done so.
+	 * Force binding this session to the application's {@link ISessionStore session store} if not
+	 * already done so.
 	 * <p>
-	 * A Wicket application can operate in a session-less mode as long as
-	 * stateless pages are used. Session objects will be then created for each
-	 * request, but they will only live for that request. You can recognize
-	 * temporary sessions by calling {@link #isTemporary()} which basically
-	 * checks whether the session's id is null. Hence, temporary sessions have
-	 * no session id.
+	 * A Wicket application can operate in a session-less mode as long as stateless pages are used.
+	 * Session objects will be then created for each request, but they will only live for that
+	 * request. You can recognize temporary sessions by calling {@link #isTemporary()} which
+	 * basically checks whether the session's id is null. Hence, temporary sessions have no session
+	 * id.
 	 * </p>
 	 * <p>
-	 * By calling this method, the session will be bound (made not-temporary) if
-	 * it was not bound yet. It is useful for cases where you want to be
-	 * absolutely sure this session object will be available in next requests.
-	 * If the session was already bound ({@link ISessionStore#lookup(Request) returns a session}),
+	 * By calling this method, the session will be bound (made not-temporary) if it was not bound
+	 * yet. It is useful for cases where you want to be absolutely sure this session object will be
+	 * available in next requests. If the session was already bound ({@link ISessionStore#lookup(Request) returns a session}),
 	 * this call will be a noop.
 	 * </p>
 	 */
@@ -447,8 +440,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Cleans up all rendered feedback messages and any unrendered, dangling
-	 * feedback messages there may be left after that.
+	 * Cleans up all rendered feedback messages and any unrendered, dangling feedback messages there
+	 * may be left after that.
 	 */
 	public void cleanupFeedbackMessages()
 	{
@@ -473,8 +466,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Removes all pages from the session. Although this method should rarely be
-	 * needed, it is available (possibly for security reasons).
+	 * Removes all pages from the session. Although this method should rarely be needed, it is
+	 * available (possibly for security reasons).
 	 */
 	public final void clear()
 	{
@@ -508,9 +501,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * With this call you can create a pagemap name but not create the pagemap
-	 * itself already. It will give the first pagemap name where it couldn't
-	 * find a current pagemap for.
+	 * With this call you can create a pagemap name but not create the pagemap itself already. It
+	 * will give the first pagemap name where it couldn't find a current pagemap for.
 	 * 
 	 * It will return the same name if you call it 2 times in a row.
 	 * 
@@ -585,13 +577,12 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Gets the client info object for this session. This method lazily gets the
-	 * new agent info object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
-	 * client info object or uses {@link RequestCycle#newClientInfo()} to get
-	 * the info object based on the current request when no client info object
-	 * was set yet, and then caches the returned object; we can expect the
-	 * client to stay the same for the whole session, and implementations of
-	 * {@link RequestCycle#newClientInfo()} might be relatively expensive.
+	 * Gets the client info object for this session. This method lazily gets the new agent info
+	 * object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
+	 * client info object or uses {@link RequestCycle#newClientInfo()} to get the info object based
+	 * on the current request when no client info object was set yet, and then caches the returned
+	 * object; we can expect the client to stay the same for the whole session, and implementations
+	 * of {@link RequestCycle#newClientInfo()} might be relatively expensive.
 	 * 
 	 * @return the client info object based on this request
 	 */
@@ -623,11 +614,10 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Gets the unique id for this session from the underlying SessionStore. May
-	 * be null if a concrete session is not yet created.
+	 * Gets the unique id for this session from the underlying SessionStore. May be null if a
+	 * concrete session is not yet created.
 	 * 
-	 * @return The unique id for this session or null if it is a temporary
-	 *         session
+	 * @return The unique id for this session or null if it is a temporary session
 	 */
 	public final String getId()
 	{
@@ -668,8 +658,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * When a regular request on certain page with certain version is being
-	 * processed, we don't allow ajax requests to same page and version.
+	 * When a regular request on certain page with certain version is being processed, we don't
+	 * allow ajax requests to same page and version.
 	 * 
 	 * @param lockedRequestCycle
 	 * @return whether current request is valid or sould be discarded
@@ -682,8 +672,8 @@ public abstract class Session implements IClusterable
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * Returns the page with given id and versionNumber. It keeps asking
-	 * pageMaps for given page until it finds one that contains it.
+	 * Returns the page with given id and versionNumber. It keeps asking pageMaps for given page
+	 * until it finds one that contains it.
 	 * 
 	 * @param pageId
 	 * @param versionNumber
@@ -722,8 +712,8 @@ public abstract class Session implements IClusterable
 	 *            Component path
 	 * @param versionNumber
 	 *            The version of the page required
-	 * @return The page based on the first path component (the page id), or null
-	 *         if the requested version of the page cannot be found.
+	 * @return The page based on the first path component (the page id), or null if the requested
+	 *         version of the page cannot be found.
 	 */
 	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
 	{
@@ -826,8 +816,7 @@ public abstract class Session implements IClusterable
 	/**
 	 * @param page
 	 *            The page, or null if no page context is available
-	 * @return The page factory for the page, or the default page factory if
-	 *         page was null
+	 * @return The page factory for the page, or the default page factory if page was null
 	 */
 	public final IPageFactory getPageFactory(final Page page)
 	{
@@ -891,10 +880,10 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Invalidates this session at the end of the current request. If you need
-	 * to invalidate the session immediately, you can do this by calling
-	 * invalidateNow(), however this will remove all Wicket components from this
-	 * session, which means that you will no longer be able to work with them.
+	 * Invalidates this session at the end of the current request. If you need to invalidate the
+	 * session immediately, you can do this by calling invalidateNow(), however this will remove all
+	 * Wicket components from this session, which means that you will no longer be able to work with
+	 * them.
 	 */
 	public void invalidate()
 	{
@@ -902,9 +891,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Invalidates this session immediately. Calling this method will remove all
-	 * Wicket components from this session, which means that you will no longer
-	 * be able to work with them.
+	 * Invalidates this session immediately. Calling this method will remove all Wicket components
+	 * from this session, which means that you will no longer be able to work with them.
 	 */
 	public void invalidateNow()
 	{
@@ -913,8 +901,8 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Whether the session is invalid now, or will be invalidated by the end of
-	 * the request. Clients should rarely need to use this method if ever.
+	 * Whether the session is invalid now, or will be invalidated by the end of the request. Clients
+	 * should rarely need to use this method if ever.
 	 * 
 	 * @return Whether the session is invalid when the current request is done
 	 * 
@@ -927,12 +915,11 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Whether this session is temporary. A Wicket application can operate in a
-	 * session-less mode as long as stateless pages are used. If this session
-	 * object is temporary, it will not be available on a next request.
+	 * Whether this session is temporary. A Wicket application can operate in a session-less mode as
+	 * long as stateless pages are used. If this session object is temporary, it will not be
+	 * available on a next request.
 	 * 
-	 * @return Whether this session is temporary (which is the same as it's id
-	 *         being null)
+	 * @return Whether this session is temporary (which is the same as it's id being null)
 	 */
 	public final boolean isTemporary()
 	{
@@ -972,8 +959,7 @@ public abstract class Session implements IClusterable
 	 * @param pageMapName
 	 *            Name of page map, or null for default page map
 	 * @param autoCreate
-	 *            True if the page map should be automatically created if it
-	 *            does not exist
+	 *            True if the page map should be automatically created if it does not exist
 	 * @return PageMap for name
 	 */
 	public final IPageMap pageMapForName(String pageMapName, final boolean autoCreate)
@@ -1052,10 +1038,9 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Sets the metadata for this session using the given key. If the metadata
-	 * object is not of the correct type for the metadata key, an
-	 * IllegalArgumentException will be thrown. For information on creating
-	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * Sets the metadata for this session using the given key. If the metadata object is not of the
+	 * correct type for the metadata key, an IllegalArgumentException will be thrown. For
+	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
 	 * 
 	 * @param key
 	 *            The singleton key for the metadata
@@ -1086,9 +1071,8 @@ public abstract class Session implements IClusterable
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * The page will be 'touched' in the session. If it wasn't added yet to the
-	 * pagemap, it will be added to the page map else it will set this page to
-	 * the front.
+	 * The page will be 'touched' in the session. If it wasn't added yet to the pagemap, it will be
+	 * added to the page map else it will set this page to the front.
 	 * 
 	 * If another page was removed because of this it will be cleaned up.
 	 * 
@@ -1163,17 +1147,15 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Any attach logic for session subclasses. Called when a session is set for
-	 * the thread.
+	 * Any attach logic for session subclasses. Called when a session is set for the thread.
 	 */
 	protected void attach()
 	{
 	}
 
 	/**
-	 * Any detach logic for session subclasses. This is called on the end of
-	 * handling a request, when the RequestCycle is about to be detached from
-	 * the current thread.
+	 * Any detach logic for session subclasses. This is called on the end of handling a request,
+	 * when the RequestCycle is about to be detached from the current thread.
 	 */
 	protected void detach()
 	{
@@ -1184,8 +1166,7 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * Marks session state as dirty so that it will be flushed at the end of the
-	 * request.
+	 * Marks session state as dirty so that it will be flushed at the end of the request.
 	 */
 	public final void dirty()
 	{
@@ -1337,8 +1318,8 @@ public abstract class Session implements IClusterable
 	/**
 	 * NOT TO BE CALLED BY FRAMEWORK USERS.
 	 * 
-	 * @deprecated obsolete method (was meant for internal book keeping really).
-	 *             Clients should override {@link #detach()} instead.
+	 * @deprecated obsolete method (was meant for internal book keeping really). Clients should
+	 *             override {@link #detach()} instead.
 	 */
 	protected final void update()
 	{
