@@ -17,6 +17,9 @@
 package org.apache.wicket.util.lang;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -31,7 +34,15 @@ import org.slf4j.LoggerFactory;
 public final class Classes
 {
 	private static final Logger log = LoggerFactory.getLogger(Classes.class);
-	
+
+	/**
+	 * Primitive java types
+	 */
+	private static final List PRIMITIVES = Arrays.asList(new Class[] { String.class, byte.class,
+			Byte.class, short.class, Short.class, int.class, Integer.class, long.class, Long.class,
+			float.class, Float.class, double.class, Double.class, char.class, Character.class,
+			boolean.class, Boolean.class });
+
 	/**
 	 * Gets the name of the given class or null if the class is null.
 	 * 
@@ -45,10 +56,20 @@ public final class Classes
 	}
 
 	/**
-	 * Takes a Class and a relative path to a class and returns any class at
-	 * that relative path. For example, if the given Class was java.lang.System
-	 * and the relative path was "../util/List", then the java.util.List class
-	 * would be returned.
+	 * Checks if the class is a primitive type
+	 * 
+	 * @param clazz
+	 * @return true if clazz is primitive
+	 */
+	public static boolean isPrimitive(Class clazz)
+	{
+		return PRIMITIVES.contains(clazz);
+	}
+
+	/**
+	 * Takes a Class and a relative path to a class and returns any class at that relative path. For
+	 * example, if the given Class was java.lang.System and the relative path was "../util/List",
+	 * then the java.util.List class would be returned.
 	 * 
 	 * @param scope
 	 *            The package to start at
@@ -78,7 +99,8 @@ public final class Classes
 		{
 			if (Application.exists())
 			{
-				return Application.get().getApplicationSettings().getClassResolver().resolveClass(className);
+				return Application.get().getApplicationSettings().getClassResolver().resolveClass(
+						className);
 			}
 			return Class.forName(className);
 		}
