@@ -23,7 +23,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder
 import org.apache.wicket.markup.html.border.Border;
 
 
-
 /**
  * Ajaxified version of {@link OrderByBorder}
  * 
@@ -115,6 +114,7 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 		};
 		add(link);
 		add(new AjaxFallbackOrderByLink.CssModifier(link, cssProvider));
+		link.add(getBodyContainer());
 	}
 
 	/**
