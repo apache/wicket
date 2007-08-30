@@ -23,9 +23,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Classes;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -62,7 +65,7 @@ import net.sf.cglib.proxy.MethodProxy;
  * 
  * 	Object locateProxyObject()
  * 	{
- * 		MyApplication app = (MyApplication) Application.get();
+ * 		MyApplication app = (MyApplication)Application.get();
  * 		return app.getUserService();
  * 	}
  * }
@@ -116,10 +119,11 @@ public class LazyInitProxyFactory
 	 */
 	public static Object createProxy(Class type, IProxyTargetLocator locator)
 	{
-		if (type == String.class)
+		if (Classes.isPrimitive(type))
 		{
-			// We special-case Strings as sometimes people use these as SpringBeans (WICKET-603).
-			return locator.locateProxyTarget(); 
+			// We special-case primitives as sometimes people use these as
+			// SpringBeans (WICKET-603, WICKET-906). Go figure.
+			return locator.locateProxyTarget();
 		}
 		else if (type.isInterface())
 		{
@@ -127,9 +131,9 @@ public class LazyInitProxyFactory
 
 			try
 			{
-				return Proxy.newProxyInstance(Thread.currentThread()
-						.getContextClassLoader(), new Class[] {type, Serializable.class,
-						ILazyInitProxy.class, IWriteReplace.class}, handler);
+				return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+						new Class[] { type, Serializable.class, ILazyInitProxy.class,
+								IWriteReplace.class }, handler);
 			}
 			catch (IllegalArgumentException e)
 			{
@@ -140,10 +144,9 @@ public class LazyInitProxyFactory
 				 * and fall back to the classloader (current) that actually
 				 * loaded this class.
 				 */
-				return Proxy.newProxyInstance(
-						LazyInitProxyFactory.class.getClassLoader(), new Class[] {type,
-								Serializable.class, ILazyInitProxy.class,
-								IWriteReplace.class}, handler);
+				return Proxy.newProxyInstance(LazyInitProxyFactory.class.getClassLoader(),
+						new Class[] { type, Serializable.class, ILazyInitProxy.class,
+								IWriteReplace.class }, handler);
 			}
 
 		}
@@ -152,8 +155,8 @@ public class LazyInitProxyFactory
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
 			Enhancer e = new Enhancer();
-			e.setInterfaces(new Class[] {Serializable.class, ILazyInitProxy.class,
-					IWriteReplace.class});
+			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
+					IWriteReplace.class });
 			e.setSuperclass(type);
 			e.setCallback(handler);
 
@@ -222,8 +225,8 @@ public class LazyInitProxyFactory
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new InvalidClassException(type, "could not resolve class ["
-						+ type + "] when deserializing proxy");
+				throw new InvalidClassException(type, "could not resolve class [" + type +
+						"] when deserializing proxy");
 			}
 
 			return LazyInitProxyFactory.createProxy(clazz, locator);
@@ -237,8 +240,12 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class CGLibInterceptor implements MethodInterceptor, ILazyInitProxy,
-			Serializable, IWriteReplace
+	private static class CGLibInterceptor
+			implements
+				MethodInterceptor,
+				ILazyInitProxy,
+				Serializable,
+				IWriteReplace
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -270,8 +277,8 @@ public class LazyInitProxyFactory
 		 *      java.lang.reflect.Method, java.lang.Object[],
 		 *      net.sf.cglib.proxy.MethodProxy)
 		 */
-		public Object intercept(Object object, Method method, Object[] args,
-				MethodProxy proxy) throws Throwable
+		public Object intercept(Object object, Method method, Object[] args, MethodProxy proxy)
+				throws Throwable
 		{
 			if (isFinalizeMethod(method))
 			{
@@ -331,8 +338,12 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class JdkHandler implements InvocationHandler, ILazyInitProxy,
-			Serializable, IWriteReplace
+	private static class JdkHandler
+			implements
+				InvocationHandler,
+				ILazyInitProxy,
+				Serializable,
+				IWriteReplace
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -435,10 +446,8 @@ public class LazyInitProxyFactory
 	 */
 	protected static boolean isEqualsMethod(Method method)
 	{
-		return method.getReturnType() == boolean.class
-				&& method.getParameterTypes().length == 1
-				&& method.getParameterTypes()[0] == Object.class
-				&& method.getName().equals("equals");
+		return method.getReturnType() == boolean.class && method.getParameterTypes().length == 1 &&
+				method.getParameterTypes()[0] == Object.class && method.getName().equals("equals");
 	}
 
 	/**
@@ -451,9 +460,8 @@ public class LazyInitProxyFactory
 	 */
 	protected static boolean isHashCodeMethod(Method method)
 	{
-		return method.getReturnType() == int.class
-				&& method.getParameterTypes().length == 0
-				&& method.getName().equals("hashCode");
+		return method.getReturnType() == int.class && method.getParameterTypes().length == 0 &&
+				method.getName().equals("hashCode");
 	}
 
 	/**
@@ -466,9 +474,8 @@ public class LazyInitProxyFactory
 	 */
 	protected static boolean isToStringMethod(Method method)
 	{
-		return method.getReturnType() == String.class
-				&& method.getParameterTypes().length == 0
-				&& method.getName().equals("toString");
+		return method.getReturnType() == String.class && method.getParameterTypes().length == 0 &&
+				method.getName().equals("toString");
 	}
 
 	/**
@@ -481,9 +488,8 @@ public class LazyInitProxyFactory
 	 */
 	protected static boolean isFinalizeMethod(Method method)
 	{
-		return method.getReturnType() == void.class
-				&& method.getParameterTypes().length == 0
-				&& method.getName().equals("finalize");
+		return method.getReturnType() == void.class && method.getParameterTypes().length == 0 &&
+				method.getName().equals("finalize");
 	}
 
 	/**
@@ -495,9 +501,8 @@ public class LazyInitProxyFactory
 	 */
 	protected static boolean isWriteReplaceMethod(Method method)
 	{
-		return method.getReturnType() == Object.class
-				&& method.getParameterTypes().length == 0
-				&& method.getName().equals("writeReplace");
+		return method.getReturnType() == Object.class && method.getParameterTypes().length == 0 &&
+				method.getName().equals("writeReplace");
 	}
 
 }
