@@ -35,20 +35,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The purpose of this filter is to make all "href", "src" and "background"
- * attributes found in the markup which contain a relative URL like
- * "myDir/myPage.gif" actually resolve in the output HTML, by prefixing them
- * with with an appropriate path to make the link work properly, even if the
- * current page is being displayed at a mounted URL or whatever. It is applied
- * to all non wicket component tags, except for auto-linked tags.
+ * The purpose of this filter is to make all "href", "src" and "background" attributes found in the
+ * markup which contain a relative URL like "myDir/myPage.gif" actually resolve in the output HTML,
+ * by prefixing them with with an appropriate path to make the link work properly, even if the
+ * current page is being displayed at a mounted URL or whatever. It is applied to all non wicket
+ * component tags, except for auto-linked tags.
  * 
- * It achieves this by being both an IMarkupFilter and IComponentResolver, and
- * works similarly to the &lt;wicket:message&gt; code. For each tag, we look to
- * see if the path in "href", "src" and "background" attributes is relative. If
- * it is, we assume it's relative to the context path and we should prefix it
- * appropriately so that it resolves correctly for the current request, even if
- * that's for something that's not at the context root. This is done for
- * ServletWebRequests by prepending with "../" tokens, for example.
+ * It achieves this by being both an IMarkupFilter and IComponentResolver, and works similarly to
+ * the &lt;wicket:message&gt; code. For each tag, we look to see if the path in "href", "src" and
+ * "background" attributes is relative. If it is, we assume it's relative to the context path and we
+ * should prefix it appropriately so that it resolves correctly for the current request, even if
+ * that's for something that's not at the context root. This is done for ServletWebRequests by
+ * prepending with "../" tokens, for example.
  * 
  * 
  * @author Al Maw
@@ -63,8 +61,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	private static final Logger log = LoggerFactory.getLogger(RelativePathPrefixHandler.class);
 
 	/**
-	 * The id automatically assigned to tags without an id which we need to
-	 * prepend a relative path to.
+	 * The id automatically assigned to tags without an id which we need to prepend a relative path
+	 * to.
 	 */
 	public static final String WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID = "_relative_path_prefix_";
 
@@ -72,8 +70,8 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	private static final String attributeNames[] = new String[] { "href", "src", "background" };
 
 	/**
-	 * Behavior that adds a prefix to src, href and background attributes to
-	 * make them context-relative
+	 * Behavior that adds a prefix to src, href and background attributes to make them
+	 * context-relative
 	 */
 	public static final IBehavior RELATIVE_PATH_BEHAVIOR = new AbstractBehavior()
 	{
@@ -105,10 +103,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	};
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handle it if
-	 * the specific filter criteria are met. Depending on the filter, it may
-	 * return the MarkupElement unchanged, modified or it remove by asking the
-	 * parent handler for the next tag.
+	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
+	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
+	 * modified or it remove by asking the parent handler for the next tag.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return Return the next eligible MarkupElement
@@ -155,8 +152,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	/**
 	 * 
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
@@ -171,7 +167,18 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			}
 			else
 			{
-				wc = new WebMarkupContainer(id);
+				// we do not want to mess with the hierarchy, so the container has to be
+				// transparent as it may have wicket components inside. for example a raw anchor tag
+				// that contains a label.
+				wc = new WebMarkupContainer(id)
+				{
+					private static final long serialVersionUID = 1L;
+
+					public boolean isTransparentResolver()
+					{
+						return true;
+					}
+				};
 			}
 			container.autoAdd(wc, markupStream);
 			return true;
