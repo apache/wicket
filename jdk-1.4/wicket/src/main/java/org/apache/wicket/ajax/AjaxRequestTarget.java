@@ -51,28 +51,26 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A request target that produces ajax response envelopes used on the client
- * side to update component markup as well as evaluate arbitrary javascript.
+ * A request target that produces ajax response envelopes used on the client side to update
+ * component markup as well as evaluate arbitrary javascript.
  * <p>
- * A component whose markup needs to be updated should be added to this target
- * via AjaxRequestTarget#addComponent(Component) method. Its body will be
- * rendered and added to the envelope when the target is processed, and
- * refreshed on the client side when the ajax response is received.
+ * A component whose markup needs to be updated should be added to this target via
+ * AjaxRequestTarget#addComponent(Component) method. Its body will be rendered and added to the
+ * envelope when the target is processed, and refreshed on the client side when the ajax response is
+ * received.
  * <p>
- * It is important that the component whose markup needs to be updated contains
- * an id attribute in the generated markup that is equal to the value retrieved
- * from Component#getMarkupId(). This can be accomplished by either setting the
- * id attribute in the html template, or using an attribute modifier that will
- * add the attribute with value Component#getMarkupId() to the tag ( such as
+ * It is important that the component whose markup needs to be updated contains an id attribute in
+ * the generated markup that is equal to the value retrieved from Component#getMarkupId(). This can
+ * be accomplished by either setting the id attribute in the html template, or using an attribute
+ * modifier that will add the attribute with value Component#getMarkupId() to the tag ( such as
  * MarkupIdSetter )
  * <p>
- * Any javascript that needs to be evaluated on the client side can be added
- * using AjaxRequestTarget#append/prependJavascript(String). For example, this
- * feature can be useful when it is desirable to link component update with some
- * javascript effects.
+ * Any javascript that needs to be evaluated on the client side can be added using
+ * AjaxRequestTarget#append/prependJavascript(String). For example, this feature can be useful when
+ * it is desirable to link component update with some javascript effects.
  * <p>
- * The target provides a listener interface {@link IListener} that can be used
- * to add code that responds to various target events by adding listeners via
+ * The target provides a listener interface {@link IListener} that can be used to add code that
+ * responds to various target events by adding listeners via
  * {@link #addListener(org.apache.wicket.ajax.AjaxRequestTarget.IListener)}
  * 
  * @since 1.2
@@ -83,8 +81,8 @@ import org.slf4j.LoggerFactory;
 public class AjaxRequestTarget implements IRequestTarget
 {
 	/**
-	 * An {@link AjaxRequestTarget} listener that can be used to respond to
-	 * various target-related events
+	 * An {@link AjaxRequestTarget} listener that can be used to respond to various target-related
+	 * events
 	 * 
 	 */
 	public static interface IListener
@@ -93,27 +91,24 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * Triggered before ajax request target begins its response cycle
 		 * 
 		 * @param map
-		 *            read-only map:markupId->component of components already
-		 *            added to the target
+		 *            read-only map:markupId->component of components already added to the target
 		 * @param target
-		 *            the target itself. Could be used to add components or to
-		 *            append/prepend javascript
+		 *            the target itself. Could be used to add components or to append/prepend
+		 *            javascript
 		 * 
 		 */
 		public void onBeforeRespond(Map map, AjaxRequestTarget target);
 
 		/**
-		 * Triggered after ajax request target is done with its response cycle.
-		 * At this point only additional javascript can be output to the
-		 * response using the provided {@link IJavascriptResponse} object
+		 * Triggered after ajax request target is done with its response cycle. At this point only
+		 * additional javascript can be output to the response using the provided
+		 * {@link IJavascriptResponse} object
 		 * 
-		 * NOTE: During this stage of processing any calls to target that
-		 * manipulate the response (adding components, javascript) will have no
-		 * effect
+		 * NOTE: During this stage of processing any calls to target that manipulate the response
+		 * (adding components, javascript) will have no effect
 		 * 
 		 * @param map
-		 *            read-only map:markupId->component of components already
-		 *            added to the target
+		 *            read-only map:markupId->component of components already added to the target
 		 * @param response
 		 *            response object that can be used to output javascript
 		 */
@@ -121,16 +116,15 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * An ajax javascript response that allows users to add javascript to be
-	 * executed on the client side
+	 * An ajax javascript response that allows users to add javascript to be executed on the client
+	 * side
 	 * 
 	 * @author ivaynberg
 	 */
 	public static interface IJavascriptResponse
 	{
 		/**
-		 * Adds more javascript to the ajax response that will be executed on
-		 * the client side
+		 * Adds more javascript to the ajax response that will be executed on the client side
 		 * 
 		 * @param script
 		 *            javascript
@@ -198,8 +192,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		/**
-		 * Resets the response to a clean state so it can be reused to save on
-		 * garbage.
+		 * Resets the response to a clean state so it can be reused to save on garbage.
 		 */
 		public void reset()
 		{
@@ -235,14 +228,14 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final List/* <String> */domReadyJavascripts = new ArrayList();
 
 	/**
-	 * Create a response for component body and javascript that will escape
-	 * output to make it safe to use inside a CDATA block
+	 * Create a response for component body and javascript that will escape output to make it safe
+	 * to use inside a CDATA block
 	 */
 	private final AjaxResponse encodingBodyResponse;
 
 	/**
-	 * Response for header contributon that will escape output to make it safe
-	 * to use inside a CDATA block
+	 * Response for header contributon that will escape output to make it safe to use inside a CDATA
+	 * block
 	 */
 	private final AjaxResponse encodingHeaderResponse;
 
@@ -289,8 +282,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Visits all children of the specified parent container and adds them to
-	 * the target if they are of same type as <code>childCriteria</code>
+	 * Visits all children of the specified parent container and adds them to the target if they are
+	 * of same type as <code>childCriteria</code>
 	 * 
 	 * @param parent
 	 * @param childCriteria
@@ -377,8 +370,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Adds javascript that will be evaluated on the client side after
-	 * components are replaced
+	 * Adds javascript that will be evaluated on the client side after components are replaced
 	 * 
 	 * @deprecated use appendJavascript(String javascript) instead
 	 * @param javascript
@@ -389,9 +381,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Sets the focus in the browser to the given component. The markup id must
-	 * be set. If the component is null the focus will not be set to any
-	 * component.
+	 * Sets the focus in the browser to the given component. The markup id must be set. If the
+	 * component is null the focus will not be set to any component.
 	 * 
 	 * @param component
 	 *            The component to get the focus or null.
@@ -410,8 +401,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 
 	/**
-	 * Adds javascript that will be evaluated on the client side after
-	 * components are replaced
+	 * Adds javascript that will be evaluated on the client side after components are replaced
 	 * 
 	 * @param javascript
 	 */
@@ -467,8 +457,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Adds javascript that will be evaluated on the client side before
-	 * components are replaced
+	 * Adds javascript that will be evaluated on the client side before components are replaced
 	 * 
 	 * @param javascript
 	 */
@@ -584,9 +573,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Processes components added to the target. This involves attaching
-	 * components, rendering markup into a client side xml envelope, and
-	 * detaching them
+	 * Processes components added to the target. This involves attaching components, rendering
+	 * markup into a client side xml envelope, and detaching them
 	 * 
 	 * @param response
 	 */
@@ -700,8 +688,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @return name of encoding used to possibly encode the contents of the
-	 *         CDATA blocks
+	 * @return name of encoding used to possibly encode the contents of the CDATA blocks
 	 */
 	protected String getEncodingName()
 	{
@@ -716,13 +703,12 @@ public class AjaxRequestTarget implements IRequestTarget
 	protected boolean needsEncoding(String str)
 	{
 		/*
-		 * TODO Post 1.2: Ajax: we can improve this by keeping a buffer of at
-		 * least 3 characters and checking that buffer so that we can narrow
-		 * down escaping occuring only for ']]>' sequence, or at least for ]] if ]
-		 * is the last char in this buffer.
+		 * TODO Post 1.2: Ajax: we can improve this by keeping a buffer of at least 3 characters and
+		 * checking that buffer so that we can narrow down escaping occuring only for ']]>'
+		 * sequence, or at least for ]] if ] is the last char in this buffer.
 		 * 
-		 * but this improvement will only work if we write first and encode
-		 * later instead of working on fragments sent to write
+		 * but this improvement will only work if we write first and encode later instead of working
+		 * on fragments sent to write
 		 */
 
 		return str.indexOf(']') >= 0;
@@ -905,9 +891,9 @@ public class AjaxRequestTarget implements IRequestTarget
 	/**
 	 * Returns the header response associated with current AjaxRequestTarget.
 	 * 
-	 * Beware that only renderOnDomReadyJavascript and renderOnLoadJavascript
-	 * can be called outside the renderHeader(IHeaderResponse response) method.
-	 * Calls to other render** methods will result in an exception being thrown.
+	 * Beware that only renderOnDomReadyJavascript and renderOnLoadJavascript can be called outside
+	 * the renderHeader(IHeaderResponse response) method. Calls to other render** methods will
+	 * result in an exception being thrown.
 	 * 
 	 * @return header response
 	 */
