@@ -69,6 +69,7 @@ import org.apache.wicket.validation.IValidator;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
+// TODO wonder if it makes sense to refactor this into a formcomponentpanel
 public class AjaxEditableLabel extends Panel
 {
 	private static final long serialVersionUID = 1L;
@@ -94,13 +95,16 @@ public class AjaxEditableLabel extends Panel
 		protected void onComponentTag(ComponentTag tag)
 		{
 			super.onComponentTag(tag);
-			final String saveCall = "{" + generateCallbackScript("wicketAjaxGet('" + getCallbackUrl()
-					+ "&save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
+			final String saveCall = "{"
+					+ generateCallbackScript("wicketAjaxGet('" + getCallbackUrl()
+							+ "&save=true&'+this.name+'='+wicketEncode(this.value)")
+					+ "; return false;}";
 
 
-			final String cancelCall = "{" + generateCallbackScript("wicketAjaxGet('" + getCallbackUrl()
-					+ "&save=false'") + "; return false;}";
-										
+			final String cancelCall = "{"
+					+ generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "&save=false'")
+					+ "; return false;}";
+
 
 			final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall
 					+ " else if (kc!=13) { return true; } else " + saveCall;
