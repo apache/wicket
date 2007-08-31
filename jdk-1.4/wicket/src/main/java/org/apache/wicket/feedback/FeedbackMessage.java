@@ -33,35 +33,34 @@ public class FeedbackMessage implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/** Constant for debug level. */
-	public static final int DEBUG = 1;
+	public static final int DEBUG = 100;
 
 	/** Constant for error level. */
-	public static final int ERROR = 4;
+	public static final int ERROR = 400;
 
 	/** Constant for fatal level. */
-	public static final int FATAL = 5;
+	public static final int FATAL = 500;
 
 	/** Constant for info level. */
-	public static final int INFO = 2;
+	public static final int INFO = 200;
 
 	/**
-	 * Constant for an undefined level; note that components might decide not to
-	 * render anything when this level is used.
+	 * Constant for an undefined level; note that components might decide not to render anything
+	 * when this level is used.
 	 */
 	public static final int UNDEFINED = 0;
 
 	/** Constant for warning level. */
-	public static final int WARNING = 3;
+	public static final int WARNING = 300;
 
 	/** Levels as strings for debugging. */
 	private static final String[] levelStrings = new String[] { "UNDEFINED", "DEBUG", "INFO",
 			"WARNING", "ERROR", "FATAL" };
 
 	/**
-	 * The message level; can be used by rendering components. Note that what
-	 * actually happens with the level indication is totally up to the
-	 * components that render messages like these. The default level is
-	 * UNDEFINED.
+	 * The message level; can be used by rendering components. Note that what actually happens with
+	 * the level indication is totally up to the components that render messages like these. The
+	 * default level is UNDEFINED.
 	 */
 	private final int level;
 
@@ -92,7 +91,7 @@ public class FeedbackMessage implements IClusterable
 		this.message = message;
 		this.level = level;
 	}
-	
+
 	/**
 	 * Gets whether or not this message has been rendered
 	 * 
@@ -109,14 +108,13 @@ public class FeedbackMessage implements IClusterable
 	 */
 	public final void markRendered()
 	{
-		this.rendered = true;
+		rendered = true;
 	}
 
 
 	/**
-	 * Gets the message level; can be used by rendering components. Note that
-	 * what actually happens with the level indication is totally up to the
-	 * components that render feedback messages.
+	 * Gets the message level; can be used by rendering components. Note that what actually happens
+	 * with the level indication is totally up to the components that render feedback messages.
 	 * 
 	 * @return The message level indicator.
 	 */
@@ -232,7 +230,8 @@ public class FeedbackMessage implements IClusterable
 	 */
 	public String toString()
 	{
-		return "[FeedbackMessage message = \"" + getMessage() + "\", reporter = "
-				+ ((getReporter()==null)?"null":getReporter().getId()) + ", level = " + getLevelAsString() + "]";
+		return "[FeedbackMessage message = \"" + getMessage() + "\", reporter = " +
+				((getReporter() == null) ? "null" : getReporter().getId()) + ", level = " +
+				getLevelAsString() + "]";
 	}
 }
