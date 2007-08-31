@@ -39,10 +39,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Implementation of {@link HttpServletResponse} that saves the output in a
- * string buffer. This is used in REDIRECT_TO_BUFFER render strategy to create
- * the buffer of the output that can be held on to until the redirect part of
- * the render strategy.
+ * Implementation of {@link HttpServletResponse} that saves the output in a string buffer. This is
+ * used in REDIRECT_TO_BUFFER render strategy to create the buffer of the output that can be held on
+ * to until the redirect part of the render strategy.
  * 
  * @author jcompagner
  */
@@ -69,7 +68,6 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	private byte[] byteBuffer;
 	private Locale locale;
 	private String encoding;
-
 
 	/**
 	 * Constructor.
@@ -147,8 +145,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#sendError(int,
-	 *      java.lang.String)
+	 * @see javax.servlet.http.HttpServletResponse#sendError(int, java.lang.String)
 	 */
 	public void sendError(int sc, String msg) throws IOException
 	{
@@ -171,7 +168,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void sendRedirect(String location) throws IOException
 	{
 		isOpen();
-		this.redirect = location;
+		redirect = location;
 	}
 
 	/**
@@ -222,8 +219,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String,
-	 *      long)
+	 * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
 	 */
 	public void setDateHeader(String name, long date)
 	{
@@ -232,8 +228,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String,
-	 *      long)
+	 * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
 	 */
 	public void addDateHeader(String name, long date)
 	{
@@ -242,8 +237,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String,
-	 *      java.lang.String)
+	 * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String, java.lang.String)
 	 */
 	public void setHeader(String name, String value)
 	{
@@ -252,8 +246,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String,
-	 *      java.lang.String)
+	 * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String, java.lang.String)
 	 */
 	public void addHeader(String name, String value)
 	{
@@ -262,8 +255,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String,
-	 *      int)
+	 * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
 	 */
 	public void setIntHeader(String name, int value)
 	{
@@ -272,8 +264,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String,
-	 *      int)
+	 * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String, int)
 	 */
 	public void addIntHeader(String name, int value)
 	{
@@ -290,8 +281,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setStatus(int,
-	 *      java.lang.String)
+	 * @see javax.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
 	 * @deprecated use setStatus(int) instead
 	 */
 	public void setStatus(int sc, String sm)
@@ -351,7 +341,12 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void setContentType(String type)
 	{
 		isOpen();
-		this.contentType = type;
+		contentType = type;
+	}
+
+	public String getContentType()
+	{
+		return contentType;
 	}
 
 	/**
@@ -413,7 +408,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void setLocale(Locale loc)
 	{
 		isOpen();
-		this.locale = loc;
+		locale = loc;
 	}
 
 	/**
@@ -422,11 +417,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public Locale getLocale()
 	{
 		isOpen();
-		if (this.locale == null)
+		if (locale == null)
 		{
 			return realResponse.getLocale();
 		}
-		return this.locale;
+		return locale;
 	}
 
 	/**
@@ -460,12 +455,12 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void close()
 	{
 		isOpen();
-		this.pw.close();
-		this.byteBuffer = convertToCharset(sbw.getStringBuffer(), getCharacterEncoding());
+		pw.close();
+		byteBuffer = convertToCharset(sbw.getStringBuffer(), getCharacterEncoding());
 
-		this.pw = null;
-		this.sbw = null;
-		this.realResponse = null;
+		pw = null;
+		sbw = null;
+		realResponse = null;
 	}
 
 	/**
@@ -539,9 +534,9 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 		if (cookies != null)
 		{
-			for (int i = 0; i < this.cookies.size(); i++)
+			for (int i = 0; i < cookies.size(); i++)
 			{
-				Cookie cookie = (Cookie)this.cookies.get(i);
+				Cookie cookie = (Cookie)cookies.get(i);
 				servletResponse.addCookie(cookie);
 			}
 		}
@@ -550,11 +545,11 @@ class BufferedHttpServletResponse implements HttpServletResponse
 			servletResponse.setLocale(locale);
 		}
 		// got a buffered response; now write it
-		servletResponse.setContentLength(this.byteBuffer.length);
-		servletResponse.setContentType(this.contentType);
+		servletResponse.setContentLength(byteBuffer.length);
+		servletResponse.setContentType(contentType);
 
 		final OutputStream out = servletResponse.getOutputStream();
-		out.write(this.byteBuffer);
+		out.write(byteBuffer);
 		out.close();
 
 	}

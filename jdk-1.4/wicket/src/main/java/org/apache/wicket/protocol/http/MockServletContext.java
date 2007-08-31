@@ -42,17 +42,15 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Mock implementation of the servlet context for testing purposes. This
- * implementation supports all of the standard context methods except that
- * request dispatching just indicates what is being dispatched to, rather than
- * doing the actual dispatch.
+ * Mock implementation of the servlet context for testing purposes. This implementation supports all
+ * of the standard context methods except that request dispatching just indicates what is being
+ * dispatched to, rather than doing the actual dispatch.
  * <p>
- * The context can be configured with a path parameter that should point to an
- * absolute directory location that represents the place where the contents of
- * the WAR bundle are located. Setting this value allows all of the resource
- * location functionality to work as in a fully functioning web application.
- * This value is not set then not resource location functionality will work and
- * instead null will always be returned.
+ * The context can be configured with a path parameter that should point to an absolute directory
+ * location that represents the place where the contents of the WAR bundle are located. Setting this
+ * value allows all of the resource location functionality to work as in a fully functioning web
+ * application. This value is not set then not resource location functionality will work and instead
+ * null will always be returned.
  * 
  * @author Chris Turner
  */
@@ -72,10 +70,9 @@ public class MockServletContext implements ServletContext
 	private File webappRoot;
 
 	/**
-	 * Create the mock object. As part of the creation, the context ets the root
-	 * directory where web application content is stored. This must be an
-	 * ABSOLUTE directory relative to where the tests are being executed. For
-	 * example: <code>System.getProperty("user.dir") +
+	 * Create the mock object. As part of the creation, the context ets the root directory where web
+	 * application content is stored. This must be an ABSOLUTE directory relative to where the tests
+	 * are being executed. For example: <code>System.getProperty("user.dir") +
 	 * "/src/webapp"</code>
 	 * 
 	 * @param application
@@ -211,8 +208,8 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Get the mime type for the given file. Uses a hardcoded map of mime types
-	 * set at initialisation time.
+	 * Get the mime type for the given file. Uses a hardcoded map of mime types set at
+	 * initialisation time.
 	 * 
 	 * @param name
 	 *            The name to get the mime type for
@@ -240,8 +237,7 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Wicket does not use the RequestDispatcher, so this implementation just
-	 * returns a dummy value.
+	 * Wicket does not use the RequestDispatcher, so this implementation just returns a dummy value.
 	 * 
 	 * @param name
 	 *            The name of the servlet or JSP
@@ -283,8 +279,7 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Wicket does not use the RequestDispatcher, so this implementation just
-	 * returns a dummy value.
+	 * Wicket does not use the RequestDispatcher, so this implementation just returns a dummy value.
 	 * 
 	 * @param name
 	 *            The name of the resource to get the dispatcher for
@@ -309,8 +304,7 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Get the URL for a particular resource that is relative to the web app
-	 * root directory.
+	 * Get the URL for a particular resource that is relative to the web app root directory.
 	 * 
 	 * @param name
 	 *            The name of the resource to get
@@ -342,13 +336,11 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Get an input stream for a particular resource that is relative to the web
-	 * app root directory.
+	 * Get an input stream for a particular resource that is relative to the web app root directory.
 	 * 
 	 * @param name
 	 *            The name of the resource to get
-	 * @return The input stream for the resource, or null of resource is not
-	 *         found
+	 * @return The input stream for the resource, or null of resource is not found
 	 */
 	public InputStream getResourceAsStream(String name)
 	{
@@ -382,8 +374,8 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * Get the resource paths starting from the web app root directory and then
-	 * relative to the the given name.
+	 * Get the resource paths starting from the web app root directory and then relative to the the
+	 * given name.
 	 * 
 	 * @param name
 	 *            The starting name
@@ -562,5 +554,10 @@ public class MockServletContext implements ServletContext
 	public void setAttribute(final String name, final Object o)
 	{
 		attributes.put(name, o);
+	}
+
+	public String getContextPath()
+	{
+		return "";
 	}
 }

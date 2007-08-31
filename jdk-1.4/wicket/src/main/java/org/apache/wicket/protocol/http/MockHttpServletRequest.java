@@ -68,8 +68,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Mock servlet request. Implements all of the methods from the standard
- * HttpServletRequest class plus helper methods to aid setting up a request.
+ * Mock servlet request. Implements all of the methods from the standard HttpServletRequest class
+ * plus helper methods to aid setting up a request.
  * 
  * @author Chris Turner
  */
@@ -213,8 +213,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Add an uploaded file to the request. Use this to simulate a file that has
-	 * been uploaded to a field.
+	 * Add an uploaded file to the request. Use this to simulate a file that has been uploaded to a
+	 * field.
 	 * 
 	 * @param fieldName
 	 *            The fieldname of the upload field.
@@ -233,8 +233,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (file.exists() == false)
 		{
 			throw new IllegalArgumentException(
-					"File does not exists. You must provide an existing file: "
-							+ file.getAbsolutePath());
+					"File does not exists. You must provide an existing file: " +
+							file.getAbsolutePath());
 		}
 
 		if (file.isFile() == false)
@@ -328,12 +328,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 
 	/**
-	 * Return the length of the content. This is always -1 except if
-	 * useMultiPartContentType set as true. Then the length will be the length
-	 * of the generated request.
+	 * Return the length of the content. This is always -1 except if useMultiPartContentType set as
+	 * true. Then the length will be the length of the generated request.
 	 * 
-	 * @return -1 if useMultiPartContentType is false. Else the length of the
-	 *         generated request.
+	 * @return -1 if useMultiPartContentType is false. Else the length of the generated request.
 	 */
 	public int getContentLength()
 	{
@@ -349,8 +347,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * If useMultiPartContentType set as true return the correct content-type.
 	 * 
-	 * @return The correct multipart content-type if useMultiPartContentType is
-	 *         true. Else null.
+	 * @return The correct multipart content-type if useMultiPartContentType is true. Else null.
 	 */
 	public String getContentType()
 	{
@@ -363,8 +360,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Get the context path. For this mock implementation the name of the
-	 * application is always returned.
+	 * Get the context path. For this mock implementation the name of the application is always
+	 * returned.
 	 * 
 	 * @return The context path
 	 */
@@ -412,8 +409,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 		catch (ParseException e)
 		{
-			throw new IllegalArgumentException("Can't convert header to date " + name + ": "
-					+ value);
+			throw new IllegalArgumentException("Can't convert header to date " + name + ": " +
+					value);
 		}
 	}
 
@@ -521,8 +518,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Get the locale of the request. Attempts to decode the Accept-Language
-	 * header and if not found returns the default locale of the JVM.
+	 * Get the locale of the request. Attempts to decode the Accept-Language header and if not found
+	 * returns the default locale of the JVM.
 	 * 
 	 * @return The locale
 	 */
@@ -559,8 +556,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Return all the accepted locales. This implementation always returns just
-	 * one.
+	 * Return all the accepted locales. This implementation always returns just one.
 	 * 
 	 * @return The locales
 	 */
@@ -708,8 +704,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * This feature is not implemented at this time as we are not supporting
-	 * binary servlet input. This functionality may be added in the future.
+	 * This feature is not implemented at this time as we are not supporting binary servlet input.
+	 * This functionality may be added in the future.
 	 * 
 	 * @return The reader
 	 * @throws IOException
@@ -764,8 +760,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Return a dummy dispatcher that just records that dispatch has occured
-	 * without actually doing anything.
+	 * Return a dummy dispatcher that just records that dispatch has occured without actually doing
+	 * anything.
 	 * 
 	 * @param name
 	 *            The name to dispatch to
@@ -777,8 +773,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Get the requested session id. Always returns the id of the current
-	 * session.
+	 * Get the requested session id. Always returns the id of the current session.
 	 * 
 	 * @return The session id
 	 */
@@ -788,7 +783,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Returns context path and servlet path concatenated, typically /applicationClassName/applicationClassName
+	 * Returns context path and servlet path concatenated, typically
+	 * /applicationClassName/applicationClassName
 	 * 
 	 * @return The path value
 	 * @see javax.servlet.http.HttpServletRequest#getRequestURI()
@@ -857,8 +853,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * The servlet path may either be the application name or /. For test
-	 * purposes we always return the servlet name.
+	 * The servlet path may either be the application name or /. For test purposes we always return
+	 * the servlet name.
 	 * 
 	 * @return The servlet path
 	 */
@@ -1045,7 +1041,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setCharacterEncoding(final String encoding) throws UnsupportedEncodingException
 	{
-		this.characterEncoding = encoding;
+		characterEncoding = encoding;
 	}
 
 	/**
@@ -1099,8 +1095,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Set the path that this request is supposed to be serving. The path is
-	 * relative to the web application root and should start with a / charater
+	 * Set the path that this request is supposed to be serving. The path is relative to the web
+	 * application root and should start with a / charater
 	 * 
 	 * @param path
 	 */
@@ -1146,8 +1142,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Initialise the request parameters to point to the given bookmarkable
-	 * page.
+	 * Initialise the request parameters to point to the given bookmarkable page.
 	 * 
 	 * @param page
 	 *            The page to point to
@@ -1174,8 +1169,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (component instanceof BookmarkablePageLink)
 		{
 			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
-					+ ':' + clazz.getName());
+			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
+					':' + clazz.getName());
 		}
 		else
 		{
@@ -1204,27 +1199,26 @@ public class MockHttpServletRequest implements HttpServletRequest
 			else
 			{
 				throw new IllegalArgumentException(
-						"The component class doesn't seem to implement any of the known *Listener interfaces: "
-								+ component.getClass());
+						"The component class doesn't seem to implement any of the known *Listener interfaces: " +
+								component.getClass());
 			}
 
-			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':'
-					+ component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':'
-					+ Classes.simpleName(clazz) + "::");
-			
+			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
+					component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
+					Classes.simpleName(clazz) + "::");
+
 			if (component.isStateless() && component.getPage().isBookmarkable())
 			{
-				parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
-						+ ':' + component.getPage().getClass().getName());
+				parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+						pageMapName + ':' + component.getPage().getClass().getName());
 			}
 		}
 	}
 
 	/**
-	 * Initialise the request parameters to point to the given form component.
-	 * The additional map should contain mappings between individual components
-	 * that appear in the form and the string value that should be submitted for
-	 * each of these components.
+	 * Initialise the request parameters to point to the given form component. The additional map
+	 * should contain mappings between individual components that appear in the form and the string
+	 * value that should be submitted for each of these components.
 	 * 
 	 * @param form
 	 *            The for to send the request to
@@ -1266,14 +1260,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 			}
 
 			log
-					.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
-							+ diff.keySet());
+					.error("Parameter mismatch: didn't find all components referenced in parameter 'values': " +
+							diff.keySet());
 		}
 	}
 
 	/**
-	 * Initialise the request parameters from the given redirect string that
-	 * redirects back to a particular component for display.
+	 * Initialise the request parameters from the given redirect string that redirects back to a
+	 * particular component for display.
 	 * 
 	 * @param redirect
 	 *            The redirect string to display from
@@ -1283,21 +1277,23 @@ public class MockHttpServletRequest implements HttpServletRequest
 		parameters.clear();
 
 		int queryStringPos = redirect.indexOf('?');
-		
+
 		// Decode the parameters
-		if (queryStringPos != -1) {
+		if (queryStringPos != -1)
+		{
 			final String queryString = redirect.substring(queryStringPos + 1);
 			RequestUtils.decodeParameters(queryString, parameters);
 		}
 
-		// We need to absolutize the redirect URL as we are not as smart as a web-browser (WICKET-702)
+		// We need to absolutize the redirect URL as we are not as smart as a web-browser
+		// (WICKET-702)
 		url = getContextPath() + getServletPath() + "/" + redirect;
 
 		// Remove occurences of ".." from the path
 		url = RequestUtils.removeDoubleDots(url);
 		log.info("Redirecting to " + url);
 	}
-	
+
 	/**
 	 * Helper method to create some default headers for the request
 	 */
@@ -1308,18 +1304,22 @@ public class MockHttpServletRequest implements HttpServletRequest
 				+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
 		addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
 		Locale l = Locale.getDefault();
-		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
-				+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
+		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-" +
+				l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
 				"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
 	}
+
 	private static final String crlf = "\r\n";
 	private static final String boundary = "--abcdefgABCDEFG";
-	private void newAttachment(OutputStream out) throws IOException {
+
+	private void newAttachment(OutputStream out) throws IOException
+	{
 		out.write(boundary.getBytes());
 		out.write(crlf.getBytes());
 		out.write("Content-Disposition: form-data".getBytes());
 	}
+
 	/**
 	 * Build the request based on the uploaded files and the parameters.
 	 * 
@@ -1331,7 +1331,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			// Build up the input stream based on the files and parameters
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-	
+
 			// Add parameters
 			for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
 			{
@@ -1385,5 +1385,25 @@ public class MockHttpServletRequest implements HttpServletRequest
 			// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	public String getLocalAddr()
+	{
+		return "127.0.0.1";
+	}
+
+	public String getLocalName()
+	{
+		return "127.0.0.1";
+	}
+
+	public int getLocalPort()
+	{
+		return 80;
+	}
+
+	public int getRemotePort()
+	{
+		return 80;
 	}
 }
