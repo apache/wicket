@@ -51,7 +51,7 @@ public class RelativePathPrefixHandlerTest extends WicketTestCase
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
@@ -59,5 +59,13 @@ public class RelativePathPrefixHandlerTest extends WicketTestCase
 	{
 		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
-	
+
+	/**
+	 * @throws Exception
+	 */
+	public final void testTransparency() throws Exception
+	{
+		executeTest(Page_3.class, "PageExpectedResult_3.html");
+	}
+
 }
