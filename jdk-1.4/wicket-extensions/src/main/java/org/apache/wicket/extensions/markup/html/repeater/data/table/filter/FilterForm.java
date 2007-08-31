@@ -19,10 +19,13 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * A form with filter-related special functionality for its form components.
@@ -49,8 +52,9 @@ public class FilterForm extends Form
 
 		this.locator = locator;
 
+		// add hidden field used for managing current focus
 		hidden = new HiddenField("focus-tracker", new Model());
-
+		
 		hidden.add(new AbstractBehavior()
 		{
 			private static final long serialVersionUID = 1L;
@@ -61,8 +65,20 @@ public class FilterForm extends Form
 				super.onComponentTag(component, tag);
 			}
 		});
-
 		add(hidden);
+		
+		// add javascript to restore focus to a filter component
+		add(new WebMarkupContainer("focus-restore")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			{
+				AppendingStringBuffer script = new AppendingStringBuffer("<script>_filter_focus_restore('").append(
+						getFocusTrackerFieldCssId()).append("');</script>");
+				replaceComponentTagBody(markupStream, openTag, script);
+			}
+		});
 	}
 
 	/**
@@ -73,6 +89,7 @@ public class FilterForm extends Form
 	{
 		return hidden.getPageRelativePath();
 	}
+
 
 	/**
 	 * @return IFilterStateLocator passed to this form
@@ -123,7 +140,6 @@ public class FilterForm extends Form
 	{
 		return ("_filter_focus(this, '" + getFocusTrackerFieldCssId() + "');");
 	}
-
 
 	/**
 	 * Model that uses filter state locator as a passthrough for model objects

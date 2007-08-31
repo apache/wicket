@@ -20,11 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
@@ -49,7 +46,7 @@ public class FilterToolbar extends AbstractToolbar
 	 *            locator responsible for finding object used to store filter's
 	 *            state
 	 */
-	public FilterToolbar(final DataTable table, final IFilterStateLocator stateLocator)
+	public FilterToolbar(final DataTable table, final FilterForm form, final IFilterStateLocator stateLocator)
 	{
 		super(table);
 
@@ -62,37 +59,11 @@ public class FilterToolbar extends AbstractToolbar
 			throw new IllegalArgumentException("argument [stateLocator] cannot be null");
 		}
 
-		// create the form used to contain all filter components
-
-		final FilterForm form = new FilterForm("filter-form", stateLocator)
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected void onSubmit()
-			{
-				table.setCurrentPage(0);
-			}
-		};
-		add(form);
-
-		// add javascript to restore focus to a filter component
-
-		add(new WebMarkupContainer("focus-restore")
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
-			{
-				AppendingStringBuffer script = new AppendingStringBuffer("<script>_filter_focus_restore('").append(
-						form.getFocusTrackerFieldCssId()).append("');</script>");
-				replaceComponentTagBody(markupStream, openTag, script);
-			}
-		});
-
 		// populate the toolbar with components provided by filtered columns
 
 		RepeatingView filters = new RepeatingView("filters");
-		form.add(filters);
+		filters.setRenderBodyOnly(true);
+		add(filters);
 
 		IColumn[] cols = table.getColumns();
 		for (int i = 0; i < cols.length; i++)
@@ -102,13 +73,13 @@ public class FilterToolbar extends AbstractToolbar
 
 			IColumn col = cols[i];
 			Component filter = null;
-
+			
 			if (col instanceof IFilteredColumn)
 			{
 				IFilteredColumn filteredCol = (IFilteredColumn)col;
 				filter = filteredCol.getFilter(FILTER_COMPONENT_ID, form);
 			}
-
+	
 			if (filter == null)
 			{
 				filter = new NoFilter(FILTER_COMPONENT_ID);
@@ -126,10 +97,19 @@ public class FilterToolbar extends AbstractToolbar
 			}
 
 			item.add(filter);
-
+			
 			filters.add(item);
 		}
 
 	}
 
+	protected void onBeforeRender()
+	{
+		if (findParent(FilterForm.class)==null) 
+		{ 
+			throw new IllegalStateException("FilterToolbar must be contained within a Form");
+		}
+		super.onBeforeRender();
+	}
+	
 }
