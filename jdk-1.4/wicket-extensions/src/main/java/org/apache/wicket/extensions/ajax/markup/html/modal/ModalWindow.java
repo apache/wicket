@@ -752,8 +752,6 @@ public class ModalWindow extends Panel
 	 */
 	protected void onBeforeRender()
 	{
-		super.onBeforeRender();
-
 		// if user is refreshing whole page, the window will not be shown
 		if (((WebRequest)getRequest()).isAjax() == false)
 		{
@@ -762,6 +760,8 @@ public class ModalWindow extends Panel
 
 		getContent().setOutputMarkupId(true);
 		getContent().setVisible(shown);
+		
+		super.onBeforeRender();
 	}
 
 	/**
