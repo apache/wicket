@@ -176,14 +176,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnDomReadyJavascript(String javascript)
 	{
-		List token = Arrays.asList(new Object[] { "javascript-event", "domready", javascript });
-		if (wasRendered(token) == false)
-		{
-			renderJavascriptReference(WicketEventReference.INSTANCE);
-			JavascriptUtils.writeJavascript(getResponse(),
-					"Wicket.Event.add(window, \"domready\", function() { " + javascript + ";});");
-			markRendered(token);
-		}
+		renderOnEventJavacript("window", "domready", javascript);
 	}
 
 	/**
@@ -191,27 +184,22 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnLoadJavascript(String javascript)
 	{
-		List token = Arrays.asList(new Object[] { "javascript-event", "load", javascript });
-		if (wasRendered(token) == false)
-		{
-			renderJavascriptReference(WicketEventReference.INSTANCE);
-			JavascriptUtils.writeJavascript(getResponse(),
-					"Wicket.Event.add(window, \"load\", function() { " + javascript + ";});");
-			markRendered(token);
-		}
+		renderOnEventJavacript("window", "load", javascript);
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnBeforeUnloadJavascript(java.lang.String)
+	 * 
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderOnEventJavacript(java.lang.String,
+	 *      java.lang.String, java.lang.String)
 	 */
-	public void renderOnBeforeUnloadJavascript(String javascript)
+	public void renderOnEventJavacript(String target, String event, String javascript)
 	{
-		List token = Arrays.asList(new Object[] { "javascript-event", "beforeunload", javascript });
+		List token = Arrays.asList(new Object[] { "javascript-event", target, event, javascript });
 		if (wasRendered(token) == false)
 		{
 			renderJavascriptReference(WicketEventReference.INSTANCE);
-			JavascriptUtils.writeJavascript(getResponse(),
-					"Wicket.Event.add(window, \"beforeunload\", function() { " + javascript + ";});");
+			JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target + ", \"" +
+					event + "\", function() { " + javascript + ";});");
 			markRendered(token);
 		}
 	}

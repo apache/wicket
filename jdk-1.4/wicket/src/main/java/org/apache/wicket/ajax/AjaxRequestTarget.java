@@ -829,7 +829,8 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		public void renderOnDomReadyJavascript(String javascript)
 		{
-			List token = Arrays.asList(new Object[] { "javascript-event", "domready", javascript });
+			List token = Arrays.asList(new Object[] { "javascript-event", "window", "domready",
+					javascript });
 			if (wasRendered(token) == false)
 			{
 				domReadyJavascripts.add(javascript);
@@ -839,7 +840,8 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		public void renderOnLoadJavascript(String javascript)
 		{
-			List token = Arrays.asList(new Object[] { "javascript-event", "load", javascript });
+			List token = Arrays.asList(new Object[] { "javascript-event", "window", "load",
+					javascript });
 			if (wasRendered(token) == false)
 			{
 				// execute the javascript after all other scripts are executed

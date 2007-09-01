@@ -20,20 +20,17 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 
 /**
- * Interface that is used to render header elements (usually javascript and CSS
- * references).
+ * Interface that is used to render header elements (usually javascript and CSS references).
  * 
- * Implementation of this interface is responsible for filtering duplicate
- * contributions (so that for example the same javascript is not loaded twice)
- * during the same request.
+ * Implementation of this interface is responsible for filtering duplicate contributions (so that
+ * for example the same javascript is not loaded twice) during the same request.
  * 
  * @author Matej Knopp
  */
 public interface IHeaderResponse
 {
 	/**
-	 * Writes a javascript reference, if the specified reference hasn't been
-	 * rendered yet.
+	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param reference
 	 *            resource reference pointing to the javascript resource
@@ -41,8 +38,7 @@ public interface IHeaderResponse
 	public void renderJavascriptReference(ResourceReference reference);
 
 	/**
-	 * Writes a javascript reference, if the specified reference hasn't been
-	 * rendered yet.
+	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
 	 *            url of the the javascript resource
@@ -50,25 +46,21 @@ public interface IHeaderResponse
 	public void renderJavascriptReference(String url);
 
 	/**
-	 * Renders javascript code to the response, if the javascript has not
-	 * already been rendered.
+	 * Renders javascript code to the response, if the javascript has not already been rendered.
 	 * 
-	 * the necessary surrounding <code>script</code> tags will be added to the
-	 * output.
+	 * the necessary surrounding <code>script</code> tags will be added to the output.
 	 * 
 	 * @param javascript
 	 *            javacript content to be rendered.
 	 * 
 	 * @param id
-	 *            unique id for the javascript element. This can be null,
-	 *            however in that case the ajax header contribution can't detect
-	 *            duplicate script fragments.
+	 *            unique id for the javascript element. This can be null, however in that case the
+	 *            ajax header contribution can't detect duplicate script fragments.
 	 */
 	public void renderJavascript(CharSequence javascript, String id);
 
 	/**
-	 * Writes a CSS reference, if the specified reference hasn't been rendered
-	 * yet.
+	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param reference
 	 *            resource reference pointing to the CSS resource
@@ -76,8 +68,7 @@ public interface IHeaderResponse
 	public void renderCSSReference(ResourceReference reference);
 
 	/**
-	 * Writes a CSS reference, if the specified reference hasn't been rendered
-	 * yet.
+	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
 	 *            url of the CSS resource
@@ -85,8 +76,7 @@ public interface IHeaderResponse
 	public void renderCSSReference(String url);
 
 	/**
-	 * Writes a CSS reference, if the specified reference hasn't been rendered
-	 * yet.
+	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param reference
 	 *            resource reference pointing to the CSS resource
@@ -96,8 +86,7 @@ public interface IHeaderResponse
 	public void renderCSSReference(ResourceReference reference, String media);
 
 	/**
-	 * Writes a CSS reference, if the specified reference hasn't been rendered
-	 * yet.
+	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
 	 * 
 	 * @param url
 	 *            url of the CSS resource
@@ -107,11 +96,11 @@ public interface IHeaderResponse
 	public void renderCSSReference(String url, String media);
 
 	/**
-	 * Renders an arbitrary string to the header. The string is only rendered if
-	 * the same string hasn't been rendered before.
+	 * Renders an arbitrary string to the header. The string is only rendered if the same string
+	 * hasn't been rendered before.
 	 * <p>
-	 * Note: This method is kind of dangerous as users are able to write to the
-	 * output whatever they like.
+	 * Note: This method is kind of dangerous as users are able to write to the output whatever they
+	 * like.
 	 * 
 	 * @param string
 	 *            string to be rendered to head
@@ -119,10 +108,9 @@ public interface IHeaderResponse
 	public void renderString(CharSequence string);
 
 	/**
-	 * Marks the given object as rendered. The object can be anything (string,
-	 * resource reference, etc...). The purpose of this function is to allow
-	 * user to manually keep track of rendered items. This can be useful for
-	 * items that are expensive to generate (like interpolated text).
+	 * Marks the given object as rendered. The object can be anything (string, resource reference,
+	 * etc...). The purpose of this function is to allow user to manually keep track of rendered
+	 * items. This can be useful for items that are expensive to generate (like interpolated text).
 	 * 
 	 * @param object
 	 *            object to be marked as rendered.
@@ -132,15 +120,12 @@ public interface IHeaderResponse
 	/**
 	 * Returns whether the given object has been marked as rendered.
 	 * <ul>
-	 * <li>Methods <code>renderJavascriptReference</code> and
-	 * <code>renderCSSReference</code> mark the specified
-	 * {@link ResourceReference} as rendered.
-	 * <li>Method <code>renderJavascript</code> marks List of two elements
-	 * (first is javascript body CharSequence and second is id) as rendered.
-	 * <li>Method <code>renderString</code> marks the whole string as
-	 * rendered.
-	 * <li>Method <code>markRendered</code> can be used to mark an arbitrary
-	 * object as rendered
+	 * <li>Methods <code>renderJavascriptReference</code> and <code>renderCSSReference</code>
+	 * mark the specified {@link ResourceReference} as rendered.
+	 * <li>Method <code>renderJavascript</code> marks List of two elements (first is javascript
+	 * body CharSequence and second is id) as rendered.
+	 * <li>Method <code>renderString</code> marks the whole string as rendered.
+	 * <li>Method <code>markRendered</code> can be used to mark an arbitrary object as rendered
 	 * </ul>
 	 * 
 	 * @param object
@@ -150,19 +135,18 @@ public interface IHeaderResponse
 	public boolean wasRendered(Object object);
 
 	/**
-	 * Returns the response that can be used to write arbitrary text to the head
-	 * section.
+	 * Returns the response that can be used to write arbitrary text to the head section.
 	 * <p>
-	 * Note: This method is kind of dangerous as users are able to write to the
-	 * output whatever they like.
+	 * Note: This method is kind of dangerous as users are able to write to the output whatever they
+	 * like.
 	 * 
 	 * @return Reponse
 	 */
 	public Response getResponse();
 
 	/**
-	 * Renders javascript that is executed right after the DOM is built, before
-	 * external resources (e.g. images) are loaded.
+	 * Renders javascript that is executed right after the DOM is built, before external resources
+	 * (e.g. images) are loaded.
 	 * 
 	 * @param javascript
 	 */
@@ -174,11 +158,13 @@ public interface IHeaderResponse
 	 * @param javascript
 	 */
 	public void renderOnLoadJavascript(String javascript);
-	
+
 	/**
-	 * Renders javascript that is executed before a page is unloaded.
+	 * Renders javascript that is executed after the given event happens on specified target
 	 * 
+	 * @param target
+	 * @param event
 	 * @param javascript
 	 */
-	public void renderOnBeforeUnloadJavascript(String javascript);
+	public void renderOnEventJavacript(String target, String event, String javascript);
 }
