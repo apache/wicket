@@ -271,15 +271,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see org.apache.wicket.feedback.IFeedback#updateFeedback()
-	 */
-	public void updateFeedback()
-	{
-		// Force model to load
-		// getFeedbackMessagesModel().preloadMessages();
-	}
-
-	/**
 	 * Gets the css class for the given message.
 	 * 
 	 * @param message
