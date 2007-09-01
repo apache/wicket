@@ -212,10 +212,7 @@ public class WebRequestCycle extends RequestCycle
 					throw ex;
 				}
 
-				if (!(ex instanceof PageExpiredException))
-				{
-					logRuntimeException(ex);
-				}
+				onRuntimeException(ex);
 
 				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);
