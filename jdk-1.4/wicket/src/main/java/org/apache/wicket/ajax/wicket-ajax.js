@@ -826,7 +826,7 @@ Wicket.Ajax.Request.prototype = {
 				Wicket.Log.error("Exception evaluating AJAX status: " + e);
 				status = "unavailable";
 			}
-			if (status == 200 || status == "") { // as stupid as it seems, IE7 sets satus to "" on ok
+			if (status == 200 || status == "") { // as stupid as it seems, IE7 sets status to "" on ok
 				// response came without error
 				var responseAsText = t.responseText;
 				
