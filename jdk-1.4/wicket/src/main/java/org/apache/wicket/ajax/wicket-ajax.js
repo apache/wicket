@@ -53,12 +53,16 @@ Wicket.$ = function(arg) {
 
 // returns if the element belongs to current document
 // if the argument is not element, function returns true
-Wicket.$$ = function(element) {
+Wicket.$$ = function(element) {	
 	if (element == null || typeof(element) == "undefined" ||
-	    element.tagName == null || typeof(element.tagName)) {
+	    element.tagName == null || typeof(element.tagName) == "undefined") {
 	    return true;
-	} 
-	return element.ownerDocument == document;
+	}
+	
+	if (typeof(element.id) == "undefined" || element.id == null)
+		return element.ownerDocument == document;
+	else
+		return document.getElementById(element.id) == element;
 }
 
 Wicket.emptyFunction = function() { };
@@ -778,6 +782,7 @@ Wicket.Ajax.Request.prototype = {
 	
 	// The actual post implementation
 	doPost: function(body) {
+		
 		if (this.precondition()) {
 			this.transport = Wicket.Ajax.getTransport();	
 		
@@ -788,6 +793,10 @@ Wicket.Ajax.Request.prototype = {
 			
 			var t = this.transport;
 			if (t != null) {
+				// we allow body to be a method - to lazily evaluate itself
+				if (typeof(body) == "function") {
+					body = body();
+				}				
 				t.open("POST", url, this.async);
 				t.onreadystatechange = this.stateChangeCallback.bind(this);
 				t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -936,9 +945,12 @@ Wicket.Ajax.Call.prototype = {
 	// Submits a form using ajax.
 	// This method serializes a form and sends it as POST body.
 	submitForm: function(form, submitButton) {
-	    var body = Wicket.Form.serialize(form);
-	    if (submitButton != null) {
-	        body += Wicket.Form.encode(submitButton) + "=1";
+	    var body = function() {
+	    	var s = Wicket.Form.serialize(form);
+	    	if (submitButton != null) {
+		        s += Wicket.Form.encode(submitButton) + "=1";
+		    }
+		    return s;		    
 	    }
 	    return this.request.post(body);
 	},
@@ -1671,7 +1683,7 @@ function wicketAjaxGet(url, successHandler, failureHandler, precondition, channe
 function wicketAjaxPost(url, body, successHandler, failureHandler, precondition, channel) {
 	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
 	
-	if (typeof(precondition) != "undefined" && precondition != null) {
+	if (typeof(precondition) != "undefined" && precondition != null) {		
 		call.request.precondition = precondition;
 	}
 	
@@ -1854,4 +1866,3 @@ function wicketHide(id) {
 	    e.style.display = "none";
 	}
 }
-
