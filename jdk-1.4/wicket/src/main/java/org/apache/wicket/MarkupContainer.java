@@ -44,44 +44,38 @@ import org.slf4j.LoggerFactory;
 /**
  * A MarkupContainer holds a map of child components.
  * <ul>
- * <li><b>Children </b>- Children can be added by calling the add() method, and
- * they can be looked up using a dotted path. For example, if a container called
- * "a" held a nested container "b" which held a nested component "c", then
- * a.get("b.c") would return the Component with id "c". The number of children
- * in a MarkupContainer can be determined by calling size(), and the whole
- * hierarchy of children held by a MarkupContainer can be traversed by calling
- * visitChildren(), passing in an implementation of Component.IVisitor.
+ * <li><b>Children </b>- Children can be added by calling the add() method, and they can be looked
+ * up using a dotted path. For example, if a container called "a" held a nested container "b" which
+ * held a nested component "c", then a.get("b.c") would return the Component with id "c". The number
+ * of children in a MarkupContainer can be determined by calling size(), and the whole hierarchy of
+ * children held by a MarkupContainer can be traversed by calling visitChildren(), passing in an
+ * implementation of Component.IVisitor.
  * 
- * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references
- * associated markup which is used to render the container. As the markup stream
- * for a container is rendered, component references in the markup are resolved
- * by using the container to look up Components in the container's component map
- * by id. Each component referenced by the markup stream is given an opportunity
- * to render itself using the markup stream.
+ * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references associated markup which is
+ * used to render the container. As the markup stream for a container is rendered, component
+ * references in the markup are resolved by using the container to look up Components in the
+ * container's component map by id. Each component referenced by the markup stream is given an
+ * opportunity to render itself using the markup stream.
  * <p>
- * Components may alter their referring tag, replace the tag's body or insert
- * markup after the tag. But components cannot remove tags from the markup
- * stream. This is an important guarantee because graphic designers may be
- * setting attributes on component tags that affect visual presentation.
+ * Components may alter their referring tag, replace the tag's body or insert markup after the tag.
+ * But components cannot remove tags from the markup stream. This is an important guarantee because
+ * graphic designers may be setting attributes on component tags that affect visual presentation.
  * <p>
- * The type of markup held in a given container subclass can be determined by
- * calling getMarkupType(). Markup is accessed via a MarkupStream object which
- * allows a component to traverse ComponentTag and RawMarkup MarkupElements
- * while rendering a response. Markup in the stream may be HTML or some other
- * kind of markup, such as VXML, as determined by the specific container
- * subclass.
+ * The type of markup held in a given container subclass can be determined by calling
+ * getMarkupType(). Markup is accessed via a MarkupStream object which allows a component to
+ * traverse ComponentTag and RawMarkup MarkupElements while rendering a response. Markup in the
+ * stream may be HTML or some other kind of markup, such as VXML, as determined by the specific
+ * container subclass.
  * <p>
- * A markup stream may be directly associated with a container via
- * setMarkupStream. However, a container which does not have a markup stream
- * (its getMarkupStream() returns null) may inherit a markup stream from a
- * container above it in the component hierarchy. The findMarkupStream() method
- * will locate the first container at or above this container which has a markup
- * stream.
+ * A markup stream may be directly associated with a container via setMarkupStream. However, a
+ * container which does not have a markup stream (its getMarkupStream() returns null) may inherit a
+ * markup stream from a container above it in the component hierarchy. The findMarkupStream() method
+ * will locate the first container at or above this container which has a markup stream.
  * <p>
- * All Page containers set a markup stream before rendering by calling the
- * method getAssociatedMarkupStream() to load the markup associated with the
- * page. Since Page is at the top of the container hierarchy, it is guaranteed
- * that findMarkupStream will always return a valid markup stream.
+ * All Page containers set a markup stream before rendering by calling the method
+ * getAssociatedMarkupStream() to load the markup associated with the page. Since Page is at the top
+ * of the container hierarchy, it is guaranteed that findMarkupStream will always return a valid
+ * markup stream.
  * 
  * @see MarkupStream
  * @author Jonathan Locke
@@ -97,9 +91,8 @@ public abstract class MarkupContainer extends Component
 	private Object children;
 
 	/**
-	 * The markup stream for this container. This variable is used only during
-	 * the render phase to provide access to the current element within the
-	 * stream.
+	 * The markup stream for this container. This variable is used only during the render phase to
+	 * provide access to the current element within the stream.
 	 */
 	private transient MarkupStream markupStream;
 
@@ -125,8 +118,7 @@ public abstract class MarkupContainer extends Component
 	 * @param child
 	 *            The child
 	 * @throws IllegalArgumentException
-	 *             Thrown if a child with the same id is replaced by the add
-	 *             operation.
+	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
 	public final MarkupContainer add(final Component child)
@@ -155,8 +147,8 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Replaces a child component of this container with another or just adds it
-	 * in case no child with the same id existed yet.
+	 * Replaces a child component of this container with another or just adds it in case no child
+	 * with the same id existed yet.
 	 * 
 	 * @param child
 	 *            The child
@@ -184,24 +176,22 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * This method allows a component to be added by an auto-resolver such as
-	 * AutoComponentResolver or AutoLinkResolver. While the component is being
-	 * added, the component's FLAG_AUTO boolean is set. The isAuto() method of
-	 * Component returns true if a component or any of its parents has this bit
-	 * set. When a component is added via autoAdd(), the logic in Page that
-	 * normally (a) checks for modifications during the rendering process, and
-	 * (b) versions components, is bypassed if Component.isAuto() returns true.
+	 * This method allows a component to be added by an auto-resolver such as AutoComponentResolver
+	 * or AutoLinkResolver. While the component is being added, the component's FLAG_AUTO boolean is
+	 * set. The isAuto() method of Component returns true if a component or any of its parents has
+	 * this bit set. When a component is added via autoAdd(), the logic in Page that normally (a)
+	 * checks for modifications during the rendering process, and (b) versions components, is
+	 * bypassed if Component.isAuto() returns true.
 	 * <p>
-	 * The result of all this is that components added with autoAdd() are free
-	 * from versioning and can add their own children without the usual
-	 * exception that would normally be thrown when the component hierarchy is
-	 * modified during rendering.
+	 * The result of all this is that components added with autoAdd() are free from versioning and
+	 * can add their own children without the usual exception that would normally be thrown when the
+	 * component hierarchy is modified during rendering.
 	 * 
 	 * @param component
 	 *            The component to add
 	 * @param markupStream
-	 *            Null, if the parent container is able to provide the markup.
-	 *            Else the markup stream to be used to render the component.
+	 *            Null, if the parent container is able to provide the markup. Else the markup
+	 *            stream to be used to render the component.
 	 * @return True, if component has been added
 	 */
 	public final boolean autoAdd(final Component component, final MarkupStream markupStream)
@@ -237,8 +227,7 @@ public abstract class MarkupContainer extends Component
 	 *            The component to add
 	 * @return True, if component has been added
 	 * 
-	 * @deprecated since 1.3 Please use
-	 *             {@link #autoAdd(Component, MarkupStream)} instead
+	 * @deprecated since 1.3 Please use {@link #autoAdd(Component, MarkupStream)} instead
 	 */
 	public final boolean autoAdd(final Component component)
 	{
@@ -332,8 +321,7 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
+	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
 	 * 
 	 * @param throwException
 	 *            If true, throw an exception, if markup could not be found
@@ -378,12 +366,11 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * Get the type of associated markup for this component.
 	 * 
-	 * @return The type of associated markup for this component (for example,
-	 *         "html", "wml" or "vxml"). The markup type for a component is
-	 *         independent of whether or not the component actually has an
-	 *         associated markup resource file (which is determined at runtime).
-	 *         If there is no markup type for a component, null may be returned,
-	 *         but this means that no markup can be loaded for the class.
+	 * @return The type of associated markup for this component (for example, "html", "wml" or
+	 *         "vxml"). The markup type for a component is independent of whether or not the
+	 *         component actually has an associated markup resource file (which is determined at
+	 *         runtime). If there is no markup type for a component, null may be returned, but this
+	 *         means that no markup can be loaded for the class.
 	 */
 	public String getMarkupType()
 	{
@@ -399,8 +386,7 @@ public abstract class MarkupContainer extends Component
 	 * @param child
 	 *            The child
 	 * @throws IllegalArgumentException
-	 *             Thrown if a child with the same id is replaced by the add
-	 *             operation.
+	 *             Thrown if a child with the same id is replaced by the add operation.
 	 */
 	public void internalAdd(final Component child)
 	{
@@ -415,9 +401,9 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Some MarkupContainers (e.g. HtmlHeaderContainer, BodyOnLoadContainer)
-	 * have to be transparent with respect to there child components. A
-	 * transparent container gets its children from its parent container.
+	 * Some MarkupContainers (e.g. HtmlHeaderContainer, BodyOnLoadContainer) have to be transparent
+	 * with respect to there child components. A transparent container gets its children from its
+	 * parent container.
 	 * <p>
 	 * 
 	 * @see org.apache.wicket.markup.resolver.ParentResolver
@@ -430,8 +416,7 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * @return Iterator that iterates through children in the order they were
-	 *         added
+	 * @return Iterator that iterates through children in the order they were added
 	 */
 	public final Iterator iterator()
 	{
@@ -461,8 +446,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @param comparator
 	 *            The comparator
-	 * @return Iterator that iterates over children in the order specified by
-	 *         comparator
+	 * @return Iterator that iterates over children in the order specified by comparator
 	 */
 	public final Iterator iterator(Comparator comparator)
 	{
@@ -488,8 +472,7 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to
-	 * Wicket 1.3
+	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to Wicket 1.3
 	 * 
 	 * @param containerClass
 	 * @return nothing
@@ -548,8 +531,8 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * Removes all children from this container.
 	 * <p>
-	 * Note: implementation does not call
-	 * {@link MarkupContainer#remove(Component) } for each component.
+	 * Note: implementation does not call {@link MarkupContainer#remove(Component) } for each
+	 * component.
 	 */
 	public final void removeAll()
 	{
@@ -598,9 +581,8 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Renders the entire associated markup stream for a container such as a
-	 * Border or Panel. Any leading or trailing raw markup in the associated
-	 * markup is skipped.
+	 * Renders the entire associated markup stream for a container such as a Border or Panel. Any
+	 * leading or trailing raw markup in the associated markup is skipped.
 	 * 
 	 * @param openTagName
 	 *            the tag to render the associated markup for
@@ -802,15 +784,15 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Traverses all child components of the given class in this container,
-	 * calling the visitor's visit method at each one.
+	 * Traverses all child components of the given class in this container, calling the visitor's
+	 * visit method at each one.
 	 * 
 	 * @param clazz
 	 *            The class of child to visit, or null to visit all children
 	 * @param visitor
 	 *            The visitor to call back to
-	 * @return The return value from a visitor which halted the traversal, or
-	 *         null if the entire traversal occurred
+	 * @return The return value from a visitor which halted the traversal, or null if the entire
+	 *         traversal occurred
 	 */
 	public final Object visitChildren(final Class clazz, final IVisitor visitor)
 	{
@@ -860,13 +842,13 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Traverses all child components in this container, calling the visitor's
-	 * visit method at each one.
+	 * Traverses all child components in this container, calling the visitor's visit method at each
+	 * one.
 	 * 
 	 * @param visitor
 	 *            The visitor to call back to
-	 * @return The return value from a visitor which halted the traversal, or
-	 *         null if the entire traversal occurred
+	 * @return The return value from a visitor which halted the traversal, or null if the entire
+	 *         traversal occurred
 	 */
 	public final Object visitChildren(final IVisitor visitor)
 	{
@@ -916,7 +898,7 @@ public abstract class MarkupContainer extends Component
 			page.componentAdded(component);
 		}
 
-		// if the PREPARED_FOR_RENDER flag is set, we have alrady called
+		// if the PREPARED_FOR_RENDER flag is set, we have already called
 		// beforeRender on this
 		// component's children. So we need to initialize the newly added one
 		if (isPreparedForRender())
@@ -1131,8 +1113,7 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Ensure that there is space in childForId map for a new entry before
-	 * adding it.
+	 * Ensure that there is space in childForId map for a new entry before adding it.
 	 * 
 	 * @param child
 	 *            The child to put into the map
@@ -1265,8 +1246,8 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * Get the markup stream for this component.
 	 * 
-	 * @return The markup stream for this component, or if it doesn't have one,
-	 *         the markup stream for the nearest parent which does have one
+	 * @return The markup stream for this component, or if it doesn't have one, the markup stream
+	 *         for the nearest parent which does have one
 	 */
 	protected final MarkupStream findMarkupStream()
 	{
@@ -1291,9 +1272,8 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Handle the container's body. If your override of this method does not
-	 * advance the markup stream to the close tag for the openTag, a runtime
-	 * exception will be thrown by the framework.
+	 * Handle the container's body. If your override of this method does not advance the markup
+	 * stream to the close tag for the openTag, a runtime exception will be thrown by the framework.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -1316,8 +1296,7 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Renders this component and all sub-components using the given markup
-	 * stream.
+	 * Renders this component and all sub-components using the given markup stream.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -1339,10 +1318,9 @@ public abstract class MarkupContainer extends Component
 	}
 
 	/**
-	 * Renders markup for the body of a ComponentTag from the current position
-	 * in the given markup stream. If the open tag passed in does not require a
-	 * close tag, nothing happens. Markup is rendered until the closing tag for
-	 * openTag is reached.
+	 * Renders markup for the body of a ComponentTag from the current position in the given markup
+	 * stream. If the open tag passed in does not require a close tag, nothing happens. Markup is
+	 * rendered until the closing tag for openTag is reached.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
