@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.protocol.http.MockHttpServletRequest;
 import org.apache.wicket.settings.IMarkupSettings;
 
-
 /**
  * Test the component: PageView
  * 
@@ -74,6 +73,7 @@ public class BoxBorderTest extends WicketTestCase
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
 
 		Border border = (Border)tester.getLastRenderedPage().get("border");
+		assertNotNull(border);
 		Form form = (Form)tester.getLastRenderedPage().get("border:myForm");
 
 		TextField input = (TextField)tester.getLastRenderedPage().get("border:name");
@@ -92,8 +92,8 @@ public class BoxBorderTest extends WicketTestCase
 	}
 
 	/**
-	 * Test to ensure MarkupException is thrown when Markup and Object hierarchy
-	 * does not match with a Border involved.
+	 * Test to ensure MarkupException is thrown when Markup and Object hierarchy does not match with
+	 * a Border involved.
 	 * 
 	 * @throws Exception
 	 */

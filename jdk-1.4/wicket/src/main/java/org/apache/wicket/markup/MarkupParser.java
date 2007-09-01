@@ -44,12 +44,12 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a
- * streaming XML parser to read the markup and IMarkupFilters to remove
- * comments, identify Wicket relevant tags, apply html specific treatments etc..
+ * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a streaming XML parser to
+ * read the markup and IMarkupFilters to remove comments, identify Wicket relevant tags, apply html
+ * specific treatments etc..
  * <p>
- * The result will be an Markup object, which is basically a list, containing
- * Wicket relevant tags and RawMarkup.
+ * The result will be an Markup object, which is basically a list, containing Wicket relevant tags
+ * and RawMarkup.
  * 
  * @see IMarkupFilter
  * @see IMarkupParserFactory
@@ -122,8 +122,8 @@ public class MarkupParser
 	}
 
 	/**
-	 * In case you want to analyze markup which BY DEFAULT does not use "wicket"
-	 * to find relevant tags.
+	 * In case you want to analyze markup which BY DEFAULT does not use "wicket" to find relevant
+	 * tags.
 	 * 
 	 * @param namespace
 	 */
@@ -133,8 +133,8 @@ public class MarkupParser
 	}
 
 	/**
-	 * Applications which subclass initFilterChain() might also wish to access
-	 * the markup resource stream.
+	 * Applications which subclass initFilterChain() might also wish to access the markup resource
+	 * stream.
 	 * 
 	 * @return The markup resource stream
 	 */
@@ -144,8 +144,7 @@ public class MarkupParser
 	}
 
 	/**
-	 * Create a new markup filter chain and initialize with all default filters
-	 * required.
+	 * Create a new markup filter chain and initialize with all default filters required.
 	 */
 	private final void initializeMarkupFilters()
 	{
@@ -185,8 +184,7 @@ public class MarkupParser
 	}
 
 	/**
-	 * By default don't do anything. Subclasses may append additional markup
-	 * filters if required.
+	 * By default don't do anything. Subclasses may append additional markup filters if required.
 	 * 
 	 * @see #appendMarkupFilter(IMarkupFilter)
 	 * @deprecated since 1.3
@@ -208,16 +206,14 @@ public class MarkupParser
 	}
 
 	/**
-	 * Append a new filter to the list of already pre-configured markup filters.
-	 * Add the new filter before the "beforeFilter" which is identified by its
-	 * class.
+	 * Append a new filter to the list of already pre-configured markup filters. Add the new filter
+	 * before the "beforeFilter" which is identified by its class.
 	 * 
 	 * @param filter
 	 *            The filter to be appended
 	 * @param beforeFilter
-	 *            The filter will be added before the beforeFilter. If
-	 *            beforeFilter == null or beforeFilter not found than append to
-	 *            the end
+	 *            The filter will be added before the beforeFilter. If beforeFilter == null or
+	 *            beforeFilter not found than append to the end
 	 */
 	public final void appendMarkupFilter(final IMarkupFilter filter, final Class beforeFilter)
 	{
@@ -458,9 +454,8 @@ public class MarkupParser
 	}
 
 	/**
-	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For
-	 * reasons I don't understand, the following regex
-	 * <code>"<!--(.|\n|\r)*?-->"<code>
+	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For reasons I don't
+	 * understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
 	 * causes a stack overflow in some circumstances (jdk 1.5) 
 	 * 
 	 * @param rawMarkup
@@ -469,20 +464,20 @@ public class MarkupParser
 	private String removeComment(String rawMarkup)
 	{
 		int pos1 = rawMarkup.indexOf("<!--");
-		while (pos1 >= 0)
+		while (pos1 != -1)
 		{
 			final int pos2 = rawMarkup.indexOf("-->", pos1 + 4);
 
 			final AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
-			if ((pos2 >= 0) && (pos1 > 0))
+			if (pos2 != -1)
 			{
 				final String comment = rawMarkup.substring(pos1 + 4, pos2);
 				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
 				{
 					buf.append(rawMarkup.substring(0, pos1));
-					if (rawMarkup.length() >= pos2 + 4)
+					if (rawMarkup.length() >= pos2 + 3)
 					{
-						buf.append(rawMarkup.substring(pos2 + 4));
+						buf.append(rawMarkup.substring(pos2 + 3));
 					}
 					rawMarkup = buf.toString();
 				}
