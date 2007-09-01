@@ -805,10 +805,22 @@ public class AjaxRequestTarget implements IRequestTarget
 			super.renderJavascriptReference(reference);
 		}
 
+		public void renderJavascriptReference(ResourceReference reference, String id)
+		{
+			checkHeaderRendering();
+			super.renderJavascriptReference(reference, id);
+		}
+
 		public void renderJavascriptReference(String url)
 		{
 			checkHeaderRendering();
 			super.renderJavascriptReference(url);
+		}
+
+		public void renderJavascriptReference(String url, String id)
+		{
+			checkHeaderRendering();
+			super.renderJavascriptReference(url, id);
 		}
 
 		public void renderString(CharSequence string)

@@ -1351,7 +1351,7 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 // Adds a javascript element to page header. 
 // The fakeSrc attribute is used to filter out duplicate javascript references.
 // External javascripts are loaded using xmlhttprequest. Then a javascript element is created and the
-// javascript body is used as text for the element. Fori javascript references, wicket uses the src 
+// javascript body is used as text for the element. For javascript references, wicket uses the src 
 // attribute to filter out duplicates. However, since we set the body of the element, we can't assign
 // also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 // Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.

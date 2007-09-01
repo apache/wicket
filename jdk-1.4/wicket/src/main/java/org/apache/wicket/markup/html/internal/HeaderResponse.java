@@ -123,6 +123,16 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.ResourceReference,
+	 *      java.lang.String)
+	 */
+	public void renderJavascriptReference(ResourceReference reference, String id)
+	{
+		CharSequence url = RequestCycle.get().urlFor(reference);
+		renderJavascriptReference(url.toString(), id);
+	}
+
+	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(java.lang.String)
 	 */
 	public void renderJavascriptReference(String url)
@@ -135,6 +145,21 @@ public abstract class HeaderResponse implements IHeaderResponse
 		}
 	}
 
+	/**
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(java.lang.String,
+	 *      java.lang.String)
+	 */
+	public void renderJavascriptReference(String url, String id)
+	{
+		List token1 = Arrays.asList(new Object[] { "javascript", url });
+		List token2 = Arrays.asList(new Object[] { "javascript", id });
+		if (wasRendered(token1) == false && wasRendered(token2))
+		{
+			JavascriptUtils.writeJavascriptUrl(getResponse(), url, id);
+			markRendered(token1);
+			markRendered(token2);
+		}
+	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascript(java.lang.CharSequence,

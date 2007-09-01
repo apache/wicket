@@ -40,10 +40,33 @@ public interface IHeaderResponse
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
 	 * 
+	 * @param reference
+	 *            resource reference pointing to the javascript resource
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 */
+	public void renderJavascriptReference(ResourceReference reference, String id);
+
+	/**
+	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
+	 * 
 	 * @param url
 	 *            url of the the javascript resource
 	 */
 	public void renderJavascriptReference(String url);
+
+	/**
+	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
+	 * 
+	 * @param url
+	 *            url of the the javascript resource
+	 * @param id
+	 *            id that will be used to filter duplicate reference (it's still filtered by URL
+	 *            too)
+	 */
+	public void renderJavascriptReference(String url, String id);
+
 
 	/**
 	 * Renders javascript code to the response, if the javascript has not already been rendered.
