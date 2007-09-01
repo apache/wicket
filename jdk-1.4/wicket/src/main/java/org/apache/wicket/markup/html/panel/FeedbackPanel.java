@@ -36,9 +36,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * A panel that displays {@link org.apache.wicket.feedback.FeedbackMessage}s in
- * a list view. The maximum number of messages to show can be set with
- * setMaxMessages().
+ * A panel that displays {@link org.apache.wicket.feedback.FeedbackMessage}s in a list view. The
+ * maximum number of messages to show can be set with setMaxMessages().
  * 
  * @see org.apache.wicket.feedback.FeedbackMessage
  * @see org.apache.wicket.feedback.FeedbackMessages
@@ -75,9 +74,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 				private static final long serialVersionUID = 1L;
 
 				/**
-				 * Returns feedbackPanel + the message level, eg
-				 * 'feedbackPanelERROR'. This is used as the class of the li /
-				 * span elements.
+				 * Returns feedbackPanel + the message level, eg 'feedbackPanelERROR'. This is used
+				 * as the class of the li / span elements.
 				 * 
 				 * @see org.apache.wicket.model.IModel#getObject()
 				 */
@@ -110,6 +108,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
+	 * 
+	 * @param id
+	 * @param filter
 	 */
 	public FeedbackPanel(final String id, IFeedbackMessageFilter filter)
 	{
@@ -124,7 +125,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 			}
 		};
 		add(messagesContainer);
-		this.messageListView = new MessageListView("messages");
+		messageListView = new MessageListView("messages");
 		messageListView.setVersioned(false);
 		messagesContainer.add(messageListView);
 
@@ -136,9 +137,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 
 
 	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message of level ERROR or up. This is a convenience method; same as
-	 * calling 'anyMessage(FeedbackMessage.ERROR)'.
+	 * Search messages that this panel will render, and see if there is any message of level ERROR
+	 * or up. This is a convenience method; same as calling 'anyMessage(FeedbackMessage.ERROR)'.
 	 * 
 	 * @return whether there is any message for this panel of level ERROR or up
 	 */
@@ -148,8 +148,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message.
+	 * Search messages that this panel will render, and see if there is any message.
 	 * 
 	 * @return whether there is any message for this panel
 	 */
@@ -159,8 +158,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message of the given level.
+	 * Search messages that this panel will render, and see if there is any message of the given
+	 * level.
 	 * 
 	 * @param level
 	 *            the level, see FeedbackMessage
@@ -195,8 +194,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @return Model for feedback messages on which you can install filters and
-	 *         other properties
+	 * @return Model for feedback messages on which you can install filters and other properties
 	 */
 	public final FeedbackMessagesModel getFeedbackMessagesModel()
 	{
@@ -253,12 +251,12 @@ public class FeedbackPanel extends Panel implements IFeedback
 
 	/**
 	 * @param maxMessages
-	 *            The maximum number of feedback messages that this feedback
-	 *            panel should show at one time
+	 *            The maximum number of feedback messages that this feedback panel should show at
+	 *            one time
 	 */
 	public final void setMaxMessages(int maxMessages)
 	{
-		this.messageListView.setViewSize(maxMessages);
+		messageListView.setViewSize(maxMessages);
 	}
 
 	/**
@@ -278,7 +276,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	public void updateFeedback()
 	{
 		// Force model to load
-		messageListView.getModelObject();
+		// getFeedbackMessagesModel().preloadMessages();
 	}
 
 	/**
@@ -286,9 +284,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @param message
 	 *            the message
-	 * @return the css class; by default, this returns feedbackPanel + the
-	 *         message level, eg 'feedbackPanelERROR', but you can override this
-	 *         method to provide your own
+	 * @return the css class; by default, this returns feedbackPanel + the message level, eg
+	 *         'feedbackPanelERROR', but you can override this method to provide your own
 	 */
 	protected String getCSSClass(final FeedbackMessage message)
 	{
@@ -317,9 +314,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Generates a component that is used to display the message inside the
-	 * feedback panel. This component must handle being attached to
-	 * <code>span</code> tags.
+	 * Generates a component that is used to display the message inside the feedback panel. This
+	 * component must handle being attached to <code>span</code> tags.
 	 * 
 	 * By default a {@link Label} is used.
 	 * 

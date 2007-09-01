@@ -30,6 +30,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.behavior.IBehavior;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
@@ -792,11 +793,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		internalAttach2();
 	}
 
-	/**
-	 * Called for every component when the page is getting to be rendered. it will call
-	 * onBeforeRender for this component and all the child components
-	 */
-	public final void beforeRender()
+	private final void internalBeforeRender()
 	{
 		if (isVisible() && !getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
@@ -811,6 +808,42 @@ public abstract class Component implements IClusterable, IConverterLocator
 						getClass().getName() +
 						" has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
+		}
+	}
+
+	/**
+	 * We need to postpone calling beforeRender() on components that implement IFeedback, to be sure
+	 * that all other component's beforeRender() has been already called, so that IFeedbacks can
+	 * collect all feedback messages. This is the key under list of postponed IFeedback is stored to
+	 * request cycle metadata. The List is then iterated over in {@link #prepareForRender()} after
+	 * calling {@link #beforeRender()}, to initialize postponed components.
+	 */
+	private static final MetaDataKey FEEDBACK_LIST = new MetaDataKey(List.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/**
+	 * Called for every component when the page is getting to be rendered. it will call
+	 * onBeforeRender for this component and all the child components
+	 */
+	public final void beforeRender()
+	{
+		if (!(this instanceof IFeedback))
+		{
+			internalBeforeRender();
+		}
+		else
+		{
+			// this component is a feedback. Feedback must be initialized last, so that
+			// they can collect messages from other components
+			List feedbacks = (List)getRequestCycle().getMetaData(FEEDBACK_LIST);
+			if (feedbacks == null)
+			{
+				feedbacks = new ArrayList();
+				getRequestCycle().setMetaData(FEEDBACK_LIST, (Serializable)feedbacks);
+			}
+			feedbacks.add(this);
 		}
 	}
 
@@ -1803,6 +1836,16 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public void prepareForRender()
 	{
 		beforeRender();
+		List feedbacks = (List)getRequestCycle().getMetaData(FEEDBACK_LIST);
+		if (feedbacks != null)
+		{
+			for (Iterator i = feedbacks.iterator(); i.hasNext();)
+			{
+				Component feedback = (Component)i.next();
+				feedback.internalBeforeRender();
+			}
+		}
+		getRequestCycle().setMetaData(FEEDBACK_LIST, null);
 		markRendering();
 	}
 
@@ -2020,8 +2063,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				// Make sure that while rendering the markup stream is found
 				parent.setMarkupStream(markupStream);
 
-				beforeRender();
-				markRendering();
+				prepareForRender();
 				// check authorization
 				// first the component itself
 				// (after attach as otherwise list views etc wont work)

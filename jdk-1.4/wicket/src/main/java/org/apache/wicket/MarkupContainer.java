@@ -208,8 +208,7 @@ public abstract class MarkupContainer extends Component
 			this.remove(component);
 		}
 		add(component);
-		component.beforeRender();
-		component.markRendering();
+		component.prepareForRender();
 		if (markupStream == null)
 		{
 			component.render();

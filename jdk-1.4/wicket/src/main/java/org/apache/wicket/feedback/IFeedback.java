@@ -17,18 +17,15 @@
 package org.apache.wicket.feedback;
 
 /**
- * Interface for components that present some kind of feedback to the user,
- * normally based on the feedback messages attached to various components on a
- * given page.
+ * Interface for components that present some kind of feedback to the user, normally based on the
+ * feedback messages attached to various components on a given page.
+ * 
+ * This is basically a marker interface that tells Wicket that this component's onBeforeRender
+ * method must be called after all non feedback components have been initialized.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
 public interface IFeedback
 {
-	/**
-	 * This method is called on any component implementing IFeedback when it is
-	 * time for the component to update its feedback display
-	 */
-	void updateFeedback();
 }

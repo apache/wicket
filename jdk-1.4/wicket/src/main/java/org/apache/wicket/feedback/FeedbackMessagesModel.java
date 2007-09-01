@@ -49,9 +49,8 @@ public class FeedbackMessagesModel implements IModel
 	 * Constructor. Creates a model for all feedback messages on the page.
 	 * 
 	 * @param component
-	 *            The component where the page will be get from for which
-	 *            messages will be displayed usually the same page as the one
-	 *            feedbackpanel is attached to
+	 *            The component where the page will be get from for which messages will be displayed
+	 *            usually the same page as the one feedbackpanel is attached to
 	 */
 	public FeedbackMessagesModel(Component component)
 	{
@@ -62,14 +61,13 @@ public class FeedbackMessagesModel implements IModel
 	}
 
 	/**
-	 * Constructor. Creates a model for all feedback messags accepted by the
-	 * given filter.
+	 * Constructor. Creates a model for all feedback messags accepted by the given filter.
 	 * 
 	 * @param filter
 	 *            The filter to apply
 	 * @param page
-	 *            Page for which messages will be displayed - usually the same
-	 *            page as the one feedbackpanel is attached to
+	 *            Page for which messages will be displayed - usually the same page as the one
+	 *            feedbackpanel is attached to
 	 * 
 	 */
 	public FeedbackMessagesModel(Page page, IFeedbackMessageFilter filter)
@@ -152,8 +150,7 @@ public class FeedbackMessagesModel implements IModel
 	 * Override this method to post process to the FeedbackMessage list.
 	 * 
 	 * @param messages
-	 *            List of sorted and filtered FeedbackMessages for further
-	 *            processing
+	 *            List of sorted and filtered FeedbackMessages for further processing
 	 * @return The processed FeedbackMessage list
 	 */
 	protected List processMessages(final List messages)

@@ -28,7 +28,6 @@ import java.util.Set;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
-import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebPage;
@@ -49,72 +48,61 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Abstract base class for pages. As a MarkupContainer subclass, a Page can
- * contain a component hierarchy and markup in some markup language such as
- * HTML. Users of the framework should not attempt to subclass Page directly.
- * Instead they should subclass a subclass of Page that is appropriate to the
- * markup type they are using, such as WebPage (for HTML markup).
+ * Abstract base class for pages. As a MarkupContainer subclass, a Page can contain a component
+ * hierarchy and markup in some markup language such as HTML. Users of the framework should not
+ * attempt to subclass Page directly. Instead they should subclass a subclass of Page that is
+ * appropriate to the markup type they are using, such as WebPage (for HTML markup).
  * <ul>
- * <li><b>Construction </b>- When a page is constructed, it is automatically
- * added to the current PageMap in the Session. When a Page is added to the
- * Session's PageMap, the PageMap assigns the Page an id. A PageMap is roughly
- * equivalent to a browser window and encapsulates a set of pages accessible
- * through that window. When a popup window is created, a new PageMap is created
- * for the popup.
+ * <li><b>Construction </b>- When a page is constructed, it is automatically added to the current
+ * PageMap in the Session. When a Page is added to the Session's PageMap, the PageMap assigns the
+ * Page an id. A PageMap is roughly equivalent to a browser window and encapsulates a set of pages
+ * accessible through that window. When a popup window is created, a new PageMap is created for the
+ * popup.
  * 
- * <li><b>Identity </b>- The Session that a Page is contained in can be
- * retrieved by calling Page.getSession(). Page identifiers start at 0 for each
- * PageMap in the Session and increment as new pages are added to the map. The
- * PageMap-(and Session)-unique identifier assigned to a given Page can be
- * retrieved by calling getId(). So, the first Page added to a new user Session
- * will always be named "0".
+ * <li><b>Identity </b>- The Session that a Page is contained in can be retrieved by calling
+ * Page.getSession(). Page identifiers start at 0 for each PageMap in the Session and increment as
+ * new pages are added to the map. The PageMap-(and Session)-unique identifier assigned to a given
+ * Page can be retrieved by calling getId(). So, the first Page added to a new user Session will
+ * always be named "0".
  * 
- * <li><b>LifeCycle </b>- Subclasses of Page which are interested in lifecycle
- * events can override onBeginRequest, onEndRequest() and onModelChanged(). The
- * onBeginRequest() method is inherited from Component. A call to
- * onBeginRequest() is made for every Component on a Page before page rendering
- * begins. At the end of a request (when rendering has completed) to a Page, the
+ * <li><b>LifeCycle </b>- Subclasses of Page which are interested in lifecycle events can override
+ * onBeginRequest, onEndRequest() and onModelChanged(). The onBeginRequest() method is inherited
+ * from Component. A call to onBeginRequest() is made for every Component on a Page before page
+ * rendering begins. At the end of a request (when rendering has completed) to a Page, the
  * onEndRequest() method is called for every Component on the Page.
  * 
- * <li><b>Nested Component Hierarchy </b>- The Page class is a subclass of
- * MarkupContainer. All MarkupContainers can have "associated markup", which
- * resides alongside the Java code by default. All MarkupContainers are also
- * Component containers. Through nesting, of containers, a Page can contain any
- * arbitrary tree of Components. For more details on MarkupContainers, see
+ * <li><b>Nested Component Hierarchy </b>- The Page class is a subclass of MarkupContainer. All
+ * MarkupContainers can have "associated markup", which resides alongside the Java code by default.
+ * All MarkupContainers are also Component containers. Through nesting, of containers, a Page can
+ * contain any arbitrary tree of Components. For more details on MarkupContainers, see
  * {@link org.apache.wicket.MarkupContainer}.
  * 
- * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any
- * constructor when they are being used in a Wicket session, but if you wish to
- * link to a Page using a URL that is "bookmarkable" (which implies that the URL
- * will not have any session information encoded in it, and that you can call
- * this page directly without having a session first directly from your
- * browser), you need to implement your Page with a no-arg constructor or with a
- * constructor that accepts a PageParameters argument (which wraps any query
- * string parameters for a request). In case the page has both constructors, the
- * constructor with PageParameters will be used.
+ * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any constructor when they are
+ * being used in a Wicket session, but if you wish to link to a Page using a URL that is
+ * "bookmarkable" (which implies that the URL will not have any session information encoded in it,
+ * and that you can call this page directly without having a session first directly from your
+ * browser), you need to implement your Page with a no-arg constructor or with a constructor that
+ * accepts a PageParameters argument (which wraps any query string parameters for a request). In
+ * case the page has both constructors, the constructor with PageParameters will be used.
  * 
- * <li><b>Models </b>- Pages, like other Components, can have models (see
- * {@link IModel}). A Page can be assigned a model by passing one to the Page's
- * constructor, by overriding initModel() or with an explicit invocation of
- * setModel(). If the model is a
- * {@link org.apache.wicket.model.CompoundPropertyModel}, Components on the
- * Page can use the Page's model implicitly via container inheritance. If a
- * Component is not assigned a model, the initModel() override in Component will
- * cause that Component to use the nearest CompoundModel in the parent chain, in
- * this case, the Page's model. For basic CompoundModels, the name of the
- * Component determines which property of the implicit page model the component
- * is bound to. If more control is desired over the binding of Components to the
- * page model (for example, if you want to specify some property expression
- * other than the component's name for retrieving the model object),
- * BoundCompoundPropertyModel can be used.
+ * <li><b>Models </b>- Pages, like other Components, can have models (see {@link IModel}). A Page
+ * can be assigned a model by passing one to the Page's constructor, by overriding initModel() or
+ * with an explicit invocation of setModel(). If the model is a
+ * {@link org.apache.wicket.model.CompoundPropertyModel}, Components on the Page can use the Page's
+ * model implicitly via container inheritance. If a Component is not assigned a model, the
+ * initModel() override in Component will cause that Component to use the nearest CompoundModel in
+ * the parent chain, in this case, the Page's model. For basic CompoundModels, the name of the
+ * Component determines which property of the implicit page model the component is bound to. If more
+ * control is desired over the binding of Components to the page model (for example, if you want to
+ * specify some property expression other than the component's name for retrieving the model
+ * object), BoundCompoundPropertyModel can be used.
  * 
- * <li><b>Back Button </b>- Pages can support the back button by enabling
- * versioning with a call to setVersioned(boolean). If a Page is versioned and
- * changes occur to it which need to be tracked, a verison manager will be
- * installed using the overridable factory method newVersionManager(). The
- * default version manager returned by the base implementation of this method is
- * an instance of UndoPageVersionManager, which manages versions of a page by
- * keeping change records that can be reversed at a later time.
+ * <li><b>Back Button </b>- Pages can support the back button by enabling versioning with a call to
+ * setVersioned(boolean). If a Page is versioned and changes occur to it which need to be tracked, a
+ * verison manager will be installed using the overridable factory method newVersionManager(). The
+ * default version manager returned by the base implementation of this method is an instance of
+ * UndoPageVersionManager, which manages versions of a page by keeping change records that can be
+ * reversed at a later time.
  * 
  * <li><b>Security </b>- See {@link IAuthorizationStrategy},
  * {@link SimplePageAuthorizationStrategy}
@@ -135,11 +123,9 @@ import org.slf4j.LoggerFactory;
 public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
 	/**
-	 * You can set implementation of the interface in the
-	 * {@link Page#serializer} then that implementation will handle the
-	 * serialization of this page. The serializePage method is called from the
-	 * writeObject method then the implementation override the default
-	 * serialization.
+	 * You can set implementation of the interface in the {@link Page#serializer} then that
+	 * implementation will handle the serialization of this page. The serializePage method is called
+	 * from the writeObject method then the implementation override the default serialization.
 	 * 
 	 * @author jcompagner
 	 */
@@ -175,15 +161,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * When passed to {@link Page#getVersion(int)} the latest page version is
-	 * returned.
+	 * When passed to {@link Page#getVersion(int)} the latest page version is returned.
 	 */
 	public static final int LATEST_VERSION = -1;
 
 	/**
-	 * This is a thread local that is used for serializing page references in
-	 * this page.It stores a {@link IPageSerializer} which can be set by the
-	 * outside world to do the serialization of this page.
+	 * This is a thread local that is used for serializing page references in this page.It stores a
+	 * {@link IPageSerializer} which can be set by the outside world to do the serialization of this
+	 * page.
 	 */
 	public static final ThreadLocal serializer = new ThreadLocal();
 
@@ -225,8 +210,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private transient Set renderedComponents;
 
 	/**
-	 * Boolean if the page is stateless, so it doesn't have to be in the page
-	 * map, will be set in urlFor
+	 * Boolean if the page is stateless, so it doesn't have to be in the page map, will be set in
+	 * urlFor
 	 */
 	private transient Boolean stateless = null;
 
@@ -304,10 +289,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Called right after a component's listener method (the provided method
-	 * argument) was called. This method may be used to clean up dependencies,
-	 * do logging, etc. NOTE: this method will also be called when
-	 * {@link WebPage#beforeCallComponent(Component, RequestListenerInterface)}
+	 * Called right after a component's listener method (the provided method argument) was called.
+	 * This method may be used to clean up dependencies, do logging, etc. NOTE: this method will
+	 * also be called when {@link WebPage#beforeCallComponent(Component, RequestListenerInterface)}
 	 * or the method invocation itself failed.
 	 * 
 	 * @param component
@@ -325,12 +309,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Called just before a component's listener method (the provided method
-	 * argument) is called. This method may be used to set up dependencies,
-	 * enforce authorization, etc. NOTE: if this method fails, the method will
-	 * not be excuted. Method
-	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)}
-	 * will always be called.
+	 * Called just before a component's listener method (the provided method argument) is called.
+	 * This method may be used to set up dependencies, enforce authorization, etc. NOTE: if this
+	 * method fails, the method will not be excuted. Method
+	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)} will always be
+	 * called.
 	 * 
 	 * @param component
 	 *            the component that is to be called
@@ -412,8 +395,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * This method is called when a component was rendered standalone. If it is
-	 * a markupcontainer then the rendering for that container is checked.
+	 * This method is called when a component was rendered standalone. If it is a markupcontainer
+	 * then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 
@@ -462,10 +445,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return The current version number of this page. If the page has been
-	 *         changed once, the return value will be 1. If the page has not yet
-	 *         been revised, the version returned will be 0, indicating that the
-	 *         page is still in its original state.
+	 * @return The current version number of this page. If the page has been changed once, the
+	 *         return value will be 1. If the page has not yet been revised, the version returned
+	 *         will be 0, indicating that the page is still in its original state.
 	 */
 	public final int getCurrentVersionNumber()
 	{
@@ -511,10 +493,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Get a page map entry for this page. By default, this is the page
-	 *         itself. But if you know of some way to compress the state for the
-	 *         page, you can return a custom implementation that produces the
-	 *         page on-the-fly.
+	 * @return Get a page map entry for this page. By default, this is the page itself. But if you
+	 *         know of some way to compress the state for the page, you can return a custom
+	 *         implementation that produces the page on-the-fly.
 	 */
 	public IPageMapEntry getPageMapEntry()
 	{
@@ -539,9 +520,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Returns whether the page should try to be stateless. To be stateless,
-	 * getStatelessHint() of every component on page (and it's behavior) must
-	 * return true and the page must be bookmarkable.
+	 * Returns whether the page should try to be stateless. To be stateless, getStatelessHint() of
+	 * every component on page (and it's behavior) must return true and the page must be
+	 * bookmarkable.
 	 * 
 	 * @see org.apache.wicket.Component#getStatelessHint()
 	 */
@@ -551,14 +532,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Override this method to implement a custom way of producing a version of
-	 * a Page when it cannot be found in the Session.
+	 * Override this method to implement a custom way of producing a version of a Page when it
+	 * cannot be found in the Session.
 	 * 
 	 * @param versionNumber
 	 *            The version desired
-	 * @return A Page object with the component/model hierarchy that was
-	 *         attached to this page at the time represented by the requested
-	 *         version.
+	 * @return A Page object with the component/model hierarchy that was attached to this page at
+	 *         the time represented by the requested version.
 	 */
 	public Page getVersion(final int versionNumber)
 	{
@@ -650,14 +630,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Call this method when the current (ajax) request shouldn't merge the
-	 * changes that are happening to the page with the previous version.
+	 * Call this method when the current (ajax) request shouldn't merge the changes that are
+	 * happening to the page with the previous version.
 	 * 
-	 * This is for example needed when you want to redirect to this page in an
-	 * ajax request and then you do want to version normally..
+	 * This is for example needed when you want to redirect to this page in an ajax request and then
+	 * you do want to version normally..
 	 * 
-	 * This method doesn't do anything if the getRequest().mergeVersion doesn't
-	 * return true.
+	 * This method doesn't do anything if the getRequest().mergeVersion doesn't return true.
 	 */
 	public final void ignoreVersionMerge()
 	{
@@ -714,12 +693,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Override this method and return true if your page is used to display
-	 * Wicket errors. This can help the framework prevent infinite failure
-	 * loops.
+	 * Override this method and return true if your page is used to display Wicket errors. This can
+	 * help the framework prevent infinite failure loops.
 	 * 
-	 * @return True if this page is intended to display an error to the end
-	 *         user.
+	 * @return True if this page is intended to display an error to the end user.
 	 */
 	public boolean isErrorPage()
 	{
@@ -727,10 +704,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Gets whether the page is stateless. Components on stateless page must not
-	 * render any statefull urls, and components on statefull page must not
-	 * render any stateless urls. Statefull urls are urls, which refer to a
-	 * certain (current) page instance.
+	 * Gets whether the page is stateless. Components on stateless page must not render any
+	 * statefull urls, and components on statefull page must not render any stateless urls.
+	 * Statefull urls are urls, which refer to a certain (current) page instance.
 	 * 
 	 * @return Whether to page is stateless
 	 */
@@ -791,16 +767,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Convenience method. Search for children of type fromClass and invoke
-	 * their respective removePersistedFormData() methods.
+	 * Convenience method. Search for children of type fromClass and invoke their respective
+	 * removePersistedFormData() methods.
 	 * 
 	 * @see Form#removePersistentFormComponentValues(boolean)
 	 * 
 	 * @param formClass
 	 *            Form to be selected. Pages may have more than one Form.
 	 * @param disablePersistence
-	 *            if true, disable persistence for all FormComponents on that
-	 *            page. If false, it will remain unchanged.
+	 *            if true, disable persistence for all FormComponents on that page. If false, it
+	 *            will remain unchanged.
 	 */
 	public final void removePersistedFormData(final Class formClass,
 			final boolean disablePersistence)
@@ -857,23 +833,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
-
-		// First, give priority to IFeedback instances, as they have to
-		// collect their messages before components like ListViews
-		// remove any child components
-		visitChildren(IFeedback.class, new IVisitor()
-		{
-			public Object component(Component component)
-			{
-				((IFeedback)component).updateFeedback();
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-
-		if (this instanceof IFeedback)
-		{
-			((IFeedback)this).updateFeedback();
-		}
 
 		try
 		{
@@ -953,8 +912,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * This returns a page instance that is rollbacked the number of versions
-	 * that is specified compared to the current page.
+	 * This returns a page instance that is rollbacked the number of versions that is specified
+	 * compared to the current page.
 	 * 
 	 * This is a rollback including ajax versions.
 	 * 
@@ -972,9 +931,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * Set the id for this Page. This method is called by PageMap when a Page is
-	 * added because the id, which is assigned by PageMap, is not known until
-	 * this time.
+	 * Set the id for this Page. This method is called by PageMap when a Page is added because the
+	 * id, which is assigned by PageMap, is not known until this time.
 	 * 
 	 * @param id
 	 *            The id
@@ -985,9 +943,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Sets whether the page should try to be stateless. To be stateless,
-	 * getStatelessHint() of every component on page (and it's behavior) must
-	 * return true and the page must be bookmarkable.
+	 * Sets whether the page should try to be stateless. To be stateless, getStatelessHint() of
+	 * every component on page (and it's behavior) must return true and the page must be
+	 * bookmarkable.
 	 * 
 	 * @param value
 	 *            whether the page should try to be stateless
@@ -1040,8 +998,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * Throw an exception if not all components rendered.
 	 * 
 	 * @param renderedContainer
-	 *            The page itself if it was a full page render or the container
-	 *            that was rendered standalone
+	 *            The page itself if it was a full page render or the container that was rendered
+	 *            standalone
 	 */
 	private final void checkRendering(final MarkupContainer renderedContainer)
 	{
@@ -1125,8 +1083,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
 	 */
 	private final void endVersion()
@@ -1306,21 +1263,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Set-up response with appropriate content type, locale and encoding. The
-	 * locale is set equal to the session's locale. The content type header
-	 * contains information about the markup type (@see #getMarkupType()) and
-	 * the encoding. The response (and request) encoding is determined by an
-	 * application setting (@see
-	 * ApplicationSettings#getResponseRequestEncoding()). In addition, if the
-	 * page's markup contains a xml declaration like &lt?xml ... ?&gt; an xml
-	 * declaration with proper encoding information is written to the output as
-	 * well, provided it is not disabled by an applicaton setting (@see
+	 * Set-up response with appropriate content type, locale and encoding. The locale is set equal
+	 * to the session's locale. The content type header contains information about the markup type
+	 * (@see #getMarkupType()) and the encoding. The response (and request) encoding is determined
+	 * by an application setting (@see ApplicationSettings#getResponseRequestEncoding()). In
+	 * addition, if the page's markup contains a xml declaration like &lt?xml ... ?&gt; an xml
+	 * declaration with proper encoding information is written to the output as well, provided it is
+	 * not disabled by an applicaton setting (@see
 	 * ApplicationSettings#getStripXmlDeclarationFromOutput()).
 	 * <p>
-	 * Note: Prior to Wicket 1.1 the output encoding was determined by the
-	 * page's markup encoding. Because this caused uncertainties about the
-	 * /request/ encoding, it has been changed in favour of the new, much safer,
-	 * approach. Please see the Wiki for more details.
+	 * Note: Prior to Wicket 1.1 the output encoding was determined by the page's markup encoding.
+	 * Because this caused uncertainties about the /request/ encoding, it has been changed in favour
+	 * of the new, much safer, approach. Please see the Wiki for more details.
 	 */
 	protected void configureResponse()
 	{
@@ -1350,8 +1304,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
 	 * @see org.apache.wicket.Component#internalOnModelChanged()
 	 */
@@ -1372,8 +1325,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
 	 * 
 	 * @param map
 	 */
@@ -1507,8 +1459,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 	/**
 	 * @param pageMap
-	 *            Sets this page into the page map with the given name. If the
-	 *            page map does not yet exist, it is automatically created.
+	 *            Sets this page into the page map with the given name. If the page map does not yet
+	 *            exist, it is automatically created.
 	 */
 	final void setPageMap(final IPageMap pageMap)
 	{

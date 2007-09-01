@@ -17,15 +17,13 @@
 package org.apache.wicket.request.target.component;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Component.IVisitor;
-import org.apache.wicket.feedback.IFeedback;
 
 /**
- * Default implementation of {@link org.apache.wicket.request.target.component.IComponentRequestTarget}.
- * Target that denotes a single component instance.
+ * Default implementation of
+ * {@link org.apache.wicket.request.target.component.IComponentRequestTarget}. Target that denotes
+ * a single component instance.
  * 
  * @author Eelco Hillenius
  */
@@ -73,26 +71,6 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 			// Render the component
 			try
 			{
-				// collect feedback
-				if (component instanceof MarkupContainer)
-				{
-					MarkupContainer container = (MarkupContainer)component;
-
-					container.visitChildren(IFeedback.class, new IVisitor()
-					{
-						public Object component(Component component)
-						{
-							((IFeedback)component).updateFeedback();
-							return IVisitor.CONTINUE_TRAVERSAL;
-						}
-					});
-				}
-
-				if (component instanceof IFeedback)
-				{
-					((IFeedback)component).updateFeedback();
-				}
-
 				// attach
 				component.attach();
 
