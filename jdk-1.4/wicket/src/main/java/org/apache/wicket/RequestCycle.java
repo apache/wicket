@@ -1118,7 +1118,10 @@ public abstract class RequestCycle
 				// probably our last chance the exception can be logged.
 				// Note that a PageExpiredException should not be logged, because
 				// it's not an internal error
-				onRuntimeException(e);
+				if (e instanceof PageExpiredException)
+				{
+					logRuntimeException(e);
+				}
 
 				// try to play nicely and let the request processor handle the
 				// exception response. If that doesn't work, any runtime exception
@@ -1135,22 +1138,6 @@ public abstract class RequestCycle
 						"unexpected exception when handling another exception: " + e.getMessage(),
 						e);
 			}
-		}
-	}
-
-	/**
-	 * Called when an unrecoverable runtime exception during request cycle handling occured, which
-	 * will result in displaying a user facing error page. Clients can override this method in case
-	 * they want to customize logging.
-	 * 
-	 * @param e
-	 *            the runtime exception
-	 */
-	protected void onRuntimeException(RuntimeException e)
-	{
-		if (!(e instanceof PageExpiredException))
-		{
-			logRuntimeException(e);
 		}
 	}
 
