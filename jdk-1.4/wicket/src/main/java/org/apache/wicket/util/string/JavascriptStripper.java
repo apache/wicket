@@ -25,26 +25,26 @@ package org.apache.wicket.util.string;
 public class JavascriptStripper
 {
 	/*
-	 * Determines the state of script proessing.
+	 * Determines the state of script processing.
 	 */
 	/** Inside regular text */
-	private final static int REGULAR_TEXT = 1; 
-		
+	private final static int REGULAR_TEXT = 1;
+
 	/** String started with single quote (') */
 	private final static int STRING_SINGLE_QUOTE = 2;
-		
+
 	/** String started with double quotes (") */
-	private final static int STRING_DOUBLE_QUOTES = 3; 
-		
+	private final static int STRING_DOUBLE_QUOTES = 3;
+
 	/** Inside two or more whitespace characters */
-	private final static int WHITE_SPACE = 4; 
-		
-	/** Inside a line comment (//   ) */
-	private final static int LINE_COMMENT = 5; 
-		
+	private final static int WHITE_SPACE = 4;
+
+	/** Inside a line comment (// ) */
+	private final static int LINE_COMMENT = 5;
+
 	/** Inside a multi line comment */
 	private final static int MULTILINE_COMMENT = 6;
-	
+
 	/** Inside a regular expression */
 	private final static int REG_EXP = 7;
 
@@ -92,7 +92,8 @@ public class JavascriptStripper
 				else if (c == '/')
 				{
 					// This might be a divide operator, or it might be a regular expression.
-					// Work out if it's a regular expression by finding the previous non-whitespace char, which
+					// Work out if it's a regular expression by finding the previous non-whitespace
+					// char, which
 					// will be either '=' or '('. If it's not, it's just a divide operator.
 					int idx = i - 1;
 					while (idx > 0)
@@ -167,7 +168,7 @@ public class JavascriptStripper
 				result.append(c);
 				continue;
 			}
-			
+
 			if (state == REG_EXP)
 			{
 				if (c == '/' && prev != '\\')
