@@ -31,6 +31,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.HeaderContributor;
@@ -847,13 +848,28 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		TreeNode node = (TreeNode)e.getTreePath().getLastPathComponent();
 
 		// has the tree root changed?
-		if (e.getTreePath().getPathCount() == 1 && node.equals(rootItem.getModelObject()))
+		if (e.getTreePath().getPathCount() == 1)
 		{
 			invalidateAll();
 		}
 		else
 		{
 			invalidateNodeWithChildren(node);
+		}
+	}
+
+	/**
+	 * Convenience method that updates changed portions on tree. You can call this method during
+	 * Ajax response, where calling {@link #updateTree(AjaxRequestTarget)} would be appropriate, but
+	 * you don't have the AjaxRequestTarget instance. However, it is also safe to call this method
+	 * outside Ajax response.
+	 */
+	public final void updateTree()
+	{
+		IRequestTarget target = getRequestCycle().getRequestTarget();
+		if (target instanceof AjaxRequestTarget)
+		{
+			updateTree((AjaxRequestTarget)target);
 		}
 	}
 
