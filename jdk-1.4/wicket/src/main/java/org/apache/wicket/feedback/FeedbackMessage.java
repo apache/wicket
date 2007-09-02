@@ -17,6 +17,8 @@
 package org.apache.wicket.feedback;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
@@ -54,8 +56,17 @@ public class FeedbackMessage implements IClusterable
 	public static final int WARNING = 300;
 
 	/** Levels as strings for debugging. */
-	private static final String[] levelStrings = new String[] { "UNDEFINED", "DEBUG", "INFO",
-			"WARNING", "ERROR", "FATAL" };
+	private static final Map levelStrings = new HashMap();
+
+	static
+	{
+		levelStrings.put(new Integer(0), "UNDEFINED");
+		levelStrings.put(new Integer(100), "DEBUG");
+		levelStrings.put(new Integer(200), "INFO");
+		levelStrings.put(new Integer(300), "WARNING");
+		levelStrings.put(new Integer(400), "ERROR");
+		levelStrings.put(new Integer(500), "FATAL");
+	}
 
 	/**
 	 * The message level; can be used by rendering components. Note that what actually happens with
@@ -130,7 +141,7 @@ public class FeedbackMessage implements IClusterable
 	 */
 	public String getLevelAsString()
 	{
-		return levelStrings[getLevel() / 100];
+		return (String)levelStrings.get(new Integer(getLevel()));
 	}
 
 	/**
