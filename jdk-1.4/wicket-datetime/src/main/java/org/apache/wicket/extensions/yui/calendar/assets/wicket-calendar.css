@@ -30,7 +30,7 @@
 	float: right;	
 }
 
-.yui-calendar input {
+.yui-calendar .calheader input {
 	text-align: center;
 	border: 1px solid #999;
 	vertical-align: middle;		
@@ -45,10 +45,10 @@
 	display: block;
 }
 
-.yui-calendar a.yearDown {
+.yui-calendar .calheader a.yearDown {
 	background: url(../../assets/skins/sam/sprite.png) no-repeat 0 -400px;
 }
 
-.yui-calendar a.yearUp {
+.yui-calendar .calheader a.yearUp {
 	background: url(../../assets/skins/sam/sprite.png) no-repeat 0 -350px;
 }

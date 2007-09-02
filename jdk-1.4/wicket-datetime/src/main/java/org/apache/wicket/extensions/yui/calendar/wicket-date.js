@@ -57,7 +57,7 @@ Wicket.DateTime.parseDate = function(pattern, value) {
 			year = year * 1 + 1900;
 		}
 	}
-	date = new Date();
+	var date = new Date();
 	date.setFullYear(year, (month - 1), day);
 	return date;
 }
@@ -164,12 +164,10 @@ Wicket.DateTime.enableMonthYearSelection = function(widget) {
 		};
 		
 		E.on(yearUpId, "click", function() {
-			var field = YAHOO.util.Dom.get(yearInputId);
 			processNumber(1);
 		});
 		
 		E.on(yearDownId, "click", function() {
-			var field = YAHOO.util.Dom.get(yearInputId);
 			processNumber(-1);
 		});
 	}
@@ -191,11 +189,43 @@ Wicket.DateTime.enableMonthYearSelection = function(widget) {
 		selectHtml += "</select>";
 
 		// generate year input and spinner buttons	
-		selectHtml += "<table class='yearInputContainer'>";	
+		selectHtml += "<table>";	
 		selectHtml += "<tr><td><a class='yearDown' id='" + yearDownId + "'/></td>";
 		selectHtml += "<td><input type='text' size='4' id='" + yearInputId + "'/></td>";
 		selectHtml += "<td><a class='yearUp' id='" + yearUpId + "'/></td>";			
 		selectHtml += "</tr></table>";
 		return selectHtml;  
 	}
+}
+
+// configures a datepicker using the cfg object
+Wicket.DateTime.init = function(cfg) {
+	cfg.dpJs = cfg.widgetId + "DpJs";
+	cfg.dp = cfg.widgetId + "Dp";
+	cfg.icon = cfg.widgetId +"Icon";
+	YAHOO.namespace("wicket");
+	YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.Calendar(cfg.dpJs,cfg.dp, cfg.calendarInit);	
+	YAHOO.wicket[cfg.dpJs].isVisible = function() { return YAHOO.wicket[cfg.dpJs].oDomContainer.style.display == 'block'; }
+	if (cfg.enableMonthYearSelection) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket[cfg.dpJs]); 
+	
+	function showCalendar() {
+		Wicket.DateTime.showCalendar(YAHOO.wicket[cfg.dpJs], YAHOO.util.Dom.get(cfg.componentId).value, cfg.datePattern);
+		if (cfg.alignWithIcon) Wicket.DateTime.positionRelativeTo(YAHOO.wicket[cfg.dpJs].oDomContainer, cfg.icon);
+		if (cfg.enableMonthYearSelection) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket[cfg.dpJs]); 
+	}
+
+	YAHOO.util.Event.addListener(cfg.icon, "click", showCalendar, YAHOO.wicket[cfg.dpJs], true);
+
+	function selectHandler(type, args, cal) {
+		YAHOO.util.Dom.get(cfg.componentId).value = Wicket.DateTime.substituteDate(cfg.datePattern, args[0][0]);
+		var wasVisible = YAHOO.wicket[cfg.dpJs].isVisible();
+		cal.hide();
+		if (cfg.fireChangeEvent && wasVisible) {
+			var field = YAHOO.util.Dom.get(cfg.componentId);
+			if (typeof(field.onchange) != 'undefined') field.onchange();
+		}
+	}
+
+	YAHOO.wicket[cfg.dpJs].selectEvent.subscribe(selectHandler,YAHOO.wicket[cfg.dpJs]);
+	YAHOO.wicket[cfg.dpJs].render();
 }

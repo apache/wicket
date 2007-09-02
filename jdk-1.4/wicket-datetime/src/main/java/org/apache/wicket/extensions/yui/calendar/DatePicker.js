@@ -24,7 +24,7 @@ function checkWicketDate(name, loaderCallback) {
 			checkWicketDate(name, loaderCallback);
 		}, 50);
 	}
-};
+}
 
 wicketYuiLoader.addModule({
 	name: "wicket-date",
@@ -35,46 +35,30 @@ wicketYuiLoader.addModule({
 });	
 
 
-function check${widgetId}Loader() {
+function check${widgetId}Loader() {	
 	if (!wicketYuiLoader.initializing) {
 		wicketYuiLoader.initializing = true;	
 		wicketYuiLoader.require("wicket-date");
 		wicketYuiLoader.insert(function() {
 			wicketYuiLoader.initializing = false;
+			// init the datepicker			
 			init${widgetId}DpJs();
 		});
 	}  else {
 		setTimeout(check${widgetId}Loader, 50);
 	}
- }
-
-check${widgetId}Loader();	
- 
-function init${widgetId}DpJs() {
-
-	YAHOO.namespace("wicket");
-	YAHOO.wicket.${widgetId}DpJs = new YAHOO.widget.Calendar("${widgetId}DpJs","${widgetId}Dp", { ${calendarInit} });
-	YAHOO.wicket.${widgetId}DpJs.isVisible = function() { return YAHOO.wicket.${widgetId}DpJs.oDomContainer.style.display == 'block'; }
-	if (${enableMonthYearSelection}) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket.${widgetId}DpJs); 
-	
-	function showCalendar() {
-		Wicket.DateTime.showCalendar(YAHOO.wicket.${widgetId}DpJs, YAHOO.util.Dom.get("${componentId}").value, '${datePattern}');
-		if (${alignWithIcon}) Wicket.DateTime.positionRelativeTo(YAHOO.wicket.${widgetId}DpJs.oDomContainer, "${widgetId}Icon");
-		if (${enableMonthYearSelection}) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket.${widgetId}DpJs); 
-	}
-
-	YAHOO.util.Event.addListener("${widgetId}Icon", "click", showCalendar, YAHOO.wicket.${widgetId}DpJs, true);
-
-	function selectHandler(type, args, cal) {
-		YAHOO.util.Dom.get("${componentId}").value = Wicket.DateTime.substituteDate('${datePattern}', args[0][0]);
-		var wasVisible = YAHOO.wicket.${widgetId}DpJs.isVisible();
-		cal.hide();
-		if (${fireChangeEvent} && wasVisible) {
-			var field = YAHOO.util.Dom.get("${componentId}");
-			if (typeof(field.onchange) != 'undefined') field.onchange();
-		}
-	}
-
-	YAHOO.wicket.${widgetId}DpJs.selectEvent.subscribe(selectHandler,YAHOO.wicket.${widgetId}DpJs);
-	YAHOO.wicket.${widgetId}DpJs.render();
 }
+
+init${widgetId}DpJs = function() {
+	Wicket.DateTime.init( {
+				widgetId: "${widgetId}",
+				componentId: "${componentId}",				
+				calendarInit: { ${calendarInit} },
+				datePattern: "${datePattern}",
+				alignWithIcon: ${alignWithIcon},
+				enableMonthYearSelection: ${enableMonthYearSelection},
+				fireChangeEvent: ${fireChangeEvent}
+			});
+}
+
+check${widgetId}Loader();
