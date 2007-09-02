@@ -130,7 +130,7 @@ public class FeedbackMessage implements IClusterable
 	 */
 	public String getLevelAsString()
 	{
-		return levelStrings[getLevel()];
+		return levelStrings[getLevel() / 100];
 	}
 
 	/**
