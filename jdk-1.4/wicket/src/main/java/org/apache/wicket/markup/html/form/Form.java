@@ -59,76 +59,65 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Base class for forms. To implement a form, subclass this class, add
- * FormComponents (such as CheckBoxes, ListChoices or TextFields) to the form.
- * You can nest multiple buttons if you want to vary submit behavior. However,
- * it is not necessary to use Wicket's button class, just putting e.g. &lt;input
- * type="submit" value="go"&gt; suffices.
+ * Base class for forms. To implement a form, subclass this class, add FormComponents (such as
+ * CheckBoxes, ListChoices or TextFields) to the form. You can nest multiple buttons if you want to
+ * vary submit behavior. However, it is not necessary to use Wicket's button class, just putting
+ * e.g. &lt;input type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
- * <li> The submitting button is looked up. A submitting button is a button that
- * is nested in this form (is a child component) and that was clicked by the
- * user. If a submitting button was found, and it has the defaultFormProcessing
- * field set to false (default is true), it's onSubmit method will be called
- * right away, thus no validition is done, and things like updating form
- * component models that would normally be done are skipped. In that respect,
- * nesting a button with the defaultFormProcessing field set to false has the
- * same effect as nesting a normal link. If you want you can call validate() to
- * execute form validation, hasError() to find out whether validate() resulted
- * in validation errors, and updateFormComponentModels() to update the models of
+ * <li> The submitting button is looked up. A submitting button is a button that is nested in this
+ * form (is a child component) and that was clicked by the user. If a submitting button was found,
+ * and it has the defaultFormProcessing field set to false (default is true), it's onSubmit method
+ * will be called right away, thus no validition is done, and things like updating form component
+ * models that would normally be done are skipped. In that respect, nesting a button with the
+ * defaultFormProcessing field set to false has the same effect as nesting a normal link. If you
+ * want you can call validate() to execute form validation, hasError() to find out whether
+ * validate() resulted in validation errors, and updateFormComponentModels() to update the models of
  * nested form components. </li>
- * <li> When no submitting button with defaultFormProcessing set to false was
- * found, this form is processed (method process()). Now, two possible paths
- * exist:
+ * <li> When no submitting button with defaultFormProcessing set to false was found, this form is
+ * processed (method process()). Now, two possible paths exist:
  * <ul>
- * <li> Form validation failed. All nested form components will be marked
- * invalid, and onError() is called to allow clients to provide custom error
- * handling code. </li>
- * <li> Form validation succeeded. The nested components will be asked to update
- * their models and persist their data is applicable. After that, method
- * delegateSubmit with optionally the submitting button is called. The default
- * when there is a submitting button is to first call onSubmit on that button,
- * and after that call onSubmit on this form. Clients may override
+ * <li> Form validation failed. All nested form components will be marked invalid, and onError() is
+ * called to allow clients to provide custom error handling code. </li>
+ * <li> Form validation succeeded. The nested components will be asked to update their models and
+ * persist their data is applicable. After that, method delegateSubmit with optionally the
+ * submitting button is called. The default when there is a submitting button is to first call
+ * onSubmit on that button, and after that call onSubmit on this form. Clients may override
  * delegateSubmit if they want different behavior. </li>
  * </ul>
  * </li>
  * </li>
  * </p>
  * 
- * Form for handling (file) uploads with multipart requests is supported by
- * callign setMultiPart(true) ( although wicket will try to automatically detect
- * this for you ). Use this with
- * {@link org.apache.wicket.markup.html.form.upload.FileUploadField} components.
- * You can attach mutliple FileUploadField components for muliple file uploads.
+ * Form for handling (file) uploads with multipart requests is supported by callign
+ * setMultiPart(true) ( although wicket will try to automatically detect this for you ). Use this
+ * with {@link org.apache.wicket.markup.html.form.upload.FileUploadField} components. You can attach
+ * mutliple FileUploadField components for muliple file uploads.
  * <p>
- * In case of an upload error two resource keys are available to specify error
- * messages: uploadTooLarge and uploadFailed
+ * In case of an upload error two resource keys are available to specify error messages:
+ * uploadTooLarge and uploadFailed
  * 
  * ie in [page].properties
  * 
- * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed
- * limit of 2Mb
+ * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
  * 
  * <p>
- * If you want to have multiple buttons which submit the same form, simply put
- * two or more button components somewhere in the hierarchy of components that
- * are children of the form.
+ * If you want to have multiple buttons which submit the same form, simply put two or more button
+ * components somewhere in the hierarchy of components that are children of the form.
  * </p>
  * <p>
- * To get form components to persist their values for users via cookies, simply
- * call setPersistent(true) on each component.
+ * To get form components to persist their values for users via cookies, simply call
+ * setPersistent(true) on each component.
  * </p>
  * <p>
- * Forms can be nested. You can put a form in another form. Since HTML doesn't
- * allow nested &lt;form&gt; tags, the inner forms will be rendered using the
- * &lt;div&gt; tag. You have to submit the inner forms using explicit components
- * (like Button or SubmitLink), you can't rely on implicit submit behavior (by
- * using just &lt;input type="submit"&gt; that is not attached to a component).
+ * Forms can be nested. You can put a form in another form. Since HTML doesn't allow nested
+ * &lt;form&gt; tags, the inner forms will be rendered using the &lt;div&gt; tag. You have to submit
+ * the inner forms using explicit components (like Button or SubmitLink), you can't rely on implicit
+ * submit behavior (by using just &lt;input type="submit"&gt; that is not attached to a component).
  * </p>
  * <p>
- * When a nested form is submitted, the user entered values in outer (parent)
- * forms are preserved and only the fields in the submitted form are validated.
- * </b>
+ * When a nested form is submitted, the user entered values in outer (parent) forms are preserved
+ * and only the fields in the submitted form are validated. </b>
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -291,14 +280,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 
 	/**
-	 * Any default button. If set, a hidden submit button will be rendered right
-	 * after the form tag, so that when users press enter in a textfield, this
-	 * button's action will be selected. If no default button is set, nothing
-	 * additional is rendered.
+	 * Any default button. If set, a hidden submit button will be rendered right after the form tag,
+	 * so that when users press enter in a textfield, this button's action will be selected. If no
+	 * default button is set, nothing additional is rendered.
 	 * <p>
-	 * WARNING: note that this is a best effort only. Unfortunately having a
-	 * 'default' button in a form is ill defined in the standards, and of course
-	 * IE has it's own way of doing things.
+	 * WARNING: note that this is a best effort only. Unfortunately having a 'default' button in a
+	 * form is ill defined in the standards, and of course IE has it's own way of doing things.
 	 * </p>
 	 */
 	private Button defaultButton;
@@ -476,9 +463,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 
 	/**
-	 * Clears the input from the form's nested children of type
-	 * {@link FormComponent}. This method is typically called when a form needs
-	 * to be reset.
+	 * Clears the input from the form's nested children of type {@link FormComponent}. This method
+	 * is typically called when a form needs to be reset.
 	 */
 	public final void clearInput()
 	{
@@ -512,8 +498,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Gets the button which submitted this form.
 	 * 
-	 * @return The button which submitted this form or null if the processing
-	 *         was not trigger by a registered button component
+	 * @return The button which submitted this form or null if the processing was not trigger by a
+	 *         registered button component
 	 */
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
@@ -547,21 +533,18 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Gets the default button. If set (not null), a hidden submit button will
-	 * be rendered right after the form tag, so that when users press enter in a
-	 * textfield, this button's action will be selected. If no default button is
-	 * set (it is null), nothing additional is rendered.
+	 * Gets the default button. If set (not null), a hidden submit button will be rendered right
+	 * after the form tag, so that when users press enter in a textfield, this button's action will
+	 * be selected. If no default button is set (it is null), nothing additional is rendered.
 	 * <p>
-	 * WARNING: note that this is a best effort only. Unfortunately having a
-	 * 'default' button in a form is ill defined in the standards, and of course
-	 * IE has it's own way of doing things.
+	 * WARNING: note that this is a best effort only. Unfortunately having a 'default' button in a
+	 * form is ill defined in the standards, and of course IE has it's own way of doing things.
 	 * </p>
-	 * There can be only one default button per form hierarchy. So if you want
-	 * to get the default button on a nested form, it will actually delegate the
-	 * call to root form. </b>
+	 * There can be only one default button per form hierarchy. So if you want to get the default
+	 * button on a nested form, it will actually delegate the call to root form. </b>
 	 * 
-	 * @return The button to set as the default button, or null when you want to
-	 *         'unset' any previously set default button
+	 * @return The button to set as the default button, or null when you want to 'unset' any
+	 *         previously set default button
 	 */
 	public final Button getDefaultButton()
 	{
@@ -576,16 +559,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * This generates a piece of javascript code that sets the url in the
-	 * special hidden field and submits the form.
+	 * This generates a piece of javascript code that sets the url in the special hidden field and
+	 * submits the form.
 	 * 
-	 * Warning: This code should only be called in the rendering phase for form
-	 * components inside the form because it uses the css/javascript id of the
-	 * form which can be stored in the markup.
+	 * Warning: This code should only be called in the rendering phase for form components inside
+	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
 	 * 
 	 * @param url
-	 *            The interface url that has to be stored in the hidden field
-	 *            and submitted
+	 *            The interface url that has to be stored in the hidden field and submitted
 	 * @return The javascript code that submits the form.
 	 */
 	public final CharSequence getJsForInterfaceUrl(CharSequence url)
@@ -630,23 +611,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Returns the prefix used when building validator keys. This allows a form
-	 * to use a separate "set" of keys. For example if prefix "short" is
-	 * returned, validator key short.Required will be tried instead of Required
-	 * key.
+	 * Returns the prefix used when building validator keys. This allows a form to use a separate
+	 * "set" of keys. For example if prefix "short" is returned, validator key short.Required will
+	 * be tried instead of Required key.
 	 * <p>
-	 * This can be useful when different designs are used for a form. In a form
-	 * where error messages are displayed next to their respective form
-	 * components as opposed to at the top of the form, the ${label} attribute
-	 * is of little use and only causes redundant information to appear in the
-	 * message. Forms like these can return the "short" (or any other string)
-	 * validator prefix and declare key: short.Required=required to override the
-	 * longer message which is usually declared like this: Required=${label} is
-	 * a required field
+	 * This can be useful when different designs are used for a form. In a form where error messages
+	 * are displayed next to their respective form components as opposed to at the top of the form,
+	 * the ${label} attribute is of little use and only causes redundant information to appear in
+	 * the message. Forms like these can return the "short" (or any other string) validator prefix
+	 * and declare key: short.Required=required to override the longer message which is usually
+	 * declared like this: Required=${label} is a required field
 	 * <p>
-	 * Returned prefix will be used for all form components. The prefix can also
-	 * be overridden on form component level by overriding
-	 * {@link FormComponent#getValidatorKeyPrefix()}
+	 * Returned prefix will be used for all form components. The prefix can also be overridden on
+	 * form component level by overriding {@link FormComponent#getValidatorKeyPrefix()}
 	 * 
 	 * @return prefix prepended to validator keys
 	 */
@@ -674,8 +651,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Returns whether the form is a root form, which means that there's no
-	 * other form in it's parent hierarchy.
+	 * Returns whether the form is a root form, which means that there's no other form in it's
+	 * parent hierarchy.
 	 * 
 	 * @return true if form is a root form, false otherwise
 	 */
@@ -687,8 +664,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Checks if this form has been submitted during the current request
 	 * 
-	 * @return true if the form has been submitted during this request, false
-	 *         otherwise
+	 * @return true if the form has been submitted during this request, false otherwise
 	 */
 	public final boolean isSubmitted()
 	{
@@ -708,8 +684,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Retrieves FormComponent values related to the page using the persister
-	 * and assign the values to the FormComponent. Thus initializing them.
+	 * Retrieves FormComponent values related to the page using the persister and assign the values
+	 * to the FormComponent. Thus initializing them.
 	 */
 	public final void loadPersistentFormComponentValues()
 	{
@@ -736,8 +712,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR
-	 * CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
 	 * 
 	 * Handles form submissions.
 	 * 
@@ -797,8 +772,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Process the form. Though you can override this method to provide your
-	 * whole own algorithm, it is not recommended to do so.
+	 * Process the form. Though you can override this method to provide your whole own algorithm, it
+	 * is not recommended to do so.
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
@@ -842,14 +817,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Removes already persisted data for all FormComponent childs and disable
-	 * persistence for the same components.
+	 * Removes already persisted data for all FormComponent childs and disable persistence for the
+	 * same components.
 	 * 
 	 * @see Page#removePersistedFormData(Class, boolean)
 	 * 
 	 * @param disablePersistence
-	 *            if true, disable persistence for all FormComponents on that
-	 *            page. If false, it will remain unchanged.
+	 *            if true, disable persistence for all FormComponents on that page. If false, it
+	 *            will remain unchanged.
 	 */
 	public void removePersistentFormComponentValues(final boolean disablePersistence)
 	{
@@ -879,23 +854,20 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Sets the default button. If set (not null), a hidden submit button will
-	 * be rendered right after the form tag, so that when users press enter in a
-	 * textfield, this button's action will be selected. If no default button is
-	 * set (so unset by calling this method with null), nothing additional is
-	 * rendered.
+	 * Sets the default button. If set (not null), a hidden submit button will be rendered right
+	 * after the form tag, so that when users press enter in a textfield, this button's action will
+	 * be selected. If no default button is set (so unset by calling this method with null), nothing
+	 * additional is rendered.
 	 * <p>
-	 * WARNING: note that this is a best effort only. Unfortunately having a
-	 * 'default' button in a form is ill defined in the standards, and of course
-	 * IE has it's own way of doing things.
+	 * WARNING: note that this is a best effort only. Unfortunately having a 'default' button in a
+	 * form is ill defined in the standards, and of course IE has it's own way of doing things.
 	 * </p>
-	 * There can be only one default button per form hierarchy. So if you set
-	 * default button on a nested form, it will actually delegate the call to
-	 * root form. </b>
+	 * There can be only one default button per form hierarchy. So if you set default button on a
+	 * nested form, it will actually delegate the call to root form. </b>
 	 * 
 	 * @param button
-	 *            The button to set as the default button, or null when you want
-	 *            to 'unset' any previously set default button
+	 *            The button to set as the default button, or null when you want to 'unset' any
+	 *            previously set default button
 	 */
 	public final void setDefaultButton(Button button)
 	{
@@ -922,8 +894,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Set to true to use enctype='multipart/form-data', and to process file
-	 * uplloads by default multiPart = false
+	 * Set to true to use enctype='multipart/form-data', and to process file uplloads by default
+	 * multiPart = false
 	 * 
 	 * @param multiPart
 	 *            whether this form should behave as a multipart form
@@ -969,13 +941,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		});
 
 		/**
-		 * TODO Post 1.2 General: Maybe we should re-think how Borders are
-		 * implemented, because there are just too many exceptions in the code
-		 * base because of borders. This time it is to solve the problem tested
-		 * in BoxBorderTestPage_3 where the Form is defined in the box border
-		 * and the FormComponents are in the "body". Thus, the formComponents
-		 * are not childs of the form. They are rather childs of the border, as
-		 * the Form itself.
+		 * TODO Post 1.2 General: Maybe we should re-think how Borders are implemented, because
+		 * there are just too many exceptions in the code base because of borders. This time it is
+		 * to solve the problem tested in BoxBorderTestPage_3 where the Form is defined in the box
+		 * border and the FormComponents are in the "body". Thus, the formComponents are not childs
+		 * of the form. They are rather childs of the border, as the Form itself.
 		 */
 		if (getParent() instanceof Border)
 		{
@@ -993,8 +963,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Convenient and typesafe way to visit all the form components on a form
-	 * postorder (deepest first)
+	 * Convenient and typesafe way to visit all the form components on a form postorder (deepest
+	 * first)
 	 * 
 	 * @param visitor
 	 *            The visitor interface to call
@@ -1004,13 +974,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		FormComponent.visitFormComponentsPostOrder(this, visitor);
 
 		/**
-		 * TODO Post 1.2 General: Maybe we should re-think how Borders are
-		 * implemented, because there are just too many exceptions in the code
-		 * base because of borders. This time it is to solve the problem tested
-		 * in BoxBorderTestPage_3 where the Form is defined in the box border
-		 * and the FormComponents are in the "body". Thus, the formComponents
-		 * are not childs of the form. They are rather childs of the border, as
-		 * the Form itself.
+		 * TODO Post 1.2 General: Maybe we should re-think how Borders are implemented, because
+		 * there are just too many exceptions in the code base because of borders. This time it is
+		 * to solve the problem tested in BoxBorderTestPage_3 where the Form is defined in the box
+		 * border and the FormComponents are in the "body". Thus, the formComponents are not childs
+		 * of the form. They are rather childs of the border, as the Form itself.
 		 */
 		if (getParent() instanceof Border)
 		{
@@ -1052,15 +1020,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Method for dispatching/calling a interface on a page from the given url.
-	 * Used by {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()}
-	 * for dispatching events
+	 * Method for dispatching/calling a interface on a page from the given url. Used by
+	 * {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()} for dispatching events
 	 * 
 	 * @param page
 	 *            The page where the event should be called on.
 	 * @param url
-	 *            The url which describes the component path and the interface
-	 *            to be called.
+	 *            The url which describes the component path and the interface to be called.
 	 */
 	private void dispatchEvent(final Page page, final String url)
 	{
@@ -1084,9 +1050,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * @param validator
-	 *            The form validator to add to the formValidators Object (which
-	 *            may be an array of IFormValidators or a single instance, for
-	 *            efficiency)
+	 *            The form validator to add to the formValidators Object (which may be an array of
+	 *            IFormValidators or a single instance, for efficiency)
 	 */
 	private void formValidators_add(final IFormValidator validator)
 	{
@@ -1117,8 +1082,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Gets form validator from formValidators Object (which may be an array of
-	 * IFormValidators or a single instance, for efficiency) at the given index
+	 * Gets form validator from formValidators Object (which may be an array of IFormValidators or a
+	 * single instance, for efficiency) at the given index
 	 * 
 	 * @param index
 	 *            The index of the validator to get
@@ -1138,9 +1103,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * @return The number of form validators in the formValidators Object (which
-	 *         may be an array of IFormValidators or a single instance, for
-	 *         efficiency)
+	 * @return The number of form validators in the formValidators Object (which may be an array of
+	 *         IFormValidators or a single instance, for efficiency)
 	 */
 	private int formValidators_size()
 	{
@@ -1156,8 +1120,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Visits the form's children FormComponents and inform them that a new user
-	 * input is available in the Request
+	 * Visits the form's children FormComponents and inform them that a new user input is available
+	 * in the Request
 	 */
 	private void inputChanged()
 	{
@@ -1174,9 +1138,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned
-	 * to the FormComponent automatically when the page is visited by the user
-	 * next time.
+	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned to the FormComponent
+	 * automatically when the page is visited by the user next time.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
@@ -1216,13 +1179,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * If a default button was set on this form, this method will be called to
-	 * render an extra field with an invisible style so that pressing enter in
-	 * one of the textfields will do a form submit using this button. This
-	 * method is overridable as what we do is best effort only, and may not what
-	 * you want in specific situations. So if you have specific usability
-	 * concerns, or want to follow another strategy, you may override this
-	 * method.
+	 * If a default button was set on this form, this method will be called to render an extra field
+	 * with an invisible style so that pressing enter in one of the textfields will do a form submit
+	 * using this button. This method is overridable as what we do is best effort only, and may not
+	 * what you want in specific situations. So if you have specific usability concerns, or want to
+	 * follow another strategy, you may override this method.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -1237,7 +1198,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		// div that is not visible (but not display:none either)
 		buffer
-				.append("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\"");
+				.append("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">");
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
@@ -1246,7 +1207,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		buffer.append("<input type=\"submit\" onclick=\" var b=Wicket.$('");
 		buffer.append(defaultButton.getMarkupId());
 		buffer
-				.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(this)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+				.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
 		// close div
@@ -1256,33 +1217,31 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Template method to allow clients to do any processing (like recording the
-	 * current model so that, in case onSubmit does further validation, the
-	 * model can be rolled back) before the actual updating of form component
-	 * models is done.
+	 * Template method to allow clients to do any processing (like recording the current model so
+	 * that, in case onSubmit does further validation, the model can be rolled back) before the
+	 * actual updating of form component models is done.
 	 */
 	protected void beforeUpdateFormComponentModels()
 	{
 	}
 
 	/**
-	 * Called (by the default implementation of 'process') when all fields
-	 * validated, the form was updated and it's data was allowed to be
-	 * persisted. It is meant for delegating further processing to clients.
+	 * Called (by the default implementation of 'process') when all fields validated, the form was
+	 * updated and it's data was allowed to be persisted. It is meant for delegating further
+	 * processing to clients.
 	 * <p>
-	 * This implementation first finds out whether the form processing was
-	 * triggered by a nested button of this form. If that is the case, that
-	 * button's onSubmit is called first.
+	 * This implementation first finds out whether the form processing was triggered by a nested
+	 * button of this form. If that is the case, that button's onSubmit is called first.
 	 * </p>
 	 * <p>
-	 * Regardless of whether a submitting button was found, the form's onSubmit
-	 * method is called next.
+	 * Regardless of whether a submitting button was found, the form's onSubmit method is called
+	 * next.
 	 * </p>
 	 * 
 	 * @param submittingButton
-	 *            the button that triggered this form processing, or null if the
-	 *            processing was triggered by something else (like a non-Wicket
-	 *            submit button or a javascript execution)
+	 *            the button that triggered this form processing, or null if the processing was
+	 *            triggered by something else (like a non-Wicket submit button or a javascript
+	 *            execution)
 	 */
 	protected void delegateSubmit(IFormSubmittingComponent submittingButton)
 	{
@@ -1298,8 +1257,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Returns the HiddenFieldId which will be used as the name and id property
-	 * of the hiddenfield that is generated for event dispatches.
+	 * Returns the HiddenFieldId which will be used as the name and id property of the hiddenfield
+	 * that is generated for event dispatches.
 	 * 
 	 * @return The name and id of the hidden field.
 	 */
@@ -1309,8 +1268,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Returns the javascript/css id of this form that will be used to generated
-	 * the id="xxx" attribute.
+	 * Returns the javascript/css id of this form that will be used to generated the id="xxx"
+	 * attribute.
 	 * 
 	 * @return The javascript/css id of this form.
 	 * @deprecated use {@link #getMarkupId()}
@@ -1322,9 +1281,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 
 	/**
-	 * Gets the method used to submit the form. Defaults to either what is
-	 * explicitly defined in the markup or 'post'. Override this if you have a
-	 * requirement to alter this behavior.
+	 * Gets the method used to submit the form. Defaults to either what is explicitly defined in the
+	 * markup or 'post'. Override this if you have a requirement to alter this behavior.
 	 * 
 	 * @return the method used to submit the form.
 	 */
@@ -1354,8 +1312,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * WARNING
 	 * 
-	 * If this method is overridden it can break {@link FileUploadField}s on
-	 * this form
+	 * If this method is overridden it can break {@link FileUploadField}s on this form
 	 * 
 	 * @return false if form is multipart and upload failed
 	 */
@@ -1531,8 +1488,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Append an additional hidden input tag to support anchor tags that can
-	 * submit a form.
+	 * Append an additional hidden input tag to support anchor tags that can submit a form.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -1592,8 +1548,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Method to override if you want to do something special when an error
-	 * occurs (other than simply displaying validation errors).
+	 * Method to override if you want to do something special when an error occurs (other than
+	 * simply displaying validation errors).
 	 */
 	protected void onError()
 	{
@@ -1627,8 +1583,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Update the model of all form components using the fields that were sent
-	 * with the current request.
+	 * Update the model of all form components using the fields that were sent with the current
+	 * request.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
@@ -1645,12 +1601,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Validates the form by checking required fields, converting raw input and
-	 * running validators for every form component, and last running global form
-	 * validators. This method is typically called before updating any models.
+	 * Validates the form by checking required fields, converting raw input and running validators
+	 * for every form component, and last running global form validators. This method is typically
+	 * called before updating any models.
 	 * <p>
-	 * NOTE: in most cases, custom validations on the form can be achieved using
-	 * an IFormValidator that can be added using addValidator().
+	 * NOTE: in most cases, custom validations on the form can be achieved using an IFormValidator
+	 * that can be added using addValidator().
 	 * </p>
 	 */
 	protected void validate()
@@ -1679,8 +1635,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @param fc
 	 *            form component
 	 * 
-	 * @return true if the form component and all its parents are visible and
-	 *         there component is in page's hierarchy
+	 * @return true if the form component and all its parents are visible and there component is in
+	 *         page's hierarchy
 	 */
 	private boolean isFormComponentVisibleInPage(FormComponent fc)
 	{
