@@ -204,7 +204,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @return the prefix for storing variables in the actual session
 	 */
-	public final String getSessionAttributePrefix(final WebRequest request)
+	public String getSessionAttributePrefix(final WebRequest request)
 	{
 		if (sessionAttributePrefix == null)
 		{
