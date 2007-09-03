@@ -20,8 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 
 /**
- * Closes a popup window and cleans up any related session page map for the
- * popup.
+ * Closes a popup window and cleans up any related session page map for the popup.
  * 
  * @author Jonathan Locke
  */
@@ -67,6 +66,6 @@ public class PopupCloseLink extends Link
 		getPage().getPageMap().remove();
 
 		// Web page closes window using javascript code in PopupCloseLink$1.html
-		setResponsePage(new ClosePopupPage());
+		setResponsePage(ClosePopupPage.class);
 	}
 }
