@@ -212,7 +212,7 @@ public class WebRequestCycle extends RequestCycle
 					throw ex;
 				}
 
-				if (ex instanceof PageExpiredException)
+				if (!(ex instanceof PageExpiredException))
 				{
 					logRuntimeException(ex);
 				}

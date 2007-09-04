@@ -1118,7 +1118,7 @@ public abstract class RequestCycle
 				// probably our last chance the exception can be logged.
 				// Note that a PageExpiredException should not be logged, because
 				// it's not an internal error
-				if (e instanceof PageExpiredException)
+				if (!(e instanceof PageExpiredException))
 				{
 					logRuntimeException(e);
 				}
