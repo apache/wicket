@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -108,8 +109,12 @@ public class ExceptionErrorPage extends WebPage
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
-				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+		if (getWebRequestCycle().getResponse() instanceof WebResponse)
+		{
+			getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+					HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	/**

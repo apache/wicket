@@ -395,22 +395,25 @@ public class MockWebApplication
 	{
 		previousRenderedPage = lastRenderedPage;
 
-		// handle redirects which are usually managed by the browser
-		// transparently
-		final MockHttpServletResponse httpResponse = (MockHttpServletResponse)cycle
-				.getWebResponse().getHttpServletResponse();
-
-		if (httpResponse.isRedirect())
+		if (cycle.getResponse() instanceof WebResponse)
 		{
-			this.lastRenderedPage = generateLastRenderedPage(cycle);
-
-			MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this.application,
-					servletSession, this.application.getServletContext());
-			newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
-			wicketRequest = this.application.newWebRequest(newHttpRequest);
-
-			cycle = createRequestCycle();
-			cycle.request();
+			// handle redirects which are usually managed by the browser
+			// transparently
+			final MockHttpServletResponse httpResponse = (MockHttpServletResponse)cycle
+					.getWebResponse().getHttpServletResponse();
+	
+			if (httpResponse.isRedirect())
+			{
+				this.lastRenderedPage = generateLastRenderedPage(cycle);
+	
+				MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this.application,
+						servletSession, this.application.getServletContext());
+				newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
+				wicketRequest = this.application.newWebRequest(newHttpRequest);
+	
+				cycle = createRequestCycle();
+				cycle.request();
+			}
 		}
 		this.lastRenderedPage = generateLastRenderedPage(cycle);
 
