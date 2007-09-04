@@ -29,11 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 /**
- * An Enclosure are automatically created by Wicket. Do not create it yourself.
- * An Enclosure container is created if &lt;wicket:enclosure&gt; is found in the
- * markup. It is meant to solve the following situation. Instead of
+ * An Enclosure are automatically created by Wicket. Do not create it yourself. An Enclosure
+ * container is created if &lt;wicket:enclosure&gt; is found in the markup. It is meant to solve the
+ * following situation. Instead of
  * 
  * <pre>
  *    &lt;table wicket:id=&quot;label-container&quot; class=&quot;notify&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id=&quot;label&quot;&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt; 
@@ -69,6 +68,7 @@ import org.slf4j.LoggerFactory;
  * @see EnclosureHandler
  * 
  * @author Juergen Donnerstag
+ * @since 1.3
  */
 public class Enclosure extends WebMarkupContainer
 {
@@ -132,8 +132,9 @@ public class Enclosure extends WebMarkupContainer
 		final Component child = parent.get(childId.toString());
 		if (child == null)
 		{
-			throw new MarkupException("Didn't find child component of <wicket:enclosure> with id='"
-					+ childId + "'. Component: " + this.toString());
+			throw new MarkupException(
+					"Didn't find child component of <wicket:enclosure> with id='" + childId +
+							"'. Component: " + this.toString());
 		}
 
 		return child;
