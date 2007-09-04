@@ -25,18 +25,14 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * An abstract repeater view that provides paging functionality to its
- * subclasses.
+ * An abstract repeater view that provides paging functionality to its subclasses.
  * <p>
- * The view is populated by overriding the
- * <code>getItemModels(int offset, int count)</code> method and providing an
- * iterator that returns models for items in the current page. The
- * AbstractPageableView builds the items that will be rendered by looping over
- * the models and calling the
- * <code>newItem(String id, int index, IModel model)</code> to generate the
- * child item container followed by <code>populateItem(Component item)</code>
- * to let the user populate the newly created item container with with custom
- * components.
+ * The view is populated by overriding the <code>getItemModels(int offset, int count)</code>
+ * method and providing an iterator that returns models for items in the current page. The
+ * AbstractPageableView builds the items that will be rendered by looping over the models and
+ * calling the <code>newItem(String id, int index, IModel model)</code> to generate the child item
+ * container followed by <code>populateItem(Component item)</code> to let the user populate the
+ * newly created item container with with custom components.
  * </p>
  * 
  * @see org.apache.wicket.extensions.markup.html.repeater.refreshing.RefreshingView
@@ -49,8 +45,8 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 {
 	/**
-	 * Keeps track of the number of items we show per page. The default is
-	 * Integer.MAX_VALUE which effectively disables paging.
+	 * Keeps track of the number of items we show per page. The default is Integer.MAX_VALUE which
+	 * effectively disables paging.
 	 */
 	private int itemsPerPage = Integer.MAX_VALUE;
 
@@ -61,9 +57,9 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 	/**
 	 * <code>cachedItemCount</code> is used to cache the call to
-	 * <code>internalGetItemCount()</code> for the duration of the request
-	 * because that call can potentially be expensive ( a select count query )
-	 * and so we do not want to execute it multiple times.
+	 * <code>internalGetItemCount()</code> for the duration of the request because that call can
+	 * potentially be expensive ( a select count query ) and so we do not want to execute it
+	 * multiple times.
 	 */
 	private int cachedItemCount;
 
@@ -85,8 +81,8 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 
 	/**
-	 * This method retrieves the subset of models for items in the current page
-	 * and allows RefreshingView to generate items.
+	 * This method retrieves the subset of models for items in the current page and allows
+	 * RefreshingView to generate items.
 	 * 
 	 * @return iterator over models for items in the current page
 	 */
@@ -107,6 +103,12 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	{
 		clearCachedItemCount();
 		super.onAttach();
+	}
+
+	protected void onPopulate()
+	{
+		clearCachedItemCount();
+		super.onPopulate();
 	}
 
 	/**
@@ -163,8 +165,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	}
 
 	/**
-	 * Sets the maximum number of items to show per page. The current page will
-	 * also be set to zero
+	 * Sets the maximum number of items to show per page. The current page will also be set to zero
 	 * 
 	 * @param items
 	 */
@@ -241,8 +242,8 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 		int page = currentPage;
 
 		/*
-		 * trim current page if its out of bounds this can happen if items are
-		 * added/deleted between requests
+		 * trim current page if its out of bounds this can happen if items are added/deleted between
+		 * requests
 		 */
 
 		if (page > 0 && page >= getPageCount())
@@ -333,8 +334,8 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	// /////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Iterator adapter that makes sure only the specified max number of items
-	 * can be accessed from its delegate.
+	 * Iterator adapter that makes sure only the specified max number of items can be accessed from
+	 * its delegate.
 	 */
 	private static class CappedIteratorAdapter implements Iterator
 	{
