@@ -71,9 +71,9 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * </p>
  * 
  * @see PropertyResolver
- * @see org.apache.wicket.model.IModel
- * @see org.apache.wicket.model.Model
- * @see org.apache.wicket.model.AbstractDetachableModel
+ * @see IModel
+ * @see Model
+ * @see LoadableDetachableModel
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -112,7 +112,7 @@ public class PropertyModel extends AbstractPropertyModel
 	}
 
 	/**
-	 * @see org.apache.wicket.model.AbstractPropertyModel#propertyExpression(org.apache.wicket.Component)
+	 * @see AbstractPropertyModel#propertyExpression()
 	 */
 	protected String propertyExpression()
 	{

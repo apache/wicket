@@ -85,7 +85,6 @@ public class Enclosure extends WebMarkupContainer
 	/**
 	 * Construct.
 	 * 
-	 * @param parent
 	 * @param id
 	 * @param childId
 	 */

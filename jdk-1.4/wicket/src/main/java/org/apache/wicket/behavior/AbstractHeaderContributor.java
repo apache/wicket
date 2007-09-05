@@ -45,7 +45,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	public abstract IHeaderContributor[] getHeaderContributors();
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.Response)
+	 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	public final void renderHead(final IHeaderResponse response)
 	{

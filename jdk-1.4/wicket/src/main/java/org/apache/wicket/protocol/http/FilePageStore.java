@@ -137,7 +137,6 @@ public class FilePageStore implements IPageStore
 
 
 		/**
-		 * @param sessionId
 		 * @param key
 		 * @param bytes
 		 */
@@ -521,8 +520,7 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
-	 *      int, int)
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(String, String, int, int, int)
 	 */
 	public Page getPage(String sessionId, String pagemapName, int id, int versionNumber,
 			int ajaxVersionNumber)
@@ -616,8 +614,7 @@ public class FilePageStore implements IPageStore
 
 
 	/**
-	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#removePage(java.lang.String,
-	 *      org.apache.wicket.Page)
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#removePage(String, String, int)
 	 */
 	public void removePage(String sessionId, String pageMapName, int pageId)
 	{
@@ -892,7 +889,7 @@ public class FilePageStore implements IPageStore
 
 		/**
 		 * @throws IOException
-		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page)
+		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page, java.io.ObjectOutputStream)
 		 */
 		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
 		{

@@ -61,7 +61,7 @@ public class MarkupComponentBorder implements IComponentBorder
 
 	/**
 	 * 
-	 * @see wicket.IComponentBorder#renderBefore(wicket.Component)
+	 * @see org.apache.wicket.IComponentBorder#renderBefore(org.apache.wicket.Component)
 	 */
 	public void renderBefore(Component component)
 	{
@@ -121,7 +121,7 @@ public class MarkupComponentBorder implements IComponentBorder
 
 	/**
 	 * 
-	 * @see wicket.IComponentBorder#renderAfter(wicket.Component)
+	 * @see IComponentBorder#renderAfter(org.apache.wicket.Component) 
 	 */
 	public void renderAfter(Component component)
 	{

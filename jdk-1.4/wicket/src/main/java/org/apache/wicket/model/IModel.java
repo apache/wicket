@@ -25,16 +25,15 @@ package org.apache.wicket.model;
  * (non-transient) instance variables sparingly.
  * <ul>
  * <li><b>Basic Models </b>- To implement a basic (non-detachable) model which
- * holds its entire state in the Session, you can either subclass
- * {@link AbstractModel}, or use the simple model wrapper {@link Model}
- * directly.
+ * holds its entire state in the Session, you can use the simple model wrapper
+ * {@link Model}.
  * 
  * <li><b>Detachable Models </b>- IModel inherits a hook,
  * {@link IDetachable#detach()}, so that interface implementers can detach
  * transient information when a model is no longer being actively used by the
  * framework. This reduces memory use and reduces the expense of replicating the
  * model in a clustered server environment. To implement a detachable model, you
- * should generally extend {@link org.apache.wicket.model.AbstractDetachableModel}instead
+ * should generally extend {@link LoadableDetachableModel} instead
  * of implementing IModel directly.
  * 
  * <li><b>Property Models </b>- The AbstractPropertyModel class provides

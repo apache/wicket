@@ -475,7 +475,7 @@ public abstract class MarkupContainer extends Component
 	 * 
 	 * @param containerClass
 	 * @return nothing
-	 * @throws always
+	 * @throws IllegalStateException
 	 *             throws an {@link IllegalStateException}
 	 */
 	// TODO remove after release 1.3.0

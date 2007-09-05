@@ -59,7 +59,7 @@ public class FileUploadException extends Exception
 	 * Constructs a new <code>FileUploadException</code> with specified detail
 	 * message and cause
 	 * 
-	 * @param msg
+	 * @param message
 	 *            the error message.
 	 * @param cause
 	 *            the cause.

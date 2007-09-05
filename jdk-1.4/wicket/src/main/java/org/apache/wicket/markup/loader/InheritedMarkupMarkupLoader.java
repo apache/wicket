@@ -43,8 +43,6 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param cache
 	 */
 	public InheritedMarkupMarkupLoader()
 	{

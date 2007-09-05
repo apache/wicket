@@ -54,7 +54,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	}
 
 	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(java.lang.String)
+	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnSuccessScript(CharSequence)
 	 */
 	public final CharSequence decorateOnSuccessScript(CharSequence script)
 	{
@@ -63,7 +63,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	}
 
 	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(java.lang.String)
+	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence) 
 	 */
 	public final CharSequence decorateOnFailureScript(CharSequence script)
 	{

@@ -71,7 +71,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
 		 */
 		protected String resourceKey()
 		{
@@ -141,7 +141,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
 		 */
 		protected String resourceKey()
 		{
@@ -200,7 +200,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
 		 */
 		protected String resourceKey()
 		{
@@ -257,7 +257,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
 		 */
 		protected String resourceKey()
 		{

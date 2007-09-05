@@ -80,7 +80,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.Response)
+		 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 		 */
 		public void renderHead(IHeaderResponse response)
 		{

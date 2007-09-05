@@ -80,8 +80,6 @@ public abstract class PageMap implements IClusterable, IPageMap
 	 * 
 	 * @param name
 	 *            The name of this page map
-	 * @param session
-	 *            The session holding this page map
 	 */
 	public PageMap(String name)
 	{

@@ -31,7 +31,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * Use this CodingStategy with the
- * {@link WebURLCompressingTargetResolverStrategy} to minimize the
+ * {@link UrlCompressingWebRequestProcessor} to minimize the
  * wicket:interface urls. The component path and the interface name will be
  * removed from the url and only an uid will be inserted into the url.
  * 

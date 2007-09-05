@@ -38,10 +38,7 @@ public abstract class AbstractReadOnlyModel implements IModel
 	 * UnsupportedOperationException. Since the method is final, any subclass is
 	 * effectively a read-only model.
 	 * 
-	 * @param component
-	 *            The component wanting to set the object
-	 * @param object
-	 *            The object to set into the model
+	 * @param object  The object to set into the model
 	 * @throws UnsupportedOperationException
 	 */
 	public final void setObject(final Object object)

@@ -42,8 +42,7 @@ public class EmptyDataProvider implements IDataProvider
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.IDataProvider#iterator(int,
-	 *      int)
+	 * @see IDataProvider#iterator(int, int)
 	 */
 	public Iterator iterator(int first, int count)
 	{
@@ -51,7 +50,7 @@ public class EmptyDataProvider implements IDataProvider
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.IDataProvider#size()
+	 * @see IDataProvider#size()
 	 */
 	public int size()
 	{
@@ -59,7 +58,7 @@ public class EmptyDataProvider implements IDataProvider
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.IDataProvider#model(java.lang.Object)
+	 * @see IDataProvider#model(Object)
 	 */
 	public IModel model(Object object)
 	{

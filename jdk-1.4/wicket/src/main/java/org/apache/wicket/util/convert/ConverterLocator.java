@@ -43,7 +43,7 @@ import org.apache.wicket.util.lang.Objects;
  * converters for a given type. It serves as a registry for {@link IConverter}
  * instances stored by type, and is the default locator for Wicket.
  * 
- * @see IConverterLocatorFactory
+ * @see IConverterLocator
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
@@ -165,8 +165,7 @@ public class ConverterLocator implements IConverterLocator
 	 * 
 	 * @return The converter for the given type
 	 * 
-	 * @see org.apache.wicket.util.convert.IConverter#convert(java.lang.Object,
-	 *      java.lang.Class, Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale)
 	 */
 	public final IConverter getConverter(Class type)
 	{

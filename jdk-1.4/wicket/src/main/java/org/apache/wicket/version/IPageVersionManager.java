@@ -95,7 +95,7 @@ public interface IPageVersionManager extends IClusterable
 	 * @param mergeVersion
 	 * 			  If this is set the version that was created is merged with the previous one. 
 	 * 
-	 * @see IPageVersionManager#beginVersion()
+	 * @see IPageVersionManager#beginVersion(boolean)
 	 */
 	void endVersion(boolean mergeVersion);
 	
@@ -119,8 +119,8 @@ public interface IPageVersionManager extends IClusterable
 	 * This method rollbacks the page the number of versions specified
 	 * Including the ajax versions.
 	 * 
-	 * @param numberOfVersions
-	 * @return
+	 * @param numberOfVersions  the number of versions to rollback
+	 * @return the rolled-back page
 	 */
 	Page rollbackPage(int numberOfVersions);
 

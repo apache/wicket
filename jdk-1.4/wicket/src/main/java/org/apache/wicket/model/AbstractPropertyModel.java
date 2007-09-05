@@ -35,7 +35,7 @@ import org.apache.wicket.util.string.Strings;
  * implementation.
  * 
  * @see PropertyResolver
- * @see org.apache.wicket.model.AbstractDetachableModel
+ * @see org.apache.wicket.model.IDetachable
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -69,7 +69,7 @@ public abstract class AbstractPropertyModel
 	/**
 	 * Unsets this property model's instance variables and detaches the model.
 	 * 
-	 * @see AbstractDetachableModel#onDetach()
+	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
 	public void detach()
 	{
@@ -301,7 +301,7 @@ public abstract class AbstractPropertyModel
 	/**
 	 * @param component
 	 * @param object
-	 * @deprecated use {@link #setObject(object)} instead
+	 * @deprecated use {@link #setObject(Object)} instead
 	 */
 	protected final void onSetObject(Component component, Object object)
 	{

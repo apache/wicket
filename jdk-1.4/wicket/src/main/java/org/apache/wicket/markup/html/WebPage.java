@@ -89,7 +89,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(org.apache.wicket.Response)
+		 * @see org.apache.wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
 		 */
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
@@ -200,7 +200,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @see Page#Page(PageMap)
+	 * @see Page#Page(org.apache.wicket.IPageMap)
 	 */
 	protected WebPage(final IPageMap pageMap)
 	{
@@ -209,7 +209,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @see Page#Page(PageMap, IModel)
+	 * @see Page#Page(org.apache.wicket.IPageMap, org.apache.wicket.model.IModel)
 	 */
 	protected WebPage(final IPageMap pageMap, final IModel model)
 	{

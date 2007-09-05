@@ -182,8 +182,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * actual handling of the runtime exception. This implemention passes the
 	 * call through to
 	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)}. Note
-	 * that if you override this method or provide a whole new implementation of
-	 * {@link IExceptionResponseStrategy} alltogether,
+	 * that if you override this method
 	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)} will not
 	 * be supported.
 	 * 

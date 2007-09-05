@@ -22,7 +22,7 @@ import org.apache.wicket.model.IModel;
  * Factory interface for creating new child item containers for
  * <b>AbstractPageableView</b>.
  * 
- * @see org.apache.wicket.extensions.markup.html.repeater.pageable.AbstractPageableView
+ * @see org.apache.wicket.markup.repeater.AbstractPageableView
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

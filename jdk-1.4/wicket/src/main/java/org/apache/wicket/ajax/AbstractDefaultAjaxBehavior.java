@@ -56,7 +56,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	/**
 	 * Subclasses should call super.onBind()
 	 * 
-	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
+	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
 	protected void onBind()
 	{
@@ -64,7 +64,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.AbstractAjaxBehavior#renderHead(wicket.markup.html.IHeaderResponse)
+	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
@@ -256,7 +256,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.IBehaviorListener#onRequest()
+	 * @see org.apache.wicket.behavior.IBehaviorListener#onRequest()
 	 */
 	public final void onRequest()
 	{

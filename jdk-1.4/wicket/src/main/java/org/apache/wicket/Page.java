@@ -149,7 +149,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				throws IOException, ClassNotFoundException;
 
 		/**
-		 * Called from the {@link Page#writeObject()} method.
+		 * Called from the {@link Page#writeObject(java.io.ObjectOutputStream)} method.
 		 * 
 		 * @param page
 		 *            The page that must be serialized.

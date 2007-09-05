@@ -34,7 +34,6 @@ public class StatelessForm extends Form
 
 	/**
 	 * Construct.
-	 * @param parent
 	 * @param id
 	 */
 	public StatelessForm(String id)
@@ -44,7 +43,6 @@ public class StatelessForm extends Form
 
 	/**
 	 * Construct.
-	 * @param parent
 	 * @param id
 	 * @param model
 	 */

@@ -459,7 +459,7 @@ public final class Objects
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
-	 * @see #cloneObject(Object, boolean)
+	 * @see #cloneModel(Object)
 	 */
 	public static Object cloneObject(final Object object)
 	{
@@ -477,11 +477,8 @@ public final class Objects
 				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
 						.toByteArray()))
 				{
-					// This overide is required to resolve classess inside in
-					// different
-					// bundle, i.e.
-					// The classess can be resolved by OSGI classresolver
-					// implementation
+					// This overide is required to resolve classess inside in different bundle, i.e.
+					// The classess can be resolved by OSGI classresolver implementation
 					protected Class resolveClass(ObjectStreamClass desc) throws IOException,
 							ClassNotFoundException
 					{
@@ -489,20 +486,17 @@ public final class Objects
 
 						try
 						{
-							return Class.forName(className, true, object.getClass()
-									.getClassLoader());
+							return Class.forName(className, true, object.getClass().getClassLoader());
 						}
 						catch (ClassNotFoundException ex1)
 						{
 							// ignore this exception.
-							log
-									.debug("Class not found by using objects own classloader, trying the IClassResolver");
+							log.debug("Class not found by using objects own classloader, trying the IClassResolver");
 						}
 
 
 						Application application = Application.get();
-						IApplicationSettings applicationSettings = application
-								.getApplicationSettings();
+						IApplicationSettings applicationSettings = application.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
 
 						Class candidate = null;

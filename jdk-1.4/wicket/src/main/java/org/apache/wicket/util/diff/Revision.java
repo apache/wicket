@@ -257,7 +257,7 @@ public class Revision extends ToString
      * Accepts a visitor.
      * 
      * @param visitor
-     *            the {@link Visitor} visiting this instance
+     *            the {@link RevisionVisitor} visiting this instance
      */
     public void accept(RevisionVisitor visitor)
     {

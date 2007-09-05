@@ -76,7 +76,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	/**
 	 * Does nothing
 	 * 
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(org.apache.wicket.request.RequestParameters)
 	 */
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
@@ -88,7 +88,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	 * {@link BookmarkablePageRequestTargetUrlCodingStrategy#encode(IRequestTarget)}
 	 * without pageMapName field
 	 * 
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(org.apache.wicket.IRequestTarget)
 	 */
 	public CharSequence encode(IRequestTarget requestTarget)
 	{
@@ -119,7 +119,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	/**
 	 * Always returns false
 	 * 
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(wicket.IRequestTarget)
+	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(org.apache.wicket.IRequestTarget)
 	 */
 	public boolean matches(IRequestTarget requestTarget)
 	{
@@ -129,7 +129,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	/**
 	 * Gets the encoded URL for the request target. The "uri" parameter is
 	 * appended first with a slash, then the remaining parameters are handled
-	 * like in {@link QueryStringUrlCodingStrategy#appendParameters()}
+	 * like in {@link org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
 	 * 
 	 * @param url
 	 *            the relative reference URL

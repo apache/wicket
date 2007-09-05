@@ -35,7 +35,6 @@ public interface IPackageResourceGuard
 	 * @param path
 	 *            The path to the resource
 	 * 
-	 * @param absolutePath
 	 * @return True if access is permitted, false otherwise
 	 */
 	boolean accept(final Class scope, final String path);

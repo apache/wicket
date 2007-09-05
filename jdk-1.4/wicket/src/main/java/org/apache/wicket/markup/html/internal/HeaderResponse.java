@@ -43,9 +43,6 @@ public abstract class HeaderResponse implements IHeaderResponse
 
 	/**
 	 * Creates a new header response instance.
-	 * 
-	 * @param response
-	 *            response used to write the head elements
 	 */
 	public HeaderResponse()
 	{
@@ -64,7 +61,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.markup.html.ResourceReference)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderCSSReference(org.apache.wicket.ResourceReference)
 	 */
 	public void renderCSSReference(ResourceReference reference)
 	{
@@ -114,7 +111,7 @@ public abstract class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.markup.html.ResourceReference)
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#renderJavascriptReference(org.apache.wicket.ResourceReference)
 	 */
 	public void renderJavascriptReference(ResourceReference reference)
 	{

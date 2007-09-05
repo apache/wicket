@@ -107,7 +107,6 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param model
 	 */
 	public MultiFileUploadField(String id)
 	{
@@ -118,7 +117,6 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param model
 	 * @param max
 	 *            max number of files a user can upload
 	 */

@@ -186,7 +186,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @return whether model messages should be HTML escaped
 	 * 
-	 * @deprecated use {@link #getEscapeModelStrings(boolean)} instead
+	 * @deprecated use {@link #getEscapeModelStrings()} instead
 	 */
 	public final boolean getEscapeMessages()
 	{

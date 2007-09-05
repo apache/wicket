@@ -71,7 +71,6 @@ public class LocaleResourceNameIterator implements Iterator
 	 * 
 	 * @param path
 	 * @param locale
-	 * @param style
 	 */
 	public LocaleResourceNameIterator(final String path, final Locale locale)
 	{

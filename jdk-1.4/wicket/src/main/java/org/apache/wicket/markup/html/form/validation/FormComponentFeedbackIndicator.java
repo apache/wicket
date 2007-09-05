@@ -70,7 +70,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see org.apache.wicket.feedback.IFeedback#updateFeedback()
+	 * Set the component's visibility according to the existance (or not) of feedback messages
 	 */
 	public void updateFeedback()
 	{

@@ -246,19 +246,9 @@ public abstract class BaseTree extends AbstractTree
 	 * junction image. If the node is a leaf (it has no children), the created
 	 * junction link is non-functional.
 	 * 
-	 * @param parent
-	 *            parent component of the link
-	 * 
-	 * @param id
-	 *            wicket:id of the component
-	 * 
-	 * @param imageId
-	 *            wicket:id of the image. this can be null, in that case image
-	 *            is not created. image is supposed to be placed on the link
-	 *            (link is parent of image)
-	 * 
-	 * @param node
-	 *            tree node for which the link should be created.
+	 * @param parent  parent component of the link
+	 * @param id      wicket:id of the component
+	 * @param node    tree node for which the link should be created.
 	 * @return The link component
 	 */
 	protected Component newJunctionLink(MarkupContainer parent, final String id, final TreeNode node)
@@ -375,7 +365,7 @@ public abstract class BaseTree extends AbstractTree
 		/**
 		 * Construct.
 		 * 
-		 * @param name
+		 * @param name  the name of the type of the link
 		 */
 		public LinkType(String name)
 		{

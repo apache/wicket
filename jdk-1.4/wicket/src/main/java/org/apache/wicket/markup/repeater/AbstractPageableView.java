@@ -35,7 +35,7 @@ import org.apache.wicket.version.undo.Change;
  * newly created item container with with custom components.
  * </p>
  * 
- * @see org.apache.wicket.extensions.markup.html.repeater.refreshing.RefreshingView
+ * @see org.apache.wicket.markup.repeater.RefreshingView
  * @see org.apache.wicket.markup.html.navigation.paging.IPageable
  * 
  * @author Igor Vaynberg (ivaynberg)

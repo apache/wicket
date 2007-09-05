@@ -272,7 +272,6 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	/**
 	 * Factory method for creating header response
 	 * 
-	 * @param response
 	 * @return new header response
 	 */
 	protected IHeaderResponse newHeaderResponse()

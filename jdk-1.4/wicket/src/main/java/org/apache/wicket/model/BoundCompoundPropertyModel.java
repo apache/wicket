@@ -138,7 +138,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * @see org.apache.wicket.model.AbstractDetachableModel#toString()
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
@@ -175,7 +175,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * @see org.apache.wicket.model.AbstractPropertyModel#propertyExpression(org.apache.wicket.Component)
+	 * @see org.apache.wicket.model.CompoundPropertyModel#propertyExpression(org.apache.wicket.Component) 
 	 */
 	protected String propertyExpression(final Component component)
 	{

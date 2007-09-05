@@ -32,7 +32,6 @@ public abstract class StatelessLink extends Link
 
 	/**
 	 * Construct.
-	 * @param parent
 	 * @param id
 	 */
 	public StatelessLink(String id)

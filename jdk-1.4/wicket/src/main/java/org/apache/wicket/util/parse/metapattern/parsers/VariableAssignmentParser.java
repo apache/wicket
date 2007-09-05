@@ -46,8 +46,6 @@ public final class VariableAssignmentParser extends MetaPatternParser
 	 * 
 	 * @param input
 	 *            The input to parse
-	 * @param valuePattern
-	 *            Value pattern
 	 */
 	public VariableAssignmentParser(final CharSequence input)
 	{

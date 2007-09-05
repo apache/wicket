@@ -28,7 +28,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @see org.apache.wicket.model.IModel
  * @see org.apache.wicket.model.Model
- * @see org.apache.wicket.model.AbstractDetachableModel
+ * @see org.apache.wicket.model.LoadableDetachableModel
  * @see IChainingModel
  * 
  * @author Jonathan Locke

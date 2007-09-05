@@ -135,7 +135,7 @@ public abstract class DateValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.markup.html.form.validation.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
 		 */
 		protected String resourceKey()
 		{

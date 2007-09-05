@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
  * Implementation of <code>IItemReuseStrategy</code> that returns new items
  * every time.
  * 
- * @see org.apache.wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy
+ * @see org.apache.wicket.markup.repeater.IItemReuseStrategy
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -46,8 +46,7 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy#getItems(org.apache.wicket.extensions.markup.html.repeater.refreshing.IItemFactory,
-	 *      java.util.Iterator, java.util.Iterator)
+	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(IItemFactory, java.util.Iterator, java.util.Iterator) 
 	 */
 	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
 			final Iterator existingItems)

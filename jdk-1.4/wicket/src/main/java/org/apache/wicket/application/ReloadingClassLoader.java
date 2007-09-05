@@ -184,8 +184,6 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * Create a new reloading ClassLoader from a list of URLs, and initialize
 	 * the ModificationWatcher to detect class file modifications
 	 * 
-	 * @param urls
-	 *            the list of URLs where to lookup class files
 	 * @param parent
 	 *            the parent classloader in case the class file cannot be loaded
 	 *            from the above locations

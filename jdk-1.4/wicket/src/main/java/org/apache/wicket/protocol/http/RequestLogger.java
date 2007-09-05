@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This is the logger class that can be set in the
- * {@link WebApplication#setRequestLogger(RequestLogger)} method. If this class
+ * {@link org.apache.wicket.protocol.http.WebApplication#getRequestLogger()} method. If this class
  * is set all request and live sessions will be recorded and displayed From the
  * total created sessions, to the peak session count and the current
  * livesessions. For the livesessions the request logger will record what

@@ -47,8 +47,7 @@ public class DateConverter extends AbstractConverter
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.String,
-	 *      Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToString(Object, java.util.Locale)
 	 */
 	public String convertToString(final Object value, Locale locale)
 	{

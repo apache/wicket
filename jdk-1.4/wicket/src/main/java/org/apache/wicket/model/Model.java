@@ -30,7 +30,7 @@ import org.apache.wicket.WicketRuntimeException;
  * Model is the basic implementation of an AbstractModel. It just wraps a simple
  * model object. The model object must be serializable, as it is stored in the
  * session. If you have large objects to store, consider using
- * {@link AbstractDetachableModel}instead of this class.
+ * {@link org.apache.wicket.model.LoadableDetachableModel} instead of this class.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -114,7 +114,7 @@ public class Model implements IModel
 	 * 
 	 * @param object
 	 *            The serializable model object
-	 * @see org.apache.wicket.model.IModel#setObject(Component, Object)
+	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
 	public void setObject(final Serializable object)
 	{

@@ -244,7 +244,7 @@ public abstract class GridView extends DataViewBase
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#getItems()
+	 * @see org.apache.wicket.markup.repeater.AbstractPageableView#getItems()
 	 */
 	public Iterator getItems()
 	{

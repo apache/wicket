@@ -313,8 +313,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(java.lang.String,
-	 *      org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
+			org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{

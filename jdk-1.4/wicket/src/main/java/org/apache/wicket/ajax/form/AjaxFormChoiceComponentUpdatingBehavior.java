@@ -44,7 +44,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	}
 
 	/**
-	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(wicket.markup.html.IHeaderResponse)
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#renderHead(org.apache.wicket.markup.html.IHeaderResponse)
 	 */
 	public void renderHead(IHeaderResponse response)
 	{
@@ -100,7 +100,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 	/**
 	 * 
-	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
+	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
 	protected void onBind()
 	{
@@ -143,7 +143,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 
 	/**
 	 * 
-	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#respond(wicket.ajax.AjaxRequestTarget)
+	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
 	protected final void respond(final AjaxRequestTarget target)
 	{

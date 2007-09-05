@@ -43,8 +43,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Utility class that analyzes objects for non-serializable nodes. Construct
- * with the object you want to check, and then call {@link #check()}. When a
+ * Utility class that analyzes objects for non-serializable nodes. Construct,
+ * then call {@link #check(Object)} with the object you want to check. When a
  * non-serializable object is found, a {@link WicketNotSerializableException} is
  * thrown with a message that shows the trace up to the not-serializable object.
  * The exception is thrown for the first non-serializable instance it
@@ -266,7 +266,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	}
 
 	/**
-	 * Gets whether we can execute the tests. If false, calling {@link #check()}
+	 * Gets whether we can execute the tests. If false, calling {@link #check(Object)}
 	 * will just return and you are advised to rely on the
 	 * {@link NotSerializableException}. Clients are advised to call this
 	 * method prior to calling the check method.

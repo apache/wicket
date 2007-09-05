@@ -42,7 +42,7 @@ public final class BooleanGroup extends Group
 	 * @param matcher
 	 *            The matcher
 	 * @return The value
-	 * @see BooleanGroup#getInt(Matcher, int)
+	 * @see BooleanGroup#getBoolean(java.util.regex.Matcher, boolean)
 	 */
 	public boolean getBoolean(final Matcher matcher)
 	{

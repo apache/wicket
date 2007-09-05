@@ -51,7 +51,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	}
 
 	/**
-	 * @see org.apache.wicket.session.pagemap.IPageMapEvictionStrategy#evict(org.apache.wicket.PageMap)
+	 * @see org.apache.wicket.session.pagemap.IPageMapEvictionStrategy#evict(org.apache.wicket.IPageMap)
 	 */
 	public void evict(final IPageMap pageMap)
 	{

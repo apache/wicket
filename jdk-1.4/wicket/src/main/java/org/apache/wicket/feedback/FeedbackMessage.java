@@ -93,8 +93,6 @@ public class FeedbackMessage implements IClusterable
 	 *            The actual message
 	 * @param level
 	 *            The level of the message
-	 * @param sessionStored
-	 *            Whether or not this message will be stored in session
 	 */
 	public FeedbackMessage(final Component reporter, final Serializable message, final int level)
 	{

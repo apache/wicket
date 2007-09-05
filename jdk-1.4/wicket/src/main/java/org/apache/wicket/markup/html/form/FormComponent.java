@@ -84,7 +84,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	public static abstract class AbstractVisitor implements IVisitor
 	{
 		/**
-		 * @see org.apache.wicket.markup.html.form.FormComponent.IVisitor#formComponent(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see org.apache.wicket.markup.html.form.FormComponent.IVisitor#formComponent(IFormVisitorParticipant)
 		 */
 		public Object formComponent(IFormVisitorParticipant component)
 		{
@@ -846,7 +846,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.IFormVisitorParticipant#processChildren(boolean)
+	 * @see IFormVisitorParticipant#processChildren()
 	 */
 	public boolean processChildren()
 	{

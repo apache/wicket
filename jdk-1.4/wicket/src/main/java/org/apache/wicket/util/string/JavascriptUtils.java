@@ -61,7 +61,6 @@ public class JavascriptUtils
 	 * 
 	 * @param response
 	 *            The response object
-	 * @param id 
 	 */
 	public JavascriptUtils(final Response response)
 	{

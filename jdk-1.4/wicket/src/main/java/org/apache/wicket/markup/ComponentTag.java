@@ -457,7 +457,7 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, String)
+	 * @see org.apache.wicket.markup.parser.XmlTag#put(String, CharSequence)
 	 * @param key
 	 *            The key
 	 * @param value

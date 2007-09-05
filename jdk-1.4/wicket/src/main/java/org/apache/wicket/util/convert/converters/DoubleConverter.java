@@ -37,7 +37,7 @@ public final class DoubleConverter extends AbstractDecimalConverter
 	public static final IConverter INSTANCE = new DoubleConverter();
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.Object,Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(String, java.util.Locale) 
 	 */
 	public Object convertToObject(final String value, Locale locale)
 	{

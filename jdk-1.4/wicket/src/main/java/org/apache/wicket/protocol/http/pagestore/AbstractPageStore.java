@@ -278,7 +278,7 @@ public abstract class AbstractPageStore implements IPageStore
 
 		/**
 		 * @throws IOException
-		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page)
+		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page, java.io.ObjectOutputStream)
 		 */
 		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
 		{

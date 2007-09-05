@@ -716,7 +716,6 @@ public class WicketFilter implements Filter
 	 * Gets the last modified time stamp for the given request.
 	 * 
 	 * @param servletRequest
-	 * @param servletResponse
 	 * @return The last modified time stamp
 	 */
 	long getLastModified(final HttpServletRequest servletRequest)

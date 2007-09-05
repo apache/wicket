@@ -74,15 +74,9 @@ public final class Snake extends PathNode
 {
     /**
      * Constructs a snake node.
-     * @param i 
-     * @param j 
-     * 
-     * @param the
-     *            position in the original sequence
-     * @param the
-     *            position in the revised sequence
-     * @param prev
-     *            the previous node in the path.
+	 * @param i     the position in the original sequence
+	 * @param j     the position in the revised sequence
+	 * @param prev  the previous node in the path.
      */
     public Snake(int i, int j, PathNode prev)
     {

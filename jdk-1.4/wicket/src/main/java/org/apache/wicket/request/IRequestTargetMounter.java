@@ -29,8 +29,6 @@ public interface IRequestTargetMounter
 	/**
 	 * Mounts a request target with the given path.
 	 * 
-	 * @param path
-	 *            the path to mount the request target with
 	 * @param urlCodingStrategy
 	 *            The strategy to use for encoding and decoding urls
 	 */

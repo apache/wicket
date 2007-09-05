@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <p>
  * <b>NOTE:</b> this class is a wrapper around
- * {@link ResourceStreamRequestTarget#ResourceStreamRequestTarget(WebExternalResourceStream)},
+ * {@link ResourceStreamRequestTarget#ResourceStreamRequestTarget(org.apache.wicket.util.resource.IResourceStream)},
  * and kept for compatibility purposes.
  * </p>
  * 

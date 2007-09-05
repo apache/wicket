@@ -36,8 +36,8 @@ import org.apache.wicket.model.Model;
  * Similar to this container, a <code>IBehavior</code> is available which does
  * the same, but does not require an additional Container.
  * 
- * @see org.apache.wicket.markup.transformer.XsltTransfomerBehavior
- * 
+ * @see org.apache.wicket.markup.transformer.XsltTransformerBehavior
+ *
  * @author Juergen Donnerstag
  */
 public class XsltOutputTransformerContainer extends AbstractOutputTransformerContainer
@@ -53,8 +53,9 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * 
-	 * @param xslFilePath
-	 *            XSL input file path
+	 * @param id           the wicket:id
+	 * @param model        the model (unused)
+	 * @param xslFilePath  XSL input file path
 	 */
 	public XsltOutputTransformerContainer(final String id, final IModel model,
 			final String xslFilePath)
@@ -63,8 +64,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 
 		this.xslFile = xslFilePath;
 
-		// The containers tag will be transformed as well. Thus we make sure
-		// that
+		// The containers tag will be transformed as well. Thus we make sure that
 		// the xml provided to the xsl processor is well formed (has a single
 		// root element)
 		setTransformBodyOnly(false);
@@ -77,6 +77,8 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
+	 * @param id           the wicket:id
+	 * @param model        the model (unused)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public XsltOutputTransformerContainer(final String id, final IModel model)
@@ -87,6 +89,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
+	 * @param id           the wicket:id
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public XsltOutputTransformerContainer(final String id)

@@ -831,8 +831,6 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		/**
 		 * Construct.
-		 * 
-		 * @param response
 		 */
 		public AjaxHeaderResponse()
 		{

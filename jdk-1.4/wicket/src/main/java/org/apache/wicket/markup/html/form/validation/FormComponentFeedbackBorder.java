@@ -83,7 +83,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	}
 
 	/**
-	 * @see org.apache.wicket.feedback.IFeedback#updateFeedback()
+	 * Update the 'visible' flag to indicate the existance (or lack thereof) of feedback messages 
 	 */
 	public void updateFeedback()
 	{

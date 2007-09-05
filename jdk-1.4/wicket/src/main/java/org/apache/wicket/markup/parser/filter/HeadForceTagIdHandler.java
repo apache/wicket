@@ -52,7 +52,6 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param parent
 	 * @param markupFileClass Used to generated the a common prefix for the id
 	 */
 	public HeadForceTagIdHandler(final Class markupFileClass)

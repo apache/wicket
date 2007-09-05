@@ -35,9 +35,6 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	/**
 	 * Construct.
-	 * 
-	 * @param parent
-	 *            The parent of this component The next element in the chain.
 	 */
 	public AbstractMarkupFilter()
 	{

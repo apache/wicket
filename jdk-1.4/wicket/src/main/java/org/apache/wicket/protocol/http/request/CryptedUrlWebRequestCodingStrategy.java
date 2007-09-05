@@ -124,8 +124,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	}
 
 	/**
-	 * @see wicket.request.IRequestTargetMounter#mount(
-	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
+			org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public void mount(IRequestTargetUrlCodingStrategy urlCodingStrategy)
 	{

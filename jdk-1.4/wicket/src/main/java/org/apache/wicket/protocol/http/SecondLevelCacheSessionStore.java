@@ -250,9 +250,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		/**
 		 * Construct.
 		 * 
-		 * @param name
-		 * @param serializeLastPage
 		 * @param sessionStore
+		 * @param name
 		 */
 		private SecondLevelCachePageMap(SecondLevelCacheSessionStore sessionStore, String name)
 		{

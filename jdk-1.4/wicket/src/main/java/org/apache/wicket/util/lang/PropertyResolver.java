@@ -706,8 +706,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
-		 *      java.lang.Object, org.apache.wicket.util.convert.IConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
+				Object, Object, PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -743,8 +743,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
-		 *      java.lang.Object, org.apache.wicket.util.convert.IConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
+				Object, Object, PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -799,8 +799,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
-		 *      java.lang.Object, org.apache.wicket.util.convert.IConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
+				Object, Object, PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -851,8 +851,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
-		 *      java.lang.Object, org.apache.wicket.util.convert.IConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
+				Object, Object, PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -927,8 +927,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
-		 *      java.lang.Object, org.apache.wicket.util.convert.IConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
+				Object, Object, PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -1231,8 +1231,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
-		 *      java.lang.Object, org.apache.wicket.util.convert.IConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
+				Object, Object, PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{

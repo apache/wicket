@@ -155,9 +155,7 @@ public final class Settings
 
 	/**
 	 * Whether Wicket should try to get extensive client info by redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
-	 * the default implementation of {@link #newClientInfo()}, so if that method is overriden,
-	 * there is no guarantee this method will be taken into account. False by default.
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. False by default.
 	 */
 	private boolean gatherExtendedBrowserInfo = false;
 
@@ -512,7 +510,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.ISecuritySettings#getEnforceMounts()
+	 * @see org.apache.wicket.settings.ISecuritySettings#getEnforceMounts()
 	 */
 	public boolean getEnforceMounts()
 	{
@@ -943,7 +941,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
+	 * @see org.apache.wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
 	 */
 	public void setEnforceMounts(boolean enforce)
 	{
@@ -1036,7 +1034,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IResourceSettings#setPropertiesFactory(org.apache.wicket.resource.PropertiesFactory)
+	 * @see IResourceSettings#setPropertiesFactory(org.apache.wicket.resource.IPropertiesFactory)
 	 */
 	public void setPropertiesFactory(org.apache.wicket.resource.IPropertiesFactory factory)
 	{
@@ -1279,7 +1277,7 @@ public final class Settings
 	}
 
 	/**
-	 * @see org.apache.wicket.settings.IMarkupSettings#setMarkupCache(org.apache.wicket.markup.MarkupCache)
+	 * @see org.apache.wicket.settings.IMarkupSettings#setMarkupCache(org.apache.wicket.markup.IMarkupCache)
 	 */
 	public void setMarkupCache(final IMarkupCache markupCache)
 	{

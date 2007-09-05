@@ -36,7 +36,6 @@ public class WicketSerializeableException extends NotSerializableException
 	 * Construct.
 	 * 
 	 * @param message
-	 * @param cause
 	 */
 	public WicketSerializeableException(String message)
 	{

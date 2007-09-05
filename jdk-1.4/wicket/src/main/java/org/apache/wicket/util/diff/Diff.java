@@ -120,10 +120,7 @@ public class Diff extends ToString
 
     /**
      * Create a differencing object using the default algorithm
-     * @param original 
-     * 
-     * @param the
-     *            original text that will be compared
+     * @param original  the original text that will be compared
      */
     public Diff(Object[] original)
     {
@@ -132,12 +129,8 @@ public class Diff extends ToString
 
     /**
      * Create a differencing object using the given algorithm
-     * @param original 
-     * 
-     * @param o
-     *            the original text which will be compared against
-     * @param algorithm
-     *            the difference algorithm to use.
+     * @param original   the original text that will be compared
+     * @param algorithm  the difference algorithm to use.
      */
     public Diff(Object[] original, DiffAlgorithm algorithm)
     {
@@ -165,10 +158,8 @@ public class Diff extends ToString
     /**
      * compute the difference between an original and a revision.
      * 
-     * @param orig
-     *            the original
-     * @param rev
-     *            the revision to compare with the original.
+     * @param orig  the original
+     * @param rev   the revision to compare with the original.
      * @return a Revision describing the differences
      * @throws DifferentiationFailedException 
      */
@@ -186,12 +177,9 @@ public class Diff extends ToString
     /**
      * compute the difference between an original and a revision.
      * 
-     * @param orig
-     *            the original
-     * @param rev
-     *            the revision to compare with the original.
-     * @param algorithm
-     *            the difference algorithm to use
+	 * @param orig       the original
+	 * @param rev        the revision to compare with the original.
+     * @param algorithm  the difference algorithm to use
      * @return a Revision describing the differences
      * @throws DifferentiationFailedException 
      */
@@ -209,8 +197,7 @@ public class Diff extends ToString
     /**
      * compute the difference between the original and a revision.
      * 
-     * @param rev
-     *            the revision to compare with the original.
+     * @param rev  the revision to compare with the original.
      * @return a Revision describing the differences
      * @throws DifferentiationFailedException 
      */
@@ -337,8 +324,7 @@ public class Diff extends ToString
     /**
      * Shuffles around the items in the input sequence.
      * 
-     * @param text
-     *            The input sequence.
+	 * @param text  the input sequence.
      * @return The shuffled sequence.
      */
     public static Object[] shuffle(Object[] text)
@@ -349,10 +335,8 @@ public class Diff extends ToString
     /**
      * Shuffles around the items in the input sequence.
      * 
-     * @param text
-     *            The input sequence.
-     * @param seed
-     *            A seed value for randomizing the suffle.
+     * @param text  the input sequence.
+	 * @param seed  a seed value for randomizing the generation.
      * @return The shuffled sequence.
      */
     public static Object[] shuffle(Object[] text, long seed)
@@ -364,10 +348,8 @@ public class Diff extends ToString
 
     /**
      * Generate a random sequence of the given size.
-     * @param size 
-     * 
-     * @param The
-     *            size of the sequence to generate.
+	 *
+     * @param size  the size of the sequence to generate.
      * @return The generated sequence.
      */
     public static Object[] randomSequence(int size)
@@ -377,10 +359,9 @@ public class Diff extends ToString
 
     /**
      * Generate a random sequence of the given size.
-     * @param size
-     *            The size of the sequence to generate.
-     * @param seed
-     *            A seed value for randomizing the generation.
+	 *
+	 * @param size  the size of the sequence to generate.
+     * @param seed  a seed value for randomizing the generation.
      * @return The generated sequence.
      */
     public static Object[] randomSequence(int size, long seed)

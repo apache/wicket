@@ -301,7 +301,8 @@ public class WicketTester extends BaseWicketTester
 	 *            The absolute path on disk to the web application contents
 	 *            (e.g. war root) - may be null
 	 * 
-	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(String)
+	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(
+			org.apache.wicket.protocol.http.WebApplication, String)
 	 */
 	public WicketTester(final WebApplication application, final String path)
 	{

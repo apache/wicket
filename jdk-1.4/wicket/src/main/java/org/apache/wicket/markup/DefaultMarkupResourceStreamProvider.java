@@ -55,7 +55,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 	 * a markup resource should be extended for ALL components of your
 	 * application.
 	 * 
-	 * @see org.apache.wicket.util.resource.locator.IResourceStreamFactory
+	 * @see org.apache.wicket.util.resource.locator.IResourceStream
 	 * @see org.apache.wicket.markup.DefaultMarkupResourceStreamProvider
 	 * 
 	 * @param container

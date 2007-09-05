@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
 
@@ -41,7 +40,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * @return a map with the variables for interpolation
 	 * 
-	 * @deprecated use {@link #variablesMap(IValidatable)} instead
+	 * @deprecated use {@link #variablesMap()} instead
 	 * @throws UnsupportedOperationException
 	 * 
 	 * FIXME 2.0: remove asap
@@ -54,7 +53,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 
 	/**
 	 * Reports an error against validatable using the map returned by
-	 * {@link #variablesMap(IValidatable)}for variable interpolations and
+	 * {@link #variablesMap()}for variable interpolations and
 	 * message key returned by {@link #resourceKey()}.
 	 * 
 	 * @param fc
@@ -108,9 +107,6 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * @param fc
 	 *            form component against which the error is reported
-	 * 
-	 * @param validatable
-	 *            validatble being validated
 	 * @param resourceKey
 	 *            The message resource key to use
 	 * @param vars

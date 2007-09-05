@@ -84,7 +84,6 @@ public final class DiffUtil
 	 *            Expected output
 	 * @param clazz
 	 *            Used to load the file (relative to clazz package)
-	 * @param wicketTestCase
 	 * @param failWithAssert
 	 * @return true, if equal
 	 * @throws IOException

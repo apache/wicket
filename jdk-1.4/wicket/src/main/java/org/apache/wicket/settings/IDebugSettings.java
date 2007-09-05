@@ -45,7 +45,7 @@ public interface IDebugSettings
 	void setComponentUseCheck(boolean check);
 
 	/**
-	 * Enables or disables ajax debug mode. See {@link IAjaxSettings} for
+	 * Enables or disables ajax debug mode. See {@link org.apache.wicket.settings.IDebugSettings} for
 	 * details
 	 * 
 	 * @param enable
@@ -54,7 +54,7 @@ public interface IDebugSettings
 	void setAjaxDebugModeEnabled(boolean enable);
 
 	/**
-	 * Returns status of ajax debug mode. See {@link IAjaxSettings} for details
+	 * Returns status of ajax debug mode. See {@link org.apache.wicket.settings.IDebugSettings} for details
 	 * 
 	 * @return true if ajax debug mode is enabled, false otherwise
 	 * 

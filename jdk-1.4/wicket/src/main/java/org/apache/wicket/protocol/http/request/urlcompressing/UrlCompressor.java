@@ -42,7 +42,7 @@ import org.apache.wicket.util.collections.IntHashMap.Entry;
  * 
  * @since 1.2
  * 
- * @see URLCompressingWebCodingStrategy
+ * @see UrlCompressingWebCodingStrategy
  * @see UrlCompressingWebRequestProcessor
  * 
  * @author jcompagner

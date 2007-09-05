@@ -660,8 +660,6 @@ public abstract class Application
 	 * Creates a new RequestCycle object. Override this method if you want to
 	 * provide a custom request cycle.
 	 * 
-	 * @param application
-	 *            The application
 	 * @param request
 	 *            The request
 	 * @param response
@@ -681,8 +679,7 @@ public abstract class Application
 	 * @return nothing
 	 * @throws UnsupportedOperationException
 	 *             always
-	 * @deprecated interface {@link IRequestCycleFactory} will be removed in the
-	 *             next release. applications wishing to provide custom request
+	 * @deprecated  Applications wishing to provide custom request
 	 *             cycles should override method
 	 *             {@link #newRequestCycle(Request, Response)}
 	 */
@@ -779,8 +776,8 @@ public abstract class Application
 	}
 
 	/**
-	 * @param properties
-	 *            Properties map with names of any library destroyers in it
+	 * Iterate initializers list, calling any {@link org.apache.wicket.IDestroyer}
+	 * instances found in it.
 	 */
 	private final void callDestroyers()
 	{
@@ -796,8 +793,7 @@ public abstract class Application
 	}
 
 	/**
-	 * @param properties
-	 *            Properties map with names of any library destroyers in it
+	 * Iterate initializers list, calling any instances found in it.
 	 */
 	private final void callInitializers()
 	{

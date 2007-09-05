@@ -165,10 +165,7 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	 * access stack. This is guaranteed to be the most recently accessed entry
 	 * IF AND ONLY IF the user just came from a stateful page. If the user could
 	 * get to the current page from a stateless page, this method may not work
-	 * if the user uses the back button. For a detailed explanation of this
-	 * issue, see getAccessStack().
-	 * 
-	 * @see PageMap#getAccessStack()
+	 * if the user uses the back button.
 	 * 
 	 * @return Previous pagemap entry in terms of access
 	 */

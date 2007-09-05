@@ -50,7 +50,7 @@ public interface IResourceStream extends IModifiable, IClusterable
 	 *         "text/html". Return null to let
 	 *         {@link ResourceStreamRequestTarget} handle the Content-Type
 	 *         automatically
-	 * @see WebResponse#detectContentType()
+	 * @see WebResponse#detectContentType(org.apache.wicket.RequestCycle, String)
 	 */
 	String getContentType();
 

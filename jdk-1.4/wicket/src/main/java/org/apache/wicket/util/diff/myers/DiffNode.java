@@ -89,15 +89,9 @@ public final class DiffNode extends PathNode
      * DiffNodes are compressed. That means that the path pointed to by the
      * <code>prev</code> parameter will be followed using
      * {@link PathNode#previousSnake} until a non-diff node is found.
-     * @param i 
-     * @param j 
-     * 
-     * @param the
-     *            position in the original sequence
-     * @param the
-     *            position in the revised sequence
-     * @param prev
-     *            the previous node in the path.
+     * @param i     the position in the original sequence
+     * @param j     the position in the revised sequence
+     * @param prev  the previous node in the path.
      */
     public DiffNode(int i, int j, PathNode prev)
     {
