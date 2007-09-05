@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
@@ -100,5 +101,22 @@ public final class RequestUtils
 	 */
 	private RequestUtils()
 	{
+	}
+
+	/**
+	 * Does a URLDecoder.decode() in UTF-8
+	 * @param servletPath
+	 * @return
+	 */
+	public static String decode(String path)
+	{
+		try
+		{
+			return URLDecoder.decode(path, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 }

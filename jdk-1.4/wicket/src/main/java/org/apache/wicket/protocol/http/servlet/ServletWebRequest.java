@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -28,6 +26,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.util.lang.Bytes;
@@ -156,15 +155,8 @@ public class ServletWebRequest extends WebRequest
 		String tmp = getRelativePathPrefixToWicketHandler();
 		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
 
-		String path;
-		try
-		{
-			path = URLDecoder.decode(Strings.replaceAll(getPath(), "%3A", ":").toString(), "UTF-8");
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		String path = RequestUtils.decode(getPath());
+
 		if (path == null || path.length() == 0)
 		{
 			path = "";
@@ -176,18 +168,9 @@ public class ServletWebRequest extends WebRequest
 		String wicketPath = "";
 
 		// We're running as a filter.
-		String servletPath;
-		try
-		{
-			servletPath = URLDecoder.decode(Strings.replaceAll(getServletPath(), "%3A", ":")
-					.toString(), "UTF-8");
-		}
-		catch (UnsupportedEncodingException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		String servletPath = RequestUtils.decode(getServletPath());
 
-		// We need to substibute the %3A (or the other way around) to be able to
+		// We need to substitute the %3A (or the other way around) to be able to
 		// get a good match, as parts of the path may have been escaped while
 		// others arent
 		if (servletPath.endsWith(path))
