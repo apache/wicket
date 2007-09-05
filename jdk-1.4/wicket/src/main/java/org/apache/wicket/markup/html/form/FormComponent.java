@@ -1120,20 +1120,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 					error.addMessageKey("ConversionError." + Classes.simpleName(e.getTargetType()));
 				}
 				error.addMessageKey("ConversionError");
-
-				final Locale locale = e.getLocale();
-				if (locale != null)
-				{
-					error.setVariable("locale", locale);
-				}
-				error.setVariable("exception", e);
-				Format format = e.getFormat();
-				if (format instanceof SimpleDateFormat)
-				{
-					error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
-				}
-
-				error((IValidationError)error);
+				reportValidationError(e, error);
 			}
 		}
 		else
@@ -1153,24 +1140,27 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 				String simpleName = Classes.simpleName(getType());
 				error.addMessageKey("IConverter." + simpleName);
 				error.addMessageKey("IConverter");
-
-
 				error.setVariable("type", simpleName);
-				final Locale locale = e.getLocale();
-				if (locale != null)
-				{
-					error.setVariable("locale", locale);
-				}
-				error.setVariable("exception", e);
-				Format format = e.getFormat();
-				if (format instanceof SimpleDateFormat)
-				{
-					error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
-				}
-
-				error((IValidationError)error);
+				reportValidationError(e, error);
 			}
 		}
+	}
+
+	private void reportValidationError(ConversionException e, ValidationError error)
+	{
+		final Locale locale = e.getLocale();
+		if (locale != null)
+		{
+			error.setVariable("locale", locale);
+		}
+		error.setVariable("exception", e);
+		Format format = e.getFormat();
+		if (format instanceof SimpleDateFormat)
+		{
+			error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
+		}
+
+		error((IValidationError)error);
 	}
 
 	/**
