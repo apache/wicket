@@ -93,9 +93,9 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
 	}
 	
-	public void onInstantiation(Component component)
+	public void inject(Object object)
 	{
-		Class<?> current = component.getClass();
+		Class<?> current = object.getClass();
 		do
 		{
 			Field[] currentFields = current.getDeclaredFields();
@@ -112,18 +112,18 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 						{
 							field.setAccessible(true);
 						}
-						field.set(component, proxy);
+						field.set(object, proxy);
 					}
 					catch (IllegalAccessException e)
 					{
-						throw new WicketRuntimeException("Error Guice-injecting field " + field.getName() + " in " + component, e);
+						throw new WicketRuntimeException("Error Guice-injecting field " + field.getName() + " in " + object, e);
 					}
 					catch (MoreThanOneBindingException e)
 					{
 						throw new RuntimeException(
 								"Can't have more than one BindingAnnotation on field "
-										+ field.getName() + " of component class "
-										+ component.getClass().getName());
+										+ field.getName() + " of class "
+										+ object.getClass().getName());
 					}
 				}
 			}
@@ -147,13 +147,13 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 							throw new RuntimeException(
 									"Can't have more than one BindingAnnotation on parameter "
 											+ i + "(" + paramTypes[i].getSimpleName() + ") of method " + method.getName()
-											+ " of component class "
-											+ component.getClass().getName());
+											+ " of class "
+											+ object.getClass().getName());
 						}
 					}
 					try
 					{
-						method.invoke(component, args);
+						method.invoke(object, args);
 					}
 					catch (IllegalAccessException e)
 					{
@@ -167,8 +167,12 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 			}
 			current = current.getSuperclass();
 		}
-		// use null check just in case Component is in a different classloader.
-		while (current != null && current != Component.class);
+		while (current != Object.class);
+	}
+	
+	public void onInstantiation(Component component)
+	{
+		inject(component);
 	}
 	
 	private Annotation findBindingAnnotation(Annotation[] annotations) throws MoreThanOneBindingException
