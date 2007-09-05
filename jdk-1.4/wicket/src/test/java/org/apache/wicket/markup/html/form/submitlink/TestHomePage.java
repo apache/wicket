@@ -30,8 +30,6 @@ public class TestHomePage extends WicketTestCase
 		System.out.println(((MockHttpServletResponse)tester.getWicketResponse()
 				.getHttpServletResponse()).getDocument());
 		tester.setParameterForNextRequest("form:text", "Hello");
-		tester.getParametersForNextRequest().put("link", "");
-		tester.getParametersForNextRequest().put("link.x", "");
 		// FIXME clickLink should submit the form
 		tester.clickLink("form:link");
 		assertEquals("Hello", home.getText());
@@ -47,7 +45,6 @@ public class TestHomePage extends WicketTestCase
 		tester.setParameterForNextRequest("form:text", "Hello");
 		// Pretend we clicked on "link"
 		tester.getParametersForNextRequest().put("link", "");
-		tester.getParametersForNextRequest().put("link.x", "");
 		tester.submitForm("form");
 		assertEquals("Hello", home.getText());
 		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());
