@@ -167,7 +167,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 			}
 			current = current.getSuperclass();
 		}
-		while (current != Object.class);
+		// Do a null check in case Object isn't in the current classloader.
+		while (current != null && current != Object.class);
 	}
 	
 	public void onInstantiation(Component component)
