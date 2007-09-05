@@ -503,8 +503,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Gets the IFormSubmittingComponent which submitted this form.
 	 * 
-	 * @return The component which submitted this form or null if the processing was not trigger by
-	 *         a registered IFormSubmittingComponent
+	 * @return The component which submitted this form, or null if the processing was not triggered
+	 *         by a registered IFormSubmittingComponent
 	 */
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
