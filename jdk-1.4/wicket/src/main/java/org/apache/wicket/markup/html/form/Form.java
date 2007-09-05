@@ -60,30 +60,31 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Base class for forms. To implement a form, subclass this class, add FormComponents (such as
- * CheckBoxes, ListChoices or TextFields) to the form. You can nest multiple buttons if you want to
- * vary submit behavior. However, it is not necessary to use Wicket's button class, just putting
- * e.g. &lt;input type="submit" value="go"&gt; suffices.
+ * CheckBoxes, ListChoices or TextFields) to the form. You can nest multiple
+ * IFormSubmittingComponents if you want to vary submit behavior. However, it is not necessary to
+ * use any of Wicket's classes (such as Button or SubmitLink), just putting e.g. &lt;input
+ * type="submit" value="go"&gt; suffices.
  * <p>
  * By default, the processing of a form works like this:
- * <li> The submitting button is looked up. A submitting button is a button that is nested in this
- * form (is a child component) and that was clicked by the user. If a submitting button was found,
- * and it has the defaultFormProcessing field set to false (default is true), it's onSubmit method
- * will be called right away, thus no validition is done, and things like updating form component
- * models that would normally be done are skipped. In that respect, nesting a button with the
- * defaultFormProcessing field set to false has the same effect as nesting a normal link. If you
- * want you can call validate() to execute form validation, hasError() to find out whether
- * validate() resulted in validation errors, and updateFormComponentModels() to update the models of
- * nested form components. </li>
- * <li> When no submitting button with defaultFormProcessing set to false was found, this form is
- * processed (method process()). Now, two possible paths exist:
+ * <li> The submitting component is looked up. An submitting IFormSubmittingComponent (such as a
+ * button) is nested in this form (is a child component) and was clicked by the user. If an
+ * IFormSubmittingComponent was found, and it has the defaultFormProcessing field set to false
+ * (default is true), it's onSubmit method will be called right away, thus no validition is done,
+ * and things like updating form component models that would normally be done are skipped. In that
+ * respect, nesting an IFormSubmittingComponent with the defaultFormProcessing field set to false
+ * has the same effect as nesting a normal link. If you want you can call validate() to execute form
+ * validation, hasError() to find out whether validate() resulted in validation errors, and
+ * updateFormComponentModels() to update the models of nested form components. </li>
+ * <li> When no submitting IFormSubmittingComponent with defaultFormProcessing set to false was
+ * found, this form is processed (method process()). Now, two possible paths exist:
  * <ul>
  * <li> Form validation failed. All nested form components will be marked invalid, and onError() is
  * called to allow clients to provide custom error handling code. </li>
  * <li> Form validation succeeded. The nested components will be asked to update their models and
  * persist their data is applicable. After that, method delegateSubmit with optionally the
- * submitting button is called. The default when there is a submitting button is to first call
- * onSubmit on that button, and after that call onSubmit on this form. Clients may override
- * delegateSubmit if they want different behavior. </li>
+ * submitting IFormSubmittingComponent is called. The default when there is a submitting
+ * IFormSubmittingComponent is to first call onSubmit on that Component, and after that call
+ * onSubmit on this form. Clients may override delegateSubmit if they want different behavior. </li>
  * </ul>
  * </li>
  * </li>
@@ -102,8 +103,9 @@ import org.slf4j.LoggerFactory;
  * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
  * 
  * <p>
- * If you want to have multiple buttons which submit the same form, simply put two or more button
- * components somewhere in the hierarchy of components that are children of the form.
+ * If you want to have multiple IFormSubmittingComponents which submit the same form, simply put two
+ * or more IFormSubmittingComponents somewhere in the hierarchy of components that are children of
+ * the form.
  * </p>
  * <p>
  * To get form components to persist their values for users via cookies, simply call
@@ -125,6 +127,7 @@ import org.slf4j.LoggerFactory;
  * @author Cameron Braid
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
+ * @author David Leangen
  */
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
@@ -280,15 +283,17 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 
 	/**
-	 * Any default button. If set, a hidden submit button will be rendered right after the form tag,
-	 * so that when users press enter in a textfield, this button's action will be selected. If no
-	 * default button is set, nothing additional is rendered.
+	 * Any default IFormSubmittingComponent. If set, a hidden submit component will be rendered
+	 * right after the form tag, so that when users press enter in a textfield, this submit
+	 * component's action will be selected. If no default IFormSubmittingComponent is set, nothing
+	 * additional is rendered.
 	 * <p>
-	 * WARNING: note that this is a best effort only. Unfortunately having a 'default' button in a
-	 * form is ill defined in the standards, and of course IE has it's own way of doing things.
+	 * WARNING: note that this is a best effort only. Unfortunately having a 'default'
+	 * IFormSubmittingComponent in a form is ill defined in the standards, and of course IE has it's
+	 * own way of doing things.
 	 * </p>
 	 */
-	private Button defaultButton;
+	private IFormSubmittingComponent defaultSubmittingComponent;
 
 	/** multi-validators assigned to this form */
 	private Object formValidators = null;
@@ -496,61 +501,62 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Gets the button which submitted this form.
+	 * Gets the IFormSubmittingComponent which submitted this form.
 	 * 
-	 * @return The button which submitted this form or null if the processing was not trigger by a
-	 *         registered button component
+	 * @return The component which submitted this form or null if the processing was not trigger by
+	 *         a registered IFormSubmittingComponent
 	 */
 	public final IFormSubmittingComponent findSubmittingButton()
 	{
-		IFormSubmittingComponent submittingButton = (IFormSubmittingComponent)getPage()
+		IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)getPage()
 				.visitChildren(IFormSubmittingComponent.class, new IVisitor()
 				{
 					public Object component(final Component component)
 					{
-						// Get button
-						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
+						// Get submitting component
+						final IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)component;
 
-						// Check for button-name or button-name.x request string
-						if (submit.getForm() != null &&
-								submit.getForm().getRootForm() == Form.this &&
-								(getRequest().getParameter(submit.getInputName()) != null || getRequest()
-										.getParameter(submit.getInputName() + ".x") != null))
+						// Check for component-name or component-name.x request string
+						if (submittingComponent.getForm() != null &&
+								submittingComponent.getForm().getRootForm() == Form.this &&
+								(getRequest().getParameter(submittingComponent.getInputName()) != null || getRequest()
+										.getParameter(submittingComponent.getInputName() + ".x") != null))
 						{
 							if (!component.isVisible())
 							{
 								throw new WicketRuntimeException("Submit Button " +
-										submit.getInputName() + " (path=" +
+										submittingComponent.getInputName() + " (path=" +
 										component.getPageRelativePath() + ") is not visible");
 							}
-							return submit;
+							return submittingComponent;
 						}
 						return CONTINUE_TRAVERSAL;
 					}
 				});
 
-		return submittingButton;
+		return submittingComponent;
 	}
 
 	/**
-	 * Gets the default button. If set (not null), a hidden submit button will be rendered right
-	 * after the form tag, so that when users press enter in a textfield, this button's action will
-	 * be selected. If no default button is set (it is null), nothing additional is rendered.
+	 * Gets the default IFormSubmittingComponent. If set (not null), a hidden submit component will
+	 * be rendered right after the form tag, so that when users press enter in a textfield, this
+	 * submit component's action will be selected. If no default component is set (it is null),
+	 * nothing additional is rendered.
 	 * <p>
 	 * WARNING: note that this is a best effort only. Unfortunately having a 'default' button in a
 	 * form is ill defined in the standards, and of course IE has it's own way of doing things.
 	 * </p>
-	 * There can be only one default button per form hierarchy. So if you want to get the default
-	 * button on a nested form, it will actually delegate the call to root form. </b>
+	 * There can be only one default submit component per form hierarchy. So if you want to get the
+	 * default component on a nested form, it will actually delegate the call to root form. </b>
 	 * 
-	 * @return The button to set as the default button, or null when you want to 'unset' any
-	 *         previously set default button
+	 * @return The submit component to set as the default IFormSubmittingComponent, or null when you
+	 *         want to 'unset' any previously set default IFormSubmittingComponent
 	 */
-	public final Button getDefaultButton()
+	public final IFormSubmittingComponent getDefaultButton()
 	{
 		if (isRootForm())
 		{
-			return defaultButton;
+			return defaultSubmittingComponent;
 		}
 		else
 		{
@@ -734,15 +740,15 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			}
 			else
 			{
-				// First, see if the processing was triggered by a Wicket button
-				final IFormSubmittingComponent submittingButton = findSubmittingButton();
+				// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
+				final IFormSubmittingComponent submittingComponent = findSubmittingButton();
 
-				// When processing was triggered by a Wicket button and that
-				// button indicates it wants to be called immediately
-				// (without processing), call Button.onSubmit() right away.
-				if (submittingButton != null && !submittingButton.getDefaultFormProcessing())
+				// When processing was triggered by a Wicket IFormSubmittingComponent and that
+				// component indicates it wants to be called immediately
+				// (without processing), call IFormSubmittingComponent.onSubmit() right away.
+				if (submittingComponent != null && !submittingComponent.getDefaultFormProcessing())
 				{
-					submittingButton.onSubmit();
+					submittingComponent.onSubmit();
 				}
 				else
 				{
@@ -750,15 +756,15 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					Form formToProcess = this;
 
 					// find out whether it was a nested form that was submitted
-					if (submittingButton != null)
+					if (submittingComponent != null)
 					{
-						formToProcess = submittingButton.getForm();
+						formToProcess = submittingComponent.getForm();
 					}
 					// process the form for this request
 					if (formToProcess.process())
 					{
 						// let clients handle further processing
-						delegateSubmit(submittingButton);
+						delegateSubmit(submittingComponent);
 					}
 				}
 			}
@@ -854,10 +860,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Sets the default button. If set (not null), a hidden submit button will be rendered right
-	 * after the form tag, so that when users press enter in a textfield, this button's action will
-	 * be selected. If no default button is set (so unset by calling this method with null), nothing
-	 * additional is rendered.
+	 * Sets the default IFormSubmittingComponent. If set (not null), a hidden submit component will
+	 * be rendered right after the form tag, so that when users press enter in a textfield, this
+	 * submit component's action will be selected. If no default component is set (so unset by
+	 * calling this method with null), nothing additional is rendered.
 	 * <p>
 	 * WARNING: note that this is a best effort only. Unfortunately having a 'default' button in a
 	 * form is ill defined in the standards, and of course IE has it's own way of doing things.
@@ -865,19 +871,19 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * There can be only one default button per form hierarchy. So if you set default button on a
 	 * nested form, it will actually delegate the call to root form. </b>
 	 * 
-	 * @param button
-	 *            The button to set as the default button, or null when you want to 'unset' any
-	 *            previously set default button
+	 * @param submittingComponent
+	 *            The component to set as the default submitting component, or null when you want to
+	 *            'unset' any previously set default component
 	 */
-	public final void setDefaultButton(Button button)
+	public final void setDefaultButton(IFormSubmittingComponent submittingComponent)
 	{
 		if (isRootForm())
 		{
-			defaultButton = button;
+			defaultSubmittingComponent = submittingComponent;
 		}
 		else
 		{
-			getRootForm().setDefaultButton(button);
+			getRootForm().setDefaultButton(submittingComponent);
 		}
 	}
 
@@ -1179,11 +1185,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * If a default button was set on this form, this method will be called to render an extra field
-	 * with an invisible style so that pressing enter in one of the textfields will do a form submit
-	 * using this button. This method is overridable as what we do is best effort only, and may not
-	 * what you want in specific situations. So if you have specific usability concerns, or want to
-	 * follow another strategy, you may override this method.
+	 * If a default IFormSubmittingComponent was set on this form, this method will be called to
+	 * render an extra field with an invisible style so that pressing enter in one of the textfields
+	 * will do a form submit using this component. This method is overridable as what we do is best
+	 * effort only, and may not what you want in specific situations. So if you have specific
+	 * usability concerns, or want to follow another strategy, you may override this method.
 	 * 
 	 * @param markupStream
 	 *            The markup stream
@@ -1203,9 +1209,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" autocomplete=\"false\"/>");
 
-		// add the button
+		// add the submitting component
+		final Component submittingComponent = (Component)defaultSubmittingComponent;
 		buffer.append("<input type=\"submit\" onclick=\" var b=Wicket.$('");
-		buffer.append(defaultButton.getMarkupId());
+		buffer.append(submittingComponent.getMarkupId());
 		buffer
 				.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
@@ -1231,25 +1238,26 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * processing to clients.
 	 * <p>
 	 * This implementation first finds out whether the form processing was triggered by a nested
-	 * button of this form. If that is the case, that button's onSubmit is called first.
+	 * IFormSubmittingComponent of this form. If that is the case, that component's onSubmit is
+	 * called first.
 	 * </p>
 	 * <p>
-	 * Regardless of whether a submitting button was found, the form's onSubmit method is called
+	 * Regardless of whether a submitting component was found, the form's onSubmit method is called
 	 * next.
 	 * </p>
 	 * 
-	 * @param submittingButton
-	 *            the button that triggered this form processing, or null if the processing was
+	 * @param submittingComponent
+	 *            the component that triggered this form processing, or null if the processing was
 	 *            triggered by something else (like a non-Wicket submit button or a javascript
 	 *            execution)
 	 */
-	protected void delegateSubmit(IFormSubmittingComponent submittingButton)
+	protected void delegateSubmit(IFormSubmittingComponent submittingComponent)
 	{
-		// when the given button is not null, it means that it was the
-		// submitting button
-		if (submittingButton != null)
+		// when the given submitting component is not null, it means that it was the
+		// submitting component
+		if (submittingComponent != null)
 		{
-			submittingButton.onSubmit();
+			submittingComponent.onSubmit();
 		}
 
 		// Model was successfully updated with valid data
@@ -1524,11 +1532,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			buffer.append("</div>");
 			getResponse().write(buffer);
 
-			// if a default button was set, handle the rendering of that
-			if (defaultButton != null && defaultButton.isVisibleInHierarchy() &&
-					defaultButton.isEnabled())
+			// if a default submitting component was set, handle the rendering of that
+			if (defaultSubmittingComponent instanceof Component)
 			{
-				appendDefaultButtonField(markupStream, openTag);
+				final Component submittingComponent = (Component)defaultSubmittingComponent;
+				if (submittingComponent.isVisibleInHierarchy() && submittingComponent.isEnabled())
+				{
+					appendDefaultButtonField(markupStream, openTag);
+				}
 			}
 		}
 
