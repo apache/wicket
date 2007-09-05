@@ -30,7 +30,7 @@ import com.google.inject.Injector;
  * but this is ok because metadata objects in application are never
  * serialized.
  */
-class GuiceInjectorHolder implements IClusterable
+public class GuiceInjectorHolder implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ class GuiceInjectorHolder implements IClusterable
 	 * Metadata key used to store Injector holder in application's
 	 * metadata
 	 */
-	static MetaDataKey INJECTOR_KEY = new MetaDataKey(
+	public static MetaDataKey INJECTOR_KEY = new MetaDataKey(
 			GuiceInjectorHolder.class) {
 
 		private static final long serialVersionUID = 1L;
@@ -52,14 +52,14 @@ class GuiceInjectorHolder implements IClusterable
 	 * 
 	 * @param context
 	 */
-	GuiceInjectorHolder(Injector injector) {
+	public GuiceInjectorHolder(Injector injector) {
 		this.injector = injector;
 	}
 
 	/**
 	 * @return the context
 	 */
-	Injector getInjector() {
+	public Injector getInjector() {
 		return injector;
 	}
 }
