@@ -184,7 +184,7 @@ public class SubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * The javascript which trigges this link.
+	 * The javascript which triggers this link.
 	 * 
 	 * TODO: This is a copy & paste from Button
 	 * 
