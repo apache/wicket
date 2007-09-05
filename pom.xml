@@ -52,6 +52,19 @@
 			</modules>
 		</profile>
 		<profile>
+			<id>bamboo</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<distributionManagement>
+			  <snapshotRepository>
+			    <id>repo</id>
+			    <name>Local Bamboo/Tomcat repository</name>
+			    <url>file:/home/wicket/tomcat/webapps/maven2/repository/</url>
+			  </snapshotRepository>
+			</distributionManagement>			
+		</profile>
+		<profile>
 			<id>release</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
