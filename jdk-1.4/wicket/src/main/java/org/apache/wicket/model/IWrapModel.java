@@ -17,13 +17,13 @@
 package org.apache.wicket.model;
 
 /**
- * A marker interface that represents a model that serves as a wrapper for
- * another. Typically these models are produced by the following methods:
+ * A marker interface that represents a model that serves as a wrapper for another. Typically these
+ * models are produced by the following methods:
  * {@link IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)} and
  * {@link IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)}
  * 
- * The wrapped model will be called detach on when the component is detached
- * when the wrapmodel is created by an {@link IComponentAssignedModel}
+ * The wrapped model will be called detach on when the component is detached when the wrap model is
+ * created by an {@link IComponentAssignedModel}
  * 
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
