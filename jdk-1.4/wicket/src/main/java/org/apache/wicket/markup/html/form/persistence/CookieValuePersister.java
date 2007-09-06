@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class CookieValuePersister implements IValuePersister
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Logging */
 	private final static Logger log = LoggerFactory.getLogger(CookieValuePersister.class);
 
@@ -50,9 +50,9 @@ public class CookieValuePersister implements IValuePersister
 		{
 			clear(cookie);
 			if (log.isDebugEnabled())
-            {
+			{
 				log.debug("Cookie for " + component + " removed");
-            }
+			}
 		}
 	}
 
@@ -82,22 +82,23 @@ public class CookieValuePersister implements IValuePersister
 		final String value = component.getValue();
 
 		Cookie cookie = getCookie(component);
-		if (cookie == null) 
+		if (cookie == null)
 		{
 			cookie = new Cookie(name, value == null ? "" : value);
 		}
-		else 
+		else
 		{
 			cookie.setValue(value == null ? "" : value);
 		}
 		cookie.setSecure(false);
 		cookie.setMaxAge(getSettings().getMaxAge());
-		
+
 		save(cookie);
 	}
-	
+
 	/**
-	 * @param component Component to get name for
+	 * @param component
+	 *            Component to get name for
 	 * @return The name of the component.
 	 */
 	protected String getName(final FormComponent component)
@@ -106,8 +107,8 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
-	 * Convenience method for deleting a cookie by name. Delete the cookie by
-	 * setting its maximum age to zero.
+	 * Convenience method for deleting a cookie by name. Delete the cookie by setting its maximum
+	 * age to zero.
 	 * 
 	 * @param cookie
 	 *            The cookie to delete
@@ -133,18 +134,18 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	private String cookieToDebugString(final Cookie cookie)
 	{
-		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue()
-				+ ", domain = " + cookie.getDomain() + ", path = " + cookie.getPath()
-				+ ", maxAge = " + Time.valueOf(cookie.getMaxAge()).toDateString() + "("
-				+ cookie.getMaxAge() + ")" + "]";
+		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
+				", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() +
+				", maxAge = " + Time.valueOf(cookie.getMaxAge()).toDateString() + "(" +
+				cookie.getMaxAge() + ")" + "]";
 	}
 
 	/**
-	 * Gets the cookie for a given persistent form component. The name of the
-	 * cookie will be the component's page relative path (@see
-	 * org.apache.wicket.markup.html.form.FormComponent#getPageRelativePath()). Be reminded
-	 * that only if the cookie data have been provided by the client (browser),
-	 * they'll be accessible by the server.
+	 * Gets the cookie for a given persistent form component. The name of the cookie will be the
+	 * component's page relative path (@see
+	 * org.apache.wicket.markup.html.form.FormComponent#getPageRelativePath()). Be reminded that
+	 * only if the cookie data have been provided by the client (browser), they'll be accessible by
+	 * the server.
 	 * 
 	 * @param component
 	 *            The form component
@@ -155,59 +156,51 @@ public class CookieValuePersister implements IValuePersister
 		// Gets the cookie's name
 		final String name = getName(component);
 
-		// Get all cookies attached to the Request by the client browser
-		Cookie[] cookies = getCookies();
-		if (cookies != null)
+		// Get the cookie attached to the Request by the client browser
+		Cookie cookie = getCookie(name);
+		if (cookie != null)
 		{
-			for (int i = 0; i < cookies.length; i++)
+			// cookie with no value do me no good!
+			if (cookie.getValue() != null && cookie.getValue().length() > 0)
 			{
-				Cookie cookie = cookies[i];
-
-				// Names must match and Value must not be empty
-				if (cookie.getName().equals(name))
+				if (log.isDebugEnabled())
 				{
-					// cookies with no value do me no good!
-					if (cookie.getValue() != null && cookie.getValue().length() > 0)
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Got cookie: " + cookieToDebugString(cookie));
-						}
-						return cookie;
-					}
-					else
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Got cookie " + name
-									+ ", but it had no value; returning null");
-						}
-					}
+					log.debug("Got cookie: " + cookieToDebugString(cookie));
+				}
+				return cookie;
+			}
+			else
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("Got cookie " + name + ", but it had no value; returning null");
 				}
 			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets any cookies for request.
+	 * 
+	 * @param name
+	 *            The name of the cookie to be looked up
+	 * 
+	 * @return Any cookies for this request
+	 */
+	private Cookie getCookie(String name)
+	{
+		try
+		{
+			return getWebRequest().getCookie(name);
+		}
+		catch (NullPointerException ex)
+		{
+			// Ignore any app server problem here
 		}
 
 		return null;
 	}
-    
-    /**
-     * Gets any cookies for request.
-     * 
-     * @return Any cookies for this request
-     */
-    private Cookie[] getCookies()
-    {
-        try
-        {
-            return getWebRequest().getCookies();
-        }
-        catch (NullPointerException ex)
-        {
-            // Ignore any app server problem here
-        }
-
-        return new Cookie[0];
-    }
 
 	/**
 	 * Persister defaults are maintained centrally by the Application.
@@ -216,7 +209,8 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	private CookieValuePersisterSettings getSettings()
 	{
-		return RequestCycle.get().getApplication().getSecuritySettings().getCookieValuePersisterSettings();
+		return RequestCycle.get().getApplication().getSecuritySettings()
+				.getCookieValuePersisterSettings();
 	}
 
 	/**
@@ -252,34 +246,34 @@ public class CookieValuePersister implements IValuePersister
 		{
 			return null;
 		}
-        else
-        {
-            final String comment = getSettings().getComment();
-    		if (comment != null)
-    		{
-    			cookie.setComment(comment);
-    		}
-    
-            final String domain = getSettings().getDomain();
-    		if (domain != null)
-    		{
-    			cookie.setDomain(domain);
-    		}
-    
-    		cookie.setPath("/");
-			//cookie.setPath(getWebRequest().getContextPath());
+		else
+		{
+			final String comment = getSettings().getComment();
+			if (comment != null)
+			{
+				cookie.setComment(comment);
+			}
 
-    		cookie.setVersion(getSettings().getVersion());
-    		cookie.setSecure(getSettings().getSecure());
+			final String domain = getSettings().getDomain();
+			if (domain != null)
+			{
+				cookie.setDomain(domain);
+			}
 
-    		getWebResponse().addCookie(cookie);
-    
-    		if (log.isDebugEnabled())
-    		{
-    			log.debug("saved: " + cookieToDebugString(cookie));
-    		}
-    
-    		return cookie;
-        }
+			cookie.setPath("/");
+			// cookie.setPath(getWebRequest().getContextPath());
+
+			cookie.setVersion(getSettings().getVersion());
+			cookie.setSecure(getSettings().getSecure());
+
+			getWebResponse().addCookie(cookie);
+
+			if (log.isDebugEnabled())
+			{
+				log.debug("saved: " + cookieToDebugString(cookie));
+			}
+
+			return cookie;
+		}
 	}
 }

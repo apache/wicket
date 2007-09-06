@@ -27,10 +27,10 @@ import org.apache.wicket.util.lang.Bytes;
 
 
 /**
- * Subclass of Request for HTTP protocol requests which holds an underlying
- * HttpServletRequest object. A variety of convenience methods are available
- * that operate on the HttpServletRequest object. These methods do things such
- * as providing access to parameters, cookies, URLs and path information.
+ * Subclass of Request for HTTP protocol requests which holds an underlying HttpServletRequest
+ * object. A variety of convenience methods are available that operate on the HttpServletRequest
+ * object. These methods do things such as providing access to parameters, cookies, URLs and path
+ * information.
  * 
  * @author Jonathan Locke
  */
@@ -47,13 +47,36 @@ public abstract class WebRequest extends Request
 	}
 
 	/**
+	 * Get the requests' cookie by name
+	 * 
+	 * @param name
+	 *            The name of the cookie to be looked up
+	 * 
+	 * @return A cookie, null if not found.
+	 */
+	public Cookie getCookie(String name)
+	{
+		Cookie[] cookies = getCookies();
+		if (cookies != null && cookies.length > 0)
+		{
+			for (int i = 0; i < cookies.length; i++)
+			{
+				if (cookies[i].getName().equals(name))
+				{
+					return cookies[i];
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Gets the wrapped http servlet request object.
 	 * <p>
-	 * WARNING: it is usually a bad idea to depend on the http servlet request
-	 * directly. Please use the classes and methods that are exposed by Wicket
-	 * (such as {@link org.apache.wicket.Session} instead. Send an email to the mailing
-	 * list in case it is not clear how to do things or you think you miss
-	 * functionality which causes you to depend on this directly.
+	 * WARNING: it is usually a bad idea to depend on the http servlet request directly. Please use
+	 * the classes and methods that are exposed by Wicket (such as {@link org.apache.wicket.Session}
+	 * instead. Send an email to the mailing list in case it is not clear how to do things or you
+	 * think you miss functionality which causes you to depend on this directly.
 	 * </p>
 	 * 
 	 * @return the wrapped http serlvet request object.
@@ -61,10 +84,9 @@ public abstract class WebRequest extends Request
 	public abstract HttpServletRequest getHttpServletRequest();
 
 	/**
-	 * Returns the preferred <code>Locale</code> that the client will accept
-	 * content in, based on the Accept-Language header. If the client request
-	 * doesn't provide an Accept-Language header, this method returns the
-	 * default locale for the server.
+	 * Returns the preferred <code>Locale</code> that the client will accept content in, based on
+	 * the Accept-Language header. If the client request doesn't provide an Accept-Language header,
+	 * this method returns the default locale for the server.
 	 * 
 	 * @return the preferred <code>Locale</code> for the client
 	 */
@@ -103,15 +125,15 @@ public abstract class WebRequest extends Request
 	public abstract String getServletPath();
 
 	/**
-	 * Create a runtime context type specific (e.g. Servlet or Portlet)
-	 * MultipartWebRequest wrapper for handling multipart content uploads.
+	 * Create a runtime context type specific (e.g. Servlet or Portlet) MultipartWebRequest wrapper
+	 * for handling multipart content uploads.
 	 * 
 	 * @param maxSize
 	 *            the maximum size this request may be
 	 * @return new WebRequest wrapper implementing MultipartWebRequest
 	 */
 	public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
-	
+
 	/**
 	 * Is the request an ajax request?
 	 * 
