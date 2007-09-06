@@ -161,12 +161,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see org.apache.wicket.markup.html.list.ListView#onBeforeRender()
 		 */
-		protected void onPopulate()
+		protected void onBeforeRender()
 		{
-			super.onPopulate();
+			super.onBeforeRender();
 			if (dirty)
 			{
-				super.internalOnAttach();
 				this.dirty = false;
 			}
 		}
