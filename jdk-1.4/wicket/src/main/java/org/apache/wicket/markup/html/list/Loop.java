@@ -110,7 +110,7 @@ public abstract class Loop extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected void onPopulate()
+	protected final void onPopulate()
 	{
 		// Remove any previous loop contents
 		removeAll();

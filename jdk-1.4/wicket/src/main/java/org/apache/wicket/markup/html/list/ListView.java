@@ -513,7 +513,7 @@ public abstract class ListView extends AbstractRepeater
 	/**
 	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#onPopulate()
 	 */
-	protected void onPopulate()
+	protected final void onPopulate()
 	{
 		// Get number of items to be displayed
 		final int size = getViewSize();

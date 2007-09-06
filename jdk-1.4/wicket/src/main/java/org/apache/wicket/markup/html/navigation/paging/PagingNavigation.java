@@ -267,19 +267,16 @@ public class PagingNavigation extends Loop
 		this.separator = separator;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.list.Loop#onPopulate()
-	 */
-	protected void onPopulate()
-	{
 
+	protected void onBeforeRender()
+	{
 		// PagingNavigation itself (as well as the PageableListView)
 		// may have pages.
 
 		// The index of the first page link depends on the PageableListView's
 		// page currently printed.
 		setStartIndex();
-		super.onPopulate();
+		super.onBeforeRender();
 	}
 
 	/**

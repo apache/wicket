@@ -117,12 +117,9 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	/**
 	 * @see org.apache.wicket.Component#onBeforeRender()
 	 */
-	protected final void onBeforeRender()
+	protected void onBeforeRender()
 	{
-		if (isVisibleInHierarchy())
-		{
-			onPopulate();
-		}
+		onPopulate();
 		super.onBeforeRender();
 	}
 

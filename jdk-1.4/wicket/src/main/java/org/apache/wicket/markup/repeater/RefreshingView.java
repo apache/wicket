@@ -85,7 +85,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * Refresh the items in the view. Delegates the creation of items to the selected item reuse
 	 * strategy
 	 */
-	protected void onPopulate()
+	protected final void onPopulate()
 	{
 
 		IItemFactory itemFactory = new IItemFactory()
