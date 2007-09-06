@@ -20,11 +20,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Optional interface implemented by models that are able to provide
- * reflection information about object property they interact with.
+ * Optional interface implemented by models that are able to provide reflection information about
+ * object property they interact with.
  * 
- * The model doesn't have to support all propery information in this 
- * interface. It is valid to return null for any method.
+ * The model doesn't have to support all property information in this interface. It is valid to
+ * return null for any method.
  * 
  * @author Matej Knopp
  */
@@ -32,21 +32,22 @@ public interface IPropertyReflectionAwareModel
 {
 	/**
 	 * Returns the field of model property or null if the field doesn't exist.
+	 * 
 	 * @return Field or null
 	 */
 	public Field getPropertyField();
-	
+
 	/**
-	 * Returns the getter method of model property or null if the method
-	 * doesn't exist.
+	 * Returns the getter method of model property or null if the method doesn't exist.
+	 * 
 	 * @return Method or null
 	 */
 	public Method getPropertyGetter();
-	
-	
+
+
 	/**
-	 * Returns the setter metod of model property or null if the method doesn't
-	 * exist.
+	 * Returns the setter metod of model property or null if the method doesn't exist.
+	 * 
 	 * @return Method or null
 	 */
 	public Method getPropertySetter();
