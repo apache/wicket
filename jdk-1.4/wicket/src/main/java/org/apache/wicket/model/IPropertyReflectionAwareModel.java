@@ -46,7 +46,7 @@ public interface IPropertyReflectionAwareModel
 
 
 	/**
-	 * Returns the setter metod of model property or null if the method doesn't exist.
+	 * Returns the setter method of model property or null if the method doesn't exist.
 	 * 
 	 * @return Method or null
 	 */
