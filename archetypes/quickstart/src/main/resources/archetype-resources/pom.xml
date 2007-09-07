@@ -60,7 +60,7 @@
 				 <groupId>junit</groupId>
 				 <artifactId>junit</artifactId>
 				 <version>3.8.2</version>
-				 <scope>testing</scope>
+				 <scope>test</scope>
 		 </dependency>
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
