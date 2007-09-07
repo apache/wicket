@@ -28,14 +28,12 @@ import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.version.undo.Change;
 
 /**
- * Usually you either have a markup file or a xml tag with
- * wicket:id="myComponent" to associate markup with a component. However in some
- * rare cases, especially when working with small panels it is a bit awkward to
- * maintain tiny pieces of markup in plenty of panel markup files. Use cases are
+ * Usually you either have a markup file or a xml tag with wicket:id="myComponent" to associate
+ * markup with a component. However in some rare cases, especially when working with small panels it
+ * is a bit awkward to maintain tiny pieces of markup in plenty of panel markup files. Use cases are
  * for example list views where list items are different depending on a state.
  * <p>
- * Fragments provide a means to maintain the panels tiny piece of markup in the
- * parents markup file.
+ * Fragments provide a means to maintain the panels tiny piece of markup in the parents markup file.
  * <p>
  * 
  * <pre>
@@ -69,6 +67,8 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 *            The component id
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
+	 * 
+	 * @deprecated use {@link #Fragment(String, String, MarkupContainer)}
 	 */
 	public Fragment(final String id, final String markupId)
 	{
@@ -86,6 +86,8 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 *            The associated id of the associated markup fragment
 	 * @param model
 	 *            The model for this fragment
+	 * 
+	 * @deprecated use {@link #Fragment(String, String, MarkupContainer, IModel)}
 	 */
 	public Fragment(final String id, final String markupId, final IModel model)
 	{
@@ -207,14 +209,14 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * Get the markup stream which shall be used to search for the fragment
 	 * 
 	 * @param markupStream
-	 *            The markup stream is associated with the component (not the
-	 *            fragment)
+	 *            The markup stream is associated with the component (not the fragment)
 	 * @return The markup stream to be used to find the fragment markup
 	 */
 	protected MarkupStream chooseMarkupStream(final MarkupStream markupStream)
 	{
 		MarkupStream stream = null;
 
+		// TODO Post 1.3: Cleanup this after deprecated constructors are removed
 		if (markupProvider == null)
 		{
 			stream = markupStream;
@@ -280,8 +282,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * Position the markup stream at the child component relative to the
-	 * <b>provider</b> markup
+	 * Position the markup stream at the child component relative to the <b>provider</b> markup
 	 * 
 	 * @param path
 	 * @return
@@ -315,6 +316,9 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	public MarkupStream getAssociatedMarkupStream(boolean throwException)
 	{
 		MarkupStream stream = null;
+
+		// TODO Post 1.3: Cleanup this after deprecated constructors are removed
+
 
 		if (markupProvider != null)
 		{
