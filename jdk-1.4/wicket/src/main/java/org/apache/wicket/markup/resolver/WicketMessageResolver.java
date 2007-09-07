@@ -16,25 +16,25 @@
  */
 package org.apache.wicket.markup.resolver;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.WicketTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
+import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * This is a tag resolver which handles &lt;wicket:message
- * key="myKey"&gt;Default Text&lt;/wicket:message&gt;. The resolver
- * will replace the whole tag with the message found in the properties file
- * associated with the Page. If no message is found, the default body text will
+ * This is a tag resolver which handles &lt;wicket:message key="myKey"&gt;Default
+ * Text&lt;/wicket:message&gt;. The resolver will replace the whole tag with the message found in
+ * the properties file associated with the Page. If no message is found, the default body text will
  * remain.
  * 
  * @author Juergen Donnerstag
@@ -42,6 +42,13 @@ import org.slf4j.LoggerFactory;
 public class WicketMessageResolver implements IComponentResolver
 {
 	private static final Logger log = LoggerFactory.getLogger(WicketMessageResolver.class);
+
+	/**
+	 * If the key can't be resolved and the default is null, an exception will be thrown. Instead,
+	 * we default to a unique string and check against this later. Don't just use an empty string
+	 * here, as people might want to override wicket:messages to empty strings.
+	 */
+	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
 
 	static
 	{
@@ -53,8 +60,7 @@ public class WicketMessageResolver implements IComponentResolver
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container
-	 * and render it.
+	 * Try to resolve the tag, then create a component, add it to the container and render it.
 	 * 
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
@@ -82,32 +88,11 @@ public class WicketMessageResolver implements IComponentResolver
 							"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
-				// If the key can't be resolved and the default is null, an
-				// exception will be thrown. Instead, we default to a unique
-				// string and check against this later. Don't just use an empty
-				// string here, as people might want to override wicket:messages
-				// to empty strings.
-				final String defaultValue = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
-				
-				final String value = container.getApplication().getResourceSettings()
-						.getLocalizer().getString(messageKey, container, defaultValue);
-
 				final String id = "_message_" + container.getPage().getAutoIndex();
-				Component component = null;
-				if (value != null && !defaultValue.equals(value))
-				{
-					component = new MyLabel(id, value.trim());
-				}
-				else
-				{
-					log.info("No value found for message key: " + messageKey);
-					component = new WebMarkupContainer(id);
-				}
-
-				component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
+				MessageLabel label = new MessageLabel(id, messageKey);
+				label.setRenderBodyOnly(container.getApplication().getMarkupSettings()
 						.getStripWicketTags());
-
-				container.autoAdd(component, markupStream);
+				container.autoAdd(label, markupStream);
 
 				// Yes, we handled the tag
 				return true;
@@ -121,7 +106,7 @@ public class WicketMessageResolver implements IComponentResolver
 	/**
 	 * A Label with expands open-close tags to open-body-close if required
 	 */
-	public static class MyLabel extends Label
+	public static class MessageLabel extends WebComponent
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -129,12 +114,42 @@ public class WicketMessageResolver implements IComponentResolver
 		 * Construct.
 		 * 
 		 * @param id
-		 * @param value
+		 * @param messageKey
 		 */
-		public MyLabel(final String id, final String value)
+		public MessageLabel(final String id, final String messageKey)
 		{
-			super(id, value);
+			super(id, new Model(messageKey));
 			setEscapeModelStrings(false);
+		}
+
+		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+		{
+			final String key = getModelObjectAsString();
+			final String value = getLocalizer().getString(key, this, DEFAULT_VALUE);
+			if (value != null && !DEFAULT_VALUE.equals(value))
+			{
+				replaceComponentTagBody(markupStream, openTag, value.trim());
+			}
+			else
+			{
+				log.debug("No value found for wicket:message tag with key: {}", key);
+
+				// get original tag from markup because we modified this one to always be open
+				markupStream.setCurrentIndex(markupStream.getCurrentIndex() - 1);
+				ComponentTag tag = markupStream.getTag();
+				markupStream.next();
+
+				// if the tag is of form <wicket:message>{foo}</wicket:message> use {foo} as
+				// default value for the message, otherwise do nothing
+				if (!tag.isOpenClose())
+				{
+					MarkupElement body = markupStream.get();
+					if (body instanceof RawMarkup)
+					{
+						replaceComponentTagBody(markupStream, openTag, body.toCharSequence());
+					}
+				}
+			}
 		}
 
 		/**
@@ -143,8 +158,7 @@ public class WicketMessageResolver implements IComponentResolver
 		 */
 		protected void onComponentTag(ComponentTag tag)
 		{
-			// Convert <wicket:message /> into
-			// <wicket:message>...</wicket:message>
+			// Convert <wicket:message /> into <wicket:message>...</wicket:message>
 			if (tag.isOpenClose())
 			{
 				tag.setType(XmlTag.OPEN);
