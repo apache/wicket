@@ -25,8 +25,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * An ajax submit button that will degrade to a normal request if ajax is not
- * available or javascript is disabled.
+ * An ajax submit button that will degrade to a normal request if ajax is not available or
+ * javascript is disabled.
  * 
  * @since 1.3
  * 
@@ -107,7 +107,7 @@ public abstract class AjaxFallbackButton extends Button
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
 	 */
-	public void onSubmit()
+	public final void onSubmit()
 	{
 		if (!(getRequestCycle().getRequestTarget() instanceof AjaxRequestTarget))
 		{
@@ -121,12 +121,11 @@ public abstract class AjaxFallbackButton extends Button
 	}
 
 	/**
-	 * Callback for the onClick event. If ajax failed and this event was
-	 * generated via a normal submission, the target argument will be null
+	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
+	 * submission, the target argument will be null
 	 * 
 	 * @param target
-	 *            ajax target if this linked was invoked using ajax, null
-	 *            otherwise
+	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
 	protected abstract void onSubmit(final AjaxRequestTarget target, final Form form);
@@ -137,8 +136,8 @@ public abstract class AjaxFallbackButton extends Button
 	}
 
 	/**
-	 * Helper methods that both checks whether the link is enabled and whether
-	 * the action ENABLE is allowed.
+	 * Helper methods that both checks whether the link is enabled and whether the action ENABLE is
+	 * allowed.
 	 * 
 	 * @return whether the link should be rendered as enabled
 	 */
