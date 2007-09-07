@@ -590,7 +590,7 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 		}
 		else
 		{
-			return input[0];
+			return input[0].trim();
 		}
 	}
 
