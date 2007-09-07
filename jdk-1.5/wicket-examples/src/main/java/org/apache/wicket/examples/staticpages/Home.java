@@ -19,6 +19,7 @@ package org.apache.wicket.examples.staticpages;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -45,8 +46,16 @@ public class Home extends WicketExamplePage
 		add(new StaticLink("helloxslt", new Model("xsldocs/hello.html")));
 		// Passing URI to a Wicket page
 		add(new StaticLink("wicketpage", new Model("pages/path/to/hello.html")));
-		// Sending a Wicket page by email
-		add(new StaticLink("emailwicketpage", new Model("pages/path/to/hello.html?email=true")));
+		/*
+		 * Sending a Wicket page by email: all requests to bookmarkable page
+		 * "Page" will be captured, and the "Sent" page is shown instead, see
+		 * the "/capture" mount in staticpages.Application. Unfortunately, you
+		 * cannot use CapturingBookmarkablePageRequestTarget in an event
+		 * listener like onClick() unless you change the application's
+		 * IRequestCycleSettings to ONE_PASS_RENDER, thus we use mount() in the
+		 * application
+		 */
+		add(new BookmarkablePageLink("emailwicketpage", EmailPage.class));
 	}
 
 	private class StaticLink extends WebMarkupContainer

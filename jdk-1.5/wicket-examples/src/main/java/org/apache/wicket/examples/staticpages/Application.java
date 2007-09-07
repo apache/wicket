@@ -17,21 +17,15 @@
 package org.apache.wicket.examples.staticpages;
 
 import org.apache.wicket.IRequestTarget;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.basic.URIRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
-import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.PackageResourceStream;
 import org.apache.wicket.util.resource.WebExternalResourceStream;
 import org.apache.wicket.util.resource.XSLTResourceStream;
-import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Examples for serving static files
@@ -73,38 +67,8 @@ public class Application extends WebApplication
 				return new ResourceStreamRequestTarget(new XSLTResourceStream(xslStream, docStream));
 			}
 		});
-
-		// Passing URI to a Wicket page
-		mount(new URIRequestTargetUrlCodingStrategy("/pages")
-		{
-			@Override
-			public IRequestTarget decode(RequestParameters requestParameters)
-			{
-				final ValueMap requestParams = decodeParameters(requestParameters);
-				PageParameters params = new PageParameters();
-				params.put("uri", requestParams.get(URI));
-				return new BookmarkablePageRequestTarget(Page.class, params) {
-					/**
-					 * @see org.apache.wicket.request.target.component.BookmarkablePageRequestTarget#respond(org.apache.wicket.RequestCycle)
-					 */
-					@Override
-					public void respond(RequestCycle requestCycle)
-					{
-						if (requestParams.getString("email") != null) {
-							final StringResponse emailResponse = new StringResponse();
-							final WebResponse originalResponse = (WebResponse)RequestCycle.get().getResponse();
-							RequestCycle.get().setResponse(emailResponse);
-							super.respond(requestCycle);
-							// Here send the email instead of dumping it to stdout!
-							System.out.println(emailResponse.toString());
-							RequestCycle.get().setResponse(originalResponse);
-							RequestCycle.get().setRequestTarget(new BookmarkablePageRequestTarget(Sent.class));
-						} else {
-							super.respond(requestCycle);
-						}
-					}
-				};
-			}
-		});
+		
+		// All requests to bookmarkable page "Page" will be captured, and the "Sent" page is shown instead
+		mount(new CapturingBookmarkablePageRequestTargetUrlCodingStrategy("/capturedpage", EmailPage.class, Sent.class));
 	}
 }
