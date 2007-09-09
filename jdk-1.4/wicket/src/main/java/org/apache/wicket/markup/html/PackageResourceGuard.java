@@ -23,8 +23,8 @@ import org.apache.wicket.util.lang.Packages;
 
 
 /**
- * Default implementation of {@link IPackageResourceGuard}. By default, the
- * extensions 'properties', 'html', 'class' and 'java' are blocked.
+ * Default implementation of {@link IPackageResourceGuard}. By default, the extensions
+ * 'properties', 'class' and 'java' are blocked.
  * 
  * @author eelcohillenius
  */
@@ -57,8 +57,8 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * Whether the provided absolute path is accepted.
 	 * 
 	 * @param path
-	 *            The absolute path, starting from the class root (packages are
-	 *            seperated with forward slashes instead of dots).
+	 *            The absolute path, starting from the class root (packages are seperated with
+	 *            forward slashes instead of dots).
 	 * @return True if accepted, false otherwise.
 	 */
 	protected boolean acceptAbsolutePath(String path)
@@ -74,7 +74,8 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		{
 			ext = path.substring(ixExtension + 1).toLowerCase();
 		}
-		if ("html".equals(ext) && getClass().getClassLoader().getResource(path.replaceAll(".html", ".class")) != null)
+		if ("html".equals(ext) &&
+				getClass().getClassLoader().getResource(path.replaceAll(".html", ".class")) != null)
 		{
 			return false;
 		}
@@ -85,8 +86,8 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * Whether the provided extension is accepted.
 	 * 
 	 * @param extension
-	 *            The extension, starting from the class root (packages are
-	 *            seperated with forward slashes instead of dots).
+	 *            The extension, starting from the class root (packages are seperated with forward
+	 *            slashes instead of dots).
 	 * @return True if accepted, false otherwise.
 	 */
 	protected boolean acceptExtension(String extension)
