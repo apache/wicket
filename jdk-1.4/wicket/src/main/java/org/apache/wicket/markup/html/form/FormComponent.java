@@ -974,8 +974,11 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * Updates this components' model from the request, it expect that the object is already
-	 * converted through the convert() call. By default it just does this:
+	 * Updates this components model from the request, it expects that the object is already
+	 * converted through the convertInput() call that is called by the validate() method when a form
+	 * is being processed.
+	 * 
+	 * By default it just does this:
 	 * 
 	 * <pre>
 	 * setModelObject(getConvertedInput());
@@ -1002,8 +1005,8 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 
 	/**
 	 * Performs full validation of the form component, which consists of calling validateRequired(),
-	 * validateTypeConversion(), and validateValidators(). This method should only be used if the
-	 * form component needs to be fully validated outside the form process.
+	 * convertInput(), and validateValidators(). This method should only be used if the form
+	 * component needs to be fully validated outside the form process.
 	 */
 	public final void validate()
 	{

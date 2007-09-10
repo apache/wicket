@@ -1595,7 +1595,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Update the model of all form components using the fields that were sent with the current
-	 * request.
+	 * request. This method only updates models when the Form.validate() is called first that takes
+	 * care of the conversion for the FormComponents.
+	 * 
+	 * Normally this method will not be called when a validation error occurs in one of the form
+	 * components.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
