@@ -57,7 +57,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * Whether the provided absolute path is accepted.
 	 * 
 	 * @param path
-	 *            The absolute path, starting from the class root (packages are seperated with
+	 *            The absolute path, starting from the class root (packages are separated with
 	 *            forward slashes instead of dots).
 	 * @return True if accepted, false otherwise.
 	 */
@@ -86,7 +86,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	 * Whether the provided extension is accepted.
 	 * 
 	 * @param extension
-	 *            The extension, starting from the class root (packages are seperated with forward
+	 *            The extension, starting from the class root (packages are separated with forward
 	 *            slashes instead of dots).
 	 * @return True if accepted, false otherwise.
 	 */
