@@ -58,12 +58,6 @@ public class Start
 		web.setWar("src/main/webapp");
 		server.addHandler(web);
 
-		// uncomment this to enable JMX (need Java 5)
-		// MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-		// MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
-		// server.getContainer().addEventListener(mBeanContainer);
-		// mBeanContainer.start();
-
 		try
 		{
 			server.start();
