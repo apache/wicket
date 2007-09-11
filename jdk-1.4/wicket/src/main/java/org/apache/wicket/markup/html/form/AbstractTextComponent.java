@@ -32,11 +32,10 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractTextComponent extends FormComponent
 {
 	/**
-	 * Text components that implement this interface are know to be able to
-	 * provide a pattern for formatting output and parsing input. This can be
-	 * used by for instance date picker components which are based on Javascript
-	 * and need some knowledge as to how to communicate properly via request
-	 * parameters.
+	 * Text components that implement this interface are know to be able to provide a pattern for
+	 * formatting output and parsing input. This can be used by for instance date picker components
+	 * which are based on Javascript and need some knowledge as to how to communicate properly via
+	 * request parameters.
 	 */
 	public static interface ITextFormatProvider
 	{
@@ -69,11 +68,10 @@ public abstract class AbstractTextComponent extends FormComponent
 	}
 
 	/**
-	 * Should the bound object become <code>null</code> when the input is
-	 * empty?
+	 * Should the bound object become <code>null</code> when the input is empty?
 	 * 
-	 * @return <code>true</code> when the value will be set to
-	 *         <code>null</code> when the input is empty.
+	 * @return <code>true</code> when the value will be set to <code>null</code> when the input
+	 *         is empty.
 	 */
 	public final boolean getConvertEmptyInputStringToNull()
 	{
@@ -81,9 +79,8 @@ public abstract class AbstractTextComponent extends FormComponent
 	}
 
 	/**
-	 * TextFields return an empty string even if the user didn't type anything
-	 * in them. To be able to work nicely with validation, this method returns
-	 * false.
+	 * TextFields return an empty string even if the user didn't type anything in them. To be able
+	 * to work nicely with validation, this method returns false.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#isInputNullable()
 	 */
@@ -126,8 +123,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	}
 
 	/**
-	 * Should the bound object become <code>null</code> when the input is
-	 * empty?
+	 * Should the bound object become <code>null</code> when the input is empty?
 	 * 
 	 * @param flag
 	 *            the value to set this flag.
