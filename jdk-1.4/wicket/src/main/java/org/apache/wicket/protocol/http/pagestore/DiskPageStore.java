@@ -992,7 +992,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			pageMapName = page.getPageMapName();
 			versionNumber = page.getCurrentVersionNumber();
 			ajaxVersionNumber = page.getAjaxVersionNumber();
-			this.pages = pages;
+			this.pages = new ArrayList(pages);
 			this.page = new WeakReference(page);
 		}
 	};
