@@ -53,6 +53,7 @@ public abstract class WebRequest extends Request
 	 *            The name of the cookie to be looked up
 	 * 
 	 * @return A cookie, null if not found.
+	 * @since 1.3.0-beta4
 	 */
 	public Cookie getCookie(String name)
 	{
