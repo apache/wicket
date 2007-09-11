@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -32,7 +34,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public class WizardButtonBar extends Panel
+public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,5 +54,25 @@ public class WizardButtonBar extends Panel
 		add(new LastButton("last", wizard));
 		add(new CancelButton("cancel", wizard));
 		add(new FinishButton("finish", wizard));
+	}
+
+	/**
+	 * @see org.apache.wicket.extensions.wizard.IDefaultButtonProvider#getDefaultButton(org.apache.wicket.extensions.wizard.IWizardModel)
+	 */
+	public IFormSubmittingComponent getDefaultButton(IWizardModel model)
+	{
+		if (model.isNextAvailable())
+		{
+			return (Button)get("next");
+		}
+		else if (model.isLastAvailable())
+		{
+			return (Button)get("last");
+		}
+		else if (model.isLastStep(model.getActiveStep()))
+		{
+			return (Button)get("finish");
+		}
+		return null;
 	}
 }

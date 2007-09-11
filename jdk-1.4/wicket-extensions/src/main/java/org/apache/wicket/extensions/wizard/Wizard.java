@@ -23,6 +23,7 @@ import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -61,6 +62,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 	/** Component id of the overview panel as used by the default wizard panel. */
 	public static final String OVERVIEW_ID = "overview";
+
+	/** Component id of the form as used by the default wizard panel. */
+	public static final String FORM_ID = "form";
 
 	/**
 	 * Component id of the view panel (where the main wizard contents go) as
@@ -263,7 +267,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		this.wizardModel = wizardModel;
 
-		form = newForm("form");
+		form = newForm(FORM_ID);
 		addOrReplace(form);
 		// dummy view to be replaced
 		form.addOrReplace(new WebMarkupContainer(HEADER_ID));
@@ -327,6 +331,18 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	protected Form newForm(String id)
 	{
 		return new Form(id);
+	}
+
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+		Component buttonBar = get(BUTTONS_ID);
+		if (buttonBar instanceof IDefaultButtonProvider)
+		{
+			IFormSubmittingComponent defaultButton = ((IDefaultButtonProvider)buttonBar)
+					.getDefaultButton(wizardModel);
+			form.setDefaultButton(defaultButton);
+		}
 	}
 
 	/**
