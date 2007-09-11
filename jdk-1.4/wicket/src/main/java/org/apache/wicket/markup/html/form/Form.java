@@ -1211,7 +1211,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		// add the submitting component
 		final Component submittingComponent = (Component)defaultSubmittingComponent;
-		buffer.append("<input type=\"submit\" onclick=\" var b=Wicket.$('");
+		buffer.append("<input type=\"submit\" name=\"");
+		if (submittingComponent instanceof FormComponent)
+		{
+			buffer.append(((FormComponent)submittingComponent).getInputName());
+		}
+		else
+		{
+			buffer.append(submittingComponent.getPath());
+		}
+		buffer.append("\" onclick=\" var b=Wicket.$('");
 		buffer.append(submittingComponent.getMarkupId());
 		buffer
 				.append("'); if (typeof(b.onclick) != 'undefined') {  var r = b.onclick.bind(b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
