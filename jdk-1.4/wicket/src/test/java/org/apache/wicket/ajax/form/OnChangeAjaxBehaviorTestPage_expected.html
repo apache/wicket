@@ -8,12 +8,12 @@ wicketAjaxDebugEnable=true;
 <script type="text/javascript" src="resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
 </head><body>
 		<form action="?wicket:interface=:0:form::IFormSubmitListener::" wicket:id="form" method="post" id="form1"><div style="display:none"><input type="hidden" name="form1_hf_0" id="form1_hf_0" /></div>
-			<input value="" type="text" wicket:id="field" name="field" onchange="var wcall=wicketAjaxPost('?wicket:interface=:0:form:field::IBehaviorListener:0:', wicketSerialize(Wicket.$('field2')), function() { }.bind(this), function() { }.bind(this), function() {return Wicket.$$(this)}.bind(this));" id="field2"/><script type="text/javascript"><!--/*--><![CDATA[/*><!--*/
+			<input value="" type="text" wicket:id="field" name="field" onchange="var wcall=wicketAjaxPost('?wicket:interface=:0:form:field::IBehaviorListener:0:', wicketSerialize(Wicket.$('field2')),null,null, function() {return Wicket.$$(this)}.bind(this));" id="field2"/><script type="text/javascript"><!--/*--><![CDATA[/*><!--*/
 new Wicket.ChangeHandler('field2');
 /*-->]]>*/</script>
 
 	
-			<select wicket:id="dropDown" name="dropDown" onchange="var wcall=wicketAjaxPost('?wicket:interface=:0:form:dropDown::IBehaviorListener:0:', wicketSerialize(Wicket.$('dropDown3')), function() { }.bind(this), function() { }.bind(this), function() {return Wicket.$$(this)}.bind(this));" id="dropDown3">
+			<select wicket:id="dropDown" name="dropDown" onchange="var wcall=wicketAjaxPost('?wicket:interface=:0:form:dropDown::IBehaviorListener:0:', wicketSerialize(Wicket.$('dropDown3')),null,null, function() {return Wicket.$$(this)}.bind(this));" id="dropDown3">
 <option selected="selected" value="">Choose One</option>
 </select>
 		</form>			

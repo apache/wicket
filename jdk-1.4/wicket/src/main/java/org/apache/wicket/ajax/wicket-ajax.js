@@ -53,7 +53,10 @@ Wicket.$ = function(arg) {
 
 // returns if the element belongs to current document
 // if the argument is not element, function returns true
-Wicket.$$ = function(element) {	
+Wicket.$$ = function(element) {
+	if (typeof(element) == "string") {		
+		element = Wicket.$(element);
+	}	
 	if (element == null || typeof(element) == "undefined" ||
 	    element.tagName == null || typeof(element.tagName) == "undefined") {
 	    return true;

@@ -25,11 +25,9 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * Ajax event behavior that submits a form via ajax when the event it is
- * attached to is invoked.
+ * Ajax event behavior that submits a form via ajax when the event it is attached to is invoked.
  * <p>
- * The form must have an id attribute in the markup or have MarkupIdSetter
- * added.
+ * The form must have an id attribute in the markup or have MarkupIdSetter added.
  * 
  * @see AjaxEventBehavior
  * 
@@ -45,8 +43,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	private Form form;
 
 	/**
-	 * Constructor. This constructor can only be used when the component this
-	 * behavior is attached to is inside a form.
+	 * Constructor. This constructor can only be used when the component this behavior is attached
+	 * to is inside a form.
 	 * 
 	 * @param event
 	 *            javascript event this behavior is attached to, like onclick
@@ -68,8 +66,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 		super(event);
 		this.form = form;
-		
-		if (form != null) {
+
+		if (form != null)
+		{
 			form.setOutputMarkupId(true);
 		}
 	}
@@ -111,7 +110,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 		if (getComponent() instanceof IFormSubmittingComponent)
 		{
-			call.append("'").append(((IFormSubmittingComponent)getComponent()).getInputName()).append("' ");
+			call.append("'").append(((IFormSubmittingComponent)getComponent()).getInputName())
+					.append("' ");
 		}
 		else
 		{
@@ -131,10 +131,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		if (form.findParent(Page.class) != null)
 		{
 			/*
-			 * there can be cases when a form is replaced with another component
-			 * in the onsubmit() handler of this behavior. in that case form no
-			 * longer has a page and so calling .hasError on it will cause an
-			 * exception, thus the check above.
+			 * there can be cases when a form is replaced with another component in the onsubmit()
+			 * handler of this behavior. in that case form no longer has a page and so calling
+			 * .hasError on it will cause an exception, thus the check above.
 			 */
 			if (getForm().hasError())
 			{
@@ -144,16 +143,14 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * Listener method that is invoked after the form has ben submitted and
-	 * processed without errors
+	 * Listener method that is invoked after the form has ben submitted and processed without errors
 	 * 
 	 * @param target
 	 */
 	protected abstract void onSubmit(AjaxRequestTarget target);
 
 	/**
-	 * Listener method invoked when the form has been processed and errors
-	 * occured
+	 * Listener method invoked when the form has been processed and errors occured
 	 * 
 	 * @param target
 	 * 
@@ -165,4 +162,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 	}
 
+	protected CharSequence getPreconditionScript()
+	{
+		return "return Wicket.$$(this)&&Wicket.$$('" + getForm().getMarkupId() + "')";
+	}
 }
