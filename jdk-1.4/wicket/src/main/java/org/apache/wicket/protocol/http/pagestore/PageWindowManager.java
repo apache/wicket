@@ -533,13 +533,15 @@ public class PageWindowManager
 		{
 			rebuildIndices();
 		}
-		List indices = (List)idToWindowIndices.get(pageId);
+		List indicesList = (List)idToWindowIndices.get(pageId);
 
-		if (indices != null)
+		if (indicesList != null)
 		{
-			for (Iterator i = indices.iterator(); i.hasNext();)
+			// we need to make a copy, as the removePage removes index from indicesList
+			Object[] indices = indicesList.toArray();
+			for (int i = 0; i < indices.length; i++)
 			{
-				int index = ((Integer)i.next()).intValue();
+				int index = ((Integer)indices[i]).intValue();
 				PageWindowInternal window = (PageWindowInternal)windows.get(index);
 				if (window.pageId == pageId)
 				{
