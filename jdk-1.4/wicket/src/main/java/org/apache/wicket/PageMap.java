@@ -52,9 +52,9 @@ public abstract class PageMap implements IClusterable, IPageMap
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Gets a page map for a page map name, automatically creating the page map
-	 * if it does not exist. If you do not want the pagemap to be automatically
-	 * created, you can call Session.pageMapForName(pageMapName, false).
+	 * Gets a page map for a page map name, automatically creating the page map if it does not
+	 * exist. If you do not want the pagemap to be automatically created, you can call
+	 * Session.pageMapForName(pageMapName, false).
 	 * 
 	 * @param pageMapName
 	 *            The name of the page map to get
@@ -114,8 +114,7 @@ public abstract class PageMap implements IClusterable, IPageMap
 	}
 
 	/**
-	 * Redirects to any intercept page previously specified by a call to
-	 * redirectToInterceptPage.
+	 * Redirects to any intercept page previously specified by a call to redirectToInterceptPage.
 	 * 
 	 * @return True if an original destination was redirected to
 	 * @see PageMap#redirectToInterceptPage(Page)
@@ -214,11 +213,10 @@ public abstract class PageMap implements IClusterable, IPageMap
 	public abstract void put(final Page page);
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's URL is saved exactly as it was requested for future use
-	 * by continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current URL at some later time; otherwise just use
-	 * setResponsePage or, when you are in a constructor, redirectTo.
+	 * Redirects browser to an intermediate page such as a sign-in page. The current request's URL
+	 * is saved exactly as it was requested for future use by continueToOriginalDestination(); Only
+	 * use this method when you plan to continue to the current URL at some later time; otherwise
+	 * just use setResponsePage or, when you are in a constructor, redirectTo.
 	 * 
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
@@ -231,11 +229,10 @@ public abstract class PageMap implements IClusterable, IPageMap
 	}
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page. The
-	 * current request's URL is saved exactly as it was requested for future use
-	 * by continueToOriginalDestination(); Only use this method when you plan to
-	 * continue to the current URL at some later time; otherwise just use
-	 * setResponsePage or, when you are in a constructor, redirectTo.
+	 * Redirects browser to an intermediate page such as a sign-in page. The current request's URL
+	 * is saved exactly as it was requested for future use by continueToOriginalDestination(); Only
+	 * use this method when you plan to continue to the current URL at some later time; otherwise
+	 * just use setResponsePage or, when you are in a constructor, redirectTo.
 	 * 
 	 * @param page
 	 *            The page to temporarily redirect to
@@ -285,6 +282,9 @@ public abstract class PageMap implements IClusterable, IPageMap
 	{
 		// Remove the pagemap entry from session
 		removeEntry(page.getPageMapEntry());
+
+		// Make sure it doesn't get added again at the end of the request cycle
+		Session.get().untouch(page);
 	}
 
 	/**
@@ -348,10 +348,9 @@ public abstract class PageMap implements IClusterable, IPageMap
 	private MetaDataEntry[] metaData;
 
 	/**
-	 * Sets the metadata for this PageMap using the given key. If the metadata
-	 * object is not of the correct type for the metadata key, an
-	 * IllegalArgumentException will be thrown. For information on creating
-	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * Sets the metadata for this PageMap using the given key. If the metadata object is not of the
+	 * correct type for the metadata key, an IllegalArgumentException will be thrown. For
+	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
 	 * 
 	 * @param key
 	 *            The singleton key for the metadata

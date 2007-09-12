@@ -25,9 +25,9 @@ import org.apache.wicket.util.collections.IntHashMap;
 /**
  * Manages positions and size of serialized pages in the pagemap file.
  * <p>
- * The pages are stored inside the file in a cyclic way. Newer pages are placed
- * after older ones, until the maximum file size is reached. After that, the
- * next page is stored in the beginning of the file.
+ * The pages are stored inside the file in a cyclic way. Newer pages are placed after older ones,
+ * until the maximum file size is reached. After that, the next page is stored in the beginning of
+ * the file.
  * 
  * @author Matej Knopp
  */
@@ -197,8 +197,8 @@ public class PageWindowManager
 	private int indexPointer = -1;
 
 	/**
-	 * Increments the {@link #indexPointer}. If the maximum file size has ben
-	 * reeched, the {@link #indexPointer} is set to 0.
+	 * Increments the {@link #indexPointer}. If the maximum file size has ben reeched, the
+	 * {@link #indexPointer} is set to 0.
 	 * 
 	 * @return
 	 */
@@ -216,9 +216,8 @@ public class PageWindowManager
 	}
 
 	/**
-	 * Returns the offset in file of the window on given index. The offset is
-	 * counted by getting the previous page offset and adding the previous page
-	 * size to it.
+	 * Returns the offset in file of the window on given index. The offset is counted by getting the
+	 * previous page offset and adding the previous page size to it.
 	 * 
 	 * @param index
 	 * @return
@@ -237,9 +236,8 @@ public class PageWindowManager
 	}
 
 	/**
-	 * Splits the window with given index to two windows. First of those will
-	 * have size specified by the argument, the other one will fill up the rest
-	 * of the original window.
+	 * Splits the window with given index to two windows. First of those will have size specified by
+	 * the argument, the other one will fill up the rest of the original window.
 	 * 
 	 * @param index
 	 * @param size
@@ -271,8 +269,8 @@ public class PageWindowManager
 	}
 
 	/**
-	 * Merges the window with given index with the next window. The resulting
-	 * window will have size of the two windows summed together.
+	 * Merges the window with given index with the next window. The resulting window will have size
+	 * of the two windows summed together.
 	 * 
 	 * @param index
 	 */
@@ -290,11 +288,10 @@ public class PageWindowManager
 	}
 
 	/**
-	 * Adjusts the window on given index to the specified size. If the new size
-	 * is smaller than the window size, the window will be splitted. Otherwise
-	 * the window will be merged with as many subsequent window as necessary. In
-	 * case the window is last window in the file, the size will be adjusted
-	 * without splitting or merging.
+	 * Adjusts the window on given index to the specified size. If the new size is smaller than the
+	 * window size, the window will be splitted. Otherwise the window will be merged with as many
+	 * subsequent window as necessary. In case the window is last window in the file, the size will
+	 * be adjusted without splitting or merging.
 	 * 
 	 * @param index
 	 * @param size
@@ -338,9 +335,9 @@ public class PageWindowManager
 	}
 
 	/**
-	 * Allocates window on given index with to size. If the index is pointing to
-	 * existing window, the window size will be adjusted. Otherwise a new window
-	 * with appropriated size will be created.
+	 * Allocates window on given index with to size. If the index is pointing to existing window,
+	 * the window size will be adjusted. Otherwise a new window with appropriated size will be
+	 * created.
 	 * 
 	 * @param index
 	 * @param size
@@ -420,8 +417,7 @@ public class PageWindowManager
 		}
 
 		/**
-		 * @return offset in the pagemap file where the serialized page data
-		 *         starts
+		 * @return offset in the pagemap file where the serialized page data starts
 		 */
 		public int getFilePartOffset()
 		{
@@ -539,10 +535,17 @@ public class PageWindowManager
 		}
 		List indices = (List)idToWindowIndices.get(pageId);
 
-		for (Iterator i = indices.iterator(); i.hasNext();)
+		if (indices != null)
 		{
-			PageWindowInternal window = (PageWindowInternal)i.next();
-			removePage(window.pageId, window.versionNumber, window.ajaxVersionNumber);
+			for (Iterator i = indices.iterator(); i.hasNext();)
+			{
+				int index = ((Integer)i.next()).intValue();
+				PageWindowInternal window = (PageWindowInternal)windows.get(index);
+				if (window.pageId == pageId)
+				{
+					removePage(window.pageId, window.versionNumber, window.ajaxVersionNumber);
+				}
+			}
 		}
 	}
 
@@ -588,8 +591,8 @@ public class PageWindowManager
 	 * Creates a new PageWindowManager.
 	 * 
 	 * @param maxSize
-	 *            maximum page size. After this size is exceeded, the pages will
-	 *            be saved starting at the beginning of file
+	 *            maximum page size. After this size is exceeded, the pages will be saved starting
+	 *            at the beginning of file
 	 */
 	public PageWindowManager(int maxSize)
 	{

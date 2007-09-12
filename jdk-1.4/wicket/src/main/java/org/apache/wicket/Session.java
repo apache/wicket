@@ -1097,6 +1097,22 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * This method will remove a page that was previously added via touch()
+	 * 
+	 * @param page
+	 */
+	public final void untouch(Page page)
+	{
+		List lst = (List)touchedPages.get();
+		if (lst != null)
+		{
+			lst.remove(page);
+		}
+	}
+
+	/**
 	 * @param visitor
 	 *            The visitor to call at each Page in this PageMap.
 	 */
