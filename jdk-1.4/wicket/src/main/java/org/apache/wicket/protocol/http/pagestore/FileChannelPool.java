@@ -34,20 +34,17 @@ import org.slf4j.LoggerFactory;
 /**
  * Thread safe pool of {@link FileChannel} objects.
  * <p>
- * Opening and closing file is an expensive operation and under certain
- * circumstances this can singificantly harm performances, because on every
- * close the filesystem cache might be flushed.
+ * Opening and closing file is an expensive operation and under certain circumstances this can
+ * significantly harm performances, because on every close the file system cache might be flushed.
  * <p>
- * To minimize the negative impact opened files can be pooled, which is a
- * responsibility of {@link FileChannelPool} class.
+ * To minimize the negative impact opened files can be pooled, which is a responsibility of
+ * {@link FileChannelPool} class.
  * <p>
- * {@link FileChannelPool} allows to specify maximum number of opened
- * {@link FileChannel}s.
+ * {@link FileChannelPool} allows to specify maximum number of opened {@link FileChannel}s.
  * <p>
- * Note that under certain circumtances (when there are no empty slots in pool)
- * the initial capacity can be exceeded (more files are opened then the
- * specified capacity is). If this happens, a warning is written to log, as this
- * probably means that there is a problem with page store.
+ * Note that under certain circumstances (when there are no empty slots in pool) the initial
+ * capacity can be exceeded (more files are opened then the specified capacity is). If this happens,
+ * a warning is written to log, as this probably means that there is a problem with page store.
  * 
  * @author Matej Knopp
  */
@@ -85,8 +82,8 @@ public class FileChannelPool
 	 * 
 	 * @param fileName
 	 * @param createIfDoesNotExist
-	 *            in case the file does not exist this parameter determines if
-	 *            the file should be created
+	 *            in case the file does not exist this parameter determines if the file should be
+	 *            created
 	 * @return
 	 */
 	private FileChannel newFileChannel(String fileName, boolean createIfDoesNotExist)
@@ -110,8 +107,8 @@ public class FileChannelPool
 
 
 	/**
-	 * Tries to reduce (close) enouch channels to have at least one channel free
-	 * (so that there are maximum capacity - 1 opened channel).
+	 * Tries to reduce (close) enough channels to have at least one channel free (so that there are
+	 * maximum capacity - 1 opened channel).
 	 */
 	private void reduceChannels()
 	{
@@ -155,8 +152,8 @@ public class FileChannelPool
 	}
 
 	/**
-	 * Returns a channel for given file. If the file doesn't exist, the
-	 * createIfDoesNotExit attribute specifies if the file should be crated.
+	 * Returns a channel for given file. If the file doesn't exist, the createIfDoesNotExit
+	 * attribute specifies if the file should be crated.
 	 * 
 	 * Do NOT call close on the returned chanel. Instead call
 	 * {@link #returnFileChannel(FileChannel)}
@@ -208,8 +205,8 @@ public class FileChannelPool
 	}
 
 	/**
-	 * Returns the channel to the pool. It is necessary to call this for every
-	 * channel obtained by calling {@link #getFileChannel(String, boolean)}.
+	 * Returns the channel to the pool. It is necessary to call this for every channel obtained by
+	 * calling {@link #getFileChannel(String, boolean)}.
 	 * 
 	 * @param channel
 	 */
@@ -267,9 +264,9 @@ public class FileChannelPool
 	}
 
 	/**
-	 * Closes the file channel with given name and removes it from pool. Also
-	 * removes the file from file system. If the channel is in use, the pool
-	 * first waits until the chanel is returned to the pool and then closes it.
+	 * Closes the file channel with given name and removes it from pool. Also removes the file from
+	 * file system. If the channel is in use, the pool first waits until the chanel is returned to
+	 * the pool and then closes it.
 	 * 
 	 * @param name
 	 */
