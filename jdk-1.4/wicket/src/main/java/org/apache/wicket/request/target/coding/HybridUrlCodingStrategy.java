@@ -37,22 +37,19 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * An URL coding strategy that encodes the mount point, page parameters and page
- * instance information into the URL. The benefits compared to mounting page
- * with {@link BookmarkablePageRequestTargetUrlCodingStrategy} are that the
- * mount point is preserved even after invoking listener interfaces (thus you
- * don't lose bookmarkability after clicking links) and that for ajax only pages
- * the state is preserved on refresh.
+ * An URL coding strategy that encodes the mount point, page parameters and page instance
+ * information into the URL. The benefits compared to mounting page with
+ * {@link BookmarkablePageRequestTargetUrlCodingStrategy} are that the mount point is preserved even
+ * after invoking listener interfaces (thus you don't lose bookmarkability after clicking links) and
+ * that for ajax only pages the state is preserved on refresh.
  * <p>
- * The url with {@link HybridUrlCodingStrategy} looks like
- * /mount/path/param1/value1.3. or /mount/path/param1/value1.3.2 where 3 is page
- * Id and 2 is version number.
+ * The url with {@link HybridUrlCodingStrategy} looks like /mount/path/param1/value1.3. or
+ * /mount/path/param1/value1.3.2 where 3 is page Id and 2 is version number.
  * <p>
- * Also to preserve state on refresh with ajax-only pages the
- * {@link HybridUrlCodingStrategy} does an immediate redirect after hitting
- * bookmarkable URL, e.g. it immediately redirects from /mount/path to
- * /mount/path.3 where 3 is the next page id. This preserves the page instance
- * on subsequent page refresh.
+ * Also to preserve state on refresh with ajax-only pages the {@link HybridUrlCodingStrategy} does
+ * an immediate redirect after hitting bookmarkable URL, e.g. it immediately redirects from
+ * /mount/path to /mount/path.3 where 3 is the next page id. This preserves the page instance on
+ * subsequent page refresh.
  * 
  * @author Matej Knopp
  */
@@ -69,9 +66,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 * @param mountPath
 	 * @param pageClass
 	 * @param redirectOnBookmarkableRequest
-	 *            whether after hitting the page with URL in bookmarkable form
-	 *            it should be redirected to hybrid URL - needed for ajax to
-	 *            work properly after page refresh
+	 *            whether after hitting the page with URL in bookmarkable form it should be
+	 *            redirected to hybrid URL - needed for ajax to work properly after page refresh
 	 */
 	public HybridUrlCodingStrategy(String mountPath, Class pageClass,
 			boolean redirectOnBookmarkableRequest)
@@ -116,8 +112,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * Returns whether after hitting bookmarkable url the request should be
-	 * redirected to a hybrid URL. This is recommended for pages with Ajax.
+	 * Returns whether after hitting bookmarkable url the request should be redirected to a hybrid
+	 * URL. This is recommended for pages with Ajax.
 	 * 
 	 * @return
 	 */
@@ -127,8 +123,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * Returns whether to redirect when there is pageMap specified in
-	 * bookmarkable URL
+	 * Returns whether to redirect when there is pageMap specified in bookmarkable URL
 	 * 
 	 * @return
 	 */
@@ -235,8 +230,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * Returns the number of traling slashes in the url when the page in request
-	 * target was created or null if the number can't be determined.
+	 * Returns the number of traling slashes in the url when the page in request target was created
+	 * or null if the number can't be determined.
 	 * 
 	 * @param requestTarget
 	 * @return
@@ -311,8 +306,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * Sets the initial page parameters for page instance. Use this only if you
-	 * know what you are doing.
+	 * Sets the initial page parameters for page instance. Use this only if you know what you are
+	 * doing.
 	 * 
 	 * @param page
 	 * @param pageParameters
@@ -442,8 +437,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	}
 
 	/**
-	 * Class that encapsulates {@link PageInfo} instance and the URL part prior
-	 * the PageInfo part
+	 * Class that encapsulates {@link PageInfo} instance and the URL part prior the PageInfo part
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -748,7 +742,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// .pageMap
 				return new PageInfo(null, null, segments[1]);
 			}
-			else if (segments.length == 2 && !isNumber(segments[0]))
+			else if (segments.length == 2 && !isNumber(segments[0]) && isNumber(segments[1]))
 			{
 				// pageMap.pageId (pageMap starts with letter)
 				return new PageInfo(Integer.valueOf(segments[1]), new Integer(0), segments[0]);
@@ -776,8 +770,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	};
 
 	/**
-	 * BookmarkablePage request target that does a redirect after bookmarkable
-	 * page was rendered (only if the bookmarkable page is stateful though)
+	 * BookmarkablePage request target that does a redirect after bookmarkable page was rendered
+	 * (only if the bookmarkable page is stateful though)
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -836,8 +830,8 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		if (path.startsWith(getMountPath()))
 		{
 			/*
-			 * We need to match /mount/point or /mount/point/with/extra/path,
-			 * but not /mount/pointXXX
+			 * We need to match /mount/point or /mount/point/with/extra/path, but not
+			 * /mount/pointXXX
 			 */
 			String remainder = path.substring(getMountPath().length());
 			if (remainder.length() == 0 || remainder.startsWith("/"))
