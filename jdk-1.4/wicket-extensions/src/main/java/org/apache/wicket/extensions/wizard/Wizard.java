@@ -336,7 +336,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		Component buttonBar = getForm().get(BUTTONS_ID);
+		Component buttonBar = form.get(BUTTONS_ID);
 		if (buttonBar instanceof IDefaultButtonProvider)
 		{
 			IFormSubmittingComponent defaultButton = ((IDefaultButtonProvider)buttonBar)
