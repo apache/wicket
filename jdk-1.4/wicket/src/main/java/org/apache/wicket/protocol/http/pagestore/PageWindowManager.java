@@ -347,7 +347,7 @@ public class PageWindowManager
 	{
 		final PageWindowInternal window;
 
-		// new indow
+		// new window
 		if (index == windows.size())
 		{
 			// new page window
