@@ -18,9 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -29,6 +27,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.collections.IntHashMap;
@@ -185,8 +184,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		private static final long serialVersionUID = 1L;
 
 		private transient Page lastPage = null;
-
-		private final List pageVersions = new ArrayList();
 
 		// whether the last page instance should be serialized together with the
 		// pagemap
@@ -376,6 +373,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		private void writeObject(java.io.ObjectOutputStream s) throws IOException
 		{
+
 			s.defaultWriteObject();
 
 			// if the pagestore is not clustered, we need to serialize the
@@ -390,7 +388,14 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					page = ((ISerializationAwarePageStore)store).prepareForSerialization(lastPage);
 				}
 
-				s.writeObject(page);
+				try
+				{
+					s.writeObject(page);
+				}
+				catch (Exception e)
+				{
+					throw new WicketRuntimeException("Failed to serialize " + page.toString(), e);
+				}
 			}
 		}
 

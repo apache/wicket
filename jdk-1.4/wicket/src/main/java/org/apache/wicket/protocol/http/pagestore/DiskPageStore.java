@@ -995,6 +995,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			this.pages = new ArrayList(pages);
 			this.page = new WeakReference(page);
 		}
+
+		public String toString()
+		{
+			return getClass().getSimpleName() + " [ pageId:" + pageId + ", pageMapName: " +
+					pageMapName + ", session: " + sessionId + "]";
+		}
 	};
 
 	/**
