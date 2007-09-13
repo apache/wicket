@@ -998,8 +998,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		public String toString()
 		{
-			return getClass().getSimpleName() + " [ pageId:" + pageId + ", pageMapName: " +
-					pageMapName + ", session: " + sessionId + "]";
+			return getClass().getName() + " [ pageId:" + pageId + ", pageMapName: " + pageMapName +
+					", session: " + sessionId + "]";
 		}
 	};
 
