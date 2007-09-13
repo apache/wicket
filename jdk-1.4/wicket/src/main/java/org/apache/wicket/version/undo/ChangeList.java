@@ -26,23 +26,26 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A ChangeList is a sequence of changes that can be undone.
+ * A <code>ChangeList</code> is a sequence of changes that can be undone.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 class ChangeList implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** log. */
+	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(ChangeList.class);
 
-	/** the changes. */
+	/** the list of changes */
 	private final List changes = new ArrayList();
 
 	/**
-	 * A component was added.
-	 * @param component the added component
+	 * A <code>Component</code> was added.
+	 * 
+	 * @param component
+	 *            the <code>Component</code> that was added
 	 */
 	void componentAdded(Component component)
 	{
@@ -50,8 +53,11 @@ class ChangeList implements IClusterable
 	}
 
 	/**
-	 * A model is about to change.
-	 * @param component the component of which the model changed
+	 * An <code>IModel</code> is about to change.
+	 * 
+	 * @param component
+	 *            the <code>Component</code> for which the <code>IModel</code>
+	 *            changed
 	 */
 	void componentModelChanging(Component component)
 	{
@@ -59,8 +65,10 @@ class ChangeList implements IClusterable
 	}
 
 	/**
-	 * The state of a component is about to change.
-	 * @param change the change object
+	 * The state of a <code>Component</code> is about to change.
+	 * 
+	 * @param change
+	 *            the <code>Change</code> object
 	 */
 	void componentStateChanging(Change change)
 	{
@@ -73,25 +81,33 @@ class ChangeList implements IClusterable
 	}
 
 	/**
-	 * A component was removed from its parent.
-	 * @param component the component that was removed
+	 * A <code>Component</code> was removed from its parent.
+	 * 
+	 * @param component
+	 *            the <code>Component</code> that was removed
 	 */
 	void componentRemoved(Component component)
 	{
 		changes.add(new Remove(component));
 	}
-	
+
+	/**
+	 * Adds the given <code>ChangeList</code> to this <code>ChangeList</code>.
+	 * 
+	 * @param component
+	 *            the <code>ChangeList</code> to add
+	 */
 	void add(ChangeList list)
 	{
 		changes.addAll(list.changes);
 	}
 
 	/**
-	 * Undo changes (rollback).
+	 * Undo changes (roll back).
 	 */
 	void undo()
 	{
-		// Go through changes in reverse time order to undo
+		// Go through changes in reverse time order to undo.
 		for (int i = changes.size() - 1; i >= 0; i--)
 		{
 			((Change)changes.get(i)).undo();

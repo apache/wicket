@@ -27,25 +27,26 @@ import org.slf4j.LoggerFactory;
  * A remove change operation.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 class Remove extends Change
 {
 	private static final long serialVersionUID = 1L;
 
-	/** log. */
+	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(Remove.class);
 
-	/** subject. */
+	/** the subject <code>Component</code> */
 	private final Component component;
 
-	/** parent. */
+	/** the parent <code>MarkupContainer</code> */
 	private final MarkupContainer container;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param component
-	 *            subject component
+	 *            the subject <code>Component</code>
 	 */
 	Remove(final Component component)
 	{
@@ -71,7 +72,7 @@ class Remove extends Change
 	}
 
 	/**
-	 * @see org.apache.wicket.version.undo.Change#undo()
+	 * @see Change#undo()
 	 */
 	public void undo()
 	{

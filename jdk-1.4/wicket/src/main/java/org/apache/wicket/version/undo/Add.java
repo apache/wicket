@@ -26,22 +26,23 @@ import org.slf4j.LoggerFactory;
  * An add change operation.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 class Add extends Change
 {
 	private static final long serialVersionUID = 1L;
 
-	/** log. */
+	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(Add.class);
 
-	/** subject. */
+	/** the subject <code>Component</code> */
 	private final Component component;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param component
-	 *            subject
+	 *            the subject <code>Component</code>
 	 */
 	Add(final Component component)
 	{
@@ -66,7 +67,7 @@ class Add extends Change
 	}
 
 	/**
-	 * @see org.apache.wicket.version.undo.Change#undo()
+	 * @see Change#undo()
 	 */
 	public void undo()
 	{
@@ -77,7 +78,7 @@ class Add extends Change
 					+ ") from parent");
 		}
 
-		// check if somehow the component isn't already removed.
+		// Check if somehow the Component isn't already removed.
 		if (component.getParent() != null)
 		{
 			component.remove();

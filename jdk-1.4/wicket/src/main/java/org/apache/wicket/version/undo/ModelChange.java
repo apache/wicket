@@ -27,28 +27,29 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A model change operation.
+ * An <code>IModel</code> change operation.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 class ModelChange extends Change
 {
 	private static final long serialVersionUID = 1L;
 
-	/** log. */
+	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(ModelChange.class);
 
-	/** subject. */
+	/** the subject <code>Component</code> */
 	private final Component component;
 
-	/** original model. */
+	/** the original <code>IModel</code> */
 	private IModel originalModel;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param component
-	 *            subject of the change
+	 *            the subject <code>Component</code>
 	 */
 	ModelChange(final Component component)
 	{

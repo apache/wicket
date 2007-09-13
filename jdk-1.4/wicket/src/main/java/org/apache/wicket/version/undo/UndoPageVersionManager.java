@@ -25,46 +25,51 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A version manager implemented by recording component changes as undo records
- * which can later be reversed to get back to a given version of the page being
- * managed.
+ * A version manager implemented by recording <code>Component</code> changes
+ * as undo records. These records can later be reversed to get back to a given
+ * version of the <code>Page</code> being managed.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public class UndoPageVersionManager implements IPageVersionManager
 {
-	/** log. */
+	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(UndoPageVersionManager.class);
 
 	private static final long serialVersionUID = 1L;
 
-	/** The current list of changes */
+	/** the current list of changes */
 	private ChangeList changeList;
 
-	/** Stack of change lists for undoing */
+	/** the stack of change lists for undoing */
 	private final ArrayListStack changeListStack = new ArrayListStack();
 
-	/** The current version number */
+	/** the current version number */
 	private int currentVersionNumber = 0;
 
-	/** The current version number */
+	/** the current Ajax version number */
 	private int currentAjaxVersionNumber = 0;
 
-	/** Maximum number of most-recent versions to keep */
+	/** maximum number of most-recent versions to keep */
 	private final int maxVersions;
 
-	/** The page being managed */
+	/** the <code>Page</code> being managed */
 	private final Page page;
 
+	/**
+	 * If this is true, the version that was created is not merged with the
+	 * previous one.
+	 */
 	private transient boolean ignoreMerge = false;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param page
-	 *            The page that we're tracking changes to
+	 *            the <code>Page</code> that we're tracking changes to
 	 * @param maxVersions
-	 *            The maximum number of versions to maintain before expiring the
+	 *            the maximum number of versions to maintain before expiring
 	 *            old versions
 	 */
 	public UndoPageVersionManager(final Page page, final int maxVersions)
@@ -74,17 +79,17 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#beginVersion(boolean)
+	 * @see IPageVersionManager#beginVersion(boolean)
 	 */
 	public void beginVersion(boolean mergeVersion)
 	{
-		// Create new change list
+		// Create new change list.
 		changeList = new ChangeList();
 
-		// if we merge then the version number shouldn't be upgraded.
+		// If we merge, then the version number shouldn't be upgraded.
 		if(!mergeVersion)
 		{
-			// We are working on the next version now
+			// We are working on the next version now.
 			currentVersionNumber++;
 			currentAjaxVersionNumber = 0;
 		}
@@ -95,7 +100,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 	
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#ignoreVersionMerge()
+	 * @see IPageVersionManager#ignoreVersionMerge()
 	 */
 	public void ignoreVersionMerge()
 	{
@@ -105,7 +110,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#componentAdded(org.apache.wicket.Component)
+	 * @see IPageVersionManager#componentAdded(Component)
 	 */
 	public void componentAdded(Component component)
 	{
@@ -113,7 +118,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#componentModelChanging(org.apache.wicket.Component)
+	 * @see IPageVersionManager#componentModelChanging(Component)
 	 */
 	public void componentModelChanging(Component component)
 	{
@@ -121,7 +126,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#componentRemoved(org.apache.wicket.Component)
+	 * @see IPageVersionManager#componentRemoved(Component)
 	 */
 	public void componentRemoved(Component component)
 	{
@@ -129,7 +134,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#componentStateChanging(org.apache.wicket.version.undo.Change)
+	 * @see IPageVersionManager#componentStateChanging(Change)
 	 */
 	public void componentStateChanging(Change change)
 	{
@@ -137,7 +142,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#endVersion(boolean)
+	 * @see IPageVersionManager#endVersion(boolean)
 	 */
 	public void endVersion(boolean mergeVersion)
 	{
@@ -152,16 +157,17 @@ public class UndoPageVersionManager implements IPageVersionManager
 		else
 		{
 			ignoreMerge = false;
-			// Push change list onto stack
+			
+			// Push change list onto stack.
 			changeListStack.push(changeList);
 			
-			// If stack is overfull, remove oldest entry
+			// If stack is overfull, remove oldest entry.
 			if (getVersions() > maxVersions)
 			{
 				expireOldestVersion();
 			}
 	
-			// Make memory efficient for replication
+			// Make memory efficient for replication.
 			changeListStack.trimToSize();
 	
 			if (log.isDebugEnabled())
@@ -172,7 +178,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 	
 	/**
-	 * Expires an old version
+	 * @see IPageVersionManager#expireOldestVersion()
 	 */
 	public void expireOldestVersion()
 	{
@@ -180,7 +186,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#getCurrentVersionNumber()
+	 * @see IPageVersionManager#getCurrentVersionNumber()
 	 */
 	public int getCurrentVersionNumber()
 	{
@@ -188,7 +194,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 	
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#getAjaxVersionNumber()
+	 * @see IPageVersionManager#getAjaxVersionNumber()
 	 */
 	public int getAjaxVersionNumber()
 	{
@@ -196,35 +202,35 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#getVersion(int)
+	 * @see IPageVersionManager#getVersion(int)
 	 */
 	public Page getVersion(final int versionNumber)
 	{
-		// If the requested version is at or before the current version
+		// If the requested version is at or before the current version,
 		if (versionNumber <= getCurrentVersionNumber())
 		{
-			// Loop until we reach the right version
+			// loop until we reach the right version.
 			while (getCurrentVersionNumber() > versionNumber)
 			{
-				// Go back one version
+				// Go back one version.
 				if (!undo())
 				{
 					return null;
 				}
 			}
 
-			// Return modified page
+			// Return modified page.
 			return page;
 		}
 		else
 		{
-			// The version is not available
+			// The version is not available.
 			return null;
 		}
 	}
 	
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#rollbackPage(int)
+	 * @see IPageVersionManager#rollbackPage(int)
 	 */
 	public Page rollbackPage(int numberOfVersions)
 	{
@@ -233,7 +239,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see org.apache.wicket.version.IPageVersionManager#getVersions()
+	 * @see IPageVersionManager#getVersions()
 	 */
 	public int getVersions()
 	{
@@ -241,10 +247,10 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * Goes back a version from the current version
+	 * Goes back a <code>Page</code> version from the current version.
 	 * 
-	 * @return True if the page was successfully reverted to its previous
-	 *         version
+	 * @return <code>true</code> if the page was successfully reverted to its
+	 *         previous version
 	 */
 	private boolean undo()
 	{
@@ -258,17 +264,17 @@ public class UndoPageVersionManager implements IPageVersionManager
 		    return false;
 		}
 
-		// Pop off top change list
+		// Pop off the top change list.
 		final ChangeList changeList = (ChangeList)changeListStack.pop();
 		if (changeList == null)
 		{
 			return false;
 		}
 
-		// Undo changes made to previous version to get to this version
+		// Undo changes made to the previous version to get to this version.
 		changeList.undo();
 
-		// One less version around
+		// There is now one less version around.
 		currentVersionNumber--;
 		return true;
 	}

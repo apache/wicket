@@ -22,132 +22,155 @@ import org.apache.wicket.Page;
 import org.apache.wicket.version.undo.Change;
 
 /**
- * Interface to code that manages versions of a Page. Initially a page has a
- * version number of 0, indicating that it is in its original state. When one or
- * more changes are made to the page, we arrive at version 1.
+ * An interface that manages versions of a <code>Page</code>. Initially
+ * a page has a version number of 0, indicating that it is in its original
+ * state. When one or more changes are made to the page, we arrive at version 1.
  * <p>
- * During a request cycle, just before a change is about to occur,
- * beginVersion() is called, followed by one or more calls to componentAdded(),
- * componentRemoved() or componentModelChanging(). If beginVersion() is called
- * by the framework during a given request cycle, a balancing endVersion() call
- * will occur at the end of the request cycle. However, if no changes occur to a
- * page during a request cycle, none of these methods will be called.
+ * During a <code>RequestCycle</code>, just before a change is about to
+ * occur, the <code>beginVersion</code> method is called, followed by one or
+ * more calls to <code>componentAdded</code>, <code>componentRemoved</code>
+ * or <code>componentModelChanging</code>. If <code>beginVersion</code> is
+ * called by the framework during a given request cycle, a balancing call to
+ * <code>endVersion</code> will occur at the end of the request cycle.
+ * However, if no changes occur to a page during a request cycle, none of these
+ * methods will be called.
  * <p>
- * Once version information has been added to a version manager, versions can be
- * retrieved by number using getVersion(int). Since version 0 is the first
- * version of a page, calling getVersion(0) will retrieve that version.
+ * Once version information has been added to a page version manager
+ * (<code>IPageVersionManager</code>), versions can be retrieved by number
+ * using the <code>getVersion(int)</code> method. Since version 0 is the first
+ * version of a page, calling <code>getVersion(0)</code> will retrieve that
+ * version.
  * <p>
- * The current version number (the number of the newest available version) of a
- * page can be retrieved by calling getCurrentVersionNumber().
+ * The current version number of a page (that is, the number of the newest
+ * available version) can be retrieved by calling
+ * <code>getCurrentVersionNumber</code>.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public interface IPageVersionManager extends IClusterable
 {
 	/**
-	 * Called when changes are immediately impending to the Page being managed.
-	 * The changes to the page between the call to this method and the call to
-	 * endVersion() create a new version of the page.
+	 * Called when changes are immediately impending to the <code>Page</code>
+	 * being managed. The changes to the page between the call to this method
+	 * and the call to <code>endVersion</code> create a new version of the
+	 * page.
 	 * <p>
-	 * In requests where a Page is not changed at all, beginVersion will never
-	 * be called, nor will any of the other methods in this interface.
+	 * In requests where a page is not changed at all, <code>beginVersion</code>
+	 * will never be called, nor will any of the other methods in this
+	 * interface.
 	 * 
 	 * @param mergeVersion
-	 * 			  If this is set the version that was created is merged with the previous one. 
+	 *            If this is set, the version that was created is merged with
+	 *            the previous one.
 	 */
 	void beginVersion(boolean mergeVersion);
 
 	/**
-	 * Indicates that the given component was added.
+	 * Indicates that the given <code>Component</code> was added.
 	 * 
 	 * @param component
-	 *            The component that was added.
+	 *            the <code>Component</code> that was added
 	 */
 	void componentAdded(Component component);
 
 	/**
-	 * Indicates that the model for the given component is about to change.
+	 * Indicates that the model for the given <code>Component</code> is about
+	 * to change.
 	 * 
 	 * @param component
-	 *            The component whose model is about to change
+	 *            the <code>Component</code> whose model is about to change
 	 */
 	void componentModelChanging(Component component);
 
 	/**
-	 * Indicates an internal state for the given component is about to change.
+	 * Indicates an internal state for the given <code>Component</code> is
+	 * about to change.
 	 * 
 	 * @param change
-	 *            The change which represents the internal state
+	 *            the <code>Change</code> which represents the internal state
 	 */
 	void componentStateChanging(Change change);
 
 	/**
-	 * Indicates that the given component was removed.
+	 * Indicates that the given <code>Component</code> was removed.
 	 * 
 	 * @param component
-	 *            The component that was removed.
+	 *            the <code>Component</code> that was removed
 	 */
 	void componentRemoved(Component component);
 
 	/**
-	 * Called when changes to the page have ended.
+	 * Called when changes to the <code>Page</code> have ended.
 	 * 
 	 * @param mergeVersion
-	 * 			  If this is set the version that was created is merged with the previous one. 
-	 * 
+	 *            If this is set, the version that was created is merged with
+	 *            the previous one.
 	 * @see IPageVersionManager#beginVersion(boolean)
 	 */
 	void endVersion(boolean mergeVersion);
 	
 	/**
-	 * Expires oldest version
+	 * Expires oldest version in this page version manager.
 	 */
 	void expireOldestVersion();
 
 	/**
-	 * Retrieves a given Page version.
-	 * This method does not take use the ajax versions.
+	 * Retrieves a given <code>Page</code> version. This method does not
+	 * include the Ajax versions.
 	 * 
 	 * @param versionNumber
-	 *            The version of the page to get
-	 * @return The page or null if the version requested is not available
+	 *            the version of the page to get
+	 * @return the <code>Page</code>, or <code>null</code> if the version
+	 *         requested is not available
 	 */
 	Page getVersion(int versionNumber);
 
 
 	/**
-	 * This method rollbacks the page the number of versions specified
-	 * Including the ajax versions.
+	 * Rolls back the <code>Page</code> by the number of versions
+	 * specified, including the Ajax versions.
 	 * 
-	 * @param numberOfVersions  the number of versions to rollback
-	 * @return the rolled-back page
+	 * @param numberOfVersions
+	 *            the number of versions to roll back
+	 * @return the rolled-back <code>Page</code>
 	 */
 	Page rollbackPage(int numberOfVersions);
 
 	/**
-	 * @return The number of versions stored in this version manager
+	 * Retrieves the number of versions stored in this page version manager.
+	 * 
+	 * @return the number of versions stored in this
+	 *         <code>IPageVersionManager</code>
 	 */
 	int getVersions();
 
 	/**
-	 * @return Returns the current (newest) version number available through
-	 *         this version manager.
+	 * Retrieves the newest version number available in this page version 
+	 * manager.
+	 * 
+	 * @return the current (newest) version number available in this
+	 *         <code>IPageVersionManager</code>
 	 */
 	int getCurrentVersionNumber();
 
 	/**
-	 * @return Returns the current ajax version number.
+	 * Retrieves the current Ajax version number.
+	 * 
+	 * @return the current Ajax version number.
 	 */
 	int getAjaxVersionNumber();
 
 	/**
-	 * Call this method when the current (ajax) request
-	 * shouldn't merge the changes that are happening to the page 
-	 * with the previous version. This is for example needed
-	 * when you want to redirect to this page in an ajax request
-	 * and then you do want to version normally.. 
+	 * Call this method if the current Ajax request shouldn't merge changes that
+	 * are happening to the <code>Page</code> with the previous version. This
+	 * is needed, for example, when you want to redirect to this page in an Ajax
+	 * request, and then you want to version normally.
+	 * <p>
+	 * This method should only be called if the <code>beginVersion</code>
+	 * method was called with <code>true</code>!
 	 * 
-	 * This method should only be called if the beginVersion was called with true!
+	 * @see IPageVersionManager#beginVersion(boolean)
 	 */
 	void ignoreVersionMerge();
 }
