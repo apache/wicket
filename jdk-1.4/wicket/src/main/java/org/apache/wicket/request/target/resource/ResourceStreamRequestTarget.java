@@ -24,6 +24,7 @@ import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.IResourceStreamWriter;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,8 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	private static final Logger log = LoggerFactory.getLogger(ResourceStreamRequestTarget.class);
 
 	/**
-	 * Optional filename, used to set the content disposition header. Only
-	 * meaningful when using with web requests.
+	 * Optional filename, used to set the content disposition header. Only meaningful when using
+	 * with web requests.
 	 */
 	private String fileName;
 
@@ -81,8 +82,8 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * @return Optional filename, used to set the content disposition header.
-	 *         Only meaningful when using with web requests.
+	 * @return Optional filename, used to set the content disposition header. Only meaningful when
+	 *         using with web requests.
 	 */
 	public String getFileName()
 	{
@@ -124,7 +125,10 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 
 		try
 		{
-			response.write(resourceStream.getInputStream());
+			if (resourceStream instanceof IResourceStreamWriter)
+				((IResourceStreamWriter)resourceStream).write(response.getOutputStream());
+			else
+				response.write(resourceStream.getInputStream());
 		}
 		catch (ResourceStreamNotFoundException e)
 		{
@@ -135,8 +139,8 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 
 	/**
 	 * @param fileName
-	 *            Optional filename, used to set the content disposition header.
-	 *            Only meaningful when using with web requests.
+	 *            Optional filename, used to set the content disposition header. Only meaningful
+	 *            when using with web requests.
 	 * 
 	 * @return The this.
 	 */
@@ -156,8 +160,8 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Configures the response, default by setting the content type and length
-	 * and content disposition (in case the fileName property was set).
+	 * Configures the response, default by setting the content type and length and content
+	 * disposition (in case the fileName property was set).
 	 * 
 	 * @param requestCycle
 	 * @param response
