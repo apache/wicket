@@ -22,13 +22,14 @@ import org.apache.wicket.util.time.Time;
  * Interface to get the last time something was modified.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public interface IModifiable
 {
 	/**
 	 * Gets the last time this modifiable thing changed.
 	 * 
-	 * @return The last modification time.
+	 * @return the last modification <code>Time</code>
 	 */
 	Time lastModifiedTime();
 }

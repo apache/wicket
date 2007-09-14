@@ -33,22 +33,27 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Monitors one or more Modifiable objects, calling a ChangeListener when a
- * given object's modification time changes.
+ * Monitors one or more <code>IModifiable</code> objects, calling a
+ * {@link IChangeListener IChangeListener} when a given object's modification
+ * time changes.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public final class ModificationWatcher
 {
-	/** Logging */
+	/** logger */
 	private static final Logger log = LoggerFactory.getLogger(ModificationWatcher.class);
 
-	/** Maps Modifiable objects to Entry objects */
+	/** maps <code>IModifiable</code> objects to <code>Entry</code> objects */
 	private final Map modifiableToEntry = new HashMap();
 
+	/** the <code>Task</code> to run */
 	private Task task;
 
-	// MarkupContainer class for holding modifiable entries to watch
+	/**
+	 * Container class for holding modifiable entries to watch.
+	 */
 	private static final class Entry
 	{
 		// The most recent lastModificationTime polled on the object
@@ -62,17 +67,18 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * For two-phase construction
+	 * Default constructor for two-phase construction.
 	 */
 	public ModificationWatcher()
 	{
 	}
 
 	/**
-	 * Constructor
+	 * Constructor that accepts a <code>Duration</code> argument representing
+	 * the poll frequency.
 	 * 
 	 * @param pollFrequency
-	 *            How often to check on modifiables
+	 *            how often to check on <code>IModifiable</code>s
 	 */
 	public ModificationWatcher(final Duration pollFrequency)
 	{
@@ -80,15 +86,17 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Adds a Modifiable object and an IChangeListener to call when the
-	 * modifiable object is modified.
+	 * Adds an <code>IModifiable</code> object and an
+	 * <code>IChangeListener</code> object to call when the modifiable object
+	 * is modified.
 	 * 
 	 * @param modifiable
-	 *            The modifiable thing to monitor
+	 *            an <code>IModifiable</code> object to monitor
 	 * @param listener
-	 *            The listener to call if the modifiable is modified
-	 * @return <tt>true</tt> if the set did not already contain the specified
-	 *         element.
+	 *            an <code>IChangeListener</code> to call if the
+	 *            <code>IModifiable</code> object is modified
+	 * @return <code>true</code> if the set did not already contain the
+	 *         specified element
 	 */
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
@@ -126,10 +134,12 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Remove all entries associated with 'modifiable'
+	 * Removes all entries associated with an <code>IModifiable</code> object.
 	 * 
 	 * @param modifiable
-	 * @return the object removed, else null
+	 *            an <code>IModifiable</code> object
+	 * @return the <code>IModifiable</code> object that was removed, else
+	 *         <code>null</code>
 	 */
 	public IModifiable remove(final IModifiable modifiable)
 	{
@@ -142,10 +152,10 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Start watching at a given polling rate
+	 * Starts watching at a given <code>Duration</code> polling rate.
 	 * 
 	 * @param pollFrequency
-	 *            The poll rate
+	 *            the polling rate <code>Duration</code>
 	 */
 	public void start(final Duration pollFrequency)
 	{
@@ -184,19 +194,23 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * stops the modification watcher from watching.
+	 * Stops this <code>ModificationWatcher</code>.
 	 */
 	public void destroy()
 	{
 		if (task != null)
 		{
-//			task.stop();
+			// task.stop();
 			task.interrupt();
 		}
 	}
 
 	/**
-	 * @return Gets all IModifiable entries currently maintained
+	 * Retrieves a key set of all <code>IModifiable</code> objects currently
+	 * being monitored.
+	 * 
+	 * @return a <code>Set</code> of all <code>IModifiable</code> entries
+	 *         currently maintained
 	 */
 	public final Set getEntries()
 	{
