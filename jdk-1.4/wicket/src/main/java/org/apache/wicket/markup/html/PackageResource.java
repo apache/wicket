@@ -105,7 +105,7 @@ public class PackageResource extends WebResource implements IModifiable
 	private static final Logger log = LoggerFactory.getLogger(PackageResource.class);
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Binds the resources that match the provided pattern to the given application object. Will
 	 * create any resources if not already in the shared resources of the application object.
@@ -534,7 +534,8 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * @return Gets the resource for the component.
-	 * @param failOnError throw an AbortException when resource does not exist
+	 * @param failOnError
+	 *            throw an AbortException when resource does not exist
 	 */
 	public IResourceStream getResourceStream(boolean failOnError)
 	{
@@ -545,7 +546,7 @@ public class PackageResource extends WebResource implements IModifiable
 		// Check that resource was found
 		if (resourceStream == null)
 		{
-			if (! failOnError)
+			if (!failOnError)
 			{
 				// Do not abort the request, as we are not yet serving the resource
 				return null;
