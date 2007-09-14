@@ -18,31 +18,36 @@ package org.apache.wicket.validation;
 
 
 /**
- * Represents any object that can be validated
+ * Interface representing any object that can be validated.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public interface IValidatable
 {
 	/**
+	 * Retrieves the value to be validated.
+	 * 
 	 * @return the value to be validated
 	 */
 	Object getValue();
 
 	/**
-	 * Reports an error against the validatable value. Multiple errors can be
-	 * reported by calling this method multiple times.
+	 * Reports an error against this <code>IValidatable</code>'s value.
+	 * Multiple errors can be reported by calling this method multiple times.
 	 * 
 	 * @param error
-	 *            reported error
+	 *            an <code>IValidationError</code> to be reported
 	 */
 	void error(IValidationError error);
 
 	/**
-	 * Queries the current state of the validatable object. Validatables should
-	 * assume they are valid until {@link #error(IValidationError)} is called.
+	 * Queries the current state of this <code>IValidatable</code> instance.
+	 * <code>IValidatable</code>s should assume they are valid until
+	 * {@link #error(IValidationError)} is called.
 	 * 
-	 * @return true if the object is in a valid state, false otherwise.
+	 * @return <code>true</code> if the object is in a valid state,
+	 *         <code>false</code> if otherwise
 	 */
 	boolean isValid();
 }

@@ -32,11 +32,13 @@ public class EmailAddressValidator extends PatternValidator
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Singleton instance */
+	/** singleton instance */
 	private static final EmailAddressValidator INSTANCE = new EmailAddressValidator();
 
 	/**
-	 * @return Instance of emailadress validator
+	 * Retrieves the singleton instance of <code>EmailAddressValidator</code>.
+	 * 
+	 * @return the singleton instance of <code>EmailAddressValidator</code>
 	 */
 	public static EmailAddressValidator getInstance()
 	{
@@ -44,8 +46,8 @@ public class EmailAddressValidator extends PatternValidator
 	}
 
 	/**
-	 * Protected constructor to force use of static singleton accessor method.
-	 * Or override it to implement resourceKey(Component)
+	 * Protected constructor to force use of static singleton accessor. Override
+	 * this constructor to implement resourceKey(Component).
 	 */
 	protected EmailAddressValidator()
 	{

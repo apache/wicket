@@ -33,31 +33,32 @@ import org.apache.wicket.IClusterable;
  * 
  * The final error message is constructed via the following process:
  * <ol>
- * <li>Try all keys added by calls to {@link #addMessageKey(String)} via
- * provided {@link IErrorMessageSource}</li>
+ * <li>Try all keys added by calls to {@link #addMessageKey(String)} via the
+ * provided <code>IErrorMessageSource</code>.</li>
  * <li>If none of the keys yielded a message, use the message set by
- * {@link #setMessage(String)} if any</li>
- * <li>Perform variable subsitution on the message if any</li>
+ * {@link #setMessage(String)}, if any.</li>
+ * <li>Perform variable substitution on the message, if any.</li>
  * </ol>
  * 
- * @author ivaynberg
+ * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public class ValidationError implements IValidationError, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
 	// XXX 2.0: optimization - keys can be null by default until a key is added
-	/** List of message keys to try against the {@link IErrorMessageSource} */
+	/** list of message keys to try against the <code>IErrorMessageSource</code> */
 	private final List keys = new ArrayList(1);
 
-	/** Variable map to use in variable substitution */
+	/** variables map to use in variable substitution */
 	private Map vars;
 
-	/** Default message used when all keys yield no message */
+	/** default message used when all keys yield no message */
 	private String message;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public ValidationError()
 	{
@@ -66,10 +67,11 @@ public class ValidationError implements IValidationError, IClusterable
 
 	/**
 	 * Adds a key to the list of keys that will be tried against
-	 * {@link IErrorMessageSource} to locate the error message string
+	 * <code>IErrorMessageSource</code> to locate the error message string.
 	 * 
 	 * @param key
-	 * @return this for chaining
+	 *            a message key to be added
+	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
 	public ValidationError addMessageKey(String key)
 	{
@@ -82,13 +84,13 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Sets a variable that will be used in substitution
+	 * Sets a key and value in the variables map for use in substitution.
 	 * 
 	 * @param name
-	 *            variable name
+	 *            a variable name
 	 * @param value
-	 *            variable value
-	 * @return this for chaining
+	 *            a variable value
+	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
 	public ValidationError setVariable(String name, Object value)
 	{
@@ -109,10 +111,10 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Returns the map of variables for this error. User is free to modify the
-	 * contents.
+	 * Retrieves the variables map for this error. The caller is free to modify
+	 * the contents.
 	 * 
-	 * @return map of variables for this error
+	 * @return a <code>Map</code> of variables for this error
 	 */
 	public final Map getVariables()
 	{
@@ -124,11 +126,11 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Sets the variable map for this error
+	 * Sets the variables map for this error.
 	 * 
 	 * @param vars
-	 *            variable map
-	 * @return this for chaining
+	 *            a variables map
+	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
 	public final ValidationError setVariables(Map vars)
 	{
@@ -141,7 +143,7 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * @see org.apache.wicket.validation.IValidationError#getErrorMessage(org.apache.wicket.validation.IErrorMessageSource)
+	 * @see IValidationError#getErrorMessage(IErrorMessageSource)
 	 */
 	public final String getErrorMessage(IErrorMessageSource messageSource)
 	{
@@ -172,12 +174,11 @@ public class ValidationError implements IValidationError, IClusterable
 		return errorMessage;
 	}
 
-
 	/**
-	 * Gets message that will be used when no message could be located via
-	 * message keys
+	 * Gets the default message that will be used when no message could be
+	 * located via message keys.
 	 * 
-	 * @return message
+	 * @return message the default message used when all keys yield no message
 	 */
 	public final String getMessage()
 	{
@@ -186,12 +187,12 @@ public class ValidationError implements IValidationError, IClusterable
 
 	/**
 	 * Sets message that will be used when no message could be located via
-	 * message keys
+	 * message keys.
 	 * 
 	 * @param message
-	 *            the message
+	 *            a default message to be used when all keys yield no message
 	 * 
-	 * @return this for chaining
+	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
 	public final ValidationError setMessage(String message)
 	{

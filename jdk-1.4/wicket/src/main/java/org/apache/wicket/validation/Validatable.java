@@ -22,10 +22,11 @@ import java.util.List;
 
 /**
  * This implementation of {@link IValidatable} is meant to be used outside of
- * wicket. It allows other parts of the application to utilize
- * {@link IValidator}s to validate values.
- * 
- * Example: <code>
+ * Wicket. It allows other parts of the application to utilize
+ * {@link IValidator}s for validation.
+ * <p>
+ * Example: 
+ * <code><pre>
  * class WebService {
  *   public void addUser(String firstName, String lastName) {
  *     Validatable standin=new Validatable();
@@ -41,27 +42,31 @@ import java.util.List;
  *     }
  *   }
  * }
- * </code>
+ * </pre></code>
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public class Validatable implements IValidatable
 {
-
+	/** the value object */
 	private Object value;
+	
+	/** the list of errors */
 	private ArrayList errors;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public Validatable()
 	{
 	}
 
 	/**
-	 * Sets the value object that will be returned by {@link #getValue()}
+	 * Sets the value object that will be returned by {@link #getValue()}.
 	 * 
 	 * @param value
+	 *            the value object
 	 */
 	public void setValue(Object value)
 	{
@@ -69,7 +74,7 @@ public class Validatable implements IValidatable
 	}
 
 	/**
-	 * @see org.apache.wicket.validation.IValidatable#getValue()
+	 * @see IValidatable#getValue()
 	 */
 	public Object getValue()
 	{
@@ -77,7 +82,7 @@ public class Validatable implements IValidatable
 	}
 
 	/**
-	 * @see org.apache.wicket.validation.IValidatable#error(org.apache.wicket.validation.IValidationError)
+	 * @see IValidatable#error(IValidationError)
 	 */
 	public void error(IValidationError error)
 	{
@@ -89,8 +94,10 @@ public class Validatable implements IValidatable
 	}
 
 	/**
-	 * @return umodifiable list of any errors reported against this validatable
-	 *         instance
+	 * Retrieves an unmodifiable list of any errors reported against this
+	 * <code>IValidatable</code> instance.
+	 * 
+	 * @return an unmodifiable list of errors
 	 */
 	public List getErrors()
 	{
@@ -105,7 +112,7 @@ public class Validatable implements IValidatable
 	}
 
 	/**
-	 * @see org.apache.wicket.validation.IValidatable#isValid()
+	 * @see IValidatable#isValid()
 	 */
 	public boolean isValid()
 	{

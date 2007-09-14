@@ -22,54 +22,58 @@ import java.util.regex.Pattern;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.validation.IValidatable;
 
-
+// FIXME 2.0: ivaynberg: look over javadoc
 /**
- * FIXME 2.0: ivaynberg: look over javadoc
- * 
- * Validates component by matching the component's value against a regular
- * expression pattern. A PatternValidator can be constructed with either a Java
- * regular expression (compiled or not) or a MetaPattern. If the pattern matches
- * against the value of the component it is attached to when validate() is
+ * Validates a <code>Component</code> by matching the component's value
+ * against a regular expression pattern. A <code>PatternValidator</code> can
+ * be constructed with either a Java regular expression (compiled or not) or a
+ * <code>MetaPattern</code>. If the pattern matches against the value of the
+ * <code>Component</code> it is attached to when <code>validate</code> is
  * called by the framework, then that input value is considered valid. If the
- * pattern does not match, the errorMessage() method will be called.
+ * pattern does not match, the <code>errorMessage</code> method will be
+ * called.
  * <p>
  * For example, to restrict a field to only digits, you might add a
- * PatternValidator constructed with the pattern "\d+". Another way to do the
- * same thing would be to construct the PatternValidator passing in
- * MetaPattern.DIGITS. The advantages of using MetaPattern over straight Java
- * regular expressions are that the patterns are easier to construct and easier
- * to combine into complex patterns. They are also more readable and more
- * reusable. See {@link org.apache.wicket.util.parse.metapattern.MetaPattern}for details.
+ * <code>PatternValidator</code> constructed with the pattern "\d+". Another
+ * way to do the same thing would be to construct the
+ * <code>PatternValidator</code> passing in <code>MetaPattern.DIGITS</code>.
+ * The advantages of using <code>MetaPattern</code> over straight Java regular
+ * expressions are that the patterns are easier to construct and easier to
+ * combine into complex patterns. They are also more readable and more reusable.
+ * See {@link org.apache.wicket.util.parse.metapattern.MetaPattern MetaPattern}
+ * for details.
  * <p>
  * The error message will be generated with the key "PatternValidator" and the
- * messages keys that can be used are:
+ * message keys that can be used are:
+ * <p>
  * <ul>
  * <li>${pattern}: the pattern which failed to match</li>
- * <li>${input}: the input the user did give</li>
- * <li>${name}: the name of the component that failed</li>
- * <li>${label}: the label of the component - either comes from
- * FormComponent.labelModel or resource key [form-id].[form-component-id] in
- * that order</li>
+ * <li>${input}: the input the user gave</li>
+ * <li>${name}: the name of the <code>Component</code> that failed</li>
+ * <li>${label}: the label of the <code>Component</code> - either comes from
+ * <code>FormComponent.labelModel</code> or resource key
+ * [form-id].[form-component-id] in that order</li>
  * </ul>
  * 
+ * @author Jonathan Locke
+ * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  * @see java.util.regex.Pattern
  * @see org.apache.wicket.util.parse.metapattern.MetaPattern
- * @author Jonathan Locke *
- * @author Igor Vaynberg(ivaynberg)
- * 
  */
 public class PatternValidator extends StringValidator
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The regexp pattern. */
+	/** the <code>java.util.regex.Pattern</code> */
 	private final Pattern pattern;
 
 	/**
-	 * Constructor.
+	 * Constructor that accepts a <code>String</code> regular expression
+	 * pattern.
 	 * 
 	 * @param pattern
-	 *            Regular expression pattern
+	 *            a regular expression pattern
 	 */
 	public PatternValidator(final String pattern)
 	{
@@ -77,12 +81,13 @@ public class PatternValidator extends StringValidator
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor that accepts a <code>String</code> pattern and Java
+	 * <code>regex</code> compile flags as arguments.
 	 * 
 	 * @param pattern
-	 *            Regular expression pattern
+	 *            a regular expression pattern
 	 * @param flags
-	 *            Compile flags for java.util.regex.Pattern
+	 *            compile flags for <code>java.util.regex.Pattern</code>
 	 */
 	public PatternValidator(final String pattern, final int flags)
 	{
@@ -90,10 +95,11 @@ public class PatternValidator extends StringValidator
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor that accepts a Java <code>regex</code> <code>Pattern</code>
+	 * argument.
 	 * 
 	 * @param pattern
-	 *            Java regex pattern
+	 *            a Java <code>regex</code> <code>Pattern</code>
 	 */
 	public PatternValidator(final Pattern pattern)
 	{
@@ -101,10 +107,10 @@ public class PatternValidator extends StringValidator
 	}
 
 	/**
-	 * Constructor.
+	 * Constructor that accepts a <code>MetaPattern</code> argument.
 	 * 
 	 * @param pattern
-	 *            MetaPattern pattern
+	 *            a <code>MetaPattern</code>
 	 */
 	public PatternValidator(final MetaPattern pattern)
 	{
@@ -122,7 +128,13 @@ public class PatternValidator extends StringValidator
 		return pattern;
 	}
 
-
+	/**
+	 * Checks a value against this <code>PatternValidator</code>'s
+	 * {@link Pattern}.
+	 * 
+	 * @param validatable
+	 *            the <code>IValidatable</code> to check
+	 */
 	protected Map variablesMap(IValidatable validatable)
 	{
 		final Map map = super.variablesMap(validatable);
@@ -138,6 +150,13 @@ public class PatternValidator extends StringValidator
 		return "[PatternValidator pattern = " + pattern + "]";
 	}
 
+	/**
+	 * Checks a value against this <code>PatternValidator</code>'s
+	 * {@link Pattern}.
+	 * 
+	 * @param validatable
+	 *            the <code>IValidatable</code> to check
+	 */
 	protected void onValidate(IValidatable validatable)
 	{
 		// Check value against pattern

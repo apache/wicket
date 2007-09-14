@@ -22,20 +22,21 @@ import org.apache.wicket.validation.IValidatable;
 
 
 /**
- * Validator for dealing with string lengths. Usually this validator is used
- * through the static factory methods, but it and its inner classes can also be
- * subclassed directly.
+ * Validator for checking <code>String</code> lengths. Usually this validator
+ * is used through the static factory methods, but it and its inner classes can
+ * also be subclassed directly.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public abstract class StringValidator extends AbstractValidator
 {
 
 	/**
-	 * Validator to check if the length of the string is exactly the specified
-	 * length
+	 * Validator for checking if the length of a <code>String</code> is
+	 * exactly the specified length.
 	 */
 	public static class ExactLengthValidator extends StringValidator
 	{
@@ -43,9 +44,10 @@ public abstract class StringValidator extends AbstractValidator
 		private final int length;
 
 		/**
-		 * Construct.
+		 * Constructor.
 		 * 
 		 * @param length
+		 *            the length value
 		 */
 		public ExactLengthValidator(int length)
 		{
@@ -53,15 +55,18 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * Gets length.
+		 * Retrieves the length value.
 		 * 
-		 * @return length
+		 * @return the length value
 		 */
 		public final int getLength()
 		{
 			return length;
 		}
 
+		/**
+		 * see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((String)validatable.getValue()).length() != length)
@@ -71,13 +76,16 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey()
 		 */
 		protected String resourceKey()
 		{
 			return "StringValidator.exact";
 		}
 
+		/**
+		 * @see AbstractValidator#variablesMap(IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -89,7 +97,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check if the length of the string is within some range
+	 * Validator for checking if the length of a <code>String</code> is within
+	 * the specified range.
 	 */
 	public static class LengthBetweenValidator extends StringValidator
 	{
@@ -98,10 +107,12 @@ public abstract class StringValidator extends AbstractValidator
 		private final int minimum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets the minimum and maximum values.
 		 * 
 		 * @param minimum
+		 *            the minimum value
 		 * @param maximum
+		 *            the maximum value
 		 */
 		public LengthBetweenValidator(int minimum, int maximum)
 		{
@@ -111,9 +122,9 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * Gets maximum.
+		 * Retrieves the maximum value.
 		 * 
-		 * @return maximum
+		 * @return the maximum value
 		 */
 		public final int getMaximum()
 		{
@@ -121,15 +132,18 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * Gets minimum.
+		 * Retrieves the minimum value.
 		 * 
-		 * @return minimum
+		 * @return the minimum value
 		 */
 		public final int getMinimum()
 		{
 			return minimum;
 		}
 
+		/**
+		 * see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			final String value = (String)validatable.getValue();
@@ -141,7 +155,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey()
 		 */
 		protected String resourceKey()
 		{
@@ -149,7 +163,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
@@ -163,8 +177,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check if the length of the string meets a maximum
-	 * requirement
+	 * Validator for checking if the length of a <code>String</code> meets the
+	 * maximum length requirement.
 	 */
 	public static class MaximumLengthValidator extends StringValidator
 	{
@@ -172,9 +186,10 @@ public abstract class StringValidator extends AbstractValidator
 		private final int maximum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets a maximum length value.
 		 * 
 		 * @param maximum
+		 *            the maximum length value
 		 */
 		public MaximumLengthValidator(int maximum)
 		{
@@ -182,15 +197,18 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * Gets maximum.
+		 * Retrieves the maximum length value.
 		 * 
-		 * @return maximum
+		 * @return the maximum length value
 		 */
 		public final int getMaximum()
 		{
 			return maximum;
 		}
 
+		/**
+		 * see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((String)validatable.getValue()).length() > maximum)
@@ -200,7 +218,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey()
 		 */
 		protected String resourceKey()
 		{
@@ -208,7 +226,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
@@ -220,8 +238,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check if the length of the string meets a minumum
-	 * requirement
+	 * Validator for checking if the length of a <code>String</code> meets the
+	 * minimum length requirement.
 	 */
 	public static class MinimumLengthValidator extends StringValidator
 	{
@@ -229,9 +247,10 @@ public abstract class StringValidator extends AbstractValidator
 		private final int minimum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets a minimum length value.
 		 * 
 		 * @param minimum
+		 *            the minimum length value
 		 */
 		public MinimumLengthValidator(int minimum)
 		{
@@ -239,15 +258,18 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * Gets minimum.
+		 * Retrieves the minimum length value.
 		 * 
-		 * @return minimum
+		 * @return the minimum length value
 		 */
 		public final int getMinimum()
 		{
 			return minimum;
 		}
 
+		/**
+		 * see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((String)validatable.getValue()).length() < minimum)
@@ -257,7 +279,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey()
 		 */
 		protected String resourceKey()
 		{
@@ -265,7 +287,7 @@ public abstract class StringValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 * @see AbstractValidator#variablesMap(IValidatable)
 		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
@@ -278,25 +300,25 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a String exact length validator to check if a string length is
-	 * exactly the same as the given value
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.exact" and the messages keys that can be used are:
+	 * Gets a <code>String</code> exact length validator for checking if a
+	 * string length is exactly the same as the given length value. If that is
+	 * not the case, then an error message will be generated with the key
+	 * "StringValidator.exact". The message keys that can be used are:
+	 * <p>
 	 * <ul>
 	 * <li>${exact}: the maximum length</li>
 	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param length
-	 *            The required length of the string.
+	 *            the required length of the string
 	 * 
-	 * @return The StringValidator
+	 * @return the requested <code>StringValidator</code>
 	 */
 	public static StringValidator exactLength(int length)
 	{
@@ -304,28 +326,28 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a String range validator to check if a string length is between min
-	 * and max.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.range" and the messages keys that can be used are:
+	 * Gets a <code>String</code> range validator for checking if a string
+	 * length falls between the minimum and and maximum lengths. If that is not
+	 * the case, then an error message will be generated with the key
+	 * "StringValidator.range". The message keys that can be used are:
+	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum length</li>
 	 * <li>${maximum}: the maximum length</li>
 	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum length of the string.
+	 *            the minimum length of the string
 	 * @param maximum
-	 *            The maximum length of the string.
+	 *            the maximum length of the string
 	 * 
-	 * @return The StringValidator
+	 * @return the requested <code>StringValidator</code>
 	 */
 	public static StringValidator lengthBetween(int minimum, int maximum)
 	{
@@ -333,25 +355,25 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a String maximum validator to check if a string length is smaller
-	 * then the given maximum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.maximum" and the messages keys that can be used are:
+	 * Gets a <code>String</code> maximum validator for checking if a string
+	 * length is smaller than the given maximum value. If that is not the case,
+	 * then an error message will be generated with the key
+	 * "StringValidator.maximum". The message keys that can be used are:
+	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum length</li>
 	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
-	 *            The maximum length of the string.
+	 *            the maximum length of the string
 	 * 
-	 * @return The StringValidator
+	 * @return the requested <code>StringValidator</code>
 	 */
 	public static StringValidator maximumLength(int maximum)
 	{
@@ -359,25 +381,25 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a String minimum validator to check if a string length is greater
-	 * then the given minimum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.minimum" and the messages keys that can be used are:
+	 * Gets a <code>String</code> minimum validator for checking if a string
+	 * length is greater than the given minimum value. If that is not the case,
+	 * then an error message will be generated with the key
+	 * "StringValidator.minimum". The message keys that can be used are:
+	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum length</li>
 	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum length of the string.
+	 *            the minimum length of the string
 	 * 
-	 * @return The StringValidator
+	 * @return the requested <code>StringValidator</code>
 	 */
 	public static StringValidator minimumLength(int minimum)
 	{

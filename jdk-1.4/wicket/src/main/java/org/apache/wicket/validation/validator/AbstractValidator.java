@@ -29,35 +29,35 @@ import org.apache.wicket.validation.ValidationError;
 
 
 /**
- * Convinience base class for {@link IValidator}s. This class is thread-safe
+ * Convenience base class for {@link IValidator}s. This class is thread-safe
  * and therefore it is safe to share validators across sessions/threads.
  * <p>
- * Error messages can be registered by calling one of the error(IValidatable
- * ...) overloads.
- * <p>
- * By default this class will skip validation if the
- * {@link IValidatable#getValue()} returns null, validators that wish to
- * validate the null value need to override {@link #validateOnNullValue()} and
- * return <code>true</code>.
+ * Error messages can be registered by calling one of the error (<code>IValidatable</code>)
+ * overloads. By default this class will skip validation if the
+ * {@link IValidatable#getValue()} returns <code>null</code>. Validators that
+ * wish to validate the <code>null</code> value need to override
+ * {@link #validateOnNullValue()} and return <code>true</code>.
  * 
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
- * @author Igor Vaynberg (ivaynbeg)
- * 
+ * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public abstract class AbstractValidator implements INullAcceptingValidator, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Whether or not to validate the value if it is null. It is usually
-	 * desirable to skip validation if the value is null - unless we want to
-	 * make sure the value is in fact null which is a rare usecase. Validators
-	 * that extend this and wish to validate that the value is null should
-	 * override this method and return <code>true</code>.
+	 * Indicates whether or not to validate the value if it is <code>null</code>.
+	 * It is usually desirable to skip validation if the value is
+	 * <code>null</code>, unless we want to make sure the value is in fact
+	 * <code>null</code> (a rare use case). Validators that extend this and
+	 * wish to ensure the value is <code>null</code> should override this
+	 * method and return <code>true</code>.
 	 * 
-	 * @return true to validate on null value, false to skip validation on null
+	 * @return <code>true</code> to validate on <code>null</code> value,
+	 *         <code>false</code> to skip validation on <code>null</code>
 	 *         value
 	 */
 	public boolean validateOnNullValue()
@@ -66,14 +66,14 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	}
 
 	/**
-	 * Method used to validate the validatable instance
+	 * Validates the <code>IValidatable</code> instance.
 	 * 
-	 * @param validatable
+	 * @param validatable the given <code>IValidatable</code> instance
 	 */
 	protected abstract void onValidate(IValidatable validatable);
 
 	/**
-	 * @see org.apache.wicket.validation.IValidator#validate(org.apache.wicket.validation.IValidatable)
+	 * @see IValidator#validate(IValidatable)
 	 */
 	public final void validate(IValidatable validatable)
 	{
@@ -83,14 +83,14 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 		}
 	}
 
-
 	/**
-	 * Reports an error against validatable using the map returned by
-	 * {@link #variablesMap(IValidatable)}for variable interpolations and
-	 * message key returned by {@link #resourceKey()}.
+	 * Reports an error against an <code>IValidatable</code> instance using
+	 * the <code>Map</code> returned by {@link #variablesMap(IValidatable)}
+	 * for variable interpolations and the message resource key returned by
+	 * {@link #resourceKey()}.
 	 * 
 	 * @param validatable
-	 *            validatble being validated
+	 *            the <code>IValidatable</code> instance being validated
 	 * 
 	 */
 	public void error(final IValidatable validatable)
@@ -99,12 +99,12 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	}
 
 	/**
-	 * Reports an error against validatable using the map returned by
-	 * {@link #variablesMap(IValidatable)}for variable interpolations and the
-	 * specified resourceKey
+	 * Reports an error against an <code>IValidatable</code> instance using
+	 * the <code>Map</code> returned by {@link #variablesMap(IValidatable)}
+	 * for variable interpolations and the given message resource key.
 	 * 
 	 * @param validatable
-	 *            validatble being validated
+	 *            the <code>IValidatable</code> instance being validated
 	 * @param resourceKey
 	 *            the message resource key to use
 	 * 
@@ -119,14 +119,14 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	}
 
 	/**
-	 * Reports an error against the validatalbe using the given map for variable
-	 * interpolations and message resource key provided by
-	 * {@link #resourceKey()}
+	 * Reports an error against an <code>IValidatable</code> instance using
+	 * the given <code>Map</code> for variable interpolations and message
+	 * resource key provided by {@link #resourceKey()}.
 	 * 
 	 * @param validatable
-	 *            validatble being validated
+	 *            the <code>IValidatable</code> instance being validated
 	 * @param vars
-	 *            variables for variable interpolation
+	 *            <code>Map</code> of variables for variable interpolation
 	 */
 	public void error(final IValidatable validatable, final Map vars)
 	{
@@ -138,15 +138,16 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	}
 
 	/**
-	 * Reports an error against the validatable using the specified resource key
-	 * and variable map
+	 * Reports an error against an <code>IValidatable</code> instance using
+	 * the given message resource key and <code>Map</code> for variable
+	 * interpolations.
 	 * 
 	 * @param validatable
-	 *            validatble being validated
+	 *            the <code>IValidatable</code> instance being validated
 	 * @param resourceKey
-	 *            The message resource key to use
+	 *            the message resource key to use
 	 * @param vars
-	 *            The model for variable interpolation
+	 *            <code>Map</code> of variables for variable interpolation
 	 */
 	public void error(final IValidatable validatable, final String resourceKey,
 			Map vars)
@@ -177,12 +178,12 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	}
 
 	/**
-	 * Gets the resource key for validator's error message from the
-	 * ApplicationSettings class.
+	 * Gets the message resource key for this validator's error message from the
+	 * <code>ApplicationSettings</code> class.
 	 * 
-	 * <strong>NOTE</strong>: THIS METHOD SHOULD NEVER RETURN NULL
+	 * <strong>NOTE</strong>: THIS METHOD SHOULD NEVER RETURN <code>null</code>.
 	 * 
-	 * @return the resource key for the validator
+	 * @return the message resource key for this validator
 	 */
 	protected String resourceKey()
 	{
@@ -190,14 +191,14 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	}
 
 	/**
-	 * Gets the default variable map
+	 * Gets the default <code>Map</code> of variables.
 	 * 
-	 * <strong>NOTE</strong>: THIS METHOD SHOULD NEVER RETURN NULL
+	 * <strong>NOTE</strong>: THIS METHOD SHOULD NEVER RETURN <code>null</code>.
 	 * 
 	 * @param validatable
-	 *            validatable being validated
+	 *            the <code>IValidatable</code> instance being validated
 	 * 
-	 * @return a map with the variables for interpolation
+	 * @return a <code>Map</code> of variables for variable interpolation
 	 */
 	protected Map variablesMap(IValidatable validatable)
 	{
@@ -207,7 +208,6 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 
 	// deprecated methods
 
-
 	/**
 	 * DEPRECATED/UNSUPPORTED
 	 * 
@@ -215,8 +215,8 @@ public abstract class AbstractValidator implements INullAcceptingValidator, IClu
 	 * <ul>
 	 * <li>${input}: the user's input</li>
 	 * <li>${name}: the name of the component</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in
 	 * that order</li>
 	 * </ul>
 	 * 

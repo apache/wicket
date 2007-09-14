@@ -17,17 +17,19 @@
 package org.apache.wicket.validation;
 
 /**
- * A validation error
+ * Interface representing a validation error.
  * 
- * @author ivaynberg
+ * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public interface IValidationError
 {
 	/**
-	 * Retrieves error message (usually user-facing)
+	 * Retrieves the error message (usually user-facing).
 	 * 
 	 * @param messageSource
-	 * @return error message
+	 *            the message source
+	 * @return the error message <code>String</code>
 	 */
 	String getErrorMessage(IErrorMessageSource messageSource);
 }

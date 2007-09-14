@@ -26,6 +26,7 @@ import java.util.List;
  * ignored.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public class CompoundValidator implements IValidator
 {
@@ -34,17 +35,18 @@ public class CompoundValidator implements IValidator
 	private final List validators = new ArrayList(2);
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public CompoundValidator()
 	{
 	}
 
 	/**
-	 * Adds a validator to the chain of validators
+	 * Adds an <code>IValidator</code> to the chain of validators.
 	 * 
 	 * @param validator
-	 * @return this for chaining
+	 *            an <code>IValidator</code> to be added
+	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
 	public final CompoundValidator add(IValidator validator)
 	{
@@ -57,7 +59,7 @@ public class CompoundValidator implements IValidator
 	}
 
 	/**
-	 * @see org.apache.wicket.validation.IValidator#validate(org.apache.wicket.validation.IValidatable)
+	 * @see IValidator#validate(IValidatable)
 	 */
 	public final void validate(IValidatable validatable)
 	{

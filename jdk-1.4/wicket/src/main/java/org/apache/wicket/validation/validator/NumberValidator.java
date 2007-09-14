@@ -20,53 +20,50 @@ import java.util.Map;
 
 import org.apache.wicket.validation.IValidatable;
 
-
+// FIXME 2.0: ivaynberg: look over javadoc
 /**
- * FIXME 2.0: ivaynberg: look over javadoc
- * 
- * 
- * A validator for numbers. See the static factory methods to make range/minimum
- * or maximum validators for doubles or longs
+ * Validator for checking numbers. Use the static factory methods to make range/minimum
+ * or maximum validators for <code>double</code>s or <code>long</code>s.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
- * @author Igor Vaynberg(ivaynberg)
+ * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public abstract class NumberValidator extends AbstractValidator
 {
 	/**
-	 * A validatior for testing if it is a positive number value
+	 * a validator for ensuring for a positive number value
 	 */
 	public static final NumberValidator POSITIVE = minimum(0);
 
 	/**
-	 * A validatior for testing if it is a positive number value
+	 * a validator for ensuring a positive number value
 	 */
 	public static final NumberValidator NEGATIVE = maximum(0);
 
-
 	/**
-	 * Gets a Integer range validator to check if a number is between the
-	 * mininum and maximum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "NumberValidator.range" and the messages keys that can be used are:
+	 * Gets an Integer range validator for checking if a number falls between
+	 * the minimum and maximum values. If that is not the case, an error message
+	 * will be generated with the key "NumberValidator.range". The message keys
+	 * that can be used are:
+	 * <p>
 	 * <ul>
-	 * <li>${minimum}: the minimal value</li>
+	 * <li>${minimum}: the minimum value</li>
 	 * <li>${maximum}: the maximum value</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum value.
+	 *            the minimum value
 	 * @param maximum
-	 *            The maximum value.
+	 *            the maximum value
 	 * 
-	 * @return The NumberValidator
+	 * @return the request <code>NumberValidator</code>
 	 */
 	public static NumberValidator range(long minimum, long maximum)
 	{
@@ -74,24 +71,24 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Integer minimum validator to check if a integer value is greater
-	 * then the given minimum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "NumberValidator.minimum" and the messages keys that can be used are:
+	 * Gets an Integer minimum validator for checking if a number is greater
+	 * than the given minimum value. If that is not the case, an error message
+	 * will be generated with the key "NumberValidator.minimum". The message
+	 * keys that can be used are:
+	 * <p>
 	 * <ul>
-	 * <li>${minimum}: the minimal value</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${minimum}: the minimum value</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum value.
+	 *            the minimum value
 	 * 
-	 * @return The NumberValidator
+	 * @return the requested <code>NumberValidator</code>
 	 */
 	public static NumberValidator minimum(long minimum)
 	{
@@ -99,25 +96,25 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Integer range validator to check if an integer value is smaller
-	 * then the given maximum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.maximum" and the messages keys that can be used are:
+	 * Gets an Integer range validator for checking if a number is smaller than
+	 * the given maximum value. If that is not the case, an error message will
+	 * be generated with the key "StringValidator.maximum". The message keys
+	 * that can be used are:
+	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
 	 * <li>${length}: the length of the user input</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
-	 *            The maximum value.
+	 *            the maximum value
 	 * 
-	 * @return The NumberValidator
+	 * @return the requested <code>NumberValidator</code>
 	 */
 	public static NumberValidator maximum(long maximum)
 	{
@@ -125,27 +122,27 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double range validator to check if a number is between the mininum
-	 * and maximum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "NumberValidator.range" and the messages keys that can be used are:
+	 * Gets a Double range validator for checking if a number falls between the
+	 * minimum and maximum values. If that is not the case, an error message
+	 * will be generated with the key "NumberValidator.range". The message keys
+	 * that can be used are:
+	 * <p>
 	 * <ul>
-	 * <li>${minimum}: the minimal value</li>
+	 * <li>${minimum}: the minimum value</li>
 	 * <li>${maximum}: the maximum value</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum value.
+	 *            the minimum value
 	 * @param maximum
-	 *            The maximum value.
+	 *            the maximum value
 	 * 
-	 * @return The NumberValidator
+	 * @return the requested <code>NumberValidator</code>
 	 */
 	public static NumberValidator range(double minimum, double maximum)
 	{
@@ -153,24 +150,24 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double minimum validator to check if a integer value is greater
-	 * then the given minimum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "NumberValidator.minimum" and the messages keys that can be used are:
+	 * Gets a Double minimum validator for checking if number is greater then
+	 * the given minimum value. If that is not the case, an error message will
+	 * be generated with the key "NumberValidator.minimum". The message keys
+	 * that can be used are:
+	 * <p>
 	 * <ul>
-	 * <li>${minimum}: the minimal value</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${minimum}: the minimum value</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum value.
+	 *            the minimum value
 	 * 
-	 * @return The NumberValidator
+	 * @return the requested <code>NumberValidator</code>
 	 */
 	public static NumberValidator minimum(double minimum)
 	{
@@ -178,24 +175,24 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double range validator to check if an integer value is smaller
-	 * then the given maximum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "StringValidator.maximum" and the messages keys that can be used are:
+	 * Gets a Double maximum validator for checking if an number is smaller than
+	 * the given maximum value. If that is not the case, an error message will
+	 * be generated with the key "StringValidator.maximum". The message keys
+	 * that can be used are:
+	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
-	 *            The maximum value.
+	 *            the maximum value
 	 * 
-	 * @return The NumberValidator
+	 * @return the requested <code>NumberValidator</code>
 	 */
 	public static NumberValidator maximum(double maximum)
 	{
@@ -203,7 +200,7 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check the number is within the specified range
+	 * Validator for checking if a given number is within the specified range.
 	 */
 	public static class RangeValidator extends NumberValidator
 	{
@@ -212,10 +209,12 @@ public abstract class NumberValidator extends AbstractValidator
 		private final long maximum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets the minimum and maximum values.
 		 * 
 		 * @param minimum
+		 *            the minimum value
 		 * @param maximum
+		 *            the maximum value
 		 */
 		public RangeValidator(long minimum, long maximum)
 		{
@@ -224,6 +223,9 @@ public abstract class NumberValidator extends AbstractValidator
 
 		}
 
+		/**
+		 * @see AbstractValidator#variablesMap(IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -233,13 +235,16 @@ public abstract class NumberValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
 		protected String resourceKey()
 		{
 			return "NumberValidator.range";
 		}
 
+		/**
+		 * @see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			Number value = (Number)validatable.getValue();
@@ -252,7 +257,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check the number meets the minimum requirement
+	 * Validator for checking if a given number number meets the minimum
+	 * requirement.
 	 */
 	public static class MinimumValidator extends NumberValidator
 	{
@@ -260,15 +266,19 @@ public abstract class NumberValidator extends AbstractValidator
 		private final long minimum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets the minimum value.
 		 * 
 		 * @param minimum
+		 *            the minimum value
 		 */
 		public MinimumValidator(long minimum)
 		{
 			this.minimum = minimum;
 		}
 
+		/**
+		 * @see AbstractValidator#variablesMap(IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -277,13 +287,16 @@ public abstract class NumberValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
 		protected String resourceKey()
 		{
 			return "NumberValidator.minimum";
 		}
 
+		/**
+		 * @see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).longValue() < minimum)
@@ -296,18 +309,27 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check the number meets the maximum requirement
+	 * Validator for checking if a given number meets the maximum requirement.
 	 */
 	public static class MaximumValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final long maximum;
-
+		
+		/**
+		 * Constructor that sets the maximum value.
+		 * 
+		 * @param maximum
+		 *            the maximum value
+		 */
 		public MaximumValidator(long maximum)
 		{
 			this.maximum = maximum;
 		}
 
+		/**
+		 * @see AbstractValidator#variablesMap(IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -316,13 +338,16 @@ public abstract class NumberValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
 		protected String resourceKey()
 		{
 			return "NumberValidator.maximum";
 		}
 
+		/**
+		 * @see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).longValue() > maximum)
@@ -333,7 +358,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check the double is within the specified range
+	 * Validator for checking if a given <code>double</code> is within the
+	 * specified range.
 	 */
 	public static class DoubleRangeValidator extends NumberValidator
 	{
@@ -342,10 +368,12 @@ public abstract class NumberValidator extends AbstractValidator
 		private final double maximum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets the maximum and minimum values.
 		 * 
 		 * @param minimum
+		 *            the minimum value
 		 * @param maximum
+		 *            the maximum value
 		 */
 		public DoubleRangeValidator(double minimum, double maximum)
 		{
@@ -354,6 +382,9 @@ public abstract class NumberValidator extends AbstractValidator
 
 		}
 
+		/**
+		 * @see AbstractValidator#variablesMap(IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -362,11 +393,17 @@ public abstract class NumberValidator extends AbstractValidator
 			return map;
 		}
 
+		/**
+		 * @see AbstractValidator#resourceKey(FormComponent)
+		 */
 		protected String resourceKey()
 		{
 			return "NumberValidator.range";
 		}
 
+		/**
+		 * @see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			Number value = (Number)validatable.getValue();
@@ -379,7 +416,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check the double meets the minimum requirement
+	 * Validator for checking if a given <code>double</code> meets the minimum
+	 * requirement.
 	 */
 	public static class DoubleMinimumValidator extends NumberValidator
 	{
@@ -387,14 +425,19 @@ public abstract class NumberValidator extends AbstractValidator
 		private final double minimum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets the minimum value.
+		 * 
 		 * @param minimum
+		 *            the minimum value
 		 */
 		public DoubleMinimumValidator(double minimum)
 		{
 			this.minimum = minimum;
 		}
 
+		/**
+		 * @see AbstractValidator#variablesMap(IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -403,13 +446,16 @@ public abstract class NumberValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
 		protected String resourceKey()
 		{
 			return "NumberValidator.minimum";
 		}
 
+		/**
+		 * @see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).doubleValue() < minimum)
@@ -421,7 +467,8 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator to check the double meets a maximum requirement
+	 * Validator for checking if a given <code>double</code> meets a maximum
+	 * requirement.
 	 */
 	public static class DoubleMaximumValidator extends NumberValidator
 	{
@@ -429,14 +476,19 @@ public abstract class NumberValidator extends AbstractValidator
 		private final double maximum;
 
 		/**
-		 * Construct.
+		 * Constructor that sets the maximum value.
+		 * 
 		 * @param maximum
+		 *            the maximum value
 		 */
 		public DoubleMaximumValidator(double maximum)
 		{
 			this.maximum = maximum;
 		}
 
+		/**
+		 * @see AbstractValidator#variablesMap(IValidatable)
+		 */
 		protected Map variablesMap(IValidatable validatable)
 		{
 			final Map map = super.variablesMap(validatable);
@@ -444,11 +496,17 @@ public abstract class NumberValidator extends AbstractValidator
 			return map;
 		}
 
+		/**
+		 * @see AbstractValidator#resourceKey(FormComponent)
+		 */
 		protected String resourceKey()
 		{
 			return "NumberValidator.maximum";
 		}
 
+		/**
+		 * @see AbstractValidator#onValidate(IValidatable)
+		 */
 		protected void onValidate(IValidatable validatable)
 		{
 			if (((Number)validatable.getValue()).doubleValue() > maximum)

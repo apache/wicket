@@ -25,53 +25,52 @@ import java.util.regex.Pattern;
 import org.apache.wicket.validation.IValidatable;
 
 /**
+ * Validator for checking URLs. The default schemes allowed are
+ * <code>http://</code>, <code>https://</code>, and <code>ftp://</code>.
  * <p>
- * Urls validator
- * </p>
+ * The behavior of validation is modified by passing in one of these options:
  * <p>
- * Default alowed schemes accepted are <code>http://, https://, ftp://</code>.
- * </p>
- * Behavour of validation is modified by passing in options:
- * <li>ALLOW_2_SLASHES - [FALSE] Allows double '/' characters in the path
- * component.</li>
- * <li>NO_FRAGMENT- [FALSE] By default fragments are allowed, if this option is
- * included then fragments are flagged as illegal.</li>
- * <li>ALLOW_ALL_SCHEMES - [FALSE] By default only http, https, and ftp are
- * considered valid schemes. Enabling this option will let any scheme pass
- * validation.</li>
- * 
+ * <ul>
+ * <li><code>ALLOW_2_SLASHES - [FALSE]</code>: Allows double '/' characters
+ * in the path component.</li>
+ * <li><code>NO_FRAGMENT- [FALSE]</code>: By default fragments are allowed.
+ * If this option is included then fragments are flagged as illegal.</li>
+ * <li><code>ALLOW_ALL_SCHEMES - [FALSE]</code>: By default only http,
+ * https, and ftp are considered valid schemes. Enabling this option will let
+ * any scheme pass validation.</li>
+ * </ul>
  * <p>
- * Originally based org.apache.commons.validator.UrlValidator. Remove dependency
- * on Oro and use java.util.regexp instead
- * </p>
+ * This was originally based
+ * <code>org.apache.commons.validator.UrlValidator</code>, but the dependency
+ * on Jakarta-ORO was removed and it now uses java.util.regexp instead. Usage
+ * example:
+ * <p>
  * <pre>
- * 	Usage : 
- * 	component.add(new UrlValidator({"http", "https"}));
+ * <code>Component.add(new UrlValidator({&quot;http&quot;, &quot;https&quot;}));</code>
  * </pre>
  * 
+ * @author Vincent Demay
+ * @since 1.2.6
  * @see <a href='http://www.ietf.org/rfc/rfc2396.txt' > Uniform Resource
  *      Identifiers (URI): Generic Syntax </a>
- * 
- * @author Vincent Demay
- * 
  */
 public class UrlValidator extends AbstractValidator
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Allows all validly formatted schemes to pass validation instead of
+	 * Allows all validly-formatted schemes to pass validation instead of
 	 * supplying a set of valid schemes.
 	 */
 	public static final int ALLOW_ALL_SCHEMES = 1 << 0;
 
 	/**
-	 * Allow two slashes in the path component of the URL.
+	 * Allow two slashes in the path component of the <code>URL</code>.
 	 */
 	public static final int ALLOW_2_SLASHES = 1 << 1;
 
 	/**
-	 * Enabling this options disallows any URL fragments.
+	 * Enabling this option disallows any <code>URL</code> fragments.
 	 */
 	public static final int NO_FRAGMENTS = 1 << 2;
 
@@ -97,12 +96,13 @@ public class UrlValidator extends AbstractValidator
 	//                                          12            3  4          5       6   7        8  9
 
 	/**
-	 * Schema/Protocol (ie. http:, ftp:, file:, etc).
+	 * Schema / Protocol (<code>http:</code>, <code>ftp:</code>,
+	 * <code>file:</code>, etc).
 	 */
 	private static final int PARSE_URL_SCHEME = 2;
 
 	/**
-	 * Includes hostname/ip and port number.
+	 * Includes hostname / ip and port number.
 	 */
 	private static final int PARSE_URL_AUTHORITY = 4;
 
@@ -113,7 +113,7 @@ public class UrlValidator extends AbstractValidator
 	private static final int PARSE_URL_FRAGMENT = 9;
 
 	/**
-	 * Protocol (ie. http:, ftp:,https:).
+	 * Protocol (<code>http:</code>, <code>ftp:</code>, or <code>https:</code>).
 	 */
 	private static final String SCHEME_PATTERN = "^[" + SCHEME_CHARS + "].*$";
 
@@ -156,12 +156,12 @@ public class UrlValidator extends AbstractValidator
 	private Set allowedSchemes = new HashSet();
 
 	/**
-	 * If no schemes are provided, default to this set.
+	 * If no schemes are provided, default to this set of protocols.
 	 */
 	protected String[] defaultSchemes = { "http", "https", "ftp" };
 
 	/**
-	 * Create a UrlValidator with default properties.
+	 * Constructs a <code>UrlValidator</code> with default properties.
 	 */
 	public UrlValidator()
 	{
@@ -169,14 +169,18 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Behavior of validation is modified by passing in several strings options:
+	 * Constructs a <code>UrlValidator</code> with the given
+	 * <code>String</code> array of scheme options. The validation is modified
+	 * by passing in options in the <code>schemes</code> argument.
 	 * 
 	 * @param schemes
-	 *            Pass in one or more url schemes to consider valid, passing in
-	 *            a null will default to "http,https,ftp" being valid. If a
-	 *            non-null schemes is specified then all valid schemes must be
-	 *            specified. Setting the ALLOW_ALL_SCHEMES option will ignore
-	 *            the contents of schemes.
+	 *            Pass in one or more <code>URL</code> schemes to consider
+	 *            valid. Passing in a <code>null</code> will default to 
+	 *            "<code>http,https,ftp</code>"
+	 *            being used. If a non-<code>null</code> scheme is specified,
+	 *            then all valid schemes must be specified. Setting the
+	 *            <code>ALLOW_ALL_SCHEMES</code> option will ignore the
+	 *            contents of <code>schemes</code>.
 	 */
 	public UrlValidator(String[] schemes)
 	{
@@ -184,13 +188,14 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Initialize a UrlValidator with the given validation options.
+	 * Constructs a <code>UrlValidator</code> with the given validation
+	 * options.
 	 * 
 	 * @param options
 	 *            The options should be set using the public constants declared
 	 *            in this class. To set multiple options you simply add them
-	 *            together. For example, ALLOW_2_SLASHES + NO_FRAGMENTS enables
-	 *            both of those options.
+	 *            together. For example, <code>ALLOW_2_SLASHES</code> +
+	 *            <code>NO_FRAGMENTS</code> enables both of those options.
 	 */
 	public UrlValidator(int options)
 	{
@@ -198,15 +203,23 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Behavour of validation is modified by passing in options:
+	 * Constructs a <code>UrlValidator</code> with the given scheme and
+	 * validation options (see class description).
 	 * 
 	 * @param schemes
-	 *            The set of valid schemes.
+	 *            Pass in one or more <code>URL</code> schemes to consider
+	 *            valid. Passing in a <code>null</code> will default to 
+	 *            "<code>http,https,ftp</code>"
+	 *            being used. If a non-<code>null</code> scheme is specified,
+	 *            then all valid schemes must be specified. Setting the
+	 *            <code>ALLOW_ALL_SCHEMES</code> option will ignore the
+	 *            contents of <code>schemes</code>.
 	 * @param options
 	 *            The options should be set using the public constants declared
 	 *            in this class. To set multiple options you simply add them
-	 *            together. For example, ALLOW_2_SLASHES + NO_FRAGMENTS enables
-	 *            both of those options.
+	 *            together. For example, <code>ALLOW_2_SLASHES</code> +
+	 *            <code>NO_FRAGMENTS</code> enables both of those options.
+	 * 
 	 */
 	public UrlValidator(String[] schemes, int options)
 	{
@@ -225,6 +238,9 @@ public class UrlValidator extends AbstractValidator
 		this.allowedSchemes.addAll(Arrays.asList(schemes));
 	}
 
+	/**
+	 * @see AbstractValidator#onValidate(IValidatable)
+	 */
 	protected void onValidate(IValidatable validatable)
 	{
 		String url = (String)validatable.getValue();
@@ -234,17 +250,13 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * <p>
-	 * Checks if a field has a valid url address.
-	 * </p>
-	 * <p>
-	 * This method is public because it is directly used in tests.
-	 * </p>
+	 * Checks if a field has a valid <code>URL</code>. This method is public
+	 * because it is directly used in tests.
 	 * 
 	 * @param value
 	 *            The value validation is being performed on. A
 	 *            <code>null</code> value is considered invalid.
-	 * @return true if the url is valid.
+	 * @return <code>true</code> if the <code>URL</code> is valid
 	 */
 	public final boolean isValid(String value)
 	{
@@ -297,14 +309,14 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validate scheme. If schemes[] was initialized to a non null, then only
-	 * those scheme's are allowed. Note this is slightly different than for the
-	 * constructor.
+	 * Validates a scheme. If schemes[] was initialized to non-<code>null</code>,
+	 * then only those schemes are allowed. Note that this is slightly different
+	 * than for the constructor.
 	 * 
 	 * @param scheme
 	 *            The scheme to validate. A <code>null</code> value is
 	 *            considered invalid.
-	 * @return true if valid.
+	 * @return <code>true</code> if the <code>URL</code> is valid
 	 */
 	protected boolean isValidScheme(String scheme)
 	{
@@ -331,13 +343,13 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Returns true if the authority is properly formatted. An authority is the
-	 * combination of hostname and port. A <code>null</code> authority value
-	 * is considered invalid.
+	 * Returns <code>true</code> if the authority is properly formatted. An
+	 * authority is the combination of host name and port. A <code>null</code>
+	 * authority value is considered invalid.
 	 * 
 	 * @param authority
-	 *            Authority value to validate.
-	 * @return true if authority (hostname and port) is valid.
+	 *            an authority value to validate
+	 * @return true if authority (host name and port) is valid.
 	 */
 	protected boolean isValidAuthority(String authority)
 	{
@@ -472,12 +484,12 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Returns true if the path is valid. A <code>null</code> value is
-	 * considered invalid.
+	 * Returns <code>true</code> if the path is valid. A <code>null</code>
+	 * value is considered invalid.
 	 * 
 	 * @param path
-	 *            Path value to validate.
-	 * @return true if path is valid.
+	 *            a path value to validate.
+	 * @return <code>true</code> if path is valid.
 	 */
 	protected boolean isValidPath(String path)
 	{
@@ -513,12 +525,12 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Returns true if the query is null or it's a properly formatted query
-	 * string.
+	 * Returns <code>true</code> if the query is <code>null</code> or if
+	 * it's a properly-formatted query string.
 	 * 
 	 * @param query
-	 *            Query value to validate.
-	 * @return true if query is valid.
+	 *            a query value to validate
+	 * @return <code>true</code> if the query is valid
 	 */
 	protected boolean isValidQuery(String query)
 	{
@@ -532,11 +544,12 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * Returns true if the given fragment is null or fragments are allowed.
+	 * Returns <code>true</code> if the given fragment is <code>null</code>
+	 * or fragments are allowed.
 	 * 
 	 * @param fragment
-	 *            Fragment value to validate.
-	 * @return true if fragment is valid.
+	 *            a fragment value to validate
+	 * @return <code>true</code> if the fragment is valid
 	 */
 	protected boolean isValidFragment(String fragment)
 	{
@@ -552,10 +565,10 @@ public class UrlValidator extends AbstractValidator
 	 * Returns the number of times the token appears in the target.
 	 * 
 	 * @param token
-	 *            Token value to be counted.
+	 *            a token value to be counted
 	 * @param target
-	 *            Target value to count tokens in.
-	 * @return the number of tokens.
+	 *            a target <code>String</code> to count tokens in
+	 * @return the number of tokens
 	 */
 	protected int countToken(String token, String target)
 	{
@@ -574,33 +587,26 @@ public class UrlValidator extends AbstractValidator
 	}
 
 	/**
-	 * <p>
-	 * Checks if the field isn't null and length of the field is greater than
-	 * zero not including whitespace.
-	 * </p>
+	 * Checks if the field isn't <code>null</code> and if length of the field
+	 * is greater than zero, not including whitespace.
 	 * 
 	 * @param value
-	 *            The value validation is being performed on.
-	 * @return true if blank or null.
+	 *            the value validation is being performed on
+	 * @return <code>true</code> if blank or <code>null</code>
 	 */
 	public static boolean isBlankOrNull(String value)
 	{
 		return ((value == null) || (value.trim().length() == 0));
 	}
 
-
 	// Flag Management
 	/**
 	 * Tests whether the given flag is on. If the flag is not a power of 2 (ie.
 	 * 3) this tests whether the combination of flags is on.
 	 * 
-	 * @param flags
-	 *            list
 	 * @param flag
-	 *            Flag value to check.
-	 * 
-	 * 
-	 * @return whether the specified flag value is on.
+	 *            flag value to check
+	 * @return whether the specified flag value is on
 	 */
 	public boolean isOn(long flag)
 	{
@@ -612,9 +618,8 @@ public class UrlValidator extends AbstractValidator
 	 * 3) this tests whether the combination of flags is off.
 	 * 
 	 * @param flag
-	 *            Flag value to check.
-	 * 
-	 * @return whether the specified flag value is off.
+	 *            flag value to check.
+	 * @return whether the specified flag value is off
 	 */
 	public boolean isOff(long flag)
 	{

@@ -19,23 +19,25 @@ package org.apache.wicket.validation;
 import org.apache.wicket.IClusterable;
 
 /**
- * A validator that can validate a {@link IValidatable} object.
+ * Interface representing a validator that can validate an {@link IValidatable} object.
  * <p>
- * Unless the validator implements also the {@link INullAcceptingValidator}
- * interface, wicket will not pass null value to the
+ * Unless the validator implements the {@link INullAcceptingValidator}
+ * interface as well, Wicket will not pass <code>null</code> values to the
  * {@link IValidator#validate(IValidatable)} method.
- * 
  * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public interface IValidator extends IClusterable
 {
 	/**
-	 * Validates the <code>validatable</code> object. Validation errors should
-	 * be reported using {@link IValidatable#error(IValidationError)} method.
+	 * Validates the <code>IValidatable</code> instance. Validation errors
+	 * should be reported using the {@link IValidatable#error(IValidationError)}
+	 * method.
 	 * 
 	 * @param validatable
+	 *            the <code>IValidatable</code> instance being validated
 	 */
 	void validate(IValidatable validatable);
 }

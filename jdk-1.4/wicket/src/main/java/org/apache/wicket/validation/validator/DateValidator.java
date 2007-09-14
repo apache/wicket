@@ -23,39 +23,41 @@ import org.apache.wicket.validation.IValidatable;
 
 
 /**
- * A validator for dates that can be used for subclassing or use one of the
- * static factory methods to get the default date validators as range, maximum
- * or minimum.
+ * Validator for checking dates. This validator can be extended or can be used
+ * for one of its static factory methods to get the default
+ * <code>DateValidator</code> as a range, maximum, or minimum type.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
+ * @since 1.2.6
  */
 public abstract class DateValidator extends AbstractValidator
 {
 
 	/**
-	 * Gets a Date range validator to check if the date is between the minimum
-	 * and maximum dates.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "DateValidator.range" and the messages keys that can be used are:
+	 * Gets a <code>Date</code> range validator for checking if the
+	 * <code>Date</code> value falls between the minimum and maximum
+	 * <code>Date</code> values. If that is not the case, an error message
+	 * will be generated with the key "DateValidator.range". The message keys
+	 * that can be used are:
+	 * <p>
 	 * <ul>
-	 * <li>${minimum}: The minimum date</li>
-	 * <li>${maximum}: The maximum date</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${minimum}: the minimum date</li>
+	 * <li>${maximum}: the maximum date</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum date.
+	 *            the minimum <code>Date</code>
 	 * @param maximum
-	 *            The maximum date.
+	 *            the maximum <code>Date</code>
 	 * 
-	 * @return The DateValidator
+	 * @return the requested <code>DateValidator</code>
 	 */
 	public static DateValidator range(Date minimum, Date maximum)
 	{
@@ -63,24 +65,25 @@ public abstract class DateValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Date minimum validator to check if a date is greater then the
-	 * given minimum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "DateValidator.minimum" and the messages keys that can be used are:
+	 * Gets a <code>Date</code> minimum validator for checking if a
+	 * <code>Date</code> value is greater than the given minimum
+	 * <code>Date</code> value. If that is not the case, an error message will
+	 * be generated with the key "DateValidator.minimum". The message keys that
+	 * can be used are:
+	 * <p>
 	 * <ul>
-	 * <li>${minimum}: The minimal date</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${minimum}: the minimum date</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
-	 *            The minimum length of the string.
+	 *            the minimum <code>Date</code>
 	 * 
-	 * @return The DateValidator
+	 * @return the requested <code>DateValidator</code>
 	 */
 	public static DateValidator minimum(Date minimum)
 	{
@@ -88,24 +91,24 @@ public abstract class DateValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Date maximum validator to check if a date is smaller then the
-	 * given maximum value.
-	 * 
-	 * If that is not the case then an error message will be generated with the
-	 * key "DateValidator.maximum" and the messages keys that can be used are:
+	 * Gets a <code>Date</code> maximum validator for checking if a
+	 * <code>Date</code> value is smaller than the given maximum value. If
+	 * that is not the case, an error message will be generated with the key
+	 * "DateValidator.maximum". The message keys that can be used are:
+	 * <p>
 	 * <ul>
-	 * <li>${maximum}: The maximum date</li>
-	 * <li>${input}: the input the user did give</li>
-	 * <li>${name}: the name of the component that failed</li>
-	 * <li>${label}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${maximum}: the maximum date</li>
+	 * <li>${input}: the input the user gave</li>
+	 * <li>${name}: the name of the <code>Component</code> that failed</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes
+	 * from <code>FormComponent.labelModel</code> or resource key
+	 * [form-id].[form-component-id] in that order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
-	 *            The maximum date.
+	 *            the maximum <code>Date</code>
 	 * 
-	 * @return The DateValidator
+	 * @return the requested <code>DateValidator</code>
 	 */
 	public static DateValidator maximum(Date maximum)
 	{
@@ -135,7 +138,7 @@ public abstract class DateValidator extends AbstractValidator
 		}
 
 		/**
-		 * @see org.apache.wicket.validation.validator.AbstractValidator#resourceKey(org.apache.wicket.markup.html.form.FormComponent)
+		 * @see AbstractValidator#resourceKey(FormComponent)
 		 */
 		protected String resourceKey()
 		{
