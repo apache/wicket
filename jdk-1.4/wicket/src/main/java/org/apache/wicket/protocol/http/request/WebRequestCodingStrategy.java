@@ -288,8 +288,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public IRequestTargetUrlCodingStrategy[] listMounts()
 	{
-		return (IRequestTargetUrlCodingStrategy[])mountsOnPath.strategies().toArray(
-				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
+		synchronized(mountsOnPath)
+		{
+			return (IRequestTargetUrlCodingStrategy[])mountsOnPath.strategies().toArray(
+					new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
+		}
 	}
 
 	/**
@@ -297,16 +300,19 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
-		if (path == null)
+		synchronized(mountsOnPath)
 		{
-			return mountsOnPath.strategyForMount(null);
-		}
-		else
-		{
-			IRequestTargetUrlCodingStrategy strategy = mountsOnPath.strategyForPath(path);
-			if (strategy != null)
+			if (path == null)
 			{
-				return strategy;
+				return mountsOnPath.strategyForMount(null);
+			}
+			else
+			{
+				IRequestTargetUrlCodingStrategy strategy = mountsOnPath.strategyForPath(path);
+				if (strategy != null)
+				{
+					return strategy;
+				}
 			}
 		}
 		return null;
@@ -342,12 +348,15 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			path = path.substring(1);
 		}
 
-		if (mountsOnPath.strategyForMount(path) != null)
+		synchronized(mountsOnPath)
 		{
-			throw new WicketRuntimeException(path + " is already mounted for " +
-					mountsOnPath.strategyForMount(path));
+			if (mountsOnPath.strategyForMount(path) != null)
+			{
+				throw new WicketRuntimeException(path + " is already mounted for " +
+						mountsOnPath.strategyForMount(path));
+			}
+			mountsOnPath.mount(path, encoder);
 		}
-		mountsOnPath.mount(path, encoder);
 	}
 
 	/**
@@ -394,7 +403,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			path = path.substring(1);
 		}
 
-		mountsOnPath.unmount(path);
+		synchronized(mountsOnPath)
+		{
+			mountsOnPath.unmount(path);
+		}
 	}
 
 	/**
@@ -848,17 +860,19 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
-		// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
-		// cache lookup results
-		for (Iterator i = mountsOnPath.strategies().iterator(); i.hasNext();)
+		synchronized(mountsOnPath)
 		{
-			IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
-			if (encoder.matches(requestTarget))
+			// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
+			// cache lookup results
+			for (Iterator i = mountsOnPath.strategies().iterator(); i.hasNext();)
 			{
-				return encoder;
+				IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
+				if (encoder.matches(requestTarget))
+				{
+					return encoder;
+				}
 			}
 		}
-
 		return null;
 	}
 
