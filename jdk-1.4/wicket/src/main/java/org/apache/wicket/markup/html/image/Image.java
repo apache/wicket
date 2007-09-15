@@ -31,8 +31,7 @@ import org.apache.wicket.util.value.ValueMap;
 /**
  * An Image component displays a localizable image resource.
  * <p>
- * For details of how Images load, generate and manage images, see
- * {@link LocalizedImageResource}.
+ * For details of how Images load, generate and manage images, see {@link LocalizedImageResource}.
  * 
  * @author Jonathan Locke
  */
@@ -44,10 +43,9 @@ public class Image extends WebComponent implements IResourceListener
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
-	 * This constructor can be used if you have a img tag that has a src that
-	 * points to a PackageResource (which will be created and bind to the shared
-	 * resources) Or if you have a value attribute in your tag for which the
-	 * image factory can make an image.
+	 * This constructor can be used if you have a img tag that has a src that points to a
+	 * PackageResource (which will be created and bind to the shared resources) Or if you have a
+	 * value attribute in your tag for which the image factory can make an image.
 	 * 
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
@@ -57,15 +55,14 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
-	 * Constructs an image from an image resourcereference. That resource
-	 * reference will bind its resource to the current SharedResources.
+	 * Constructs an image from an image resourcereference. That resource reference will bind its
+	 * resource to the current SharedResources.
 	 * 
-	 * If you are using non sticky session clustering and the resource reference
-	 * is pointing to a Resource that isn't guaranteed to be on every server,
-	 * for example a dynamic image or resources that aren't added with a
-	 * IInitializer at application startup. Then if only that resource is
-	 * requested from another server, without the rendering of the page, the
-	 * image won't be there and will result in a broken link.
+	 * If you are using non sticky session clustering and the resource reference is pointing to a
+	 * Resource that isn't guaranteed to be on every server, for example a dynamic image or
+	 * resources that aren't added with a IInitializer at application startup. Then if only that
+	 * resource is requested from another server, without the rendering of the page, the image won't
+	 * be there and will result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -78,15 +75,14 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
-	 * Constructs an image from an image resourcereference. That resource
-	 * reference will bind its resource to the current SharedResources.
+	 * Constructs an image from an image resourcereference. That resource reference will bind its
+	 * resource to the current SharedResources.
 	 * 
-	 * If you are using non sticky session clustering and the resource reference
-	 * is pointing to a Resource that isn't guaranteed to be on every server,
-	 * for example a dynamic image or resources that aren't added with a
-	 * IInitializer at application startup. Then if only that resource is
-	 * requested from another server, without the rendering of the page, the
-	 * image won't be there and will result in a broken link.
+	 * If you are using non sticky session clustering and the resource reference is pointing to a
+	 * Resource that isn't guaranteed to be on every server, for example a dynamic image or
+	 * resources that aren't added with a IInitializer at application startup. Then if only that
+	 * resource is requested from another server, without the rendering of the page, the image won't
+	 * be there and will result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -105,9 +101,9 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * Constructs an image directly from an image resource.
 	 * 
-	 * This one doesn't have the 'non sticky session clustering' problem that
-	 * the ResourceReference constructor has. But this will result in a non
-	 * 'stable' url and the url will have request parameters.
+	 * This one doesn't have the 'non sticky session clustering' problem that the ResourceReference
+	 * constructor has. But this will result in a non 'stable' url and the url will have request
+	 * parameters.
 	 * 
 	 * @param id
 	 *            See Component
@@ -196,7 +192,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected Resource getImageResource()
 	{
-		return null;
+		return localizedImageResource.getResource();
 	}
 
 	/**
@@ -204,7 +200,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected ResourceReference getImageResourceReference()
 	{
-		return null;
+		return localizedImageResource.getResourceReference();
 	}
 
 	/**
@@ -247,8 +243,7 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream,
-	 *      ComponentTag)
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
