@@ -512,7 +512,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 */
 	public DiskPageStore()
 	{
-		this((int)Bytes.megabytes(10).bytes(), (int)Bytes.megabytes(100).bytes(), 25);
+		this((int)Bytes.megabytes(10).bytes(), (int)Bytes.megabytes(100).bytes(), 50);
 	}
 
 	/**
