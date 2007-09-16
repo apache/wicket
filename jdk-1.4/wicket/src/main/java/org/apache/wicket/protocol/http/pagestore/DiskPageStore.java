@@ -31,6 +31,7 @@ import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.FilePageStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
@@ -485,8 +486,23 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	private static File getDefaultFileStoreFolder()
 	{
-		return (File)((WebApplication)Application.get()).getServletContext().getAttribute(
-				"javax.servlet.context.tempdir");
+		final File dir = (File)((WebApplication)Application.get()).getServletContext()
+				.getAttribute("javax.servlet.context.tempdir");
+		if (dir != null)
+		{
+			return dir;
+		}
+		else
+		{
+			try
+			{
+				return File.createTempFile("file-prefix", null).getParentFile();
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
 	}
 
 	/**
