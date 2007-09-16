@@ -1036,4 +1036,24 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		encodingBodyResponse.reset();
 	}
+
+	/**
+	 * Static method that returns current {@link AjaxRequestTarget} or <code>null</code> of no
+	 * {@link AjaxRequestTarget} is available.
+	 * 
+	 * @return {@link AjaxRequestTarget} instance if current request is an Ajax request,
+	 *         <code>null</code> otherwise.
+	 */
+	public static AjaxRequestTarget get()
+	{
+		final RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle != null)
+		{
+			if (requestCycle.getRequestTarget() instanceof AjaxRequestTarget)
+			{
+				return (AjaxRequestTarget)requestCycle.getRequestTarget();
+			}
+		}
+		return null;
+	}
 }

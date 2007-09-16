@@ -20,8 +20,10 @@ import org.apache.wicket.Component;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.behavior.AbstractBehavior;
+import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
  * A behavior that adds a span with wicket's default indicator gif to the end of
@@ -59,11 +61,29 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	}
 
 	/**
+	 * @see AbstractBehavior#renderHead(IHeaderResponse)
+	 */
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		if (AjaxRequestTarget.get() != null)
+		{
+			final String javascript = "var e = Wicket.$('"
+					+ getMarkupId()
+					+ "'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);";
+
+			response.renderJavascript(javascript, null);
+		}
+	}
+
+	/**
 	 * @see org.apache.wicket.behavior.AbstractBehavior#onRendered(org.apache.wicket.Component)
 	 */
 	public void onRendered(Component component)
 	{
 		final Response r = component.getResponse();
+
 		r.write("<span style=\"display:none;\" class=\"");
 		r.write(getSpanClass());
 		r.write("\" ");
