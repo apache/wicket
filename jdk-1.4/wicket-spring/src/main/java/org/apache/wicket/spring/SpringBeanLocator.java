@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.apache.wicket.spring;
 
@@ -21,10 +21,10 @@ import java.lang.ref.WeakReference;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
+import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-
 
 /**
  * Implementation of {@link IProxyTargetLocator} that can locate beans within a
@@ -37,7 +37,7 @@ import org.springframework.context.ApplicationContext;
 public class SpringBeanLocator implements IProxyTargetLocator
 {
 	// Weak reference so we don't hold up WebApp classloader garbage collection.
-	private transient WeakReference/*<Class>*/ beanTypeCache;
+	private transient WeakReference/* <Class> */beanTypeCache;
 
 	private String beanTypeName;
 
@@ -110,10 +110,16 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 		if (names.length > 1)
 		{
-			throw new IllegalStateException(
-					"more then one bean of type ["
-							+ clazz.getName()
-							+ "] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict");
+			StringBuilder msg = new StringBuilder();
+			msg.append("more then one bean of type [");
+			msg.append(clazz.getName());
+			msg.append("] found, you have to specify the name of the bean ");
+			msg.append("(@SpringBean(name=\"foo\")) in order to resolve this conflict. ");
+
+			msg.append("Matched beans: ");
+			msg.append(Strings.join(",", names));
+
+			throw new IllegalStateException(msg.toString());
 		}
 		return names[0];
 	}
@@ -137,7 +143,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public Class getBeanType()
 	{
-		Class clazz = beanTypeCache == null ? null : (Class)beanTypeCache.get();
+		Class clazz = beanTypeCache == null ? null : (Class) beanTypeCache.get();
 		if (clazz == null)
 		{
 			beanTypeCache = new WeakReference(clazz = Classes.resolveClass(beanTypeName));
