@@ -33,38 +33,46 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * A Map implementation that holds values, parses strings and exposes a variety
- * of convenience methods.
+ * A <code>IValueMap</code> implementation that holds values, parses
+ * <code>String</code>s, and exposes a variety of convenience methods.
  * <p>
- * In addition to a no-arg constructor and a copy constructor that takes a Map
- * argument, ValueMaps can be constructed using a parsing constructor.
- * ValueMap(String) will parse values from the string in comma separated
- * key/value assignment pairs. For example, new ValueMap("a=9,b=foo").
+ * In addition to a no-arg constructor and a copy constructor that takes a
+ * <code>Map</code> argument, <code>ValueMap</code>s can be constructed
+ * using a parsing constructor. <code>ValueMap(String)</code> will parse
+ * values from the string in comma separated key/value assignment pairs. For
+ * example, <code>new ValueMap("a=9,b=foo")</code>.
  * <p>
- * Values can be retrieved from the map in the usual way or with methods that do
- * handy conversions to various types, including String, StringValue, int, long,
- * double, Time and Duration.
+ * Values can be retrieved from the <code>ValueMap</code> in the usual way or
+ * with methods that do handy conversions to various types, including
+ * <code>String</code>, <code>StringValue</code>, <code>int</code>,
+ * <code>long</code>, <code>double</code>, <code>Time</code> and
+ * <code>Duration</code>.
  * <p>
- * The makeImmutable method will make the underlying map immutable. Further
- * attempts to change the map will result in a runtime exception.
+ * The <code>makeImmutable</code> method will make the underlying
+ * <code>Map</code> immutable. Further attempts to change the <code>Map</code>
+ * will result in a <code>RuntimeException</code>.
  * <p>
- * The toString() method converts a ValueMap object to a readable key/value
- * string for diagnostics.
+ * The <code>toString</code> method converts a <code>ValueMap</code> object
+ * to a readable key/value string for diagnostics.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public class ValueMap extends HashMap implements IValueMap
 {
-	/** An empty ValueMap. */
+	/** an empty <code>ValueMap</code>. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
 
 	private static final long serialVersionUID = 1L;
 
-	/** True if this value map has been made immutable. */
+	/**
+	 * <code>true</code> if this <code>ValueMap</code> has been made
+	 * immutable.
+	 */
 	private boolean immutable = false;
 
 	/**
-	 * Constructs empty value map.
+	 * Constructs empty <code>ValueMap</code>.
 	 */
 	public ValueMap()
 	{
@@ -74,7 +82,7 @@ public class ValueMap extends HashMap implements IValueMap
 	 * Copy constructor.
 	 * 
 	 * @param map
-	 *            The map to copy
+	 *            the <code>ValueMap</code> to copy
 	 */
 	public ValueMap(final Map map)
 	{
@@ -82,12 +90,14 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Constructor. NOTE: Please use RequestUtils.decodeParameters() if you wish
-	 * to properly decode a request URL.
+	 * Constructor.
+	 * <p>
+	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you
+	 * wish to properly decode a request URL.
 	 * 
 	 * @param keyValuePairs
-	 *            List of key value pairs separated by commas. For example,
-	 *            "param1=foo,param2=bar"
+	 *            list of key/value pairs separated by commas. 
+	 *            For example, "<code>param1=foo,param2=bar</code>"
 	 */
 	public ValueMap(final String keyValuePairs)
 	{
@@ -95,14 +105,18 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Constructor. NOTE: Please use RequestUtils.decodeParameters() if you wish
-	 * to properly decode a request URL.
+	 * Constructor.
+	 * <p>
+	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you
+	 * wish to properly decode a request URL.
 	 * 
 	 * @param keyValuePairs
-	 *            List of key value pairs separated by a given delimiter. For
-	 *            example, "param1=foo,param2=bar" where delimiter is ",".
+	 *            list of key/value pairs separated by a given delimiter. For
+	 *            example, "<code>param1=foo,param2=bar</code>" where
+	 *            delimiter is "<code>,</code>".
 	 * @param delimiter
-	 *            Delimiter string used to separate key/value pairs
+	 *            delimiter <code>String</code> used to separate key/value
+	 *            pairs
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
@@ -155,13 +169,14 @@ public class ValueMap extends HashMap implements IValueMap
 	 * Constructor.
 	 * 
 	 * @param keyValuePairs
-	 *            List of key value pairs separated by a given delimiter. For
-	 *            example, "param1=foo,param2=bar" where delimiter is ",".
+	 *            list of key/value pairs separated by a given delimiter. For
+	 *            example, "<code>param1=foo,param2=bar</code>" where
+	 *            delimiter is "<code>,</code>".
 	 * @param delimiter
-	 *            Delimiter string used to separate key/value pairs
+	 *            delimiter string used to separate key/value pairs
 	 * @param valuePattern
-	 *            Pattern for value. To pass a simple regular expression pass
-	 *            "new MetaPattern(regexp)".
+	 *            pattern for value. To pass a simple regular expression, 
+	 *            pass "<code>new MetaPattern(regexp)</code>".
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter,
 			final MetaPattern valuePattern)
@@ -202,12 +217,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a boolean value by key.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getBoolean(String)
 	 */
 	public final boolean getBoolean(final String key) throws StringValueConversionException
 	{
@@ -215,12 +225,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a double value by key.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getDouble(String)
 	 */
 	public final double getDouble(final String key) throws StringValueConversionException
 	{
@@ -228,14 +233,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a double using a default if not found.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getDouble(String, double)
 	 */
 	public final double getDouble(final String key, final double defaultValue)
 			throws StringValueConversionException
@@ -244,12 +242,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a duration.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getDuration(String)
 	 */
 	public final Duration getDuration(final String key) throws StringValueConversionException
 	{
@@ -257,12 +250,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets an int.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getInt(String)
 	 */
 	public final int getInt(final String key) throws StringValueConversionException
 	{
@@ -270,14 +258,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets an int, using a default if not found.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getInt(String, int)
 	 */
 	public final int getInt(final String key, final int defaultValue)
 			throws StringValueConversionException
@@ -286,12 +267,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a long.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getLong(String)
 	 */
 	public final long getLong(final String key) throws StringValueConversionException
 	{
@@ -299,14 +275,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a long using a default if not found.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getLong(String, long)
 	 */
 	public final long getLong(final String key, final long defaultValue)
 			throws StringValueConversionException
@@ -315,13 +284,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a string by key.
-	 * 
-	 * @param key
-	 *            The get
-	 * @param defaultValue
-	 *            Default value to return if value is null
-	 * @return The string
+	 * @see IValueMap#getString(String, String)
 	 */
 	public final String getString(final String key, final String defaultValue)
 	{
@@ -330,11 +293,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a string by key.
-	 * 
-	 * @param key
-	 *            The get
-	 * @return The string
+	 * @see IValueMap#getString(String)
 	 */
 	public final String getString(final String key)
 	{
@@ -364,11 +323,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a string by key.
-	 * 
-	 * @param key
-	 *            The get
-	 * @return The string
+	 * @see IValueMap#getCharSequence(String)
 	 */
 	public final CharSequence getCharSequence(final String key)
 	{
@@ -406,13 +361,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a String array by key. If the value was a String[] it will be
-	 * returned directly. If it was a String it will be converted to a String
-	 * array of one. If it was an array of another type a String array will be
-	 * made and the elements will be converted to a string.
-	 * 
-	 * @param key
-	 * @return The String array of that key
+	 * @see IValueMap#getStringArray(String)
 	 */
 	public String[] getStringArray(final String key)
 	{
@@ -443,11 +392,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a StringValue by key.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The string value object
+	 * @see IValueMap#getStringValue(String)
 	 */
 	public StringValue getStringValue(final String key)
 	{
@@ -455,12 +400,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a time.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see IValueMap#getTime(String)
 	 */
 	public final Time getTime(final String key) throws StringValueConversionException
 	{
@@ -468,9 +408,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets whether this value map is made immutable.
-	 * 
-	 * @return whether this value map is made immutable
+	 * @see IValueMap#isImmutable()
 	 */
 	public final boolean isImmutable()
 	{
@@ -478,10 +416,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Makes this value map immutable by changing the underlying map
-	 * representation to a collections "unmodifiableMap". After calling this
-	 * method, any attempt to modify this map will result in a runtime exception
-	 * being thrown by the collections classes.
+	 * @see IValueMap#makeImmutable()
 	 */
 	public final IValueMap makeImmutable()
 	{
@@ -499,16 +434,18 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * This methods adds the value to this map under the given key If the key
-	 * already is in the map it will combine the values into a String array else
-	 * it will just store the value itself
+	 * Adds the value to this <code>ValueMap</code> with the given key. If the
+	 * key already is in the <code>ValueMap</code> it will combine the values
+	 * into a <code>String</code> array, else it will just store the value
+	 * itself.
 	 * 
 	 * @param key
-	 *            The key to store the value under.
+	 *            the key to store the value under
 	 * @param value
-	 *            The value that must be added/merged to the map
-	 * @return The value itself if there was no previous value or a string array
-	 *         with the combined values.
+	 *            the value that must be added/merged to the
+	 *            <code>ValueMap</code>
+	 * @return the value itself if there was no previous value, or a
+	 *         <code>String</code> array with the combined values
 	 */
 	public final Object add(final String key, final String value)
 	{
@@ -559,12 +496,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Provided the hash key is a string and you need to access the value
-	 * ignoring ignoring the keys case (upper or lower letter), than you may use
-	 * this method to get the correct writing.
-	 * 
-	 * @param key
-	 * @return The key with the correct writing
+	 * @see IValueMap#getKey(String)
 	 */
 	public String getKey(final String key)
 	{
@@ -585,10 +517,11 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Gets a string representation of this object
+	 * Generates a <code>String</code> representation of this object.
 	 * 
-	 * @return String representation of map consistent with tag attribute style
-	 *         of markup elements, for example: a="x" b="y" c="z"
+	 * @return <code>String</code> representation of this
+	 *         <code>ValueMap</code> consistent with the tag-attribute style
+	 *         of markup elements. For example: <code>a="x" b="y" c="z"</code>.
 	 */
 	public String toString()
 	{
@@ -622,7 +555,7 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Throw exception if map is immutable.
+	 * Throws an exception if <code>ValueMap</code> is immutable.
 	 */
 	private final void checkMutability()
 	{

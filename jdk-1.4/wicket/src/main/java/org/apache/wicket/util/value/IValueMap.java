@@ -24,12 +24,12 @@ import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
 
 
-
 /**
- * A Map interface that holds values, parses strings and exposes a variety of
- * convenience methods.
+ * A <code>Map</code> interface that holds values, parses <code>String</code>s,
+ * and exposes a variety of convenience methods.
  * 
- * @author jcompagner
+ * @author Johan Compagner
+ * @since 1.2.6
  */
 public interface IValueMap extends Map
 {
@@ -39,165 +39,173 @@ public interface IValueMap extends Map
 	void clear();
 
 	/**
-	 * Gets a boolean value by key.
+	 * Retrieves a <code>boolean</code> value by key.
 	 * 
 	 * @param key
-	 *            The key
-	 * @return The value
+	 *            the key
+	 * @return the value
 	 * @throws StringValueConversionException
 	 */
 	boolean getBoolean(final String key) throws StringValueConversionException;
 
 	/**
-	 * Gets a double value by key.
+	 * Retrieves a <code>double</code> value by key.
 	 * 
 	 * @param key
-	 *            The key
-	 * @return The value
+	 *            the key
+	 * @return the value
 	 * @throws StringValueConversionException
 	 */
 	double getDouble(final String key) throws StringValueConversionException;
 
 	/**
-	 * Gets a double using a default if not found.
+	 * Retrieves a <code>double</code> value by key, using a default value if
+	 * not found.
 	 * 
 	 * @param key
-	 *            The key
+	 *            the key
 	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
+	 *            value to use if no value is in this <code>IValueMap</code>
+	 * @return the value
 	 * @throws StringValueConversionException
 	 */
 	double getDouble(final String key, final double defaultValue)
 			throws StringValueConversionException;
 
 	/**
-	 * Gets a duration.
+	 * Retrieves a <code>Duration</code> by key.
 	 * 
 	 * @param key
-	 *            The key
-	 * @return The value
+	 *            the key
+	 * @return the <code>Duration</code> value
 	 * @throws StringValueConversionException
 	 */
 	Duration getDuration(final String key) throws StringValueConversionException;
 
 	/**
-	 * Gets an int.
+	 * Retrieves an <code>int</code> value by key.
 	 * 
 	 * @param key
-	 *            The key
-	 * @return The value
+	 *            the key
+	 * @return the value
 	 * @throws StringValueConversionException
 	 */
 	int getInt(final String key) throws StringValueConversionException;
 
 	/**
-	 * Gets an int, using a default if not found.
+	 * Retrieves an <code>int</code> value by key, using a default value if
+	 * not found.
 	 * 
 	 * @param key
-	 *            The key
+	 *            the key
 	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
+	 *            value to use if no value is in this <code>IValueMap</code>
+	 * @return the value
 	 * @throws StringValueConversionException
 	 */
 	int getInt(final String key, final int defaultValue) throws StringValueConversionException;
 
 	/**
-	 * Gets a long.
+	 * Retrieves a <code>long</code> value by key.
 	 * 
 	 * @param key
-	 *            The key
-	 * @return The value
+	 *            the key
+	 * @return the value
 	 * @throws StringValueConversionException
 	 */
 	long getLong(final String key) throws StringValueConversionException;
 
 	/**
-	 * Gets a long using a default if not found.
+	 * Retrieves a <code>long</code> value by key, using a default value if
+	 * not found.
 	 * 
 	 * @param key
-	 *            The key
+	 *            the key
 	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
+	 *            value to use if no value in this <code>IValueMap</code>
+	 * @return the value
 	 * @throws StringValueConversionException
 	 */
 	long getLong(final String key, final long defaultValue) throws StringValueConversionException;
 
 	/**
-	 * Gets a string by key.
+	 * Retrieves a <code>String</code> by key, using a default value if not
+	 * found.
 	 * 
 	 * @param key
-	 *            The get
+	 *            the key
 	 * @param defaultValue
-	 *            Default value to return if value is null
-	 * @return The string
+	 *            default value to return if value is <code>null</code>
+	 * @return the <code>String</code>
 	 */
 	String getString(final String key, final String defaultValue);
 
 	/**
-	 * Gets a string by key.
+	 * Retrieves a <code>String</code> by key.
 	 * 
 	 * @param key
-	 *            The get
-	 * @return The string
+	 *            the key
+	 * @return the <code>String</code>
 	 */
 	String getString(final String key);
 
 	/**
-	 * Gets a string by key.
+	 * Retrieves a <code>CharSequence</code> by key.
 	 * 
 	 * @param key
-	 *            The get
-	 * @return The string
+	 *            the key
+	 * @return the <code>CharSequence</code>
 	 */
 	CharSequence getCharSequence(final String key);
 
 	/**
-	 * Gets a String array by key. If the value was a String[] it will be
-	 * returned directly. If it was a String it will be converted to a String
-	 * array of one. If it was an array of another type a String array will be
-	 * made and the elements will be converted to a string.
+	 * Retrieves a <code>String</code> array by key. If the value was a
+	 * <code>String[]</code> it will be returned directly. If it was a
+	 * <code>String</code> it will be converted to a <code>String</code>
+	 * array of length one. If it was an array of another type, a
+	 * <code>String</code> array will be made and each element will be
+	 * converted to a <code>String</code>.
 	 * 
 	 * @param key
-	 * @return The String array of that key
+	 *            the key
+	 * @return the <code>String</code> array of that key
 	 */
 	String[] getStringArray(final String key);
 
 	/**
-	 * Gets a StringValue by key.
+	 * Retrieves a <code>StringValue</code> object by key.
 	 * 
 	 * @param key
-	 *            The key
-	 * @return The string value object
+	 *            the key
+	 * @return the <code>StringValue</code> object
 	 */
 	StringValue getStringValue(final String key);
 
 	/**
-	 * Gets a time.
+	 * Retrieves a <code>Time</code> object by key.
 	 * 
 	 * @param key
-	 *            The key
-	 * @return The value
+	 *            the key
+	 * @return the <code>Time</code> object
 	 * @throws StringValueConversionException
 	 */
 	Time getTime(final String key) throws StringValueConversionException;
 
 	/**
-	 * Gets whether this value map is made immutable.
+	 * Returns whether or not this <code>IValueMap</code> is immutable.
 	 * 
-	 * @return whether this value map is made immutable
+	 * @return whether or not this <code>IValueMap</code> is immutable
 	 */
 	boolean isImmutable();
 
 	/**
-	 * Makes this value map immutable by changing the underlying map
-	 * representation to a collections "unmodifiableMap". After calling this
-	 * method, any attempt to modify this map will result in a runtime exception
-	 * being thrown by the collections classes.
+	 * Makes this <code>IValueMap</code> immutable by changing the underlying
+	 * map representation to a <code>Collections.unmodifiableMap</code>.
+	 * After calling this method, any attempt to modify this
+	 * <code>IValueMap</code> will result in a <code>RuntimeException</code>
+	 * being thrown by the <code>Collections</code> framework.
 	 * 
-	 * @return this
+	 * @return this <code>IValueMap</code>
 	 */
 	IValueMap makeImmutable();
 
@@ -217,12 +225,13 @@ public interface IValueMap extends Map
 	Object remove(final Object key);
 
 	/**
-	 * Provided the hash key is a string and you need to access the value
-	 * ignoring ignoring the keys case (upper or lower letter), than you may use
-	 * this method to get the correct writing.
+	 * Provided that the hash key is a <code>String</code> and you need to
+	 * access the value ignoring the key's case (upper- or lowercase letters),
+	 * then you may use this method to get the correct writing.
 	 * 
 	 * @param key
-	 * @return The key with the correct writing
+	 *            the key
+	 * @return the key with the correct writing
 	 */
 	String getKey(final String key);
 }

@@ -19,16 +19,17 @@ package org.apache.wicket.util.value;
 import java.util.Map;
 
 /**
- * ValueMap for attributes.
+ * <code>ValueMap</code> for attributes.
  * 
  * @author Eelco Hillenius
+ * @since 1.2.6
  */
 public final class AttributeMap extends ValueMap
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructs an empty map.
+	 * Constructs an empty <code>AttributeMap</code>.
 	 */
 	public AttributeMap()
 	{
@@ -39,7 +40,7 @@ public final class AttributeMap extends ValueMap
 	 * Copy constructor.
 	 * 
 	 * @param map
-	 *            Map to be copied
+	 *            a <code>Map</code> to be copied
 	 */
 	public AttributeMap(Map map)
 	{

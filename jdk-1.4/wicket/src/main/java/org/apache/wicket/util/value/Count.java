@@ -22,16 +22,19 @@ import org.apache.wicket.IClusterable;
  * A class for counting things.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public final class Count implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The count */
+	/** the count */
 	private int count = 0;
 
 	/**
-	 * @return Returns the count.
+	 * Retrieves the current count value.
+	 * 
+	 * @return the count value
 	 */
 	public int getCount()
 	{
@@ -39,7 +42,7 @@ public final class Count implements IClusterable
 	}
 
 	/**
-	 * Increases the count
+	 * Increases the count value by one.
 	 */
 	public void increment()
 	{
