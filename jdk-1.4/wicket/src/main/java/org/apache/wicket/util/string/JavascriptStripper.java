@@ -48,6 +48,24 @@ public class JavascriptStripper
 	/** Inside a regular expression */
 	private final static int REG_EXP = 7;
 
+	private static int getPrevCount(String s, int fromIndex, char c)
+	{
+		int count = 0;
+		--fromIndex;
+		while (fromIndex >= 0)
+		{
+			if (s.charAt(fromIndex--) == c)
+			{
+				++count;
+			}
+			else
+			{
+				break;
+			}
+		}
+		return count;
+	}
+
 	/**
 	 * Removes javascript comments and whitespaces from specified string.
 	 * 
@@ -151,7 +169,9 @@ public class JavascriptStripper
 
 			if (state == STRING_SINGLE_QUOTE)
 			{
-				if (c == '\'' && prev != '\\')
+				// to leave a string expression we need even (or zero) number of backslashes
+				int count = getPrevCount(original, i, '\\');
+				if (c == '\'' && count % 2 == 0)
 				{
 					state = REGULAR_TEXT;
 				}
@@ -161,7 +181,9 @@ public class JavascriptStripper
 
 			if (state == STRING_DOUBLE_QUOTES)
 			{
-				if (c == '"' && prev != '\\')
+				// to leave a string expression we need even (or zero) number of backslashes
+				int count = getPrevCount(original, i, '\\');
+				if (c == '"' && count % 2 == 0)
 				{
 					state = REGULAR_TEXT;
 				}
@@ -171,7 +193,9 @@ public class JavascriptStripper
 
 			if (state == REG_EXP)
 			{
-				if (c == '/' && prev != '\\')
+				// to leave regular expression we need even (or zero) number of backslashes
+				int count = getPrevCount(original, i, '\\');
+				if (c == '/' && count % 2 == 0)
 				{
 					state = REGULAR_TEXT;
 				}
