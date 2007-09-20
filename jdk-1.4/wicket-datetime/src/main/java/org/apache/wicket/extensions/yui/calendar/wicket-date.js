@@ -106,10 +106,12 @@ Wicket.DateTime.substituteDate = function(datePattern, date) {
 Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
 	if (date) {
 		date = Wicket.DateTime.parseDate(datePattern, date);
-		widget.select(date);
-		firstDate = widget.getSelectedDates()[0];
-		widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
-		widget.render();
+		if (!isNaN(date.getTime())) { 		
+			widget.select(date);
+			firstDate = widget.getSelectedDates()[0];
+			widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
+			widget.render();
+		}
 	}
 	widget.show();
 }
