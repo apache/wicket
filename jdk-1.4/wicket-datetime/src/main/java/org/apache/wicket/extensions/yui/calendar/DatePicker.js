@@ -57,7 +57,8 @@ init${widgetId}DpJs = function() {
 				datePattern: "${datePattern}",
 				alignWithIcon: ${alignWithIcon},
 				enableMonthYearSelection: ${enableMonthYearSelection},
-				fireChangeEvent: ${fireChangeEvent}
+				fireChangeEvent: ${fireChangeEvent},
+				hideOnSelect: ${hideOnSelect}
 			});
 }
 

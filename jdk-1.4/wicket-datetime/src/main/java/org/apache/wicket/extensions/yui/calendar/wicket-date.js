@@ -221,7 +221,7 @@ Wicket.DateTime.init = function(cfg) {
 	function selectHandler(type, args, cal) {
 		YAHOO.util.Dom.get(cfg.componentId).value = Wicket.DateTime.substituteDate(cfg.datePattern, args[0][0]);
 		var wasVisible = YAHOO.wicket[cfg.dpJs].isVisible();
-		cal.hide();
+		if (cfg.hideOnSelect) { cal.hide(); }
 		if (cfg.fireChangeEvent && wasVisible) {
 			var field = YAHOO.util.Dom.get(cfg.componentId);
 			if (typeof(field.onchange) != 'undefined') field.onchange();

@@ -130,8 +130,17 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// component. Not as pretty as working with a panel etc, but works
 		// for behaviors and is more efficient
 		Response response = component.getResponse();
-		response
-				.write("\n<span class=\"yui-skin-sam\">&nbsp;<span style=\"display:none;position:absolute;z-index: 99999;\" id=\"");
+		response.write("\n<span class=\"yui-skin-sam\">&nbsp;<span style=\"");
+		if (renderOnLoad())
+		{
+			response.write("display:block;");
+		}
+		else
+		{
+			response.write("display:none;");
+			response.write("position:absolute;");
+		}
+		response.write("z-index: 99999;\" id=\"");
 		response.write(getEscapedComponentMarkupId());
 		response.write("Dp\"></span><img style=\"");
 		response.write(getIconStyle());
@@ -140,7 +149,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		response.write("\" src=\"");
 		CharSequence iconUrl = getIconUrl();
 		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl.toString() : ""));
-		response.write("\" /></span><input type=\"hidden\"/>");
+		response.write("\" />");
+		if (renderOnLoad())
+		{
+			response.write("<br style=\"clear:left;\"/>");
+		}
+		response.write("</span>");
 	}
 
 	/**
@@ -173,6 +187,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		variables.put("basePath", RequestCycle.get().urlFor(
 				new JavascriptResourceReference(YuiLib.class, "")));
 		variables.put("enableMonthYearSelection", Boolean.valueOf(enableMonthYearSelection()));
+		variables.put("hideOnSelect", Boolean.valueOf(hideOnSelect()));
 
 		// print out the initialization properties
 		Properties p = new Properties();
@@ -564,6 +579,32 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 *         just plain text.
 	 */
 	protected boolean enableMonthYearSelection()
+	{
+		return false;
+	}
+
+	/**
+	 * Indicates whether the calendar should be hidden after a date was
+	 * selected.
+	 * 
+	 * @return <code>true</code> (default) if the calendar should be hidden
+	 *         after the date selection <br/><code>false</code> if the
+	 *         calendar should remain visible after the date selection.
+	 */
+	protected boolean hideOnSelect()
+	{
+		return true;
+	}
+
+	/**
+	 * Indicates whether the calendar should be rendered after it has been
+	 * loaded.
+	 * 
+	 * @return <code>true</code> if the calendar should be rendered after it
+	 *         has been loaded.<br/><code>false</code> (default) if it's
+	 *         initially hidden.
+	 */
+	protected boolean renderOnLoad()
 	{
 		return false;
 	}
