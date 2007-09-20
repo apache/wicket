@@ -16,7 +16,9 @@ Contents
 --------
  - License
  - Java/Application server requirements
+ - What is in this package
  - Getting started
+ - Dependencies
  - Building Wicket from source
  - Migrating from 1.2
  - Getting help
@@ -33,6 +35,38 @@ Java/Application server requirements
 
 Wicket requires at least Java 1.4. The application server for running your web
 application should adhere to the servlet specification version 2.3 or newer.
+
+What is in this package
+-----------------------
+
+The archive you just downloaded and unpacked contains the jars of the core 
+projects of Wicket. If you are just starting out, you probably only need to
+include wicket-x.jar, where x stands for the version. As a rule, use just 
+the jars you need.
+
+Here is a list of projects in this distribution and what they do.
+
+ - wicket: the core project, includes the framework and basic components;
+ - wicket-extensions: contains utilities and more specialized components;
+ - wicket-auth-roles: a basic authorization package based on roles;
+ - wicket-datetime: contains date/ time specific components such as a date picker;
+ - wicket-jmx: registers JMX beans for managing things like your Wicket 
+		configuration and markup cache;
+ - wicket-objectssizeof-agent: utility for making better estimates of object 
+		sizes in the JVM - most people probably never need this;
+ - wicket-ioc: base project for IoC (aka DI) implementations such as 
+		Spring and Guice;
+ - wicket-spring: support project for using Spring with Wicket;
+ - wicket-spring-annot: supports including Spring managed dependencies 
+		through using @SpringBean annotations - recommended for most users 
+		who use Spring and can use JDK 5 and up;
+ - wicket-guice: support project for using Google Guice with Wicket;
+ - wicket-velocity: contains special components for rendering Velocity templates 
+		using Wicket components - most people probably don't need this, but it 
+		can be neat when you want to do CMS-like things;
+ - wicket-examples: contains a basic component reference and many examples of 
+		how to use Wicket and Wicket components, including examples for sub 
+		projects such as wicket-spring, wicket-velocity and wicket-auth-roles.
 
 Getting started
 ---------------
@@ -68,6 +102,61 @@ started quickly:
     technologies. It features over 60 downloads and combines each available
     web application framework with Hibernate, iBatis, JDO (JPOX), OJB and
     Spring JDBC.
+
+Dependencies
+------------
+
+The easiest way of getting the dependencies of your Wicket based projects right is to use Maven with your projects and include the wicket dependencies you want like is outlined in the quickstart. Maven will then take care of including the appropriate dependencies.
+
+If you do not want to use maven, here is a break down of the dependencies you need.
+
+ - wicket and wicket-extensions:
+
+	You only need to include the Servlet API (2.3, just for compiling) and 
+	the SLF4J logging implementation you want. You cannot use Wicket without 
+	adding a SLF4J logging implementation to your classpath. Most people use 
+	log4j. If you do, just include slf4j-log4j12.jar on your classpath to get 
+	Wicket to use log4j too. If you want to use commons-logging or JDK14 
+	logging or something else, please see the SLF4J site (http://www.slf4j.org/)
+	for more information.
+
+	As the following projects all depend on wicket, they inherit these dependencies.
+
+ - wicket-auth-roles, wicket-jmx and wicket-objectssize-agent:
+ 	
+	JDK 5 or up (though JMX can be run on 1.4 with an
+	extension package if you really need to).
+
+ - wicket-datetime:
+
+ 	Joda-Time 1.4 (http://joda-time.sourceforge.net/)
+
+ - wicket-velocity:
+ 	
+	Apache Velocity 1.4 (http://velocity.apache.org/) and it's 
+	dependencies (it ships a velocity-deps jar for convenience)
+
+ - wicket-ioc:
+
+	gclib nodep 2.1.3 (http://cglib.sourceforge.net/) and 
+	asm 1.5.3 (http://asm.objectweb.org/)
+
+ - wicket-spring:
+
+ 	wicket-ioc and Spring (http://www.springframework.org/) and
+ 	it's dependencies
+
+ - wicket-spring-annots:
+	
+	wicket-spring and needs to run on JDK 5 or up
+
+ - wicket-guice:
+
+	Google Guice (http://code.google.com/p/google-guice/) and runs on JDK 5 or up.
+
+ - wicket-examples:
+
+ 	All of the above.
 
 Building Wicket from source
 ---------------------------
