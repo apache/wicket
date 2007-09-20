@@ -22,6 +22,8 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.version.undo.Change;
 
 
 /**
@@ -51,7 +53,6 @@ public class LinkPage extends WicketExamplePage
 			}
 		};
 		add(link1);
-
 		// add a counter label to the link so that we can display it in the body
 		// of the link
 		link1.add(new Label("label1", new Model()
@@ -62,6 +63,33 @@ public class LinkPage extends WicketExamplePage
 			}
 		}));
 
+		final ClickCount count2 = new ClickCount();
+		// Same idea as above, but now we record a state change. Note that the
+		// URL will change because of this, and pressing the back button and
+		// clicking the link again would revert to the older value.
+		// The same thing could have been achieved by using setModelObject,
+		// which implicitly registers a state change (of type
+		// ComponentModelChange).
+		Link linkWithStateChange = new Link("linkWithStateChange")
+		{
+			public void onClick()
+			{
+				final int count = count1.clicks;
+				count2.clicks++;
+				addStateChange(new Change()
+				{
+					@Override
+					public void undo()
+					{
+						// revert
+						count2.clicks = count;
+					}
+				});
+			}
+		};
+		add(linkWithStateChange);
+		linkWithStateChange.add(new Label("label", new PropertyModel(count2, "clicks")));
+
 		// we can attach Link components to any HTML tag we want. If it is an
 		// anchor (<a href...),
 		// the url to this component is put in the href attribute. For other
@@ -69,9 +97,8 @@ public class LinkPage extends WicketExamplePage
 		// onclick javascript event handler is created that triggers the round
 		// trip
 
-		// it is ofcourse possible to - instead of the above approach - hide as
-		// much of the
-		// component as possible within a class.
+		// it is of course possible to - instead of the above approach - hide as
+		// much of the component as possible within a class.
 		class CustomLink extends Link
 		{
 			final ClickCount count2;
