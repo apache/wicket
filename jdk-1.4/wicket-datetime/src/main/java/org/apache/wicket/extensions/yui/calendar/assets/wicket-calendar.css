@@ -36,6 +36,10 @@
 	vertical-align: middle;		
 }
 
+.yui-calendar .calheader th {
+	vertical-align: middle;
+}
+
 .yui-calendar .calheader a {
 	vertical-align: middle;
 	border-width: 0px;
