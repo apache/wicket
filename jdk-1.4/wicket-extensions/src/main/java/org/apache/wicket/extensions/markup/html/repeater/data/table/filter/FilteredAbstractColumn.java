@@ -51,7 +51,7 @@ public abstract class FilteredAbstractColumn extends AbstractColumn implements I
 	 * @param displayModel
 	 *            model used to display the header text of this column
 	 */
-	public FilteredAbstractColumn(Model displayModel)
+	public FilteredAbstractColumn(IModel displayModel)
 	{
 		super(displayModel);
 	}
