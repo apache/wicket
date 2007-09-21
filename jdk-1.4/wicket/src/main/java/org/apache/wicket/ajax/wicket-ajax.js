@@ -62,10 +62,11 @@ Wicket.$$ = function(element) {
 	    return true;
 	}
 	
-	if (typeof(element.id) == "undefined" || element.id == null)
+	var id = element.getAttribute('id');
+	if (typeof(id) == "undefined" || id == null)
 		return element.ownerDocument == document;
 	else
-		return document.getElementById(element.id) == element;
+		return document.getElementById(id) == element;
 }
 
 Wicket.emptyFunction = function() { };
