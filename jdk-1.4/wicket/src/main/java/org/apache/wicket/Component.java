@@ -1212,6 +1212,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (!Character.isLetter(c))
 			{
 				markupId = "id" + markupId;
+				// escape some noncompliant characters
+				markupId = markupId.replace("_", "__");
+				markupId = markupId.replace('.', '_');
+				markupId = markupId.replace('-', '_');
 			}
 
 			// }
