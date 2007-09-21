@@ -1213,7 +1213,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			{
 				markupId = "id" + markupId;
 				// escape some noncompliant characters
-				markupId = markupId.replace("_", "__");
+				markupId = Strings.replaceAll(markupId, "_", "__").toString();
 				markupId = markupId.replace('.', '_');
 				markupId = markupId.replace('-', '_');
 			}
