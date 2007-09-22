@@ -36,14 +36,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is Wicket's default IMarkupCache implementation. It will load the markup
- * and cache it for fast retrieval.
+ * This is Wicket's default IMarkupCache implementation. It will load the markup and cache it for
+ * fast retrieval.
  * <p>
- * If the application is in development mode and a markup file changes, it'll
- * automatically be removed from the cache and reloaded when needed.
+ * If the application is in development mode and a markup file changes, it'll automatically be
+ * removed from the cache and reloaded when needed.
  * <p>
- * MarkupCache is registered with {@link IMarkupSettings} and thus can be
- * replaced with a subclassed version.
+ * MarkupCache is registered with {@link IMarkupSettings} and thus can be replaced with a subclassed
+ * version.
  * 
  * @see IMarkupSettings
  * 
@@ -79,8 +79,8 @@ public class MarkupCache implements IMarkupCache
 	{
 		this.application = application;
 
-		this.markupCache = newCacheImplementation();
-		if (this.markupCache == null)
+		markupCache = newCacheImplementation();
+		if (markupCache == null)
 		{
 			throw new WicketRuntimeException("The map used to cache markup must not be null");
 		}
@@ -91,7 +91,7 @@ public class MarkupCache implements IMarkupCache
 	 */
 	public final void clear()
 	{
-		this.markupCache.clear();
+		markupCache.clear();
 	}
 
 	/**
@@ -100,9 +100,9 @@ public class MarkupCache implements IMarkupCache
 	 */
 	public void shutdown()
 	{
-		this.markupCache.shutdown();
+		markupCache.shutdown();
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.IMarkupCache#removeMarkup(java.lang.String)
 	 */
@@ -124,7 +124,7 @@ public class MarkupCache implements IMarkupCache
 		if (markup != null)
 		{
 			markupCache.remove(cacheKey);
-			
+
 			// In practice markup inheritance has probably not more than 3 or 4
 			// levels. And since markup reloading is only enabled in development
 			// mode, this max 4 iterations of the outer loop shouldn't be a
@@ -238,21 +238,21 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * Get a unmodifiable map which contains the cached data. The map key is of
-	 * type String and the value is of type Markup.
+	 * Get a unmodifiable map which contains the cached data. The map key is of type String and the
+	 * value is of type Markup.
 	 * 
 	 * @return
 	 */
 	protected final ICache getMarkupCache()
 	{
-		return this.markupCache;
+		return markupCache;
 	}
 
 	/**
 	 * THIS IS NOT PART OF WICKET'S PUBLIC API. DO NOT USE IT.
 	 * 
-	 * I still don't like this method being part of the API but I didn't find a
-	 * suitable other solution.
+	 * I still don't like this method being part of the API but I didn't find a suitable other
+	 * solution.
 	 * 
 	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class, boolean)
@@ -272,7 +272,8 @@ public class MarkupCache implements IMarkupCache
 		}
 
 		// Get the cache key to be associated with the markup resource stream
-		final String cacheKey = getMarkupCacheKeyProvider(container).getCacheKey(container, clazz);
+		final String cacheKey = getMarkupCacheKeyProvider(container).getCacheKey(container,
+				containerClass);
 
 		// Is the markup already in the cache?
 		Markup markup = (enforceReload == false ? getMarkupFromCache(cacheKey, container) : null);
@@ -317,12 +318,11 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * Will be called if the markup was not in the cache yet but could not be
-	 * found either.
+	 * Will be called if the markup was not in the cache yet but could not be found either.
 	 * <p>
-	 * Subclasses may change the default implementation. E.g. they might choose
-	 * not update the cache to enforce reloading of any markup not found. This
-	 * might be useful in very dynamic environments.
+	 * Subclasses may change the default implementation. E.g. they might choose not update the cache
+	 * to enforce reloading of any markup not found. This might be useful in very dynamic
+	 * environments.
 	 * 
 	 * @param cacheKey
 	 * @param container
@@ -340,15 +340,14 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * Put the markup into the cache if cacheKey is not null and the cache does
-	 * not yet contain the cacheKey. Return the markup stored in the cache if
-	 * cacheKey is present already.
+	 * Put the markup into the cache if cacheKey is not null and the cache does not yet contain the
+	 * cacheKey. Return the markup stored in the cache if cacheKey is present already.
 	 * 
 	 * @param cacheKey
 	 *            If null, than ignore the cache
 	 * @param markup
-	 * @return markup The markup provided, except if the cacheKey already
-	 *         existed in the cache, than the markup from the cache is provided.
+	 * @return markup The markup provided, except if the cacheKey already existed in the cache, than
+	 *         the markup from the cache is provided.
 	 */
 	protected Markup putIntoCache(final String cacheKey, Markup markup)
 	{
@@ -374,10 +373,9 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * Wicket's default implementation just uses the cacheKey to retrieve the
-	 * markup from the cache. More sofisticated implementations may call a
-	 * container method to e.g. ignore the cached markup under certain
-	 * situations.
+	 * Wicket's default implementation just uses the cacheKey to retrieve the markup from the cache.
+	 * More sofisticated implementations may call a container method to e.g. ignore the cached
+	 * markup under certain situations.
 	 * 
 	 * @param cacheKey
 	 *            If null, than the cache will be ignored
@@ -401,9 +399,8 @@ public class MarkupCache implements IMarkupCache
 	 * @param markupResourceStream
 	 *            The markup resource stream to load
 	 * @param enforceReload
-	 *            The cache will be ignored and all, including inherited markup
-	 *            files, will be reloaded. Whatever is in the cache, it will be
-	 *            ignored
+	 *            The cache will be ignored and all, including inherited markup files, will be
+	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup
 	 */
 	private final Markup loadMarkup(final MarkupContainer container,
@@ -437,19 +434,17 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * Load markup from an IResourceStream and add an {@link IChangeListener}to
-	 * the {@link ModificationWatcher} so that if the resource changes, we can
-	 * remove it from the cache automatically and subsequently reload when
-	 * needed.
+	 * Load markup from an IResourceStream and add an {@link IChangeListener}to the
+	 * {@link ModificationWatcher} so that if the resource changes, we can remove it from the cache
+	 * automatically and subsequently reload when needed.
 	 * 
 	 * @param container
 	 *            The original requesting markup container
 	 * @param markupResourceStream
 	 *            The markup stream to load and begin to watch
 	 * @param enforceReload
-	 *            The cache will be ignored and all, including inherited markup
-	 *            files, will be reloaded. Whatever is in the cache, it will be
-	 *            ignored
+	 *            The cache will be ignored and all, including inherited markup files, will be
+	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup in the stream
 	 */
 	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
@@ -502,11 +497,11 @@ public class MarkupCache implements IMarkupCache
 			return (IMarkupCacheKeyProvider)container;
 		}
 
-		if (this.markupCacheKeyProvider == null)
+		if (markupCacheKeyProvider == null)
 		{
-			this.markupCacheKeyProvider = new DefaultMarkupCacheKeyProvider();
+			markupCacheKeyProvider = new DefaultMarkupCacheKeyProvider();
 		}
-		return this.markupCacheKeyProvider;
+		return markupCacheKeyProvider;
 	}
 
 	/**
@@ -524,11 +519,11 @@ public class MarkupCache implements IMarkupCache
 			return (IMarkupResourceStreamProvider)container;
 		}
 
-		if (this.markupResourceStreamProvider == null)
+		if (markupResourceStreamProvider == null)
 		{
-			this.markupResourceStreamProvider = new DefaultMarkupResourceStreamProvider();
+			markupResourceStreamProvider = new DefaultMarkupResourceStreamProvider();
 		}
-		return this.markupResourceStreamProvider;
+		return markupResourceStreamProvider;
 	}
 
 	/**
@@ -546,9 +541,8 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * Allows you to change the map implementation which will hold the cache
-	 * data. By default it is a ConcurrentHashMap() in order to allow multiple
-	 * thread to access the data in a secure way.
+	 * Allows you to change the map implementation which will hold the cache data. By default it is
+	 * a ConcurrentHashMap() in order to allow multiple thread to access the data in a secure way.
 	 * 
 	 * @return
 	 */
@@ -558,8 +552,8 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * MarkupCache allows you to implement you own cache implementation. ICache
-	 * is the interface the implementation must comply with.
+	 * MarkupCache allows you to implement you own cache implementation. ICache is the interface the
+	 * implementation must comply with.
 	 * 
 	 * @see MarkupCache
 	 */
@@ -587,7 +581,7 @@ public class MarkupCache implements IMarkupCache
 		Object get(Object key);
 
 		/**
-		 * Get all the keys referencing cache entries 
+		 * Get all the keys referencing cache entries
 		 * 
 		 * @return
 		 */
@@ -611,11 +605,13 @@ public class MarkupCache implements IMarkupCache
 		/**
 		 * Put an entry into the cache
 		 * 
-		 * @param key The reference key to find the element
-		 * @param value The element to be cached
+		 * @param key
+		 *            The reference key to find the element
+		 * @param value
+		 *            The element to be cached
 		 */
 		void put(Object key, Object value);
-		
+
 		/**
 		 * Cleanup and shutdown
 		 */
@@ -629,8 +625,8 @@ public class MarkupCache implements IMarkupCache
 	{
 		private static final long serialVersionUID = 1L;
 
-		private ConcurrentHashMap cache = new ConcurrentHashMap();
-		
+		private final ConcurrentHashMap cache = new ConcurrentHashMap();
+
 		/**
 		 * Construct.
 		 */
@@ -643,7 +639,7 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public void clear()
 		{
-			this.cache.clear();
+			cache.clear();
 		}
 
 		/**
@@ -651,7 +647,7 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public boolean containsKey(Object key)
 		{
-			return this.cache.containsKey(key);
+			return cache.containsKey(key);
 		}
 
 		/**
@@ -659,7 +655,7 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public Object get(Object key)
 		{
-			return this.cache.get(key);
+			return cache.get(key);
 		}
 
 		/**
@@ -667,7 +663,7 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public Collection getKeys()
 		{
-			return this.cache.keySet();
+			return cache.keySet();
 		}
 
 		/**
@@ -675,7 +671,7 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public void put(Object key, Object value)
 		{
-			this.cache.put(key, value);
+			cache.put(key, value);
 		}
 
 		/**
@@ -683,7 +679,7 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public boolean remove(Object key)
 		{
-			return this.cache.remove(key) == null;
+			return cache.remove(key) == null;
 		}
 
 		/**
@@ -691,7 +687,7 @@ public class MarkupCache implements IMarkupCache
 		 */
 		public int size()
 		{
-			return this.cache.size();
+			return cache.size();
 		}
 
 		/**
