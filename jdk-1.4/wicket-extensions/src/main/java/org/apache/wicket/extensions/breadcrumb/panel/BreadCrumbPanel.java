@@ -17,7 +17,6 @@
 package org.apache.wicket.extensions.breadcrumb.panel;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.breadcrumb.BreadCrumbLink;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
@@ -62,6 +61,19 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 
 	/** The bread crumb model. */
 	private IBreadCrumbModel breadCrumbModel;
+
+	/**
+	 * Implementation of the participant.
+	 */
+	private final IBreadCrumbParticipant decorated = new BreadCrumbParticipantDelegate(this)
+	{
+		private static final long serialVersionUID = 1L;
+
+		public String getTitle()
+		{
+			return BreadCrumbPanel.this.getTitle();
+		}
+	};
 
 	/**
 	 * Construct.
@@ -158,70 +170,15 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 */
 	public Component getComponent()
 	{
-		return this;
+		return decorated.getComponent();
 	}
 
 	/**
-	 * If the previous participant is not null (and a component, which it should
-	 * be), replace that component on it's parent with this one.
-	 * 
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#onActivate(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
 	public void onActivate(IBreadCrumbParticipant previous)
 	{
-		if (previous != null)
-		{
-			MarkupContainer parent = previous.getComponent().getParent();
-			if (parent != null)
-			{
-				final String thisId = getId();
-				if (parent.get(thisId) != null)
-				{
-					parent.replace(this);
-				}
-				else
-				{
-					// try to search downwards to match the id
-					// NOTE unfortunately, we can't rely on the path pre 2.0
-					Component c = (Component)parent.visitChildren(new IVisitor()
-					{
-						public Object component(Component component)
-						{
-							if (component.getId().equals(thisId))
-							{
-								return component;
-							}
-							return IVisitor.CONTINUE_TRAVERSAL;
-						}
-					});
-					if (c == null)
-					{
-						// not found... do a reverse search (upwards)
-						c = (Component)parent.visitParents(Component.class, new IVisitor()
-						{
-							public Object component(Component component)
-							{
-								if (component.getId().equals(thisId))
-								{
-									return component;
-								}
-								return IVisitor.CONTINUE_TRAVERSAL;
-							}
-						});
-					}
-
-					// replace if found
-					if (c != null)
-					{
-						c.replaceWith(this);
-					}
-				}
-			}
-		}
-		else if (getParent() != null)
-		{
-			getParent().replace(this);
-		}
+		decorated.onActivate(previous);
 	}
 
 	/**

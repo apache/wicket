@@ -38,10 +38,13 @@ import org.apache.wicket.model.LoadableDetachableModel;
  * first / second / third
  * </pre>
  * 
- * This component also functions as a implementation of
- * {@link IBreadCrumbModel bread crumb model}. This component holds the state
- * as well as doing the rendering. Override and provide your own markup file if
- * you want to work with other elements, e.g. uls instead of spans.
+ * <p>
+ * Delegates how the bread crumb model works to {@link DefaultBreadCrumbsModel}.
+ * </p>
+ * <p>
+ * Override and provide your own markup file if you want to work with other
+ * elements, e.g. uls instead of spans.
+ * </p>
  * 
  * @author Eelco Hillenius
  */
@@ -184,14 +187,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 
 	private static final long serialVersionUID = 1L;
 
-	/** The currently active participant, if any (possibly null). */
-	private IBreadCrumbParticipant activeParticipant = null;
-
-	/** Holds the current list of crumbs. */
-	private List crumbs = new ArrayList();
-
-	/** listeners utility. */
-	private final BreadCrumbModelListenerSupport listenerSupport = new BreadCrumbModelListenerSupport();
+	private final IBreadCrumbModel decorated;
 
 	/**
 	 * Construct.
@@ -202,25 +198,27 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	public BreadCrumbBar(String id)
 	{
 		super(id);
+		this.decorated = new DefaultBreadCrumbsModel();
 		BreadCrumbsListView breadCrumbsListView = new BreadCrumbsListView("crumbs");
 		addListener(breadCrumbsListView);
 		add(breadCrumbsListView);
 	}
 
+
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#addListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
-	public final void addListener(IBreadCrumbModelListener listener)
+	public void addListener(IBreadCrumbModelListener listener)
 	{
-		this.listenerSupport.addListener(listener);
+		decorated.addListener(listener);
 	}
 
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#allBreadCrumbParticipants()
 	 */
-	public final List allBreadCrumbParticipants()
+	public List allBreadCrumbParticipants()
 	{
-		return crumbs;
+		return decorated.allBreadCrumbParticipants();
 	}
 
 	/**
@@ -228,85 +226,23 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 */
 	public IBreadCrumbParticipant getActive()
 	{
-		return activeParticipant;
+		return decorated.getActive();
 	}
 
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#removeListener(org.apache.wicket.extensions.breadcrumb.IBreadCrumbModelListener)
 	 */
-	public final void removeListener(IBreadCrumbModelListener listener)
+	public void removeListener(IBreadCrumbModelListener listener)
 	{
-		this.listenerSupport.removeListener(listener);
+		decorated.removeListener(listener);
 	}
 
 	/**
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel#setActive(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
-	public final void setActive(final IBreadCrumbParticipant breadCrumbParticipant)
+	public void setActive(IBreadCrumbParticipant breadCrumbParticipant)
 	{
-		// see if the bread crumb was already added, and if so,
-		// clean up the stack after (on top of) this bred crumb
-		// and notify listeners of the removal
-		int len = crumbs.size() - 1;
-		int i = len;
-		while (i > -1)
-		{
-			IBreadCrumbParticipant temp = (IBreadCrumbParticipant)crumbs.get(i);
-
-			// if we found the bread crumb
-			if (breadCrumbParticipant.equals(temp))
-			{
-				// remove the bread crumbs after this one
-				int j = len;
-				while (j > i)
-				{
-					// remove and fire event
-					IBreadCrumbParticipant removed = (IBreadCrumbParticipant)crumbs.remove(j--);
-					listenerSupport.fireBreadCrumbRemoved(removed);
-				}
-
-				// activate the bread crumb participant
-				activate(breadCrumbParticipant);
-
-				// we're done; the provided bread crumb is on top
-				// and the content is replaced, so just return this function
-				return;
-			}
-
-			i--;
-		}
-
-		// arriving here means we weren't able to find the bread crumb
-		// add the new crumb
-		crumbs.add(breadCrumbParticipant);
-
-		// and notify listeners
-		listenerSupport.fireBreadCrumbAdded(breadCrumbParticipant);
-
-		// activate the bread crumb participant
-		activate(breadCrumbParticipant);
-	}
-
-	/**
-	 * Activates the bread crumb participant.
-	 * 
-	 * @param breadCrumbParticipant
-	 *            The participant to activate
-	 */
-	protected final void activate(final IBreadCrumbParticipant breadCrumbParticipant)
-	{
-		// get old value
-		IBreadCrumbParticipant previousParticipant = this.activeParticipant;
-
-		// and set the provided participant as the active one
-		this.activeParticipant = breadCrumbParticipant;
-
-		// fire bread crumb activated event
-		listenerSupport.fireBreadCrumbActivated(previousParticipant, breadCrumbParticipant);
-
-		// signal the bread crumb participant that it is selected as the
-		// currently active one
-		breadCrumbParticipant.onActivate(previousParticipant);
+		decorated.setActive(breadCrumbParticipant);
 	}
 
 	/**
@@ -350,7 +286,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	protected void onDetach()
 	{
 		super.onDetach();
-		for (Iterator i = crumbs.iterator(); i.hasNext();)
+		for (Iterator i = decorated.allBreadCrumbParticipants().iterator(); i.hasNext();)
 		{
 			IBreadCrumbParticipant crumb = (IBreadCrumbParticipant)i.next();
 			if (crumb instanceof Component)
