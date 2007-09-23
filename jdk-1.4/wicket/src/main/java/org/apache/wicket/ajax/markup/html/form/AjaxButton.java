@@ -24,9 +24,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * A button that submits the form via ajax. Since this button takes the form as
- * a constructor argument it does not need to be added to it unlike the
- * {@link Button} component.
+ * A button that submits the form via ajax. Since this button takes the form as a constructor
+ * argument it does not need to be added to it unlike the {@link Button} component.
  * 
  * @since 1.3
  * 
@@ -37,7 +36,7 @@ public abstract class AjaxButton extends Button
 	private static final long serialVersionUID = 1L;
 
 	private final Form form;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -47,10 +46,11 @@ public abstract class AjaxButton extends Button
 	{
 		this(id, null);
 	}
-	
+
 	/**
-	 * Returns the form if it was set in constructor, otherwise returns the 
-	 * form nearest in parent hierarchy.
+	 * Returns the form if it was set in constructor, otherwise returns the form nearest in parent
+	 * hierarchy.
+	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#getForm()
 	 */
 	public Form getForm()
@@ -83,12 +83,12 @@ public abstract class AjaxButton extends Button
 
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onSubmit(target, form);
+				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
 			}
 
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onError(target, form);
+				AjaxButton.this.onError(target, AjaxButton.this.getForm());
 			}
 
 			protected CharSequence getEventHandler()
@@ -106,12 +106,10 @@ public abstract class AjaxButton extends Button
 	}
 
 	/**
-	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the
-	 * generated javascript. This is the preferred way of changing the
-	 * javascript in the onclick handler
+	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the generated javascript.
+	 * This is the preferred way of changing the javascript in the onclick handler
 	 * 
-	 * @return call decorator used to modify the generated javascript or null
-	 *         for none
+	 * @return call decorator used to modify the generated javascript or null for none
 	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
