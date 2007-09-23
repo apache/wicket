@@ -89,9 +89,6 @@ public class Guess extends HangmanPage
 						}
 					}
 				};
-				link
-						.add(new AttributeModifier("id", true, new Model("letter_"
-								+ letter.asString())));
 				link.add(new Image("image", letter.getSharedImageResource()));
 				listItem.add(link);
 			}
