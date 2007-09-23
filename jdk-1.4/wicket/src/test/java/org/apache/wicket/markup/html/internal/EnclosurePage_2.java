@@ -16,52 +16,33 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.resource.DummyApplication;
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 
 
 /**
+ * Mock page for testing.
  * 
  * @author Juergen Donnerstag
  */
-public class EnclosureTest extends WicketTestCase
+public class EnclosurePage_2 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
-	 * 
-	 * @param name
 	 */
-	public EnclosureTest(final String name)
+	public EnclosurePage_2()
 	{
-		super(name);
-	}
+		WebMarkupContainer example3 = new WebMarkupContainer("example3");
+		example3.add(new Label("label1", "label 1"));
+		example3.add(new Label("label2", "label 2"));
+		example3.add(new Label("label3", "label 3"));
+		example3.add(new Label("label4", "label 4"));
 
-	/**
-	 * 
-	 * @see org.apache.wicket.WicketTestCase#setUp()
-	 */
+		add(example3);
 
-	protected void setUp() throws Exception
-	{
-		WebApplication app = new DummyApplication();
-		tester = new WicketTester(app);
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public void testRenderHomePage() throws Exception
-	{
-		executeTest(EnclosurePage_1.class, "EnclosurePageExpectedResult_1.html");
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public void testRenderHomePage2() throws Exception
-	{
-		executeTest(EnclosurePage_2.class, "EnclosurePageExpectedResult_2.html");
+		example3.get("label3").setVisible(false);
 	}
 }
