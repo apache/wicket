@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.repeater;
 
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.MarkupStream;
@@ -41,6 +43,8 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractRepeater.class);
+
+	private static Pattern SAFE_CHILD_ID_PATTERN = Pattern.compile("^\\d+$");
 
 	/**
 	 * Constructor
@@ -120,6 +124,24 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	protected void onBeforeRender()
 	{
 		onPopulate();
+
+		// TODO possibly enable this only in development mode
+		Iterator i = iterator();
+		while (i.hasNext())
+		{
+			Component c = (Component)i.next();
+			Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
+			if (!matcher.matches())
+			{
+				log.warn("Child component of repeater " + getClass().getName() + ":" + getId() +
+						" has a non-safe child id of " + c.getId() +
+						". Safe child ids must be composed of digits only.");
+				// do not flood the log
+				break;
+			}
+
+		}
+
 		super.onBeforeRender();
 	}
 
