@@ -19,16 +19,16 @@ package org.apache.wicket.markup.html.basic;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * A Label component replaces its body with the String version of its model
- * object returned by getModelObjectAsString().
+ * A Label component replaces its body with the String version of its model object returned by
+ * getModelObjectAsString().
  * <p>
- * Exactly what is displayed as the body, depends on the model. The simplest
- * case is a Label with a static String model, which can be constructed like
- * this:
+ * Exactly what is displayed as the body, depends on the model. The simplest case is a Label with a
+ * static String model, which can be constructed like this:
  * 
  * <pre>
  * add(new Label(&quot;myLabel&quot;, &quot;the string to display&quot;))
@@ -42,9 +42,8 @@ import org.apache.wicket.model.Model;
  *  
  * </pre>
  * 
- * In this case, the Label component will replace the body of the tag it is
- * attached to with the 'name' property of the given Person object, where Person
- * might look like:
+ * In this case, the Label component will replace the body of the tag it is attached to with the
+ * 'name' property of the given Person object, where Person might look like:
  * 
  * <pre>
  * public class Person
@@ -68,7 +67,7 @@ import org.apache.wicket.model.Model;
 public class Label extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -79,7 +78,7 @@ public class Label extends WebComponent
 	{
 		super(id);
 	}
-	
+
 	/**
 	 * Convenience constructor. Same as Label(String, new Model(String))
 	 * 
@@ -110,5 +109,15 @@ public class Label extends WebComponent
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		// always transform the tag to <span></span> so even labels defined as <span/> render
+		tag.setType(XmlTag.OPEN);
 	}
 }
