@@ -22,23 +22,21 @@ import java.util.Date;
 
 /**
  * Abstract base class for subclasses that represent a point in time (as opposed
- * to a duration of time).
+ * to a {@link Duration} of time).
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 abstract class AbstractTime extends AbstractTimeValue
 {
-	/** Calendar for the local timezone */
+	/** calendar for the local time zone */
 	static final Calendar localtime = Calendar.getInstance();
 
-	/** Time format */
+	/** time format */
 	static final SimpleDateFormat timeFormat = new SimpleDateFormat("h.mma");
 
 	/**
-	 * Package local constructor for package subclasses only
-	 * 
-	 * @param milliseconds
-	 *            The number of milliseconds in this time value
+	 * @see AbstractTimeValue
 	 */
 	AbstractTime(final long milliseconds)
 	{
@@ -46,9 +44,13 @@ abstract class AbstractTime extends AbstractTimeValue
 	}
 
 	/**
+	 * Returns <code>true</code> if this <code>Time</code> value is after
+	 * the given <code>Time</code> argument's value.
+	 * 
 	 * @param that
-	 *            The time to compare with
-	 * @return True if this time value is after that time value
+	 *            the <code>AbstractTimeValue</code> to compare with
+	 * @return <code>true</code> if this <code>Time</code> value is after
+	 *         <code>that</code> <code>Time</code> value
 	 */
 	public final boolean after(final AbstractTimeValue that)
 	{
@@ -56,9 +58,13 @@ abstract class AbstractTime extends AbstractTimeValue
 	}
 
 	/**
+	 * Returns <code>true</code> if this <code>Time</code> value is before
+	 * the given <code>Time</code> argument's value.
+	 * 
 	 * @param that
-	 *            The time to compare with
-	 * @return True if this time value is before that time value
+	 *            the <code>AbstractTimeValue</code> to compare with
+	 * @return <code>true</code> if this <code>Time</code> value is before
+	 *         <code>that</code> <code>Time</code> value
 	 */
 	public final boolean before(final AbstractTimeValue that)
 	{
@@ -66,9 +72,10 @@ abstract class AbstractTime extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts this time to a time string using the formatter h.mma
+	 * Converts this <code>Time</code> to a time <code>String</code> using
+	 * the formatter 'h.mma'.
 	 * 
-	 * @return The date string
+	 * @return the <code>Time</code> <code>String</code>
 	 */
 	public final String toTimeString()
 	{
@@ -76,11 +83,12 @@ abstract class AbstractTime extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts this time to a date string using the date formatter h.mma
+	 * Converts this <code>Time</code> to a <code>Date String</code> using
+	 * the <code>Date</code> formatter 'h.mma'.
 	 * 
 	 * @param calendar
-	 *            The calendar to use in the conversion
-	 * @return The date string
+	 *            the <code>Calendar</code> to use in the conversion
+	 * @return the <code>Date</code> <code>String</code>
 	 */
 	public final String toTimeString(final Calendar calendar)
 	{
@@ -95,9 +103,10 @@ abstract class AbstractTime extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts this time to a string suitable for use in a filesystem name
+	 * Converts this <code>Time</code> to a <code>String</code> suitable for
+	 * use in a file system name.
 	 * 
-	 * @return This time as a formatted string
+	 * @return this <code>Time</code> as a formatted <code>String</code>
 	 */
 	public String toString()
 	{

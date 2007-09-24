@@ -21,27 +21,37 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This class maps ITimeFrames to Objects. Since values are stored using
- * ITimeFrameSource implementing objects, the value returned by the source may
- * vary over time. For example, one implementation of ITimeFrameSource might
- * return the start and end time of lunch on any given day.
+ * This class maps <code>ITimeFrame</code>s to <code>Object</code>s. Since
+ * values are stored using <code>ITimeFrameSource</code> implementing objects,
+ * the value returned by the source may vary over time. For example, one
+ * implementation of <code>ITimeFrameSource</code> might return the start and
+ * end time of lunch on any given day.
  * <p>
- * To associate an object with a dynamic TimeFrame (via ITimeFrameSource), call
- * put(ITimeFrameSource, Object). You can later retrieve the first object for a
- * point in time with get(Time). The method get() is provided for convenience
- * and is equivalent to get(Time.now()).
+ * To associate an object with a dynamic <code>TimeFrame</code> (via
+ * <code>ITimeFrameSource</code>), call
+ * <code>put(ITimeFrameSource, Object)</code>. You can later retrieve the
+ * first object for a point in time with <code>get(Time)</code>. The
+ * <code>get</code> method is provided for convenience and is equivalent to
+ * <code>get(Time.now())</code>.
  * <p>
- * This class is not threadsafe.
+ * This class is not thread-safe.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public final class TimeMap
 {
-	/** Map from ITimeFrameSource implementing objects to Object values. */
+	/**
+	 * <code>Map</code> from <code>ITimeFrameSource</code> implementing
+	 * objects to <code>Object</code> values.
+	 */
 	private final Map sources = new HashMap();
 
 	/**
-	 * @return Object for the current time
+	 * Retrieves an <code>Object</code> for the current <code>Time</code>
+	 * value.
+	 * 
+	 * @return <code>Object</code> for the current <code>Time</code> value
 	 */
 	public Object get()
 	{
@@ -49,9 +59,13 @@ public final class TimeMap
 	}
 
 	/**
+	 * Retrieves an <code>Object</code> for the given <code>Time</code>
+	 * value.
+	 * 
 	 * @param time
-	 *            The time
-	 * @return Gets an Object for the given time value or null if none exists
+	 *            the <code>Time</code> value
+	 * @return gets an <code>Object</code> for the given <code>Time</code>
+	 *         value or <code>null</code> if none exists
 	 */
 	public Object get(final Time time)
 	{
@@ -68,13 +82,14 @@ public final class TimeMap
 	}
 
 	/**
-	 * Associates an object with a dynamic time frame
+	 * Associates an <code>Object</code> with a dynamic <code>TimeFrame</code>.
 	 * 
 	 * @param source
-	 *            A source that can produce a timeframe to compare a time value
-	 *            with
+	 *            a source that can produce a <code>TimeFrame</code> with
+	 *            which to compare a <code>Time</code> value
 	 * @param o
-	 *            The object to be returned for the given dynamic timeframe
+	 *            the <code>Object</code> to be returned for the given dynamic
+	 *            <code>TimeFrame</code>
 	 */
 	public void put(final ITimeFrameSource source, final Object o)
 	{

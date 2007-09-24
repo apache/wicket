@@ -20,47 +20,56 @@ package org.apache.wicket.util.time;
  * Immutable class which represents an interval of time with a beginning and an
  * end. The beginning value is inclusive and the end value is exclusive. In
  * other words, the time frame of 1pm to 2pm includes 1pm, but not 2pm. 1:59:59
- * is the last value in the timeframe.
+ * is the last value in the <code>TimeFrame</code>.
  * <p>
- * TimeFrames can be constructed by calling the valueOf static factory methods
- * valueOf(Time, Time) (yielding a TimeFrame between two absolute times) and
- * valueOf(Time, Duration) yielding a TimeFrame starting at an absolute time and
- * having a given length.
+ * <code>TimeFrame</code>s can be constructed by calling the
+ * <code>valueOf</code> static factory methods
+ * <code>valueOf(Time, Time)</code> (yielding a <code>TimeFrame</code>
+ * between two absolute times) and <code>valueOf(Time, Duration)</code>
+ * yielding a <code>TimeFrame</code> starting at an absolute time and having a
+ * given length.
  * <p>
- * The start and end of a TimeFrame can be retrieved by calling getStart() and
- * getEnd(). Its duration can be retrieved by calling getDuration().
+ * The start and end of a <code>TimeFrame</code> can be retrieved by calling
+ * <code>getStart</code> and <code>getEnd</code>. Its duration can be
+ * retrieved by calling <code>getDuration</code>.
  * <p>
- * The contains(Time) method can be called to determine if a TimeFrame contains
- * a given point in time. The overlaps(TimeFrame) method can be called to
- * determine if two TimeFrames overlap.
+ * The <code>contains(Time)</code> method can be called to determine if a
+ * <code>TimeFrame</code> contains a given point in time. The
+ * <code>overlaps(TimeFrame)</code> method can be called to determine if two
+ * <code>TimeFrames</code> overlap.
  * <p>
- * The eachDay(TimeOfDay, TimeOfDay) will return a TimeFrameSource which
- * generates a timeframe using the two times of day. In other words, if the
- * start is 3pm and the end is 4pm, the TimeFrameSource returned will yield
- * 3-4pm on the day it is called (each day).
+ * The <code>eachDay(TimeOfDay, TimeOfDay)</code> will return a
+ * <code>TimeFrameSource</code> which generates a <code>TimeFrame</code>
+ * using the two times of day. In other words, if the start is 3pm and the end
+ * is 4pm, the <code>TimeFrameSource</code> returned will yield 3-4pm on the
+ * day it is called (each day).
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public final class TimeFrame implements ITimeFrameSource
 {
-	/** End of this timeframe */
+	/** end of this <code>TimeFrame</code> */
 	private final Time end;
 	
-	/** Begining of this timeframe */
+	/** beginning of this <code>TimeFrame</code> */
 	private final Time start;
 
 	/**
-	 * Returns a timeframe source for a start and end time-of-day. For example,
-	 * called with 3pm and 5pm as parameters, the timeframe source returned
-	 * would produce timeframe objects representing 3pm-5pm on whatever day it
-	 * is when the caller calls the timeframesource interface.
+	 * Creates an <code>ITimeFrameSource</code> source for start and end
+	 * <code>TimeOfDay</code>s. For example, called with 3pm and 5pm as
+	 * parameters, the <code>TimeFrame</code> source returned would produce
+	 * <code>TimeFrame</code> objects representing 3pm-5pm on whatever day it
+	 * is when the caller calls the <code>TimeFrameSource</code> interface.
 	 * 
 	 * @param startTimeOfDay
-	 *            The start time for this time frame each day
+	 *            the start <code>TimeOfDay</code> for this
+	 *            <code>TimeFrame</code> each day
 	 * @param endTimeOfDay
-	 *            The end time for this time frame each day
-	 * @return A timeframe source which will return the specified timeframe each
-	 *         day
+	 *            the end <code>TimeOfDay</code> for this
+	 *            <code>TimeFrame</code> each day
+	 * @return a <code>TimeFrameSource</code> which will return the specified
+	 *         <code>TimeFrame</code> each day
 	 */
 	public static ITimeFrameSource eachDay(final TimeOfDay startTimeOfDay,
 			final TimeOfDay endTimeOfDay)
@@ -77,15 +86,17 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * Creates a time frame for a start and duration
+	 * Creates a <code>TimeFrame</code> for a start <code>Time</code> and
+	 * <code>Duration</code>.
 	 * 
 	 * @param start
-	 *            The start time
+	 *            the start <code>Time</code>
 	 * @param duration
-	 *            The duration
-	 * @return The time frame
+	 *            the <code>Duration</code>
+	 * @return the <code>TimeFrame</code>
 	 * @throws IllegalArgumentException
-	 *             Thrown if start time is before end time
+	 *             thrown if start <code>Time</code> value is before end
+	 *             <code>Time</code> value
 	 */
 	public static TimeFrame valueOf(final Time start, final Duration duration)
 	{
@@ -93,15 +104,17 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * Creates a time frame for a start and end time
+	 * Creates a <code>TimeFrame</code> for given start and end
+	 * <code>Time</code>s.
 	 * 
 	 * @param start
-	 *            The start time
+	 *            the start <code>Time</code>
 	 * @param end
-	 *            The end time
-	 * @return The time frame
+	 *            the end <code>Time</code>
+	 * @return the <code>TimeFrame</code>
 	 * @throws IllegalArgumentException
-	 *             Thrown if start time is before end time
+	 *             thrown if start <code>Time</code> value is before end
+	 *             <code>Time</code> value
 	 */
 	public static TimeFrame valueOf(final Time start, final Time end)
 	{
@@ -109,15 +122,15 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * Checks consistency of start and end values, ensuring that the end value
-	 * is less than the start value.
+	 * Checks consistency of start and end <code>AbstractTimeValue</code>
+	 * values, ensuring that the end value is less than the start value.
 	 * 
 	 * @param start
-	 *            Start value
+	 *            start <code>AbstractTimeValue</code> value
 	 * @param end
-	 *            End value
+	 *            end <code>AbstractTimeValue</code> value
 	 * @throws IllegalArgumentException
-	 *             Thrown if end is less than start
+	 *             thrown if end is less than start
 	 */
 	private static void check(final AbstractTimeValue start, final AbstractTimeValue end)
 	{
@@ -130,14 +143,15 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * Private constructor to force use of static factory methods
+	 * Private constructor to force use of static factory methods.
 	 * 
 	 * @param start
-	 *            The start time
+	 *            the start <code>Time</code>
 	 * @param end
-	 *            The end time
+	 *            the end <code>Time</code>
 	 * @throws IllegalArgumentException
-	 *             Thrown if start time is before end time
+	 *             thrown if start <code>Time</code> value is before end
+	 *             <code>Time</code> value
 	 */
 	private TimeFrame(final Time start, final Time end)
 	{
@@ -147,9 +161,13 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
+	 * Determines if this <code>TimeFrame</code> contains a given point in
+	 * time.
+	 * 
 	 * @param time
-	 *            The time to check
-	 * @return True if this time frame contains the given time
+	 *            the <code>Time</code> to check
+	 * @return <code>true</code> if this <code>TimeFrame</code> contains the
+	 *         given time
 	 */
 	public boolean contains(final Time time)
 	{
@@ -157,7 +175,9 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * @return The duration of this time frame
+	 * Retrieves the <code>Duration</code> of this <code>TimeFrame</code>.
+	 * 
+	 * @return the <code>Duration</code> of this <code>TimeFrame</code>
 	 */
 	public Duration getDuration()
 	{
@@ -165,7 +185,9 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * @return The end of this time frame
+	 * Retrieves the end <code>Time</code> of this <code>TimeFrame</code>.
+	 * 
+	 * @return the end of this <code>TimeFrame</code>
 	 */
 	public Time getEnd()
 	{
@@ -173,7 +195,9 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * @return The start of this time frame
+	 * Retrieves the start <code>Time</code> of this <code>TimeFrame</code>.
+	 * 
+	 * @return the start of this <code>TimeFrame</code>
 	 */
 	public Time getStart()
 	{
@@ -181,9 +205,10 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * Implementation of ITimeFrameSource that simply returns this timeframe
+	 * Implementation of <code>ITimeFrameSource</code> that simply returns
+	 * this <code>TimeFrame</code>.
 	 * 
-	 * @return Gets this timeframe
+	 * @return this <code>TimeFrame</code>
 	 */
 	public TimeFrame getTimeFrame()
 	{
@@ -191,9 +216,12 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
+	 * Determines if two <code>TimeFrame</code>s overlap.
+	 * 
 	 * @param timeframe
-	 *            The timeframe to test
-	 * @return True if the given timeframe overlaps this one
+	 *            the <code>TimeFrame</code> to test
+	 * @return <code>true</code> if the given <code>TimeFrame</code>
+	 *         overlaps this one
 	 */
 	public boolean overlaps(final TimeFrame timeframe)
 	{
@@ -202,7 +230,9 @@ public final class TimeFrame implements ITimeFrameSource
 	}
 
 	/**
-	 * @return String representation of this object
+	 * Converts this <code>TimeFrame</code> to a <code>String</code> representation.
+	 * 
+	 * @return a <code>String</code> representation of this object
 	 */
 	public String toString()
 	{

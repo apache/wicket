@@ -17,17 +17,21 @@
 package org.apache.wicket.util.time;
 
 /**
- * A timeframe source produces time frame values. The value returned by a
- * timeframe source may vary over time.
+ * An <code>ITimeFrameSource</code> produces <code>TimeFrame</code> values.
+ * The value returned by an <code>ITimeFrameSource</code> source may vary over
+ * time.
  * 
- * @see org.apache.wicket.util.time.TimeFrame
+ * @see TimeFrame
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public interface ITimeFrameSource
 {
 	/**
-	 * @return Gets current time frame value
+	 * Retrieves the current <code>TimeFrame</code> value.
+	 * 
+	 * @return the current <code>TimeFrame</code> value
 	 */
 	TimeFrame getTimeFrame();
 }

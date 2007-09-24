@@ -23,14 +23,15 @@ import org.apache.wicket.util.value.LongValue;
  * and typical operations on such values.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 abstract class AbstractTimeValue extends LongValue
 {
 	/**
-	 * Package local constructor for package subclasses only
+	 * Package local constructor for package subclasses only.
 	 * 
 	 * @param milliseconds
-	 *            The number of milliseconds in this time value
+	 *            the number of milliseconds in this <code>Time</code> value
 	 */
 	AbstractTimeValue(final long milliseconds)
 	{
@@ -38,7 +39,9 @@ abstract class AbstractTimeValue extends LongValue
 	}
 
 	/**
-	 * @return Number of milliseconds in this abstract time value
+	 * Retrieves the number of milliseconds in this <code>Time</code> value.
+	 * 
+	 * @return the number of milliseconds in this <code>Time</code> value
 	 */
 	public final long getMilliseconds()
 	{

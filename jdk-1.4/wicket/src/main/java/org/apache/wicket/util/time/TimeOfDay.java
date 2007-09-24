@@ -28,32 +28,42 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * <p>
  * Values can be constructed using various factory methods:
  * <ul>
- * <li>valueOf(long) where long is milliseconds since midnight
- * <li>valueOf(String) where the string is in h.mma format
- * <li>valueOf(Calendar, String) where the string is in h.mma format
- * <li>valueOf(Duration) where duration is time since midnight
- * <li>valueOf(Time) where time is some point in time today
- * <li>valueOf(Calendar, Time) where time is some point in time today
- * <li>militaryTime(int hour, int minute, int second) for 24 hour time
- * <li>time(int hour, int minute, Meridian) where Meridian is AM or PM
- * <li>time(int hour, int minute, int second, Meridian) where Meridian is AM or
- * PM
- * <li>now() to construct the current time of day
- * <li>now(Calendar) to construct the current time of day using a given
- * calendar
+ * <li><code>valueOf(long)</code> where <code>long</code> is milliseconds
+ * since midnight
+ * <li><code>valueOf(String)</code> where the <code>String</code> is in
+ * 'h.mma' format
+ * <li><code>valueOf(Calendar, String)</code> where the <code>String</code>
+ * is in 'h.mma' format
+ * <li><code>valueOf(Duration)</code> where <code>Duration</code> is time
+ * since midnight
+ * <li><code>valueOf(Time)</code> where <code>Time</code> is some point in
+ * time today
+ * <li><code>valueOf(Calendar, Time)</code> where <code>Time</code> is some
+ * point in time today
+ * <li><code>militaryTime(int hour, int minute, int second)</code> for
+ * 24-hour time
+ * <li><code>time(int hour, int minute, Meridian)</code> where
+ * <code>Meridian</code> is AM or PM
+ * <li><code>time(int hour, int minute, int second, Meridian)</code> where
+ * <code>Meridian</code> is AM or PM
+ * <li><code>now()</code> to construct the current time of day
+ * <li><code>now(Calendar)</code> to construct the current time of day using
+ * a given <code>Calendar</code>
  * </ul>
  * <p>
  * If an attempt is made to construct an illegal time of day value (one that is
- * greater than 24 hours worth of milliseconds), an IllegalArgumentException
- * will be thrown.
+ * greater than 24 hours worth of milliseconds), an
+ * <code>IllegalArgumentException</code> will be thrown.
  * <p>
  * Military hours, minutes and seconds of the time of day can be retrieved by
- * calling hour(), minute() and second().
+ * calling the <code>hour</code>, <code>minute</code>, and
+ * <code>second</code> methods.
  * <p>
- * The next occurrence of a given time of day can be retrieved by calling next()
- * or next(Calendar).
+ * The next occurrence of a given <code>TimeOfDay</code> can 
+ * be retrieved by calling <code>next()</code> or <code>next(Calendar)</code>.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public final class TimeOfDay extends AbstractTime
 {
@@ -77,7 +87,7 @@ public final class TimeOfDay extends AbstractTime
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Construct.
+		 * Constructor.
 		 * 
 		 * @param name
 		 *            the meridian name (value)
@@ -89,15 +99,15 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets a time of day value on a 24 hour clock.
+	 * Retrieves a <code>TimeOfDay</code> value on a 24-hour clock.
 	 * 
 	 * @param hour
-	 *            The hour (0-23)
+	 *            the hour (0-23)
 	 * @param minute
-	 *            The minute (0-59)
+	 *            the minute (0-59)
 	 * @param second
-	 *            The second (0-59)
-	 * @return The time of day
+	 *            the second (0-59)
+	 * @return the time of day
 	 */
 	public static TimeOfDay militaryTime(final int hour, final int minute, final int second)
 	{
@@ -121,9 +131,9 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets the time of day it is now.
+	 * Retrieves the <code>TimeOfDay</code> representing 'now'.
 	 * 
-	 * @return The time of day it is now
+	 * @return the time of day it is now
 	 */
 	public static TimeOfDay now()
 	{
@@ -131,11 +141,12 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets the time of day it is now on the given calendar.
+	 * Retrieves the <code>TimeOfDay</code> representing 'now' on the given
+	 * <code>Calendar</code>.
 	 * 
 	 * @param calendar
-	 *            The calendar to use
-	 * @return The time of day it is now on the given calendar
+	 *            the <code>Calendar</code> to use
+	 * @return the time of day it is now on the given <code>Calendar</code>
 	 */
 	public static TimeOfDay now(final Calendar calendar)
 	{
@@ -143,17 +154,17 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets a time of day on a 12 hour clock.
+	 * Retrieves a <code>TimeOfDay</code> on a 12-hour clock.
 	 * 
 	 * @param hour
-	 *            The hour (1-12)
+	 *            the hour (1-12)
 	 * @param minute
-	 *            The minute (0-59)
+	 *            the minute (0-59)
 	 * @param second
-	 *            The second (0-59)
+	 *            the second (0-59)
 	 * @param meridian
-	 *            AM/PM
-	 * @return The time value
+	 *            AM or PM
+	 * @return the <code>TimeOfDay</code> value
 	 */
 	public static TimeOfDay time(final int hour, final int minute, final int second,
 			final Meridian meridian)
@@ -183,15 +194,15 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets a time of day on a 12 hour clock.
+	 * Retrieves a <code>TimeOfDay</code> on a 12-hour clock.
 	 * 
 	 * @param hour
-	 *            The hour (1-12)
+	 *            the hour (1-12)
 	 * @param minute
-	 *            The minute (0-59)
+	 *            the minute (0-59)
 	 * @param meridian
-	 *            AM/PM
-	 * @return The time value
+	 *            AM of PM
+	 * @return the <code>TimeOfDay</code> value
 	 */
 	public static TimeOfDay time(final int hour, final int minute, final Meridian meridian)
 	{
@@ -199,13 +210,15 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Converts to TimeOfDay instance.
+	 * Converts a time <code>String</code> and <code>Calendar</code> to a
+	 * <code>TimeOfDay</code> instance.
 	 * 
 	 * @param calendar
-	 *            The calendar to use when parsing time string
+	 *            the <code>Calendar</code> to use when parsing time
+	 *            <code>String</code>
 	 * @param time
-	 *            A string in h.mma format
-	 * @return The time of day on the given calendar
+	 *            a <code>String</code> in 'h.mma' format
+	 * @return the <code>TimeOfDay</code> on the given <code>Calendar</code>
 	 * @throws ParseException
 	 */
 	public static TimeOfDay valueOf(final Calendar calendar, final String time)
@@ -222,13 +235,14 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Converts to TimeOfDay instance.
+	 * Converts a <code>Time</code> instance and <code>Calendar</code> to a
+	 * <code>TimeOfDay</code> instance.
 	 * 
 	 * @param calendar
-	 *            The calendar to use when converting time value
+	 *            the <code>Calendar</code> to use
 	 * @param time
-	 *            The time to convert to a time of day
-	 * @return The time of day for this time
+	 *            a <code>Time</code> instance
+	 * @return the <code>TimeOfDay</code> on the given <code>Calendar</code>
 	 */
 	public static TimeOfDay valueOf(final Calendar calendar, final Time time)
 	{
@@ -237,11 +251,12 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Converts to TimeOfDay instance.
+	 * Converts a <code>Duration</code> instance to a <code>TimeOfDay</code>
+	 * instance.
 	 * 
 	 * @param duration
-	 *            The duration
-	 * @return The time of day for the duration since midnight
+	 *            the <code>Duration</code> to use
+	 * @return the <code>TimeOfDay</code> of the given <code>Duration</code>
 	 */
 	public static TimeOfDay valueOf(final Duration duration)
 	{
@@ -249,11 +264,12 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Converts to TimeOfDay instance.
+	 * Converts a <code>long</code> value to a <code>TimeOfDay</code>
+	 * instance.
 	 * 
 	 * @param time
-	 *            The time in milliseconds today
-	 * @return The time of day
+	 *            the time in milliseconds today
+	 * @return the <code>TimeOfDay</code> 
 	 */
 	public static TimeOfDay valueOf(final long time)
 	{
@@ -261,11 +277,12 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Converts to TimeOfDay instance.
+	 * Converts a <code>String</code> value to a <code>TimeOfDay</code>
+	 * instance.
 	 * 
 	 * @param time
-	 *            A string in h.mma format
-	 * @return The time of day on the given calendar
+	 *            a <code>String</code> in 'h.mma' format
+	 * @return the <code>TimeOfDay</code>
 	 * @throws ParseException
 	 */
 	public static TimeOfDay valueOf(final String time) throws ParseException
@@ -274,11 +291,12 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Converts to TimeOfDay instance.
+	 * Converts a <code>String</code> value to a <code>TimeOfDay</code>
+	 * instance.
 	 * 
 	 * @param time
-	 *            Time to convert to time of day
-	 * @return The time of day in the current timezone
+	 *            a <code>Time</code> to convert to <code>TimeOfDay</code>
+	 * @return the <code>TimeOfDay</code> in the current time zone
 	 */
 	public static TimeOfDay valueOf(final Time time)
 	{
@@ -289,7 +307,7 @@ public final class TimeOfDay extends AbstractTime
 	 * Private utility constructor forces use of static factory methods.
 	 * 
 	 * @param time
-	 *            Time today in milliseconds
+	 *            the time today in milliseconds
 	 */
 	private TimeOfDay(final long time)
 	{
@@ -303,9 +321,9 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets the hour of the day.
+	 * Retrieves the hour of the day.
 	 * 
-	 * @return The hour of the day (0-23)
+	 * @return the hour (0-23) of this <code>TimeOfDay</code> 
 	 */
 	public int hour()
 	{
@@ -313,9 +331,9 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets the minute.
+	 * Retrieves the minute.
 	 * 
-	 * @return The minute (0-59)
+	 * @return the minute (0-59) of this <code>TimeOfDay</code>
 	 */
 	public int minute()
 	{
@@ -323,9 +341,11 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets the next occurrence of this time of day in localtime.
+	 * Retrieves the next occurrence of this <code>TimeOfDay</code> in local
+	 * time.
 	 * 
-	 * @return The next occurrence of this time of day in localtime
+	 * @return the next occurrence of this <code>TimeOfDay</code> in local
+	 *         time
 	 */
 	public Time next()
 	{
@@ -333,11 +353,13 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets the next occurence of this time of day on the given calendar.
+	 * Retrieves the next occurrence of this <code>TimeOfDay</code> on the
+	 * given <code>Calendar</code>.
 	 * 
 	 * @param calendar
-	 *            The calendar to use
-	 * @return The next occurrence of this time of day on the given calendar
+	 *            the <code>Calendar</code> to use
+	 * @return the next occurrence of this <code>TimeOfDay</code> on the given
+	 *         <code>Calendar</code>
 	 */
 	public Time next(final Calendar calendar)
 	{
@@ -358,9 +380,9 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets the second.
+	 * Retrieves the second.
 	 * 
-	 * @return The second (0-59)
+	 * @return the second (0-59)
 	 */
 	public int second()
 	{
@@ -377,10 +399,10 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets miliseconds as hours.
+	 * Retrieves milliseconds as hours.
 	 * 
 	 * @param milliseconds
-	 *            miliseconds to convert
+	 *            milliseconds to convert
 	 * @return converted input
 	 */
 	private int toHours(final long milliseconds)
@@ -389,10 +411,10 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets miliseconds as minutes.
+	 * Retrieves milliseconds as minutes.
 	 * 
 	 * @param milliseconds
-	 *            miliseconds to convert
+	 *            milliseconds to convert
 	 * @return converted input
 	 */
 	private int toMinutes(final long milliseconds)
@@ -401,10 +423,10 @@ public final class TimeOfDay extends AbstractTime
 	}
 
 	/**
-	 * Gets miliseconds as seconds.
+	 * Retrieves milliseconds as seconds.
 	 * 
 	 * @param milliseconds
-	 *            miliseconds to convert
+	 *            milliseconds to convert
 	 * @return converted input
 	 */
 	private int toSeconds(final long milliseconds)

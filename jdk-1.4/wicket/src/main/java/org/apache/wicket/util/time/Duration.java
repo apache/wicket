@@ -27,70 +27,77 @@ import org.slf4j.Logger;
 
 
 /**
- * A duration is an immutable length of time stored as a number of milliseconds.
- * Various factory and conversion methods are available for convenience.
- * <P>
+ * A <code>Duration</code> is an immutable length of time stored as a number
+ * of milliseconds. Various factory and conversion methods are available for
+ * convenience.
+ * <p>
  * These static factory methods allow easy construction of value objects using
- * either long values like seconds(2034) or hours(3):
+ * either long values like <code>seconds(2034)</code> or <code>hours(3)</code>:
  * <p>
  * <ul>
- * <li>Duration.milliseconds(long)
- * <li>Duration.seconds(int)
- * <li>Duration.minutes(int)
- * <li>Duration.hours(int)
- * <li>Duration.days(int)
+ * <li><code>Duration.milliseconds(long)</code>
+ * <li><code>Duration.seconds(int)</code>
+ * <li><code>Duration.minutes(int)</code>
+ * <li><code>Duration.hours(int)</code>
+ * <li><code>Duration.days(int)</code>
  * </ul>
  * <p>
- * or double precision floating point values like days(3.2):
+ * ...or double-precision floating point values like <code>days(3.2)</code>:
  * <p>
  * <ul>
- * <li>Duration.milliseconds(double)
- * <li>Duration.seconds(double)
- * <li>Duration.minutes(double)
- * <li>Duration.hours(double)
- * <li>Duration.days(double)
+ * <li><code>Duration.milliseconds(double)</code>
+ * <li><code>Duration.seconds(double)</code>
+ * <li><code>Duration.minutes(double)</code>
+ * <li><code>Duration.hours(double)</code>
+ * <li><code>Duration.days(double)</code>
  * </ul>
  * <p>
- * In the case of milliseconds(double), the value will be rounded off to the
- * nearest integral millisecond using Math.round().
+ * In the case of <code>milliseconds(double)</code>, the value will be
+ * rounded off to the nearest integral millisecond using
+ * <code>Math.round()</code>.
  * <p>
- * The precise number of milliseconds represented by a Duration object can be
- * retrieved by calling the milliseconds() method. The value of a Duration
- * object in a given unit like days or hours can be retrieved by calling one of
- * the following unit methods, each of which returns a double precision floating
- * point number:
+ * The precise number of milliseconds represented by a <code>Duration</code>
+ * object can be retrieved by calling the <code>getMilliseconds</code> method.
+ * The value of a <code>Duration</code> object in a given unit like days or
+ * hours can be retrieved by calling one of the following unit methods, each of
+ * which returns a double-precision floating point number:
  * <p>
  * <ul>
- * <li>seconds()
- * <li>minutes()
- * <li>hours()
- * <li>days()
+ * <li><code>seconds()</code>
+ * <li><code>minutes()</code>
+ * <li><code>hours()</code>
+ * <li><code>days()</code>
  * </ul>
  * <p>
- * Values can be added and subtracted using the add() and subtract() methods,
- * each of which returns a new immutable Duration object.
+ * Values can be added and subtracted using the <code>add(Duration)</code> and
+ * <code>subtract(Duration)</code> methods, each of which returns a new
+ * immutable <code>Duration</code> object.
  * <p>
- * String values can be converted to Duration objects using the static valueOf
- * factory methods. The string format is the opposite of the one created by
- * toString(), which converts a Duration object to a readable form, such as "3.2
- * hours" or "32.5 minutes". Valid units are: milliseconds, seconds, minutes
- * hours and days. Correct English plural forms are used in creating string
- * values and are parsed as well. The Locale is respected and "," will be used
- * instead of "." in the Eurozone.
+ * <code>String</code> values can be converted to <code>Duration</code>
+ * objects using the static <code>valueOf</code> factory methods. The
+ * <code>String</code> format is the opposite of the one created by
+ * <code>toString()</code>, which converts a <code>Duration</code> object
+ * to a readable form, such as "3.2 hours" or "32.5 minutes". Valid units are:
+ * milliseconds, seconds, minutes hours and days. Correct English plural forms
+ * are used in creating <code>String</code> values and are parsed as well. The
+ * <code>Locale</code> is respected and "," will be used instead of "." in the
+ * Eurozone.
  * <p>
- * The benchmark method will "benchmark" a Runnable or an ICode implementing
- * object, returning a Duration object that represents the amount of time
- * elapsed in running the code.
+ * The benchmark method will "benchmark" a <code>Runnable</code> or an
+ * {@link ICode} implementing object, returning a <code>Duration</code> object
+ * that represents the amount of time elapsed in running the code.
  * <p>
- * Finally, the sleep() method will sleep for the value of a Duration.
+ * Finally, the <code>sleep</code> method will sleep for the value of a
+ * <code>Duration</code>.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public class Duration extends AbstractTimeValue
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Constant for maximum duration */
+	/** Constant for maximum duration. */
 	public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE); 
 
 	/** Constant for no duration. */
@@ -111,17 +118,19 @@ public class Duration extends AbstractTimeValue
 	/** Constant for one week. */
 	public static final Duration ONE_WEEK = days(7);
 
-	/** Pattern to match strings. */
+	/** pattern to match strings */
 	private static final Pattern pattern = Pattern.compile(
 			"([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?",
 			Pattern.CASE_INSENSITIVE);
 
 	/**
+	 * Benchmark the given command.
+	 * 
 	 * @param code
-	 *            The code
+	 *            an <code>ICode</code>
 	 * @param log
-	 *            Optional log to use with errors and exceptions
-	 * @return The duration it took to run the code
+	 *            optional logger to use with errors and exceptions
+	 * @return the <code>Time</code> value it took to run the code
 	 */
 	public static Duration benchmark(final ICode code, final Logger log)
 	{
@@ -139,8 +148,8 @@ public class Duration extends AbstractTimeValue
 	 * Benchmark the given command.
 	 * 
 	 * @param code
-	 *            The code
-	 * @return The duration it took to run the code
+	 *            a <code>Runnable</code>
+	 * @return the <code>Time</code> value it took to run the code
 	 */
 	public static Duration benchmark(final Runnable code)
 	{
@@ -155,10 +164,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on days.
+	 * Retrieves the <code>Duration</code> based on days.
 	 * 
 	 * @param days
-	 * @return duration
+	 *            days <code>double</code> value
+	 * @return the <code>Duration</code> based on days
 	 */
 	public static Duration days(final double days)
 	{
@@ -166,10 +176,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on days.
+	 * Retrieves the <code>Duration</code> based on days.
 	 * 
 	 * @param days
-	 * @return duration
+	 *            days <code>int</code> value
+	 * @return the <code>Duration</code> based on days
 	 */
 	public static Duration days(final int days)
 	{
@@ -177,12 +188,13 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * The amount of time elapsed since start time
+	 * Calculates the amount of time elapsed since start time.
 	 * 
 	 * @param start
-	 *            The start time
-	 * @return The elapsed period
-	 * @throws IllegalStateException Thrown if start is in the future
+	 *            the start <code>Time</code>
+	 * @return the elapsed period as a <code>Duration</code>
+	 * @throws IllegalStateException
+	 *             if start <code>Time</code> is in the future
 	 */
 	public static Duration elapsed(final Time start)
 	{
@@ -190,10 +202,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on hours.
+	 * Retrieves the <code>Duration</code> based on hours.
 	 * 
 	 * @param hours
-	 * @return duration
+	 *            hours <code>double</code> value
+	 * @return the <code>Duration</code> based on hours
 	 */
 	public static Duration hours(final double hours)
 	{
@@ -201,10 +214,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on hours.
+	 * Retrieves the <code>Duration</code> based on hours.
 	 * 
 	 * @param hours
-	 * @return duration
+	 *            hours <code>int</code> value
+	 * @return the <code>Duration</code> based on hours
 	 */
 	public static Duration hours(final int hours)
 	{
@@ -212,10 +226,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on milliseconds.
+	 * Retrieves the <code>Duration</code> based on milliseconds.
 	 * 
 	 * @param milliseconds
-	 * @return duration
+	 *            milliseconds <code>double</code> value
+	 * @return the <code>Duration</code> based on milliseconds
 	 */
 	public static Duration milliseconds(final double milliseconds)
 	{
@@ -223,10 +238,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on miliseconds.
+	 * Retrieves the <code>Duration</code> based on miliseconds.
 	 * 
 	 * @param milliseconds
-	 * @return duration
+	 *            milliseconds <code>long</code> value
+	 * @return the <code>Duration</code> based on milliseconds
 	 */
 	public static Duration milliseconds(final long milliseconds)
 	{
@@ -234,10 +250,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on minutes.
+	 * Retrieves the <code>Duration</code> based on minutes.
 	 * 
 	 * @param minutes
-	 * @return duration
+	 *            minutes <code>double</code> value
+	 * @return the <code>Duration</code> based on minutes
 	 */
 	public static Duration minutes(final double minutes)
 	{
@@ -245,10 +262,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on minutes.
+	 * Retrieves the <code>Duration</code> based on minutes.
 	 * 
 	 * @param minutes
-	 * @return duration
+	 *            minutes <code>int</code> value
+	 * @return the <code>Duration</code> based on minutes
 	 */
 	public static Duration minutes(final int minutes)
 	{
@@ -256,10 +274,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on seconds.
+	 * Retrieves the <code>Duration</code> based on seconds.
 	 * 
 	 * @param seconds
-	 * @return duration
+	 *            seconds <code>double</code> value
+	 * @return the <code>Duration</code> based on seconds
 	 */
 	public static Duration seconds(final double seconds)
 	{
@@ -267,10 +286,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the duration based on seconds.
+	 * Retrieves the <code>Duration</code> based on seconds.
 	 * 
 	 * @param seconds
-	 * @return duration
+	 *            seconds <code>int</code> value
+	 * @return the <code>Duration</code> based on seconds
 	 */
 	public static Duration seconds(final int seconds)
 	{
@@ -278,11 +298,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the given long as a duration.
+	 * Retrieves the given <code>long</code> as a <code>Duration</code>.
 	 * 
 	 * @param time
-	 *            The duration value in milliseconds
-	 * @return Duration value
+	 *            the duration <code>long</code> value in milliseconds
+	 * @return the <code>Duration</code> value
 	 */
 	public static Duration valueOf(final long time)
 	{
@@ -290,14 +310,15 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts the given string to a new duration object. The string can take
-	 * the form of a floating point number followed by a number of milliseconds,
-	 * seconds, minutes, hours or days. For example "6 hours" or "3.4 days".
-	 * Parsing is case insensitive.
+	 * Converts the given <code>String</code> to a new <code>Duration</code>
+	 * object. The string can take the form of a floating point number followed
+	 * by a number of milliseconds, seconds, minutes, hours or days. For example
+	 * "6 hours" or "3.4 days". Parsing is case-insensitive.
 	 * 
 	 * @param string
-	 *            The string to parse
-	 * @return The duration value of the given string
+	 *            a <code>String</code> to parse
+	 * @return the <code>Duration</code> value of the given
+	 *         <code>String</code>
 	 * @throws StringValueConversionException
 	 */
 	public static Duration valueOf(final String string) throws StringValueConversionException
@@ -306,16 +327,17 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts the given string to a new Duration object. The string can take
-	 * the form of a floating point number followed by a number of milliseconds,
-	 * seconds, minutes, hours or days. For example "6 hours" or "3.4 days".
-	 * Parsing is case insensitive.
+	 * Converts the given <code>String</code> to a new <code>Duration</code>
+	 * object. The string can take the form of a floating point number followed
+	 * by a number of milliseconds, seconds, minutes, hours or days. For example
+	 * "6 hours" or "3.4 days". Parsing is case-insensitive.
 	 * 
 	 * @param string
-	 *            The string to parse
+	 *            a <code>String</code> to parse
 	 * @param locale
-	 *            Locale used for parsing
-	 * @return The duration value of the given string
+	 *            the <code>Locale</code> used for parsing
+	 * @return the <code>Duration</code> value of the given
+	 *         <code>String</code>
 	 * @throws StringValueConversionException
 	 */
 	public static Duration valueOf(final String string, final Locale locale)
@@ -363,7 +385,7 @@ public class Duration extends AbstractTimeValue
 	 * Private constructor forces use of static factory methods.
 	 * 
 	 * @param milliseconds
-	 *            Number of milliseconds in this duration
+	 *            number of milliseconds in this <code>Duration</code>
 	 */
 	protected Duration(final long milliseconds)
 	{
@@ -371,11 +393,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Adds a given duration to this duration.
+	 * Adds a given <code>Duration</code> to this <code>Duration</code>.
 	 * 
 	 * @param duration
-	 *            The duration to add
-	 * @return The sum of the durations
+	 *            the <code>Duration</code> to add
+	 * @return the sum of the <code>Duration</code>s
 	 */
 	public Duration add(final Duration duration)
 	{
@@ -383,9 +405,9 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets number of days of the current duration.
+	 * Retrieves the number of days of the current <code>Duration</code>.
 	 * 
-	 * @return number of days of the current duration
+	 * @return number of days of the current <code>Duration</code>
 	 */
 	public final double days()
 	{
@@ -393,9 +415,9 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets number of hours of the current duration.
+	 * Retrieves the number of hours of the current <code>Duration</code>.
 	 * 
-	 * @return number of hours of the current duration
+	 * @return number of hours of the current <code>Duration</code>
 	 */
 	public final double hours()
 	{
@@ -403,9 +425,9 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets number of minutes of the current duration.
+	 * Retrieves the number of minutes of the current <code>Duration</code>.
 	 * 
-	 * @return number of minutes of the current duration
+	 * @return number of minutes of the current <code>Duration</code>
 	 */
 	public final double minutes()
 	{
@@ -413,9 +435,9 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets number of seconds of the current duration.
+	 * Retrieves the number of seconds of the current <code>Duration</code>.
 	 * 
-	 * @return number of seconds of the current duration
+	 * @return number of seconds of the current <code>Duration</code>
 	 */
 	public final double seconds()
 	{
@@ -423,7 +445,7 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Sleep for the current duration.
+	 * Sleeps for the current <code>Duration</code>.
 	 */
 	public final void sleep()
 	{
@@ -441,11 +463,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Subtract a given duration from this duration.
+	 * Subtracts a given <code>Duration</code> from this <code>Duration</code>.
 	 * 
 	 * @param that
-	 *            The duration to subtract
-	 * @return This duration minus that duration
+	 *            the <code>Duration</code> to subtract
+	 * @return this <code>Duration</code> minus that <code>Duration</code>
 	 */
 	public Duration subtract(final Duration that)
 	{
@@ -453,10 +475,11 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the string representation of this duration in days, hours, minutes,
-	 * seconds or milliseconds, as appropriate. Uses the default locale.
+	 * Retrieves the <code>String</code> representation of this
+	 * <code>Duration</code> in days, hours, minutes, seconds or milliseconds,
+	 * as appropriate. Uses the default <code>Locale</code>.
 	 * 
-	 * @return String representation
+	 * @return a <code>String</code> representation
 	 */
 	public String toString()
 	{
@@ -464,12 +487,13 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Gets the string representation of this duration in days, hours, minutes,
-	 * seconds or milliseconds, as appropriate.
+	 * Retrieves the <code>String</code> representation of this
+	 * <code>Duration</code> in days, hours, minutes, seconds or milliseconds,
+	 * as appropriate.
 	 * 
 	 * @param locale
-	 *            the locale
-	 * @return String representation
+	 *            a <code>Locale</code>
+	 * @return a <code>String</code> representation
 	 */
 	public String toString(final Locale locale)
 	{
@@ -504,16 +528,16 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Converts a value to a unit suffixed value, taking care of English
+	 * Converts a value to a unit-suffixed value, taking care of English
 	 * singular/plural suffix.
 	 * 
 	 * @param value
-	 *            The value to format
+	 *            a <code>double</code> value to format
 	 * @param units
-	 *            The units to apply singular or plural suffix to
+	 *            the units to apply singular or plural suffix to
 	 * @param locale
-	 *            The locale
-	 * @return A string for the value
+	 *            the <code>Locale</code>
+	 * @return a <code>String</code> representation
 	 */
 	private String unitString(final double value, final String units, final Locale locale)
 	{
