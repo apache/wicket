@@ -17,7 +17,9 @@
 package org.apache.wicket.util.convert;
 
 import java.text.Format;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.Classes;
@@ -46,9 +48,12 @@ public class ConversionException extends WicketRuntimeException
 
 	/** Target type for the failed conversion. */
 	private String targetTypeName;
-	
+
 	/** Resource key for the message that should be displayed */
 	private String resourceKey;
+
+	/** Variable map to use in variable substitution */
+	private Map vars;
 
 	/**
 	 * Construct exception with message.
@@ -225,5 +230,45 @@ public class ConversionException extends WicketRuntimeException
 		return this;
 	}
 
+	/**
+	 * Sets a variable that will be used in substitution
+	 * 
+	 * @param name
+	 *            variable name
+	 * @param value
+	 *            variable value
+	 * @return this for chaining
+	 */
+	public ConversionException setVariable(String name, Object value)
+	{
+		if (name == null || name.trim().length() == 0)
+		{
+			throw new IllegalArgumentException(
+					"Argument [[name]] cannot be null or an empty string");
+		}
+		if (value == null)
+		{
+			throw new IllegalArgumentException(
+					"Argument [[value]] cannot be null or an empty string");
+		}
+
+		if (vars == null)
+		{
+			vars = new HashMap(2);
+		}
+		vars.put(name, value);
+
+		return this;
+	}
+
+	/**
+	 * Returns the map of variables for this exception.
+	 * 
+	 * @return map of variables for this exception (or null if no variables were defined)
+	 */
+	public Map getVariables()
+	{
+		return vars;
+	}
 
 }

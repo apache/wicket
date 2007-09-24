@@ -1163,6 +1163,12 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 			error.setVariable("format", ((SimpleDateFormat)format).toLocalizedPattern());
 		}
 
+		Map variables = e.getVariables();
+		if (variables != null)
+		{
+			error.getVariables().putAll(variables);
+		}
+
 		error((IValidationError)error);
 	}
 
