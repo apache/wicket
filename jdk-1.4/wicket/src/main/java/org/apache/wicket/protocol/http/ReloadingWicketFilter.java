@@ -27,11 +27,10 @@ import org.apache.wicket.util.listener.IChangeListener;
 
 
 /**
- * Custom {@link WicketFilter} that reloads the web applications when classes
- * are modified. In order to monitor changes to your own classes, subclass
- * {@link ReloadingWicketFilter} and use include and exclude patterns using
- * wildcards. And in web.xml, point to your custom {@link ReloadingWicketFilter}
- * instead of the original {@link WicketFilter}.
+ * Custom {@link WicketFilter} that reloads the web applications when classes are modified. In order
+ * to monitor changes to your own classes, subclass {@link ReloadingWicketFilter} and use include
+ * and exclude patterns using wildcards. And in web.xml, point to your custom
+ * {@link ReloadingWicketFilter} instead of the original {@link WicketFilter}.
  * 
  * <p>
  * The built-in patterns are:
@@ -59,69 +58,62 @@ import org.apache.wicket.util.listener.IChangeListener;
  * </pre>
  * 
  * <p>
- * <b>NOTE. </b> If you wish to reload <tt>com.company.search.Form</tt>, you
- * have to make sure to include all classes that <b>reference</b>
- * <tt>com.company.search.Form</tt>. In particular, if it is referenced in
- * com.company.Application, you will also have to include the latter. And this
- * is viral, as for every class you include, you must check that all classes
- * that reference it are also included.
+ * <b>NOTE. </b> If you wish to reload <tt>com.company.search.Form</tt>, you have to make sure to
+ * include all classes that <b>reference</b> <tt>com.company.search.Form</tt>. In particular, if
+ * it is referenced in com.company.Application, you will also have to include the latter. And this
+ * is viral, as for every class you include, you must check that all classes that reference it are
+ * also included.
  * </p>
  * 
  * <p>
  * It is also possible to add an extra URL to watch for changes using
- * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URLs
- * returned by the parent class loader (ie all {@link URL} returned by
- * {@link ClassLoader#getResources(String)} with empty {@link String}) are
- * registered.
+ * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URLs returned by the parent
+ * class loader (ie all {@link URL} returned by {@link ClassLoader#getResources(String)} with empty
+ * {@link String}) are registered.
  * </p>
  * <hr>
  * <p>
- * <b>Important. </b> It can be quite tricky to setup the reloading mechanism
- * correctly. Here are the general guidelines:
+ * <b>Important. </b> It can be quite tricky to setup the reloading mechanism correctly. Here are
+ * the general guidelines:
  * </p>
  * <ul>
- * <li>The order of include and exclude patterns is significant, the patterns
- * are processed sequentially in the order they are defined</li>
- * <li>Don't forget that inner classes are named after YourClass$1, so take
- * that into account when setting up the patterns, eg include
- * <tt>YourClass*</tt>, not just <tt>YourClass</tt></li>
- * <li>To enable back-button support for the reloading mechanism, be sure to
- * put <tt>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</tt>
- * in your application's {@link WebApplication#init()} method. <b>Native JDK
- * object serialization will break the reloading mechanism when navigating in
- * the browser's history.</b></li>
- * <li>It is advisable to <b>exclude</b> subclasses of {@link Session} from
- * the the reloading classloader, because this is the only object that remains
- * across application restarts</li>
+ * <li>The order of include and exclude patterns is significant, the patterns are processed
+ * sequentially in the order they are defined</li>
+ * <li>Don't forget that inner classes are named after YourClass$1, so take that into account when
+ * setting up the patterns, eg include <tt>YourClass*</tt>, not just <tt>YourClass</tt></li>
+ * <li>To enable back-button support for the reloading mechanism, be sure to put
+ * <tt>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</tt> in your application's
+ * {@link WebApplication#init()} method. <b>Native JDK object serialization will break the reloading
+ * mechanism when navigating in the browser's history.</b></li>
+ * <li>It is advisable to <b>exclude</b> subclasses of {@link Session} from the the reloading
+ * classloader, because this is the only object that remains across application restarts</li>
+ * <li>Last but not least, make sure to clear your session cookie before reloading the application
+ * home page (or any other bookmarkable page) to get rid of old pages stored in session</li>
  * </ul>
  * 
  * <p>
- * <b>Be sure to carefully read the following information if you also use
- * Spring:</b>
+ * <b>Be sure to carefully read the following information if you also use Spring:</b>
  * </p>
  * 
  * <p>
- * When using Spring, the application must not be a Spring bean itself,
- * otherwise the reloading mechanism won't be able to reload the application. In
- * particular, make sure <b>not</b> to use
- * org.apache.wicket.spring.SpringWebApplicationFactory in web.xml. If you
- * really need to inject dependencies in your application, use
- * DefaultListableBeanFactory.autowireBeanProperties() in the init() method.
+ * When using Spring, the application must not be a Spring bean itself, otherwise the reloading
+ * mechanism won't be able to reload the application. In particular, make sure <b>not</b> to use
+ * org.apache.wicket.spring.SpringWebApplicationFactory in web.xml. If you really need to inject
+ * dependencies in your application, use DefaultListableBeanFactory.autowireBeanProperties() in the
+ * init() method.
  * </p>
  * 
  * <p>
- * <b>WARNING. </b> Be careful that when using Spring or other component
- * managers, you will get <tt>ClassCastException</tt> if a given class is
- * loaded two times, one time by the normal classloader, and another time by the
- * reloading classloader. You need to ensure that your Spring beans are properly
- * excluded from the reloading class loader and that only the Wicket components
- * are included. When getting a cryptic error with regard to class loading,
- * class instantiation or class comparison, first <b>disable the reloading class
- * loader</b> to rule out the possibility of a classloader conflict. Please
- * keep in mind that two classes are equal if and only if they have the same
- * name <b>and are loaded in the same classloader</b>. Same goes for errors
- * like <tt>LinkageError: Class FooBar violates loader constraints</tt>,
- * better be safe and disable the reloading feature.
+ * <b>WARNING. </b> Be careful that when using Spring or other component managers, you will get
+ * <tt>ClassCastException</tt> if a given class is loaded two times, one time by the normal
+ * classloader, and another time by the reloading classloader. You need to ensure that your Spring
+ * beans are properly excluded from the reloading class loader and that only the Wicket components
+ * are included. When getting a cryptic error with regard to class loading, class instantiation or
+ * class comparison, first <b>disable the reloading class loader</b> to rule out the possibility of
+ * a classloader conflict. Please keep in mind that two classes are equal if and only if they have
+ * the same name <b>and are loaded in the same classloader</b>. Same goes for errors like
+ * <tt>LinkageError: Class FooBar violates loader constraints</tt>, better be safe and disable
+ * the reloading feature.
  * </p>
  * 
  * @see WicketFilter
@@ -162,10 +154,9 @@ public class ReloadingWicketFilter extends WicketFilter
 				reloadingClassLoader.destroy();
 
 				/*
-				 * Create a new classloader, as there is no way to clear a
-				 * ClassLoader's cache. This supposes that we don't share
-				 * objects across application instances, this is almost true,
-				 * except for Wicket's Session object.
+				 * Create a new classloader, as there is no way to clear a ClassLoader's cache. This
+				 * supposes that we don't share objects across application instances, this is almost
+				 * true, except for Wicket's Session object.
 				 */
 				reloadingClassLoader = new ReloadingClassLoader(getClass().getClassLoader());
 				try
