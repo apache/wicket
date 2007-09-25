@@ -39,6 +39,20 @@
 		component model backed by POJO data beans that can easily be 
 		persisted using your favorite technology.
 	</description>
+	<dependencies>
+		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.portals.bridges</groupId>
+			<artifactId>portals-bridges-common</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>

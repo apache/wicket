@@ -19,9 +19,11 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.version.undo.Change;
@@ -460,20 +462,28 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				// when the option is clicked?
 				if (wantOnSelectionChangedNotifications())
 				{
-					final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
+					CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 					Form form = (Form)findParent(Form.class);
 					if (form != null)
 					{
+						RequestContext rc = RequestContext.get();
+						if (rc.isPortletRequest())
+						{
+							// restore url back to real wicket path as its going to be interpreted by the form itself
+							url = ((PortletRequestContext)rc).getLastEncodedPath();
+						}				
 						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(
 								";\"");
 					}
 					else
 					{
+						// TODO: following doesn't work with portlets, should be posted to a dynamic hidden form
+						// with an ActionURL or something
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
 						buffer.append(" onclick=\"window.location.href='").append(url).append(
-								"&amp;" + getInputName()).append("=").append(id).append("';\"");
+								(url.toString().indexOf('?')>-1 ? "&amp;" : "?") + getInputName()).append("=").append(id).append("';\"");
 					}
 				}
 

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -126,12 +127,19 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			final StringResponse response = new StringResponse();
 			this.getRequestCycle().setResponse(response);
 
+			IHeaderResponse headerResponse = getHeaderResponse();
+			if (!response.equals(headerResponse.getResponse()))
+			{
+				this.getRequestCycle().setResponse(headerResponse.getResponse());
+			}
+			
 			// In any case, first render the header section directly associated
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
 
 			// Render all header sections of all components on the page
 			renderHeaderSections(getPage(), this);
+			getHeaderResponse().close();
 
 			// Automatically add <head> if necessary
 			CharSequence output = response.getBuffer();
@@ -276,12 +284,19 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 */
 	protected IHeaderResponse newHeaderResponse()
 	{
-		return new HeaderResponse() {
-			public Response getResponse()
-			{
-				return HtmlHeaderContainer.this.getResponse();
-			}
-		};
+		IHeaderResponse headerResponse = RequestContext.get().getHeaderResponse();
+		if ( headerResponse == null )
+		{
+			// no (portlet) headerResponse override, create a default one
+			headerResponse =
+				new HeaderResponse() {
+					protected Response getRealResponse()
+					{
+						return HtmlHeaderContainer.this.getResponse();
+					}
+				};
+		}
+		return headerResponse;
 	}
 
 	/**

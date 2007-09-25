@@ -1,10 +1,11 @@
 <html xmlns:wicket>
 <body>
   <wicket:panel>
-    <h1><span wicket:id="inspector"/><a href="index.html" style="color: #E9601A" target="_top">Wicket Examples</a></h1>	
-    <div id="titleblock" style="font-size:larger;height:1.5em;vertical-align:center;">
+    <h1 wicket:id="hideInPortlet"><a href="index.html" style="color: #E9601A" target="_top">Wicket Examples</a></h1>	
+      <span wicket:id="inspector"/>
+      <div id="titleblock" style="font-size:larger;height:1.5em;vertical-align:center;">
         <div style="float:left;"><span wicket:id="exampleTitle">Example Title Goes Here</span></div>
-	    <div style="float:right;padding-right:10px"><a href="#" wicket:id="sources">Source code</a></div>
+	      <div style="float:right;padding-right:10px"><a href="#" wicket:id="sources">Source code</a></div>
     </div>
     <br/>
   </wicket:panel>

@@ -720,7 +720,7 @@ Wicket.Ajax.Request.prototype = {
 		if (this.randomURL == false)
 			return this.url;
 		else
-			return this.url + "&random=" + Math.random();
+			return this.url + (this.url.indexOf("?")>-1 ? "&" : "?") + "random=" + Math.random();
 	},
 	
 	log: function(method, url) {
@@ -737,6 +737,26 @@ Wicket.Ajax.Request.prototype = {
 	
 	// Executes a get request
 	get: function() {
+        // first check if a query string is provided
+        var qs = this.url.indexOf('?');
+        if (qs==-1) {
+            qs = this.url.indexOf('&');
+        }
+        if (qs>-1) {
+            var query = this.url.substring(qs+1);
+            // ensure the query is not empty
+            if (query && query.length > 0) {
+                // cut off query part from original url
+                this.url = this.url.substring(0,qs);
+                // ensure query ends with &
+                if (query.charAt(query.length-1)!='&') {
+                    query += "&";
+                }
+                // post the query string instead to support portlets
+                // for which you cannot modify/append to the url
+                return this.post(query);
+            }
+        }
 		if (this.channel != null) {
 			var res = Wicket.channelManager.schedule(this.channel, this.doGet.bind(this));
 			return res != null ? res : true;
@@ -845,22 +865,28 @@ Wicket.Ajax.Request.prototype = {
 				if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
 					t.onreadystatechange = Wicket.emptyFunction;
 					
-					var urlDepth = 0;
-					while (redirectUrl.substring(0, 3) == "../") {
-						urlDepth++;
-						redirectUrl = redirectUrl.substring(3);
+                    // support/check for non-relative redirectUrl like as provided and needed in a portlet context
+					if (redirectUrl.charAt(0)==('/')||redirectUrl.match("^http://")=="http://"||redirectUrl.match("^https://")=="https://") {
+					    window.location = redirectUrl;
 					}
-					// Make this a string.
-					var calculatedRedirect = window.location.pathname;
-					while (urlDepth > -1) {
-						urlDepth--;
-						i = calculatedRedirect.lastIndexOf("/");
-						if (i > -1) {
-							calculatedRedirect = calculatedRedirect.substring(0, i);
-						}
+					else {
+					    var urlDepth = 0;
+					    while (redirectUrl.substring(0, 3) == "../") {
+						    urlDepth++;
+						    redirectUrl = redirectUrl.substring(3);
+					    }
+					    // Make this a string.
+					    var calculatedRedirect = window.location.pathname;
+					    while (urlDepth > -1) {
+						    urlDepth--;
+						    i = calculatedRedirect.lastIndexOf("/");
+						    if (i > -1) {
+							    calculatedRedirect = calculatedRedirect.substring(0, i);
+						    }
+					    }
+					    calculatedRedirect += "/" + redirectUrl;
+					    window.location = calculatedRedirect;
 					}
-					calculatedRedirect += "/" + redirectUrl;
-					window.location = calculatedRedirect;
 				}
 				else {
 					// no redirect, just regular response

@@ -17,8 +17,10 @@
 package org.apache.wicket.examples;
 
 import org.apache.wicket.PageMap;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.examples.debug.InspectorBug;
 import org.apache.wicket.examples.source.SourcesPage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -46,6 +48,17 @@ public final class WicketExampleHeader extends Panel
 	public WicketExampleHeader(String id, String exampleTitle, WebPage page)
 	{
 		super(id);
+		add(new WebMarkupContainer("hideInPortlet")
+		{
+			/**
+			 * @see org.apache.wicket.Component#isVisible()
+			 */
+			@Override
+			public boolean isVisible()
+			{
+				return !RequestContext.get().isPortletRequest();
+			}
+		});		
 		add(new InspectorBug("inspector", page));
 		add(new Label("exampleTitle", exampleTitle));
 		Link link = new Link("sources")

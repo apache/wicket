@@ -24,8 +24,10 @@ import java.util.Set;
 import org.apache.wicket.Application;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
+import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WicketEventReference;
+import org.apache.wicket.response.NullResponse;
 import org.apache.wicket.util.string.JavascriptUtils;
 
 
@@ -40,6 +42,8 @@ public abstract class HeaderResponse implements IHeaderResponse
 	private static final long serialVersionUID = 1L;
 
 	private final Set rendered = new HashSet();
+
+	private boolean closed;
 
 	/**
 	 * Creates a new header response instance.
@@ -65,8 +69,11 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(ResourceReference reference)
 	{
-		CharSequence url = RequestCycle.get().urlFor(reference);
-		renderCSSReference(url.toString(), null);
+		if (!closed)
+		{
+			CharSequence url = RequestCycle.get().urlFor(reference);
+			renderCSSReference(url.toString(), null);
+		}
 	}
 
 	/**
@@ -75,8 +82,11 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(ResourceReference reference, String media)
 	{
-		CharSequence url = RequestCycle.get().urlFor(reference);
-		renderCSSReference(url.toString(), media);
+		if (!closed)
+		{
+			CharSequence url = RequestCycle.get().urlFor(reference);
+			renderCSSReference(url.toString(), media);
+		}
 	}
 
 	/**
@@ -84,7 +94,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(String url)
 	{
-		renderCSSReference(url, null);
+		if (!closed)
+		{
+			renderCSSReference(url, null);
+		}
 	}
 
 	/**
@@ -93,20 +106,23 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderCSSReference(String url, String media)
 	{
-		List token = Arrays.asList(new Object[] { "css", url, media });
-		if (wasRendered(token) == false)
+		if (!closed)
 		{
-			getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-			getResponse().write(url);
-			getResponse().write("\"");
-			if (media != null)
+			List token = Arrays.asList(new Object[] { "css", url, media });
+			if (wasRendered(token) == false)
 			{
-				getResponse().write(" media=\"");
-				getResponse().write(media);
+				getResponse().write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+				getResponse().write(url);
 				getResponse().write("\"");
+				if (media != null)
+				{
+					getResponse().write(" media=\"");
+					getResponse().write(media);
+					getResponse().write("\"");
+				}
+				getResponse().println(" />");
+				markRendered(token);
 			}
-			getResponse().println(" />");
-			markRendered(token);
 		}
 	}
 
@@ -115,8 +131,11 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(ResourceReference reference)
 	{
-		CharSequence url = RequestCycle.get().urlFor(reference);
-		renderJavascriptReference(url.toString());
+		if (!closed)
+		{
+			CharSequence url = RequestCycle.get().urlFor(reference);
+			renderJavascriptReference(url.toString());
+		}
 	}
 
 	/**
@@ -125,8 +144,11 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(ResourceReference reference, String id)
 	{
-		CharSequence url = RequestCycle.get().urlFor(reference);
-		renderJavascriptReference(url.toString(), id);
+		if (!closed)
+		{
+			CharSequence url = RequestCycle.get().urlFor(reference);
+			renderJavascriptReference(url.toString(), id);
+		}
 	}
 
 	/**
@@ -134,11 +156,14 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(String url)
 	{
-		List token = Arrays.asList(new Object[] { "javascript", url });
-		if (wasRendered(token) == false)
+		if (!closed)
 		{
-			JavascriptUtils.writeJavascriptUrl(getResponse(), url);
-			markRendered(token);
+			List token = Arrays.asList(new Object[] { "javascript", url });
+			if (wasRendered(token) == false)
+			{
+				JavascriptUtils.writeJavascriptUrl(getResponse(), url);
+				markRendered(token);
+			}
 		}
 	}
 
@@ -148,13 +173,16 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascriptReference(String url, String id)
 	{
-		List token1 = Arrays.asList(new Object[] { "javascript", url });
-		List token2 = Arrays.asList(new Object[] { "javascript", id });
-		if (wasRendered(token1) == false && wasRendered(token2))
+		if (!closed)
 		{
-			JavascriptUtils.writeJavascriptUrl(getResponse(), url, id);
-			markRendered(token1);
-			markRendered(token2);
+			List token1 = Arrays.asList(new Object[] { "javascript", url });
+			List token2 = Arrays.asList(new Object[] { "javascript", id });
+			if (wasRendered(token1) == false && wasRendered(token2))
+			{
+				JavascriptUtils.writeJavascriptUrl(getResponse(), url, id);
+				markRendered(token1);
+				markRendered(token2);
+			}
 		}
 	}
 
@@ -164,11 +192,14 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderJavascript(CharSequence javascript, String id)
 	{
-		List token = Arrays.asList(new Object[] { javascript.toString(), id });
-		if (wasRendered(token) == false)
+		if (!closed)
 		{
-			JavascriptUtils.writeJavascript(getResponse(), javascript, id);
-			markRendered(token);
+			List token = Arrays.asList(new Object[] { javascript.toString(), id });
+			if (wasRendered(token) == false)
+			{
+				JavascriptUtils.writeJavascript(getResponse(), javascript, id);
+				markRendered(token);
+			}
 		}
 	}
 
@@ -177,11 +208,14 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderString(CharSequence string)
 	{
-		String token = string.toString();
-		if (wasRendered(token) == false)
+		if (!closed)
 		{
-			getResponse().write(string);
-			markRendered(token);
+			String token = string.toString();
+			if (wasRendered(token) == false)
+			{
+				getResponse().write(string);
+				markRendered(token);
+			}
 		}
 	}
 
@@ -198,7 +232,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnDomReadyJavascript(String javascript)
 	{
-		renderOnEventJavacript("window", "domready", javascript);
+		if (!closed)
+		{
+			renderOnEventJavacript("window", "domready", javascript);
+		}
 	}
 
 	/**
@@ -206,7 +243,10 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnLoadJavascript(String javascript)
 	{
-		renderOnEventJavacript("window", "load", javascript);
+		if (!closed)
+		{
+			renderOnEventJavacript("window", "load", javascript);
+		}
 	}
 
 	/**
@@ -216,13 +256,48 @@ public abstract class HeaderResponse implements IHeaderResponse
 	 */
 	public void renderOnEventJavacript(String target, String event, String javascript)
 	{
-		List token = Arrays.asList(new Object[] { "javascript-event", target, event, javascript });
-		if (wasRendered(token) == false)
+		if (!closed)
 		{
-			renderJavascriptReference(WicketEventReference.INSTANCE);
-			JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target + ", \"" +
-					event + "\", function() { " + javascript + ";});");
-			markRendered(token);
+			List token = Arrays.asList(new Object[] { "javascript-event", target, event, javascript });
+			if (wasRendered(token) == false)
+			{
+				renderJavascriptReference(WicketEventReference.INSTANCE);
+				JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target + ", \"" +
+						event + "\", function() { " + javascript + ";});");
+				markRendered(token);
+			}
 		}
 	}
+	
+	/**
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#close()
+	 */
+	public void close()
+	{
+		this.closed = true;
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#getResponse()
+	 */
+	public final Response getResponse()
+	{
+		return closed ? NullResponse.getInstance() : getRealResponse();
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.IHeaderResponse#isClosed()
+	 */
+	public boolean isClosed()
+	{
+		return closed;
+	}
+	
+	/**
+	 * Once the HeaderResponse is closed, no output may be written to it anymore. To enforce that,
+	 * the {@link #getResponse()} is defined final in this class and will return a NullResponse instance once closed or otherwise
+	 * the Response provided by this method.
+	 * @return Response
+	 */
+	protected abstract Response getRealResponse();
 }

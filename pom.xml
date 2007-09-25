@@ -421,6 +421,20 @@
 				<version>1.4-rc3</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>javax.portlet</groupId>
+				<artifactId>portlet-api</artifactId>
+				<version>1.0</version>
+				<scope>provided</scope>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.portals.bridges</groupId>
+				<artifactId>portals-bridges-common</artifactId>
+				<version>1.0.3</version>
+				<scope>provided</scope>
+				<optional>true</optional>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>

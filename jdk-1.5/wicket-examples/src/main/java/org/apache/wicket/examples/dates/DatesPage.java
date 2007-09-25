@@ -138,7 +138,17 @@ public class DatesPage extends WicketExamplePage
 	public DatesPage()
 	{
 		selectedLocale = Session.get().getLocale();
-		add(new LocaleDropDownChoice("localeSelect"));
+		Form localeForm = new Form("localeForm");		
+		localeForm.add(new LocaleDropDownChoice("localeSelect"));
+		localeForm.add(new Link("localeUSLink")
+		{
+			@Override
+			public void onClick()
+			{
+				selectedLocale = LOCALE_EN;
+			}
+		});
+		add(localeForm);
 		DateTextField dateTextField = new DateTextField("dateTextField", new PropertyModel(this,
 				"date"), new StyleDateConverter("S-", true))
 		{
@@ -148,14 +158,6 @@ public class DatesPage extends WicketExamplePage
 				return selectedLocale;
 			}
 		};
-		add(new Link("localeUSLink")
-		{
-			@Override
-			public void onClick()
-			{
-				selectedLocale = LOCALE_EN;
-			}
-		});
 		Form form = new Form("form")
 		{
 			@Override

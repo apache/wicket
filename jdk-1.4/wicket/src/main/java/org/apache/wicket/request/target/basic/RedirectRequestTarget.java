@@ -17,9 +17,11 @@
 package org.apache.wicket.request.target.basic;
 
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 
 /**
  * A RequestTarget that will sent a redirect url to the browser. Use this if you 
@@ -68,7 +70,16 @@ public class RedirectRequestTarget implements IRequestTarget
 		response.reset();
 		if (redirectUrl.startsWith("/"))
 		{
-			response.redirect(RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + redirectUrl.substring(1));	
+			RequestContext rc = RequestContext.get();
+			String continueTo = null;
+			if (rc.isPortletRequest() && ((PortletRequestContext)rc).isEmbedded())
+			{
+				response.redirect(redirectUrl);	
+			}
+			else
+			{
+				response.redirect(RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + redirectUrl.substring(1));	
+			}
 		}
 		else if (redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://"))
 		{

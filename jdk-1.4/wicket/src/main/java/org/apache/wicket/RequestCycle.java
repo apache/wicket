@@ -26,7 +26,6 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.AbstractRequestCycleProcessor;
 import org.apache.wicket.request.ClientInfo;
-import org.apache.wicket.request.IRequestCodingStrategy;
 import org.apache.wicket.request.IRequestCycleProcessor;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
@@ -255,6 +254,13 @@ public abstract class RequestCycle
 
 	/** The current response. */
 	protected Response response;
+
+	/**
+	 * Boolean if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
+	 * This temporary flag is specifically needed for portlet-support as then such a page needs a special target (Resource) url.
+	 * After each urlFor call, this flag is reset to false.
+	 */
+	private transient boolean urlForNewWindowEncoding;
 
 	/**
 	 * Constructor. This instance will be set as the current one for this thread.
@@ -666,6 +672,38 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * @return true if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
+	 */
+	public final boolean isUrlForNewWindowEncoding()
+	{
+		return urlForNewWindowEncoding;
+	}
+	
+	/**
+	 * Indicate if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
+	 * This temporary flag is specifically needed for portlet-support as then such a page needs a special target (Resource) url.
+	 * After each urlFor call, this flag is reset to false.
+	 */
+	public final void setUrlForNewWindowEncoding()
+	{
+		urlForNewWindowEncoding = true;
+	}
+	
+	/**
+	 * Returns an encoded URL that references the given request target and clears the urlForNewWindowEncoding flag.
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * @return a URL that references the given request target
+	 */
+	private final CharSequence encodeUrlFor(final IRequestTarget requestTarget)
+	{
+		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this, requestTarget);
+		urlForNewWindowEncoding = false;
+		return url;
+	}
+	
+	/**
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
@@ -720,9 +758,7 @@ public abstract class RequestCycle
 
 		final IRequestTarget target = new BehaviorRequestTarget(component.getPage(), component,
 				listener, params);
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return encodeUrlFor(target);
 	}
 
 	/**
@@ -762,9 +798,7 @@ public abstract class RequestCycle
 			// Get the listener interface name
 			target = new ListenerInterfaceRequestTarget(page, component, listener);
 		}
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return encodeUrlFor(target);
 	}
 
 	/**
@@ -786,9 +820,7 @@ public abstract class RequestCycle
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
 				? PageMap.DEFAULT_NAME
 				: pageMap.getName(), pageClass, parameters);
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
+		return encodeUrlFor(target);
 	}
 
 	/**
@@ -800,8 +832,7 @@ public abstract class RequestCycle
 	 */
 	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
-		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, requestTarget);
+		return encodeUrlFor(requestTarget);
 	}
 
 	/**
@@ -817,7 +848,7 @@ public abstract class RequestCycle
 	{
 		IRequestTarget target = new PageRequestTarget(page);
 		getSession().touch(((IPageRequestTarget)target).getPage());
-		return urlFor(target);
+		return encodeUrlFor(target);
 	}
 
 	/**
@@ -860,9 +891,7 @@ public abstract class RequestCycle
 		}
 
 		requestParameters.setParameters(parameters);
-		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
-				new SharedResourceRequestTarget(requestParameters));
-		return url;
+		return encodeUrlFor(new SharedResourceRequestTarget(requestParameters));
 	}
 
 	/**

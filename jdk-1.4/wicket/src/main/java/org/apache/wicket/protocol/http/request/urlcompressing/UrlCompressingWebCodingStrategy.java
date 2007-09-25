@@ -22,6 +22,7 @@ import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.behavior.IActivePageBehaviorListener;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
@@ -130,6 +131,10 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		if (params != null && params.getUrlDepth() != 0)
 		{
 			url.append(params.getUrlDepth());
+		}
+		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
+		{
+			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return requestCycle.getOriginalResponse().encodeURL(url);
 	}

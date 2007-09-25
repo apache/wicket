@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+  <portlet>
+    <description>Menu to the available Wicket portlet examples</description>
+    <portlet-name>WicketExamplesMenuApplication</portlet-name>
+    <display-name>wicket examples</display-name>
+    <portlet-class>org.apache.wicket.examples.portlet.menu.WicketExamplesMenuPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/examples</value>
+    </init-param>
+    <init-param>
+      <name>viewPage</name>
+      <value>/examples/menu</value>
+    </init-param>
+    <init-param>
+      <name>editPage</name>
+      <value>/examples/edit</value>
+    </init-param>
+    <init-param>
+      <name>headerPage</name>
+      <value>/examples/header</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+      <portlet-mode>EDIT</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Portlet Examples</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>As simple as it gets.</description>
+    <portlet-name>HelloWorldApplication</portlet-name>
+    <display-name>helloworld</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/helloworld</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket HelloWorld Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Trivial input form.</description>
+    <portlet-name>EchoApplication</portlet-name>
+    <display-name>echo</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/echo</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Echo Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Basic form processing.</description>
+    <portlet-name>FormInputApplication</portlet-name>
+    <display-name>forminput</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/forminput</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket FormInput Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Component Reference.</description>
+    <portlet-name>ComponentReferenceApplication</portlet-name>
+    <display-name>compref</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/compref</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket ComponentReference Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Various kinds of images.</description>
+    <portlet-name>ImagesApplication</portlet-name>
+    <display-name>images</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/images</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Images Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Different kinds of links.</description>
+    <portlet-name>LinkomaticApplication</portlet-name>
+    <display-name>linkomatic</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/linkomatic</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Linkomatic Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Page navigation</description>
+    <portlet-name>NavomaticApplication</portlet-name>
+    <display-name>navomatic</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/navomatic</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Navomatic Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Localization.</description>
+    <portlet-name>PubApplication</portlet-name>
+    <display-name>pub</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/pub</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Pub Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Converts input using some model magic.</description>
+    <portlet-name>UnicodeConverterApplication</portlet-name>
+    <display-name>unicode converter</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/unicodeconverter</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket UnicodeConverter Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Demonstrates the use of "nice" URLs.</description>
+    <portlet-name>NiceUrlApplication</portlet-name>
+    <display-name>niceurl</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/niceurl</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket NiceUrl Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Examples using wicket's built-in AJAX.</description>
+    <portlet-name>AjaxApplication</portlet-name>
+    <display-name>ajax</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/ajax</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Ajax Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Trees and nested lists.</description>
+    <portlet-name>NestedApplication</portlet-name>
+    <display-name>nested</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/nested</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Nested Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>DataView, DataTable, GridView component examples.</description>
+    <portlet-name>RepeaterExamplesApplication</portlet-name>
+    <display-name>repeaters</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/repeater</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Repeaters Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>A simple sign-in page.</description>
+    <portlet-name>SignInApplication</portlet-name>
+    <display-name>signin</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/signin</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket SignIn Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>An advanced sign-in page (using cookies).</description>
+    <portlet-name>SignIn2Application</portlet-name>
+    <display-name>signin2</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/signin2</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket SignIn2 Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Single file upload.</description>
+    <portlet-name>UploadSingleApplication</portlet-name>
+    <display-name>upload single</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/upload</value>
+    </init-param>
+    <init-param>
+      <name>viewPage</name>
+      <value>/upload/single</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket UploadSingle Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Multiple file upload.</description>
+    <portlet-name>UploadMultiApplication</portlet-name>
+    <display-name>upload multi</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/upload</value>
+    </init-param>
+    <init-param>
+      <name>viewPage</name>
+      <value>/upload/multi</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket UploadMulti Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Templating example.</description>
+    <portlet-name>TemplateApplication</portlet-name>
+    <display-name>template</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/template</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Template Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Demonstrates stateless pages/sessions.</description>
+    <portlet-name>StatelessApplication</portlet-name>
+    <display-name>stateless</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/stateless</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Stateless Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Examples for serving static files.</description>
+    <portlet-name>StaticPagesApplication</portlet-name>
+    <display-name>staticpages</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/staticpages</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket StaticPages Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Browser snooper.</description>
+    <portlet-name>HelloBrowserApplication</portlet-name>
+    <display-name>hellobrowser</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/hellobrowser</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket HelloBrowser Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Demonstrates the wizard component.</description>
+    <portlet-name>WizardApplication</portlet-name>
+    <display-name>abacadabra</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/wizard</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Wizard Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Demonstrates custom template loading.</description>
+    <portlet-name>CustomResourceLoadingApplication</portlet-name>
+    <display-name>custom template loading</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/customresourceloading</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket CustomResourceLoading Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Don't get lost, use bread-crumbs.</description>
+    <portlet-name>BreadCrumbApplication</portlet-name>
+    <display-name>breadcrumb</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/breadcrumb</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket BreadCrumb Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Image-based "captcha" to distinguish humans from spammers.</description>
+    <portlet-name>CaptchaApplication</portlet-name>
+    <display-name>captcha</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/captcha</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Captcha Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Demonstrates authentication for pages.</description>
+    <portlet-name>MyAuthenticatedWebApplication</portlet-name>
+    <display-name>authentication</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/authentication</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Authentication Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Demonstrates authorization for pages and components.</description>
+    <portlet-name>RolesAuthApplication</portlet-name>
+    <display-name>authorization</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/authorization</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Authorization Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Date component example from the wicket-date project.</description>
+    <portlet-name>DatesApplication</portlet-name>
+    <display-name>dates</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/dates</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Dates Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Stock quote example.</description>
+    <portlet-name>StockQuoteApplication</portlet-name>
+    <display-name>stockquote</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/stock</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket StockQuote Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>A blog-like multi-user guestbook.</description>
+    <portlet-name>GuestBookApplication</portlet-name>
+    <display-name>guestbook</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/guestbook</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket GuestBook Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>The game of hangman.</description>
+    <portlet-name>HangmanApplication</portlet-name>
+    <display-name>hangman</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/hangman</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Hangman Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>A simple application.</description>
+    <portlet-name>LibraryApplication</portlet-name>
+    <display-name>library</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/library</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Library Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Demonstrates integration options with the Spring framework.</description>
+    <portlet-name>SpringExample</portlet-name>
+    <display-name>spring</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/spring</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Spring Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Integration with the Google Guice IoC container.</description>
+    <portlet-name>GuiceApplication</portlet-name>
+    <display-name>guice</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/guice</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket Quice Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+  <portlet>
+    <description>Shows a Velocity panel in action.</description>
+    <portlet-name>VelocityTemplateApplication</portlet-name>
+    <display-name>velocity</display-name>
+    <portlet-class>org.apache.wicket.protocol.http.portlet.WicketPortlet</portlet-class>
+    <init-param>
+      <name>wicketFilterPath</name>
+      <value>/velocity</value>
+    </init-param>
+    <supports>
+      <mime-type>*/*</mime-type>
+      <portlet-mode>VIEW</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>Wicket VelocityTemplate Example</title>
+      <keywords>Wicket</keywords>
+    </portlet-info>
+  </portlet>
+</portlet-app>

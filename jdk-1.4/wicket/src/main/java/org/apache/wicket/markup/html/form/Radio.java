@@ -17,10 +17,12 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -128,18 +130,26 @@ public class Radio extends LabeledWebMarkupContainer
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
+			CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
 			Form form = (Form)group.findParent(Form.class);
 			if (form != null)
 			{
+				RequestContext rc = RequestContext.get();
+				if (rc.isPortletRequest())
+				{
+					// restore url back to real wicket path as its going to be interpreted by the form itself
+					url = ((PortletRequestContext)rc).getLastEncodedPath();
+				}				
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			else
 			{
+				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden form
+				// with an ActionURL or something
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "window.location.href='" + url + "&amp;" + group.getInputName()
+				tag.put("onclick", "window.location.href='" + url + (url.toString().indexOf('?')>-1 ? "&amp;" : "?") + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}

@@ -22,8 +22,6 @@ import org.apache.wicket.Response;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for
@@ -105,16 +103,16 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		
 		final RequestListenerInterface rli;
 		
-		rli = IBehaviorListener.INTERFACE;
-		
-		AppendingStringBuffer url = new AppendingStringBuffer(getComponent().urlFor(this, rli));
-		
 		if (onlyTargetActivePage)
 		{
-			url.append("&amp;").append(WebRequestCodingStrategy.IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+			rli = IActivePageBehaviorListener.INTERFACE;
 		}
-
-		return url;
+		else
+		{
+			rli = IBehaviorListener.INTERFACE;
+		}
+				
+		return getComponent().urlFor(this, rli);
 	}
 
 	/**

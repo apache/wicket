@@ -33,12 +33,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.AbortException;
 import org.apache.wicket.Application;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Resource;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.protocol.http.portlet.FilterRequestContext;
+import org.apache.wicket.protocol.http.portlet.WicketFilterPortletContext;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.settings.IRequestCycleSettings;
@@ -92,6 +95,22 @@ public class WicketFilter implements Filter
 	private boolean servletMode = false;
 
 	/**
+	 * The name of the optional filter parameter indicating it may/can only be accessed from within a Portlet context.
+	 * Value should be true
+	 */
+	private final String PORTLET_ONLY_FILTER = "portletOnlyFilter";
+	
+	/* init marker if running in a portlet container context */
+	private Boolean portletContextAvailable;
+	
+	/* Delegate for handling Portlet specific filtering. Not instantiated if not running in a portlet container context */
+	private WicketFilterPortletContext filterPortletContext;
+	
+	/* Flag if this filter may only process request from within a Portlet context.
+	 */
+	private boolean portletOnlyFilter;
+	
+	/**
 	 * Servlet cleanup.
 	 */
 	public void destroy()
@@ -110,7 +129,29 @@ public class WicketFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
 	{
-		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+		HttpServletRequest httpServletRequest;
+		HttpServletResponse httpServletResponse;
+		
+		boolean inPortletContext = false;
+        if (filterPortletContext != null)
+        {
+        	FilterRequestContext filterRequestContext = new FilterRequestContext((HttpServletRequest)request,(HttpServletResponse)response);
+        	inPortletContext = filterPortletContext.setupFilter(getFilterConfig(), filterRequestContext, getFilterPath((HttpServletRequest)request));
+        	httpServletRequest = filterRequestContext.getRequest();
+        	httpServletResponse = filterRequestContext.getResponse();
+        }
+        else
+        {
+    		httpServletRequest = (HttpServletRequest)request;
+			httpServletResponse = (HttpServletResponse)response;
+        }
+
+        if ( portletOnlyFilter && !inPortletContext )
+		{
+			chain.doFilter(request, response);
+			return;
+		}
+		        
 		String relativePath = getRelativePath(httpServletRequest);
 
 		if (isWicketRequest(relativePath))
@@ -120,7 +161,6 @@ public class WicketFilter implements Filter
 				// Set the webapplication for this thread
 				Application.set(webApplication);
 
-				HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 				long lastModified = getLastModified(httpServletRequest);
 				if (lastModified == -1)
 				{
@@ -268,6 +308,8 @@ public class WicketFilter implements Filter
 				response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 						.getResponseRequestEncoding());
 
+	            createRequestContext(request, response);
+	            
 				// Create request cycle
 				final RequestCycle cycle = webApplication.newRequestCycle(request, response);
 
@@ -444,6 +486,26 @@ public class WicketFilter implements Filter
 
 			// Give the application the option to log that it is started
 			webApplication.logStarted();
+
+			this.portletOnlyFilter = Boolean.valueOf(filterConfig.getInitParameter(PORTLET_ONLY_FILTER)).booleanValue();
+			
+	        if ( portletContextAvailable == null )
+	        {
+	        	try
+				{
+					Class portletClass = Class.forName("javax.portlet.PortletContext");
+					portletContextAvailable = Boolean.TRUE;
+					filterPortletContext = newWicketFilterPortletContext();
+				}
+				catch (ClassNotFoundException e)
+				{
+					portletContextAvailable = Boolean.FALSE;
+				}
+	        }
+	        if (filterPortletContext != null)
+	        {
+	        	filterPortletContext.initFilter(filterConfig, this.webApplication);
+	        }
 		}
 		finally
 		{
@@ -455,6 +517,19 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	protected WicketFilterPortletContext newWicketFilterPortletContext()
+	{
+		return new WicketFilterPortletContext();
+	}
+
+    protected void createRequestContext(WebRequest request, WebResponse response)
+    {
+        if (filterPortletContext == null || !filterPortletContext.createPortletRequestContext(request, response))
+        {
+        	new RequestContext();
+        }
+    }
+    
 	private String getFilterPath(String filterName, InputStream is) throws ServletException
 	{
 		String prefix = servletMode ? "servlet" : "filter";
