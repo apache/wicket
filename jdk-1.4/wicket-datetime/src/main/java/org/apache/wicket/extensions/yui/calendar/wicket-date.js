@@ -69,8 +69,27 @@ Wicket.DateTime.padDateFragment = function(value) {
 	return (value < 10 ? "0" : "") + value;
 }
 
+/**
+ * Gets the height of the displayed area of the window, as YAHOO.util.Dom.getViewportHeight()
+ * has issues with Firefox. 
+ * See http://tech.groups.yahoo.com/group/ydn-javascript/message/5850
+ * Implementation taken from: http://www.quirksmode.org/viewport/compatibility.html#link2
+ */
+Wicket.DateTime.getViewportHeight = function() {	  
+	if (window.innerHeight) // all browsers except IE
+		viewPortHeight = window.innerHeight;
+	else if (document.documentElement && document.documentElement.clientHeight) // IE 6 strict mode
+		viewPortHeight = document.documentElement.height;		
+	else if (document.body) // other IEs
+		viewPortHeight = document.body.clientHeight;
+	return viewPortHeight;
+}
+
 /** 
- * Position subject relative to target top-left.
+ * Position subject relative to target top-left by default.
+ * If there is too little space on the right side/bottom,
+ * the datepicker's position is corrected so that the right side/bottom
+ * is aligned with the display area's right side/bottom.
  * @param subject the dom element to has to be positioned
  * @param target id of the dom element to position relative to
  */
@@ -78,8 +97,25 @@ Wicket.DateTime.positionRelativeTo = function(subject, target) {
 	
 	targetPos = YAHOO.util.Dom.getXY(target);
 	targetHeight = YAHOO.util.Dom.get(target).offsetHeight;
-	YAHOO.util.Dom.setX(subject, targetPos[0]);
-	YAHOO.util.Dom.setY(subject, targetPos[1] + targetHeight + 1);
+	subjectHeight = YAHOO.util.Dom.get(subject).offsetHeight;
+	subjectWidth = YAHOO.util.Dom.get(subject).offsetWidth;		
+	
+	viewPortHeight = Wicket.DateTime.getViewportHeight();	
+	viewPortWidth = YAHOO.util.Dom.getViewportWidth();
+	
+	// correct datepicker's position so that it isn't rendered off screen on the right side or bottom
+	if (targetPos[0] + subjectWidth > viewPortWidth) {
+		// correct horizontal position
+		YAHOO.util.Dom.setX(subject, viewPortWidth - subjectWidth);
+	} else {
+		YAHOO.util.Dom.setX(subject, targetPos[0]);
+	}
+	if (targetPos[1] + targetHeight + 1 + subjectHeight > viewPortHeight) {
+		// correct vertical position
+		YAHOO.util.Dom.setY(subject, viewPortHeight - subjectHeight);
+	} else {
+		YAHOO.util.Dom.setY(subject, targetPos[1] + targetHeight + 1);
+	}
 }
 
 /**
