@@ -110,7 +110,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 		if (names.length > 1)
 		{
-			StringBuilder msg = new StringBuilder();
+			StringBuffer msg = new StringBuffer();
 			msg.append("more then one bean of type [");
 			msg.append(clazz.getName());
 			msg.append("] found, you have to specify the name of the bean ");
