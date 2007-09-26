@@ -33,26 +33,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class parses expressions to lookup or set a value on the object that is
- * given. <br/> The supported expressions are:
+ * This class parses expressions to lookup or set a value on the object that is given. <br/> The
+ * supported expressions are:
  * <p>
- * "property": This can can then be a bean property with get and set method. Or
- * if a map is given as an object it will be lookup with the property as a key
- * when there is not get method for that property. <p/>
+ * "property": This can can then be a bean property with get and set method. Or if a map is given as
+ * an object it will be lookup with the property as a key when there is not get method for that
+ * property. <p/>
  * <p>
- * "property1.property2": Both properties are lookup as written above. If
- * property1 evaluates to null then if there is a setMethod (or if it is a map)
- * and the Class of the property has a default constructor then the object will
- * be constructed and set on the object. <p/>
+ * "property1.property2": Both properties are lookup as written above. If property1 evaluates to
+ * null then if there is a setMethod (or if it is a map) and the Class of the property has a default
+ * constructor then the object will be constructed and set on the object. <p/>
  * <p>
- * "property.index": If the property is a List or Array then the second property
- * can be a index on that list like: 'mylist.0' this expression will also map on
- * a getProperty(index) or setProperty(index,value) methods. If the object is a
- * List then the list will grow automaticaly if the index is greater then the
- * size <p/>
+ * "property.index": If the property is a List or Array then the second property can be a index on
+ * that list like: 'mylist.0' this expression will also map on a getProperty(index) or
+ * setProperty(index,value) methods. If the object is a List then the list will grow automaticaly if
+ * the index is greater then the size <p/>
  * <p>
- * Index or map properties can also be written as: "property[index]" or
- * "property[key]" <p/>
+ * Index or map properties can also be written as: "property[index]" or "property[key]" <p/>
  * 
  * @author jcompagner
  */
@@ -68,16 +65,14 @@ public final class PropertyResolver
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
 	/**
-	 * Looksup the value from the object with the given expression. If the
-	 * expresion, the object itself or one property evalutes to null then a null
-	 * will be returned.
+	 * Looksup the value from the object with the given expression. If the expresion, the object
+	 * itself or one property evalutes to null then a null will be returned.
 	 * 
 	 * @param expression
 	 *            The expression string with the property to be lookup.
 	 * @param object
 	 *            The object which is evaluated.
-	 * @return The value that is evaluted. Null something in the expression
-	 *         evaluted to null.
+	 * @return The value that is evaluted. Null something in the expression evaluted to null.
 	 */
 	public final static Object getValue(final String expression, final Object object)
 	{
@@ -96,13 +91,11 @@ public final class PropertyResolver
 	}
 
 	/**
-	 * Set the value on the object with the given expression. If the expression
-	 * can't be evaluated then a WicketRuntimeException will be thrown. If a
-	 * null object is encounted then it will try to generate it by calling the
-	 * default constructor and set it on the object.
+	 * Set the value on the object with the given expression. If the expression can't be evaluated
+	 * then a WicketRuntimeException will be thrown. If a null object is encounted then it will try
+	 * to generate it by calling the default constructor and set it on the object.
 	 * 
-	 * The value will be tried to convert to the right type with the given
-	 * converter.
+	 * The value will be tried to convert to the right type with the given converter.
 	 * 
 	 * @param expression
 	 *            The expression string with the property to be set.
@@ -111,8 +104,7 @@ public final class PropertyResolver
 	 * @param value
 	 *            The value to set.
 	 * @param converter
-	 *            The convertor to convert the value if needed to the right
-	 *            type.
+	 *            The convertor to convert the value if needed to the right type.
 	 */
 	public final static void setValue(final String expression, final Object object, Object value,
 			PropertyResolverConverter converter)
@@ -157,8 +149,8 @@ public final class PropertyResolver
 	/**
 	 * @param expression
 	 * @param object
-	 * @return Field for the property expression or null if such field doesn't
-	 *         exist (only getters and setters)
+	 * @return Field for the property expression or null if such field doesn't exist (only getters
+	 *         and setters)
 	 */
 	public final static Field getPropertyField(String expression, Object object)
 	{
@@ -174,8 +166,8 @@ public final class PropertyResolver
 	/**
 	 * @param expression
 	 * @param object
-	 * @return Getter method for the property expression or null if such getter
-	 *         doesn't exist (only field)
+	 * @return Getter method for the property expression or null if such getter doesn't exist (only
+	 *         field)
 	 */
 	public final static Method getPropertyGetter(String expression, Object object)
 	{
@@ -191,8 +183,8 @@ public final class PropertyResolver
 	/**
 	 * @param expression
 	 * @param object
-	 * @return Setter method for the property expression or null if such setter
-	 *         doesn't exist (only field)
+	 * @return Setter method for the property expression or null if such setter doesn't exist (only
+	 *         field)
 	 */
 	public final static Method getPropertySetter(String expression, Object object)
 	{
@@ -624,8 +616,7 @@ public final class PropertyResolver
 		 * @param object
 		 *            The object where the new value must be set on.
 		 * 
-		 * @return The new value for the property that is set back on that
-		 *         object.
+		 * @return The new value for the property that is set back on that object.
 		 */
 		public Object newValue(Object object);
 
@@ -706,8 +697,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
-				Object, Object, PropertyResolverConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -743,8 +734,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
-				Object, Object, PropertyResolverConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -799,8 +790,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
-				Object, Object, PropertyResolverConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -851,8 +842,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
-				Object, Object, PropertyResolverConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -927,8 +918,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
-				Object, Object, PropertyResolverConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -1231,8 +1222,8 @@ public final class PropertyResolver
 		}
 
 		/**
-		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue(
-				Object, Object, PropertyResolverConverter)
+		 * @see org.apache.wicket.util.lang.PropertyResolver.IGetAndSet#setValue( Object, Object,
+		 *      PropertyResolverConverter)
 		 */
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -1264,14 +1255,22 @@ public final class PropertyResolver
 
 	private static Map getClassesToGetAndSetters()
 	{
-		Application app = Application.get();
-		Map result = (Map)applicationToClassesToGetAndSetters.get(Application.get());
+		Object key = null;
+		if (Application.exists())
+		{
+			key = Application.get();
+		}
+		else
+		{
+			key = PropertyResolver.class;
+		}
+		Map result = (Map)applicationToClassesToGetAndSetters.get(key);
 		if (result == null)
 		{
 			// Don't synchronize this - Doesn't matter if we create two of them,
 			// as it's only a cache and the first will go out of scope and get
 			// GC'ed.
-			applicationToClassesToGetAndSetters.put(app, result = new ConcurrentHashMap(64));
+			applicationToClassesToGetAndSetters.put(key, result = new ConcurrentHashMap(64));
 		}
 		return result;
 	}
