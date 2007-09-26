@@ -27,6 +27,11 @@ import org.apache.wicket.model.Model;
 public abstract class HeaderlessColumn extends AbstractColumn
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Construct.
 	 */
 	public HeaderlessColumn()

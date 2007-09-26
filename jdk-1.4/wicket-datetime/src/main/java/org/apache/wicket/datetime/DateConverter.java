@@ -48,6 +48,11 @@ import org.joda.time.format.DateTimeFormatter;
 public abstract class DateConverter implements IConverter
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Whether to apply the time zone difference when interpreting dates.
 	 */
 	private final boolean applyTimeZoneDifference;

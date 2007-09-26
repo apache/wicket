@@ -30,6 +30,11 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public abstract class AbstractColumn implements IColumn
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String header;
 
 	private ColumnLocation location;

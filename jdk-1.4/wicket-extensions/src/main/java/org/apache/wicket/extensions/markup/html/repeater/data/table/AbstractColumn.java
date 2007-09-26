@@ -27,6 +27,10 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class AbstractColumn implements IStyledColumn
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private IModel displayModel;
 	private String sortProperty;
 

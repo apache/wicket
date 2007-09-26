@@ -58,6 +58,11 @@ import org.apache.wicket.util.lang.EnumeratedType;
 public abstract class DefaultAbstractTree extends AbstractTree
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * The type of junction links and node selection links.
 	 * <dl>
 	 * <dt>Regular link</dt>

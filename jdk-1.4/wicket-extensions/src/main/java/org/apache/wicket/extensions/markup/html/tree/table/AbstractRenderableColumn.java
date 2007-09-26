@@ -32,6 +32,11 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractRenderableColumn extends AbstractColumn
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private boolean contentAsTooltip = false;
 
 	private boolean escapeContent = true;

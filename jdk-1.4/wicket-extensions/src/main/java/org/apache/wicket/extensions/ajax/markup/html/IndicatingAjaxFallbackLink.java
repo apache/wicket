@@ -32,6 +32,10 @@ import org.apache.wicket.model.IModel;
 public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink implements IAjaxIndicatorAware
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
 
 	/**

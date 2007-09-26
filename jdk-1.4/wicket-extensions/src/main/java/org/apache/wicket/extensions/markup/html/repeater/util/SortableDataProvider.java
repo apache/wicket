@@ -32,6 +32,10 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
  */
 public abstract class SortableDataProvider implements ISortableDataProvider
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private SingleSortState state = new SingleSortState();
 
 	/**

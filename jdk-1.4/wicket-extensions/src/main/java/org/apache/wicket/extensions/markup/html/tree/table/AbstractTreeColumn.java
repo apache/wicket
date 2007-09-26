@@ -31,6 +31,11 @@ import org.apache.wicket.MarkupContainer;
 public abstract class AbstractTreeColumn extends AbstractColumn
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Creates new column. Checks if the column is not aligned in middle. In
 	 * case it is, throws an exception.
 	 * 

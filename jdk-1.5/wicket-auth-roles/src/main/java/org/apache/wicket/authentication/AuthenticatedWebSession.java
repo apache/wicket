@@ -32,6 +32,11 @@ import org.apache.wicket.protocol.http.WebSession;
 public abstract class AuthenticatedWebSession extends WebSession
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @return Current authenticated web session
 	 */
 	public static AuthenticatedWebSession get()

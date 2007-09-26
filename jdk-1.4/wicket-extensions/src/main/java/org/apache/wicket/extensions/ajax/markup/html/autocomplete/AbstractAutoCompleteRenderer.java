@@ -32,6 +32,11 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @see org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#render(java.lang.Object,
 	 *      org.apache.wicket.Response, String)
 	 */

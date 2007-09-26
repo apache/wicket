@@ -74,6 +74,11 @@ public class DataTable extends Panel implements IPageable
 {
 	static abstract class CssAttributeBehavior extends AbstractBehavior
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		protected abstract String getCssClass();
 
 		/**

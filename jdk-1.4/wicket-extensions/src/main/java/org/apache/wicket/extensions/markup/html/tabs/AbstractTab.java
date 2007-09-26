@@ -29,6 +29,10 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class AbstractTab implements ITab
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	IModel title;
 
 	/**

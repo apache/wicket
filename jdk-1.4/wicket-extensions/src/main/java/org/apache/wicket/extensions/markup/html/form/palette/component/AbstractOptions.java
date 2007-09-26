@@ -38,6 +38,10 @@ import org.apache.wicket.util.value.IValueMap;
  */
 public abstract class AbstractOptions extends FormComponent
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Palette palette;
 
 	protected Palette getPalette()

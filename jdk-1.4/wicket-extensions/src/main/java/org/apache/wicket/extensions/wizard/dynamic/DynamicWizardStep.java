@@ -28,6 +28,10 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class DynamicWizardStep extends WizardStep implements IDynamicWizardStep
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final IDynamicWizardStep previousStep;
 
 	/**

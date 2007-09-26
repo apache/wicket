@@ -32,6 +32,11 @@ import java.util.List;
 public abstract class AbstractWizardModel implements IWizardModel
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Whether cancel functionality is available. */
 	private boolean cancelVisible = true;
 

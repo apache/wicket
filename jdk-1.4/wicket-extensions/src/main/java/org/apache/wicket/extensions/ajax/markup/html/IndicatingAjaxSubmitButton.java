@@ -31,6 +31,11 @@ public abstract class IndicatingAjaxSubmitButton extends IndicatingAjaxButton
 
 	/**
 	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
 	 * @param id
 	 * @param form
 	 */

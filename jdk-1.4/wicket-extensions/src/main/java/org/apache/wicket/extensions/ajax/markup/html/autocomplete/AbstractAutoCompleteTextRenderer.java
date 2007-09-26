@@ -29,6 +29,11 @@ import org.apache.wicket.Response;
 public abstract class AbstractAutoCompleteTextRenderer extends AbstractAutoCompleteRenderer
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @see AbstractAutoCompleteRenderer#renderChoice(Object, Response, String)
 	 */
 	protected void renderChoice(Object object, Response response, String criteria)

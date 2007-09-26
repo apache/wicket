@@ -31,7 +31,11 @@ import org.apache.wicket.markup.html.form.Form;
 public abstract class IndicatingAjaxButton
        extends AjaxButton implements IAjaxIndicatorAware {
 
-       private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
+       /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
 
        /**
         *
