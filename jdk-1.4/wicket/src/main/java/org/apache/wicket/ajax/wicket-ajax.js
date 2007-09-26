@@ -1116,15 +1116,34 @@ Wicket.Ajax.Call.prototype = {
 		    if (encoding != null) {
 		        text = Wicket.decode(encoding, text);
 		    }
-		    try {
-		   		// do the evaluation
-		    	eval(text);
-		    } catch (exception) {
-		    	Wicket.Log.error("Exception evaluating javascript: " + exception);
-		    }
-		    // continue to next step
-			notify();
-		});
+		    
+		    // test if the javascript is in form of identifier|code
+		    // if it is, we allow for letting the javascript decide when the rest of processing will continue 
+		    // by invoking identifier();
+		    var res = text.match("([a-z|A-Z_][a-z|A-Z|0-9_]*)\\|(.*)");
+		    
+		    if (res != null) {
+		    	text = "var f = function(" + res[1] + ") {" + res[2] +"};";		    	
+		    	try {
+			   		// do the evaluation
+			    	eval(text);
+			    	f(notify);
+			    } catch (exception) {
+			    	Wicket.Log.error("Exception evaluating javascript: " + exception);
+			    }
+		    	
+		    } else {
+		    	// just evaluate the javascript
+			    try {
+			   		// do the evaluation
+			    	eval(text);
+			    } catch (exception) {
+			    	Wicket.Log.error("Exception evaluating javascript: " + exception);
+			    }
+			    // continue to next step
+				notify();
+			}
+		});		
 	},
 	
 	// Adds a closure that processes a header contribution
