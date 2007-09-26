@@ -30,6 +30,11 @@ import org.apache.wicket.util.convert.ConversionException;
 public abstract class AbstractNumberConverter extends AbstractConverter
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @param locale
 	 * @return Returns the numberFormat.
 	 */

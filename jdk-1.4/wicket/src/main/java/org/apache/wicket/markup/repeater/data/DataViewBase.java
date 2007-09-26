@@ -40,6 +40,10 @@ import org.apache.wicket.markup.repeater.RefreshingView;
  */
 public abstract class DataViewBase extends AbstractPageableView
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final IDataProvider dataProvider;
 
 	/**

@@ -45,6 +45,11 @@ import org.apache.wicket.util.time.Time;
 public abstract class DynamicWebResource extends WebResource
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * The resource state returned by the getResourceState() method. This state
 	 * needs to be thread-safe and its methods must return the same values no
 	 * matter how many times they are invoked. A ResourceState may assume

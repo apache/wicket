@@ -37,6 +37,10 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			IBehaviorListener,
 			IHeaderContributor
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** the component that this handler is bound to. */
 	private Component component;
 

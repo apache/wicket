@@ -44,6 +44,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**  
 	 * Construct.
 	 * 

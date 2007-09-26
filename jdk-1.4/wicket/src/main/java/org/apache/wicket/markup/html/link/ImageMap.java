@@ -206,6 +206,10 @@ public final class ImageMap extends WebMarkupContainer
 	 */
 	private static abstract class ShapeLink implements IClusterable
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		/** The link. */
 		private final Link link;
 

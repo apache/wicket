@@ -57,6 +57,11 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Interface for visiting individual tree items.
 	 */
 	private static interface IItemCallback

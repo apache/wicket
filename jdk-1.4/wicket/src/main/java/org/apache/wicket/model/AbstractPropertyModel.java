@@ -47,6 +47,10 @@ public abstract class AbstractPropertyModel
 			IObjectClassAwareModel,
 			IPropertyReflectionAwareModel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** Any model object (which may or may not implement IModel) */
 	private Object target;
 

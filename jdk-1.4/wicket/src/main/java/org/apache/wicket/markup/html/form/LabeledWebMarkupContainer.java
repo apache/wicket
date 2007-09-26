@@ -30,6 +30,10 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 			ILabelProvider
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * The value will be made available to the validator property by means of
 	 * ${label}. It does not have any specific meaning to FormComponent itself.
 	 */

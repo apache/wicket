@@ -33,6 +33,11 @@ public abstract class AbstractSubmitLink extends AbstractLink
 			IFormSubmittingComponent
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Target form or null if the form is parent of the link.
 	 */
 	private Form form;

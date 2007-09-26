@@ -25,6 +25,10 @@ import org.apache.wicket.markup.html.border.Border;
  */
 public abstract class AbstractTest14WebPage extends WebPage
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Border border;
 
 	/**

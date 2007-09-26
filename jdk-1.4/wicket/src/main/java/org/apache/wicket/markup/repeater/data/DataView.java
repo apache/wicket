@@ -65,6 +65,11 @@ public abstract class DataView extends DataViewBase
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @param id
 	 *            component id
 	 * @param dataProvider

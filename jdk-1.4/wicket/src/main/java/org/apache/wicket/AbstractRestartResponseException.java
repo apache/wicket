@@ -26,6 +26,11 @@ package org.apache.wicket;
 public abstract class AbstractRestartResponseException extends AbortException
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Construct.
 	 */
 	public AbstractRestartResponseException()

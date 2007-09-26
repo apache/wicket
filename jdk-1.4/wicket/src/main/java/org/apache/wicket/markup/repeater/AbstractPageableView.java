@@ -45,6 +45,11 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Keeps track of the number of items we show per page. The default is Integer.MAX_VALUE which
 	 * effectively disables paging.
 	 */

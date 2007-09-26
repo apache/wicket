@@ -32,6 +32,11 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehavior
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The update interval */
 	private Duration updateInterval;
 

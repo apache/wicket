@@ -26,6 +26,11 @@ package org.apache.wicket.model;
 public abstract class AbstractWrapModel implements IWrapModel
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
 	public Object getObject()

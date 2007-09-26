@@ -96,6 +96,10 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		implements
 			IComponentResolver
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	static final String BODY = "body";
 	static final String BORDER = "border";
 

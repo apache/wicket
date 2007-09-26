@@ -36,6 +36,11 @@ public abstract class DateValidator extends AbstractValidator
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Gets a <code>Date</code> range validator for checking if the
 	 * <code>Date</code> value falls between the minimum and maximum
 	 * <code>Date</code> values. If that is not the case, an error message

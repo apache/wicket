@@ -36,6 +36,11 @@ import org.apache.wicket.util.string.JavascriptUtils;
 public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBehavior
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Construct.
 	 */
 	public OnChangeAjaxBehavior()

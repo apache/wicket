@@ -32,6 +32,11 @@ import org.apache.wicket.model.IModel;
 public abstract class PropertyListView extends ListView
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Construct without model, assume bound externally.
 	 * 
 	 * @param id

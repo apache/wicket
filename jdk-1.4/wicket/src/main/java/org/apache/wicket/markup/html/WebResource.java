@@ -31,6 +31,11 @@ public abstract class WebResource extends Resource
 {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Construct.
 	 */
 	public WebResource()

@@ -32,6 +32,11 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractSingleSelectChoice extends AbstractChoice
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
 

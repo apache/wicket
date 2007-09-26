@@ -26,6 +26,10 @@ import org.apache.wicket.Page;
  */
 public abstract class AbstractPageMapEntry implements IPageMapEntry
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private short id;
 
 	/**

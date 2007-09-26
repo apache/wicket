@@ -34,6 +34,11 @@ import org.apache.wicket.validation.ValidationError;
 public abstract class AbstractFormValidator implements IFormValidator
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * DEPRECATED/UNSUPPORTED
 	 * 
 	 * Gets the default variables for interpolation.

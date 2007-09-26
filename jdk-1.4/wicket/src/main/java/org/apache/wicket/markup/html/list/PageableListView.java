@@ -32,6 +32,11 @@ import org.apache.wicket.version.undo.Change;
  */
 public abstract class PageableListView extends ListView implements IPageable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The page to show. */
 	private int currentPage;
 

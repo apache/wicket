@@ -52,6 +52,11 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Logger. */
 	private static final Logger log = LoggerFactory.getLogger(LoadableDetachableModel.class);
 

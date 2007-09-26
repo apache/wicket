@@ -55,6 +55,10 @@ import org.apache.wicket.version.undo.Change;
 public abstract class GridView extends DataViewBase
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int columns = 1;
 	private int rows = Integer.MAX_VALUE;
 

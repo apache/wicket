@@ -28,6 +28,10 @@ import java.util.Map;
  */
 public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The date format to use */
 	private final Map/*<Locale, NumberFormat>*/ numberFormats = new HashMap/*<Locale, NumberFormat>*/();
 

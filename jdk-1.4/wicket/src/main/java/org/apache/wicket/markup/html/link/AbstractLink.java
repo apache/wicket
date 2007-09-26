@@ -31,6 +31,12 @@ public abstract class AbstractLink extends WebMarkupContainer
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	/**
 	 * Construct.
 	 * 
 	 * @param id

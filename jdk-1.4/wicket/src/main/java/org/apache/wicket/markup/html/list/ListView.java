@@ -103,6 +103,11 @@ import org.apache.wicket.version.undo.Change;
  */
 public abstract class ListView extends AbstractRepeater
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Index of the first item to show */
 	private int firstIndex = 0;
 

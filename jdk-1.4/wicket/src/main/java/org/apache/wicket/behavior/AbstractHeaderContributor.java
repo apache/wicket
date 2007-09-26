@@ -31,6 +31,11 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 			IHeaderContributor
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Construct.
 	 */
 	public AbstractHeaderContributor()

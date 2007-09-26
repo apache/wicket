@@ -28,6 +28,11 @@ import org.apache.wicket.util.value.LongValue;
 abstract class AbstractTimeValue extends LongValue
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Package local constructor for package subclasses only.
 	 * 
 	 * @param milliseconds

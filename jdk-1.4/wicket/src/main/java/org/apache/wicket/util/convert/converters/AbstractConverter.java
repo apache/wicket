@@ -32,6 +32,11 @@ import org.apache.wicket.util.convert.IConverter;
 public abstract class AbstractConverter implements IConverter
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Parses a value using one of the java.util.text format classes.
 	 * 
 	 * @param format

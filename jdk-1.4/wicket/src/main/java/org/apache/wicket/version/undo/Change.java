@@ -28,6 +28,11 @@ import org.apache.wicket.IClusterable;
 public abstract class Change implements IClusterable
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Undoes the given change.
 	 */
 	public abstract void undo();

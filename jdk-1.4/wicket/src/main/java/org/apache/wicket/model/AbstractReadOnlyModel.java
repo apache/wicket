@@ -29,6 +29,11 @@ public abstract class AbstractReadOnlyModel implements IModel
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @see IModel#getObject()
 	 */
 	public abstract Object getObject();

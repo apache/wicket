@@ -30,6 +30,10 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
  */
 public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecorator
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final IAjaxCallDecorator delegate;
 
 	/**

@@ -29,6 +29,11 @@ import java.util.Date;
  */
 abstract class AbstractTime extends AbstractTimeValue
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** calendar for the local time zone */
 	static final Calendar localtime = Calendar.getInstance();
 

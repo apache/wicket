@@ -33,6 +33,11 @@ import org.apache.wicket.validation.IValidatable;
 public abstract class NumberValidator extends AbstractValidator
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * a validator for ensuring for a positive number value
 	 */
 	public static final NumberValidator POSITIVE = minimum(0);

@@ -40,6 +40,11 @@ import org.apache.wicket.util.time.Time;
 public abstract class DynamicByteArrayResource extends WebResource
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * This is a ResourceState subclasses should return in the getResourceState
 	 * method. This resource state should be thread safe. So it shouldn't be
 	 * altered after construction. Even with syncronize blocks this is still not

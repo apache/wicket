@@ -58,7 +58,12 @@ import org.apache.wicket.util.time.Time;
  */
 public abstract class DynamicImageResource extends DynamicWebResource
 {
-  /** The image type */
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+/** The image type */
   private String format = "png";
   
   /** The last modified time of this resource */

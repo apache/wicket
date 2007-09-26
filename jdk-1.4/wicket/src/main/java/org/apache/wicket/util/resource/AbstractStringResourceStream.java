@@ -31,6 +31,11 @@ import org.apache.wicket.util.time.Time;
  */
 public abstract class AbstractStringResourceStream extends AbstractResourceStream
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** MIME content type */
 	private final String contentType;
 	

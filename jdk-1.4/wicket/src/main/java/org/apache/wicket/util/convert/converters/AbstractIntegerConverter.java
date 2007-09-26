@@ -27,6 +27,11 @@ import java.util.Locale;
 public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @param locale
 	 *            The locale
 	 * @return Returns the numberFormat.

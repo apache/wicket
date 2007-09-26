@@ -35,6 +35,11 @@ public abstract class StringValidator extends AbstractValidator
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Validator for checking if the length of a <code>String</code> is
 	 * exactly the specified length.
 	 */

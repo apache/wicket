@@ -39,6 +39,11 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
 public abstract class Loop extends AbstractRepeater
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Item container for a Loop iteration.
 	 * 
 	 * @author Jonathan Locke

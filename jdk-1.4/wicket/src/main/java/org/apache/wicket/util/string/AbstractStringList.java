@@ -44,6 +44,11 @@ import java.util.List;
 public abstract class AbstractStringList implements IStringSequence, Serializable
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @return String iterator
 	 * @see org.apache.wicket.util.string.IStringSequence#iterator()
 	 */

@@ -38,6 +38,11 @@ import org.apache.wicket.version.undo.Change;
  */
 abstract class AbstractChoice extends FormComponent
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The list of objects. */
 	private IModel choices;
 

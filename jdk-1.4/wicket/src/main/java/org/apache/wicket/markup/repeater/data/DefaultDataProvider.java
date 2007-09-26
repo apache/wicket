@@ -19,6 +19,11 @@ package org.apache.wicket.markup.repeater.data;
 
 public abstract class DefaultDataProvider implements IDataProvider
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public void detach()
 	{
 	}

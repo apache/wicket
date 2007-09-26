@@ -38,6 +38,11 @@ import org.apache.wicket.util.io.Streams;
 public abstract class BlobImageResource extends DynamicImageResource
 {
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+/**
    * Construct.
    * @param locale
    */

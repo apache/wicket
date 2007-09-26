@@ -32,6 +32,11 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Construct.
 	 */
 	public AbstractBehavior()

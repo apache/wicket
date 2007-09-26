@@ -37,6 +37,10 @@ import org.apache.wicket.util.string.StringValue;
  */
 public abstract class EnumeratedType extends StringValue
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** Map of type values by class */
 	private static final Map valueListByClass = new HashMap();
 

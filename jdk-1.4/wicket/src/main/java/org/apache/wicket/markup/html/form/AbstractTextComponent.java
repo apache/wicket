@@ -32,6 +32,11 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractTextComponent extends FormComponent
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Text components that implement this interface are know to be able to provide a pattern for
 	 * formatting output and parsing input. This can be used by for instance date picker components
 	 * which are based on Javascript and need some knowledge as to how to communicate properly via
