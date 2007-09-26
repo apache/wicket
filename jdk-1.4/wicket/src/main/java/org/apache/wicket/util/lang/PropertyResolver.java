@@ -494,7 +494,7 @@ public final class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.debug("Cannot find getter " + clz + "." + expression, e);
+				log.debug("Cannot find getter " + clz + "." + expression);
 			}
 		}
 		return method;
