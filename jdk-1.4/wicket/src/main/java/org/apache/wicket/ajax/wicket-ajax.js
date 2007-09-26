@@ -800,7 +800,7 @@ Wicket.Ajax.Request.prototype = {
 			var res = Wicket.channelManager.schedule(this.channel, function() { this.doPost(body); }.bind(this));
 			return res != null ? res: true;
 		} else {
-			return doPost(this);
+			return this.doPost(body);
 		}
 	},
 	
@@ -1120,10 +1120,12 @@ Wicket.Ajax.Call.prototype = {
 		    // test if the javascript is in form of identifier|code
 		    // if it is, we allow for letting the javascript decide when the rest of processing will continue 
 		    // by invoking identifier();
-		    var res = text.match("([a-z|A-Z_][a-z|A-Z|0-9_]*)\\|(.*)");
-		    
+		    var res = text.match(new RegExp("^([a-z|A-Z_][a-z|A-Z|0-9_]*)\\|((.|\\n)*)$"));
+		    		     
 		    if (res != null) {
-		    	text = "var f = function(" + res[1] + ") {" + res[2] +"};";		    	
+
+		    	text = "var f = function(" + res[1] + ") {" + res[2] +"};";
+		    			    	
 		    	try {
 			   		// do the evaluation
 			    	eval(text);
