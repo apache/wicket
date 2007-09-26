@@ -114,7 +114,7 @@ public class FilterForm extends Form
 
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
-				tag.put("id", component.getPageRelativePath());
+				tag.put("id", component.getMarkupId());
 				tag.put("onfocus", getFocusTrackingHandler(component));
 				super.onComponentTag(component, tag);
 			}
