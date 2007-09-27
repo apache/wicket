@@ -65,7 +65,7 @@ public final class PropertyResolver
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
 	/**
-	 * Looksup the value from the object with the given expression. If the expresion, the object
+	 * Looks up the value from the object with the given expression. If the expresion, the object
 	 * itself or one property evalutes to null then a null will be returned.
 	 * 
 	 * @param expression
