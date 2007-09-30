@@ -1524,4 +1524,24 @@ public abstract class MarkupContainer extends Component
 	{
 		return getApplication().getMarkupSettings().getMarkupCache().hasAssociatedMarkup(this);
 	}
+
+	/**
+	 * @see org.apache.wicket.Component#setRenderAllowed()
+	 */
+	void setRenderAllowed()
+	{
+		super.setRenderAllowed();
+
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Find out if this component can be rendered
+				final boolean renderAllowed = component.isActionAuthorized(RENDER);
+				// Authorize rendering
+				component.setRenderAllowed(renderAllowed);
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+	}
 }

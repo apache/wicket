@@ -856,27 +856,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			throw e;
 		}
 
-		// Visit all this page's children to reset markup streams and check
-		// rendering authorization, as appropriate. We set any result; positive
-		// or negative as a temporary boolean in the components, and when a
-		// authorization exception is thrown it will block the rendering of this
-		// page
-
-		// first the page itself
-		setRenderAllowed(isActionAuthorized(RENDER));
-		// children of the page
-		visitChildren(new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Find out if this component can be rendered
-				final boolean renderAllowed = component.isActionAuthorized(RENDER);
-
-				// Authorize rendering
-				component.setRenderAllowed(renderAllowed);
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
 
 		// Handle request by rendering page
 		try

@@ -1852,6 +1852,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 		getRequestCycle().setMetaData(FEEDBACK_LIST, null);
 		markRendering();
+
+		// check authorization
+		// first the component itself
+		// (after attach as otherwise list views etc wont work)
+		setRenderAllowed();
 	}
 
 	/**
@@ -2069,26 +2074,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 				parent.setMarkupStream(markupStream);
 
 				prepareForRender();
-				// check authorization
-				// first the component itself
-				// (after attach as otherwise list views etc wont work)
-				setRenderAllowed(isActionAuthorized(RENDER));
-				// check children if this is a container
-				if (this instanceof MarkupContainer)
-				{
-					MarkupContainer container = (MarkupContainer)this;
-					container.visitChildren(new IVisitor()
-					{
-						public Object component(final Component component)
-						{
-							// Find out if this component can be rendered
-							final boolean renderAllowed = component.isActionAuthorized(RENDER);
-							// Authorize rendering
-							component.setRenderAllowed(renderAllowed);
-							return IVisitor.CONTINUE_TRAVERSAL;
-						}
-					});
-				}
 
 				// Render the component and all its children
 				render(markupStream);
@@ -3734,5 +3719,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	final void setRenderAllowed(boolean renderAllowed)
 	{
 		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
+	}
+
+	/**
+	 * Sets the render allowed flag.
+	 * 
+	 * Visit all this page's children (overriden in MarkupContainer) to check rendering
+	 * authorization, as appropriate. We set any result; positive or negative as a temporary boolean
+	 * in the components, and when a authorization exception is thrown it will block the rendering
+	 * of this page
+	 */
+	void setRenderAllowed()
+	{
+		setRenderAllowed(isActionAuthorized(RENDER));
 	}
 }
