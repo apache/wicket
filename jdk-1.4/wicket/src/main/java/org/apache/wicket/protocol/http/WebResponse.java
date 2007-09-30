@@ -33,11 +33,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Implements responses over the HTTP protocol by holding an underlying
- * HttpServletResponse object and providing convenience methods for using that
- * object. Convenience methods include methods which: add a cookie, close the
- * stream, encode a URL, redirect a request to another resource, determine if a
- * redirect has been issued, set the content type, set the locale and, most
+ * Implements responses over the HTTP protocol by holding an underlying HttpServletResponse object
+ * and providing convenience methods for using that object. Convenience methods include methods
+ * which: add a cookie, close the stream, encode a URL, redirect a request to another resource,
+ * determine if a redirect has been issued, set the content type, set the locale and, most
  * importantly, write a String to the response output.
  * 
  * @author Jonathan Locke
@@ -61,7 +60,7 @@ public class WebResponse extends Response
 	 */
 	public WebResponse()
 	{
-		this.httpServletResponse = null;
+		httpServletResponse = null;
 	}
 
 	/**
@@ -125,7 +124,27 @@ public class WebResponse extends Response
 	{
 		if (httpServletResponse != null && url != null)
 		{
-			return httpServletResponse.encodeURL(url.toString());
+			if (url.length() > 0 && url.charAt(0) == '?')
+			{
+				// there is a bug in apache tomcat 5.5 where tomcat doesn't put sessionid to url
+				// when the URL starts with '?'. So we prepend the URL with ./ and remove it
+				// afterwards (unless some container prepends session id before './' or mangles
+				// the URL otherwise
+
+				String encoded = httpServletResponse.encodeURL("./" + url.toString());
+				if (encoded.startsWith("./"))
+				{
+					return encoded.substring(2);
+				}
+				else
+				{
+					return encoded;
+				}
+			}
+			else
+			{
+				return httpServletResponse.encodeURL(url.toString());
+			}
 		}
 		return url;
 	}
@@ -168,8 +187,8 @@ public class WebResponse extends Response
 	/**
 	 * CLIENTS SHOULD NEVER CALL THIS METHOD FOR DAY TO DAY USE!
 	 * <p>
-	 * Redirects to the given url. Implementations should encode the URL to make
-	 * sure cookie-less operation is supported in case clients forgot.
+	 * Redirects to the given url. Implementations should encode the URL to make sure cookie-less
+	 * operation is supported in case clients forgot.
 	 * </p>
 	 * 
 	 * @param url
@@ -187,8 +206,8 @@ public class WebResponse extends Response
 				{
 					if (httpServletResponse.isCommitted())
 					{
-						log.error("Unable to redirect to: " + url
-								+ ", HTTP Response has already been committed.");
+						log.error("Unable to redirect to: " + url +
+								", HTTP Response has already been committed.");
 					}
 
 					if (log.isDebugEnabled())
@@ -199,9 +218,8 @@ public class WebResponse extends Response
 					if (isAjax())
 					{
 						/*
-						 * By reaching this point, make sure the HTTP response
-						 * status code is set to 200, otherwise wicket-ajax.js
-						 * will not process the Ajax-Location header
+						 * By reaching this point, make sure the HTTP response status code is set to
+						 * 200, otherwise wicket-ajax.js will not process the Ajax-Location header
 						 */
 						httpServletResponse.addHeader("Ajax-Location", url);
 
@@ -267,10 +285,9 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Output stream encoding. If the deployment descriptor contains a
-	 * locale-encoding-mapping-list element, and that element provides a mapping
-	 * for the given locale, that mapping is used. Otherwise, the mapping from
-	 * locale to character encoding is container dependent. Default is
+	 * Output stream encoding. If the deployment descriptor contains a locale-encoding-mapping-list
+	 * element, and that element provides a mapping for the given locale, that mapping is used.
+	 * Otherwise, the mapping from locale to character encoding is container dependent. Default is
 	 * ISO-8859-1.
 	 * 
 	 * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
@@ -373,17 +390,17 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Convenience method for setting the content-disposition:attachment header.
-	 * This header is used if the response should prompt the user to download it
-	 * as a file instead of opening in a browser.
+	 * Convenience method for setting the content-disposition:attachment header. This header is used
+	 * if the response should prompt the user to download it as a file instead of opening in a
+	 * browser.
 	 * 
 	 * @param filename
 	 *            file name of the attachment
 	 */
 	public void setAttachmentHeader(String filename)
 	{
-		setHeader("Content-Disposition", "attachment"
-				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+		setHeader("Content-Disposition", "attachment" +
+				((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
 	}
 
 	/**
