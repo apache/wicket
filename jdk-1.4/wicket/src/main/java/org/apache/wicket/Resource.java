@@ -27,29 +27,25 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A Resource is something that implements IResourceListener and provides a
- * getResourceStream() method which returns the raw IResourceStream to be
- * rendered back to the client browser.
+ * A Resource is something that implements IResourceListener and provides a getResourceStream()
+ * method which returns the raw IResourceStream to be rendered back to the client browser.
  * <p>
- * Resources themselves do not currently have URLs. Instead, they are referred
- * to by components that have URLs.
+ * Resources themselves do not currently have URLs. Instead, they are referred to by components that
+ * have URLs.
  * <p>
- * Resources can be shared throughout an application by adding them to
- * Application with addResource(Class scope, String name) or addResource(String
- * name). A resource added in such a way is a named resource and is accessible
- * throughout the application via Application.getResource(Class scope, String
- * name) or Application.getResource(String name). The ResourceReference class
- * enables easy access to such resources in a way that is light on clusters.
+ * Resources can be shared throughout an application by adding them to Application with
+ * addResource(Class scope, String name) or addResource(String name). A resource added in such a way
+ * is a named resource and is accessible throughout the application via
+ * Application.getResource(Class scope, String name) or Application.getResource(String name). The
+ * ResourceReference class enables easy access to such resources in a way that is light on clusters.
  * <p>
- * While resources can be shared between components, it is important to
- * emphasize that components <i>cannot </i> be shared among containers. For
- * example, you can create a button image resource with new
- * DefaultButtonImageResource(...) and store that in the Application with
- * addResource(). You can then assign that logical resource via
- * ResourceReference to several ImageButton components. While the button image
- * resource can be shared between components like this, the ImageButton
- * components in this example are like all other components in Wicket and cannot
- * be shared.
+ * While resources can be shared between components, it is important to emphasize that components
+ * <i>cannot </i> be shared among containers. For example, you can create a button image resource
+ * with new DefaultButtonImageResource(...) and store that in the Application with addResource().
+ * You can then assign that logical resource via ResourceReference to several ImageButton
+ * components. While the button image resource can be shared between components like this, the
+ * ImageButton components in this example are like all other components in Wicket and cannot be
+ * shared.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -67,8 +63,7 @@ public abstract class Resource implements IResourceListener
 	private boolean cacheable;
 
 	/**
-	 * ThreadLocal to keep any parameters associated with the request for this
-	 * resource
+	 * ThreadLocal to keep any parameters associated with the request for this resource
 	 */
 	private static final ThreadLocal parameters = new ThreadLocal();
 
@@ -133,8 +128,8 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Should this resource be cacheable, so will it set the last modified and
-	 * the some cache headers in the response.
+	 * Should this resource be cacheable, so will it set the last modified and the some cache
+	 * headers in the response.
 	 * 
 	 * @param cacheable
 	 *            boolean if the lastmodified and cache headers must be set.
@@ -165,8 +160,7 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * Allows implementations to do configure the response, like setting headers
-	 * etc.
+	 * Allows implementations to do configure the response, like setting headers etc.
 	 * 
 	 * @param response
 	 *            the respone
@@ -176,21 +170,20 @@ public abstract class Resource implements IResourceListener
 	}
 
 	/**
-	 * @return Any query parameters associated with the request for this
-	 *         resource
+	 * @return Any query parameters associated with the request for this resource
 	 */
 	protected ValueMap getParameters()
 	{
 		if (parameters.get() == null)
 		{
-			setParameters(RequestCycle.get().getRequest().getParameterMap());
+			return new ValueMap(RequestCycle.get().getRequest().getRequestParameters()
+					.getParameters());
 		}
 		return (ValueMap)parameters.get();
 	}
 
 	/**
-	 * Sets any loaded resource to null, thus forcing a reload on the next
-	 * request.
+	 * Sets any loaded resource to null, thus forcing a reload on the next request.
 	 */
 	protected void invalidate()
 	{
