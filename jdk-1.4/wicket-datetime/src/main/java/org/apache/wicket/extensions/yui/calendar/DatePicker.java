@@ -189,7 +189,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 				new JavascriptResourceReference(YuiLib.class, "")));
 		variables.put("enableMonthYearSelection", Boolean.valueOf(enableMonthYearSelection()));
 		variables.put("hideOnSelect", Boolean.valueOf(hideOnSelect()));
-
+		String script = getAdditionalJavascript();
+		if (script != null)
+		{
+			variables.put("additionalJavascript", script.replace("${calendar}", "YAHOO.wicket."
+					+ widgetId + "DpJs"));
+		}
 		// print out the initialization properties
 		Properties p = new Properties();
 		configure(p);
@@ -615,5 +620,29 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected boolean renderOnLoad()
 	{
 		return false;
+	}
+
+	/**
+	 * Override this method to further customize the YUI Calendar with
+	 * additional Javascript code. The code returned by this method is executed
+	 * right after the Calendar has been constructed and initialized. To refer
+	 * to the actual Calendar DOM object, use <code>${calendar}</code> in your
+	 * code.<br/>See <a href="http://developer.yahoo.com/yui/calendar/">the
+	 * widget's documentation</a> for more information about the YUI Calendar.<br/>
+	 * Example:
+	 * 
+	 * <pre>
+	 * protected String getAdditionalJavascript()
+	 * {
+	 * 	return &quot;${calendar}.addRenderer(&quot;10/3&quot;, ${calendar}.renderCellStyleHighlight1);&quot;;
+	 * }
+	 * </pre>
+	 * 
+	 * @return a String containing additional Javascript code
+	 * 
+	 */
+	protected String getAdditionalJavascript()
+	{
+		return "";
 	}
 }

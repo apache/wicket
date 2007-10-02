@@ -60,6 +60,7 @@ init${widgetId}DpJs = function() {
 				fireChangeEvent: ${fireChangeEvent},
 				hideOnSelect: ${hideOnSelect}
 			});
+	${additionalJavascript}
 }
 
 check${widgetId}Loader();
