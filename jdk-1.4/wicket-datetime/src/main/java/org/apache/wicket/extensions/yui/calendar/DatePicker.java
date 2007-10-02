@@ -45,6 +45,7 @@ import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvi
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.DateConverter;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackagedTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
@@ -192,6 +193,13 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// print out the initialization properties
 		Properties p = new Properties();
 		configure(p);
+
+		if (enableMonthYearSelection() && p.containsKey("pages")
+				&& Objects.longValue(p.get("pages")) > 1)
+		{
+			throw new IllegalStateException(
+					"You cannot use a CalendarGroup with month/year selection!");
+		}
 
 		// ${calendarInit}
 		StringBuffer calendarInit = new StringBuffer();

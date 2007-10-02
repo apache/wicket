@@ -242,7 +242,11 @@ Wicket.DateTime.init = function(cfg) {
 	cfg.dp = cfg.widgetId + "Dp";
 	cfg.icon = cfg.widgetId +"Icon";
 	YAHOO.namespace("wicket");
-	YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.Calendar(cfg.dpJs,cfg.dp, cfg.calendarInit);	
+	if (cfg.calendarInit.pages && cfg.calendarInit.pages > 1) {
+		YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.CalendarGroup(cfg.dpJs,cfg.dp, cfg.calendarInit);
+	} else {
+		YAHOO.wicket[cfg.dpJs] = new YAHOO.widget.Calendar(cfg.dpJs,cfg.dp, cfg.calendarInit);
+	}	
 	YAHOO.wicket[cfg.dpJs].isVisible = function() { return YAHOO.wicket[cfg.dpJs].oDomContainer.style.display == 'block'; }
 	if (cfg.enableMonthYearSelection) Wicket.DateTime.enableMonthYearSelection(YAHOO.wicket[cfg.dpJs]); 
 	
