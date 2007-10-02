@@ -634,7 +634,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	 * <pre>
 	 * protected String getAdditionalJavascript()
 	 * {
-	 * 	return &quot;${calendar}.addRenderer(&quot;10/3&quot;, ${calendar}.renderCellStyleHighlight1);&quot;;
+	 * 	return &quot;${calendar}.addRenderer(\&quot;10/3\&quot;, ${calendar}.renderCellStyleHighlight1);&quot;;
 	 * }
 	 * </pre>
 	 * 
