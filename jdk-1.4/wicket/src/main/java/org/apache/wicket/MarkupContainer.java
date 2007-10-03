@@ -203,10 +203,10 @@ public abstract class MarkupContainer extends Component
 
 		/* Replace strategy */
 		component.setAuto(true);
-		if (get(component.getId()) != null)
-		{
-			this.remove(component);
-		}
+// if (get(component.getId()) != null)
+// {
+// this.remove(component);
+// }
 		add(component);
 		component.prepareForRender();
 		if (markupStream == null)
@@ -217,6 +217,7 @@ public abstract class MarkupContainer extends Component
 		{
 			component.render(markupStream);
 		}
+		remove(component);
 		return true;
 	}
 
