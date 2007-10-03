@@ -192,8 +192,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		String script = getAdditionalJavascript();
 		if (script != null)
 		{
-			variables.put("additionalJavascript", script.replace("${calendar}", "YAHOO.wicket."
-					+ widgetId + "DpJs"));
+			variables.put("additionalJavascript", script.replaceAll("\\$\\{calendar\\}",
+					"YAHOO.wicket." + widgetId + "DpJs"));
 		}
 		// print out the initialization properties
 		Properties p = new Properties();
