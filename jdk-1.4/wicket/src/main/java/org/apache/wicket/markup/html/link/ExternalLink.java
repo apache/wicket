@@ -26,8 +26,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL.
- * Usually this is used for links to destinations outside of Wicket.
+ * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL. Usually this is used for
+ * links to destinations outside of Wicket.
  * 
  * @author Juergen Donnerstag
  */
@@ -44,8 +44,8 @@ public class ExternalLink extends WebMarkupContainer
 	private boolean contextRelative = false;
 
 	/**
-	 * The popup specification. If not-null, a javascript on-click event handler
-	 * will be generated that opens a new window using the popup properties.
+	 * The popup specification. If not-null, a javascript on-click event handler will be generated
+	 * that opens a new window using the popup properties.
 	 */
 	private PopupSettings popupSettings = null;
 
@@ -112,9 +112,8 @@ public class ExternalLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the popup specification. If not-null, a javascript on-click event
-	 * handler will be generated that opens a new window using the popup
-	 * properties.
+	 * Gets the popup specification. If not-null, a javascript on-click event handler will be
+	 * generated that opens a new window using the popup properties.
 	 * 
 	 * @return the popup specification.
 	 */
@@ -124,9 +123,8 @@ public class ExternalLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the popup specification. If not-null, a javascript on-click event
-	 * handler will be generated that opens a new window using the popup
-	 * properties.
+	 * Sets the popup specification. If not-null, a javascript on-click event handler will be
+	 * generated that opens a new window using the popup properties.
 	 * 
 	 * @param popupSettings
 	 *            the popup specification.
@@ -232,8 +230,8 @@ public class ExternalLink extends WebMarkupContainer
 	}
 
 	/**
-	 * @return True if this link is automatically prepended with ../ to make it
-	 *         relative to the context root.
+	 * @return True if this link is automatically prepended with ../ to make it relative to the
+	 *         context root.
 	 */
 	public boolean isContextRelative()
 	{
@@ -241,8 +239,8 @@ public class ExternalLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Set to true if this link should be automatically prepended with ../ to
-	 * make it relative to the context root.
+	 * Set to true if this link should be automatically prepended with ../ to make it relative to
+	 * the context root.
 	 * 
 	 * @param contextRelative
 	 * @return This for chaining
@@ -252,4 +250,22 @@ public class ExternalLink extends WebMarkupContainer
 		this.contextRelative = contextRelative;
 		return this;
 	}
+
+	/**
+	 * @return href attribute
+	 */
+	public IModel getHref()
+	{
+		return href;
+	}
+
+	/**
+	 * @return label attribute
+	 */
+	public IModel getLabel()
+	{
+		return label;
+	}
+
+
 }
