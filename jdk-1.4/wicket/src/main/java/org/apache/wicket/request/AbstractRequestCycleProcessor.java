@@ -149,8 +149,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 					.getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
-			if (responseClass != internalErrorPageClass
-					&& settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
+			if (responseClass != internalErrorPageClass &&
+					settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				throw new RestartResponseException(internalErrorPageClass);
 			}
@@ -162,29 +162,26 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 			else
 			{
 				// give up while we're ahead!
-				throw new WicketRuntimeException("Internal Error: Could not render error page "
-						+ internalErrorPageClass, e);
+				throw new WicketRuntimeException("Internal Error: Could not render error page " +
+						internalErrorPageClass, e);
 			}
 		}
 	}
 
 	/**
-	 * Creates a new request coding strategy instance. this is (typically)
-	 * called once at the first time {@link #getRequestCodingStrategy()} is
-	 * called.
+	 * Creates a new request coding strategy instance. this is (typically) called once at the first
+	 * time {@link #getRequestCodingStrategy()} is called.
 	 * 
 	 * @return a new request coding strategy
 	 */
 	protected abstract IRequestCodingStrategy newRequestCodingStrategy();
 
 	/**
-	 * This method is called when a runtime exception is thrown, just before the
-	 * actual handling of the runtime exception. This implemention passes the
-	 * call through to
-	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)}. Note
-	 * that if you override this method
-	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)} will not
-	 * be supported.
+	 * This method is called when a runtime exception is thrown, just before the actual handling of
+	 * the runtime exception. This implemention passes the call through to
+	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)}. Note that if you override
+	 * this method {@link RequestCycle#onRuntimeException(Page, RuntimeException)} will not be
+	 * supported.
 	 * 
 	 * @param page
 	 *            Any page context where the exception was thrown
@@ -225,8 +222,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		try
 		{
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			if (requestParameters.getComponentPath() != null
-					&& requestParameters.getInterfaceName() != null)
+			if (requestParameters.getComponentPath() != null &&
+					requestParameters.getInterfaceName() != null)
 			{
 				final String componentPath = requestParameters.getComponentPath();
 				final Page page = session.getPage(requestParameters.getPageMapName(),
@@ -252,8 +249,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		}
 		catch (RuntimeException e)
 		{
-			throw new WicketRuntimeException("Unable to instantiate Page class: "
-					+ bookmarkablePageClass + ". See below for details.", e);
+			throw new WicketRuntimeException("Unable to instantiate Page class: " +
+					bookmarkablePageClass + ". See below for details.", e);
 		}
 	}
 
@@ -327,14 +324,13 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	}
 
 	/**
-	 * Resolves the RequestTarget for the given interface. This method can be
-	 * overriden if some special interface needs to resolve to its own target.
+	 * Resolves the RequestTarget for the given interface. This method can be overriden if some
+	 * special interface needs to resolve to its own target.
 	 * 
 	 * @param requestCycle
 	 *            The current RequestCycle object
 	 * @param page
-	 *            The page object which holds the component for which this
-	 *            interface is called on.
+	 *            The page object which holds the component for which this interface is called on.
 	 * @param componentPath
 	 *            The component path for looking up the component in the page.
 	 * @param interfaceName
@@ -390,9 +386,9 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 
 			if (component == null)
 			{
-				throw new WicketRuntimeException("component " + pageRelativeComponentPath
-						+ " not found on page " + page.getClass().getName() + "[id = "
-						+ page.getNumericId() + "], listener interface = " + listener);
+				throw new WicketRuntimeException("component " + pageRelativeComponentPath +
+						" not found on page " + page.getClass().getName() + "[id = " +
+						page.getNumericId() + "], listener interface = " + listener);
 			}
 
 			if (!component.isEnableAllowed())
@@ -407,10 +403,9 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	}
 
 	/**
-	 * Resolves to a page target that was previously rendered. Optionally
-	 * resolves to a component call target, which is a specialization of a page
-	 * target. If no corresponding page could be found, a expired page target
-	 * will be returned.
+	 * Resolves to a page target that was previously rendered. Optionally resolves to a component
+	 * call target, which is a specialization of a page target. If no corresponding page could be
+	 * found, a expired page target will be returned.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -444,13 +439,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 				return new PageRequestTarget(page);
 			}
 		}
-		else
-		{
-			// Page could not be located in the session
-			throw new PageExpiredException("Cannot find the rendered page in session [pagemap="
-					+ requestParameters.getPageMapName() + ",componentPath=" + componentPath
-					+ ",versionNumber=" + requestParameters.getVersionNumber() + "]");
-		}
+		// just return null here and let it be handled further down the road.
+		return null;
 	}
 
 	/**

@@ -116,8 +116,8 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 							else
 							{
 								final int version = requestParameters.getVersionNumber();
-								if (version != Page.LATEST_VERSION
-										&& version != access.getVersion())
+								if (version != Page.LATEST_VERSION &&
+										version != access.getVersion())
 								{
 									// version is no longer the active version -
 									// ignore this request
@@ -173,19 +173,30 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		{
 			// still null? check for a mount
 			target = requestCodingStrategy.targetForRequest(requestParameters);
+
+			if (target == null && requestParameters.getComponentPath() != null)
+			{
+				// If the target is still null and there was a component path
+				// then the Page could not be located in the session
+				throw new PageExpiredException(
+						"Cannot find the rendered page in session [pagemap=" +
+								requestParameters.getPageMapName() + ",componentPath=" +
+								requestParameters.getComponentPath() + ",versionNumber=" +
+								requestParameters.getVersionNumber() + "]");
+			}
 		}
 		else
 		{
 			// a target was found, but not by looking up a mount. check whether
 			// this is allowed
-			if (Application.get().getSecuritySettings().getEnforceMounts()
-					&& requestCodingStrategy.pathForTarget(target) != null)
+			if (Application.get().getSecuritySettings().getEnforceMounts() &&
+					requestCodingStrategy.pathForTarget(target) != null)
 			{
 				String msg = "Direct access not allowed for mounted targets";
 				// the target was mounted, but we got here via another path
 				// : deny the request
-				log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target
-						+ ",session=" + Session.get() + "]");
+				log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target +
+						",session=" + Session.get() + "]");
 				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_FORBIDDEN, msg);
 			}
 		}

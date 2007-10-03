@@ -19,13 +19,13 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.model.IModel;
 
 /**
- * This StatelessForm is the same as a normal form but with the statelesshint default to true.
- * The form can be newly constructed when the onSubmit of its form or its buttons is called.
- * So you can't depend on state within the page. The only state you can depend on is what 
- * was submitted from the browser.  So the model of the form or the formcomponents are updated
- * with the submit values.
+ * This StatelessForm is the same as a normal form but with the statelesshint default to true. The
+ * form can be newly constructed when the onSubmit of its form or its buttons is called. So you
+ * can't depend on state within the page. The only state you can depend on is what was submitted
+ * from the browser. So the model of the form or the formcomponents are updated with the submit
+ * values.
  * 
- *            
+ * 
  * @author jcompagner
  */
 public class StatelessForm extends Form
@@ -34,6 +34,7 @@ public class StatelessForm extends Form
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
 	public StatelessForm(String id)
@@ -43,6 +44,7 @@ public class StatelessForm extends Form
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 * @param model
 	 */
@@ -51,7 +53,13 @@ public class StatelessForm extends Form
 		super(id, model);
 	}
 
-	
+	public boolean process()
+	{
+		// set redirect to true for a stateless form.
+		setRedirect(true);
+		return super.process();
+	}
+
 	protected boolean getStatelessHint()
 	{
 		return true;

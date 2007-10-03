@@ -27,12 +27,11 @@ import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * Url coding strategy for bookmarkable pages that encodes index based
- * parameters.
+ * Url coding strategy for bookmarkable pages that encodes index based parameters.
  * 
- * Strategy looks for parameters whose name is an integer in an incremented
- * order starting with zero. Found parameters will be appended to the url in the
- * form /mount-path/paramvalue0/paramvalue1/paramvalue2
+ * Strategy looks for parameters whose name is an integer in an incremented order starting with
+ * zero. Found parameters will be appended to the url in the form
+ * /mount-path/paramvalue0/paramvalue1/paramvalue2
  * 
  * When decoded these parameters will once again be available under their index (
  * PageParameters.getString("0"); )
@@ -97,6 +96,17 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 					.append("/");
 		}
 
+		String intface = (String)parameters.get(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+		if (intface != null)
+		{
+			i++;
+			if (!url.endsWith("/"))
+			{
+				url.append("/");
+			}
+			url.append(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME).append("/").append(
+					urlEncode(intface)).append("/");
+		}
 		if (i != parameters.size())
 		{
 			throw new WicketRuntimeException(
@@ -129,6 +139,11 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 				i++;
 				params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
 						.decodePageMapName(urlDecode(parts[i])));
+			}
+			else if (WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.equals(parts[i]))
+			{
+				i++;
+				params.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, urlDecode(parts[i]));
 			}
 			else
 			{
