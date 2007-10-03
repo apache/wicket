@@ -28,8 +28,18 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
+ * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
+ * component in the html but many.
+ * <p>
+ * Use the normal {@link AjaxFormChoiceComponentUpdatingBehavior} for the normal single component
+ * fields
+ * 
  * @author jcompagner
  * 
+ * @see RadioChoice
+ * @see CheckBoxMultipleChoice
+ * @see RadioGroup
+ * @see CheckGroup
  */
 public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDefaultAjaxBehavior
 {
@@ -72,19 +82,19 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends AbstractDe
 	}
 
 	/**
-	 * Listener invoked on the ajax request. This listener is invoked after the
-	 * component's model has been updated.
+	 * Listener invoked on the ajax request. This listener is invoked after the component's model
+	 * has been updated.
 	 * 
 	 * @param target
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
 	/**
-	 * Called to handle any error resulting from updating form component. Errors
-	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * Called to handle any error resulting from updating form component. Errors thrown from
+	 * {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
 	 * 
-	 * The RuntimeException will be null if it was just a validation or
-	 * conversion error of the FormComponent
+	 * The RuntimeException will be null if it was just a validation or conversion error of the
+	 * FormComponent
 	 * 
 	 * @param target
 	 * @param e

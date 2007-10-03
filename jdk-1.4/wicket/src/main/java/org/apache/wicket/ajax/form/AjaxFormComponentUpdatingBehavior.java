@@ -25,18 +25,19 @@ import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * A behavior that updates the hosting FormComponent via ajax when an event it
- * is attached to is triggered. This behavior encapsulates the entire
- * form-processing workflow as relevant only to this component so if validation
- * is successfull the component's model will be updated according to the
- * submitted value.
+ * A behavior that updates the hosting FormComponent via ajax when an event it is attached to is
+ * triggered. This behavior encapsulates the entire form-processing workflow as relevant only to
+ * this component so if validation is successfull the component's model will be updated according to
+ * the submitted value.
  * <p>
- * NOTE: This behavior does not support persisting form component values into
- * cookie or other {@link IValuePersister}. If this is necessary please add a
- * request for enhancement.
+ * NOTE: This behavior does not support persisting form component values into cookie or other
+ * {@link IValuePersister}. If this is necessary please add a request for enhancement.
  * <p>
- * NOTE: This behavior does not validate any {@link IFormValidator}s attached
- * to this form even though they may reference the component being updated.
+ * NOTE: This behavior does not validate any {@link IFormValidator}s attached to this form even
+ * though they may reference the component being updated.
+ * <p>
+ * NOTE: This behavior does not work on Choices or Groups use the
+ * {@link AjaxFormChoiceComponentUpdatingBehavior} for that.
  * 
  * @since 1.2
  * 
@@ -49,7 +50,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**  
+	/**
 	 * Construct.
 	 * 
 	 * @param event
@@ -70,8 +71,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 
 		if (!(getComponent() instanceof FormComponent))
 		{
-			throw new WicketRuntimeException("Behavior " + getClass().getName()
-					+ " can only be added to an instance of a FormComponent");
+			throw new WicketRuntimeException("Behavior " + getClass().getName() +
+					" can only be added to an instance of a FormComponent");
 		}
 	}
 
@@ -91,8 +92,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		return generateCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
 				getCallbackUrl(false)).append(
-				"', wicketSerialize(Wicket.$('" + getComponent().getMarkupId()
-						+ "'))"));
+				"', wicketSerialize(Wicket.$('" + getComponent().getMarkupId() + "'))"));
 	}
 
 	/**
@@ -122,7 +122,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			if (formComponent.hasErrorMessage())
 			{
 				formComponent.invalid();
-				
+
 				onError(target, null);
 			}
 			else
@@ -140,26 +140,26 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	}
 
 	/**
-	 * Listener invoked on the ajax request. This listener is invoked after the
-	 * component's model has been updated.
+	 * Listener invoked on the ajax request. This listener is invoked after the component's model
+	 * has been updated.
 	 * 
 	 * @param target
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
 	/**
-	 * Called to handle any error resulting from updating form component. Errors
-	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * Called to handle any error resulting from updating form component. Errors thrown from
+	 * {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
 	 * 
-	 * The RuntimeException will be null if it was just a validation or conversion 
-	 * error of the FormComponent
+	 * The RuntimeException will be null if it was just a validation or conversion error of the
+	 * FormComponent
 	 * 
 	 * @param target
 	 * @param e
 	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{
-		if(e != null)
+		if (e != null)
 		{
 			throw e;
 		}
