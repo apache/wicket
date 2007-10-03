@@ -35,9 +35,6 @@ public class ExternalLink extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
-	/** the href attribute. */
-	private final IModel href;
-
 	/** this links' label. */
 	private final IModel label;
 
@@ -63,7 +60,7 @@ public class ExternalLink extends WebMarkupContainer
 	{
 		super(id);
 
-		this.href = (href != null ? new Model(href) : null);
+		setModel(href != null ? new Model(href) : null);
 		this.label = (label != null ? new Model(label) : null);
 	}
 
@@ -94,7 +91,7 @@ public class ExternalLink extends WebMarkupContainer
 	{
 		super(id);
 
-		this.href = wrap(href);
+		setModel(wrap(href));
 		this.label = wrap(label);
 	}
 
@@ -146,9 +143,9 @@ public class ExternalLink extends WebMarkupContainer
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		if (href != null)
+		if (getModel() != null)
 		{
-			Object hrefValue = href.getObject();
+			Object hrefValue = getModelObject();
 			if (hrefValue != null)
 			{
 				String url = hrefValue.toString();
@@ -251,13 +248,6 @@ public class ExternalLink extends WebMarkupContainer
 		return this;
 	}
 
-	/**
-	 * @return href attribute
-	 */
-	public IModel getHref()
-	{
-		return href;
-	}
 
 	/**
 	 * @return label attribute
