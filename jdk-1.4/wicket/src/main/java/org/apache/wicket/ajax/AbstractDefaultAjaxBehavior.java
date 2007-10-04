@@ -277,7 +277,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	public final void onRequest()
 	{
-		AjaxRequestTarget target = new AjaxRequestTarget();
+		AjaxRequestTarget target = new AjaxRequestTarget(getComponent().getPage());
 		RequestCycle.get().setRequestTarget(target);
 		respond(target);
 	}

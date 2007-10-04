@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
@@ -44,6 +43,7 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.protocol.http.WebResponse;
+import org.apache.wicket.request.target.component.IPageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -78,7 +78,7 @@ import org.slf4j.LoggerFactory;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public class AjaxRequestTarget implements IRequestTarget
+public class AjaxRequestTarget implements IPageRequestTarget
 {
 	/**
 	 * An {@link AjaxRequestTarget} listener that can be used to respond to various target-related
@@ -248,11 +248,21 @@ public class AjaxRequestTarget implements IRequestTarget
 	/** a list of listeners */
 	private List listeners = null;
 
+	private final Page page;
+
+	public Page getPage()
+	{
+		return page;
+	}
+
 	/**
 	 * Constructor
+	 * 
+	 * @param page
 	 */
-	public AjaxRequestTarget()
+	public AjaxRequestTarget(Page page)
 	{
+		this.page = page;
 		Response response = RequestCycle.get().getResponse();
 		encodingBodyResponse = new AjaxResponse(response);
 		encodingHeaderResponse = new AjaxResponse(response);

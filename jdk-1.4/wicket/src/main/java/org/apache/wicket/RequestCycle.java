@@ -257,8 +257,8 @@ public abstract class RequestCycle
 
 	/**
 	 * Boolean if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
-	 * This temporary flag is specifically needed for portlet-support as then such a page needs a special target (Resource) url.
-	 * After each urlFor call, this flag is reset to false.
+	 * This temporary flag is specifically needed for portlet-support as then such a page needs a
+	 * special target (Resource) url. After each urlFor call, this flag is reset to false.
 	 */
 	private transient boolean urlForNewWindowEncoding;
 
@@ -625,6 +625,29 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Atempts to return name of current page map
+	 * 
+	 * @return
+	 */
+	private String getCurrentPageMap()
+	{
+		IRequestTarget target = RequestCycle.get().getRequestTarget();
+		if (target instanceof IPageRequestTarget)
+		{
+			Page page = ((IPageRequestTarget)target).getPage();
+			return page != null ? page.getPageMapName() : null;
+		}
+		else if (target instanceof IBookmarkablePageRequestTarget)
+		{
+			return ((IBookmarkablePageRequestTarget)target).getPageMapName();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
 	 * Convenience method that sets page class as the response. This will generate a redirect to the
 	 * page with a bookmarkable url
 	 * 
@@ -646,7 +669,25 @@ public abstract class RequestCycle
 	 */
 	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
 	{
-		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
+		setResponsePage(pageClass, pageParameters, getCurrentPageMap());
+	}
+
+	/**
+	 * Sets the page class with optionally the page parameters and page map name as the render
+	 * target of this request.
+	 * 
+	 * @param pageClass
+	 *            The page class to render as a response
+	 * @param pageParameters
+	 *            The page parameters that gets appended to the bookmarkable url,
+	 * @param pageMapName
+	 *            The pagemap in which the response page should be created
+	 */
+	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters,
+			final String pageMapName)
+	{
+		IRequestTarget target = new BookmarkablePageRequestTarget(pageMapName, pageClass,
+				pageParameters);
 		setRequestTarget(target);
 	}
 
@@ -672,25 +713,27 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * @return true if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
+	 * @return true if the next to be encoded url is targetting a new window (ModalWindow, popup,
+	 *         tab).
 	 */
 	public final boolean isUrlForNewWindowEncoding()
 	{
 		return urlForNewWindowEncoding;
 	}
-	
+
 	/**
 	 * Indicate if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
-	 * This temporary flag is specifically needed for portlet-support as then such a page needs a special target (Resource) url.
-	 * After each urlFor call, this flag is reset to false.
+	 * This temporary flag is specifically needed for portlet-support as then such a page needs a
+	 * special target (Resource) url. After each urlFor call, this flag is reset to false.
 	 */
 	public final void setUrlForNewWindowEncoding()
 	{
 		urlForNewWindowEncoding = true;
 	}
-	
+
 	/**
-	 * Returns an encoded URL that references the given request target and clears the urlForNewWindowEncoding flag.
+	 * Returns an encoded URL that references the given request target and clears the
+	 * urlForNewWindowEncoding flag.
 	 * 
 	 * @param requestTarget
 	 *            the request target to reference
@@ -702,7 +745,7 @@ public abstract class RequestCycle
 		urlForNewWindowEncoding = false;
 		return url;
 	}
-	
+
 	/**
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
