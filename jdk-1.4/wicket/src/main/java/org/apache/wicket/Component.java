@@ -846,6 +846,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 			feedbacks.add(this);
 		}
+
+		// If any of the components on page is not stateless, we need to bind the session
+		// before we start rendering components, as then jsessionid won't be appended
+		// for links rendered before first stateful component
+		if (isStateless() && getSession().isTemporary())
+		{
+			getSession().bind();
+		}
 	}
 
 	/**
