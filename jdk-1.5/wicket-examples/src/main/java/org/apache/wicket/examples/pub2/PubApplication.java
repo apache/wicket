@@ -14,51 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.helloworld;
+package org.apache.wicket.examples.pub2;
 
-import org.apache.wicket.Request;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 
 /**
- * Application class for hello world example.
+ * Application class for the linkomatic example.
  * 
  * @author Jonathan Locke
  */
-public class HelloWorldApplication extends WicketExampleApplication
+public class PubApplication extends WicketExampleApplication
 {
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
-	public HelloWorldApplication()
+	public PubApplication()
 	{
-
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newRequestCycle(org.apache.wicket.Request,
-	 *      org.apache.wicket.Response)
-	 */
-	@Override
-	public RequestCycle newRequestCycle(Request request, Response response)
-	{
-		return new WebRequestCycle(this, (WebRequest)request, response)
-		{
-			@Override
-			protected void onBeginRequest()
-			{
-				// open session
-			}
-
-			@Override
-			protected void onEndRequest()
-			{
-				// close session
-			}
-		};
 	}
 
 	/**
@@ -66,6 +37,7 @@ public class HelloWorldApplication extends WicketExampleApplication
 	 */
 	public Class getHomePage()
 	{
-		return HelloWorld.class;
+		return Home.class;
 	}
+
 }

@@ -1,0 +1,28 @@
+<html xmlns:wicket="http://wicket.apache.org/">
+<head>
+    <title>Wicket Examples - pub</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"></span>
+    <span wicket:id="salutation">Salutation</span>
+    <p>
+	    <wicket:message key="salespitch">
+	    	Does this beer rock?
+	    </wicket:message>
+    </p>
+    <p>
+      <wicket:link><!-- the autolink will try to match the image with a package resource -->
+        <img src="Beer.gif"/>
+      </wicket:link>
+    </p>
+    <p>
+        <a href="#" wicket:id="goCanadian">[go Canadian]</a>&nbsp;
+        <a href="#" wicket:id="goUS">[go US]</a>&nbsp;
+        <a href="#" wicket:id="goDutch">[go Dutch]</a>&nbsp;
+        <a href="#" wicket:id="goGerman">[go German]</a>&nbsp;
+        <a href="#" wicket:id="goChinese">[go Chinese]</a>&nbsp;
+        <a href="#" wicket:id="goDanish">[go Danish]</a>
+    </p>
+</body>
+</html>
