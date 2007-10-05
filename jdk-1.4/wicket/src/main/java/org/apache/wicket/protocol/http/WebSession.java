@@ -16,7 +16,14 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.*;
+import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.Request;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Session;
+import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -27,13 +34,39 @@ import org.apache.wicket.util.string.Strings;
 public class WebSession extends Session
 {
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Filter that returns all component scoped messages ({@link FeedbackMessage#getReporter()} !=
+	 * null).
+	 */
+	private static final IFeedbackMessageFilter MESSAGES_FOR_COMPONENTS = new IFeedbackMessageFilter()
+	{
+		private static final long serialVersionUID = 1L;
+
+		public boolean accept(FeedbackMessage message)
+		{
+			return message.getReporter() != null;
+		}
+	};
+	/**
+	 * Filter that returns all session scoped messages ({@link FeedbackMessage#getReporter()} ==
+	 * null).
+	 */
+	private static final IFeedbackMessageFilter RENDERED_SESSION_SCOPED_MESSAGES = new IFeedbackMessageFilter()
+	{
+		private static final long serialVersionUID = 1L;
+
+		public boolean accept(FeedbackMessage message)
+		{
+			return message.getReporter() == null && message.isRendered();
+		}
+	};
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
 	 * constructor returns.
-	 *
-     * @deprecated Use #WebSession(Request) instead
-     * 
+	 * 
+	 * @deprecated Use #WebSession(Request) instead
+	 * 
 	 * @param application
 	 *            The application
 	 * @param request
@@ -47,8 +80,8 @@ public class WebSession extends Session
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this
 	 * constructor returns.
-     *
-     * @deprecated Use #WebSession(Request)
+	 * 
+	 * @deprecated Use #WebSession(Request)
 	 * 
 	 * @param application
 	 *            The application
@@ -60,52 +93,80 @@ public class WebSession extends Session
 		super(application, request);
 	}
 
-    /**
-     * Constructor. Note that {@link RequestCycle} is not available until this
-     * constructor returns.
-     *
-     * @param request
-     *            The current request
-     */
-    public WebSession(Request request)
-    {
-        super(request);
-    }
+	/**
+	 * Constructor. Note that {@link RequestCycle} is not available until this
+	 * constructor returns.
+	 * 
+	 * @param request
+	 *            The current request
+	 */
+	public WebSession(Request request)
+	{
+		super(request);
+	}
 
-    /**
+	/**
 	 * @see org.apache.wicket.Session#isCurrentRequestValid(org.apache.wicket.RequestCycle)
 	 */
 	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
 	{
-		WebRequest lockedRequest = (WebRequest) lockedRequestCycle.getRequest();
-		
+		WebRequest lockedRequest = (WebRequest)lockedRequestCycle.getRequest();
+
 		// if the request that's holding the lock is ajax, we allow this request
 		if (lockedRequest.isAjax() == true)
 		{
 			return true;
 		}
-		
+
 		RequestCycle currentRequestCycle = RequestCycle.get();
-		WebRequest currentRequest = (WebRequest) currentRequestCycle.getRequest();
-		
+		WebRequest currentRequest = (WebRequest)currentRequestCycle.getRequest();
+
 		if (currentRequest.isAjax() == false)
 		{
 			// if this request is not ajax, we allow it
 			return true;
 		}
-		
-		String lockedPageId = Strings.firstPathComponent(lockedRequest.getRequestParameters().getComponentPath(), Component.PATH_SEPARATOR);
-		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest().getRequestParameters().getComponentPath(), Component.PATH_SEPARATOR); 
-		
+
+		String lockedPageId = Strings.firstPathComponent(lockedRequest.getRequestParameters()
+				.getComponentPath(), Component.PATH_SEPARATOR);
+		String currentPageId = Strings.firstPathComponent(currentRequestCycle.getRequest()
+				.getRequestParameters().getComponentPath(), Component.PATH_SEPARATOR);
+
 		int lockedVersion = lockedRequest.getRequestParameters().getVersionNumber();
 		int currentVersion = currentRequest.getRequestParameters().getVersionNumber();
-		
-		if (currentPageId.equals(lockedPageId) && currentVersion == lockedVersion) 
+
+		if (currentPageId.equals(lockedPageId) && currentVersion == lockedVersion)
 		{
 			// we don't allow tis request
 			return false;
 		}
-		
+
 		return true;
+	}
+
+	/**
+	 * @see org.apache.wicket.Session#cleanupFeedbackMessages()
+	 */
+	public void cleanupFeedbackMessages()
+	{
+		// remove all component feedback messages if we are either using one
+		// pass or render to buffer render strategy (in which case we can remove
+		// without further delay) or in case the redirect to render strategy is
+		// used, when we're doing the render request (isRedirect should return
+		// false in that case)
+		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.REDIRECT_TO_RENDER
+				|| ((WebRequest)RequestCycle.get().getRequest()).isAjax()
+				|| (!RequestCycle.get().isRedirect()))
+		{
+			// If session scoped, rendered messages got indeed cleaned up, mark
+			// the session as dirty
+			if (getFeedbackMessages().clear(RENDERED_SESSION_SCOPED_MESSAGES) > 0)
+			{
+				dirty();
+			}
+
+			// clean up all component related feedback messages
+			getFeedbackMessages().clear(WebSession.MESSAGES_FOR_COMPONENTS);
+		}
 	}
 }
