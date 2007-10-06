@@ -35,6 +35,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.behavior.StringHeaderContributor;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
@@ -255,6 +256,18 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		TextTemplate datePickerJs = new PackagedTextTemplate(DatePicker.class, "DatePicker.js");
 		datePickerJs.interpolate(variables);
 		response.renderOnDomReadyJavascript(datePickerJs.asString());
+
+		// remove previously generated markup (see onRendered) via javascript in
+		// ajax requests to not render the yui calendar multiple times
+		if (AjaxRequestTarget.get() != null)
+		{
+			final String javascript = "var e = Wicket.$('" + getEscapedComponentMarkupId() + "Dp"
+					+ "'); if (e != null && typeof(e.parentNode) != 'undefined' && "
+					+ "typeof(e.parentNode.parentNode != 'undefined')) "
+					+ "e.parentNode.parentNode.removeChild(e.parentNode);";
+
+			response.renderJavascript(javascript, null);
+		}
 	}
 
 	/**
