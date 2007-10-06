@@ -19,21 +19,22 @@
 	text-align: center;
 }
 
-.yui-calendar .calheader select {
-	float: left;
+.yui-calendar .calheader select {	
+	font-size: 100%
 }
 
 .yui-calendar .calheader table {
 	border-width: 0px;	
 	border-collapse: collapse;
-	border-spacing: 0px;
-	float: right;	
+	border-spacing: 0px;	
+	font-size: 100%;
 }
 
 .yui-calendar .calheader input {
 	text-align: center;
 	border: 1px solid #999;
-	vertical-align: middle;		
+	vertical-align: middle;
+	font-size: 100%		
 }
 
 .yui-calendar .calheader th {

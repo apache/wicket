@@ -214,8 +214,11 @@ Wicket.DateTime.enableMonthYearSelection = function(widget) {
   	widget.buildMonthLabel = function () {
 		var pageDate = widget.cfg.getProperty(YAHOO.widget.Calendar._DEFAULT_CONFIG.PAGEDATE.key);
 
+		var selectHtml = "<table>";
+		selectHtml += "<tr><th>";
+
 		// generate month select box using localized strings
-		var selectHtml = "<select id=\"" + monthSelectId + "\">";
+		selectHtml += "<select id=\"" + monthSelectId + "\">";
 		var i;
 		for (i = 0; i < 12; i++) {
 			selectHtml += "<option value=\"" + i + "\"";
@@ -224,11 +227,10 @@ Wicket.DateTime.enableMonthYearSelection = function(widget) {
 			} 	
 			selectHtml += ">" + widget.Locale.LOCALE_MONTHS[i] + "</option>";
 		}
-		selectHtml += "</select>";
+		selectHtml += "</select></th>";
 
 		// generate year input and spinner buttons	
-		selectHtml += "<table>";	
-		selectHtml += "<tr><th><a class='yearDown' id='" + yearDownId + "'/></th>";
+		selectHtml += "<th><a class='yearDown' id='" + yearDownId + "'/></th>";
 		selectHtml += "<th><input type='text' size='4' id='" + yearInputId + "'/></th>";
 		selectHtml += "<th><a class='yearUp' id='" + yearUpId + "'/></th>";			
 		selectHtml += "</tr></table>";
