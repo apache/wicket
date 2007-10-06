@@ -88,6 +88,11 @@ public class AutoCompletePage extends BasePage
 			{
 				target.addComponent(label);
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+			}
 		});
 	}
 }

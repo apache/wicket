@@ -111,6 +111,11 @@ public class GuestBook extends BasePage
 				target.appendJavascript("document.getElementById('" + text.getMarkupId()
 						+ "').focus();");
 			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+			}
 		});
 	}
 
