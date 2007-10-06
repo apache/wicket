@@ -154,13 +154,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * 
 	 * @param target
 	 * 
-	 * TODO 1.3: make abstract to be consistent with onsubmit()
-	 * 
 	 */
-	protected void onError(AjaxRequestTarget target)
-	{
-
-	}
+	protected abstract void onError(AjaxRequestTarget target);
 
 	protected CharSequence getPreconditionScript()
 	{
