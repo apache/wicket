@@ -347,4 +347,16 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 		return stream;
 	}
+
+	/**
+	 * Returns markup provider associated with this fragment
+	 * 
+	 * @return markup provider
+	 */
+	public final MarkupContainer getMarkupProvider()
+	{
+		return markupProvider;
+	}
+
+
 }
