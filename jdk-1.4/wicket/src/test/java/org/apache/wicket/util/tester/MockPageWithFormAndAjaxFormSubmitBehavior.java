@@ -65,6 +65,10 @@ public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 			{
 				executed = true;
 			}
+
+			protected void onError(AjaxRequestTarget target)
+			{
+			}
 		});
 	}
 
