@@ -15,7 +15,7 @@ public class Start {
 
 		WebAppContext bb = new WebAppContext();
 		bb.setServer(server);
-		bb.setContextPath("/${artifactId}");
+		bb.setContextPath("/");
 		bb.setWar("src/main/webapp");
 
 		
