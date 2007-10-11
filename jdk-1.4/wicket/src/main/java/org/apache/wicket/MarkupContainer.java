@@ -877,14 +877,6 @@ public abstract class MarkupContainer extends Component
 		component.setParent(this);
 
 		final Page page = findPage();
-		if (page != null && page.isAttached())
-		{
-			// if page is not null and the page has already been attached,
-			// attach the component. we only attach if the page has been
-			// attached because at some point the page must be attached and the
-			// call would cascade down anyways.
-			component.attach();
-		}
 
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled())
@@ -923,12 +915,12 @@ public abstract class MarkupContainer extends Component
 			final int size = children_size();
 
 			// Create array that holds size + 1 elements
-			final Component[] children = new Component[size + 1];
+			final Object[] children = new Object[size + 1];
 
 			// Loop through existing children copying them
 			for (int i = 0; i < size; i++)
 			{
-				children[i] = children_get(i);
+				children[i] = children_get(i, false);
 			}
 
 			// Add new child to the end
@@ -941,70 +933,125 @@ public abstract class MarkupContainer extends Component
 
 	private final Component children_get(int index)
 	{
-		if (index == 0)
+		return (Component)children_get(index, true);
+	}
+
+	/**
+	 * If the given object is a {@link ComponentSourceEntry} instance and <code>reconstruct</code>
+	 * is true, it reconstructs the component and returns it. Otherwise it just returns the object
+	 * passed as parameter
+	 * 
+	 * @param object
+	 * @param reconstruct
+	 * @param parent
+	 * @param index
+	 * @return
+	 */
+	private final Object postprocess(Object object, boolean reconstruct, MarkupContainer parent,
+			int index)
+	{
+		if (reconstruct && object instanceof ComponentSourceEntry)
 		{
-			if (children instanceof Component)
+			object = ((ComponentSourceEntry)object).reconstruct(parent, index);
+		}
+		return object;
+	}
+
+	private final Object children_get(int index, boolean reconstruct)
+	{
+		Object component = null;
+		if (index == 0 && children != null && children instanceof Object[] == false)
+		{
+			component = postprocess(children, reconstruct, this, 0);
+			if (children != component)
 			{
-				return (Component)children;
-			}
-			else
-			{
-				return ((Component[])children)[index];
+				children = component;
 			}
 		}
 		else
 		{
-			return ((Component[])children)[index];
+			// we have a list
+			Object[] children = (Object[])this.children;
+			component = postprocess(children[index], reconstruct, this, index);
+			if (children[index] != component)
+			{
+				children[index] = component;
+			}
+		}
+
+		return component;
+	}
+
+	/**
+	 * Returns the wicket:id of the given object, that can be either a {@link Component} or a
+	 * {@link ComponentSourceEntry}
+	 * 
+	 * @param object
+	 * @return
+	 */
+	private final String getId(Object object)
+	{
+		if (object instanceof Component)
+		{
+			return ((Component)object).getId();
+		}
+		else if (object instanceof ComponentSourceEntry)
+		{
+			return ((ComponentSourceEntry)object).id;
+		}
+		else
+		{
+			throw new IllegalArgumentException("Unknown type of object " + object);
 		}
 	}
 
 	private final Component children_get(final String id)
 	{
-		if (children instanceof Component)
+		Component component = null;
+		if (children != null && children instanceof Object[] == false && getId(children).equals(id))
 		{
-			final Component component = (Component)children;
-			if (component.getId().equals(id))
+			component = (Component)postprocess(children, true, this, 0);
+			if (children != component)
 			{
-				return component;
+				children = component;
 			}
 		}
-		else
+		else if (children instanceof Object[])
 		{
-			if (children != null)
+			final Object[] children = (Object[])this.children;
 			{
-				final Component[] components = (Component[])children;
-				for (int i = 0; i < components.length; i++)
+				for (int i = 0; i < children.length; i++)
 				{
-					if (components[i].getId().equals(id))
+					if (getId(children[i]).equals(id))
 					{
-						return components[i];
+						component = (Component)postprocess(children[i], true, this, i);
+						if (children[i] != component)
+						{
+							children[i] = component;
+						}
+						break;
 					}
 				}
 			}
 		}
-		return null;
+		return component;
 	}
 
 	private final int children_indexOf(Component child)
 	{
-		if (children instanceof Component)
+		if (children != null && children instanceof Object[] == false &&
+				getId(children).equals(child.getId()))
 		{
-			if (((Component)children).getId().equals(child.getId()))
-			{
-				return 0;
-			}
+			return 0;
 		}
-		else
+		else if (children instanceof Object[])
 		{
-			if (children != null)
+			final Object[] children = (Object[])this.children;
+			for (int i = 0; i < children.length; i++)
 			{
-				final Component[] components = (Component[])children;
-				for (int i = 0; i < components.length; i++)
+				if (getId(children[i]).equals(child.getId()))
 				{
-					if (components[i].getId().equals(child.getId()))
-					{
-						return i;
-					}
+					return i;
 				}
 			}
 		}
@@ -1023,11 +1070,11 @@ public abstract class MarkupContainer extends Component
 
 	private final Component children_remove(int index)
 	{
-		if (children instanceof Component)
+		if (children instanceof Component || children instanceof ComponentSourceEntry)
 		{
 			if (index == 0)
 			{
-				final Component removed = (Component)children;
+				final Component removed = (Component)postprocess(children, true, null, -1);
 				children = null;
 				return removed;
 			}
@@ -1038,8 +1085,8 @@ public abstract class MarkupContainer extends Component
 		}
 		else
 		{
-			Component[] c = ((Component[])children);
-			final Component removed = c[index];
+			Object[] c = ((Object[])children);
+			final Object removed = c[index];
 			if (c.length == 2)
 			{
 				if (index == 0)
@@ -1057,7 +1104,7 @@ public abstract class MarkupContainer extends Component
 			}
 			else
 			{
-				Component[] newChildren = new Component[c.length - 1];
+				Object[] newChildren = new Object[c.length - 1];
 				int j = 0;
 				for (int i = 0; i < c.length; i++)
 				{
@@ -1068,23 +1115,24 @@ public abstract class MarkupContainer extends Component
 				}
 				children = newChildren;
 			}
-			return removed;
+			return (Component)postprocess(removed, true, null, -1);
 		}
 	}
 
-	private final Component children_set(int index, Component child)
+	private final Object children_set(int index, Object child, boolean reconstruct)
 	{
-		final Component replaced;
+		Object replaced;
 		if (index < children_size())
 		{
-			if (children == null || children instanceof Component)
+			if (children == null || children instanceof Component ||
+					children instanceof ComponentSourceEntry)
 			{
-				replaced = (Component)children;
+				replaced = children;
 				children = child;
 			}
 			else
 			{
-				final Component[] children = (Component[])this.children;
+				final Object[] children = (Object[])this.children;
 				replaced = children[index];
 				children[index] = child;
 			}
@@ -1093,7 +1141,12 @@ public abstract class MarkupContainer extends Component
 		{
 			throw new IndexOutOfBoundsException();
 		}
-		return replaced;
+		return postprocess(replaced, reconstruct, null, -1);
+	}
+
+	private final Component children_set(int index, Component child)
+	{
+		return (Component)children_set(index, child, true);
 	}
 
 	private final int children_size()
@@ -1104,11 +1157,11 @@ public abstract class MarkupContainer extends Component
 		}
 		else
 		{
-			if (children instanceof Component)
+			if (children instanceof Component || children instanceof ComponentSourceEntry)
 			{
 				return 1;
 			}
-			return ((Component[])children).length;
+			return ((Object[])children).length;
 		}
 	}
 
@@ -1366,80 +1419,41 @@ public abstract class MarkupContainer extends Component
 		this.markupStream = markupStream;
 	}
 
-	final void internalAttach2()
+	private static class ComponentSourceEntry extends org.apache.wicket.ComponentSourceEntry
 	{
-		if (!getFlag(FLAG_ATTACHED))
+		private ComponentSourceEntry(MarkupContainer container, Component component,
+				IComponentSource componentSource)
 		{
-			setFlag(FLAG_ATTACHING, true);
-			visitChildren(new IVisitor()
-			{
-				public Object component(Component component)
-				{
-					component.setFlag(FLAG_ATTACHING, true);
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
-			setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
-			onAttach();
-			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(
-						"Component " +
-								this +
-								" of type " +
-								getClass().getName() +
-								" has not been properly attached.  " +
-								"Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
-			}
+			super(container, component, componentSource);
+		}
 
-			visitChildren(new IVisitor()
-			{
-				public Object component(Component component)
-				{
-					component.setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
-					component.onAttach();
-					if (!component.getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
-					{
-						throw new IllegalStateException(
-								"Component " +
-										component +
-										" of type " +
-										component.getClass().getName() +
-										" has not been properly attached.  " +
-										"Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
-					}
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
+		private static final long serialVersionUID = 1L;
 
-			visitChildren(new IVisitor()
-			{
-				public Object component(Component component)
-				{
-					component.setFlag(FLAG_ATTACHING, false);
-					component.setFlag(FLAG_ATTACHED, true);
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-			});
-
-			setFlag(FLAG_ATTACHING, false);
-			setFlag(FLAG_ATTACHED, true);
+		protected void setChild(MarkupContainer parent, int index, Component child)
+		{
+			parent.children_set(index, child, false);
 		}
 	}
 
 	void detachChildren()
 	{
-		// Loop through child components
-		final Iterator iter = iterator();
-		while (iter.hasNext())
-		{
-			// Get next child
-			final Component child = (Component)iter.next();
-
-			// Call end request on the child
-			child.detach();
-		}
 		super.detachChildren();
+
+		for (int i = 0; i < children_size(); ++i)
+		{
+			Object child = children_get(i, false);
+			if (child instanceof Component)
+			{
+				((Component)child).detach();
+
+				if (child instanceof IComponentSourceProvider)
+				{
+					ComponentSourceEntry entry = new ComponentSourceEntry(this, (Component)child,
+							((IComponentSourceProvider)child).getComponentSource());
+					children_set(i, entry, false);
+				}
+			}
+		}
 	}
 
 	void internalMarkRendering()
