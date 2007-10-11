@@ -62,8 +62,7 @@ public class WebSession extends Session
 	};
 
 	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this
-	 * constructor returns.
+	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
 	 * 
 	 * @deprecated Use #WebSession(Request) instead
 	 * 
@@ -78,8 +77,7 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this
-	 * constructor returns.
+	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
 	 * 
 	 * @deprecated Use #WebSession(Request)
 	 * 
@@ -94,8 +92,7 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Constructor. Note that {@link RequestCycle} is not available until this
-	 * constructor returns.
+	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
 	 * 
 	 * @param request
 	 *            The current request
@@ -154,9 +151,9 @@ public class WebSession extends Session
 		// without further delay) or in case the redirect to render strategy is
 		// used, when we're doing the render request (isRedirect should return
 		// false in that case)
-		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.REDIRECT_TO_RENDER
-				|| ((WebRequest)RequestCycle.get().getRequest()).isAjax()
-				|| (!RequestCycle.get().isRedirect()))
+		if (Application.get().getRequestCycleSettings().getRenderStrategy() != IRequestCycleSettings.REDIRECT_TO_RENDER ||
+				((WebRequest)RequestCycle.get().getRequest()).isAjax() ||
+				(!RequestCycle.get().isRedirect()))
 		{
 			// If session scoped, rendered messages got indeed cleaned up, mark
 			// the session as dirty
