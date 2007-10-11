@@ -42,6 +42,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
@@ -635,12 +636,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		private static final long serialVersionUID = 1L;
 	};
 
-	static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
+	// static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
 
 
 	static final int FLAG_ATTACHED = 0x20000000;
 
-	static final int FLAG_ATTACHING = 0x40000000;
+	// static final int FLAG_ATTACHING = 0x40000000;
 
 	/**
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
@@ -785,15 +786,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 	}
 
-	/**
-	 * Attaches the component. This is called when the page is starting to be used for rendering or
-	 * when a component listener call is executed on it.
-	 */
-	public final void attach()
-	{
-		internalAttach2();
-	}
-
 	private final void internalBeforeRender()
 	{
 		if (isVisible() && !getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
@@ -850,7 +842,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// If any of the components on page is not stateless, we need to bind the session
 		// before we start rendering components, as then jsessionid won't be appended
 		// for links rendered before first stateful component
-		if (isStateless() && getSession().isTemporary())
+		if (!isStateless() && getSession().isTemporary())
 		{
 			getSession().bind();
 		}
@@ -2931,13 +2923,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 			throw new WicketRuntimeException(
 					"Cannot modify component hierarchy during render phase");
 		}
-
-		// Throw exception if modification is attempted during attach
-		if (getFlag(FLAG_ATTACHING))
-		{
-			throw new WicketRuntimeException(
-					"Cannot modify component hierarchy during attach phase");
-		}
 	}
 
 	/**
@@ -3175,6 +3160,16 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Convenience method that sets the attached flags.
+	 * 
+	 * @param attached
+	 */
+	protected final void markAttached(boolean attached)
+	{
+		setFlag(FLAG_ATTACHED, attached);
+	}
+
+	/**
 	 * @return true if this component is attached
 	 */
 	protected final boolean isAttached()
@@ -3227,15 +3222,20 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Called to allow a component to attach resources for use.
+	 * The onAttach method is no longer available.
+	 * <p>
+	 * If you need to initialize component before it is rendered, either use
+	 * {@link #onBeforeRender()} or do the initialization lazily (on first demand, such as
+	 * {@link LoadableDetachableModel} does.
+	 * <p>
+	 * If you need to get notification when page is taken out of Session (before calling the even
+	 * listener), you can use the {@link Page#onPageAttached()} method.
 	 * 
-	 * Overrides of this method MUST call the super implementation, the most logical place to do
-	 * this is the first line of the override method.
-	 * 
+	 * @deprecated
 	 */
-	protected void onAttach()
+	protected final void onAttach()
 	{
-		setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, true);
+
 	}
 
 	/**
@@ -3570,35 +3570,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	final boolean hasMarkupIdMetaData()
 	{
 		return getMetaData(MARKUP_ID_KEY) != null;
-	}
-
-	/**
-	 * Attaches any child components
-	 * 
-	 * This method is here only for {@link MarkupContainer}. It is broken out of
-	 * {@link #onBeforeRender()} so we can guarantee that it executes as the last in onAttach()
-	 * chain no matter where user places the <code>super.onAttach()</code> call
-	 */
-	void internalAttach2()
-	{
-		if (!getFlag(FLAG_ATTACHED))
-		{
-			setFlag(FLAG_ATTACHING, true);
-			setFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED, false);
-			onAttach();
-			if (!getFlag(FLAG_ATTACH_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(
-						"Component " +
-								this +
-								" of type " +
-								getClass().getName() +
-								" has not been properly attached.  " +
-								"Something in its class hierarchy has failed to call super.onAttach() in an override of onAttach() method");
-			}
-			setFlag(FLAG_ATTACHING, false);
-			setFlag(FLAG_ATTACHED, true);
-		}
 	}
 
 	void internalMarkRendering()

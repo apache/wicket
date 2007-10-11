@@ -810,11 +810,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public final void renderPage()
 	{
-		// if not attached then attach the whole page.
-		if (!isAttached())
-		{
-			attach();
-		}
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -1461,5 +1456,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	void setPageStateless(Boolean stateless)
 	{
 		this.stateless = stateless;
+	}
+
+	/**
+	 * Called when the page is retrieved from Session.
+	 */
+	public void onPageAttached()
+	{
+
 	}
 }

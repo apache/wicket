@@ -258,23 +258,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			setFlag(FLAG_RENDER_CHILDREN, value);
 		}
 
-		protected void onAttach()
-		{
-			super.onAttach();
-
-			if (isRenderChildren())
-			{
-				// visit every child
-				visitItemChildren(this, new IItemCallback()
-				{
-					public void visitItem(TreeItem item)
-					{
-						item.attach();
-					}
-				});
-			}
-		}
-
 		protected void onDetach()
 		{
 			super.onDetach();

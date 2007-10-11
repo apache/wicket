@@ -413,7 +413,6 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public void startComponent(Component component)
 	{
-		component.attach();
 		if (component instanceof FormComponent)
 		{
 			((FormComponent)component).processInput();

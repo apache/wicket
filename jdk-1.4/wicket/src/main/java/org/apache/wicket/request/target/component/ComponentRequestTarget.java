@@ -71,9 +71,6 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 			// Render the component
 			try
 			{
-				// attach
-				component.attach();
-
 				// Render the component
 				component.renderComponent();
 			}

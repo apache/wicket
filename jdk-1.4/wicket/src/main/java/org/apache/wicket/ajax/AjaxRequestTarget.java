@@ -35,8 +35,6 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.Response;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.Component.IVisitor;
-import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -592,44 +590,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	{
 		Iterator it;
 
-		// process feedback
+		// TODO: We might need to call prepareRender on all components upfront
 
-		// we need to attach feedback components here because they are not
-		// attached in MarkupContainer#attachChildren()
-		it = markupIdToComponent.values().iterator();
-		while (it.hasNext())
-		{
-			final Component component = (Component)it.next();
-
-			if (component instanceof IFeedback)
-			{
-				component.attach();
-			}
-
-			if (component instanceof MarkupContainer)
-			{
-				MarkupContainer container = (MarkupContainer)component;
-
-				// collect feedback
-				container.visitChildren(IFeedback.class, new IVisitor()
-				{
-					public Object component(Component component)
-					{
-						component.attach();
-						return IVisitor.CONTINUE_TRAVERSAL;
-					}
-				});
-			}
-
-		}
-
-
-		// attach components
-		it = markupIdToComponent.values().iterator();
-		while (it.hasNext())
-		{
-			((Component)it.next()).attach();
-		}
 
 		// process component markup
 		it = markupIdToComponent.entrySet().iterator();

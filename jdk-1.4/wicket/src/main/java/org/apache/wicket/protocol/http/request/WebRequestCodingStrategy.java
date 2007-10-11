@@ -195,8 +195,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final RequestParameters parameters = new RequestParameters();
 		final String pathInfo = getRequestPath(request);
 		parameters.setPath(pathInfo);
-		parameters.setPageMapName(WebRequestCodingStrategy.decodePageMapName(request
-				.getParameter(PAGEMAP)));
+		parameters.setPageMapName(request.getParameter(PAGEMAP));
 		addInterfaceParameters(request, parameters);
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
@@ -239,18 +238,20 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		RequestContext requestContext = RequestContext.get();
 		boolean portletRequest = requestContext.isPortletRequest();
 		boolean sharedResourceURL = false;
-		
+
 		if (url != null && !portletRequest)
 		{
 			// Do nothing - we've found the URL and it's mounted.
 		}
 		else if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
-			url = requestContext.encodeRenderURL(url == null ? encode(requestCycle, (IBookmarkablePageRequestTarget)requestTarget) : url);
+			url = requestContext.encodeRenderURL(url == null ? encode(requestCycle,
+					(IBookmarkablePageRequestTarget)requestTarget) : url);
 		}
 		else if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
-			url = requestContext.encodeSharedResourceURL(url == null ? encode(requestCycle, (ISharedResourceRequestTarget)requestTarget) : url);
+			url = requestContext.encodeSharedResourceURL(url == null ? encode(requestCycle,
+					(ISharedResourceRequestTarget)requestTarget) : url);
 			sharedResourceURL = true;
 		}
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
@@ -263,18 +264,22 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			{
 				IListenerInterfaceRequestTarget iliRequestTarget = (IListenerInterfaceRequestTarget)requestTarget;
 				RequestListenerInterface rli = iliRequestTarget.getRequestListenerInterface();
-				if (IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass())
-					|| IBehaviorListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
+				if (IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()) ||
+						IBehaviorListener.class.isAssignableFrom(rli.getMethod()
+								.getDeclaringClass()))
 				{
 					url = requestContext.encodeResourceURL(url);
 				}
-				else if (IRedirectListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
+				else if (IRedirectListener.class.isAssignableFrom(rli.getMethod()
+						.getDeclaringClass()))
 				{
 					if (((WebRequestCycle)requestCycle).getWebRequest().isAjax())
 					{
-                        // TODO: Probably not all Ajax based redirects need to break out of ResourceURL encoding
-						// Need to findout and/or provide some kind of extension how to indicate this
-						url = ((PortletRequestContext)requestContext).encodeRenderURL(url,true);
+						// TODO: Probably not all Ajax based redirects need to break out of
+						// ResourceURL encoding
+						// Need to findout and/or provide some kind of extension how to indicate
+						// this
+						url = ((PortletRequestContext)requestContext).encodeRenderURL(url, true);
 					}
 					else
 					{
@@ -288,9 +293,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					if (forceActionURL)
 					{
 						List behaviors = iliRequestTarget.getTarget().getBehaviors();
-						for (int i = 0, size = behaviors.size(); i<size; i++)
+						for (int i = 0, size = behaviors.size(); i < size; i++)
 						{
-							if (AbstractAjaxBehavior.class.isAssignableFrom(behaviors.get(i).getClass()))
+							if (AbstractAjaxBehavior.class.isAssignableFrom(behaviors.get(i)
+									.getClass()))
 							{
 								forceActionURL = false;
 								break;
@@ -321,7 +327,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		if (url != null)
 		{
 			String result = null;
-			
+
 			if (!sharedResourceURL && portletRequest)
 			{
 				result = url.toString();
@@ -329,7 +335,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			else
 			{
 				// Add the actual URL. This will be relative to the Wicket
-			    // Servlet/Filter, with no leading '/'.
+				// Servlet/Filter, with no leading '/'.
 				PrependingStringBuffer prepender = new PrependingStringBuffer(url.toString());
 
 				// Prepend prefix to the URL to make it relative to the current
@@ -366,7 +372,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public IRequestTargetUrlCodingStrategy[] listMounts()
 	{
-		synchronized(mountsOnPath)
+		synchronized (mountsOnPath)
 		{
 			return (IRequestTargetUrlCodingStrategy[])mountsOnPath.strategies().toArray(
 					new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
@@ -378,7 +384,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
-		synchronized(mountsOnPath)
+		synchronized (mountsOnPath)
 		{
 			if (path == null)
 			{
@@ -398,7 +404,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 	/**
 	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
-			org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 *      org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
@@ -426,7 +432,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			path = path.substring(1);
 		}
 
-		synchronized(mountsOnPath)
+		synchronized (mountsOnPath)
 		{
 			if (mountsOnPath.strategyForMount(path) != null)
 			{
@@ -481,7 +487,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			path = path.substring(1);
 		}
 
-		synchronized(mountsOnPath)
+		synchronized (mountsOnPath)
 		{
 			mountsOnPath.unmount(path);
 		}
@@ -904,7 +910,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
 		{
-			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(
+					IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return url;
 	}
@@ -942,7 +949,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	protected IRequestTargetUrlCodingStrategy getMountEncoder(IRequestTarget requestTarget)
 	{
-		synchronized(mountsOnPath)
+		synchronized (mountsOnPath)
 		{
 			// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
 			// cache lookup results
