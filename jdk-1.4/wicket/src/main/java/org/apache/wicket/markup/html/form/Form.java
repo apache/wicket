@@ -1366,15 +1366,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					String msg = getString(getId() + "." + UPLOAD_TOO_LARGE_RESOURCE_KEY, Model
 							.valueOf(model), defaultValue);
 					error(msg);
-
-					if (log.isDebugEnabled())
-					{
-						log.error(msg, e);
-					}
-					else
-					{
-						log.error(msg);
-					}
 				}
 				else
 				{
