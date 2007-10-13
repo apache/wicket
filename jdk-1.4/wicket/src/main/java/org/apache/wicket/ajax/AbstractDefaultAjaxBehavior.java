@@ -77,8 +77,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
-			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
 			response.renderJavascriptReference(JAVASCRIPT_DEBUG);
+			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
 		}
 	}
 
