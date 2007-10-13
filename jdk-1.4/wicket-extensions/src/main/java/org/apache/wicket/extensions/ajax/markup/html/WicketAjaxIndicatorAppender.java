@@ -92,7 +92,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 		r.write("\">");
 		r.write("<img src=\"");
 		r.write(getIndicatorUrl());
-		r.write("\"/></span>");
+		r.write("\" alt=\"\"/></span>");
 	}
 
 	/**
