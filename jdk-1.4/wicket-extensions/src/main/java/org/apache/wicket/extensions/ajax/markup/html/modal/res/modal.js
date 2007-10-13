@@ -806,7 +806,16 @@ Wicket.Window.prototype = {
 		} else {
 			// remove reference to the window
 			Wicket.Window.current = null;
-		}											
+		}					
+		
+		if (Wicket.Browser.isIE()) {
+			// There's a strange focus problem in IE that disables focus on entire page,
+			// unless something focuses an input
+			var e = document.createElement("input");
+			document.body.appendChild(e);
+			e.focus();
+			document.body.removeChild(e);
+		}						
 	},
 	
 	/**
