@@ -115,6 +115,11 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		final FormComponent formComponent = getFormComponent();
 
+		if (getEvent().toLowerCase().equals("onblur") && disableFocusOnBlur())
+		{
+			target.focusComponent(null);
+		}
+
 		try
 		{
 			formComponent.inputChanged();
@@ -129,6 +134,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			{
 				formComponent.valid();
 				formComponent.updateModel();
+
 				onUpdate(target);
 			}
 		}
@@ -137,6 +143,17 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			onError(target, e);
 
 		}
+	}
+
+	/**
+	 * Determines whether the focus will not be restored when the event is blur. By default this is
+	 * true, as we don't want to re-focus component on blur event.
+	 * 
+	 * @return
+	 */
+	protected boolean disableFocusOnBlur()
+	{
+		return true;
 	}
 
 	/**
