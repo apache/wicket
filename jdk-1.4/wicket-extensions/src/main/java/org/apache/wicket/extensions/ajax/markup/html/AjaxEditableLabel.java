@@ -368,7 +368,7 @@ public class AjaxEditableLabel extends Panel
 		// put focus on the textfield and stupid explorer hack to move the
 		// caret to the end
 		target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
-				+ "  el.focus(); " + "  if (el.createTextRange) { "
+				+ "   if (el.createTextRange) { "
 				+ "     var v = el.value; var r = el.createTextRange(); "
 				+ "     r.moveStart('character', v.length); r.select(); } }");
 		target.focusComponent(editor);
