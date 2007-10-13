@@ -101,7 +101,7 @@ var WicketAjaxDebug = {
 					"<div style='width: 450px; display: none; position: absolute; left: 200px; top: 300px; z-index: 1000;' id='"+dwid+"'>"+
 					"	<div style='border: 1px solid black; padding: 1px; background-color: #eee'>"+
 					"		<div style='overflow: auto; width: 100%'>"+
-					"			<div style='float: right; padding: 0.2em; padding-right: 1em;'>"+
+					"			<div style='float: right; padding: 0.2em; padding-right: 1em; color: black;'>"+
 					"               <a href='javascript:WicketAjaxDebug.switchScrollLock()' id='"+WicketAjaxDebug.debugWindowScrollLockLinkId+"' style='color:blue' onfocus='this.blur();'>scroll lock</a> |"+
 					"				<a href='javascript:WicketAjaxDebug.clearLog()' style='color:blue'>clear</a> | "+
 					"				<a href='javascript:WicketAjaxDebug.hideDebugWindow()' style='color:blue'>close</a>"+
@@ -109,7 +109,7 @@ var WicketAjaxDebug = {
 					"			<div id='"+dwdhid+"' style='padding: 0.2em; background-color: gray; color: white; padding-left: 1em; margin-right: 14em; cursor: move;'>"+
 					"				Wicket Ajax Debug Window (drag me here)"+
 					"			</div>"+
-					"			<div id='"+WicketAjaxDebug.debugWindowLogId+"' style='width: 100%; height: 200px; background-color: white; overflow: auto; white-space: nowrap'>"+
+					"			<div id='"+WicketAjaxDebug.debugWindowLogId+"' style='width: 100%; height: 200px; background-color: white; color: black; overflow: auto; white-space: nowrap'>"+
 					"			</div>"+
 					"           <div style='height: 10px; margin:0px; padding:0px;overflow:hidden;'>"+
 					"              <div style='height: 10px; width: 10px; background-color: gray; margin:0px; padding: 0px;overflow:hidden; float:right; cursor: nw-resize' id='" + WicketAjaxDebug.debugWindowResizeHandleId + "'>"+
