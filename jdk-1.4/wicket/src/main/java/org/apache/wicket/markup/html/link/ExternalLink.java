@@ -20,7 +20,6 @@ import org.apache.wicket.IPageMap;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
@@ -31,7 +30,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  */
-public class ExternalLink extends WebMarkupContainer
+public class ExternalLink extends AbstractLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -143,7 +142,12 @@ public class ExternalLink extends WebMarkupContainer
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		if (getModel() != null)
+
+		if (isLinkEnabled() == false)
+		{
+			disableLink(tag);
+		}
+		else if (getModel() != null)
 		{
 			Object hrefValue = getModelObject();
 			if (hrefValue != null)
@@ -215,6 +219,13 @@ public class ExternalLink extends WebMarkupContainer
 	 */
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
+		// Draw anything before the body?
+		if (!isLinkEnabled() && getBeforeDisabledLink() != null)
+		{
+			getResponse().write(getBeforeDisabledLink());
+		}
+
+
 		if ((label != null) && (label.getObject() != null))
 		{
 			replaceComponentTagBody(markupStream, openTag,
@@ -222,8 +233,15 @@ public class ExternalLink extends WebMarkupContainer
 		}
 		else
 		{
-			super.onComponentTagBody(markupStream, openTag);
+			renderComponentTagBody(markupStream, openTag);
 		}
+
+		// Draw anything after the body?
+		if (!isLinkEnabled() && getAfterDisabledLink() != null)
+		{
+			getResponse().write(getAfterDisabledLink());
+		}
+
 	}
 
 	/**
