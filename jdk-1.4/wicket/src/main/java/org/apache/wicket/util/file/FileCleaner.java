@@ -34,7 +34,7 @@ public class FileCleaner
 	/**
 	 * Queue of <code>Tracker</code> instances being watched.
 	 */
-	private static ReferenceQueue /* Tracker */q = new ReferenceQueue();
+	private static final ReferenceQueue /* Tracker */q = new ReferenceQueue();
 
 	/**
 	 * Collection of <code>Tracker</code> instances in existence.
@@ -52,7 +52,9 @@ public class FileCleaner
 		 */
 		public void run()
 		{
-			for (;;)
+			// Though q is final, it happens while hot deploying that Wicket runs into an infinite
+			// loop because q == null (NullPointerException). To prevent that happening ...
+			while (q != null)
 			{
 				Tracker tracker = null;
 				try
