@@ -22,14 +22,15 @@ import org.slf4j.Logger;
  * Interface to an arbitrary piece of code that runs and can do logging.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public interface ICode
 {
 	/**
-	 * Override this method to provide the code to run as a task
+	 * Override this method to provide the code to run as a <code>Task</code>.
 	 * 
 	 * @param log
-	 *            The log that will be used by the code.
+	 *            the log that will be used by the code
 	 */
 	void run(Logger log);
 }
