@@ -23,7 +23,7 @@ package org.apache.wicket;
  * <p>
  * IMPORTANT NOTE: Implementations must let subclasses of
  * {@link org.apache.wicket.AbstractRestartResponseException} thrown from the constructing
- * page' constructor bubble up.
+ * page's constructor bubble up.
  * 
  * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(IPageFactory)
  * @see Session#getPageFactory()

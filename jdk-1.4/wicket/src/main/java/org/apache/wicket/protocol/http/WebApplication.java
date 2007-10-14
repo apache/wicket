@@ -451,7 +451,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * Internal intialization. First determine the deployment mode. First check the system property
+	 * Internal initialization. First determine the deployment mode. First check the system property
 	 * -Dwicket.configuration. If it does not exist check the servlet init parameter (
 	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>). If not
 	 * found check the servlet context init paramert
@@ -531,8 +531,8 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * Gets a new request cycle processor for web requests. May be replaced by subclasses which
-	 * whishes to uses there own implementation of IRequestCycleProcessor.
+	 * Gets a new request cycle processor for web requests. May be replaced by subclasses which wish
+	 * to use their own implementation of IRequestCycleProcessor.
 	 * 
 	 * NOTE this can't be moved to application as portlets use two different request cycle
 	 * processors, and hence have two different methods for them, depending on the kind of request.
@@ -578,7 +578,7 @@ public abstract class WebApplication extends Application
 				servletResponse) : new WebResponse(servletResponse));
 	}
 
-	/*
+	/**
 	 * Set the application key value
 	 */
 	protected final void setApplicationKey(String applicationKey)

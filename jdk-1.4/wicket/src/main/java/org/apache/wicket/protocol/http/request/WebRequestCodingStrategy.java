@@ -155,7 +155,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * conflicts. <br />
 	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
 	 * Page1 uses a parameters encoder that only encodes parameter values <br />
-	 * now suppose we want to access Page1 with a single paramter param="test". we have a url
+	 * now suppose we want to access Page1 with a single parameter param="test". we have a url
 	 * collision since both pages can be access with /page/test <br />
 	 * the sorting by longest path first guarantees that the iterator will return the mount
 	 * /page/test before it returns mount /page therefore giving deterministic behavior to path
@@ -223,7 +223,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Otherwise, one of the delegation methods will be called. In case you are using custom targets
 	 * that are not part of the default target hierarchy, you need to override
 	 * {@link #doEncode(RequestCycle, IRequestTarget)}, which will be called after the defaults
-	 * have been tried. When that doesn't provide a url either, and exception will be thrown saying
+	 * have been tried. When that doesn't provide a url either, an exception will be thrown saying
 	 * that encoding could not be done.
 	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
@@ -353,13 +353,17 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			return requestCycle.getOriginalResponse().encodeURL(result);
 		}
 
-		// Just return null intead of throwing an exception. So that it can be
+		// Just return null instead of throwing an exception. So that it can be
 		// handled better
 		return null;
 	}
 
 	/**
-	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(java.lang.CharSequence)
+	 * Returns the given url encoded.
+	 * 
+	 * @param url
+	 *            The URL to encode
+	 * @return The encoded url
 	 */
 	public CharSequence encode(CharSequence url)
 	{
@@ -500,7 +504,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * 
 	 * If you override this method to behave differently then
 	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should also be overridden to be
-	 * in sync with that behaviour.
+	 * in sync with that behavior.
 	 * 
 	 * @param request
 	 *            the incoming request
@@ -537,8 +541,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Adds page related parameters (path and pagemap and optionally version and interface).
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be overridden to by in
-	 * sync with that behaviour.
+	 * {@link #encode(RequestCycle, IListenerInterfaceRequestTarget)} should be overridden to be in
+	 * sync with that behavior.
 	 * 
 	 * @param request
 	 *            the incoming request
@@ -617,7 +621,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 		parameters.setUrlDepth(urlDepth);
 
-		// Extract behaviour ID after last colon
+		// Extract behavior ID after last colon
 		final String behaviourId = pathComponents[pathComponents.length - 2];
 		parameters.setBehaviorId(behaviourId.length() != 0 ? behaviourId : null);
 
@@ -640,11 +644,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * override this method; hence if a mount is found, this method will not be called.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be overridden to by in
-	 * sync with that behaviour.
+	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be overridden to be in
+	 * sync with that behavior.
 	 * 
 	 * @param request
-	 *            the incomming request
+	 *            the incoming request
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
@@ -695,8 +699,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a page class target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should be overridden to by
-	 * in sync with that behaviour.
+	 * {@link #addBookmarkablePageParameters(Request, RequestParameters)} should be overridden to be
+	 * in sync with that behavior.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -790,8 +794,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a shared resource target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addResourceParameters(Request, RequestParameters)} should be overridden to by in sync
-	 * with that behaviour.
+	 * {@link #addResourceParameters(Request, RequestParameters)} should be overridden to be in sync
+	 * with that behavior.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -838,8 +842,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 * Encode a listener interface target.
 	 * 
 	 * If you override this method to behave different then also
-	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be overridden to by in
-	 * sync with that behaviour.
+	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be overridden to be in
+	 * sync with that behavior.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
@@ -1008,7 +1012,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		/**
 		 * Checks if the specified path matches any mount, and if so returns the coding strategy for
-		 * that mount. Returns null if the path doesnt match any mounts.
+		 * that mount. Returns null if the path doesn't match any mounts.
 		 * 
 		 * NOTE: path here is not the mount - it is the full url path
 		 * 
@@ -1081,7 +1085,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		 * Gets the coding strategy for the specified mount path
 		 * 
 		 * @param mount
-		 *            mount paht
+		 *            mount path
 		 * @return associated coding strategy or null if none
 		 */
 		public IRequestTargetUrlCodingStrategy strategyForMount(String mount)

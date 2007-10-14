@@ -256,7 +256,7 @@ public abstract class RequestCycle
 	protected Response response;
 
 	/**
-	 * Boolean if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
+	 * Boolean if the next to be encoded url is targeting a new window (ModalWindow, popup, tab).
 	 * This temporary flag is specifically needed for portlet-support as then such a page needs a
 	 * special target (Resource) url. After each urlFor call, this flag is reset to false.
 	 */
@@ -308,7 +308,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Get the orignal respone the request was create with. Access may be necessary with the
+	 * Get the original response the request was create with. Access may be necessary with the
 	 * response has temporarily being replaced but your components requires access to lets say the
 	 * cookie methods of a WebResponse.
 	 * 
@@ -625,7 +625,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Atempts to return name of current page map
+	 * Attempts to return name of current page map
 	 * 
 	 * @return
 	 */
@@ -713,7 +713,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * @return true if the next to be encoded url is targetting a new window (ModalWindow, popup,
+	 * @return true if the next to be encoded url is targeting a new window (ModalWindow, popup,
 	 *         tab).
 	 */
 	public final boolean isUrlForNewWindowEncoding()
@@ -722,7 +722,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Indicate if the next to be encoded url is targetting a new window (ModalWindow, popup, tab).
+	 * Indicate if the next to be encoded url is targeting a new window (ModalWindow, popup, tab).
 	 * This temporary flag is specifically needed for portlet-support as then such a page needs a
 	 * special target (Resource) url. After each urlFor call, this flag is reset to false.
 	 */
@@ -763,18 +763,18 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Returns a URL that references a given interface on a given behaviour of a component. When the
-	 * URL is requested from the server at a later time, the interface on the behaviour will be
+	 * Returns a URL that references a given interface on a given behavior of a component. When the
+	 * URL is requested from the server at a later time, the interface on the behavior will be
 	 * called. A URL returned by this method will not be stable across sessions and cannot be
 	 * bookmarked by a user.
 	 * 
 	 * @param component
 	 *            The component to reference
 	 * @param behaviour
-	 *            The behaviour to reference
+	 *            The behavior to reference
 	 * @param listener
 	 *            The listener interface on the component
-	 * @return A URL that encodes a page, component, behaviour and interface to call
+	 * @return A URL that encodes a page, component, behavior and interface to call
 	 */
 	public final CharSequence urlFor(final Component component, final IBehavior behaviour,
 			final RequestListenerInterface listener)
@@ -979,7 +979,7 @@ public abstract class RequestCycle
 
 		if (automaticallyClearFeedbackMessages)
 		{
-			// remove any rendered and otherwise obsolute feedback messages from
+			// remove any rendered and otherwise obsolete feedback messages from
 			// the session
 			try
 			{
@@ -1315,7 +1315,7 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Called when an unrecoverable runtime exception during request cycle handling occured, which
+	 * Called when an unrecoverable runtime exception during request cycle handling occurred, which
 	 * will result in displaying a user facing error page. Clients can override this method in case
 	 * they want to customize logging. NOT called for
 	 * {@link PageExpiredException page expired exceptions}.
@@ -1379,7 +1379,7 @@ public abstract class RequestCycle
 	 * 
 	 * @param key
 	 *            The key for the data
-	 * @return The metadata or null of no metadata was found for the given key
+	 * @return The metadata or null if no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
 	public final Serializable getMetaData(final MetaDataKey key)

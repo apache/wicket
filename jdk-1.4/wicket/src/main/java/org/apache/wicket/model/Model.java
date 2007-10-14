@@ -27,9 +27,9 @@ import org.apache.wicket.WicketRuntimeException;
 
 
 /**
- * Model is the basic implementation of an AbstractModel. It just wraps a simple
- * model object. The model object must be serializable, as it is stored in the
- * session. If you have large objects to store, consider using
+ * <code>Model</code> is the basic implementation of an <code>IModel</code>. It just wraps a
+ * simple model object. The model object must be serializable, as it is stored in the session. If
+ * you have large objects to store, consider using
  * {@link org.apache.wicket.model.LoadableDetachableModel} instead of this class.
  * 
  * @author Chris Turner
@@ -89,8 +89,8 @@ public class Model implements IModel
 	}
 
 	/**
-	 * Set the model object; calls setObject(java.io.Serializable). The model
-	 * object must be serializable, as it is stored in the session
+	 * Set the model object; calls setObject(java.io.Serializable). The model object must be
+	 * serializable, as it is stored in the session
 	 * 
 	 * @param object
 	 *            the model object
@@ -109,8 +109,7 @@ public class Model implements IModel
 	}
 
 	/**
-	 * Sets the model object. The model object must be serializable, as it is
-	 * stored in the session
+	 * Sets the model object. The model object must be serializable, as it is stored in the session
 	 * 
 	 * @param object
 	 *            The serializable model object
@@ -135,7 +134,7 @@ public class Model implements IModel
 	{
 		StringBuffer sb = new StringBuffer("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
-		sb.append(":object=[").append(this.object).append("]");
+		sb.append(":object=[").append(object).append("]");
 		return sb.toString();
 	}
 

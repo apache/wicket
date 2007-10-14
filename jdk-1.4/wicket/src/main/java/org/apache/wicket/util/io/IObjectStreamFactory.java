@@ -27,9 +27,8 @@ import org.apache.wicket.util.lang.Objects;
 
 
 /**
- * Interface for serializing and deserializing so that we can very the
- * implementation of the {@link ObjectOutputStream} and
- * {@link ObjectInputStream} implementations.
+ * Interface for serializing and deserializing so that we can vary the implementation of the
+ * {@link ObjectOutputStream} and {@link ObjectInputStream} implementations.
  * 
  * @see Objects#objectToByteArray(Object)
  * @see Objects#byteArrayToObject(byte[])
@@ -84,11 +83,10 @@ public interface IObjectStreamFactory
 	}
 
 	/**
-	 * Gets a new instance of an {@link ObjectInputStream} with the provided
-	 * {@link InputStream}.
+	 * Gets a new instance of an {@link ObjectInputStream} with the provided {@link InputStream}.
 	 * 
 	 * @param in
-	 *            The inpu stream that should be used for the reading
+	 *            The input stream that should be used for the reading
 	 * @return a new object input stream instance
 	 * @throws IOException
 	 *             if an I/O error occurs while reading stream header
@@ -96,8 +94,7 @@ public interface IObjectStreamFactory
 	ObjectInputStream newObjectInputStream(InputStream in) throws IOException;
 
 	/**
-	 * Gets a new instance of an {@link ObjectOutputStream} with the provided
-	 * {@link OutputStream}.
+	 * Gets a new instance of an {@link ObjectOutputStream} with the provided {@link OutputStream}.
 	 * 
 	 * @param out
 	 *            The output stream that should be used for the writing

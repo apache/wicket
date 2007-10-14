@@ -30,7 +30,7 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
  * <p>
  * Object that abstracts common request parameters. It consists of possible
  * optional parameters that can be translated from e.g. servlet request
- * parameters and serves of a strongly typed variant of these that is to be
+ * parameters and serves as a strongly typed variant of these that is to be
  * created by the {@link org.apache.wicket.request.IRequestCycleProcessor}'s
  * {@link org.apache.wicket.request.IRequestCodingStrategy}.
  * </p>

@@ -708,7 +708,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * statefull urls, and components on statefull page must not render any stateless urls.
 	 * Statefull urls are urls, which refer to a certain (current) page instance.
 	 * 
-	 * @return Whether to page is stateless
+	 * @return Whether this page is stateless
 	 */
 	public final boolean isPageStateless()
 	{
@@ -796,7 +796,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				// They must be of type Form as well
 				if (component instanceof Form)
 				{
-					// Delete persistet FormComponent data and disable
+					// Delete persistent FormComponent data and disable
 					// persistence
 					((Form)component).removePersistentFormComponentValues(disablePersistence);
 				}
@@ -1246,11 +1246,11 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * by an application setting (@see ApplicationSettings#getResponseRequestEncoding()). In
 	 * addition, if the page's markup contains a xml declaration like &lt?xml ... ?&gt; an xml
 	 * declaration with proper encoding information is written to the output as well, provided it is
-	 * not disabled by an applicaton setting (@see
+	 * not disabled by an application setting (@see
 	 * ApplicationSettings#getStripXmlDeclarationFromOutput()).
 	 * <p>
 	 * Note: Prior to Wicket 1.1 the output encoding was determined by the page's markup encoding.
-	 * Because this caused uncertainties about the /request/ encoding, it has been changed in favour
+	 * Because this caused uncertainties about the /request/ encoding, it has been changed in favor
 	 * of the new, much safer, approach. Please see the Wiki for more details.
 	 */
 	protected void configureResponse()

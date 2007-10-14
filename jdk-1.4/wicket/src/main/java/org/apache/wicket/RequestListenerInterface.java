@@ -63,16 +63,15 @@ public class RequestListenerInterface
 	private final String name;
 
 	/**
-	 * Whether or not this listener is targetted for a specific page version. If
-	 * recordVersion is true the page will be rolled back to the version which
-	 * created the url, if false the latest version of the page will be used.
+	 * Whether or not this listener is targeted for a specific page version. If recordVersion is
+	 * true the page will be rolled back to the version which created the url, if false the latest
+	 * version of the page will be used.
 	 */
 	private boolean recordsPageVersion = true;
 
 
 	/**
-	 * Constructor that creates listener interfaces which record the page
-	 * version.
+	 * Constructor that creates listener interfaces which record the page version.
 	 * 
 	 * @param listenerInterfaceClass
 	 *            The interface class, which must extend IRequestListener.
@@ -89,17 +88,16 @@ public class RequestListenerInterface
 	 * @param listenerInterfaceClass
 	 *            The interface class, which must extend IRequestListener.
 	 * @param recordsPageVersion
-	 *            Whether or not urls encoded for this interface contain the
-	 *            page version. If set to false the latest page version is
-	 *            always used.
+	 *            Whether or not urls encoded for this interface contain the page version. If set to
+	 *            false the latest page version is always used.
 	 */
 	public RequestListenerInterface(final Class listenerInterfaceClass, boolean recordsPageVersion)
 	{
-		// Ensure that i extends IRequestListener
+		// Ensure that it extends IRequestListener
 		if (!IRequestListener.class.isAssignableFrom(listenerInterfaceClass))
 		{
-			throw new IllegalArgumentException("Class " + listenerInterfaceClass
-					+ " must extend IRequestListener");
+			throw new IllegalArgumentException("Class " + listenerInterfaceClass +
+					" must extend IRequestListener");
 		}
 
 		this.recordsPageVersion = recordsPageVersion;
@@ -113,22 +111,22 @@ public class RequestListenerInterface
 			// and that method takes no parameters
 			if (methods[0].getParameterTypes().length == 0)
 			{
-				this.method = methods[0];
+				method = methods[0];
 			}
 			else
 			{
-				throw new IllegalArgumentException("Method " + methods[0] + " in interface "
-						+ listenerInterfaceClass + " cannot take any arguments");
+				throw new IllegalArgumentException("Method " + methods[0] + " in interface " +
+						listenerInterfaceClass + " cannot take any arguments");
 			}
 		}
 		else
 		{
-			throw new IllegalArgumentException("Interface " + listenerInterfaceClass
-					+ " can have only one method");
+			throw new IllegalArgumentException("Interface " + listenerInterfaceClass +
+					" can have only one method");
 		}
 
 		// Save short class name
-		this.name = Classes.simpleName(listenerInterfaceClass);
+		name = Classes.simpleName(listenerInterfaceClass);
 
 		// Register this listener
 		register();
@@ -151,9 +149,8 @@ public class RequestListenerInterface
 	}
 
 	/**
-	 * @return true if urls encoded for this interface should record the page
-	 *         version, false if they should always be encoded for the latest
-	 *         page version
+	 * @return true if urls encoded for this interface should record the page version, false if they
+	 *         should always be encoded for the latest page version
 	 */
 	public final boolean getRecordsPageVersion()
 	{
@@ -188,21 +185,21 @@ public class RequestListenerInterface
 		catch (InvocationTargetException e)
 		{
 			// Honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException
-					|| e.getTargetException() instanceof AuthorizationException
-					|| e.getTargetException() instanceof WicketRuntimeException)
+			if (e.getTargetException() instanceof AbstractRestartResponseException ||
+					e.getTargetException() instanceof AuthorizationException ||
+					e.getTargetException() instanceof WicketRuntimeException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
-			throw new WicketRuntimeException("Method " + method.getName() + " of "
-					+ method.getDeclaringClass() + " targeted at component " + component
-					+ " threw an exception", e);
+			throw new WicketRuntimeException("Method " + method.getName() + " of " +
+					method.getDeclaringClass() + " targeted at component " + component +
+					" threw an exception", e);
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Method " + method.getName() + " of "
-					+ method.getDeclaringClass() + " targeted at component " + component
-					+ " threw an exception", e);
+			throw new WicketRuntimeException("Method " + method.getName() + " of " +
+					method.getDeclaringClass() + " targeted at component " + component +
+					" threw an exception", e);
 		}
 		finally
 		{
@@ -250,13 +247,11 @@ public class RequestListenerInterface
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * In previous versions of Wicket, request listeners were manually
-	 * registered by calling this method. Now there is a first class
-	 * RequestListenerInterface object which should be constructed as a constant
-	 * member of the interface to enable automatic interface registration.
+	 * In previous versions of Wicket, request listeners were manually registered by calling this
+	 * method. Now there is a first class RequestListenerInterface object which should be
+	 * constructed as a constant member of the interface to enable automatic interface registration.
 	 * <p>
-	 * Adds a request listener interface to the map of interfaces that can be
-	 * invoked by outsiders.
+	 * Adds a request listener interface to the map of interfaces that can be invoked by outsiders.
 	 * 
 	 * @param requestListenerInterface
 	 *            The request listener interface object
@@ -268,13 +263,13 @@ public class RequestListenerInterface
 		// already been registered
 		final RequestListenerInterface existingInterface = RequestListenerInterface
 				.forName(requestListenerInterface.getName());
-		if (existingInterface != null
-				&& existingInterface.getMethod() != requestListenerInterface.getMethod())
+		if (existingInterface != null &&
+				existingInterface.getMethod() != requestListenerInterface.getMethod())
 		{
-			throw new IllegalStateException("Cannot register listener interface "
-					+ requestListenerInterface
-					+ " because it conflicts with the already registered interface "
-					+ existingInterface);
+			throw new IllegalStateException("Cannot register listener interface " +
+					requestListenerInterface +
+					" because it conflicts with the already registered interface " +
+					existingInterface);
 		}
 
 		// Save this interface method by the non-qualified class name

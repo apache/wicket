@@ -561,8 +561,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
 
 	/**
-	 * Ouput a placeholder tag if the component is not visible. This is useful in ajax mode to go to
-	 * visible(false) to visible(true) without the overhead of repaiting a visible parent container
+	 * Output a placeholder tag if the component is not visible. This is useful in ajax mode to go
+	 * to visible(false) to visible(true) without the overhead of repainting a visible parent
+	 * container
 	 */
 
 	private static final int FLAG_PLACEHOLDER = 0x8000;
@@ -756,8 +757,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Called on very component after the page is renderd It will call onAfterRender for it self and
-	 * its childeren.
+	 * Called on very component after the page is rendered. It will call onAfterRender for it self
+	 * and its children.
 	 */
 	public final void afterRender()
 	{
@@ -1123,7 +1124,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets the locale for this component. By default, it searches it parent for a locale. If no
+	 * Gets the locale for this component. By default, it searches its parents for a locale. If no
 	 * parents (it's a recursive search) returns a locale, it gets one from the session.
 	 * 
 	 * @return The locale to be used for this component

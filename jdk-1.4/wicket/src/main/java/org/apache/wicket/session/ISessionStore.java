@@ -28,8 +28,7 @@ import org.apache.wicket.version.IPageVersionManager;
 
 
 /**
- * The actual store that is used by {@link org.apache.wicket.Session} to store
- * its attributes.
+ * The actual store that is used by {@link org.apache.wicket.Session} to store its attributes.
  * 
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -87,32 +86,29 @@ public interface ISessionStore
 	void setAttribute(Request request, String name, Object value);
 
 	/**
-	 * Get the session id for the provided request. It create is false and the
-	 * creation of the actual session is deferred, this method should return
-	 * null to reflect it doesn't have one.
+	 * Get the session id for the provided request. If create is false and the creation of the
+	 * actual session is deferred, this method should return null to reflect it doesn't have one.
 	 * 
 	 * @param request
 	 *            The request
 	 * @param create
-	 *            Whether to create an actual session (typically an instance of
-	 *            {@link HttpSession}) when not already done so
-	 * @return The session id for the provided request, possibly null if create
-	 *         is false and the creation of the actual session was deferred
+	 *            Whether to create an actual session (typically an instance of {@link HttpSession})
+	 *            when not already done so
+	 * @return The session id for the provided request, possibly null if create is false and the
+	 *         creation of the actual session was deferred
 	 */
 	String getSessionId(Request request, boolean create);
 
 	/**
 	 * Retrieves the session for the provided request from this facade.
 	 * <p>
-	 * This method should return null if it is not bound yet, so that Wicket can
-	 * recognize that it should create a session and call
-	 * {@link #bind(Request, Session)} right after that.
+	 * This method should return null if it is not bound yet, so that Wicket can recognize that it
+	 * should create a session and call {@link #bind(Request, Session)} right after that.
 	 * </p>
 	 * 
 	 * @param request
 	 *            The current request
-	 * @return The session for the provided request or null if the session was
-	 *         not bound
+	 * @return The session for the provided request or null if the session was not bound
 	 */
 	Session lookup(Request request);
 
@@ -120,7 +116,7 @@ public interface ISessionStore
 	 * Adds the provided new session to this facade using the provided request.
 	 * 
 	 * @param request
-	 *            The request that triggered making a new sesion
+	 *            The request that triggered making a new session
 	 * @param newSession
 	 *            The new session
 	 */
@@ -130,13 +126,13 @@ public interface ISessionStore
 	 * Removes a session from this facade
 	 * 
 	 * @param sessionId
-	 *            The id of the session that must be unbinded.
+	 *            The id of the session that must be unbound.
 	 */
 	void unbind(String sessionId);
 
 	/**
-	 * Called at the start of a request. It can be used for example to rebuild
-	 * server state from the client request.
+	 * Called at the start of a request. It can be used for example to rebuild server state from the
+	 * client request.
 	 * 
 	 * @param request
 	 *            The request object
@@ -144,8 +140,8 @@ public interface ISessionStore
 	void onBeginRequest(Request request);
 
 	/**
-	 * Called at the end of a request. It can be used for instance to release
-	 * temporary server state when using client state saving.
+	 * Called at the end of a request. It can be used for instance to release temporary server state
+	 * when using client state saving.
 	 * 
 	 * @param request
 	 *            The request

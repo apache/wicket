@@ -24,7 +24,7 @@ import org.apache.wicket.request.RequestParameters;
 
 /**
  * Target that denotes a page instance and a call to a component on that page
- * using an listener interface method.
+ * using a listener interface method.
  * 
  * @author Eelco Hillenius
  */

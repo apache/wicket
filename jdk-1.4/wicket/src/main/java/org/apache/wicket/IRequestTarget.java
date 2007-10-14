@@ -18,19 +18,17 @@ package org.apache.wicket;
 
 /**
  * <p>
- * A request target is the base entity that is the subject of a request.
- * Different types of request have different request targets. For instance a
- * request for a bookmarkable page differs from a request for a link on a
- * previously rendered page, which in turn differs from a request for a shared
- * resource.
+ * A request target is the base entity that is the subject of a request. Different types of request
+ * have different request targets. For instance a request for a bookmarkable page differs from a
+ * request for a link on a previously rendered page, which in turn differs from a request for a
+ * shared resource.
  * </p>
  * <p>
  * It is very important (for mounting) that implementations implement
- * {@link java.lang.Object#equals(java.lang.Object)} and
- * {@link java.lang.Object#hashCode()} in a consistent way.
+ * {@link java.lang.Object#equals(java.lang.Object)} and {@link java.lang.Object#hashCode()} in a
+ * consistent way.
  * </p>
- * Typically, implementations of IRequestTarget are not meant to be used more
- * than once.
+ * Typically, implementations of IRequestTarget are not meant to be used more than once.
  * 
  * @author Eelco Hillenius
  */
@@ -45,9 +43,8 @@ public interface IRequestTarget
 	void respond(RequestCycle requestCycle);
 
 	/**
-	 * This method is alled on the end of a request cycle to indicate that
-	 * processing is done and that cleaning up of the subject(s) of this target
-	 * may be done.
+	 * This method is called at the end of a request cycle to indicate that processing is done and
+	 * that cleaning up of the subject(s) of this target may be done.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle

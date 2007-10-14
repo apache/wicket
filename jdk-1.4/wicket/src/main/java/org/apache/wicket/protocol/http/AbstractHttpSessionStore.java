@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract implementation of {@link ISessionStore} that works with web applications and that
- * provided some speficic http servlet/ session related functionality.
+ * provided some specific http servlet/ session related functionality.
  * 
  * @author jcompagner
  * @author Eelco Hillenius
@@ -284,7 +284,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 * <p>
 	 * WARNING: it is a bad idea to depend on the http session object directly. Please use the
 	 * classes and methods that are exposed by Wicket instead. Send an email to the mailing list in
-	 * case it is not clear how to do things or you think you miss funcionality which causes you to
+	 * case it is not clear how to do things or you think you miss functionality which causes you to
 	 * depend on this directly.
 	 * </p>
 	 * 
