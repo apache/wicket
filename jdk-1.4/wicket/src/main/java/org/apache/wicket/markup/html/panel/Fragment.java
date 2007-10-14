@@ -33,7 +33,8 @@ import org.apache.wicket.version.undo.Change;
  * is a bit awkward to maintain tiny pieces of markup in plenty of panel markup files. Use cases are
  * for example list views where list items are different depending on a state.
  * <p>
- * Fragments provide a means to maintain the panels tiny piece of markup in the parents markup file.
+ * Fragments provide a means to maintain the panels tiny piece of markup. Since it can be anywhere,
+ * the component whose markup contains the fragment's markup must be provided (markup provider).
  * <p>
  * 
  * <pre>
@@ -43,7 +44,7 @@ import org.apache.wicket.version.undo.Change;
  *  &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *  add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *  add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;, myPage);
  * </pre>
  * 
  * @author Juergen Donnerstag
