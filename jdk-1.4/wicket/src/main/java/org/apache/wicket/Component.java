@@ -1278,7 +1278,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets a model object as a string.
+	 * Gets a model object as a string. Depending on the "escape model strings" flag of the
+	 * component, the string is either HTML escaped or not. "HTML escaped" meaning that only HTML
+	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
+	 * instead. In case you realy need a fully escaped model string you may call
+	 * {@link Strings#escapeMarkup(String, boolean, boolean)} on the model string returned.
+	 * 
+	 * @see Strings#escapeMarkup(String, boolean, boolean)
+	 * @see #getEscapeModelStrings()
 	 * 
 	 * @return Model object for this component as a string
 	 */
@@ -1288,6 +1295,15 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
+	 * Gets a model object as a string. Depending on the "escape model strings" flag of the
+	 * component, the string is either HTML escaped or not. "HTML escaped" meaning that only HTML
+	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
+	 * instead. In case you realy need a fully escaped model string you may call
+	 * {@link Strings#escapeMarkup(String, boolean, boolean)} on the model string returned.
+	 * 
+	 * @see Strings#escapeMarkup(String, boolean, boolean)
+	 * @see #getEscapeModelStrings()
+	 * 
 	 * @param modelObject
 	 *            Model object to convert to string
 	 * @return The string
@@ -1307,8 +1323,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 				// If we should escape the markup
 				if (getFlag(FLAG_ESCAPE_MODEL_STRINGS))
 				{
-					// Escape it
-					return Strings.escapeMarkup(modelString, false, true).toString();
+					// Escape HTML sensitive characters only. Not all none-ascii chars
+					return Strings.escapeMarkup(modelString, false, false).toString();
 				}
 				return modelString;
 			}
