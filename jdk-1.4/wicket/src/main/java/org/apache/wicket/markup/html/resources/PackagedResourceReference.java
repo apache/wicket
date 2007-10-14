@@ -38,8 +38,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param id
 	 *            component id
 	 * @param referer
-	 *            the class that is refering; is used as the relative root for
-	 *            gettting the resource
+	 *            the class that is refering; is used as the relative root for gettting the resource
 	 * @param file
 	 *            relative location of the packaged file
 	 * @param attributeToReplace
@@ -57,11 +56,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param id
 	 *            component id
 	 * @param referer
-	 *            the class that is refering; is used as the relative root for
-	 *            gettting the resource
+	 *            the class that is refering; is used as the relative root for gettting the resource
 	 * @param file
-	 *            model that supplies the relative location of the packaged
-	 *            file. Must return an instance of {@link String}
+	 *            model that supplies the relative location of the packaged file. Must return an
+	 *            instance of {@link String}
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
@@ -94,12 +92,12 @@ public class PackagedResourceReference extends WebMarkupContainer
 				{
 					throw new IllegalArgumentException("The model must provide a non-null object");
 				}
-				if ( !( o instanceof String) )
+				if (!(o instanceof String))
 				{
 					throw new IllegalArgumentException("The model must provide a string");
 				}
 				String f = getConverter(String.class).convertToString(o, getLocale());
-				ResourceReference ref = new ResourceReference(referer, f);
+				ResourceReference ref = new ResourceReference(referer, f, getLocale(), getStyle());
 				return urlFor(ref);
 			}
 		};
@@ -172,8 +170,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 				Object o = resourceReference.getObject();
 				if (o == null)
 				{
-					throw new IllegalArgumentException(
-							"The model must provide a non-null object");
+					throw new IllegalArgumentException("The model must provide a non-null object");
 				}
 				if (!(o instanceof ResourceReference))
 				{
