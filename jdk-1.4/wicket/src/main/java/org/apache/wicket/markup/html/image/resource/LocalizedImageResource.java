@@ -209,7 +209,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 */
 	public final void setResourceReference(final ResourceReference resourceReference)
 	{
-		setResourceReference(resourceReference, null);
+		setResourceReference(resourceReference, resourceParameters);
 	}
 
 	/**
