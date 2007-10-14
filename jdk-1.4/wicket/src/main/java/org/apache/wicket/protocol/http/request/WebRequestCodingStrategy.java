@@ -830,7 +830,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 					buffer.append(entry.getValue());
 					if (it.hasNext())
 					{
-						buffer.append("&amp;");
+						buffer.append('&');
 					}
 				}
 			}
