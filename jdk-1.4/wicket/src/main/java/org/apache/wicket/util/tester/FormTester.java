@@ -49,22 +49,24 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * A helper for testing validation and submission of Form component.
- *
+ * A helper class for testing validation and submission of
+ * <code>FormComponent</code>s.
+ * 
  * @author Ingram Chen
  * @author Frank Bille (frankbille)
+ * @since 1.2.6
  */
 public class FormTester
 {
 	/**
-	 * A selector template for selecting seletable form component via index of
-	 * option, support RadioGroup, CheckGroup, and AbstractChoice family.
-	 *
+	 * A selector template for selecting selectable <code>FormComponent</code>s
+	 * with an index of option -- supports <code>RadioGroup</code>,
+	 * <code>CheckGroup</code>, and <code>AbstractChoice</code> family.
 	 */
 	protected abstract class ChoiceSelector
 	{
 		/**
-		 * ???
+		 * TODO need Javadoc from author.
 		 */
 		private final class SearchOptionByIndexVisitor implements IVisitor
 		{
@@ -98,9 +100,9 @@ public class FormTester
 		private final FormComponent formComponent;
 
 		/**
-		 * Construct.
+		 * Constructor.
 		 *
-		 * @param formComponent
+		 * @param formComponent a <code>FormComponent</code>
 		 */
 		protected ChoiceSelector(FormComponent formComponent)
 		{
@@ -108,14 +110,17 @@ public class FormTester
 		}
 
 		/**
-		 * implement whether toggle or cumulate selection
-		 *
+		 * Implements whether toggle or accumulate the selection.
+		 * 
 		 * @param formComponent
+		 *            a <code>FormComponent</code>
 		 * @param value
+		 *            a <code>String</code> value
 		 */
 		protected abstract void assignValueToFormComponent(FormComponent formComponent, String value);
 
 		/**
+		 * Selects a given index in a selectable <code>FormComponent</code>.
 		 *
 		 * @param index
 		 */
@@ -127,7 +132,7 @@ public class FormTester
 						new SearchOptionByIndexVisitor(index));
 				if (foundRadio == null)
 				{
-					fail("RadioGroup " + formComponent.getPath() + " does not has index:"
+					fail("RadioGroup " + formComponent.getPath() + " does not have index:"
 							+ index);
 				}
 				assignValueToFormComponent(formComponent, foundRadio.getValue());
@@ -149,7 +154,7 @@ public class FormTester
 				String idValue = selectAbstractChoice(formComponent, index);
 				if (idValue == null)
 				{
-					fail(formComponent.getPath() + " is not selectable component.");
+					fail(formComponent.getPath() + " is not a selectable Component.");
 				}
 				else
 				{
@@ -159,9 +164,13 @@ public class FormTester
 		}
 
 		/**
+		 * Selects a given index in a selectable <code>FormComponent</code>.
+		 * 
 		 * @param formComponent
+		 *            a <code>FormComponent</code>
 		 * @param index
-		 * @return xxx
+		 *            the index to select
+		 * @return the id value at the selected index
 		 */
 		private String selectAbstractChoice(FormComponent formComponent, final int index)
 		{
@@ -202,20 +211,20 @@ public class FormTester
 	}
 
 	/**
-	 * A Factory to create appropriate ChoiceSelector based on type of
-	 * formComponent
+	 * A factory that creates an appropriate <code>ChoiceSelector</code> based
+	 * on type of <code>FormComponent</code>.
 	 */
 	private class ChoiceSelectorFactory
 	{
 		/**
-		 *
+		 * <code>MultipleChoiceSelector</code> class.
 		 */
 		private final class MultipleChoiceSelector extends ChoiceSelector
 		{
 			/**
-			 * Construct.
+			 * Constructor.
 			 *
-			 * @param formComponent
+			 * @param formComponent a <code>FormComponent</code>
 			 */
 			protected MultipleChoiceSelector(FormComponent formComponent)
 			{
@@ -240,14 +249,14 @@ public class FormTester
 		}
 
 		/**
-		 *
+		 * <code>SingleChoiceSelector</code> class.
 		 */
 		private final class SingleChoiceSelector extends ChoiceSelector
 		{
 			/**
-			 * Construct.
+			 * Constructor.
 			 *
-			 * @param formComponent
+			 * @param formComponent a <code>FormComponent</code>
 			 */
 			protected SingleChoiceSelector(FormComponent formComponent)
 			{
@@ -255,7 +264,6 @@ public class FormTester
 			}
 
 			/**
-			 *
 			 * @see org.apache.wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(org.apache.wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
@@ -267,9 +275,11 @@ public class FormTester
 		}
 
 		/**
-		 *
+		 * Creates a <code>ChoiceSelector</code>.
+		 * 
 		 * @param formComponent
-		 * @return ChoiceSelector
+		 *            a <code>FormComponent</code>
+		 * @return ChoiceSelector a <code>ChoiceSelector</code>
 		 */
 		protected ChoiceSelector create(FormComponent formComponent)
 		{
@@ -296,9 +306,11 @@ public class FormTester
 		}
 
 		/**
-		 *
+		 * Creates a <code>MultipleChoiceSelector</code>.
+		 * 
 		 * @param formComponent
-		 * @return ChoiceSelector
+		 *            a <code>FormComponent</code>
+		 * @return ChoiceSelector a <code>ChoiceSelector</code>
 		 */
 		protected ChoiceSelector createForMultiple(FormComponent formComponent)
 		{
@@ -306,9 +318,12 @@ public class FormTester
 		}
 
 		/**
-		 *
+		 * Tests if a given <code>FormComponent</code> allows multiple choice.
+		 * 
 		 * @param formComponent
-		 * @return boolean
+		 *            a <code>FormComponent</code>
+		 * @return <code>true</code> if the given FormComponent allows
+		 *         multiple choice
 		 */
 		private boolean allowMultipleChoice(FormComponent formComponent)
 		{
@@ -320,32 +335,33 @@ public class FormTester
 	private final ChoiceSelectorFactory choiceSelectorFactory = new ChoiceSelectorFactory();
 
 	/**
-	 * An instance of FormTester can only be used once. Create a new instance of
-	 * each test
+	 * An instance of <code>FormTester</code> can only be used once. Create a
+	 * new instance of each test.
 	 */
 	private boolean closed = false;
 
-	/** path to form component */
+	/** path to <code>FormComponent</code> */
 	private final String path;
 
-	/** baseWicketTester that create FormTester */
+	/** <code>BaseWicketTester</code> that create <code>FormTester</code> */
 	private final BaseWicketTester baseWicketTester;
 
-	/** form component to be test */
+	/** <code>FormComponent</code> to be tested */
 	private final Form workingForm;
 
 	/**
 	 * @see WicketTester#newFormTester(String)
-	 *
+	 * 
 	 * @param path
-	 *            path to form component
+	 *            path to <code>FormComponent</code>
 	 * @param workingForm
-	 *            form component to be test
+	 *            <code>FormComponent</code> to be tested
 	 * @param wicketTester
-	 *            wicketTester that create FormTester
+	 *            <code>WicketTester</code> that creates
+	 *            <code>FormTester</code>
 	 * @param fillBlankString
-	 *            specify whether filling child Text Components with blank
-	 *            String
+	 *            specifies whether to fill child <code>TextComponent</code>s
+	 *            with blank <code>String</code>s
 	 */
 	protected FormTester(final String path, final Form workingForm,
 			final BaseWicketTester wicketTester, final boolean fillBlankString)
@@ -417,7 +433,9 @@ public class FormTester
 	}
 
 	/**
-	 * @return work form
+	 * Retrieves the current <code>Form</code> object.
+	 * 
+	 * @return the working <code>Form</code>
 	 */
 	public Form getForm()
 	{
@@ -425,11 +443,12 @@ public class FormTester
 	}
 
 	/**
-	 * Gets value for text component with provided id.
-	 *
+	 * Gets the value for an <code>AbstractTextComponent</code> with the
+	 * provided id.
+	 * 
 	 * @param id
-	 *            Component's id
-	 * @return value text component
+	 *            <code>Component</code> id
+	 * @return the value of the text component
 	 */
 	public String getTextComponentValue(String id)
 	{
@@ -442,16 +461,19 @@ public class FormTester
 	}
 
 	/**
-	 * simulate selecting an option of a Form Component. Support RadioGroup,
-	 * CheckGroup, and AbstractChoice family currently. The behavior is similar
-	 * to interacting on the browser: For single choice, such as Radio or
-	 * DropDownList, the selection will toggle each other. For multiple choice,
-	 * such as Checkbox or ListMultipleChoice, the selection will cumulate.
-	 *
+	 * Simulates selecting an option of a <code>FormComponent</code>.
+	 * Supports <code>RadioGroup</code>, <code>CheckGroup</code>, and
+	 * <code>AbstractChoice</code> family currently. The behavior is similar
+	 * to interacting on the browser: For a single choice, such as
+	 * <code>Radio</code> or <code>DropDownList</code>, the selection will
+	 * toggle each other. For multiple choice, such as <code>Checkbox</code>
+	 * or <code>ListMultipleChoice</code>, the selection will accumulate.
+	 * 
 	 * @param formComponentId
-	 *            relative path (from form) to selectable formComponent
+	 *            relative path (from <code>Form</code>) to the selectable
+	 *            <code>FormComponent</code>
 	 * @param index
-	 *            index of selectable option, start from 0
+	 *            index of the selectable option, starting from 0
 	 */
 	public void select(String formComponentId, int index)
 	{
@@ -479,15 +501,17 @@ public class FormTester
 	}
 
 	/**
-	 * A convenient method to select multiple options for the form component.
-	 * The method only support multiple selectable form component.
-	 *
+	 * A convenience method to select multiple options for the
+	 * <code>FormComponent</code>. The method only support multiple
+	 * selectable <code>FormComponent</code>s.
+	 * 
 	 * @see #select(String, int)
-	 *
+	 * 
 	 * @param formComponentId
-	 *            relative path (from form) to selectable formComponent
+	 *            relative path (from <code>Form</code>) to the selectable
+	 *            <code>FormComponent</code>
 	 * @param indexes
-	 *            index of selectable option, start from 0
+	 *            index of the selectable option, starting from 0
 	 */
 	public void selectMultiple(String formComponentId, int[] indexes)
 	{
@@ -503,12 +527,13 @@ public class FormTester
 	}
 
 	/**
-	 * simulate filling a field of a Form.
-	 *
+	 * Simulates filling in a field on a <code>Form</code>.
+	 * 
 	 * @param formComponentId
-	 *            relative path (from form) to formComponent
+	 *            relative path (from <code>Form</code>) to the selectable
+	 *            <code>FormComponent</code>
 	 * @param value
-	 *            field value of form.
+	 *            the field value
 	 */
 	public void setValue(final String formComponentId, final String value)
 	{
@@ -519,15 +544,16 @@ public class FormTester
 	}
 
 	/**
-	 * Set the file on a {@link FileUploadField}.
-	 *
+	 * Sets the <code>File</code> on a {@link FileUploadField}.
+	 * 
 	 * @param formComponentId
-	 *            relative path (from form) to formComponent. The form component
-	 *            must be of a type FileUploadField.
+	 *            relative path (from <code>Form</code>) to the selectable
+	 *            <code>FormComponent</code>. The <code>FormComponent</code>
+	 *            must be of a type <code>FileUploadField</code>.
 	 * @param file
-	 *            The file to upload.
+	 *            the <code>File</code> to upload.
 	 * @param contentType
-	 *            The content type of the file. Must be a correct mimetype.
+	 *            the content type of the file. Must be a valid mime type.
 	 */
 	public void setFile(final String formComponentId, final File file, final String contentType)
 	{
@@ -547,7 +573,8 @@ public class FormTester
 	}
 
 	/**
-	 * submit the form. note that submit() can be executed only once.
+	 * Submits the <code>Form</code>. Note that <code>submit</code> can be
+	 * executed only once.
 	 */
 	public void submit()
 	{
@@ -591,18 +618,19 @@ public class FormTester
 	}
 
 	/**
-	 * A convenient method to submit form with alternative button.
-	 *
-	 * Note that if the button associates with a model, it's better to use
-	 * setValue() instead:
-	 *
+	 * A convenience method for submitting the <code>Form</code> with an
+	 * alternate button.
+	 * <p>
+	 * Note that if the button is associated with a model, it's better to use
+	 * the <code>setValue</code> method instead:
+	 * 
 	 * <pre>
 	 * formTester.setValue(&quot;to:my:button&quot;, &quot;value on the button&quot;);
 	 * formTester.submit();
 	 * </pre>
-	 *
+	 * 
 	 * @param buttonComponentId
-	 *            relative path (from form) to the button
+	 *            relative path (from <code>Form</code>) to the button
 	 */
 	public void submit(String buttonComponentId)
 	{
@@ -611,11 +639,14 @@ public class FormTester
 	}
 
 	/**
-	 * add additional formComponent's value into request parameter, this method
-	 * retain exist parameters but remove any duplicated parameters.
-	 *
+	 * Adds an additional <code>FormComponent</code>'s value into request
+	 * parameter -- this method retains existing parameters but removes any
+	 * duplicate parameters.
+	 * 
 	 * @param formComponent
+	 *            a <code>FormComponent</code>
 	 * @param value
+	 *            a value to add
 	 */
 	private void addFormComponentValue(FormComponent formComponent, String value)
 	{
@@ -637,8 +668,8 @@ public class FormTester
 	}
 
 	/**
-	 * FormTester must only be used once. Create a new instance of FormTester
-	 * for each test.
+	 * <code>FormTester</code> must only be used once. Create a new instance
+	 * of <code>FormTester</code> for each test.
 	 */
 	private void checkClosed()
 	{
@@ -651,9 +682,13 @@ public class FormTester
 	}
 
 	/**
-	 *
+	 * Returns <code>true</code> if the parameter exists in the
+	 * <code>FormComponent</code>.
+	 * 
 	 * @param formComponent
-	 * @return Boolean
+	 *            a <code>FormComponent</code>
+	 * @return <code>true</code> if the parameter exists in the
+	 *         <code>FormComponent</code>
 	 */
 	private boolean parameterExist(FormComponent formComponent)
 	{
@@ -663,11 +698,13 @@ public class FormTester
 	}
 
 	/**
-	 * set formComponent's value into request parameter, this method overwrites
-	 * exist parameters.
-	 *
+	 * Set formComponent's value into request parameter, this method overwrites
+	 * existing parameters.
+	 * 
 	 * @param formComponent
+	 *            a <code>FormComponent</code>
 	 * @param value
+	 *            a value to add
 	 */
 	private void setFormComponentValue(FormComponent formComponent, String value)
 	{

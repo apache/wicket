@@ -30,14 +30,18 @@ import org.apache.wicket.Component.IVisitor;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A WicketTester specific helper class
+ * A <code>WicketTester</code>-specific helper class.
  * 
  * @author Ingram Chen
+ * @since 1.2.6
  */
 public class WicketTesterHelper
 {
 	/**
+	 * <code>ComponentData</code> class.
 	 * 
+	 * @author Ingram Chen
+	 * @since 1.2.6
 	 */
 	public static class ComponentData implements IClusterable
 	{
@@ -54,11 +58,13 @@ public class WicketTesterHelper
 	}
 
 	/**
-	 * Get recursively all components of the page, extract the information
-	 * relevant for us and add them to a list.
+	 * Gets recursively all <code>Component</code>s of a given
+	 * <code>Page</code>, extracts the information relevant to us, and adds
+	 * them to a <code>List</code>.
 	 * 
 	 * @param page
-	 * @return List of component data objects
+	 *            the <code>Page</code> to analyze
+	 * @return a <code>List</code> of <code>Component</code> data objects
 	 */
 	public static List getComponentData(final Page page)
 	{
@@ -102,10 +108,12 @@ public class WicketTesterHelper
 	}
 
 	/**
-	 * Assert both collections contain the same elements
+	 * Asserts that both <code>Collection</code>s contain the same elements.
 	 * 
 	 * @param expects
+	 *            a <code>Collection</code> object
 	 * @param actuals
+	 *            a <code>Collection</code> object
 	 */
 	public static void assertEquals(final Collection expects, final Collection actuals)
 	{
@@ -116,10 +124,12 @@ public class WicketTesterHelper
 	}
 
 	/**
-	 * Fail with a verbose error message
+	 * Fails with a verbose error message.
 	 * 
 	 * @param expects
+	 *            a <code>Collection</code> object
 	 * @param actuals
+	 *            a <code>Collection</code> object
 	 */
 	public static void failWithVerboseMessage(final Collection expects, final Collection actuals)
 	{
@@ -128,10 +138,12 @@ public class WicketTesterHelper
 	}
 
 	/**
-	 * toString() for the collection provided.
+	 * A <code>toString</code> method for the given <code>Collection</code>.
 	 * 
 	 * @param objects
-	 * @return String
+	 *            a <code>Collection</code> object
+	 * @return a <code>String</code> representation of the
+	 *         <code>Collection</code>
 	 */
 	public static String asLined(final Collection objects)
 	{

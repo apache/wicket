@@ -17,7 +17,10 @@
 package org.apache.wicket.util.tester;
 
 /**
- *
+ * A <code>Result</code> class.
+ * 
+ * @author unknown
+ * @since 1.2.6
  */
 public class Result
 {
@@ -38,8 +41,11 @@ public class Result
 	}
 
 	/**
-	 * @param message the error message for the user
-	 * @return a Result which failed
+	 * Returns a <code>Result</code> which failed.
+	 * 
+	 * @param message
+	 *            an error message
+	 * @return a <code>Result</code> which failed
 	 */
 	static Result fail(String message)
 	{
@@ -47,7 +53,9 @@ public class Result
 	}
 
 	/**
-	 * @return a Result which passed
+	 * Returns a <code>Result</code> which passed.
+	 * 
+	 * @return a <code>Result</code> which passed
 	 */
 	static Result pass()
 	{
@@ -55,7 +63,9 @@ public class Result
 	}
 
 	/**
-	 * @return true if the result was failed
+	 * Returns <code>true</code> if the <code>Result</code> was a failure.
+	 * 
+	 * @return <code>true</code> if the <code>Result</code> was a failure
 	 */
 	public boolean wasFailed()
 	{
@@ -63,7 +73,9 @@ public class Result
 	}
 
 	/**
-	 * @return the error message for the user
+	 * Retrieves the error message.
+	 * 
+	 * @return the error message
 	 */
 	public String getMessage()
 	{

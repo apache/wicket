@@ -20,19 +20,22 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * A test panel factory for WicketTester
+ * A test <code>Panel</code> factory for <code>WicketTester</code>.
  * 
  * @author Ingram Chen
+ * @since 1.2.6
  */
 public interface TestPanelSource extends IClusterable
 {
 	/**
-	 * Define a panel instance source for WicketTester
+	 * Defines a <code>Panel</code> instance source for
+	 * <code>WicketTester</code>.
 	 * 
 	 * @param panelId
-	 *            panelId of the testing panel
-	 * @return Panel testing panel instance, note that testing panel's
-	 *         componentId must use supplied <code>panelId</code>.
+	 *            <code>Component</code> id of the test <code>Panel</code>
+	 * @return test <code>Panel</code> instance -- note that the test
+	 *         <code>Panel</code>'s <code>Component</code> id must use the
+	 *         given <code>panelId</code>.
 	 */
 	Panel getTestPanel(final String panelId);
 }

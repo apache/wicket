@@ -19,20 +19,23 @@ package org.apache.wicket.util.tester;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
- * A dummy panel component
+ * A dummy <code>Panel</code> Component.
  * 
  * @author Ingram Chen
+ * @since 1.2.6
  */
 public class DummyPanelPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The dummy panels component id */
+	/** The dummy <code>Panel</code> <code>Component</code> id */
 	public static final String TEST_PANEL_ID = "panel";
 
 	/**
+	 * Constructor.
 	 * 
 	 * @param testPanelSource
+	 *            a <code>TestPanelSource</code>
 	 */
 	public DummyPanelPage(final TestPanelSource testPanelSource)
 	{

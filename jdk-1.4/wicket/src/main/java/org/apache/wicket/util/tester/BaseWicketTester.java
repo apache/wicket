@@ -65,43 +65,42 @@ import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * A helper to ease unit testing of Wicket applications without the need for a servlet container.
- * See javadoc of WicketTester for example usage. This class can be used as is, but JUnit users
- * should use derived class WicketTester.
+ * A helper class to ease unit testing of Wicket applications without the need
+ * for a servlet container. See javadoc of <code>WicketTester</code> for
+ * example usage. This class can be used as is, but JUnit users should use
+ * derived class <code>WicketTester</code>.
  * 
  * @see WicketTester
  * 
  * @author Ingram Chen
  * @author Juergen Donnerstag
  * @author Frank Bille
+ * @since 1.2.6
  */
-public class BaseWicketTester extends MockWebApplication
-{
+public class BaseWicketTester extends MockWebApplication {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(BaseWicketTester.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(BaseWicketTester.class);
 
 	/**
 	 * @author jcompagner
 	 */
-	private static final class TestPageSource implements ITestPageSource
-	{
+	private static final class TestPageSource implements ITestPageSource {
 		private final Page page;
+
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Construct.
+		 * Constructor.
 		 * 
 		 * @param page
 		 */
-		private TestPageSource(Page page)
-		{
+		private TestPageSource(Page page) {
 			this.page = page;
 		}
 
-		public Page getTestPage()
-		{
+		public Page getTestPage() {
 			return page;
 		}
 	}
@@ -109,59 +108,53 @@ public class BaseWicketTester extends MockWebApplication
 	/**
 	 * @author frankbille
 	 */
-	public static class DummyWebApplication extends WebApplication
-	{
-		public Class getHomePage()
-		{
+	public static class DummyWebApplication extends WebApplication {
+		public Class getHomePage() {
 			return DummyHomePage.class;
 		}
 
-		protected void outputDevelopmentModeWarning()
-		{
+		protected void outputDevelopmentModeWarning() {
 			// Do nothing.
 		}
 
-		protected ISessionStore newSessionStore()
-		{
-			// Don't use a filestore, or we spawn lots of threads, which makes things slow.
+		protected ISessionStore newSessionStore() {
+			// Don't use a filestore, or we spawn lots of threads, which makes
+			// things slow.
 			return new HttpSessionStore(this);
 		}
 	}
 
 	/**
-	 * Create WicketTester and automatically create a WebApplication, but the tester will have no
-	 * home page.
+	 * Creates <code>WicketTester</code> and automatically create a
+	 * <code>WebApplication</code>, but the tester will have no home page.
 	 */
-	public BaseWicketTester()
-	{
+	public BaseWicketTester() {
 		this(new DummyWebApplication(), null);
 	}
 
 	/**
-	 * Create WicketTester and automatically create a WebApplication.
+	 * Creates <code>WicketTester</code> and automatically creates a
+	 * <code>WebApplication</code>.
 	 * 
 	 * @param homePage
+	 *            a home page <code>Class</code>
 	 */
-	public BaseWicketTester(final Class homePage)
-	{
-		this(new WebApplication()
-		{
+	public BaseWicketTester(final Class homePage) {
+		this(new WebApplication() {
 			/**
 			 * @see org.apache.wicket.Application#getHomePage()
 			 */
-			public Class getHomePage()
-			{
+			public Class getHomePage() {
 				return homePage;
 			}
 
-			protected void outputDevelopmentModeWarning()
-			{
+			protected void outputDevelopmentModeWarning() {
 				// Do nothing.
 			}
 
-			protected ISessionStore newSessionStore()
-			{
-				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
+			protected ISessionStore newSessionStore() {
+				// Don't use a filestore, or we spawn lots of threads, which
+				// makes things slow.
 				return new HttpSessionStore(this);
 			}
 
@@ -169,43 +162,42 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Create WicketTester
+	 * Creates a <code>WicketTester</code>.
 	 * 
 	 * @param application
-	 *            The wicket tester object
+	 *            a <code>WicketTester</code> <code>WebApplication</code>
+	 *            object
 	 */
-	public BaseWicketTester(final WebApplication application)
-	{
+	public BaseWicketTester(final WebApplication application) {
 		this(application, null);
 	}
 
 	/**
-	 * Create WicketTester to help unit testing
+	 * Creates a <code>WicketTester</code> for unit testing.
 	 * 
 	 * @param application
-	 *            The wicket tester object
+	 *            a <code>WicketTester</code> <code>WebApplication</code>
+	 *            object
 	 * @param path
-	 *            The absolute path on disk to the web application contents (e.g. war root) - may be
-	 *            null
+	 *            the absolute path on disk to the <code>WebApplication</code>'s
+	 *            contents (e.g. war root) - may be <code>null</code>
 	 * 
 	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(
 	 *      org.apache.wicket.protocol.http.WebApplication, String)
 	 */
-	public BaseWicketTester(final WebApplication application, final String path)
-	{
+	public BaseWicketTester(final WebApplication application, final String path) {
 		super(application, path);
 	}
 
 	/**
-	 * Render a page defined in <code>TestPageSource</code>. This is usually used when a page
-	 * does not have default constructor. For example, a <code>ViewBook</code> page requires a
-	 * <code>Book</code> instance:
+	 * Renders a <code>Page</code> defined in <code>TestPageSource</code>.
+	 * This is usually used when a page does not have default constructor. For
+	 * example, a <code>ViewBook</code> page requires a <code>Book</code>
+	 * instance:
 	 * 
 	 * <pre>
-	 * tester.startPage(new TestPageSource()
-	 * {
-	 * 	public Page getTestPage()
-	 * 	{
+	 * tester.startPage(new TestPageSource() {
+	 * 	public Page getTestPage() {
 	 * 		Book mockBook = new Book(&quot;myBookName&quot;);
 	 * 		return new ViewBook(mockBook);
 	 * 	}
@@ -213,13 +205,13 @@ public class BaseWicketTester extends MockWebApplication
 	 * </pre>
 	 * 
 	 * @param testPageSource
-	 *            a page factory that creating test page instance
-	 * @return Page rendered page
+	 *            a <code>Page</code> factory that creates a test page
+	 *            instance
+	 * @return the rendered Page
 	 */
-	public final Page startPage(final ITestPageSource testPageSource)
-	{
+	public final Page startPage(final ITestPageSource testPageSource) {
 		startPage(DummyHomePage.class);
-		DummyHomePage page = (DummyHomePage)getLastRenderedPage();
+		DummyHomePage page = (DummyHomePage) getLastRenderedPage();
 		page.setTestPageSource(testPageSource);
 
 		executeListener(page.getTestPageLink());
@@ -227,27 +219,27 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Builds and processes a request suitable for invoking a listener. The component must implement
-	 * any of the known *Listener interfaces.
+	 * Builds and processes a request suitable for invoking a listener. The
+	 * <code>Component</code> must implement any of the known
+	 * <code>IListener</code> interfaces.
 	 * 
 	 * @param component
 	 *            the listener to invoke
 	 */
-	public void executeListener(Component component)
-	{
+	public void executeListener(Component component) {
 		setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
 		processRequestCycle();
 	}
 
 	/**
-	 * Builds and processes a request suitable for executing an ajax behavior.
+	 * Builds and processes a request suitable for executing an
+	 * <code>AbstractAjaxBehavior</code>.
 	 * 
 	 * @param behavior
-	 *            the ajax behavior to execute
+	 *            an <code>AbstractAjaxBehavior</code> to execute
 	 */
-	public void executeBehavior(final AbstractAjaxBehavior behavior)
-	{
+	public void executeBehavior(final AbstractAjaxBehavior behavior) {
 		// setupRequestAndResponse();
 		WebRequestCycle cycle = createRequestCycle();
 		CharSequence url = behavior.getCallbackUrl(false);
@@ -258,71 +250,71 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Render the page
+	 * Renders the <code>Page</code>.
 	 * 
 	 * @param page
-	 * @return The page rendered
+	 *            a <code>Page</code> to render
+	 * @return the rendered <code>Page</code>
 	 */
-	public final Page startPage(final Page page)
-	{
+	public final Page startPage(final Page page) {
 		return startPage(new TestPageSource(page));
 	}
 
 	/**
-	 * Render a page from its default constructor.
+	 * Renders a <code>Page</code> from its default constructor.
 	 * 
 	 * @param pageClass
-	 *            a test page class with default constructor
-	 * @return Page Rendered Page
+	 *            a test <code>Page</code> class with default constructor
+	 * @return the rendered <code>Page</code>
 	 */
-	public final Page startPage(Class pageClass)
-	{
+	public final Page startPage(Class pageClass) {
 		processRequestCycle(pageClass);
 		return getLastRenderedPage();
 	}
 
 	/**
-	 * create a {@link FormTester} for the form at path, and fill all child
-	 * {@link org.apache.wicket.markup.html.form.FormComponent}s with blank String initially.
+	 * Creates a {@link FormTester} for the <code>Form</code> at a given path,
+	 * and fills all child
+	 * {@link org.apache.wicket.markup.html.form.FormComponent}s with blank
+	 * <code>String</code>s.
 	 * 
 	 * @param path
-	 *            path to {@link Form} component
-	 * @return FormTester A FormTester instance for testing form
+	 *            path to <code>FormComponent</code>
+	 * @return a <code>FormTester</code> instance for testing the
+	 *         <code>Form</code>
 	 * @see #newFormTester(String, boolean)
 	 */
-	public FormTester newFormTester(String path)
-	{
+	public FormTester newFormTester(String path) {
 		return newFormTester(path, true);
 	}
 
 	/**
-	 * create a {@link FormTester} for the form at path.
+	 * Creates a {@link FormTester} for the <code>Form</code> at a given path.
 	 * 
 	 * @param path
-	 *            path to {@link Form} component
+	 *            path to <code>FormComponent</code>
 	 * @param fillBlankString
-	 *            specify whether fill all child
-	 *            {@link org.apache.wicket.markup.html.form.FormComponent}s with blankString
-	 *            initially.
-	 * @return FormTester A FormTester instance for testing form
+	 *            specifies whether to fill all child <code>FormComponent</code>s
+	 *            with blank <code>String</code>s
+	 * @return a <code>FormTester</code> instance for testing the
+	 *         <code>Form</code>
 	 * @see FormTester
 	 */
-	public FormTester newFormTester(String path, boolean fillBlankString)
-	{
-		return new FormTester(path, (Form)getComponentFromLastRenderedPage(path), this,
+	public FormTester newFormTester(String path, boolean fillBlankString) {
+		return new FormTester(path,
+				(Form) getComponentFromLastRenderedPage(path), this,
 				fillBlankString);
 	}
 
 	/**
-	 * Render a panel defined in <code>TestPanelSource</code>. The usage is similar with
-	 * {@link #startPage(ITestPageSource)}. Please note that testing panel must use supplied
-	 * <code>panelId<code> as component id.
+	 * Renders a <code>Panel</code> defined in <code>TestPanelSource</code>.
+	 * The usage is similar to {@link #startPage(ITestPageSource)}. Please note
+	 * that testing <code>Panel</code> must use the supplied
+	 * <code>panelId<code> as a <code>Component</code> id.
 	 *
 	 * <pre>
-	 * tester.startPanel(new TestPanelSource()
-	 * {
-	 * 	public Panel getTestPanel(String panelId)
-	 * 	{
+	 * tester.startPanel(new TestPanelSource() {
+	 * 	public Panel getTestPanel(String panelId) {
 	 * 		MyData mockMyData = new MyData();
 	 * 		return new MyPanel(panelId, mockMyData);
 	 * 	}
@@ -330,66 +322,51 @@ public class BaseWicketTester extends MockWebApplication
 	 * </pre>
 	 *
 	 * @param testPanelSource
-	 *            a panel factory that creating test panel instance
-	 * @return Panel rendered panel
+	 *            a <code>Panel</code> factory that creates test <code>Panel</code> instances
+	 * @return a rendered <code>Panel</code>
 	 */
-	public final Panel startPanel(final TestPanelSource testPanelSource)
-	{
-		return (Panel)startPage(new ITestPageSource()
-		{
+	public final Panel startPanel(final TestPanelSource testPanelSource) {
+		return (Panel) startPage(new ITestPageSource() {
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
-			{
+			public Page getTestPage() {
 				return new DummyPanelPage(testPanelSource);
 			}
 		}).get(DummyPanelPage.TEST_PANEL_ID);
 	}
 
 	/**
-	 * Render a panel from <code>Panel(String id)</code> constructor.
+	 * Renders a <code>Panel</code> from a <code>Panel(String id)</code>
+	 * constructor.
 	 * 
 	 * @param panelClass
-	 *            a test panel class with <code>Panel(String id)</code> constructor
-	 * @return Panel rendered panel
+	 *            a test <code>Panel</code> class with
+	 *            <code>Panel(String id)</code> constructor
+	 * @return a rendered <code>Panel</code>
 	 */
-	public final Panel startPanel(final Class panelClass)
-	{
-		return (Panel)startPage(new ITestPageSource()
-		{
+	public final Panel startPanel(final Class panelClass) {
+		return (Panel) startPage(new ITestPageSource() {
 			private static final long serialVersionUID = 1L;
 
-			public Page getTestPage()
-			{
-				return new DummyPanelPage(new TestPanelSource()
-				{
+			public Page getTestPage() {
+				return new DummyPanelPage(new TestPanelSource() {
 					private static final long serialVersionUID = 1L;
 
-					public Panel getTestPanel(String panelId)
-					{
-						try
-						{
-							Constructor c = panelClass.getConstructor(new Class[] { String.class });
-							return (Panel)c.newInstance(new Object[] { panelId });
-						}
-						catch (SecurityException e)
-						{
+					public Panel getTestPanel(String panelId) {
+						try {
+							Constructor c = panelClass
+									.getConstructor(new Class[] { String.class });
+							return (Panel) c
+									.newInstance(new Object[] { panelId });
+						} catch (SecurityException e) {
 							throw convertoUnexpect(e);
-						}
-						catch (NoSuchMethodException e)
-						{
+						} catch (NoSuchMethodException e) {
 							throw convertoUnexpect(e);
-						}
-						catch (InstantiationException e)
-						{
+						} catch (InstantiationException e) {
 							throw convertoUnexpect(e);
-						}
-						catch (IllegalAccessException e)
-						{
+						} catch (IllegalAccessException e) {
 							throw convertoUnexpect(e);
-						}
-						catch (InvocationTargetException e)
-						{
+						} catch (InvocationTargetException e) {
 							throw convertoUnexpect(e);
 						}
 					}
@@ -650,9 +627,8 @@ public class BaseWicketTester extends MockWebApplication
 		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
 		// If it's not handling of the linkComponent is passed through to the
 		// Link.
-		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
-		{
-			AjaxFallbackLink link = (AjaxFallbackLink)linkComponent;
+		else if (linkComponent instanceof AjaxFallbackLink && isAjax) {
+			AjaxFallbackLink link = (AjaxFallbackLink) linkComponent;
 
 			setupRequestAndResponse();
 			RequestCycle requestCycle = createRequestCycle();
@@ -666,27 +642,25 @@ public class BaseWicketTester extends MockWebApplication
 		}
 		// if the link is an AjaxSubmitLink, we need to find the form
 		// from it using reflection so we know what to submit.
-		else if (linkComponent instanceof AjaxSubmitLink)
-		{
+		else if (linkComponent instanceof AjaxSubmitLink) {
 			// If it's not ajax we fail
-			if (isAjax == false)
-			{
-				fail("Link " + path + "is an AjaxSubmitLink and " +
-						"will not be invoked when AJAX (javascript) is disabled.");
+			if (isAjax == false) {
+				fail("Link "
+						+ path
+						+ "is an AjaxSubmitLink and "
+						+ "will not be invoked when AJAX (javascript) is disabled.");
 			}
 
-			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
+			AjaxSubmitLink link = (AjaxSubmitLink) linkComponent;
 
 			// We cycle through the attached behaviors and select the
 			// LAST matching behavior as the one we handle.
 			List behaviors = link.getBehaviors();
 			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = null;
-			for (Iterator iter = behaviors.iterator(); iter.hasNext();)
-			{
+			for (Iterator iter = behaviors.iterator(); iter.hasNext();) {
 				Object behavior = iter.next();
-				if (behavior instanceof AjaxFormSubmitBehavior)
-				{
-					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior)behavior;
+				if (behavior instanceof AjaxFormSubmitBehavior) {
+					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior) behavior;
 					ajaxFormSubmitBehavior = submitBehavior;
 				}
 			}
@@ -706,28 +680,23 @@ public class BaseWicketTester extends MockWebApplication
 			requestCycle.getRequestTarget().respond(requestCycle);
 		}
 		// if the link is a normal link (or ResourceLink)
-		else if (linkComponent instanceof AbstractLink)
-		{
-			AbstractLink link = (AbstractLink)linkComponent;
+		else if (linkComponent instanceof AbstractLink) {
+			AbstractLink link = (AbstractLink) linkComponent;
 
 			/*
-			 * If the link is a bookmarkable link, then we need to transfer the parameters to the
-			 * next request.
+			 * If the link is a bookmarkable link, then we need to transfer the
+			 * parameters to the next request.
 			 */
-			if (link instanceof BookmarkablePageLink)
-			{
-				BookmarkablePageLink bookmarkablePageLink = (BookmarkablePageLink)link;
-				try
-				{
+			if (link instanceof BookmarkablePageLink) {
+				BookmarkablePageLink bookmarkablePageLink = (BookmarkablePageLink) link;
+				try {
 					Field parametersField = BookmarkablePageLink.class
 							.getDeclaredField("parameters");
 					parametersField.setAccessible(true);
-					PageParameters parameters = (PageParameters)parametersField
+					PageParameters parameters = (PageParameters) parametersField
 							.get(bookmarkablePageLink);
 					setParametersForNextRequest(parameters);
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
 					fail("Internal error in WicketTester. "
 							+ "Please report this in Wickets Issue Tracker.");
 				}
@@ -735,223 +704,216 @@ public class BaseWicketTester extends MockWebApplication
 			}
 
 			executeListener(link);
-		}
-		else
-		{
-			fail("Link " + path + " is not a Link, AjaxLink, AjaxFallbackLink or AjaxSubmitLink");
+		} else {
+			fail("Link "
+					+ path
+					+ " is not a Link, AjaxLink, AjaxFallbackLink or AjaxSubmitLink");
 		}
 	}
 
 	/**
-	 * submit the <code>Form</code> in the last rendered Page.
+	 * Submits the <code>Form</code> in the last rendered <code>Page</code>.
 	 * 
 	 * @param path
 	 *            path to <code>Form</code> component
 	 */
-	public void submitForm(String path)
-	{
-		Form form = (Form)getComponentFromLastRenderedPage(path);
+	public void submitForm(String path) {
+		Form form = (Form) getComponentFromLastRenderedPage(path);
 		executeListener(form);
 	}
 
 	/**
-	 * Sets a parameter for the component with the given path to be used with the next request.
-	 * NOTE: this method only works when a page was rendered first.
+	 * Sets a parameter for the <code>Component</code> with the given path to
+	 * be used with the next request.
+	 * <p>
+	 * NOTE: this method only works when a <code>Page</code> was rendered
+	 * first.
 	 * 
 	 * @param componentPath
-	 *            path of the component
+	 *            path to the <code>Component</code>
 	 * @param value
 	 *            the parameter value to set
 	 */
-	public void setParameterForNextRequest(String componentPath, Object value)
-	{
-		if (getLastRenderedPage() == null)
-		{
+	public void setParameterForNextRequest(String componentPath, Object value) {
+		if (getLastRenderedPage() == null) {
 			fail("before using this method, at least one page has to be rendered");
 		}
 
 		Component c = getComponentFromLastRenderedPage(componentPath);
-		if (c == null)
-		{
+		if (c == null) {
 			fail("component " + componentPath + " was not found");
 			return;
 		}
 
-		if (c instanceof FormComponent)
-		{
-			getParametersForNextRequest().put(((FormComponent)c).getInputName(), value);
-		}
-		else
-		{
+		if (c instanceof FormComponent) {
+			getParametersForNextRequest().put(
+					((FormComponent) c).getInputName(), value);
+		} else {
 			getParametersForNextRequest().put(c.getPath(), value);
 		}
 
 	}
 
 	/**
-	 * assert last rendered Page class
+	 * Asserts the last rendered <code>Page</code> class.
 	 * 
-	 * FIXME explain why the code is so complicated to compare two classes, or simplify
+	 * FIXME explain why the code is so complicated to compare two classes, or
+	 * simplify
 	 * 
 	 * @param expectedRenderedPageClass
-	 *            expected class of last renered page
-	 * @return
+	 *            expected class of last rendered page
+	 * @return a <code>Result</code>
 	 */
-	public Result isRenderedPage(Class expectedRenderedPageClass)
-	{
+	public Result isRenderedPage(Class expectedRenderedPageClass) {
 		Page page = getLastRenderedPage();
-		if (page == null)
-		{
+		if (page == null) {
 			return Result.fail("page was null");
 		}
-		if (!page.getClass().isAssignableFrom(expectedRenderedPageClass))
-		{
-			return isEqual(Classes.simpleName(expectedRenderedPageClass), Classes.simpleName(page
-					.getClass()));
+		if (!page.getClass().isAssignableFrom(expectedRenderedPageClass)) {
+			return isEqual(Classes.simpleName(expectedRenderedPageClass),
+					Classes.simpleName(page.getClass()));
 		}
 		return Result.pass();
 	}
 
 	/**
-	 * assert last rendered Page against an expected HTML document
+	 * Asserts last rendered <code>Page</code> against an expected HTML
+	 * document.
 	 * <p>
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the
-	 * expected output file.
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to
+	 * automatically replace the expected output file.
 	 * </p>
 	 * 
 	 * @param pageClass
-	 *            Used to load the file (relative to clazz package)
+	 *            used to load the <code>File</code> (relative to
+	 *            <code>clazz</code> package)
 	 * @param filename
-	 *            Expected output
+	 *            expected output <code>File</code> name
 	 * @throws Exception
 	 */
-	public void assertResultPage(final Class pageClass, final String filename) throws Exception
-	{
+	public void assertResultPage(final Class pageClass, final String filename)
+			throws Exception {
 		// Validate the document
 		String document = getServletResponse().getDocument();
 		DiffUtil.validatePage(document, pageClass, filename, true);
 	}
 
 	/**
-	 * assert last rendered Page against an expected HTML document as a String
+	 * Asserts last rendered <code>Page</code> against an expected HTML
+	 * document as a <code>String</code>.
 	 * 
 	 * @param expectedDocument
-	 *            Expected output
-	 * @return
+	 *            expected output
+	 * @return a <code>Result</code>
 	 * @throws Exception
 	 */
-	public Result isResultPage(final String expectedDocument) throws Exception
-	{
+	public Result isResultPage(final String expectedDocument) throws Exception {
 		// Validate the document
 		String document = getServletResponse().getDocument();
-		return isTrue("expected rendered page equals", document.equals(expectedDocument));
+		return isTrue("expected rendered page equals", document
+				.equals(expectedDocument));
 	}
 
 	/**
-	 * assert no error feedback messages
+	 * Asserts no error-level feedback messages.
 	 * 
-	 * @return
+	 * @return a <code>Result</code>
 	 */
-	public Result hasNoErrorMessage()
-	{
+	public Result hasNoErrorMessage() {
 		List messages = getMessages(FeedbackMessage.ERROR);
-		return isTrue("expect no error message, but contains\n" +
-				WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue("expect no error message, but contains\n"
+				+ WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
-	 * assert no info feedback messages
+	 * Asserts no info-level feedback messages.
 	 * 
-	 * @return
+	 * @return a <code>Result</code>
 	 */
-	public Result hasNoInfoMessage()
-	{
+	public Result hasNoInfoMessage() {
 		List messages = getMessages(FeedbackMessage.INFO);
-		return isTrue("expect no info message, but contains\n" +
-				WicketTesterHelper.asLined(messages), messages.isEmpty());
+		return isTrue("expect no info message, but contains\n"
+				+ WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
-	 * get feedback messages
+	 * Retrieves <code>FeedbackMessages</code>.
 	 * 
 	 * @param level
-	 *            level of feedback message, ex.
+	 *            level of feedback message, for example:
 	 *            <code>FeedbackMessage.DEBUG or FeedbackMessage.INFO.. etc</code>
-	 * @return List list of messages (in String)
+	 * @return <code>List</code> of messages (as <code>String</code>s)
 	 * @see FeedbackMessage
 	 */
-	public List getMessages(final int level)
-	{
+	public List getMessages(final int level) {
 		FeedbackMessages feedbackMessages = Session.get().getFeedbackMessages();
-		List allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
-		{
-			private static final long serialVersionUID = 1L;
+		List allMessages = feedbackMessages
+				.messages(new IFeedbackMessageFilter() {
+					private static final long serialVersionUID = 1L;
 
-			public boolean accept(FeedbackMessage message)
-			{
-				return message.getLevel() == level;
-			}
-		});
+					public boolean accept(FeedbackMessage message) {
+						return message.getLevel() == level;
+					}
+				});
 		List actualMessages = new ArrayList();
-		for (Iterator iter = allMessages.iterator(); iter.hasNext();)
-		{
-			actualMessages.add(((FeedbackMessage)iter.next()).getMessage());
+		for (Iterator iter = allMessages.iterator(); iter.hasNext();) {
+			actualMessages.add(((FeedbackMessage) iter.next()).getMessage());
 		}
 		return actualMessages;
 	}
 
 	/**
-	 * dump the source of last rendered page
+	 * Dumps the source of last rendered <code>Page</code>.
 	 */
-	public void dumpPage()
-	{
+	public void dumpPage() {
 		log.info(getServletResponse().getDocument());
 	}
 
 	/**
-	 * dump component trees
+	 * Dumps the <code>Component</code> trees.
 	 */
-	public void debugComponentTrees()
-	{
+	public void debugComponentTrees() {
 		debugComponentTrees("");
 	}
 
-
 	/**
-	 * Dump the component trees to log.
+	 * Dumps the <code>Component</code> trees to log. Show only the
+	 * <code>Component</code>s whose paths contain the filter
+	 * <code>String</code>.
 	 * 
 	 * @param filter
-	 *            Show only the components, which path contains the filterstring.
+	 *            a filter <code>String</code>
 	 */
-	public void debugComponentTrees(String filter)
-	{
+	public void debugComponentTrees(String filter) {
 		log.info("debugging ----------------------------------------------");
-		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter
-				.hasNext();)
-		{
-			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)iter.next();
-			if (obj.path.matches(".*" + filter + ".*"))
-			{
-				log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
+		for (Iterator iter = WicketTesterHelper.getComponentData(
+				getLastRenderedPage()).iterator(); iter.hasNext();) {
+			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData) iter
+					.next();
+			if (obj.path.matches(".*" + filter + ".*")) {
+				log.info("path\t" + obj.path + " \t" + obj.type + " \t["
+						+ obj.value + "]");
 			}
 		}
 	}
 
 	/**
-	 * Test that a component has been added to a AjaxRequestTarget, using
-	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually tests that a
-	 * component is on the AJAX response sent back to the client.
+	 * Tests that a <code>Component</code> has been added to a
+	 * <code>AjaxRequestTarget</code>, using
+	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually
+	 * tests that a <code>Component</code> is on the Ajax response sent back
+	 * to the client.
 	 * <p>
-	 * PLEASE NOTE! This method doesn't actually insert the component in the client DOM tree, using
-	 * javascript. But it shouldn't be needed because you have to trust that the Wicket Ajax
+	 * PLEASE NOTE! This method doesn't actually insert the
+	 * <code>Component</code> in the client DOM tree, using Javascript. But it
+	 * shouldn't be needed because you have to trust that the Wicket Ajax
 	 * Javascript just works.
 	 * 
 	 * @param component
-	 *            The component to test whether it's on the response.
-	 * @return
+	 *            the <code>Component</code> to test
+	 * @return a <code>Result</code>
 	 */
-	public Result isComponentOnAjaxResponse(Component component)
-	{
+	public Result isComponentOnAjaxResponse(Component component) {
 		String failMessage = "A component which is null could not have been added to the AJAX response";
 		notNull(failMessage, component);
 
@@ -964,8 +926,7 @@ public class BaseWicketTester extends MockWebApplication
 		boolean isAjaxResponse = ajaxResponse
 				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
 		Result result = isTrue(failMessage, isAjaxResponse);
-		if (result.wasFailed())
-		{
+		if (result.wasFailed()) {
 			return result;
 		}
 
@@ -975,37 +936,37 @@ public class BaseWicketTester extends MockWebApplication
 		failMessage = "The component doesn't have a markup id, "
 				+ "which means that it can't have been added to the AJAX response";
 		result = isTrue(failMessage, !Strings.isEmpty(markupId));
-		if (result.wasFailed())
-		{
+		if (result.wasFailed()) {
 			return result;
 		}
 
 		// Look for that the component is on the response, using the markup id
-		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" +
-				markupId + "\" ?>.*");
+		boolean isComponentInAjaxResponse = ajaxResponse
+				.matches("(?s).*<component id=\"" + markupId + "\" ?>.*");
 		failMessage = "Component wasn't found in the AJAX response";
 		return isTrue(failMessage, isComponentInAjaxResponse);
 	}
 
 	/**
-	 * Simulate that an AJAX event has been fired.
+	 * Simulates the firing of an Ajax event.
 	 * 
 	 * @see #executeAjaxEvent(Component, String)
 	 * 
 	 * @since 1.2.3
 	 * @param componentPath
-	 *            The component path.
+	 *            the <code>Component</code> path
 	 * @param event
-	 *            The event which we simulate is fired. If the event is null, the test will fail.
+	 *            the event which we simulate being fired. If <code>event</code>
+	 *            is <code>null</code>, the test will fail.
 	 */
-	public void executeAjaxEvent(String componentPath, String event)
-	{
+	public void executeAjaxEvent(String componentPath, String event) {
 		Component component = getComponentFromLastRenderedPage(componentPath);
 		executeAjaxEvent(component, event);
 	}
 
 	/**
-	 * Simulate that an AJAX event has been fired. You add an AJAX event to a component by using:
+	 * Simulates the firing of an Ajax event. You add an Ajax event to a
+	 * <code>Component</code> by using:
 	 * 
 	 * <pre>
 	 *     ...
@@ -1015,8 +976,8 @@ public class BaseWicketTester extends MockWebApplication
 	 *     ...
 	 * </pre>
 	 * 
-	 * You can then test that the code inside onEvent actually does what it's supposed to, using the
-	 * WicketTester:
+	 * You can then test that the code inside <code>onEvent</code> actually
+	 * does what it's supposed to, using the <code>WicketTester</code>:
 	 * 
 	 * <pre>
 	 *     ...
@@ -1025,21 +986,23 @@ public class BaseWicketTester extends MockWebApplication
 	 *     ...
 	 * </pre>
 	 * 
-	 * This also works with AjaxFormSubmitBehavior, where it will "submit" the form before executing
-	 * the command.
+	 * This also works with <code>AjaxFormSubmitBehavior</code>, where it
+	 * will "submit" the <code>Form</code> before executing the command.
 	 * <p>
-	 * PLEASE NOTE! This method doesn't actually insert the component in the client DOM tree, using
-	 * javascript.
+	 * PLEASE NOTE! This method doesn't actually insert the
+	 * <code>Component</code> in the client DOM tree, using Javascript.
 	 * 
 	 * 
 	 * @param component
-	 *            The component which has the AjaxEventBehavior we wan't to test. If the component
-	 *            is null, the test will fail.
+	 *            the <code>Component</code> that has the
+	 *            <code>AjaxEventBehavior</code> we want to test. If the
+	 *            <code>Component</code> is <code>null</code>, the test
+	 *            will fail.
 	 * @param event
-	 *            The event which we simulate is fired. If the event is null, the test will fail.
+	 *            the event to simulate being fired. If <code>event</code> is
+	 *            <code>null</code>, the test will fail.
 	 */
-	public void executeAjaxEvent(Component component, String event)
-	{
+	public void executeAjaxEvent(Component component, String event) {
 		String failMessage = "Can't execute event on a component which is null.";
 		notNull(failMessage, component);
 
@@ -1050,17 +1013,14 @@ public class BaseWicketTester extends MockWebApplication
 		// matches the event parameter.
 		AjaxEventBehavior ajaxEventBehavior = null;
 		List behaviors = component.getBehaviors();
-		for (Iterator iter = behaviors.iterator(); iter.hasNext();)
-		{
-			IBehavior behavior = (IBehavior)iter.next();
+		for (Iterator iter = behaviors.iterator(); iter.hasNext();) {
+			IBehavior behavior = (IBehavior) iter.next();
 
 			// AjaxEventBehavior is the one to look for
-			if (behavior instanceof AjaxEventBehavior)
-			{
-				AjaxEventBehavior tmp = (AjaxEventBehavior)behavior;
+			if (behavior instanceof AjaxEventBehavior) {
+				AjaxEventBehavior tmp = (AjaxEventBehavior) behavior;
 
-				if (event.equals(tmp.getEvent()))
-				{
+				if (event.equals(tmp.getEvent())) {
 					ajaxEventBehavior = tmp;
 				}
 			}
@@ -1068,26 +1028,24 @@ public class BaseWicketTester extends MockWebApplication
 
 		// If there haven't been found any event behaviors on the component
 		// which maches the parameters we fail.
-		failMessage = "No AjaxEventBehavior found on component: " + component.getId() +
-				" which matches the event: " + event.toString();
+		failMessage = "No AjaxEventBehavior found on component: "
+				+ component.getId() + " which matches the event: "
+				+ event.toString();
 		notNull(failMessage, ajaxEventBehavior);
 
-		// initialize the request only if needed to allow the user to pass request parameters, see
+		// initialize the request only if needed to allow the user to pass
+		// request parameters, see
 		// WICKET-254
 		WebRequestCycle requestCycle;
-		if (RequestCycle.get() == null)
-		{
+		if (RequestCycle.get() == null) {
 			requestCycle = setupRequestAndResponse();
-		}
-		else
-		{
-			requestCycle = (WebRequestCycle)RequestCycle.get();
+		} else {
+			requestCycle = (WebRequestCycle) RequestCycle.get();
 		}
 
 		// If the event is an FormSubmitBehavior then also "submit" the form
-		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
-		{
-			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = (AjaxFormSubmitBehavior)ajaxEventBehavior;
+		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior) {
+			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = (AjaxFormSubmitBehavior) ajaxEventBehavior;
 			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
 		}
 
@@ -1098,71 +1056,72 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Get a TagTester based on a wicket:id. If more components exists with the same wicket:id in
-	 * the markup only the first one is returned.
+	 * Retrieves a <code>TagTester</code> based on a <code>wicket:id</code>.
+	 * If more <code>Component</code>s exist with the same
+	 * <code>wicket:id</code> in the markup, only the first one is returned.
 	 * 
 	 * @param wicketId
-	 *            The wicket:id to search for.
-	 * @return The TagTester for the tag which has the given wicket:id.
+	 *            the <code>wicket:id</code> to search for
+	 * @return the <code>TagTester</code> for the tag which has the given
+	 *         <code>wicket:id</code>
 	 */
-	public TagTester getTagByWicketId(String wicketId)
-	{
-		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "wicket:id",
-				wicketId);
+	public TagTester getTagByWicketId(String wicketId) {
+		return TagTester.createTagByAttribute(getServletResponse()
+				.getDocument(), "wicket:id", wicketId);
 	}
 
 	/**
-	 * Get a TagTester based on an dom id. If more components exists with the same id in the markup
-	 * only the first one is returned.
+	 * Retrieves a <code>TagTester</code> based on an DOM id. If more
+	 * <code>Component</code>s exist with the same id in the markup, only the
+	 * first one is returned.
 	 * 
 	 * @param id
-	 *            The dom id to search for.
-	 * @return The TagTester for the tag which has the given dom id.
+	 *            the DOM id to search for.
+	 * @return the <code>TagTester</code> for the tag which has the given DOM
+	 *         id
 	 */
-	public TagTester getTagById(String id)
-	{
-		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "id", id);
+	public TagTester getTagById(String id) {
+		return TagTester.createTagByAttribute(getServletResponse()
+				.getDocument(), "id", id);
 	}
 
 	/**
-	 * Helper method for all the places where an AjaxCall should submit an associated form.
+	 * Helper method for all the places where an Ajax call should submit an
+	 * associated <code>Form</code>.
 	 * 
 	 * @param behavior
-	 *            The AjaxFormSubmitBehavior with the form to "submit"
+	 *            The <code>AjaxFormSubmitBehavior</code> with the
+	 *            <code>Form</code> to "submit"
 	 */
-	private void submitAjaxFormSubmitBehavior(AjaxFormSubmitBehavior behavior)
-	{
+	private void submitAjaxFormSubmitBehavior(AjaxFormSubmitBehavior behavior) {
 		// We need to get the form submitted, using reflection.
 		// It needs to be "submitted".
 		Form form = null;
-		try
-		{
-			Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
+		try {
+			Field formField = AjaxFormSubmitBehavior.class
+					.getDeclaredField("form");
 			formField.setAccessible(true);
-			form = (Form)formField.get(behavior);
-		}
-		catch (Exception e)
-		{
+			form = (Form) formField.get(behavior);
+		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 
 		String failMessage = "No form attached to the submitlink.";
 		notNull(failMessage, form);
 
-		form.visitFormComponents(new FormComponent.AbstractVisitor()
-		{
-			public void onFormComponent(FormComponent formComponent)
-			{
-				if (!(formComponent instanceof Button) && !(formComponent instanceof RadioGroup) &&
-						!(formComponent instanceof CheckGroup))
-				{
+		form.visitFormComponents(new FormComponent.AbstractVisitor() {
+			public void onFormComponent(FormComponent formComponent) {
+				if (!(formComponent instanceof Button)
+						&& !(formComponent instanceof RadioGroup)
+						&& !(formComponent instanceof CheckGroup)) {
 					String name = formComponent.getInputName();
 					String value = formComponent.getValue();
 
-					// Set request parameter with the field value, but do not modify an existing
-					// request parameter explicitly set using FormTester.setValue()
-					if (getServletRequest().getParameterMap().get(name) == null)
-					{
+					// Set request parameter with the field value, but do not
+					// modify an existing
+					// request parameter explicitly set using
+					// FormTester.setValue()
+					if (getServletRequest().getParameterMap().get(name) == null) {
 						getServletRequest().setParameter(name, value);
 					}
 				}
@@ -1171,97 +1130,85 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
+	 * Retrieves the content type from the response header.
 	 * 
-	 * @return
+	 * @return the content type from the response header
 	 */
-	public String getContentTypeFromResponseHeader()
-	{
-		String contentType = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Type");
-		if (contentType == null)
-		{
+	public String getContentTypeFromResponseHeader() {
+		String contentType = ((MockHttpServletResponse) getWicketResponse()
+				.getHttpServletResponse()).getHeader("Content-Type");
+		if (contentType == null) {
 			throw new WicketRuntimeException("No Content-Type header found");
 		}
 		return contentType;
 	}
 
 	/**
+	 * Retrieves the content length from the response header.
 	 * 
-	 * @return
+	 * @return the content length from the response header
 	 */
-	public int getContentLengthFromResponseHeader()
-	{
-		String contentLength = ((MockHttpServletResponse)getWicketResponse()
+	public int getContentLengthFromResponseHeader() {
+		String contentLength = ((MockHttpServletResponse) getWicketResponse()
 				.getHttpServletResponse()).getHeader("Content-Length");
-		if (contentLength == null)
-		{
+		if (contentLength == null) {
 			throw new WicketRuntimeException("No Content-Length header found");
 		}
 		return Integer.parseInt(contentLength);
 	}
 
 	/**
+	 * Retrieves the last-modified value from the response header.
 	 * 
-	 * @return
+	 * @return the last-modified value from the response header
 	 */
-	public String getLastModifiedFromResponseHeader()
-	{
-		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getHeader("Last-Modified");
+	public String getLastModifiedFromResponseHeader() {
+		return ((MockHttpServletResponse) getWicketResponse()
+				.getHttpServletResponse()).getHeader("Last-Modified");
 	}
 
 	/**
+	 * Retrieves the content disposition from the response header.
 	 * 
-	 * @return
+	 * @return the content disposition from the response header
 	 */
-	public String getContentDispositionFromResponseHeader()
-	{
-		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Disposition");
+	public String getContentDispositionFromResponseHeader() {
+		return ((MockHttpServletResponse) getWicketResponse()
+				.getHttpServletResponse()).getHeader("Content-Disposition");
 	}
 
-	private Result isTrue(String message, boolean condition)
-	{
-		if (condition)
-		{
+	private Result isTrue(String message, boolean condition) {
+		if (condition) {
 			return Result.pass();
 		}
 		return Result.fail(message);
 	}
 
-	private Result isEqual(Object expected, Object actual)
-	{
-		if (expected == null && actual == null)
-		{
+	private Result isEqual(Object expected, Object actual) {
+		if (expected == null && actual == null) {
 			return Result.pass();
 		}
-		if (expected != null && expected.equals(actual))
-		{
+		if (expected != null && expected.equals(actual)) {
 			return Result.pass();
 		}
 		String message = "expected:<" + expected + "> but was:<" + actual + ">";
 		return Result.fail(message);
 	}
 
-	private void notNull(String message, Object object)
-	{
-		if (object == null)
-		{
+	private void notNull(String message, Object object) {
+		if (object == null) {
 			fail(message);
 		}
 	}
 
-	private Result isNull(String message, Object object)
-	{
-		if (object != null)
-		{
+	private Result isNull(String message, Object object) {
+		if (object != null) {
 			return Result.fail(message);
 		}
 		return Result.pass();
 	}
 
-	private void fail(String message)
-	{
+	private void fail(String message) {
 		throw new WicketRuntimeException(message);
 	}
 }

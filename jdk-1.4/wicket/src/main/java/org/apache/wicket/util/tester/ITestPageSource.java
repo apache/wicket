@@ -20,16 +20,18 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
 
 /**
- * A test page factory for WicketTester
+ * A test <code>Page</code> factory for <code>WicketTester</code>
  * 
  * @author Ingram Chen
+ * @since 1.2.6
  */
 public interface ITestPageSource extends IClusterable
 {
 	/**
-	 * Define a page instance source for WicketTester
+	 * Defines a <code>Page</code> instance source for
+	 * <code>WicketTester</code>.
 	 * 
-	 * @return Page created page instance for testing
+	 * @return a <code>Page</code> instance for testing
 	 */
 	Page getTestPage();
 }

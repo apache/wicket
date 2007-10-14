@@ -20,9 +20,10 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 
 /**
- * A dummy homepage required by WicketTester only
+ * A dummy home page, as required by <code>WicketTester</code>.
  * 
  * @author Ingram Chen
+ * @since 1.2.6
  */
 public class DummyHomePage extends WebPage
 {
@@ -33,7 +34,8 @@ public class DummyHomePage extends WebPage
 	private final Link testPageLink;
 
 	/**
-	 * Construct
+	 * Constructor.
+	 * 
 	 */
 	public DummyHomePage()
 	{
@@ -42,8 +44,11 @@ public class DummyHomePage extends WebPage
 	}
 
 	/**
+	 * Sets the <code>TestPageSource</code> for this
+	 * <code>DummyHomePage</code>.
 	 * 
 	 * @param testPageSource
+	 *            an <code>ITestPageSource</code> instance
 	 */
 	public void setTestPageSource(ITestPageSource testPageSource)
 	{
@@ -51,8 +56,9 @@ public class DummyHomePage extends WebPage
 	}
 
 	/**
+	 * Retrieves the test page <code>Link</code>.
 	 * 
-	 * @return Link
+	 * @return the test page <code>Link</code>
 	 */
 	public Link getTestPageLink()
 	{
@@ -60,24 +66,23 @@ public class DummyHomePage extends WebPage
 	}
 
 	/**
-	 * 
+	 * <code>TestLink</code> class.
 	 */
 	public class TestLink extends Link
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
+		 * Constructor.
 		 * 
 		 * @param id
+		 *            <code>Component</code> id of the <code>TestLink</code>
 		 */
 		public TestLink(String id)
 		{
 			super(id);
 		}
 
-		/**
-		 * 
-		 */
 		public void onClick()
 		{
 			setResponsePage(testPageSource.getTestPage());

@@ -26,9 +26,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class is experimental only and may not yet work in your environment
+ * <code>ExternalPageViewer</code> class. This class is experimental only and
+ * may not yet work in your environment.
+ * 
+ * TODO need Javadoc from author.
  * 
  * @author Ingram Chen
+ * @since 1.2.6
  */
 public class ExternalPageViewer
 {

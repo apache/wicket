@@ -30,11 +30,11 @@ import org.apache.wicket.util.value.IValueMap;
  * Tag tester is used to test that a generated markup tag contains the correct
  * attributes, values etc. This can be done instead of comparing generated
  * markup with some expected markup. The advantage of this is that a lot of
- * tests doesn't fail, when the generated markup changes just a little bit.
+ * tests don't fail when the generated markup changes just a little bit.
  * <p>
  * It also gives a more programmatic way of testing the generated output, by not
- * having to worry about how the markup looks precisely instead of which
- * attributes exists on the given tags and what values they have.
+ * having to worry about precisely how the markup looks instead of which
+ * attributes exists on the given tags, and what values they have.
  * <p>
  * Example:
  * 
@@ -46,6 +46,7 @@ import org.apache.wicket.util.value.IValueMap;
  * </pre>
  * 
  * @author Frank Bille (billen)
+ * @since 1.2.6
  */
 public class TagTester
 {
@@ -56,11 +57,11 @@ public class TagTester
 	private final XmlPullParser parser;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
-	 * @param parser
-	 * @param openTag
-	 * @param closeTag
+	 * @param parser an <code>XmlPullParser</code>
+	 * @param openTag an opening XML tag
+	 * @param closeTag a closing XML tag
 	 */
 	private TagTester(XmlPullParser parser, XmlTag openTag, XmlTag closeTag)
 	{
@@ -70,9 +71,9 @@ public class TagTester
 	}
 
 	/**
-	 * Get the tag name.
+	 * Gets the tag's name.
 	 * 
-	 * @return Tag name.
+	 * @return the tag name
 	 */
 	public String getName()
 	{
@@ -80,12 +81,13 @@ public class TagTester
 	}
 
 	/**
-	 * Does the tag contain the attribute. Please note that this is case
-	 * in-sensitive, because attributes in HTML may be case in-sensitive.
+	 * Tests if the tag contains the given attribute. Please note that this is
+	 * non case-sensitive, because attributes in HTML may be non case-sensitive.
 	 * 
 	 * @param attribute
-	 *            The attribute to look for in the tag.
-	 * @return True if the tag has an attribute, false if not.
+	 *            an attribute to look for in the tag
+	 * @return <code>true</code> if the tag has the attribute,
+	 *         <code>false</code> if not.
 	 */
 	public boolean hasAttribute(String attribute)
 	{
@@ -100,12 +102,13 @@ public class TagTester
 	}
 
 	/**
-	 * Get the attribute value for the given attribute. Please note that this is
-	 * case in-sensitive, because attributes in HTML may be case in-sensitive.
+	 * Gets the value for a given attribute. Please note that this is non
+	 * case-sensitive, because attributes in HTML may be non case-sensitive.
 	 * 
 	 * @param attribute
-	 *            The attribute to look for in the tag.
-	 * @return The value of the attribute or null if it isn't found.
+	 *            an attribute to look for in the tag
+	 * @return the value of the attribute or <code>null</code> if it isn't
+	 *         found.
 	 */
 	public String getAttribute(String attribute)
 	{
@@ -130,7 +133,7 @@ public class TagTester
 	}
 
 	/**
-	 * Check if an attribute contains the specified partial value.
+	 * Checks if an attribute contains the specified partial value.
 	 * <p>
 	 * For example:
 	 * 
@@ -142,7 +145,7 @@ public class TagTester
 	 * </pre>
 	 * 
 	 * <p>
-	 * <b>Test</b>
+	 * <b>Test:</b>
 	 * 
 	 * <pre>
 	 * TagTester tester = application.getTagByWicketId(&quot;helloComp&quot;);
@@ -150,10 +153,11 @@ public class TagTester
 	 * </pre>
 	 * 
 	 * @param attribute
-	 *            The attribute to test on
+	 *            the attribute to test on
 	 * @param partialValue
-	 *            The partial value to test if the attribute value contains.
-	 * @return True if the attribute value contains the partial value.
+	 *            the partial value to test if the attribute value contains it
+	 * @return <code>true</code> if the attribute value contains the partial
+	 *         value
 	 */
 	public boolean getAttributeContains(String attribute, String partialValue)
 	{
@@ -176,13 +180,14 @@ public class TagTester
 	}
 
 	/**
-	 * Check if an attributes value is the exact same as the given parameter.
+	 * Checks if an attribute's value is the exact same as the given value.
 	 * 
 	 * @param attribute
-	 *            The attribute to test.
+	 *            an attribute to test
 	 * @param expected
-	 *            The value which should be the same at the attributes value
-	 * @return True if the attributes value is the same as the parameter.
+	 *            the value which should be the same at the attribute's value
+	 * @return <code>true</code> if the attribute's value is the same as the
+	 *         given value
 	 */
 	public boolean getAttributeIs(String attribute, String expected)
 	{
@@ -199,11 +204,14 @@ public class TagTester
 	}
 
 	/**
-	 * Check if an attributes value ends with the given parameter.
+	 * Checks if an attribute's value ends with the given parameter.
 	 * 
 	 * @param attribute
+	 *            an attribute to test
 	 * @param expected
-	 * @return True if the attributes value ends with the expected value
+	 *            the expected value
+	 * @return <code>true</code> if the attribute's value ends with the
+	 *         expected value
 	 */
 	public boolean getAttributeEndsWith(String attribute, String expected)
 	{
@@ -226,11 +234,12 @@ public class TagTester
 	}
 
 	/**
-	 * Check if the tag has a child with the tagName.
+	 * Checks if the tag has a child with the given <code>tagName</code>.
 	 * 
 	 * @param tagName
-	 *            The tag name to search for.
-	 * @return True if this tag has a child with the given tagName.
+	 *            the tag name to search for
+	 * @return <code>true</code> if this tag has a child with the given
+	 *         <code>tagName</code>.
 	 */
 	public boolean hasChildTag(String tagName)
 	{
@@ -278,14 +287,14 @@ public class TagTester
 	}
 
 	/**
-	 * Get a child tag for testing. If this tag contains child tags, you can get
-	 * one of them as a TagTester.
+	 * Gets a child tag for testing. If this tag contains child tags, you can
+	 * get one of them as a {@link TagTester} instance.
 	 * 
 	 * @param attribute
-	 *            The attribute on the child tag to search for
+	 *            an attribute on the child tag to search for
 	 * @param value
-	 *            The value that the attribute must have.
-	 * @return The TagTester for the child tag.
+	 *            a value that the attribute must have
+	 * @return the <code>TagTester</code> for the child tag
 	 */
 	public TagTester getChild(String attribute, String value)
 	{
@@ -306,10 +315,10 @@ public class TagTester
 	}
 
 	/**
-	 * Get markup for this tag. This includes every markup which is between the
-	 * open tag and the close tag.
+	 * Gets the markup for this tag. This includes all markup between the open
+	 * tag and the close tag.
 	 * 
-	 * @return The entire markup between the open tag and the close tag.
+	 * @return all the markup between the open tag and the close tag
 	 */
 	public String getMarkup()
 	{
@@ -321,20 +330,21 @@ public class TagTester
 	}
 
 	/**
-	 * Static factory method for creating a TagTester based on a tag found by an
-	 * attribute with a specific value. Please note that it will return the
-	 * first tag which matches the criteria. It's therefore good for attributes
-	 * suck as "id" or "wicket:id", but only if "wicket:id" is unique in the
-	 * specified markup.
+	 * Static factory method for creating a <code>TagTester</code> based on a
+	 * tag found by an attribute with a specific value. Please note that it will
+	 * return the first tag which matches the criteria. It's therefore good for
+	 * attributes suck as "id" or "wicket:id", but only if "wicket:id" is unique
+	 * in the specified markup.
 	 * 
 	 * @param markup
-	 *            The markup to look for the tag to create the TagTester from.
+	 *            the markup to look for the tag to create the
+	 *            <code>TagTester</code> from
 	 * @param attribute
-	 *            The attribute which should be on the tag in the markup.
+	 *            the attribute which should be on the tag in the markup
 	 * @param value
-	 *            The value which the attribute must have.
-	 * @return The TagTester which matches the tag in the markup, that has the
-	 *         given value on the given attribute.
+	 *            the value which the attribute must have
+	 * @return the <code>TagTester</code> which matches the tag in the markup,
+	 *         that has the given value on the given attribute
 	 */
 	public static TagTester createTagByAttribute(String markup, String attribute, String value)
 	{
