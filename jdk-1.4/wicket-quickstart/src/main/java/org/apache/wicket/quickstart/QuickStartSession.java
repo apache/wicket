@@ -21,8 +21,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
 /**
- * Subclass of WebSession for QuickStartApplication to allow easy and typesafe
- * access to session properties.
+ * Subclass of WebSession for QuickStartApplication to allow easy and typesafe access to session
+ * properties.
  * 
  * @author Jonathan Locke
  */

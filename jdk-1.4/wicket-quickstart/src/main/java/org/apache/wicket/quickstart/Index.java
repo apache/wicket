@@ -21,8 +21,7 @@ import org.apache.wicket.PageParameters;
 /**
  * Basic bookmarkable index page.
  * 
- * NOTE: You can get session properties from QuickStartSession via
- * getQuickStartSession()
+ * NOTE: You can get session properties from QuickStartSession via getQuickStartSession()
  */
 public class Index extends QuickStartPage
 {

@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Application object for your web application. If you want to run this
- * application without deploying, run the Start class.
+ * Application object for your web application. If you want to run this application without
+ * deploying, run the Start class.
  * 
  * @see org.apache.wicket.quickstart.Start#main(String[])
  */
@@ -51,8 +51,7 @@ public class QuickStartApplication extends WebApplication
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request,
-	 *      Response)
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
 	 */
 	public Session newSession(Request request, Response response)
 	{
