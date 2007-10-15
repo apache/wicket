@@ -19,8 +19,7 @@ package org.apache.wicket.injection;
 import java.lang.reflect.Field;
 
 /**
- * Factory object used by injector to generate values for fields of the object
- * being injected.
+ * Factory object used by injector to generate values for fields of the object being injected.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -40,16 +39,13 @@ public interface IFieldValueFactory
 	Object getFieldValue(Field field, Object fieldOwner);
 
 	/**
-	 * Returns true if the factory can generate a value for the field, false
-	 * otherwise.
+	 * Returns true if the factory can generate a value for the field, false otherwise.
 	 * 
-	 * If this method returns false, getFieldValue() will not be called on this
-	 * factory
+	 * If this method returns false, getFieldValue() will not be called on this factory
 	 * 
 	 * @param field
 	 *            field
-	 * @return true if the factory can generate a value for the field, false
-	 *         otherwise
+	 * @return true if the factory can generate a value for the field, false otherwise
 	 */
 	boolean supportsField(Field field);
 }

@@ -22,9 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Compound implementation of IFieldValueFactory. This field value factory will
- * keep trying added factories until one returns a non-null value or all are
- * tried.
+ * Compound implementation of IFieldValueFactory. This field value factory will keep trying added
+ * factories until one returns a non-null value or all are tried.
  * 
  * 
  * @see IFieldValueFactory
@@ -111,7 +110,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 		Iterator it = delegates.iterator();
 		while (it.hasNext())
 		{
-			final IFieldValueFactory factory = (IFieldValueFactory) it.next();
+			final IFieldValueFactory factory = (IFieldValueFactory)it.next();
 			Object object = factory.getFieldValue(field, fieldOwner);
 			if (object != null)
 			{
@@ -129,8 +128,9 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 		Iterator it = delegates.iterator();
 		while (it.hasNext())
 		{
-			final IFieldValueFactory factory = (IFieldValueFactory) it.next();
-			if (factory.supportsField(field)) {
+			final IFieldValueFactory factory = (IFieldValueFactory)it.next();
+			if (factory.supportsField(field))
+			{
 				return true;
 			}
 		}

@@ -29,8 +29,8 @@ import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * Injector scans fields of an object instance and checks if the specified
- * {@link IFieldValueFactory} can provide a value for a field; if it can, the
- * field is set to that value. Injector will ignore all non-null fields.
+ * {@link IFieldValueFactory} can provide a value for a field; if it can, the field is set to that
+ * value. Injector will ignore all non-null fields.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -39,7 +39,8 @@ public class Injector
 {
 	private static Injector instance = new Injector();
 
-	// FIXME: WICKET-625 - Wicket doesn't clean up properly when hot-deploying; hangs onto Class references.
+	// FIXME: WICKET-625 - Wicket doesn't clean up properly when hot-deploying;
+	// hangs onto Class references.
 	// We need some way to clean out this hashmap when we're done.
 	private ConcurrentHashMap/* <Class, Field[]> */classToFields = new ConcurrentHashMap();
 
@@ -52,11 +53,11 @@ public class Injector
 	}
 
 	/**
-	 * When the initializer traverses the hierarchy of the specified object it
-	 * will stop if it encounters a boundary class.
+	 * When the initializer traverses the hierarchy of the specified object it will stop if it
+	 * encounters a boundary class.
 	 * 
-	 * By default, more common wicket classes are defined as boundaries so that
-	 * the initializer does not waste time traversing them.
+	 * By default, more common wicket classes are defined as boundaries so that the initializer does
+	 * not waste time traversing them.
 	 * 
 	 * @param clazz
 	 *            class to be tested for being a boundary class
@@ -64,9 +65,8 @@ public class Injector
 	 */
 	protected boolean isBoundaryClass(Class clazz)
 	{
-		if (clazz.equals(WebPage.class)
-				|| clazz.equals(Page.class) || clazz.equals(Panel.class)
-				|| clazz.equals(MarkupContainer.class) || clazz.equals(Component.class))
+		if (clazz.equals(WebPage.class) || clazz.equals(Page.class) || clazz.equals(Panel.class) ||
+				clazz.equals(MarkupContainer.class) || clazz.equals(Component.class))
 		{
 			return true;
 		}
@@ -74,8 +74,8 @@ public class Injector
 	}
 
 	/**
-	 * traverse fields in the class hierarchy of the object and set their value
-	 * with a locator provided by the locator factory.
+	 * traverse fields in the class hierarchy of the object and set their value with a locator
+	 * provided by the locator factory.
 	 * 
 	 * @param object
 	 * @param factory
@@ -84,7 +84,7 @@ public class Injector
 	public Object inject(Object object, IFieldValueFactory factory)
 	{
 		Class clazz = object.getClass();
-		Field[] fields = (Field[]) classToFields.get(clazz);
+		Field[] fields = (Field[])classToFields.get(clazz);
 		if (fields == null)
 		{
 			fields = findFields(clazz, factory);
@@ -115,15 +115,13 @@ public class Injector
 			}
 			catch (IllegalArgumentException e)
 			{
-				throw new RuntimeException("error while injecting object ["
-						+ object.toString() + "] of type [" + object.getClass().getName()
-						+ "]", e);
+				throw new RuntimeException("error while injecting object [" + object.toString() +
+						"] of type [" + object.getClass().getName() + "]", e);
 			}
 			catch (IllegalAccessException e)
 			{
-				throw new RuntimeException("error while injecting object ["
-						+ object.toString() + "] of type [" + object.getClass().getName()
-						+ "]", e);
+				throw new RuntimeException("error while injecting object [" + object.toString() +
+						"] of type [" + object.getClass().getName() + "]", e);
 			}
 		}
 
@@ -131,13 +129,11 @@ public class Injector
 	}
 
 	/**
-	 * Returns an array of fields that can be injected using the given field
-	 * value factory
+	 * Returns an array of fields that can be injected using the given field value factory
 	 * 
 	 * @param clazz
 	 * @param factory
-	 * @return an array of fields that can be injected using the given field
-	 *         value factory
+	 * @return an array of fields that can be injected using the given field value factory
 	 */
 	private Field[] findFields(Class clazz, IFieldValueFactory factory)
 	{
@@ -158,7 +154,7 @@ public class Injector
 			clazz = clazz.getSuperclass();
 		}
 
-		return (Field[]) matched.toArray(new Field[matched.size()]);
+		return (Field[])matched.toArray(new Field[matched.size()]);
 	}
 
 }

@@ -17,10 +17,10 @@
 package org.apache.wicket.injection;
 
 /**
- * Abstract injector that allows subclasses to provide IFieldValueFactory
- * pragmatically by implementing getFieldValueFactory(). Allows for injectors
- * that can be used with inject(Object obj) call instead of inject(Object obj,
- * IFieldValueFactory factory), thereby allowing for default factories.
+ * Abstract injector that allows subclasses to provide IFieldValueFactory pragmatically by
+ * implementing getFieldValueFactory(). Allows for injectors that can be used with inject(Object
+ * obj) call instead of inject(Object obj, IFieldValueFactory factory), thereby allowing for default
+ * factories.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -28,8 +28,7 @@ package org.apache.wicket.injection;
 public abstract class ConfigurableInjector extends Injector
 {
 	/**
-	 * Injects proxies using IFieldValueFactory obtained by calling
-	 * getFieldValueFactory() method
+	 * Injects proxies using IFieldValueFactory obtained by calling getFieldValueFactory() method
 	 * 
 	 * @param object
 	 *            object to be injected

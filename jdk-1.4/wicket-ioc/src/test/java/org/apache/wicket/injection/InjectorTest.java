@@ -18,13 +18,11 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 
-import org.apache.wicket.injection.IFieldValueFactory;
-import org.apache.wicket.injection.Injector;
+import junit.framework.TestCase;
+
 import org.apache.wicket.injection.util.InternalTestObject;
 import org.apache.wicket.injection.util.MockDependency;
 import org.apache.wicket.injection.util.TestObject;
-
-import junit.framework.TestCase;
 
 /**
  * Tests {@link Injector}

@@ -21,9 +21,8 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.injection.web.InjectorHolder;
 
 /**
- * Enables your application to do Spring dependency injection. To use, register
- * the injector as a {@link org.apache.wicket.application.IComponentInstantiationListener}
- * like this:
+ * Enables your application to do Spring dependency injection. To use, register the injector as a
+ * {@link org.apache.wicket.application.IComponentInstantiationListener} like this:
  * 
  * <pre>
  *      ... (in your application's constructor or init method)

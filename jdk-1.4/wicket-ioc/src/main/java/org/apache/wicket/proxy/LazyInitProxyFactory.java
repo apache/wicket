@@ -34,25 +34,22 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.model.IModel;
 
 /**
- * A factory class that creates lazy init proxies given a type and a
- * {@link IProxyTargetLocator} used to retrieve the object the proxy will
- * represent.
+ * A factory class that creates lazy init proxies given a type and a {@link IProxyTargetLocator}
+ * used to retrieve the object the proxy will represent.
  * <p>
  * A lazy init proxy waits until the first method invocation before it uses the
- * {@link IProxyTargetLocator} to retrieve the object to which the method
- * invocation will be forwarded.
+ * {@link IProxyTargetLocator} to retrieve the object to which the method invocation will be
+ * forwarded.
  * <p>
- * This factory creates two kinds of proxies: A standard dynamic proxy when the
- * specified type is an interface, and a CGLib proxy when the specified type is
- * a concrete class.
+ * This factory creates two kinds of proxies: A standard dynamic proxy when the specified type is an
+ * interface, and a CGLib proxy when the specified type is a concrete class.
  * <p>
- * The general use case for such a proxy is to represent a dependency that
- * should not be serialized with a wicket page or {@link IModel}. The solution
- * is to serialize the proxy and the {@link IProxyTargetLocator} instead of the
- * dependency, and be able to look up the target object again when the proxy is
- * deserialized and accessed. A good strategy for achieving this is to have a
- * static lookup in the {@link IProxyTargetLocator}, this keeps its size small
- * and makes it safe to serialize.
+ * The general use case for such a proxy is to represent a dependency that should not be serialized
+ * with a wicket page or {@link IModel}. The solution is to serialize the proxy and the
+ * {@link IProxyTargetLocator} instead of the dependency, and be able to look up the target object
+ * again when the proxy is deserialized and accessed. A good strategy for achieving this is to have
+ * a static lookup in the {@link IProxyTargetLocator}, this keeps its size small and makes it safe
+ * to serialize.
  * <p>
  * Example:
  * 
@@ -94,9 +91,8 @@ import org.apache.wicket.model.IModel;
  * 
  * </pre>
  * 
- * The detachable model in the example above follows to good citizen pattern and
- * is easy to unit test. These are the advantages gained through the use of the
- * lazy init proxies.
+ * The detachable model in the example above follows to good citizen pattern and is easy to unit
+ * test. These are the advantages gained through the use of the lazy init proxies.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -112,15 +108,14 @@ public class LazyInitProxyFactory
 			boolean.class, Boolean.class });
 
 	/**
-	 * Create a lazy init proxy for the specified type. The target object will
-	 * be located using the provided locator upon first method invocation.
+	 * Create a lazy init proxy for the specified type. The target object will be located using the
+	 * provided locator upon first method invocation.
 	 * 
 	 * @param type
 	 *            type that proxy will represent
 	 * 
 	 * @param locator
-	 *            object locator that will locate the object the proxy
-	 *            represents
+	 *            object locator that will locate the object the proxy represents
 	 * 
 	 * @return lazily initializable proxy
 	 */
@@ -145,10 +140,9 @@ public class LazyInitProxyFactory
 			catch (IllegalArgumentException e)
 			{
 				/*
-				 * STW: In some clustering environments it appears the context
-				 * classloader fails to load the proxied interface (currently
-				 * seen in BEA WLS 9.x clusters). If this happens, we can try
-				 * and fall back to the classloader (current) that actually
+				 * STW: In some clustering environments it appears the context classloader fails to
+				 * load the proxied interface (currently seen in BEA WLS 9.x clusters). If this
+				 * happens, we can try and fall back to the classloader (current) that actually
 				 * loaded this class.
 				 */
 				return Proxy.newProxyInstance(LazyInitProxyFactory.class.getClassLoader(),
@@ -174,10 +168,10 @@ public class LazyInitProxyFactory
 	}
 
 	/**
-	 * This interface is used to make the proxy forward writeReplace() call to
-	 * the handler instead of invoking it on itself. This allows us to serialize
-	 * the replacement objet instead of the proxy itself in case the proxy
-	 * subclass is deserialized on a VM that does not have it created.
+	 * This interface is used to make the proxy forward writeReplace() call to the handler instead
+	 * of invoking it on itself. This allows us to serialize the replacement objet instead of the
+	 * proxy itself in case the proxy subclass is deserialized on a VM that does not have it
+	 * created.
 	 * 
 	 * @see ProxyReplacement
 	 * 
@@ -196,9 +190,8 @@ public class LazyInitProxyFactory
 	}
 
 	/**
-	 * Object that replaces the proxy when it is serialized. Upon
-	 * deserialization this object will create a new proxy with the same
-	 * locator.
+	 * Object that replaces the proxy when it is serialized. Upon deserialization this object will
+	 * create a new proxy with the same locator.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
@@ -241,8 +234,8 @@ public class LazyInitProxyFactory
 	}
 
 	/**
-	 * Method interceptor for proxies representing concrete object not backed by
-	 * an interface. These proxies are representing by cglib proxies.
+	 * Method interceptor for proxies representing concrete object not backed by an interface. These
+	 * proxies are representing by cglib proxies.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
@@ -269,8 +262,7 @@ public class LazyInitProxyFactory
 		 *            class of the object this proxy was created for
 		 * 
 		 * @param locator
-		 *            object locator used to locate the object this proxy
-		 *            represents
+		 *            object locator used to locate the object this proxy represents
 		 */
 		public CGLibInterceptor(Class type, IProxyTargetLocator locator)
 		{
@@ -281,8 +273,7 @@ public class LazyInitProxyFactory
 
 		/**
 		 * @see net.sf.cglib.proxy.MethodInterceptor#intercept(java.lang.Object,
-		 *      java.lang.reflect.Method, java.lang.Object[],
-		 *      net.sf.cglib.proxy.MethodProxy)
+		 *      java.lang.reflect.Method, java.lang.Object[], net.sf.cglib.proxy.MethodProxy)
 		 */
 		public Object intercept(Object object, Method method, Object[] args, MethodProxy proxy)
 				throws Throwable
@@ -339,8 +330,8 @@ public class LazyInitProxyFactory
 	}
 
 	/**
-	 * Invocation handler for proxies representing interface based object. For
-	 * interface backed objects dynamic jdk proxies are used.
+	 * Invocation handler for proxies representing interface based object. For interface backed
+	 * objects dynamic jdk proxies are used.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
@@ -367,8 +358,7 @@ public class LazyInitProxyFactory
 		 *            class of object this handler will represent
 		 * 
 		 * @param locator
-		 *            object locator used to locate the object this proxy
-		 *            represents
+		 *            object locator used to locate the object this proxy represents
 		 */
 		public JdkHandler(Class type, IProxyTargetLocator locator)
 		{
@@ -448,8 +438,7 @@ public class LazyInitProxyFactory
 	 * 
 	 * @param method
 	 *            method being tested
-	 * @return true if the method is derived from Object.equals(), false
-	 *         otherwise
+	 * @return true if the method is derived from Object.equals(), false otherwise
 	 */
 	protected static boolean isEqualsMethod(Method method)
 	{
@@ -462,8 +451,7 @@ public class LazyInitProxyFactory
 	 * 
 	 * @param method
 	 *            method being tested
-	 * @return true if the method is defined from Object.hashCode(), false
-	 *         otherwise
+	 * @return true if the method is defined from Object.hashCode(), false otherwise
 	 */
 	protected static boolean isHashCodeMethod(Method method)
 	{
@@ -476,8 +464,7 @@ public class LazyInitProxyFactory
 	 * 
 	 * @param method
 	 *            method being tested
-	 * @return true if the method is defined from Object.toString(), false
-	 *         otherwise
+	 * @return true if the method is defined from Object.toString(), false otherwise
 	 */
 	protected static boolean isToStringMethod(Method method)
 	{
@@ -490,8 +477,7 @@ public class LazyInitProxyFactory
 	 * 
 	 * @param method
 	 *            method being tested
-	 * @return true if the method is defined from Object.finalize(), false
-	 *         otherwise
+	 * @return true if the method is defined from Object.finalize(), false otherwise
 	 */
 	protected static boolean isFinalizeMethod(Method method)
 	{

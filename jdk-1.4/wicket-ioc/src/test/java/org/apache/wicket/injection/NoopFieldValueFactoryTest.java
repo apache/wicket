@@ -18,8 +18,6 @@ package org.apache.wicket.injection;
 
 import java.lang.reflect.Field;
 
-import org.apache.wicket.injection.NoopFieldValueFactory;
-
 import junit.framework.TestCase;
 
 /**

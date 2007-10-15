@@ -22,13 +22,14 @@ import java.lang.reflect.Field;
  * Implementation of field value factory that ignores all fields
  * 
  * @author Igor Vaynberg (ivaynberg)
- *
+ * 
  */
 public class NoopFieldValueFactory implements IFieldValueFactory
 {
 
 	/**
-	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field, java.lang.Object)
+	 * @see org.apache.wicket.injection.IFieldValueFactory#getFieldValue(java.lang.reflect.Field,
+	 *      java.lang.Object)
 	 */
 	public Object getFieldValue(Field field, Object fieldOwner)
 	{

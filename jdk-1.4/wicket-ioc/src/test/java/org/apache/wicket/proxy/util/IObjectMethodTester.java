@@ -17,8 +17,7 @@
 package org.apache.wicket.proxy.util;
 
 /**
- * Tester object that is valid as long as equals/hashCode/toString have not been
- * called on it.
+ * Tester object that is valid as long as equals/hashCode/toString have not been called on it.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

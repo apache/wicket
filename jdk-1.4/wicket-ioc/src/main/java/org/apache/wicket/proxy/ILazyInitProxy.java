@@ -19,8 +19,8 @@ package org.apache.wicket.proxy;
 import org.apache.wicket.IClusterable;
 
 /**
- * Interface the lazy init proxies implement to make identification of the proxy
- * and retrival of {@link IProxyTargetLocator} possible.
+ * Interface the lazy init proxies implement to make identification of the proxy and retrival of
+ * {@link IProxyTargetLocator} possible.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
