@@ -21,21 +21,19 @@ import java.lang.instrument.Instrumentation;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy;
 
-
 /**
- * Instrumentation agent for calculating object sizes using Java's
- * instrumentation API. To use it, have the jar somewhere we you can access it
- * (just having this class on the classpath is not enough) and startup your
- * application with a -javaagent argument like e.g:
- * '-javaagent:/mydir/wicket-objectsizeof-agent-1.3-SNAPSHOT.jar'.
- * When the application starts up, this agent will register an
- * {@link IObjectSizeOfStrategy} at
- * {@link Objects#setObjectSizeOfStrategy(IObjectSizeOfStrategy)}. Note that
- * this is a static registration.
+ * Instrumentation agent for calculating object sizes using Java's instrumentation API. To use it,
+ * have the jar somewhere we you can access it (just having this class on the classpath is not
+ * enough) and startup your application with a -javaagent argument like e.g:
+ * '-javaagent:/mydir/wicket-objectsizeof-agent-1.3-SNAPSHOT.jar'. When the application starts up,
+ * this agent will register an {@link IObjectSizeOfStrategy} at
+ * {@link Objects#setObjectSizeOfStrategy(IObjectSizeOfStrategy)}. Note that this is a static
+ * registration.
  * 
  * @author eelcohillenius
  */
-public class ObjectSizeOfAgent {
+public class ObjectSizeOfAgent
+{
 
 	/**
 	 * Initializes agent when it is attached to an already running JVM.
@@ -45,8 +43,8 @@ public class ObjectSizeOfAgent {
 	 * @param instrumentation
 	 *            The instrumentation class
 	 */
-	public static void agentmain(String agentArgs,
-			Instrumentation instrumentation) {
+	public static void agentmain(String agentArgs, Instrumentation instrumentation)
+	{
 
 		InstrumentationObjectSizeOfStrategy strategy = new InstrumentationObjectSizeOfStrategy(
 				instrumentation);
@@ -54,15 +52,15 @@ public class ObjectSizeOfAgent {
 	}
 
 	/**
-	 * Initializes agent before the main function of the application is
-	 * executed.
+	 * Initializes agent before the main function of the application is executed.
 	 * 
 	 * @param agentArgs
 	 *            Arguments passed in to the agent
 	 * @param instrumentation
 	 *            The instrumentation class
 	 */
-	public static void premain(String agentArgs, Instrumentation instrumentation) {
+	public static void premain(String agentArgs, Instrumentation instrumentation)
+	{
 
 		InstrumentationObjectSizeOfStrategy strategy = new InstrumentationObjectSizeOfStrategy(
 				instrumentation);

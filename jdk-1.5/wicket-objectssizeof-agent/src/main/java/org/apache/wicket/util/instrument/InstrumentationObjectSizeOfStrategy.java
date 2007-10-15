@@ -23,20 +23,20 @@ import java.lang.instrument.Instrumentation;
 
 import org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy;
 
-
 /**
  * Object size of strategy that is based on instrumentation.
  * 
  * @author eelcohillenius
  */
-public class InstrumentationObjectSizeOfStrategy implements
-		IObjectSizeOfStrategy {
+public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrategy
+{
 
 	/**
-	 * Records the size of an object and it's dependants as if they were
-	 * serialized but using the instrumentation API to calculate.
+	 * Records the size of an object and it's dependants as if they were serialized but using the
+	 * instrumentation API to calculate.
 	 */
-	private final class SizeRecodingOuputStream extends ObjectOutputStream {
+	private final class SizeRecodingOuputStream extends ObjectOutputStream
+	{
 
 		private long totalSize = 0;
 
@@ -45,11 +45,14 @@ public class InstrumentationObjectSizeOfStrategy implements
 		 * 
 		 * @throws IOException
 		 */
-		public SizeRecodingOuputStream() throws IOException {
-			super(new OutputStream() {
+		public SizeRecodingOuputStream() throws IOException
+		{
+			super(new OutputStream()
+			{
 
 				@Override
-				public void write(int b) throws IOException {
+				public void write(int b) throws IOException
+				{
 				}
 			});
 			enableReplaceObject(true);
@@ -60,14 +63,17 @@ public class InstrumentationObjectSizeOfStrategy implements
 		 * 
 		 * @return
 		 */
-		public long getTotalSize() {
+		public long getTotalSize()
+		{
 			return totalSize;
 		}
 
 		@Override
-		protected Object replaceObject(Object obj) throws IOException {
+		protected Object replaceObject(Object obj) throws IOException
+		{
 
-			if (obj != null) {
+			if (obj != null)
+			{
 				totalSize += instrumentation.getObjectSize(obj);
 			}
 
@@ -85,7 +91,8 @@ public class InstrumentationObjectSizeOfStrategy implements
 	 * 
 	 * @param instrumentation
 	 */
-	public InstrumentationObjectSizeOfStrategy(Instrumentation instrumentation) {
+	public InstrumentationObjectSizeOfStrategy(Instrumentation instrumentation)
+	{
 		this.instrumentation = instrumentation;
 	}
 
@@ -98,15 +105,20 @@ public class InstrumentationObjectSizeOfStrategy implements
 	 * 
 	 * @see org.apache.wicket.util.lang.Objects.IObjectSizeOfStrategy#sizeOf(java.lang.Object)
 	 */
-	public long sizeOf(Object obj) {
-		if (obj == null) {
+	public long sizeOf(Object obj)
+	{
+		if (obj == null)
+		{
 			return 0;
 		}
-		try {
+		try
+		{
 			SizeRecodingOuputStream recorder = new SizeRecodingOuputStream();
 			recorder.writeObject(obj);
 			return recorder.getTotalSize();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 			return -1;
 		}
