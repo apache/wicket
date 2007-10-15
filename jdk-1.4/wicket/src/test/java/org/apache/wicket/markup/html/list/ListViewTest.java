@@ -25,13 +25,16 @@ import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Test for ListView
+ * 
  * @author Juergen Donnerstag
  */
 public class ListViewTest extends TestCase
 {
 	/**
 	 * Create a predefined ListView
-	 * @param modelListSize # of elements to go into the list
+	 * 
+	 * @param modelListSize #
+	 *            of elements to go into the list
 	 * @return list view
 	 */
 	private ListView createListView(final int modelListSize)
@@ -59,7 +62,7 @@ public class ListViewTest extends TestCase
 	public void testListView()
 	{
 		WicketTester tester = new WicketTester();
-		
+
 		ListView lv = createListView(4);
 		assertEquals(4, lv.getList().size());
 		assertEquals(4, lv.getViewSize());
@@ -92,12 +95,12 @@ public class ListViewTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void testEmptyListView()
 	{
 		WicketTester tester = new WicketTester();
-		
+
 		// Empty tables
 		ListView lv = createListView(0);
 		assertEquals(0, lv.getStartIndex());
@@ -109,7 +112,7 @@ public class ListViewTest extends TestCase
 		lv = new ListView("listView", new Model(null))
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected void populateItem(final ListItem listItem)
 			{
 				// do nothing

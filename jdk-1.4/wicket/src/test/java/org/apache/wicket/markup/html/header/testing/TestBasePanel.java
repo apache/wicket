@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Juergen Donnerstag
  */
-public class TestBasePanel extends Panel 
+public class TestBasePanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 

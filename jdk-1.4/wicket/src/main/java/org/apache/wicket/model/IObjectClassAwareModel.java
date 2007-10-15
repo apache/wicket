@@ -17,8 +17,7 @@
 package org.apache.wicket.model;
 
 /**
- * Interface implemented by model that can provide class of the model 
- * object.
+ * Interface implemented by model that can provide class of the model object.
  * 
  * @author Matej Knopp
  */
@@ -26,6 +25,7 @@ public interface IObjectClassAwareModel extends IModel
 {
 	/**
 	 * Returns the class of model object
+	 * 
 	 * @return class of model object or null if the class couldn't be determined
 	 */
 	public Class getObjectClass();

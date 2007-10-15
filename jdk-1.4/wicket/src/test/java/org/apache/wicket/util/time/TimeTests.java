@@ -24,23 +24,21 @@ import junit.framework.TestSuite;
  */
 public final class TimeTests
 {
-    /**
-     * 
-     * @return suite
-     */
-    public static Test suite()
-    {
-        final TestSuite suite = new TestSuite("Test for org.apache.wicket.util.time");
+	/**
+	 * 
+	 * @return suite
+	 */
+	public static Test suite()
+	{
+		final TestSuite suite = new TestSuite("Test for org.apache.wicket.util.time");
 
-        //$JUnit-BEGIN$
-        suite.addTest(new TestSuite(TimeTest.class));
-        suite.addTest(new TestSuite(DurationTest.class));
-        suite.addTest(new TestSuite(TimeOfDayTest.class));
-        suite.addTest(new TestSuite(TimeMapTest.class));
+		// $JUnit-BEGIN$
+		suite.addTest(new TestSuite(TimeTest.class));
+		suite.addTest(new TestSuite(DurationTest.class));
+		suite.addTest(new TestSuite(TimeOfDayTest.class));
+		suite.addTest(new TestSuite(TimeMapTest.class));
 
-        //$JUnit-END$
-        return suite;
-    }
+		// $JUnit-END$
+		return suite;
+	}
 }
-
-

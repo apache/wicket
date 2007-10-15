@@ -24,7 +24,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * A convenience class to represent an empty data provider.
- *
+ * 
  * @author Phil Kulak
  */
 public class EmptyDataProvider implements IDataProvider

@@ -25,12 +25,11 @@ import org.apache.wicket.request.RequestParameters;
 
 
 /**
- * Base class for page request implementations allowing access to request
- * parameters. A Request has a URL and a parameter map. You can retrieve the URL
- * of the request with getURL(). The entire parameter map can be retrieved via
- * getParameterMap(). Individual parameters can be retrieved via
- * getParameter(String). If multiple values are available for a given parameter,
- * they can be retrieved via getParameters(String).
+ * Base class for page request implementations allowing access to request parameters. A Request has
+ * a URL and a parameter map. You can retrieve the URL of the request with getURL(). The entire
+ * parameter map can be retrieved via getParameterMap(). Individual parameters can be retrieved via
+ * getParameter(String). If multiple values are available for a given parameter, they can be
+ * retrieved via getParameters(String).
  * 
  * @author Jonathan Locke
  */
@@ -50,9 +49,8 @@ public abstract class Request
 	}
 
 	/**
-	 * An implementation of this method is only required if a subclass wishes to
-	 * support sessions via URL rewriting. This default implementation simply
-	 * returns the URL String it is passed.
+	 * An implementation of this method is only required if a subclass wishes to support sessions
+	 * via URL rewriting. This default implementation simply returns the URL String it is passed.
 	 * 
 	 * @param url
 	 *            The URL to decode
@@ -109,37 +107,31 @@ public abstract class Request
 	/**
 	 * Gets a prefix to make this relative to the context root.
 	 * <p>
-	 * For example, if your context root is http://server.com/myApp/ and the
-	 * request is for /myApp/mountedPage/, then the prefix returned might be
-	 * "../../".
+	 * For example, if your context root is http://server.com/myApp/ and the request is for
+	 * /myApp/mountedPage/, then the prefix returned might be "../../".
 	 * <p>
-	 * For a particular technology, this might return either an absolute prefix
-	 * or a relative one.
+	 * For a particular technology, this might return either an absolute prefix or a relative one.
 	 * 
-	 * @return Prefix relative to this request required to back up to context
-	 *         root.
+	 * @return Prefix relative to this request required to back up to context root.
 	 */
 	public abstract String getRelativePathPrefixToContextRoot();
-	
+
 	/**
 	 * Gets a prefix to make this relative to the Wicket Servlet/Filter.
 	 * <p>
-	 * For example, if your context root is http://server.com/myApp/ and the
-	 * request is for /myApp/mountedPage/, then the prefix returned might be
-	 * "../../".
+	 * For example, if your context root is http://server.com/myApp/ and the request is for
+	 * /myApp/mountedPage/, then the prefix returned might be "../../".
 	 * <p>
-	 * For a particular technology, this might return either an absolute prefix
-	 * or a relative one.
+	 * For a particular technology, this might return either an absolute prefix or a relative one.
 	 * 
-	 * @return Prefix relative to this request required to back up to context
-	 *         root.
+	 * @return Prefix relative to this request required to back up to context root.
 	 */
 	public abstract String getRelativePathPrefixToWicketHandler();
-	
+
 	/**
-	 * Gets the relative (to some root) url (e.g. in a servlet environment, the
-	 * url without the context path and without a leading '/'). Use this method
-	 * e.g. to load resources using the servlet context.
+	 * Gets the relative (to some root) url (e.g. in a servlet environment, the url without the
+	 * context path and without a leading '/'). Use this method e.g. to load resources using the
+	 * servlet context.
 	 * 
 	 * @return Request URL
 	 * @deprecated Use {@link #getURL()} instead.
@@ -150,8 +142,8 @@ public abstract class Request
 	}
 
 	/**
-	 * Gets the request parameters object using the instance of
-	 * {@link IRequestCodingStrategy} of the provided request cycle processor.
+	 * Gets the request parameters object using the instance of {@link IRequestCodingStrategy} of
+	 * the provided request cycle processor.
 	 * 
 	 * @return the request parameters object
 	 */
@@ -168,8 +160,8 @@ public abstract class Request
 		final IRequestCodingStrategy encoder = processor.getRequestCodingStrategy();
 		if (encoder == null)
 		{
-			throw new WicketRuntimeException("request encoder must be not-null (provided by "
-					+ processor + ")");
+			throw new WicketRuntimeException("request encoder must be not-null (provided by " +
+					processor + ")");
 		}
 
 		// decode the request parameters into a strongly typed parameters
@@ -188,14 +180,15 @@ public abstract class Request
 
 		if (requestParameters == null)
 		{
-			throw new WicketRuntimeException("request parameters must be not-null (provided by "
-					+ encoder + ")");
+			throw new WicketRuntimeException("request parameters must be not-null (provided by " +
+					encoder + ")");
 		}
 		return requestParameters;
 	}
 
 	/**
-	 * Retrieves the relative URL of this request for local use. This is relative to the context root.
+	 * Retrieves the relative URL of this request for local use. This is relative to the context
+	 * root.
 	 * 
 	 * @return The relative request URL for local use
 	 */
@@ -211,11 +204,11 @@ public abstract class Request
 	{
 		this.page = page;
 	}
-	
+
 	/**
-	 * A request can say if the current request should generated a new version number.
-	 * If this returns true, then all the changes on a page that has versioning enabled
-	 * is merged with the latest version. Else it will just create a new version.
+	 * A request can say if the current request should generated a new version number. If this
+	 * returns true, then all the changes on a page that has versioning enabled is merged with the
+	 * latest version. Else it will just create a new version.
 	 * 
 	 * @return true if the version must be merged with the previous latest.
 	 */

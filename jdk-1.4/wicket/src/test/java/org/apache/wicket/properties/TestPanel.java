@@ -28,6 +28,7 @@ public class TestPanel extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
 	public TestPanel(final String id)

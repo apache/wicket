@@ -29,7 +29,8 @@ import org.apache.wicket.util.tester.WicketTester;
 public class MarkupFragmentFinderTest extends TestCase
 {
 	/**
-	 * Test method for {@link org.apache.wicket.MarkupFragmentFinder#find(org.apache.wicket.Component)}.
+	 * Test method for
+	 * {@link org.apache.wicket.MarkupFragmentFinder#find(org.apache.wicket.Component)}.
 	 */
 	public void testFind()
 	{
@@ -44,7 +45,7 @@ public class MarkupFragmentFinderTest extends TestCase
 		assertNotNull(panel);
 		markupStream = new MarkupFragmentFinder().find(panel);
 		assertNotNull(markupStream);
-		
+
 		page = new InlinePanelPage_1();
 		panel = page.get("myPanel1");
 		assertNotNull(panel);

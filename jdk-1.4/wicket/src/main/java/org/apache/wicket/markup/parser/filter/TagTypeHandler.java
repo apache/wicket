@@ -28,9 +28,8 @@ import org.apache.wicket.util.collections.ArrayListStack;
 
 
 /**
- * This is a markup inline filter. It identifies tags which are allowed
- * open-close in the markup, but which for Wicket to be processed correctly
- * must be open-body-close.
+ * This is a markup inline filter. It identifies tags which are allowed open-close in the markup,
+ * but which for Wicket to be processed correctly must be open-body-close.
  * 
  * @author Juergen Donnerstag
  */
@@ -56,10 +55,9 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handle it if
-	 * the specific filter criteria are met. Depending on the filter, it may
-	 * return the MarkupElement unchanged, modified or it remove by asking the
-	 * parent handler for the next tag.
+	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
+	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
+	 * modified or it remove by asking the parent handler for the next tag.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return Return the next eligible MarkupElement
@@ -88,7 +86,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 			{
 				name = tag.getNamespace() + ":" + tag.getName();
 			}
-			
+
 			// Pop any simple tags off the top of the stack
 			if (requiresOpenBodyCloseTag(name))
 			{
@@ -98,7 +96,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 				closeTag.setName(tag.getName());
 				closeTag.setNamespace(tag.getNamespace());
 				closeTag.closes(tag);
-				
+
 				stack.push(new ComponentTag(closeTag));
 			}
 		}

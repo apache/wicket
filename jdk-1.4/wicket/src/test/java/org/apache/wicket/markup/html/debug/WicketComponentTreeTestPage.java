@@ -36,12 +36,12 @@ public class WicketComponentTreeTestPage extends WebPage
 	 */
 	public WicketComponentTreeTestPage()
 	{
-	    add(new Label("label1", "test1"));
-	    
-	    // Create a dummy component with inner class
-	    add(new Label("label2", "test22"));
-	    
-	    // Add component tree
+		add(new Label("label1", "test1"));
+
+		// Create a dummy component with inner class
+		add(new Label("label2", "test22"));
+
+		// Add component tree
 		add(new PageView("componentList", this));
 	}
 }

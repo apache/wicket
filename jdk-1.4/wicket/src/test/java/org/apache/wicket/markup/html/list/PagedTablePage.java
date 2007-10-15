@@ -24,7 +24,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
 
 
-
 /**
  * Dummy page used for resource testing.
  */
@@ -33,8 +32,7 @@ public class PagedTablePage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 *  page parameters.
+	 * Construct. page parameters.
 	 */
 	public PagedTablePage()
 	{
@@ -46,7 +44,7 @@ public class PagedTablePage extends WebPage
 		PageableListView table = new PageableListView("table", list, 2)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
@@ -55,7 +53,7 @@ public class PagedTablePage extends WebPage
 		};
 
 		add(table);
- 		PagingNavigation navigation = new PagingNavigation("navigation", table);
+		PagingNavigation navigation = new PagingNavigation("navigation", table);
 		add(navigation);
 	}
 }

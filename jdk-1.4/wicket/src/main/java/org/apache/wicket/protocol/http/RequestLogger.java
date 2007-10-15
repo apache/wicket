@@ -44,19 +44,17 @@ import org.slf4j.LoggerFactory;
 /**
  * This is the logger class that can be set in the
  * {@link org.apache.wicket.protocol.http.WebApplication#getRequestLogger()} method. If this class
- * is set all request and live sessions will be recorded and displayed From the
- * total created sessions, to the peak session count and the current
- * livesessions. For the livesessions the request logger will record what
- * request are happening what kind of {@link IRequestTarget} was the event
- * target and what {@link IRequestTarget} was the response target. It also
- * records what session data was touched for this and how long the request did
- * take.
- *
- * To view this information live see the {@link InspectorBug} that shows the
- * {@link InspectorPage} with the {@link LiveSessionsPage}
- *
+ * is set all request and live sessions will be recorded and displayed From the total created
+ * sessions, to the peak session count and the current livesessions. For the livesessions the
+ * request logger will record what request are happening what kind of {@link IRequestTarget} was the
+ * event target and what {@link IRequestTarget} was the response target. It also records what
+ * session data was touched for this and how long the request did take.
+ * 
+ * To view this information live see the {@link InspectorBug} that shows the {@link InspectorPage}
+ * with the {@link LiveSessionsPage}
+ * 
  * @author jcompagner
- *
+ * 
  * @since 1.2
  */
 public class RequestLogger implements IRequestLogger
@@ -66,22 +64,20 @@ public class RequestLogger implements IRequestLogger
 
 
 	/**
-	 * This interface can be implemented in a custom session object. to give an
-	 * object that has more information for the current session (state of
-	 * session).
-	 *
+	 * This interface can be implemented in a custom session object. to give an object that has more
+	 * information for the current session (state of session).
+	 * 
 	 * @author jcompagner
 	 */
 	public interface ISessionLogInfo
 	{
 
 		/**
-		 * If you use the request logger log functionality then this object
-		 * should have a nice String representation. So make sure that the
-		 * toString() is implemented for the returned object.
-		 *
-		 * @return The custom object stored in the request loggers current
-		 *         request.
+		 * If you use the request logger log functionality then this object should have a nice
+		 * String representation. So make sure that the toString() is implemented for the returned
+		 * object.
+		 * 
+		 * @return The custom object stored in the request loggers current request.
 		 */
 		Object getSessionInfo();
 	}
@@ -230,10 +226,13 @@ public class RequestLogger implements IRequestLogger
 				}
 				catch (Exception e)
 				{
-					// log the error and let the request logging continue (this is what happens in the
+					// log the error and let the request logging continue (this is what happens in
+					// the
 					// detach phase of the request cycle anyway. This provides better diagnostics).
-					log.error("Exception while determining the size of the session in the request logger: "
-					        + e.getMessage(), e);
+					log
+							.error(
+									"Exception while determining the size of the session in the request logger: " +
+											e.getMessage(), e);
 				}
 			}
 			rd.setSessionSize(sizeInBytes);
@@ -345,8 +344,8 @@ public class RequestLogger implements IRequestLogger
 		else if (value instanceof IPageMap)
 		{
 			IPageMap map = (IPageMap)value;
-			rd.addEntry("PageMap removed, name: "
-					+ (map.getName() == null ? "DEFAULT" : map.getName()));
+			rd.addEntry("PageMap removed, name: " +
+					(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else if (value instanceof WebSession)
 		{
@@ -372,8 +371,8 @@ public class RequestLogger implements IRequestLogger
 		else if (value instanceof IPageMap)
 		{
 			IPageMap map = (IPageMap)value;
-			rd.addEntry("PageMap updated, name: "
-					+ (map.getName() == null ? "DEFAULT" : map.getName()));
+			rd.addEntry("PageMap updated, name: " +
+					(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else if (value instanceof Session)
 		{
@@ -404,8 +403,8 @@ public class RequestLogger implements IRequestLogger
 		else if (value instanceof IPageMap)
 		{
 			IPageMap map = (IPageMap)value;
-			rd.addEntry("PageMap created, name: "
-					+ (map.getName() == null ? "DEFAULT" : map.getName()));
+			rd.addEntry("PageMap created, name: " +
+					(map.getName() == null ? "DEFAULT" : map.getName()));
 		}
 		else
 		{
@@ -487,7 +486,7 @@ public class RequestLogger implements IRequestLogger
 
 	/**
 	 * This class hold the information one request of a session has.
-	 *
+	 * 
 	 * @author jcompagner
 	 */
 	public static class SessionData implements IClusterable, Comparable
@@ -504,7 +503,7 @@ public class RequestLogger implements IRequestLogger
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param sessionId
 		 */
 		public SessionData(String sessionId)
@@ -555,8 +554,8 @@ public class RequestLogger implements IRequestLogger
 		}
 
 		/**
-		 * @return The session info object given by the
-		 *         {@link ISessionLogInfo#getSessionInfo()} session method.
+		 * @return The session info object given by the {@link ISessionLogInfo#getSessionInfo()}
+		 *         session method.
 		 */
 		public Object getSessionInfo()
 		{
@@ -597,7 +596,7 @@ public class RequestLogger implements IRequestLogger
 
 	/**
 	 * This class hold the information one request of a session has.
-	 *
+	 * 
 	 * @author jcompagner
 	 */
 	public static class RequestData implements IClusterable
@@ -644,8 +643,7 @@ public class RequestLogger implements IRequestLogger
 		}
 
 		/**
-		 * @return The session object info, created by
-		 *         {@link ISessionLogInfo#getSessionInfo()}
+		 * @return The session object info, created by {@link ISessionLogInfo#getSessionInfo()}
 		 */
 		public Object getSessionInfo()
 		{
@@ -654,7 +652,7 @@ public class RequestLogger implements IRequestLogger
 
 		/**
 		 * Set the session info object of the session for this request.
-		 *
+		 * 
 		 * @param sessionInfo
 		 */
 		public void setSessionInfo(Object sessionInfo)
@@ -736,8 +734,7 @@ public class RequestLogger implements IRequestLogger
 		}
 
 		/**
-		 * @return All entries of the objects that are created/updated or
-		 *         removed in this request
+		 * @return All entries of the objects that are created/updated or removed in this request
 		 */
 		public String getAlteredObjects()
 		{
@@ -772,10 +769,10 @@ public class RequestLogger implements IRequestLogger
 
 		public String toString()
 		{
-			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo
-					+ ",sessionid=" + sessionId + ",sessionsize=" + totalSessionSize + ",request="
-					+ eventTarget + ",response=" + responseTarget + ",alteredobjects="
-					+ getAlteredObjects() + ",activerequest=" + activeRequest + "]";
+			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo +
+					",sessionid=" + sessionId + ",sessionsize=" + totalSessionSize + ",request=" +
+					eventTarget + ",response=" + responseTarget + ",alteredobjects=" +
+					getAlteredObjects() + ",activerequest=" + activeRequest + "]";
 		}
 	}
 }

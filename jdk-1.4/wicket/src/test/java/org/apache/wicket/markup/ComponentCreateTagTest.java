@@ -28,8 +28,8 @@ import org.apache.wicket.util.tester.WicketTester.DummyWebApplication;
 
 
 /**
- * Simple application that demonstrates the mock http application code (and
- * checks that it is working)
+ * Simple application that demonstrates the mock http application code (and checks that it is
+ * working)
  * 
  * @author Chris Turner
  */
@@ -54,7 +54,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	public void testRenderHomePage_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(ComponentCreateTag_1.class, "ComponentCreateTagExpectedResult_1.html");
+		executeTest(ComponentCreateTag_1.class, "ComponentCreateTagExpectedResult_1.html");
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	public void testRenderHomePage_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(ComponentCreateTag_2.class, "ComponentCreateTagExpectedResult_2.html");
+		executeTest(ComponentCreateTag_2.class, "ComponentCreateTagExpectedResult_2.html");
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	public void testRenderHomePage_3() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(ComponentCreateTag_3.class, "ComponentCreateTagExpectedResult_3.html");
+		executeTest(ComponentCreateTag_3.class, "ComponentCreateTagExpectedResult_3.html");
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	public void testRenderHomePage_4() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(ComponentCreateTag_4.class, "ComponentCreateTagExpectedResult_4.html");
+		executeTest(ComponentCreateTag_4.class, "ComponentCreateTagExpectedResult_4.html");
 	}
 
 	/**
@@ -100,7 +100,8 @@ public class ComponentCreateTagTest extends WicketTestCase
 		WebApplication myApplication = new DummyWebApplication()
 		{
 			/**
-			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request, org.apache.wicket.Response)
+			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+			 *      org.apache.wicket.Response)
 			 */
 			public Session newSession(Request request, Response response)
 			{
@@ -109,10 +110,10 @@ public class ComponentCreateTagTest extends WicketTestCase
 				return session;
 			}
 		};
-		
+
 		tester = new WicketTester(myApplication);
 
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-	    executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
+		executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
 	}
 }

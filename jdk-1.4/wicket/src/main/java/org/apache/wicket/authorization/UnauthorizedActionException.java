@@ -33,7 +33,7 @@ public class UnauthorizedActionException extends AuthorizationException
 
 	/** The component that caused the unauthorized exception */
 	private final Component component;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -48,7 +48,7 @@ public class UnauthorizedActionException extends AuthorizationException
 		this.component = component;
 		this.action = action;
 	}
-	
+
 	/**
 	 * @return The action that was forbidden
 	 */
@@ -56,7 +56,7 @@ public class UnauthorizedActionException extends AuthorizationException
 	{
 		return action;
 	}
-	
+
 	/**
 	 * @return The component that caused the unauthorized exception
 	 */

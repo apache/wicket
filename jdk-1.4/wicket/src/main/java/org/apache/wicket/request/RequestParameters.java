@@ -28,17 +28,16 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 
 /**
  * <p>
- * Object that abstracts common request parameters. It consists of possible
- * optional parameters that can be translated from e.g. servlet request
- * parameters and serves as a strongly typed variant of these that is to be
- * created by the {@link org.apache.wicket.request.IRequestCycleProcessor}'s
+ * Object that abstracts common request parameters. It consists of possible optional parameters that
+ * can be translated from e.g. servlet request parameters and serves as a strongly typed variant of
+ * these that is to be created by the {@link org.apache.wicket.request.IRequestCycleProcessor}'s
  * {@link org.apache.wicket.request.IRequestCodingStrategy}.
  * </p>
  * <p>
- * Though this object can be extended and hence more parameter options can be
- * used, anything other than in this implementation must be supported by
- * specific {@link org.apache.wicket.request.IRequestCycleProcessor}
- * implementations and thus are not supported by default implementations.
+ * Though this object can be extended and hence more parameter options can be used, anything other
+ * than in this implementation must be supported by specific
+ * {@link org.apache.wicket.request.IRequestCycleProcessor} implementations and thus are not
+ * supported by default implementations.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -62,8 +61,8 @@ public class RequestParameters implements IClusterable
 	private String interfaceName;
 
 	/**
-	 * in case this request points to a dispatched call to a behavior that is
-	 * coupled to a component, this is the registration id of the behavior.
+	 * in case this request points to a dispatched call to a behavior that is coupled to a
+	 * component, this is the registration id of the behavior.
 	 */
 	private String behaviorId;
 
@@ -202,8 +201,8 @@ public class RequestParameters implements IClusterable
 	}
 
 	/**
-	 * Tells wicket whether this request should only be processed if the page +
-	 * version specified are pointing to the last page the user accessed.
+	 * Tells wicket whether this request should only be processed if the page + version specified
+	 * are pointing to the last page the user accessed.
 	 * 
 	 * @see WebRequestCodingStrategy#IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME
 	 * 
@@ -353,8 +352,7 @@ public class RequestParameters implements IClusterable
 	 * Sets the depth for relative URLs. Used in AJAX requests.
 	 * 
 	 * @param urlDepth
-	 *            Number of slashes deep the page is that an AJAX request is
-	 *            made from.
+	 *            Number of slashes deep the page is that an AJAX request is made from.
 	 */
 	public void setUrlDepth(int urlDepth)
 	{

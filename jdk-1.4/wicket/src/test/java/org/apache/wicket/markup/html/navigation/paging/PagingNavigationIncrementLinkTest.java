@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 
-
 /**
  * Testcase for the navigation increment link.
  * 

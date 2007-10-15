@@ -22,7 +22,7 @@ import org.apache.wicket.util.lang.PackageName;
 public class RestartWithMountedPageTest extends WicketTestCase
 {
 
-    /**
+	/**
 	 * Construct.
 	 */
 	public RestartWithMountedPageTest()
@@ -32,7 +32,7 @@ public class RestartWithMountedPageTest extends WicketTestCase
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param name
 	 */
 	public RestartWithMountedPageTest(String name)
@@ -40,21 +40,24 @@ public class RestartWithMountedPageTest extends WicketTestCase
 		super(name);
 	}
 
-    /**
-     * Tests that a protected page can redirect to a login page from a mounted package.
-     */
-    public void testWithMountedPackage() {
-        tester.getApplication().mount("/test", PackageName.forPackage(ProtectedPage.class.getPackage()));
-        tester.startPage(ProtectedPage.class);
-        tester.assertRenderedPage(LoginPage.class);
-    }
+	/**
+	 * Tests that a protected page can redirect to a login page from a mounted package.
+	 */
+	public void testWithMountedPackage()
+	{
+		tester.getApplication().mount("/test",
+				PackageName.forPackage(ProtectedPage.class.getPackage()));
+		tester.startPage(ProtectedPage.class);
+		tester.assertRenderedPage(LoginPage.class);
+	}
 
-    /**
-     * Tests that a protected page can redirect to a login page from mounted pages.
-     */
-    public void testWithMountedLoginPage() {
-        tester.getApplication().mountBookmarkablePage("/login", LoginPage.class);
-        tester.startPage(ProtectedPage.class);
-        tester.assertRenderedPage(LoginPage.class);
-    }
+	/**
+	 * Tests that a protected page can redirect to a login page from mounted pages.
+	 */
+	public void testWithMountedLoginPage()
+	{
+		tester.getApplication().mountBookmarkablePage("/login", LoginPage.class);
+		tester.startPage(ProtectedPage.class);
+		tester.assertRenderedPage(LoginPage.class);
+	}
 }

@@ -19,8 +19,8 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.WicketRuntimeException;
 
 /**
- * Thrown when the {@link org.apache.wicket.protocol.http.IWebApplicationFactory} could not
- * be created for some reason.
+ * Thrown when the {@link org.apache.wicket.protocol.http.IWebApplicationFactory} could not be
+ * created for some reason.
  * 
  * @author Seth Ladd
  */

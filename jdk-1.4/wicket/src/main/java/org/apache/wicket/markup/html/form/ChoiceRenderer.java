@@ -19,16 +19,15 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.util.lang.PropertyResolver;
 
 /**
- * Default implementation of {@link org.apache.wicket.markup.html.form.IChoiceRenderer}.
- * Usage:
+ * Default implementation of {@link org.apache.wicket.markup.html.form.IChoiceRenderer}. Usage:
  * <p>
  * 
  * <pre>
  * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers)
  * </pre>
  * 
- * creates a DropDownChoice of users and the display value will be toString()
- * and the id the index of the object in the ListOfUsers.
+ * creates a DropDownChoice of users and the display value will be toString() and the id the index
+ * of the object in the ListOfUsers.
  * </p>
  * <p>
  * 
@@ -36,9 +35,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers, new ChoiceRenderer(&quot;name&quot;))
  * </pre>
  * 
- * creates a DropDownChoice of users and the display value will be looked up by
- * property expression ("name") and the id the index of the object in the
- * ListOfUsers
+ * creates a DropDownChoice of users and the display value will be looked up by property expression
+ * ("name") and the id the index of the object in the ListOfUsers
  * </p>
  * <p>
  * 
@@ -46,9 +44,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * new DropDownChoice(&quot;users&quot;, new Model(selectedUser), listOfUsers, new ChoiceRenderer(&quot;name&quot;, &quot;id&quot;))
  * </pre>
  * 
- * creates a DropDownChoice of users and the display value will be looked up by
- * property expression ("name") and the id will be looked up by the property
- * expression "id"
+ * creates a DropDownChoice of users and the display value will be looked up by property expression
+ * ("name") and the id will be looked up by the property expression "id"
  * </p>
  * 
  * @author jcompagner
@@ -64,9 +61,9 @@ public class ChoiceRenderer implements IChoiceRenderer
 	private final String idExpression;
 
 	/**
-	 * Construct. When you use this constructor, the display value will be
-	 * determined by calling toString() on the list object, and the id will be
-	 * based on the list index. the id value will be the index
+	 * Construct. When you use this constructor, the display value will be determined by calling
+	 * toString() on the list object, and the id will be based on the list index. the id value will
+	 * be the index
 	 */
 	public ChoiceRenderer()
 	{
@@ -76,10 +73,9 @@ public class ChoiceRenderer implements IChoiceRenderer
 	}
 
 	/**
-	 * Construct. When you use this constructor, the display value will be
-	 * determined by executing the given property expression on the list object, and
-	 * the id will be based on the list index. The display value will be
-	 * calculated by the given property expression
+	 * Construct. When you use this constructor, the display value will be determined by executing
+	 * the given property expression on the list object, and the id will be based on the list index.
+	 * The display value will be calculated by the given property expression
 	 * 
 	 * @param displayExpression
 	 *            A property expression to get the display value
@@ -92,9 +88,8 @@ public class ChoiceRenderer implements IChoiceRenderer
 	}
 
 	/**
-	 * Construct. When you use this constructor, both the id and the display
-	 * value will be determined by executing the given property expressions on the
-	 * list object.
+	 * Construct. When you use this constructor, both the id and the display value will be
+	 * determined by executing the given property expressions on the list object.
 	 * 
 	 * @param displayExpression
 	 *            A property expression to get the display value
@@ -128,8 +123,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object,
-	 *      int)
+	 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object, int)
 	 */
 	public String getIdValue(Object object, int index)
 	{

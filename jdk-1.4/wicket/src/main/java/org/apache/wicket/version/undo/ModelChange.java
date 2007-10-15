@@ -109,8 +109,8 @@ class ModelChange extends Change
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("RECORD MODEL CHANGE: changed model of " + " ("
-					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode() + ")");
+			log.debug("RECORD MODEL CHANGE: changed model of " + " (" +
+					Classes.simpleName(component.getClass()) + "@" + component.hashCode() + ")");
 		}
 	}
 
@@ -121,8 +121,8 @@ class ModelChange extends Change
 	{
 		if (log.isDebugEnabled())
 		{
-			log.debug("UNDO MODEL CHANGE: setting original model " + originalModel + " to "
-					+ component.getPath() + "@" + component.hashCode() + ")");
+			log.debug("UNDO MODEL CHANGE: setting original model " + originalModel + " to " +
+					component.getPath() + "@" + component.hashCode() + ")");
 		}
 
 		component.setModel(originalModel);

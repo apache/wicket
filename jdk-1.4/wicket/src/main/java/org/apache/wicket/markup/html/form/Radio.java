@@ -26,8 +26,7 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.lang.Objects;
 
 /**
- * Component representing a single radio choice in a
- * org.apache.wicket.markup.html.form.RadioGroup.
+ * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
  * 
  * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
  * 
@@ -43,8 +42,8 @@ public class Radio extends LabeledWebMarkupContainer
 	private static final String ATTR_DISABLED = "disabled";
 
 	/**
-	 * page-scoped uuid of this check. this property must not be accessed
-	 * directly, instead {@link #getValue()} must be used
+	 * page-scoped uuid of this check. this property must not be accessed directly, instead
+	 * {@link #getValue()} must be used
 	 */
 	private short uuid = -1;
 
@@ -66,9 +65,8 @@ public class Radio extends LabeledWebMarkupContainer
 
 
 	/**
-	 * Form submission value used for this radio component. This string will
-	 * appear as the value of the <code>value</code> html attribute for the
-	 * <code>input</code> tag.
+	 * Form submission value used for this radio component. This string will appear as the value of
+	 * the <code>value</code> html attribute for the <code>input</code> tag.
 	 * 
 	 * @return form submission value
 	 */
@@ -102,9 +100,9 @@ public class Radio extends LabeledWebMarkupContainer
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
-					"Radio component ["
-							+ getPath()
-							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
+					"Radio component [" +
+							getPath() +
+							"] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
 
@@ -138,19 +136,22 @@ public class Radio extends LabeledWebMarkupContainer
 				RequestContext rc = RequestContext.get();
 				if (rc.isPortletRequest())
 				{
-					// restore url back to real wicket path as its going to be interpreted by the form itself
+					// restore url back to real wicket path as its going to be interpreted by the
+					// form itself
 					url = ((PortletRequestContext)rc).getLastEncodedPath();
-				}				
+				}
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			else
 			{
-				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden form
+				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden
+				// form
 				// with an ActionURL or something
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "window.location.href='" + url + (url.toString().indexOf('?')>-1 ? "&amp;" : "?") + group.getInputName()
-						+ "=' + this.value;");
+				tag.put("onclick", "window.location.href='" + url +
+						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
+						"=' + this.value;");
 			}
 		}
 
@@ -160,10 +161,10 @@ public class Radio extends LabeledWebMarkupContainer
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 	}
-	
+
 	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to Radio itself.
+	 * The value will be made available to the validator property by means of ${label}. It does not
+	 * have any specific meaning to Radio itself.
 	 * 
 	 * @param labelModel
 	 * @return this for chaining

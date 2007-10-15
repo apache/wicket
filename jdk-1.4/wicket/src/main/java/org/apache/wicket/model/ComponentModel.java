@@ -19,9 +19,8 @@ package org.apache.wicket.model;
 import org.apache.wicket.Component;
 
 /**
- * Quick model that is implements the IComponentAssignedModel and the IModel
- * interfaces. Its a quick replacement for the current
- * setObject(Component,Object) and getObject(Component) methods when the
+ * Quick model that is implements the IComponentAssignedModel and the IModel interfaces. Its a quick
+ * replacement for the current setObject(Component,Object) and getObject(Component) methods when the
  * component is needed in the model.
  * 
  * @author jcompagner
@@ -49,8 +48,7 @@ public class ComponentModel implements IModel, IComponentAssignedModel
 	}
 
 	/**
-	 * Returns the object from the model with the use of the component where it
-	 * is attached to.
+	 * Returns the object from the model with the use of the component where it is attached to.
 	 * 
 	 * @param component
 	 *            The component which has this model.

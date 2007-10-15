@@ -23,18 +23,15 @@ import org.apache.wicket.IClusterable;
 
 
 /**
- * Converts input to output and vice versa. Converters are needed in web
- * applications because we have to switch between Java objects on the server and
- * Strings in the browser output and input.
+ * Converts input to output and vice versa. Converters are needed in web applications because we
+ * have to switch between Java objects on the server and Strings in the browser output and input.
  * <p>
- * Output conversion, which is handled by
- * {@link #convertToString(Object, Locale)}, is typically used by components
- * when they render, so that a date can be displayed as '12/12/2007'. Input
- * conversion, handled by {@link #convertToObject(String, Locale)}, is
- * typically used by form components to interpret incoming values Such values
- * are strings as they are send as request parameters from browsers. An incoming
- * value could be the string '12/12/2007' which could be translated to a
- * corresponding {@link Date} object.
+ * Output conversion, which is handled by {@link #convertToString(Object, Locale)}, is typically
+ * used by components when they render, so that a date can be displayed as '12/12/2007'. Input
+ * conversion, handled by {@link #convertToObject(String, Locale)}, is typically used by form
+ * components to interpret incoming values Such values are strings as they are send as request
+ * parameters from browsers. An incoming value could be the string '12/12/2007' which could be
+ * translated to a corresponding {@link Date} object.
  * </p>
  * 
  * @author Eelco Hillenius

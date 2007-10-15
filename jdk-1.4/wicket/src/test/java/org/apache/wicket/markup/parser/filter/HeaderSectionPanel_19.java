@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class HeaderSectionPanel_19 extends Panel
@@ -31,13 +31,14 @@ public class HeaderSectionPanel_19 extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public HeaderSectionPanel_19(final String id) 
+	public HeaderSectionPanel_19(final String id)
 	{
-	    super(id);
-	    
-	    add(new Label("foo1", "1111"));
-	    add(new Label("foo2", "2222"));
-    }
+		super(id);
+
+		add(new Label("foo1", "1111"));
+		add(new Label("foo2", "2222"));
+	}
 }

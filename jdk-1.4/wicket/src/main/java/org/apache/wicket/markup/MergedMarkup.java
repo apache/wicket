@@ -26,22 +26,20 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A Markup class which represents merged markup, as it is required for markup
- * inheritance.
+ * A Markup class which represents merged markup, as it is required for markup inheritance.
  * <p>
- * The Markups are merged at load time. Deep markup hierarchies are supported.
- * Multiple inheritance is not.
+ * The Markups are merged at load time. Deep markup hierarchies are supported. Multiple inheritance
+ * is not.
  * <p>
- * The markup resource file, which is associated with the markup, will be the
- * resource of the requested markup file. The base markup resources are not.
+ * The markup resource file, which is associated with the markup, will be the resource of the
+ * requested markup file. The base markup resources are not.
  * <p>
- * Base Markup must have a &lt;wicket:child/&gt; tag at the position where the
- * derived markup should be inserted. From the derived markup all tags in
- * between &lt;wicket:extend&gt; and &lt;/wicket:extend&gt; will be inserted.
+ * Base Markup must have a &lt;wicket:child/&gt; tag at the position where the derived markup should
+ * be inserted. From the derived markup all tags in between &lt;wicket:extend&gt; and
+ * &lt;/wicket:extend&gt; will be inserted.
  * <p>
- * In addition, all &lt;wicket:head> regions are copied as well. This allows to
- * develop completely self-contained plug & play components including javascript
- * etc.
+ * In addition, all &lt;wicket:head> regions are copied as well. This allows to develop completely
+ * self-contained plug & play components including javascript etc.
  * 
  * @author Juergen Donnerstag
  */
@@ -375,8 +373,7 @@ public class MergedMarkup extends Markup
 	}
 
 	/**
-	 * Append the wicket:head regions from the extended markup to the current
-	 * markup
+	 * Append the wicket:head regions from the extended markup to the current markup
 	 * 
 	 * @param markup
 	 * @param extendIndex

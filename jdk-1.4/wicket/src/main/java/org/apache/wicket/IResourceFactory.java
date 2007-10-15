@@ -19,11 +19,10 @@ package org.apache.wicket;
 import java.util.Locale;
 
 /**
- * A factory which creates resources for a given specification string. The
- * format of the specification string is determined by the resource factory
- * subclass. If the resource factory produced button images, the specification
- * might include settings relevant to buttons such as the width, height and
- * color of the button, as well as the text to draw on the button.
+ * A factory which creates resources for a given specification string. The format of the
+ * specification string is determined by the resource factory subclass. If the resource factory
+ * produced button images, the specification might include settings relevant to buttons such as the
+ * width, height and color of the button, as well as the text to draw on the button.
  * 
  * @see org.apache.wicket.markup.html.image.resource.LocalizedImageResource
  * @author Jonathan Locke

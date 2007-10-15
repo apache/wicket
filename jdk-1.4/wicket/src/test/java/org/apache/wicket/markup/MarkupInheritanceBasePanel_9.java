@@ -22,18 +22,19 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  */
-public class MarkupInheritanceBasePanel_9 extends Panel 
+public class MarkupInheritanceBasePanel_9 extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
 	public MarkupInheritanceBasePanel_9(final String id)
 	{
-	    super(id);
-	    
+		super(id);
+
 		add(new Label("panelLabel1", "label 1"));
 		add(new Label("panelLabel2", "label 2"));
 	}

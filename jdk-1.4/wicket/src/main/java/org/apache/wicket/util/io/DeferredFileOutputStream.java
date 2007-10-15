@@ -23,16 +23,16 @@ import java.io.OutputStream;
 
 /**
  * <p>
- * An output stream which will retain data in memory until a specified threshold is
- * reached, and only then commit it to disk. If the stream is closed before the threshold
- * is reached, the data will not be written to disk at all.
+ * An output stream which will retain data in memory until a specified threshold is reached, and
+ * only then commit it to disk. If the stream is closed before the threshold is reached, the data
+ * will not be written to disk at all.
  * </p>
  * <p>
- * This class originated in FileUpload processing. In this use case, you do not know in
- * advance the size of the file being uploaded. If the file is small you want to store it
- * in memory (for speed), but if the file is large you want to store it to file (to avoid
- * memory issues).
+ * This class originated in FileUpload processing. In this use case, you do not know in advance the
+ * size of the file being uploaded. If the file is small you want to store it in memory (for speed),
+ * but if the file is large you want to store it to file (to avoid memory issues).
  * </p>
+ * 
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @version $Id$
  */
@@ -43,15 +43,14 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * The output stream to which data will be written at any given time. This will always
-	 * be one of <code>memoryOutputStream</code> or <code>diskOutputStream</code>.
+	 * The output stream to which data will be written at any given time. This will always be one of
+	 * <code>memoryOutputStream</code> or <code>diskOutputStream</code>.
 	 */
 	private OutputStream currentOutputStream;
 
 
 	/**
-	 * The output stream to which data will be written prior to the threshold being
-	 * reached.
+	 * The output stream to which data will be written prior to the threshold being reached.
 	 */
 	private ByteArrayOutputStream memoryOutputStream;
 
@@ -66,10 +65,13 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * Constructs an instance of this class which will trigger an event at the specified
-	 * threshold, and save data to a file beyond that point.
-	 * @param threshold The number of bytes at which to trigger an event.
-	 * @param outputFile The file to which data is saved beyond the threshold.
+	 * Constructs an instance of this class which will trigger an event at the specified threshold,
+	 * and save data to a file beyond that point.
+	 * 
+	 * @param threshold
+	 *            The number of bytes at which to trigger an event.
+	 * @param outputFile
+	 *            The file to which data is saved beyond the threshold.
 	 */
 	public DeferredFileOutputStream(int threshold, File outputFile)
 	{
@@ -85,11 +87,10 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * Returns the data for this output stream as an array of bytes, assuming that the
-	 * data has been retained in memory. If the data was written to disk, this method
-	 * returns <code>null</code>.
-	 * @return The data for this output stream, or <code>null</code> if no such data is
-	 *         available.
+	 * Returns the data for this output stream as an array of bytes, assuming that the data has been
+	 * retained in memory. If the data was written to disk, this method returns <code>null</code>.
+	 * 
+	 * @return The data for this output stream, or <code>null</code> if no such data is available.
 	 */
 	public byte[] getData()
 	{
@@ -102,11 +103,10 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * Returns the data for this output stream as a <code>File</code>, assuming that
-	 * the data was written to disk. If the data was retained in memory, this method
-	 * returns <code>null</code>.
-	 * @return The file for this output stream, or <code>null</code> if no such file
-	 *         exists.
+	 * Returns the data for this output stream as a <code>File</code>, assuming that the data was
+	 * written to disk. If the data was retained in memory, this method returns <code>null</code>.
+	 * 
+	 * @return The file for this output stream, or <code>null</code> if no such file exists.
 	 */
 	public File getFile()
 	{
@@ -118,8 +118,8 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * Determines whether or not the data for this output stream has been retained in
-	 * memory.
+	 * Determines whether or not the data for this output stream has been retained in memory.
+	 * 
 	 * @return <code>true</code> if the data is available in memory; <code>false</code>
 	 *         otherwise.
 	 */
@@ -130,10 +130,12 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * Returns the current output stream. This may be memory based or disk based,
-	 * depending on the current state with respect to the threshold.
+	 * Returns the current output stream. This may be memory based or disk based, depending on the
+	 * current state with respect to the threshold.
+	 * 
 	 * @return The underlying output stream.
-	 * @exception IOException if an error occurs.
+	 * @exception IOException
+	 *                if an error occurs.
 	 */
 	protected OutputStream getStream() throws IOException
 	{
@@ -142,10 +144,12 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * Switches the underlying output stream from a memory based stream to one that is
-	 * backed by disk. This is the point at which we realize that too much data is being
-	 * written to keep in memory, so we elect to switch to disk-based storage.
-	 * @exception IOException if an error occurs.
+	 * Switches the underlying output stream from a memory based stream to one that is backed by
+	 * disk. This is the point at which we realize that too much data is being written to keep in
+	 * memory, so we elect to switch to disk-based storage.
+	 * 
+	 * @exception IOException
+	 *                if an error occurs.
 	 */
 	protected void thresholdReached() throws IOException
 	{

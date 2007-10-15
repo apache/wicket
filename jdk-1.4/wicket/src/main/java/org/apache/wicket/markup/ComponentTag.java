@@ -37,20 +37,18 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * A subclass of MarkupElement which represents a "significant" markup tag, such
- * as a component open tag. Insignificant markup tags (those which are merely
- * concerned with markup formatting operations and do not denote components or
- * component nesting) are coalesced into instances of RawMarkup (also a subclass
- * of MarkupElement).
+ * A subclass of MarkupElement which represents a "significant" markup tag, such as a component open
+ * tag. Insignificant markup tags (those which are merely concerned with markup formatting
+ * operations and do not denote components or component nesting) are coalesced into instances of
+ * RawMarkup (also a subclass of MarkupElement).
  * 
  * @author Jonathan Locke
  */
 public class ComponentTag extends MarkupElement
 {
 	/**
-	 * Standard component id attribute always available for components
-	 * regardless of user ApplicationSettings for id attribute; value ==
-	 * 'wicket'.
+	 * Standard component id attribute always available for components regardless of user
+	 * ApplicationSettings for id attribute; value == 'wicket'.
 	 */
 	public static final String DEFAULT_WICKET_NAMESPACE = "wicket";
 
@@ -58,8 +56,8 @@ public class ComponentTag extends MarkupElement
 	private static final List EMPTY_LIST = new ArrayList();
 
 	/**
-	 * Assuming this is a open (or open-close) tag, 'closes' refers to the
-	 * ComponentTag which closes it.
+	 * Assuming this is a open (or open-close) tag, 'closes' refers to the ComponentTag which closes
+	 * it.
 	 */
 	private ComponentTag closes;
 
@@ -70,8 +68,8 @@ public class ComponentTag extends MarkupElement
 	private boolean autolink = false;
 
 	/**
-	 * By default this is equal to the wicket:id="xxx" attribute value, but may
-	 * be provided e.g. for auto-tags
+	 * By default this is equal to the wicket:id="xxx" attribute value, but may be provided e.g. for
+	 * auto-tags
 	 */
 	private String id;
 
@@ -82,8 +80,7 @@ public class ComponentTag extends MarkupElement
 	private boolean modified = false;
 
 	/**
-	 * If true, than the MarkupParser will ignore (remove) it. Temporary working
-	 * variable
+	 * If true, than the MarkupParser will ignore (remove) it. Temporary working variable
 	 */
 	private transient boolean ignore = false;
 
@@ -91,15 +88,15 @@ public class ComponentTag extends MarkupElement
 	private boolean autoComponent = false;
 
 	/**
-	 * In case of inherited markup, the base and the extended markups are merged
-	 * and the information about the tags origin is lost. In some cases like
-	 * wicket:head and wicket:link this information however is required.
+	 * In case of inherited markup, the base and the extended markups are merged and the information
+	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this
+	 * information however is required.
 	 */
 	private WeakReference/* <Class> */markupClassRef = null;
 
 	/**
-	 * Tags which are detected to have only an open tag, which is allowed with
-	 * some HTML tags like 'br' for example
+	 * Tags which are detected to have only an open tag, which is allowed with some HTML tags like
+	 * 'br' for example
 	 */
 	private boolean hasNoCloseTag = false;
 
@@ -110,8 +107,8 @@ public class ComponentTag extends MarkupElement
 	private Map userData;
 
 	/**
-	 * Automatically create a XmlTag, assign the name and the type, and
-	 * construct a ComponentTag based on this XmlTag.
+	 * Automatically create a XmlTag, assign the name and the type, and construct a ComponentTag
+	 * based on this XmlTag.
 	 * 
 	 * @param name
 	 *            The name of html tag
@@ -198,8 +195,8 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * If autolink is set to true, href attributes will automatically be
-	 * converted into Wicket bookmarkable URLs.
+	 * If autolink is set to true, href attributes will automatically be converted into Wicket
+	 * bookmarkable URLs.
 	 * 
 	 * @param autolink
 	 *            enable/disable automatic href conversion
@@ -378,9 +375,8 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Makes this tag object immutable by making the attribute map unmodifiable.
-	 * Immutable tags cannot be made mutable again. They can only be copied into
-	 * new mutable tag objects.
+	 * Makes this tag object immutable by making the attribute map unmodifiable. Immutable tags
+	 * cannot be made mutable again. They can only be copied into new mutable tag objects.
 	 */
 	public final void makeImmutable()
 	{
@@ -388,11 +384,9 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
-	 * it is immutable.
+	 * Gets this tag if it is already mutable, or a mutable copy of this tag if it is immutable.
 	 * 
-	 * @return This tag if it is already mutable, or a mutable copy of this tag
-	 *         if it is immutable.
+	 * @return This tag if it is already mutable, or a mutable copy of this tag if it is immutable.
 	 */
 	public ComponentTag mutable()
 	{
@@ -409,8 +403,8 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Copies all internal properties from this tag to <code>dest</code>.
-	 * This is basically cloning without instance creation.
+	 * Copies all internal properties from this tag to <code>dest</code>. This is basically
+	 * cloning without instance creation.
 	 * 
 	 * @param dest
 	 *            tag whose properties will be set
@@ -518,8 +512,8 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Set the component's id. The value is usually taken from the tag's id
-	 * attribute, e.g. wicket:id="componentId".
+	 * Set the component's id. The value is usually taken from the tag's id attribute, e.g.
+	 * wicket:id="componentId".
 	 * 
 	 * @param id
 	 *            The component's id assigned to the tag.
@@ -680,8 +674,7 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Converts this object to a string representation including useful
-	 * information for debugging
+	 * Converts this object to a string representation including useful information for debugging
 	 * 
 	 * @return String version of this object
 	 */
@@ -699,8 +692,8 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * Manually mark the ComponentTag being modified. Flagging the tag being
-	 * modified does not happen automatically.
+	 * Manually mark the ComponentTag being modified. Flagging the tag being modified does not
+	 * happen automatically.
 	 * 
 	 * @param modified
 	 */
@@ -760,9 +753,9 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * In case of inherited markup, the base and the extended markups are merged
-	 * and the information about the tags origin is lost. In some cases like
-	 * wicket:head and wicket:link this information however is required.
+	 * In case of inherited markup, the base and the extended markups are merged and the information
+	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this
+	 * information however is required.
 	 * 
 	 * @return wicketHeaderClass
 	 */
@@ -824,8 +817,7 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @return True, if wicket:id has been automatically created (internal
-	 *         component)
+	 * @return True, if wicket:id has been automatically created (internal component)
 	 */
 	public boolean isAutoComponentTag()
 	{
@@ -834,8 +826,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @param auto
-	 *            True, if wicket:id has been automatically created (internal
-	 *            component)
+	 *            True, if wicket:id has been automatically created (internal component)
 	 */
 	public void setAutoComponentTag(boolean auto)
 	{

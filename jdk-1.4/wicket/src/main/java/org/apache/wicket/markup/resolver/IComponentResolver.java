@@ -22,17 +22,15 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 
 /**
- * ApplicationSettings maintains a list of IComponentResolvers.
- * IComponentResolvers are responsible for mapping component names to Wicket
- * components.
+ * ApplicationSettings maintains a list of IComponentResolvers. IComponentResolvers are responsible
+ * for mapping component names to Wicket components.
  * 
  * @author Juergen Donnerstag
  */
 public interface IComponentResolver extends IClusterable
 {
 	/**
-	 * Try to resolve the tag, then create a component, add it to the
-	 * container and render it.
+	 * Try to resolve the tag, then create a component, add it to the container and render it.
 	 * 
 	 * @param container
 	 *            The container parsing its markup

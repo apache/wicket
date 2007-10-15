@@ -36,7 +36,7 @@ public class TesterTest extends TestCase
 	{
 		tester = new WicketTester();
 	}
-	
+
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();

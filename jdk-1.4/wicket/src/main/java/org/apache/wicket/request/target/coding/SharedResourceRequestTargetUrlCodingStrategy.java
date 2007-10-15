@@ -70,8 +70,8 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 	{
 		if (!(requestTarget instanceof ISharedResourceRequestTarget))
 		{
-			throw new IllegalArgumentException("This encoder can only be used with "
-					+ "instances of " + ISharedResourceRequestTarget.class.getName());
+			throw new IllegalArgumentException("This encoder can only be used with " +
+					"instances of " + ISharedResourceRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());

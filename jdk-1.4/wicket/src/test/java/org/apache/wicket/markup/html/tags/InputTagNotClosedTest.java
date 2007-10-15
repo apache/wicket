@@ -25,6 +25,7 @@ public class InputTagNotClosedTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public InputTagNotClosedTest(String name)
@@ -39,12 +40,12 @@ public class InputTagNotClosedTest extends WicketTestCase
 	{
 		executeTest(InputTagVisibleWebPage.class, "InputTagVisibleWebPageResult.html");
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
 	public void testInputNotVisible() throws Exception
 	{
 		executeTest(InputTagNotVisibleWebPage.class, "InputTagNotVisibleWebPageResult.html");
-	}	
+	}
 }

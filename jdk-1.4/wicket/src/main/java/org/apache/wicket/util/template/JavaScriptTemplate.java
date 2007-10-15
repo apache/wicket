@@ -58,8 +58,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	}
 
 	/**
-	 * This class decorates another text template class and so
-	 * does not allow interpolation.
+	 * This class decorates another text template class and so does not allow interpolation.
 	 * 
 	 * @param variables
 	 *            Ignored

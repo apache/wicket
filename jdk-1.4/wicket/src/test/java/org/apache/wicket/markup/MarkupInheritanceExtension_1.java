@@ -17,19 +17,18 @@
 package org.apache.wicket.markup;
 
 
-
 /**
  */
 public class MarkupInheritanceExtension_1 extends MarkupInheritanceBase_1
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceExtension_1() 
+	public MarkupInheritanceExtension_1()
 	{
-	    super();
-    }
+		super();
+	}
 }

@@ -113,8 +113,7 @@ public class AddDelta extends Delta
 	}
 
 	/**
-	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
 	 */
 	public void toRCSString(StringBuffer s, String EOL)
 	{

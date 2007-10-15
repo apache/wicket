@@ -35,31 +35,31 @@ import org.apache.wicket.version.undo.Change;
  * are situations where it is necessary to work with other collection types, for repeaters that
  * might work better with non-list or database-driven collections see the
  * org.apache.wicket.markup.repeater package.
- *
+ * 
  * Also notice that in a list the item's uniqueness/primary key/id is identified as its index in the
  * list. If this is not the case you should either override {@link #getListItemModel(IModel, int)}
  * to return a model that will work with the item's true primary key, or use a different repeater
  * that does not rely on the list index.
- *
- *
+ * 
+ * 
  * A ListView holds ListItem children. Items can be re-ordered and deleted, either one at a time or
  * many at a time.
  * <p>
  * Example:
- *
+ * 
  * <pre>
  *                      &lt;tbody&gt;
  *                        &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
  *                            &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
  *                        ...
  * </pre>
- *
+ * 
  * <p>
  * Though this example is about a HTML table, ListView is not at all limited to HTML tables. Any
  * kind of list can be rendered using ListView.
  * <p>
  * The related Java code:
- *
+ * 
  * <pre>
  * add(new ListView(&quot;rows&quot;, listData)
  * {
@@ -70,18 +70,18 @@ import org.apache.wicket.version.undo.Change;
  * 	}
  * });
  * </pre>
- *
+ * 
  * <p>
  * <strong>NOTE:</strong>
- *
+ * 
  * When you want to change the default generated markup it is important to realize that the ListView
  * instance itself does not correspond to any markup, however, the generated ListItems do.<br/>
- *
+ * 
  * This means that methods like {@link #setRenderBodyOnly(boolean)} and
  * {@link #add(org.apache.wicket.behavior.IBehavior)} should be invoked on the {@link ListItem} that
  * is given in {@link #populateItem(ListItem)} method.
  * </p>
- *
+ * 
  * <p>
  * <strong>WARNING:</strong> though you can nest ListViews within Forms, you HAVE to set the
  * setReuseItems property to true in order to have validation work properly. By default,
@@ -95,7 +95,7 @@ import org.apache.wicket.version.undo.Change;
  * components are replaced by new ones, your user will never see the wrong data when setReuseItems
  * is false.
  * </p>
- *
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Johan Compagner
@@ -104,7 +104,7 @@ import org.apache.wicket.version.undo.Change;
 public abstract class ListView extends AbstractRepeater
 {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -165,7 +165,7 @@ public abstract class ListView extends AbstractRepeater
 	 * Gets the list of items in the listView. This method is final because it is not designed to be
 	 * overridden. If it were allowed to be overridden, the values returned by getModelObject() and
 	 * getList() might not coincide.
-	 *
+	 * 
 	 * @return The list of items in this list view.
 	 */
 	public final List getList()
@@ -184,7 +184,7 @@ public abstract class ListView extends AbstractRepeater
 	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
 	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
 	 * not work properly.
-	 *
+	 * 
 	 * @return Whether to reuse items
 	 */
 	public boolean getReuseItems()
@@ -194,7 +194,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Get index of first cell in page. Default is: 0.
-	 *
+	 * 
 	 * @return Index of first cell in page. Default is: 0
 	 */
 	public final int getStartIndex()
@@ -207,7 +207,7 @@ public abstract class ListView extends AbstractRepeater
 	 * really will be. E.g. default for viewSize is Integer.MAX_VALUE, if not set via setViewSize().
 	 * If the underlying list has 10 elements, the value returned by getViewSize() will be 10 if
 	 * startIndex = 0.
-	 *
+	 * 
 	 * @return The number of items to be populated and rendered.
 	 */
 	public int getViewSize()
@@ -244,7 +244,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Returns a link that will move the given item "down" (towards the end) in the listView.
-	 *
+	 * 
 	 * @param id
 	 *            Name of move-down link component to create
 	 * @param item
@@ -300,7 +300,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Returns a link that will move the given item "up" (towards the beginning) in the listView.
-	 *
+	 * 
 	 * @param id
 	 *            Name of move-up link component to create
 	 * @param item
@@ -357,7 +357,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Returns a link that will remove this ListItem from the ListView that holds it.
-	 *
+	 * 
 	 * @param id
 	 *            Name of remove link component to create
 	 * @param item
@@ -402,7 +402,7 @@ public abstract class ListView extends AbstractRepeater
 	/**
 	 * Sets the model as the provided list and removes all children, so that the next render will be
 	 * using the contents of the model.
-	 *
+	 * 
 	 * @param list
 	 *            The list for the new model. The list must implement {@link Serializable}.
 	 * @return This for chaining
@@ -415,11 +415,11 @@ public abstract class ListView extends AbstractRepeater
 	/**
 	 * Sets the model and removes all current children, so that the next render will be using the
 	 * contents of the model.
-	 *
+	 * 
 	 * @param model
 	 *            The new model
 	 * @return This for chaining
-	 *
+	 * 
 	 * @see org.apache.wicket.MarkupContainer#setModel(org.apache.wicket.model.IModel)
 	 */
 	public Component setModel(IModel model)
@@ -433,7 +433,7 @@ public abstract class ListView extends AbstractRepeater
 	 * than you must manually call listView.removeAll() in order to rebuild the ListItems. If you
 	 * nest a ListView in a Form, ALLWAYS set this property to true, as otherwise validation will
 	 * not work properly.
-	 *
+	 * 
 	 * @param reuseItems
 	 *            Whether to reuse the child items.
 	 * @return this
@@ -446,7 +446,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Set the index of the first item to render
-	 *
+	 * 
 	 * @param startIndex
 	 *            First index of model object's list to display
 	 * @return This
@@ -469,7 +469,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Define the maximum number of items to render. Default: render all.
-	 *
+	 * 
 	 * @param size
 	 *            Number of items to display
 	 * @return This
@@ -492,7 +492,7 @@ public abstract class ListView extends AbstractRepeater
 	 * the underlying list changes a lot (many users using the application), it may not longer be
 	 * appropriate. In that case your own ListItemModel implementation should use an id (e.g. the
 	 * database' record id) to identify and load the list item model object.
-	 *
+	 * 
 	 * @param listViewModel
 	 *            The ListView's model
 	 * @param index
@@ -506,7 +506,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Create a new ListItem for list item at index.
-	 *
+	 * 
 	 * @param index
 	 * @return ListItem
 	 */
@@ -582,7 +582,7 @@ public abstract class ListView extends AbstractRepeater
 	 * Comes handy for ready made ListView based components which must implement populateItem() but
 	 * you don't want to lose compile time error checking reminding the user to implement abstract
 	 * populateItem().
-	 *
+	 * 
 	 * @param item
 	 */
 	protected void onBeginPopulateItem(final ListItem item)
@@ -593,19 +593,19 @@ public abstract class ListView extends AbstractRepeater
 	 * Populate a given item.
 	 * <p>
 	 * <b>be careful</b> to add any components to the list item. So, don't do:
-	 *
+	 * 
 	 * <pre>
 	 * add(new Label(&quot;foo&quot;, &quot;bar&quot;));
 	 * </pre>
-	 *
+	 * 
 	 * but:
-	 *
+	 * 
 	 * <pre>
 	 * item.add(new Label(&quot;foo&quot;, &quot;bar&quot;));
 	 * </pre>
-	 *
+	 * 
 	 * </p>
-	 *
+	 * 
 	 * @param item
 	 *            The item to populate
 	 */
@@ -622,7 +622,7 @@ public abstract class ListView extends AbstractRepeater
 
 	/**
 	 * Render a single item.
-	 *
+	 * 
 	 * @param item
 	 *            The item to be rendered
 	 */

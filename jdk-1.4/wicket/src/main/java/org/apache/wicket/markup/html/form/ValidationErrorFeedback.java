@@ -24,12 +24,10 @@ import org.apache.wicket.validation.IValidationError;
 
 
 /**
- * This class is the parameter to {@link Component#error(Serializable)} instead
- * of the generated error string itself (when
- * {@link FormComponent#error(IValidationError)} is called). The advantage is
- * that a custom feedback panel would still have access to the underlying
- * {@link IValidationError} that generated the error message - providing much
- * more context.
+ * This class is the parameter to {@link Component#error(Serializable)} instead of the generated
+ * error string itself (when {@link FormComponent#error(IValidationError)} is called). The advantage
+ * is that a custom feedback panel would still have access to the underlying
+ * {@link IValidationError} that generated the error message - providing much more context.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */

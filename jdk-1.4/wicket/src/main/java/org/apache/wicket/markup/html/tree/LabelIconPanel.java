@@ -51,8 +51,8 @@ public class LabelIconPanel extends Panel
 	}
 
 	/**
-	 * Adds the icon and content components to the panel. You can override this
-	 * method if you want custom components to be added
+	 * Adds the icon and content components to the panel. You can override this method if you want
+	 * custom components to be added
 	 * 
 	 * @param model
 	 *            model that can be used to retrieve the TreeNode
@@ -128,8 +128,7 @@ public class LabelIconPanel extends Panel
 	}
 
 	/**
-	 * Optional method for wrapping (creating an intermediate model) for the
-	 * tree node model
+	 * Optional method for wrapping (creating an intermediate model) for the tree node model
 	 * 
 	 * @param nodeModel
 	 * @return wrapped model
@@ -141,6 +140,7 @@ public class LabelIconPanel extends Panel
 
 	/**
 	 * Returns resource reference for closed folder icon.
+	 * 
 	 * @param node
 	 * @return resource reference
 	 */
@@ -151,6 +151,7 @@ public class LabelIconPanel extends Panel
 
 	/**
 	 * Returns resource reference for open folder icon.
+	 * 
 	 * @param node
 	 * @return resource reference
 	 */
@@ -161,6 +162,7 @@ public class LabelIconPanel extends Panel
 
 	/**
 	 * Returns resource reference for a leaf icon.
+	 * 
 	 * @param node
 	 * @return resource reference
 	 */

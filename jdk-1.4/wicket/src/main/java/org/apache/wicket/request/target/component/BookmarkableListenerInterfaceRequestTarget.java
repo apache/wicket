@@ -27,9 +27,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Request target for bookmarkable page links that also contain component path
- * and interface name. This is used for stateless forms and stateless links.
- *
+ * Request target for bookmarkable page links that also contain component path and interface name.
+ * This is used for stateless forms and stateless links.
+ * 
  * @author Matej Knopp
  */
 public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePageRequestTarget
@@ -38,11 +38,10 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	private final String interfaceName;
 
 	/**
-	 * This constructor is called when a stateless link is clicked on but the
-	 * page wasn't found in the session. Then this class will recreate the page
-	 * and call the interface method on the component that is targeted with the
-	 * component path.
-	 *
+	 * This constructor is called when a stateless link is clicked on but the page wasn't found in
+	 * the session. Then this class will recreate the page and call the interface method on the
+	 * component that is targeted with the component path.
+	 * 
 	 * @param pageMapName
 	 * @param pageClass
 	 * @param pageParameters
@@ -58,12 +57,11 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	}
 
 	/**
-	 * This constructor is called for generating the urls
-	 * (RequestCycle.urlFor()) So it will alter the PageParameters to include
-	 * the 2 org.apache.wicket params
+	 * This constructor is called for generating the urls (RequestCycle.urlFor()) So it will alter
+	 * the PageParameters to include the 2 org.apache.wicket params
 	 * {@link WebRequestCodingStrategy#BOOKMARKABLE_PAGE_PARAMETER_NAME} and
 	 * {@link WebRequestCodingStrategy#INTERFACE_PARAMETER_NAME}
-	 *
+	 * 
 	 * @param pageMapName
 	 * @param pageClass
 	 * @param pageParameters
@@ -81,8 +79,8 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 
 		// add the wicket:interface param to the params.
 		// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:urlDepth
-		AppendingStringBuffer param = new AppendingStringBuffer(4 + componentPath.length()
-				+ interfaceName.length());
+		AppendingStringBuffer param = new AppendingStringBuffer(4 + componentPath.length() +
+				interfaceName.length());
 		if (pageMapName != null)
 		{
 			param.append(pageMapName);
@@ -115,8 +113,8 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		Component component = page.get(pageRelativeComponentPath);
 		if (component == null)
 		{
-			throw new WicketRuntimeException("unable to find component with path "
-					+ pageRelativeComponentPath + " on page " + page);
+			throw new WicketRuntimeException("unable to find component with path " +
+					pageRelativeComponentPath + " on page " + page);
 		}
 		RequestListenerInterface listenerInterface = RequestListenerInterface
 				.forName(interfaceName);

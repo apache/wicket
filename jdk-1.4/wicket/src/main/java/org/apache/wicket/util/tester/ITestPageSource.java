@@ -28,8 +28,7 @@ import org.apache.wicket.Page;
 public interface ITestPageSource extends IClusterable
 {
 	/**
-	 * Defines a <code>Page</code> instance source for
-	 * <code>WicketTester</code>.
+	 * Defines a <code>Page</code> instance source for <code>WicketTester</code>.
 	 * 
 	 * @return a <code>Page</code> instance for testing
 	 */

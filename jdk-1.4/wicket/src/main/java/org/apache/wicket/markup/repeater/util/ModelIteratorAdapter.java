@@ -23,8 +23,8 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Iterator adapter that wraps adaptee's elements with a model. Convenient when
- * implementing {@link RefreshingView}.
+ * Iterator adapter that wraps adaptee's elements with a model. Convenient when implementing
+ * {@link RefreshingView}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -69,9 +69,8 @@ public abstract class ModelIteratorAdapter implements Iterator
 	}
 
 	/**
-	 * This method is used to wrap the provided object with an implementation of
-	 * IModel. The provided object is guaranteed to be returned from the
-	 * delegate iterator.
+	 * This method is used to wrap the provided object with an implementation of IModel. The
+	 * provided object is guaranteed to be returned from the delegate iterator.
 	 * 
 	 * @param object
 	 *            object to be wrapped

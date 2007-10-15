@@ -52,19 +52,19 @@ public class JavascriptStripperTest extends TestCase
 				.stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
 		assertEquals("\nt = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
 	}
-	
+
 	public void testRegexp2()
 	{
 		String s = JavascriptStripper
 				.stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
 		assertEquals("foo.replace(/\"/, \"\"); doFoo();", s);
 	}
-	
+
 	public void testRegexp3()
 	{
-		String s = JavascriptStripper.stripCommentsAndWhitespace(
-				"parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo"
-		);
-		assertEquals("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r", s);
+		String s = JavascriptStripper
+				.stripCommentsAndWhitespace("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
+		assertEquals("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r",
+				s);
 	}
 }

@@ -17,11 +17,9 @@
 package org.apache.wicket.markup;
 
 /**
- * This class is for framework purposes only, which is why the class is
- * (default) protected.
+ * This class is for framework purposes only, which is why the class is (default) protected.
  * <p>
- * A RawMarkup element represents a hunk of unparsed HTML containing any
- * arbitrary content.
+ * A RawMarkup element represents a hunk of unparsed HTML containing any arbitrary content.
  * 
  * @see MarkupElement
  * @author Jonathan Locke

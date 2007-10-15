@@ -46,34 +46,35 @@ public class PropertyResolverTest extends TestCase
 
 	private Person person;
 	private MockWebApplication app;
-	
+
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception
 	{
 		person = new Person();
-		app = new MockWebApplication(new WebApplication() {
+		app = new MockWebApplication(new WebApplication()
+		{
 
 			public Class getHomePage()
 			{
 				return null;
 			}
-			
+
 			protected void outputDevelopmentModeWarning()
 			{
 				// Do nothing.
 			}
-			
+
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
 				return new HttpSessionStore(this);
 			}
-			
+
 		}, "/foo");
 	}
-	
+
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
@@ -273,7 +274,7 @@ public class PropertyResolverTest extends TestCase
 	 */
 	public void testListSizeLookup() throws Exception
 	{
-		List/*<Address>*/ addresses = new ArrayList/*<Address>*/();
+		List/* <Address> */addresses = new ArrayList/* <Address> */();
 		addresses.add(new Address());
 		addresses.add(new Address());
 		person.setAddressList(addresses);
@@ -288,7 +289,7 @@ public class PropertyResolverTest extends TestCase
 	 */
 	public void testMapSizeLookup() throws Exception
 	{
-		Map/*<String, Address>*/ addresses = new HashMap/*<String, Address>*/();
+		Map/* <String, Address> */addresses = new HashMap/* <String, Address> */();
 		Address address = new Address();
 		addresses.put("size", address);
 		addresses.put("test", new Address());
@@ -349,11 +350,11 @@ public class PropertyResolverTest extends TestCase
 	public void testPrivateField() throws Exception
 	{
 		Address address = new Address();
-		PropertyResolver.setValue("privateAddress", person, address , CONVERTER);
+		PropertyResolver.setValue("privateAddress", person, address, CONVERTER);
 		Address address2 = (Address)PropertyResolver.getValue("privateAddress", person);
 		assertEquals(address, address2);
-	}	
-	
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -361,105 +362,108 @@ public class PropertyResolverTest extends TestCase
 	{
 		Person2 person2 = new Person2();
 		Address address = new Address();
-		PropertyResolver.setValue("privateAddress", person2, address , CONVERTER);
+		PropertyResolver.setValue("privateAddress", person2, address, CONVERTER);
 		Address address2 = (Address)PropertyResolver.getValue("privateAddress", person2);
 		assertEquals(address, address2);
-	}	
-	
+	}
+
 	/**
-	 *
+	 * 
 	 */
-	public void testGetTargetClass() 
+	public void testGetTargetClass()
 	{
 		Address address = new Address();
-		
+
 		Class clazz = PropertyResolver.getPropertyClass("number", address);
 		assertEquals(int.class, clazz);
-		
+
 		Person person = new Person();
 		person.setAddress(new Address());
-		
+
 		clazz = PropertyResolver.getPropertyClass("address.number", person);
 		assertEquals(int.class, clazz);
-		
+
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		clazz = PropertyResolver.getPropertyClass("addressArray[0]", person);
 		assertEquals(Address.class, clazz);
-		
+
 		clazz = PropertyResolver.getPropertyClass("addressArray[0].number", person);
 		assertEquals(int.class, clazz);
 	}
-	
+
 	/**
-	 *
+	 * 
 	 */
-	public void testGetTargetField() {
+	public void testGetTargetField()
+	{
 		Address address = new Address();
-		
+
 		Field field = PropertyResolver.getPropertyField("number", address);
 		assertEquals(field.getName(), "number");
 		assertEquals(field.getType(), int.class);
-		
+
 		Person person = new Person();
 		person.setAddress(new Address());
-		
+
 		field = PropertyResolver.getPropertyField("address.number", person);
 		assertEquals(field.getName(), "number");
 		assertEquals(field.getType(), int.class);
-		
+
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		field = PropertyResolver.getPropertyField("addressArray[0].number", person);
 		assertEquals(field.getName(), "number");
 		assertEquals(field.getType(), int.class);
 	}
-	
+
 	/**
-	 *
+	 * 
 	 */
-	public void testGetTargetGetter() {
+	public void testGetTargetGetter()
+	{
 		Address address = new Address();
-		
+
 		Method method = PropertyResolver.getPropertyGetter("number", address);
 		assertEquals(method.getName(), "getNumber");
 		assertEquals(method.getReturnType(), int.class);
-		
+
 		Person person = new Person();
 		person.setAddress(new Address());
-		
+
 		method = PropertyResolver.getPropertyGetter("address.number", person);
 		assertEquals(method.getName(), "getNumber");
 		assertEquals(method.getReturnType(), int.class);
-		
+
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		method = PropertyResolver.getPropertyGetter("addressArray[0].number", person);
 		assertEquals(method.getName(), "getNumber");
 		assertEquals(method.getReturnType(), int.class);
 	}
-	
+
 	/**
-	 *
+	 * 
 	 */
-	public void testGetTargetSetter() {
+	public void testGetTargetSetter()
+	{
 		Address address = new Address();
-		
+
 		// FIXME: We shouldn't need to run this first in order for the getName() stuff to work.
 		// See WICKET-668 for details.
-		//PropertyResolver.setValue("number", address, new Integer(1), CONVERTER);
-		
+		// PropertyResolver.setValue("number", address, new Integer(1), CONVERTER);
+
 		Method method = PropertyResolver.getPropertySetter("number", address);
 		assertEquals(method.getName(), "setNumber");
-		
+
 		Person person = new Person();
 		person.setAddress(new Address());
-		
+
 		method = PropertyResolver.getPropertySetter("address.number", person);
 		assertEquals(method.getName(), "setNumber");
-		
+
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		method = PropertyResolver.getPropertySetter("addressArray[0].number", person);
 		assertEquals(method.getName(), "setNumber");
 	}
-	
+
 	/**
 	 * Used for models in testing.
 	 */
@@ -470,7 +474,7 @@ public class PropertyResolverTest extends TestCase
 		/**
 		 * 
 		 */
-		public String	testValue = "vector";
+		public String testValue = "vector";
 	}
 
 	/**
@@ -479,6 +483,6 @@ public class PropertyResolverTest extends TestCase
 	public void testPropertyModel()
 	{
 		String value = (String)PropertyResolver.getValue("testValue", new InnerVectorPOJO());
- 		assertEquals("vector", value);
+		assertEquals("vector", value);
 	}
 }

@@ -29,9 +29,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This is a markup inline filter. It identifies HTML specific issues which make
- * HTML not 100% xml compliant. E.g. tags like &lt;p&gt; often are missing the
- * corresponding close tag.
+ * This is a markup inline filter. It identifies HTML specific issues which make HTML not 100% xml
+ * compliant. E.g. tags like &lt;p&gt; often are missing the corresponding close tag.
  * 
  * @author Juergen Donnerstag
  */
@@ -66,10 +65,9 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handle it if
-	 * the specific filter criteria are met. Depending on the filter, it may
-	 * return the MarkupElement unchanged, modified or it remove by asking the
-	 * parent handler for the next tag.
+	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
+	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
+	 * modified or it remove by asking the parent handler for the next tag.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return Return the next eligible MarkupElement
@@ -92,8 +90,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				}
 				else
 				{
-					throw new ParseException("Tag " + top + " at " + top.getPos()
-							+ " did not have a close tag", top.getPos());
+					throw new ParseException("Tag " + top + " at " + top.getPos() +
+							" did not have a close tag", top.getPos());
 				}
 			}
 
@@ -126,7 +124,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				if (mismatch)
 				{
 					top.setHasNoCloseTag(true);
-					
+
 					// Pop any simple tags off the top of the stack
 					while (mismatch && !requiresCloseTag(top.getName()))
 					{
@@ -143,9 +141,9 @@ public final class HtmlHandler extends AbstractMarkupFilter
 					// it must be a real mismatch.
 					if (mismatch)
 					{
-						throw new ParseException("Tag " + top.toUserDebugString()
-								+ " has a mismatched close tag at " + tag.toUserDebugString(), 
-								top.getPos());
+						throw new ParseException("Tag " + top.toUserDebugString() +
+								" has a mismatched close tag at " + tag.toUserDebugString(), top
+								.getPos());
 					}
 				}
 
@@ -154,8 +152,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 			}
 			else
 			{
-				throw new ParseException("Tag " + tag.toUserDebugString()
-						+ " does not have a matching open tag", tag.getPos());
+				throw new ParseException("Tag " + tag.toUserDebugString() +
+						" does not have a matching open tag", tag.getPos());
 			}
 		}
 		else if (tag.isOpenClose())

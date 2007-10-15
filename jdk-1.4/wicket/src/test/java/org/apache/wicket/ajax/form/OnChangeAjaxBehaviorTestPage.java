@@ -38,24 +38,26 @@ public class OnChangeAjaxBehaviorTestPage extends WebPage
 		add(form);
 
 		TextField field = new TextField("field");
-		field.add(new OnChangeAjaxBehavior(){
+		field.add(new OnChangeAjaxBehavior()
+		{
 			private static final long serialVersionUID = 1L;
 
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 			}
-			
+
 		});
 		form.add(field);
 
 		DropDownChoice choice = new DropDownChoice("dropDown");
-		choice.add(new OnChangeAjaxBehavior(){
+		choice.add(new OnChangeAjaxBehavior()
+		{
 			private static final long serialVersionUID = 1L;
 
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 			}
-			
+
 		});
 		form.add(choice);
 	}

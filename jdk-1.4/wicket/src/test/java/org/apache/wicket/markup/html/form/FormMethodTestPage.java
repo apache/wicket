@@ -29,10 +29,10 @@ public class FormMethodTestPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public FormMethodTestPage() 
+	public FormMethodTestPage()
 	{
 		add(new Form("formpost"));
-		add(new Form("formget") 
+		add(new Form("formget")
 		{
 			/** Serialization */
 			private static final long serialVersionUID = 1L;

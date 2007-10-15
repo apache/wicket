@@ -21,11 +21,10 @@ import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.OptionalMetaPattern;
 
 /**
- * Parses XML tag names and attribute names which may include optional
- * namespaces like "namespace:name" or "name". Both ":name" and "namespace:" are
- * not allowed. Both, the namespace and the name have to follow naming rules for
- * variable names (identifier).
- *
+ * Parses XML tag names and attribute names which may include optional namespaces like
+ * "namespace:name" or "name". Both ":name" and "namespace:" are not allowed. Both, the namespace
+ * and the name have to follow naming rules for variable names (identifier).
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -44,7 +43,7 @@ public final class TagNameParser extends MetaPatternParser
 
 	/**
 	 * Constructs a tag name parser for a given input character sequence.
-	 *
+	 * 
 	 * @param input
 	 *            The input to parse
 	 */
@@ -54,11 +53,9 @@ public final class TagNameParser extends MetaPatternParser
 	}
 
 	/**
-	 * Get the namespace part (eg 'html' in 'html:form') converted to all lower
-	 * case characters.
-	 *
-	 * @return the namespace part. Will be null, if optional namespace was not
-	 *         found
+	 * Get the namespace part (eg 'html' in 'html:form') converted to all lower case characters.
+	 * 
+	 * @return the namespace part. Will be null, if optional namespace was not found
 	 */
 	public String getNamespace()
 	{
@@ -72,7 +69,7 @@ public final class TagNameParser extends MetaPatternParser
 
 	/**
 	 * Gets the tag name part (eg 'form' in 'html:form' or 'form')
-	 *
+	 * 
 	 * @return the name part
 	 */
 	public String getName()

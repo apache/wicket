@@ -57,6 +57,7 @@ public class PackagedTextTemplate extends TextTemplate
 		private static final long serialVersionUID = 1L;
 
 		private final String className;
+
 		CachedTextTemplateKey(Class clazz, String path)
 		{
 			this.className = clazz.getName();
@@ -102,8 +103,8 @@ public class PackagedTextTemplate extends TextTemplate
 	 * Constructor.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for
-	 *            loading the packaged template.
+	 *            The class to be used for retrieving the classloader for loading the packaged
+	 *            template.
 	 * @param fileName
 	 *            The name of the file, relative to the clazz position
 	 */
@@ -116,13 +117,12 @@ public class PackagedTextTemplate extends TextTemplate
 	 * Constructor.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for
-	 *            loading the packaged template.
+	 *            The class to be used for retrieving the classloader for loading the packaged
+	 *            template.
 	 * @param fileName
 	 *            the name of the file, relative to the clazz position
 	 * @param contentType
-	 *            The mime type of this resource, such as "image/jpeg" or
-	 *            "text/html"
+	 *            The mime type of this resource, such as "image/jpeg" or "text/html"
 	 */
 	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType)
 	{
@@ -133,13 +133,12 @@ public class PackagedTextTemplate extends TextTemplate
 	 * Constructor.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for
-	 *            loading the packaged template.
+	 *            The class to be used for retrieving the classloader for loading the packaged
+	 *            template.
 	 * @param fileName
 	 *            the name of the file, relative to the clazz position
 	 * @param contentType
-	 *            The mime type of this resource, such as "image/jpeg" or
-	 *            "text/html"
+	 *            The mime type of this resource, such as "image/jpeg" or "text/html"
 	 * @param encoding
 	 *            The file's encoding, e.g. 'UTF-8'
 	 */
@@ -158,8 +157,8 @@ public class PackagedTextTemplate extends TextTemplate
 
 		if (stream == null)
 		{
-			throw new IllegalArgumentException("resource " + fileName + " not found for scope "
-					+ clazz + " (path = " + path + ")");
+			throw new IllegalArgumentException("resource " + fileName + " not found for scope " +
+					clazz + " (path = " + path + ")");
 		}
 
 		try
@@ -211,15 +210,14 @@ public class PackagedTextTemplate extends TextTemplate
 	}
 
 	/**
-	 * Interpolate the map of variables with the content and replace the content
-	 * with the result. Variables are denoted in this string by the syntax
-	 * ${variableName}. The contents will be altered by replacing each variable
-	 * of the form ${variableName} with the value returned by
+	 * Interpolate the map of variables with the content and replace the content with the result.
+	 * Variables are denoted in this string by the syntax ${variableName}. The contents will be
+	 * altered by replacing each variable of the form ${variableName} with the value returned by
 	 * variables.getValue("variableName").
 	 * <p>
-	 * WARNING there is no going back to the original contents after the
-	 * interpolation is done. if you need to do different interpolations on the
-	 * same original contents, use method {@link #asString(Map)} instead.
+	 * WARNING there is no going back to the original contents after the interpolation is done. if
+	 * you need to do different interpolations on the same original contents, use method
+	 * {@link #asString(Map)} instead.
 	 * </p>
 	 * 
 	 * @param variables

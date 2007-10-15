@@ -21,10 +21,10 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class PanelPage_1 extends WebPage 
+public class PanelPage_1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -32,9 +32,9 @@ public class PanelPage_1 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public PanelPage_1() 
+	public PanelPage_1()
 	{
-	    Panel panel = new SimplePanel_1("myPanel");
-	    add(panel);
-    }
+		Panel panel = new SimplePanel_1("myPanel");
+		add(panel);
+	}
 }

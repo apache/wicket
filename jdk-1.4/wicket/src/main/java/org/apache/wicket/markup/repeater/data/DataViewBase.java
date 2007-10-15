@@ -26,9 +26,8 @@ import org.apache.wicket.markup.repeater.RefreshingView;
 /**
  * Base class for data views.
  * 
- * Data views aim to make it very simple to populate your repeating view from a
- * database by utilizing {@link IDataProvider} to act as an interface between
- * the database and the dataview.
+ * Data views aim to make it very simple to populate your repeating view from a database by
+ * utilizing {@link IDataProvider} to act as an interface between the database and the dataview.
  * 
  * @see IDataProvider
  * @see DataView
@@ -77,8 +76,7 @@ public abstract class DataViewBase extends AbstractPageableView
 	}
 
 	/**
-	 * Helper class that converts input from IDataProvider to an iterator over
-	 * view items.
+	 * Helper class that converts input from IDataProvider to an iterator over view items.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 

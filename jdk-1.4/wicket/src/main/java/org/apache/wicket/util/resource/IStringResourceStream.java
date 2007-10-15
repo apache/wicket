@@ -19,8 +19,7 @@ package org.apache.wicket.util.resource;
 import java.nio.charset.Charset;
 
 /**
- * A resource that can be converted to a String representation, possibly using
- * an explicit Charset.
+ * A resource that can be converted to a String representation, possibly using an explicit Charset.
  * 
  * @author Jonathan Locke
  */

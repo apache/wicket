@@ -33,7 +33,7 @@ public class TestPage extends WebPage
 	private final Panel panel1 = new Panel1("panel");
 	private final Panel panel2 = new Panel2("panel");
 	private Panel current;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -41,24 +41,24 @@ public class TestPage extends WebPage
 	{
 		this.current = panel1;
 		add(current);
-		
+
 		add(new PageLink("link", new IPageLink()
-				{
-					private static final long serialVersionUID = 1L;
+		{
+			private static final long serialVersionUID = 1L;
 
-					public Page getPage()
-					{
-						replacePanel();
-						return TestPage.this;
-					}
+			public Page getPage()
+			{
+				replacePanel();
+				return TestPage.this;
+			}
 
-					public Class getPageIdentity()
-					{
-						return TestPage.this.getClass();
-					}
-				}));
+			public Class getPageIdentity()
+			{
+				return TestPage.this.getClass();
+			}
+		}));
 	}
-	
+
 	/**
 	 * 
 	 */

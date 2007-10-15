@@ -22,17 +22,17 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  */
-public class MarkupInheritanceBase_2 extends WebPage 
+public class MarkupInheritanceBase_2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBase_2() 
+	public MarkupInheritanceBase_2()
 	{
-	    add(new Label("label1", "base label 1"));
-	    add(new Label("label2", "base label 2"));
-    }
+		add(new Label("label1", "base label 1"));
+		add(new Label("label2", "base label 2"));
+	}
 }

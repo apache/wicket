@@ -21,18 +21,20 @@ import org.apache.wicket.markup.html.border.Border;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class HeaderSectionBorder_2 extends Border
 {
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public HeaderSectionBorder_2(final String id) 
+	public HeaderSectionBorder_2(final String id)
 	{
-	    super(id);
-    }
+		super(id);
+	}
 }

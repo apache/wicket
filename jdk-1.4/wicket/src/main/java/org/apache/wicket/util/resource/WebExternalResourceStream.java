@@ -66,6 +66,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 
 	/**
 	 * Not implemented, throws {@link WicketRuntimeException}
+	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	public long length()
@@ -98,7 +99,8 @@ public class WebExternalResourceStream extends AbstractResourceStream
 		in = context.getResourceAsStream(url);
 		if (in == null)
 		{
-			throw new ResourceStreamNotFoundException("The requested resource was not found: " + url);
+			throw new ResourceStreamNotFoundException("The requested resource was not found: " +
+					url);
 		}
 		return in;
 	}

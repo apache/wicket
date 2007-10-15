@@ -52,8 +52,7 @@ public class CheckGroupTest extends WicketTestCase
 	}
 
 	/**
-	 * mock model object with an embedded property used to test compound
-	 * property model
+	 * mock model object with an embedded property used to test compound property model
 	 * 
 	 * @author igor
 	 * 
@@ -189,8 +188,8 @@ public class CheckGroupTest extends WicketTestCase
 		form.onFormSubmitted();
 		assertTrue(
 				"running with choice1 and choice2 selected - model must only contain values of check1 and check2",
-				modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2)
-						&& modelObject.getProp1().contains(check1));
+				modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2) &&
+						modelObject.getProp1().contains(check1));
 
 		tester.getServletRequest().getParameterMap().put(group.getInputName(),
 				new String[] { "some weird choice uuid to test error" });

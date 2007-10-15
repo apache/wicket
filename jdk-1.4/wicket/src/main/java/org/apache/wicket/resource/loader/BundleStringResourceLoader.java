@@ -24,12 +24,11 @@ import org.apache.wicket.Component;
 
 
 /**
- * Implementation of a string resource loader that sits on top of the ordinary
- * Java resource bundle mechanism. When created this loader must be given the
- * name of the resource bundle that it is to sit on top of. Note that this
- * implementation does not make use of any style or component specific knowledge -
- * it utilizes just the bundle name, the resource key and the locale.
- *
+ * Implementation of a string resource loader that sits on top of the ordinary Java resource bundle
+ * mechanism. When created this loader must be given the name of the resource bundle that it is to
+ * sit on top of. Note that this implementation does not make use of any style or component specific
+ * knowledge - it utilizes just the bundle name, the resource key and the locale.
+ * 
  * @author Chris Turner
  */
 public class BundleStringResourceLoader implements IStringResourceLoader
@@ -39,7 +38,7 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 
 	/**
 	 * Create the loader with the name of the given Java resource bundle.
-	 *
+	 * 
 	 * @param bundleName
 	 *            The name of the resource bundle
 	 */
@@ -49,17 +48,15 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Get the requested string resource from the underlying resource bundle.
-	 * The bundle is selected by locale and the string obtained from the best
-	 * matching bundle.
-	 *
+	 * Get the requested string resource from the underlying resource bundle. The bundle is selected
+	 * by locale and the string obtained from the best matching bundle.
+	 * 
 	 * @param clazz
 	 *            Not used for this implementation
 	 * @param key
 	 *            The key to obtain the string for
 	 * @param locale
-	 *            The locale identifying the resource set to select the strings
-	 *            from
+	 *            The locale identifying the resource set to select the strings from
 	 * @param style
 	 *            Not used for this implementation (see {@link org.apache.wicket.Session})
 	 * @return The string resource value or null if resource not found
@@ -83,10 +80,9 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Get the requested string resource from the underlying resource bundle.
-	 * The bundle is selected by locale and the string obtained from the best
-	 * matching bundle.
-	 *
+	 * Get the requested string resource from the underlying resource bundle. The bundle is selected
+	 * by locale and the string obtained from the best matching bundle.
+	 * 
 	 * @param component
 	 *            Used to get the locale
 	 * @param key

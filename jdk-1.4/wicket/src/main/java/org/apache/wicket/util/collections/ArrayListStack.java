@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.EmptyStackException;
 
 /**
- * A faster, smaller stack implementation. ArrayListStack is final and
- * unsynchronized (the JDK's methods are synchronized). In addition you can set
- * the initial capacity if you want via the ArrayListStack(int) constructor.
+ * A faster, smaller stack implementation. ArrayListStack is final and unsynchronized (the JDK's
+ * methods are synchronized). In addition you can set the initial capacity if you want via the
+ * ArrayListStack(int) constructor.
  * 
  * @author Jonathan Locke
  */
@@ -106,8 +106,8 @@ public final class ArrayListStack extends ArrayList
 	/**
 	 * Tests if this stack is empty.
 	 * 
-	 * @return <code>true</code> if and only if this stack contains no items;
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if and only if this stack contains no items; <code>false</code>
+	 *         otherwise.
 	 */
 	public final boolean empty()
 	{
@@ -115,18 +115,16 @@ public final class ArrayListStack extends ArrayList
 	}
 
 	/**
-	 * Returns the 1-based position where an object is on this stack. If the
-	 * object <tt>o</tt> occurs as an item in this stack, this method returns
-	 * the distance from the top of the stack of the occurrence nearest the top
-	 * of the stack; the topmost item on the stack is considered to be at
-	 * distance <tt>1</tt>. The <tt>equals</tt> method is used to compare
-	 * <tt>o</tt> to the items in this stack.
+	 * Returns the 1-based position where an object is on this stack. If the object <tt>o</tt>
+	 * occurs as an item in this stack, this method returns the distance from the top of the stack
+	 * of the occurrence nearest the top of the stack; the topmost item on the stack is considered
+	 * to be at distance <tt>1</tt>. The <tt>equals</tt> method is used to compare <tt>o</tt>
+	 * to the items in this stack.
 	 * 
 	 * @param o
 	 *            the desired object.
-	 * @return the 1-based position from the top of the stack where the object
-	 *         is located; the return value <code>-1</code> indicates that the
-	 *         object is not on the stack.
+	 * @return the 1-based position from the top of the stack where the object is located; the
+	 *         return value <code>-1</code> indicates that the object is not on the stack.
 	 */
 	public final int search(final Object o)
 	{

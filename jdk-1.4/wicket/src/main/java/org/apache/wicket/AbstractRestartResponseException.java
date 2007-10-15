@@ -17,8 +17,7 @@
 package org.apache.wicket;
 
 /**
- * An exception that causes the request cycle to immediately switch to respond
- * stage.
+ * An exception that causes the request cycle to immediately switch to respond stage.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Jonathan Locke
@@ -36,7 +35,7 @@ public abstract class AbstractRestartResponseException extends AbortException
 	public AbstractRestartResponseException()
 	{
 		RequestCycle rc = RequestCycle.get();
-		if(rc != null)
+		if (rc != null)
 		{
 			rc.getResponse().reset();
 		}

@@ -27,16 +27,16 @@ import java.util.Map.Entry;
 import org.apache.wicket.IClusterable;
 
 /**
- * A versatile implementation of {@link IValidationError} that supports message
- * resolution from {@link IErrorMessageSource}, default message (if none of the
- * keys matched), and variable substitution.
+ * A versatile implementation of {@link IValidationError} that supports message resolution from
+ * {@link IErrorMessageSource}, default message (if none of the keys matched), and variable
+ * substitution.
  * 
  * The final error message is constructed via the following process:
  * <ol>
- * <li>Try all keys added by calls to {@link #addMessageKey(String)} via the
- * provided <code>IErrorMessageSource</code>.</li>
- * <li>If none of the keys yielded a message, use the message set by
- * {@link #setMessage(String)}, if any.</li>
+ * <li>Try all keys added by calls to {@link #addMessageKey(String)} via the provided
+ * <code>IErrorMessageSource</code>.</li>
+ * <li>If none of the keys yielded a message, use the message set by {@link #setMessage(String)},
+ * if any.</li>
  * <li>Perform variable substitution on the message, if any.</li>
  * </ol>
  * 
@@ -66,8 +66,8 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Adds a key to the list of keys that will be tried against
-	 * <code>IErrorMessageSource</code> to locate the error message string.
+	 * Adds a key to the list of keys that will be tried against <code>IErrorMessageSource</code>
+	 * to locate the error message string.
 	 * 
 	 * @param key
 	 *            a message key to be added
@@ -111,8 +111,7 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Retrieves the variables map for this error. The caller is free to modify
-	 * the contents.
+	 * Retrieves the variables map for this error. The caller is free to modify the contents.
 	 * 
 	 * @return a <code>Map</code> of variables for this error
 	 */
@@ -175,8 +174,7 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Gets the default message that will be used when no message could be
-	 * located via message keys.
+	 * Gets the default message that will be used when no message could be located via message keys.
 	 * 
 	 * @return message the default message used when all keys yield no message
 	 */
@@ -186,8 +184,7 @@ public class ValidationError implements IValidationError, IClusterable
 	}
 
 	/**
-	 * Sets message that will be used when no message could be located via
-	 * message keys.
+	 * Sets message that will be used when no message could be located via message keys.
 	 * 
 	 * @param message
 	 *            a default message to be used when all keys yield no message

@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class HeaderSectionPanel_5 extends Panel
@@ -32,15 +32,16 @@ public class HeaderSectionPanel_5 extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public HeaderSectionPanel_5(final String id) 
+	public HeaderSectionPanel_5(final String id)
 	{
-	    super(id);
-	    
-	    WebMarkupContainer container = new WebMarkupContainer("aContainer");
-	    add(container);
-	    
-	    container.add(new Label("aLabel", "Mein Test"));
-    }
+		super(id);
+
+		WebMarkupContainer container = new WebMarkupContainer("aContainer");
+		add(container);
+
+		container.add(new Label("aLabel", "Mein Test"));
+	}
 }

@@ -27,12 +27,14 @@ import org.apache.wicket.util.time.Time;
 
 /**
  * A FileResourceStream is an IResource implementation for files.
- *
+ * 
  * @see org.apache.wicket.util.resource.IResourceStream
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Jonathan Locke
  */
-public class FileResourceStream extends AbstractResourceStream implements IFixedLocationResourceStream
+public class FileResourceStream extends AbstractResourceStream
+		implements
+			IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +46,7 @@ public class FileResourceStream extends AbstractResourceStream implements IFixed
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param file
 	 *            {@link File} containing resource
 	 */
@@ -55,7 +57,7 @@ public class FileResourceStream extends AbstractResourceStream implements IFixed
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param file
 	 *            {@link java.io.File} containing resource
 	 */
@@ -66,7 +68,7 @@ public class FileResourceStream extends AbstractResourceStream implements IFixed
 
 	/**
 	 * Closes this resource.
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	public void close() throws IOException
@@ -96,10 +98,9 @@ public class FileResourceStream extends AbstractResourceStream implements IFixed
 	}
 
 	/**
-	 * @return A readable input stream for this resource. The same input stream
-	 *         is returned until <tt>FileResourceStream.close()</tt> is
-	 *         invoked.
-	 *
+	 * @return A readable input stream for this resource. The same input stream is returned until
+	 *         <tt>FileResourceStream.close()</tt> is invoked.
+	 * 
 	 * @throws ResourceStreamNotFoundException
 	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
@@ -112,8 +113,8 @@ public class FileResourceStream extends AbstractResourceStream implements IFixed
 			}
 			catch (FileNotFoundException e)
 			{
-				throw new ResourceStreamNotFoundException("Resource " + file
-						+ " could not be found", e);
+				throw new ResourceStreamNotFoundException("Resource " + file +
+						" could not be found", e);
 			}
 		}
 

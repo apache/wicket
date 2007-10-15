@@ -34,10 +34,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Tests that an AbstractAjaxTimerBehavior injects itself into the markup once
- * and only once. Also tests the callback URL to make sure the timer reinjects
- * itself
- *
+ * Tests that an AbstractAjaxTimerBehavior injects itself into the markup once and only once. Also
+ * tests the callback URL to make sure the timer reinjects itself
+ * 
  * @author Jim McLaughlin
  */
 public class AjaxTimerBehaviorTest extends WicketTestCase
@@ -46,7 +45,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param name
 	 */
 	public AjaxTimerBehaviorTest(String name)
@@ -128,9 +127,8 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	}
 
 	/**
-	 * Validates the reponse, then makes sure the timer injects itself again
-	 * when called.
-	 *
+	 * Validates the reponse, then makes sure the timer injects itself again when called.
+	 * 
 	 * @param timer
 	 * @param inBodyOnLoad
 	 */
@@ -139,7 +137,8 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		String document = tester.getServletResponse().getDocument();
 
 		String updateScript = timer.getUpdateScript();
-		String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function() { " + updateScript + ";});";
+		String bodyOnLoadUpdateScript = "Wicket.Event.add(window, \"load\", function() { " +
+				updateScript + ";});";
 
 		if (inBodyOnLoad)
 		{
@@ -160,7 +159,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 	/**
 	 * Checks that the timer javascript is in the document once and only once
-	 *
+	 * 
 	 * @param document
 	 *            the response from the Application
 	 * @param updateScript
@@ -180,37 +179,39 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			++count;
 		}
 		// make sure there is only one match
-		assertEquals("There should be 1 and only 1 script in the markup for this behavior,"
-				+ "but " + count + " were found", 1, count);
+		assertEquals("There should be 1 and only 1 script in the markup for this behavior," +
+				"but " + count + " were found", 1, count);
 	}
 
 	// quick fix for JDK 5 method
-    private static final String quote(String s) {
-        int slashEIndex = s.indexOf("\\E");
-        if (slashEIndex == -1)
+	private static final String quote(String s)
+	{
+		int slashEIndex = s.indexOf("\\E");
+		if (slashEIndex == -1)
 		{
 			return "\\Q" + s + "\\E";
 		}
 
-        StringBuffer sb = new StringBuffer(s.length() * 2);
-        sb.append("\\Q");
-        slashEIndex = 0;
-        int current = 0;
-        while ((slashEIndex = s.indexOf("\\E", current)) != -1) {
-            sb.append(s.substring(current, slashEIndex));
-            current = slashEIndex + 2;
-            sb.append("\\E\\\\E\\Q");
-        }
-        sb.append(s.substring(current, s.length()));
-        sb.append("\\E");
-        return sb.toString();
-    }
+		StringBuffer sb = new StringBuffer(s.length() * 2);
+		sb.append("\\Q");
+		slashEIndex = 0;
+		int current = 0;
+		while ((slashEIndex = s.indexOf("\\E", current)) != -1)
+		{
+			sb.append(s.substring(current, slashEIndex));
+			current = slashEIndex + 2;
+			sb.append("\\E\\\\E\\Q");
+		}
+		sb.append(s.substring(current, s.length()));
+		sb.append("\\E");
+		return sb.toString();
+	}
 
 	static class MyAjaxSelfUpdatingTimerBehavior extends AjaxSelfUpdatingTimerBehavior
 	{
 
 		/**
-		 *
+		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 		private final Duration duration;
@@ -218,6 +219,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		/**
 		 * Construct.
+		 * 
 		 * @param updateInterval
 		 */
 		public MyAjaxSelfUpdatingTimerBehavior(Duration updateInterval)

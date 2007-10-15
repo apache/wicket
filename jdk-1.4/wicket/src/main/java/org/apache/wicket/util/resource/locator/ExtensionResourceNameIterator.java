@@ -22,9 +22,9 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Contains the logic to build the various combinations of file path, style and
- * locale required while searching for Wicket resources. The full filename will
- * be built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * Contains the logic to build the various combinations of file path, style and locale required
+ * while searching for Wicket resources. The full filename will be built like:
+ * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
@@ -34,8 +34,8 @@ import org.apache.wicket.util.string.Strings;
  * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
  * <p>
- * Locales may contain a language, a country and a region or variant.
- * Combinations of these components will be attempted in the following order:
+ * Locales may contain a language, a country and a region or variant. Combinations of these
+ * components will be attempted in the following order:
  * <ol>
  * <li>locale.toString() see javadoc for Locale for more details</li>
  * <li>&lt;language&gt;_&lt;country&gt;</li>
@@ -51,7 +51,7 @@ public class ExtensionResourceNameIterator implements Iterator
 	private final String path;
 
 	private final String[] extensions;
-	
+
 	private int index;
 
 	/**
@@ -81,7 +81,7 @@ public class ExtensionResourceNameIterator implements Iterator
 				}
 			}
 		}
-		
+
 		this.path = path;
 		this.index = 0;
 	}

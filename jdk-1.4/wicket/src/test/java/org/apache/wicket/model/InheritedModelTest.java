@@ -27,8 +27,7 @@ import org.apache.wicket.util.value.ValueMap;
 public class InheritedModelTest extends WicketTestCase
 {
 	/**
-	 * Tests the CPM inheritance by setting a different root model using a
-	 * rendered scenario.
+	 * Tests the CPM inheritance by setting a different root model using a rendered scenario.
 	 */
 	public void testCompoundPropertyModelRendered()
 	{

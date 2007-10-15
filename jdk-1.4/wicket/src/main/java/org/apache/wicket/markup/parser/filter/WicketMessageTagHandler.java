@@ -34,14 +34,12 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * This is a markup inline filter and a component resolver. It identifies
- * wicket:message attributes and adds an attribute modifier to the component tag
- * that can localize
- * wicket:message="attr-name:i18n-key,attr-name-2:i18n-key-2,..." expressions,
- * replacing values of attributes specified by attr-name with a localizer lookup
- * with key i18n-key. If an attribute being localized has a set value that value
- * will be used as the default value for the localization lookup. This handler
- * also resolves and localizes raw markup with wicket:message attribute.
+ * This is a markup inline filter and a component resolver. It identifies wicket:message attributes
+ * and adds an attribute modifier to the component tag that can localize
+ * wicket:message="attr-name:i18n-key,attr-name-2:i18n-key-2,..." expressions, replacing values of
+ * attributes specified by attr-name with a localizer lookup with key i18n-key. If an attribute
+ * being localized has a set value that value will be used as the default value for the localization
+ * lookup. This handler also resolves and localizes raw markup with wicket:message attribute.
  * 
  * @author Juergen Donnerstag
  * @author Igor Vaynberg
@@ -57,8 +55,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 
 	/**
-	 * The id automatically assigned to tags with wicket:message attribute but
-	 * without id
+	 * The id automatically assigned to tags with wicket:message attribute but without id
 	 */
 	public final static String WICKET_MESSAGE_CONTAINER_ID = "_message_attr_";
 
@@ -75,8 +72,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/**
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag to be processed. Null, if not more tags are
-	 *         available
+	 * @return The next tag to be processed. Null, if not more tags are available
 	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
@@ -110,8 +106,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Attribute localizing behavior. See the javadoc of
-	 * {@link WicketMessageTagHandler} for details.
+	 * Attribute localizing behavior. See the javadoc of {@link WicketMessageTagHandler} for
+	 * details.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
@@ -167,8 +163,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/**
 	 * 
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{

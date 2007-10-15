@@ -24,10 +24,9 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
- * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because
- * autolinks are already detected and handled, the only task of this resolver
- * will be to add a "transparent" WebMarkupContainer to transparently handling
- * child components.
+ * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because autolinks are already
+ * detected and handled, the only task of this resolver will be to add a "transparent"
+ * WebMarkupContainer to transparently handling child components.
  * 
  * @author Juergen Donnerstag
  */
@@ -36,8 +35,7 @@ public class WicketLinkResolver implements IComponentResolver
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container
-	 * and render it.
+	 * Try to resolve the tag, then create a component, add it to the container and render it.
 	 * 
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)

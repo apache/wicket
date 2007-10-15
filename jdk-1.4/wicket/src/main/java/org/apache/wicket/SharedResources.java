@@ -29,9 +29,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Class which holds shared resources. Resources can be shared by name. An
- * optional scope can be given to prevent naming conflicts and a locale and/or
- * style can be given as well.
+ * Class which holds shared resources. Resources can be shared by name. An optional scope can be
+ * given to prevent naming conflicts and a locale and/or style can be given as well.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -43,9 +42,8 @@ public class SharedResources
 	private static final Logger log = LoggerFactory.getLogger(SharedResources.class);
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts
-	 * _[locale] and _[style] into path just before any extension that might
-	 * exist.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts _[locale] and
+	 * _[style] into path just before any extension that might exist.
 	 * 
 	 * @param path
 	 *            The resource path
@@ -94,13 +92,13 @@ public class SharedResources
 	}
 
 	/** Map of Class to alias String */
-	private final Map/*<Class, String>*/ classAliasMap = new WeakHashMap();
-	
+	private final Map/* <Class, String> */classAliasMap = new WeakHashMap();
+
 	/** Map of alias String to WeakReference(Class) */
-	private final Map/*<String, WeakReference<Class>>*/ aliasClassMap = new HashMap();
+	private final Map/* <String, WeakReference<Class>> */aliasClassMap = new HashMap();
 
 	/** Map of shared resources states */
-	private final Map/*<String, Resource>*/ resourceMap = new HashMap();
+	private final Map/* <String, Resource> */resourceMap = new HashMap();
 
 	/**
 	 * Construct.
@@ -183,8 +181,8 @@ public class SharedResources
 	 * @param style
 	 *            The resource style (see {@link org.apache.wicket.Session})
 	 * @param exact
-	 *            If true then only return the resource that is registered for
-	 *            the given locale and style.
+	 *            If true then only return the resource that is registered for the given locale and
+	 *            style.
 	 * 
 	 * @return The logical resource
 	 */
@@ -257,9 +255,8 @@ public class SharedResources
 	}
 
 	/**
-	 * Sets an alias for a class so that a resource url can look like:
-	 * resources/images/Image.jpg instead of
-	 * resources/org.apache.wicket.resources.ResourceClass/Image.jpg
+	 * Sets an alias for a class so that a resource url can look like: resources/images/Image.jpg
+	 * instead of resources/org.apache.wicket.resources.ResourceClass/Image.jpg
 	 * 
 	 * @param clz
 	 *            The class that has to be aliased.
@@ -271,7 +268,7 @@ public class SharedResources
 		classAliasMap.put(clz, alias);
 		aliasClassMap.put(alias, new WeakReference(clz));
 	}
-	
+
 	/**
 	 * Gets the class for a given resource alias.
 	 * 

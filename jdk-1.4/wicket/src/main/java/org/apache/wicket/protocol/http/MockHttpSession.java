@@ -28,8 +28,7 @@ import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * Mock implementation of the <code>WebSession</code> interface for use by the
- * test harnesses.
+ * Mock implementation of the <code>WebSession</code> interface for use by the test harnesses.
  * 
  * @author Chris Turner
  */
@@ -43,7 +42,7 @@ public class MockHttpSession implements HttpSession, Serializable
 
 	private final long creationTime = System.currentTimeMillis();
 
-	private final String id = (new UID()).toString().replace(':', '_').replace('-','_');
+	private final String id = (new UID()).toString().replace(':', '_').replace('-', '_');
 
 	private long lastAccessedTime = 0;
 

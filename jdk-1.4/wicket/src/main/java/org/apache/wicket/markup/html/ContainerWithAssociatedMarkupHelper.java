@@ -32,7 +32,7 @@ import org.apache.wicket.util.lang.Classes;
 
 /**
  * A Wicket internal helper class to handle wicket:head tags.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
@@ -54,15 +54,14 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	}
 
 	/**
-	 * Called by components like Panel and Border which have associated Markup
-	 * and which may have a &lt;wicket:head&gt; tag.
+	 * Called by components like Panel and Border which have associated Markup and which may have a
+	 * &lt;wicket:head&gt; tag.
 	 * <p>
-	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer
-	 * parameter has been added to the Page as a container for all headers any
-	 * of its components might wish to contribute.
+	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer parameter has been added
+	 * to the Page as a container for all headers any of its components might wish to contribute.
 	 * <p>
 	 * The headers contributed are rendered in the standard way.
-	 *
+	 * 
 	 * @param htmlContainer
 	 *            The HtmlHeaderContainer added to the Page
 	 */
@@ -124,15 +123,13 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	}
 
 	/**
-	 * Gets the header part of the Panel/Border. Returns null if it doesn't have
-	 * a header tag.
-	 *
+	 * Gets the header part of the Panel/Border. Returns null if it doesn't have a header tag.
+	 * 
 	 * @param index
 	 *            A unique index
 	 * @param markupClass
 	 *            The java class the wicket:head tag is directly associated with
-	 * @return the header part for this panel/border or null if it doesn't have
-	 *         a wicket:head tag.
+	 * @return the header part for this panel/border or null if it doesn't have a wicket:head tag.
 	 */
 	private final HeaderPartContainer getHeaderPart(final Class markupClass, final int index)
 	{
@@ -153,8 +150,8 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// found <wicket:head>
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
-				final String headerId = "_" + Classes.simpleName(markupClass)
-						+ container.getVariation() + "Header" + index;
+				final String headerId = "_" + Classes.simpleName(markupClass) +
+						container.getVariation() + "Header" + index;
 
 				// Create the header container and associate the markup with
 				// it
@@ -170,13 +167,13 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 			}
 		}
 
-		throw new WicketRuntimeException("Programming error: expected a WicketTag: "
-				+ markupStream.toString());
+		throw new WicketRuntimeException("Programming error: expected a WicketTag: " +
+				markupStream.toString());
 	}
 
 	/**
 	 * Process next header markup fragment.
-	 *
+	 * 
 	 * @param associatedMarkupStream
 	 * @return index or -1 when done
 	 */
@@ -205,8 +202,8 @@ public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 					return associatedMarkupStream.getCurrentIndex();
 				}
 				// wicket:head must be before border, panel or extend
-				else if (tag.isOpen()
-						&& (tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
+				else if (tag.isOpen() &&
+						(tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
 				{
 					noMoreWicketHeadTagsAllowed = true;
 				}

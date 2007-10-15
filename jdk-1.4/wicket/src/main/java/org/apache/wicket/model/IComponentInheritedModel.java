@@ -19,12 +19,12 @@ package org.apache.wicket.model;
 import org.apache.wicket.Component;
 
 /**
- * This is a marker interface for models that can be inherited from components
- * higher in the hierarchy.
+ * This is a marker interface for models that can be inherited from components higher in the
+ * hierarchy.
  * 
- * If a model implements this interface then you can give the parent container
- * this model and all the child (recursively) components will also get and then
- * set that model on their own if they are created with a null model
+ * If a model implements this interface then you can give the parent container this model and all
+ * the child (recursively) components will also get and then set that model on their own if they are
+ * created with a null model
  * 
  * <pre>
  * Form form = new Form(getPage(), &quot;form&quot;, new ModelImplementingIInheritableModel());

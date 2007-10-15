@@ -21,19 +21,20 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class WicketPanel extends Panel 
+public class WicketPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public WicketPanel(final String id) 
+	public WicketPanel(final String id)
 	{
-	    super(id);
-    }
+		super(id);
+	}
 }

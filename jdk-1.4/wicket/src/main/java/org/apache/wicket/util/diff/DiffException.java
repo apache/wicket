@@ -67,7 +67,7 @@ package org.apache.wicket.util.diff;
 public class DiffException extends Exception
 {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -76,15 +76,16 @@ public class DiffException extends Exception
 	 * Construct.
 	 */
 	public DiffException()
-    {
-    }
+	{
+	}
 
-    /**
-     * Construct.
-     * @param msg
-     */
-    public DiffException(String msg)
-    {
-        super(msg);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param msg
+	 */
+	public DiffException(String msg)
+	{
+		super(msg);
+	}
 }

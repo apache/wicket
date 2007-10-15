@@ -41,9 +41,9 @@ import sun.reflect.ReflectionFactory;
 /**
  * TODO DOC ME!
  * 
- * NOTE: this class uses Sun-specific features: we use {@link Unsafe} because we
- * need to set the final fields, and we use {@link ReflectionFactory} to be able
- * to find constructors appropriate for serialization.
+ * NOTE: this class uses Sun-specific features: we use {@link Unsafe} because we need to set the
+ * final fields, and we use {@link ReflectionFactory} to be able to find constructors appropriate
+ * for serialization.
  * 
  * @author jcompagner
  */
@@ -79,7 +79,7 @@ public final class ClassStreamHandler
 
 
 	private static Map handlesClasses = new HashMap();
-	
+
 	private static short classCounter = 0;
 
 	/**
@@ -142,7 +142,7 @@ public final class ClassStreamHandler
 	private final short classId;
 
 	private final Constructor cons;
-	
+
 	private final Method writeReplaceMethod;
 	private final Method readResolveMethod;
 
@@ -159,7 +159,7 @@ public final class ClassStreamHandler
 	 * 
 	 * @param cls
 	 *            TODO
-	 * @throws WicketSerializeableException 
+	 * @throws WicketSerializeableException
 	 */
 	private ClassStreamHandler(Class cls) throws WicketSerializeableException
 	{
@@ -171,10 +171,10 @@ public final class ClassStreamHandler
 			cons = null;
 			writeObjectMethods = null;
 			readObjectMethods = null;
-			
+
 			writeReplaceMethod = null;
 			readResolveMethod = null;
-			
+
 			if (clz == boolean.class)
 			{
 				primitiveArray = new BooleanPrimitiveArray();
@@ -236,38 +236,41 @@ public final class ClassStreamHandler
 		{
 			fields = new ArrayList();
 			primitiveArray = null;
-	    	writeObjectMethods = new ArrayList(2);
+			writeObjectMethods = new ArrayList(2);
 			readObjectMethods = new ArrayList(2);
-			writeReplaceMethod = getInheritableMethod( clz, "writeReplace", null, Object.class);
-		    
-		    readResolveMethod = getInheritableMethod(clz, "readResolve", null, Object.class);
-		    if (readResolveMethod == null)
-		    {
+			writeReplaceMethod = getInheritableMethod(clz, "writeReplace", null, Object.class);
+
+			readResolveMethod = getInheritableMethod(clz, "readResolve", null, Object.class);
+			if (readResolveMethod == null)
+			{
 				cons = getSerializableConstructor(clz);
 				if (cons == null)
 				{
-					throw new WicketSerializeableException("No Serializable constructor found for " + cls);
+					throw new WicketSerializeableException(
+							"No Serializable constructor found for " + cls);
 				}
-		    }
-		    else
-		    {
+			}
+			else
+			{
 				cons = getSerializableConstructor(clz);
-		    }
+			}
 
 			Class parent = cls;
-			while(parent != Object.class)
+			while (parent != Object.class)
 			{
-				Method method = getPrivateMethod(parent, "writeObject", new Class[] { ObjectOutputStream.class }, Void.TYPE);
+				Method method = getPrivateMethod(parent, "writeObject",
+						new Class[] { ObjectOutputStream.class }, Void.TYPE);
 				if (method != null)
 				{
 					writeObjectMethods.add(method);
 				}
-				method = getPrivateMethod(parent, "readObject", new Class[] { ObjectInputStream.class }, Void.TYPE);
+				method = getPrivateMethod(parent, "readObject",
+						new Class[] { ObjectInputStream.class }, Void.TYPE);
 				if (method != null)
 				{
 					readObjectMethods.add(method);
 				}
-				
+
 				parent = parent.getSuperclass();
 			}
 			fillFields(cls);
@@ -317,8 +320,8 @@ public final class ClassStreamHandler
 		{
 			Field field = fields[i];
 			field.setAccessible(true);
-			if (!Modifier.isStatic(field.getModifiers())
-					&& !Modifier.isTransient(field.getModifiers()))
+			if (!Modifier.isStatic(field.getModifiers()) &&
+					!Modifier.isTransient(field.getModifiers()))
 			{
 				FieldAndIndex fai = null;
 				Class clz = field.getType();
@@ -375,7 +378,8 @@ public final class ClassStreamHandler
 	 * @param obj
 	 * @throws WicketSerializeableException
 	 */
-	public void writeFields(WicketObjectOutputStream woos, Object obj) throws WicketSerializeableException
+	public void writeFields(WicketObjectOutputStream woos, Object obj)
+			throws WicketSerializeableException
 	{
 		FieldAndIndex fai = null;
 		try
@@ -393,7 +397,7 @@ public final class ClassStreamHandler
 		}
 		catch (Exception ex)
 		{
-			String field = fai == null || fai.field == null? "" : fai.field.getName();
+			String field = fai == null || fai.field == null ? "" : fai.field.getName();
 			String msg = "Error writing field: " + field + " for object class: " + obj.getClass();
 			throw new WicketSerializeableException(msg, ex);
 		}
@@ -402,9 +406,10 @@ public final class ClassStreamHandler
 
 	/**
 	 * @param wois
-	 * @throws WicketSerializeableException 
+	 * @throws WicketSerializeableException
 	 */
-	public void readFields(WicketObjectInputStream wois, Object object)  throws WicketSerializeableException
+	public void readFields(WicketObjectInputStream wois, Object object)
+			throws WicketSerializeableException
 	{
 		FieldAndIndex fai = null;
 		try
@@ -422,20 +427,21 @@ public final class ClassStreamHandler
 		}
 		catch (Exception ex)
 		{
-			throw new WicketSerializeableException("Error reading field: " + fai.field.getName() + " for object class: " + object.getClass(),ex);
+			throw new WicketSerializeableException("Error reading field: " + fai.field.getName() +
+					" for object class: " + object.getClass(), ex);
 		}
 	}
-	
+
 	public void writeArray(Object obj, WicketObjectOutputStream wois) throws IOException
 	{
-		primitiveArray.writeArray(obj,wois);
+		primitiveArray.writeArray(obj, wois);
 	}
 
 	public Object readArray(WicketObjectInputStream wois) throws IOException
 	{
 		return primitiveArray.readArray(wois);
 	}
-	
+
 	/**
 	 * @param woos
 	 * @param obj
@@ -451,7 +457,7 @@ public final class ClassStreamHandler
 			for (int i = writeObjectMethods.size(); --i >= 0;)
 			{
 				Method method = (Method)writeObjectMethods.get(i);
-				
+
 				try
 				{
 					method.invoke(obj, new Object[] { woos });
@@ -521,8 +527,8 @@ public final class ClassStreamHandler
 		{
 			Constructor cons = initCl.getDeclaredConstructor((Class[])null);
 			int mods = cons.getModifiers();
-			if ((mods & Modifier.PRIVATE) != 0
-					|| ((mods & (Modifier.PUBLIC | Modifier.PROTECTED)) == 0 && !packageEquals(cl,
+			if ((mods & Modifier.PRIVATE) != 0 ||
+					((mods & (Modifier.PUBLIC | Modifier.PROTECTED)) == 0 && !packageEquals(cl,
 							initCl)))
 			{
 				return null;
@@ -538,9 +544,8 @@ public final class ClassStreamHandler
 	}
 
 	/**
-	 * Returns non-static private method with given signature defined by given
-	 * class, or null if none found. Access checks are disabled on the returned
-	 * method (if any).
+	 * Returns non-static private method with given signature defined by given class, or null if
+	 * none found. Access checks are disabled on the returned method (if any).
 	 */
 	private static Method getPrivateMethod(Class cl, String name, Class[] argTypes, Class returnType)
 	{
@@ -558,17 +563,15 @@ public final class ClassStreamHandler
 			return null;
 		}
 	}
-	
+
 	/**
-     * Returns non-static, non-abstract method with given signature provided it
-     * is defined by or accessible (via inheritance) by the given class, or
-     * null if no match found.  Access checks are disabled on the returned
-     * method (if any).
-     */
-    private static Method getInheritableMethod(Class cl, String name,
-					       Class[] argTypes,
-					       Class returnType)
-    {
+	 * Returns non-static, non-abstract method with given signature provided it is defined by or
+	 * accessible (via inheritance) by the given class, or null if no match found. Access checks are
+	 * disabled on the returned method (if any).
+	 */
+	private static Method getInheritableMethod(Class cl, String name, Class[] argTypes,
+			Class returnType)
+	{
 		Method meth = null;
 		Class defCl = cl;
 		while (defCl != null)
@@ -639,61 +642,67 @@ public final class ClassStreamHandler
 			this.field = field;
 			this.index = unsafe.objectFieldOffset(field);
 		}
-		
-		public abstract void writeField(Object object, WicketObjectOutputStream dos)  throws IOException;
-		
-		public abstract void readField(Object object, WicketObjectInputStream dos)  throws IOException, ClassNotFoundException;
+
+		public abstract void writeField(Object object, WicketObjectOutputStream dos)
+				throws IOException;
+
+		public abstract void readField(Object object, WicketObjectInputStream dos)
+				throws IOException, ClassNotFoundException;
 	}
-	
+
 	private final class BooleanFieldAndIndex extends FieldAndIndex
 	{
 		BooleanFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeBoolean(unsafe.getBoolean(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putBoolean(object, index, dos.readBoolean());
 		}
 	}
-	
+
 	private final class ByteFieldAndIndex extends FieldAndIndex
 	{
 		ByteFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeByte(unsafe.getByte(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putByte(object, index, dos.readByte());
 		}
-	}	
+	}
 
 	private final class ShortFieldAndIndex extends FieldAndIndex
 	{
@@ -701,189 +710,206 @@ public final class ClassStreamHandler
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeShort(unsafe.getShort(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putShort(object, index, dos.readShort());
 		}
-	}	
-	
+	}
+
 	private final class CharFieldAndIndex extends FieldAndIndex
 	{
 		CharFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeChar(unsafe.getChar(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putChar(object, index, dos.readChar());
 		}
-	}	
-	
+	}
+
 	private final class IntFieldAndIndex extends FieldAndIndex
 	{
 		IntFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeInt(unsafe.getInt(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putInt(object, index, dos.readInt());
 		}
-	}	
-	
+	}
+
 	private final class LongFieldAndIndex extends FieldAndIndex
 	{
 		LongFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeLong(unsafe.getLong(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putLong(object, index, dos.readLong());
 		}
-	}	
-	
+	}
+
 	private final class FloatFieldAndIndex extends FieldAndIndex
 	{
 		FloatFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeFloat(unsafe.getFloat(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putFloat(object, index, dos.readFloat());
 		}
-	}	
-	
+	}
+
 	private final class DoubleFieldAndIndex extends FieldAndIndex
 	{
 		DoubleFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeDouble(unsafe.getDouble(object, index));
 		}
-		
+
 		/**
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object, WicketObjectInputStream)
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object,
+		 *      WicketObjectInputStream)
 		 */
 		public void readField(Object object, WicketObjectInputStream dos) throws IOException
 		{
 			unsafe.putDouble(object, index, dos.readDouble());
 		}
 	}
-	
+
 	private final class ObjectFieldAndIndex extends FieldAndIndex
 	{
 		ObjectFieldAndIndex(Field field)
 		{
 			super(field);
 		}
-		
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#writeField(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeField(Object object, WicketObjectOutputStream dos) throws IOException
 		{
 			dos.writeObject(unsafe.getObject(object, index));
 		}
-		
+
 		/**
-		 * @throws ClassNotFoundException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object, WicketObjectInputStream)
+		 * @throws ClassNotFoundException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.FieldAndIndex#readField(java.lang.Object,
+		 *      WicketObjectInputStream)
 		 */
-		public void readField(Object object, WicketObjectInputStream dos) throws IOException, ClassNotFoundException
+		public void readField(Object object, WicketObjectInputStream dos) throws IOException,
+				ClassNotFoundException
 		{
 			unsafe.putObject(object, index, dos.readObject());
 		}
 	}
-	
+
 
 	private abstract class PrimitiveArray
 	{
-		public abstract void writeArray(Object object, WicketObjectOutputStream dos)  throws IOException;
-		
-		public abstract Object readArray(WicketObjectInputStream dos)  throws IOException;
+		public abstract void writeArray(Object object, WicketObjectOutputStream dos)
+				throws IOException;
+
+		public abstract Object readArray(WicketObjectInputStream dos) throws IOException;
 	}
-	
+
 	private final class BooleanPrimitiveArray extends PrimitiveArray
 	{
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -894,7 +920,7 @@ public final class ClassStreamHandler
 				dos.writeBoolean(Array.getBoolean(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -909,12 +935,13 @@ public final class ClassStreamHandler
 			return array;
 		}
 	}
-	
+
 	private final class BytePrimitiveArray extends PrimitiveArray
 	{
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -925,7 +952,7 @@ public final class ClassStreamHandler
 				dos.writeByte(Array.getByte(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -939,13 +966,14 @@ public final class ClassStreamHandler
 			}
 			return array;
 		}
-	}	
+	}
 
 	private final class ShortPrimitiveArray extends PrimitiveArray
 	{
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -956,7 +984,7 @@ public final class ClassStreamHandler
 				dos.writeShort(Array.getShort(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -970,14 +998,15 @@ public final class ClassStreamHandler
 			}
 			return array;
 		}
-	}	
-	
+	}
+
 	private final class CharPrimitiveArray extends PrimitiveArray
 	{
-	
+
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -988,7 +1017,7 @@ public final class ClassStreamHandler
 				dos.writeChar(Array.getChar(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -1002,13 +1031,14 @@ public final class ClassStreamHandler
 			}
 			return array;
 		}
-	}	
-	
+	}
+
 	private final class IntPrimitiveArray extends PrimitiveArray
 	{
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -1019,7 +1049,7 @@ public final class ClassStreamHandler
 				dos.writeInt(Array.getInt(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -1033,13 +1063,14 @@ public final class ClassStreamHandler
 			}
 			return array;
 		}
-	}	
-	
+	}
+
 	private final class LongPrimitiveArray extends PrimitiveArray
 	{
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -1050,7 +1081,7 @@ public final class ClassStreamHandler
 				dos.writeLong(Array.getLong(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -1064,13 +1095,14 @@ public final class ClassStreamHandler
 			}
 			return array;
 		}
-	}	
-	
+	}
+
 	private final class FloatPrimitiveArray extends PrimitiveArray
 	{
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -1081,7 +1113,7 @@ public final class ClassStreamHandler
 				dos.writeFloat(Array.getFloat(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -1095,13 +1127,14 @@ public final class ClassStreamHandler
 			}
 			return array;
 		}
-	}	
-	
+	}
+
 	private final class DoublePrimitiveArray extends PrimitiveArray
 	{
 		/**
-		 * @throws IOException 
-		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object, WicketObjectOutputStream)
+		 * @throws IOException
+		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#writeArray(Object,
+		 *      WicketObjectOutputStream)
 		 */
 		public void writeArray(Object object, WicketObjectOutputStream dos) throws IOException
 		{
@@ -1112,7 +1145,7 @@ public final class ClassStreamHandler
 				dos.writeDouble(Array.getDouble(object, i));
 			}
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.util.io.ClassStreamHandler.PrimitiveArray#readArray(WicketObjectInputStream)
 		 */
@@ -1130,7 +1163,7 @@ public final class ClassStreamHandler
 
 	/**
 	 * @return
-	 * @throws NotSerializableException 
+	 * @throws NotSerializableException
 	 */
 	public Object writeReplace(Object o) throws NotSerializableException
 	{
@@ -1143,11 +1176,11 @@ public final class ClassStreamHandler
 			catch (Exception ex)
 			{
 				throw new NotSerializableException(ex.getMessage());
-			} 
+			}
 		}
 		return null;
 	}
-	
+
 	public Object readResolve(Object o) throws NotSerializableException
 	{
 		if (readResolveMethod != null)
@@ -1159,7 +1192,7 @@ public final class ClassStreamHandler
 			catch (Exception ex)
 			{
 				throw new NotSerializableException(ex.getMessage());
-			} 
+			}
 		}
 		return o;
 	}

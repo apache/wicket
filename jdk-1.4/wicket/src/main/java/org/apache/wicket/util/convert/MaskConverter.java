@@ -26,13 +26,12 @@ import org.apache.wicket.WicketRuntimeException;
 
 
 /**
- * A converter that takes a mask into account. It is specifically meant for
- * overrides on individual components, that provide their own converter by
- * returning it from {@link Component#getConverter(Class)}. It uses an instance
- * of {@link MaskFormatter} to delegate the masking and unmasking to.
+ * A converter that takes a mask into account. It is specifically meant for overrides on individual
+ * components, that provide their own converter by returning it from
+ * {@link Component#getConverter(Class)}. It uses an instance of {@link MaskFormatter} to delegate
+ * the masking and unmasking to.
  * <p>
- * The following characters can be specified (adopted from the MaskFormatter
- * documentation):
+ * The following characters can be specified (adopted from the MaskFormatter documentation):
  * 
  * <table border=1 summary="Valid characters and their descriptions">
  * <tr>
@@ -49,18 +48,17 @@ import org.apache.wicket.WicketRuntimeException;
  * </tr>
  * <tr>
  * <td>'</td>
- * <td>Escape character, used to escape any of the special formatting
- * characters.</td>
+ * <td>Escape character, used to escape any of the special formatting characters.</td>
  * </tr>
  * <tr>
  * <td>U</td>
- * <td>Any character (<code>Character.isLetter</code>). All lowercase
- * letters are mapped to upper case.</td>
+ * <td>Any character (<code>Character.isLetter</code>). All lowercase letters are mapped to
+ * upper case.</td>
  * </tr>
  * <tr>
  * <td>L</td>
- * <td>Any character (<code>Character.isLetter</code>). All upper case
- * letters are mapped to lower case.</td>
+ * <td>Any character (<code>Character.isLetter</code>). All upper case letters are mapped to
+ * lower case.</td>
  * </tr>
  * <tr>
  * <td>A</td>
@@ -82,9 +80,8 @@ import org.apache.wicket.WicketRuntimeException;
  * </table>
  * 
  * <p>
- * Typically characters correspond to one char, but in certain languages this is
- * not the case. The mask is on a per character basis, and will thus adjust to
- * fit as many chars as are needed.
+ * Typically characters correspond to one char, but in certain languages this is not the case. The
+ * mask is on a per character basis, and will thus adjust to fit as many chars as are needed.
  * </p>
  * 
  * @see MaskFormatter
@@ -151,11 +148,9 @@ public class MaskConverter implements IConverter
 	}
 
 	/**
-	 * Converts a string to an object using
-	 * {@link MaskFormatter#stringToValue(String)}.
+	 * Converts a string to an object using {@link MaskFormatter#stringToValue(String)}.
 	 * 
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
-	 *      Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
 	public Object convertToObject(String value, Locale locale)
 	{
@@ -170,11 +165,9 @@ public class MaskConverter implements IConverter
 	}
 
 	/**
-	 * Converts the value to a string using
-	 * {@link MaskFormatter#valueToString(Object)}.
+	 * Converts the value to a string using {@link MaskFormatter#valueToString(Object)}.
 	 * 
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
-	 *      Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
 	public String convertToString(Object value, Locale locale)
 	{

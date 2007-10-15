@@ -38,18 +38,15 @@ import org.apache.wicket.util.convert.IConverter;
 
 
 /**
- * &lt;wicket:component class="myApp.MyTable" key=value&gt; tags may be used to
- * add Wicket components (e.g. a specialized PageableListView) and pass
- * parameters (e.g. the number of rows per list view page). The object is
- * automatically instantiated, initialized and added to the page's component
- * hierarchy.
+ * &lt;wicket:component class="myApp.MyTable" key=value&gt; tags may be used to add Wicket
+ * components (e.g. a specialized PageableListView) and pass parameters (e.g. the number of rows per
+ * list view page). The object is automatically instantiated, initialized and added to the page's
+ * component hierarchy.
  * <p>
- * Note: The component must have a constructor with a single String parameter:
- * the component name.
+ * Note: The component must have a constructor with a single String parameter: the component name.
  * <p>
- * Note: The component must provide a setter for each key/value attribute
- * provided.
- *
+ * Note: The component must provide a setter for each key/value attribute provided.
+ * 
  * @author Juergen Donnerstag
  */
 public final class AutoComponentResolver implements IComponentResolver
@@ -63,11 +60,10 @@ public final class AutoComponentResolver implements IComponentResolver
 	}
 
 	/**
-	 * Temporary storage for containers currently being rendered. Thus child
-	 * components can be re-parented. Remember: <wicket:component> are an
-	 * exception to the rule. Though the markup of the children are nested
-	 * inside <wicket:component>, their respective Java components are not. They
-	 * must be added to the parent container of <wicket:component>.
+	 * Temporary storage for containers currently being rendered. Thus child components can be
+	 * re-parented. Remember: <wicket:component> are an exception to the rule. Though the markup of
+	 * the children are nested inside <wicket:component>, their respective Java components are not.
+	 * They must be added to the parent container of <wicket:component>.
 	 */
 	private final Map nestedComponents = new HashMap();
 
@@ -150,10 +146,9 @@ public final class AutoComponentResolver implements IComponentResolver
 
 	/**
 	 * Based on the tag, create and initialize the component.
-	 *
+	 * 
 	 * @param container
-	 *            The current container. The new component will be added to that
-	 *            container.
+	 *            The current container. The new component will be added to that container.
 	 * @param tag
 	 *            The tag containing the information about component
 	 * @return The new component
@@ -195,38 +190,38 @@ public final class AutoComponentResolver implements IComponentResolver
 		}
 		catch (ClassNotFoundException e)
 		{
-			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
-					+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
+					e.getMessage());
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
-					+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
+					e.getMessage());
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
-					+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
+					e.getMessage());
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
-					+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
+					e.getMessage());
 		}
 		catch (InstantiationException e)
 		{
-			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
-					+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
+					e.getMessage());
 		}
 		catch (ClassCastException e)
 		{
-			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
-					+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
+					e.getMessage());
 		}
 		catch (SecurityException e)
 		{
-			throw new MarkupException("Unable to create Component from wicket tag: Cause: "
-					+ e.getMessage());
+			throw new MarkupException("Unable to create Component from wicket tag: Cause: " +
+					e.getMessage());
 		}
 
 		// Get all remaining attributes and invoke the component's setters
@@ -251,7 +246,7 @@ public final class AutoComponentResolver implements IComponentResolver
 
 	/**
 	 * Invoke the setter method for 'name' on object and provide the 'value'
-	 *
+	 * 
 	 * @param object
 	 * @param name
 	 * @param value
@@ -282,16 +277,16 @@ public final class AutoComponentResolver implements IComponentResolver
 
 		if (method == null)
 		{
-			throw new MarkupException("Unable to initialize Component. Method with name "
-					+ methodName + " not found");
+			throw new MarkupException("Unable to initialize Component. Method with name " +
+					methodName + " not found");
 		}
 
 		// The method must have a single parameter
 		final Class[] parameterClasses = method.getParameterTypes();
 		if (parameterClasses.length != 1)
 		{
-			throw new MarkupException("Unable to initialize Component. Method with name "
-					+ methodName + " must have one and only one parameter");
+			throw new MarkupException("Unable to initialize Component. Method with name " +
+					methodName + " must have one and only one parameter");
 		}
 
 		// Convert the parameter if necessary, depending on the setter's
@@ -304,28 +299,28 @@ public final class AutoComponentResolver implements IComponentResolver
 			final Object param = converter.convertToObject(value, locale);
 			if (param == null)
 			{
-				throw new MarkupException("Unable to convert value '" + value + "' into "
-						+ paramClass + ". May be there is no converter for that type registered?");
+				throw new MarkupException("Unable to convert value '" + value + "' into " +
+						paramClass + ". May be there is no converter for that type registered?");
 			}
 			method.invoke(object, new Object[] { param });
 		}
 		catch (IllegalAccessException ex)
 		{
 			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName
-							+ ". Cause: " + ex);
+					"Unable to initialize Component. Failure while invoking method " + methodName +
+							". Cause: " + ex);
 		}
 		catch (InvocationTargetException ex)
 		{
 			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName
-							+ ". Cause: " + ex);
+					"Unable to initialize Component. Failure while invoking method " + methodName +
+							". Cause: " + ex);
 		}
 		catch (NumberFormatException ex)
 		{
 			throw new MarkupException(
-					"Unable to initialize Component. Failure while invoking method " + methodName
-							+ ". Cause: " + ex);
+					"Unable to initialize Component. Failure while invoking method " + methodName +
+							". Cause: " + ex);
 		}
 	}
 }

@@ -32,12 +32,12 @@ import org.apache.wicket.util.value.ValueMap;
 public final class RequestUtils
 {
 	/**
-	 * Decode the provided queryString as a series of key/ value pairs and set
-	 * them in the provided value map.
-	 *
+	 * Decode the provided queryString as a series of key/ value pairs and set them in the provided
+	 * value map.
+	 * 
 	 * @param queryString
-	 *            string to decode, uses '&' to separate parameters and '=' to
-	 *            separate key from value
+	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
+	 *            value
 	 * @param params
 	 *            parameters map to write the found key/ value pairs to
 	 */
@@ -68,6 +68,7 @@ public final class RequestUtils
 
 	/**
 	 * Remove occurrences of ".." from the path
+	 * 
 	 * @param path
 	 * @return
 	 */
@@ -76,12 +77,12 @@ public final class RequestUtils
 		String[] components = path.split("/");
 		List newcomponents = new ArrayList(Arrays.asList(components));
 
-		for (int i=0; i<components.length; i++)
+		for (int i = 0; i < components.length; i++)
 		{
-			if (i<components.length-1)
+			if (i < components.length - 1)
 			{
 				// Verify for a ".." component at next iteration
-				if (components[i].length() > 0 && components[i+1].equals(".."))
+				if (components[i].length() > 0 && components[i + 1].equals(".."))
 				{
 					newcomponents.remove(i);
 					newcomponents.remove(i);
@@ -105,6 +106,7 @@ public final class RequestUtils
 
 	/**
 	 * Does a URLDecoder.decode() in UTF-8
+	 * 
 	 * @param path
 	 * @return
 	 */

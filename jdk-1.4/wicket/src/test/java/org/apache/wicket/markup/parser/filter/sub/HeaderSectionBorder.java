@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.border.Border;
 
 /**
  * Border component.
+ * 
  * @author Jonathan Locke
  */
 public class HeaderSectionBorder extends Border
@@ -27,13 +28,13 @@ public class HeaderSectionBorder extends Border
 	private static final long serialVersionUID = 1L;
 
 	/**
-     * Constructor
-     * @param id The id of this component
-     */
-    public HeaderSectionBorder(final String id)
-    {
-        super(id);
-    }
+	 * Constructor
+	 * 
+	 * @param id
+	 *            The id of this component
+	 */
+	public HeaderSectionBorder(final String id)
+	{
+		super(id);
+	}
 }
-
-

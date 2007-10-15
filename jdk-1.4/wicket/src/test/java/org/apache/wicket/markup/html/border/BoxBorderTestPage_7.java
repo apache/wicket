@@ -35,7 +35,7 @@ public class BoxBorderTestPage_7 extends WebPage
 	 */
 	public BoxBorderTestPage_7()
 	{
-	    add(new BorderComponent1("border1"));
-	    add(new BorderComponent2("border2"));
+		add(new BorderComponent1("border1"));
+		add(new BorderComponent2("border2"));
 	}
 }

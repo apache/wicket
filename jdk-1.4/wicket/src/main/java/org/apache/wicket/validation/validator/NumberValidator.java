@@ -18,12 +18,13 @@ package org.apache.wicket.validation.validator;
 
 import java.util.Map;
 
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.validation.IValidatable;
 
 // FIXME 2.0: ivaynberg: look over javadoc
 /**
- * Validator for checking numbers. Use the static factory methods to make range/minimum
- * or maximum validators for <code>double</code>s or <code>long</code>s.
+ * Validator for checking numbers. Use the static factory methods to make range/minimum or maximum
+ * validators for <code>double</code>s or <code>long</code>s.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -48,19 +49,18 @@ public abstract class NumberValidator extends AbstractValidator
 	public static final NumberValidator NEGATIVE = maximum(0);
 
 	/**
-	 * Gets an Integer range validator for checking if a number falls between
-	 * the minimum and maximum values. If that is not the case, an error message
-	 * will be generated with the key "NumberValidator.range". The message keys
-	 * that can be used are:
+	 * Gets an Integer range validator for checking if a number falls between the minimum and
+	 * maximum values. If that is not the case, an error message will be generated with the key
+	 * "NumberValidator.range". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
 	 * <li>${maximum}: the maximum value</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
@@ -76,18 +76,17 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets an Integer minimum validator for checking if a number is greater
-	 * than the given minimum value. If that is not the case, an error message
-	 * will be generated with the key "NumberValidator.minimum". The message
-	 * keys that can be used are:
+	 * Gets an Integer minimum validator for checking if a number is greater than the given minimum
+	 * value. If that is not the case, an error message will be generated with the key
+	 * "NumberValidator.minimum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
@@ -101,19 +100,18 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets an Integer range validator for checking if a number is smaller than
-	 * the given maximum value. If that is not the case, an error message will
-	 * be generated with the key "StringValidator.maximum". The message keys
-	 * that can be used are:
+	 * Gets an Integer range validator for checking if a number is smaller than the given maximum
+	 * value. If that is not the case, an error message will be generated with the key
+	 * "StringValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
 	 * <li>${length}: the length of the user input</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
@@ -127,19 +125,18 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double range validator for checking if a number falls between the
-	 * minimum and maximum values. If that is not the case, an error message
-	 * will be generated with the key "NumberValidator.range". The message keys
-	 * that can be used are:
+	 * Gets a Double range validator for checking if a number falls between the minimum and maximum
+	 * values. If that is not the case, an error message will be generated with the key
+	 * "NumberValidator.range". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
 	 * <li>${maximum}: the maximum value</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
@@ -155,18 +152,17 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double minimum validator for checking if number is greater then
-	 * the given minimum value. If that is not the case, an error message will
-	 * be generated with the key "NumberValidator.minimum". The message keys
-	 * that can be used are:
+	 * Gets a Double minimum validator for checking if number is greater then the given minimum
+	 * value. If that is not the case, an error message will be generated with the key
+	 * "NumberValidator.minimum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum value</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
@@ -180,18 +176,17 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a Double maximum validator for checking if an number is smaller than
-	 * the given maximum value. If that is not the case, an error message will
-	 * be generated with the key "StringValidator.maximum". The message keys
-	 * that can be used are:
+	 * Gets a Double maximum validator for checking if an number is smaller than the given maximum
+	 * value. If that is not the case, an error message will be generated with the key
+	 * "StringValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum value</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
@@ -262,8 +257,7 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if a given number number meets the minimum
-	 * requirement.
+	 * Validator for checking if a given number number meets the minimum requirement.
 	 */
 	public static class MinimumValidator extends NumberValidator
 	{
@@ -320,7 +314,7 @@ public abstract class NumberValidator extends AbstractValidator
 	{
 		private static final long serialVersionUID = 1L;
 		private final long maximum;
-		
+
 		/**
 		 * Constructor that sets the maximum value.
 		 * 
@@ -363,8 +357,7 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if a given <code>double</code> is within the
-	 * specified range.
+	 * Validator for checking if a given <code>double</code> is within the specified range.
 	 */
 	public static class DoubleRangeValidator extends NumberValidator
 	{
@@ -421,8 +414,7 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if a given <code>double</code> meets the minimum
-	 * requirement.
+	 * Validator for checking if a given <code>double</code> meets the minimum requirement.
 	 */
 	public static class DoubleMinimumValidator extends NumberValidator
 	{
@@ -472,8 +464,7 @@ public abstract class NumberValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if a given <code>double</code> meets a maximum
-	 * requirement.
+	 * Validator for checking if a given <code>double</code> meets a maximum requirement.
 	 */
 	public static class DoubleMaximumValidator extends NumberValidator
 	{

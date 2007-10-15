@@ -24,16 +24,16 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * PageableListView is similar to ListView but provides in addition pageable
- * views. A PageableListView holds pageable rows of information. The rows can be
- * re-ordered and deleted, either one at a time or many at a time.
- *
+ * PageableListView is similar to ListView but provides in addition pageable views. A
+ * PageableListView holds pageable rows of information. The rows can be re-ordered and deleted,
+ * either one at a time or many at a time.
+ * 
  * @author Jonathan Locke
  */
 public abstract class PageableListView extends ListView implements IPageable
 {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,7 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -60,9 +60,9 @@ public abstract class PageableListView extends ListView implements IPageable
 	}
 
 	/**
-	 * Creates a pageable list view having the given number of rows per page that
-	 * uses the provided object as a simple model.
-	 *
+	 * Creates a pageable list view having the given number of rows per page that uses the provided
+	 * object as a simple model.
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param list
@@ -79,7 +79,7 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Gets the index of the current page being displayed by this list view.
-	 *
+	 * 
 	 * @return Returns the currentPage.
 	 */
 	public final int getCurrentPage()
@@ -95,7 +95,7 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Gets the number of pages in this list view.
-	 *
+	 * 
 	 * @return The number of pages in this list view
 	 */
 	public final int getPageCount()
@@ -105,7 +105,7 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Gets the maximum number of rows on each page.
-	 *
+	 * 
 	 * @return the maximum number of rows on each page.
 	 */
 	public final int getRowsPerPage()
@@ -115,8 +115,9 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Sets the maximum number of rows on each page.
-	 *
-	 * @param rowsPerPage the maximum number of rows on each page.
+	 * 
+	 * @param rowsPerPage
+	 *            the maximum number of rows on each page.
 	 */
 	public final void setRowsPerPage(int rowsPerPage)
 	{
@@ -145,7 +146,7 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Sets the current page that this list view should show.
-	 *
+	 * 
 	 * @param currentPage
 	 *            The currentPage to set.
 	 */
@@ -169,9 +170,10 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Prevent users from accidentally using it.
-	 *
+	 * 
 	 * @see org.apache.wicket.markup.html.list.ListView#setStartIndex(int)
-	 * @throws UnsupportedOperationException always
+	 * @throws UnsupportedOperationException
+	 *             always
 	 */
 	public ListView setStartIndex(int startIndex) throws UnsupportedOperationException
 	{
@@ -181,11 +183,12 @@ public abstract class PageableListView extends ListView implements IPageable
 
 	/**
 	 * Prevent users from accidentally using it.
-	 *
+	 * 
 	 * @param size
 	 *            the view size
 	 * @return This
-	 * @throws UnsupportedOperationException always
+	 * @throws UnsupportedOperationException
+	 *             always
 	 * @see org.apache.wicket.markup.html.list.ListView#setStartIndex(int)
 	 */
 	public ListView setViewSize(int size) throws UnsupportedOperationException
@@ -206,12 +209,15 @@ public abstract class PageableListView extends ListView implements IPageable
 
 		/**
 		 * Construct.
-		 * @param currentPage the former 'current' page
+		 * 
+		 * @param currentPage
+		 *            the former 'current' page
 		 */
 		CurrentPageChange(int currentPage)
 		{
 			this.currentPage = currentPage;
 		}
+
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */
@@ -241,12 +247,15 @@ public abstract class PageableListView extends ListView implements IPageable
 
 		/**
 		 * Construct.
-		 * @param rowsPerPage the former number of rows per page
+		 * 
+		 * @param rowsPerPage
+		 *            the former number of rows per page
 		 */
 		RowsPerPageChange(int rowsPerPage)
 		{
 			this.rowsPerPage = rowsPerPage;
 		}
+
 		/**
 		 * @see org.apache.wicket.version.undo.Change#undo()
 		 */

@@ -40,7 +40,7 @@ public class OutputTransformerContainerTest extends WicketTestCase
 	 */
 	public void testRenderHomePage() throws Exception
 	{
-	    executeTest(Page_1.class, "PageExpectedResult_1.html");
+		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
 
 	/**
@@ -48,6 +48,6 @@ public class OutputTransformerContainerTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-	    executeTest(Page_2.class, "PageExpectedResult_2.html");
+		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
 }

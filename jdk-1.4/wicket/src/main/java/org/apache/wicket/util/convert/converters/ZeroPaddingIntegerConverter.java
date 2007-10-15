@@ -35,8 +35,7 @@ public final class ZeroPaddingIntegerConverter extends AbstractIntegerConverter
 	 * Constructs this converter.
 	 * 
 	 * @param zeroPadLength
-	 *            Minimum length of String to be outputted (will be
-	 *            zero-padded).
+	 *            Minimum length of String to be outputted (will be zero-padded).
 	 */
 	public ZeroPaddingIntegerConverter(int zeroPadLength)
 	{

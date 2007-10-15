@@ -26,10 +26,10 @@ import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.util.upload.FileItem;
 
 /**
- * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
- * When a FileInput component is nested in a
- * {@link org.apache.wicket.markup.html.form.Form}, that has multipart == true, its model
- * is updated with the {@link org.apache.wicket.util.upload.FileItem}for this component.
+ * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;. When a FileInput
+ * component is nested in a {@link org.apache.wicket.markup.html.form.Form}, that has multipart ==
+ * true, its model is updated with the {@link org.apache.wicket.util.upload.FileItem}for this
+ * component.
  * 
  * @author Eelco Hillenius
  */
@@ -160,8 +160,8 @@ public class FileUploadField extends FormComponent
 	}
 
 	/**
-	 * Clean up at the end of the request. This means closing all inputstreams
-	 * which might have been opened from the fileUpload.
+	 * Clean up at the end of the request. This means closing all inputstreams which might have been
+	 * opened from the fileUpload.
 	 * 
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
@@ -174,12 +174,11 @@ public class FileUploadField extends FormComponent
 		}
 		super.onDetach();
 	}
-	
+
 	/**
-	 * The FileUploadField will close any input streams you have opened in its
-	 * FileUpload by default. If you wish to manage the stream yourself (e.g.
-	 * you want to use it in another thread) then you can override this method
-	 * to prevent this behavior.
+	 * The FileUploadField will close any input streams you have opened in its FileUpload by
+	 * default. If you wish to manage the stream yourself (e.g. you want to use it in another
+	 * thread) then you can override this method to prevent this behavior.
 	 * 
 	 * @return
 	 */

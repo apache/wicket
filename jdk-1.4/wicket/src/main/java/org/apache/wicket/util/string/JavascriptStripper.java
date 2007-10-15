@@ -19,7 +19,7 @@ package org.apache.wicket.util.string;
 
 /**
  * Strips comments and whitespace from javascript
- *
+ * 
  * @author Matej Knopp
  */
 public class JavascriptStripper
@@ -68,7 +68,7 @@ public class JavascriptStripper
 
 	/**
 	 * Removes javascript comments and whitespace from specified string.
-	 *
+	 * 
 	 * @param original
 	 *            Source string
 	 * @return String with removed comments and whitespace

@@ -25,8 +25,8 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * Load the markup via the MarkupParser, not more, not less. Caching is provided
- * separately as well as Inherited-Markup merging.
+ * Load the markup via the MarkupParser, not more, not less. Caching is provided separately as well
+ * as Inherited-Markup merging.
  * 
  * @author Juergen Donnerstag
  */

@@ -21,7 +21,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 
 
-
 /**
  * Test for simple table behavior.
  */
@@ -29,7 +28,9 @@ public class IncrementalTableNavigationTest extends WicketTestCase
 {
 	/**
 	 * Construct.
-	 * @param name name of test
+	 * 
+	 * @param name
+	 *            name of test
 	 */
 	public IncrementalTableNavigationTest(String name)
 	{
@@ -38,17 +39,21 @@ public class IncrementalTableNavigationTest extends WicketTestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
 	{
-		executeTest(IncrementalTableNavigationPage.class, "IncrementalTableNavigationPage_ExpectedResult_1.html");
+		executeTest(IncrementalTableNavigationPage.class,
+				"IncrementalTableNavigationPage_ExpectedResult_1.html");
 
 		Page page = tester.getLastRenderedPage();
 		Link link = (Link)page.get("nextNext");
-		executedListener(IncrementalTableNavigationPage.class, link, "IncrementalTableNavigationPage_ExpectedResult_1-1.html");
+		executedListener(IncrementalTableNavigationPage.class, link,
+				"IncrementalTableNavigationPage_ExpectedResult_1-1.html");
 
 		link = (Link)page.get("prev");
-		executedListener(IncrementalTableNavigationPage.class, link, "IncrementalTableNavigationPage_ExpectedResult_1-2.html");
+		executedListener(IncrementalTableNavigationPage.class, link,
+				"IncrementalTableNavigationPage_ExpectedResult_1-2.html");
 	}
 }

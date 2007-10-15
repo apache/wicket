@@ -68,7 +68,7 @@ package org.apache.wicket.util.diff;
 public class PatchFailedException extends DiffException
 {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -77,15 +77,16 @@ public class PatchFailedException extends DiffException
 	 * Construct.
 	 */
 	public PatchFailedException()
-    {
-    }
+	{
+	}
 
-    /**
-     * Construct.
-     * @param msg
-     */
-    public PatchFailedException(String msg)
-    {
-        super(msg);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param msg
+	 */
+	public PatchFailedException(String msg)
+	{
+		super(msg);
+	}
 }

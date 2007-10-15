@@ -58,28 +58,28 @@
 package org.apache.wicket.util.diff;
 
 /**
- * Definition of a Visitor interface for {@link Revision Revisions} See "Design
- * Patterns" by the Gang of Four
+ * Definition of a Visitor interface for {@link Revision Revisions} See "Design Patterns" by the
+ * Gang of Four
  */
 public interface RevisionVisitor
 {
-    /**
-     * @param revision
-     */
-    public void visit(Revision revision);
+	/**
+	 * @param revision
+	 */
+	public void visit(Revision revision);
 
-    /**
-     * @param delta
-     */
-    public void visit(DeleteDelta delta);
+	/**
+	 * @param delta
+	 */
+	public void visit(DeleteDelta delta);
 
-    /**
-     * @param delta
-     */
-    public void visit(ChangeDelta delta);
+	/**
+	 * @param delta
+	 */
+	public void visit(ChangeDelta delta);
 
-    /**
-     * @param delta
-     */
-    public void visit(AddDelta delta);
+	/**
+	 * @param delta
+	 */
+	public void visit(AddDelta delta);
 }

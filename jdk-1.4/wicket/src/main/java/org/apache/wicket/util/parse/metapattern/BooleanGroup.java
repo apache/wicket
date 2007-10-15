@@ -28,8 +28,7 @@ public final class BooleanGroup extends Group
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructs an IntegerGroup that parses Strings that match the INTEGER
-	 * pattern in base 10.
+	 * Constructs an IntegerGroup that parses Strings that match the INTEGER pattern in base 10.
 	 * 
 	 * @see MetaPattern#INTEGER
 	 */
@@ -55,8 +54,7 @@ public final class BooleanGroup extends Group
 	 * @param matcher
 	 *            The matcher
 	 * @param defaultValue
-	 *            The default value to use if this group is omitted because it
-	 *            is optional
+	 *            The default value to use if this group is omitted because it is optional
 	 * @return The parsed int value
 	 */
 	public boolean getBoolean(final Matcher matcher, final boolean defaultValue)

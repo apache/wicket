@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default request processor implementation for normal web applications.
- *
+ * 
  * @author eelcohillenius
  */
 public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor

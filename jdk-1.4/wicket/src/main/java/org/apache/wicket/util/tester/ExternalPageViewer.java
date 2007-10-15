@@ -26,9 +26,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * <code>ExternalPageViewer</code> class. This class is experimental only and
- * may not yet work in your environment.
- *
+ * <code>ExternalPageViewer</code> class. This class is experimental only and may not yet work in
+ * your environment.
+ * 
  * TODO need Javadoc from author.
  * 
  * @author Ingram Chen
@@ -38,7 +38,8 @@ public class ExternalPageViewer
 {
 	private static final List browserPaths = new ArrayList();
 
-	// TODO Post 1.2: General: We could use JNLP to launch browser (see http://www.croftsoft.com/library/tutorials/browser/), but why not use Swing HTMLArea??
+	// TODO Post 1.2: General: We could use JNLP to launch browser (see
+	// http://www.croftsoft.com/library/tutorials/browser/), but why not use Swing HTMLArea??
 	static
 	{
 		registerBrowserPath("C:/Program Files/Mozilla Firefox/firefox.exe");
@@ -48,7 +49,7 @@ public class ExternalPageViewer
 	private final WicketTester tester;
 
 	/**
-	 *
+	 * 
 	 * @param tester
 	 */
 	public ExternalPageViewer(final WicketTester tester)
@@ -58,7 +59,7 @@ public class ExternalPageViewer
 
 	/**
 	 * register additional browser path for viewInBrowser()
-	 *
+	 * 
 	 * @param path
 	 */
 	public static final void registerBrowserPath(String path)
@@ -124,7 +125,7 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 *
+	 * 
 	 * @return path
 	 */
 	private String getBrowserPath()
@@ -142,9 +143,9 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 * define a temporary file name that stores source of last rendered page.
-	 * This file is used by external browser
-	 *
+	 * define a temporary file name that stores source of last rendered page. This file is used by
+	 * external browser
+	 * 
 	 * @return String
 	 */
 	protected String getTemperaryDumpHtmlFileName()
@@ -155,7 +156,7 @@ public class ExternalPageViewer
 
 	/**
 	 * set default encoding for writing temporary file.
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getHtmlEncoding()
@@ -164,7 +165,7 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 *
+	 * 
 	 * @return URL
 	 */
 	private URL getThisClassFileURL()
@@ -175,7 +176,7 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 *
+	 * 
 	 * @param e
 	 * @return RuntimeException
 	 */

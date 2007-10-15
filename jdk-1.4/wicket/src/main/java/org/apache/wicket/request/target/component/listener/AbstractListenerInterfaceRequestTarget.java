@@ -29,8 +29,8 @@ import org.apache.wicket.settings.IRequestCycleSettings;
 /**
  * The abstract implementation of
  * {@link org.apache.wicket.request.target.component.listener.IListenerInterfaceRequestTarget}.
- * Target that denotes a page instance and a call to a component on that page
- * using an listener interface method.
+ * Target that denotes a page instance and a call to a component on that page using an listener
+ * interface method.
  * 
  * @author Eelco Hillenius
  * @author Johan Compagner

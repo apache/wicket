@@ -20,11 +20,10 @@ import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A class for constructing singleton constants that represent a given component
- * action that needs to be authorized. The Wicket core framework defines
- * Component.RENDER and Component.ENABLE actions, but future versions of the
- * framework may add more actions and user defined components can define their
- * own actions as well.
+ * A class for constructing singleton constants that represent a given component action that needs
+ * to be authorized. The Wicket core framework defines Component.RENDER and Component.ENABLE
+ * actions, but future versions of the framework may add more actions and user defined components
+ * can define their own actions as well.
  * 
  * @see org.apache.wicket.Component#RENDER
  * @see org.apache.wicket.Component#ENABLE

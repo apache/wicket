@@ -24,10 +24,10 @@ import org.apache.wicket.model.PropertyModel;
 
 /**
  */
-public class MarkupInheritanceBase_7 extends WebPage 
+public class MarkupInheritanceBase_7 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int counter = 0;
 
 	/**
@@ -50,6 +50,7 @@ public class MarkupInheritanceBase_7 extends WebPage
 
 	/**
 	 * Gets the counter.
+	 * 
 	 * @return counter
 	 */
 	public int getCounter()
@@ -59,7 +60,9 @@ public class MarkupInheritanceBase_7 extends WebPage
 
 	/**
 	 * Sets the counter.
-	 * @param counter counter
+	 * 
+	 * @param counter
+	 *            counter
 	 */
 	public void setCounter(int counter)
 	{

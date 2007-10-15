@@ -22,9 +22,8 @@ import org.apache.wicket.validation.IValidatable;
 
 
 /**
- * Validator for checking <code>String</code> lengths. Usually this validator
- * is used through the static factory methods, but it and its inner classes can
- * also be subclassed directly.
+ * Validator for checking <code>String</code> lengths. Usually this validator is used through the
+ * static factory methods, but it and its inner classes can also be subclassed directly.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -40,8 +39,8 @@ public abstract class StringValidator extends AbstractValidator
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Validator for checking if the length of a <code>String</code> is
-	 * exactly the specified length.
+	 * Validator for checking if the length of a <code>String</code> is exactly the specified
+	 * length.
 	 */
 	public static class ExactLengthValidator extends StringValidator
 	{
@@ -102,8 +101,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if the length of a <code>String</code> is within
-	 * the specified range.
+	 * Validator for checking if the length of a <code>String</code> is within the specified
+	 * range.
 	 */
 	public static class LengthBetweenValidator extends StringValidator
 	{
@@ -182,8 +181,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if the length of a <code>String</code> meets the
-	 * maximum length requirement.
+	 * Validator for checking if the length of a <code>String</code> meets the maximum length
+	 * requirement.
 	 */
 	public static class MaximumLengthValidator extends StringValidator
 	{
@@ -243,8 +242,8 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Validator for checking if the length of a <code>String</code> meets the
-	 * minimum length requirement.
+	 * Validator for checking if the length of a <code>String</code> meets the minimum length
+	 * requirement.
 	 */
 	public static class MinimumLengthValidator extends StringValidator
 	{
@@ -305,19 +304,19 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a <code>String</code> exact length validator for checking if a
-	 * string length is exactly the same as the given length value. If that is
-	 * not the case, then an error message will be generated with the key
-	 * "StringValidator.exact". The message keys that can be used are:
+	 * Gets a <code>String</code> exact length validator for checking if a string length is
+	 * exactly the same as the given length value. If that is not the case, then an error message
+	 * will be generated with the key "StringValidator.exact". The message keys that can be used
+	 * are:
 	 * <p>
 	 * <ul>
 	 * <li>${exact}: the maximum length</li>
 	 * <li>${length}: the length of the user input</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param length
@@ -331,10 +330,9 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a <code>String</code> range validator for checking if a string
-	 * length falls between the minimum and and maximum lengths. If that is not
-	 * the case, then an error message will be generated with the key
-	 * "StringValidator.range". The message keys that can be used are:
+	 * Gets a <code>String</code> range validator for checking if a string length falls between
+	 * the minimum and and maximum lengths. If that is not the case, then an error message will be
+	 * generated with the key "StringValidator.range". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum length</li>
@@ -342,9 +340,9 @@ public abstract class StringValidator extends AbstractValidator
 	 * <li>${length}: the length of the user input</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param minimum
@@ -360,19 +358,18 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a <code>String</code> maximum validator for checking if a string
-	 * length is smaller than the given maximum value. If that is not the case,
-	 * then an error message will be generated with the key
-	 * "StringValidator.maximum". The message keys that can be used are:
+	 * Gets a <code>String</code> maximum validator for checking if a string length is smaller
+	 * than the given maximum value. If that is not the case, then an error message will be
+	 * generated with the key "StringValidator.maximum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${maximum}: the maximum length</li>
 	 * <li>${length}: the length of the user input</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param maximum
@@ -386,19 +383,18 @@ public abstract class StringValidator extends AbstractValidator
 	}
 
 	/**
-	 * Gets a <code>String</code> minimum validator for checking if a string
-	 * length is greater than the given minimum value. If that is not the case,
-	 * then an error message will be generated with the key
-	 * "StringValidator.minimum". The message keys that can be used are:
+	 * Gets a <code>String</code> minimum validator for checking if a string length is greater
+	 * than the given minimum value. If that is not the case, then an error message will be
+	 * generated with the key "StringValidator.minimum". The message keys that can be used are:
 	 * <p>
 	 * <ul>
 	 * <li>${minimum}: the minimum length</li>
 	 * <li>${length}: the length of the user input</li>
 	 * <li>${input}: the input the user gave</li>
 	 * <li>${name}: the name of the <code>Component</code> that failed</li>
-	 * <li>${label}: the label of the <code>Component</code> - either comes
-	 * from <code>FormComponent.labelModel</code> or resource key
-	 * [form-id].[form-component-id] in that order</li>
+	 * <li>${label}: the label of the <code>Component</code> - either comes from
+	 * <code>FormComponent.labelModel</code> or resource key [form-id].[form-component-id] in that
+	 * order</li>
 	 * </ul>
 	 * 
 	 * @param minimum

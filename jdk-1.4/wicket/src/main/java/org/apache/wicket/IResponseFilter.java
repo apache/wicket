@@ -20,11 +20,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * A response filter can be added to the
- * {@link org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)} object
- * The will be called from the Buffered Response objects right before they would send it to the
- * real responses. You have to use the
- * {@link org.apache.wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)}(to true which is the default)
- * for this filtering to work.
+ * {@link org.apache.wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)}
+ * object The will be called from the Buffered Response objects right before they would send it to
+ * the real responses. You have to use the
+ * {@link org.apache.wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)}(to true
+ * which is the default) for this filtering to work.
  * 
  * @author jcompagner
  * 
@@ -33,11 +33,10 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public interface IResponseFilter
 {
 	/**
-	 * Filters the response buffer and returns the filtered response that can be
-	 * used in the next filter or returned to the real output itself.
+	 * Filters the response buffer and returns the filtered response that can be used in the next
+	 * filter or returned to the real output itself.
 	 * 
-	 * A filter may alter the response buffer and return the response buffer
-	 * itself.
+	 * A filter may alter the response buffer and return the response buffer itself.
 	 * 
 	 * @param responseBuffer
 	 *            The response buffer to be filtered

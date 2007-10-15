@@ -21,15 +21,13 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.lang.Objects;
 
 /**
- * Validates that the input of two form components is identical. Errors are
- * reported on the second form component with key 'EqualInputValidator' and
- * the variables:
+ * Validates that the input of two form components is identical. Errors are reported on the second
+ * form component with key 'EqualInputValidator' and the variables:
  * <ul>
  * <li>${input(n)}: the user's input</li>
  * <li>${name}: the name of the component</li>
- * <li>${label(n)}: the label of the component - either comes from
- * FormComponent.labelModel or resource key [form-id].[form-component-id] in
- * that order</li>
+ * <li>${label(n)}: the label of the component - either comes from FormComponent.labelModel or
+ * resource key [form-id].[form-component-id] in that order</li>
  * </ul>
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -88,5 +86,5 @@ public class EqualInputValidator extends AbstractFormValidator
 			error(formComponent2);
 		}
 	}
-	
+
 }

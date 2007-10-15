@@ -20,11 +20,10 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.Page;
 
 /**
- * Some source which produces a page. Page implements IPageMapEntry by simply
- * returning "this", but other implementations are possible as well, allowing
- * users to create IPageMapEntry implementations that reconstruct full blown
- * Page objects from a limited set of data (for example, a details page from an
- * id). The advantage of doing this is that you can save session memory (by
+ * Some source which produces a page. Page implements IPageMapEntry by simply returning "this", but
+ * other implementations are possible as well, allowing users to create IPageMapEntry
+ * implementations that reconstruct full blown Page objects from a limited set of data (for example,
+ * a details page from an id). The advantage of doing this is that you can save session memory (by
  * trading off against the processing power required to reconstruct the page).
  * 
  * @see org.apache.wicket.session.pagemap.AbstractPageMapEntry
@@ -43,8 +42,8 @@ public interface IPageMapEntry extends IClusterable
 	Page getPage();
 
 	/**
-	 * @return The class of page stored in this page map entry (which can be
-	 *         used by an eviction strategy to prioritize evictions)
+	 * @return The class of page stored in this page map entry (which can be used by an eviction
+	 *         strategy to prioritize evictions)
 	 */
 	Class getPageClass();
 

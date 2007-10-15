@@ -20,16 +20,14 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * This is not a reader like e.g. FileReader. It rather reads the whole data
- * until the end from a source reader into memory and besides that it maintains
- * the current position (like a reader) it provides String like methods which
- * conveniently let you navigate (usually forward) in the stream.
+ * This is not a reader like e.g. FileReader. It rather reads the whole data until the end from a
+ * source reader into memory and besides that it maintains the current position (like a reader) it
+ * provides String like methods which conveniently let you navigate (usually forward) in the stream.
  * <p>
- * Because the source data are expected to be text, the line and column numbers
- * are maintained as well for location precise error messages. But it does NOT
- * automatically update the line and column numbers. You must call
- * {@link #countLinesTo(int)}
- *
+ * Because the source data are expected to be text, the line and column numbers are maintained as
+ * well for location precise error messages. But it does NOT automatically update the line and
+ * column numbers. You must call {@link #countLinesTo(int)}
+ * 
  * @author Juergen Donnerstag
  */
 public final class FullyBufferedReader
@@ -54,7 +52,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Read all the data from the resource into memory.
-	 *
+	 * 
 	 * @param reader
 	 *            The source reader to load the data from
 	 * @throws IOException
@@ -69,10 +67,9 @@ public final class FullyBufferedReader
 	/**
 	 * Get the characters from the position marker to toPos.
 	 * <p>
-	 * If toPos < 0, than get all data from the position marker until the end.
-	 * If toPos less than the current position marker than return an empty
-	 * string ""
-	 *
+	 * If toPos < 0, than get all data from the position marker until the end. If toPos less than
+	 * the current position marker than return an empty string ""
+	 * 
 	 * @param toPos
 	 *            Index of first character not included
 	 * @return Raw markup (a string) in between these two positions.
@@ -91,9 +88,9 @@ public final class FullyBufferedReader
 	}
 
 	/**
-	 * Get the characters from in between both positions including the char at
-	 * fromPos, excluding the char at toPos
-	 *
+	 * Get the characters from in between both positions including the char at fromPos, excluding
+	 * the char at toPos
+	 * 
 	 * @param fromPos
 	 *            first index
 	 * @param toPos
@@ -107,7 +104,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Gets the current input position
-	 *
+	 * 
 	 * @return input position
 	 */
 	public final int getPosition()
@@ -117,7 +114,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Remember the current position in markup
-	 *
+	 * 
 	 * @param pos
 	 */
 	public final void setPositionMarker(final int pos)
@@ -135,7 +132,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Counts lines starting where we last left off up to the index provided.
-	 *
+	 * 
 	 * @param end
 	 *            End index
 	 */
@@ -160,7 +157,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Find a char starting at the current input position
-	 *
+	 * 
 	 * @param ch
 	 *            The char to search for
 	 * @return -1 if not found
@@ -172,7 +169,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Find a char starting at the position provided
-	 *
+	 * 
 	 * @param ch
 	 *            The char to search for
 	 * @param startPos
@@ -186,7 +183,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Find the string starting at the current input position
-	 *
+	 * 
 	 * @param str
 	 *            The string to search for
 	 * @return -1 if not found
@@ -198,7 +195,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Find the string starting at the position provided
-	 *
+	 * 
 	 * @param str
 	 *            The string to search for
 	 * @param startPos
@@ -211,9 +208,8 @@ public final class FullyBufferedReader
 	}
 
 	/**
-	 * Position the reader at the index provided. Could be anywhere within the
-	 * data
-	 *
+	 * Position the reader at the index provided. Could be anywhere within the data
+	 * 
 	 * @param pos
 	 *            The new current position
 	 */
@@ -223,10 +219,9 @@ public final class FullyBufferedReader
 	}
 
 	/**
-	 * Get the column number. Note: The column number depends on you calling
-	 * countLinesTo(pos). It is not necessarily the column number matching the
-	 * current position in the stream.
-	 *
+	 * Get the column number. Note: The column number depends on you calling countLinesTo(pos). It
+	 * is not necessarily the column number matching the current position in the stream.
+	 * 
 	 * @return column number
 	 */
 	public final int getColumnNumber()
@@ -235,10 +230,9 @@ public final class FullyBufferedReader
 	}
 
 	/**
-	 * Get the line number. Note: The line number depends on you calling
-	 * countLinesTo(pos). It is not necessarily the line number matching the
-	 * current position in the stream.
-	 *
+	 * Get the line number. Note: The line number depends on you calling countLinesTo(pos). It is
+	 * not necessarily the line number matching the current position in the stream.
+	 * 
 	 * @return line number
 	 */
 	public final int getLineNumber()
@@ -247,9 +241,9 @@ public final class FullyBufferedReader
 	}
 
 	/**
-	 * Get the number of character read from the source resource. The whole
-	 * content, not just until the current position.
-	 *
+	 * Get the number of character read from the source resource. The whole content, not just until
+	 * the current position.
+	 * 
 	 * @return Size of the data
 	 */
 	public final int size()
@@ -259,7 +253,7 @@ public final class FullyBufferedReader
 
 	/**
 	 * Get the character at the position provided
-	 *
+	 * 
 	 * @param pos
 	 *            The position
 	 * @return char at position

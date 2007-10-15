@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 
 
-
 /**
  * Dummy page used for resource testing.
  */
@@ -37,7 +36,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 	 * Construct.
 	 * 
 	 * 
-	 *            page parameters.
+	 * page parameters.
 	 */
 	public PagedTableNavigatorWithLabelProviderPage()
 	{
@@ -57,12 +56,12 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 		list.add("twelve");
 		list.add("thirteen");
 		list.add("fourteen");
-		
+
 		final int pageSize = 2;
 		final PageableListView listview = new PageableListView("table", list, pageSize)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
@@ -77,21 +76,22 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 			public String getPageLabel(int page)
 			{
 				int size = listview.getList().size();
-				 int current = page*pageSize;
-				 int end = current+pageSize;
-				 if (end > size) 
-				 {
-					 end = size;
-				 }
-				 current++; // page start at 0.
-				 return current + "-" + end;
+				int current = page * pageSize;
+				int end = current + pageSize;
+				if (end > size)
+				{
+					end = size;
+				}
+				current++; // page start at 0.
+				return current + "-" + end;
 			}
 		};
 
 
 		add(listview);
-		add(new PagingNavigator("navigator", listview,labelProvider));
+		add(new PagingNavigator("navigator", listview, labelProvider));
 	}
+
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */

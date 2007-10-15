@@ -20,8 +20,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Holds a map of most recently used items of a given maximum size. Old entries
- * are expired when the map exceeds that maximum size.
+ * Holds a map of most recently used items of a given maximum size. Old entries are expired when the
+ * map exceeds that maximum size.
  * 
  * @author Jonathan Locke
  */
@@ -31,13 +31,13 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 
 	/** Value most recently removed from map */
 	Object removedValue;
-	
+
 	/** Maximum number of entries allowed in this map */
 	private final int maxEntries;
 
 	/**
 	 * Constructor
-	 *  
+	 * 
 	 * @param maxEntries
 	 *            Maximum number of entries allowed in the map
 	 */
@@ -49,10 +49,10 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 		{
 			throw new IllegalArgumentException("Must have at least one entry");
 		}
-		
+
 		this.maxEntries = maxEntries;
 	}
-	
+
 	/**
 	 * @return Returns the removedValue.
 	 */
@@ -60,7 +60,7 @@ public class MostRecentlyUsedMap extends LinkedHashMap
 	{
 		return removedValue;
 	}
-	
+
 	/**
 	 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
 	 */

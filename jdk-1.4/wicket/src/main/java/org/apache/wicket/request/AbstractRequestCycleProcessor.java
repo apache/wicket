@@ -50,7 +50,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Default abstract implementation of {@link IRequestCycleProcessor}.
- *
+ * 
  * @author eelcohillenius
  */
 public abstract class AbstractRequestCycleProcessor implements IRequestCycleProcessor
@@ -171,7 +171,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	/**
 	 * Creates a new request coding strategy instance. this is (typically) called once at the first
 	 * time {@link #getRequestCodingStrategy()} is called.
-	 *
+	 * 
 	 * @return a new request coding strategy
 	 */
 	protected abstract IRequestCodingStrategy newRequestCodingStrategy();
@@ -182,7 +182,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * {@link RequestCycle#onRuntimeException(Page, RuntimeException)}. Note that if you override
 	 * this method {@link RequestCycle#onRuntimeException(Page, RuntimeException)} will not be
 	 * supported.
-	 *
+	 * 
 	 * @param page
 	 *            Any page context where the exception was thrown
 	 * @param e
@@ -196,7 +196,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 
 	/**
 	 * Resolves to a bookmarkable page target.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestParameters
@@ -256,7 +256,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 
 	/**
 	 * Resolves to an external resource.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            The current request cycle
 	 * @return The external resource request target
@@ -278,7 +278,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 
 	/**
 	 * Resolves to a home page target.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle.
 	 * @param requestParameters
@@ -330,7 +330,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	/**
 	 * Resolves the RequestTarget for the given interface. This method can be overridden if some
 	 * special interface needs to resolve to its own target.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            The current RequestCycle object
 	 * @param page
@@ -410,7 +410,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 	 * Resolves to a page target that was previously rendered. Optionally resolves to a component
 	 * call target, which is a specialization of a page target. If no corresponding page could be
 	 * found, a expired page target will be returned.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestParameters
@@ -449,7 +449,7 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 
 	/**
 	 * Resolves to a shared resource target.
-	 *
+	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestParameters

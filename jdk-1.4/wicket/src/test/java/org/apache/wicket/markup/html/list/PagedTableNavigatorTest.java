@@ -40,7 +40,9 @@ public class PagedTableNavigatorTest extends TestCase
 
 	/**
 	 * Construct.
-	 * @param name name of test
+	 * 
+	 * @param name
+	 *            name of test
 	 */
 	public PagedTableNavigatorTest(String name)
 	{
@@ -49,6 +51,7 @@ public class PagedTableNavigatorTest extends TestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
@@ -58,7 +61,8 @@ public class PagedTableNavigatorTest extends TestCase
 		PagedTableNavigatorPage page = (PagedTableNavigatorPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
 		application.setupRequestAndResponse();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_1.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_1.html", true);
 
 		Link link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -77,7 +81,8 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_2.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_2.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -96,7 +101,8 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_3.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_3.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -115,7 +121,8 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_4.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_4.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -134,7 +141,8 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_5.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_5.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertFalse(link.isEnabled());
@@ -153,7 +161,8 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_6.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_6.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -172,7 +181,8 @@ public class PagedTableNavigatorTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_7.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_7.html", true);
 
 		link = (Link)page.get("navigator:first");
 		assertTrue(link.isEnabled());
@@ -185,19 +195,20 @@ public class PagedTableNavigatorTest extends TestCase
 
 		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
-		
+
 		// add entries to the model list.
 		List modelData = (List)page.get("table").getModelObject();
 		modelData.add("add-1");
 		modelData.add("add-2");
 		modelData.add("add-3");
-		
+
 		link = (Link)page.get("navigator:first");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, this.getClass(), "PagedTableNavigatorExpectedResult_8.html", true);
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTableNavigatorExpectedResult_8.html", true);
 
 		application.destroy();
 	}

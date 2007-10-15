@@ -51,7 +51,7 @@ public abstract class AjaxCheckBox extends CheckBox
 	public AjaxCheckBox(final String id, final IModel model)
 	{
 		super(id, model);
-		
+
 		setOutputMarkupId(true);
 
 		add(new AjaxFormComponentUpdatingBehavior("onclick")

@@ -28,8 +28,8 @@ import org.apache.wicket.util.collections.IntHashMap.Entry;
 
 
 /**
- * This class generates UID for Component/Interface combinations when used in
- * conjunction with {@link UrlCompressingWebCodingStrategy}
+ * This class generates UID for Component/Interface combinations when used in conjunction with
+ * {@link UrlCompressingWebCodingStrategy}
  * 
  * Use it like this:
  * 
@@ -66,8 +66,7 @@ public class UrlCompressor implements IClusterable
 		}
 
 		/**
-		 * @return Component The component that should be used to call the
-		 *         interface
+		 * @return Component The component that should be used to call the interface
 		 */
 		public Component getComponent()
 		{
@@ -75,8 +74,7 @@ public class UrlCompressor implements IClusterable
 		}
 
 		/**
-		 * @return String The interface name which should be called on the
-		 *         component
+		 * @return String The interface name which should be called on the component
 		 */
 		public String getInterfaceName()
 		{
@@ -135,9 +133,8 @@ public class UrlCompressor implements IClusterable
 	}
 
 	/**
-	 * Returns a uid for the combination component and the to call interface.
-	 * Will return the same uid if it was already called for this specific
-	 * combination.
+	 * Returns a uid for the combination component and the to call interface. Will return the same
+	 * uid if it was already called for this specific combination.
 	 * 
 	 * @param component
 	 *            The Component

@@ -28,9 +28,9 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * An implementation of <code>IValueMap</code> that makes a copy when a caller
- * tries to change an immutable <code>Map</code>. That is, the
- * <code>Map</code> may or may not be immutable, but if it is, a copy is made.
+ * An implementation of <code>IValueMap</code> that makes a copy when a caller tries to change an
+ * immutable <code>Map</code>. That is, the <code>Map</code> may or may not be immutable, but
+ * if it is, a copy is made.
  * 
  * @author Johan Compagner
  * @since 1.2.6
@@ -41,7 +41,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 
 	/** the wrapped <code>IValueMap</code> */
 	private IValueMap wrapped;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -63,14 +63,13 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	}
 
 	/**
-	 * Checks if this <code>IValueMap</code> is immutable. If it is, this
-	 * method makes a new <code>IValueMap</code> using the
-	 * <code>ValueMap</code> copy constructor, and sets it to be this
-	 * <code>CopyOnWriteValueMap</code>.
+	 * Checks if this <code>IValueMap</code> is immutable. If it is, this method makes a new
+	 * <code>IValueMap</code> using the <code>ValueMap</code> copy constructor, and sets it to
+	 * be this <code>CopyOnWriteValueMap</code>.
 	 */
 	private void checkAndCopy()
 	{
-		if(wrapped.isImmutable())
+		if (wrapped.isImmutable())
 		{
 			wrapped = new ValueMap(wrapped);
 		}
@@ -275,7 +274,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	 */
 	public Object put(Object key, Object value)
 	{
-		checkAndCopy();		
+		checkAndCopy();
 		return wrapped.put(key, value);
 	}
 
@@ -312,7 +311,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	{
 		return wrapped.values();
 	}
-	
+
 	/**
 	 * @see IValueMap#toString()
 	 */

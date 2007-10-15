@@ -52,7 +52,7 @@ public class StringBufferWriter extends Writer
 	{
 		this.buffer = buffer;
 	}
-	
+
 	/**
 	 * Writers the char to the buffer
 	 * 
@@ -92,7 +92,7 @@ public class StringBufferWriter extends Writer
 	 */
 	public void write(String string, int offset, int length)
 	{
-		buffer.append(string.substring(offset, offset+length));
+		buffer.append(string.substring(offset, offset + length));
 	}
 
 	/**

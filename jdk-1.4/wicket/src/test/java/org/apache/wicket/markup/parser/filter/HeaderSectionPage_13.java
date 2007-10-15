@@ -21,18 +21,18 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class HeaderSectionPage_13 extends WebPage 
+public class HeaderSectionPage_13 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public HeaderSectionPage_13() 
+	public HeaderSectionPage_13()
 	{
-	    add(new HeaderSectionPanel_4("panel"));
-    }
+		add(new HeaderSectionPanel_4("panel"));
+	}
 }

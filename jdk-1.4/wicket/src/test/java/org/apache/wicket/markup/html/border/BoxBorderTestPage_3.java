@@ -32,7 +32,7 @@ public class BoxBorderTestPage_3 extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private final ValueMap properties = new ValueMap();
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -42,7 +42,7 @@ public class BoxBorderTestPage_3 extends WebPage
 	{
 		Border formBorder = new FormBorder("border");
 		add(formBorder);
-		
+
 		formBorder.add(new TextField("name", new PropertyModel(properties, "name")));
 	}
 }

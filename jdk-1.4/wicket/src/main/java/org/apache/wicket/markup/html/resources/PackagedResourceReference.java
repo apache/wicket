@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
 
 /**
  * Base class for components that render references to packaged resources.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class PackagedResourceReference extends WebMarkupContainer
@@ -34,7 +34,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param referer
@@ -52,7 +52,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param referer
@@ -106,7 +106,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Creates new package resource reference.
-	 *
+	 * 
 	 * @param app
 	 * @param scope
 	 * @param name
@@ -122,7 +122,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param resourceReference
@@ -138,7 +138,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param resourceReference

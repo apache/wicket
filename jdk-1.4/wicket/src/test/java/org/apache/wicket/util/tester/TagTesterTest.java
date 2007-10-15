@@ -121,9 +121,8 @@ public class TagTesterTest extends TestCase
 	}
 
 	/**
-	 * getAttributeContains should only return true if the attribute value
-	 * contains the expected value. It should not be case in-sensitive and not
-	 * trim the attribute value.
+	 * getAttributeContains should only return true if the attribute value contains the expected
+	 * value. It should not be case in-sensitive and not trim the attribute value.
 	 */
 	public void testGetAttributeContains()
 	{
@@ -143,8 +142,8 @@ public class TagTesterTest extends TestCase
 	}
 
 	/**
-	 * Test the convenience method getAttributeIs, which returns true if the
-	 * attributes value is exactly the same as the parameter.
+	 * Test the convenience method getAttributeIs, which returns true if the attributes value is
+	 * exactly the same as the parameter.
 	 */
 	public void testGetAttributeIs()
 	{
@@ -162,8 +161,8 @@ public class TagTesterTest extends TestCase
 	}
 
 	/**
-	 * getAttributeEndsWith behaves the same as getAttributeContains, but the
-	 * parameter which should be contained must only be at the end.
+	 * getAttributeEndsWith behaves the same as getAttributeContains, but the parameter which should
+	 * be contained must only be at the end.
 	 */
 	public void testGetAttributeEndsWith()
 	{
@@ -180,20 +179,20 @@ public class TagTesterTest extends TestCase
 		assertFalse(tester.getAttributeEndsWith("class", "class 1"));
 		assertFalse(tester.getAttributeEndsWith("class", "SS1"));
 	}
-	
+
 	/**
 	 * 
 	 */
 	public void testHasChildTag()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
-		
+
 		assertTrue(tester.hasChildTag("span"));
 		assertTrue(tester.hasChildTag("SPAN"));
-		
+
 		assertFalse(tester.hasChildTag("span "));
 		assertFalse(tester.hasChildTag("p"));
-		
+
 		try
 		{
 			tester.hasChildTag("");
@@ -207,7 +206,7 @@ public class TagTesterTest extends TestCase
 		{
 			fail(e.getMessage());
 		}
-		
+
 		try
 		{
 			tester.hasChildTag(null);
@@ -222,9 +221,9 @@ public class TagTesterTest extends TestCase
 			fail(e.getMessage());
 		}
 
-		
+
 		tester = TagTester.createTagByAttribute("<p id=\"test\">mock</p>", "id", "test");
-		
+
 		assertFalse(tester.hasChildTag("span"));
 		assertFalse(tester.hasChildTag("p"));
 	}

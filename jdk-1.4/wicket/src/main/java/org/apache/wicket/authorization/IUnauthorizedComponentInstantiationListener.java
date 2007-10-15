@@ -19,20 +19,18 @@ package org.apache.wicket.authorization;
 import org.apache.wicket.Component;
 
 /**
- * Interface to code that is called to handle unauthorized component
- * instantiations.
+ * Interface to code that is called to handle unauthorized component instantiations.
  * 
  * @author Jonathan Locke
  */
 public interface IUnauthorizedComponentInstantiationListener
 {
 	/**
-	 * Called when an unauthorized component instantiation is about to take
-	 * place (but before it happens).
+	 * Called when an unauthorized component instantiation is about to take place (but before it
+	 * happens).
 	 * 
 	 * @param component
-	 *            The partially constructed component (only the id is guaranteed
-	 *            to be valid).
+	 *            The partially constructed component (only the id is guaranteed to be valid).
 	 * @see org.apache.wicket.application.IComponentInstantiationListener
 	 */
 	void onUnauthorizedInstantiation(Component component);

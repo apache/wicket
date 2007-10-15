@@ -28,10 +28,10 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * This is a simple XmlReader. Its only purpose is to read the xml decl string
- * from the input and apply proper character encoding to all subsequent
- * characters. The xml decl string itself is removed from the output.
- *
+ * This is a simple XmlReader. Its only purpose is to read the xml decl string from the input and
+ * apply proper character encoding to all subsequent characters. The xml decl string itself is
+ * removed from the output.
+ * 
  * @author Juergen Donnerstag
  */
 public final class XmlReader extends Reader
@@ -57,11 +57,12 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param inputStream
 	 *            The InputStream to read the xml data from
 	 * @param defaultEncoding
-	 *            Default character encoding to use when not specified in XML declaration, specify null to use JVM default
+	 *            Default character encoding to use when not specified in XML declaration, specify
+	 *            null to use JVM default
 	 * @throws IOException
 	 *             In case something went wrong while reading the data
 	 */
@@ -84,7 +85,7 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Return the encoding used while reading the markup file.
-	 *
+	 * 
 	 * @return if null, then JVM default
 	 */
 	public String getEncoding()
@@ -94,7 +95,7 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Return the XML declaration string, in case if found in the markup.
-	 *
+	 * 
 	 * @return Null, if not found.
 	 */
 	public String getXmlDeclaration()
@@ -104,7 +105,7 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Reads and parses markup from a resource such as file.
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	public void init() throws IOException
@@ -145,8 +146,9 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Determine the encoding from the xml decl.
-	 *
-	 * @param string The xmlDecl string
+	 * 
+	 * @param string
+	 *            The xmlDecl string
 	 * @return The encoding. Null, if not found
 	 */
 	private final String determineEncoding(final String string)
@@ -175,17 +177,15 @@ public final class XmlReader extends Reader
 	}
 
 	/**
-	 * Read-ahead the input stream (markup file). If the first line contains
-	 * &lt;?xml...?&gt;, than remember the xml decl for later to determine the
-	 * encoding.
+	 * Read-ahead the input stream (markup file). If the first line contains &lt;?xml...?&gt;, than
+	 * remember the xml decl for later to determine the encoding.
 	 * <p>
 	 * The xml decl will not be forwarded to the user.
-	 *
+	 * 
 	 * @param in
 	 *            The markup file
 	 * @param readAheadSize
-	 *            The read ahead buffer available to read the xml encoding
-	 *            information
+	 *            The read ahead buffer available to read the xml encoding information
 	 * @return true, if &lt;?xml ..?&gt; has been found
 	 * @throws IOException
 	 */
@@ -203,8 +203,8 @@ public final class XmlReader extends Reader
 
 			// Stop at the end of the first tag or end of line. If it is HTML
 			// without newlines, stop after X bytes (= characters)
-			if ((value == '>') || (value == '\n') || (value == '\r')
-					|| (pushBack.length() >= (readAheadSize - 1)))
+			if ((value == '>') || (value == '\n') || (value == '\r') ||
+					(pushBack.length() >= (readAheadSize - 1)))
 			{
 				break;
 			}

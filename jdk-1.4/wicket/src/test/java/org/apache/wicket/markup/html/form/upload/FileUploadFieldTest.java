@@ -24,8 +24,6 @@ import java.io.OutputStream;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketTestCase;
-import org.apache.wicket.protocol.http.MockHttpServletRequest;
-import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.ITestPageSource;
@@ -50,13 +48,13 @@ public class FileUploadFieldTest extends WicketTestCase
 	/**
 	 * Test that detach closes the streams
 	 * 
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void testInternalDetach() throws Exception
 	{
 		final MockPageWithFormAndUploadField page = new MockPageWithFormAndUploadField();
 
-		tester.startPage(new ITestPageSource() 
+		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -67,11 +65,12 @@ public class FileUploadFieldTest extends WicketTestCase
 		});
 
 		File tmp = null;
-		try {
+		try
+		{
 			// Write out a large text file. We need to make this file reasonably sizable,
 			// because things get handled using input streams, and we want to check to make
 			// sure they're closed properly if we abort mid-request.
-			
+
 			// We create a temp file because we don't want to depend on a file we might not
 			// know the path of (e.g. the big DTD this test used previously). This enables
 			// us to run the test out of a JAR file if need be, and also with an unknown
@@ -83,31 +82,31 @@ public class FileUploadFieldTest extends WicketTestCase
 				os.write("test test test test test\n".getBytes());
 			}
 			os.close();
-		
+
 			// Let's upload the dtd file. It's large enough to avoid being in memory.
 			FormTester formtester = tester.newFormTester("form");
 			formtester.setFile("upload", tmp, "text/plain");
-		    formtester.submit();
-			
+			formtester.submit();
+
 			// Get the file upload
 			FileUpload fileUpload = page.getFileUpload();
-			
+
 			assertNotNull(fileUpload);
-			
+
 			// Get an input stream from the file upload
 			InputStream is = fileUpload.getInputStream();
-			
+
 			// We should be able to read a byte
 			assertTrue(is.read() != -1);
-			
+
 			fileUpload.closeStreams();
-			
+
 			// The input stream should be closed so we shouldn't be able to read any more bytes
-			try 
+			try
 			{
 				is.read();
 				fail("The input stream should be closed so we shouldn't be able to read any more bytes");
-			} 
+			}
 			catch (IOException e)
 			{
 				// Expected

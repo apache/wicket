@@ -46,7 +46,8 @@ public class LinkIconPanel extends LabelIconPanel
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.LabelIconPanel#addComponents(org.apache.wicket.model.IModel, org.apache.wicket.markup.html.tree.BaseTree)
+	 * @see org.apache.wicket.markup.html.tree.LabelIconPanel#addComponents(org.apache.wicket.model.IModel,
+	 *      org.apache.wicket.markup.html.tree.BaseTree)
 	 */
 	protected void addComponents(final IModel model, final BaseTree tree)
 	{
@@ -71,6 +72,7 @@ public class LinkIconPanel extends LabelIconPanel
 
 	/**
 	 * Handler invoked when the link is clicked. By default makes the node selected
+	 * 
 	 * @param node
 	 * @param tree
 	 * @param target

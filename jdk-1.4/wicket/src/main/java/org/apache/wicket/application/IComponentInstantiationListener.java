@@ -19,10 +19,9 @@ package org.apache.wicket.application;
 import org.apache.wicket.Component;
 
 /**
- * Listener interface that receives messages when components are constructed.
- * This mechanism is used by {@link org.apache.wicket.authorization.IAuthorizationStrategy},
- * but can additionally be used to implement things like dependency injection
- * support etc.
+ * Listener interface that receives messages when components are constructed. This mechanism is used
+ * by {@link org.apache.wicket.authorization.IAuthorizationStrategy}, but can additionally be used
+ * to implement things like dependency injection support etc.
  * 
  * <strong>Implementations must be thread safe</strong>
  * 
@@ -31,10 +30,9 @@ import org.apache.wicket.Component;
 public interface IComponentInstantiationListener
 {
 	/**
-	 * Called for every component that is instantiated. This method is called
-	 * <strong>during</strong> construction, so do not depend on the
-	 * construction being completed yet. The id is guaranteed to be set before
-	 * this call.
+	 * Called for every component that is instantiated. This method is called <strong>during</strong>
+	 * construction, so do not depend on the construction being completed yet. The id is guaranteed
+	 * to be set before this call.
 	 * 
 	 * @param component
 	 *            the component that is being instantiated.

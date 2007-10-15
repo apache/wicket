@@ -21,8 +21,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 
 /**
- * Specialization of page request that denotes that we are actually handling a
- * redirect request of a page.
+ * Specialization of page request that denotes that we are actually handling a redirect request of a
+ * page.
  * 
  * @author Eelco Hillenius
  */
@@ -38,12 +38,12 @@ public class RedirectPageRequestTarget extends AbstractListenerInterfaceRequestT
 	{
 		super(page, page, IRedirectListener.INTERFACE);
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.request.target.IEventProcessor#processEvents(org.apache.wicket.RequestCycle)
 	 */
 	public final void processEvents(final RequestCycle requestCycle)
 	{
 		getRequestListenerInterface().invoke(getPage(), getTarget());
-	}	
+	}
 }

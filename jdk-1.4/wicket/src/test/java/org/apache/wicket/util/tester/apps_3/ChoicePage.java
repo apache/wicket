@@ -98,9 +98,9 @@ public class ChoicePage extends WebPage
 		form.setModel(new CompoundPropertyModel(this));
 
 		// setting initial values
-		dropDownChoice = (Book) candidateChoices.get(1);
-		listChoice = (Book) candidateChoices.get(3);
-		radioChoice = (Book) candidateChoices.get(2);
+		dropDownChoice = (Book)candidateChoices.get(1);
+		listChoice = (Book)candidateChoices.get(3);
+		radioChoice = (Book)candidateChoices.get(2);
 		checkBox = true;
 		initialListMultipleChoice.add(candidateChoices.get(1));
 		initialListMultipleChoice.add(candidateChoices.get(2));
@@ -117,8 +117,10 @@ public class ChoicePage extends WebPage
 		form.add(newRadioGroup(candidateChoices));
 
 		// multiple select family
-		form.add(new ListMultipleChoice("initialListMultipleChoice", candidateChoices, bookChoiceRenderer));
-		form.add(new CheckBoxMultipleChoice("initialCheckBoxMultipleChoice", candidateChoices, bookChoiceRenderer));
+		form.add(new ListMultipleChoice("initialListMultipleChoice", candidateChoices,
+				bookChoiceRenderer));
+		form.add(new CheckBoxMultipleChoice("initialCheckBoxMultipleChoice", candidateChoices,
+				bookChoiceRenderer));
 		form.add(newCheckGroup("initialCheckGroup", candidateChoices));
 		form.add(new ListMultipleChoice("listMultipleChoice", candidateChoices, bookChoiceRenderer)
 				.setMaxRows(4));

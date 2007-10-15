@@ -49,9 +49,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Stores pages on disk.
  * <p>
- * Override {@link #getWorkDir()} to change the default directory for pages,
- * which is configured from the javax.servlet.context.tempdir attribute in the
- * servlet context.
+ * Override {@link #getWorkDir()} to change the default directory for pages, which is configured
+ * from the javax.servlet.context.tempdir attribute in the servlet context.
  * 
  * @author jcompagner
  */
@@ -297,9 +296,8 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * Key based on session id, page id, version numbers, etc. We don't
-	 * serialize it anywhere. It's made serializable for convenience if a
-	 * subclass needs to serialize it
+	 * Key based on session id, page id, version numbers, etc. We don't serialize it anywhere. It's
+	 * made serializable for convenience if a subclass needs to serialize it
 	 */
 	protected static class SessionPageKey implements Serializable
 	{
@@ -520,7 +518,8 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(String, String, int, int, int)
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(String,
+	 *      String, int, int, int)
 	 */
 	public Page getPage(String sessionId, String pagemapName, int id, int versionNumber,
 			int ajaxVersionNumber)
@@ -614,7 +613,8 @@ public class FilePageStore implements IPageStore
 
 
 	/**
-	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#removePage(String, String, int)
+	 * @see org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#removePage(String,
+	 *      String, int)
 	 */
 	public void removePage(String sessionId, String pageMapName, int pageId)
 	{
@@ -858,9 +858,8 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * Returns the working directory for this disk-based PageStore. Override
-	 * this to configure a different location. The default is
-	 * javax.servlet.context.tempdir from the servlet context.
+	 * Returns the working directory for this disk-based PageStore. Override this to configure a
+	 * different location. The default is javax.servlet.context.tempdir from the servlet context.
 	 * 
 	 * @return Working directory
 	 */
@@ -889,7 +888,8 @@ public class FilePageStore implements IPageStore
 
 		/**
 		 * @throws IOException
-		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page, java.io.ObjectOutputStream)
+		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page,
+		 *      java.io.ObjectOutputStream)
 		 */
 		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
 		{

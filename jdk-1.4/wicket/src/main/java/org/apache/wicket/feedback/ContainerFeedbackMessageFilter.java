@@ -56,8 +56,8 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 		}
 		else
 		{
-			return container.contains(message.getReporter(), true)
-					|| container == message.getReporter();
+			return container.contains(message.getReporter(), true) ||
+					container == message.getReporter();
 		}
 	}
 }

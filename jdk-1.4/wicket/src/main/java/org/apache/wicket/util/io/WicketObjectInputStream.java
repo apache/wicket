@@ -35,11 +35,11 @@ import org.apache.wicket.util.collections.IntHashMap;
  */
 public final class WicketObjectInputStream extends ObjectInputStream
 {
-	 
-	private final IntHashMap handledObjects = new IntHashMap(); 
+
+	private final IntHashMap handledObjects = new IntHashMap();
 	private short handleCounter = 0;
 
-	
+
 	private final DataInputStream in;
 	private ClassStreamHandler currentStreamHandler;
 	private HandleArrayListStack stack = new HandleArrayListStack();
@@ -47,6 +47,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 
 	/**
 	 * Construct.
+	 * 
 	 * @param in
 	 * @throws IOException
 	 */
@@ -55,7 +56,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		super();
 		this.in = new DataInputStream(in);
 	}
-	
+
 	/**
 	 * @see java.io.ObjectInputStream#readObjectOverride()
 	 */
@@ -63,11 +64,11 @@ public final class WicketObjectInputStream extends ObjectInputStream
 	{
 		Object value = null;
 		int token = in.read();
-		if(token == ClassStreamHandler.NULL)
+		if (token == ClassStreamHandler.NULL)
 		{
 			return null;
 		}
-		else if ( token == ClassStreamHandler.HANDLE)
+		else if (token == ClassStreamHandler.HANDLE)
 		{
 			short handle = in.readShort();
 			value = handledObjects.get(handle);
@@ -84,18 +85,18 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			if (currentStreamHandler.getStreamClass() == String.class)
 			{
 				value = in.readUTF();
-				handledObjects.put(handleCounter++,value);
+				handledObjects.put(handleCounter++, value);
 			}
 			else
 			{
 				try
 				{
 					value = currentStreamHandler.createObject();
-					handledObjects.put(handleCounter++,value);
+					handledObjects.put(handleCounter++, value);
 					stack.push(value);
-					if ( !currentStreamHandler.invokeReadMethod(this, value))
+					if (!currentStreamHandler.invokeReadMethod(this, value))
 					{
-						currentStreamHandler.readFields(this,value);
+						currentStreamHandler.readFields(this, value);
 					}
 					value = currentStreamHandler.readResolve(value);
 					stack.pop();
@@ -131,7 +132,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			ClassStreamHandler lookup = ClassStreamHandler.lookup(classDef);
 			int length = in.readInt();
 			Object[] array = (Object[])Array.newInstance(lookup.getStreamClass(), length);
-			handledObjects.put(handleCounter++,array);
+			handledObjects.put(handleCounter++, array);
 			for (int i = 0; i < array.length; i++)
 			{
 				array[i] = readObjectOverride();
@@ -143,7 +144,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			short classDef = in.readShort();
 			ClassStreamHandler lookup = ClassStreamHandler.lookup(classDef);
 			value = lookup.readArray(this);
-			handledObjects.put(handleCounter++,value);
+			handledObjects.put(handleCounter++, value);
 		}
 		else
 		{
@@ -151,21 +152,21 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		}
 		return value;
 	}
-	
+
 	/**
 	 * @see java.io.ObjectInputStream#defaultReadObject()
 	 */
 	public void defaultReadObject() throws IOException, ClassNotFoundException
 	{
 		Object currentObject = stack.peek();
-		if ( !defaultRead.contains(currentObject) )
+		if (!defaultRead.contains(currentObject))
 		{
 			defaultRead.add(currentObject);
-			currentStreamHandler.readFields(this,currentObject);
+			currentStreamHandler.readFields(this, currentObject);
 		}
 	}
 
-	
+
 	/**
 	 * @see java.io.ObjectInputStream#close()
 	 */
@@ -176,196 +177,237 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		currentStreamHandler = null;
 		in.close();
 	}
-	
-    /**
-     * Reads in a boolean.
-     * 
-     * @return	the boolean read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public boolean readBoolean() throws IOException {
-	return in.readBoolean();
-    }
 
-    /**
-     * Reads an 8 bit byte.
-     * 
-     * @return	the 8 bit byte read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public byte readByte() throws IOException  {
-	return in.readByte();
-    }
-
-    /**
-     * Reads an unsigned 8 bit byte.
-     *
-     * @return	the 8 bit byte read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public int readUnsignedByte()  throws IOException {
-	return in.readUnsignedByte();
-    }
-
-    /**
-     * Reads a 16 bit char.
-     *
-     * @return	the 16 bit char read. 
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public char readChar()  throws IOException {
-	return in.readChar();
-    }
-
-    /**
-     * Reads a 16 bit short.
-     *
-     * @return	the 16 bit short read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public short readShort()  throws IOException {
-	return in.readShort();
-    }
-
-    /**
-     * Reads an unsigned 16 bit short.
-     *
-     * @return	the 16 bit short read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public int readUnsignedShort() throws IOException {
-	return in.readUnsignedShort();
-    }
-
-    /**
-     * Reads a 32 bit int.
-     *
-     * @return	the 32 bit integer read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public int readInt()  throws IOException {
-	return in.readInt();
-    }
-
-    /**
-     * Reads a 64 bit long.
-     *
-     * @return	the read 64 bit long.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public long readLong()  throws IOException {
-	return in.readLong();
-    }
-
-    /**
-     * Reads a 32 bit float.
-     *
-     * @return	the 32 bit float read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public float readFloat() throws IOException {
-	return in.readFloat();
-    }
-
-    /**
-     * Reads a 64 bit double.
-     *
-     * @return	the 64 bit double read.
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public double readDouble() throws IOException {
-	return in.readDouble();
-    }
-
-    /**
-     * Reads bytes, blocking until all bytes are read.
-     *
-     * @param	buf the buffer into which the data is read
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public void readFully(byte[] buf) throws IOException {
-	in.readFully(buf, 0, buf.length);
-    }
-
-    /**
-     * Reads bytes, blocking until all bytes are read.
-     *
-     * @param	buf the buffer into which the data is read
-     * @param	off the start offset of the data
-     * @param	len the maximum number of bytes to read
-     * @throws	EOFException If end of file is reached.
-     * @throws	IOException If other I/O error has occurred.
-     */
-    public void readFully(byte[] buf, int off, int len) throws IOException {
-	int endoff = off + len;
-	if (off < 0 || len < 0 || endoff > buf.length || endoff < 0) {
-	    throw new IndexOutOfBoundsException();
+	/**
+	 * Reads in a boolean.
+	 * 
+	 * @return the boolean read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public boolean readBoolean() throws IOException
+	{
+		return in.readBoolean();
 	}
-	in.readFully(buf, off, len);
-    }
 
-    /**
-     * @see java.io.ObjectInputStream#readUTF()
-     */
-    public String readUTF() throws IOException
-    {
-    	String s = in.readUTF();
-    	return s;
-    }
-    
-    /**
-     * @see java.io.ObjectInputStream#read()
-     */
-    public int read() throws IOException
-    {
-    	return in.read();
-    }
-    
-    /**
-     * @see java.io.InputStream#read(byte[])
-     */
-    public int read(byte[] b) throws IOException
-    {
-    	return in.read(b);
-    }
-    
-    /**
-     * @see java.io.ObjectInputStream#read(byte[], int, int)
-     */
-    public int read(byte[] buf, int off, int len) throws IOException
-    {
-    	return in.read(buf, off, len);
-    }
-    
-    /**
-     * @see java.io.ObjectInputStream#readFields()
-     */
-    public GetField readFields() throws IOException, ClassNotFoundException
-    {
-    	GetFieldImpl field = new GetFieldImpl();
-    	field.read();
-    	return field;
-    }
-    
-    
-    private class GetFieldImpl extends GetField
-    {
-    	private final HashMap values = new HashMap();
-    	
-    	private void read() throws IOException, ClassNotFoundException
-    	{
-    		short token = readShort();
+	/**
+	 * Reads an 8 bit byte.
+	 * 
+	 * @return the 8 bit byte read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public byte readByte() throws IOException
+	{
+		return in.readByte();
+	}
+
+	/**
+	 * Reads an unsigned 8 bit byte.
+	 * 
+	 * @return the 8 bit byte read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public int readUnsignedByte() throws IOException
+	{
+		return in.readUnsignedByte();
+	}
+
+	/**
+	 * Reads a 16 bit char.
+	 * 
+	 * @return the 16 bit char read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public char readChar() throws IOException
+	{
+		return in.readChar();
+	}
+
+	/**
+	 * Reads a 16 bit short.
+	 * 
+	 * @return the 16 bit short read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public short readShort() throws IOException
+	{
+		return in.readShort();
+	}
+
+	/**
+	 * Reads an unsigned 16 bit short.
+	 * 
+	 * @return the 16 bit short read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public int readUnsignedShort() throws IOException
+	{
+		return in.readUnsignedShort();
+	}
+
+	/**
+	 * Reads a 32 bit int.
+	 * 
+	 * @return the 32 bit integer read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public int readInt() throws IOException
+	{
+		return in.readInt();
+	}
+
+	/**
+	 * Reads a 64 bit long.
+	 * 
+	 * @return the read 64 bit long.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public long readLong() throws IOException
+	{
+		return in.readLong();
+	}
+
+	/**
+	 * Reads a 32 bit float.
+	 * 
+	 * @return the 32 bit float read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public float readFloat() throws IOException
+	{
+		return in.readFloat();
+	}
+
+	/**
+	 * Reads a 64 bit double.
+	 * 
+	 * @return the 64 bit double read.
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public double readDouble() throws IOException
+	{
+		return in.readDouble();
+	}
+
+	/**
+	 * Reads bytes, blocking until all bytes are read.
+	 * 
+	 * @param buf
+	 *            the buffer into which the data is read
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public void readFully(byte[] buf) throws IOException
+	{
+		in.readFully(buf, 0, buf.length);
+	}
+
+	/**
+	 * Reads bytes, blocking until all bytes are read.
+	 * 
+	 * @param buf
+	 *            the buffer into which the data is read
+	 * @param off
+	 *            the start offset of the data
+	 * @param len
+	 *            the maximum number of bytes to read
+	 * @throws EOFException
+	 *             If end of file is reached.
+	 * @throws IOException
+	 *             If other I/O error has occurred.
+	 */
+	public void readFully(byte[] buf, int off, int len) throws IOException
+	{
+		int endoff = off + len;
+		if (off < 0 || len < 0 || endoff > buf.length || endoff < 0)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		in.readFully(buf, off, len);
+	}
+
+	/**
+	 * @see java.io.ObjectInputStream#readUTF()
+	 */
+	public String readUTF() throws IOException
+	{
+		String s = in.readUTF();
+		return s;
+	}
+
+	/**
+	 * @see java.io.ObjectInputStream#read()
+	 */
+	public int read() throws IOException
+	{
+		return in.read();
+	}
+
+	/**
+	 * @see java.io.InputStream#read(byte[])
+	 */
+	public int read(byte[] b) throws IOException
+	{
+		return in.read(b);
+	}
+
+	/**
+	 * @see java.io.ObjectInputStream#read(byte[], int, int)
+	 */
+	public int read(byte[] buf, int off, int len) throws IOException
+	{
+		return in.read(buf, off, len);
+	}
+
+	/**
+	 * @see java.io.ObjectInputStream#readFields()
+	 */
+	public GetField readFields() throws IOException, ClassNotFoundException
+	{
+		GetFieldImpl field = new GetFieldImpl();
+		field.read();
+		return field;
+	}
+
+
+	private class GetFieldImpl extends GetField
+	{
+		private final HashMap values = new HashMap();
+
+		private void read() throws IOException, ClassNotFoundException
+		{
+			short token = readShort();
 			ClassStreamHandler lookup = ClassStreamHandler.lookup(boolean.class);
 			if (token == lookup.getClassId())
 			{
@@ -373,7 +415,7 @@ public final class WicketObjectInputStream extends ObjectInputStream
 				for (int i = 0; i < count; i++)
 				{
 					String key = (String)readObjectOverride();
-					values.put(key, readBoolean()?Boolean.TRUE:Boolean.FALSE);
+					values.put(key, readBoolean() ? Boolean.TRUE : Boolean.FALSE);
 				}
 				token = readShort();
 				if (token == ClassStreamHandler.NULL)
@@ -501,8 +543,8 @@ public final class WicketObjectInputStream extends ObjectInputStream
 			{
 				throw new RuntimeException("Expected NULL end byte");
 			}
-    	}
-    	
+		}
+
 		/**
 		 * @see java.io.ObjectInputStream.GetField#defaulted(java.lang.String)
 		 */
@@ -635,6 +677,6 @@ public final class WicketObjectInputStream extends ObjectInputStream
 		{
 			return null;
 		}
-    	
-    }
+
+	}
 }

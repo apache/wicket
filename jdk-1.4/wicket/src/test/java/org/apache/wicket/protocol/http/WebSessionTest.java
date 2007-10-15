@@ -25,19 +25,20 @@ import java.util.Locale;
 /**
  * @author Timo Rantalaiho
  */
-public class WebSessionTest extends TestCase {
-    public void testReadsLocaleFromRequestOnConstruction()
-    {
-        final Locale locale = Locale.TRADITIONAL_CHINESE;
-        HttpServletRequest request = new MockHttpServletRequest(null, null, null)
-        {
-            public Locale getLocale()
-            {
-                return locale;
-            }
-        };
+public class WebSessionTest extends TestCase
+{
+	public void testReadsLocaleFromRequestOnConstruction()
+	{
+		final Locale locale = Locale.TRADITIONAL_CHINESE;
+		HttpServletRequest request = new MockHttpServletRequest(null, null, null)
+		{
+			public Locale getLocale()
+			{
+				return locale;
+			}
+		};
 
-        WebSession session = new WebSession(new ServletWebRequest(request));
-        assertEquals(locale, session.getLocale());
-    }
+		WebSession session = new WebSession(new ServletWebRequest(request));
+		assertEquals(locale, session.getLocale());
+	}
 }

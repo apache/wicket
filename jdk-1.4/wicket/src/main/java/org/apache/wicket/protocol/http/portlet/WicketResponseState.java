@@ -28,6 +28,7 @@ public class WicketResponseState
 
 	/**
 	 * Gets errorCode.
+	 * 
 	 * @return errorCode
 	 */
 	public int getErrorCode()
@@ -37,67 +38,78 @@ public class WicketResponseState
 
 	/**
 	 * Sets errorCode.
-	 * @param errorCode errorCode
+	 * 
+	 * @param errorCode
+	 *            errorCode
 	 */
 	public void setErrorCode(int errorCode)
 	{
 		this.errorCode = errorCode;
 	}
-	
+
 	/**
 	 * Gets errorMessage.
+	 * 
 	 * @return errorMessage
 	 */
 	public String getErrorMessage()
 	{
 		return errorMessage;
 	}
-	
+
 	/**
 	 * Sets errorMessage.
-	 * @param errorMessage errorMessage
+	 * 
+	 * @param errorMessage
+	 *            errorMessage
 	 */
 	public void setErrorMessage(String errorMessage)
 	{
 		this.errorMessage = errorMessage;
 	}
-	
+
 	/**
 	 * Gets redirectLocation.
+	 * 
 	 * @return redirectLocation
 	 */
 	public String getRedirectLocation()
 	{
 		return redirectLocation;
 	}
-	
+
 	/**
 	 * Sets redirectLocation.
-	 * @param redirectLocation redirectLocation
+	 * 
+	 * @param redirectLocation
+	 *            redirectLocation
 	 */
 	public void setRedirectLocation(String redirectLocation)
 	{
 		this.redirectLocation = redirectLocation;
 	}
-	
+
 	/**
 	 * Gets statusCode.
+	 * 
 	 * @return statusCode
 	 */
 	public int getStatusCode()
 	{
 		return statusCode;
 	}
-	
+
 	/**
 	 * Sets statusCode.
-	 * @param statusCode statusCode
+	 * 
+	 * @param statusCode
+	 *            statusCode
 	 */
 	public void setStatusCode(int statusCode)
 	{
 		this.statusCode = statusCode;
 	}
-	
+
 	public void reset()
 	{
 		errorCode = 0;

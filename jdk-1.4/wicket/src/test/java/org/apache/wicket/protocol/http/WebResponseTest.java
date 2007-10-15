@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author Frank Bille (billen)
  */
 public class WebResponseTest extends TestCase

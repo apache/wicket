@@ -19,8 +19,7 @@ package org.apache.wicket.version.undo;
 import org.apache.wicket.IClusterable;
 
 /**
- * A <code>Change</code> contains undo information for a change to the
- * <code>Page</code>.
+ * A <code>Change</code> contains undo information for a change to the <code>Page</code>.
  * 
  * @author Jonathan Locke
  * @since 1.2.6

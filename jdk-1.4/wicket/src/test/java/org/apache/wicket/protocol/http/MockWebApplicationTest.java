@@ -30,8 +30,8 @@ import org.apache.wicket.util.diff.DiffUtil;
 import org.apache.wicket.util.tester.WicketTester;
 
 /**
- * Simple application that demonstrates the mock http application code (and
- * checks that it is working)
+ * Simple application that demonstrates the mock http application code (and checks that it is
+ * working)
  * 
  * @author Chris Turner
  */
@@ -90,8 +90,7 @@ public class MockWebApplicationTest extends TestCase
 	}
 
 	/**
-	 * Tests the clean up of flash messages put into the session when they are
-	 * rendered.
+	 * Tests the clean up of flash messages put into the session when they are rendered.
 	 */
 	public void testSessionFeedbackMessagesCleanUp()
 	{

@@ -54,9 +54,8 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            The variables to substitute
 	 * @param exceptionOnNullVarValue
 	 *            if true an {@link IllegalStateException} will be thrown if a
-	 *            {@link #getValue(String)} returns null, otherwise the
-	 *            ${varname} string will be left in the <code>string</code> so
-	 *            multiple interpolators can be chained
+	 *            {@link #getValue(String)} returns null, otherwise the ${varname} string will be
+	 *            left in the <code>string</code> so multiple interpolators can be chained
 	 */
 	public MapVariableInterpolator(String string, final Map variables,
 			boolean exceptionOnNullVarValue)

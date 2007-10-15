@@ -41,7 +41,7 @@ public final class FileResponse extends Response
 
 	/** Output stream to write to */
 	private OutputStream out;
-	
+
 	/** Output PrintWriter to write to */
 	private PrintWriter printWriter;
 
@@ -95,7 +95,7 @@ public final class FileResponse extends Response
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new WicketRuntimeException("Unable to get output stream to file " + file, e);			
+			throw new WicketRuntimeException("Unable to get output stream to file " + file, e);
 		}
 	}
 

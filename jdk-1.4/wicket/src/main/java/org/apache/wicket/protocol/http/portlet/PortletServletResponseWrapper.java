@@ -27,8 +27,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 {
 	private WicketResponseState responseState;
-	
-	public PortletServletResponseWrapper(HttpServletResponse response, WicketResponseState responseState)
+
+	public PortletServletResponseWrapper(HttpServletResponse response,
+			WicketResponseState responseState)
 	{
 		super(response);
 		this.responseState = responseState;
@@ -42,7 +43,7 @@ public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 		responseState.setErrorCode(errorCode);
 		responseState.setErrorMessage(errorMessage);
 	}
-	
+
 	/**
 	 * @see javax.servlet.http.HttpServletResponseWrapper#sendError(int)
 	 */

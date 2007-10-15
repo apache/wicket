@@ -25,13 +25,13 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * A pageable DataView which breaks the data in the IDataProvider into a number
- * of data-rows, depending on the column size. A typical use case is to show
- * items in a table with ie 3 columns where the table is filled left to right
- * top-down so that for each third item a new row is created.
+ * A pageable DataView which breaks the data in the IDataProvider into a number of data-rows,
+ * depending on the column size. A typical use case is to show items in a table with ie 3 columns
+ * where the table is filled left to right top-down so that for each third item a new row is
+ * created.
  * <p>
  * Example
- *
+ * 
  * <pre>
  *   &lt;tbody&gt;
  *     &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
@@ -41,22 +41,22 @@ import org.apache.wicket.version.undo.Change;
  *     &lt;/tr&gt;
  *   &lt;/tbody&gt;
  * </pre>
- *
+ * 
  * and in java:
- *
+ * 
  * <pre>
  * add(new GridView(&quot;rows&quot;, dataProvider).setColumns(3));
  * </pre>
- *
+ * 
  * @author Igor Vaynberg
  * @author Christian Essl
- *
+ * 
  */
 public abstract class GridView extends DataViewBase
 {
 
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private int columns = 1;
@@ -85,7 +85,7 @@ public abstract class GridView extends DataViewBase
 
 	/**
 	 * Sets number of columns
-	 *
+	 * 
 	 * @param cols
 	 *            number of columns
 	 * @return this for chaining
@@ -114,8 +114,8 @@ public abstract class GridView extends DataViewBase
 
 					public String toString()
 					{
-						return "GridViewColumnsChange[component: " + getPath()
-								+ ", removed columns: " + old + "]";
+						return "GridViewColumnsChange[component: " + getPath() +
+								", removed columns: " + old + "]";
 					}
 				});
 			}
@@ -135,7 +135,7 @@ public abstract class GridView extends DataViewBase
 
 	/**
 	 * Sets number of rows per page
-	 *
+	 * 
 	 * @param rows
 	 *            number of rows
 	 * @return this for chaining
@@ -164,8 +164,8 @@ public abstract class GridView extends DataViewBase
 
 					public String toString()
 					{
-						return "GridViewRowsChange[component: " + getPath() + ", removed rows: "
-								+ old + "]";
+						return "GridViewRowsChange[component: " + getPath() + ", removed rows: " +
+								old + "]";
 					}
 				});
 			}
@@ -256,18 +256,16 @@ public abstract class GridView extends DataViewBase
 	}
 
 	/**
-	 * Add component to an Item for which there is no model anymore and is shown
-	 * in a cell
-	 *
+	 * Add component to an Item for which there is no model anymore and is shown in a cell
+	 * 
 	 * @param item
 	 *            Item object
 	 */
 	abstract protected void populateEmptyItem(Item item);
 
 	/**
-	 * Create a Item which represents an empty cell (there is no model for it in
-	 * the DataProvider)
-	 *
+	 * Create a Item which represents an empty cell (there is no model for it in the DataProvider)
+	 * 
 	 * @param id
 	 * @param index
 	 * @return created item
@@ -279,7 +277,7 @@ public abstract class GridView extends DataViewBase
 
 	/**
 	 * Create a new Item which will hold a row.
-	 *
+	 * 
 	 * @param id
 	 * @param index
 	 * @return created Item
@@ -291,9 +289,9 @@ public abstract class GridView extends DataViewBase
 
 	/**
 	 * Iterator that iterates over all items in the cells
-	 *
+	 * 
 	 * @author igor
-	 *
+	 * 
 	 */
 	private static class ItemsIterator implements Iterator
 	{

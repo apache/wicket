@@ -34,7 +34,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 public final class ImageMap extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** list of shape links. */
 	private final List shapeLinks = new ArrayList();
 
@@ -225,8 +225,7 @@ public final class ImageMap extends WebMarkupContainer
 		}
 
 		/**
-		 * The shape as a string using the given request cycle; will be used for
-		 * rendering.
+		 * The shape as a string using the given request cycle; will be used for rendering.
 		 * 
 		 * @return The shape as a string
 		 */
@@ -244,12 +243,17 @@ public final class ImageMap extends WebMarkupContainer
 				popupJavaScript = null;
 			}
 
-			return "<area shape=\"" + getType() + "\"" + " coords=\"" + getCoordinates() + "\""
-					+ " href=\"" + link.getURL() + "\""
-					// Output the markup ID if that was specified, so we can link tooltips, etc. to it.
-					+ (link.getOutputMarkupId() ? " id=\"" + link.getMarkupId() + "\"" : "")
-					+ ((popupJavaScript == null) ? "" : (" onClick = \"" + popupJavaScript + "\""))
-					+ ">";
+			return "<area shape=\"" + getType() + "\"" + " coords=\"" +
+					getCoordinates() +
+					"\"" +
+					" href=\"" +
+					link.getURL() +
+					"\""
+					// Output the markup ID if that was specified, so we can link tooltips, etc. to
+					// it.
+					+ (link.getOutputMarkupId() ? " id=\"" + link.getMarkupId() + "\"" : "") +
+					((popupJavaScript == null) ? "" : (" onClick = \"" + popupJavaScript + "\"")) +
+					">";
 		}
 
 		/**

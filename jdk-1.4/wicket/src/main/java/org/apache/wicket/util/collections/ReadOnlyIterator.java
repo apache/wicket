@@ -19,8 +19,8 @@ package org.apache.wicket.util.collections;
 import java.util.Iterator;
 
 /**
- * Base class for read-only iterators. Calls to {@link #remove()} will result in
- * an {@link UnsupportedOperationException}
+ * Base class for read-only iterators. Calls to {@link #remove()} will result in an
+ * {@link UnsupportedOperationException}
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -28,7 +28,7 @@ public abstract class ReadOnlyIterator implements Iterator
 {
 	public final void remove()
 	{
-		throw new UnsupportedOperationException("Iterator " + getClass().getName()
-				+ " is a read-only iterator. Calls to remove() are not allowed");
+		throw new UnsupportedOperationException("Iterator " + getClass().getName() +
+				" is a read-only iterator. Calls to remove() are not allowed");
 	}
 }

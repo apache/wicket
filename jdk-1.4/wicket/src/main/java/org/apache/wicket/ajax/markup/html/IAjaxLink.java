@@ -29,8 +29,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 public interface IAjaxLink
 {
 	/**
-	 * Listener method invoked on the ajax request generated when the user
-	 * clicks the link
+	 * Listener method invoked on the ajax request generated when the user clicks the link
 	 * 
 	 * @param target
 	 *            the request target.

@@ -33,37 +33,34 @@ import org.apache.wicket.response.StringResponse;
 
 
 /**
- * The HtmlHeaderContainer is automatically created and added to the component
- * hierarchy by a HtmlHeaderResolver instance. HtmlHeaderContainer tries to
- * handle/render the &gt;head&gt; tag and its body. However depending on the
- * parent component, the behavior must be different. E.g. if parent component is
- * a Page all components of the page's hierarchy must be asked if they have
- * something to contribute to the &lt;head&gt; section of the html response. If
- * yes, it must <b>immediately</b> be rendered.
+ * The HtmlHeaderContainer is automatically created and added to the component hierarchy by a
+ * HtmlHeaderResolver instance. HtmlHeaderContainer tries to handle/render the &gt;head&gt; tag and
+ * its body. However depending on the parent component, the behavior must be different. E.g. if
+ * parent component is a Page all components of the page's hierarchy must be asked if they have
+ * something to contribute to the &lt;head&gt; section of the html response. If yes, it must
+ * <b>immediately</b> be rendered.
  * <p>
- * &lt;head&gt; regions may contain additional wicket components, which can be
- * added by means of add(Component) as usual.
+ * &lt;head&gt; regions may contain additional wicket components, which can be added by means of
+ * add(Component) as usual.
  * <p>
- * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also
- * created by a HtmlHeaderResolver.
+ * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also created by a
+ * HtmlHeaderResolver.
  * <p>
  * <ul>
  * <li> &lt;head&gt; will be inserted in output automatically if required</li>
- * <li> &lt;head&gt; is <b>not</b> a wicket specific tag and you must use add()
- * to add components referenced in body of the head tag</li>
- * <li> &lt;head&gt; is supported by panels, borders and inherited markup, but
- * is <b>not</b> copied to the output. They are for previewability only (except
- * on Pages)</li>
- * <li> &lt;wicket:head&gt; does not make sense in page markup (but does in
- * inherited page markup)</li>
- * <li> &lt;wicket:head&gt; makes sense in Panels, Borders and inherited markup
- * (of Panels, Borders and Pages)</li>
- * <li> components within &lt;wicket:head&gt; must be added by means of add(),
- * like always with Wicket. No difference.</li>
- * <li> &lt;wicket:head&gt; and it's content is copied to the output. Components
- * contained in &lt;org.apache.wicket.head&gt; are rendered as usual</li>
+ * <li> &lt;head&gt; is <b>not</b> a wicket specific tag and you must use add() to add components
+ * referenced in body of the head tag</li>
+ * <li> &lt;head&gt; is supported by panels, borders and inherited markup, but is <b>not</b> copied
+ * to the output. They are for previewability only (except on Pages)</li>
+ * <li> &lt;wicket:head&gt; does not make sense in page markup (but does in inherited page markup)</li>
+ * <li> &lt;wicket:head&gt; makes sense in Panels, Borders and inherited markup (of Panels, Borders
+ * and Pages)</li>
+ * <li> components within &lt;wicket:head&gt; must be added by means of add(), like always with
+ * Wicket. No difference.</li>
+ * <li> &lt;wicket:head&gt; and it's content is copied to the output. Components contained in
+ * &lt;org.apache.wicket.head&gt; are rendered as usual</li>
  * </ul>
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class HtmlHeaderContainer extends WebMarkupContainer
@@ -71,23 +68,21 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * wicket:head tags (components) must only be added once. To allow for a
-	 * little bit more control, each wicket:head has an associated scope which
-	 * by default is equal to the java class name directly associated with the
-	 * markup which contains the wicket:head. It can be modified by means of the
-	 * scope attribute.
+	 * wicket:head tags (components) must only be added once. To allow for a little bit more
+	 * control, each wicket:head has an associated scope which by default is equal to the java class
+	 * name directly associated with the markup which contains the wicket:head. It can be modified
+	 * by means of the scope attribute.
 	 */
 	private transient Map renderedComponentsPerScope;
 
 	/**
-	 * Header response that is responsible for filtering duplicate
-	 * contributions.
+	 * Header response that is responsible for filtering duplicate contributions.
 	 */
 	private transient IHeaderResponse headerResponse = null;
 
 	/**
 	 * Construct
-	 *
+	 * 
 	 * @see Component#Component(String)
 	 */
 	public HtmlHeaderContainer(final String id)
@@ -104,10 +99,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * First render the body of the component. And if it is the header component
-	 * of a Page (compared to a Panel or Border), than get the header sections
-	 * from all component in the hierarchy and render them as well.
-	 *
+	 * First render the body of the component. And if it is the header component of a Page (compared
+	 * to a Panel or Border), than get the header sections from all component in the hierarchy and
+	 * render them as well.
+	 * 
 	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
@@ -186,21 +181,21 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * Ask all child components of the Page if they have something to contribute
-	 * to the &lt;head&gt; section of the HTML output. Every component
-	 * interested must implement IHeaderContributor.
+	 * Ask all child components of the Page if they have something to contribute to the &lt;head&gt;
+	 * section of the HTML output. Every component interested must implement IHeaderContributor.
 	 * <p>
-	 * Note: HtmlHeaderContainer will be removed from the component hierarchy at
-	 * the end of the request (@see #onEndRequest()) and thus can not transport
-	 * status from one request to the next. This is true for all components
-	 * added to the header.
-	 *
+	 * Note: HtmlHeaderContainer will be removed from the component hierarchy at the end of the
+	 * request (@see #onEndRequest()) and thus can not transport status from one request to the
+	 * next. This is true for all components added to the header.
+	 * 
 	 * @param page
-	 *            Usually it is the page object, but there might also be that a WebMarkupContainer has been attached to the &lt;html&gt; tag
+	 *            Usually it is the page object, but there might also be that a WebMarkupContainer
+	 *            has been attached to the &lt;html&gt; tag
 	 * @param container
 	 *            The header component container
 	 */
-	private final void renderHeaderSections(final MarkupContainer page, final HtmlHeaderContainer container)
+	private final void renderHeaderSections(final MarkupContainer page,
+			final HtmlHeaderContainer container)
 	{
 		page.renderHead(container);
 		// Make sure all Components interested in contributing to the header
@@ -235,7 +230,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 
 	/**
 	 * Check if the header component is ok to render within the scope given.
-	 *
+	 * 
 	 * @param scope
 	 *            The scope of the header component
 	 * @param id
@@ -279,29 +274,29 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 
 	/**
 	 * Factory method for creating header response
-	 *
+	 * 
 	 * @return new header response
 	 */
 	protected IHeaderResponse newHeaderResponse()
 	{
 		IHeaderResponse headerResponse = RequestContext.get().getHeaderResponse();
-		if ( headerResponse == null )
+		if (headerResponse == null)
 		{
 			// no (portlet) headerResponse override, create a default one
-			headerResponse =
-				new HeaderResponse() {
-					protected Response getRealResponse()
-					{
-						return HtmlHeaderContainer.this.getResponse();
-					}
-				};
+			headerResponse = new HeaderResponse()
+			{
+				protected Response getRealResponse()
+				{
+					return HtmlHeaderContainer.this.getResponse();
+				}
+			};
 		}
 		return headerResponse;
 	}
 
 	/**
 	 * Returns the header response.
-	 *
+	 * 
 	 * @return header response
 	 */
 	public IHeaderResponse getHeaderResponse()

@@ -22,22 +22,21 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
- * This class implements an output stream in which the data is written into a byte array.
- * The buffer automatically grows as data is written to it.
+ * This class implements an output stream in which the data is written into a byte array. The buffer
+ * automatically grows as data is written to it.
  * <p>
- * The data can be retrieved using <code>toByteArray()</code> and
- * <code>toString()</code>.
+ * The data can be retrieved using <code>toByteArray()</code> and <code>toString()</code>.
  * <p>
- * Closing a <tt>ByteArrayOutputStream</tt> has no effect. The methods in this class can
- * be called after the stream has been closed without generating an <tt>IOException</tt>.
+ * Closing a <tt>ByteArrayOutputStream</tt> has no effect. The methods in this class can be called
+ * after the stream has been closed without generating an <tt>IOException</tt>.
  * <p>
- * This is an alternative implementation of the java.io.ByteArrayOutputStream class. The
- * original implementation only allocates 32 bytes at the beginning. As this class is
- * designed for heavy duty it starts at 1024 bytes. In contrast to the original it doesn't
- * reallocate the whole memory block but allocates additional buffers. This way no buffers
- * need to be garbage collected and the contents don't have to be copied to the new
- * buffer. This class is designed to behave exactly like the original. The only exception
- * is the deprecated toString(int) method that has been ignored.
+ * This is an alternative implementation of the java.io.ByteArrayOutputStream class. The original
+ * implementation only allocates 32 bytes at the beginning. As this class is designed for heavy duty
+ * it starts at 1024 bytes. In contrast to the original it doesn't reallocate the whole memory block
+ * but allocates additional buffers. This way no buffers need to be garbage collected and the
+ * contents don't have to be copied to the new buffer. This class is designed to behave exactly like
+ * the original. The only exception is the deprecated toString(int) method that has been ignored.
+ * 
  * @author <a href="mailto:jeremias@apache.org">Jeremias Maerki</a>
  * @version $Id$
  */
@@ -50,8 +49,8 @@ public class ByteArrayOutputStream extends OutputStream
 	private int filledBufferSum;
 
 	/**
-	 * Creates a new byte array output stream. The buffer capacity is initially 1024
-	 * bytes, though its size increases if necessary.
+	 * Creates a new byte array output stream. The buffer capacity is initially 1024 bytes, though
+	 * its size increases if necessary.
 	 */
 	public ByteArrayOutputStream()
 	{
@@ -59,10 +58,13 @@ public class ByteArrayOutputStream extends OutputStream
 	}
 
 	/**
-	 * Creates a new byte array output stream, with a buffer capacity of the specified
-	 * size, in bytes.
-	 * @param size the initial size.
-	 * @exception IllegalArgumentException if size is negative.
+	 * Creates a new byte array output stream, with a buffer capacity of the specified size, in
+	 * bytes.
+	 * 
+	 * @param size
+	 *            the initial size.
+	 * @exception IllegalArgumentException
+	 *                if size is negative.
 	 */
 	public ByteArrayOutputStream(int size)
 	{
@@ -74,10 +76,11 @@ public class ByteArrayOutputStream extends OutputStream
 	}
 
 	/**
-	 * Closing a <tt>ByteArrayOutputStream</tt> has no effect. The methods in this class
-	 * can be called after the stream has been closed without generating an
-	 * <tt>IOException</tt>.
-	 * @throws IOException in case an I/O error occurs
+	 * Closing a <tt>ByteArrayOutputStream</tt> has no effect. The methods in this class can be
+	 * called after the stream has been closed without generating an <tt>IOException</tt>.
+	 * 
+	 * @throws IOException
+	 *             in case an I/O error occurs
 	 */
 	public void close() throws IOException
 	{
@@ -97,6 +100,7 @@ public class ByteArrayOutputStream extends OutputStream
 
 	/**
 	 * Gets the size.
+	 * 
 	 * @return the size
 	 */
 	public int size()
@@ -106,6 +110,7 @@ public class ByteArrayOutputStream extends OutputStream
 
 	/**
 	 * Writes to a byte array.
+	 * 
 	 * @return this is a byte array
 	 */
 	public synchronized byte[] toByteArray()
@@ -138,7 +143,9 @@ public class ByteArrayOutputStream extends OutputStream
 
 	/**
 	 * This as a string using the provided encoding.
-	 * @param enc the encoding to use
+	 * 
+	 * @param enc
+	 *            the encoding to use
 	 * @return This as a string using the provided encoding
 	 * @throws UnsupportedEncodingException
 	 */
@@ -152,8 +159,8 @@ public class ByteArrayOutputStream extends OutputStream
 	 */
 	public synchronized void write(byte[] b, int off, int len)
 	{
-		if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length)
-				|| ((off + len) < 0))
+		if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) ||
+				((off + len) < 0))
 		{
 			throw new IndexOutOfBoundsException();
 		}
@@ -180,6 +187,7 @@ public class ByteArrayOutputStream extends OutputStream
 
 	/**
 	 * Calls the write(byte[]) method.
+	 * 
 	 * @see java.io.OutputStream#write(int)
 	 */
 	public synchronized void write(int b)
@@ -189,7 +197,9 @@ public class ByteArrayOutputStream extends OutputStream
 
 	/**
 	 * Write to the given output stream.
-	 * @param out the output stream to write to
+	 * 
+	 * @param out
+	 *            the output stream to write to
 	 * @throws IOException
 	 * @see java.io.ByteArrayOutputStream#writeTo(OutputStream)
 	 */

@@ -27,20 +27,18 @@ import org.apache.wicket.IClusterable;
 /**
  * Useful class for constructing readable and reusable regular expressions.
  * <p>
- * MetaPatterns can be constructed from a simple regular expression String, from
- * other MetaPatterns (copy constructor), from a list of MetaPatterns or from an
- * array of MetaPatterns. In this way, it is easy to build up larger patterns
- * while transparently binding the capturing groups of each MetaPattern for easy
- * object oriented access to capturing group matches.
+ * MetaPatterns can be constructed from a simple regular expression String, from other MetaPatterns
+ * (copy constructor), from a list of MetaPatterns or from an array of MetaPatterns. In this way, it
+ * is easy to build up larger patterns while transparently binding the capturing groups of each
+ * MetaPattern for easy object oriented access to capturing group matches.
  * <p>
- * A given MetaPattern can be converted to a Matcher or Pattern. Groups within
- * the MetaPattern can be used to automatically reference capturing group values
- * when a match is made with a Matcher object.
+ * A given MetaPattern can be converted to a Matcher or Pattern. Groups within the MetaPattern can
+ * be used to automatically reference capturing group values when a match is made with a Matcher
+ * object.
  * <p>
- * A variety of static constants are provided for use in constructing compound
- * MetaPatterns. Also, a number of simple parsers have been constructed using
- * MetaPatterns in the parsers subpackage.
- *
+ * A variety of static constants are provided for use in constructing compound MetaPatterns. Also, a
+ * number of simple parsers have been constructed using MetaPatterns in the parsers subpackage.
+ * 
  * @author Jonathan Locke
  */
 public class MetaPattern implements IClusterable
@@ -48,8 +46,7 @@ public class MetaPattern implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Compiled regular expression pattern, or null if patterns variable is
-	 * valid instead
+	 * Compiled regular expression pattern, or null if patterns variable is valid instead
 	 */
 	private Pattern pattern;
 
@@ -62,8 +59,8 @@ public class MetaPattern implements IClusterable
 	// Regexps that are used multiple times in defining meta patterns
 	private static final String _DOUBLE_QUOTED_STRING = "\"[^\"]*?\"";
 	private static final String _SINGLE_QUOTED_STRING = "'[^']*?\'";
-	private static final String _STRING = "(?:[\\w\\-\\.]+|" + _DOUBLE_QUOTED_STRING + "|"
-			+ _SINGLE_QUOTED_STRING + ")";
+	private static final String _STRING = "(?:[\\w\\-\\.]+|" + _DOUBLE_QUOTED_STRING + "|" +
+			_SINGLE_QUOTED_STRING + ")";
 	private static final String _OPTIONAL_STRING = _STRING + "?";
 	private static final String _VARIABLE_NAME = "[A-Za-z_][A-Za-z0-9_]*";
 	private static final String _XML_NAME = "[A-Za-z_][A-Za-z0-9_.-]*";
@@ -200,8 +197,8 @@ public class MetaPattern implements IClusterable
 	public static final MetaPattern XML_ATTRIBUTE_NAME = new MetaPattern(_XML_NAME);
 
 	/** Constant for perl interpolation. */
-	public static final MetaPattern PERL_INTERPOLATION = new MetaPattern("$\\{" + _VARIABLE_NAME
-			+ "\\}");
+	public static final MetaPattern PERL_INTERPOLATION = new MetaPattern("$\\{" + _VARIABLE_NAME +
+			"\\}");
 
 	/** Constant for a double quoted string. */
 	public static final MetaPattern DOUBLE_QUOTED_STRING = new MetaPattern(_DOUBLE_QUOTED_STRING);
@@ -214,7 +211,7 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Constructor for a simple pattern.
-	 *
+	 * 
 	 * @param pattern
 	 *            The regular expression pattern to compile
 	 */
@@ -225,7 +222,7 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Copy constructor.
-	 *
+	 * 
 	 * @param pattern
 	 *            The meta pattern to copy
 	 */
@@ -238,7 +235,7 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Constructs from an array of MetaPatterns.
-	 *
+	 * 
 	 * @param patterns
 	 *            Array of MetaPatterns
 	 */
@@ -249,7 +246,7 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Constructs from a list of MetaPatterns
-	 *
+	 * 
 	 * @param patterns
 	 *            List of MetaPatterns
 	 */
@@ -260,7 +257,7 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Creates a matcher against a given input character sequence.
-	 *
+	 * 
 	 * @param input
 	 *            The input to match against
 	 * @return The matcher
@@ -271,16 +268,15 @@ public class MetaPattern implements IClusterable
 	}
 
 	/**
-	 * Creates a matcher with the given regexp compile flags. Once you call this
-	 * method with a given regexp compile flag value, the pattern will be
-	 * compiled. Calling it again with a different value for flags will not
-	 * recompile the pattern.
-	 *
+	 * Creates a matcher with the given regexp compile flags. Once you call this method with a given
+	 * regexp compile flag value, the pattern will be compiled. Calling it again with a different
+	 * value for flags will not recompile the pattern.
+	 * 
 	 * @param input
 	 *            The input to match
 	 * @param flags
-	 *            One or more of the standard Java regular expression compile
-	 *            flags (see {@link Pattern#compile(String, int)})
+	 *            One or more of the standard Java regular expression compile flags (see
+	 *            {@link Pattern#compile(String, int)})
 	 * @return The matcher
 	 */
 	public final Matcher matcher(final CharSequence input, final int flags)
@@ -291,9 +287,8 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Gets the regular expression Pattern for this MetaPattern by compiling it.
-	 *
-	 * @return Pattern compiled with default Java regular expression compile
-	 *         flags
+	 * 
+	 * @return Pattern compiled with default Java regular expression compile flags
 	 */
 	public final Pattern pattern()
 	{
@@ -301,14 +296,13 @@ public class MetaPattern implements IClusterable
 	}
 
 	/**
-	 * Gets the regular expression Pattern for this MetaPattern by compiling it
-	 * using the given flags.
-	 *
+	 * Gets the regular expression Pattern for this MetaPattern by compiling it using the given
+	 * flags.
+	 * 
 	 * @param flags
-	 *            One or more of the standard Java regular expression compile
-	 *            flags (see {@link Pattern#compile(String, int)})
-	 * @return Equivalent Java regular expression Pattern compiled with the
-	 *         given flags
+	 *            One or more of the standard Java regular expression compile flags (see
+	 *            {@link Pattern#compile(String, int)})
+	 * @return Equivalent Java regular expression Pattern compiled with the given flags
 	 */
 	public final Pattern pattern(final int flags)
 	{
@@ -318,7 +312,7 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Converts this MetaPattern to a String.
-	 *
+	 * 
 	 * @return A String representing this MetaPattern
 	 * @see java.lang.Object#toString()
 	 */
@@ -341,10 +335,10 @@ public class MetaPattern implements IClusterable
 
 	/**
 	 * Compiles this MetaPattern with the given Java regular expression flags.
-	 *
+	 * 
 	 * @param flags
-	 *            One or more of the standard Java regular expression compile
-	 *            flags (see {@link Pattern#compile(String, int)})
+	 *            One or more of the standard Java regular expression compile flags (see
+	 *            {@link Pattern#compile(String, int)})
 	 */
 	private synchronized void compile(final int flags)
 	{
@@ -356,9 +350,9 @@ public class MetaPattern implements IClusterable
 	}
 
 	/**
-	 * Binds this MetaPattern to one or more capturing groups. Since
-	 * MetaPatterns can nest, the binding process can recurse.
-	 *
+	 * Binds this MetaPattern to one or more capturing groups. Since MetaPatterns can nest, the
+	 * binding process can recurse.
+	 * 
 	 * @param group
 	 *            The initial capturing group number
 	 * @return The final capturing group (for use in recursion)

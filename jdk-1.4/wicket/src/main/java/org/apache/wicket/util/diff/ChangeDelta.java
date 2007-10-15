@@ -71,83 +71,84 @@ import java.util.List;
 public class ChangeDelta extends Delta
 {
 
-    ChangeDelta()
-    {
-        super();
-    }
+	ChangeDelta()
+	{
+		super();
+	}
 
-    /**
-     * Construct.
-     * @param orig
-     * @param rev
-     */
-    public ChangeDelta(Chunk orig, Chunk rev)
-    {
-        init(orig, rev);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param orig
+	 * @param rev
+	 */
+	public ChangeDelta(Chunk orig, Chunk rev)
+	{
+		init(orig, rev);
+	}
 
-    /**
-     * @see org.apache.wicket.util.diff.Delta#verify(java.util.List)
-     */
-    public void verify(List target) throws PatchFailedException
-    {
-        if (!original.verify(target))
-        {
-            throw new PatchFailedException();
-        }
-        if (original.first() > target.size())
-        {
-            throw new PatchFailedException("original.first() > target.size()");
-        }
-    }
+	/**
+	 * @see org.apache.wicket.util.diff.Delta#verify(java.util.List)
+	 */
+	public void verify(List target) throws PatchFailedException
+	{
+		if (!original.verify(target))
+		{
+			throw new PatchFailedException();
+		}
+		if (original.first() > target.size())
+		{
+			throw new PatchFailedException("original.first() > target.size()");
+		}
+	}
 
-    /**
-     * @see org.apache.wicket.util.diff.Delta#applyTo(java.util.List)
-     */
-    public void applyTo(List target)
-    {
-        original.applyDelete(target);
-        revised.applyAdd(original.first(), target);
-    }
+	/**
+	 * @see org.apache.wicket.util.diff.Delta#applyTo(java.util.List)
+	 */
+	public void applyTo(List target)
+	{
+		original.applyDelete(target);
+		revised.applyAdd(original.first(), target);
+	}
 
-    /**
-     * @see org.apache.wicket.util.diff.Delta#toString(java.lang.StringBuffer)
-     */
-    public void toString(StringBuffer s)
-    {
-        original.rangeString(s);
-        s.append("c");
-        revised.rangeString(s);
-        s.append(Diff.NL);
-        original.toString(s, "< ", "\n");
-        s.append("---");
-        s.append(Diff.NL);
-        revised.toString(s, "> ", "\n");
-    }
+	/**
+	 * @see org.apache.wicket.util.diff.Delta#toString(java.lang.StringBuffer)
+	 */
+	public void toString(StringBuffer s)
+	{
+		original.rangeString(s);
+		s.append("c");
+		revised.rangeString(s);
+		s.append(Diff.NL);
+		original.toString(s, "< ", "\n");
+		s.append("---");
+		s.append(Diff.NL);
+		revised.toString(s, "> ", "\n");
+	}
 
-    /**
-     * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
-     */
-    public void toRCSString(StringBuffer s, String EOL)
-    {
-        s.append("d");
-        s.append(original.rcsfrom());
-        s.append(" ");
-        s.append(original.size());
-        s.append(EOL);
-        s.append("a");
-        s.append(original.rcsto());
-        s.append(" ");
-        s.append(revised.size());
-        s.append(EOL);
-        revised.toString(s, "", EOL);
-    }
+	/**
+	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
+	 */
+	public void toRCSString(StringBuffer s, String EOL)
+	{
+		s.append("d");
+		s.append(original.rcsfrom());
+		s.append(" ");
+		s.append(original.size());
+		s.append(EOL);
+		s.append("a");
+		s.append(original.rcsto());
+		s.append(" ");
+		s.append(revised.size());
+		s.append(EOL);
+		revised.toString(s, "", EOL);
+	}
 
-    /**
-     * @see org.apache.wicket.util.diff.Delta#accept(org.apache.wicket.util.diff.RevisionVisitor)
-     */
-    public void accept(RevisionVisitor visitor)
-    {
-        visitor.visit(this);
-    }
+	/**
+	 * @see org.apache.wicket.util.diff.Delta#accept(org.apache.wicket.util.diff.RevisionVisitor)
+	 */
+	public void accept(RevisionVisitor visitor)
+	{
+		visitor.visit(this);
+	}
 }

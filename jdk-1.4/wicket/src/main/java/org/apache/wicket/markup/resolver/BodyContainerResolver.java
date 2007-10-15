@@ -22,20 +22,19 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 
 /**
- * The &lt;body&gt; tag has always a HtmlBodyContainer associated which is
- * always added to the Page. But it might be that a container has been added to
- * &lt;html&gt; which means that when trying to find the component associated
- * with the BODY_ID, it can not be found.
+ * The &lt;body&gt; tag has always a HtmlBodyContainer associated which is always added to the Page.
+ * But it might be that a container has been added to &lt;html&gt; which means that when trying to
+ * find the component associated with the BODY_ID, it can not be found.
  * <p>
- * Someone might want to attach a component to the html tag for example to
- * change the xmlns:lang or lang attribute.
+ * Someone might want to attach a component to the html tag for example to change the xmlns:lang or
+ * lang attribute.
  * 
  * @author Juergen Donnerstag
  */
 public class BodyContainerResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)
@@ -61,7 +60,7 @@ public class BodyContainerResolver implements IComponentResolver
 				return true;
 			}
 		}
-		
+
 		// We were not able to handle the tag
 		return false;
 	}

@@ -21,14 +21,12 @@ import java.io.Serializable;
 import org.apache.wicket.util.lang.Classes;
 
 /**
- * A key to a piece of metadata associated with a Component at runtime. The key
- * contains type information that can be used to check the type of any metadata
- * value for the key when the value is set on the given Component. MetaDataKey
- * is abstract in order to force the creation of a subtype. That subtype is used
- * to test for identity when looking for the metadata because actual object
- * identity would suffer from problems under serialization. So, the correct way
- * to declare a MetaDataKey is like this: public static MetaDataKey ROLE = new
- * MetaDataKey(Role.class) { }
+ * A key to a piece of metadata associated with a Component at runtime. The key contains type
+ * information that can be used to check the type of any metadata value for the key when the value
+ * is set on the given Component. MetaDataKey is abstract in order to force the creation of a
+ * subtype. That subtype is used to test for identity when looking for the metadata because actual
+ * object identity would suffer from problems under serialization. So, the correct way to declare a
+ * MetaDataKey is like this: public static MetaDataKey ROLE = new MetaDataKey(Role.class) { }
  * 
  * @author Jonathan Locke
  */
@@ -143,22 +141,20 @@ public abstract class MetaDataKey implements IClusterable
 	}
 
 	/**
-	 * Checks the type of the given object against the type for this metadata
-	 * key.
+	 * Checks the type of the given object against the type for this metadata key.
 	 * 
 	 * @param object
 	 *            The object to check
 	 * @throws IllegalArgumentException
-	 *             Thrown if the type of the given object does not match the
-	 *             type for this key.
+	 *             Thrown if the type of the given object does not match the type for this key.
 	 */
 	void checkType(final Object object)
 	{
 		Class clazz = Classes.resolveClass(typeName);
-		if (object != null && !clazz.isAssignableFrom(object.getClass()) )
+		if (object != null && !clazz.isAssignableFrom(object.getClass()))
 		{
-			throw new IllegalArgumentException("MetaDataKey " + getClass()
-					+ " requires argument of " + clazz + ", not " + object.getClass());
+			throw new IllegalArgumentException("MetaDataKey " + getClass() +
+					" requires argument of " + clazz + ", not " + object.getClass());
 		}
 	}
 

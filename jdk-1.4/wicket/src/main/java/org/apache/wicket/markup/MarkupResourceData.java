@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Holds markup as a resource (the stream that the markup came from) and a list
- * of MarkupElements (the markup itself).
+ * Holds markup as a resource (the stream that the markup came from) and a list of MarkupElements
+ * (the markup itself).
  * 
  * @see MarkupElement
  * @see ComponentTag
@@ -99,9 +99,8 @@ public class MarkupResourceData
 	}
 
 	/**
-	 * Gets the markup encoding. A markup encoding may be specified in a markup
-	 * file with an XML encoding specifier of the form &lt;?xml ...
-	 * encoding="..." ?&gt;.
+	 * Gets the markup encoding. A markup encoding may be specified in a markup file with an XML
+	 * encoding specifier of the form &lt;?xml ... encoding="..." ?&gt;.
 	 * 
 	 * @return Encoding, or null if not found.
 	 */
@@ -169,8 +168,7 @@ public class MarkupResourceData
 	}
 
 	/**
-	 * Sets the resource stream associated with the markup. It is for diagnostic
-	 * purposes only.
+	 * Sets the resource stream associated with the markup. It is for diagnostic purposes only.
 	 * 
 	 * @param resource
 	 *            the markup resource stream

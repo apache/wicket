@@ -27,9 +27,8 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * An IResourceStream implementation with specific extensions for markup
- * resource streams.
- *
+ * An IResourceStream implementation with specific extensions for markup resource streams.
+ * 
  * @author Juergen Donnerstag
  */
 public class MarkupResourceStream implements IResourceStream
@@ -40,14 +39,13 @@ public class MarkupResourceStream implements IResourceStream
 	private final IResourceStream resourceStream;
 
 	/**
-	 * Container info like Class, locale and style which were used to locate the
-	 * resource
+	 * Container info like Class, locale and style which were used to locate the resource
 	 */
 	private final ContainerInfo containerInfo;
 
 	/**
-	 * The actual component class the markup is directly associated with. It
-	 * might be super class of the component class
+	 * The actual component class the markup is directly associated with. It might be super class of
+	 * the component class
 	 */
 	private final String markupClassName;
 
@@ -56,7 +54,7 @@ public class MarkupResourceStream implements IResourceStream
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param resourceStream
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream)
@@ -73,7 +71,7 @@ public class MarkupResourceStream implements IResourceStream
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param resourceStream
 	 * @param containerInfo
 	 * @param markupClass
@@ -92,7 +90,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#close()
 	 */
 	public void close() throws IOException
@@ -101,7 +99,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
 	 */
 	public String getContentType()
@@ -110,7 +108,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#getInputStream()
 	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
@@ -119,7 +117,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#getLocale()
 	 */
 	public Locale getLocale()
@@ -128,7 +126,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
 	public Time lastModifiedTime()
@@ -137,7 +135,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	public long length()
@@ -146,7 +144,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
 	 */
 	public void setLocale(Locale locale)
@@ -155,9 +153,9 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * Get the actual component class the markup is directly associated with.
-	 * Note: it not necessarily must be the container class.
-	 *
+	 * Get the actual component class the markup is directly associated with. Note: it not
+	 * necessarily must be the container class.
+	 * 
 	 * @return The directly associated class
 	 */
 	public Class getMarkupClass()
@@ -167,7 +165,7 @@ public class MarkupResourceStream implements IResourceStream
 
 	/**
 	 * Get the container info associated with the markup
-	 *
+	 * 
 	 * @return ContainerInfo
 	 */
 	public ContainerInfo getContainerInfo()
@@ -177,6 +175,7 @@ public class MarkupResourceStream implements IResourceStream
 
 	/**
 	 * Gets cacheKey.
+	 * 
 	 * @return cacheKey
 	 */
 	public final String getCacheKey()
@@ -186,6 +185,7 @@ public class MarkupResourceStream implements IResourceStream
 
 	/**
 	 * Set the cache key
+	 * 
 	 * @param cacheKey
 	 */
 	public final void setCacheKey(final String cacheKey)
@@ -194,7 +194,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()

@@ -53,7 +53,7 @@ public abstract class AjaxCallDecorator implements IAjaxCallDecorator
 	}
 
 	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence) 
+	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence)
 	 */
 	public CharSequence decorateOnFailureScript(CharSequence script)
 	{

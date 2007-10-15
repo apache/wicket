@@ -25,24 +25,27 @@ import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.protocol.http.MockWebApplication;
 import org.apache.wicket.protocol.http.WebRequestCycle;
 import org.apache.wicket.request.target.component.BookmarkablePageRequestTarget;
-import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.IExceptionSettings;
 
 public class StringResponseTest extends WicketTestCase
 {
-	public void testBrokenPage() {
+	public void testBrokenPage()
+	{
 		tester.setupRequestAndResponse();
-		tester.getApplication().getRequestCycleSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+		tester.getApplication().getRequestCycleSettings().setUnexpectedExceptionDisplay(
+				IExceptionSettings.SHOW_EXCEPTION_PAGE);
 
 		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.setResponse(new StringResponse());
 		try
 		{
-			// Decompose processRequestCycle() as error pages are not rendered in WicketTester, the exception is thrown instead
+			// Decompose processRequestCycle() as error pages are not rendered in WicketTester, the
+			// exception is thrown instead
 			cycle.request(new BookmarkablePageRequestTarget(BrokenPage.class));
-			Method method = MockWebApplication.class.getDeclaredMethod("generateLastRenderedPage", new Class[]{WebRequestCycle.class});
+			Method method = MockWebApplication.class.getDeclaredMethod("generateLastRenderedPage",
+					new Class[] { WebRequestCycle.class });
 			method.setAccessible(true);
-			Page page = (Page)method.invoke(tester, new Object[]{cycle});
+			Page page = (Page)method.invoke(tester, new Object[] { cycle });
 			assertTrue("Page is not an ExceptionErrorPage", page instanceof ExceptionErrorPage);
 			WebRequestCycle cycle2 = tester.createRequestCycle();
 			cycle2.setResponse(new StringResponse());

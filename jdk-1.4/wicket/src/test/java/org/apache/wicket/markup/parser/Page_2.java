@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class Page_2 extends WebPage

@@ -21,10 +21,9 @@ import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.settings.IMarkupSettings;
 
 /**
- * Default implementation of IMarkupParserFactory. It creates a MarkupParser
- * with a standard set of IMarkupFilter. You may add IMarkupFilters like shown
- * below, but don't forget to register your own MarkupParserFactory with
- * Settings to become activated.
+ * Default implementation of IMarkupParserFactory. It creates a MarkupParser with a standard set of
+ * IMarkupFilter. You may add IMarkupFilters like shown below, but don't forget to register your own
+ * MarkupParserFactory with Settings to become activated.
  * 
  * <pre>
  * class MyMarkupParserFactory

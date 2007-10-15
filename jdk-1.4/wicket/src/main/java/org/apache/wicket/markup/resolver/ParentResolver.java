@@ -23,8 +23,8 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
 
 /**
- * Some containers are transparent to the user (e.g. HtmlHeaderContainer or
- * BodyOnLoadContainer) and delegate component resolution to there parent.
+ * Some containers are transparent to the user (e.g. HtmlHeaderContainer or BodyOnLoadContainer) and
+ * delegate component resolution to there parent.
  * 
  * @author Juergen Donnerstag
  */
@@ -33,11 +33,9 @@ public class ParentResolver implements IComponentResolver
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container
-	 * and render it.
+	 * Try to resolve the tag, then create a component, add it to the container and render it.
 	 * <p>
-	 * Note: Special tags like &ltwicket:...&gt> and tags which id start with
-	 * "_" are not resolved.
+	 * Note: Special tags like &ltwicket:...&gt> and tags which id start with "_" are not resolved.
 	 * 
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)

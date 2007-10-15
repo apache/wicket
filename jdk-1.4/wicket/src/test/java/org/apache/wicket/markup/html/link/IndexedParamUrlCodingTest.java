@@ -72,7 +72,8 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		assertEquals("test2/Integer0/Integer1/a%3Ab/wicket:pageMapName/mypagemap/", url2);
 
 		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url1);
+		tester.getServletRequest().setURL(
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url1);
 		cycle = tester.createRequestCycle();
 		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
 
@@ -93,7 +94,8 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		assertEquals("a:b", params.getString("2"));
 
 		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL("/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url2);
+		tester.getServletRequest().setURL(
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/" + url2);
 		cycle = tester.createRequestCycle();
 		encoder = cycle.getProcessor().getRequestCodingStrategy();
 

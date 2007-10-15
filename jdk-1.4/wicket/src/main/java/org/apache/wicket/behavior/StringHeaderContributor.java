@@ -24,8 +24,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Objects;
 
 /**
- * A simple header contributor that just spits out the string it is constructed
- * with as a header contribution.
+ * A simple header contributor that just spits out the string it is constructed with as a header
+ * contribution.
  * 
  * @author Eelco Hillenius
  */
@@ -37,8 +37,8 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	private final StringContributor contributor;
 
 	/**
-	 * Simply writes out the string it was constructed with whenever it is
-	 * called for a header contribution.
+	 * Simply writes out the string it was constructed with whenever it is called for a header
+	 * contribution.
 	 */
 	private static final class StringContributor implements IHeaderContributor
 	{

@@ -18,20 +18,20 @@ package org.apache.wicket.application;
 
 /**
  * An interface to code which finds classes.
- *
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
 public interface IClassResolver
 {
-    /**
-     * Resolves a class by name (which may or may not involve loading it; thus
-     * the name class *resolver* not *loader*).
-     *
-     * @param classname
-     *            Fully qualified classname to find
-     * @return Class
-     * @throws ClassNotFoundException 
-     */
-    Class resolveClass(final String classname) throws ClassNotFoundException;
+	/**
+	 * Resolves a class by name (which may or may not involve loading it; thus the name class
+	 * *resolver* not *loader*).
+	 * 
+	 * @param classname
+	 *            Fully qualified classname to find
+	 * @return Class
+	 * @throws ClassNotFoundException
+	 */
+	Class resolveClass(final String classname) throws ClassNotFoundException;
 }

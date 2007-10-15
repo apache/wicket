@@ -24,13 +24,14 @@ import org.apache.wicket.util.diff.DiffUtil;
 
 /**
  * Test for ajax handler.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class SimpleTestPanelTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public SimpleTestPanelTest(String name)
@@ -44,14 +45,15 @@ public class SimpleTestPanelTest extends WicketTestCase
 	public void testRenderHomePage_2() throws Exception
 	{
 		tester.setupRequestAndResponse();
-	    executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
+		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 		WebRequestCycle cycle = tester.createRequestCycle();
-		
+
 		Page page = tester.getLastRenderedPage();
 		tester.executeBehavior(((SimpleTestPanel)page.get("testPanel")).getTimeBehavior());
 
 		// Validate the document
 		String document = tester.getServletResponse().getDocument();
-		DiffUtil.validatePage(document, SimpleTestPage.class, "SimpleTestPageExpectedResult-1.html", true);
+		DiffUtil.validatePage(document, SimpleTestPage.class,
+				"SimpleTestPageExpectedResult-1.html", true);
 	}
 }

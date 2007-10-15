@@ -24,10 +24,9 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * Container that holds components in a RefreshingView. One Item represents one
- * entire row of the view. Users should add all containing components to the
- * Item instead of the view, this is accomplished by implementing
- * refreshingView.populateItem(Item item).
+ * Container that holds components in a RefreshingView. One Item represents one entire row of the
+ * view. Users should add all containing components to the Item instead of the view, this is
+ * accomplished by implementing refreshingView.populateItem(Item item).
  * 
  * @see RefreshingView
  * 

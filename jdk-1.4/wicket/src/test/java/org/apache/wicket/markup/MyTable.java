@@ -33,35 +33,37 @@ import org.apache.wicket.model.Model;
 public class MyTable extends ListView
 {
 	private static final long serialVersionUID = 1L;
-    
-    /**
-     * Construct.
-     * @param id
-     */
-    public MyTable(final String id)
-    {
-        super(id, new Model(null));
-    }
 
-    protected void populateItem(ListItem listItem)
-    {
-        String txt = (String)listItem.getModelObject();
-        listItem.add(new Label("txt", txt));
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 */
+	public MyTable(final String id)
+	{
+		super(id, new Model(null));
+	}
 
-    /**
-     * Sets the number of rows per page.
-     * @param rows
-     */
-    public void setRowsPerPage(final int rows)
-    {
-        List list = new ArrayList();
+	protected void populateItem(ListItem listItem)
+	{
+		String txt = (String)listItem.getModelObject();
+		listItem.add(new Label("txt", txt));
+	}
 
-        for (int i=0; i < rows; i++)
-        {
-            list.add("row: " + String.valueOf(i));
-        }
-                
-        setModelObject(list);
-    }
+	/**
+	 * Sets the number of rows per page.
+	 * 
+	 * @param rows
+	 */
+	public void setRowsPerPage(final int rows)
+	{
+		List list = new ArrayList();
+
+		for (int i = 0; i < rows; i++)
+		{
+			list.add("row: " + String.valueOf(i));
+		}
+
+		setModelObject(list);
+	}
 }

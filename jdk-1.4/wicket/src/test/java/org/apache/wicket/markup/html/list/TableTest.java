@@ -22,15 +22,16 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.Model;
 
 
-
 /**
  * Test for tables.
+ * 
  * @author Juergen Donnerstag
  */
 public class TableTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public TableTest(String name)
@@ -40,8 +41,10 @@ public class TableTest extends WicketTestCase
 
 	/**
 	 * creates a table.
+	 * 
 	 * @param modelListSize
-	 * @param pageSize size of a page
+	 * @param pageSize
+	 *            size of a page
 	 * @return table
 	 */
 	private PageableListView createTable(final int modelListSize, final int pageSize)

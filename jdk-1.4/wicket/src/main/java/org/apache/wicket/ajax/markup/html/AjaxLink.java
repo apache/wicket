@@ -72,7 +72,7 @@ public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 
 			protected void onComponentTag(ComponentTag tag)
 			{
-				// add the onclick handler only if link is enabled 
+				// add the onclick handler only if link is enabled
 				if (isLinkEnabled())
 				{
 					super.onComponentTag(tag);
@@ -84,21 +84,21 @@ public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		
-		if (isLinkEnabled()) 
+
+		if (isLinkEnabled())
 		{
 			// disable any href attr in markup
-			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
-					|| tag.getName().equalsIgnoreCase("area"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
+					tag.getName().equalsIgnoreCase("area"))
 			{
 				tag.put("href", "#");
 			}
-		} 
-		else 
+		}
+		else
 		{
 			disableLink(tag);
 		}
-		
+
 	}
 
 	/**
@@ -112,8 +112,7 @@ public abstract class AjaxLink extends AbstractLink implements IAjaxLink
 	}
 
 	/**
-	 * Listener method invoked on the ajax request generated when the user
-	 * clicks the link
+	 * Listener method invoked on the ajax request generated when the user clicks the link
 	 * 
 	 * @param target
 	 */

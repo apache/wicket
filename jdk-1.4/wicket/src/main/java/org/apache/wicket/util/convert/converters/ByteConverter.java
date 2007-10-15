@@ -21,7 +21,6 @@ import java.util.Locale;
 import org.apache.wicket.util.convert.IConverter;
 
 
-
 /**
  * Converts from Object to Byte.
  * 

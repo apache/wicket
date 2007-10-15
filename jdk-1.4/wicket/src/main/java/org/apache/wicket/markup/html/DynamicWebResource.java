@@ -28,13 +28,11 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * An WebResource subclass for dynamic resources (resources created
- * programmatically).
+ * An WebResource subclass for dynamic resources (resources created programmatically).
  * <p>
- * This class caches the generated resource in memory, and is thus very useful
- * for things you generate dynamically, but reuse for a while after that. If you
- * need resources that stream directly and are not cached, extend
- * {@link WebResource} directly and implement
+ * This class caches the generated resource in memory, and is thus very useful for things you
+ * generate dynamically, but reuse for a while after that. If you need resources that stream
+ * directly and are not cached, extend {@link WebResource} directly and implement
  * {@link WebResource#getResourceStream()} yourself.
  * </p>
  * 
@@ -50,10 +48,10 @@ public abstract class DynamicWebResource extends WebResource
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The resource state returned by the getResourceState() method. This state
-	 * needs to be thread-safe and its methods must return the same values no
-	 * matter how many times they are invoked. A ResourceState may assume
-	 * getParameters() will remain unchanged during its lifetime.
+	 * The resource state returned by the getResourceState() method. This state needs to be
+	 * thread-safe and its methods must return the same values no matter how many times they are
+	 * invoked. A ResourceState may assume getParameters() will remain unchanged during its
+	 * lifetime.
 	 * 
 	 * @author jcompagner
 	 */
@@ -113,8 +111,7 @@ public abstract class DynamicWebResource extends WebResource
 	 * Creates a dynamic resource.
 	 * 
 	 * @param filename
-	 *            The filename that will be set as the Content-Disposition
-	 *            header.
+	 *            The filename that will be set as the Content-Disposition header.
 	 */
 	public DynamicWebResource(String filename)
 	{
@@ -138,8 +135,7 @@ public abstract class DynamicWebResource extends WebResource
 	 * @param locale
 	 *            The locale of this resource
 	 * @param filename
-	 *            The filename that will be set as the Content-Disposition
-	 *            header.
+	 *            The filename that will be set as the Content-Disposition header.
 	 */
 	public DynamicWebResource(Locale locale, String filename)
 	{
@@ -186,8 +182,7 @@ public abstract class DynamicWebResource extends WebResource
 			private transient InputStream inputStream = null;
 
 			/**
-			 * Transient ResourceState of the resources, will always be deleted
-			 * in the close
+			 * Transient ResourceState of the resources, will always be deleted in the close
 			 */
 			private transient ResourceState data = null;
 
@@ -274,9 +269,8 @@ public abstract class DynamicWebResource extends WebResource
 	}
 
 	/**
-	 * Gets the byte array for our dynamic resource. If the subclass regenerates
-	 * the data, it should set the lastModifiedTime too. This ensures that
-	 * resource caching works correctly.
+	 * Gets the byte array for our dynamic resource. If the subclass regenerates the data, it should
+	 * set the lastModifiedTime too. This ensures that resource caching works correctly.
 	 * 
 	 * @return The byte array for this dynamic resource.
 	 */

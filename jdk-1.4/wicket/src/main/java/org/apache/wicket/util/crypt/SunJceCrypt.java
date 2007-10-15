@@ -33,9 +33,8 @@ import org.apache.wicket.util.lang.Classes;
 
 
 /**
- * Provide some simple means to encrypt and decrypt strings such as passwords.
- * The whole implementation is based around Sun's security providers and uses
- * the <a
+ * Provide some simple means to encrypt and decrypt strings such as passwords. The whole
+ * implementation is based around Sun's security providers and uses the <a
  * href="http://www.semoa.org/docs/api/cdc/standard/pbe/PBEWithMD5AndDES.html">PBEWithMD5AndDES</a>
  * method to encrypt and decrypt the data.
  * 
@@ -44,8 +43,7 @@ import org.apache.wicket.util.lang.Classes;
 public class SunJceCrypt extends AbstractCrypt
 {
 	/**
-	 * Iteration count used in combination with the salt to create the
-	 * encryption key.
+	 * Iteration count used in combination with the salt to create the encryption key.
 	 */
 	private final static int COUNT = 17;
 
@@ -105,9 +103,8 @@ public class SunJceCrypt extends AbstractCrypt
 	/**
 	 * Generate the de-/encryption key.
 	 * <p>
-	 * Note: if you don't provide your own encryption key, the implementation
-	 * will use a default. Be aware that this is potential security risk. Thus
-	 * make sure you always provide your own one.
+	 * Note: if you don't provide your own encryption key, the implementation will use a default. Be
+	 * aware that this is potential security risk. Thus make sure you always provide your own one.
 	 * 
 	 * @return secretKey the security key generated
 	 * @throws NoSuchAlgorithmException

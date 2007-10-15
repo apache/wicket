@@ -32,15 +32,15 @@ public class MyTesterApplication extends WebApplication
 	{
 		return null;
 	}
-	
+
 	protected void outputDevelopmentModeWarning()
 	{
 		// Do nothing.
 	}
-	
-        protected ISessionStore newSessionStore()
-        {
-                // Don't use a filestore, or we spawn lots of threads, which makes things slow.
-                return new HttpSessionStore(this);
-        }
+
+	protected ISessionStore newSessionStore()
+	{
+		// Don't use a filestore, or we spawn lots of threads, which makes things slow.
+		return new HttpSessionStore(this);
+	}
 }

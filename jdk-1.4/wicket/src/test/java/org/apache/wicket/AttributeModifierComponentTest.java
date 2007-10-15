@@ -28,11 +28,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This set of tests builds a sample tester for testing the dynamic modicication
- * of attributes in both component tags and also in raw markup. The tests
- * contained here represent testing on one specific area of functionality of the
- * Component class. It is expected that separate test cases will be added to
- * test other facets of Components.
+ * This set of tests builds a sample tester for testing the dynamic modicication of attributes in
+ * both component tags and also in raw markup. The tests contained here represent testing on one
+ * specific area of functionality of the Component class. It is expected that separate test cases
+ * will be added to test other facets of Components.
  * 
  * @author Chris Turner
  */
@@ -44,7 +43,9 @@ public class AttributeModifierComponentTest extends TestCase
 
 	/**
 	 * Create a test case instance.
-	 * @param name The name of the test being run
+	 * 
+	 * @param name
+	 *            The name of the test being run
 	 */
 	public AttributeModifierComponentTest(final String name)
 	{
@@ -76,7 +77,9 @@ public class AttributeModifierComponentTest extends TestCase
 
 	/**
 	 * Helper method to validate the returned XML document.
-	 * @param document The document
+	 * 
+	 * @param document
+	 *            The document
 	 * @return The validation result
 	 */
 	private boolean validateDocument(String document)

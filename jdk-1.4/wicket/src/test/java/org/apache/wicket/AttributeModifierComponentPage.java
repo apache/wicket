@@ -22,8 +22,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Test page used for checking the attribute modification functionality of
- * Component.
+ * Test page used for checking the attribute modification functionality of Component.
  * 
  * @see AttributeModifierComponentTest
  * @author Chris Turner
@@ -31,7 +30,7 @@ import org.apache.wicket.model.Model;
 public class AttributeModifierComponentPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 * 

@@ -28,20 +28,18 @@ import org.apache.wicket.markup.resolver.EnclosureResolver;
 
 
 /**
- * This is a markup inline filter. It identifies &lt;wicket:enclosure&gt; tags.
- * If the 'child' attribute is empty it determines the wicket:id of the child
- * component automatically by analyzing the wicket component (in this case on
- * one wicket component is allowed) in between the open and close tags. If the
- * enclosure tag has a 'child' attribute like
- * <code>&lt;wicket:enclosure child="xxx"&gt;</code> than more than just one
- * wicket component inside the enclosure tags are allowed and the child
- * component which determines the visibility of the enclosure is identified by
- * the 'child' attribute value which must be equal to the relative child id
- * path.
- *
+ * This is a markup inline filter. It identifies &lt;wicket:enclosure&gt; tags. If the 'child'
+ * attribute is empty it determines the wicket:id of the child component automatically by analyzing
+ * the wicket component (in this case on one wicket component is allowed) in between the open and
+ * close tags. If the enclosure tag has a 'child' attribute like
+ * <code>&lt;wicket:enclosure child="xxx"&gt;</code> than more than just one wicket component
+ * inside the enclosure tags are allowed and the child component which determines the visibility of
+ * the enclosure is identified by the 'child' attribute value which must be equal to the relative
+ * child id path.
+ * 
  * @see EnclosureResolver
  * @see Enclosure
- *
+ * 
  * @author Juergen Donnerstag
  */
 public final class EnclosureHandler extends AbstractMarkupFilter

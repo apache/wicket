@@ -22,8 +22,8 @@ import org.apache.wicket.markup.html.link.ResourceLink;
 
 
 /**
- * Links to shared, interpolated text template resources created by a factory.
- * This is useful for creating dynamic JNLP descriptors, among other things.
+ * Links to shared, interpolated text template resources created by a factory. This is useful for
+ * creating dynamic JNLP descriptors, among other things.
  * 
  * @author Jonathan Locke
  */
@@ -39,8 +39,7 @@ public class TextTemplateLink extends ResourceLink
 	 * @param factory
 	 *            The factory to create resources with
 	 * @param variables
-	 *            Variables to interpolate into the template held by the shared
-	 *            resource factory
+	 *            Variables to interpolate into the template held by the shared resource factory
 	 */
 	public TextTemplateLink(final String id, final TextTemplateSharedResourceFactory factory,
 			final Map variables)

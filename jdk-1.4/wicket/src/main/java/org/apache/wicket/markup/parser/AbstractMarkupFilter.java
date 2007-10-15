@@ -23,9 +23,9 @@ import org.apache.wicket.markup.ComponentTag;
 
 /**
  * Base class for markup filters
- *
+ * 
  * @see org.apache.wicket.markup.MarkupParser
- *
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
@@ -42,7 +42,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param parent
 	 *            The parent of this component The next element in the chain.
 	 */
@@ -61,7 +61,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	/**
 	 * Set new parent.
-	 *
+	 * 
 	 * @param parent
 	 *            The parent of this component The next element in the chain
 	 */
@@ -71,9 +71,9 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	}
 
 	/**
-	 * A convenience function to retrieve the next tag (same as nextTag()),
-	 * however assuming that it is a ComponentTag.
-	 *
+	 * A convenience function to retrieve the next tag (same as nextTag()), however assuming that it
+	 * is a ComponentTag.
+	 * 
 	 * @return ComponentTag
 	 * @throws ParseException
 	 */

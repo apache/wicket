@@ -40,10 +40,12 @@ public class ApplicationSettingsTest extends TestCase
 	{
 		tester = new WicketTester();
 	}
+
 	protected void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
+
 	/**
 	 * 
 	 */

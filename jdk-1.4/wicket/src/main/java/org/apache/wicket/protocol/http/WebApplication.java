@@ -65,14 +65,14 @@ import org.slf4j.LoggerFactory;
  * <p>
  * If you want to use a filter specific configuration, e.g. using init parameters from the
  * {@link javax.servlet.FilterConfig} object, you should override the init() method. For example:
- *
+ * 
  * <pre>
  *  public void init() {
  *  String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
  *  URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
  *  ...
  * </pre>
- *
+ * 
  * @see WicketFilter
  * @see org.apache.wicket.settings.IApplicationSettings
  * @see org.apache.wicket.settings.IDebugSettings
@@ -86,7 +86,7 @@ import org.slf4j.LoggerFactory;
  * @see javax.servlet.Filter
  * @see javax.servlet.FilterConfig
  * @see javax.servlet.ServletContext
- *
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Johan Compagner
@@ -146,7 +146,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Gets an init parameter from the filter's context.
-	 *
+	 * 
 	 * @param key
 	 *            the key to search for
 	 * @return the value of the filter init parameter
@@ -166,7 +166,7 @@ public abstract class WebApplication extends Application
 	 * Gets the default request cycle processor (with lazy initialization). This is the
 	 * {@link IRequestCycleProcessor} that will be used by {@link RequestCycle}s when custom
 	 * implementations of the request cycle do not provide their own customized versions.
-	 *
+	 * 
 	 * @return the default request cycle processor
 	 */
 	public final IRequestCycleProcessor getRequestCycleProcessor()
@@ -181,7 +181,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Gets the servlet context for this application. Use this to get references to absolute paths,
 	 * global web.xml parameters (<context-param>), etc.
-	 *
+	 * 
 	 * @return The servlet context for this application
 	 */
 	public final ServletContext getServletContext()
@@ -198,10 +198,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
 	 * for this application instance.
-	 *
+	 * 
 	 * @param request
 	 *            the request
-	 *
+	 * 
 	 * @return the prefix for storing variables in the actual session
 	 */
 	public String getSessionAttributePrefix(final WebRequest request)
@@ -252,7 +252,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts an encoder at the given path.
-	 *
+	 * 
 	 * @param encoder
 	 *            the encoder that will be used for this mount
 	 */
@@ -268,7 +268,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts all bookmarkable pages at the given path.
-	 *
+	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param packageName
@@ -286,7 +286,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts a bookmarkable page class to the given path.
-	 *
+	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param bookmarkablePageClass
@@ -299,7 +299,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts a bookmarkable page class to the given pagemap and path.
-	 *
+	 * 
 	 * @param path
 	 *            the path to mount the bookmarkable page class on
 	 * @param pageMapName
@@ -316,7 +316,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts a shared resource class to the given path.
-	 *
+	 * 
 	 * @param path
 	 *            the path to mount the resource class on
 	 * @param resourceKey
@@ -339,7 +339,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Create new Wicket Session object. Note, this method is not called if you registered your own
 	 * ISessionFactory with the Application.
-	 *
+	 * 
 	 * @return The created session
 	 * @deprecated see {@link WebApplication#newSession(Request, Response)}.
 	 */
@@ -352,7 +352,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Create new Wicket Session object. Note, this method is not called if you registered your own
 	 * ISessionFactory with the Application.
-	 *
+	 * 
 	 * @param request
 	 * @return The created session
 	 * @deprecated {@link WebApplication#newSession(Request, Response)}.
@@ -389,7 +389,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 *
+	 * 
 	 * @param wicketFilter
 	 *            The wicket filter instance for this application
 	 */
@@ -401,7 +401,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Unmounts whatever encoder is mounted at a given path.
-	 *
+	 * 
 	 * @param path
 	 *            the path of the encoder to unmount
 	 */
@@ -450,7 +450,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 *
+	 * 
 	 * Internal initialization. First determine the deployment mode. First check the system property
 	 * -Dwicket.configuration. If it does not exist check the servlet init parameter (
 	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>). If not
@@ -533,10 +533,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Gets a new request cycle processor for web requests. May be replaced by subclasses which wish
 	 * to use their own implementation of IRequestCycleProcessor.
-	 *
+	 * 
 	 * NOTE this can't be moved to application as portlets use two different request cycle
 	 * processors, and hence have two different methods for them, depending on the kind of request.
-	 *
+	 * 
 	 * @return IRequestCycleProcessor
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()
@@ -555,7 +555,7 @@ public abstract class WebApplication extends Application
 	/**
 	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and obfuscated URL which
 	 * has been encoded by an appropriate WebResponse.
-	 *
+	 * 
 	 * @param servletRequest
 	 * @return a WebRequest object
 	 */
@@ -568,7 +568,7 @@ public abstract class WebApplication extends Application
 	 * Create a WebResponse. Subclasses of WebRequest could e.g. encode wicket's default URL and
 	 * hide the details from the user. A appropriate WebRequest must be implemented and configured
 	 * to decode the encoded URL.
-	 *
+	 * 
 	 * @param servletResponse
 	 * @return a WebResponse object
 	 */
@@ -588,7 +588,7 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Add a buffered response to the redirect buffer.
-	 *
+	 * 
 	 * @param sessionId
 	 *            the session id
 	 * @param bufferId
@@ -650,10 +650,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Returns the redirect map where the buffered render pages are stored in and removes it
 	 * immediately.
-	 *
+	 * 
 	 * @param sessionId
 	 *            the session id
-	 *
+	 * 
 	 * @param bufferId
 	 *            the id of the buffer as passed in as a request parameter
 	 * @return the buffered response or null if not found (when this request is on a different box

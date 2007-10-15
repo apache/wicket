@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
 
-
 /**
  * Dummy page used for resource testing.
  */
@@ -32,8 +31,7 @@ public class SimpleTablePage_1 extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 *  page parameters.
+	 * Construct. page parameters.
 	 */
 	public SimpleTablePage_1()
 	{
@@ -45,7 +43,7 @@ public class SimpleTablePage_1 extends WebPage
 		add(new ListView("table", list)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();

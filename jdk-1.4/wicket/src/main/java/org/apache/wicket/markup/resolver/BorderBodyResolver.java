@@ -26,16 +26,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * In case of Border where the associated markup has a container in between the
- * wicket:border and the wicket:body tag, the wicket:body container can not be
- * resolved easily. Lets assume the container in the middle is a Form container,
- * than this Form container does not know how to resolve the wicket:body. Only
- * the Border component does know how to do it.
+ * In case of Border where the associated markup has a container in between the wicket:border and
+ * the wicket:body tag, the wicket:body container can not be resolved easily. Lets assume the
+ * container in the middle is a Form container, than this Form container does not know how to
+ * resolve the wicket:body. Only the Border component does know how to do it.
  * <p>
- * Until 1.3, the original Border implementation, resolved these markup vs
- * component hierarchy mismatches, but the new implementation by purpose no
- * longer does. We want to minimize such mismatches for simplicity and clarity
- * reasons. No magic.
+ * Until 1.3, the original Border implementation, resolved these markup vs component hierarchy
+ * mismatches, but the new implementation by purpose no longer does. We want to minimize such
+ * mismatches for simplicity and clarity reasons. No magic.
  * 
  * NOTE: This resolver will be removed again in Wicket 1.4(!)
  * 
@@ -85,9 +83,10 @@ public class BorderBodyResolver implements IComponentResolver
 						{
 							component.render(markupStream);
 
-							log.warn("Please consider to change your java code to something like: " 
-									+ container.getId() 
-									+ ".add(getBodyContainer()); for the component hierarchy to better reflect the markup hierarchy.");
+							log
+									.warn("Please consider to change your java code to something like: " +
+											container.getId() +
+											".add(getBodyContainer()); for the component hierarchy to better reflect the markup hierarchy.");
 						}
 
 						return true;

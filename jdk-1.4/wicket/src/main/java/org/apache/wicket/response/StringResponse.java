@@ -23,9 +23,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Response object that writes to a StringWriter. If the StringResponse is later
- * converted to a String via toString(), the output which was written to the
- * StringResponse will be returned as a String.
+ * Response object that writes to a StringWriter. If the StringResponse is later converted to a
+ * String via toString(), the output which was written to the StringResponse will be returned as a
+ * String.
  * 
  * @author Jonathan Locke
  */
@@ -58,6 +58,7 @@ public class StringResponse extends Response
 	{
 		out.clear();
 	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -65,7 +66,7 @@ public class StringResponse extends Response
 	{
 		return out.toString();
 	}
-	
+
 	/**
 	 * @return The internal buffer directly as a {@link CharSequence}
 	 */

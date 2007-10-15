@@ -30,15 +30,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This is a filter that injects javascript code to the top head portion and
- * after the body so that the time can me measured what the client parse time
- * was for this page. It also reports the total server parse/response time in
- * the client and logs the server response time and response size it took for a
- * specific response in the server log.
+ * This is a filter that injects javascript code to the top head portion and after the body so that
+ * the time can me measured what the client parse time was for this page. It also reports the total
+ * server parse/response time in the client and logs the server response time and response size it
+ * took for a specific response in the server log.
  * 
- * You can specify what the status text should be like this:
- * ServerAndClientTimeFilter.statustext=My Application, Server parsetime:
- * ${servertime}, Client parsetime: ${clienttime}
+ * You can specify what the status text should be like this: ServerAndClientTimeFilter.statustext=My
+ * Application, Server parsetime: ${servertime}, Client parsetime: ${clienttime}
  * 
  * @author jcompagner
  */
@@ -75,13 +73,13 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 			endScript.append(txt);
 			endScript.append("';\n").append(JavascriptUtils.SCRIPT_CLOSE_TAG).append("\n");
 			responseBuffer.insert(bodyIndex - 1, endScript);
-			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG
-					+ "\nvar clientTimeVariable = new Date().getTime();\n"
-					+ JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
+			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG +
+					"\nvar clientTimeVariable = new Date().getTime();\n" +
+					JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
-		log.info(timeTaken + "ms server time taken for request "
-				+ RequestCycle.get().getRequest().getURL() + " response size: "
-				+ responseBuffer.length());
+		log.info(timeTaken + "ms server time taken for request " +
+				RequestCycle.get().getRequest().getURL() + " response size: " +
+				responseBuffer.length());
 		return responseBuffer;
 	}
 }

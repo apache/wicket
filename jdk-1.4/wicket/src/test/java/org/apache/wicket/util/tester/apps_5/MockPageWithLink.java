@@ -30,7 +30,8 @@ public class MockPageWithLink extends WebPage
 	/**
 	 * Construct.
 	 */
-	public MockPageWithLink() {
+	public MockPageWithLink()
+	{
 
 	}
 }

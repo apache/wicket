@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Page expired error page.
- *
+ * 
  * @author Jonathan Locke
  */
 public class AccessDeniedPage extends WebPage
@@ -44,8 +44,10 @@ public class AccessDeniedPage extends WebPage
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+				HttpServletResponse.SC_FORBIDDEN);
 	}
+
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */

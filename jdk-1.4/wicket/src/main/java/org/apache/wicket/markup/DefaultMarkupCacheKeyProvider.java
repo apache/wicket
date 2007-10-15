@@ -23,8 +23,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Wicket default implementation for the cache key used to reference the cached
- * markup resource stream.
+ * Wicket default implementation for the cache key used to reference the cached markup resource
+ * stream.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -45,8 +45,8 @@ public class DefaultMarkupCacheKeyProvider implements IMarkupCacheKeyProvider
 	 *            The container requesting the markup
 	 * @param clazz
 	 *            The clazz to get the key for
-	 * @return Key that uniquely identifies any markup that might be associated
-	 *         with this markup container.
+	 * @return Key that uniquely identifies any markup that might be associated with this markup
+	 *         container.
 	 */
 	public String getCacheKey(final MarkupContainer container, final Class clazz)
 	{

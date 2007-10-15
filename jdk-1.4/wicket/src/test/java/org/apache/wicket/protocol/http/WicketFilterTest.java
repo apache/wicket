@@ -24,25 +24,28 @@ import junit.framework.TestCase;
 
 public class WicketFilterTest extends TestCase
 {
-	public void testFilterPath1() {
-			InputStream in = WicketFilterTest.class.getResourceAsStream("web1.xml");
-			String filterPath = getFilterPath("FilterTestApplication", in);
-			assertEquals("filtertest/", filterPath);
+	public void testFilterPath1()
+	{
+		InputStream in = WicketFilterTest.class.getResourceAsStream("web1.xml");
+		String filterPath = getFilterPath("FilterTestApplication", in);
+		assertEquals("filtertest/", filterPath);
 	}
 
-	public void testFilterPath2() {
+	public void testFilterPath2()
+	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web2.xml");
 		String filterPath = getFilterPath("FilterTestApplication", in);
 		assertEquals("filtertest/", filterPath);
-}
+	}
 
 	private String getFilterPath(String string, InputStream in)
 	{
 		try
 		{
-			Method method = WicketFilter.class.getDeclaredMethod("getFilterPath", new Class[] {String.class, InputStream.class});
+			Method method = WicketFilter.class.getDeclaredMethod("getFilterPath", new Class[] {
+					String.class, InputStream.class });
 			method.setAccessible(true);
-			return method.invoke(new WicketFilter(), new Object[] {string, in}).toString();
+			return method.invoke(new WicketFilter(), new Object[] { string, in }).toString();
 		}
 		catch (SecurityException e)
 		{

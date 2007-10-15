@@ -58,21 +58,18 @@ public abstract class AbstractLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Simple insertion string to allow disabled links to look like <i>Disabled
-	 * link </i>.
+	 * Simple insertion string to allow disabled links to look like <i>Disabled link </i>.
 	 */
 	private String beforeDisabledLink;
 
 	/**
-	 * Simple insertion string to allow disabled links to look like <i>Disabled
-	 * link </i>.
+	 * Simple insertion string to allow disabled links to look like <i>Disabled link </i>.
 	 */
 	private String afterDisabledLink;
 
 
 	/**
-	 * Sets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
+	 * Sets the insertion string to allow disabled links to look like <i>Disabled link </i>.
 	 * 
 	 * @param afterDisabledLink
 	 *            The insertion string
@@ -88,8 +85,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
+	 * Gets the insertion string to allow disabled links to look like <i>Disabled link </i>.
 	 * 
 	 * @return The insertion string
 	 */
@@ -99,8 +95,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
+	 * Sets the insertion string to allow disabled links to look like <i>Disabled link </i>.
 	 * 
 	 * @param beforeDisabledLink
 	 *            The insertion string
@@ -129,8 +124,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
+	 * Gets the insertion string to allow disabled links to look like <i>Disabled link </i>.
 	 * 
 	 * @return The insertion string
 	 */
@@ -140,8 +134,8 @@ public abstract class AbstractLink extends WebMarkupContainer
 	}
 
 	/**
-	 * Helper methods that both checks whether the link is enabled and whether
-	 * the action ENABLE is allowed.
+	 * Helper methods that both checks whether the link is enabled and whether the action ENABLE is
+	 * allowed.
 	 * 
 	 * @return whether the link should be rendered as enabled
 	 */
@@ -157,8 +151,7 @@ public abstract class AbstractLink extends WebMarkupContainer
 	 *            the markup stream
 	 * @param openTag
 	 *            the open part of this tag
-	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream,
-	 *      ComponentTag)
+	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
@@ -181,16 +174,16 @@ public abstract class AbstractLink extends WebMarkupContainer
 	/**
 	 * Alters the tag so that the link renders as disabled.
 	 * 
-	 * This method is meant to be called from
-	 * {@link #onComponentTag(ComponentTag)} method of the derived class.
+	 * This method is meant to be called from {@link #onComponentTag(ComponentTag)} method of the
+	 * derived class.
 	 * 
 	 * @param tag
 	 */
 	protected void disableLink(final ComponentTag tag)
 	{
 		// if the tag is an anchor proper
-		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
-				|| tag.getName().equalsIgnoreCase("area"))
+		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
+				tag.getName().equalsIgnoreCase("area"))
 		{
 			// Change anchor link to span tag
 			tag.setName("span");
@@ -201,8 +194,8 @@ public abstract class AbstractLink extends WebMarkupContainer
 			tag.remove("onclick");
 		}
 		// if the tag is a button or input
-		else if ("button".equalsIgnoreCase(tag.getName())
-				|| "input".equalsIgnoreCase(tag.getName()))
+		else if ("button".equalsIgnoreCase(tag.getName()) ||
+				"input".equalsIgnoreCase(tag.getName()))
 		{
 			tag.put("disabled", "disabled");
 		}

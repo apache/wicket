@@ -17,8 +17,7 @@
 package org.apache.wicket.util.parse.metapattern;
 
 /**
- * Thrown if an attempt is made to re-bind a Group to a second capturing group
- * or MetaPattern.
+ * Thrown if an attempt is made to re-bind a Group to a second capturing group or MetaPattern.
  * 
  * @author Jonathan Locke
  */

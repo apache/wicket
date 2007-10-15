@@ -104,8 +104,8 @@ public class BrowserInfoForm extends Panel
 
 
 	/**
-	 * Log a warning that for in order to use this page, you should really be
-	 * using {@link WebClientInfo}.
+	 * Log a warning that for in order to use this page, you should really be using
+	 * {@link WebClientInfo}.
 	 * 
 	 * @param clientInfo
 	 *            the actual client info object

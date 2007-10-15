@@ -17,15 +17,14 @@
 package org.apache.wicket;
 
 /**
- * Optional interface for {@link IInitializer initializers} that can clean up
- * stuff initializers created. Initializers simple have to implement this
- * interface and do their thing in {@link #destroy(Application)}.
+ * Optional interface for {@link IInitializer initializers} that can clean up stuff initializers
+ * created. Initializers simple have to implement this interface and do their thing in
+ * {@link #destroy(Application)}.
  * <p>
- * Destroyers can be used to cleanup code when the application unloads. It only
- * guarantees a best effort of cleaning up. Typically, for web applications,
- * this is called when the Wicket servlet/ filter is unloaded by the container,
- * which may depend on the container's implementation and things like the time
- * out period it uses and whether all threads of the web app were cleared.
+ * Destroyers can be used to cleanup code when the application unloads. It only guarantees a best
+ * effort of cleaning up. Typically, for web applications, this is called when the Wicket servlet/
+ * filter is unloaded by the container, which may depend on the container's implementation and
+ * things like the time out period it uses and whether all threads of the web app were cleared.
  * </p>
  * 
  * @author Eelco Hillenius

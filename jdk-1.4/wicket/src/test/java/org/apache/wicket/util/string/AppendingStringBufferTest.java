@@ -25,8 +25,7 @@ public class AppendingStringBufferTest extends TestCase
 {
 
 	/**
-	 * Test method for
-	 * 'org.apache.wicket.util.string.AppendingStringBuffer.append(String)'
+	 * Test method for 'org.apache.wicket.util.string.AppendingStringBuffer.append(String)'
 	 */
 	public void testAppend()
 	{

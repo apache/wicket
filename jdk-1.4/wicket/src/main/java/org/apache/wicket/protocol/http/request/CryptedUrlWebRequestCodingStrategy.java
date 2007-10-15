@@ -42,15 +42,14 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This is a request coding strategy which encrypts the URL and hence makes it
- * impossible for users to guess what is in the url and rebuild it manually. It
- * uses the CryptFactory registered with the application to encode and decode
- * the URL. Hence, the coding algorithm must be a two-way one (reversible).
- * Because the algorithm is reversible, URLs which were bookmarkable before will
+ * This is a request coding strategy which encrypts the URL and hence makes it impossible for users
+ * to guess what is in the url and rebuild it manually. It uses the CryptFactory registered with the
+ * application to encode and decode the URL. Hence, the coding algorithm must be a two-way one
+ * (reversible). Because the algorithm is reversible, URLs which were bookmarkable before will
  * remain bookmarkable.
  * <p>
  * To register the request coding strategy to need to do the following:
- *
+ * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
  * {
@@ -63,24 +62,25 @@ import org.slf4j.LoggerFactory;
  * 	};
  * }
  * </pre>
- *
- * <b>Note:</b> When trying to hack urls in the browser an exception might be
- * caught while decoding the URL. By default, for safety reasons a very simple
- * WicketRuntimeException is thrown. The original stack trace is only logged.
- *
+ * 
+ * <b>Note:</b> When trying to hack urls in the browser an exception might be caught while decoding
+ * the URL. By default, for safety reasons a very simple WicketRuntimeException is thrown. The
+ * original stack trace is only logged.
+ * 
  * @author Juergen Donnerstag
  */
 public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(CryptedUrlWebRequestCodingStrategy.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(CryptedUrlWebRequestCodingStrategy.class);
 
 	/** The default request coding strategy most of the methods are delegated to */
 	private final IRequestCodingStrategy defaultStrategy;
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param defaultStrategy
 	 *            The default strategy most requests are forwarded to
 	 */
@@ -91,7 +91,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * Decode the querystring of the URL
-	 *
+	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#decode(org.apache.wicket.Request)
 	 */
 	public RequestParameters decode(final Request request)
@@ -112,7 +112,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * Encode the querystring of the URL
-	 *
+	 * 
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.IRequestTarget)
 	 */
@@ -125,7 +125,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * @see org.apache.wicket.request.IRequestTargetMounter#mount(
-			org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 *      org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public void mount(IRequestTargetUrlCodingStrategy urlCodingStrategy)
 	{
@@ -166,7 +166,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * Returns the given url encoded.
-	 *
+	 * 
 	 * @param url
 	 *            The URL to encode
 	 * @return The encoded url
@@ -225,7 +225,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * Decode the "x" parameter of the querystring
-	 *
+	 * 
 	 * @param url
 	 *            The encoded URL
 	 * @return The decoded 'x' parameter of the querystring
@@ -274,7 +274,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * @param ex
-	 *
+	 * 
 	 * @return decoded URL
 	 */
 	protected String onError(final Exception ex)
@@ -285,9 +285,9 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	}
 
 	/**
-	 * Try to shorten the querystring without loosing information. Note:
-	 * WebRequestWithCryptedUrl must implement exactly the opposite logic.
-	 *
+	 * Try to shorten the querystring without loosing information. Note: WebRequestWithCryptedUrl
+	 * must implement exactly the opposite logic.
+	 * 
 	 * @param queryString
 	 *            The original query string
 	 * @return The shortened querystring
@@ -327,10 +327,10 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	}
 
 	/**
-	 * In case the query string has been shortened prior to encryption, than
-	 * rebuild (lengthen) the query string now. Note: This implementation must
-	 * exactly match the reverse one implemented in WebResponseWithCryptedUrl.
-	 *
+	 * In case the query string has been shortened prior to encryption, than rebuild (lengthen) the
+	 * query string now. Note: This implementation must exactly match the reverse one implemented in
+	 * WebResponseWithCryptedUrl.
+	 * 
 	 * @param queryString
 	 *            The URL's query string
 	 * @return The lengthened query string
@@ -356,10 +356,9 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	}
 
 	/**
-	 * IRequestCodingStrategy.decode(Request) requires a Request parameter and
-	 * not a URL. Hence, based on the original URL and the decoded 'x' parameter
-	 * a new Request object must be created to serve the default coding strategy
-	 * as input for analyzing the URL.
+	 * IRequestCodingStrategy.decode(Request) requires a Request parameter and not a URL. Hence,
+	 * based on the original URL and the decoded 'x' parameter a new Request object must be created
+	 * to serve the default coding strategy as input for analyzing the URL.
 	 */
 	private static class DecodedUrlRequest extends Request
 	{
@@ -370,14 +369,13 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		private final String url;
 
 		/**
-		 * The new parameter map with the 'x' param removed and the 'new' one
-		 * included
+		 * The new parameter map with the 'x' param removed and the 'new' one included
 		 */
 		private final Map parameterMap;
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param request
 		 * @param url
 		 * @param encodedParamReplacement
@@ -416,8 +414,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			}
 			int pos2 = url.indexOf("&");
 
-			AppendingStringBuffer urlBuf = new AppendingStringBuffer(url.length()
-					+ encodedParamReplacement.length());
+			AppendingStringBuffer urlBuf = new AppendingStringBuffer(url.length() +
+					encodedParamReplacement.length());
 			urlBuf.append(url.subSequence(0, pos1 + 1));
 			urlBuf.append(encodedParamReplacement);
 			if (pos2 != -1)
@@ -429,7 +427,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 		/**
 		 * Delegate to the original request
-		 *
+		 * 
 		 * @see org.apache.wicket.Request#getLocale()
 		 */
 		public Locale getLocale()
@@ -535,7 +533,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public class HackAttackException extends WicketRuntimeException
 	{
@@ -543,7 +541,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param msg
 		 */
 		public HackAttackException(final String msg)
@@ -552,9 +550,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		}
 
 		/**
-		 * No stack trace. We won't tell the hackers about the internals of
-		 * wicket
-		 *
+		 * No stack trace. We won't tell the hackers about the internals of wicket
+		 * 
 		 * @see java.lang.Throwable#getStackTrace()
 		 */
 		public StackTraceElement[] getStackTrace()
@@ -563,9 +560,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		}
 
 		/**
-		 * No additional information. We won't tell the hackers about the
-		 * internals of wicket
-		 *
+		 * No additional information. We won't tell the hackers about the internals of wicket
+		 * 
 		 * @see java.lang.Throwable#toString()
 		 */
 		public String toString()

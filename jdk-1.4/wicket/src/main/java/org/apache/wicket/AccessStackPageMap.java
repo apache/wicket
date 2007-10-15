@@ -25,13 +25,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A container for pages held in the session. IPageMap is a parameter to several
- * methods in the Wicket API. You can get a IPageMap by name from a Session with
- * Session.getPageMap(String pageMapName) or more conveniently with
- * PageMap.forName(String pageMapName). But you should not hold onto a reference
- * to the pagemap (just as you should not hold onto a reference to your Session
- * but should get it each time you need it instead). Instead, create a strongly
- * typed accessor method like this:
+ * A container for pages held in the session. IPageMap is a parameter to several methods in the
+ * Wicket API. You can get a IPageMap by name from a Session with Session.getPageMap(String
+ * pageMapName) or more conveniently with PageMap.forName(String pageMapName). But you should not
+ * hold onto a reference to the pagemap (just as you should not hold onto a reference to your
+ * Session but should get it each time you need it instead). Instead, create a strongly typed
+ * accessor method like this:
  * 
  * <pre>
  * public IPageMap getMyPageMap()
@@ -40,8 +39,7 @@ import org.slf4j.LoggerFactory;
  * }
  * </pre>
  * 
- * If the page map with the given name is not found, one will be automatically
- * created.
+ * If the page map with the given name is not found, one will be automatically created.
  * 
  * @author Jonathan Locke
  */
@@ -142,8 +140,8 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	}
 
 	/**
-	 * Returns a stack of PageMap.Access entries pushed in the order that the
-	 * pages and versions were accessed.
+	 * Returns a stack of PageMap.Access entries pushed in the order that the pages and versions
+	 * were accessed.
 	 * 
 	 * @return Stack containing ids of entries in access order.
 	 */
@@ -161,11 +159,10 @@ public class AccessStackPageMap extends PageMap implements IClusterable
 	}
 
 	/**
-	 * Gets the most recently accessed page map entry off the top of the entry
-	 * access stack. This is guaranteed to be the most recently accessed entry
-	 * IF AND ONLY IF the user just came from a stateful page. If the user could
-	 * get to the current page from a stateless page, this method may not work
-	 * if the user uses the back button.
+	 * Gets the most recently accessed page map entry off the top of the entry access stack. This is
+	 * guaranteed to be the most recently accessed entry IF AND ONLY IF the user just came from a
+	 * stateful page. If the user could get to the current page from a stateless page, this method
+	 * may not work if the user uses the back button.
 	 * 
 	 * @return Previous pagemap entry in terms of access
 	 */

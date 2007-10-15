@@ -34,12 +34,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Very simple page store that uses separate file for each serialized page
- * instance. Also this store doesn't use any worker threads.
+ * Very simple page store that uses separate file for each serialized page instance. Also this store
+ * doesn't use any worker threads.
  * <p>
- * This store is for demonstration purposes only and will perform badly in
- * production.
- *
+ * This store is for demonstration purposes only and will perform badly in production.
+ * 
  * @author Matej Knopp
  */
 public class SimpleSynchronousFilePageStore extends AbstractPageStore
@@ -49,7 +48,7 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param workDir
 	 */
 	public SimpleSynchronousFilePageStore(File workDir)
@@ -91,12 +90,11 @@ public class SimpleSynchronousFilePageStore extends AbstractPageStore
 	}
 
 	/**
-	 * Returns the file for specified page. The specification might be
-	 * incomplete (-1 set as versionNumber or ajaxVersionNumber). In that case,
-	 * it search for the correct file. The search traverses the session folder
-	 * which is inefficient and should not be used in production. It's good to
-	 * manage/cache this information in page store implementations.
-	 *
+	 * Returns the file for specified page. The specification might be incomplete (-1 set as
+	 * versionNumber or ajaxVersionNumber). In that case, it search for the correct file. The search
+	 * traverses the session folder which is inefficient and should not be used in production. It's
+	 * good to manage/cache this information in page store implementations.
+	 * 
 	 * @param sessionDir
 	 * @param pageMapName
 	 * @param pageId

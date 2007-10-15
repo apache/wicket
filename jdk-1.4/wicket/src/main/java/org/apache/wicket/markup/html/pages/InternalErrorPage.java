@@ -44,8 +44,10 @@ public class InternalErrorPage extends WebPage
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
+
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */

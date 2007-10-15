@@ -26,16 +26,14 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Implementation of an <a
- * href="http://www.w3.org/TR/REC-html40/present/frames.html#h-16.5">inline
- * frame</a> component. Must be used with an iframe (&lt;iframe src...)
- * element. The src attribute will be generated.
+ * Implementation of an <a href="http://www.w3.org/TR/REC-html40/present/frames.html#h-16.5">inline
+ * frame</a> component. Must be used with an iframe (&lt;iframe src...) element. The src attribute
+ * will be generated.
  * 
  * @author Sven Meier
  * @author Ralf Ebert
  * 
- * @deprecated will be replaced by {@link InlineFrame} in Wicket 2.0 as that's a
- *             better name for it.
+ * @deprecated will be replaced by {@link InlineFrame} in Wicket 2.0 as that's a better name for it.
  */
 public class InternalFrame extends WebMarkupContainer implements ILinkListener
 {
@@ -45,15 +43,13 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	private final IPageLink pageLink;
 
 	/**
-	 * The pagemap name where the page that will be created by this inline frame
-	 * will be created in.
+	 * The pagemap name where the page that will be created by this inline frame will be created in.
 	 */
 	private final String pageMapName;
 
 	/**
-	 * Constructs an inline frame that instantiates the given Page class when
-	 * the content of the inline frame is requested. The instantiated Page is
-	 * used to render a response to the user.
+	 * Constructs an inline frame that instantiates the given Page class when the content of the
+	 * inline frame is requested. The instantiated Page is used to render a response to the user.
 	 * 
 	 * @param id
 	 *            See Component
@@ -88,8 +84,8 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * This constructor is ideal if a Page object was passed in from a previous
-	 * Page. Construct an inline frame containing the given Page.
+	 * This constructor is ideal if a Page object was passed in from a previous Page. Construct an
+	 * inline frame containing the given Page.
 	 * 
 	 * @param id
 	 *            See component
@@ -120,19 +116,17 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	/**
 	 * This constructor is ideal for constructing pages lazily.
 	 * 
-	 * Constructs an inline frame which invokes the getPage() method of the
-	 * IPageLink interface when the content of the inline frame is requested.
-	 * Whatever Page objects is returned by this method will be rendered back to
-	 * the user.
+	 * Constructs an inline frame which invokes the getPage() method of the IPageLink interface when
+	 * the content of the inline frame is requested. Whatever Page objects is returned by this
+	 * method will be rendered back to the user.
 	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageMap
 	 *            the pagemap where the page of the inline frame must be in
 	 * @param pageLink
-	 *            An implementation of IPageLink which will create the page to
-	 *            be contained in the inline frame if and when the content is
-	 *            requested
+	 *            An implementation of IPageLink which will create the page to be contained in the
+	 *            inline frame if and when the content is requested
 	 */
 	public InternalFrame(final String id, final IPageMap pageMap, IPageLink pageLink)
 	{

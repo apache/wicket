@@ -281,8 +281,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * Test that the clickLink works when submitting a form with a checkgroup
-	 * inside.
+	 * Test that the clickLink works when submitting a form with a checkgroup inside.
 	 */
 	public void testClickLink_ajaxSubmitLink_checkGroup()
 	{
@@ -293,8 +292,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * Test that the executeAjaxEvent "submits" the form if the event is a
-	 * AjaxFormSubmitBehavior.
+	 * Test that the executeAjaxEvent "submits" the form if the event is a AjaxFormSubmitBehavior.
 	 */
 	public void testExecuteAjaxEvent_ajaxFormSubmitLink()
 	{
@@ -349,8 +347,7 @@ public class WicketTesterTest extends TestCase
 	}
 
 	/**
-	 * Test that clickLink on a ResourceLink with a ResourceReference on it
-	 * works.
+	 * Test that clickLink on a ResourceLink with a ResourceReference on it works.
 	 * 
 	 * <p>
 	 * See also WICKET-280 Allow to access html resources

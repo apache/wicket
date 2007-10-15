@@ -20,9 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 
 /**
- * A lightweight version of the attribute modifier. This is convenient for
- * simpler situations where you know the value upfront and you do not need a
- * pull-based model.
+ * A lightweight version of the attribute modifier. This is convenient for simpler situations where
+ * you know the value upfront and you do not need a pull-based model.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */

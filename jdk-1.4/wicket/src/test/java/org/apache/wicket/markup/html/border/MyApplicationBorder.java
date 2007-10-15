@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.border;
 
 
-
 /**
  * Test the component: PageView
  * 
@@ -33,7 +32,7 @@ public class MyApplicationBorder extends Border
 	public MyApplicationBorder(final String id)
 	{
 		super(id);
-		
+
 		Border border = new BoxBorder("boxBorder");
 		add(border);
 	}

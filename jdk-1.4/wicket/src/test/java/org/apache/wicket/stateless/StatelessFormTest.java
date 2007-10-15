@@ -57,13 +57,13 @@ public class StatelessFormTest extends TestCase
 			{
 				// Do nothing.
 			}
-			
+
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
 				return new HttpSessionStore(this);
 			}
-			
+
 		}, "src/test/java/" + getClass().getPackage().getName().replace('.', '/'));
 	}
 
@@ -88,7 +88,8 @@ public class StatelessFormTest extends TestCase
 	}
 
 	/**
-	 * @param homePage The homePage to set.
+	 * @param homePage
+	 *            The homePage to set.
 	 */
 	public void setHomePage(Class homePage)
 	{
@@ -104,7 +105,8 @@ public class StatelessFormTest extends TestCase
 	}
 
 	/**
-	 * @param loginPage The loginPage to set.
+	 * @param loginPage
+	 *            The loginPage to set.
 	 */
 	public void setLoginPage(Class loginPage)
 	{

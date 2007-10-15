@@ -20,17 +20,15 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 
 /**
- * A model that represents a localized resource string. This is a lightweight
- * version of the {@link StringResourceModel}. It lacks parameter
- * substitutions, but is generally easier to use.
+ * A model that represents a localized resource string. This is a lightweight version of the
+ * {@link StringResourceModel}. It lacks parameter substitutions, but is generally easier to use.
  * <p>
- * If you don't use this model as primary component model (you don't specify it
- * in component constructor and don't assign it to component using
- * {@link Component#setModel(IModel)}), you will need to connect the model
- * with a component using {@link #wrapOnAssignment(Component)}.
- *
+ * If you don't use this model as primary component model (you don't specify it in component
+ * constructor and don't assign it to component using {@link Component#setModel(IModel)}), you will
+ * need to connect the model with a component using {@link #wrapOnAssignment(Component)}.
+ * 
  * @author Igor Vaynberg (ivaynberg)
- *
+ * 
  */
 public class ResourceModel extends AbstractReadOnlyModel implements IComponentAssignedModel
 {
@@ -42,7 +40,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param resourceKey
 	 *            key of the resource this model represents
 	 */
@@ -53,12 +51,12 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param resourceKey
 	 *            key of the resource this model represents
 	 * @param defaultValue
 	 *            value that will be returned if resource does not exist
-	 *
+	 * 
 	 */
 	public ResourceModel(String resourceKey, String defaultValue)
 	{
@@ -86,7 +84,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	private class AssignmentWrapper extends ResourceModel implements IWrapModel
 	{
@@ -96,7 +94,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param resourceKey
 		 * @param defaultValue
 		 * @param component

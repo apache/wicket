@@ -31,16 +31,14 @@ import org.apache.wicket.util.value.ValueMap;
 
 /**
  * 
- * Url coding strategy for bookmarkable pages that encodes a set of given
- * parameters
+ * Url coding strategy for bookmarkable pages that encodes a set of given parameters
  * 
  * in the url's path path and the rest in the querystring.
  * 
  * <p>
  * Strategy looks for path-parameters whose name is read from an array of
  * 
- * names e.g. ["param0", "param1"]. Found parameters will be appended to the url
- * in
+ * names e.g. ["param0", "param1"]. Found parameters will be appended to the url in
  * 
  * the form <code>/mount-path/paramvalue0/paramvalue1</code>.
  * </p>
@@ -52,17 +50,14 @@ import org.apache.wicket.util.value.ValueMap;
  * </p>
  * 
  * <p>
- * Decode is symmetric except for when a path parameter that is not at the end
- * has no value during encode.
+ * Decode is symmetric except for when a path parameter that is not at the end has no value during
+ * encode.
  * 
- * For example, the names for the path parameters are: "a", "b" and "c". When
- * "b" is
+ * For example, the names for the path parameters are: "a", "b" and "c". When "b" is
  * 
- * not specified upon encoding, but "c" is, upon a decode "b" will get the empty
- * string
+ * not specified upon encoding, but "c" is, upon a decode "b" will get the empty string
  * 
- * as value. When both "b" and "c" are missing on encode, the will not get a
- * value during decode.
+ * as value. When both "b" and "c" are missing on encode, the will not get a value during decode.
  * </p>
  * 
  * @author erik.van.oosten

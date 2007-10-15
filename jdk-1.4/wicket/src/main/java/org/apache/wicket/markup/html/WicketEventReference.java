@@ -20,8 +20,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 
 /**
- * Resource reference to wicket-event.js which is used to allow events via
- * javascript
+ * Resource reference to wicket-event.js which is used to allow events via javascript
  * 
  * @author ivaynberg
  */

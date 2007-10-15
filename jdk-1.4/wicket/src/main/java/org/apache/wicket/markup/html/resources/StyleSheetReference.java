@@ -23,7 +23,7 @@ import org.apache.wicket.util.value.IValueMap;
 
 /**
  * Link to a packaged style sheet.
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class StyleSheetReference extends PackagedResourceReference
@@ -32,10 +32,13 @@ public final class StyleSheetReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param referer the class that is referring; is used as the relative
-	 * root for getting the resource
-	 * @param file reference as a string
+	 * 
+	 * @param id
+	 *            component id
+	 * @param referer
+	 *            the class that is referring; is used as the relative root for getting the resource
+	 * @param file
+	 *            reference as a string
 	 */
 	public StyleSheetReference(String id, Class referer, String file)
 	{
@@ -44,11 +47,13 @@ public final class StyleSheetReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param referer the class that is referring; is used as the relative
-	 * root for getting the resource
-	 * @param file reference. The model must provide an instance
-	 * 		of {@link String}
+	 * 
+	 * @param id
+	 *            component id
+	 * @param referer
+	 *            the class that is referring; is used as the relative root for getting the resource
+	 * @param file
+	 *            reference. The model must provide an instance of {@link String}
 	 */
 	public StyleSheetReference(String id, Class referer, IModel file)
 	{
@@ -57,8 +62,11 @@ public final class StyleSheetReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param resourceReference resource reference
+	 * 
+	 * @param id
+	 *            component id
+	 * @param resourceReference
+	 *            resource reference
 	 */
 	public StyleSheetReference(String id, ResourceReference resourceReference)
 	{
@@ -67,9 +75,12 @@ public final class StyleSheetReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param resourceReference resource reference.  The model must provide an instance
-	 * 		of {@link ResourceReference}
+	 * 
+	 * @param id
+	 *            component id
+	 * @param resourceReference
+	 *            resource reference. The model must provide an instance of
+	 *            {@link ResourceReference}
 	 */
 	public StyleSheetReference(String id, IModel resourceReference)
 	{

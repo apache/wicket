@@ -21,8 +21,8 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.request.target.IEventProcessor;
 
 /**
- * Target that denotes a page that is to be created from the provided page
- * class. This is typically used for redirects to bookmarkable pages.
+ * Target that denotes a page that is to be created from the provided page class. This is typically
+ * used for redirects to bookmarkable pages.
  * 
  * @author Eelco Hillenius
  */

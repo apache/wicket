@@ -17,8 +17,8 @@
 package org.apache.wicket.resource;
 
 /**
- * To be implemented by listeners interested in PropertiesFactory events fired
- * after a change to the properties has been detected
+ * To be implemented by listeners interested in PropertiesFactory events fired after a change to the
+ * properties has been detected
  * 
  * @author Juergen Donnerstag
  */

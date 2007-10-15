@@ -35,17 +35,16 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Package resource for javascript files. It strips comments and whitespace
- * from javascript and gzips the content. The stripped and gzipped version is
- * cached.
- *
+ * Package resource for javascript files. It strips comments and whitespace from javascript and
+ * gzips the content. The stripped and gzipped version is cached.
+ * 
  * @author Matej Knopp
  */
 public class JavascriptPackageResource extends CompressedPackageResource
 {
 	/**
 	 * Resource Stream that caches the stripped content.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	protected abstract class FilteringResourceStream implements IResourceStream
@@ -159,13 +158,13 @@ public class JavascriptPackageResource extends CompressedPackageResource
 	private static final Logger log = LoggerFactory.getLogger(JavascriptPackageResource.class);
 
 	/**
-	 * Gets the resource for a given set of criteria. Only one resource will be
-	 * loaded for the same criteria.
-	 *
+	 * Gets the resource for a given set of criteria. Only one resource will be loaded for the same
+	 * criteria.
+	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the class in which you call this method
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the class in
+	 *            which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -195,7 +194,7 @@ public class JavascriptPackageResource extends CompressedPackageResource
 
 	/**
 	 * Creates a new javascript package resource.
-	 *
+	 * 
 	 * @param scope
 	 * @param path
 	 * @param locale

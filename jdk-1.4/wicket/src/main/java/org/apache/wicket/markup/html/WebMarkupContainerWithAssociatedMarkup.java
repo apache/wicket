@@ -51,12 +51,11 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	}
 
 	/**
-	 * Called by components like Panel and Border which have associated Markup
-	 * and which may have a &lt;wicket:head&gt; tag.
+	 * Called by components like Panel and Border which have associated Markup and which may have a
+	 * &lt;wicket:head&gt; tag.
 	 * <p>
-	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer
-	 * parameter has been added to the Page as a container for all headers any
-	 * of its components might wish to contribute.
+	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer parameter has been added
+	 * to the Page as a container for all headers any of its components might wish to contribute.
 	 * <p>
 	 * The headers contributed are rendered in the standard way.
 	 * 

@@ -17,9 +17,8 @@
 package org.apache.wicket.util.time;
 
 /**
- * An <code>ITimeFrameSource</code> produces <code>TimeFrame</code> values.
- * The value returned by an <code>ITimeFrameSource</code> source may vary over
- * time.
+ * An <code>ITimeFrameSource</code> produces <code>TimeFrame</code> values. The value returned
+ * by an <code>ITimeFrameSource</code> source may vary over time.
  * 
  * @see TimeFrame
  * 

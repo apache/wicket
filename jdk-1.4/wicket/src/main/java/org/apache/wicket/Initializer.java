@@ -43,7 +43,7 @@ public class Initializer implements IInitializer
 		IRedirectListener.INTERFACE.register();
 		IResourceListener.INTERFACE.register();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */

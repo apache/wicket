@@ -17,15 +17,16 @@
 package org.apache.wicket.model;
 
 /**
- * Models that implement this interface will support chaining of IModels.
- *	getObject() of a IChainingModel should do something like:
+ * Models that implement this interface will support chaining of IModels. getObject() of a
+ * IChainingModel should do something like:
+ * 
  * <pre>
  * if ( object instanceof IModel) { return ((IModel)object).getObject()}
  * else return object;
  * </pre>
  * 
- * ChainingModels should also take care that the internal model detach is called
- * when detach is called on them.
+ * ChainingModels should also take care that the internal model detach is called when detach is
+ * called on them.
  * 
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
@@ -41,12 +42,12 @@ public interface IChainingModel extends IModel
 	 * @param model
 	 */
 	public void setChainedModel(IModel model);
-	
+
 	/**
 	 * Returns the chained model if there is a chained model.
 	 * 
 	 * @return The chained model
 	 */
 	public IModel getChainedModel();
-	
+
 }

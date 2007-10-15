@@ -19,7 +19,7 @@ package org.apache.wicket.util.crypt;
 import java.security.GeneralSecurityException;
 
 /**
- * THIS CLASS IS FOR TESTING PURPOSES ONLY.  DO NOT USE IT IN PRODUCTION CODE!
+ * THIS CLASS IS FOR TESTING PURPOSES ONLY. DO NOT USE IT IN PRODUCTION CODE!
  * 
  * @author Jonathan Locke
  */
@@ -46,4 +46,3 @@ public class TrivialCrypt extends AbstractCrypt
 		return result;
 	}
 }
-

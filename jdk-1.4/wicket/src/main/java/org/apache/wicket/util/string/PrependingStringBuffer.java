@@ -17,9 +17,9 @@
 package org.apache.wicket.util.string;
 
 /**
- * This is a prepending stringbuffer optimized for constantly prepending strings
- * to the front of the buffer.
- *
+ * This is a prepending stringbuffer optimized for constantly prepending strings to the front of the
+ * buffer.
+ * 
  * @author jcompagner
  */
 public class PrependingStringBuffer
@@ -39,7 +39,7 @@ public class PrependingStringBuffer
 
 	/**
 	 * Constructs this PrependingStringBuffer with the given buffer size.
-	 *
+	 * 
 	 * @param size
 	 *            The initial size of the buffer.
 	 */
@@ -51,9 +51,8 @@ public class PrependingStringBuffer
 	}
 
 	/**
-	 * Constructs and direct inserts the given string. The buffer size will be
-	 * string.length+16
-	 *
+	 * Constructs and direct inserts the given string. The buffer size will be string.length+16
+	 * 
 	 * @param start
 	 *            The string that is directly inserted.
 	 */
@@ -65,7 +64,7 @@ public class PrependingStringBuffer
 
 	/**
 	 * Prepends one char to this PrependingStringBuffer
-	 *
+	 * 
 	 * @param ch
 	 *            The char that will be prepended
 	 * @return this
@@ -85,7 +84,7 @@ public class PrependingStringBuffer
 
 	/**
 	 * Prepends the string to this PrependingStringBuffer
-	 *
+	 * 
 	 * @param str
 	 *            The string that will be prepended
 	 * @return this
@@ -123,7 +122,7 @@ public class PrependingStringBuffer
 
 	/**
 	 * Returns the size of this PrependingStringBuffer
-	 *
+	 * 
 	 * @return The size
 	 */
 	public int length()

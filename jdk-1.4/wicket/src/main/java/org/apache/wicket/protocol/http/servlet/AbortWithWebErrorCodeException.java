@@ -24,8 +24,8 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.protocol.http.request.WebErrorCodeResponseTarget;
 
 /**
- * Causes Wicket to abort processing and set the specified HTTP error code, with
- * the provided message if provided.
+ * Causes Wicket to abort processing and set the specified HTTP error code, with the provided
+ * message if provided.
  * 
  * @author Eelco Hillenius
  * 

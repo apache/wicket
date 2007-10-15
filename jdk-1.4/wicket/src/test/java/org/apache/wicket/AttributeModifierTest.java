@@ -36,7 +36,9 @@ public class AttributeModifierTest extends TestCase
 
 	/**
 	 * Create a test case instance.
-	 * @param name The test name
+	 * 
+	 * @param name
+	 *            The test name
 	 */
 	public AttributeModifierTest(final String name)
 	{
@@ -129,8 +131,7 @@ public class AttributeModifierTest extends TestCase
 	}
 
 	/**
-	 * Test that an attribute is not added if we didn't want that
-	 * (addAttributeIfNotPresent).
+	 * Test that an attribute is not added if we didn't want that (addAttributeIfNotPresent).
 	 */
 	public void testNoModelReplacementForNonExistingAttributeValue()
 	{
@@ -146,8 +147,7 @@ public class AttributeModifierTest extends TestCase
 	}
 
 	/**
-	 * Test that the current attribute is overwritten by the one that the model
-	 * provides.
+	 * Test that the current attribute is overwritten by the one that the model provides.
 	 */
 	public void testModelReplacementOverwritingExistingAttributeValue()
 	{

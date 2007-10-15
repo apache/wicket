@@ -24,13 +24,13 @@ import org.apache.wicket.util.convert.ConversionException;
 
 /**
  * Base class for all number converters.
- *
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractNumberConverter extends AbstractConverter
 {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 
 	/**
 	 * Parses a value as a String and returns a Number.
-	 *
+	 * 
 	 * @param value
 	 *            The object to parse (after converting with toString())
 	 * @param min
@@ -96,8 +96,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	}
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
-	 *      Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
 	public String convertToString(final Object value, Locale locale)
 	{

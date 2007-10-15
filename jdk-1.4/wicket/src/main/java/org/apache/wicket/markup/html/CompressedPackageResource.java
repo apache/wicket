@@ -46,8 +46,8 @@ import org.apache.wicket.util.time.Time;
 public class CompressedPackageResource extends PackageResource
 {
 	/**
-	 * IResourceStream implementation which compresses the data with gzip if the
-	 * requests header Accept-Encoding contains string gzip
+	 * IResourceStream implementation which compresses the data with gzip if the requests header
+	 * Accept-Encoding contains string gzip
 	 */
 	protected abstract class CompressingResourceStream implements IResourceStream
 	{
@@ -164,20 +164,20 @@ public class CompressedPackageResource extends PackageResource
 				throw new RuntimeException(e);
 			}
 		}
-		
+
 		protected abstract IResourceStream getOriginalResourceStream();
 	}
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Gets the resource for a given set of criteria. Only one resource will be
-	 * loaded for the same criteria.
+	 * Gets the resource for a given set of criteria. Only one resource will be loaded for the same
+	 * criteria.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the class in which you call this method
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the class in
+	 *            which you call this method
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -210,8 +210,8 @@ public class CompressedPackageResource extends PackageResource
 	 * Hidden constructor.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in
 	 * @param path
 	 *            The path to the resource
 	 * @param locale
@@ -222,15 +222,18 @@ public class CompressedPackageResource extends PackageResource
 	protected CompressedPackageResource(Class scope, String path, Locale locale, String style)
 	{
 		super(scope, path, locale, style);
-		resourceStream = newResourceStream();	
+		resourceStream = newResourceStream();
 	}
-	
+
 	/**
 	 * Factory method for creating resource stream instance
-	 * @return new stream instance 
+	 * 
+	 * @return new stream instance
 	 */
-	protected IResourceStream newResourceStream() {
-		return new CompressingResourceStream() {
+	protected IResourceStream newResourceStream()
+	{
+		return new CompressingResourceStream()
+		{
 			private static final long serialVersionUID = 1L;
 
 			protected IResourceStream getOriginalResourceStream()
@@ -239,18 +242,20 @@ public class CompressedPackageResource extends PackageResource
 			}
 		};
 	}
-	
+
 	/**
-	 * Returns the resource stream of package resource 
+	 * Returns the resource stream of package resource
+	 * 
 	 * @return resource stream
 	 */
-	protected IResourceStream getPackageResourceStream() {
+	protected IResourceStream getPackageResourceStream()
+	{
 		return CompressedPackageResource.super.getResourceStream();
 	}
 
 	/**
-	 * IResourceStream implementation which compresses the data with gzip if the
-	 * requests header Accept-Encoding contains string gzip
+	 * IResourceStream implementation which compresses the data with gzip if the requests header
+	 * Accept-Encoding contains string gzip
 	 * 
 	 * @see org.apache.wicket.markup.html.PackageResource#getResourceStream()
 	 */

@@ -35,15 +35,14 @@ import org.apache.wicket.util.io.DeferredFileOutputStream;
 
 /**
  * <p>
- * The default implementation of the
- * {@link org.apache.wicket.util.upload.FileItem FileItem} interface.
+ * The default implementation of the {@link org.apache.wicket.util.upload.FileItem FileItem}
+ * interface.
  * 
  * <p>
- * After retrieving an instance of this class, you may either request all
- * contents of file at once using {@link #get()} or request an
- * {@link java.io.InputStream InputStream} with {@link #getInputStream()} and
- * process the file without attempting to load it into memory, which may come
- * handy with large files.
+ * After retrieving an instance of this class, you may either request all contents of file at once
+ * using {@link #get()} or request an {@link java.io.InputStream InputStream} with
+ * {@link #getInputStream()} and process the file without attempting to load it into memory, which
+ * may come handy with large files.
  * 
  * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
  * @author <a href="mailto:sean@informage.net">Sean Legassick</a>
@@ -61,9 +60,9 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Default content charset to be used when no explicit charset parameter is
-	 * provided by the sender. Media subtypes of the "text" type are defined to
-	 * have a default charset value of "ISO-8859-1" when received via HTTP.
+	 * Default content charset to be used when no explicit charset parameter is provided by the
+	 * sender. Media subtypes of the "text" type are defined to have a default charset value of
+	 * "ISO-8859-1" when received via HTTP.
 	 */
 	public static final String DEFAULT_CHARSET = "ISO-8859-1";
 
@@ -90,8 +89,7 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * The content type passed by the browser, or <code>null</code> if not
-	 * defined.
+	 * The content type passed by the browser, or <code>null</code> if not defined.
 	 */
 	private final String contentType;
 
@@ -141,20 +139,18 @@ public class DiskFileItem implements FileItem
 	 * @param fieldName
 	 *            The name of the form field.
 	 * @param contentType
-	 *            The content type passed by the browser or <code>null</code>
-	 *            if not specified.
+	 *            The content type passed by the browser or <code>null</code> if not specified.
 	 * @param isFormField
-	 *            Whether or not this item is a plain form field, as opposed to
-	 *            a file upload.
+	 *            Whether or not this item is a plain form field, as opposed to a file upload.
 	 * @param fileName
-	 *            The original filename in the user's filesystem, or
-	 *            <code>null</code> if not specified.
+	 *            The original filename in the user's filesystem, or <code>null</code> if not
+	 *            specified.
 	 * @param sizeThreshold
-	 *            The threshold, in bytes, below which items will be retained in
-	 *            memory and above which they will be stored as a file.
+	 *            The threshold, in bytes, below which items will be retained in memory and above
+	 *            which they will be stored as a file.
 	 * @param repository
-	 *            The data repository, which is the directory in which files
-	 *            will be created, should the item size exceed the threshold.
+	 *            The data repository, which is the directory in which files will be created, should
+	 *            the item size exceed the threshold.
 	 */
 	public DiskFileItem(String fieldName, String contentType, boolean isFormField, String fileName,
 			int sizeThreshold, File repository)
@@ -172,11 +168,11 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns an {@link java.io.InputStream InputStream} that can be used to
-	 * retrieve the contents of the file.
+	 * Returns an {@link java.io.InputStream InputStream} that can be used to retrieve the contents
+	 * of the file.
 	 * 
-	 * @return An {@link java.io.InputStream InputStream} that can be used to
-	 *         retrieve the contents of the file.
+	 * @return An {@link java.io.InputStream InputStream} that can be used to retrieve the contents
+	 *         of the file.
 	 * 
 	 * @exception IOException
 	 *                if an error occurs.
@@ -197,11 +193,9 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns the content type passed by the agent or <code>null</code> if
-	 * not defined.
+	 * Returns the content type passed by the agent or <code>null</code> if not defined.
 	 * 
-	 * @return The content type passed by the agent or <code>null</code> if
-	 *         not defined.
+	 * @return The content type passed by the agent or <code>null</code> if not defined.
 	 */
 	public String getContentType()
 	{
@@ -210,11 +204,9 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns the content charset passed by the agent or <code>null</code> if
-	 * not defined.
+	 * Returns the content charset passed by the agent or <code>null</code> if not defined.
 	 * 
-	 * @return The content charset passed by the agent or <code>null</code> if
-	 *         not defined.
+	 * @return The content charset passed by the agent or <code>null</code> if not defined.
 	 */
 	public String getCharSet()
 	{
@@ -241,11 +233,10 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Provides a hint as to whether or not the file contents will be read from
-	 * memory.
+	 * Provides a hint as to whether or not the file contents will be read from memory.
 	 * 
-	 * @return <code>true</code> if the file contents will be read from
-	 *         memory; <code>false</code> otherwise.
+	 * @return <code>true</code> if the file contents will be read from memory; <code>false</code>
+	 *         otherwise.
 	 */
 	public boolean isInMemory()
 	{
@@ -276,9 +267,8 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns the contents of the file as an array of bytes. If the contents of
-	 * the file were not yet cached in memory, they will be loaded from the disk
-	 * storage and cached.
+	 * Returns the contents of the file as an array of bytes. If the contents of the file were not
+	 * yet cached in memory, they will be loaded from the disk storage and cached.
 	 * 
 	 * @return The contents of the file as an array of bytes.
 	 */
@@ -325,9 +315,8 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns the contents of the file as a String, using the specified
-	 * encoding. This method uses {@link #get()} to retrieve the contents of the
-	 * file.
+	 * Returns the contents of the file as a String, using the specified encoding. This method uses
+	 * {@link #get()} to retrieve the contents of the file.
 	 * 
 	 * @param charset
 	 *            The charset to use.
@@ -344,9 +333,8 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns the contents of the file as a String, using the default character
-	 * encoding. This method uses {@link #get()} to retrieve the contents of the
-	 * file.
+	 * Returns the contents of the file as a String, using the default character encoding. This
+	 * method uses {@link #get()} to retrieve the contents of the file.
 	 * 
 	 * @return The contents of the file, as a string.
 	 * 
@@ -372,23 +360,20 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * A convenience method to write an uploaded item to disk. The client code
-	 * is not concerned with whether or not the item is stored in memory, or on
-	 * disk in a temporary location. They just want to write the uploaded item
-	 * to a file.
+	 * A convenience method to write an uploaded item to disk. The client code is not concerned with
+	 * whether or not the item is stored in memory, or on disk in a temporary location. They just
+	 * want to write the uploaded item to a file.
 	 * <p>
-	 * This implementation first attempts to rename the uploaded item to the
-	 * specified destination file, if the item was originally written to disk.
-	 * Otherwise, the data will be copied to the specified file.
+	 * This implementation first attempts to rename the uploaded item to the specified destination
+	 * file, if the item was originally written to disk. Otherwise, the data will be copied to the
+	 * specified file.
 	 * <p>
-	 * This method is only guaranteed to work <em>once</em>, the first time
-	 * it is invoked for a particular item. This is because, in the event that
-	 * the method renames a temporary file, that file will no longer be
-	 * available to copy or rename again at a later time.
+	 * This method is only guaranteed to work <em>once</em>, the first time it is invoked for a
+	 * particular item. This is because, in the event that the method renames a temporary file, that
+	 * file will no longer be available to copy or rename again at a later time.
 	 * 
 	 * @param file
-	 *            The <code>File</code> into which the uploaded item should be
-	 *            stored.
+	 *            The <code>File</code> into which the uploaded item should be stored.
 	 * 
 	 * @exception Exception
 	 *                if an error occurs.
@@ -417,8 +402,8 @@ public class DiskFileItem implements FileItem
 			if (outputFile != null)
 			{
 				/*
-				 * The uploaded file is being stored on disk in a temporary
-				 * location so move it to the desired file.
+				 * The uploaded file is being stored on disk in a temporary location so move it to
+				 * the desired file.
 				 */
 				if (!outputFile.renameTo(file))
 				{
@@ -474,10 +459,9 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Deletes the underlying storage for a file item, including deleting any
-	 * associated temporary disk file. Although this storage will be deleted
-	 * automatically when the <code>FileItem</code> instance is garbage
-	 * collected, this method can be used to ensure that this is done at an
+	 * Deletes the underlying storage for a file item, including deleting any associated temporary
+	 * disk file. Although this storage will be deleted automatically when the <code>FileItem</code>
+	 * instance is garbage collected, this method can be used to ensure that this is done at an
 	 * earlier time, thus preserving system resources.
 	 */
 	public void delete()
@@ -492,8 +476,7 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns the name of the field in the multipart form corresponding to this
-	 * file item.
+	 * Returns the name of the field in the multipart form corresponding to this file item.
 	 * 
 	 * @return The name of the form field.
 	 * 
@@ -522,11 +505,10 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Determines whether or not a <code>FileItem</code> instance represents a
-	 * simple form field.
+	 * Determines whether or not a <code>FileItem</code> instance represents a simple form field.
 	 * 
-	 * @return <code>true</code> if the instance represents a simple form
-	 *         field; <code>false</code> if it represents an uploaded file.
+	 * @return <code>true</code> if the instance represents a simple form field;
+	 *         <code>false</code> if it represents an uploaded file.
 	 * 
 	 * @see #setFormField(boolean)
 	 * 
@@ -538,12 +520,11 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Specifies whether or not a <code>FileItem</code> instance represents a
-	 * simple form field.
+	 * Specifies whether or not a <code>FileItem</code> instance represents a simple form field.
 	 * 
 	 * @param state
-	 *            <code>true</code> if the instance represents a simple form
-	 *            field; <code>false</code> if it represents an uploaded file.
+	 *            <code>true</code> if the instance represents a simple form field;
+	 *            <code>false</code> if it represents an uploaded file.
 	 * 
 	 * @see #isFormField()
 	 * 
@@ -555,11 +536,11 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns an {@link java.io.OutputStream OutputStream} that can be used for
-	 * storing the contents of the file.
+	 * Returns an {@link java.io.OutputStream OutputStream} that can be used for storing the
+	 * contents of the file.
 	 * 
-	 * @return An {@link java.io.OutputStream OutputStream} that can be used for
-	 *         storing the contensts of the file.
+	 * @return An {@link java.io.OutputStream OutputStream} that can be used for storing the
+	 *         contensts of the file.
 	 * 
 	 * @exception IOException
 	 *                if an error occurs.
@@ -579,16 +560,13 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns the {@link java.io.File} object for the <code>FileItem</code>'s
-	 * data's temporary location on the disk. Note that for
-	 * <code>FileItem</code>s that have their data stored in memory, this
-	 * method will return <code>null</code>. When handling large files, you
-	 * can use {@link java.io.File#renameTo(java.io.File)} to move the file to
-	 * new location without copying the data, if the source and destination
-	 * locations reside within the same logical volume.
+	 * Returns the {@link java.io.File} object for the <code>FileItem</code>'s data's temporary
+	 * location on the disk. Note that for <code>FileItem</code>s that have their data stored in
+	 * memory, this method will return <code>null</code>. When handling large files, you can use
+	 * {@link java.io.File#renameTo(java.io.File)} to move the file to new location without copying
+	 * the data, if the source and destination locations reside within the same logical volume.
 	 * 
-	 * @return The data file, or <code>null</code> if the data is stored in
-	 *         memory.
+	 * @return The data file, or <code>null</code> if the data is stored in memory.
 	 */
 	public File getStoreLocation()
 	{
@@ -614,10 +592,10 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Creates and returns a {@link java.io.File File} representing a uniquely
-	 * named temporary file in the configured repository path. The lifetime of
-	 * the file is tied to the lifetime of the <code>FileItem</code> instance;
-	 * the file will be deleted when the instance is garbage collected.
+	 * Creates and returns a {@link java.io.File File} representing a uniquely named temporary file
+	 * in the configured repository path. The lifetime of the file is tied to the lifetime of the
+	 * <code>FileItem</code> instance; the file will be deleted when the instance is garbage
+	 * collected.
 	 * 
 	 * @return The {@link java.io.File File} to be used for temporary storage.
 	 */
@@ -653,8 +631,8 @@ public class DiskFileItem implements FileItem
 
 
 	/**
-	 * Returns an identifier that is unique within the class loader used to load
-	 * this class, but does not have random-like apearance.
+	 * Returns an identifier that is unique within the class loader used to load this class, but
+	 * does not have random-like apearance.
 	 * 
 	 * @return A String with the non-random looking instance identifier.
 	 */
@@ -681,8 +659,8 @@ public class DiskFileItem implements FileItem
 	 */
 	public String toString()
 	{
-		return "name=" + this.getName() + ", StoreLocation="
-				+ String.valueOf(this.getStoreLocation()) + ", size=" + this.getSize() + "bytes, "
-				+ "isFormField=" + isFormField() + ", FieldName=" + this.getFieldName();
+		return "name=" + this.getName() + ", StoreLocation=" +
+				String.valueOf(this.getStoreLocation()) + ", size=" + this.getSize() + "bytes, " +
+				"isFormField=" + isFormField() + ", FieldName=" + this.getFieldName();
 	}
 }

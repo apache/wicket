@@ -40,7 +40,7 @@ public class ScopedPage extends WebPage
 		add(new ScopedLabel("clicked", new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			public Object getObject()
 			{
 				return "Clicked: " + _clicked;

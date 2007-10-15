@@ -35,22 +35,19 @@ import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * How to test CookieValuePersister. Problem: CookieValuePersister relies on
- * RequestCycle.get().getApplication() to access application settings.
- * RequestCycle.get() however is valid only during the render process. It get's
- * automatically attached and detached. Thus RequestCycle.get() will be NULL
- * before and after render. Thus CookieValuePersister can not be tested outside
- * the render process. You may think you can subclass CookieValuePersister and
- * provide your own getSettings(). Unfortunately you can't as it is private. One
- * more note: Though CookieValuePersister could probably be re-arranged in a way
- * that RequestCycle.get() is no longer a problem, the next (testing-) problem
- * can not be solved. Cookies are added to the response and based on the servlet
- * api, the response has no means to validate (read) the already added cookies.
- * But the MockResponse does !?!?. The only solution I came up with so far is
- * indirect testing. Create a page with a form and a form component. Enable the
- * component to be persistent. The first run should give you a null value, as no
- * values are currently stored. Than set a new value and submit the form. The
- * component's values will (hopefully) be saved. Refresh the same page and voala
- * the saved values should be automatically loaded.
+ * RequestCycle.get().getApplication() to access application settings. RequestCycle.get() however is
+ * valid only during the render process. It get's automatically attached and detached. Thus
+ * RequestCycle.get() will be NULL before and after render. Thus CookieValuePersister can not be
+ * tested outside the render process. You may think you can subclass CookieValuePersister and
+ * provide your own getSettings(). Unfortunately you can't as it is private. One more note: Though
+ * CookieValuePersister could probably be re-arranged in a way that RequestCycle.get() is no longer
+ * a problem, the next (testing-) problem can not be solved. Cookies are added to the response and
+ * based on the servlet api, the response has no means to validate (read) the already added cookies.
+ * But the MockResponse does !?!?. The only solution I came up with so far is indirect testing.
+ * Create a page with a form and a form component. Enable the component to be persistent. The first
+ * run should give you a null value, as no values are currently stored. Than set a new value and
+ * submit the form. The component's values will (hopefully) be saved. Refresh the same page and
+ * voala the saved values should be automatically loaded.
  * 
  * @author Juergen Donnerstag
  */
@@ -63,10 +60,12 @@ public class CookieValuePersisterTest extends TestCase
 		application = new WicketTester();
 		application.startPage(CookieValuePersisterTestPage.class);
 	}
+
 	protected void tearDown() throws Exception
 	{
 		application.destroy();
 	}
+
 	/**
 	 * 
 	 * @throws Exception

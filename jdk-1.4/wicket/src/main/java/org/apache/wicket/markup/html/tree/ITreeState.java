@@ -21,18 +21,17 @@ import java.util.Collection;
 import javax.swing.tree.TreeNode;
 
 /**
- * Tree state holds information about a tree such as which nodes are expanded /
- * collapsed and which nodes are selected, It can also fire callbacks on
- * listener in case any of the information changed.
- *
+ * Tree state holds information about a tree such as which nodes are expanded / collapsed and which
+ * nodes are selected, It can also fire callbacks on listener in case any of the information
+ * changed.
+ * 
  * @author Matej Knopp
  */
 public interface ITreeState
 {
 	/**
-	 * Adds a tree state listener. On state change events on the listener are
-	 * fired.
-	 *
+	 * Adds a tree state listener. On state change events on the listener are fired.
+	 * 
 	 * @param l
 	 *            Listener to add
 	 */
@@ -45,7 +44,7 @@ public interface ITreeState
 
 	/**
 	 * Collapses the given node.
-	 *
+	 * 
 	 * @param node
 	 *            Node to collapse
 	 */
@@ -58,7 +57,7 @@ public interface ITreeState
 
 	/**
 	 * Expands the given node.
-	 *
+	 * 
 	 * @param node
 	 *            Node to expand
 	 */
@@ -66,21 +65,21 @@ public interface ITreeState
 
 	/**
 	 * Returns the collection of all selected nodes.
-	 *
+	 * 
 	 * @return The collection of selected nodes
 	 */
 	Collection getSelectedNodes();
 
 	/**
 	 * Returns whether multiple nodes can be selected.
-	 *
+	 * 
 	 * @return True if multiple nodes can be selected
 	 */
 	boolean isAllowSelectMultiple();
 
 	/**
 	 * Returns true if the given node is expanded.
-	 *
+	 * 
 	 * @param node
 	 *            The node to inspect
 	 * @return True if the node is expanded
@@ -89,7 +88,7 @@ public interface ITreeState
 
 	/**
 	 * Returns true if the given node is selected, false otherwise.
-	 *
+	 * 
 	 * @param node
 	 *            The node to inspect
 	 * @return True if the node is selected
@@ -98,7 +97,7 @@ public interface ITreeState
 
 	/**
 	 * Removes a tree state listener.
-	 *
+	 * 
 	 * @param l
 	 *            The listener to remove
 	 */
@@ -106,26 +105,24 @@ public interface ITreeState
 
 
 	/**
-	 * Marks given node as selected (or unselected) according to the selected
-	 * value.
+	 * Marks given node as selected (or unselected) according to the selected value.
 	 * <p>
-	 * If tree is in single selection mode and a new node is selected, old node
-	 * is automatically unselected (and the event is fired on listeners).
-	 *
+	 * If tree is in single selection mode and a new node is selected, old node is automatically
+	 * unselected (and the event is fired on listeners).
+	 * 
 	 * @param node
 	 *            The node to select or deselect
 	 * @param selected
-	 *            If true, the node will be selected, otherwise, the node will
-	 *            be unselected
+	 *            If true, the node will be selected, otherwise, the node will be unselected
 	 */
 	void selectNode(TreeNode node, boolean selected);
 
 	/**
 	 * Sets whether multiple nodes can be selected.
-	 *
+	 * 
 	 * @param value
-	 *            If true, multiple nodes can be selected. If false, only one
-	 *            node at a time can be selected
+	 *            If true, multiple nodes can be selected. If false, only one node at a time can be
+	 *            selected
 	 */
 	void setAllowSelectMultiple(boolean value);
 }

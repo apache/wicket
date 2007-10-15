@@ -24,9 +24,8 @@ import org.apache.wicket.model.IModel;
 /**
  * Provides a context-relative image.
  * <p>
- * Provide a String in this component's model which will be prefixed such that
- * the image is relative to the context root, no matter what URL the page the
- * ContextImage is on is rendered at.
+ * Provide a String in this component's model which will be prefixed such that the image is relative
+ * to the context root, no matter what URL the page the ContextImage is on is rendered at.
  * 
  * @author Alastair Maw
  */
@@ -57,6 +56,8 @@ public class ContextImage extends WebComponent
 	{
 		checkComponentTag(tag, "img");
 		super.onComponentTag(tag);
-		tag.put("src", getRequest().getRelativePathPrefixToContextRoot() + getModelObjectAsString());
+		tag
+				.put("src", getRequest().getRelativePathPrefixToContextRoot() +
+						getModelObjectAsString());
 	}
 }

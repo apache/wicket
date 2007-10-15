@@ -22,8 +22,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * This filter removes html page top level markup elements like <html>, <head> and <body>.
- * The filter is configured automatically by WicketFilter if it detects the application is (potentially) invoked as a Portlet.
+ * This filter removes html page top level markup elements like <html>, <head> and <body>. The
+ * filter is configured automatically by WicketFilter if it detects the application is (potentially)
+ * invoked as a Portlet.
  * 
  * @author Ate Douma
  */
@@ -43,36 +44,36 @@ public class PortletInvalidMarkupFilter implements IResponseFilter
 			deleteOpenTag(responseBuffer, "head");
 			deleteOpenTag(responseBuffer, "body");
 		}
-		
+
 		return responseBuffer;
 	}
-	
+
 	private void deleteFragment(AppendingStringBuffer responseBuffer, String prefix, String postfix)
 	{
 		int startIndex, endIndex;
-		if ((startIndex = responseBuffer.indexOf(prefix)) > -1) 
+		if ((startIndex = responseBuffer.indexOf(prefix)) > -1)
 		{
-			if ((endIndex = responseBuffer.indexOf(postfix, startIndex)) >-1)
+			if ((endIndex = responseBuffer.indexOf(postfix, startIndex)) > -1)
 			{
-				responseBuffer.delete(startIndex, endIndex+postfix.length());
-			}				
+				responseBuffer.delete(startIndex, endIndex + postfix.length());
+			}
 		}
 	}
-	
+
 	private void deleteOpenTag(AppendingStringBuffer responseBuffer, String tagName)
 	{
 		int startIndex, endIndex;
 		// find and remove opening tag
-		if ((startIndex = responseBuffer.indexOf("<"+tagName)) > -1) 
+		if ((startIndex = responseBuffer.indexOf("<" + tagName)) > -1)
 		{
-			if ((endIndex = responseBuffer.indexOf(">", startIndex)) >-1)
+			if ((endIndex = responseBuffer.indexOf(">", startIndex)) > -1)
 			{
-				responseBuffer.delete(startIndex, endIndex+1);
+				responseBuffer.delete(startIndex, endIndex + 1);
 			}
 			// remove closing tag
-			if ((startIndex = responseBuffer.indexOf("</"+tagName+">")) > -1) 
+			if ((startIndex = responseBuffer.indexOf("</" + tagName + ">")) > -1)
 			{
-				responseBuffer.delete(startIndex, startIndex+tagName.length()+3);
+				responseBuffer.delete(startIndex, startIndex + tagName.length() + 3);
 			}
 		}
 	}

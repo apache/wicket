@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class SimplePanel_6 extends Panel
@@ -31,12 +31,13 @@ public class SimplePanel_6 extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public SimplePanel_6(final String id) 
+	public SimplePanel_6(final String id)
 	{
-	    super(id);
-	    
-	    add(new WebMarkupContainer("container"));
-    }
+		super(id);
+
+		add(new WebMarkupContainer("container"));
+	}
 }

@@ -66,7 +66,7 @@ class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	public boolean addLicenseHeader(File file)
 	{
 		prependLicenseHeader(file);
-		
+
 		return true;
 	}
 

@@ -30,19 +30,17 @@ import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.coding.AbstractRequestTargetUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
-import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import org.apache.wicket.request.target.coding.WebRequestEncoder;
 import org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
- * Request coding strategy that uses a simple URI by putting the remaining path
- * in the <tt>uri</tt> page parameter. Override the decode() method to return
- * the appropriate request target, calling getURI(requestParameters) to get
- * requested uri. Note that this request coding strategy takes other page
- * parameters from the query string directly, it does not use hierarchical path
- * for parameters.
+ * Request coding strategy that uses a simple URI by putting the remaining path in the <tt>uri</tt>
+ * page parameter. Override the decode() method to return the appropriate request target, calling
+ * getURI(requestParameters) to get requested uri. Note that this request coding strategy takes
+ * other page parameters from the query string directly, it does not use hierarchical path for
+ * parameters.
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
@@ -84,8 +82,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	}
 
 	/**
-	 * Copied from
-	 * {@link BookmarkablePageRequestTargetUrlCodingStrategy#encode(IRequestTarget)}
+	 * Copied from {@link BookmarkablePageRequestTargetUrlCodingStrategy#encode(IRequestTarget)}
 	 * without pageMapName field
 	 * 
 	 * @see org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(org.apache.wicket.IRequestTarget)
@@ -127,9 +124,9 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	}
 
 	/**
-	 * Gets the encoded URL for the request target. The "uri" parameter is
-	 * appended first with a slash, then the remaining parameters are handled
-	 * like in {@link org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
+	 * Gets the encoded URL for the request target. The "uri" parameter is appended first with a
+	 * slash, then the remaining parameters are handled like in
+	 * {@link org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy#appendParameters(org.apache.wicket.util.string.AppendingStringBuffer, java.util.Map)}
 	 * 
 	 * @param url
 	 *            the relative reference URL
@@ -182,8 +179,7 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	 * Decodes parameters object from the provided url fragment
 	 * 
 	 * @param urlFragment
-	 *            fragment of the url after the decoded path and before the
-	 *            query string
+	 *            fragment of the url after the decoded path and before the query string
 	 * @param urlParameters
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
@@ -208,9 +204,9 @@ public class URIRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlC
 	}
 
 	/**
-	 * Calls decodeParameters() and retrieves the <tt>uri</tt> parameter. If
-	 * you need to access multiple parameters in the request, call
-	 * {@link #decodeParameters(RequestParameters)} directly.
+	 * Calls decodeParameters() and retrieves the <tt>uri</tt> parameter. If you need to access
+	 * multiple parameters in the request, call {@link #decodeParameters(RequestParameters)}
+	 * directly.
 	 * 
 	 * <p>
 	 * <b>NOTE. </b> the returned URI is kept URL-encoded as per the

@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.resources.StyleSheetReference;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class PanelWithHeaderPart extends Panel
 {
@@ -35,11 +35,11 @@ public class PanelWithHeaderPart extends Panel
 	public PanelWithHeaderPart(String id)
 	{
 		super(id);
-		
+
 		add(new Label("body"));
-		add(new StyleSheetReference("testlink", PanelWithHeaderPart.class,"test.css"));
+		add(new StyleSheetReference("testlink", PanelWithHeaderPart.class, "test.css"));
 		add(new JavaScriptReference("testscript", PanelWithHeaderPart.class, "test.js"));
-		
+
 	}
 
 }

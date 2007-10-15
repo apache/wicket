@@ -44,20 +44,19 @@ import org.apache.wicket.util.upload.FileItem;
 
 
 /**
- * Form component that allows the user to select multiple files to upload via a
- * single &lt;input type=&quot;file&quot;/&gt; field.
- *
- * Notice that this component clears its model at the end of the request, so the
- * uploaded files MUST be processed within the request they were uploaded.
- *
+ * Form component that allows the user to select multiple files to upload via a single &lt;input
+ * type=&quot;file&quot;/&gt; field.
+ * 
+ * Notice that this component clears its model at the end of the request, so the uploaded files MUST
+ * be processed within the request they were uploaded.
+ * 
  * Uses javascript implementation from
  * http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
- *
- * For customizing caption text see {@link #RESOURCE_LIMITED} and
- * {@link #RESOURCE_UNLIMITED}
- *
+ * 
+ * For customizing caption text see {@link #RESOURCE_LIMITED} and {@link #RESOURCE_UNLIMITED}
+ * 
  * For an example of styling using CSS see the upload example in wicket-examples
- *
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class MultiFileUploadField extends FormComponentPanel implements IHeaderContributor
@@ -70,18 +69,17 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 	public static final int UNLIMITED = 1;
 
 	/**
-	 * Resource key used to retrieve caption message for when a limit on the
-	 * number of uploads is specified. The limit is represented via ${max}
-	 * variable.
-	 *
+	 * Resource key used to retrieve caption message for when a limit on the number of uploads is
+	 * specified. The limit is represented via ${max} variable.
+	 * 
 	 * Example: org.apache.wicket.mfu.caption.limited=Files (maximum ${max}):
 	 */
 	public static final String RESOURCE_LIMITED = "org.apache.wicket.mfu.caption.limited";
 
 	/**
-	 * Resource key used to retrieve caption message for when no limit on the
-	 * number of uploads is specified.
-	 *
+	 * Resource key used to retrieve caption message for when no limit on the number of uploads is
+	 * specified.
+	 * 
 	 * Example: org.apache.wicket.mfu.caption.unlimited=Files:
 	 */
 	public static final String RESOURCE_UNLIMITED = "org.apache.wicket.mfu.caption.unlimited";
@@ -105,7 +103,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 */
 	public MultiFileUploadField(String id)
@@ -115,7 +113,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 * @param max
 	 *            max number of files a user can upload
@@ -127,7 +125,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 * @param model
 	 */
@@ -138,12 +136,12 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 * @param model
 	 * @param max
 	 *            max number of files a user can upload
-	 *
+	 * 
 	 */
 	public MultiFileUploadField(String id, IModel model, int max)
 	{
@@ -356,7 +354,7 @@ public class MultiFileUploadField extends FormComponentPanel implements IHeaderC
 
 	/**
 	 * Model that will construct the caption string
-	 *
+	 * 
 	 * @author ivaynberg
 	 */
 	private class CaptionModel extends AbstractReadOnlyModel

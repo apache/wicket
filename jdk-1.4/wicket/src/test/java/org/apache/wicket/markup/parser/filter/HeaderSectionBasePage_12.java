@@ -22,13 +22,13 @@ import org.apache.wicket.markup.parser.filter.sub.HeaderSectionBorder;
 
 
 /**
- *
+ * 
  * @author Jonathan Locke
  */
 public class HeaderSectionBasePage_12 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Border border;
 
 	/**
@@ -36,9 +36,9 @@ public class HeaderSectionBasePage_12 extends WebPage
 	 */
 	public HeaderSectionBasePage_12()
 	{
-        // Create border and add it to the page
-        border = new HeaderSectionBorder("border");
-        border.setTransparentResolver(true);
-        super.add(border);   
+		// Create border and add it to the page
+		border = new HeaderSectionBorder("border");
+		border.setTransparentResolver(true);
+		super.add(border);
 	}
 }

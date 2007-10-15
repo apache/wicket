@@ -58,9 +58,9 @@ class Add extends Change
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("RECORD ADD: added " + component.getPath() + " ("
-					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
-					+ ") to parent");
+			log.debug("RECORD ADD: added " + component.getPath() + " (" +
+					Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
+					") to parent");
 		}
 
 		this.component = component;
@@ -73,9 +73,9 @@ class Add extends Change
 	{
 		if (log.isDebugEnabled())
 		{
-			log.debug("UNDO ADD: removing " + component.getPath() + " ("
-					+ Classes.simpleName(component.getClass()) + "@" + component.hashCode()
-					+ ") from parent");
+			log.debug("UNDO ADD: removing " + component.getPath() + " (" +
+					Classes.simpleName(component.getClass()) + "@" + component.hashCode() +
+					") from parent");
 		}
 
 		// Check if somehow the Component isn't already removed.

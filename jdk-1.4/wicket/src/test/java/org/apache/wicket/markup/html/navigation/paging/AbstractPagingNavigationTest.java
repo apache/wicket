@@ -20,9 +20,8 @@ import org.apache.wicket.WicketTestCase;
 
 
 /**
- * Base class for testing the navigation links, supplies a mock object
- * for exercizing the links.
- *
+ * Base class for testing the navigation links, supplies a mock object for exercizing the links.
+ * 
  * @author Martijn Dashorst
  */
 public abstract class AbstractPagingNavigationTest extends WicketTestCase
@@ -78,6 +77,7 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public AbstractPagingNavigationTest(String name)

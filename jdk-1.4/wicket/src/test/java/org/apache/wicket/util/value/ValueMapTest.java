@@ -31,7 +31,7 @@ public class ValueMapTest extends TestCase
 		ValueMap vm = new ValueMap("param=value");
 		assertEquals(1, vm.size());
 		assertEquals("value", vm.get("param"));
-		
+
 
 		vm = new ValueMap("param1=value1,param2=value2");
 		assertEquals(2, vm.size());
@@ -80,7 +80,7 @@ public class ValueMapTest extends TestCase
 		assertEquals(2, vm.size());
 		assertEquals("value1", vm.get("param1"));
 		assertEquals("val=ue2", vm.get("param2"));
-		
+
 		vm = new ValueMap("param1=val;ue1;param2=value2", ";");
 		assertEquals(2, vm.size());
 		assertEquals("val;ue1", vm.get("param1"));
@@ -96,6 +96,6 @@ public class ValueMapTest extends TestCase
 		assertEquals("va=l;ue1", vm.get("param1"));
 		assertEquals("val;ue2", vm.get("param2"));
 		assertEquals("val=ue3", vm.get("param3"));
-		
+
 	}
 }

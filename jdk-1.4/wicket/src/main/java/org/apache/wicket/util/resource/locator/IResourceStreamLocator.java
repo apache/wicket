@@ -29,13 +29,12 @@ import org.apache.wicket.util.resource.IResourceStream;
 public interface IResourceStreamLocator
 {
 	/**
-	 * Loads a resource, given a path and class. Typically this method is either
-	 * called by external clients if they are not interested in a lookup that
-	 * takes the style and locale into account, or it is called by the
-	 * implementation of {@link #locate(Class, String, String, Locale, String)}
-	 * where the latter just takes care of trying out the different combinations
-	 * for the provided style and locale and uses this method to actually load
-	 * the resource stream.
+	 * Loads a resource, given a path and class. Typically this method is either called by external
+	 * clients if they are not interested in a lookup that takes the style and locale into account,
+	 * or it is called by the implementation of
+	 * {@link #locate(Class, String, String, Locale, String)} where the latter just takes care of
+	 * trying out the different combinations for the provided style and locale and uses this method
+	 * to actually load the resource stream.
 	 * 
 	 * @param clazz
 	 *            The class loader for delegating the loading of the resource
@@ -54,8 +53,7 @@ public interface IResourceStreamLocator
 	 * @param path
 	 *            The path of the resource
 	 * @param style
-	 *            Any resource style, such as a skin style (see
-	 *            {@link org.apache.wicket.Session})
+	 *            Any resource style, such as a skin style (see {@link org.apache.wicket.Session})
 	 * @param locale
 	 *            The locale of the resource to load
 	 * @param extension

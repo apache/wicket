@@ -20,17 +20,16 @@ import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * Implementations are responsible for {@link #load(Class, String) locating}
- * {@link Properties} objects, which are a thin wrapper around {@link ValueMap}
- * and is used to locate localized messages.
+ * Implementations are responsible for {@link #load(Class, String) locating} {@link Properties}
+ * objects, which are a thin wrapper around {@link ValueMap} and is used to locate localized
+ * messages.
  * <p>
- * The {@link #clearCache()} method should remove any cached references to
- * properties objects used by an implementation, so that
- * {@link #load(Class, String)} gets the freshest instance possible.
+ * The {@link #clearCache()} method should remove any cached references to properties objects used
+ * by an implementation, so that {@link #load(Class, String)} gets the freshest instance possible.
  * </p>
  * <p>
- * {@link IPropertiesChangeListener Listeners} are related to cached properties
- * and should be used to inform observers when sets of properties are reloaded.
+ * {@link IPropertiesChangeListener Listeners} are related to cached properties and should be used
+ * to inform observers when sets of properties are reloaded.
  * </p>
  * 
  * @see org.apache.wicket.resource.Properties
@@ -40,8 +39,8 @@ import org.apache.wicket.util.value.ValueMap;
 public interface IPropertiesFactory
 {
 	/**
-	 * Add a listener which will be called when a change to the underlying
-	 * resource stream (e.g. properties file) has been detected
+	 * Add a listener which will be called when a change to the underlying resource stream (e.g.
+	 * properties file) has been detected
 	 * 
 	 * @param listener
 	 */

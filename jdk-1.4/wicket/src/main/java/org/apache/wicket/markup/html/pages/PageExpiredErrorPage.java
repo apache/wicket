@@ -23,13 +23,13 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Page expired error page.
- *
+ * 
  * @author Jonathan Locke
  */
 public class PageExpiredErrorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -37,14 +37,15 @@ public class PageExpiredErrorPage extends WebPage
 	{
 		add(homePageLink("homePageLink"));
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.WebPage#configureResponse()
 	 */
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+				HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**

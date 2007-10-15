@@ -26,14 +26,12 @@ import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListen
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 
 /**
- * A very simple authorization strategy that takes a supertype (a base class or
- * tagging interface) and performs a simple authorization check by calling the
- * abstract method isAuthorized() whenever a Page class that extends or
- * implements the supertype is about to be instantiated. If that method returns
- * true, page instantiation proceeds normally. If it returns false, the user is
- * automatically directed to the specified sign-in page for authentication,
- * which will presumably allow authorization to succeed once they have signed
- * in.
+ * A very simple authorization strategy that takes a supertype (a base class or tagging interface)
+ * and performs a simple authorization check by calling the abstract method isAuthorized() whenever
+ * a Page class that extends or implements the supertype is about to be instantiated. If that method
+ * returns true, page instantiation proceeds normally. If it returns false, the user is
+ * automatically directed to the specified sign-in page for authentication, which will presumably
+ * allow authorization to succeed once they have signed in.
  * <p>
  * In your Application.init() method do something like the following:
  * 
@@ -41,11 +39,11 @@ import org.apache.wicket.authorization.UnauthorizedInstantiationException;
  * SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
  * 		MySecureWebPage.class, MySignInPage.class)
  * {
- *     protected boolean isAuthorized()
- * 	   {
- * 		   // Authorize access based on user authentication in the session
- * 		   return (((MySession)Session.get()).isSignedIn());
- * 	   }
+ * 	protected boolean isAuthorized()
+ * 	{
+ * 		// Authorize access based on user authentication in the session
+ * 		return (((MySession)Session.get()).isSignedIn());
+ * 	}
  * };
  * 
  * getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
@@ -57,17 +55,16 @@ import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthorizationStrategy
 {
 	/**
-	 * The supertype (class or interface) of Pages that require authorization to
-	 * be instantiated.
+	 * The supertype (class or interface) of Pages that require authorization to be instantiated.
 	 */
-	private final WeakReference/*<Class>*/ securePageSuperTypeRef;
+	private final WeakReference/* <Class> */securePageSuperTypeRef;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param securePageSuperType
-	 *            The class or interface supertype that indicates that a given
-	 *            Page requires authorization
+	 *            The class or interface supertype that indicates that a given Page requires
+	 *            authorization
 	 * @param signInPageClass
 	 *            The sign in page class
 	 */
@@ -119,12 +116,11 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	}
 
 	/**
-	 * Gets whether the current user/session is authorized to instantiate a page
-	 * class which extends or implements the supertype (base class or tagging
-	 * interface) passed to the constructor.
+	 * Gets whether the current user/session is authorized to instantiate a page class which extends
+	 * or implements the supertype (base class or tagging interface) passed to the constructor.
 	 * 
-	 * @return True if the instantiation should be allowed to proceed. False, if
-	 *         the user should be directed to the application's sign-in page.
+	 * @return True if the instantiation should be allowed to proceed. False, if the user should be
+	 *         directed to the application's sign-in page.
 	 */
 	protected abstract boolean isAuthorized();
 }

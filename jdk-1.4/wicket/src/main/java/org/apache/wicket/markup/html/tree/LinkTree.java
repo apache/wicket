@@ -27,8 +27,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Simple tree component that provides node panel with link allowing user to
- * select individual nodes.
+ * Simple tree component that provides node panel with link allowing user to select individual
+ * nodes.
  * 
  * @author Matej Knopp
  */
@@ -58,7 +58,7 @@ public class LinkTree extends BaseTree
 	{
 		super(id, model);
 	}
-	
+
 	/**
 	 * 
 	 * Construct.
@@ -73,7 +73,8 @@ public class LinkTree extends BaseTree
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.tree.BaseTree#newNodeComponent(java.lang.String, org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.markup.html.tree.BaseTree#newNodeComponent(java.lang.String,
+	 *      org.apache.wicket.model.IModel)
 	 */
 	protected Component newNodeComponent(String id, IModel model)
 	{
@@ -91,6 +92,7 @@ public class LinkTree extends BaseTree
 
 	/**
 	 * Method invoked after the node has been selected / unselected.
+	 * 
 	 * @param node
 	 * @param tree
 	 * @param target

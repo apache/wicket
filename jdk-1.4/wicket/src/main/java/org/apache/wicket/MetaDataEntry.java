@@ -49,7 +49,7 @@ final class MetaDataEntry implements IClusterable
 	 */
 	public String toString()
 	{
-		return key + "=" + object.getClass().getName() + "@"
-				+ Integer.toHexString(object.hashCode());
+		return key + "=" + object.getClass().getName() + "@" +
+				Integer.toHexString(object.hashCode());
 	}
 }

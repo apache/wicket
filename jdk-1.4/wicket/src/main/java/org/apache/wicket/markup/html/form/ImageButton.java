@@ -34,7 +34,7 @@ import org.apache.wicket.markup.html.image.resource.LocalizedImageResource;
 public class ImageButton extends Button implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The image resource this image component references */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
@@ -110,7 +110,7 @@ public class ImageButton extends Button implements IResourceListener
 		super.onComponentTag(tag);
 		localizedImageResource.setSrcAttribute(tag);
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.form.Button#getStatelessHint()
 	 */

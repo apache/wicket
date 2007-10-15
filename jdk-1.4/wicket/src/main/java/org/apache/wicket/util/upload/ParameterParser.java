@@ -20,15 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A simple parser intended to parse sequences of name/value pairs. Parameter
- * values are expected to be enclosed in quotes if they contain unsafe
- * characters, such as '=' characters or separators. Parameter values are
- * optional and can be omitted.
- *
+ * A simple parser intended to parse sequences of name/value pairs. Parameter values are expected to
+ * be enclosed in quotes if they contain unsafe characters, such as '=' characters or separators.
+ * Parameter values are optional and can be omitted.
+ * 
  * <p>
  * <code>param1 = value; param2 = "anything goes; really"; param3</code>
  * </p>
- *
+ * 
  * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
  */
 
@@ -74,9 +73,8 @@ public class ParameterParser
 
 	/**
 	 * Are there any characters left to parse?
-	 *
-	 * @return <tt>true</tt> if there are unparsed characters, <tt>false</tt>
-	 *         otherwise.
+	 * 
+	 * @return <tt>true</tt> if there are unparsed characters, <tt>false</tt> otherwise.
 	 */
 	private boolean hasChar()
 	{
@@ -84,12 +82,11 @@ public class ParameterParser
 	}
 
 	/**
-	 * A helper method to process the parsed token. This method removes leading
-	 * and trailing blanks as well as enclosing quotation marks, when necessary.
-	 *
+	 * A helper method to process the parsed token. This method removes leading and trailing blanks
+	 * as well as enclosing quotation marks, when necessary.
+	 * 
 	 * @param quoted
-	 *            <tt>true</tt> if quotation marks are expected,
-	 *            <tt>false</tt> otherwise.
+	 *            <tt>true</tt> if quotation marks are expected, <tt>false</tt> otherwise.
 	 * @return the token
 	 */
 	private String getToken(boolean quoted)
@@ -123,14 +120,14 @@ public class ParameterParser
 
 	/**
 	 * Tests if the given character is present in the array of characters.
-	 *
+	 * 
 	 * @param ch
 	 *            the character to test for presence in the array of characters
 	 * @param charray
 	 *            the array of characters to test against
-	 *
-	 * @return <tt>true</tt> if the character is present in the array of
-	 *         characters, <tt>false</tt> otherwise.
+	 * 
+	 * @return <tt>true</tt> if the character is present in the array of characters,
+	 *         <tt>false</tt> otherwise.
 	 */
 	private boolean isOneOf(char ch, final char[] charray)
 	{
@@ -148,11 +145,11 @@ public class ParameterParser
 
 	/**
 	 * Parses out a token until any of the given terminators is encountered.
-	 *
+	 * 
 	 * @param terminators
-	 *            the array of terminating characters. Any of these characters
-	 *            when encountered signify the end of the token
-	 *
+	 *            the array of terminating characters. Any of these characters when encountered
+	 *            signify the end of the token
+	 * 
 	 * @return the token
 	 */
 	private String parseToken(final char[] terminators)
@@ -174,14 +171,13 @@ public class ParameterParser
 	}
 
 	/**
-	 * Parses out a token until any of the given terminators is encountered
-	 * outside the quotation marks.
-	 *
+	 * Parses out a token until any of the given terminators is encountered outside the quotation
+	 * marks.
+	 * 
 	 * @param terminators
-	 *            the array of terminating characters. Any of these characters
-	 *            when encountered outside the quotation marks signify the end
-	 *            of the token
-	 *
+	 *            the array of terminating characters. Any of these characters when encountered
+	 *            outside the quotation marks signify the end of the token
+	 * 
 	 * @return the token
 	 */
 	private String parseQuotedToken(final char[] terminators)
@@ -211,12 +207,11 @@ public class ParameterParser
 	}
 
 	/**
-	 * Returns <tt>true</tt> if parameter names are to be converted to lower
-	 * case when name/value pairs are parsed.
-	 *
-	 * @return <tt>true</tt> if parameter names are to be converted to lower
-	 *         case when name/value pairs are parsed. Otherwise returns
-	 *         <tt>false</tt>
+	 * Returns <tt>true</tt> if parameter names are to be converted to lower case when name/value
+	 * pairs are parsed.
+	 * 
+	 * @return <tt>true</tt> if parameter names are to be converted to lower case when name/value
+	 *         pairs are parsed. Otherwise returns <tt>false</tt>
 	 */
 	public boolean isLowerCaseNames()
 	{
@@ -224,13 +219,12 @@ public class ParameterParser
 	}
 
 	/**
-	 * Sets the flag if parameter names are to be converted to lower case when
-	 * name/value pairs are parsed.
-	 *
+	 * Sets the flag if parameter names are to be converted to lower case when name/value pairs are
+	 * parsed.
+	 * 
 	 * @param b
-	 *            <tt>true</tt> if parameter names are to be converted to
-	 *            lower case when name/value pairs are parsed. <tt>false</tt>
-	 *            otherwise.
+	 *            <tt>true</tt> if parameter names are to be converted to lower case when
+	 *            name/value pairs are parsed. <tt>false</tt> otherwise.
 	 */
 	public void setLowerCaseNames(boolean b)
 	{
@@ -238,14 +232,13 @@ public class ParameterParser
 	}
 
 	/**
-	 * Extracts a map of name/value pairs from the given string. Names are
-	 * expected to be unique.
-	 *
+	 * Extracts a map of name/value pairs from the given string. Names are expected to be unique.
+	 * 
 	 * @param str
 	 *            the string that contains a sequence of name/value pairs
 	 * @param separator
 	 *            the name/value pairs separator
-	 *
+	 * 
 	 * @return a map of name/value pairs
 	 */
 	public Map parse(final String str, char separator)
@@ -258,15 +251,14 @@ public class ParameterParser
 	}
 
 	/**
-	 * Extracts a map of name/value pairs from the given array of characters.
-	 * Names are expected to be unique.
-	 *
+	 * Extracts a map of name/value pairs from the given array of characters. Names are expected to
+	 * be unique.
+	 * 
 	 * @param chars
-	 *            the array of characters that contains a sequence of name/value
-	 *            pairs
+	 *            the array of characters that contains a sequence of name/value pairs
 	 * @param separator
 	 *            the name/value pairs separator
-	 *
+	 * 
 	 * @return a map of name/value pairs
 	 */
 	public Map parse(final char[] chars, char separator)
@@ -279,19 +271,18 @@ public class ParameterParser
 	}
 
 	/**
-	 * Extracts a map of name/value pairs from the given array of characters.
-	 * Names are expected to be unique.
-	 *
+	 * Extracts a map of name/value pairs from the given array of characters. Names are expected to
+	 * be unique.
+	 * 
 	 * @param chars
-	 *            the array of characters that contains a sequence of name/value
-	 *            pairs
+	 *            the array of characters that contains a sequence of name/value pairs
 	 * @param offset -
 	 *            the initial offset.
 	 * @param length -
 	 *            the length.
 	 * @param separator
 	 *            the name/value pairs separator
-	 *
+	 * 
 	 * @return a map of name/value pairs
 	 */
 	public Map parse(final char[] chars, int offset, int length, char separator)

@@ -25,14 +25,13 @@ import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * A typesafe abstraction and container for parameters to a requested page. Page
- * parameters in HTTP are query string values in the request URL. In other
- * protocols, the parameters to a page might come from some other source.
+ * A typesafe abstraction and container for parameters to a requested page. Page parameters in HTTP
+ * are query string values in the request URL. In other protocols, the parameters to a page might
+ * come from some other source.
  * <p>
- * Pages which take a PageParameters object as an argument to their constructor
- * can be accessed directly from a URL and are known as "bookmarkable" pages
- * since the URL is stable across sessions and can be stored in a browser's
- * bookmark database.
+ * Pages which take a PageParameters object as an argument to their constructor can be accessed
+ * directly from a URL and are known as "bookmarkable" pages since the URL is stable across sessions
+ * and can be stored in a browser's bookmark database.
  * 
  * @author Jonathan Locke
  */
@@ -58,7 +57,8 @@ public final class PageParameters extends ValueMap
 	/**
 	 * Copy constructor.
 	 * 
-	 * @param parameterMap  The map to copy
+	 * @param parameterMap
+	 *            The map to copy
 	 * @see ValueMap#ValueMap(java.util.Map)
 	 */
 	public PageParameters(final Map parameterMap)
@@ -72,8 +72,7 @@ public final class PageParameters extends ValueMap
 	 * Construct.
 	 * 
 	 * @param keyValuePairs
-	 *            List of key value pairs separated by commas. For example,
-	 *            "param1=foo,param2=bar"
+	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
 	 * @see ValueMap#ValueMap(String)
 	 */
 	public PageParameters(final String keyValuePairs)
@@ -85,16 +84,13 @@ public final class PageParameters extends ValueMap
 	 * Construct.
 	 * 
 	 * @param keyValuePairs
-	 *            List of key value pairs separated by commas. For example,
-	 *            "param1=foo,param2=bar"
+	 *            List of key value pairs separated by commas. For example, "param1=foo,param2=bar"
 	 * @param delimiter
 	 *            Delimiter string used to separate key/value pairs
 	 * @see ValueMap#ValueMap(String)
 	 * 
-	 * @deprecated Please use
-	 *             {@link RequestUtils#decodeParameters(String, ValueMap)} to
-	 *             decode a request URL, or
-	 *             {@link ValueMap#ValueMap(String, String)} for other usecases.
+	 * @deprecated Please use {@link RequestUtils#decodeParameters(String, ValueMap)} to decode a
+	 *             request URL, or {@link ValueMap#ValueMap(String, String)} for other usecases.
 	 */
 	public PageParameters(final String keyValuePairs, final String delimiter)
 	{
@@ -145,19 +141,18 @@ public final class PageParameters extends ValueMap
 /*
  * BRING BACK IN 1.4
  * 
- * if (!(key instanceof String)) { throw new IllegalArgumentException(
- * "PageParameter keys must be of type String, but you supplied a " +
- * key.getClass().getName()); } if (value instanceof String || value instanceof
- * String[]) { return super.put(key, value); } else { throw new
- * IllegalArgumentException("You tried to add an object of type " +
- * value.getClass().getName() + " to your PageParameters for key " + key + ",
- * but you are only allowed to use String or String[]."); }
+ * if (!(key instanceof String)) { throw new IllegalArgumentException( "PageParameter keys must be
+ * of type String, but you supplied a " + key.getClass().getName()); } if (value instanceof String ||
+ * value instanceof String[]) { return super.put(key, value); } else { throw new
+ * IllegalArgumentException("You tried to add an object of type " + value.getClass().getName() + "
+ * to your PageParameters for key " + key + ", but you are only allowed to use String or
+ * String[]."); }
  */
 	}
 
 	/**
-	 * Set this on request cycle. The RequestCycle will decide whether to keep
-	 * it as a reference or not.
+	 * Set this on request cycle. The RequestCycle will decide whether to keep it as a reference or
+	 * not.
 	 * 
 	 * @see RequestCycle#setPageParameters(PageParameters)
 	 */

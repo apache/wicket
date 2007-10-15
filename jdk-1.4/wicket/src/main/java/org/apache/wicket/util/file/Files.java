@@ -32,8 +32,8 @@ import org.apache.wicket.util.string.Strings;
 public class Files
 {
 	/**
-	 * Strips off the given extension (probably returned from Files.extension())
-	 * from the path, yielding a base pathname.
+	 * Strips off the given extension (probably returned from Files.extension()) from the path,
+	 * yielding a base pathname.
 	 * 
 	 * @param path
 	 *            The path, possibly with an extension to strip

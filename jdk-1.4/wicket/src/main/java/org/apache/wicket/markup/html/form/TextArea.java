@@ -28,7 +28,7 @@ import org.apache.wicket.model.IModel;
 public class TextArea extends AbstractTextComponent
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */

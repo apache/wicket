@@ -19,9 +19,8 @@ package org.apache.wicket.resource;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
- * Kind of like java.util.Properties but based on Wicket's ValueMap and thus
- * benefiting from all its nice build-in type converters and without parent
- * properties.
+ * Kind of like java.util.Properties but based on Wicket's ValueMap and thus benefiting from all its
+ * nice build-in type converters and without parent properties.
  * 
  * @author Juergen Donnerstag
  */
@@ -51,7 +50,7 @@ public final class Properties
 	}
 
 	/**
-	 * Get direct access to all values from the properties file. 
+	 * Get direct access to all values from the properties file.
 	 * 
 	 * @return map
 	 */
@@ -61,7 +60,7 @@ public final class Properties
 	}
 
 	/**
-	 * Get the property value identified by its 'key'. 
+	 * Get the property value identified by its 'key'.
 	 * 
 	 * @param key
 	 * @return property message

@@ -37,21 +37,21 @@ import org.slf4j.LoggerFactory;
  * An IResourceStream that ZIPs a directory's contents on the fly
  * 
  * <p>
- * <b>NOTE 1.</b> Nested directories are not supported yet, and a
- * {@link FileNotFoundException} will be thrown in that case.
+ * <b>NOTE 1.</b> Nested directories are not supported yet, and a {@link FileNotFoundException}
+ * will be thrown in that case.
  * </p>
  * 
  * <p>
- * <b>NOTE 2.</b> As a future improvement, cache a map of generated ZIP files
- * for every directory and use a Watcher to detect modifications in this
- * directory. Using ehcache would be good for that, but it's not in Wicket
- * dependencies yet. <b>No caching of the generated ZIP files is done yet.</b>
+ * <b>NOTE 2.</b> As a future improvement, cache a map of generated ZIP files for every directory
+ * and use a Watcher to detect modifications in this directory. Using ehcache would be good for
+ * that, but it's not in Wicket dependencies yet. <b>No caching of the generated ZIP files is done
+ * yet.</b>
  * </p>
  * 
  * <p>
- * <b>NOTE 3.</b> As a future improvement, implement getLastModified() and
- * request ResourceStreamRequestTarget to generate Last-Modified and Expires
- * HTTP headers. <b>No HTTP cache headers are provided yet</b>. See WICKET-385
+ * <b>NOTE 3.</b> As a future improvement, implement getLastModified() and request
+ * ResourceStreamRequestTarget to generate Last-Modified and Expires HTTP headers. <b>No HTTP cache
+ * headers are provided yet</b>. See WICKET-385
  * </p>
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
@@ -71,8 +71,8 @@ public class ZipResourceStream extends AbstractResourceStream
 	 * Construct.
 	 * 
 	 * @param dir
-	 *            The directory where to look for files. The directory itself
-	 *            will not be included in the ZIP.
+	 *            The directory where to look for files. The directory itself will not be included
+	 *            in the ZIP.
 	 */
 	public ZipResourceStream(File dir)
 	{

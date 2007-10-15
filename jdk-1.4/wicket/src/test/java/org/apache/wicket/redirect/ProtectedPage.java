@@ -20,18 +20,18 @@ import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
-     * The page that is protected and needs to redirect to the login page.
-     */
+ * The page that is protected and needs to redirect to the login page.
+ */
 public class ProtectedPage extends WebPage
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	public ProtectedPage()
-    {
-       throw new RestartResponseAtInterceptPageException(LoginPage.class);
-    }
+	{
+		throw new RestartResponseAtInterceptPageException(LoginPage.class);
+	}
 
 }

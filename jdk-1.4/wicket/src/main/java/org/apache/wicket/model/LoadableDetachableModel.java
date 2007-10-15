@@ -23,10 +23,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Model that makes working with detachable models a breeze.
- * LoadableDetachableModel holds a temporary, transient model object, that is
- * set when {@link #getObject(Component)} is called by calling abstract method
- * 'load', and that will be reset/ set to null on {@link #detach()}.
+ * Model that makes working with detachable models a breeze. LoadableDetachableModel holds a
+ * temporary, transient model object, that is set when {@link #getObject(Component)} is called by
+ * calling abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
  * 
  * A usage example:
  * 
@@ -41,10 +40,9 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * <p>
- * Though you can override methods {@link #onAttach()} and {@link #onDetach()} for
- * additional attach/ detach behavior, the point of this class is to hide as
- * much of the attaching/ detaching as possible. So you should rarely need to
- * override those methods, if ever.
+ * Though you can override methods {@link #onAttach()} and {@link #onDetach()} for additional
+ * attach/ detach behavior, the point of this class is to hide as much of the attaching/ detaching
+ * as possible. So you should rarely need to override those methods, if ever.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -74,8 +72,8 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	}
 
 	/**
-	 * This constructor is used if you already have the object retrieved and
-	 * want to wrap it with a detachable model.
+	 * This constructor is used if you already have the object retrieved and want to wrap it with a
+	 * detachable model.
 	 * 
 	 * @param object
 	 *            retrieved instance of the detachable object
@@ -98,8 +96,8 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("removed transient object for " + this + ", requestCycle "
-						+ RequestCycle.get());
+				log.debug("removed transient object for " + this + ", requestCycle " +
+						RequestCycle.get());
 			}
 			onDetach();
 		}
@@ -117,8 +115,8 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("loaded transient object " + transientModelObject + " for " + this
-						+ ", requestCycle " + RequestCycle.get());
+				log.debug("loaded transient object " + transientModelObject + " for " + this +
+						", requestCycle " + RequestCycle.get());
 			}
 
 			onAttach();
@@ -155,16 +153,16 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	protected abstract Object load();
 
 	/**
-	 * Attaches to the current request. Implement this method with custom
-	 * behavior, such as loading the model object.
+	 * Attaches to the current request. Implement this method with custom behavior, such as loading
+	 * the model object.
 	 */
 	protected void onAttach()
 	{
 	}
 
 	/**
-	 * Detaches from the current request. Implement this method with custom
-	 * behavior, such as setting the model object to null.
+	 * Detaches from the current request. Implement this method with custom behavior, such as
+	 * setting the model object to null.
 	 */
 	protected void onDetach()
 	{

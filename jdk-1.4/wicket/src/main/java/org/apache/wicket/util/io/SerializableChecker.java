@@ -43,23 +43,20 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Utility class that analyzes objects for non-serializable nodes. Construct,
- * then call {@link #check(Object)} with the object you want to check. When a
- * non-serializable object is found, a {@link WicketNotSerializableException} is
- * thrown with a message that shows the trace up to the not-serializable object.
- * The exception is thrown for the first non-serializable instance it
- * encounters, so multiple problems will not be shown.
+ * Utility class that analyzes objects for non-serializable nodes. Construct, then call
+ * {@link #check(Object)} with the object you want to check. When a non-serializable object is
+ * found, a {@link WicketNotSerializableException} is thrown with a message that shows the trace up
+ * to the not-serializable object. The exception is thrown for the first non-serializable instance
+ * it encounters, so multiple problems will not be shown.
  * <p>
- * As this class depends heavily on JDK's serialization internals using
- * introspection, analyzing may not be possible, for instance when the runtime
- * environment does not have sufficient rights to set fields accessible that
- * would otherwise be hidden. You should call
- * {@link SerializableChecker#isAvailable()} to see whether this class can
- * operate properly. If it doesn't, you should fall back to e.g. re-throwing/
- * printing the {@link NotSerializableException} you probably got before using
- * this class.
+ * As this class depends heavily on JDK's serialization internals using introspection, analyzing may
+ * not be possible, for instance when the runtime environment does not have sufficient rights to set
+ * fields accessible that would otherwise be hidden. You should call
+ * {@link SerializableChecker#isAvailable()} to see whether this class can operate properly. If it
+ * doesn't, you should fall back to e.g. re-throwing/ printing the {@link NotSerializableException}
+ * you probably got before using this class.
  * </p>
- *
+ * 
  * @author eelcohillenius
  * @author Al Maw
  */
@@ -266,13 +263,12 @@ public final class SerializableChecker extends ObjectOutputStream
 	}
 
 	/**
-	 * Gets whether we can execute the tests. If false, calling {@link #check(Object)}
-	 * will just return and you are advised to rely on the
-	 * {@link NotSerializableException}. Clients are advised to call this
-	 * method prior to calling the check method.
-	 *
-	 * @return whether security settings and underlying API etc allow for
-	 *         accessing the serialization API using introspection
+	 * Gets whether we can execute the tests. If false, calling {@link #check(Object)} will just
+	 * return and you are advised to rely on the {@link NotSerializableException}. Clients are
+	 * advised to call this method prior to calling the check method.
+	 * 
+	 * @return whether security settings and underlying API etc allow for accessing the
+	 *         serialization API using introspection
 	 */
 	public static boolean isAvailable()
 	{
@@ -305,11 +301,10 @@ public final class SerializableChecker extends ObjectOutputStream
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param exception
-	 *            exception that should be set as the cause when throwing a new
-	 *            exception
-	 *
+	 *            exception that should be set as the cause when throwing a new exception
+	 * 
 	 * @throws IOException
 	 */
 	public SerializableChecker(NotSerializableException exception) throws IOException
@@ -356,9 +351,9 @@ public final class SerializableChecker extends ObjectOutputStream
 				desc = (ObjectStreamClass)LOOKUP_METHOD.invoke(null, new Object[] { cls,
 						Boolean.TRUE });
 				Class repCl;
-				if (!((Boolean)HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, null)).booleanValue()
-						|| (obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, new Object[] { obj })) == null
-						|| (repCl = obj.getClass()) == cls)
+				if (!((Boolean)HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, null)).booleanValue() ||
+						(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, new Object[] { obj })) == null ||
+						(repCl = obj.getClass()) == cls)
 				{
 					break;
 				}
@@ -426,8 +421,8 @@ public final class SerializableChecker extends ObjectOutputStream
 				{
 					throw (WicketNotSerializableException)e;
 				}
-				log.warn("error delegating to Externalizable : " + e.getMessage() + ", path: "
-						+ currentPath());
+				log.warn("error delegating to Externalizable : " + e.getMessage() + ", path: " +
+						currentPath());
 			}
 		}
 		else
@@ -506,8 +501,8 @@ public final class SerializableChecker extends ObjectOutputStream
 					{
 						throw (WicketNotSerializableException)e;
 					}
-					log.warn("error delegating to writeObject : " + e.getMessage() + ", path: "
-							+ currentPath());
+					log.warn("error delegating to writeObject : " + e.getMessage() + ", path: " +
+							currentPath());
 				}
 			}
 			else
@@ -580,9 +575,9 @@ public final class SerializableChecker extends ObjectOutputStream
 			}
 			for (int i = 0; i < objVals.length; i++)
 			{
-				if (objVals[i] instanceof String || objVals[i] instanceof Number
-						|| objVals[i] instanceof Date || objVals[i] instanceof Boolean
-						|| objVals[i] instanceof Class)
+				if (objVals[i] instanceof String || objVals[i] instanceof Number ||
+						objVals[i] instanceof Date || objVals[i] instanceof Boolean ||
+						objVals[i] instanceof Class)
 				{
 					// filter out common cases
 					continue;
@@ -636,7 +631,7 @@ public final class SerializableChecker extends ObjectOutputStream
 
 	/**
 	 * Dump with indentation.
-	 *
+	 * 
 	 * @param type
 	 *            the type that couldn't be serialized
 	 * @return A very pretty dump

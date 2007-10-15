@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 /**
  * This is a tag resolver which handles &lt;wicket:container&gt;
  * 
- * Sometimes adding components in certain ways may lead to output of invalid
- * markup. For example, lets pretend we output table rows two at a time using a
- * repeater. The markup would look something like this:
+ * Sometimes adding components in certain ways may lead to output of invalid markup. For example,
+ * lets pretend we output table rows two at a time using a repeater. The markup would look something
+ * like this:
  * 
  * <code>
  * 	<table>
@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
  * 	</table>
  * </code>
  * 
- * Notice that we had to attach the repeater to a component tag - in this case a
- * <code>span</code>, but a span is not a legal tag to nest under
- * <code>table</code>. So we can rewrite the example as following:
+ * Notice that we had to attach the repeater to a component tag - in this case a <code>span</code>,
+ * but a span is not a legal tag to nest under <code>table</code>. So we can rewrite the example
+ * as following:
  * 
  * <code>
  * 	<table>
@@ -71,8 +71,7 @@ public class WicketContainerResolver implements IComponentResolver
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container
-	 * and render it.
+	 * Try to resolve the tag, then create a component, add it to the container and render it.
 	 * 
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)

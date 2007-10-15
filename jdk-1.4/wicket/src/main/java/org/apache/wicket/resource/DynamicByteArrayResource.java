@@ -30,27 +30,25 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * Byte array resource class that supports dynamic (database or on the fly
- * generated) data.
- *
+ * Byte array resource class that supports dynamic (database or on the fly generated) data.
+ * 
  * @author Johan Compagner
- *
+ * 
  * @deprecated use {@link DynamicWebResource} now
  */
 public abstract class DynamicByteArrayResource extends WebResource
 {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * This is a ResourceState subclasses should return in the getResourceState
-	 * method. This resource state should be thread safe. So it shouldn't be
-	 * altered after construction. Even with synchronize blocks this is still not
-	 * safe because the call getContentType() can not be sync together with the
-	 * call getData() they will happen after each other.
-	 *
+	 * This is a ResourceState subclasses should return in the getResourceState method. This
+	 * resource state should be thread safe. So it shouldn't be altered after construction. Even
+	 * with synchronize blocks this is still not safe because the call getContentType() can not be
+	 * sync together with the call getData() they will happen after each other.
+	 * 
 	 * @author jcompagner
 	 */
 	public static class ResourceState
@@ -103,7 +101,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 
 	/**
 	 * Creates a dynamic resource
-	 *
+	 * 
 	 * @param locale
 	 *            The locale of this resource
 	 */
@@ -114,7 +112,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 
 	/**
 	 * Creates a dynamic resource
-	 *
+	 * 
 	 * @param locale
 	 *            The locale of this resource
 	 * @param cacheTimeout
@@ -140,8 +138,7 @@ public abstract class DynamicByteArrayResource extends WebResource
 			private transient InputStream inputStream = null;
 
 			/**
-			 * Transient ResourceState of the resources, will always be deleted
-			 * in the close
+			 * Transient ResourceState of the resources, will always be deleted in the close
 			 */
 			private transient ResourceState data = null;
 
@@ -236,10 +233,9 @@ public abstract class DynamicByteArrayResource extends WebResource
 	}
 
 	/**
-	 * Gets the byte array for our dynamic resource. If the subclass regenerates
-	 * the data, it should set the lastModifiedTime too. This ensures that image
-	 * caching works correctly.
-	 *
+	 * Gets the byte array for our dynamic resource. If the subclass regenerates the data, it should
+	 * set the lastModifiedTime too. This ensures that image caching works correctly.
+	 * 
 	 * @return The byte array for this dynamic resource.
 	 */
 	protected abstract ResourceState getResourceState();

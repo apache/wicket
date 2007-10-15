@@ -30,14 +30,16 @@ import org.slf4j.LoggerFactory;
  */
 public class QueryStringUrlCodingStrategyTest extends WicketTestCase
 {
-	private static final Logger log = LoggerFactory.getLogger(QueryStringUrlCodingStrategyTest.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(QueryStringUrlCodingStrategyTest.class);
 
 	/**
 	 * Tests mounting.
 	 */
 	public void testQS()
 	{
-		IRequestTargetUrlCodingStrategy ucs = new QueryStringUrlCodingStrategy("/mount/point", TestPage.class);
+		IRequestTargetUrlCodingStrategy ucs = new QueryStringUrlCodingStrategy("/mount/point",
+				TestPage.class);
 		PageParameters params = new PageParameters();
 		params.add("a", "1");
 		params.add("a", "2");

@@ -30,9 +30,10 @@ import javax.servlet.http.HttpServletResponse;
 public class PortletActionServletResponseWrapper extends PortletServletResponseWrapper
 {
 
-	public PortletActionServletResponseWrapper(HttpServletResponse response, WicketResponseState responseState)
-    {
-        super(response, responseState);
+	public PortletActionServletResponseWrapper(HttpServletResponse response,
+			WicketResponseState responseState)
+	{
+		super(response, responseState);
 	}
 
 	public void addCookie(Cookie cookie)

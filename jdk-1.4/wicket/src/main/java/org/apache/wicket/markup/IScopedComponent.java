@@ -17,13 +17,11 @@
 package org.apache.wicket.markup;
 
 /**
- * To be implemented by Components which walks up the component tree until a
- * Page or Panel and tries to find a component with a matching wicket id if the
- * component itself does not contain it.
+ * To be implemented by Components which walks up the component tree until a Page or Panel and tries
+ * to find a component with a matching wicket id if the component itself does not contain it.
  * <p>
- * Note: MarkupContainer.isTransparent() in combination with ParentResolver
- * tries to resolve the wicket id with the parent only and shall be used to
- * implement transparent containers.
+ * Note: MarkupContainer.isTransparent() in combination with ParentResolver tries to resolve the
+ * wicket id with the parent only and shall be used to implement transparent containers.
  * 
  * @see org.apache.wicket.markup.resolver.ScopedComponentResolver
  * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
@@ -35,8 +33,8 @@ package org.apache.wicket.markup;
 public interface IScopedComponent
 {
 	/**
-	 * @return true, if component shall try its parents to resolve the component
-	 *         if the component itself does not contain it.
+	 * @return true, if component shall try its parents to resolve the component if the component
+	 *         itself does not contain it.
 	 */
 	boolean isRenderableInSubContainers();
 }

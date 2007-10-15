@@ -17,20 +17,19 @@
 package org.apache.wicket.markup.parser.filter;
 
 
-
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class HeaderSectionPage_14 extends AbstractTest14WebPage 
+public class HeaderSectionPage_14 extends AbstractTest14WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public HeaderSectionPage_14() 
+	public HeaderSectionPage_14()
 	{
-    }
+	}
 }

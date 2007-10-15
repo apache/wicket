@@ -23,9 +23,9 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Contains the logic to build the various combinations of file path, style and
- * locale required while searching for Wicket resources. The full filename will
- * be built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * Contains the logic to build the various combinations of file path, style and locale required
+ * while searching for Wicket resources. The full filename will be built like:
+ * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
@@ -35,8 +35,8 @@ import org.apache.wicket.util.string.Strings;
  * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
  * <p>
- * Locales may contain a language, a country and a region or variant.
- * Combinations of these components will be attempted in the following order:
+ * Locales may contain a language, a country and a region or variant. Combinations of these
+ * components will be attempted in the following order:
  * <ol>
  * <li>locale.toString() see javadoc for Locale for more details</li>
  * <li>&lt;language&gt;_&lt;country&gt;</li>
@@ -58,8 +58,8 @@ public class LocaleResourceNameIterator implements Iterator
 	private int state = 0;
 
 	/**
-	 * While iterating the various combinations, it will always contain the
-	 * current combination used to create the path
+	 * While iterating the various combinations, it will always contain the current combination used
+	 * to create the path
 	 */
 	private Locale currentLocale;
 
@@ -106,7 +106,7 @@ public class LocaleResourceNameIterator implements Iterator
 			state = 999;
 			return path;
 		}
-		
+
 		// 1. Apply Locale default toString() implementation. See Locale.
 		if (state == 0)
 		{
@@ -140,7 +140,7 @@ public class LocaleResourceNameIterator implements Iterator
 		if (state == 2)
 		{
 			this.state++;
-			
+
 			if (!Strings.isEmpty(language))
 			{
 				this.currentLocale = new Locale(language);
@@ -150,7 +150,7 @@ public class LocaleResourceNameIterator implements Iterator
 
 		// 4. The path only; without locale
 		this.state++;
-		
+
 		this.currentLocale = null;
 		return path;
 	}

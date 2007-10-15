@@ -28,9 +28,8 @@ import org.apache.wicket.util.value.LongValue;
 
 
 /**
- * Represents an immutable byte count. These static factory methods allow easy
- * construction of value objects using either long values like bytes(2034) or
- * megabytes(3):
+ * Represents an immutable byte count. These static factory methods allow easy construction of value
+ * objects using either long values like bytes(2034) or megabytes(3):
  * <p>
  * <ul>
  * <li>Bytes.bytes(long)
@@ -50,12 +49,11 @@ import org.apache.wicket.util.value.LongValue;
  * <li>Bytes.terabytes(double)
  * </ul>
  * <p>
- * In the case of bytes(double), the value will be rounded off to the nearest
- * integer byte count using Math.round().
+ * In the case of bytes(double), the value will be rounded off to the nearest integer byte count
+ * using Math.round().
  * <p>
- * The precise number of bytes in a Bytes object can be retrieved by calling
- * bytes(). Approximate values for different units can be retrieved as double
- * precision values using these methods:
+ * The precise number of bytes in a Bytes object can be retrieved by calling bytes(). Approximate
+ * values for different units can be retrieved as double precision values using these methods:
  * <p>
  * <ul>
  * <li>kilobytes()
@@ -64,11 +62,10 @@ import org.apache.wicket.util.value.LongValue;
  * <li>terabytes()
  * </ul>
  * <p>
- * Also, value objects can be constructed from strings, optionally using a
- * Locale with valueOf(String) and valueOf(String,Locale). The string may
- * contain a decimal or floating point number followed by optional whitespace
- * followed by a unit (nothing for bytes, K for kilobyte, M for megabytes, G for
- * gigabytes or T for terabytes) optionally followed by a B (for bytes). Any of
+ * Also, value objects can be constructed from strings, optionally using a Locale with
+ * valueOf(String) and valueOf(String,Locale). The string may contain a decimal or floating point
+ * number followed by optional whitespace followed by a unit (nothing for bytes, K for kilobyte, M
+ * for megabytes, G for gigabytes or T for terabytes) optionally followed by a B (for bytes). Any of
  * these letters can be any case. So, examples of permissible string values are:
  * <p>
  * <ul>
@@ -80,11 +77,11 @@ import org.apache.wicket.util.value.LongValue;
  * <li>1024M (1024 megabytes)
  * </ul>
  * <p>
- * Note that if the Locale was not US, the values might substitute "," for "."
- * as that is the custom in Euroland.
+ * Note that if the Locale was not US, the values might substitute "," for "." as that is the custom
+ * in Euroland.
  * <p>
- * The toString() and toString(Locale) methods are smart enough to convert a
- * given value object to the most appropriate units for the given value.
+ * The toString() and toString(Locale) methods are smart enough to convert a given value object to
+ * the most appropriate units for the given value.
  * 
  * @author Jonathan Locke
  */
@@ -95,7 +92,7 @@ public final class Bytes extends LongValue
 	/** Pattern for string parsing. */
 	private static final Pattern valuePattern = Pattern.compile(
 			"([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T)B?", Pattern.CASE_INSENSITIVE);
-	
+
 	/** Maximum bytes value */
 	public static Bytes MAX = bytes(Long.MAX_VALUE);
 
@@ -281,10 +278,9 @@ public final class Bytes extends LongValue
 	}
 
 	/**
-	 * Converts a string to a number of bytes. Strings consist of a floating
-	 * point value followed by K, M, G or T for kilobytes, megabytes, gigabytes
-	 * or terabytes, respectively. The abbreviations KB, MB, GB and TB are also
-	 * accepted. Matching is case insensitive.
+	 * Converts a string to a number of bytes. Strings consist of a floating point value followed by
+	 * K, M, G or T for kilobytes, megabytes, gigabytes or terabytes, respectively. The
+	 * abbreviations KB, MB, GB and TB are also accepted. Matching is case insensitive.
 	 * 
 	 * @param string
 	 *            The string to convert
@@ -348,10 +344,9 @@ public final class Bytes extends LongValue
 	}
 
 	/**
-	 * Converts a string to a number of bytes. Strings consist of a floating
-	 * point value followed by K, M, G or T for kilobytes, megabytes, gigabytes
-	 * or terabytes, respectively. The abbreviations KB, MB, GB and TB are also
-	 * accepted. Matching is case insensitive.
+	 * Converts a string to a number of bytes. Strings consist of a floating point value followed by
+	 * K, M, G or T for kilobytes, megabytes, gigabytes or terabytes, respectively. The
+	 * abbreviations KB, MB, GB and TB are also accepted. Matching is case insensitive.
 	 * 
 	 * @param string
 	 *            The string to convert

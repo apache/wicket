@@ -19,9 +19,8 @@ package org.apache.wicket.util.upload;
 
 /**
  * <p>
- * A factory interface for creating {@link FileItem} instances. Factories can
- * provide their own custom configuration, over and above that provided by the
- * default file upload implementation.
+ * A factory interface for creating {@link FileItem} instances. Factories can provide their own
+ * custom configuration, over and above that provided by the default file upload implementation.
  * </p>
  * 
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
@@ -30,19 +29,17 @@ public interface FileItemFactory
 {
 
 	/**
-	 * Create a new {@link FileItem} instance from the supplied parameters and
-	 * any local factory configuration.
+	 * Create a new {@link FileItem} instance from the supplied parameters and any local factory
+	 * configuration.
 	 * 
 	 * @param fieldName
 	 *            The name of the form field.
 	 * @param contentType
 	 *            The content type of the form field.
 	 * @param isFormField
-	 *            <code>true</code> if this is a plain form field;
-	 *            <code>false</code> otherwise.
+	 *            <code>true</code> if this is a plain form field; <code>false</code> otherwise.
 	 * @param fileName
-	 *            The name of the uploaded file, if any, as supplied by the
-	 *            browser or other client.
+	 *            The name of the uploaded file, if any, as supplied by the browser or other client.
 	 * 
 	 * @return The newly created file item.
 	 */

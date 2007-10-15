@@ -22,8 +22,8 @@ import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.IPageRequestTarget;
 
 /**
- * Target that denotes a page instance and a call to a component on that page
- * using an listener interface method.
+ * Target that denotes a page instance and a call to a component on that page using an listener
+ * interface method.
  * 
  * @author Eelco Hillenius
  */
@@ -46,7 +46,7 @@ public interface IListenerInterfaceRequestTarget extends IPageRequestTarget
 	/**
 	 * Get the request parameters
 	 * 
-	 * @return The request parameters 
+	 * @return The request parameters
 	 */
 	RequestParameters getRequestParameters();
 }

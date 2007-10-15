@@ -23,7 +23,7 @@ import org.apache.wicket.model.Model;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class HeaderSectionMyLabel2 extends Label
@@ -32,19 +32,20 @@ public class HeaderSectionMyLabel2 extends Label
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 * @param label
 	 */
-	public HeaderSectionMyLabel2(final String id, final String label) 
+	public HeaderSectionMyLabel2(final String id, final String label)
 	{
-	    super(id, new Model(label));
-    }
+		super(id, new Model(label));
+	}
 
 	/**
 	 * @param container
 	 */
 	public void renderHead(HtmlHeaderContainer container)
 	{
-	    this.getResponse().write("text added by contributor");
+		this.getResponse().write("text added by contributor");
 	}
 }

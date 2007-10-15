@@ -17,13 +17,11 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 /**
- * Components that implement this interface will be pageable, they should return
- * the pagecount so that an object/component knows how many pages it can use for
- * the setCurrentPage method.
+ * Components that implement this interface will be pageable, they should return the pagecount so
+ * that an object/component knows how many pages it can use for the setCurrentPage method.
  * 
- * The PageableListView is one example that is Pageable. But also a Form could
- * be pageable so that you can scroll to sets of records that you display in
- * that form with any navigator you want.
+ * The PageableListView is one example that is Pageable. But also a Form could be pageable so that
+ * you can scroll to sets of records that you display in that form with any navigator you want.
  * 
  * @author jcompagner
  */

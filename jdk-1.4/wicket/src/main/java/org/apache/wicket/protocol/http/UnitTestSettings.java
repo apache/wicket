@@ -24,8 +24,8 @@ package org.apache.wicket.protocol.http;
 public class UnitTestSettings
 {
 	/**
-	 * True when unit testing is going on and we need to sort coded parameters
-	 * so they will string compare.
+	 * True when unit testing is going on and we need to sort coded parameters so they will string
+	 * compare.
 	 */
 	private static boolean sortUrlParameters = false;
 

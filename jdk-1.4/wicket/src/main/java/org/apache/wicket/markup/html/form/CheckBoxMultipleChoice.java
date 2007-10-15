@@ -184,10 +184,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see org.apache.wicket.Component#Component(String,
-	 *      org.apache.wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String,
-	 *      org.apache.wicket.model.IModel, java.util.List)
+	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel, java.util.List)
 	 */
 	public CheckBoxMultipleChoice(final String id, IModel model, final List choices)
 	{
@@ -205,10 +203,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see org.apache.wicket.Component#Component(String,
-	 *      org.apache.wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String,
-	 *      org.apache.wicket.model.IModel,
+	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
 	 *      java.util.List,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(final String id, IModel model, final List choices,
@@ -225,8 +221,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see org.apache.wicket.Component#Component(String)
-	 * @see AbstractChoice#AbstractChoice(String,
-	 *      org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel choices)
 	{
@@ -239,14 +234,12 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See
-	 *            Component
+	 *            The model that is updated with changes in this component. See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see AbstractChoice#AbstractChoice(String,
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.model.IModel)
-	 * @see org.apache.wicket.Component#Component(String,
-	 *      org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel model, IModel choices)
 	{
@@ -278,16 +271,13 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @param id
 	 *            See Component
 	 * @param model
-	 *            The model that is updated with changes in this component. See
-	 *            Component
+	 *            The model that is updated with changes in this component. See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see org.apache.wicket.Component#Component(String,
-	 *      org.apache.wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String,
-	 *      org.apache.wicket.model.IModel,
+	 * @see org.apache.wicket.Component#Component(String, org.apache.wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(String, org.apache.wicket.model.IModel,
 	 *      org.apache.wicket.model.IModel,org.apache.wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
@@ -438,8 +428,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	}
 
 	/**
-	 * Overridable method to determine whether the label markup should be
-	 * escaped.
+	 * Overridable method to determine whether the label markup should be escaped.
 	 * 
 	 * @return
 	 */

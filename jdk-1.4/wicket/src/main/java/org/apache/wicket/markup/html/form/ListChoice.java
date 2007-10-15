@@ -23,8 +23,8 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Essentially a drop down choice that doesn't drop down. Instead, it scrolls
- * and displays a given number of rows.
+ * Essentially a drop down choice that doesn't drop down. Instead, it scrolls and displays a given
+ * number of rows.
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -70,8 +70,7 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
 	public ListChoice(final String id, final List choices)
 	{
@@ -162,8 +161,7 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
 	public ListChoice(String id, IModel choices)
 	{
@@ -171,8 +169,7 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel,IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
 	public ListChoice(String id, IModel model, IModel choices)
 	{
@@ -190,8 +187,8 @@ public class ListChoice extends DropDownChoice
 
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel, IModel,IChoiceRenderer)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
+	 *      IModel,IChoiceRenderer)
 	 */
 	public ListChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
 	{
@@ -199,8 +196,8 @@ public class ListChoice extends DropDownChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel, IModel,IChoiceRenderer)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
+	 *      IModel,IChoiceRenderer)
 	 */
 	public ListChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer, int maxRows)
 	{
@@ -237,7 +234,8 @@ public class ListChoice extends DropDownChoice
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		if (!tag.getAttributes().containsKey("size")) {
+		if (!tag.getAttributes().containsKey("size"))
+		{
 			tag.put("size", maxRows);
 		}
 	}

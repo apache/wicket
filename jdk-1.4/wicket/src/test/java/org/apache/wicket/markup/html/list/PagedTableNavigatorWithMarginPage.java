@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 
 
-
 /**
  * Dummy page used for resource testing.
  */
@@ -36,8 +35,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 *  page parameters.
+	 * Construct. page parameters.
 	 */
 	public PagedTableNavigatorWithMarginPage()
 	{
@@ -71,25 +69,27 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 
 		add(table);
 		add(new PagingNavigator("navigator", table)
-        {
+		{
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * @see org.apache.wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(org.apache.wicket.markup.html.navigation.paging.IPageable, org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider)
+			 * @see org.apache.wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(org.apache.wicket.markup.html.navigation.paging.IPageable,
+			 *      org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider)
 			 */
-			protected PagingNavigation newNavigation(IPageable pageable, IPagingLabelProvider labelProvider)
+			protected PagingNavigation newNavigation(IPageable pageable,
+					IPagingLabelProvider labelProvider)
 			{
-                PagingNavigation nav = new PagingNavigation("navigation", pageable);
-                nav.setMargin(2);
-                if (nav.getViewSize() > 5)
-                {
-                    nav.setViewSize(5);
-                }
-                
-                nav.setSeparator(", ");
-                return nav;
+				PagingNavigation nav = new PagingNavigation("navigation", pageable);
+				nav.setMargin(2);
+				if (nav.getViewSize() > 5)
+				{
+					nav.setViewSize(5);
+				}
+
+				nav.setSeparator(", ");
+				return nav;
 			}
-        });
+		});
 	}
 
 	/**

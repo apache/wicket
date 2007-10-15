@@ -18,10 +18,9 @@ package org.apache.wicket.protocol.http;
 
 
 /**
- * Custom WicketServlet that reloads the web applications when classes are
- * modified. In order to reload your own classes, use include and exclude
- * patterns using wildcards. And in web.xml, point to the reloading wicket
- * servlet instead of the original one.
+ * Custom WicketServlet that reloads the web applications when classes are modified. In order to
+ * reload your own classes, use include and exclude patterns using wildcards. And in web.xml, point
+ * to the reloading wicket servlet instead of the original one.
  * 
  * <p>
  * <b>Example denoting the built-in patterns:</b>
@@ -37,8 +36,7 @@ package org.apache.wicket.protocol.http;
  * }
  * </pre>
  * 
- * @see ReloadingWicketFilter for complete documentation, and for proper
- *      integration with Spring
+ * @see ReloadingWicketFilter for complete documentation, and for proper integration with Spring
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */

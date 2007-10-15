@@ -22,9 +22,9 @@ import org.apache.wicket.util.lang.Primitives;
 
 
 /**
- * A base class based on the Java <code>long</code> primitive for value
- * classes that want to implement standard operations on that value without the
- * pain of aggregating a <code>Long</code> object.
+ * A base class based on the Java <code>long</code> primitive for value classes that want to
+ * implement standard operations on that value without the pain of aggregating a <code>Long</code>
+ * object.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -32,7 +32,7 @@ import org.apache.wicket.util.lang.Primitives;
 public class LongValue implements Comparable, Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** the <code>long</code> value */
 	protected final long value;
 
@@ -52,8 +52,8 @@ public class LongValue implements Comparable, Serializable
 	 * 
 	 * @param object
 	 *            the <code>Object</code> to compare with
-	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s
-	 *         value, or 1 if greater than given <code>Object</code>'s value
+	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s value, or 1 if greater
+	 *         than given <code>Object</code>'s value
 	 */
 	public final int compareTo(final Object object)
 	{
@@ -77,8 +77,8 @@ public class LongValue implements Comparable, Serializable
 	 * 
 	 * @param that
 	 *            the <code>Object</code> to compare with
-	 * @return <code>true</code> if this <code>Object</code>'s value is
-	 *         equal to the given <code>Object</code>'s value
+	 * @return <code>true</code> if this <code>Object</code>'s value is equal to the given
+	 *         <code>Object</code>'s value
 	 */
 	public final boolean equals(final Object that)
 	{
@@ -91,13 +91,12 @@ public class LongValue implements Comparable, Serializable
 	}
 
 	/**
-	 * Compares this <code>LongValue</code> with a primitive <code>long</code>
-	 * value.
+	 * Compares this <code>LongValue</code> with a primitive <code>long</code> value.
 	 * 
 	 * @param value
 	 *            the <code>long</code> value to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is greater
-	 *         than the given <code>long</code> value
+	 * @return <code>true</code> if this <code>LongValue</code> is greater than the given
+	 *         <code>long</code> value
 	 */
 	public final boolean greaterThan(final long value)
 	{
@@ -105,13 +104,12 @@ public class LongValue implements Comparable, Serializable
 	}
 
 	/**
-	 * Compares this <code>LongValue</code> with another
-	 * <code>LongValue</code>.
+	 * Compares this <code>LongValue</code> with another <code>LongValue</code>.
 	 * 
 	 * @param that
 	 *            the <code>LongValue</code> to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is greater
-	 *         than the given <code>LongValue</code>
+	 * @return <code>true</code> if this <code>LongValue</code> is greater than the given
+	 *         <code>LongValue</code>
 	 */
 	public final boolean greaterThan(final LongValue that)
 	{
@@ -129,13 +127,12 @@ public class LongValue implements Comparable, Serializable
 	}
 
 	/**
-	 * Compares this <code>LongValue</code> with a primitive <code>long</code>
-	 * value.
+	 * Compares this <code>LongValue</code> with a primitive <code>long</code> value.
 	 * 
 	 * @param that
 	 *            the <code>long</code> value to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is less than
-	 *         the given <code>long</code> value
+	 * @return <code>true</code> if this <code>LongValue</code> is less than the given
+	 *         <code>long</code> value
 	 */
 	public final boolean lessThan(final long that)
 	{
@@ -143,13 +140,12 @@ public class LongValue implements Comparable, Serializable
 	}
 
 	/**
-	 * Compares this <code>LongValue</code> with another
-	 * <code>LongValue</code>.
+	 * Compares this <code>LongValue</code> with another <code>LongValue</code>.
 	 * 
 	 * @param that
 	 *            the <code>LongValue</code> value to compare with
-	 * @return <code>true</code> if this <code>LongValue</code> is less than
-	 *         the given <code>LongValue</code>
+	 * @return <code>true</code> if this <code>LongValue</code> is less than the given
+	 *         <code>LongValue</code>
 	 */
 	public final boolean lessThan(final LongValue that)
 	{
@@ -159,8 +155,7 @@ public class LongValue implements Comparable, Serializable
 	/**
 	 * Converts this <code>LongValue</code> to a <code>String</code>.
 	 * 
-	 * @return a <code>String</code> representation of this
-	 *         <code>LongValue</code>
+	 * @return a <code>String</code> representation of this <code>LongValue</code>
 	 */
 	public String toString()
 	{

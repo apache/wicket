@@ -31,18 +31,16 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * This is a markup inline filter. It identifies xml tags which include a href
- * attribute and which are not Wicket specific components and flags these tags
- * (ComponentTag) as autolink enabled. A component resolver will later resolve
- * the href and assign a BookmarkablePageLink to it (automatically).
+ * This is a markup inline filter. It identifies xml tags which include a href attribute and which
+ * are not Wicket specific components and flags these tags (ComponentTag) as autolink enabled. A
+ * component resolver will later resolve the href and assign a BookmarkablePageLink to it
+ * (automatically).
  * <p>
- * An application setting is used as default value, which might be modified for
- * specific regions. These regions are identified by &lt;wicket:link&gt; tags
- * with an optional 'autolink' attribute. The default value for the attribute is
- * true, thus enabling autolinking. An open-close &lt;wicket:link/&gt tag will
- * change the autolink status until the end of the markup document or the next
- * &lt;wicket:link&gt; tag respectively. &lt;wicket:link&gt; regions may be
- * nested.
+ * An application setting is used as default value, which might be modified for specific regions.
+ * These regions are identified by &lt;wicket:link&gt; tags with an optional 'autolink' attribute.
+ * The default value for the attribute is true, thus enabling autolinking. An open-close
+ * &lt;wicket:link/&gt tag will change the autolink status until the end of the markup document or
+ * the next &lt;wicket:link&gt; tag respectively. &lt;wicket:link&gt; regions may be nested.
  * 
  * @author Juergen Donnerstag
  */
@@ -83,10 +81,9 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handles it if
-	 * the specific filter criteria are met. Depending on the filter, it may
-	 * return the MarkupElement unchanged, modified or it remove by asking the
-	 * parent handler for the next tag.
+	 * Get the next MarkupElement from the parent MarkupFilter and handles it if the specific filter
+	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
+	 * modified or it remove by asking the parent handler for the next tag.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return Return the next eligible MarkupElement
@@ -167,12 +164,10 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Analyze the tag. If return value == true, a autolink component will be
-	 * created.
+	 * Analyze the tag. If return value == true, a autolink component will be created.
 	 * <p>
-	 * Subclass analyzeAutolinkCondition() to implement you own implementation
-	 * and register the new tag handler with the markup parser through
-	 * Application.newMarkupParser().
+	 * Subclass analyzeAutolinkCondition() to implement you own implementation and register the new
+	 * tag handler with the markup parser through Application.newMarkupParser().
 	 * 
 	 * @param tag
 	 *            The current tag being parsed

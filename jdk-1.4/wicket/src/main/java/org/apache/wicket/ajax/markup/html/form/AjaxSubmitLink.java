@@ -25,39 +25,37 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * A link that submits a form via ajax. Since this link takes the form as a
- * constructor argument it does not need to be inside form's component
- * hierarchy.
+ * A link that submits a form via ajax. Since this link takes the form as a constructor argument it
+ * does not need to be inside form's component hierarchy.
  * 
- * <p/>
- * It works by splitting the javascript/Ajax calls from the normal
- * non-ajax requests by generating:
+ * <p/> It works by splitting the javascript/Ajax calls from the normal non-ajax requests by
+ * generating:
+ * 
  * <pre>
- * &lt;a href="normal action url" onclick="ajax javascript script; return
- * false;"&gt;link&lt;/a&gt;
+ * &lt;a href=&quot;normal action url&quot; onclick=&quot;ajax javascript script; return
+ * false;&quot;&gt;link&lt;/a&gt;
  * </pre>
- * If/when javascript is turned off in the browser, or it doesn't support
- * javascript, then the browser will not respond to the onclick event,
- * using the href directly. Wicket will then use a normal request target,
- * and call the serverside onClick with a null {@link AjaxRequestTarget}.
- *
- * If javascript is enabled, Wicket will send an ajax request, and
- * process it serverside with an {@link AjaxRequestTarget} that is supplied to
- * the server-side onClick method. The "return false" in the &lt;a href&gt;
- * onclick handler ensures the browser doesn't perform the normal request
- * too.
- *
+ * 
+ * If/when javascript is turned off in the browser, or it doesn't support javascript, then the
+ * browser will not respond to the onclick event, using the href directly. Wicket will then use a
+ * normal request target, and call the serverside onClick with a null {@link AjaxRequestTarget}.
+ * 
+ * If javascript is enabled, Wicket will send an ajax request, and process it serverside with an
+ * {@link AjaxRequestTarget} that is supplied to the server-side onClick method. The "return false"
+ * in the &lt;a href&gt; onclick handler ensures the browser doesn't perform the normal request too.
+ * 
  * The latter is nicely illustrated with this:
+ * 
  * <pre>
- * &lt;a href="javascript:alert('href event handler');"
- * onclick="alert('onclick event handler');"&gt;clicking me gives two
+ * &lt;a href=&quot;javascript:alert('href event handler');&quot;
+ * onclick=&quot;alert('onclick event handler');&quot;&gt;clicking me gives two
  * alerts&lt;/a&gt;
- *
- * &lt;a href="javascript:alert('href event handler');"
- * onclick="alert('onclick event handler');return false;"&gt;clicking me
+ * 
+ * &lt;a href=&quot;javascript:alert('href event handler');&quot;
+ * onclick=&quot;alert('onclick event handler');return false;&quot;&gt;clicking me
  * gives only one alert&lt;/a&gt;
  * </pre>
- *
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -110,12 +108,12 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			{
 				return AjaxSubmitLink.this.getAjaxCallDecorator();
 			}
-			
+
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// write the onclick handler only if link is enabled
 				if (isLinkEnabled())
-				{					
+				{
 					super.onComponentTag(tag);
 				}
 			}
@@ -124,12 +122,10 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the
-	 * generated javascript. This is the preferred way of changing the
-	 * javascript in the onclick handler
+	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the generated javascript.
+	 * This is the preferred way of changing the javascript in the onclick handler
 	 * 
-	 * @return call decorator used to modify the generated javascript or null
-	 *         for none
+	 * @return call decorator used to modify the generated javascript or null for none
 	 */
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
@@ -139,8 +135,8 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		
-		if (isLinkEnabled()) 
+
+		if (isLinkEnabled())
 		{
 			if (tag.getName().toLowerCase().equals("a"))
 			{
@@ -152,10 +148,10 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			disableLink(tag);
 		}
 	}
-	
+
 	/**
-	 * Final implementation of the Button's onSubmit. AjaxSubmitLinks have
-	 * there own onSubmit which is called.
+	 * Final implementation of the Button's onSubmit. AjaxSubmitLinks have there own onSubmit which
+	 * is called.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.Button#onSubmit()
 	 */

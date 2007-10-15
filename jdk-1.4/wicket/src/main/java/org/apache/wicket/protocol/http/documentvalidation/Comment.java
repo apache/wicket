@@ -23,37 +23,37 @@ package org.apache.wicket.protocol.http.documentvalidation;
  */
 public class Comment implements DocumentElement
 {
-    /** The text for this HTML comment */
-    private final String text;
+	/** The text for this HTML comment */
+	private final String text;
 
-    /**
-     * Create the comment.
-     * 
-     * @param text
-     *            The text for the comment
-     */
-    public Comment(final String text)
-    {
-        this.text = text;
-    }
+	/**
+	 * Create the comment.
+	 * 
+	 * @param text
+	 *            The text for the comment
+	 */
+	public Comment(final String text)
+	{
+		this.text = text;
+	}
 
-    /**
-     * Get the comment text.
-     * 
-     * @return The text
-     */
-    public String getText()
-    {
-        return text;
-    }
+	/**
+	 * Get the comment text.
+	 * 
+	 * @return The text
+	 */
+	public String getText()
+	{
+		return text;
+	}
 
-    /**
-     * Output a descriptive string.
-     * 
-     * @return The string
-     */
-    public String toString()
-    {
-        return "[comment = '" + text + "']";
-    }
+	/**
+	 * Output a descriptive string.
+	 * 
+	 * @return The string
+	 */
+	public String toString()
+	{
+		return "[comment = '" + text + "']";
+	}
 }

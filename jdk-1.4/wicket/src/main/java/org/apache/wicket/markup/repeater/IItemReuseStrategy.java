@@ -24,9 +24,8 @@ import org.apache.wicket.IClusterable;
 /**
  * Interface for item reuse strategies.
  * <p>
- * <u>Notice:</u> Child items will be rendered in the order they are provided
- * by the returned iterator, so it is important that the strategy preserve this
- * order
+ * <u>Notice:</u> Child items will be rendered in the order they are provided by the returned
+ * iterator, so it is important that the strategy preserve this order
  * </p>
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -36,9 +35,8 @@ public interface IItemReuseStrategy extends IClusterable
 {
 
 	/**
-	 * Returns an iterator over items that will be added to the view. The
-	 * iterator needs to return all the items because the old ones are removed
-	 * prior to the new ones added.
+	 * Returns an iterator over items that will be added to the view. The iterator needs to return
+	 * all the items because the old ones are removed prior to the new ones added.
 	 * 
 	 * @param factory
 	 *            implementation of IItemFactory
@@ -46,8 +44,7 @@ public interface IItemReuseStrategy extends IClusterable
 	 *            iterator over models for items
 	 * @param existingItems
 	 *            iterator over child items
-	 * @return iterator over items that will be added after all the old items
-	 *         are moved.
+	 * @return iterator over items that will be added after all the old items are moved.
 	 */
 	Iterator getItems(IItemFactory factory, Iterator newModels, Iterator existingItems);
 }

@@ -28,10 +28,9 @@ import org.apache.wicket.util.string.StringList;
 public final class Packages
 {
 	/**
-	 * Takes a package and a relative path to a resource and returns an absolute
-	 * path to the resource. For example, if the given package was java.lang and
-	 * the relative path was "../util/List", then "java/util/List" would be
-	 * returned.
+	 * Takes a package and a relative path to a resource and returns an absolute path to the
+	 * resource. For example, if the given package was java.lang and the relative path was
+	 * "../util/List", then "java/util/List" would be returned.
 	 * 
 	 * @param p
 	 *            The package to start at
@@ -46,10 +45,9 @@ public final class Packages
 	}
 
 	/**
-	 * Takes a package and a relative path to a resource and returns an absolute
-	 * path to the resource. For example, if the given package was java.lang and
-	 * the relative path was "../util/List", then "java/util/List" would be
-	 * returned.
+	 * Takes a package and a relative path to a resource and returns an absolute path to the
+	 * resource. For example, if the given package was java.lang and the relative path was
+	 * "../util/List", then "java/util/List" would be returned.
 	 * 
 	 * @param p
 	 *            The package to start at
@@ -63,10 +61,9 @@ public final class Packages
 	}
 
 	/**
-	 * Takes a package and a relative path to a resource and returns an absolute
-	 * path to the resource. For example, if the given package was java.lang and
-	 * the relative path was "../util/List", then "java/util/List" would be
-	 * returned.
+	 * Takes a package and a relative path to a resource and returns an absolute path to the
+	 * resource. For example, if the given package was java.lang and the relative path was
+	 * "../util/List", then "java/util/List" would be returned.
 	 * 
 	 * @param packageName
 	 *            The package to start at
@@ -159,8 +156,8 @@ public final class Packages
 
 
 	/**
-	 * Resolve scope for the given class by extracting it's package name and
-	 * converting all dots to slashes.
+	 * Resolve scope for the given class by extracting it's package name and converting all dots to
+	 * slashes.
 	 * 
 	 * @param forClass
 	 *            the class

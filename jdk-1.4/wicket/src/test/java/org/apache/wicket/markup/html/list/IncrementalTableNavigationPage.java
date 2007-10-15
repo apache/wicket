@@ -24,7 +24,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
 
 
-
 /**
  * Dummy page used for resource testing.
  */
@@ -33,8 +32,7 @@ public class IncrementalTableNavigationPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 *  page parameters.
+	 * Construct. page parameters.
 	 */
 	public IncrementalTableNavigationPage()
 	{
@@ -61,11 +59,10 @@ public class IncrementalTableNavigationPage extends WebPage
 		};
 
 		add(table);
-		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink(
-				"prev", table, -1);
+		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink("prev", table, -1);
 		add(prev);
-		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink(
-				"nextNext", table, +2);
+		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink("nextNext",
+				table, +2);
 		add(nextNext);
 	}
 }

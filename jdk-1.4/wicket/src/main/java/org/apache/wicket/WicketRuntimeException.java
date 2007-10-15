@@ -42,8 +42,7 @@ public class WicketRuntimeException extends RuntimeException
 	}
 
 	/**
-	 * @see RuntimeException#RuntimeException(java.lang.String,
-	 *      java.lang.Throwable)
+	 * @see RuntimeException#RuntimeException(java.lang.String, java.lang.Throwable)
 	 */
 	public WicketRuntimeException(final String message, final Throwable cause)
 	{

@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.border.BoxBorder;
 public class AjaxPage2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Label ajaxLabel;
 	private final BoxBorder myBorder;
 

@@ -30,17 +30,16 @@ import java.util.Map;
  * <p>
  * High level API for processing file uploads.
  * </p>
- *
+ * 
  * <p>
- * This class handles multiple files per single HTML widget, sent using
- * <code>multipart/mixed</code> encoding type, as specified by <a
- * href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.
- *
+ * This class handles multiple files per single HTML widget, sent using <code>multipart/mixed</code>
+ * encoding type, as specified by <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.
+ * 
  * <p>
- * How the data for individual parts is stored is determined by the factory used
- * to create them; a given part may be in memory, on disk, or somewhere else.
+ * How the data for individual parts is stored is determined by the factory used to create them; a
+ * given part may be in memory, on disk, or somewhere else.
  * </p>
- *
+ * 
  * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
@@ -56,22 +55,19 @@ public abstract class FileUploadBase
 
 	/**
 	 * <p>
-	 * Utility method that determines whether the request contains multipart
-	 * content.
+	 * Utility method that determines whether the request contains multipart content.
 	 * </p>
-	 *
+	 * 
 	 * <p>
-	 * <strong>NOTE:</strong>This method will be moved to the
-	 * <code>ServletFileUpload</code> class after the FileUpload 1.1 release.
-	 * Unfortunately, since this method is static, it is not possible to provide
-	 * its replacement until this method is removed.
+	 * <strong>NOTE:</strong>This method will be moved to the <code>ServletFileUpload</code>
+	 * class after the FileUpload 1.1 release. Unfortunately, since this method is static, it is not
+	 * possible to provide its replacement until this method is removed.
 	 * </p>
-	 *
+	 * 
 	 * @param ctx
 	 *            The request context to be evaluated. Must be non-null.
-	 *
-	 * @return <code>true</code> if the request is multipart;
-	 *         <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if the request is multipart; <code>false</code> otherwise.
 	 */
 	public static final boolean isMultipartContent(RequestContext ctx)
 	{
@@ -133,8 +129,7 @@ public abstract class FileUploadBase
 
 
 	/**
-	 * The maximum length of a single header line that will be parsed (1024
-	 * bytes).
+	 * The maximum length of a single header line that will be parsed (1024 bytes).
 	 */
 	public static final int MAX_HEADER_SIZE = 1024;
 
@@ -143,8 +138,7 @@ public abstract class FileUploadBase
 
 
 	/**
-	 * The maximum size permitted for an uploaded file. A value of -1 indicates
-	 * no maximum.
+	 * The maximum size permitted for an uploaded file. A value of -1 indicates no maximum.
 	 */
 	private long sizeMax = -1;
 
@@ -160,7 +154,7 @@ public abstract class FileUploadBase
 
 	/**
 	 * Returns the factory class used when creating file items.
-	 *
+	 * 
 	 * @return The factory class for new file items.
 	 */
 	public abstract FileItemFactory getFileItemFactory();
@@ -168,7 +162,7 @@ public abstract class FileUploadBase
 
 	/**
 	 * Sets the factory class to use when creating file items.
-	 *
+	 * 
 	 * @param factory
 	 *            The factory class for new file items.
 	 */
@@ -177,11 +171,11 @@ public abstract class FileUploadBase
 
 	/**
 	 * Returns the maximum allowed upload size.
-	 *
+	 * 
 	 * @return The maximum allowed size, in bytes.
-	 *
+	 * 
 	 * @see #setSizeMax(long)
-	 *
+	 * 
 	 */
 	public long getSizeMax()
 	{
@@ -191,12 +185,12 @@ public abstract class FileUploadBase
 
 	/**
 	 * Sets the maximum allowed upload size. If negative, there is no maximum.
-	 *
+	 * 
 	 * @param sizeMax
 	 *            The maximum allowed size, in bytes, or -1 for no maximum.
-	 *
+	 * 
 	 * @see #getSizeMax()
-	 *
+	 * 
 	 */
 	public void setSizeMax(long sizeMax)
 	{
@@ -205,10 +199,9 @@ public abstract class FileUploadBase
 
 
 	/**
-	 * Retrieves the character encoding used when reading the headers of an
-	 * individual part. When not specified, or <code>null</code>, the
-	 * platform default encoding is used.
-	 *
+	 * Retrieves the character encoding used when reading the headers of an individual part. When
+	 * not specified, or <code>null</code>, the platform default encoding is used.
+	 * 
 	 * @return The encoding used to read part headers.
 	 */
 	public String getHeaderEncoding()
@@ -218,10 +211,9 @@ public abstract class FileUploadBase
 
 
 	/**
-	 * Specifies the character encoding to be used when reading the headers of
-	 * individual parts. When not specified, or <code>null</code>, the
-	 * platform default encoding is used.
-	 *
+	 * Specifies the character encoding to be used when reading the headers of individual parts.
+	 * When not specified, or <code>null</code>, the platform default encoding is used.
+	 * 
 	 * @param encoding
 	 *            The encoding used to read part headers.
 	 */
@@ -234,18 +226,17 @@ public abstract class FileUploadBase
 	// --------------------------------------------------------- Public methods
 
 	/**
-	 * Processes an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
-	 * compliant <code>multipart/form-data</code> stream.
-	 *
+	 * Processes an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a> compliant
+	 * <code>multipart/form-data</code> stream.
+	 * 
 	 * @param ctx
 	 *            The context for the request to be parsed.
-	 *
-	 * @return A list of <code>FileItem</code> instances parsed from the
-	 *         request, in the order that they were transmitted.
-	 *
+	 * 
+	 * @return A list of <code>FileItem</code> instances parsed from the request, in the order
+	 *         that they were transmitted.
+	 * 
 	 * @exception FileUploadException
-	 *                if there are problems reading/parsing the request or
-	 *                storing files.
+	 *                if there are problems reading/parsing the request or storing files.
 	 */
 	public List /* FileItem */parseRequest(RequestContext ctx) throws FileUploadException
 	{
@@ -259,9 +250,9 @@ public abstract class FileUploadBase
 
 		if ((null == contentType) || (!contentType.toLowerCase().startsWith(MULTIPART)))
 		{
-			throw new InvalidContentTypeException("the request doesn't contain a "
-					+ MULTIPART_FORM_DATA + " or " + MULTIPART_MIXED
-					+ " stream, content type header is " + contentType);
+			throw new InvalidContentTypeException("the request doesn't contain a " +
+					MULTIPART_FORM_DATA + " or " + MULTIPART_MIXED +
+					" stream, content type header is " + contentType);
 		}
 		int requestSize = ctx.getContentLength();
 
@@ -302,8 +293,8 @@ public abstract class FileUploadBase
 				if (fieldName != null)
 				{
 					String subContentType = getHeader(headers, CONTENT_TYPE);
-					if (subContentType != null
-							&& subContentType.toLowerCase().startsWith(MULTIPART_MIXED))
+					if (subContentType != null &&
+							subContentType.toLowerCase().startsWith(MULTIPART_MIXED))
 					{
 						// Multiple files.
 						byte[] subBoundary = getBoundary(subContentType);
@@ -361,8 +352,8 @@ public abstract class FileUploadBase
 		}
 		catch (IOException e)
 		{
-			throw new FileUploadException("Processing of " + MULTIPART_FORM_DATA
-					+ " request failed. " + e.getMessage(), e);
+			throw new FileUploadException("Processing of " + MULTIPART_FORM_DATA +
+					" request failed. " + e.getMessage(), e);
 		}
 
 		return items;
@@ -374,11 +365,10 @@ public abstract class FileUploadBase
 
 	/**
 	 * Retrieves the boundary from the <code>Content-type</code> header.
-	 *
+	 * 
 	 * @param contentType
-	 *            The value of the content type header from which to extract the
-	 *            boundary value.
-	 *
+	 *            The value of the content type header from which to extract the boundary value.
+	 * 
 	 * @return The boundary, as a byte array.
 	 */
 	protected byte[] getBoundary(String contentType)
@@ -407,12 +397,11 @@ public abstract class FileUploadBase
 
 
 	/**
-	 * Retrieves the file name from the <code>Content-disposition</code>
-	 * header.
-	 *
+	 * Retrieves the file name from the <code>Content-disposition</code> header.
+	 * 
 	 * @param headers
 	 *            A <code>Map</code> containing the HTTP request headers.
-	 *
+	 * 
 	 * @return The file name for the current <code>encapsulation</code>.
 	 */
 	protected String getFileName(Map /* String, String */headers)
@@ -454,12 +443,11 @@ public abstract class FileUploadBase
 
 
 	/**
-	 * Retrieves the field name from the <code>Content-disposition</code>
-	 * header.
-	 *
+	 * Retrieves the field name from the <code>Content-disposition</code> header.
+	 * 
 	 * @param headers
 	 *            A <code>Map</code> containing the HTTP request headers.
-	 *
+	 * 
 	 * @return The field name for the current <code>encapsulation</code>.
 	 */
 	protected String getFieldName(Map /* String, String */headers)
@@ -485,13 +473,12 @@ public abstract class FileUploadBase
 
 	/**
 	 * Creates a new {@link FileItem} instance.
-	 *
+	 * 
 	 * @param headers
 	 *            A <code>Map</code> containing the HTTP request headers.
 	 * @param isFormField
-	 *            Whether or not this item is a form field, as opposed to a
-	 *            file.
-	 *
+	 *            Whether or not this item is a form field, as opposed to a file.
+	 * 
 	 * @return A newly created <code>FileItem</code> instance.
 	 */
 	protected FileItem createItem(Map /* String, String */headers, boolean isFormField)
@@ -504,15 +491,14 @@ public abstract class FileUploadBase
 	/**
 	 * <p>
 	 * Parses the <code>header-part</code> and returns as key/value pairs.
-	 *
+	 * 
 	 * <p>
-	 * If there are multiple headers of the same names, the name will map to a
-	 * comma-separated list containing the values.
-	 *
+	 * If there are multiple headers of the same names, the name will map to a comma-separated list
+	 * containing the values.
+	 * 
 	 * @param headerPart
-	 *            The <code>header-part</code> of the current
-	 *            <code>encapsulation</code>.
-	 *
+	 *            The <code>header-part</code> of the current <code>encapsulation</code>.
+	 * 
 	 * @return A <code>Map</code> containing the parsed HTTP request headers.
 	 */
 	protected Map /* String, String */parseHeaders(String headerPart)
@@ -571,16 +557,16 @@ public abstract class FileUploadBase
 
 
 	/**
-	 * Returns the header with the specified name from the supplied map. The
-	 * header lookup is case-insensitive.
-	 *
+	 * Returns the header with the specified name from the supplied map. The header lookup is
+	 * case-insensitive.
+	 * 
 	 * @param headers
 	 *            A <code>Map</code> containing the HTTP request headers.
 	 * @param name
 	 *            The name of the header to return.
-	 *
-	 * @return The value of specified header, or a comma-separated list if there
-	 *         were multiple headers of that name.
+	 * 
+	 * @return The value of specified header, or a comma-separated list if there were multiple
+	 *         headers of that name.
 	 */
 	protected final String getHeader(Map /* String, String */headers, String name)
 	{
@@ -597,8 +583,7 @@ public abstract class FileUploadBase
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Constructs a <code>InvalidContentTypeException</code> with no
-		 * detail message.
+		 * Constructs a <code>InvalidContentTypeException</code> with no detail message.
 		 */
 		public InvalidContentTypeException()
 		{
@@ -606,9 +591,9 @@ public abstract class FileUploadBase
 		}
 
 		/**
-		 * Constructs an <code>InvalidContentTypeException</code> with the
-		 * specified detail message.
-		 *
+		 * Constructs an <code>InvalidContentTypeException</code> with the specified detail
+		 * message.
+		 * 
 		 * @param message
 		 *            The detail message.
 		 */
@@ -628,8 +613,7 @@ public abstract class FileUploadBase
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Constructs a <code>UnknownSizeException</code> with no detail
-		 * message.
+		 * Constructs a <code>UnknownSizeException</code> with no detail message.
 		 */
 		public UnknownSizeException()
 		{
@@ -637,9 +621,8 @@ public abstract class FileUploadBase
 		}
 
 		/**
-		 * Constructs an <code>UnknownSizeException</code> with the specified
-		 * detail message.
-		 *
+		 * Constructs an <code>UnknownSizeException</code> with the specified detail message.
+		 * 
 		 * @param message
 		 *            The detail message.
 		 */
@@ -659,8 +642,7 @@ public abstract class FileUploadBase
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Constructs a <code>SizeExceededException</code> with no detail
-		 * message.
+		 * Constructs a <code>SizeExceededException</code> with no detail message.
 		 */
 		public SizeLimitExceededException()
 		{
@@ -668,9 +650,8 @@ public abstract class FileUploadBase
 		}
 
 		/**
-		 * Constructs an <code>SizeExceededException</code> with the specified
-		 * detail message.
-		 *
+		 * Constructs an <code>SizeExceededException</code> with the specified detail message.
+		 * 
 		 * @param message
 		 *            The detail message.
 		 */

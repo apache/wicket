@@ -20,8 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
 /**
- * An implementation of an output transformer which does nothing. It does not
- * modify the markup at all.
+ * An implementation of an output transformer which does nothing. It does not modify the markup at
+ * all.
  * 
  * @author Juergen Donnerstag
  */
@@ -51,7 +51,8 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 
 	/**
 	 * 
-	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component, CharSequence)
+	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
+	 *      CharSequence)
 	 */
 	public CharSequence transform(final Component component, final CharSequence output)
 	{

@@ -58,9 +58,8 @@ public class WicketTesterHelper
 	}
 
 	/**
-	 * Gets recursively all <code>Component</code>s of a given
-	 * <code>Page</code>, extracts the information relevant to us, and adds
-	 * them to a <code>List</code>.
+	 * Gets recursively all <code>Component</code>s of a given <code>Page</code>, extracts the
+	 * information relevant to us, and adds them to a <code>List</code>.
 	 * 
 	 * @param page
 	 *            the <code>Page</code> to analyze
@@ -133,8 +132,8 @@ public class WicketTesterHelper
 	 */
 	public static void failWithVerboseMessage(final Collection expects, final Collection actuals)
 	{
-		Assert.fail("\nexpect (" + expects.size() + "):\n" + asLined(expects) + "\nbut was ("
-				+ actuals.size() + "):\n" + asLined(actuals));
+		Assert.fail("\nexpect (" + expects.size() + "):\n" + asLined(expects) + "\nbut was (" +
+				actuals.size() + "):\n" + asLined(actuals));
 	}
 
 	/**
@@ -142,8 +141,7 @@ public class WicketTesterHelper
 	 * 
 	 * @param objects
 	 *            a <code>Collection</code> object
-	 * @return a <code>String</code> representation of the
-	 *         <code>Collection</code>
+	 * @return a <code>String</code> representation of the <code>Collection</code>
 	 */
 	public static String asLined(final Collection objects)
 	{

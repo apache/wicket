@@ -25,11 +25,10 @@ import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget;
 
 /**
- * Listens for requests to behaviors. When {@link org.apache.wicket.behavior.IBehavior}s
- * are 'enriched' with this interface, they can receive requests themselves. You
- * can use this for example to implement AJAX behavior, though you'll probably
- * want to extend from {@link org.apache.wicket.behavior.AbstractAjaxBehavior} directly
- * instead in that case.
+ * Listens for requests to behaviors. When {@link org.apache.wicket.behavior.IBehavior}s are
+ * 'enriched' with this interface, they can receive requests themselves. You can use this for
+ * example to implement AJAX behavior, though you'll probably want to extend from
+ * {@link org.apache.wicket.behavior.AbstractAjaxBehavior} directly instead in that case.
  * 
  * @author Eelco Hillenius
  */

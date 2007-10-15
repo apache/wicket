@@ -19,8 +19,8 @@ package org.apache.wicket.markup.html.form.persistence;
 import org.apache.wicket.IClusterable;
 
 /**
- * This class provides default values that are used by the CookieValuePersister
- * class when it creates cookies.
+ * This class provides default values that are used by the CookieValuePersister class when it
+ * creates cookies.
  * 
  * @author Juergen Donnerstag
  */
@@ -107,8 +107,8 @@ public class CookieValuePersisterSettings implements IClusterable
 	}
 
 	/**
-	 * Returns true if the browser is sending cookies only over a secure
-	 * protocol, or false if the browser can send cookies using any protocol.
+	 * Returns true if the browser is sending cookies only over a secure protocol, or false if the
+	 * browser can send cookies using any protocol.
 	 * 
 	 * @return whether this cookie is secure
 	 */
@@ -118,13 +118,12 @@ public class CookieValuePersisterSettings implements IClusterable
 	}
 
 	/**
-	 * Indicates to the browser whether the cookie should only be sent using a
-	 * secure protocol, such as HTTPS or SSL.
+	 * Indicates to the browser whether the cookie should only be sent using a secure protocol, such
+	 * as HTTPS or SSL.
 	 * 
 	 * @param secure
-	 *            if true, sends the cookie from the browser to the server using
-	 *            only when using a secure protocol; if false, sent on any
-	 *            protocol
+	 *            if true, sends the cookie from the browser to the server using only when using a
+	 *            secure protocol; if false, sent on any protocol
 	 */
 	public void setSecure(boolean secure)
 	{
@@ -132,13 +131,12 @@ public class CookieValuePersisterSettings implements IClusterable
 	}
 
 	/**
-	 * Returns the version of the protocol this cookie complies with. Version 1
-	 * complies with RFC 2109, and version 0 complies with the original cookie
-	 * specification drafted by Netscape. Cookies provided by a browser use and
-	 * identify the browser's cookie version.
+	 * Returns the version of the protocol this cookie complies with. Version 1 complies with RFC
+	 * 2109, and version 0 complies with the original cookie specification drafted by Netscape.
+	 * Cookies provided by a browser use and identify the browser's cookie version.
 	 * 
-	 * @return 0 if the cookie complies with the original Netscape
-	 *         specification; 1 if the cookie complies with RFC 2109
+	 * @return 0 if the cookie complies with the original Netscape specification; 1 if the cookie
+	 *         complies with RFC 2109
 	 */
 	public int getVersion()
 	{
@@ -146,20 +144,17 @@ public class CookieValuePersisterSettings implements IClusterable
 	}
 
 	/**
-	 * Sets the version of the cookie protocol this cookie complies with.
-	 * Version 0 complies with the original Netscape cookie specification.
-	 * Version 1 complies with RFC 2109. <br/>Since RFC 2109 is still somewhat
-	 * new, consider version 1 as experimental; do not use it yet on production
-	 * sites.
+	 * Sets the version of the cookie protocol this cookie complies with. Version 0 complies with
+	 * the original Netscape cookie specification. Version 1 complies with RFC 2109. <br/>Since RFC
+	 * 2109 is still somewhat new, consider version 1 as experimental; do not use it yet on
+	 * production sites.
 	 * 
 	 * @param version
-	 *            0 if the cookie should comply with the original Netscape
-	 *            specification; 1 if the cookie should comply with RFC 2109
+	 *            0 if the cookie should comply with the original Netscape specification; 1 if the
+	 *            cookie should comply with RFC 2109
 	 */
 	public void setVersion(int version)
 	{
 		this.version = version;
 	}
 }
-
-

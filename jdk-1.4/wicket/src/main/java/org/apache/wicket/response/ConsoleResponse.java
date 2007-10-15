@@ -28,31 +28,31 @@ import org.apache.wicket.Response;
  */
 public class ConsoleResponse extends Response
 {
-    /** The one and only instance */
-    private static final ConsoleResponse instance = new ConsoleResponse();
+	/** The one and only instance */
+	private static final ConsoleResponse instance = new ConsoleResponse();
 
-    /**
-     * @return The one and only instance of NullResponse
-     */
-    public static final ConsoleResponse getInstance()
-    {
-        return instance;
-    }
+	/**
+	 * @return The one and only instance of NullResponse
+	 */
+	public static final ConsoleResponse getInstance()
+	{
+		return instance;
+	}
 
-    /**
-     * Private constructor to force use of static factory method
-     */
-    private ConsoleResponse()
-    {
-    }
+	/**
+	 * Private constructor to force use of static factory method
+	 */
+	private ConsoleResponse()
+	{
+	}
 
-    /**
-     * @see org.apache.wicket.Response#write(CharSequence)
-     */
-    public void write(CharSequence string)
-    {
-        System.out.print(string);
-    }
+	/**
+	 * @see org.apache.wicket.Response#write(CharSequence)
+	 */
+	public void write(CharSequence string)
+	{
+		System.out.print(string);
+	}
 
 	/**
 	 * @see org.apache.wicket.Response#getOutputStream()
@@ -62,5 +62,3 @@ public class ConsoleResponse extends Response
 		return System.out;
 	}
 }
-
-

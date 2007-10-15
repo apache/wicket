@@ -18,8 +18,7 @@ package org.apache.wicket.util.crypt;
 
 
 /**
- * {@link ICryptFactory} decorator that caches the call to
- * {@link ICryptFactory#newCrypt()}
+ * {@link ICryptFactory} decorator that caches the call to {@link ICryptFactory#newCrypt()}
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -32,8 +31,7 @@ public class CryptFactoryCachingDecorator implements ICryptFactory
 	 * Construct.
 	 * 
 	 * @param delegate
-	 *            the crypt factory whose {@link ICryptFactory#newCrypt()} call
-	 *            will be cached
+	 *            the crypt factory whose {@link ICryptFactory#newCrypt()} call will be cached
 	 */
 	public CryptFactoryCachingDecorator(ICryptFactory delegate)
 	{

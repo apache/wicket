@@ -19,17 +19,15 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.WicketRuntimeException;
 
 /**
- * Factory that creates application objects based on the class name specified in
- * the {@link ContextParamWebApplicationFactory#APP_CLASS_PARAM} context
- * variable.
+ * Factory that creates application objects based on the class name specified in the
+ * {@link ContextParamWebApplicationFactory#APP_CLASS_PARAM} context variable.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 {
 	/**
-	 * context parameter name that must contain the class name of the
-	 * application
+	 * context parameter name that must contain the class name of the application
 	 */
 	public static final String APP_CLASS_PARAM = "applicationClassName";
 
@@ -42,10 +40,10 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 		if (applicationClassName == null)
 		{
 			throw new WicketRuntimeException(
-					"servlet init param ["
-							+ APP_CLASS_PARAM
-							+ "] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["
-							+ WicketFilter.APP_FACT_PARAM + "] is missing");
+					"servlet init param [" +
+							APP_CLASS_PARAM +
+							"] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param [" +
+							WicketFilter.APP_FACT_PARAM + "] is missing");
 		}
 
 		return createApplication(applicationClassName);
@@ -75,29 +73,29 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 			}
 			else
 			{
-				throw new WicketRuntimeException("Application class " + applicationClassName
-						+ " must be a subclass of WebApplication");
+				throw new WicketRuntimeException("Application class " + applicationClassName +
+						" must be a subclass of WebApplication");
 			}
 		}
 		catch (ClassNotFoundException e)
 		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
+			throw new WicketRuntimeException("Unable to create application of class " +
+					applicationClassName, e);
 		}
 		catch (InstantiationException e)
 		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
+			throw new WicketRuntimeException("Unable to create application of class " +
+					applicationClassName, e);
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
+			throw new WicketRuntimeException("Unable to create application of class " +
+					applicationClassName, e);
 		}
 		catch (SecurityException e)
 		{
-			throw new WicketRuntimeException("Unable to create application of class "
-					+ applicationClassName, e);
+			throw new WicketRuntimeException("Unable to create application of class " +
+					applicationClassName, e);
 		}
 	}
 }

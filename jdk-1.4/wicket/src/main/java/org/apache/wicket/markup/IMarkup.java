@@ -17,8 +17,8 @@
 package org.apache.wicket.markup;
 
 /**
- * Holds markup as a resource (the stream that the markup came from) and a list
- * of MarkupElements (the markup itself).
+ * Holds markup as a resource (the stream that the markup came from) and a list of MarkupElements
+ * (the markup itself).
  * 
  * @see MarkupElement
  * @see ComponentTag
@@ -44,9 +44,8 @@ public abstract interface IMarkup
 	int findComponentIndex(final String path, final String id);
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
+	 * For Wicket it would be sufficient for this method to be package protected. However to allow
+	 * wicket-bench easy access to the information ...
 	 * 
 	 * @param index
 	 *            Index into markup list
@@ -55,9 +54,8 @@ public abstract interface IMarkup
 	MarkupElement get(final int index);
 
 	/**
-	 * Gets the markup encoding. A markup encoding may be specified in a markup
-	 * file with an XML encoding specifier of the form &lt;?xml ...
-	 * encoding="..." ?&gt;.
+	 * Gets the markup encoding. A markup encoding may be specified in a markup file with an XML
+	 * encoding specifier of the form &lt;?xml ... encoding="..." ?&gt;.
 	 * 
 	 * @return Encoding, or null if not found.
 	 */
@@ -85,9 +83,8 @@ public abstract interface IMarkup
 	String getXmlDeclaration();
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
+	 * For Wicket it would be sufficient for this method to be package protected. However to allow
+	 * wicket-bench easy access to the information ...
 	 * 
 	 * @return Number of markup elements
 	 */

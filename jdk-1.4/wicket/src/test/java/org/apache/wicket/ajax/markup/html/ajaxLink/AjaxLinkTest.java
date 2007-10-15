@@ -39,8 +39,8 @@ public class AjaxLinkTest extends WicketTestCase
 	}
 
 	/**
-	 * If the AjaxLink is attached to an "a" tag the href value should be
-	 * replaced with "#" because we use the onclick to execute the javascript.
+	 * If the AjaxLink is attached to an "a" tag the href value should be replaced with "#" because
+	 * we use the onclick to execute the javascript.
 	 */
 	public void testAnchorGetsHrefReplaced()
 	{
@@ -53,8 +53,7 @@ public class AjaxLinkTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests setting the request target to a normal page request from an ajax
-	 * request.
+	 * Tests setting the request target to a normal page request from an ajax request.
 	 */
 	public void testFromAjaxRequestToNormalPage()
 	{
@@ -68,9 +67,8 @@ public class AjaxLinkTest extends WicketTestCase
 	}
 
 	/**
-	 * Test that the onclick on ajax link has "return !wcall;" at the end. This
-	 * ensures that execution is not turned over to the href attribute, which
-	 * would then append # to the url.
+	 * Test that the onclick on ajax link has "return !wcall;" at the end. This ensures that
+	 * execution is not turned over to the href attribute, which would then append # to the url.
 	 */
 	public void testJavascriptEndsWithReturn()
 	{

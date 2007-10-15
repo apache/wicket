@@ -18,9 +18,8 @@ package org.apache.wicket.markup.html.link;
 
 
 /**
- * This link is stateless that means that the url to this link could generate
- * a new page before the link onClick is called. Because of this you can't depend
- * on model data in the onClick method.
+ * This link is stateless that means that the url to this link could generate a new page before the
+ * link onClick is called. Because of this you can't depend on model data in the onClick method.
  * 
  * This Link component is the same as a normal link with the statelesshint to true.
  * 
@@ -32,14 +31,14 @@ public abstract class StatelessLink extends Link
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
 	public StatelessLink(String id)
 	{
 		super(id);
 	}
-	
-	
+
 
 	protected boolean getStatelessHint()
 	{

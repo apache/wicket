@@ -21,11 +21,10 @@ import java.io.File;
 /**
  * <p>
  * The default {@link org.apache.wicket.util.upload.FileItemFactory} implementation. This
- * implementation creates {@link org.apache.wicket.util.upload.FileItem} instances which
- * keep their content either in memory, for smaller items, or in a temporary
- * file on disk, for larger items. The size threshold, above which content will
- * be stored on disk, is configurable, as is the directory in which temporary
- * files will be created.
+ * implementation creates {@link org.apache.wicket.util.upload.FileItem} instances which keep their
+ * content either in memory, for smaller items, or in a temporary file on disk, for larger items.
+ * The size threshold, above which content will be stored on disk, is configurable, as is the
+ * directory in which temporary files will be created.
  * </p>
  * 
  * <p>
@@ -70,8 +69,8 @@ public class DiskFileItemFactory implements FileItemFactory
 
 
 	/**
-	 * Constructs an unconfigured instance of this class. The resulting factory
-	 * may be configured by calling the appropriate setter methods.
+	 * Constructs an unconfigured instance of this class. The resulting factory may be configured by
+	 * calling the appropriate setter methods.
 	 */
 	public DiskFileItemFactory()
 	{
@@ -82,11 +81,11 @@ public class DiskFileItemFactory implements FileItemFactory
 	 * Constructs a preconfigured instance of this class.
 	 * 
 	 * @param sizeThreshold
-	 *            The threshold, in bytes, below which items will be retained in
-	 *            memory and above which they will be stored as a file.
+	 *            The threshold, in bytes, below which items will be retained in memory and above
+	 *            which they will be stored as a file.
 	 * @param repository
-	 *            The data repository, which is the directory in which files
-	 *            will be created, should the item size exceed the threshold.
+	 *            The data repository, which is the directory in which files will be created, should
+	 *            the item size exceed the threshold.
 	 */
 	public DiskFileItemFactory(int sizeThreshold, File repository)
 	{
@@ -99,8 +98,8 @@ public class DiskFileItemFactory implements FileItemFactory
 
 
 	/**
-	 * Returns the directory used to temporarily store files that are larger
-	 * than the configured size threshold.
+	 * Returns the directory used to temporarily store files that are larger than the configured
+	 * size threshold.
 	 * 
 	 * @return The directory in which temporary files will be located.
 	 * 
@@ -114,8 +113,8 @@ public class DiskFileItemFactory implements FileItemFactory
 
 
 	/**
-	 * Sets the directory used to temporarily store files that are larger than
-	 * the configured size threshold.
+	 * Sets the directory used to temporarily store files that are larger than the configured size
+	 * threshold.
 	 * 
 	 * @param repository
 	 *            The directory in which temporary files will be located.
@@ -130,8 +129,8 @@ public class DiskFileItemFactory implements FileItemFactory
 
 
 	/**
-	 * Returns the size threshold beyond which files are written directly to
-	 * disk. The default value is 1024 bytes.
+	 * Returns the size threshold beyond which files are written directly to disk. The default value
+	 * is 1024 bytes.
 	 * 
 	 * @return The size threshold, in bytes.
 	 * 
@@ -161,19 +160,17 @@ public class DiskFileItemFactory implements FileItemFactory
 	// --------------------------------------------------------- Public Methods
 
 	/**
-	 * Create a new {@link org.apache.wicket.util.upload.DiskFileItem} instance from the
-	 * supplied parameters and the local factory configuration.
+	 * Create a new {@link org.apache.wicket.util.upload.DiskFileItem} instance from the supplied
+	 * parameters and the local factory configuration.
 	 * 
 	 * @param fieldName
 	 *            The name of the form field.
 	 * @param contentType
 	 *            The content type of the form field.
 	 * @param isFormField
-	 *            <code>true</code> if this is a plain form field;
-	 *            <code>false</code> otherwise.
+	 *            <code>true</code> if this is a plain form field; <code>false</code> otherwise.
 	 * @param fileName
-	 *            The name of the uploaded file, if any, as supplied by the
-	 *            browser or other client.
+	 *            The name of the uploaded file, if any, as supplied by the browser or other client.
 	 * 
 	 * @return The newly created file item.
 	 */

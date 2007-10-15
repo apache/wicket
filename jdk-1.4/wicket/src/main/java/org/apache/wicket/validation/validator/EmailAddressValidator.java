@@ -46,12 +46,13 @@ public class EmailAddressValidator extends PatternValidator
 	}
 
 	/**
-	 * Protected constructor to force use of static singleton accessor. Override
-	 * this constructor to implement resourceKey(Component).
+	 * Protected constructor to force use of static singleton accessor. Override this constructor to
+	 * implement resourceKey(Component).
 	 */
 	protected EmailAddressValidator()
 	{
-		super("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
+		super(
+				"^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*((\\.[A-Za-z]{2,}){1}$)",
 				Pattern.CASE_INSENSITIVE);
 	}
 }

@@ -33,8 +33,7 @@ public class FileUploadException extends Exception
 	}
 
 	/**
-	 * Constructs a new <code>FileUploadException</code> with specified detail
-	 * message.
+	 * Constructs a new <code>FileUploadException</code> with specified detail message.
 	 * 
 	 * @param msg
 	 *            the error message.
@@ -56,8 +55,7 @@ public class FileUploadException extends Exception
 	}
 
 	/**
-	 * Constructs a new <code>FileUploadException</code> with specified detail
-	 * message and cause
+	 * Constructs a new <code>FileUploadException</code> with specified detail message and cause
 	 * 
 	 * @param message
 	 *            the error message.

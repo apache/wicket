@@ -40,51 +40,55 @@ public class FileUploadTest extends WicketTestCase
 	{
 		super("Test of FileUpload");
 	}
-	
+
 	/**
 	 * Test that when getting an input stream a new input stream is returned every time.
 	 * 
 	 * Also test that the inputstream is saved internally for later closing.
 	 * 
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void testGetInputStream() throws Exception
 	{
-		FileItem fileItem = new DiskFileItemFactory().createItem("dummyFieldName", "text/java", false, "FileUploadTest.java");
+		FileItem fileItem = new DiskFileItemFactory().createItem("dummyFieldName", "text/java",
+				false, "FileUploadTest.java");
 		// Initialize the upload
 		fileItem.getOutputStream();
-		
+
 		// Get the internal list out
 		Field inputStreamsField = FileUpload.class.getDeclaredField("inputStreamsToClose");
 		inputStreamsField.setAccessible(true);
-		
+
 		FileUpload fileUpload = new FileUpload(fileItem);
 
-		List inputStreams = (List) inputStreamsField.get(fileUpload);
-		
+		List inputStreams = (List)inputStreamsField.get(fileUpload);
+
 		assertNull(inputStreams);
 
 		InputStream is1 = fileUpload.getInputStream();
-		inputStreams = (List) inputStreamsField.get(fileUpload);
-		
+		inputStreams = (List)inputStreamsField.get(fileUpload);
+
 		assertEquals(1, inputStreams.size());
 
 		InputStream is2 = fileUpload.getInputStream();
-		inputStreams = (List) inputStreamsField.get(fileUpload);
-		
+		inputStreams = (List)inputStreamsField.get(fileUpload);
+
 		assertEquals(2, inputStreams.size());
-		
+
 		assertNotSame(is1, is2);
-		
+
 		// Ok lets close all the streams
-		try {
+		try
+		{
 			fileUpload.closeStreams();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			fail();
 		}
-		
-		inputStreams = (List) inputStreamsField.get(fileUpload);
-		
+
+		inputStreams = (List)inputStreamsField.get(fileUpload);
+
 		assertNull(inputStreams);
 	}
 

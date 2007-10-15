@@ -30,9 +30,10 @@ public class ContextRelativeResource extends WebResource
 	private static final long serialVersionUID = 1L;
 
 	private final String path;
-	
+
 	/**
 	 * Construct.
+	 * 
 	 * @param pathRelativeToContextRoot
 	 */
 	public ContextRelativeResource(String pathRelativeToContextRoot)
@@ -41,7 +42,7 @@ public class ContextRelativeResource extends WebResource
 		{
 			throw new IllegalArgumentException("Cannot have null path for ContextRelativeResource.");
 		}
-		
+
 		// Make sure there is a leading '/'.
 		if (!pathRelativeToContextRoot.startsWith("/"))
 		{
@@ -49,7 +50,7 @@ public class ContextRelativeResource extends WebResource
 		}
 		this.path = pathRelativeToContextRoot;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Resource#getResourceStream()
 	 */

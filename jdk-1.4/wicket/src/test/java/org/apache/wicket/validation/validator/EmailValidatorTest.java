@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 
 /**
  * Tests a couple of valid and invalid email patterns.
+ * 
  * @author Maurice Marrink
  */
 public class EmailValidatorTest extends TestCase
@@ -34,6 +35,7 @@ public class EmailValidatorTest extends TestCase
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param name
 	 */
 	public EmailValidatorTest(String name)

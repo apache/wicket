@@ -19,18 +19,17 @@ package org.apache.wicket.model;
 import org.apache.wicket.IClusterable;
 
 /**
- * Interface to logic for detaching transient information from a detachable
- * model. Detachable models are desirable because they reduce the amount of
- * state required by a model, which makes the model cheaper to replicate in a
- * clustered environment.
+ * Interface to logic for detaching transient information from a detachable model. Detachable models
+ * are desirable because they reduce the amount of state required by a model, which makes the model
+ * cheaper to replicate in a clustered environment.
  * 
  * @author Jonathan Locke
  */
 public interface IDetachable extends IClusterable
 {
 	/**
-	 * Detaches model after use. This is generally used to null out transient
-	 * references that can be re-attached later.
+	 * Detaches model after use. This is generally used to null out transient references that can be
+	 * re-attached later.
 	 */
 	void detach();
 }

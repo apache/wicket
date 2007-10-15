@@ -20,10 +20,9 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * A Wicket panel component to draw and maintain a complete page navigator,
- * meant to be easily added to any PageableListView. A navigation which contains
- * links to the first and last page, the current page +- some increment and
- * which supports paged navigation bars (@see
+ * A Wicket panel component to draw and maintain a complete page navigator, meant to be easily added
+ * to any PageableListView. A navigation which contains links to the first and last page, the
+ * current page +- some increment and which supports paged navigation bars (@see
  * PageableListViewNavigationWithMargin).
  * 
  * @author Juergen Donnerstag
@@ -76,8 +75,8 @@ public class PagingNavigator extends Panel
 	}
 
 	/**
-	 * Create a new increment link. May be subclassed to make use of specialized
-	 * links, e.g. Ajaxian links.
+	 * Create a new increment link. May be subclassed to make use of specialized links, e.g. Ajaxian
+	 * links.
 	 * 
 	 * @param id
 	 *            the link id
@@ -93,8 +92,8 @@ public class PagingNavigator extends Panel
 	}
 
 	/**
-	 * Create a new pagenumber link. May be subclassed to make use of
-	 * specialized links, e.g. Ajaxian links.
+	 * Create a new pagenumber link. May be subclassed to make use of specialized links, e.g.
+	 * Ajaxian links.
 	 * 
 	 * @param id
 	 *            the link id
@@ -110,8 +109,7 @@ public class PagingNavigator extends Panel
 	}
 
 	/**
-	 * Create a new PagingNavigation. May be subclassed to make us of
-	 * specialized PagingNavigation.
+	 * Create a new PagingNavigation. May be subclassed to make us of specialized PagingNavigation.
 	 * 
 	 * @param pageable
 	 *            the pageable component

@@ -28,139 +28,137 @@ import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser
 
 /**
  * Test cases for this object
+ * 
  * @author Jonathan Locke
  */
 public final class MetaPatternTest extends TestCase
 {
-    /**
-     *
-     */
-    public void testSimple()
-    {
-        // Parse "variable = <number>"
-        final Group variable = new Group(MetaPattern.VARIABLE_NAME);
-        final IntegerGroup value = new IntegerGroup(MetaPattern.INTEGER);
-        final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {variable,
-                MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
-                MetaPattern.OPTIONAL_WHITESPACE, value});
+	/**
+	 * 
+	 */
+	public void testSimple()
+	{
+		// Parse "variable = <number>"
+		final Group variable = new Group(MetaPattern.VARIABLE_NAME);
+		final IntegerGroup value = new IntegerGroup(MetaPattern.INTEGER);
+		final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] { variable,
+				MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
+				MetaPattern.OPTIONAL_WHITESPACE, value });
 
-        final Matcher matcher = variableAssignment.matcher("foo = 9");
-        assertTrue(matcher.matches());
-        assertEquals("foo", matcher.group(1));
-        assertEquals("9", matcher.group(2));
-    }
+		final Matcher matcher = variableAssignment.matcher("foo = 9");
+		assertTrue(matcher.matches());
+		assertEquals("foo", matcher.group(1));
+		assertEquals("9", matcher.group(2));
+	}
 
-    /**
-     * Test assignment of variables.
-     */
-    public void testVariableAssignmentParser()
-    {
-        VariableAssignmentParser parser = new VariableAssignmentParser("foo = 9");
-        assertTrue(parser.matches());
-        assertEquals("foo", parser.getKey());
-        assertEquals("9", parser.getValue());
+	/**
+	 * Test assignment of variables.
+	 */
+	public void testVariableAssignmentParser()
+	{
+		VariableAssignmentParser parser = new VariableAssignmentParser("foo = 9");
+		assertTrue(parser.matches());
+		assertEquals("foo", parser.getKey());
+		assertEquals("9", parser.getValue());
 
-        parser = new VariableAssignmentParser("foo=9");
-        assertTrue(parser.matches());
-        assertEquals("foo", parser.getKey());
-        assertEquals("9", parser.getValue());
-    }
-    
-    /**
-     * Test assignment of integers.
-     */
-    public void testIntegerVariableAssignmentParser()
-    {
-        IntegerVariableAssignmentParser parser = 
-            	new IntegerVariableAssignmentParser("foo = 9");
-        assertTrue(parser.matches());
-        assertEquals("foo", parser.getVariable());
-        assertEquals(9, parser.getIntValue());
-        assertEquals(9, parser.getLongValue());
+		parser = new VariableAssignmentParser("foo=9");
+		assertTrue(parser.matches());
+		assertEquals("foo", parser.getKey());
+		assertEquals("9", parser.getValue());
+	}
 
-        parser = new IntegerVariableAssignmentParser("foo=9");
-	    assertTrue(parser.matches());
-	    assertEquals("foo", parser.getVariable());
-	    assertEquals(9, parser.getIntValue());
-	    assertEquals(9, parser.getLongValue());
+	/**
+	 * Test assignment of integers.
+	 */
+	public void testIntegerVariableAssignmentParser()
+	{
+		IntegerVariableAssignmentParser parser = new IntegerVariableAssignmentParser("foo = 9");
+		assertTrue(parser.matches());
+		assertEquals("foo", parser.getVariable());
+		assertEquals(9, parser.getIntValue());
+		assertEquals(9, parser.getLongValue());
 
-        parser = new IntegerVariableAssignmentParser("foo=a");
-	    assertFalse(parser.matches());
-    }
+		parser = new IntegerVariableAssignmentParser("foo=9");
+		assertTrue(parser.matches());
+		assertEquals("foo", parser.getVariable());
+		assertEquals(9, parser.getIntValue());
+		assertEquals(9, parser.getLongValue());
 
-    /**
-     * Test parsing of comma separated variables.
-     */
-    public void testCommaSeparatedVariableParser()
-    {
-        CommaSeparatedVariableParser parser = new CommaSeparatedVariableParser("a,b,c");
-	    assertTrue(parser.matches());
-	    assertEquals(3, parser.getValues().size());
-	    assertEquals("a", parser.getValues().get(0));
-	    assertEquals("b", parser.getValues().get(1));
-	    assertEquals("c", parser.getValues().get(2));
-	    
-	    // no whitespaces will be removed
-	    parser = new CommaSeparatedVariableParser(" a ,b, c , d ");
-	    assertTrue(parser.matches());
-	    assertEquals(4, parser.getValues().size());
-	    assertEquals(" a ", parser.getValues().get(0));
-	    assertEquals("b", parser.getValues().get(1));
-	    assertEquals(" c ", parser.getValues().get(2));
-	    assertEquals(" d ", parser.getValues().get(3));
+		parser = new IntegerVariableAssignmentParser("foo=a");
+		assertFalse(parser.matches());
+	}
 
-	    // It'll care for "" and '' but it'll not remove them
-	    parser = new CommaSeparatedVariableParser("'a ',\" b\",'c,d'");
-	    assertTrue(parser.matches());
-	    assertEquals(3, parser.getValues().size());
-	    assertEquals("'a '", parser.getValues().get(0));
-	    assertEquals("\" b\"", parser.getValues().get(1));
-	    assertEquals("'c,d'", parser.getValues().get(2));
+	/**
+	 * Test parsing of comma separated variables.
+	 */
+	public void testCommaSeparatedVariableParser()
+	{
+		CommaSeparatedVariableParser parser = new CommaSeparatedVariableParser("a,b,c");
+		assertTrue(parser.matches());
+		assertEquals(3, parser.getValues().size());
+		assertEquals("a", parser.getValues().get(0));
+		assertEquals("b", parser.getValues().get(1));
+		assertEquals("c", parser.getValues().get(2));
 
-	    // But no escapes. Because no separator is following the 2nd "'",
-	    // it'll stop parsing the string.
-	    parser = new CommaSeparatedVariableParser("'a\'b, c");
-	    assertTrue(parser.matches());
-	    assertEquals(1, parser.getValues().size());
-	    assertEquals("'a'", parser.getValues().get(0));
-	    
-	    parser = new CommaSeparatedVariableParser("a");
-	    assertTrue(parser.matches());
-	    assertEquals(1, parser.getValues().size());
-	    assertEquals("a", parser.getValues().get(0));
+		// no whitespaces will be removed
+		parser = new CommaSeparatedVariableParser(" a ,b, c , d ");
+		assertTrue(parser.matches());
+		assertEquals(4, parser.getValues().size());
+		assertEquals(" a ", parser.getValues().get(0));
+		assertEquals("b", parser.getValues().get(1));
+		assertEquals(" c ", parser.getValues().get(2));
+		assertEquals(" d ", parser.getValues().get(3));
 
-	    // Empty elements are not supported
-	    parser = new CommaSeparatedVariableParser("a,,");
-	    assertTrue(parser.matches());
-	    assertEquals(1, parser.getValues().size());
-	    assertEquals("a", parser.getValues().get(0));
-    }
+		// It'll care for "" and '' but it'll not remove them
+		parser = new CommaSeparatedVariableParser("'a ',\" b\",'c,d'");
+		assertTrue(parser.matches());
+		assertEquals(3, parser.getValues().size());
+		assertEquals("'a '", parser.getValues().get(0));
+		assertEquals("\" b\"", parser.getValues().get(1));
+		assertEquals("'c,d'", parser.getValues().get(2));
 
-    /**
-     * Test the tag parser.
-     */
-    public void testTagParser()
-    {
-        String tag = "name";
-        TagNameParser parser = new TagNameParser(tag);
-        assertEquals(true, parser.matcher().matches());
-        assertEquals("name", parser.getName());
-        assertNull(parser.getNamespace());
+		// But no escapes. Because no separator is following the 2nd "'",
+		// it'll stop parsing the string.
+		parser = new CommaSeparatedVariableParser("'a\'b, c");
+		assertTrue(parser.matches());
+		assertEquals(1, parser.getValues().size());
+		assertEquals("'a'", parser.getValues().get(0));
 
-        tag = "namespace:name";
-        parser = new TagNameParser(tag);
-        assertEquals(true, parser.matcher().matches());
-        assertEquals("name", parser.getName());
-        assertEquals("namespace", parser.getNamespace());
+		parser = new CommaSeparatedVariableParser("a");
+		assertTrue(parser.matches());
+		assertEquals(1, parser.getValues().size());
+		assertEquals("a", parser.getValues().get(0));
 
-        tag = "namespace:";
-        parser = new TagNameParser(tag);
-        assertEquals(false, parser.matcher().matches());
+		// Empty elements are not supported
+		parser = new CommaSeparatedVariableParser("a,,");
+		assertTrue(parser.matches());
+		assertEquals(1, parser.getValues().size());
+		assertEquals("a", parser.getValues().get(0));
+	}
 
-        tag = ":names";
-        parser = new TagNameParser(tag);
-        assertEquals(false, parser.matcher().matches());
-    }
+	/**
+	 * Test the tag parser.
+	 */
+	public void testTagParser()
+	{
+		String tag = "name";
+		TagNameParser parser = new TagNameParser(tag);
+		assertEquals(true, parser.matcher().matches());
+		assertEquals("name", parser.getName());
+		assertNull(parser.getNamespace());
+
+		tag = "namespace:name";
+		parser = new TagNameParser(tag);
+		assertEquals(true, parser.matcher().matches());
+		assertEquals("name", parser.getName());
+		assertEquals("namespace", parser.getNamespace());
+
+		tag = "namespace:";
+		parser = new TagNameParser(tag);
+		assertEquals(false, parser.matcher().matches());
+
+		tag = ":names";
+		parser = new TagNameParser(tag);
+		assertEquals(false, parser.matcher().matches());
+	}
 }
-
-

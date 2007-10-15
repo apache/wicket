@@ -17,25 +17,24 @@
 package org.apache.wicket.markup.html.basic;
 
 
-
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class SimplePage_3 extends SimplePage 
+public class SimplePage_3 extends SimplePage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 */
-	public SimplePage_3() 
+	public SimplePage_3()
 	{
 		get("myLabel").setVisible(false);
-	    get("test").setVisible(false);
-	    get("myPanel").setVisible(false);
-	    get("myBorder").setVisible(false);
-	    get("myBorder2").setVisible(false);
-    }
+		get("test").setVisible(false);
+		get("myPanel").setVisible(false);
+		get("myBorder").setVisible(false);
+		get("myBorder2").setVisible(false);
+	}
 }

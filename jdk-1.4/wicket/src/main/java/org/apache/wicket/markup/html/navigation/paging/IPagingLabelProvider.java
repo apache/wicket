@@ -19,9 +19,8 @@ package org.apache.wicket.markup.html.navigation.paging;
 import org.apache.wicket.IClusterable;
 
 /**
- * This interface is used by the PagingNavigator components to get the label of
- * the pages there are for a IPageable component. By default this is only the
- * page number.
+ * This interface is used by the PagingNavigator components to get the label of the pages there are
+ * for a IPageable component. By default this is only the page number.
  * 
  * @author jcompagner
  */

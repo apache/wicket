@@ -19,8 +19,8 @@ package org.apache.wicket.request;
 import org.apache.wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 
 /**
- * Optional interface that can be implemented by implementations of
- * {@link IRequestTargetMounter} to provide management extensions.
+ * Optional interface that can be implemented by implementations of {@link IRequestTargetMounter} to
+ * provide management extensions.
  * 
  * @author eelcohillenius
  */

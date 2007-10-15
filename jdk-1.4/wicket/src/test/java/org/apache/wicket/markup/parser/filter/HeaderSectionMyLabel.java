@@ -25,7 +25,7 @@ import org.apache.wicket.model.Model;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
@@ -34,13 +34,14 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 * @param label
 	 */
-	public HeaderSectionMyLabel(final String id, final String label) 
+	public HeaderSectionMyLabel(final String id, final String label)
 	{
-	    super(id, new Model(label));
-    }
+		super(id, new Model(label));
+	}
 
 	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
@@ -50,16 +51,16 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	{
 		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}
-	
-    /**
-     * This label renders its markup the normal way, and is still able
-     * to take and render the header tag from an associated markup file.
-     * 
-     * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
-     */
-    public void renderHead(HtmlHeaderContainer container)
-    {
-    	this.renderHeadFromAssociatedMarkupFile(container);
-    	super.renderHead(container);
-    }
+
+	/**
+	 * This label renders its markup the normal way, and is still able to take and render the header
+	 * tag from an associated markup file.
+	 * 
+	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
+	 */
+	public void renderHead(HtmlHeaderContainer container)
+	{
+		this.renderHeadFromAssociatedMarkupFile(container);
+		super.renderHead(container);
+	}
 }

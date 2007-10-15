@@ -27,14 +27,17 @@ import org.apache.wicket.util.tester.WicketTester;
 public class HomePageRedirectTest extends TestCase
 {
 	WicketTester application;
+
 	protected void setUp() throws Exception
 	{
 		application = new WicketTester();
 	}
+
 	protected void tearDown() throws Exception
 	{
 		application.destroy();
 	}
+
 	/**
 	 * Construct.
 	 */

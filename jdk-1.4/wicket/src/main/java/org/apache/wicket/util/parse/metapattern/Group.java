@@ -19,11 +19,10 @@ package org.apache.wicket.util.parse.metapattern;
 import java.util.regex.Matcher;
 
 /**
- * A Group is a piece of a regular expression (referenced by some Java field or
- * local variable) that forms a "capturing group" within the larger regular
- * expression. A Group is bound to a regular expression MetaPattern when a
- * matcher is retrieved for the pattern by calling one of the matcher() methods.
- * Once bound, a Group cannot be rebound.
+ * A Group is a piece of a regular expression (referenced by some Java field or local variable) that
+ * forms a "capturing group" within the larger regular expression. A Group is bound to a regular
+ * expression MetaPattern when a matcher is retrieved for the pattern by calling one of the
+ * matcher() methods. Once bound, a Group cannot be rebound.
  * 
  * @author Jonathan Locke
  */

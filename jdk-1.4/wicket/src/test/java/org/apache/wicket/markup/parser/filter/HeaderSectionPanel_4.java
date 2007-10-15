@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class HeaderSectionPanel_4 extends Panel
@@ -30,10 +30,11 @@ public class HeaderSectionPanel_4 extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public HeaderSectionPanel_4(final String id) 
+	public HeaderSectionPanel_4(final String id)
 	{
-	    super(id);
-    }
+		super(id);
+	}
 }

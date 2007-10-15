@@ -32,7 +32,7 @@ import org.apache.wicket.IClusterable;
  * Default implementation of TreeState.
  * <p>
  * This implementation tries to be as lightweight as possible.
- *
+ * 
  * @author Matej Knopp
  */
 public class DefaultTreeState implements ITreeState, IClusterable
@@ -46,8 +46,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 	private final List listeners = new ArrayList(1);
 
 	/**
-	 * set of nodes which are collapsed or expanded (depends on nodesCollapsed
-	 * variable).
+	 * set of nodes which are collapsed or expanded (depends on nodesCollapsed variable).
 	 */
 	private final Set nodes = new HashSet();
 
@@ -84,7 +83,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 			nodesCollapsed = false;
 
 			Object[] listenersCopy = listeners.toArray();
-			for(int i = 0; i < listenersCopy.length; i++)
+			for (int i = 0; i < listenersCopy.length; i++)
 			{
 				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.allNodesCollapsed();
@@ -107,7 +106,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		}
 
 		Object[] listenersCopy = listeners.toArray();
-		for(int i = 0; i < listenersCopy.length; i++)
+		for (int i = 0; i < listenersCopy.length; i++)
 		{
 			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 			l.nodeCollapsed(node);
@@ -130,7 +129,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 			nodesCollapsed = true;
 
 			Object[] listenersCopy = listeners.toArray();
-			for(int i = 0; i < listenersCopy.length; i++)
+			for (int i = 0; i < listenersCopy.length; i++)
 			{
 				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.allNodesCollapsed();
@@ -153,7 +152,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		}
 
 		Object[] listenersCopy = listeners.toArray();
-		for(int i = 0; i < listenersCopy.length; i++)
+		for (int i = 0; i < listenersCopy.length; i++)
 		{
 			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 			l.nodeExpanded(node);
@@ -223,7 +222,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 				{
 					i.remove();
 					Object[] listenersCopy = listeners.toArray();
-					for(int j = 0; j < listenersCopy.length; j++)
+					for (int j = 0; j < listenersCopy.length; j++)
 					{
 						ITreeStateListener l = (ITreeStateListener)listenersCopy[j];
 						l.nodeUnselected(current);
@@ -237,7 +236,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 
 			selectedNodes.add(node);
 			Object[] listenersCopy = listeners.toArray();
-			for(int i = 0; i < listenersCopy.length; i++)
+			for (int i = 0; i < listenersCopy.length; i++)
 			{
 				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.nodeSelected(node);
@@ -247,7 +246,7 @@ public class DefaultTreeState implements ITreeState, IClusterable
 		{
 			selectedNodes.remove(node);
 			Object[] listenersCopy = listeners.toArray();
-			for(int i = 0; i < listenersCopy.length; i++)
+			for (int i = 0; i < listenersCopy.length; i++)
 			{
 				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.nodeUnselected(node);

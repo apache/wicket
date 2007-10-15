@@ -31,8 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Merge the 2+ markups involved in markup inheritance. From a users perspective
- * there is only one markup associated with the component, the merged one.
+ * Merge the 2+ markups involved in markup inheritance. From a users perspective there is only one
+ * markup associated with the component, the merged one.
  * 
  * @author Juergen Donnerstag
  */
@@ -65,19 +65,17 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	}
 
 	/**
-	 * The markup has just been loaded and now we check if markup inheritance
-	 * applies, which is if <wicket:extend> is found in the markup. If yes, than
-	 * load the base markups and merge the markup elements to create an updated
-	 * (merged) list of markup elements.
+	 * The markup has just been loaded and now we check if markup inheritance applies, which is if
+	 * <wicket:extend> is found in the markup. If yes, than load the base markups and merge the
+	 * markup elements to create an updated (merged) list of markup elements.
 	 * 
 	 * @param container
 	 *            The original requesting markup container
 	 * @param markup
 	 *            The markup to checked for inheritance
 	 * @param enforceReload
-	 *            The cache will be ignored and all, including inherited markup
-	 *            files, will be reloaded. Whatever is in the cache, it will be
-	 *            ignored
+	 *            The cache will be ignored and all, including inherited markup files, will be
+	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return A markup object with the the base markup elements resolved.
 	 * @TODO move into IMarkupLoader
 	 */
@@ -113,9 +111,9 @@ public class InheritedMarkupMarkupLoader implements IMarkupLoader
 	}
 
 	/**
-	 * Check if markup contains &lt;wicket:extend&gt; which tells us that we
-	 * need to read the inherited markup as well. &lt;wicket:extend&gt; MUST BE
-	 * the first wicket tag in the markup. Skip raw markup
+	 * Check if markup contains &lt;wicket:extend&gt; which tells us that we need to read the
+	 * inherited markup as well. &lt;wicket:extend&gt; MUST BE the first wicket tag in the markup.
+	 * Skip raw markup
 	 * 
 	 * @param markup
 	 * @return == 0, if no wicket:extend was found

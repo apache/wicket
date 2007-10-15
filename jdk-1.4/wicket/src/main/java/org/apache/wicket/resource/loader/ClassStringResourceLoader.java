@@ -24,29 +24,28 @@ import org.apache.wicket.Session;
 
 
 /**
- * This string resource loader attempts to find a single resource bundle that
- * has the same name and location as the clazz provided in the constructor. If
- * the bundle is found than strings are obtained from here. This implementation
- * is fully aware of both locale and style values when trying to obtain the
- * appropriate bundle.
+ * This string resource loader attempts to find a single resource bundle that has the same name and
+ * location as the clazz provided in the constructor. If the bundle is found than strings are
+ * obtained from here. This implementation is fully aware of both locale and style values when
+ * trying to obtain the appropriate bundle.
  * <p>
  * An instance of this loader is registered with the Application by default.
- *
+ * 
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
 public class ClassStringResourceLoader extends ComponentStringResourceLoader
 {
 	/** The application we are loading for. */
-	private final WeakReference/*<Class<? extends Application>>*/ clazzRef;
+	private final WeakReference/* <Class<? extends Application>> */clazzRef;
 
 	/**
 	 * Create and initialize the resource loader.
-	 *
+	 * 
 	 * @param clazz
 	 *            The class that this resource loader is associated with
 	 */
-	public ClassStringResourceLoader(final Class/*<? extends Application>*/ clazz)
+	public ClassStringResourceLoader(final Class/* <? extends Application> */clazz)
 	{
 		if (clazz == null)
 		{

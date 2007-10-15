@@ -24,8 +24,8 @@ import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.request.RequestParameters;
 
 /**
- * Target that denotes a page instance and a call to a component on that page
- * using an listener interface method.
+ * Target that denotes a page instance and a call to a component on that page using an listener
+ * interface method.
  * 
  * @author Eelco Hillenius
  */
@@ -80,8 +80,8 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 		if (id == null)
 		{
 			throw new IllegalStateException(
-					"Parameter behaviorId was not provided: unable to locate listener. Component: "
-							+ component.toString());
+					"Parameter behaviorId was not provided: unable to locate listener. Component: " +
+							component.toString());
 		}
 
 		final int idAsInt = Integer.parseInt(id);
@@ -92,8 +92,8 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 		}
 		if (behaviorListener == null)
 		{
-			throw new IllegalStateException("No behavior listener found with behaviorId " + id
-					+ "; Component: " + component.toString());
+			throw new IllegalStateException("No behavior listener found with behaviorId " + id +
+					"; Component: " + component.toString());
 		}
 
 		// Invoke the interface method

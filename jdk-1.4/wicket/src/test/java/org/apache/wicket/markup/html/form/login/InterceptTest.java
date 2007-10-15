@@ -171,7 +171,7 @@ public class InterceptTest extends TestCase
 		{
 			// Do nothing.
 		}
-		
+
 		protected ISessionStore newSessionStore()
 		{
 			// Don't use a filestore, or we spawn lots of threads, which makes things slow.
@@ -227,8 +227,8 @@ public class InterceptTest extends TestCase
 		 */
 		public boolean isInstantiationAuthorized(Class componentClass)
 		{
-			if (MockHomePage.class.equals(componentClass)
-					&& !((MySession)Session.get()).isLoggedIn())
+			if (MockHomePage.class.equals(componentClass) &&
+					!((MySession)Session.get()).isLoggedIn())
 			{
 				throw new RestartResponseAtInterceptPageException(MockLoginPage.class);
 			}

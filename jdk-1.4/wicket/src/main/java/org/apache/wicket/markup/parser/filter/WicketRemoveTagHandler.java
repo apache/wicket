@@ -25,10 +25,9 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 
 
 /**
- * This is a markup inline filter. It identifies preview regions useful for HTML
- * designers to design the page. But they must be removed prior to sending the
- * markup to the client. Preview regions are enclosed by &lt;wicket:remove&gt;
- * tags.
+ * This is a markup inline filter. It identifies preview regions useful for HTML designers to design
+ * the page. But they must be removed prior to sending the markup to the client. Preview regions are
+ * enclosed by &lt;wicket:remove&gt; tags.
  * 
  * @author Juergen Donnerstag
  */
@@ -48,12 +47,11 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Removes preview regions enclosed by &lt;wicket:remove&gt; tags. Note that
-	 * for obvious reasons, nested components are not allowed.
+	 * Removes preview regions enclosed by &lt;wicket:remove&gt; tags. Note that for obvious
+	 * reasons, nested components are not allowed.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag to be processed. Null, if not more tags are
-	 *         available
+	 * @return The next tag to be processed. Null, if not more tags are available
 	 */
 	public final MarkupElement nextTag() throws ParseException
 	{
@@ -74,8 +72,8 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 		// remove tag must not be open-close tags
 		if (openTag.isOpenClose())
 		{
-			throw new ParseException("Wicket remove tag must not be an open-close tag: "
-					+ openTag.toUserDebugString(), openTag.getPos());
+			throw new ParseException("Wicket remove tag must not be an open-close tag: " +
+					openTag.toUserDebugString(), openTag.getPos());
 		}
 
 		// Find the corresponding close tag and remove all tags in between
@@ -100,11 +98,11 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 			}
 
 			throw new ParseException(
-					"Markup remove regions must not contain Wicket component tags. tag: "
-							+ closeTag.toUserDebugString(), closeTag.getPos());
+					"Markup remove regions must not contain Wicket component tags. tag: " +
+							closeTag.toUserDebugString(), closeTag.getPos());
 		}
 
-		throw new ParseException("Did not find close tag for markup remove region. Open tag: "
-				+ openTag.toUserDebugString(), openTag.getPos());
+		throw new ParseException("Did not find close tag for markup remove region. Open tag: " +
+				openTag.toUserDebugString(), openTag.getPos());
 	}
 }

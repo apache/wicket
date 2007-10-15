@@ -24,20 +24,22 @@ interface ILicenseHeaderHandler
 	 * @return The suffixes that matches the files that it handles.
 	 */
 	String[] getSuffixes();
-	
+
 	/**
 	 * @return The files to ignore.
 	 */
 	String[] getIgnoreFiles();
 
 	/**
-	 * @param file Add a license header to the file.
+	 * @param file
+	 *            Add a license header to the file.
 	 * @return True if the license were added. False if not.
 	 */
 	boolean addLicenseHeader(File file);
 
 	/**
-	 * @param file The file to check for a correct license header.
+	 * @param file
+	 *            The file to check for a correct license header.
 	 * @return True if the file has a correct license header. False if not.
 	 */
 	boolean checkLicenseHeader(File file);
@@ -45,7 +47,8 @@ interface ILicenseHeaderHandler
 	/**
 	 * Get the license type of the file. F.ex. ASL2, ASL1.1, GPL, LGPL etc.
 	 * 
-	 * @param file THe file to get the license type from.
+	 * @param file
+	 *            THe file to get the license type from.
 	 * @return The license type of the file. Null if no license header in the file.
 	 */
 	String getLicenseType(File file);

@@ -30,8 +30,8 @@ import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * A subclass of MarkupElement which represents a tag including namespace and
- * its optional attributes. XmlTags are returned by the XML parser.
+ * A subclass of MarkupElement which represents a tag including namespace and its optional
+ * attributes. XmlTags are returned by the XML parser.
  * 
  * @author Jonathan Locke
  */
@@ -209,8 +209,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets the name of the tag, for example the tag <code>&lt;b&gt;</code>'s
-	 * name would be 'b'.
+	 * Gets the name of the tag, for example the tag <code>&lt;b&gt;</code>'s name would be 'b'.
 	 * 
 	 * @return The tag's name
 	 */
@@ -347,9 +346,8 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Makes this tag object immutable by making the attribute map unmodifiable.
-	 * Immutable tags cannot be made mutable again. They can only be copied into
-	 * new mutable tag objects.
+	 * Makes this tag object immutable by making the attribute map unmodifiable. Immutable tags
+	 * cannot be made mutable again. They can only be copied into new mutable tag objects.
 	 */
 	public void makeImmutable()
 	{
@@ -365,11 +363,9 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
-	 * it is immutable.
+	 * Gets this tag if it is already mutable, or a mutable copy of this tag if it is immutable.
 	 * 
-	 * @return This tag if it is already mutable, or a mutable copy of this tag
-	 *         if it is immutable.
+	 * @return This tag if it is already mutable, or a mutable copy of this tag if it is immutable.
 	 */
 	public XmlTag mutable()
 	{
@@ -386,8 +382,8 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Copies all internal properties from this tag to <code>dest</code>.
-	 * This is basically cloning without instance creation.
+	 * Copies all internal properties from this tag to <code>dest</code>. This is basically
+	 * cloning without instance creation.
 	 * 
 	 * @param dest
 	 *            tag whose properties will be set
@@ -416,10 +412,9 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
-	 * @return previous value associated with specified key, or null if there
-	 *         was no mapping for key. A null return can also indicate that the
-	 *         map previously associated null with the specified key, if the
-	 *         implementation supports null values.
+	 * @return previous value associated with specified key, or null if there was no mapping for
+	 *         key. A null return can also indicate that the map previously associated null with the
+	 *         specified key, if the implementation supports null values.
 	 */
 	public Object put(final String key, final boolean value)
 	{
@@ -433,10 +428,9 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
-	 * @return previous value associated with specified key, or null if there
-	 *         was no mapping for key. A null return can also indicate that the
-	 *         map previously associated null with the specified key, if the
-	 *         implementation supports null values.
+	 * @return previous value associated with specified key, or null if there was no mapping for
+	 *         key. A null return can also indicate that the map previously associated null with the
+	 *         specified key, if the implementation supports null values.
 	 */
 	public Object put(final String key, final int value)
 	{
@@ -450,10 +444,9 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
-	 * @return previous value associated with specified key, or null if there
-	 *         was no mapping for key. A null return can also indicate that the
-	 *         map previously associated null with the specified key, if the
-	 *         implementation supports null values.
+	 * @return previous value associated with specified key, or null if there was no mapping for
+	 *         key. A null return can also indicate that the map previously associated null with the
+	 *         specified key, if the implementation supports null values.
 	 */
 	public Object put(final String key, final CharSequence value)
 	{
@@ -467,10 +460,9 @@ public class XmlTag extends MarkupElement
 	 *            The key
 	 * @param value
 	 *            The value
-	 * @return previous value associated with specified key, or null if there
-	 *         was no mapping for key. A null return can also indicate that the
-	 *         map previously associated null with the specified key, if the
-	 *         implementation supports null values.
+	 * @return previous value associated with specified key, or null if there was no mapping for
+	 *         key. A null return can also indicate that the map previously associated null with the
+	 *         specified key, if the implementation supports null values.
 	 */
 	public Object put(final String key, final StringValue value)
 	{
@@ -580,8 +572,8 @@ public class XmlTag extends MarkupElement
 	 */
 	public String toDebugString()
 	{
-		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber + ", length = "
-				+ length + ", attributes = [" + getAttributes() + "], type = " + type + "]";
+		return "[Tag name = " + name + ", pos = " + pos + ", line = " + lineNumber + ", length = " +
+				length + ", attributes = [" + getAttributes() + "], type = " + type + "]";
 	}
 
 	/**
@@ -618,8 +610,8 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
-	 * Assuming some attributes have been changed, toXmlString() rebuilds the
-	 * String on based on the tags informations.
+	 * Assuming some attributes have been changed, toXmlString() rebuilds the String on based on the
+	 * tags informations.
 	 * 
 	 * @param attributeToBeIgnored
 	 * @return A xml string matching the tag
@@ -650,8 +642,8 @@ public class XmlTag extends MarkupElement
 			for (; iterator.hasNext();)
 			{
 				final String key = (String)iterator.next();
-				if ((key != null)
-						&& ((attributeToBeIgnored == null) || !key
+				if ((key != null) &&
+						((attributeToBeIgnored == null) || !key
 								.equalsIgnoreCase(attributeToBeIgnored)))
 				{
 					buffer.append(" ");

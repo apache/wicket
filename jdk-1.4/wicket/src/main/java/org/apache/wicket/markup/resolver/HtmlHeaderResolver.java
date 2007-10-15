@@ -29,15 +29,13 @@ import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
- * This is a tag resolver which handles &lt;head&gt; and
- * &lt;wicket:head&gt;tags. It must be registered (with the application) and
- * assumes that a ComponentTag respectively a WicketTag has already been created
- * (see HtmlheaderSectionHandler and WicketTagIdentifier).
+ * This is a tag resolver which handles &lt;head&gt; and &lt;wicket:head&gt;tags. It must be
+ * registered (with the application) and assumes that a ComponentTag respectively a WicketTag has
+ * already been created (see HtmlheaderSectionHandler and WicketTagIdentifier).
  * <p>
- * Provided the current tag is a &lt;head&gt;, a HtmlHeaderContainer component
- * is created, (auto) added to the component hierarchie and immediately
- * rendered. Please see the javadoc for HtmlHeaderContainer on how it treats the
- * tag.
+ * Provided the current tag is a &lt;head&gt;, a HtmlHeaderContainer component is created, (auto)
+ * added to the component hierarchie and immediately rendered. Please see the javadoc for
+ * HtmlHeaderContainer on how it treats the tag.
  * <p>
  * In case of &lt;wicket:head&gt; a simple WebMarkupContainer handles the tag.
  * 
@@ -54,8 +52,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 	}
 
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container
-	 * and render it.
+	 * Try to resolve the tag, then create a component, add it to the container and render it.
 	 * 
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)

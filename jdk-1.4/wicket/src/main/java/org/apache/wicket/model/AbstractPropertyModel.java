@@ -27,11 +27,10 @@ import org.apache.wicket.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Serves as a base class for different kinds of property models. By default,
- * this class uses {@link PropertyResolver} to resolve expressions on the target
- * model object. Note that the property resolver by default provides access to
- * private members and methods. If guaranteeing encapsulation of the target
- * objects is a big concern, you should consider using an alternative
+ * Serves as a base class for different kinds of property models. By default, this class uses
+ * {@link PropertyResolver} to resolve expressions on the target model object. Note that the
+ * property resolver by default provides access to private members and methods. If guaranteeing
+ * encapsulation of the target objects is a big concern, you should consider using an alternative
  * implementation.
  * 
  * @see PropertyResolver
@@ -135,12 +134,10 @@ public abstract class AbstractPropertyModel
 	}
 
 	/**
-	 * Applies the property expression on the model object using the given
-	 * object argument.
+	 * Applies the property expression on the model object using the given object argument.
 	 * 
 	 * @param object
-	 *            The object that will be used when setting a value on the model
-	 *            object
+	 *            The object that will be used when setting a value on the model object
 	 * @see IModel#setObject(Object)
 	 */
 	public void setObject(Object object)

@@ -24,8 +24,8 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 
 
 /**
- * Compound implementation of the IAuthorizationStrategy that lets you chain two
- * or more strategies together.
+ * Compound implementation of the IAuthorizationStrategy that lets you chain two or more strategies
+ * together.
  * 
  * @author ivaynberg
  */

@@ -21,9 +21,9 @@ import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.OptionalMetaPattern;
 
 /**
- * Parses key value assignment statements like "foo=bar" but also supporting
- * namespaces like "wicket:foo=bar". However the 'key' value returned will
- * contain "wicket:foo". It does not separate namespace and name.
+ * Parses key value assignment statements like "foo=bar" but also supporting namespaces like
+ * "wicket:foo=bar". However the 'key' value returned will contain "wicket:foo". It does not
+ * separate namespace and name.
  * 
  * @author Jonathan Locke
  */
@@ -41,8 +41,7 @@ public final class VariableAssignmentParser extends MetaPatternParser
 	private final Group value;
 
 	/**
-	 * Construct a variable assignment parser against a given input character
-	 * sequence
+	 * Construct a variable assignment parser against a given input character sequence
 	 * 
 	 * @param input
 	 *            The input to parse
@@ -53,8 +52,7 @@ public final class VariableAssignmentParser extends MetaPatternParser
 	}
 
 	/**
-	 * Construct a variable assignment parser against a given input character
-	 * sequence
+	 * Construct a variable assignment parser against a given input character sequence
 	 * 
 	 * @param input
 	 *            The input to parse
@@ -79,8 +77,8 @@ public final class VariableAssignmentParser extends MetaPatternParser
 	}
 
 	/**
-	 * Gets the key part (eg 'foo' in 'foo=bar'). The key will include the
-	 * optional namespace (eg 'html:foo' in 'html:foo=bar').
+	 * Gets the key part (eg 'foo' in 'foo=bar'). The key will include the optional namespace (eg
+	 * 'html:foo' in 'html:foo=bar').
 	 * 
 	 * @return The key part
 	 */

@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * Note that under certain circumstances (when there are no empty slots in pool) the initial
  * capacity can be exceeded (more files are opened then the specified capacity is). If this happens,
  * a warning is written to log, as this probably means that there is a problem with page store.
- *
+ * 
  * @author Matej Knopp
  */
 public class FileChannelPool
@@ -61,7 +61,7 @@ public class FileChannelPool
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param capacity
 	 *            Maximum number of opened file channels.
 	 */
@@ -79,7 +79,7 @@ public class FileChannelPool
 
 	/**
 	 * Creates a new file channel with specified file name.
-	 *
+	 * 
 	 * @param fileName
 	 * @param createIfDoesNotExist
 	 *            in case the file does not exist this parameter determines if the file should be
@@ -154,10 +154,10 @@ public class FileChannelPool
 	/**
 	 * Returns a channel for given file. If the file doesn't exist, the createIfDoesNotExit
 	 * attribute specifies if the file should be created.
-	 *
+	 * 
 	 * Do NOT call close on the returned chanel. Instead call
 	 * {@link #returnFileChannel(FileChannel)}
-	 *
+	 * 
 	 * @param fileName
 	 * @param createIfDoesNotExist
 	 * @return
@@ -207,7 +207,7 @@ public class FileChannelPool
 	/**
 	 * Returns the channel to the pool. It is necessary to call this for every channel obtained by
 	 * calling {@link #getFileChannel(String, boolean)}.
-	 *
+	 * 
 	 * @param channel
 	 */
 	public synchronized void returnFileChannel(FileChannel channel)
@@ -267,7 +267,7 @@ public class FileChannelPool
 	 * Closes the file channel with given name and removes it from pool. Also removes the file from
 	 * file system. If the channel is in use, the pool first waits until the chanel is returned to
 	 * the pool and then closes it.
-	 *
+	 * 
 	 * @param name
 	 */
 	public synchronized void closeAndDeleteFileChannel(String name)

@@ -26,18 +26,18 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A popup specification can be used as a property of the {@link Link}classes
- * to specify that the link should be rendered with an onClick javascript event
- * handler that opens a new window with the links' URL.
+ * A popup specification can be used as a property of the {@link Link}classes to specify that the
+ * link should be rendered with an onClick javascript event handler that opens a new window with the
+ * links' URL.
  * <p>
  * You can 'or' display flags together like this:
- *
+ * 
  * <pre>
  * new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS);
  * </pre>
- *
+ * 
  * </p>
- *
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
@@ -76,9 +76,8 @@ public class PopupSettings implements IClusterable
 	private int left = -1;
 
 	/**
-	 * The target to put in JavaScript. This implementation simply refers to the
-	 * href element, but clients may want to override this (e.g. when the HTML
-	 * element is not an anchor).
+	 * The target to put in JavaScript. This implementation simply refers to the href element, but
+	 * clients may want to override this (e.g. when the HTML element is not an anchor).
 	 */
 	private String target = "href";
 
@@ -89,28 +88,25 @@ public class PopupSettings implements IClusterable
 	private int width = -1;
 
 	/**
-	 * The logical name of the window. This can be anything you want, although
-	 * you should use alphanumeric characters only (no spaces or punctuation).
-	 * If you have a window already open and call window.open a second time
-	 * using the same windowName, the first window will be reused rather than
-	 * opening a second window.
+	 * The logical name of the window. This can be anything you want, although you should use
+	 * alphanumeric characters only (no spaces or punctuation). If you have a window already open
+	 * and call window.open a second time using the same windowName, the first window will be reused
+	 * rather than opening a second window.
 	 */
 	private String windowName = null;
 
 	/**
-	 * The pagemap name where the page that will be created by this popuplink
-	 * will be created in.
+	 * The pagemap name where the page that will be created by this popuplink will be created in.
 	 */
 	private String pageMapName;
 
 	/**
-	 * Construct. If you are not using these popup settings with an external
-	 * link - in which case we don't need to know about a page map - you should
-	 * use one of the constructors with a {@link PageMap} argument. Typically,
-	 * you should put any popup in a separate page map as Wicket holds
-	 * references to a limited number of pages/ versions only. If you don't put
-	 * your popup in a separate page map, the user might get page expired
-	 * exceptions when getting back to the main window again.
+	 * Construct. If you are not using these popup settings with an external link - in which case we
+	 * don't need to know about a page map - you should use one of the constructors with a
+	 * {@link PageMap} argument. Typically, you should put any popup in a separate page map as
+	 * Wicket holds references to a limited number of pages/ versions only. If you don't put your
+	 * popup in a separate page map, the user might get page expired exceptions when getting back to
+	 * the main window again.
 	 */
 	public PopupSettings()
 	{
@@ -118,7 +114,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param displayFlags
 	 *            Display flags
 	 */
@@ -129,14 +125,12 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param pagemap
-	 *            The pagemap where this popup must be in. Typically, you should
-	 *            put any popup in a separate page map as Wicket holds
-	 *            references to a limited number of pages/ versions only. If you
-	 *            don't put your popup in a separate page map, the user might
-	 *            get page expired exceptions when getting back to the main
-	 *            window again.
+	 *            The pagemap where this popup must be in. Typically, you should put any popup in a
+	 *            separate page map as Wicket holds references to a limited number of pages/
+	 *            versions only. If you don't put your popup in a separate page map, the user might
+	 *            get page expired exceptions when getting back to the main window again.
 	 */
 	public PopupSettings(IPageMap pagemap)
 	{
@@ -146,14 +140,12 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param pagemap
-	 *            The pagemap where this popup must be in. Typically, you should
-	 *            put any popup in a separate page map as Wicket holds
-	 *            references to a limited number of pages/ versions only. If you
-	 *            don't put your popup in a separate page map, the user might
-	 *            get page expired exceptions when getting back to the main
-	 *            window again.
+	 *            The pagemap where this popup must be in. Typically, you should put any popup in a
+	 *            separate page map as Wicket holds references to a limited number of pages/
+	 *            versions only. If you don't put your popup in a separate page map, the user might
+	 *            get page expired exceptions when getting back to the main window again.
 	 * @param displayFlags
 	 *            Display flags
 	 */
@@ -166,7 +158,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Get the onClick javascript event handler.
-	 *
+	 * 
 	 * @return the onClick javascript event handler
 	 */
 	public String getPopupJavaScript()
@@ -220,7 +212,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Sets the popup window height.
-	 *
+	 * 
 	 * @param popupHeight
 	 *            the popup window height.
 	 * @return This
@@ -233,7 +225,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Sets the left position of the popup window.
-	 *
+	 * 
 	 * @param popupPositionLeft
 	 *            the left position of the popup window.
 	 * @return This
@@ -245,10 +237,10 @@ public class PopupSettings implements IClusterable
 	}
 
 	/**
-	 * Sets the target of the link. The default implementation simply refers to
-	 * the href element, but clients may want to override this (e.g. when the
-	 * HTML element is not an anchor) by setting the target explicitly.
-	 *
+	 * Sets the target of the link. The default implementation simply refers to the href element,
+	 * but clients may want to override this (e.g. when the HTML element is not an anchor) by
+	 * setting the target explicitly.
+	 * 
 	 * @param target
 	 *            the target of the link
 	 */
@@ -259,7 +251,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Sets the top position of the popup window.
-	 *
+	 * 
 	 * @param popupPositionTop
 	 *            the top position of the popup window.
 	 * @return This
@@ -272,7 +264,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Sets the popup window width.
-	 *
+	 * 
 	 * @param popupWidth
 	 *            the popup window width.
 	 * @return This
@@ -284,12 +276,11 @@ public class PopupSettings implements IClusterable
 	}
 
 	/**
-	 * Sets the window name. The logical name of the window. This can be
-	 * anything you want, although you should use alphanumeric characters only
-	 * (no spaces or punctuation). If you have a window already open and call
-	 * window.open a second time using the same windowName, the first window
+	 * Sets the window name. The logical name of the window. This can be anything you want, although
+	 * you should use alphanumeric characters only (no spaces or punctuation). If you have a window
+	 * already open and call window.open a second time using the same windowName, the first window
 	 * will be reused rather than opening a second window
-	 *
+	 * 
 	 * @param popupWindowName
 	 *            window name.
 	 * @return This
@@ -301,9 +292,9 @@ public class PopupSettings implements IClusterable
 			windowName = popupWindowName;
 			if (pageMapName != null && (!pageMapName.equals(popupWindowName)))
 			{
-				log.warn("the page map and window name should be the same. The page map was "
-						+ pageMapName + ", and the requested window name is " + popupWindowName
-						+ "; changing the page map to " + popupWindowName);
+				log.warn("the page map and window name should be the same. The page map was " +
+						pageMapName + ", and the requested window name is " + popupWindowName +
+						"; changing the page map to " + popupWindowName);
 			}
 			pageMapName = popupWindowName;
 		}
@@ -322,10 +313,9 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Gets the pagemap where the popup page must be created in.
-	 *
+	 * 
 	 * @return The pagemap where the popup page must be created in
-	 * @deprecated will be removed in Wicket 2.0; use
-	 *             {@link #getPageMap(Component)} instead
+	 * @deprecated will be removed in Wicket 2.0; use {@link #getPageMap(Component)} instead
 	 */
 	public IPageMap getPageMap()
 	{
@@ -343,7 +333,7 @@ public class PopupSettings implements IClusterable
 
 	/**
 	 * Gets the pagemap where the popup page must be created in.
-	 *
+	 * 
 	 * @param callee
 	 *            Calling component
 	 * @return The pagemap where the popup page must be created in
@@ -364,10 +354,10 @@ public class PopupSettings implements IClusterable
 			Page page = callee.getPage();
 			if (page == null)
 			{
-				throw new IllegalStateException(callee
-						+ " is not yet set on a page; if you want to use this method "
-						+ "without a page map being set, argument callee must be not null "
-						+ "and added to a page");
+				throw new IllegalStateException(callee +
+						" is not yet set on a page; if you want to use this method " +
+						"without a page map being set, argument callee must be not null " +
+						"and added to a page");
 			}
 			return page.getPageMap();
 		}

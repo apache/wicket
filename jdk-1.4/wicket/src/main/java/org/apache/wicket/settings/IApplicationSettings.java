@@ -23,16 +23,15 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * Settings interface for application settings.
  * <p>
- * <i>internalErrorPage </i>- You can override this with your own page class to
- * display internal errors in a different way.
+ * <i>internalErrorPage </i>- You can override this with your own page class to display internal
+ * errors in a different way.
  * <p>
- * <i>pageExpiredErrorPage </i>- You can override this with your own
- * bookmarkable page class to display expired page errors in a different way.
- * You can set property homePageRenderStrategy to choose from different ways the
- * home page url shows up in your browser.
+ * <i>pageExpiredErrorPage </i>- You can override this with your own bookmarkable page class to
+ * display expired page errors in a different way. You can set property homePageRenderStrategy to
+ * choose from different ways the home page url shows up in your browser.
  * <p>
- * <b>A Converter Factory </b>- By overriding getConverterFactory(), you can
- * provide your own factory which creates locale sensitive Converter instances.
+ * <b>A Converter Factory </b>- By overriding getConverterFactory(), you can provide your own
+ * factory which creates locale sensitive Converter instances.
  * 
  * @author Jonathan Locke
  */
@@ -54,9 +53,8 @@ public interface IApplicationSettings
 	IClassResolver getClassResolver();
 
 	/**
-	 * Gets the default maximum size for uploads. This is used by
-	 * {@link Form#getMaxSize()} if no value is explicitly set through
-	 * {@link Form#setMaxSize(Bytes)}.
+	 * Gets the default maximum size for uploads. This is used by {@link Form#getMaxSize()} if no
+	 * value is explicitly set through {@link Form#setMaxSize(Bytes)}.
 	 * 
 	 * @return the default maximum size for uploads
 	 */
@@ -79,8 +77,7 @@ public interface IApplicationSettings
 	Class getPageExpiredErrorPage();
 
 	/**
-	 * Sets the access denied page class. The class must be bookmarkable and
-	 * must extend Page.
+	 * Sets the access denied page class. The class must be bookmarkable and must extend Page.
 	 * 
 	 * @param accessDeniedPage
 	 *            The accessDeniedPage to set.
@@ -96,9 +93,8 @@ public interface IApplicationSettings
 	void setClassResolver(final IClassResolver defaultClassResolver);
 
 	/**
-	 * Sets the default maximum size for uploads. This is used by
-	 * {@link Form#getMaxSize()} if no value is explicitly set through
-	 * {@link Form#setMaxSize(Bytes)}.
+	 * Sets the default maximum size for uploads. This is used by {@link Form#getMaxSize()} if no
+	 * value is explicitly set through {@link Form#setMaxSize(Bytes)}.
 	 * 
 	 * @param defaultUploadSize
 	 *            the default maximum size for uploads
@@ -106,8 +102,7 @@ public interface IApplicationSettings
 	void setDefaultMaximumUploadSize(Bytes defaultUploadSize);
 
 	/**
-	 * Sets internal error page class. The class must be bookmarkable and must
-	 * extend Page.
+	 * Sets internal error page class. The class must be bookmarkable and must extend Page.
 	 * 
 	 * @param internalErrorPage
 	 *            The internalErrorPage to set.
@@ -115,8 +110,7 @@ public interface IApplicationSettings
 	void setInternalErrorPage(final Class internalErrorPage);
 
 	/**
-	 * Sets the page expired page class. The class must be bookmarkable and must
-	 * extend Page.
+	 * Sets the page expired page class. The class must be bookmarkable and must extend Page.
 	 * 
 	 * @param pageExpiredErrorPage
 	 *            The pageExpiredErrorPage to set.

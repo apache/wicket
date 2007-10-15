@@ -154,9 +154,9 @@ public class ServletWebRequest extends WebRequest
 
 		if (RequestContext.get().isPortletRequest())
 		{
-			return relativePathPrefixToContextRoot = getHttpServletRequest().getContextPath()+"/";
+			return relativePathPrefixToContextRoot = getHttpServletRequest().getContextPath() + "/";
 		}
-		
+
 		// Prepend to get back to the wicket handler.
 		String tmp = getRelativePathPrefixToWicketHandler();
 		PrependingStringBuffer prepender = new PrependingStringBuffer(tmp);
@@ -227,7 +227,7 @@ public class ServletWebRequest extends WebRequest
 		}
 
 		boolean portletRequest = RequestContext.get().isPortletRequest();
-		
+
 		PrependingStringBuffer prepender = new PrependingStringBuffer();
 
 		// For AJAX requests, we need to make the URLs relative to the
@@ -317,7 +317,7 @@ public class ServletWebRequest extends WebRequest
 					lastPathPos = i;
 					if (depth == ajaxUrlDepth)
 					{
-						return relativeUrl.substring(0,lastPathPos+1);
+						return relativeUrl.substring(0, lastPathPos + 1);
 					}
 				}
 			}

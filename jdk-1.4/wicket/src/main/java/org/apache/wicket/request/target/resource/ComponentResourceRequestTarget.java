@@ -31,9 +31,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * An implementation of IRequestTarget that is used for the IResourceListener
- * event request.
- *
+ * An implementation of IRequestTarget that is used for the IResourceListener event request.
+ * 
  * @author jcompagner
  */
 public final class ComponentResourceRequestTarget implements IRequestTarget
@@ -46,7 +45,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param page
 	 * @param component
 	 * @param listener
@@ -76,16 +75,16 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 			{
 				((WebResponse)response).getHttpServletResponse().setStatus(
 						HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				log.error("error handling resource request for component " + component
-						+ ", on page " + page + ", listener " + listener.getName() + " - "
-						+ e.getMessage(), e);
+				log.error("error handling resource request for component " + component +
+						", on page " + page + ", listener " + listener.getName() + " - " +
+						e.getMessage(), e);
 				return;
 			}
 			else
 			{
-				throw new WicketRuntimeException("method " + listener.getName() + " of "
-						+ listener.getMethod().getDeclaringClass() + " targetted at component "
-						+ component + " threw an exception", e);
+				throw new WicketRuntimeException("method " + listener.getName() + " of " +
+						listener.getMethod().getDeclaringClass() + " targetted at component " +
+						component + " threw an exception", e);
 			}
 		}
 	}

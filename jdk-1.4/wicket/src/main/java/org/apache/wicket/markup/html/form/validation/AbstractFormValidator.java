@@ -28,26 +28,26 @@ import org.apache.wicket.validation.ValidationError;
 
 /**
  * Base class for {@link org.apache.wicket.markup.html.form.validation.IFormValidator}s.
- *
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractFormValidator implements IFormValidator
 {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * DEPRECATED/UNSUPPORTED
-	 *
+	 * 
 	 * Gets the default variables for interpolation.
-	 *
+	 * 
 	 * @return a map with the variables for interpolation
-	 *
+	 * 
 	 * @deprecated use {@link #variablesMap()} instead
 	 * @throws UnsupportedOperationException
-	 *
+	 * 
 	 * FIXME 2.0: remove asap
 	 */
 	protected final Map messageModel()
@@ -57,13 +57,12 @@ public abstract class AbstractFormValidator implements IFormValidator
 
 
 	/**
-	 * Reports an error against validatable using the map returned by
-	 * {@link #variablesMap()}for variable interpolations and
-	 * message key returned by {@link #resourceKey()}.
-	 *
+	 * Reports an error against validatable using the map returned by {@link #variablesMap()}for
+	 * variable interpolations and message key returned by {@link #resourceKey()}.
+	 * 
 	 * @param fc
 	 *            form component against which the error is reported
-	 *
+	 * 
 	 */
 	public void error(FormComponent fc)
 	{
@@ -72,7 +71,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 
 	/**
 	 * Reports an error against the validatable using the given resource key
-	 *
+	 * 
 	 * @param fc
 	 *            form component against which the error is reported
 	 * @param resourceKey
@@ -88,10 +87,9 @@ public abstract class AbstractFormValidator implements IFormValidator
 	}
 
 	/**
-	 * Reports an error against the validatable using the given map for variable
-	 * interpolations and message resource key provided by
-	 * {@link #resourceKey()}
-	 *
+	 * Reports an error against the validatable using the given map for variable interpolations and
+	 * message resource key provided by {@link #resourceKey()}
+	 * 
 	 * @param fc
 	 *            form component against which the error is reported
 	 * @param vars
@@ -107,9 +105,8 @@ public abstract class AbstractFormValidator implements IFormValidator
 	}
 
 	/**
-	 * Reports an error against the validatable using the specified resource key
-	 * and variable map
-	 *
+	 * Reports an error against the validatable using the specified resource key and variable map
+	 * 
 	 * @param fc
 	 *            form component against which the error is reported
 	 * @param resourceKey
@@ -145,16 +142,14 @@ public abstract class AbstractFormValidator implements IFormValidator
 	}
 
 	/**
-	 * Gets the default variables for interpolation. These are for every
-	 * component:
+	 * Gets the default variables for interpolation. These are for every component:
 	 * <ul>
 	 * <li>${input(n)}: the user's input</li>
 	 * <li>${name(n)}: the name of the component</li>
-	 * <li>${label(n)}: the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
-	 * that order</li>
+	 * <li>${label(n)}: the label of the component - either comes from FormComponent.labelModel or
+	 * resource key [form-id].[form-component-id] in that order</li>
 	 * </ul>
-	 *
+	 * 
 	 * @return a map with the variables for interpolation
 	 */
 	protected Map variablesMap()
@@ -192,9 +187,8 @@ public abstract class AbstractFormValidator implements IFormValidator
 	}
 
 	/**
-	 * Gets the resource key for validator's error message from the
-	 * ApplicationSettings class.
-	 *
+	 * Gets the resource key for validator's error message from the ApplicationSettings class.
+	 * 
 	 * @return the resource key based on the form component
 	 */
 	protected String resourceKey()

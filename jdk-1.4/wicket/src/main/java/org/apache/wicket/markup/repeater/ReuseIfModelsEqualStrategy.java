@@ -24,15 +24,14 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Reuse strategy that will reuse an old item if its model is equal to a model
- * inside the newModels iterator. Useful when state needs to be kept across
- * requests for as long as the item is visible within the view.
+ * Reuse strategy that will reuse an old item if its model is equal to a model inside the newModels
+ * iterator. Useful when state needs to be kept across requests for as long as the item is visible
+ * within the view.
  * <p>
- * Notice that the <u>model</u> and not the <u>model object</u> needs to
- * implement the equals method. Most of the time it is a good idea to forward
- * the equals call to the object, however if a detachable model is used it is
- * often enough to compare object ids models point to ( this saves the model
- * from loading the object).
+ * Notice that the <u>model</u> and not the <u>model object</u> needs to implement the equals
+ * method. Most of the time it is a good idea to forward the equals call to the object, however if a
+ * detachable model is used it is often enough to compare object ids models point to ( this saves
+ * the model from loading the object).
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -40,7 +39,7 @@ import org.apache.wicket.model.IModel;
 public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private static IItemReuseStrategy instance = new ReuseIfModelsEqualStrategy();
 
 	/**
@@ -52,7 +51,8 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(IItemFactory, java.util.Iterator, java.util.Iterator) 
+	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(IItemFactory,
+	 *      java.util.Iterator, java.util.Iterator)
 	 */
 	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
 			Iterator existingItems)

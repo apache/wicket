@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Maintain a list of paths which might either be ordinary folders of the
- * filesystem or relative paths to the web application's servlet context.
+ * Maintain a list of paths which might either be ordinary folders of the filesystem or relative
+ * paths to the web application's servlet context.
  * 
  * @author Johan Compagner
  */
@@ -54,8 +54,7 @@ public final class WebApplicationPath implements IResourcePath
 	 * Constructor
 	 * 
 	 * @param servletContext
-	 *            The webapplication context where the resources must be loaded
-	 *            from
+	 *            The webapplication context where the resources must be loaded from
 	 */
 	public WebApplicationPath(final ServletContext servletContext)
 	{
@@ -96,7 +95,7 @@ public final class WebApplicationPath implements IResourcePath
 		Iterator iter = folders.iterator();
 		while (iter.hasNext())
 		{
-			Folder folder = (Folder) iter.next();
+			Folder folder = (Folder)iter.next();
 			final File file = new File(folder, pathname);
 			if (file.exists())
 			{
@@ -107,7 +106,7 @@ public final class WebApplicationPath implements IResourcePath
 		iter = webappPaths.iterator();
 		while (iter.hasNext())
 		{
-			String path = (String) iter.next();
+			String path = (String)iter.next();
 			try
 			{
 				final URL url = servletContext.getResource(path + pathname);
@@ -130,7 +129,7 @@ public final class WebApplicationPath implements IResourcePath
 	 */
 	public String toString()
 	{
-		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: "
-				+ StringList.valueOf(webappPaths) + "]";
+		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: " +
+				StringList.valueOf(webappPaths) + "]";
 	}
 }

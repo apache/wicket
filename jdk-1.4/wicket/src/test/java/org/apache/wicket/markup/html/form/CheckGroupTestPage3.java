@@ -31,7 +31,7 @@ public class CheckGroupTestPage3 extends AbstractCheckGroupTestPage
 	 */
 	public CheckGroupTestPage3()
 	{
-		super(Arrays.asList(new String[] { "check2"}));
+		super(Arrays.asList(new String[] { "check2" }));
 
 	}
 

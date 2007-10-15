@@ -25,12 +25,14 @@ public class EmailAddressPatternValidator extends EmailAddressValidator
 {
 	private static final long serialVersionUID = 1L;
 	private static final EmailAddressPatternValidator INSTANCE = new EmailAddressPatternValidator();
-	
+
 	/**
-	 * @deprecated Use {@link EmailAddressValidator} instead. Don't forget to update your resource keys!
+	 * @deprecated Use {@link EmailAddressValidator} instead. Don't forget to update your resource
+	 *             keys!
 	 * @return
 	 */
-	public static EmailAddressValidator getInstance() {
+	public static EmailAddressValidator getInstance()
+	{
 		// We have to have our own instance because otherwise we break the resource keys.
 		return INSTANCE;
 	}

@@ -26,9 +26,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * An implementation of the java.util.Map interface which can only hold a single
- * object. This is particularly useful to control memory usage in Wicket because
- * many containers hold only a single component.
+ * An implementation of the java.util.Map interface which can only hold a single object. This is
+ * particularly useful to control memory usage in Wicket because many containers hold only a single
+ * component.
  * 
  * @author Jonathan Locke
  */
@@ -246,7 +246,8 @@ public final class MicroMap implements Map, Serializable
 		{
 			public Object get(final int index)
 			{
-				if (index > size() - 1) {
+				if (index > size() - 1)
+				{
 					throw new IndexOutOfBoundsException();
 				}
 				return value;

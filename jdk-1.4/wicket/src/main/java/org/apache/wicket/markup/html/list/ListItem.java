@@ -27,13 +27,13 @@ import org.apache.wicket.model.IModel;
 public class ListItem extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The index of the ListItem in the parent ListView */
 	private final int index;
 
 	/**
-	 * A constructor which uses the index and the list provided to create a
-	 * ListItem. This constructor is the default one.
+	 * A constructor which uses the index and the list provided to create a ListItem. This
+	 * constructor is the default one.
 	 * 
 	 * @param index
 	 *            The index of the item

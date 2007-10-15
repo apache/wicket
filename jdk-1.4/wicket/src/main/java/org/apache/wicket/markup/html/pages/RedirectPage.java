@@ -24,9 +24,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 
 /**
- * Page that let the browser redirect. Use this if you want to direct the
- * browser to some external URL, like Google etc. or if you want to redirect to
- * a Wicket page, but with a delay.
+ * Page that let the browser redirect. Use this if you want to direct the browser to some external
+ * URL, like Google etc. or if you want to redirect to a Wicket page, but with a delay.
  * 
  * @author Eelco Hillenius
  */
@@ -46,14 +45,13 @@ public class RedirectPage extends WebPage
 	}
 
 	/**
-	 * Constructor. The page will redirect to the given url after waiting for
-	 * the given number of seconds.
+	 * Constructor. The page will redirect to the given url after waiting for the given number of
+	 * seconds.
 	 * 
 	 * @param url
 	 *            The url to redirect to
 	 * @param waitBeforeRedirectInSeconds
-	 *            The number of seconds the browser should wait before
-	 *            redirecting
+	 *            The number of seconds the browser should wait before redirecting
 	 */
 	public RedirectPage(final CharSequence url, final int waitBeforeRedirectInSeconds)
 	{
@@ -75,14 +73,13 @@ public class RedirectPage extends WebPage
 	}
 
 	/**
-	 * Construct. The page will redirect to the given Page after waiting for the
-	 * given number of seconds.
+	 * Construct. The page will redirect to the given Page after waiting for the given number of
+	 * seconds.
 	 * 
 	 * @param page
 	 *            The page to redirect to.
 	 * @param waitBeforeRedirectInSeconds
-	 *            The number of seconds the browser should wait before
-	 *            redirecting
+	 *            The number of seconds the browser should wait before redirecting
 	 */
 	public RedirectPage(final Page page, final int waitBeforeRedirectInSeconds)
 	{

@@ -97,8 +97,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
 	public AbstractSingleSelectChoice(String id, IModel choices)
 	{
@@ -106,8 +105,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel,IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
 	public AbstractSingleSelectChoice(String id, IModel model, IModel choices)
 	{
@@ -125,8 +123,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel, IModel,IChoiceRenderer)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
+	 *      IModel,IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(String id, IModel model, IModel choices,
 			IChoiceRenderer renderer)
@@ -149,14 +147,12 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value? If it is, it means that
-	 * the null value will be displayed, typically to the user as 'choose one'
-	 * or something similar. Note that this doesn't say anything about whether a
-	 * null value (not selecting a value) is permitted; use
+	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will
+	 * be displayed, typically to the user as 'choose one' or something similar. Note that this
+	 * doesn't say anything about whether a null value (not selecting a value) is permitted; use
 	 * {@link #setRequired(boolean)} for that.
 	 * 
-	 * @return <code>true</code> when the <code>null</code> value is
-	 *         allowed.
+	 * @return <code>true</code> when the <code>null</code> value is allowed.
 	 */
 	public boolean isNullValid()
 	{
@@ -164,10 +160,9 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * Is the <code>null</code> value a valid value? If it is, it means that
-	 * the null value will be displayed, typically to the user as 'choose one'
-	 * or something similar. Note that this doesn't say anything about whether a
-	 * null value (not selecting a value) is permitted; use
+	 * Is the <code>null</code> value a valid value? If it is, it means that the null value will
+	 * be displayed, typically to the user as 'choose one' or something similar. Note that this
+	 * doesn't say anything about whether a null value (not selecting a value) is permitted; use
 	 * {@link #setRequired(boolean)} for that.
 	 * 
 	 * @param nullValid
@@ -193,8 +188,7 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * Converts submitted choice id string back to choice object.
 	 * 
 	 * @param id
-	 *            string id of one of the choice objects in the choices list.
-	 *            can be null.
+	 *            string id of one of the choice objects in the choices list. can be null.
 	 * @return choice object. null if none match the specified id.
 	 */
 	protected Object convertChoiceIdToChoice(String id)
@@ -214,18 +208,16 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * The localizer will be ask for the property to display Depending on if
-	 * null is allowed or not it will ask for:
+	 * The localizer will be ask for the property to display Depending on if null is allowed or not
+	 * it will ask for:
 	 * 
 	 * <ul>
-	 * <li>nullValid: when null is valid and by default it will show an empty
-	 * string as a choice.</li>
-	 * <li>null: when null is not a valid choice and it will make a choice with
-	 * "Choose One"</li>
+	 * <li>nullValid: when null is valid and by default it will show an empty string as a choice.</li>
+	 * <li>null: when null is not a valid choice and it will make a choice with "Choose One"</li>
 	 * </ul>
 	 * 
-	 * The choice for null is valid will always be returned. The choice when
-	 * null is not valid will only be returned if the selected object is null.
+	 * The choice for null is valid will always be returned. The choice when null is not valid will
+	 * only be returned if the selected object is null.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
@@ -261,8 +253,8 @@ public abstract class AbstractSingleSelectChoice extends AbstractChoice
 		else
 		{
 			// Null is not valid. Is it selected anyway?
-			if (selected == null || selected.equals(NO_SELECTION_VALUE)
-					|| selected.equals(EMPTY_STRING))
+			if (selected == null || selected.equals(NO_SELECTION_VALUE) ||
+					selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
 				String option = getLocalizer().getString(getId() + ".null", this, "");

@@ -18,20 +18,19 @@ package org.apache.wicket.markup.html;
 
 
 /**
- * Guards lazily loaded {@link PackageResource package resources} against
- * unwanted access.
+ * Guards lazily loaded {@link PackageResource package resources} against unwanted access.
  * 
  * @author Eelco Hillenius
  */
 public interface IPackageResourceGuard
 {
 	/**
-	 * Whether the package resource that can be reached using the provided
-	 * parameters may be accessed.
+	 * Whether the package resource that can be reached using the provided parameters may be
+	 * accessed.
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in
 	 * @param path
 	 *            The path to the resource
 	 * 

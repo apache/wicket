@@ -45,8 +45,7 @@ public class RadioGroupTest extends WicketTestCase
 	}
 
 	/**
-	 * mock model object with an embedded property used to test compound
-	 * property model
+	 * mock model object with an embedded property used to test compound property model
 	 * 
 	 * @author igor
 	 * 
@@ -210,8 +209,7 @@ public class RadioGroupTest extends WicketTestCase
 	}
 
 	/**
-	 * Regression test for markup parsing of radio buttons. Tests issue
-	 * #1465676.
+	 * Regression test for markup parsing of radio buttons. Tests issue #1465676.
 	 * 
 	 * @throws Exception
 	 */

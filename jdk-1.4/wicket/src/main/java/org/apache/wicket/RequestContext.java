@@ -25,12 +25,12 @@ public class RequestContext
 {
 	/** Thread-local that holds the current request context. */
 	private static final ThreadLocal current = new ThreadLocal();
-	
+
 	public RequestContext()
 	{
 		set(this);
 	}
-	
+
 	public static final RequestContext get()
 	{
 		RequestContext context = (RequestContext)current.get();
@@ -40,7 +40,7 @@ public class RequestContext
 		}
 		return context;
 	}
-	
+
 	protected static final void set(RequestContext context)
 	{
 		current.set(context);
@@ -50,37 +50,37 @@ public class RequestContext
 	{
 		return "";
 	}
-	
+
 	public String encodeMarkupId(String markupId)
 	{
 		return markupId;
 	}
-	
+
 	public CharSequence encodeActionURL(CharSequence path)
 	{
 		return path;
 	}
-	
+
 	public CharSequence encodeRenderURL(CharSequence path)
 	{
 		return path;
 	}
-	
+
 	public CharSequence encodeResourceURL(CharSequence path)
 	{
 		return path;
 	}
-	
+
 	public CharSequence encodeSharedResourceURL(CharSequence path)
 	{
 		return path;
 	}
-	
+
 	public IHeaderResponse getHeaderResponse()
 	{
 		return null;
 	}
-	
+
 	public boolean isPortletRequest()
 	{
 		return false;

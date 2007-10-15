@@ -24,15 +24,15 @@ import org.apache.wicket.markup.html.basic.Label;
 public class MarkupInheritanceExtension_11 extends MarkupInheritanceBase_11
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceExtension_11() 
+	public MarkupInheritanceExtension_11()
 	{
-	    super();
-	    
-	    add(new Label("label5", "extension label"));
-    }
+		super();
+
+		add(new Label("label5", "extension label"));
+	}
 }

@@ -28,13 +28,14 @@ public class PrimitiveTypeRequiredTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public PrimitiveTypeRequiredTest(String name)
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
@@ -42,17 +43,17 @@ public class PrimitiveTypeRequiredTest extends WicketTestCase
 	{
 		TextField tf = new TextField("test", int.class);
 		assertTrue(tf.isRequired());
-		
+
 		try
 		{
 			tf.setRequired(false);
 			fail("Required can't be false for a primitive class type");
-		} 
-		catch(WicketRuntimeException wre)
+		}
+		catch (WicketRuntimeException wre)
 		{
 			// igore should happen
 		}
-		
+
 	}
 
 }

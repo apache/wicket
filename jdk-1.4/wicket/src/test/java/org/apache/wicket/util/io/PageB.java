@@ -29,22 +29,23 @@ public class PageB extends WebPage
 	private static final long serialVersionUID = 1L;
 	private PageA a;
 	private final String test;
-	
+
 	/**
 	 * Construct.
+	 * 
 	 * @param test
 	 */
 	public PageB(String test)
 	{
 		this.test = test;
-		
+
 	}
 
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof PageB)
 		{
-			return getNumericId() == ((PageB)obj).getNumericId() && test.equals( ((PageB)obj).test);
+			return getNumericId() == ((PageB)obj).getNumericId() && test.equals(((PageB)obj).test);
 		}
 		return false;
 	}
@@ -64,5 +65,5 @@ public class PageB extends WebPage
 	{
 		return a;
 	}
-	
+
 }

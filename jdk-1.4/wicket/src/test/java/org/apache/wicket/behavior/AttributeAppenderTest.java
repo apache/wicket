@@ -19,9 +19,9 @@ package org.apache.wicket.behavior;
 import junit.framework.TestCase;
 
 /**
- * Tests the attribute appender. Performs only the tests on the actual
- * added functionality to the attribute modifier.
- *
+ * Tests the attribute appender. Performs only the tests on the actual added functionality to the
+ * attribute modifier.
+ * 
  * @author Martijn Dashorst
  */
 public class AttributeAppenderTest extends TestCase
@@ -29,7 +29,8 @@ public class AttributeAppenderTest extends TestCase
 	/**
 	 * Test
 	 */
-	public void testNewValue1() {
+	public void testNewValue1()
+	{
 		AttributeAppender appender = new AttributeAppender("", null, " ");
 		assertEquals("oldvalue newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));
@@ -39,7 +40,8 @@ public class AttributeAppenderTest extends TestCase
 	/**
 	 * Test
 	 */
-	public void testNewValue2() {
+	public void testNewValue2()
+	{
 		AttributeAppender appender = new AttributeAppender("", null, ";");
 		assertEquals("oldvalue;newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));

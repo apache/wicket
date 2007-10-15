@@ -25,15 +25,15 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Simple application that demonstrates the mock http application code (and
- * checks that it is working)
+ * Simple application that demonstrates the mock http application code (and checks that it is
+ * working)
  * 
  * @author Chris Turner
  */
 public class HeaderSectionTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(HeaderSectionTest.class);
-	
+
 	/**
 	 * Create the test.
 	 * 
@@ -50,7 +50,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(HeaderSectionPage_1.class, "HeaderSectionPageExpectedResult_1.html");
+		executeTest(HeaderSectionPage_1.class, "HeaderSectionPageExpectedResult_1.html");
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-	    executeTest(HeaderSectionPage_2.class, "HeaderSectionPageExpectedResult_2.html");
+		executeTest(HeaderSectionPage_2.class, "HeaderSectionPageExpectedResult_2.html");
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-	    executeTest(HeaderSectionPage_3.class, "HeaderSectionPageExpectedResult_3.html");
+		executeTest(HeaderSectionPage_3.class, "HeaderSectionPageExpectedResult_3.html");
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
-	    executeTest(HeaderSectionPage_4.class, "HeaderSectionPageExpectedResult_4.html");
+		executeTest(HeaderSectionPage_4.class, "HeaderSectionPageExpectedResult_4.html");
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_5() throws Exception
 	{
-	    executeTest(HeaderSectionPage_5.class, "HeaderSectionPageExpectedResult_5.html");
+		executeTest(HeaderSectionPage_5.class, "HeaderSectionPageExpectedResult_5.html");
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_6() throws Exception
 	{
-	    executeTest(HeaderSectionPage_6.class, "HeaderSectionPageExpectedResult_6.html");
+		executeTest(HeaderSectionPage_6.class, "HeaderSectionPageExpectedResult_6.html");
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_7() throws Exception
 	{
-	    executeTest(HeaderSectionPage_7.class, "HeaderSectionPageExpectedResult_7.html");
+		executeTest(HeaderSectionPage_7.class, "HeaderSectionPageExpectedResult_7.html");
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_8() throws Exception
 	{
-	    executeTest(HeaderSectionPage_8.class, "HeaderSectionPageExpectedResult_8.html");
+		executeTest(HeaderSectionPage_8.class, "HeaderSectionPageExpectedResult_8.html");
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_9() throws Exception
 	{
-	    executeTest(HeaderSectionPage_9.class, "HeaderSectionPageExpectedResult_9.html");
+		executeTest(HeaderSectionPage_9.class, "HeaderSectionPageExpectedResult_9.html");
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_9a() throws Exception
 	{
-	    executeTest(HeaderSectionPage_9a.class, "HeaderSectionPageExpectedResult_9a.html");
+		executeTest(HeaderSectionPage_9a.class, "HeaderSectionPageExpectedResult_9a.html");
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_10() throws Exception
 	{
-	    executeTest(HeaderSectionPage_10.class, "HeaderSectionPageExpectedResult_10.html");
+		executeTest(HeaderSectionPage_10.class, "HeaderSectionPageExpectedResult_10.html");
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_11() throws Exception
 	{
-	    executeTest(HeaderSectionPage_11.class, "HeaderSectionPageExpectedResult_11.html");
+		executeTest(HeaderSectionPage_11.class, "HeaderSectionPageExpectedResult_11.html");
 	}
 
 	/**
@@ -146,13 +146,14 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_12() throws Exception
 	{
-	    executeTest(HeaderSectionPage_12.class, "HeaderSectionPageExpectedResult_12.html");
-	    PackageResource res = (PackageResource) tester.getApplication().getSharedResources().get("org.apache.wicket.markup.parser.filter.sub.HeaderSectionBorder/cborder.css");
-	    assertNotNull(res);
-	    String absPath = res.getAbsolutePath();
-	    assertNotNull(absPath);
-	    IResourceStream stream = res.getResourceStream();
-	    assertNotNull(stream);
+		executeTest(HeaderSectionPage_12.class, "HeaderSectionPageExpectedResult_12.html");
+		PackageResource res = (PackageResource)tester.getApplication().getSharedResources().get(
+				"org.apache.wicket.markup.parser.filter.sub.HeaderSectionBorder/cborder.css");
+		assertNotNull(res);
+		String absPath = res.getAbsolutePath();
+		assertNotNull(absPath);
+		IResourceStream stream = res.getResourceStream();
+		assertNotNull(stream);
 	}
 
 	/**
@@ -177,7 +178,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_14() throws Exception
 	{
-	    executeTest(HeaderSectionPage_14.class, "HeaderSectionPageExpectedResult_14.html");
+		executeTest(HeaderSectionPage_14.class, "HeaderSectionPageExpectedResult_14.html");
 	}
 
 	/**
@@ -185,7 +186,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_15() throws Exception
 	{
-	    executeTest(HeaderSectionPage_15.class, "HeaderSectionPageExpectedResult_15.html");
+		executeTest(HeaderSectionPage_15.class, "HeaderSectionPageExpectedResult_15.html");
 	}
 
 	/**
@@ -193,7 +194,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_16() throws Exception
 	{
-	    executeTest(HeaderSectionPage_16.class, "HeaderSectionPageExpectedResult_16.html");
+		executeTest(HeaderSectionPage_16.class, "HeaderSectionPageExpectedResult_16.html");
 	}
 
 	/**
@@ -201,7 +202,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_17() throws Exception
 	{
-	    executeTest(HeaderSectionPage_17.class, "HeaderSectionPageExpectedResult_17.html");
+		executeTest(HeaderSectionPage_17.class, "HeaderSectionPageExpectedResult_17.html");
 	}
 
 	/**
@@ -209,7 +210,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_18() throws Exception
 	{
-	    executeTest(HeaderSectionPage_18.class, "HeaderSectionPageExpectedResult_18.html");
+		executeTest(HeaderSectionPage_18.class, "HeaderSectionPageExpectedResult_18.html");
 	}
 
 	/**
@@ -217,6 +218,6 @@ public class HeaderSectionTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_19() throws Exception
 	{
-	    executeTest(HeaderSectionPage_19.class, "HeaderSectionPageExpectedResult_19.html");
+		executeTest(HeaderSectionPage_19.class, "HeaderSectionPageExpectedResult_19.html");
 	}
 }

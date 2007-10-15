@@ -70,14 +70,14 @@ import org.slf4j.LoggerFactory;
 /**
  * Mock servlet request. Implements all of the methods from the standard HttpServletRequest class
  * plus helper methods to aid setting up a request.
- *
+ * 
  * @author Chris Turner
  */
 public class MockHttpServletRequest implements HttpServletRequest
 {
 	/**
 	 * A holder class for an uploaded file.
-	 *
+	 * 
 	 * @author Frank Bille (billen)
 	 */
 	private class UploadedFile
@@ -88,7 +88,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param fieldName
 		 * @param file
 		 * @param contentType
@@ -184,7 +184,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Create the request using the supplied session object.
-	 *
+	 * 
 	 * @param application
 	 *            The application that this request is for
 	 * @param session
@@ -203,7 +203,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Add a new cookie.
-	 *
+	 * 
 	 * @param cookie
 	 *            The cookie
 	 */
@@ -215,7 +215,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Add an uploaded file to the request. Use this to simulate a file that has been uploaded to a
 	 * field.
-	 *
+	 * 
 	 * @param fieldName
 	 *            The fieldname of the upload field.
 	 * @param file
@@ -255,7 +255,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Add a header to the request.
-	 *
+	 * 
 	 * @param name
 	 *            The name of the header to add
 	 * @param value
@@ -274,7 +274,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get an attribute.
-	 *
+	 * 
 	 * @param name
 	 *            The attribute name
 	 * @return The value, or null
@@ -286,7 +286,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the names of all of the values.
-	 *
+	 * 
 	 * @return The names
 	 */
 	public Enumeration getAttributeNames()
@@ -298,7 +298,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the auth type.
-	 *
+	 * 
 	 * @return The auth type
 	 */
 	public String getAuthType()
@@ -308,7 +308,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the current character encoding.
-	 *
+	 * 
 	 * @return The character encoding
 	 */
 	public String getCharacterEncoding()
@@ -318,7 +318,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * true will force Request generate multiPart ContentType and ContentLength
-	 *
+	 * 
 	 * @param useMultiPartContentType
 	 */
 	public void setUseMultiPartContentType(boolean useMultiPartContentType)
@@ -330,7 +330,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Return the length of the content. This is always -1 except if useMultiPartContentType set as
 	 * true. Then the length will be the length of the generated request.
-	 *
+	 * 
 	 * @return -1 if useMultiPartContentType is false. Else the length of the generated request.
 	 */
 	public int getContentLength()
@@ -346,7 +346,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * If useMultiPartContentType set as true return the correct content-type.
-	 *
+	 * 
 	 * @return The correct multipart content-type if useMultiPartContentType is true. Else null.
 	 */
 	public String getContentType()
@@ -362,7 +362,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the context path. For this mock implementation the name of the application is always
 	 * returned.
-	 *
+	 * 
 	 * @return The context path
 	 */
 	public String getContextPath()
@@ -372,7 +372,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get all of the cookies for this request.
-	 *
+	 * 
 	 * @return The cookies
 	 */
 	public Cookie[] getCookies()
@@ -387,7 +387,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the given header as a date.
-	 *
+	 * 
 	 * @param name
 	 *            The header name
 	 * @return The date, or -1 if header not found
@@ -416,7 +416,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the given header value.
-	 *
+	 * 
 	 * @param name
 	 *            The header name
 	 * @return The header value or null
@@ -436,7 +436,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the names of all of the headers.
-	 *
+	 * 
 	 * @return The header names
 	 */
 	public Enumeration getHeaderNames()
@@ -446,7 +446,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get enumeration of all header values with the given name.
-	 *
+	 * 
 	 * @param name
 	 *            The name
 	 * @return The header values
@@ -464,7 +464,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Returns an input stream if there has been added some uploaded files. Use
 	 * {@link #addFile(String, File, String)} to add some uploaded files.
-	 *
+	 * 
 	 * @return The input stream
 	 * @throws IOException
 	 *             If an I/O related problem occurs
@@ -500,7 +500,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the given header as an int.
-	 *
+	 * 
 	 * @param name
 	 *            The header name
 	 * @return The header value or -1 if header not found
@@ -520,7 +520,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the locale of the request. Attempts to decode the Accept-Language header and if not found
 	 * returns the default locale of the JVM.
-	 *
+	 * 
 	 * @return The locale
 	 */
 	public Locale getLocale()
@@ -557,7 +557,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Return all the accepted locales. This implementation always returns just one.
-	 *
+	 * 
 	 * @return The locales
 	 */
 	public Enumeration getLocales()
@@ -569,7 +569,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the method.
-	 *
+	 * 
 	 * @return The method
 	 */
 	public String getMethod()
@@ -579,7 +579,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the request parameter with the given name.
-	 *
+	 * 
 	 * @param name
 	 *            The parameter name
 	 * @return The parameter value, or null
@@ -591,7 +591,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the map of all of the parameters.
-	 *
+	 * 
 	 * @return The parameters
 	 */
 	public Map getParameterMap()
@@ -601,7 +601,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the names of all of the parameters.
-	 *
+	 * 
 	 * @return The parameter names
 	 */
 	public Enumeration getParameterNames()
@@ -611,7 +611,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the values for the given parameter.
-	 *
+	 * 
 	 * @param name
 	 *            The name of the parameter
 	 * @return The return values
@@ -638,7 +638,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the path info.
-	 *
+	 * 
 	 * @return The path info
 	 */
 	public String getPathInfo()
@@ -648,7 +648,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Always returns null.
-	 *
+	 * 
 	 * @return null
 	 */
 	public String getPathTranslated()
@@ -658,7 +658,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the protocol.
-	 *
+	 * 
 	 * @return Always HTTP/1.1
 	 */
 	public String getProtocol()
@@ -668,7 +668,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the query string part of the request.
-	 *
+	 * 
 	 * @return The query string
 	 */
 	public String getQueryString()
@@ -706,7 +706,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * This feature is not implemented at this time as we are not supporting binary servlet input.
 	 * This functionality may be added in the future.
-	 *
+	 * 
 	 * @return The reader
 	 * @throws IOException
 	 *             If an I/O related problem occurs
@@ -718,7 +718,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Deprecated method - should not be used.
-	 *
+	 * 
 	 * @param name
 	 *            The name
 	 * @return The path
@@ -731,7 +731,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the remote address of the client.
-	 *
+	 * 
 	 * @return Always 127.0.0.1
 	 */
 	public String getRemoteAddr()
@@ -741,7 +741,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the remote host.
-	 *
+	 * 
 	 * @return Always localhost
 	 */
 	public String getRemoteHost()
@@ -751,7 +751,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the name of the remote user from the REMOTE_USER header.
-	 *
+	 * 
 	 * @return The name of the remote user
 	 */
 	public String getRemoteUser()
@@ -762,7 +762,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Return a dummy dispatcher that just records that dispatch has occurred without actually doing
 	 * anything.
-	 *
+	 * 
 	 * @param name
 	 *            The name to dispatch to
 	 * @return The dispatcher
@@ -774,7 +774,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the requested session id. Always returns the id of the current session.
-	 *
+	 * 
 	 * @return The session id
 	 */
 	public String getRequestedSessionId()
@@ -785,7 +785,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Returns context path and servlet path concatenated, typically
 	 * /applicationClassName/applicationClassName
-	 *
+	 * 
 	 * @return The path value
 	 * @see javax.servlet.http.HttpServletRequest#getRequestURI()
 	 */
@@ -800,7 +800,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Try to build a rough URL.
-	 *
+	 * 
 	 * @return The url
 	 */
 	public StringBuffer getRequestURL()
@@ -824,7 +824,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the scheme.
-	 *
+	 * 
 	 * @return Always http
 	 */
 	public String getScheme()
@@ -834,7 +834,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the server name.
-	 *
+	 * 
 	 * @return Always localhost
 	 */
 	public String getServerName()
@@ -844,7 +844,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the server port.
-	 *
+	 * 
 	 * @return Always 80
 	 */
 	public int getServerPort()
@@ -855,7 +855,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * The servlet path may either be the application name or /. For test purposes we always return
 	 * the servlet name.
-	 *
+	 * 
 	 * @return The servlet path
 	 */
 	public String getServletPath()
@@ -865,7 +865,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the sessions.
-	 *
+	 * 
 	 * @return The session
 	 */
 	public HttpSession getSession()
@@ -875,7 +875,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the session.
-	 *
+	 * 
 	 * @param b
 	 *            Ignored, there is always a session
 	 * @return The session
@@ -887,7 +887,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Get the user principal.
-	 *
+	 * 
 	 * @return A user principal
 	 */
 	public Principal getUserPrincipal()
@@ -936,7 +936,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Check whether session id is from a cookie. Always returns true.
-	 *
+	 * 
 	 * @return Always true
 	 */
 	public boolean isRequestedSessionIdFromCookie()
@@ -946,7 +946,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Check whether session id is from a url rewrite. Always returns false.
-	 *
+	 * 
 	 * @return Always false
 	 */
 	public boolean isRequestedSessionIdFromUrl()
@@ -956,7 +956,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Check whether session id is from a url rewrite. Always returns false.
-	 *
+	 * 
 	 * @return Always false
 	 */
 	public boolean isRequestedSessionIdFromURL()
@@ -966,7 +966,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Check whether the session id is valid.
-	 *
+	 * 
 	 * @return Always true
 	 */
 	public boolean isRequestedSessionIdValid()
@@ -976,7 +976,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Always returns false.
-	 *
+	 * 
 	 * @return Always false
 	 */
 	public boolean isSecure()
@@ -986,7 +986,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * NOT IMPLEMENTED.
-	 *
+	 * 
 	 * @param name
 	 *            The role name
 	 * @return Always false
@@ -998,7 +998,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Remove the given attribute.
-	 *
+	 * 
 	 * @param name
 	 *            The name of the attribute
 	 */
@@ -1009,7 +1009,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Set the given attribute.
-	 *
+	 * 
 	 * @param name
 	 *            The attribute name
 	 * @param o
@@ -1022,7 +1022,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Set the auth type.
-	 *
+	 * 
 	 * @param authType
 	 *            The auth type
 	 */
@@ -1033,7 +1033,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Set the character encoding.
-	 *
+	 * 
 	 * @param encoding
 	 *            The character encoding
 	 * @throws UnsupportedEncodingException
@@ -1046,7 +1046,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Set the cookies.
-	 *
+	 * 
 	 * @param theCookies
 	 *            The cookies
 	 */
@@ -1061,7 +1061,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Set the method.
-	 *
+	 * 
 	 * @param method
 	 *            The method
 	 */
@@ -1072,7 +1072,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Set a parameter.
-	 *
+	 * 
 	 * @param name
 	 *            The name
 	 * @param value
@@ -1085,7 +1085,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Sets a map of parameters.
-	 *
+	 * 
 	 * @param parameters
 	 *            the parameters to set
 	 */
@@ -1097,7 +1097,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Set the path that this request is supposed to be serving. The path is relative to the web
 	 * application root and should start with a / character
-	 *
+	 * 
 	 * @param path
 	 */
 	public void setPath(final String path)
@@ -1107,7 +1107,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Set the complete url for this request. The url will be analyzed.
-	 *
+	 * 
 	 * @param url
 	 */
 	public void setURL(String url)
@@ -1143,7 +1143,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Initialize the request parameters to point to the given bookmarkable page.
-	 *
+	 * 
 	 * @param page
 	 *            The page to point to
 	 * @param params
@@ -1158,7 +1158,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Initialize the request parameters to point to the given component.
-	 *
+	 * 
 	 * @param component
 	 *            The component
 	 */
@@ -1219,7 +1219,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * Initialize the request parameters to point to the given form component. The additional map
 	 * should contain mappings between individual components that appear in the form and the string
 	 * value that should be submitted for each of these components.
-	 *
+	 * 
 	 * @param form
 	 *            The for to send the request to
 	 * @param values
@@ -1268,7 +1268,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Initialize the request parameters from the given redirect string that redirects back to a
 	 * particular component for display.
-	 *
+	 * 
 	 * @param redirect
 	 *            The redirect string to display from
 	 */
@@ -1322,7 +1322,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Build the request based on the uploaded files and the parameters.
-	 *
+	 * 
 	 * @return The request as a string.
 	 */
 	private byte[] buildRequest()

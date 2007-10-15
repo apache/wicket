@@ -36,18 +36,22 @@ import org.apache.wicket.util.parse.metapattern.parsers.MetaPatternParser;
 public class DefaultButtonImageResourceFactory implements IResourceFactory
 {
 	/**
-	 * @see org.apache.wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale, java.lang.String)
+	 * @see org.apache.wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale,
+	 *      java.lang.String)
 	 */
 	public Resource newResource(final String specification, final Locale locale, final String style)
 	{
 		final Parser parser = new Parser(specification);
 		if (parser.matches())
 		{
-			return new DefaultButtonImageResource(parser.getWidth(), parser.getHeight(), parser.getLabel());
+			return new DefaultButtonImageResource(parser.getWidth(), parser.getHeight(), parser
+					.getLabel());
 		}
 		else
 		{
-			throw new WicketRuntimeException("DefaultButtonImageResourceFactory does not recognized the specification " + specification);
+			throw new WicketRuntimeException(
+					"DefaultButtonImageResourceFactory does not recognized the specification " +
+							specification);
 		}
 	}
 

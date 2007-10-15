@@ -34,18 +34,18 @@ import org.apache.wicket.version.undo.Change;
  * container followed by <code>populateItem(Component item)</code> to let the user populate the
  * newly created item container with with custom components.
  * </p>
- *
+ * 
  * @see org.apache.wicket.markup.repeater.RefreshingView
  * @see org.apache.wicket.markup.html.navigation.paging.IPageable
- *
+ * 
  * @author Igor Vaynberg (ivaynberg)
- *
+ * 
  */
 public abstract class AbstractPageableView extends RefreshingView implements IPageable
 
 {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -88,7 +88,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	/**
 	 * This method retrieves the subset of models for items in the current page and allows
 	 * RefreshingView to generate items.
-	 *
+	 * 
 	 * @return iterator over models for items in the current page
 	 */
 	protected Iterator getItemModels()
@@ -111,7 +111,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 	/**
 	 * Returns an iterator over models for items in the current page
-	 *
+	 * 
 	 * @param offset
 	 *            index of first item in this page
 	 * @param size
@@ -164,7 +164,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 	/**
 	 * Sets the maximum number of items to show per page. The current page will also be set to zero
-	 *
+	 * 
 	 * @param items
 	 */
 	protected final void internalSetRowsPerPage(int items)
@@ -343,7 +343,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 		/**
 		 * Constructor
-		 *
+		 * 
 		 * @param delegate
 		 *            delegate iterator
 		 * @param max

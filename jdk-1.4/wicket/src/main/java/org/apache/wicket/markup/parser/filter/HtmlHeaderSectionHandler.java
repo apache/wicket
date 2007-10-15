@@ -26,13 +26,11 @@ import org.apache.wicket.markup.parser.XmlTag;
 
 
 /**
- * This is a markup inline filter. It assumes that WicketTagIdentifier has been
- * called first and search for a &lt;head&gt; tag (note: not wicket:head).
- * Provided the markup contains a &lt;body&gt; tag it will automatically prepend
- * a &lt;head&gt; tag if missing.
+ * This is a markup inline filter. It assumes that WicketTagIdentifier has been called first and
+ * search for a &lt;head&gt; tag (note: not wicket:head). Provided the markup contains a
+ * &lt;body&gt; tag it will automatically prepend a &lt;head&gt; tag if missing.
  * <p>
- * Note: This handler is only relevant for Pages (see
- * MarkupParser.newFilterChain())
+ * Note: This handler is only relevant for Pages (see MarkupParser.newFilterChain())
  * 
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
@@ -58,8 +56,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param markup
-	 *            The Markup object being filled while reading the markup
-	 *            resource
+	 *            The Markup object being filled while reading the markup resource
 	 */
 	public HtmlHeaderSectionHandler(final Markup markup)
 	{
@@ -67,13 +64,11 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next tag from the next MarkupFilter in the chain and search for
-	 * Wicket specific tags.
+	 * Get the next tag from the next MarkupFilter in the chain and search for Wicket specific tags.
 	 * <p>
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag from markup to be processed. If null, no more tags
-	 *         are available
+	 * @return The next tag from markup to be processed. If null, no more tags are available
 	 */
 	public MarkupElement nextTag() throws ParseException
 	{
@@ -133,8 +128,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Insert <head> open and close tag (with empty body) to the current
-	 * position.
+	 * Insert <head> open and close tag (with empty body) to the current position.
 	 */
 	private void insertHeadTag()
 	{

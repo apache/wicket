@@ -19,21 +19,24 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.IClusterable;
 
 /**
- * An interface to be implemented by components or behaviors that wish to
- * contribute to the header section of the page.
+ * An interface to be implemented by components or behaviors that wish to contribute to the header
+ * section of the page.
  * 
  * Example:
  * 
  * <pre>
- * class MyPanel extends Panel implements IHeaderContributor {
- *    public MyPanel(String id) {
- *      super(id);
- *    }
- *    
- *    public void renderHead(IHeaderResponse response) {
- *       response.renderOnLoadJavascript("alert('page loaded!');");
- *    }
- * } 
+ * class MyPanel extends Panel implements IHeaderContributor
+ * {
+ * 	public MyPanel(String id)
+ * 	{
+ * 		super(id);
+ * 	}
+ * 
+ * 	public void renderHead(IHeaderResponse response)
+ * 	{
+ * 		response.renderOnLoadJavascript(&quot;alert('page loaded!');&quot;);
+ * 	}
+ * }
  * </pre>
  * 
  * 
@@ -43,8 +46,7 @@ import org.apache.wicket.IClusterable;
 public interface IHeaderContributor extends IClusterable
 {
 	/**
-	 * Render to the web response whatever the component wants to contribute to
-	 * the head section.
+	 * Render to the web response whatever the component wants to contribute to the head section.
 	 * 
 	 * @param response
 	 *            Response object

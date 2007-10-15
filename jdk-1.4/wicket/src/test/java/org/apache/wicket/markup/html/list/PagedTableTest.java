@@ -42,7 +42,9 @@ public class PagedTableTest extends TestCase
 
 	/**
 	 * Construct.
-	 * @param name name of test
+	 * 
+	 * @param name
+	 *            name of test
 	 */
 	public PagedTableTest(String name)
 	{
@@ -51,6 +53,7 @@ public class PagedTableTest extends TestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
@@ -72,7 +75,9 @@ public class PagedTableTest extends TestCase
 
 	/**
 	 * Validates page 1 of paged table.
-	 * @param document The document
+	 * 
+	 * @param document
+	 *            The document
 	 * @return The validation result
 	 */
 	private boolean validatePage1(String document)
@@ -99,8 +104,8 @@ public class PagedTableTest extends TestCase
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
 				.addExpectedChild(new Tag("em").addExpectedChild(new Tag("span")
 						.addExpectedChild(new TextContent("1"))))));
-		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
-				"span").addExpectedChild(new TextContent("2")))));
+		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a")
+				.addExpectedChild(new Tag("span").addExpectedChild(new TextContent("2")))));
 
 		body.addExpectedChild(ulNav);
 

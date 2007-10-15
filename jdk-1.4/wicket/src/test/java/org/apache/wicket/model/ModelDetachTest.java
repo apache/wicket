@@ -19,8 +19,8 @@ package org.apache.wicket.model;
 import junit.framework.TestCase;
 
 /**
- * Tests the detach behavior for compatibility with IDetachable nested objects,
- * ensuring that the detach method is called for those nested objects.
+ * Tests the detach behavior for compatibility with IDetachable nested objects, ensuring that the
+ * detach method is called for those nested objects.
  */
 public class ModelDetachTest extends TestCase
 {

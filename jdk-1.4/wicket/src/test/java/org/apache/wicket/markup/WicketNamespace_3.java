@@ -22,10 +22,10 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class WicketNamespace_3 extends WebPage 
+public class WicketNamespace_3 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,8 +33,8 @@ public class WicketNamespace_3 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public WicketNamespace_3() 
+	public WicketNamespace_3()
 	{
-	    add(new Label("label", "my label test"));
-    }
+		add(new Label("label", "my label test"));
+	}
 }

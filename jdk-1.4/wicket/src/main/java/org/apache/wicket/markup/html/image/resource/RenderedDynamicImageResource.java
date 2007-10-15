@@ -24,17 +24,16 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * A DynamicImageResource subclass that allows easy rendering of regeneratable
- * (unbuffered) dynamic images. A RenderedDynamicImageResource implements the
- * abstract method render(Graphics2D) to create/re-create a given image
- * on-the-fly. When a RenderedDynamicImageResource is serialized, the image
- * state is transient, which means it will disappear when the resource is sent
- * over the wire and then will be recreated when required.
+ * A DynamicImageResource subclass that allows easy rendering of regeneratable (unbuffered) dynamic
+ * images. A RenderedDynamicImageResource implements the abstract method render(Graphics2D) to
+ * create/re-create a given image on-the-fly. When a RenderedDynamicImageResource is serialized, the
+ * image state is transient, which means it will disappear when the resource is sent over the wire
+ * and then will be recreated when required.
  * <p>
- * The format of the image (and therefore the resource's extension) can be
- * specified with setFormat(String). The default format is "PNG" because JPEG is
- * lossy and makes generated images look bad and GIF has patent issues.
- *
+ * The format of the image (and therefore the resource's extension) can be specified with
+ * setFormat(String). The default format is "PNG" because JPEG is lossy and makes generated images
+ * look bad and GIF has patent issues.
+ * 
  * @see org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource
  * @see org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory
  * @author Jonathan Locke
@@ -59,7 +58,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param width
 	 *            Width of image
 	 * @param height
@@ -73,7 +72,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param width
 	 *            Width of image
 	 * @param height
@@ -114,7 +113,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Causes the image to be redrawn the next time its requested.
-	 *
+	 * 
 	 * @see org.apache.wicket.Resource#invalidate()
 	 */
 	public synchronized void invalidate()
@@ -171,7 +170,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Renders this image
-	 *
+	 * 
 	 * @return The image data
 	 */
 	protected byte[] render()
@@ -188,12 +187,11 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 
 	/**
 	 * Override this method to provide your rendering code
-	 *
+	 * 
 	 * @param graphics
 	 *            The graphics context to render on
-	 * @return True if the image was rendered. False if the image size was
-	 *         changed by the rendering implementation and the image should be
-	 *         re-rendered at the new size.
+	 * @return True if the image was rendered. False if the image size was changed by the rendering
+	 *         implementation and the image should be re-rendered at the new size.
 	 */
 	protected abstract boolean render(Graphics2D graphics);
 }

@@ -17,8 +17,7 @@
 package org.apache.wicket.util.thread;
 
 /**
- * Type-safe monitor class to be used in place of <code>Object</code> for
- * readability.
+ * Type-safe monitor class to be used in place of <code>Object</code> for readability.
  * 
  * @author Jonathan Locke
  * @since 1.2.6

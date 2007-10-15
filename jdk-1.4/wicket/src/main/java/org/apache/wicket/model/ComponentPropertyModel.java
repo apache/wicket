@@ -20,9 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.PropertyResolver;
 
 /**
- * A model that references a property by name on the current model of the
- * component it is bound to. This enables direct usage of inherited models such
- * as compound property models.
+ * A model that references a property by name on the current model of the component it is bound to.
+ * This enables direct usage of inherited models such as compound property models.
  * 
  * @author Jonathan Locke
  */
@@ -65,9 +64,7 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 	/**
 	 * Wrapper used when assigning a ComponentPropertyModel to a component.
 	 */
-	private class AssignmentWrapper extends AbstractReadOnlyModel
-			implements
-				IWrapModel
+	private class AssignmentWrapper extends AbstractReadOnlyModel implements IWrapModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -96,8 +93,8 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 
 		public Object getObject()
 		{
-			return PropertyResolver.getValue(propertyName, component.getParent().getInnermostModel()
-					.getObject());
+			return PropertyResolver.getValue(propertyName, component.getParent()
+					.getInnermostModel().getObject());
 		}
 	}
 }

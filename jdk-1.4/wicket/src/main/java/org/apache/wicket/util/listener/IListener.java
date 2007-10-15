@@ -17,8 +17,8 @@
 package org.apache.wicket.util.listener;
 
 /**
- * Typesafe super-interface for listener subclasses which can be added to a
- * ListenerSet or are intended to be dealt with in other generic ways.
+ * Typesafe super-interface for listener subclasses which can be added to a ListenerSet or are
+ * intended to be dealt with in other generic ways.
  * 
  * @author Jonathan Locke
  */

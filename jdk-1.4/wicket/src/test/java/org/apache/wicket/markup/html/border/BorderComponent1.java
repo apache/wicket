@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.border;
 
 
-
 /**
  * Test the component: PageView
  * 

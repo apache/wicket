@@ -26,7 +26,7 @@ import org.apache.wicket.util.string.StringList;
 
 /**
  * Maintains a list of folders as a path.
- *
+ * 
  * @author Jonathan Locke
  */
 public final class Path implements IResourcePath
@@ -43,7 +43,7 @@ public final class Path implements IResourcePath
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param folder
 	 *            A single folder to add to the path
 	 */
@@ -54,7 +54,7 @@ public final class Path implements IResourcePath
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param folders
 	 *            An array of folders to add to the path
 	 */
@@ -62,7 +62,7 @@ public final class Path implements IResourcePath
 	{
 		if (folders != null)
 		{
-			for (int i=0; i < folders.length; i++)
+			for (int i = 0; i < folders.length; i++)
 			{
 				add(folders[i]);
 			}
@@ -94,14 +94,14 @@ public final class Path implements IResourcePath
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
 	public IResourceStream find(final Class clazz, final String pathname)
 	{
-		for (int i=0; i < folders.size(); i++)
+		for (int i = 0; i < folders.size(); i++)
 		{
-			Folder folder = (Folder) folders.get(i);
+			Folder folder = (Folder)folders.get(i);
 			final File file = new File(folder, pathname);
 
 			if (file.exists())

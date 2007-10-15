@@ -57,8 +57,8 @@ public class AjaxRequestTargetTest extends WicketTestCase
 	}
 
 	/**
-	 * Test that if there are no headers contributed in any components added to
-	 * the response, we then don't add <header-contribution> at all.
+	 * Test that if there are no headers contributed in any components added to the response, we
+	 * then don't add <header-contribution> at all.
 	 * 
 	 * @throws IOException
 	 */

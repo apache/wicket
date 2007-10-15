@@ -19,10 +19,9 @@ package org.apache.wicket;
 import java.io.Serializable;
 
 /**
- * Wicket version of {@link Serializable}. All Wicket interfaces and base
- * classes that should typically be clustered should implement this interface.
- * This communicates their intent and also makes configuration for <a
- * href="http://terracotta.org/">Terracotta</a> a lot easier.
+ * Wicket version of {@link Serializable}. All Wicket interfaces and base classes that should
+ * typically be clustered should implement this interface. This communicates their intent and also
+ * makes configuration for <a href="http://terracotta.org/">Terracotta</a> a lot easier.
  * 
  * @author eelcohillenius
  */

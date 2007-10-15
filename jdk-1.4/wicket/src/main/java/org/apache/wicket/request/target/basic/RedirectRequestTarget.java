@@ -24,13 +24,13 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 
 /**
- * A RequestTarget that will sent a redirect url to the browser. Use this if you
- * want to direct the browser to some external URL, like Google etc, immediately.
- * or if you want to redirect to a Wicket page.
- *
- * If you want to redirect with a delay the {@link RedirectPage} will do a meta
- * tag redirect with a delay.
- *
+ * A RequestTarget that will sent a redirect url to the browser. Use this if you want to direct the
+ * browser to some external URL, like Google etc, immediately. or if you want to redirect to a
+ * Wicket page.
+ * 
+ * If you want to redirect with a delay the {@link RedirectPage} will do a meta tag redirect with a
+ * delay.
+ * 
  * @author jcompagner
  */
 public class RedirectRequestTarget implements IRequestTarget
@@ -45,8 +45,9 @@ public class RedirectRequestTarget implements IRequestTarget
 	 * <li>Relative to the Wicket filter/servlet, e.g. "?wicket:interface=foo", "mounted_page"</li>
 	 * <li>Absolute within your web application's context root, e.g. "/foo.html"</li>
 	 * </ul>
-	 *
-	 * @param redirectUrl URL to redirect to.
+	 * 
+	 * @param redirectUrl
+	 *            URL to redirect to.
 	 */
 	public RedirectRequestTarget(String redirectUrl)
 	{
@@ -78,7 +79,9 @@ public class RedirectRequestTarget implements IRequestTarget
 			}
 			else
 			{
-				response.redirect(RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot() + redirectUrl.substring(1));
+				response.redirect(RequestCycle.get().getRequest()
+						.getRelativePathPrefixToContextRoot() +
+						redirectUrl.substring(1));
 			}
 		}
 		else if (redirectUrl.startsWith("http://") || redirectUrl.startsWith("https://"))
@@ -87,7 +90,9 @@ public class RedirectRequestTarget implements IRequestTarget
 		}
 		else
 		{
-			response.redirect(RequestCycle.get().getRequest().getRelativePathPrefixToWicketHandler() + redirectUrl);
+			response.redirect(RequestCycle.get().getRequest()
+					.getRelativePathPrefixToWicketHandler() +
+					redirectUrl);
 		}
 	}
 

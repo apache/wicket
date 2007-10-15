@@ -20,12 +20,11 @@ import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 
 /**
- * Decorator that can be used to cancel the regular action if ajax call was
- * performed. This allows us to, for example, cancel the default anchor behavior
- * (requesting href url) if an ajax call was made in the onclick event handler.
- * Ajax call cannot be performed if javascript has been turned off or no
- * compatible XmlHttpRequest object can be found. This decorator will make
- * javascript return true if the ajax call was made, and false otherwise.
+ * Decorator that can be used to cancel the regular action if ajax call was performed. This allows
+ * us to, for example, cancel the default anchor behavior (requesting href url) if an ajax call was
+ * made in the onclick event handler. Ajax call cannot be performed if javascript has been turned
+ * off or no compatible XmlHttpRequest object can be found. This decorator will make javascript
+ * return true if the ajax call was made, and false otherwise.
  * 
  * @see AjaxFallbackLink
  * 

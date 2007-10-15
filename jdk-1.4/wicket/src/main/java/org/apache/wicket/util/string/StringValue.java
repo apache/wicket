@@ -40,7 +40,7 @@ import org.apache.wicket.util.time.Time;
  * <P>
  * The beforeFirst(), afterFirst(), beforeLast() and afterLast() methods are handy for parsing
  * things like paths and filenames.
- *
+ * 
  * @author Jonathan Locke
  */
 public class StringValue implements IClusterable
@@ -93,7 +93,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param value
 	 *            Double precision value
 	 * @return String value formatted with one place after decimal
@@ -105,7 +105,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param value
 	 *            Double precision value
 	 * @param places
@@ -130,7 +130,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param value
 	 *            Double precision value
 	 * @param locale
@@ -144,7 +144,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param object
 	 *            An object
 	 * @return String value for object
@@ -156,7 +156,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param object
 	 *            An object
 	 * @param locale
@@ -170,7 +170,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param string
 	 *            A string
 	 * @return String value for string
@@ -182,7 +182,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param string
 	 *            A string
 	 * @param locale
@@ -196,7 +196,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts the given input to an instance of StringValue.
-	 *
+	 * 
 	 * @param buffer
 	 *            A string buffer
 	 * @return String value
@@ -208,7 +208,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Private constructor to force use of static factory methods.
-	 *
+	 * 
 	 * @param text
 	 *            The text for this string value
 	 */
@@ -220,7 +220,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Private constructor to force use of static factory methods.
-	 *
+	 * 
 	 * @param text
 	 *            The text for this string value
 	 * @param locale
@@ -234,7 +234,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Gets the substring after the first occurrence given char.
-	 *
+	 * 
 	 * @param c
 	 *            char to scan for
 	 * @return the substring
@@ -246,7 +246,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Gets the substring after the last occurrence given char.
-	 *
+	 * 
 	 * @param c
 	 *            char to scan for
 	 * @return the substring
@@ -258,7 +258,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Gets the substring before the first occurrence given char.
-	 *
+	 * 
 	 * @param c
 	 *            char to scan for
 	 * @return the substring
@@ -270,7 +270,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Gets the substring before the last occurrence given char.
-	 *
+	 * 
 	 * @param c
 	 *            char to scan for
 	 * @return the substring
@@ -282,7 +282,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Replaces on this text.
-	 *
+	 * 
 	 * @param searchFor
 	 *            What to search for
 	 * @param replaceWith
@@ -297,7 +297,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Converts this StringValue to a given type.
-	 *
+	 * 
 	 * @param type
 	 *            The type to convert to
 	 * @return The converted value
@@ -351,7 +351,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a boolean.
-	 *
+	 * 
 	 * @return This string value as a boolean
 	 * @throws StringValueConversionException
 	 */
@@ -362,7 +362,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null
@@ -376,7 +376,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a boolean.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -387,7 +387,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a char.
-	 *
+	 * 
 	 * @return This string value as a character
 	 * @throws StringValueConversionException
 	 */
@@ -398,7 +398,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null
@@ -411,7 +411,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a Character.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -422,7 +422,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a double.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -441,7 +441,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null
@@ -454,7 +454,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a Double.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -465,7 +465,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a Duration instance.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -476,7 +476,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null
@@ -490,7 +490,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to an int.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -509,7 +509,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null
@@ -522,7 +522,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to an Integer.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -541,7 +541,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a long.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -560,7 +560,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null
@@ -573,7 +573,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a Long.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -592,7 +592,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -603,7 +603,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -614,7 +614,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -625,7 +625,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -636,7 +636,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -647,7 +647,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -658,7 +658,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 */
 	public final String toOptionalString()
@@ -668,7 +668,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to object types, returning null if text is null.
-	 *
+	 * 
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
@@ -687,7 +687,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null
@@ -699,7 +699,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert this text to a time instance.
-	 *
+	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
@@ -718,7 +718,7 @@ public class StringValue implements IClusterable
 
 	/**
 	 * Convert to primitive types, returning default value if text is null.
-	 *
+	 * 
 	 * @param defaultValue
 	 *            the default value to return of text is null
 	 * @return the converted text as a primitive or the default if text is null

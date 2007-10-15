@@ -20,9 +20,8 @@ import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
 
 /**
- * The empty request target does nothing in itself but instead relies on some
- * other source to generate a response. It can be regarded as a dummy
- * implementation.
+ * The empty request target does nothing in itself but instead relies on some other source to
+ * generate a response. It can be regarded as a dummy implementation.
  * 
  * @author Eelco Hillenius
  */

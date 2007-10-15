@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
 public class ListItemModel implements IModel
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The ListView itself */
 	private final ListView listView;
 

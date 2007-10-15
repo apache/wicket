@@ -30,13 +30,12 @@ import org.apache.wicket.markup.transformer.XsltOutputTransformerContainer;
 import org.apache.wicket.model.Model;
 
 
-
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class Page_1 extends WebPage 
+public class Page_1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,17 +43,17 @@ public class Page_1 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public Page_1() 
+	public Page_1()
 	{
 		add(new Label("myLabel", "Test Label"));
-		
-	    MarkupContainer container = new NoopOutputTransformerContainer("test");
-	    
-	    add(container);
-	    container.add(new Label("myLabel2", "Test Label2"));
 
-	    MarkupContainer panelContainer = new AbstractOutputTransformerContainer("test2")
-	    {
+		MarkupContainer container = new NoopOutputTransformerContainer("test");
+
+		add(container);
+		container.add(new Label("myLabel2", "Test Label2"));
+
+		MarkupContainer panelContainer = new AbstractOutputTransformerContainer("test2")
+		{
 			private static final long serialVersionUID = 1L;
 
 			public CharSequence transform(Component component, CharSequence output)
@@ -62,15 +61,15 @@ public class Page_1 extends WebPage
 				// replace the generated String
 				return "Whatever";
 			}
-	    };
+		};
 
-	    add(panelContainer);
-	    Panel panel = new Panel_1("myPanel");
-	    panel.setRenderBodyOnly(true);
-	    panelContainer.add(panel);
+		add(panelContainer);
+		Panel panel = new Panel_1("myPanel");
+		panel.setRenderBodyOnly(true);
+		panelContainer.add(panel);
 
-	    MarkupContainer borderContainer = new AbstractOutputTransformerContainer("test3")
-	    {
+		MarkupContainer borderContainer = new AbstractOutputTransformerContainer("test3")
+		{
 			private static final long serialVersionUID = 1L;
 
 			public CharSequence transform(Component component, CharSequence output)
@@ -78,27 +77,27 @@ public class Page_1 extends WebPage
 				// Convert all text to uppercase
 				return output.toString().toUpperCase();
 			}
-	    };
+		};
 
-	    add(borderContainer);
-	    Border border = new SimpleBorder("myBorder");
-	    borderContainer.add(border);
+		add(borderContainer);
+		Border border = new SimpleBorder("myBorder");
+		borderContainer.add(border);
 
-	    MarkupContainer xsltContainer = new XsltOutputTransformerContainer("test4");
-	    add(xsltContainer);
-	    
-	    Border border2 = new SimpleBorder("myBorder2");
-	    border2.setRenderBodyOnly(false);
-	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-	    xsltContainer.add(border2);
+		MarkupContainer xsltContainer = new XsltOutputTransformerContainer("test4");
+		add(xsltContainer);
 
-	    MarkupContainer xsltContainer2 = new XsltOutputTransformerContainer("test5", null, 
-	    		"org/apache/wicket/markup/outputTransformer/anyName.xsl");
-	    add(xsltContainer2);
-	    
-	    Border border3 = new SimpleBorder("myBorder3");
-	    border3.setRenderBodyOnly(false);
-	    border3.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-	    xsltContainer2.add(border3);
-    }
+		Border border2 = new SimpleBorder("myBorder2");
+		border2.setRenderBodyOnly(false);
+		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		xsltContainer.add(border2);
+
+		MarkupContainer xsltContainer2 = new XsltOutputTransformerContainer("test5", null,
+				"org/apache/wicket/markup/outputTransformer/anyName.xsl");
+		add(xsltContainer2);
+
+		Border border3 = new SimpleBorder("myBorder3");
+		border3.setRenderBodyOnly(false);
+		border3.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		xsltContainer2.add(border3);
+	}
 }

@@ -258,17 +258,18 @@ public abstract class HeaderResponse implements IHeaderResponse
 	{
 		if (!closed)
 		{
-			List token = Arrays.asList(new Object[] { "javascript-event", target, event, javascript });
+			List token = Arrays
+					.asList(new Object[] { "javascript-event", target, event, javascript });
 			if (wasRendered(token) == false)
 			{
 				renderJavascriptReference(WicketEventReference.INSTANCE);
-				JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target + ", \"" +
-						event + "\", function() { " + javascript + ";});");
+				JavascriptUtils.writeJavascript(getResponse(), "Wicket.Event.add(" + target +
+						", \"" + event + "\", function() { " + javascript + ";});");
 				markRendered(token);
 			}
 		}
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.IHeaderResponse#close()
 	 */
@@ -292,11 +293,12 @@ public abstract class HeaderResponse implements IHeaderResponse
 	{
 		return closed;
 	}
-	
+
 	/**
 	 * Once the HeaderResponse is closed, no output may be written to it anymore. To enforce that,
-	 * the {@link #getResponse()} is defined final in this class and will return a NullResponse instance once closed or otherwise
-	 * the Response provided by this method.
+	 * the {@link #getResponse()} is defined final in this class and will return a NullResponse
+	 * instance once closed or otherwise the Response provided by this method.
+	 * 
 	 * @return Response
 	 */
 	protected abstract Response getRealResponse();

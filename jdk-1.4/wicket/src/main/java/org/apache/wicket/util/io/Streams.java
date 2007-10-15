@@ -54,8 +54,8 @@ public final class Streams
 			+ " key CDATA #REQUIRED>";
 
 	/**
-	 * Writes the input stream to the output stream. Input is done without a
-	 * Reader object, meaning that the input is copied in its raw form.
+	 * Writes the input stream to the output stream. Input is done without a Reader object, meaning
+	 * that the input is copied in its raw form.
 	 * 
 	 * @param in
 	 *            The input stream
@@ -82,8 +82,7 @@ public final class Streams
 	}
 
 	/**
-	 * Loads properties from an XML input stream into the provided properties
-	 * object.
+	 * Loads properties from an XML input stream into the provided properties object.
 	 * 
 	 * @param properties
 	 *            The object to load the properties into

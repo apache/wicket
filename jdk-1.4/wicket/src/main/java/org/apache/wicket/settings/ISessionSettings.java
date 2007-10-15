@@ -22,14 +22,13 @@ import org.apache.wicket.session.pagemap.IPageMapEvictionStrategy;
 /**
  * Interface for session related settings
  * <p>
- * <i>pageFactory </i>- The factory class that is used for constructing page
- * instances.
+ * <i>pageFactory </i>- The factory class that is used for constructing page instances.
  * <p>
- * <i>pageMapEvictionStrategy </i>- The strategy for evicting pages from page
- * maps when they are too full
+ * <i>pageMapEvictionStrategy </i>- The strategy for evicting pages from page maps when they are too
+ * full
  * <p>
- * <i>maxPageMaps </i>- The maximum number of page maps allowed in a session (to
- * prevent denial of service attacks)
+ * <i>maxPageMaps </i>- The maximum number of page maps allowed in a session (to prevent denial of
+ * service attacks)
  * <p>
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -82,16 +81,16 @@ public interface ISessionSettings
 	void setPageMapEvictionStrategy(IPageMapEvictionStrategy pageMapEvictionStrategy);
 
 	/**
-	 * Sets whether the id of a page should be unique across the entire session.
-	 * Default is false, which means that a page id is unique per pagemap.
+	 * Sets whether the id of a page should be unique across the entire session. Default is false,
+	 * which means that a page id is unique per pagemap.
 	 * 
 	 * @param value
 	 */
 	void setPageIdUniquePerSession(boolean value);
 
 	/**
-	 * Returns whether the page id is unique per session. If the page id is not
-	 * unique per session, it is only unique per pagemap.
+	 * Returns whether the page id is unique per session. If the page id is not unique per session,
+	 * it is only unique per pagemap.
 	 * 
 	 * @return
 	 */

@@ -43,7 +43,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(WicketNamespace_1.class, "WicketNamespaceExpectedResult_1.html");
+		executeTest(WicketNamespace_1.class, "WicketNamespaceExpectedResult_1.html");
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-	    executeTest(WicketNamespace_2.class, "WicketNamespaceExpectedResult_2.html");
+		executeTest(WicketNamespace_2.class, "WicketNamespaceExpectedResult_2.html");
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-	    executeTest(WicketNamespace_3.class, "WicketNamespaceExpectedResult_3.html");
+		executeTest(WicketNamespace_3.class, "WicketNamespaceExpectedResult_3.html");
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
-	    executeTest(WicketNamespace_4.class, "WicketNamespaceExpectedResult_4.html");
+		executeTest(WicketNamespace_4.class, "WicketNamespaceExpectedResult_4.html");
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_5() throws Exception
 	{
-	    executeTest(WicketNamespace_5.class, "WicketNamespaceExpectedResult_5.html");
+		executeTest(WicketNamespace_5.class, "WicketNamespaceExpectedResult_5.html");
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_6() throws Exception
 	{
-	    executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
+		executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class WicketNamespaceTest extends TestCase
 	public void executeTest(final Class pageClass, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
-		
+
 		application = new WicketTester();
 		application.startPage(pageClass);
 

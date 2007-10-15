@@ -36,18 +36,18 @@ public class FilePageStoreTest extends WicketTestCase
 		PageB b = new PageB("test");
 		PageA a = new PageA(b);
 		b.setA(a);
-		
+
 		tester.setupRequestAndResponse();
-		
+
 		Session session = Session.get();
-		
+
 		a.getPageMap().put(a);
 		a.getPageMap().put(b);
-		
+
 		PageA a2 = (PageA)a.getPageMap().get(a.getNumericId(), a.getCurrentVersionNumber());
-		
+
 		Assert.assertEquals(a, a2);
-		
+
 		Assert.assertSame(a2, a2.getB().getA());
 	}
 }

@@ -25,9 +25,8 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 
 
 /**
- * An authorization strategy which allows the use of a command pattern for users
- * that want to authorize a variety of different types of actions throughout an
- * application.
+ * An authorization strategy which allows the use of a command pattern for users that want to
+ * authorize a variety of different types of actions throughout an application.
  * 
  * @author Jonathan Locke
  * @since Wicket 1.2

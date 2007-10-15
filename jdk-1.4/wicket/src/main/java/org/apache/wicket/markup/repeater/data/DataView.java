@@ -22,9 +22,8 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
 /**
  * DataView is a basic implementation of AbstractDataView.
  * 
- * Data views aim to make it very simple to populate your repeating view from a
- * database by utilizing {@link IDataProvider} to act as an interface between
- * the database and the dataview.
+ * Data views aim to make it very simple to populate your repeating view from a database by
+ * utilizing {@link IDataProvider} to act as an interface between the database and the dataview.
  * 
  * 
  * 
@@ -39,8 +38,8 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
  * </pre>
  * 
  * <p>
- * Though this example is about a HTML table, DataView is not at all limited to
- * HTML tables. Any kind of list can be rendered using DataView.
+ * Though this example is about a HTML table, DataView is not at all limited to HTML tables. Any
+ * kind of list can be rendered using DataView.
  * <p>
  * And the related Java code:
  * 

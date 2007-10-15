@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class SimplePanel extends Panel
@@ -30,13 +30,14 @@ public class SimplePanel extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public SimplePanel(final String id) 
+	public SimplePanel(final String id)
 	{
-	    super(id);
-	    setRenderBodyOnly(true);
-	    
-	    add(new Label("label", "mein Label"));
-    }
+		super(id);
+		setRenderBodyOnly(true);
+
+		add(new Label("label", "mein Label"));
+	}
 }

@@ -30,8 +30,8 @@ import org.apache.wicket.Session;
 
 
 /**
- * Default web implementation of {@link org.apache.wicket.session.ISessionStore} that uses
- * the {@link javax.servlet.http.HttpSession} to store its attributes.
+ * Default web implementation of {@link org.apache.wicket.session.ISessionStore} that uses the
+ * {@link javax.servlet.http.HttpSession} to store its attributes.
  * 
  * @author Eelco Hillenius
  */
@@ -159,8 +159,8 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * Gets the prefix for storing variables in the actual session (typically
-	 * {@link HttpSession} for this application instance.
+	 * Gets the prefix for storing variables in the actual session (typically {@link HttpSession}
+	 * for this application instance.
 	 * 
 	 * @param request
 	 *            the request
@@ -173,8 +173,8 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @return Whether the session was marked invalid during this request
-	 *         (afterwards, we shouldn't even come here as there is no session)
+	 * @return Whether the session was marked invalid during this request (afterwards, we shouldn't
+	 *         even come here as there is no session)
 	 */
 	private boolean isSessionValid()
 	{

@@ -36,17 +36,17 @@ import org.apache.wicket.version.undo.Change;
  * Fragments provide a means to maintain the panels tiny piece of markup. Since it can be anywhere,
  * the component whose markup contains the fragment's markup must be provided (markup provider).
  * <p>
- *
+ * 
  * <pre>
  *  &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *
+ * 
  *  &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
  *  &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre>
  * <pre>
  *  add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;, myPage);
  * </pre>
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class Fragment extends WebMarkupContainerWithAssociatedMarkup
@@ -61,14 +61,14 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#Component(String)
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
-	 *
+	 * 
 	 * @deprecated use {@link #Fragment(String, String, MarkupContainer)}
 	 */
 	public Fragment(final String id, final String markupId)
@@ -78,16 +78,16 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#Component(String)
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
 	 * @param model
 	 *            The model for this fragment
-	 *
+	 * 
 	 * @deprecated use {@link #Fragment(String, String, MarkupContainer, IModel)}
 	 */
 	public Fragment(final String id, final String markupId, final IModel model)
@@ -97,9 +97,9 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#Component(String)
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param markupId
@@ -114,9 +114,9 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#Component(String)
-	 *
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param markupId
@@ -142,7 +142,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * The associated markup fragment can be modified
-	 *
+	 * 
 	 * @param markupId
 	 */
 	public final void setMarkupTagReferenceId(final String markupId)
@@ -170,7 +170,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Make sure we open up open-close tags to open-body-close
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
 	protected void onComponentTag(final ComponentTag tag)
@@ -183,7 +183,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
@@ -208,7 +208,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Get the markup stream which shall be used to search for the fragment
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream is associated with the component (not the fragment)
 	 * @return The markup stream to be used to find the fragment markup
@@ -237,9 +237,9 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Render the markup starting at the current position of the markup strean
-	 *
+	 * 
 	 * @see #onComponentTagBody(MarkupStream, ComponentTag)
-	 *
+	 * 
 	 * @param providerMarkupStream
 	 * @param openTag
 	 */
@@ -284,7 +284,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Position the markup stream at the child component relative to the <b>provider</b> markup
-	 *
+	 * 
 	 * @param path
 	 * @return
 	 */
@@ -351,7 +351,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * Returns markup provider associated with this fragment
-	 *
+	 * 
 	 * @return markup provider
 	 */
 	public final MarkupContainer getMarkupProvider()

@@ -17,10 +17,9 @@
 package org.apache.wicket.util.resource;
 
 /**
- * Non-dynamic resource streams point to fixed locations, like a file or a url.
- * Such resources should implement this interface and provide clients with
- * information about the resource location, such that the client is able to
- * deduct e.g. an extension or URL schema.
+ * Non-dynamic resource streams point to fixed locations, like a file or a url. Such resources
+ * should implement this interface and provide clients with information about the resource location,
+ * such that the client is able to deduct e.g. an extension or URL schema.
  * 
  * @author eelcohillenius
  */

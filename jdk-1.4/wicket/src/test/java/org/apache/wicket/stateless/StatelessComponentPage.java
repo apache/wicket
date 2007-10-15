@@ -41,6 +41,6 @@ public class StatelessComponentPage extends WebPage
 				throw new WicketRuntimeException("wanted exception");
 			}
 		});
-		
+
 	}
 }

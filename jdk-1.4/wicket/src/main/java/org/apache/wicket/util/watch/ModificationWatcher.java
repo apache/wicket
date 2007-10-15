@@ -34,8 +34,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Monitors one or more <code>IModifiable</code> objects, calling a
- * {@link IChangeListener IChangeListener} when a given object's modification
- * time changes.
+ * {@link IChangeListener IChangeListener} when a given object's modification time changes.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -74,8 +73,7 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Constructor that accepts a <code>Duration</code> argument representing
-	 * the poll frequency.
+	 * Constructor that accepts a <code>Duration</code> argument representing the poll frequency.
 	 * 
 	 * @param pollFrequency
 	 *            how often to check on <code>IModifiable</code>s
@@ -86,17 +84,15 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Adds an <code>IModifiable</code> object and an
-	 * <code>IChangeListener</code> object to call when the modifiable object
-	 * is modified.
+	 * Adds an <code>IModifiable</code> object and an <code>IChangeListener</code> object to
+	 * call when the modifiable object is modified.
 	 * 
 	 * @param modifiable
 	 *            an <code>IModifiable</code> object to monitor
 	 * @param listener
-	 *            an <code>IChangeListener</code> to call if the
-	 *            <code>IModifiable</code> object is modified
-	 * @return <code>true</code> if the set did not already contain the
-	 *         specified element
+	 *            an <code>IChangeListener</code> to call if the <code>IModifiable</code> object
+	 *            is modified
+	 * @return <code>true</code> if the set did not already contain the specified element
 	 */
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
@@ -138,8 +134,7 @@ public final class ModificationWatcher
 	 * 
 	 * @param modifiable
 	 *            an <code>IModifiable</code> object
-	 * @return the <code>IModifiable</code> object that was removed, else
-	 *         <code>null</code>
+	 * @return the <code>IModifiable</code> object that was removed, else <code>null</code>
 	 */
 	public IModifiable remove(final IModifiable modifiable)
 	{
@@ -206,11 +201,9 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 * Retrieves a key set of all <code>IModifiable</code> objects currently
-	 * being monitored.
+	 * Retrieves a key set of all <code>IModifiable</code> objects currently being monitored.
 	 * 
-	 * @return a <code>Set</code> of all <code>IModifiable</code> entries
-	 *         currently maintained
+	 * @return a <code>Set</code> of all <code>IModifiable</code> entries currently maintained
 	 */
 	public final Set getEntries()
 	{

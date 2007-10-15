@@ -39,8 +39,8 @@ import org.apache.wicket.model.IModel;
  *  ...
  * </pre>
  * 
- * a Panel has its own associated markup file and the container content is taken
- * from that file, like:
+ * a Panel has its own associated markup file and the container content is taken from that file,
+ * like:
  * 
  * <pre>
  *  &lt;span wicket:id=&quot;mypanel&quot;/&gt;

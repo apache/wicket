@@ -22,9 +22,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * AttributeModifier that appends the given value, rather than replace it. This
- * is especially useful for adding CSS classes to markup elements, or adding
- * JavaScript snippets to existing element handlers.
+ * AttributeModifier that appends the given value, rather than replace it. This is especially useful
+ * for adding CSS classes to markup elements, or adding JavaScript snippets to existing element
+ * handlers.
  * 
  * <pre>
  *     &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link&quot; onmouseover=&quot;doSomething()&quot;&gt;
@@ -56,9 +56,8 @@ public class AttributeAppender extends AttributeModifier
 	private final String separator;
 
 	/**
-	 * Creates an AttributeModifier that appends the appendModel's value to the
-	 * current value of the attribute, and will add the attribute when
-	 * addAttributeIfNotPresent is true.
+	 * Creates an AttributeModifier that appends the appendModel's value to the current value of the
+	 * attribute, and will add the attribute when addAttributeIfNotPresent is true.
 	 * 
 	 * @param attribute
 	 *            the attribute to append the appendModels value to
@@ -67,8 +66,7 @@ public class AttributeAppender extends AttributeModifier
 	 * @param appendModel
 	 *            the model supplying the value to append
 	 * @param separator
-	 *            the separator string, comes between the original value and the
-	 *            append value
+	 *            the separator string, comes between the original value and the append value
 	 */
 	public AttributeAppender(String attribute, boolean addAttributeIfNotPresent,
 			IModel appendModel, String separator)
@@ -78,17 +76,15 @@ public class AttributeAppender extends AttributeModifier
 	}
 
 	/**
-	 * Creates an AttributeModifier that appends the appendModel's value to the
-	 * current value of the attribute, and will add the attribute when it is not
-	 * there already.
+	 * Creates an AttributeModifier that appends the appendModel's value to the current value of the
+	 * attribute, and will add the attribute when it is not there already.
 	 * 
 	 * @param attribute
 	 *            the attribute to append the appendModels value to
 	 * @param appendModel
 	 *            the model supplying the value to append
 	 * @param separator
-	 *            the separator string, comes between the original value and the
-	 *            append value
+	 *            the separator string, comes between the original value and the append value
 	 */
 	public AttributeAppender(String attribute, IModel appendModel, String separator)
 	{
@@ -97,8 +93,7 @@ public class AttributeAppender extends AttributeModifier
 	}
 
 	/**
-	 * @see org.apache.wicket.AttributeModifier#newValue(java.lang.String,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.AttributeModifier#newValue(java.lang.String, java.lang.String)
 	 */
 	protected String newValue(String currentValue, String appendValue)
 	{
@@ -111,8 +106,8 @@ public class AttributeAppender extends AttributeModifier
 		}
 		else
 		{
-			sb = new AppendingStringBuffer(currentValue.length() + appendValueLen
-					+ separator.length());
+			sb = new AppendingStringBuffer(currentValue.length() + appendValueLen +
+					separator.length());
 			sb.append(currentValue);
 		}
 

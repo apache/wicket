@@ -22,24 +22,24 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class ComponentCreateTag_4 extends WebPage 
+public class ComponentCreateTag_4 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 */
-	public ComponentCreateTag_4() 
+	public ComponentCreateTag_4()
 	{
-	    // <wicket:component> are treated as anonymous because they not
-	    // accessible nor available right now. Thus you do not add
-	    // the label contained in <wicket:component> to that specific
-	    // component. You rather add it to its parent, which in this
-	    // case is the page.
-	    add(new Label("txt1", "Demo 1"));
-	    add(new Label("txt2", "Demo 2"));
-    }
+		// <wicket:component> are treated as anonymous because they not
+		// accessible nor available right now. Thus you do not add
+		// the label contained in <wicket:component> to that specific
+		// component. You rather add it to its parent, which in this
+		// case is the page.
+		add(new Label("txt1", "Demo 1"));
+		add(new Label("txt2", "Demo 2"));
+	}
 }

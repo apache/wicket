@@ -37,10 +37,10 @@ public class BoxBorderTestPage_2 extends WebPage
 	 */
 	public BoxBorderTestPage_2()
 	{
-		 BoxBorder border = new BoxBorder("box");
-		 add(border);
+		BoxBorder border = new BoxBorder("box");
+		add(border);
 
-	     border.add(new TextField("text"));
-	     border.add(new Image("img"));	
+		border.add(new TextField("text"));
+		border.add(new Image("img"));
 	}
 }

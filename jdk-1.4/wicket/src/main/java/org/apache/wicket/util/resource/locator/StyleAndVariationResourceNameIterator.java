@@ -19,9 +19,9 @@ package org.apache.wicket.util.resource.locator;
 import java.util.Iterator;
 
 /**
- * Contains the logic to build the various combinations of file path, style and
- * locale required while searching for Wicket resources. The full filename will
- * be built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * Contains the logic to build the various combinations of file path, style and locale required
+ * while searching for Wicket resources. The full filename will be built like:
+ * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
@@ -31,8 +31,8 @@ import java.util.Iterator;
  * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
  * <p>
- * Locales may contain a language, a country and a region or variant.
- * Combinations of these components will be attempted in the following order:
+ * Locales may contain a language, a country and a region or variant. Combinations of these
+ * components will be attempted in the following order:
  * <ol>
  * <li>locale.toString() see javadoc for Locale for more details</li>
  * <li>&lt;language&gt;_&lt;country&gt;</li>
@@ -63,7 +63,8 @@ public class StyleAndVariationResourceNameIterator implements Iterator
 	 * @param style
 	 * @param variation
 	 */
-	public StyleAndVariationResourceNameIterator(final String path, final String style, final String variation)
+	public StyleAndVariationResourceNameIterator(final String path, final String style,
+			final String variation)
 	{
 		this.path = path;
 		this.style = style;
@@ -93,7 +94,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator
 				return path + '_' + style + '_' + variation;
 			}
 		}
-		
+
 		if (state == 1)
 		{
 			state++;
@@ -102,7 +103,7 @@ public class StyleAndVariationResourceNameIterator implements Iterator
 				return path + '_' + style;
 			}
 		}
-		
+
 		state = 3;
 		return path;
 	}

@@ -25,12 +25,12 @@ import org.apache.wicket.markup.html.WebPage;
  * 
  * <pre>
  * Page page = new MockPageWithLinkAndComponent();
- * page.add(new Link(MockPageWithLinkAndComponent.LINK_ID) 
+ * page.add(new Link(MockPageWithLinkAndComponent.LINK_ID)
  * {
- *     public void onClick() 
- *     {
- *         // ...
- *     }
+ * 	public void onClick()
+ * 	{
+ * 		// ...
+ * 	}
  * });
  * 
  * page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID));
@@ -41,12 +41,12 @@ import org.apache.wicket.markup.html.WebPage;
 public class MockPageWithLinkAndComponent extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Use this constant for links you add to the page.
 	 */
 	public static final String LINK_ID = "link";
-	
+
 	/**
 	 * Use this constant for components you add to the page.
 	 */

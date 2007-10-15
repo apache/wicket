@@ -42,8 +42,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	 * Constructor.
 	 * 
 	 * @param contentType
-	 *            The mime type of this resource, such as "image/jpeg" or
-	 *            "text/html"
+	 *            The mime type of this resource, such as "image/jpeg" or "text/html"
 	 */
 	public StringBufferResourceStream(final String contentType)
 	{
@@ -80,6 +79,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 
 	/**
 	 * Clears the string buffer resource.
+	 * 
 	 * @return this for chaining
 	 */
 	public StringBufferResourceStream clear()

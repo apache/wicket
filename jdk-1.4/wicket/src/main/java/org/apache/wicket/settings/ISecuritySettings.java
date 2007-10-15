@@ -53,10 +53,9 @@ public interface ISecuritySettings
 	ICryptFactory getCryptFactory();
 
 	/**
-	 * Gets whether mounts should be enforced. If true, requests for mounted
-	 * targets have to done through the mounted paths. If, for instance, a
-	 * bookmarkable page is mounted to a path, a request to that same page via
-	 * the bookmarkablePage parameter will be denied.
+	 * Gets whether mounts should be enforced. If true, requests for mounted targets have to done
+	 * through the mounted paths. If, for instance, a bookmarkable page is mounted to a path, a
+	 * request to that same page via the bookmarkablePage parameter will be denied.
 	 * 
 	 * @return Whether mounts should be enforced
 	 */
@@ -84,18 +83,17 @@ public interface ISecuritySettings
 	void setCookieValuePersisterSettings(CookieValuePersisterSettings cookieValuePersisterSettings);
 
 	/**
-	 * Sets the factory that will be used to create crypt objects. The crypt
-	 * object returned from the first call is cached.
+	 * Sets the factory that will be used to create crypt objects. The crypt object returned from
+	 * the first call is cached.
 	 * 
 	 * @param cryptFactory
 	 */
 	void setCryptFactory(ICryptFactory cryptFactory);
 
 	/**
-	 * Sets whether mounts should be enforced. If true, requests for mounted
-	 * targets have to done through the mounted paths. If, for instance, a
-	 * bookmarkable page is mounted to a path, a request to that same page via
-	 * the bookmarkablePage parameter will be denied.
+	 * Sets whether mounts should be enforced. If true, requests for mounted targets have to done
+	 * through the mounted paths. If, for instance, a bookmarkable page is mounted to a path, a
+	 * request to that same page via the bookmarkablePage parameter will be denied.
 	 * 
 	 * @param enforce
 	 *            Whether mounts should be enforced

@@ -27,8 +27,8 @@ import org.apache.wicket.request.target.basic.EmptyRequestTarget;
 
 /**
  * Causes Wicket to abort processing and set the specified HTTP status code. An
- * {@link IllegalStateException} will be thrown if HTTP status code could not be
- * set and the optional parameter is specified as false.
+ * {@link IllegalStateException} will be thrown if HTTP status code could not be set and the
+ * optional parameter is specified as false.
  * 
  * This exception can be thrown from a page or a resource.
  * 
@@ -47,8 +47,7 @@ public class AbortWithHttpStatusException extends AbstractRestartResponseExcepti
 	 * @param status
 	 *            The http response status code
 	 * @param statusCodeOptional
-	 *            If true and http status could not be set, an
-	 *            IllegalStateException will be thrown
+	 *            If true and http status could not be set, an IllegalStateException will be thrown
 	 */
 	public AbortWithHttpStatusException(int status, boolean statusCodeOptional)
 	{

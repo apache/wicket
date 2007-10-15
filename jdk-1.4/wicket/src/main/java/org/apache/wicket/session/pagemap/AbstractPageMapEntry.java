@@ -19,8 +19,7 @@ package org.apache.wicket.session.pagemap;
 import org.apache.wicket.Page;
 
 /**
- * An abstract base class that makes it easier to create IPageMapEntry
- * implementations.
+ * An abstract base class that makes it easier to create IPageMapEntry implementations.
  * 
  * @author Jonathan Locke
  */
@@ -46,11 +45,10 @@ public abstract class AbstractPageMapEntry implements IPageMapEntry
 	public abstract Page getPage();
 
 	/**
-	 * Failing to override this method could be pretty expensive because this
-	 * default implementation calls getPage(), which probably creates the page.
-	 * That's a lot of work to do in order to simply determine the page's class.
-	 * So, if there's an easy way to implement this method, that might be
-	 * desirable.
+	 * Failing to override this method could be pretty expensive because this default implementation
+	 * calls getPage(), which probably creates the page. That's a lot of work to do in order to
+	 * simply determine the page's class. So, if there's an easy way to implement this method, that
+	 * might be desirable.
 	 * 
 	 * @see org.apache.wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */

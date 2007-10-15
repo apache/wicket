@@ -27,9 +27,8 @@ import org.apache.wicket.markup.html.PackageResourceReference;
 
 /**
  * 
- * A static resource reference which can be transferred to the browser using the
- * gzip compression. Reduces the download size of for example javascript
- * resources.
+ * A static resource reference which can be transferred to the browser using the gzip compression.
+ * Reduces the download size of for example javascript resources.
  * 
  * see {@link PackageResourceReference} and {@link CompressedPackageResource}
  * 
@@ -42,8 +41,7 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see PackageResourceReference#PackageResourceReference(Application,
-	 *      Class, String)
+	 * @see PackageResourceReference#PackageResourceReference(Application, Class, String)
 	 */
 	public CompressedPackageResourceReference(Application application, Class scope, String name)
 	{
@@ -51,8 +49,8 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	}
 
 	/**
-	 * @see PackageResourceReference#PackageResourceReference(Application,
-	 *      Class, String, Locale, String)
+	 * @see PackageResourceReference#PackageResourceReference(Application, Class, String, Locale,
+	 *      String)
 	 */
 	public CompressedPackageResourceReference(Application application, Class scope, String name,
 			Locale locale, String style)
@@ -61,8 +59,7 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	}
 
 	/**
-	 * @see PackageResourceReference#PackageResourceReference(Application,
-	 *      String)
+	 * @see PackageResourceReference#PackageResourceReference(Application, String)
 	 */
 	public CompressedPackageResourceReference(Application application, String name)
 	{
@@ -90,8 +87,8 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 		}
 		else
 		{
-			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name="
-					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
+					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 

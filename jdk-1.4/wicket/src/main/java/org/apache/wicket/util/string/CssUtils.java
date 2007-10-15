@@ -18,7 +18,7 @@ package org.apache.wicket.util.string;
 
 /**
  * Utility methods for CSS.
- *
+ * 
  * @author eelcohillenius
  */
 public final class CssUtils

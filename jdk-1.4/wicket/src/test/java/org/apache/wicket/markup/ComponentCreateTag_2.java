@@ -21,17 +21,17 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class ComponentCreateTag_2 extends WebPage 
+public class ComponentCreateTag_2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 */
-	public ComponentCreateTag_2() 
+	public ComponentCreateTag_2()
 	{
-    }
+	}
 }

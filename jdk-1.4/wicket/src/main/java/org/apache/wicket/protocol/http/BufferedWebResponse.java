@@ -54,9 +54,8 @@ public class BufferedWebResponse extends WebResponse
 	}
 
 	/**
-	 * Flushes the response buffer by doing a redirect or writing out the
-	 * buffer. NOTE: The servlet container will close the response output
-	 * stream.
+	 * Flushes the response buffer by doing a redirect or writing out the buffer. NOTE: The servlet
+	 * container will close the response output stream.
 	 */
 	public void close()
 	{
@@ -86,9 +85,8 @@ public class BufferedWebResponse extends WebResponse
 	}
 
 	/**
-	 * Saves url to redirect to when buffered response is flushed.
-	 * Implementations should encode the URL to make sure cookie-less operation
-	 * is supported in case clients forgot.
+	 * Saves url to redirect to when buffered response is flushed. Implementations should encode the
+	 * URL to make sure cookie-less operation is supported in case clients forgot.
 	 * 
 	 * @param url
 	 *            The URL to redirect to
@@ -97,8 +95,8 @@ public class BufferedWebResponse extends WebResponse
 	{
 		if (redirectURL != null)
 		{
-			throw new WicketRuntimeException("Already redirecting to '" + redirectURL
-					+ "'. Cannot redirect more than once");
+			throw new WicketRuntimeException("Already redirecting to '" + redirectURL +
+					"'. Cannot redirect more than once");
 		}
 		// encode to make sure no caller forgot this
 		this.redirectURL = encodeURL(url).toString();

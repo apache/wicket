@@ -49,8 +49,7 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * A helper class for testing validation and submission of
- * <code>FormComponent</code>s.
+ * A helper class for testing validation and submission of <code>FormComponent</code>s.
  * 
  * @author Ingram Chen
  * @author Frank Bille (frankbille)
@@ -59,9 +58,9 @@ import org.apache.wicket.util.string.Strings;
 public class FormTester
 {
 	/**
-	 * A selector template for selecting selectable <code>FormComponent</code>s
-	 * with an index of option -- supports <code>RadioGroup</code>,
-	 * <code>CheckGroup</code>, and <code>AbstractChoice</code> family.
+	 * A selector template for selecting selectable <code>FormComponent</code>s with an index of
+	 * option -- supports <code>RadioGroup</code>, <code>CheckGroup</code>, and
+	 * <code>AbstractChoice</code> family.
 	 */
 	protected abstract class ChoiceSelector
 	{
@@ -101,8 +100,9 @@ public class FormTester
 
 		/**
 		 * Constructor.
-		 *
-		 * @param formComponent a <code>FormComponent</code>
+		 * 
+		 * @param formComponent
+		 *            a <code>FormComponent</code>
 		 */
 		protected ChoiceSelector(FormComponent formComponent)
 		{
@@ -121,7 +121,7 @@ public class FormTester
 
 		/**
 		 * Selects a given index in a selectable <code>FormComponent</code>.
-		 *
+		 * 
 		 * @param index
 		 */
 		protected final void doSelect(final int index)
@@ -132,8 +132,7 @@ public class FormTester
 						new SearchOptionByIndexVisitor(index));
 				if (foundRadio == null)
 				{
-					fail("RadioGroup " + formComponent.getPath() + " does not have index:"
-							+ index);
+					fail("RadioGroup " + formComponent.getPath() + " does not have index:" + index);
 				}
 				assignValueToFormComponent(formComponent, foundRadio.getValue());
 			}
@@ -143,8 +142,7 @@ public class FormTester
 						new SearchOptionByIndexVisitor(index));
 				if (foundCheck == null)
 				{
-					fail("CheckGroup " + formComponent.getPath() + " does not have index:"
-							+ index);
+					fail("CheckGroup " + formComponent.getPath() + " does not have index:" + index);
 				}
 
 				assignValueToFormComponent(formComponent, foundCheck.getValue());
@@ -211,8 +209,8 @@ public class FormTester
 	}
 
 	/**
-	 * A factory that creates an appropriate <code>ChoiceSelector</code> based
-	 * on type of <code>FormComponent</code>.
+	 * A factory that creates an appropriate <code>ChoiceSelector</code> based on type of
+	 * <code>FormComponent</code>.
 	 */
 	private class ChoiceSelectorFactory
 	{
@@ -223,21 +221,22 @@ public class FormTester
 		{
 			/**
 			 * Constructor.
-			 *
-			 * @param formComponent a <code>FormComponent</code>
+			 * 
+			 * @param formComponent
+			 *            a <code>FormComponent</code>
 			 */
 			protected MultipleChoiceSelector(FormComponent formComponent)
 			{
 				super(formComponent);
 				if (!allowMultipleChoice(formComponent))
 				{
-					fail("Component:'" + formComponent.getPath()
-							+ "' Does not support multiple selection.");
+					fail("Component:'" + formComponent.getPath() +
+							"' Does not support multiple selection.");
 				}
 			}
 
 			/**
-			 *
+			 * 
 			 * @see org.apache.wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(org.apache.wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
@@ -255,8 +254,9 @@ public class FormTester
 		{
 			/**
 			 * Constructor.
-			 *
-			 * @param formComponent a <code>FormComponent</code>
+			 * 
+			 * @param formComponent
+			 *            a <code>FormComponent</code>
 			 */
 			protected SingleChoiceSelector(FormComponent formComponent)
 			{
@@ -288,8 +288,8 @@ public class FormTester
 				fail("Trying to select on null component.");
 			}
 
-			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice
-					|| formComponent instanceof RadioChoice)
+			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice ||
+					formComponent instanceof RadioChoice)
 			{
 				return new SingleChoiceSelector(formComponent);
 			}
@@ -299,8 +299,8 @@ public class FormTester
 			}
 			else
 			{
-				fail("Selecting on the component:'" + formComponent.getPath()
-						+ "' is not supported.");
+				fail("Selecting on the component:'" + formComponent.getPath() +
+						"' is not supported.");
 				return null;
 			}
 		}
@@ -322,21 +322,20 @@ public class FormTester
 		 * 
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
-		 * @return <code>true</code> if the given FormComponent allows
-		 *         multiple choice
+		 * @return <code>true</code> if the given FormComponent allows multiple choice
 		 */
 		private boolean allowMultipleChoice(FormComponent formComponent)
 		{
-			return formComponent instanceof CheckGroup
-			|| formComponent instanceof ListMultipleChoice;
+			return formComponent instanceof CheckGroup ||
+					formComponent instanceof ListMultipleChoice;
 		}
 	}
 
 	private final ChoiceSelectorFactory choiceSelectorFactory = new ChoiceSelectorFactory();
 
 	/**
-	 * An instance of <code>FormTester</code> can only be used once. Create a
-	 * new instance of each test.
+	 * An instance of <code>FormTester</code> can only be used once. Create a new instance of each
+	 * test.
 	 */
 	private boolean closed = false;
 
@@ -357,19 +356,18 @@ public class FormTester
 	 * @param workingForm
 	 *            <code>FormComponent</code> to be tested
 	 * @param wicketTester
-	 *            <code>WicketTester</code> that creates
-	 *            <code>FormTester</code>
+	 *            <code>WicketTester</code> that creates <code>FormTester</code>
 	 * @param fillBlankString
-	 *            specifies whether to fill child <code>TextComponent</code>s
-	 *            with blank <code>String</code>s
+	 *            specifies whether to fill child <code>TextComponent</code>s with blank
+	 *            <code>String</code>s
 	 */
 	protected FormTester(final String path, final Form workingForm,
 			final BaseWicketTester wicketTester, final boolean fillBlankString)
 	{
 		this.path = path;
 		this.workingForm = workingForm;
-		this.baseWicketTester = wicketTester;
-		this.baseWicketTester.setupRequestAndResponse();
+		baseWicketTester = wicketTester;
+		baseWicketTester.setupRequestAndResponse();
 
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
@@ -398,7 +396,7 @@ public class FormTester
 						setFormComponentValue(formComponent, formComponent.getValue());
 					}
 				}
-				else if ( (formComponent instanceof DropDownChoice) ||
+				else if ((formComponent instanceof DropDownChoice) ||
 						(formComponent instanceof RadioChoice) ||
 						(formComponent instanceof CheckBox))
 				{
@@ -406,7 +404,8 @@ public class FormTester
 				}
 				else if (formComponent instanceof ListMultipleChoice)
 				{
-					final String[] modelValues = formComponent.getValue().split(FormComponent.VALUE_SEPARATOR);
+					final String[] modelValues = formComponent.getValue().split(
+							FormComponent.VALUE_SEPARATOR);
 					for (int i = 0; i < modelValues.length; i++)
 					{
 						addFormComponentValue(formComponent, modelValues[i]);
@@ -414,14 +413,14 @@ public class FormTester
 				}
 				else if (formComponent instanceof CheckGroup)
 				{
-					final Collection checkGroupValues = (Collection) formComponent.getModelObject();
+					final Collection checkGroupValues = (Collection)formComponent.getModelObject();
 					formComponent.visitChildren(Check.class, new IVisitor()
 					{
 						public Object component(Component component)
 						{
 							if (checkGroupValues.contains(component.getModelObject()))
 							{
-								addFormComponentValue(formComponent, ((Check) component).getValue());
+								addFormComponentValue(formComponent, ((Check)component).getValue());
 							}
 							return CONTINUE_TRAVERSAL;
 						}
@@ -443,8 +442,7 @@ public class FormTester
 	}
 
 	/**
-	 * Gets the value for an <code>AbstractTextComponent</code> with the
-	 * provided id.
+	 * Gets the value for an <code>AbstractTextComponent</code> with the provided id.
 	 * 
 	 * @param id
 	 *            <code>Component</code> id
@@ -461,13 +459,12 @@ public class FormTester
 	}
 
 	/**
-	 * Simulates selecting an option of a <code>FormComponent</code>.
-	 * Supports <code>RadioGroup</code>, <code>CheckGroup</code>, and
-	 * <code>AbstractChoice</code> family currently. The behavior is similar
-	 * to interacting on the browser: For a single choice, such as
-	 * <code>Radio</code> or <code>DropDownList</code>, the selection will
-	 * toggle each other. For multiple choice, such as <code>Checkbox</code>
-	 * or <code>ListMultipleChoice</code>, the selection will accumulate.
+	 * Simulates selecting an option of a <code>FormComponent</code>. Supports
+	 * <code>RadioGroup</code>, <code>CheckGroup</code>, and <code>AbstractChoice</code>
+	 * family currently. The behavior is similar to interacting on the browser: For a single choice,
+	 * such as <code>Radio</code> or <code>DropDownList</code>, the selection will toggle each
+	 * other. For multiple choice, such as <code>Checkbox</code> or
+	 * <code>ListMultipleChoice</code>, the selection will accumulate.
 	 * 
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
@@ -478,18 +475,21 @@ public class FormTester
 	public void select(String formComponentId, int index)
 	{
 		checkClosed();
-		FormComponent component = (FormComponent)workingForm
-		.get(formComponentId);
+		FormComponent component = (FormComponent)workingForm.get(formComponentId);
 
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
-		if (component instanceof DropDownChoice) {
+		if (component instanceof DropDownChoice)
+		{
 			try
 			{
-				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class.getDeclaredMethod("wantOnSelectionChangedNotifications", new Class[0]);
+				Method wantOnSelectionChangedNotificationsMethod = DropDownChoice.class
+						.getDeclaredMethod("wantOnSelectionChangedNotifications", new Class[0]);
 				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
-				boolean wantOnSelectionChangedNotifications = ((Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component, new Object[0])).booleanValue();
-				if (wantOnSelectionChangedNotifications) {
+				boolean wantOnSelectionChangedNotifications = ((Boolean)wantOnSelectionChangedNotificationsMethod
+						.invoke(component, new Object[0])).booleanValue();
+				if (wantOnSelectionChangedNotifications)
+				{
 					((DropDownChoice)component).onSelectionChanged();
 				}
 			}
@@ -501,9 +501,8 @@ public class FormTester
 	}
 
 	/**
-	 * A convenience method to select multiple options for the
-	 * <code>FormComponent</code>. The method only support multiple
-	 * selectable <code>FormComponent</code>s.
+	 * A convenience method to select multiple options for the <code>FormComponent</code>. The
+	 * method only support multiple selectable <code>FormComponent</code>s.
 	 * 
 	 * @see #select(String, int)
 	 * 
@@ -518,7 +517,7 @@ public class FormTester
 		checkClosed();
 
 		ChoiceSelector choiceSelector = choiceSelectorFactory
-		.createForMultiple((FormComponent)workingForm.get(formComponentId));
+				.createForMultiple((FormComponent)workingForm.get(formComponentId));
 
 		for (int i = 0; i < indexes.length; i++)
 		{
@@ -548,8 +547,8 @@ public class FormTester
 	 * 
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
-	 *            <code>FormComponent</code>. The <code>FormComponent</code>
-	 *            must be of a type <code>FileUploadField</code>.
+	 *            <code>FormComponent</code>. The <code>FormComponent</code> must be of a type
+	 *            <code>FileUploadField</code>.
 	 * @param file
 	 *            the <code>File</code> to upload.
 	 * @param contentType
@@ -563,9 +562,9 @@ public class FormTester
 
 		if (formComponent instanceof FileUploadField == false)
 		{
-			throw new IllegalArgumentException("'" + formComponentId + "' is not "
-					+ "a FileUploadField. You can only attach a file to form "
-					+ "component of this type.");
+			throw new IllegalArgumentException("'" + formComponentId + "' is not " +
+					"a FileUploadField. You can only attach a file to form " +
+					"component of this type.");
 		}
 
 		MockHttpServletRequest servletRequest = baseWicketTester.getServletRequest();
@@ -573,8 +572,7 @@ public class FormTester
 	}
 
 	/**
-	 * Submits the <code>Form</code>. Note that <code>submit</code> can be
-	 * executed only once.
+	 * Submits the <code>Form</code>. Note that <code>submit</code> can be executed only once.
 	 */
 	public void submit()
 	{
@@ -618,11 +616,10 @@ public class FormTester
 	}
 
 	/**
-	 * A convenience method for submitting the <code>Form</code> with an
-	 * alternate button.
+	 * A convenience method for submitting the <code>Form</code> with an alternate button.
 	 * <p>
-	 * Note that if the button is associated with a model, it's better to use
-	 * the <code>setValue</code> method instead:
+	 * Note that if the button is associated with a model, it's better to use the
+	 * <code>setValue</code> method instead:
 	 * 
 	 * <pre>
 	 * formTester.setValue(&quot;to:my:button&quot;, &quot;value on the button&quot;);
@@ -639,9 +636,8 @@ public class FormTester
 	}
 
 	/**
-	 * Adds an additional <code>FormComponent</code>'s value into request
-	 * parameter -- this method retains existing parameters but removes any
-	 * duplicate parameters.
+	 * Adds an additional <code>FormComponent</code>'s value into request parameter -- this
+	 * method retains existing parameters but removes any duplicate parameters.
 	 * 
 	 * @param formComponent
 	 *            a <code>FormComponent</code>
@@ -668,27 +664,24 @@ public class FormTester
 	}
 
 	/**
-	 * <code>FormTester</code> must only be used once. Create a new instance
-	 * of <code>FormTester</code> for each test.
+	 * <code>FormTester</code> must only be used once. Create a new instance of
+	 * <code>FormTester</code> for each test.
 	 */
 	private void checkClosed()
 	{
 		if (closed)
 		{
-			throw new IllegalStateException("'" + path
-					+ "' already sumbitted. Note that FormTester "
-					+ "is allowed to submit only once");
+			throw new IllegalStateException("'" + path +
+					"' already sumbitted. Note that FormTester " + "is allowed to submit only once");
 		}
 	}
 
 	/**
-	 * Returns <code>true</code> if the parameter exists in the
-	 * <code>FormComponent</code>.
+	 * Returns <code>true</code> if the parameter exists in the <code>FormComponent</code>.
 	 * 
 	 * @param formComponent
 	 *            a <code>FormComponent</code>
-	 * @return <code>true</code> if the parameter exists in the
-	 *         <code>FormComponent</code>
+	 * @return <code>true</code> if the parameter exists in the <code>FormComponent</code>
 	 */
 	private boolean parameterExist(FormComponent formComponent)
 	{
@@ -698,8 +691,7 @@ public class FormTester
 	}
 
 	/**
-	 * Set formComponent's value into request parameter, this method overwrites
-	 * existing parameters.
+	 * Set formComponent's value into request parameter, this method overwrites existing parameters.
 	 * 
 	 * @param formComponent
 	 *            a <code>FormComponent</code>

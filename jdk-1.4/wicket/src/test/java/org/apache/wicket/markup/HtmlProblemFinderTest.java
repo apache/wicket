@@ -29,32 +29,33 @@ public class HtmlProblemFinderTest extends WicketTestCase
 {
 
 
-    /**
-     * Construct.
-     *
-     * @param name
-     */
-    public HtmlProblemFinderTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public HtmlProblemFinderTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     *
-     */
-    public void testProblemFinder()
-    {
-        final MarkupParser parser = new MarkupParser("<img src=\"\"/>");
-        parser.appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION), RelativePathPrefixHandler.class);
-	    
-	    try
-	    {
-	        parser.parse();
-	        assertTrue("Should have thrown an exception", false);
-	    }
-	    catch (Exception ex)
-	    {
-	        // ignore
-	    }
-    }
+	/**
+	 * 
+	 */
+	public void testProblemFinder()
+	{
+		final MarkupParser parser = new MarkupParser("<img src=\"\"/>");
+		parser.appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION),
+				RelativePathPrefixHandler.class);
+
+		try
+		{
+			parser.parse();
+			assertTrue("Should have thrown an exception", false);
+		}
+		catch (Exception ex)
+		{
+			// ignore
+		}
+	}
 }

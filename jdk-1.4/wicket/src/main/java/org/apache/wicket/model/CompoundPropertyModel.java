@@ -20,17 +20,17 @@ import org.apache.wicket.Component;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * A simple compound model which uses the component's name as the property
- * expression to retrieve properties on the nested model object.
- *
- * CompoundPropertyModel is a chaining model so it will call get/setobject
- * on the given object if the object is an instanceof IModel itself.
- *
+ * A simple compound model which uses the component's name as the property expression to retrieve
+ * properties on the nested model object.
+ * 
+ * CompoundPropertyModel is a chaining model so it will call get/setobject on the given object if
+ * the object is an instanceof IModel itself.
+ * 
  * @see org.apache.wicket.model.IModel
  * @see org.apache.wicket.model.Model
  * @see org.apache.wicket.model.LoadableDetachableModel
  * @see IChainingModel
- *
+ * 
  * @author Jonathan Locke
  */
 public class CompoundPropertyModel implements IComponentInheritedModel, IChainingModel
@@ -41,7 +41,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param object
 	 *            The model object, which may or may not implement IModel
 	 */
@@ -109,9 +109,8 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	}
 
 	/**
-	 * Returns the property expression that should be used against the target
-	 * object
-	 *
+	 * Returns the property expression that should be used against the target object
+	 * 
 	 * @param component
 	 * @return property expression that should be used against the target object
 	 */
@@ -129,28 +128,25 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	}
 
 	/**
-	 * Binds this model to a special property by returning a model
-	 * that has this compound model as its nested/wrapped model and
-	 * the property which should be evaluated.
-	 * This can be used if the id of the Component isn't a valid property
-	 * for the data object.
-	 *
+	 * Binds this model to a special property by returning a model that has this compound model as
+	 * its nested/wrapped model and the property which should be evaluated. This can be used if the
+	 * id of the Component isn't a valid property for the data object.
+	 * 
 	 * @param property
 	 * @return The IModel that is a wrapper around the current model and the property
 	 */
 	public IModel bind(String property)
 	{
-		return new PropertyModel(this,property);
+		return new PropertyModel(this, property);
 	}
 
 	/**
-	 * Component aware variation of the {@link CompoundPropertyModel} that
-	 * components that inherit the model get
-	 *
+	 * Component aware variation of the {@link CompoundPropertyModel} that components that inherit
+	 * the model get
+	 * 
 	 * @author ivaynberg
 	 */
-	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
-			implements  IWrapModel
+	private class AttachedCompoundPropertyModel extends AbstractPropertyModel implements IWrapModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -158,7 +154,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 
 		/**
 		 * Constructor
-		 *
+		 * 
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
@@ -199,8 +195,8 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	 */
 	public String toString()
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=["
-				+ getClass().getName() + "]");
+		AppendingStringBuffer sb = new AppendingStringBuffer().append("Model:classname=[" +
+				getClass().getName() + "]");
 		sb.append(":nestedModel=[").append(target).append("]");
 		return sb.toString();
 	}

@@ -25,21 +25,21 @@ import org.apache.wicket.model.Model;
 
 /**
  */
-public class MarkupInheritanceBaseBase_11 extends WebPage 
+public class MarkupInheritanceBaseBase_11 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBaseBase_11() 
+	public MarkupInheritanceBaseBase_11()
 	{
 		WebMarkupContainer css = new WebMarkupContainer("css");
 		css.add(new AttributeModifier("src", true, new Model("myStyle.css")));
 		add(css);
-		
-	    add(new Label("label1", "base label 1"));
-	    add(new Label("label2", "base label 2"));
-    }
+
+		add(new Label("label1", "base label 1"));
+		add(new Label("label2", "base label 2"));
+	}
 }

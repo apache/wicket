@@ -28,14 +28,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 public interface TestPanelSource extends IClusterable
 {
 	/**
-	 * Defines a <code>Panel</code> instance source for
-	 * <code>WicketTester</code>.
+	 * Defines a <code>Panel</code> instance source for <code>WicketTester</code>.
 	 * 
 	 * @param panelId
 	 *            <code>Component</code> id of the test <code>Panel</code>
-	 * @return test <code>Panel</code> instance -- note that the test
-	 *         <code>Panel</code>'s <code>Component</code> id must use the
-	 *         given <code>panelId</code>.
+	 * @return test <code>Panel</code> instance -- note that the test <code>Panel</code>'s
+	 *         <code>Component</code> id must use the given <code>panelId</code>.
 	 */
 	Panel getTestPanel(final String panelId);
 }

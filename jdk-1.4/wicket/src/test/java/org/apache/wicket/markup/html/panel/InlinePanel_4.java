@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  */
 public class InlinePanel_4 extends Panel
 {
@@ -27,11 +27,12 @@ public class InlinePanel_4 extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public InlinePanel_4(final String id) 
+	public InlinePanel_4(final String id)
 	{
-	    super(id);
+		super(id);
 
 		Fragment panel1 = new Fragment("myPanel1", "frag1");
 		add(panel1);

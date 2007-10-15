@@ -17,19 +17,17 @@
 package org.apache.wicket.markup.html.form;
 
 /**
- * Interface that must be implemented by components that are able to submit
- * form.
+ * Interface that must be implemented by components that are able to submit form.
  * 
  * @author Matej Knopp
  */
 public interface IFormSubmittingComponent
 {
 	/**
-	 * Returns whether form should be processed the default way. When false
-	 * (default is true), all validation and formupdating is bypassed and the
-	 * onSubmit method of that button is called directly, and the onSubmit
-	 * method of the parent form is not called. A common use for this is to
-	 * create a cancel button.
+	 * Returns whether form should be processed the default way. When false (default is true), all
+	 * validation and formupdating is bypassed and the onSubmit method of that button is called
+	 * directly, and the onSubmit method of the parent form is not called. A common use for this is
+	 * to create a cancel button.
 	 * 
 	 * @return defaultFormProcessing
 	 */
@@ -43,16 +41,15 @@ public interface IFormSubmittingComponent
 	Form getForm();
 
 	/**
-	 * Returns the name that is unique to this component, at least within the
-	 * form.
+	 * Returns the name that is unique to this component, at least within the form.
 	 * 
 	 * @return component name
 	 */
 	String getInputName();
 
 	/**
-	 * Override this method to provide special submit handling in a multi-button
-	 * form. It is called whenever the user clicks this particular button.
+	 * Override this method to provide special submit handling in a multi-button form. It is called
+	 * whenever the user clicks this particular button.
 	 */
 	void onSubmit();
 }

@@ -37,9 +37,9 @@ import org.apache.wicket.markup.html.WebPage;
 public class MockPageWithLink extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Use this constant for links you add to the page.
 	 */
-	public static final String LINK_ID = "link"; 
+	public static final String LINK_ID = "link";
 }

@@ -25,8 +25,8 @@ import org.apache.wicket.util.parse.metapattern.MetaPattern;
 
 
 /**
- * Parses an arbitrary list format with a pattern for list entries and a pattern
- * for list separators.
+ * Parses an arbitrary list format with a pattern for list entries and a pattern for list
+ * separators.
  * 
  * @author Jonathan Locke
  */
@@ -42,8 +42,8 @@ public class ListParser extends MetaPatternParser
 	private final List values = new ArrayList();
 
 	/**
-	 * Constructs a list parser from an entry MetaPattern, a separator
-	 * MetaPattern and an input character sequence.
+	 * Constructs a list parser from an entry MetaPattern, a separator MetaPattern and an input
+	 * character sequence.
 	 * 
 	 * @param entryPattern
 	 *            The pattern in between the separators
@@ -61,8 +61,7 @@ public class ListParser extends MetaPatternParser
 	}
 
 	/**
-	 * Parse the input and add the elements to an internal list to be accessed
-	 * by
+	 * Parse the input and add the elements to an internal list to be accessed by
 	 * 
 	 * @see #getValues()
 	 * @see org.apache.wicket.util.parse.metapattern.parsers.MetaPatternParser#matches()
@@ -92,8 +91,8 @@ public class ListParser extends MetaPatternParser
 	}
 
 	/**
-	 * Gets the parsed values. It depends on the elements pattern, whether empty
-	 * elements, double or single quotes or escape characters are supported.
+	 * Gets the parsed values. It depends on the elements pattern, whether empty elements, double or
+	 * single quotes or escape characters are supported.
 	 * 
 	 * @return the parsed values
 	 */

@@ -44,8 +44,7 @@ public class DummyHomePage extends WebPage
 	}
 
 	/**
-	 * Sets the <code>TestPageSource</code> for this
-	 * <code>DummyHomePage</code>.
+	 * Sets the <code>TestPageSource</code> for this <code>DummyHomePage</code>.
 	 * 
 	 * @param testPageSource
 	 *            an <code>ITestPageSource</code> instance

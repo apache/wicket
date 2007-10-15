@@ -19,10 +19,9 @@ package org.apache.wicket.util.lang;
 import junit.framework.TestCase;
 
 /**
- * Tests the <code>Primitives</code> class. The code for testing the hashcode
- * is taken from the junit-addons framework
- * (http://junit-addons.sourceforge.net). It didn't seem worth it to include the
- * whole framework.
+ * Tests the <code>Primitives</code> class. The code for testing the hashcode is taken from the
+ * junit-addons framework (http://junit-addons.sourceforge.net). It didn't seem worth it to include
+ * the whole framework.
  * 
  * @author Martijn Dashorst
  * @author <a href="mailto:pholser@yahoo.com">Paul Holser</a>

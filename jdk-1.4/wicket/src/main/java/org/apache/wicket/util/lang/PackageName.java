@@ -19,9 +19,8 @@ package org.apache.wicket.util.lang;
 import org.apache.wicket.IClusterable;
 
 /**
- * A type-safe package name class since Package is unreliable (it's not a
- * Package object, but rather a sometimes-available holder for versioning
- * information).
+ * A type-safe package name class since Package is unreliable (it's not a Package object, but rather
+ * a sometimes-available holder for versioning information).
  * 
  * @author Jonathan Locke
  */

@@ -20,23 +20,32 @@ import junit.framework.TestCase;
 
 public class RequestUtilsTest extends TestCase
 {
-	public void testDoubleDotsMiddle() {
+	public void testDoubleDotsMiddle()
+	{
 		assertEquals("/a/b", RequestUtils.removeDoubleDots("/a/b/../b"));
 		assertEquals("a/b", RequestUtils.removeDoubleDots("a/b/../b"));
 		assertEquals("a/b/", RequestUtils.removeDoubleDots("a/b/../b/"));
 	}
-	public void testDoubleDotsEnd() {
+
+	public void testDoubleDotsEnd()
+	{
 		assertEquals("/a/b", RequestUtils.removeDoubleDots("/a/b/c/.."));
 		assertEquals("a/b", RequestUtils.removeDoubleDots("a/b/c/.."));
 	}
-	public void testDoubleDotsStart() {
+
+	public void testDoubleDotsStart()
+	{
 		assertEquals("/../a/b", RequestUtils.removeDoubleDots("/../a/b"));
 		assertEquals("../a/b", RequestUtils.removeDoubleDots("../a/b"));
 	}
-	public void testEmptyDoubleDots() {
+
+	public void testEmptyDoubleDots()
+	{
 		assertEquals("", RequestUtils.removeDoubleDots(""));
 	}
-	public void testOneDoubleDots() {
+
+	public void testOneDoubleDots()
+	{
 		assertEquals("..", RequestUtils.removeDoubleDots(".."));
 		assertEquals("../", RequestUtils.removeDoubleDots("../"));
 		assertEquals("/..", RequestUtils.removeDoubleDots("/.."));

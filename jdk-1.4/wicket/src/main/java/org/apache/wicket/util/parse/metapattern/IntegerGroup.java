@@ -19,8 +19,7 @@ package org.apache.wicket.util.parse.metapattern;
 import java.util.regex.Matcher;
 
 /**
- * A Group that captures integer values (positive and negative whole numbers,
- * not Java ints).
+ * A Group that captures integer values (positive and negative whole numbers, not Java ints).
  * 
  * @author Jonathan Locke
  */
@@ -32,8 +31,7 @@ public final class IntegerGroup extends Group
 	private final int radix;
 
 	/**
-	 * Constructs an IntegerGroup that parses Strings that match the INTEGER
-	 * pattern in base 10.
+	 * Constructs an IntegerGroup that parses Strings that match the INTEGER pattern in base 10.
 	 * 
 	 * @see MetaPattern#INTEGER
 	 */
@@ -43,11 +41,10 @@ public final class IntegerGroup extends Group
 	}
 
 	/**
-	 * Constructs an IntegerGroup that parses Strings that match the given
-	 * pattern in base 10.
+	 * Constructs an IntegerGroup that parses Strings that match the given pattern in base 10.
 	 * 
 	 * @param pattern
-	 *			  The capturing pattern
+	 *            The capturing pattern
 	 */
 	public IntegerGroup(final MetaPattern pattern)
 	{
@@ -55,13 +52,13 @@ public final class IntegerGroup extends Group
 	}
 
 	/**
-	 * Constructs an IntegerGroup that parses Strings that match the given
-	 * pattern in the given radix.
+	 * Constructs an IntegerGroup that parses Strings that match the given pattern in the given
+	 * radix.
 	 * 
 	 * @param pattern
-	 *			  The capturing pattern
+	 *            The capturing pattern
 	 * @param radix
-	 *			  The radix to use when parsing captured Strings
+	 *            The radix to use when parsing captured Strings
 	 */
 	public IntegerGroup(final MetaPattern pattern, final int radix)
 	{
@@ -71,7 +68,7 @@ public final class IntegerGroup extends Group
 
 	/**
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @return The value
 	 * @see IntegerGroup#getInt(Matcher, int)
 	 */
@@ -81,14 +78,13 @@ public final class IntegerGroup extends Group
 	}
 
 	/**
-	 * Gets an int by parsing the String matched by this capturing group. The
-	 * IntegerGroup's radix is used in the conversion.
+	 * Gets an int by parsing the String matched by this capturing group. The IntegerGroup's radix
+	 * is used in the conversion.
 	 * 
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @param defaultValue
-	 *			  The default value to use if this group is omitted because it
-	 *			  is optional
+	 *            The default value to use if this group is omitted because it is optional
 	 * @return The parsed int value
 	 */
 	public int getInt(final Matcher matcher, final int defaultValue)
@@ -99,7 +95,7 @@ public final class IntegerGroup extends Group
 
 	/**
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @return The value
 	 * @see IntegerGroup#getLong(Matcher)
 	 */
@@ -109,14 +105,13 @@ public final class IntegerGroup extends Group
 	}
 
 	/**
-	 * Gets a long by parsing the String matched by this capturing group. The
-	 * IntegerGroup's radix is used in the conversion. parsing radix.
+	 * Gets a long by parsing the String matched by this capturing group. The IntegerGroup's radix
+	 * is used in the conversion. parsing radix.
 	 * 
 	 * @param defaultValue
-	 *			  The default value to use if this group is omitted because it
-	 *			  is optional
+	 *            The default value to use if this group is omitted because it is optional
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @return The parsed long value
 	 */
 	public long getLong(final Matcher matcher, final long defaultValue)

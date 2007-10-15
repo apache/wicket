@@ -25,13 +25,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 /**
- * A panel that hides or shows itself depending on whether there are feedback
- * messages for a given message filter. If a component is set using
- * setIndicatorFor(Component), then the indicator is visible when the given
- * component has an error. The default content for this indicator is a red star,
- * but you can subclass this panel and provide your own markup to give any
- * custom look you desire.
- *
+ * A panel that hides or shows itself depending on whether there are feedback messages for a given
+ * message filter. If a component is set using setIndicatorFor(Component), then the indicator is
+ * visible when the given component has an error. The default content for this indicator is a red
+ * star, but you can subclass this panel and provide your own markup to give any custom look you
+ * desire.
+ * 
  * @author Jonathan Locke
  */
 public class FormComponentFeedbackIndicator extends Panel implements IFeedback
@@ -43,7 +42,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param id
 	 *            See Component
 	 */

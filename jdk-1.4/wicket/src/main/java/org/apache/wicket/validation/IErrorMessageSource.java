@@ -20,8 +20,8 @@ import java.util.Map;
 
 
 /**
- * Interface representing a message source that stores messages by key and can
- * perform variable substitution.
+ * Interface representing a message source that stores messages by key and can perform variable
+ * substitution.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6
@@ -38,11 +38,10 @@ public interface IErrorMessageSource
 	String getMessage(String key);
 
 	/**
-	 * Performs variable substitution on the given <code>String</code> using
-	 * variables declared in the <code>vars</code> <code>Map</code>.
+	 * Performs variable substitution on the given <code>String</code> using variables declared in
+	 * the <code>vars</code> <code>Map</code>.
 	 * <p>
-	 * Variables in the message are identified using <code>${varname}</code>
-	 * syntax.
+	 * Variables in the message are identified using <code>${varname}</code> syntax.
 	 * 
 	 * @param string
 	 *            a <code>String</code> to be altered
@@ -50,8 +49,8 @@ public interface IErrorMessageSource
 	 *            a <code>Map</code> of variables to process
 	 * 
 	 * @throws IllegalStateException
-	 *             if a variable defined in the given <code>String</code>
-	 *             cannot be found in the <code>vars</code> <code>Map</code>
+	 *             if a variable defined in the given <code>String</code> cannot be found in the
+	 *             <code>vars</code> <code>Map</code>
 	 * 
 	 * @return the given <code>String</code> with the variables substituted
 	 */

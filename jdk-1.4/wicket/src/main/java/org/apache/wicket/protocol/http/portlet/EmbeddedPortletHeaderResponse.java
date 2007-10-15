@@ -31,7 +31,7 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 {
 	private Response realResponse;
 	private StringResponse bufferedResponse;
-	
+
 	public EmbeddedPortletHeaderResponse(Response realResponse)
 	{
 		this.realResponse = realResponse;
@@ -49,19 +49,20 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 				getResponse().write("var elem=document.createElement(\"link\");");
 				getResponse().write("elem.setAttribute(\"rel\",\"stylesheet\");");
 				getResponse().write("elem.setAttribute(\"type\",\"text/css\");");
-				getResponse().write("elem.setAttribute(\"href\",\""+url+"\");");
+				getResponse().write("elem.setAttribute(\"href\",\"" + url + "\");");
 				if (media != null)
 				{
-					getResponse().write("elem.setAttribute(\"media\",\""+media+"\");");
+					getResponse().write("elem.setAttribute(\"media\",\"" + media + "\");");
 				}
-				getResponse().write("document.getElementsByTagName(\"head\")[0].appendChild(elem);");
+				getResponse()
+						.write("document.getElementsByTagName(\"head\")[0].appendChild(elem);");
 				getResponse().println("</script>");
 				markRendered(token);
 			}
 		}
 	}
 
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.internal.HeaderResponse#close()
 	 */
@@ -99,7 +100,8 @@ public class EmbeddedPortletHeaderResponse extends HeaderResponse
 		}
 		if (output.length() > 0)
 		{
-			realResponse.write("<span id=\""+RequestContext.get().getNamespace()+"_embedded_head\" style=\"display:none\">");
+			realResponse.write("<span id=\"" + RequestContext.get().getNamespace() +
+					"_embedded_head\" style=\"display:none\">");
 			realResponse.write(output);
 			realResponse.write("</span>");
 		}

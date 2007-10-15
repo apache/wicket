@@ -28,8 +28,9 @@ import org.apache.wicket.util.string.Strings;
 
 class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
-	private final Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^"+LINE_ENDING+"]+?)"+LINE_ENDING+"(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
-	
+	private final Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^" + LINE_ENDING + "]+?)" +
+			LINE_ENDING + "(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+
 	/**
 	 * Construct.
 	 * 
@@ -91,28 +92,28 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 	public boolean addLicenseHeader(File file)
 	{
 		boolean added = false;
-		
+
 		try
 		{
 			String content = new org.apache.wicket.util.file.File(file).readString();
 			String xml = "";
 			StringBuffer newContent = new StringBuffer();
-			
+
 			Matcher mat = xmlHeader.matcher(content);
 			if (mat.matches())
 			{
 				xml = mat.group(1);
 				content = mat.group(2);
 			}
-			
+
 			if (Strings.isEmpty(xml) == false)
 			{
 				newContent.append(xml).append(LINE_ENDING);
 			}
-			
+
 			newContent.append(getLicenseHeader()).append(LINE_ENDING);
 			newContent.append(content);
-			
+
 			new org.apache.wicket.util.file.File(file).write(newContent.toString());
 			added = true;
 		}
@@ -120,9 +121,9 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		{
 			Assert.fail(e.getMessage());
 		}
-		
+
 		return added;
 	}
 
-	
+
 }

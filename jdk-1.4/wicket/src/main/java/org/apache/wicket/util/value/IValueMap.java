@@ -25,8 +25,8 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * A <code>Map</code> interface that holds values, parses <code>String</code>s,
- * and exposes a variety of convenience methods.
+ * A <code>Map</code> interface that holds values, parses <code>String</code>s, and exposes a
+ * variety of convenience methods.
  * 
  * @author Johan Compagner
  * @since 1.2.6
@@ -59,8 +59,7 @@ public interface IValueMap extends Map
 	double getDouble(final String key) throws StringValueConversionException;
 
 	/**
-	 * Retrieves a <code>double</code> value by key, using a default value if
-	 * not found.
+	 * Retrieves a <code>double</code> value by key, using a default value if not found.
 	 * 
 	 * @param key
 	 *            the key
@@ -93,8 +92,7 @@ public interface IValueMap extends Map
 	int getInt(final String key) throws StringValueConversionException;
 
 	/**
-	 * Retrieves an <code>int</code> value by key, using a default value if
-	 * not found.
+	 * Retrieves an <code>int</code> value by key, using a default value if not found.
 	 * 
 	 * @param key
 	 *            the key
@@ -116,8 +114,7 @@ public interface IValueMap extends Map
 	long getLong(final String key) throws StringValueConversionException;
 
 	/**
-	 * Retrieves a <code>long</code> value by key, using a default value if
-	 * not found.
+	 * Retrieves a <code>long</code> value by key, using a default value if not found.
 	 * 
 	 * @param key
 	 *            the key
@@ -129,8 +126,7 @@ public interface IValueMap extends Map
 	long getLong(final String key, final long defaultValue) throws StringValueConversionException;
 
 	/**
-	 * Retrieves a <code>String</code> by key, using a default value if not
-	 * found.
+	 * Retrieves a <code>String</code> by key, using a default value if not found.
 	 * 
 	 * @param key
 	 *            the key
@@ -159,12 +155,11 @@ public interface IValueMap extends Map
 	CharSequence getCharSequence(final String key);
 
 	/**
-	 * Retrieves a <code>String</code> array by key. If the value was a
-	 * <code>String[]</code> it will be returned directly. If it was a
-	 * <code>String</code> it will be converted to a <code>String</code>
-	 * array of length one. If it was an array of another type, a
-	 * <code>String</code> array will be made and each element will be
-	 * converted to a <code>String</code>.
+	 * Retrieves a <code>String</code> array by key. If the value was a <code>String[]</code> it
+	 * will be returned directly. If it was a <code>String</code> it will be converted to a
+	 * <code>String</code> array of length one. If it was an array of another type, a
+	 * <code>String</code> array will be made and each element will be converted to a
+	 * <code>String</code>.
 	 * 
 	 * @param key
 	 *            the key
@@ -199,11 +194,10 @@ public interface IValueMap extends Map
 	boolean isImmutable();
 
 	/**
-	 * Makes this <code>IValueMap</code> immutable by changing the underlying
-	 * map representation to a <code>Collections.unmodifiableMap</code>.
-	 * After calling this method, any attempt to modify this
-	 * <code>IValueMap</code> will result in a <code>RuntimeException</code>
-	 * being thrown by the <code>Collections</code> framework.
+	 * Makes this <code>IValueMap</code> immutable by changing the underlying map representation
+	 * to a <code>Collections.unmodifiableMap</code>. After calling this method, any attempt to
+	 * modify this <code>IValueMap</code> will result in a <code>RuntimeException</code> being
+	 * thrown by the <code>Collections</code> framework.
 	 * 
 	 * @return this <code>IValueMap</code>
 	 */
@@ -225,9 +219,9 @@ public interface IValueMap extends Map
 	Object remove(final Object key);
 
 	/**
-	 * Provided that the hash key is a <code>String</code> and you need to
-	 * access the value ignoring the key's case (upper- or lowercase letters),
-	 * then you may use this method to get the correct writing.
+	 * Provided that the hash key is a <code>String</code> and you need to access the value
+	 * ignoring the key's case (upper- or lowercase letters), then you may use this method to get
+	 * the correct writing.
 	 * 
 	 * @param key
 	 *            the key

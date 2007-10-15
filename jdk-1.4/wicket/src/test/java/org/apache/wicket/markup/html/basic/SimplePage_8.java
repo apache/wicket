@@ -21,19 +21,19 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class SimplePage_8 extends WebPage 
+public class SimplePage_8 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public SimplePage_8() 
+	public SimplePage_8()
 	{
 		// One Label, but two <span> tag in the html with the same id => Not allowed.
 		add(new Label("myLabel", "test-1"));
-    }
+	}
 }

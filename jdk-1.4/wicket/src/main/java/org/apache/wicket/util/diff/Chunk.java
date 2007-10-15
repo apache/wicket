@@ -56,9 +56,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Holds a information about a part of the text involved in a differencing or
- * patching operation.
- *
+ * Holds a information about a part of the text involved in a differencing or patching operation.
+ * 
  * @version $Id: Chunk.java,v 1.1 2006/03/12 00:24:21 juanca Exp $
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  * @see Diff
@@ -75,7 +74,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Creates a chunk that doesn't copy the original text.
-	 *
+	 * 
 	 * @param pos
 	 *            the start position in the text.
 	 * @param count
@@ -89,7 +88,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Creates a chunk and saves a copy the original chunk's text.
-	 *
+	 * 
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -104,9 +103,9 @@ public class Chunk extends ToString
 	}
 
 	/**
-	 * Creates a chunk that will be displaced in the resulting text, and saves a
-	 * copy the original chunk's text.
-	 *
+	 * Creates a chunk that will be displaced in the resulting text, and saves a copy the original
+	 * chunk's text.
+	 * 
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -124,7 +123,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Creates a chunk and saves a copy the original chunk's text.
-	 *
+	 * 
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -139,9 +138,9 @@ public class Chunk extends ToString
 	}
 
 	/**
-	 * Creates a chunk that will be displaced in the resulting text, and saves a
-	 * copy the original chunk's text.
-	 *
+	 * Creates a chunk that will be displaced in the resulting text, and saves a copy the original
+	 * chunk's text.
+	 * 
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -159,7 +158,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the anchor position of the chunk.
-	 *
+	 * 
 	 * @return the anchor position.
 	 */
 	public int anchor()
@@ -169,7 +168,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the size of the chunk.
-	 *
+	 * 
 	 * @return the size.
 	 */
 	public int size()
@@ -179,7 +178,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the index of the first line of the chunk.
-	 *
+	 * 
 	 * @return int
 	 */
 	public int first()
@@ -189,7 +188,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the index of the last line of the chunk.
-	 *
+	 * 
 	 * @return int
 	 */
 	public int last()
@@ -199,7 +198,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the <i>from</i> index of the chunk in RCS terms.
-	 *
+	 * 
 	 * @return int
 	 */
 	public int rcsfrom()
@@ -209,7 +208,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the <i>to</i> index of the chunk in RCS terms.
-	 *
+	 * 
 	 * @return int
 	 */
 	public int rcsto()
@@ -219,7 +218,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the text saved for this chunk.
-	 *
+	 * 
 	 * @return the text.
 	 */
 	public List chunk()
@@ -228,9 +227,8 @@ public class Chunk extends ToString
 	}
 
 	/**
-	 * Verifies that this chunk's saved text matches the corresponding text in
-	 * the given sequence.
-	 *
+	 * Verifies that this chunk's saved text matches the corresponding text in the given sequence.
+	 * 
 	 * @param target
 	 *            the sequence to verify against.
 	 * @return true if the texts match.
@@ -257,7 +255,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Delete this chunk from he given text.
-	 *
+	 * 
 	 * @param target
 	 *            the text to delete from.
 	 */
@@ -271,7 +269,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Add the text of this chunk to the target at the given position.
-	 *
+	 * 
 	 * @param start
 	 *            where to add the text.
 	 * @param target
@@ -287,9 +285,8 @@ public class Chunk extends ToString
 	}
 
 	/**
-	 * Provide a string image of the chunk using the an empty prefix and
-	 * postfix.
-	 *
+	 * Provide a string image of the chunk using the an empty prefix and postfix.
+	 * 
 	 * @param s
 	 */
 	public void toString(StringBuffer s)
@@ -299,7 +296,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string image of the chunk using the given prefix and postfix.
-	 *
+	 * 
 	 * @param s
 	 *            where the string image should be appended.
 	 * @param prefix
@@ -325,7 +322,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Retrieves the specified part from a {@link List List}.
-	 *
+	 * 
 	 * @param seq
 	 *            the list to retrieve a slice from.
 	 * @param pos
@@ -348,7 +345,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Retrieves a slice from an {@link Object Object} array.
-	 *
+	 * 
 	 * @param seq
 	 *            the list to retrieve a slice from.
 	 * @param pos
@@ -364,7 +361,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string representation of the numeric range of this chunk.
-	 *
+	 * 
 	 * @return String
 	 */
 	public String rangeString()
@@ -376,7 +373,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string representation of the numeric range of this chunk.
-	 *
+	 * 
 	 * @param s
 	 *            where the string representation should be appended.
 	 */
@@ -387,7 +384,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string representation of the numeric range of this chunk.
-	 *
+	 * 
 	 * @param s
 	 *            where the string representation should be appended.
 	 * @param separ

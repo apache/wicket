@@ -108,14 +108,16 @@ public class ModelToStringTest extends WicketTestCase
 		InnerPOJO innerPOJO = new InnerPOJO();
 		BoundCompoundPropertyModel pojoProperty = new BoundCompoundPropertyModel(innerPOJO);
 
-		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=["
-				+ innerPOJO + "]:bindings=[]";
+		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[" +
+				innerPOJO + "]:bindings=[]";
 		assertEquals(expected, pojoProperty.toString());
 
 		Component component1 = pojoProperty.bind(new Label("label"));
-		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=["
-				+ innerPOJO + "]:bindings=[Binding(:component=[" + component1
-				+ "]:expression=[label])]";
+		expected = "Model:classname=[org.apache.wicket.model.BoundCompoundPropertyModel]:nestedModel=[" +
+				innerPOJO +
+				"]:bindings=[Binding(:component=[" +
+				component1 +
+				"]:expression=[label])]";
 		assertEquals(expected, pojoProperty.toString());
 	}
 
@@ -142,8 +144,8 @@ public class ModelToStringTest extends WicketTestCase
 		InnerPOJO innerPOJO = new InnerPOJO();
 		CompoundPropertyModel pojoProperty = new CompoundPropertyModel(innerPOJO);
 
-		expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[" + innerPOJO
-				+ "]";
+		expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[" +
+				innerPOJO + "]";
 		assertEquals(expected, pojoProperty.toString());
 	}
 
@@ -153,18 +155,18 @@ public class ModelToStringTest extends WicketTestCase
 	public void testLoadableDetachableModel()
 	{
 		LoadableDetachableModel model = new MyLoadableDetachableModel();
-		String expected = "Model:classname=[" + model.getClass().getName() + "]"
-				+ ":attached=false" + ":tempModelObject=[null]";
+		String expected = "Model:classname=[" + model.getClass().getName() + "]" +
+				":attached=false" + ":tempModelObject=[null]";
 		assertEquals(expected, model.toString());
 
 		model.getObject();
-		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=true"
-				+ ":tempModelObject=[foo]";
+		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=true" +
+				":tempModelObject=[foo]";
 		assertEquals(expected, model.toString());
 
 		model.detach();
-		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=false"
-				+ ":tempModelObject=[null]";
+		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=false" +
+				":tempModelObject=[null]";
 		assertEquals(expected, model.toString());
 	}
 

@@ -20,9 +20,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
- * A component that represents html &lt;label&gt; tag. This component will
- * automatically make the form component output an id attribute and link its for
- * attribute with that value.
+ * A component that represents html &lt;label&gt; tag. This component will automatically make the
+ * form component output an id attribute and link its for attribute with that value.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -60,8 +59,8 @@ public class FormComponentLabel extends WebMarkupContainer
 
 
 	/**
-	 * Returns LabeledWebMarkupContainer bound to this label. This will be a
-	 * FormComponent, a Radio or a Check.
+	 * Returns LabeledWebMarkupContainer bound to this label. This will be a FormComponent, a Radio
+	 * or a Check.
 	 * 
 	 * @return form component
 	 */

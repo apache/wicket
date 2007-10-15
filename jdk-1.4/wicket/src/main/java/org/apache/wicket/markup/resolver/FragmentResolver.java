@@ -23,16 +23,14 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
- * Usually you either have a markup file or a xml tag with
- * wicket:id="myComponent" to associate markup with a component. However in some
- * rare cases, especially when working with small panels it is a bit awkward to
- * maintain tiny pieces of markup in plenty of panel markup files. Use cases are
+ * Usually you either have a markup file or a xml tag with wicket:id="myComponent" to associate
+ * markup with a component. However in some rare cases, especially when working with small panels it
+ * is a bit awkward to maintain tiny pieces of markup in plenty of panel markup files. Use cases are
  * for example list views where list items are different depending on a state.
  * <p>
- * Inline panels provide a means to maintain the panels tiny piece of markup in
- * the parents markup file. During the render process, when Wicket iterates over
- * the markup file, the markup fragment must be ignored. It is only indirectly
- * referenced by component.
+ * Inline panels provide a means to maintain the panels tiny piece of markup in the parents markup
+ * file. During the render process, when Wicket iterates over the markup file, the markup fragment
+ * must be ignored. It is only indirectly referenced by component.
  * 
  * @author Juergen Donnerstag
  */
@@ -45,7 +43,7 @@ public class FragmentResolver implements IComponentResolver
 		// register "wicket:fragment"
 		WicketTagIdentifier.registerWellKnownTagName("fragment");
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)

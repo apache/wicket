@@ -38,7 +38,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 
 	/**
 	 * Tests serialization of a big int.
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void testBigInteger() throws Exception
@@ -74,35 +74,37 @@ public class WicketOutputStreamTest extends WicketTestCase
 	}
 
 
-	 public void testNotSerializeable() throws Exception
-	 {
-		 WebApplication app = new WebApplication()
-		 {
-			 public Class getHomePage()
-			 {
-				 return null;
-			 }
-			 
-			 protected ISessionStore newSessionStore()
-			 {
-				 // Don't use a filestore, or we spawn lots of threads, which makes things slow.
-				 return new HttpSessionStore(this);
-			 }
+	public void testNotSerializeable() throws Exception
+	{
+		WebApplication app = new WebApplication()
+		{
+			public Class getHomePage()
+			{
+				return null;
+			}
 
-		 };
+			protected ISessionStore newSessionStore()
+			{
+				// Don't use a filestore, or we spawn lots of threads, which makes things slow.
+				return new HttpSessionStore(this);
+			}
 
-		 try
-		 {
-			 woos.writeObject(app);
-			 assertFalse("webapplication is not serializeable",false);
-		 }
-		 catch(Exception e){ }
-	 }
+		};
 
-	 public void testLocale() throws Exception
-	 {
-		 Locale locale = new Locale("nl","NL");
-		 woos.writeObject(locale);
+		try
+		{
+			woos.writeObject(app);
+			assertFalse("webapplication is not serializeable", false);
+		}
+		catch (Exception e)
+		{
+		}
+	}
+
+	public void testLocale() throws Exception
+	{
+		Locale locale = new Locale("nl", "NL");
+		woos.writeObject(locale);
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
 
@@ -111,7 +113,7 @@ public class WicketOutputStreamTest extends WicketTestCase
 
 		Assert.assertEquals(locale, locale2);
 
-	 }
+	}
 
 	public void testPageReference() throws Exception
 	{

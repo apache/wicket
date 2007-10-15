@@ -23,8 +23,8 @@ import org.apache.wicket.markup.MarkupException;
 
 
 /**
- * Simple application that demonstrates the mock http application code (and
- * checks that it is working)
+ * Simple application that demonstrates the mock http application code (and checks that it is
+ * working)
  * 
  * @author Chris Turner
  */

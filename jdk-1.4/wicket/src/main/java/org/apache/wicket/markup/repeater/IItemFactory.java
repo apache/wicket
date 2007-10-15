@@ -19,8 +19,7 @@ package org.apache.wicket.markup.repeater;
 import org.apache.wicket.model.IModel;
 
 /**
- * Factory interface for creating new child item containers for
- * <b>AbstractPageableView</b>.
+ * Factory interface for creating new child item containers for <b>AbstractPageableView</b>.
  * 
  * @see org.apache.wicket.markup.repeater.AbstractPageableView
  * 
@@ -30,8 +29,8 @@ import org.apache.wicket.model.IModel;
 public interface IItemFactory
 {
 	/**
-	 * Factory method for instances of Item. Each generated item must have a
-	 * unique id with respect to other generated items.
+	 * Factory method for instances of Item. Each generated item must have a unique id with respect
+	 * to other generated items.
 	 * 
 	 * @param index
 	 *            the index of the new data item

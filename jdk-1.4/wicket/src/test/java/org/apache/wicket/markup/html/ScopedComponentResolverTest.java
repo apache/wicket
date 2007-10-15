@@ -36,11 +36,12 @@ public class ScopedComponentResolverTest extends WicketTestCase
 	{
 		super(name);
 	}
-	
+
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		tester.getApplication().getPageSettings().addComponentResolver(new ScopedComponentResolver());
+		tester.getApplication().getPageSettings().addComponentResolver(
+				new ScopedComponentResolver());
 	}
 
 	/**
@@ -48,6 +49,6 @@ public class ScopedComponentResolverTest extends WicketTestCase
 	 */
 	public void testRenderHomePage() throws Exception
 	{
-	    executeTest(ScopedPage.class, "ScopedPageExpectedResult.html");
+		executeTest(ScopedPage.class, "ScopedPageExpectedResult.html");
 	}
 }

@@ -51,14 +51,14 @@ import org.slf4j.LoggerFactory;
  * <p>
  * {@link DiskPageStore} allows to set maximum size for pagemap file and maximum size for session.
  * If the maximum size for session is exceeded, the last recently used pagemap file is removed.
- *
+ * 
  * @author Matej Knopp
  */
 public class DiskPageStore extends AbstractPageStore implements ISerializationAwarePageStore
 {
 	/**
 	 * Each PageMap is represented by this class.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	protected static class PageMapEntry
@@ -94,7 +94,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Represents a session,
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	protected class SessionEntry
@@ -138,7 +138,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		/**
 		 * Returns a {@link PageMapEntry} for specified pagemap. If the create attribute is set and
 		 * the pagemap does not exist, new {@link PageMapEntry} will be created.
-		 *
+		 * 
 		 * @param pageMapName
 		 * @param create
 		 * @return
@@ -169,7 +169,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		/**
 		 * Removes the pagemap entry and deletes the file.
-		 *
+		 * 
 		 * @param entry
 		 */
 		private void removePageMapEntry(PageMapEntry entry)
@@ -180,7 +180,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		/**
 		 * Removes the specified pagemap and deletes the file.
-		 *
+		 * 
 		 * @param pageMapName
 		 */
 		public synchronized void removePageMap(String pageMapName)
@@ -194,7 +194,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		/**
 		 * Saves the serialized page to appropriate pagemap file.
-		 *
+		 * 
 		 * @param page
 		 */
 		public synchronized void savePage(SerializedPage page)
@@ -241,7 +241,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		/**
 		 * Removes the page from pagemap file.
-		 *
+		 * 
 		 * @param pageMapName
 		 * @param pageId
 		 */
@@ -256,7 +256,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		/**
 		 * Loads the part of pagemap file specified by the given PageWindow.
-		 *
+		 * 
 		 * @param window
 		 * @param pageMapFileName
 		 * @return
@@ -290,7 +290,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		/**
 		 * Loads the specified page data.
-		 *
+		 * 
 		 * @param pageMapName
 		 * @param id
 		 * @param versionNumber
@@ -332,7 +332,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 		/**
 		 * Returns true if the given page exists for specified pageMap
-		 *
+		 * 
 		 * @param pageMapName
 		 * @param pageId
 		 * @param versionNumber
@@ -349,7 +349,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns the folder for the specified sessions. If the folder doesn't exist and the create
 	 * flag is set, the folder will be created.
-	 *
+	 * 
 	 * @param sessionId
 	 * @param create
 	 * @return
@@ -368,7 +368,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Utility method for creating a directory
-	 *
+	 * 
 	 * @param file
 	 */
 	private void mkdirs(File file)
@@ -397,7 +397,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns the file name for specified pagemap. If the session folder (folder that contains the
 	 * file) does not exist and createSessionFolder is true, the folder will be created.
-	 *
+	 * 
 	 * @param sessionId
 	 * @param pageMapName
 	 * @param createSessionFolder
@@ -414,7 +414,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Return maximum pagemap file size (in bytes).
-	 *
+	 * 
 	 * @return
 	 */
 	protected int getMaxSizePerPageMap()
@@ -427,7 +427,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns maximum size per session (in bytes). After the session exceeds this size, appropriate
 	 * number of last recently used pagemap files will be removed.
-	 *
+	 * 
 	 * @return
 	 */
 	protected int getMaxSizePerSession()
@@ -441,7 +441,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Returns the "root" file store folder.
-	 *
+	 * 
 	 * @return
 	 */
 	protected File getFileStoreFolder()
@@ -453,7 +453,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Creates a new {@link DiskPageStore} instance.
-	 *
+	 * 
 	 * @param fileStoreFolder
 	 *            folder in which the session folders containing pagemap files will be stored
 	 * @param maxSizePerPagemap
@@ -507,7 +507,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Creates a new {@link DiskPageStore} instance.
-	 *
+	 * 
 	 * @param maxSizePerPagemap
 	 *            the maximum size of pagemap file (in bytes)
 	 * @param maxSizePerSession
@@ -515,7 +515,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param fileChannelPoolCapacity
 	 *            the maximum number of concurrently opened files (higher number improves
 	 *            performance under heavy load).
-	 *
+	 * 
 	 */
 	public DiskPageStore(int maxSizePerPagemap, int maxSizePerSession, int fileChannelPoolCapacity)
 	{
@@ -548,7 +548,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns the SessionEntry for session with given id. If the entry does not yet exist and the
 	 * createIfDoesNotExist attribute is set, new SessionEntry will be created.
-	 *
+	 * 
 	 * @param sessionId
 	 * @param createIfDoesNotExist
 	 * @return
@@ -619,7 +619,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Removes the page (or entire pagemap) from specified session.
-	 *
+	 * 
 	 * @param entry
 	 * @param pageMap
 	 * @param id
@@ -667,7 +667,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Stores the serialized pages. The storing is done either immediately (in synchronous mode) or
 	 * it's scheduled to be stored by the worker thread.
-	 *
+	 * 
 	 * @param sessionId
 	 * @param pages
 	 */
@@ -691,7 +691,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Hook for processing serialized pages (e.g. sending those across cluster)
-	 *
+	 * 
 	 * @param sessionId
 	 * @param pages
 	 */
@@ -750,7 +750,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns the list of pages to be saved for the specified session id. If the list is not found,
 	 * new list is created.
-	 *
+	 * 
 	 * @param sessionId
 	 * @return
 	 */
@@ -774,7 +774,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Saves all entries from the specified list.
-	 *
+	 * 
 	 * @param sessionId
 	 * @param list
 	 */
@@ -793,7 +793,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Schedules the pages to be saved by the worker thread.
-	 *
+	 * 
 	 * @param sessionId
 	 * @param pages
 	 */
@@ -814,7 +814,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Worker thread that saves the serialized pages. Saving pages in the separate thread results in
 	 * smoother performance under load.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	private class PageSavingThread implements Runnable
@@ -892,7 +892,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns the amount time in milliseconds for the saving thread to sleep between checking
 	 * whether there are pending serialized pages to be saved.
-	 *
+	 * 
 	 * @return
 	 */
 	protected int getSavingThreadSleepTime()
@@ -903,7 +903,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Returns whether the {@link DiskPageStore} should work in synchronous or asynchronous mode.
 	 * Asynchronous mode uses a worker thread to save pages, which results in smoother performance.
-	 *
+	 * 
 	 * @return
 	 */
 	protected boolean isSynchronous()
@@ -916,7 +916,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	/**
 	 * Sets the number of last recently serialized pages kept in cache. The cache is used to aid
 	 * performance on session replication.
-	 *
+	 * 
 	 * @param lastRecentlySerializedPagesCacheSize
 	 */
 	public void setLastRecentlySerializedPagesCacheSize(int lastRecentlySerializedPagesCacheSize)
@@ -951,7 +951,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 
 	/**
 	 * Store the serialized page in the request metadata,.
-	 *
+	 * 
 	 * @param sessionId
 	 * @param page
 	 * @param pagesList
@@ -977,7 +977,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	/**
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	private static class SerializedPageWithSession implements Serializable

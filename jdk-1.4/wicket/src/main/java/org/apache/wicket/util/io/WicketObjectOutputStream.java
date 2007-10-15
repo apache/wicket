@@ -36,8 +36,8 @@ import java.util.Map.Entry;
 public final class WicketObjectOutputStream extends ObjectOutputStream
 {
 	/**
-	 * Lightweight identity hash table which maps objects to integer handles,
-	 * assigned in ascending order (comes from {@link ObjectOutputStream}).
+	 * Lightweight identity hash table which maps objects to integer handles, assigned in ascending
+	 * order (comes from {@link ObjectOutputStream}).
 	 */
 	private static final class HandleTable
 	{
@@ -106,8 +106,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		}
 
 		/**
-		 * Assigns next available handle to given object, and returns handle
-		 * value. Handles are assigned in ascending order starting at 0.
+		 * Assigns next available handle to given object, and returns handle value. Handles are
+		 * assigned in ascending order starting at 0.
 		 * 
 		 * @param obj
 		 * @return
@@ -139,8 +139,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		}
 
 		/**
-		 * Looks up and returns handle associated with given object, or -1 if no
-		 * mapping found.
+		 * Looks up and returns handle associated with given object, or -1 if no mapping found.
 		 * 
 		 * @param obj
 		 * @return
@@ -181,8 +180,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		private HashMap mapObject;
 
 		/**
-		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String,
-		 *      boolean)
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, boolean)
 		 */
 		public void put(String name, boolean val)
 		{
@@ -218,8 +216,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		}
 
 		/**
-		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String,
-		 *      double)
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, double)
 		 */
 		public void put(String name, double val)
 		{
@@ -267,8 +264,7 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 		}
 
 		/**
-		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String,
-		 *      java.lang.Object)
+		 * @see java.io.ObjectOutputStream.PutField#put(java.lang.String, java.lang.Object)
 		 */
 		public void put(String name, Object val)
 		{
@@ -724,15 +720,15 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						catch (WicketSerializeableException wse)
 						{
 							wse
-									.addTrace(componentType.getName() + "[" + Array.getLength(obj)
-											+ "]");
+									.addTrace(componentType.getName() + "[" + Array.getLength(obj) +
+											"]");
 							throw wse;
 						}
 						catch (Exception e)
 						{
 							throw new WicketSerializeableException(
-									"Error writing primitive array of " + componentType.getName()
-											+ "[" + Array.getLength(obj) + "]", e);
+									"Error writing primitive array of " + componentType.getName() +
+											"[" + Array.getLength(obj) + "]", e);
 						}
 					}
 					else
@@ -755,8 +751,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						}
 						catch (Exception e)
 						{
-							throw new WicketSerializeableException("Error writing array of "
-									+ componentType.getName() + "[" + length + "]", e);
+							throw new WicketSerializeableException("Error writing array of " +
+									componentType.getName() + "[" + length + "]", e);
 						}
 					}
 					return;
@@ -798,8 +794,8 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						{
 							if (realClz != cls)
 							{
-								wse.addTrace(realClz.getName() + "(ReplaceOf:" + cls.getName()
-										+ ")");
+								wse.addTrace(realClz.getName() + "(ReplaceOf:" + cls.getName() +
+										")");
 							}
 							else
 							{
@@ -811,15 +807,14 @@ public final class WicketObjectOutputStream extends ObjectOutputStream
 						{
 							if (realClz != cls)
 							{
-								throw new WicketSerializeableException("Error writing fields for "
-										+ realClz.getName() + "(ReplaceOf:" + cls.getName() + ")",
-										e);
+								throw new WicketSerializeableException("Error writing fields for " +
+										realClz.getName() + "(ReplaceOf:" + cls.getName() + ")", e);
 
 							}
 							else
 							{
-								throw new WicketSerializeableException("Error writing fields for "
-										+ realClz.getName(), e);
+								throw new WicketSerializeableException("Error writing fields for " +
+										realClz.getName(), e);
 							}
 						}
 						finally

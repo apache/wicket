@@ -31,8 +31,7 @@ import org.apache.wicket.util.tester.WicketTester;
 
 
 /**
- * Tests the inclusion of the wicket:head section from a panel in a subclassed
- * page.
+ * Tests the inclusion of the wicket:head section from a panel in a subclassed page.
  * 
  * @author Martijn Dashorst
  */
@@ -66,8 +65,7 @@ public class InheritanceHeadTest extends WicketTestCase
 		tester = new WicketTester(new WebApplication()
 		{
 			/**
-			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request,
-			 *      Response)
+			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
 			 */
 			public Session newSession(Request request, Response response)
 			{

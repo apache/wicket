@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class DoubleHeaderPartPage extends WebPage
 {
@@ -32,7 +32,7 @@ public class DoubleHeaderPartPage extends WebPage
 	 */
 	public DoubleHeaderPartPage()
 	{
-		add(new Label("title","Header Part Test"));
+		add(new Label("title", "Header Part Test"));
 		add(new PanelWithHeaderPart("panelwithheadercomponents1"));
 		add(new PanelWithHeaderPart("panelwithheadercomponents2"));
 	}

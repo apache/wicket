@@ -22,12 +22,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * An immutable <code>Time</code> class that represents a specific point in time. The
- * underlying representation is a <code>long</code> value which holds a number of
- * milliseconds since January 1, 1970, 0:00 GMT. To represent a duration of time,
- * such as "6 seconds", use the <code>Duration</code> class. To represent a time period with
- * a start and end time, use the <code>TimeFrame</code> class. To represent a time of day,
- * use the <code>TimeOfDay</code> class.
+ * An immutable <code>Time</code> class that represents a specific point in time. The underlying
+ * representation is a <code>long</code> value which holds a number of milliseconds since January
+ * 1, 1970, 0:00 GMT. To represent a duration of time, such as "6 seconds", use the
+ * <code>Duration</code> class. To represent a time period with a start and end time, use the
+ * <code>TimeFrame</code> class. To represent a time of day, use the <code>TimeOfDay</code>
+ * class.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -71,8 +71,7 @@ public final class Time extends AbstractTime
 	 * Retrieves a <code>Time</code> instance by parsing 'yyyy.MM.dd' format.
 	 * 
 	 * @param calendar
-	 *            the <code>Calendar</code> to use when parsing date
-	 *            <code>String</code>
+	 *            the <code>Calendar</code> to use when parsing date <code>String</code>
 	 * @param string
 	 *            the <code>String</code> to parse
 	 * @return the time
@@ -93,8 +92,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Retrieves a <code>Time</code> instance by parsing 'yyyy.MM.dd' format
-	 * using a local time <code>Calendar</code>.
+	 * Retrieves a <code>Time</code> instance by parsing 'yyyy.MM.dd' format using a local time
+	 * <code>Calendar</code>.
 	 * 
 	 * @param string
 	 *            the <code>String</code> to parse
@@ -107,12 +106,10 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Retrieves a <code>Time</code> instance by parsing 'yyyy.MM.dd-h.mma'
-	 * format.
+	 * Retrieves a <code>Time</code> instance by parsing 'yyyy.MM.dd-h.mma' format.
 	 * 
 	 * @param calendar
-	 *            the <code>Calendar</code> to use when parsing the
-	 *            <code>String</code>
+	 *            the <code>Calendar</code> to use when parsing the <code>String</code>
 	 * @param string
 	 *            the <code>String</code> to parse
 	 * @return an immutable UNIX <code>Time</code> value
@@ -132,8 +129,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Retrieves a <code>Time</code> instance based on the given
-	 * <code>Calendar</code> and {@link TimeOfDay} objects.
+	 * Retrieves a <code>Time</code> instance based on the given <code>Calendar</code> and
+	 * {@link TimeOfDay} objects.
 	 * 
 	 * @param calendar
 	 *            the <code>Calendar</code> to use
@@ -157,8 +154,7 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Retrieves a <code>Time</code> instance based on the given
-	 * <code>Date</code> object.
+	 * Retrieves a <code>Time</code> instance based on the given <code>Date</code> object.
 	 * 
 	 * @param date
 	 *            a <code>java.util.Date</code> object
@@ -173,8 +169,7 @@ public final class Time extends AbstractTime
 	 * Retrieves a <code>Time</code> instance based on the given milliseconds.
 	 * 
 	 * @param time
-	 *            the <code>Time</code> value in milliseconds since
-	 *            START_OF_UNIX_TIME
+	 *            the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
 	 * @return a corresponding immutable <code>Time</code> object
 	 */
 	public static Time valueOf(final long time)
@@ -202,8 +197,8 @@ public final class Time extends AbstractTime
 	 *            input
 	 * @param pattern
 	 *            the pattern to parse
-	 * @return a <code>Time</code> instance that resulted from parsing the
-	 *         given <code>String</code>
+	 * @return a <code>Time</code> instance that resulted from parsing the given
+	 *         <code>String</code>
 	 * @throws ParseException
 	 */
 	public static Time valueOf(final String string, final String pattern) throws ParseException
@@ -214,8 +209,7 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Retrieves a <code>Time</code> instance based on the given
-	 * {@link TimeOfDay} object.
+	 * Retrieves a <code>Time</code> instance based on the given {@link TimeOfDay} object.
 	 * 
 	 * @param timeOfDay
 	 *            the time of day in local time
@@ -230,8 +224,7 @@ public final class Time extends AbstractTime
 	 * Private constructor forces use of static factory methods.
 	 * 
 	 * @param time
-	 *            the <code>Time</code> value in milliseconds since
-	 *            START_OF_UNIX_TIME
+	 *            the <code>Time</code> value in milliseconds since START_OF_UNIX_TIME
 	 */
 	private Time(final long time)
 	{
@@ -239,8 +232,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Adds the given <code>Duration</code> to this <code>Time</code>
-	 * object, moving the time into the future.
+	 * Adds the given <code>Duration</code> to this <code>Time</code> object, moving the time
+	 * into the future.
 	 * 
 	 * @param duration
 	 *            the <code>Duration</code> to add
@@ -252,11 +245,9 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Calculates the amount of time that has elapsed since this
-	 * <code>Time</code> value.
+	 * Calculates the amount of time that has elapsed since this <code>Time</code> value.
 	 * 
-	 * @return the amount of time that has elapsed since this <code>Time</code>
-	 *         value
+	 * @return the amount of time that has elapsed since this <code>Time</code> value
 	 * @throws IllegalStateException
 	 *             thrown if this <code>Time</code> value is in the future
 	 */
@@ -271,13 +262,11 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Retrieves the <code>Duration</code> from now to this <code>Time</code>
-	 * value. If this <code>Time</code> value is in the past, then the
-	 * <code>Duration</code> returned will be negative. Otherwise, it will be
-	 * the number of milliseconds from now to this <code>Time</code>.
+	 * Retrieves the <code>Duration</code> from now to this <code>Time</code> value. If this
+	 * <code>Time</code> value is in the past, then the <code>Duration</code> returned will be
+	 * negative. Otherwise, it will be the number of milliseconds from now to this <code>Time</code>.
 	 * 
-	 * @return the <code>Duration</code> from now to this <code>Time</code>
-	 *         value
+	 * @return the <code>Duration</code> from now to this <code>Time</code> value
 	 */
 	public Duration fromNow()
 	{
@@ -291,8 +280,7 @@ public final class Time extends AbstractTime
 	 *            the <code>Calendar</code> to use
 	 * @param field
 	 *            the <code>Calendar</code> field to get
-	 * @return the field's value for this point in time on the given
-	 *         <code>Calendar</code>
+	 * @return the field's value for this point in time on the given <code>Calendar</code>
 	 */
 	public int get(final Calendar calendar, final int field)
 	{
@@ -449,8 +437,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Adds the given <code>Duration</code> to this <code>Time</code>
-	 * object, moving the time into the future.
+	 * Adds the given <code>Duration</code> to this <code>Time</code> object, moving the time
+	 * into the future.
 	 * 
 	 * @param duration
 	 *            the <code>Duration</code> to add
@@ -462,8 +450,7 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Subtract time from this and returns the difference as a
-	 * <code>Duration</code> object.
+	 * Subtract time from this and returns the difference as a <code>Duration</code> object.
 	 * 
 	 * @param that
 	 *            the time to subtract
@@ -475,12 +462,12 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Retrieves a <code>Date</code> object for this <code>Time</code>
-	 * object. A new <code>Date</code> object is always returned rather than
-	 * attempting to cache a date since <code>Date</code> is mutable.
+	 * Retrieves a <code>Date</code> object for this <code>Time</code> object. A new
+	 * <code>Date</code> object is always returned rather than attempting to cache a date since
+	 * <code>Date</code> is mutable.
 	 * 
-	 * @return this immutable <code>Time</code> object as a mutable
-	 *         <code>java.util.Date</code> object
+	 * @return this immutable <code>Time</code> object as a mutable <code>java.util.Date</code>
+	 *         object
 	 */
 	public Date toDate()
 	{
@@ -488,8 +475,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Converts this <code>Time</code> value to a date <code>String</code>
-	 * using the date formatter 'yyyy.MM.dd'.
+	 * Converts this <code>Time</code> value to a date <code>String</code> using the date
+	 * formatter 'yyyy.MM.dd'.
 	 * 
 	 * @return the date string
 	 */
@@ -499,8 +486,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Converts this <code>Time</code> value to a date <code>String</code>
-	 * using the formatter 'yyyy.MM.dd'.
+	 * Converts this <code>Time</code> value to a date <code>String</code> using the formatter
+	 * 'yyyy.MM.dd'.
 	 * 
 	 * @param calendar
 	 *            the <code>Calendar</code> to use in the conversion
@@ -520,8 +507,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Converts this <code>Time</code> value to a <code>String</code>
-	 * suitable for use in a file system name.
+	 * Converts this <code>Time</code> value to a <code>String</code> suitable for use in a file
+	 * system name.
 	 * 
 	 * @return this <code>Time</code> value as a formatted <code>String</code>
 	 */
@@ -531,8 +518,8 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * Converts this <code>Time</code> object to a <code>String</code> using
-	 * the given <code>Calendar</code> and format.
+	 * Converts this <code>Time</code> object to a <code>String</code> using the given
+	 * <code>Calendar</code> and format.
 	 * 
 	 * @param calendar
 	 *            the <code>Calendar</code> to use in the conversion

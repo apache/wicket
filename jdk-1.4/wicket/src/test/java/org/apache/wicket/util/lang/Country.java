@@ -18,12 +18,12 @@ package org.apache.wicket.util.lang;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class Country
 {
 	private final String name;
-	
+
 	/**
 	 * @param name
 	 */
@@ -31,7 +31,7 @@ public class Country
 	{
 		this.name = name;
 	}
-	
+
 	/**
 	 * @return The name
 	 */

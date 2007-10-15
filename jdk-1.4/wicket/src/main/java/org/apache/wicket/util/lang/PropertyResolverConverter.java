@@ -51,7 +51,7 @@ public class PropertyResolverConverter implements IClusterable
 	 * @param clz
 	 * @return The converted object
 	 */
-	public Object convert(Object object, Class/*<?>*/ clz)
+	public Object convert(Object object, Class/* <?> */clz)
 	{
 		if (object == null)
 		{

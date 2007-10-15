@@ -89,7 +89,7 @@ import org.slf4j.LoggerFactory;
  * </li>
  * </li>
  * </p>
- *
+ * 
  * Form for handling (file) uploads with multipart requests is supported by calling
  * setMultiPart(true) ( although wicket will try to automatically detect this for you ). Use this
  * with {@link org.apache.wicket.markup.html.form.upload.FileUploadField} components. You can attach
@@ -97,11 +97,11 @@ import org.slf4j.LoggerFactory;
  * <p>
  * In case of an upload error two resource keys are available to specify error messages:
  * uploadTooLarge and uploadFailed
- *
+ * 
  * ie in [page].properties
- *
+ * 
  * [form-id].uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
- *
+ * 
  * <p>
  * If you want to have multiple IFormSubmittingComponents which submit the same form, simply put two
  * or more IFormSubmittingComponents somewhere in the hierarchy of components that are children of
@@ -120,7 +120,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * When a nested form is submitted, the user entered values in outer (parent) forms are preserved
  * and only the fields in the submitted form are validated. </b>
- *
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
@@ -133,7 +133,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
 	/**
 	 * Visitor used for validation
-	 *
+	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	public static abstract class ValidationVisitor implements FormComponent.IVisitor
@@ -164,14 +164,14 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		/**
 		 * Callback that should be used to validate form component
-		 *
+		 * 
 		 * @param formComponent
 		 */
 		public abstract void validate(FormComponent formComponent);
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	class FormDispatchRequest extends Request
 	{
@@ -183,7 +183,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param realRequest
 		 * @param url
 		 */
@@ -311,7 +311,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Constructs a form with no validation.
-	 *
+	 * 
 	 * @param id
 	 *            See Component
 	 */
@@ -336,7 +336,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Adds a form validator to the form.
-	 *
+	 * 
 	 * @param validator
 	 *            validator
 	 * @throws IllegalArgumentException
@@ -363,7 +363,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Removes a form validator from the form.
-	 *
+	 * 
 	 * @param validator
 	 *            validator
 	 * @throws IllegalArgumentException
@@ -489,7 +489,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * /** Registers an error feedback message for this component
-	 *
+	 * 
 	 * @param error
 	 *            error message
 	 * @param args
@@ -502,7 +502,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Gets the IFormSubmittingComponent which submitted this form.
-	 *
+	 * 
 	 * @return The component which submitted this form, or null if the processing was not triggered
 	 *         by a registered IFormSubmittingComponent
 	 */
@@ -548,7 +548,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * </p>
 	 * There can be only one default submit component per form hierarchy. So if you want to get the
 	 * default component on a nested form, it will actually delegate the call to root form. </b>
-	 *
+	 * 
 	 * @return The submit component to set as the default IFormSubmittingComponent, or null when you
 	 *         want to 'unset' any previously set default IFormSubmittingComponent
 	 */
@@ -567,10 +567,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * This generates a piece of javascript code that sets the url in the special hidden field and
 	 * submits the form.
-	 *
+	 * 
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
-	 *
+	 * 
 	 * @param url
 	 *            The interface url that has to be stored in the hidden field and submitted
 	 * @return The javascript code that submits the form.
@@ -585,7 +585,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Gets the maximum size for uploads. If null, the setting
 	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
-	 *
+	 * 
 	 * @return the maximum size
 	 */
 	public Bytes getMaxSize()
@@ -599,7 +599,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Returns the root form or this, if this is the root form.
-	 *
+	 * 
 	 * @return root form or this form
 	 */
 	public Form getRootForm()
@@ -630,7 +630,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * <p>
 	 * Returned prefix will be used for all form components. The prefix can also be overridden on
 	 * form component level by overriding {@link FormComponent#getValidatorKeyPrefix()}
-	 *
+	 * 
 	 * @return prefix prepended to validator keys
 	 */
 	public String getValidatorKeyPrefix()
@@ -640,7 +640,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Gets whether the current form has any error registered.
-	 *
+	 * 
 	 * @return True if this form has at least one error.
 	 */
 	public final boolean hasError()
@@ -659,7 +659,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Returns whether the form is a root form, which means that there's no other form in it's
 	 * parent hierarchy.
-	 *
+	 * 
 	 * @return true if form is a root form, false otherwise
 	 */
 	public boolean isRootForm()
@@ -669,7 +669,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Checks if this form has been submitted during the current request
-	 *
+	 * 
 	 * @return true if the form has been submitted during this request, false otherwise
 	 */
 	public final boolean isSubmitted()
@@ -679,7 +679,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Method made final because we want to ensure users call setVersioned.
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */
 	public boolean isVersioned()
@@ -719,9 +719,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
-	 *
+	 * 
 	 * Handles form submissions.
-	 *
+	 * 
 	 * @see Form#validate()
 	 */
 	public final void onFormSubmitted()
@@ -783,7 +783,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
-	 *
+	 * 
 	 * @return False if the form had an error
 	 */
 	public boolean process()
@@ -825,9 +825,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Removes already persisted data for all FormComponent children and disable persistence for the
 	 * same components.
-	 *
+	 * 
 	 * @see Page#removePersistedFormData(Class, boolean)
-	 *
+	 * 
 	 * @param disablePersistence
 	 *            if true, disable persistence for all FormComponents on that page. If false, it
 	 *            will remain unchanged.
@@ -870,7 +870,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * </p>
 	 * There can be only one default button per form hierarchy. So if you set default button on a
 	 * nested form, it will actually delegate the call to root form. </b>
-	 *
+	 * 
 	 * @param submittingComponent
 	 *            The component to set as the default submitting component, or null when you want to
 	 *            'unset' any previously set default component
@@ -890,7 +890,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Sets the maximum size for uploads. If null, the setting
 	 * {@link IApplicationSettings#getDefaultMaximumUploadSize()} is used.
-	 *
+	 * 
 	 * @param maxSize
 	 *            The maximum size
 	 */
@@ -902,7 +902,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Set to true to use enctype='multipart/form-data', and to process file uploads by default
 	 * multiPart = false
-	 *
+	 * 
 	 * @param multiPart
 	 *            whether this form should behave as a multipart form
 	 */
@@ -931,7 +931,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Convenient and typesafe way to visit all the form components on a form
-	 *
+	 * 
 	 * @param visitor
 	 *            The visitor interface to call
 	 */
@@ -971,7 +971,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Convenient and typesafe way to visit all the form components on a form postorder (deepest
 	 * first)
-	 *
+	 * 
 	 * @param visitor
 	 *            The visitor interface to call
 	 */
@@ -983,8 +983,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		 * TODO Post 1.2 General: Maybe we should re-think how Borders are implemented, because
 		 * there are just too many exceptions in the code base because of borders. This time it is
 		 * to solve the problem tested in BoxBorderTestPage_3 where the Form is defined in the box
-		 * border and the FormComponents are in the "body". Thus, the formComponents are not children
-		 * of the form. They are rather children of the border, as the Form itself.
+		 * border and the FormComponents are in the "body". Thus, the formComponents are not
+		 * children of the form. They are rather children of the border, as the Form itself.
 		 */
 		if (getParent() instanceof Border)
 		{
@@ -1003,7 +1003,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Find out whether there is any registered error for a form component.
-	 *
+	 * 
 	 * @return whether there is any registered error for a form component
 	 */
 	private boolean anyFormComponentError()
@@ -1028,7 +1028,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Method for dispatching/calling a interface on a page from the given url. Used by
 	 * {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()} for dispatching events
-	 *
+	 * 
 	 * @param page
 	 *            The page where the event should be called on.
 	 * @param url
@@ -1090,7 +1090,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Gets form validator from formValidators Object (which may be an array of IFormValidators or a
 	 * single instance, for efficiency) at the given index
-	 *
+	 * 
 	 * @param index
 	 *            The index of the validator to get
 	 * @return The form validator
@@ -1146,7 +1146,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Persist (e.g. Cookie) FormComponent data to be reloaded and re-assigned to the FormComponent
 	 * automatically when the page is visited by the user next time.
-	 *
+	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	private void persistFormComponentData()
@@ -1190,7 +1190,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * will do a form submit using this component. This method is overridable as what we do is best
 	 * effort only, and may not what you want in specific situations. So if you have specific
 	 * usability concerns, or want to follow another strategy, you may override this method.
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -1254,7 +1254,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * Regardless of whether a submitting component was found, the form's onSubmit method is called
 	 * next.
 	 * </p>
-	 *
+	 * 
 	 * @param submittingComponent
 	 *            the component that triggered this form processing, or null if the processing was
 	 *            triggered by something else (like a non-Wicket submit button or a javascript
@@ -1276,7 +1276,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Returns the HiddenFieldId which will be used as the name and id property of the hiddenfield
 	 * that is generated for event dispatches.
-	 *
+	 * 
 	 * @return The name and id of the hidden field.
 	 */
 	protected final String getHiddenFieldId()
@@ -1287,7 +1287,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Returns the javascript/css id of this form that will be used to generated the id="xxx"
 	 * attribute.
-	 *
+	 * 
 	 * @return The javascript/css id of this form.
 	 * @deprecated use {@link #getMarkupId()}
 	 */
@@ -1300,7 +1300,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	/**
 	 * Gets the method used to submit the form. Defaults to either what is explicitly defined in the
 	 * markup or 'post'. Override this if you have a requirement to alter this behavior.
-	 *
+	 * 
 	 * @return the method used to submit the form.
 	 */
 	protected String getMethod()
@@ -1316,7 +1316,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Gets the form component persistence manager; it is lazy loaded.
-	 *
+	 * 
 	 * @return The form component value persister
 	 */
 	protected IValuePersister getValuePersister()
@@ -1326,11 +1326,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Handles multi-part processing of the submitted data.
-	 *
+	 * 
 	 * WARNING
-	 *
+	 * 
 	 * If this method is overridden it can break {@link FileUploadField}s on this form
-	 *
+	 * 
 	 * @return false if form is multipart and upload failed
 	 */
 	protected boolean handleMultiPart()
@@ -1497,7 +1497,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Append an additional hidden input tag to support anchor tags that can submit a form.
-	 *
+	 * 
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -1597,10 +1597,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * Update the model of all form components using the fields that were sent with the current
 	 * request. This method only updates models when the Form.validate() is called first that takes
 	 * care of the conversion for the FormComponents.
-	 *
+	 * 
 	 * Normally this method will not be called when a validation error occurs in one of the form
 	 * components.
-	 *
+	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	protected final void updateFormComponentModels()
@@ -1646,10 +1646,10 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Checks if the specified form component visible and is attached to a page
-	 *
+	 * 
 	 * @param fc
 	 *            form component
-	 *
+	 * 
 	 * @return true if the form component and all its parents are visible and there component is in
 	 *         page's hierarchy
 	 */
@@ -1679,7 +1679,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Validates form with the given form validator
-	 *
+	 * 
 	 * @param validator
 	 */
 	protected final void validateFormValidator(final IFormValidator validator)
@@ -1758,7 +1758,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 	/**
 	 * Change object to keep track of form validator removals
-	 *
+	 * 
 	 * @author Igor Vaynberg (ivaynberg at apache dot org)
 	 */
 	private class FormValidatorRemovedChange extends Change
@@ -1769,7 +1769,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param removed
 		 */
 		public FormValidatorRemovedChange(final IFormValidator removed)

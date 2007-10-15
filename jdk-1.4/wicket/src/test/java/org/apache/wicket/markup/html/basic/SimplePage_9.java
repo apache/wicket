@@ -22,17 +22,17 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class SimplePage_9 extends WebPage 
+public class SimplePage_9 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public SimplePage_9() 
+	public SimplePage_9()
 	{
 		add(new TestContainer("test"));
 	}
@@ -46,6 +46,7 @@ public class SimplePage_9 extends WebPage
 
 		/**
 		 * Construct.
+		 * 
 		 * @param id
 		 */
 		public TestContainer(String id)

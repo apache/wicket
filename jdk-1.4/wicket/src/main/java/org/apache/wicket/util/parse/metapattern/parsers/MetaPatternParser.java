@@ -35,8 +35,8 @@ public abstract class MetaPatternParser
 	private final int length;
 
 	/**
-	 * The position (index) behind the last pattern group matched while
-	 * advancing from one pattern group to the next one.
+	 * The position (index) behind the last pattern group matched while advancing from one pattern
+	 * group to the next one.
 	 */
 	private int pos;
 
@@ -80,8 +80,8 @@ public abstract class MetaPatternParser
 	}
 
 	/**
-	 * Advance parsing to the next element. The internal cursor will be moved to
-	 * end of the string matched.
+	 * Advance parsing to the next element. The internal cursor will be moved to end of the string
+	 * matched.
 	 * 
 	 * @param pattern
 	 *            Meta pattern

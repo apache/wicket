@@ -23,21 +23,20 @@ import org.apache.wicket.markup.MarkupParserFactory;
 /**
  * Interface for markup related settings.
  * <p>
- * <i>compressWhitespace </i> (defaults to false) - Causes pages to render with
- * redundant whitespace removed. Whitespace stripping is not HTML or JavaScript
- * savvy and can conceivably break pages, but should provide significant
- * performance improvements.
+ * <i>compressWhitespace </i> (defaults to false) - Causes pages to render with redundant whitespace
+ * removed. Whitespace stripping is not HTML or JavaScript savvy and can conceivably break pages,
+ * but should provide significant performance improvements.
  * <p>
- * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
- * comments during markup loading
- *
+ * <i>stripComments </i> (defaults to false) - Set to true to strip HTML comments during markup
+ * loading
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public interface IMarkupSettings
 {
 	/**
 	 * If true, automatic link resolution is enabled. Disabled by default.
-	 *
+	 * 
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver
 	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler
 	 * @return Returns the automaticLinking.
@@ -62,8 +61,8 @@ public interface IMarkupSettings
 
 	/**
 	 * @since 1.1
-	 * @return Returns default encoding of markup files. If null, the operating
-	 *         system provided encoding will be used.
+	 * @return Returns default encoding of markup files. If null, the operating system provided
+	 *         encoding will be used.
 	 */
 	String getDefaultMarkupEncoding();
 
@@ -74,7 +73,7 @@ public interface IMarkupSettings
 
 	/**
 	 * The markup cache also loads the markup if not yet available in the cache.
-	 *
+	 * 
 	 * @return markup cache
 	 */
 	IMarkupCache getMarkupCache();
@@ -87,13 +86,13 @@ public interface IMarkupSettings
 
 	/**
 	 * Gets whether to remove wicket tags from the output.
-	 *
+	 * 
 	 * @return whether to remove wicket tags from the output
 	 */
 	boolean getStripWicketTags();
 
 	/**
-	 *
+	 * 
 	 * @since 1.1
 	 * @return if true, xml declaration will be removed.
 	 */
@@ -101,30 +100,28 @@ public interface IMarkupSettings
 
 	/**
 	 * Application default for automatic link resolution. Please
-	 *
+	 * 
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver and
-	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler for more
-	 *      details.
-	 *
+	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler for more details.
+	 * 
 	 * @param automaticLinking
 	 *            The automaticLinking to set.
 	 */
 	void setAutomaticLinking(boolean automaticLinking);
 
 	/**
-	 * Turns on whitespace compression. Multiple occurrences of space/tab
-	 * characters will be compressed to a single space. Multiple line breaks
-	 * newline/carriage-return will also be compressed to a single newline.
+	 * Turns on whitespace compression. Multiple occurrences of space/tab characters will be
+	 * compressed to a single space. Multiple line breaks newline/carriage-return will also be
+	 * compressed to a single newline.
 	 * <p>
-	 * Compression is currently not HTML aware and so it may be possible for
-	 * whitespace compression to break pages. For this reason, whitespace
-	 * compression is off by default and you should test your application
-	 * thoroughly after turning whitespace compression on.
+	 * Compression is currently not HTML aware and so it may be possible for whitespace compression
+	 * to break pages. For this reason, whitespace compression is off by default and you should test
+	 * your application thoroughly after turning whitespace compression on.
 	 * <p>
-	 * Spaces are removed from markup at markup load time and there should be no
-	 * effect on page rendering speed. In fact, your pages should render faster
-	 * with whitespace compression enabled.
-	 *
+	 * Spaces are removed from markup at markup load time and there should be no effect on page
+	 * rendering speed. In fact, your pages should render faster with whitespace compression
+	 * enabled.
+	 * 
 	 * @param compressWhitespace
 	 *            The compressWhitespace to set.
 	 */
@@ -143,36 +140,35 @@ public interface IMarkupSettings
 	void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink);
 
 	/**
-	 * Set default encoding for markup files. If null, the encoding provided by
-	 * the operating system will be used.
-	 *
+	 * Set default encoding for markup files. If null, the encoding provided by the operating system
+	 * will be used.
+	 * 
 	 * @since 1.1
 	 * @param encoding
 	 */
 	void setDefaultMarkupEncoding(final String encoding);
 
 	/**
-	 * Sets the markup parser factory that will be used to generate parsers for
-	 * markup. By default {@link MarkupParserFactory} will be used.
-	 *
+	 * Sets the markup parser factory that will be used to generate parsers for markup. By default
+	 * {@link MarkupParserFactory} will be used.
+	 * 
 	 * @param factory
 	 *            new factory
 	 */
 	void setMarkupParserFactory(IMarkupParserFactory factory);
 
 	/**
-	 * Sets a new markup cache which will also be used to load markup if not yet
-	 * available in the cache.
-	 *
+	 * Sets a new markup cache which will also be used to load markup if not yet available in the
+	 * cache.
+	 * 
 	 * @param markupCache
 	 *            new markup cache
 	 */
 	void setMarkupCache(IMarkupCache markupCache);
 
 	/**
-	 * Enables stripping of markup comments denoted in markup by HTML comment
-	 * tagging.
-	 *
+	 * Enables stripping of markup comments denoted in markup by HTML comment tagging.
+	 * 
 	 * @param stripComments
 	 *            True to strip markup comments from rendered pages
 	 */
@@ -180,14 +176,14 @@ public interface IMarkupSettings
 
 	/**
 	 * Sets whether to remove wicket tags from the output.
-	 *
+	 * 
 	 * @param stripWicketTags
 	 *            whether to remove wicket tags from the output
 	 */
 	void setStripWicketTags(boolean stripWicketTags);
 
 	/**
-	 *
+	 * 
 	 * @since 1.1
 	 * @param strip
 	 *            if true, xml declaration will be stripped from output

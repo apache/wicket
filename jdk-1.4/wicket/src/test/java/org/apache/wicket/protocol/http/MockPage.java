@@ -24,10 +24,11 @@ import org.apache.wicket.model.PropertyModel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class MockPage extends WebPage {
+public class MockPage extends WebPage
+{
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,32 +36,38 @@ public class MockPage extends WebPage {
 	 * Construct.
 	 * 
 	 */
-	public MockPage() {
-        // Action link counts link clicks
-        final Link actionLink = new Link("actionLink") {
+	public MockPage()
+	{
+		// Action link counts link clicks
+		final Link actionLink = new Link("actionLink")
+		{
 			private static final long serialVersionUID = 1L;
 
-			public void onClick() {
-                linkClickCount++;
-            }
-        };
-        actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
-        add(actionLink);
-    }
+			public void onClick()
+			{
+				linkClickCount++;
+			}
+		};
+		actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
+		add(actionLink);
+	}
 
-    /**
-     * @return Returns the linkClickCount.
-     */
-    public int getLinkClickCount() {
-        return linkClickCount;
-    }
+	/**
+	 * @return Returns the linkClickCount.
+	 */
+	public int getLinkClickCount()
+	{
+		return linkClickCount;
+	}
 
-    /**
-     * @param linkClickCount The linkClickCount to set.
-     */
-    public void setLinkClickCount(final int linkClickCount) {
-        this.linkClickCount = linkClickCount;
-    }
+	/**
+	 * @param linkClickCount
+	 *            The linkClickCount to set.
+	 */
+	public void setLinkClickCount(final int linkClickCount)
+	{
+		this.linkClickCount = linkClickCount;
+	}
 
-    private int linkClickCount = 0;
+	private int linkClickCount = 0;
 }

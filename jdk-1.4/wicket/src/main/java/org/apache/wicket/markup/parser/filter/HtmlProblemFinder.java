@@ -27,9 +27,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This is a markup inline filter which by default is not added to the list of
- * markup filter. It can be added by means of subclassing
- * Application.newMarkupParser() like
+ * This is a markup inline filter which by default is not added to the list of markup filter. It can
+ * be added by means of subclassing Application.newMarkupParser() like
  * 
  * <pre>
  *     public class MyApplication extends Application
@@ -41,8 +40,7 @@ import org.slf4j.LoggerFactory;
  *         }
  * </pre>
  * 
- * The purpose of the filter is to find possible HTML issues and to log a
- * warning.
+ * The purpose of the filter is to find possible HTML issues and to log a warning.
  * 
  * @author Juergen Donnerstag
  */
@@ -78,10 +76,9 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next MarkupElement from the parent MarkupFilter and handle it if
-	 * the specific filter criteria are met. Depending on the filter, it may
-	 * return the MarkupElement unchanged, modified or it remove by asking the
-	 * parent handler for the next tag.
+	 * Get the next MarkupElement from the parent MarkupFilter and handle it if the specific filter
+	 * criteria are met. Depending on the filter, it may return the MarkupElement unchanged,
+	 * modified or it remove by asking the parent handler for the next tag.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
 	 * @return Return the next eligible MarkupElement
@@ -128,8 +125,8 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Handle the issue. Depending the setting either log a warning, an error,
-	 * throw an exception or ignore it.
+	 * Handle the issue. Depending the setting either log a warning, an error, throw an exception or
+	 * ignore it.
 	 * 
 	 * @param msg
 	 *            The message

@@ -44,21 +44,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Object utilities.
- *
+ * 
  * @author Jonathan Locke
  */
 public final class Objects
 {
 	/**
-	 * Interface that enables users to plugin the way object sizes are
-	 * calculated with Wicket.
+	 * Interface that enables users to plugin the way object sizes are calculated with Wicket.
 	 */
 	public static interface IObjectSizeOfStrategy
 	{
 		/**
-		 * Computes the size of an object. This typically is an estimation, not
-		 * an absolute accurate size.
-		 *
+		 * Computes the size of an object. This typically is an estimation, not an absolute accurate
+		 * size.
+		 * 
 		 * @param object
 		 *            Object to compute size of
 		 * @return The size of the object in bytes.
@@ -67,12 +66,11 @@ public final class Objects
 	}
 
 	/**
-	 * {@link IObjectSizeOfStrategy} that works by serializing the object to an
-	 * instance of {@link ByteCountingOutputStream}, which records the number
-	 * of bytes written to it. Hence, this gives the size of the object as it
-	 * would be serialized,including all the overhead of writing class headers
-	 * etc. Not very accurate (the real memory consumption should be lower) but
-	 * the best we can do in a cheap way pre JDK 5.
+	 * {@link IObjectSizeOfStrategy} that works by serializing the object to an instance of
+	 * {@link ByteCountingOutputStream}, which records the number of bytes written to it. Hence,
+	 * this gives the size of the object as it would be serialized,including all the overhead of
+	 * writing class headers etc. Not very accurate (the real memory consumption should be lower)
+	 * but the best we can do in a cheap way pre JDK 5.
 	 */
 	public static final class SerializingObjectSizeOfStrategy implements IObjectSizeOfStrategy
 	{
@@ -222,12 +220,11 @@ public final class Objects
 	private static final int LONG = 5;
 
 	/**
-	 * The smallest type tag that represents reals as opposed to integers. You
-	 * can see whether a type tag represents reals or integers by comparing the
-	 * tag to this constant: all tags less than this constant represent
-	 * integers, and all tags greater than or equal to this constant represent
-	 * reals. Of course, you must also check for NONNUMERIC, which means it is
-	 * not a number at all.
+	 * The smallest type tag that represents reals as opposed to integers. You can see whether a
+	 * type tag represents reals or integers by comparing the tag to this constant: all tags less
+	 * than this constant represent integers, and all tags greater than or equal to this constant
+	 * represent reals. Of course, you must also check for NONNUMERIC, which means it is not a
+	 * number at all.
 	 */
 	private static final int MIN_REAL_TYPE = FLOAT;
 
@@ -241,18 +238,17 @@ public final class Objects
 	private static final HashMap primitiveDefaults = new HashMap();
 
 	/**
-	 * The default object stream factory to use. Keep this as a static here
-	 * opposed to in Application, as the Application most likely isn't available
-	 * in the threads we'll be using this with.
+	 * The default object stream factory to use. Keep this as a static here opposed to in
+	 * Application, as the Application most likely isn't available in the threads we'll be using
+	 * this with.
 	 */
 	private static IObjectStreamFactory objectStreamFactory = new IObjectStreamFactory.DefaultObjectStreamFactory();
 
 	/**
-	 * Strategy for calculating sizes of objects. Note: I didn't make this an
-	 * application setting as we have enough of those already, and the typical
-	 * way this probably would be used is that install a different one according
-	 * to the JDK version used, so varying them between applications doesn't
-	 * make a lot of sense.
+	 * Strategy for calculating sizes of objects. Note: I didn't make this an application setting as
+	 * we have enough of those already, and the typical way this probably would be used is that
+	 * install a different one according to the JDK version used, so varying them between
+	 * applications doesn't make a lot of sense.
 	 */
 	private static IObjectSizeOfStrategy objectSizeOfStrategy = new SerializingObjectSizeOfStrategy();
 
@@ -272,7 +268,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a BigDecimal.
-	 *
+	 * 
 	 * @param value
 	 *            an object to interpret as a BigDecimal
 	 * @return the BigDecimal value implied by the given object
@@ -311,7 +307,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a BigInteger.
-	 *
+	 * 
 	 * @param value
 	 *            an object to interpret as a BigInteger
 	 * @return the BigInteger value implied by the given object
@@ -349,10 +345,10 @@ public final class Objects
 	}
 
 	/**
-	 * Evaluates the given object as a boolean: if it is a Boolean object, it's
-	 * easy; if it's a Number or a Character, returns true for non-zero objects;
-	 * and otherwise returns true for non-null objects.
-	 *
+	 * Evaluates the given object as a boolean: if it is a Boolean object, it's easy; if it's a
+	 * Number or a Character, returns true for non-zero objects; and otherwise returns true for
+	 * non-null objects.
+	 * 
 	 * @param value
 	 *            an object to interpret as a boolean
 	 * @return the boolean value implied by the given object
@@ -381,7 +377,7 @@ public final class Objects
 
 	/**
 	 * De-serializes an object from a byte array.
-	 *
+	 * 
 	 * @param data
 	 *            The serialized object
 	 * @return The object
@@ -402,22 +398,21 @@ public final class Objects
 		}
 		catch (ClassNotFoundException e)
 		{
-			throw new RuntimeException("Could not deserialize object using `"
-					+ objectStreamFactory.getClass().getName() + "` object factory", e);
+			throw new RuntimeException("Could not deserialize object using `" +
+					objectStreamFactory.getClass().getName() + "` object factory", e);
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("Could not deserialize object using `"
-					+ objectStreamFactory.getClass().getName() + "` object factory", e);
+			throw new RuntimeException("Could not deserialize object using `" +
+					objectStreamFactory.getClass().getName() + "` object factory", e);
 		}
 	}
 
 	/**
-	 * Makes a deep clone of an object by serializing and deserializing it. The
-	 * object must be fully serializable to be cloned. This method will not
-	 * clone wicket Components, it will just reuse those instances so that the
-	 * complete component tree is not copied over only the model data.
-	 *
+	 * Makes a deep clone of an object by serializing and deserializing it. The object must be fully
+	 * serializable to be cloned. This method will not clone wicket Components, it will just reuse
+	 * those instances so that the complete component tree is not copied over only the model data.
+	 * 
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
@@ -452,10 +447,9 @@ public final class Objects
 	}
 
 	/**
-	 * Makes a deep clone of an object by serializing and deserializing it. The
-	 * object must be fully serializable to be cloned. No extra debug info is
-	 * gathered.
-	 *
+	 * Makes a deep clone of an object by serializing and deserializing it. The object must be fully
+	 * serializable to be cloned. No extra debug info is gathered.
+	 * 
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
@@ -486,17 +480,20 @@ public final class Objects
 
 						try
 						{
-							return Class.forName(className, true, object.getClass().getClassLoader());
+							return Class.forName(className, true, object.getClass()
+									.getClassLoader());
 						}
 						catch (ClassNotFoundException ex1)
 						{
 							// ignore this exception.
-							log.debug("Class not found by using objects own classloader, trying the IClassResolver");
+							log
+									.debug("Class not found by using objects own classloader, trying the IClassResolver");
 						}
 
 
 						Application application = Application.get();
-						IApplicationSettings applicationSettings = application.getApplicationSettings();
+						IApplicationSettings applicationSettings = application
+								.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
 
 						Class candidate = null;
@@ -532,28 +529,25 @@ public final class Objects
 	}
 
 	/**
-	 * Compares two objects for equality, even if it has to convert one of them
-	 * to the other type. If both objects are numeric they are converted to the
-	 * widest type and compared. If one is non-numeric and one is numeric the
-	 * non-numeric is converted to double and compared to the double numeric
-	 * value. If both are non-numeric and Comparable and the types are
-	 * compatible (i.e. v1 is of the same or superclass of v2's type) they are
-	 * compared with Comparable.compareTo(). If both values are non-numeric and
-	 * not Comparable or of incompatible classes this will throw and
-	 * IllegalArgumentException.
-	 *
+	 * Compares two objects for equality, even if it has to convert one of them to the other type.
+	 * If both objects are numeric they are converted to the widest type and compared. If one is
+	 * non-numeric and one is numeric the non-numeric is converted to double and compared to the
+	 * double numeric value. If both are non-numeric and Comparable and the types are compatible
+	 * (i.e. v1 is of the same or superclass of v2's type) they are compared with
+	 * Comparable.compareTo(). If both values are non-numeric and not Comparable or of incompatible
+	 * classes this will throw and IllegalArgumentException.
+	 * 
 	 * @param v1
 	 *            First value to compare
 	 * @param v2
 	 *            second value to compare
-	 *
-	 * @return integer describing the comparison between the two objects. A
-	 *         negative number indicates that v1 < v2. Positive indicates that
-	 *         v1 > v2. Zero indicates v1 == v2.
-	 *
+	 * 
+	 * @return integer describing the comparison between the two objects. A negative number
+	 *         indicates that v1 < v2. Positive indicates that v1 > v2. Zero indicates v1 == v2.
+	 * 
 	 * @throws IllegalArgumentException
-	 *             if the objects are both non-numeric yet of incompatible types
-	 *             or do not implement Comparable.
+	 *             if the objects are both non-numeric yet of incompatible types or do not implement
+	 *             Comparable.
 	 */
 	public static int compareWithConversion(Object v1, Object v2)
 	{
@@ -581,16 +575,16 @@ public final class Objects
 				case NONNUMERIC :
 					if ((t1 == NONNUMERIC) && (t2 == NONNUMERIC))
 					{
-						if ((v1 instanceof Comparable)
-								&& v1.getClass().isAssignableFrom(v2.getClass()))
+						if ((v1 instanceof Comparable) &&
+								v1.getClass().isAssignableFrom(v2.getClass()))
 						{
 							result = ((Comparable)v1).compareTo(v2);
 							break;
 						}
 						else
 						{
-							throw new IllegalArgumentException("invalid comparison: "
-									+ v1.getClass().getName() + " and " + v2.getClass().getName());
+							throw new IllegalArgumentException("invalid comparison: " +
+									v1.getClass().getName() + " and " + v2.getClass().getName());
 						}
 					}
 					// else fall through
@@ -613,16 +607,16 @@ public final class Objects
 
 	/**
 	 * Returns the value converted numerically to the given class type
-	 *
-	 * This method also detects when arrays are being converted and converts the
-	 * components of one array to the type of the other.
-	 *
+	 * 
+	 * This method also detects when arrays are being converted and converts the components of one
+	 * array to the type of the other.
+	 * 
 	 * @param value
 	 *            an object to be converted to the given type
 	 * @param toType
 	 *            class type to be converted to
-	 * @return converted value of the type given, or value if the value cannot
-	 *         be converted to the given type.
+	 * @return converted value of the type given, or value if the value cannot be converted to the
+	 *         given type.
 	 */
 	public static Object convertValue(Object value, Class toType)
 	{
@@ -701,7 +695,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a double-precision floating-point number.
-	 *
+	 * 
 	 * @param value
 	 *            an object to interpret as a double
 	 * @return the double value implied by the given object
@@ -734,7 +728,7 @@ public final class Objects
 
 	/**
 	 * Returns true if a and b are equal. Either object may be null.
-	 *
+	 * 
 	 * @param a
 	 *            Object a
 	 * @param b
@@ -758,10 +752,9 @@ public final class Objects
 
 
 	/**
-	 * Returns the constant from the NumericTypes interface that best expresses
-	 * the type of an operation, which can be either numeric or not, on the two
-	 * given types.
-	 *
+	 * Returns the constant from the NumericTypes interface that best expresses the type of an
+	 * operation, which can be either numeric or not, on the two given types.
+	 * 
 	 * @param t1
 	 *            type of one argument to an operator
 	 * @param t2
@@ -826,9 +819,9 @@ public final class Objects
 	}
 
 	/**
-	 * Returns a constant from the NumericTypes interface that represents the
-	 * numeric type of the given object.
-	 *
+	 * Returns a constant from the NumericTypes interface that represents the numeric type of the
+	 * given object.
+	 * 
 	 * @param value
 	 *            an object that needs to be interpreted as a number
 	 * @return the appropriate constant from the NumericTypes interface
@@ -883,9 +876,9 @@ public final class Objects
 	}
 
 	/**
-	 * Returns the constant from the NumericTypes interface that best expresses
-	 * the type of a numeric operation on the two given objects.
-	 *
+	 * Returns the constant from the NumericTypes interface that best expresses the type of a
+	 * numeric operation on the two given objects.
+	 * 
 	 * @param v1
 	 *            one argument to a numeric operator
 	 * @param v2
@@ -898,10 +891,9 @@ public final class Objects
 	}
 
 	/**
-	 * Returns the constant from the NumericTypes interface that best expresses
-	 * the type of an operation, which can be either numeric or not, on the two
-	 * given objects.
-	 *
+	 * Returns the constant from the NumericTypes interface that best expresses the type of an
+	 * operation, which can be either numeric or not, on the two given objects.
+	 * 
 	 * @param v1
 	 *            one argument to an operator
 	 * @param v2
@@ -916,15 +908,14 @@ public final class Objects
 	}
 
 	/**
-	 * Returns true if object1 is equal to object2 in either the sense that they
-	 * are the same object or, if both are non-null if they are equal in the
-	 * <CODE>equals()</CODE> sense.
-	 *
+	 * Returns true if object1 is equal to object2 in either the sense that they are the same object
+	 * or, if both are non-null if they are equal in the <CODE>equals()</CODE> sense.
+	 * 
 	 * @param object1
 	 *            First object to compare
 	 * @param object2
 	 *            Second object to compare
-	 *
+	 * 
 	 * @return true if v1 == v2
 	 */
 	public static boolean isEqual(Object object1, Object object2)
@@ -939,8 +930,8 @@ public final class Objects
 		{
 			if ((object1 != null) && object1.getClass().isArray())
 			{
-				if ((object2 != null) && object2.getClass().isArray()
-						&& (object2.getClass() == object1.getClass()))
+				if ((object2 != null) && object2.getClass().isArray() &&
+						(object2.getClass() == object1.getClass()))
 				{
 					result = (Array.getLength(object1) == Array.getLength(object2));
 					if (result)
@@ -956,10 +947,8 @@ public final class Objects
 			{
 				// Check for converted equivalence first, then equals()
 				// equivalence
-				result = (object1 != null)
-						&& (object2 != null)
-						&& ((compareWithConversion(object1, object2) == 0) || object1
-								.equals(object2));
+				result = (object1 != null) && (object2 != null) &&
+						((compareWithConversion(object1, object2) == 0) || object1.equals(object2));
 			}
 		}
 		return result;
@@ -967,7 +956,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a long integer.
-	 *
+	 * 
 	 * @param value
 	 *            an object to interpret as a long integer
 	 * @return the long integer value implied by the given object
@@ -997,9 +986,9 @@ public final class Objects
 	}
 
 	/**
-	 * Creates a new instance using the current application's class resolver.
-	 * Returns null if className is null.
-	 *
+	 * Creates a new instance using the current application's class resolver. Returns null if
+	 * className is null.
+	 * 
 	 * @param className
 	 *            The full class name
 	 * @return The new object instance
@@ -1011,7 +1000,8 @@ public final class Objects
 			try
 			{
 				Class c = Classes.resolveClass(className);
-				if (c == null) {
+				if (c == null)
+				{
 					throw new WicketRuntimeException("Unable to create " + className);
 				}
 				return c.newInstance();
@@ -1033,17 +1023,15 @@ public final class Objects
 	}
 
 	/**
-	 * Returns a new Number object of an appropriate type to hold the given
-	 * integer value. The type of the returned object is consistent with the
-	 * given type argument, which is a constant from the NumericTypes interface.
-	 *
+	 * Returns a new Number object of an appropriate type to hold the given integer value. The type
+	 * of the returned object is consistent with the given type argument, which is a constant from
+	 * the NumericTypes interface.
+	 * 
 	 * @param type
-	 *            the nominal numeric type of the result, a constant from the
-	 *            NumericTypes interface
+	 *            the nominal numeric type of the result, a constant from the NumericTypes interface
 	 * @param value
 	 *            the integer value to convert to a Number object
-	 * @return a Number object with the given value, of type implied by the type
-	 *         argument
+	 * @return a Number object with the given value, of type implied by the type argument
 	 */
 	public static Number newInteger(int type, long value)
 	{
@@ -1082,7 +1070,7 @@ public final class Objects
 
 	/**
 	 * Serializes an object into a byte array.
-	 *
+	 * 
 	 * @param object
 	 *            The object
 	 * @return The serialized object
@@ -1112,7 +1100,7 @@ public final class Objects
 
 	/**
 	 * Sets the strategy for determining the sizes of objects.
-	 *
+	 * 
 	 * @param objectSizeOfStrategy
 	 *            the strategy. Pass null to reset to the default.
 	 */
@@ -1130,13 +1118,12 @@ public final class Objects
 	}
 
 	/**
-	 * Configure this utility class to use the provided
-	 * {@link IObjectStreamFactory} instance.
-	 *
+	 * Configure this utility class to use the provided {@link IObjectStreamFactory} instance.
+	 * 
 	 * @param objectStreamFactory
 	 *            The factory instance to use. If you pass in null, the
-	 *            {@link DefaultObjectStreamFactory default} will be set
-	 *            (again). Pass null to reset to the default.
+	 *            {@link DefaultObjectStreamFactory default} will be set (again). Pass null to reset
+	 *            to the default.
 	 */
 	public static void setObjectStreamFactory(IObjectStreamFactory objectStreamFactory)
 	{
@@ -1152,9 +1139,9 @@ public final class Objects
 	}
 
 	/**
-	 * Computes the size of an object. Note that this is an estimation, never an
-	 * absolute accurate size.
-	 *
+	 * Computes the size of an object. Note that this is an estimation, never an absolute accurate
+	 * size.
+	 * 
 	 * @param object
 	 *            Object to compute size of
 	 * @return The size of the object in bytes
@@ -1166,11 +1153,11 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a String.
-	 *
+	 * 
 	 * @param value
 	 *            an object to interpret as a String
-	 * @return the String value implied by the given object as returned by the
-	 *         toString() method, or "null" if the object is null.
+	 * @return the String value implied by the given object as returned by the toString() method, or
+	 *         "null" if the object is null.
 	 */
 	public static String stringValue(Object value)
 	{
@@ -1178,9 +1165,8 @@ public final class Objects
 	}
 
 	/**
-	 * returns hashcode of the objects by calling obj.hashcode(). safe to use
-	 * when obj is null.
-	 *
+	 * returns hashcode of the objects by calling obj.hashcode(). safe to use when obj is null.
+	 * 
 	 * @param obj
 	 * @return hashcode of the object or 0 if obj is null
 	 */
@@ -1200,15 +1186,14 @@ public final class Objects
 	}
 
 	/**
-	 * Evaluates the given object as a String and trims it if the trim flag is
-	 * true.
-	 *
+	 * Evaluates the given object as a String and trims it if the trim flag is true.
+	 * 
 	 * @param value
 	 *            an object to interpret as a String
 	 * @param trim
 	 *            whether to trim the string
-	 * @return the String value implied by the given object as returned by the
-	 *         toString() method, or "null" if the object is null.
+	 * @return the String value implied by the given object as returned by the toString() method, or
+	 *         "null" if the object is null.
 	 */
 	public static String stringValue(Object value, boolean trim)
 	{

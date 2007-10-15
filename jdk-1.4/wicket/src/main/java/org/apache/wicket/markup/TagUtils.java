@@ -18,7 +18,7 @@ package org.apache.wicket.markup;
 
 
 /**
- * Some utils to handle tags which otherwise would bloat the Tag AP. 
+ * Some utils to handle tags which otherwise would bloat the Tag AP.
  * 
  * @author Juergen Donnerstag
  */

@@ -35,16 +35,14 @@ import org.apache.wicket.request.target.component.listener.RedirectPageRequestTa
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Use this processor to minimize the wicket:interface urls. The component path
- * and the interface name will be removed from the url and only an uid will be
- * inserted into the url.
- *
- * To use this url compressing behavior you must override the
- * {@link Application}'s newRequestCycleProcessor() method and return an
- * instance of this.
- *
+ * Use this processor to minimize the wicket:interface urls. The component path and the interface
+ * name will be removed from the url and only an uid will be inserted into the url.
+ * 
+ * To use this url compressing behavior you must override the {@link Application}'s
+ * newRequestCycleProcessor() method and return an instance of this.
+ * 
  * @author jcompagner
- *
+ * 
  * @since 1.3
  */
 public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
@@ -125,9 +123,8 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 			if (component == null)
 			{
 				// still null? that's not right
-				throw new WicketRuntimeException("cannot resolve component with path '"
-						+ pageRelativeComponentPath + "', listener " + listener + " on page "
-						+ page);
+				throw new WicketRuntimeException("cannot resolve component with path '" +
+						pageRelativeComponentPath + "', listener " + listener + " on page " + page);
 			}
 
 			if (!component.isEnableAllowed())

@@ -21,18 +21,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This class maps <code>ITimeFrame</code>s to <code>Object</code>s. Since
- * values are stored using <code>ITimeFrameSource</code> implementing objects,
- * the value returned by the source may vary over time. For example, one
- * implementation of <code>ITimeFrameSource</code> might return the start and
- * end time of lunch on any given day.
+ * This class maps <code>ITimeFrame</code>s to <code>Object</code>s. Since values are stored
+ * using <code>ITimeFrameSource</code> implementing objects, the value returned by the source may
+ * vary over time. For example, one implementation of <code>ITimeFrameSource</code> might return
+ * the start and end time of lunch on any given day.
  * <p>
- * To associate an object with a dynamic <code>TimeFrame</code> (via
- * <code>ITimeFrameSource</code>), call
- * <code>put(ITimeFrameSource, Object)</code>. You can later retrieve the
- * first object for a point in time with <code>get(Time)</code>. The
- * <code>get</code> method is provided for convenience and is equivalent to
- * <code>get(Time.now())</code>.
+ * To associate an object with a dynamic <code>TimeFrame</code> (via <code>ITimeFrameSource</code>),
+ * call <code>put(ITimeFrameSource, Object)</code>. You can later retrieve the first object for a
+ * point in time with <code>get(Time)</code>. The <code>get</code> method is provided for
+ * convenience and is equivalent to <code>get(Time.now())</code>.
  * <p>
  * This class is not thread-safe.
  * 
@@ -42,14 +39,13 @@ import java.util.Map;
 public final class TimeMap
 {
 	/**
-	 * <code>Map</code> from <code>ITimeFrameSource</code> implementing
-	 * objects to <code>Object</code> values.
+	 * <code>Map</code> from <code>ITimeFrameSource</code> implementing objects to
+	 * <code>Object</code> values.
 	 */
 	private final Map sources = new HashMap();
 
 	/**
-	 * Retrieves an <code>Object</code> for the current <code>Time</code>
-	 * value.
+	 * Retrieves an <code>Object</code> for the current <code>Time</code> value.
 	 * 
 	 * @return <code>Object</code> for the current <code>Time</code> value
 	 */
@@ -59,13 +55,12 @@ public final class TimeMap
 	}
 
 	/**
-	 * Retrieves an <code>Object</code> for the given <code>Time</code>
-	 * value.
+	 * Retrieves an <code>Object</code> for the given <code>Time</code> value.
 	 * 
 	 * @param time
 	 *            the <code>Time</code> value
-	 * @return gets an <code>Object</code> for the given <code>Time</code>
-	 *         value or <code>null</code> if none exists
+	 * @return gets an <code>Object</code> for the given <code>Time</code> value or
+	 *         <code>null</code> if none exists
 	 */
 	public Object get(final Time time)
 	{
@@ -85,8 +80,8 @@ public final class TimeMap
 	 * Associates an <code>Object</code> with a dynamic <code>TimeFrame</code>.
 	 * 
 	 * @param source
-	 *            a source that can produce a <code>TimeFrame</code> with
-	 *            which to compare a <code>Time</code> value
+	 *            a source that can produce a <code>TimeFrame</code> with which to compare a
+	 *            <code>Time</code> value
 	 * @param o
 	 *            the <code>Object</code> to be returned for the given dynamic
 	 *            <code>TimeFrame</code>
@@ -101,8 +96,8 @@ public final class TimeMap
 
 			if (timeframe.overlaps(current))
 			{
-				throw new IllegalArgumentException("Timeframe " + timeframe
-						+ " overlaps timeframe " + current);
+				throw new IllegalArgumentException("Timeframe " + timeframe +
+						" overlaps timeframe " + current);
 			}
 		}
 

@@ -44,6 +44,7 @@ public class MockPageWithForm extends WebPage
 			submitted = true;
 		}
 	}
+
 	private static final long serialVersionUID = 1L;
 
 	private boolean selected;

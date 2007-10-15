@@ -17,15 +17,14 @@
 package org.apache.wicket.markup.html.border;
 
 /**
- * A very simple border component that draws a thin black line around its
- * children.
+ * A very simple border component that draws a thin black line around its children.
  * 
  * @author Jonathan Locke
  */
 public final class BoxBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
@@ -34,5 +33,3 @@ public final class BoxBorder extends Border
 		super(id);
 	}
 }
-
-

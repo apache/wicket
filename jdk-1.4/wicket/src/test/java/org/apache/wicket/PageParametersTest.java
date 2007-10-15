@@ -19,8 +19,8 @@ package org.apache.wicket;
 import junit.framework.TestCase;
 
 /**
- * Unit test for the PageParameters, introduced for bug [ 1213889 ]
- * PageParameter keyValuePair disallows negatives.
+ * Unit test for the PageParameters, introduced for bug [ 1213889 ] PageParameter keyValuePair
+ * disallows negatives.
  * 
  * @author Martijn Dashorst
  */
@@ -95,8 +95,8 @@ public class PageParametersTest extends TestCase
 	}
 
 	/**
-	 * Parsing of negative numbers on the right side of the assignment didn't
-	 * work, as the minus character was not part of the word pattern.
+	 * Parsing of negative numbers on the right side of the assignment didn't work, as the minus
+	 * character was not part of the word pattern.
 	 */
 	public void testNegativeNumberParameter()
 	{

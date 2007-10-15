@@ -32,13 +32,12 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 
 /**
- * A border component has associated markup which is drawn and determines
- * placement of any markup and/or components nested within the border component.
+ * A border component has associated markup which is drawn and determines placement of any markup
+ * and/or components nested within the border component.
  * <p>
- * The portion of the border's associated markup file which is to be used in
- * rendering the border is denoted by a &lt;wicket:border&gt; tag. The children
- * of the border component instance are then inserted into this markup,
- * replacing the first &lt;wicket:body&gt; tag in the border's associated
+ * The portion of the border's associated markup file which is to be used in rendering the border is
+ * denoted by a &lt;wicket:border&gt; tag. The children of the border component instance are then
+ * inserted into this markup, replacing the first &lt;wicket:body&gt; tag in the border's associated
  * markup.
  * <p>
  * For example, if a border's associated markup looked like this:
@@ -75,16 +74,13 @@ import org.apache.wicket.model.IModel;
  *   &lt;/html&gt;
  * </pre>
  * 
- * In other words, the body of the myBorder component is substituted into the
- * border's associated markup at the position indicated by the
- * &lt;wicket:body&gt; tag.
+ * In other words, the body of the myBorder component is substituted into the border's associated
+ * markup at the position indicated by the &lt;wicket:body&gt; tag.
  * <p>
- * Regarding &lt;wicket:body/&gt; you have two options. Either use
- * &lt;wicket:body/&gt; (open-close tag) which will automatically be expanded to
- * &lt;wicket:body&gt;body content&lt;/wicket:body&gt; or use
- * &lt;wicket:body&gt;preview region&lt;/wicket:body&gt; in your border's
- * markup. The preview region (everything in between the open and close tag)
- * will automatically be removed.
+ * Regarding &lt;wicket:body/&gt; you have two options. Either use &lt;wicket:body/&gt; (open-close
+ * tag) which will automatically be expanded to &lt;wicket:body&gt;body content&lt;/wicket:body&gt;
+ * or use &lt;wicket:body&gt;preview region&lt;/wicket:body&gt; in your border's markup. The preview
+ * region (everything in between the open and close tag) will automatically be removed.
  * 
  * @see BorderBodyResolver
  * @see BorderBodyContainer
@@ -120,8 +116,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	private BorderBodyContainer body;
 
 	/**
-	 * only required during render phase. The markup stream associated with
-	 * <span wicket:id="myBorder"
+	 * only required during render phase. The markup stream associated with <span
+	 * wicket:id="myBorder"
 	 */
 	private transient MarkupStream originalMarkupStream;
 
@@ -165,8 +161,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * When this method is called with a false value the components and raw
-	 * markup that this border wraps will not be rendered.
+	 * When this method is called with a false value the components and raw markup that this border
+	 * wraps will not be rendered.
 	 * 
 	 * @param bodyVisible
 	 * @return this for chaining
@@ -179,10 +175,9 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * Borders used for bordered pages should set it to "true". Default is
-	 * "false". If enabled, than requests to find a component are passed to the
-	 * parent container as well. Thus the child may not be added to the Border,
-	 * but might be added to the parent of the Border as well.
+	 * Borders used for bordered pages should set it to "true". Default is "false". If enabled, than
+	 * requests to find a component are passed to the parent container as well. Thus the child may
+	 * not be added to the Border, but might be added to the parent of the Border as well.
 	 * 
 	 * @param enable
 	 *            true, to enable transparent resolving
@@ -205,8 +200,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 	/**
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-	 *      org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
+	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
@@ -353,8 +347,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 
 		/**
 		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-		 *      org.apache.wicket.markup.MarkupStream,
-		 *      org.apache.wicket.markup.ComponentTag)
+		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 		 */
 		public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 				final ComponentTag tag)

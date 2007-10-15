@@ -55,7 +55,7 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	public void testGetPageNumber_1()
 	{
 		PagingNavigationLink link = new PagingNavigationLink("id", mock, 0);
-		
+
 		currentpage = 0;
 		pagecount = 0;
 
@@ -67,7 +67,7 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 		assertTrue("is first", link.isFirst());
 		assertTrue("is last", link.isLast());
 		assertEquals(0, link.getPageNumber());
-		
+
 		pagecount = 2;
 		assertTrue("is first", link.isFirst());
 		assertFalse("is last", link.isLast());
@@ -80,14 +80,14 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	public void testGetPageNumber_2()
 	{
 		PagingNavigationLink link = new PagingNavigationLink("id", mock, 2);
-		
+
 		currentpage = 0;
 		pagecount = 0;
-		
+
 		assertTrue("is first", link.isFirst());
 		assertFalse("is last", link.isLast());
 		assertEquals(0, link.getPageNumber());
-		
+
 		pagecount = 2;
 		assertFalse("is first", link.isFirst());
 		assertTrue("is last", link.isLast());
@@ -105,14 +105,14 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	public void testGetPageNumber_3()
 	{
 		PagingNavigationLink link = new PagingNavigationLink("id", mock, -1);
-		
+
 		currentpage = 0;
 		pagecount = 0;
-		
+
 		assertTrue("is first", link.isFirst());
 		assertFalse("is last", link.isLast());
 		assertEquals(0, link.getPageNumber());
-		
+
 		pagecount = 2;
 		assertFalse("is first", link.isFirst());
 		assertTrue("is last", link.isLast());
@@ -123,17 +123,17 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 		assertTrue("is last", link.isLast());
 		assertEquals(2, link.getPageNumber());
 	}
-	
+
 	/**
 	 * Tests the linksTo method.
 	 */
 	public void testLinksTo()
 	{
 		PagingNavigationLink link = new PagingNavigationLink("id", mock, -1);
-		
+
 		currentpage = 0;
 		pagecount = 0;
-		
+
 		assertTrue("links to", link.linksTo(null));
 
 		currentpage = 0;

@@ -21,10 +21,10 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing autolinks
- *
+ * 
  * @author Chris Turner
  */
-public class Page1 extends WebPage 
+public class Page1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class Page1 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public Page1() 
+	public Page1()
 	{
-    }
+	}
 }

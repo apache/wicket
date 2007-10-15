@@ -28,14 +28,14 @@ import org.apache.wicket.util.collections.IntHashMap;
  * The pages are stored inside the file in a cyclic way. Newer pages are placed after older ones,
  * until the maximum file size is reached. After that, the next page is stored in the beginning of
  * the file.
- *
+ * 
  * @author Matej Knopp
  */
 public class PageWindowManager
 {
 	/**
 	 * Contains information about a page inside the file.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	private static class PageWindowInternal
@@ -170,7 +170,7 @@ public class PageWindowManager
 
 	/**
 	 * Returns the index of the given page in the {@link #windows} list.
-	 *
+	 * 
 	 * @param pageId
 	 * @param versionNumber
 	 * @param ajaxVersionNumber
@@ -199,7 +199,7 @@ public class PageWindowManager
 	/**
 	 * Increments the {@link #indexPointer}. If the maximum file size has been reached, the
 	 * {@link #indexPointer} is set to 0.
-	 *
+	 * 
 	 * @return
 	 */
 	private int incrementIndexPointer()
@@ -218,7 +218,7 @@ public class PageWindowManager
 	/**
 	 * Returns the offset in file of the window on given index. The offset is counted by getting the
 	 * previous page offset and adding the previous page size to it.
-	 *
+	 * 
 	 * @param index
 	 * @return
 	 */
@@ -238,7 +238,7 @@ public class PageWindowManager
 	/**
 	 * Splits the window with given index to two windows. First of those will have size specified by
 	 * the argument, the other one will fill up the rest of the original window.
-	 *
+	 * 
 	 * @param index
 	 * @param size
 	 */
@@ -271,7 +271,7 @@ public class PageWindowManager
 	/**
 	 * Merges the window with given index with the next window. The resulting window will have size
 	 * of the two windows summed together.
-	 *
+	 * 
 	 * @param index
 	 */
 	private void mergeWindowWithNext(int index)
@@ -292,7 +292,7 @@ public class PageWindowManager
 	 * window size, the window will be split. Otherwise the window will be merged with as many
 	 * subsequent window as necessary. In case the window is last window in the file, the size will
 	 * be adjusted without splitting or merging.
-	 *
+	 * 
 	 * @param index
 	 * @param size
 	 */
@@ -338,7 +338,7 @@ public class PageWindowManager
 	 * Allocates window on given index with to size. If the index is pointing to existing window,
 	 * the window size will be adjusted. Otherwise a new window with appropriated size will be
 	 * created.
-	 *
+	 * 
 	 * @param index
 	 * @param size
 	 * @return
@@ -375,7 +375,7 @@ public class PageWindowManager
 
 	/**
 	 * Public (read only) version of page window.
-	 *
+	 * 
 	 * @author Matej Knopp
 	 */
 	public static class PageWindow
@@ -384,7 +384,7 @@ public class PageWindowManager
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param pageWindowInternal
 		 */
 		private PageWindow(PageWindowInternal pageWindowInternal)
@@ -435,7 +435,7 @@ public class PageWindowManager
 
 	/**
 	 * Creates and returns a new page window for given page.
-	 *
+	 * 
 	 * @param pageId
 	 * @param versionNumber
 	 * @param ajaxVersionNumber
@@ -473,7 +473,7 @@ public class PageWindowManager
 
 	/**
 	 * Returns the page window for given page or null if no window was found.
-	 *
+	 * 
 	 * @param pageId
 	 * @param versionNumber
 	 * @param ajaxVersionNumber
@@ -494,7 +494,7 @@ public class PageWindowManager
 
 	/**
 	 * Removes the page window for given page.
-	 *
+	 * 
 	 * @param pageId
 	 * @param versionNumber
 	 * @param ajaxVersionNumber
@@ -524,7 +524,7 @@ public class PageWindowManager
 
 	/**
 	 * Removes all page windows for given page. Removes all page versions.
-	 *
+	 * 
 	 * @param pageId
 	 */
 	public void removePage(int pageId)
@@ -553,7 +553,7 @@ public class PageWindowManager
 
 	/**
 	 * Returns last n saved page windows.
-	 *
+	 * 
 	 * @param count
 	 * @return
 	 */
@@ -591,7 +591,7 @@ public class PageWindowManager
 
 	/**
 	 * Creates a new PageWindowManager.
-	 *
+	 * 
 	 * @param maxSize
 	 *            maximum page size. After this size is exceeded, the pages will be saved starting
 	 *            at the beginning of file
@@ -603,7 +603,7 @@ public class PageWindowManager
 
 	/**
 	 * Returns the size of all saved pages
-	 *
+	 * 
 	 * @return
 	 */
 	public int getTotalSize()

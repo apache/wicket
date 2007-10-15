@@ -27,11 +27,10 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * IMarkupLoader are loading the actual markup for a specific Wicket container
- * and resource stream. In case of markup inheritance it means that 2+ markup
- * files must be read and merged. In order to be flexible the interface has been
- * designed in a way that multiple IMarkupLoader can be chained to easily build
- * up more complex loaders.
+ * IMarkupLoader are loading the actual markup for a specific Wicket container and resource stream.
+ * In case of markup inheritance it means that 2+ markup files must be read and merged. In order to
+ * be flexible the interface has been designed in a way that multiple IMarkupLoader can be chained
+ * to easily build up more complex loaders.
  * 
  * @see MarkupCache
  * @see MarkupParser
@@ -51,9 +50,8 @@ public interface IMarkupLoader
 	 * @param baseLoader
 	 *            This parameter can be use to chain IMarkupLoaders
 	 * @param enforceReload
-	 *            The cache will be ignored and all, including inherited markup
-	 *            files, will be reloaded. Whatever is in the cache, it will be
-	 *            ignored
+	 *            The cache will be ignored and all, including inherited markup files, will be
+	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException

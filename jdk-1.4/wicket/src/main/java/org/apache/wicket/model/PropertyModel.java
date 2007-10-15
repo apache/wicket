@@ -19,9 +19,8 @@ package org.apache.wicket.model;
 import org.apache.wicket.util.lang.PropertyResolver;
 
 /**
- * A PropertyModel is used to dynamically access a model using a "property
- * expression". See {@link PropertyResolver} javadoc for allowed property
- * expressions.
+ * A PropertyModel is used to dynamically access a model using a "property expression". See
+ * {@link PropertyResolver} javadoc for allowed property expressions.
  * <p>
  * For example, take the following bean:
  * 
@@ -42,8 +41,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * }
  * </pre>
  * 
- * We could construct a label that dynamically fetches the name property of the
- * given person object like this:
+ * We could construct a label that dynamically fetches the name property of the given person object
+ * like this:
  * 
  * <pre>
  *     Person person = getSomePerson();
@@ -51,13 +50,13 @@ import org.apache.wicket.util.lang.PropertyResolver;
  *     add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
  * </pre>
  * 
- * Where 'myLabel' is the name of the component, and 'name' is the property
- * expression to get the name property.
+ * Where 'myLabel' is the name of the component, and 'name' is the property expression to get the
+ * name property.
  * </p>
  * <p>
- * In the same fashion, we can create form components that work dynamically on
- * the given model object. For instance, we could create a text field that
- * updates the name property of a person like this:
+ * In the same fashion, we can create form components that work dynamically on the given model
+ * object. For instance, we could create a text field that updates the name property of a person
+ * like this:
  * 
  * <pre>
  *     add(new TextField(&quot;myTextField&quot;, new PropertyModel(person, &quot;name&quot;));
@@ -65,9 +64,9 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * 
  * </p>
  * <p>
- * Note that the property resolver by default provides access to private members
- * and methods. If guaranteeing encapsulation of the target objects is a big
- * concern, you should consider using an alternative implementation.
+ * Note that the property resolver by default provides access to private members and methods. If
+ * guaranteeing encapsulation of the target objects is a big concern, you should consider using an
+ * alternative implementation.
  * </p>
  * 
  * @see PropertyResolver
@@ -87,8 +86,8 @@ public class PropertyModel extends AbstractPropertyModel
 	private final String expression;
 
 	/**
-	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a
-	 * property expression that works on the given model.
+	 * Construct with a wrapped (IModel) or unwrapped (non-IModel) object and a property expression
+	 * that works on the given model.
 	 * 
 	 * @param modelObject
 	 *            The model object, which may or may not implement IModel

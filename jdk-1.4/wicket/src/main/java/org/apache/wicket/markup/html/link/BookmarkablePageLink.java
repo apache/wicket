@@ -25,8 +25,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Classes;
 
 /**
- * Renders a stable link which can be cached in a web browser and used at a
- * later time.
+ * Renders a stable link which can be cached in a web browser and used at a later time.
  * 
  * @author Jonathan Locke
  */
@@ -64,8 +63,7 @@ public class BookmarkablePageLink extends Link
 	 * @param pageClass
 	 *            The class of page to link to
 	 * @param parameters
-	 *            The parameters to pass to the new page when the link is
-	 *            clicked
+	 *            The parameters to pass to the new page when the link is clicked
 	 */
 	public BookmarkablePageLink(final String id, final Class pageClass,
 			final PageParameters parameters)
@@ -77,8 +75,8 @@ public class BookmarkablePageLink extends Link
 		}
 		else if (!Page.class.isAssignableFrom(pageClass))
 		{
-			throw new IllegalArgumentException("Page class must be derived from "
-					+ Page.class.getName());
+			throw new IllegalArgumentException("Page class must be derived from " +
+					Page.class.getName());
 		}
 		this.pageClassName = pageClass.getName();
 		this.parameters = parameters;
@@ -127,9 +125,8 @@ public class BookmarkablePageLink extends Link
 	}
 
 	/**
-	 * THIS METHOD IS NOT USED! Bookmarkable links do not have a click handler.
-	 * It is here to satisfy the interface only, as bookmarkable links will be
-	 * dispatched by the handling servlet.
+	 * THIS METHOD IS NOT USED! Bookmarkable links do not have a click handler. It is here to
+	 * satisfy the interface only, as bookmarkable links will be dispatched by the handling servlet.
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */

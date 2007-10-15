@@ -23,12 +23,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A password text field component. As you type, characters show up as asterisks
- * or some other such character so that nobody can look over your shoulder and
- * read your password.
+ * A password text field component. As you type, characters show up as asterisks or some other such
+ * character so that nobody can look over your shoulder and read your password.
  * <p>
- * By default this text field is required. If it is not, call
- * {@link #setRequired(boolean)} with value of <code>false</code>.
+ * By default this text field is required. If it is not, call {@link #setRequired(boolean)} with
+ * value of <code>false</code>.
  * 
  * @author Jonathan Locke
  */
@@ -40,12 +39,11 @@ public class PasswordTextField extends TextField
 	private static final Logger log = LoggerFactory.getLogger(PasswordTextField.class);
 
 	/**
-	 * Flag indicating whether the contents of the field should be reset each
-	 * time it is rendered. If <code>true</code>, the contents are emptied
-	 * when the field is rendered. This is useful for login forms. If
-	 * <code>false</code>, the contents of the model are put into the field.
-	 * This is useful for entry forms where the contents of the model should be
-	 * editable, or resubmitted.
+	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
+	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
+	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
+	 * This is useful for entry forms where the contents of the model should be editable, or
+	 * resubmitted.
 	 */
 	private boolean resetPassword = true;
 
@@ -67,12 +65,11 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * Flag indicating whether the contents of the field should be reset each
-	 * time it is rendered. If <code>true</code>, the contents are emptied
-	 * when the field is rendered. This is useful for login forms. If
-	 * <code>false</code>, the contents of the model are put into the field.
-	 * This is useful for entry forms where the contents of the model should be
-	 * editable, or resubmitted.
+	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
+	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
+	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
+	 * This is useful for entry forms where the contents of the model should be editable, or
+	 * resubmitted.
 	 * 
 	 * @return Returns the resetPassword.
 	 */
@@ -82,12 +79,11 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * Flag indicating whether the contents of the field should be reset each
-	 * time it is rendered. If <code>true</code>, the contents are emptied
-	 * when the field is rendered. This is useful for login forms. If
-	 * <code>false</code>, the contents of the model are put into the field.
-	 * This is useful for entry forms where the contents of the model should be
-	 * editable, or resubmitted.
+	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
+	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful
+	 * for login forms. If <code>false</code>, the contents of the model are put into the field.
+	 * This is useful for entry forms where the contents of the model should be editable, or
+	 * resubmitted.
 	 * 
 	 * @param resetPassword
 	 *            The resetPassword to set.

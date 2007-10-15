@@ -31,9 +31,8 @@ import org.slf4j.LoggerFactory;
  * Locate Wicket resource.
  * <p>
  * Contains the logic to locate a resource based on a path, a style (see
- * {@link org.apache.wicket.Session}), a locale and an extension string. The
- * full filename will be built like:
- * &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * {@link org.apache.wicket.Session}), a locale and an extension string. The full filename will be
+ * built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
@@ -43,8 +42,8 @@ import org.slf4j.LoggerFactory;
  * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
  * <p>
- * Locales may contain a language, a country and a region or variant.
- * Combinations of these components will be attempted in the following order:
+ * Locales may contain a language, a country and a region or variant. Combinations of these
+ * components will be attempted in the following order:
  * <ol>
  * <li>locale.toString() see javadoc for Locale for more details</li>
  * <li>&lt;language&gt;_&lt;country&gt;</li>
@@ -108,8 +107,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	/**
 	 * 
 	 * @see org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
-	 *      java.lang.String, java.lang.String, java.util.Locale,
-	 *      java.lang.String)
+	 *      java.lang.String, java.lang.String, java.util.Locale, java.lang.String)
 	 */
 	public IResourceStream locate(final Class clazz, String path, final String style,
 			final Locale locale, final String extension)
@@ -163,8 +161,8 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 		// Log attempt
 		if (log.isDebugEnabled())
 		{
-			log.debug("Attempting to locate resource '" + path + "' using classloader "
-					+ classLoader);
+			log.debug("Attempting to locate resource '" + path + "' using classloader " +
+					classLoader);
 		}
 
 		// Try loading path using classloader
@@ -177,8 +175,7 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 * Search the resource by means of the application registered resource
-	 * finder
+	 * Search the resource by means of the application registered resource finder
 	 * 
 	 * @param clazz
 	 * @param path

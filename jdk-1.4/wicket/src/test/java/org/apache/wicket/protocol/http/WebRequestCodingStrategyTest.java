@@ -45,7 +45,9 @@ public class WebRequestCodingStrategyTest extends TestCase
 				MockPage.class, params);
 		app.setupRequestAndResponse();
 		CharSequence cs = wrcs.encode(app.createRequestCycle(), requestTarget);
-		assertEquals("?wicket:bookmarkablePage=%3Aorg.apache.wicket.protocol.http.MockPage&a=1&a=2", cs.toString());
+		assertEquals(
+				"?wicket:bookmarkablePage=%3Aorg.apache.wicket.protocol.http.MockPage&a=1&a=2", cs
+						.toString());
 		app.destroy();
 	}
 }

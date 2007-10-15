@@ -37,7 +37,7 @@ public class PrependingStringBufferTest extends TestCase
 		psb.prepend("test4");
 		assertEquals("test4test3test2test1", psb.toString());
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */

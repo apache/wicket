@@ -18,9 +18,8 @@ package org.apache.wicket.util.license;
 
 
 /**
- * Test that the license headers are in place in this project. The tests are run
- * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
- * tests here if needed.
+ * Test that the license headers are in place in this project. The tests are run from
+ * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
  * 
  * @author Frank Bille Jensen (frankbille)
  */
@@ -31,38 +30,33 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	 */
 	public ApacheLicenceHeaderTest()
 	{
-//		addHeaders = true;
-		
+// addHeaders = true;
+
 		htmlIgnore = new String[] {
-				/*
-				 * .html in test is very test specific and a license header 
-				 * would confuse and make it unclear what the test is about. 
-				 */
-				"src/test/java",
-				/*
-				 * See NOTICE.txt
-				 */
-				"src/main/java/org/apache/wicket/util/diff",				
-		};
-		
+		/*
+		 * .html in test is very test specific and a license header would confuse and make it
+		 * unclear what the test is about.
+		 */
+		"src/test/java",
+		/*
+		 * See NOTICE.txt
+		 */
+		"src/main/java/org/apache/wicket/util/diff", };
+
 		cssIgnore = new String[] {
-				/*
-				 * .css in test is very test specific and a license header 
-				 * would confuse and make it unclear what the test is about. 
-				 */
-				"src/test/java" 
-		};
-		
-		xmlIgnore = new String[] { 
-				"EclipseCodeFormat.xml",
-				"src/assembly/bin.xml"
-		};
-		
+		/*
+		 * .css in test is very test specific and a license header would confuse and make it unclear
+		 * what the test is about.
+		 */
+		"src/test/java" };
+
+		xmlIgnore = new String[] { "EclipseCodeFormat.xml", "src/assembly/bin.xml" };
+
 		javaIgnore = new String[] {
-				/*
-				 * ASL1.1. Taken from Maven JRCS. See NOTICE.txt
-				 */
-				"src/main/java/org/apache/wicket/util/diff/AddDelta.java",
+		/*
+		 * ASL1.1. Taken from Maven JRCS. See NOTICE.txt
+		 */
+		"src/main/java/org/apache/wicket/util/diff/AddDelta.java",
 				"src/main/java/org/apache/wicket/util/diff/ChangeDelta.java",
 				"src/main/java/org/apache/wicket/util/diff/Chunk.java",
 				"src/main/java/org/apache/wicket/util/diff/DeleteDelta.java",
@@ -84,31 +78,25 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				 */
 				"src/main/java/org/apache/wicket/util/concurrent/ConcurrentReaderHashMap.java",
 				"src/main/java/org/apache/wicket/util/concurrent/ConcurrentHashMap.java",
-				"src/main/java/org/apache/wicket/util/concurrent/CopyOnWriteArrayList.java"
-		};
-		
-		javaScriptIgnore = new String[] { 
-				"src/site/xdoc/onestat.js",
-				/*
-				 * .js in test is very test specific and a license 
-				 * header would confuse and make it unclear what the test 
-				 * is about. 
-				 */
-				"src/test/java",
-				/*
-				 * See NOTICE.txt
-				 */
-				"src/main/java/org/apache/wicket/ajax/wicket-ajax-debug-drag.js",
-				"src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js"
-		};
-		
+				"src/main/java/org/apache/wicket/util/concurrent/CopyOnWriteArrayList.java" };
+
+		javaScriptIgnore = new String[] { "src/site/xdoc/onestat.js",
+		/*
+		 * .js in test is very test specific and a license header would confuse and make it unclear
+		 * what the test is about.
+		 */
+		"src/test/java",
+		/*
+		 * See NOTICE.txt
+		 */
+		"src/main/java/org/apache/wicket/ajax/wicket-ajax-debug-drag.js",
+				"src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js" };
+
 		propertiesIgnore = new String[] {
-				/*
-				 * .properties in test is very test specific and a license 
-				 * header would confuse and make it unclear what the test 
-				 * is about. 
-				 */
-				"src/test/java", 
-		};
+		/*
+		 * .properties in test is very test specific and a license header would confuse and make it
+		 * unclear what the test is about.
+		 */
+		"src/test/java", };
 	}
 }

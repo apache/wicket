@@ -22,8 +22,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 
 /**
- * Contains a form with a textfield on it. Also contains markup for a link, but
- * you must add the link yourself
+ * Contains a form with a textfield on it. Also contains markup for a link, but you must add the
+ * link yourself
  * 
  * @author Frank Bille
  */

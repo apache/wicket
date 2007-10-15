@@ -31,10 +31,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Use this CodingStategy with the
- * {@link UrlCompressingWebRequestProcessor} to minimize the
- * wicket:interface urls. The component path and the interface name will be
- * removed from the url and only an uid will be inserted into the url.
+ * Use this CodingStategy with the {@link UrlCompressingWebRequestProcessor} to minimize the
+ * wicket:interface urls. The component path and the interface name will be removed from the url and
+ * only an uid will be inserted into the url.
  * 
  * Use it like this:
  * 
@@ -126,7 +125,7 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 			url.append(params.getBehaviorId());
 		}
 		url.append(Component.PATH_SEPARATOR);
-		
+
 		// Add URL depth
 		if (params != null && params.getUrlDepth() != 0)
 		{
@@ -134,7 +133,8 @@ public class UrlCompressingWebCodingStrategy extends WebRequestCodingStrategy
 		}
 		if (IActivePageBehaviorListener.INTERFACE.getName().equals(listenerName))
 		{
-			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
+			url.append(url.indexOf("?") > -1 ? "&amp;" : "?").append(
+					IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME).append("=true");
 		}
 		return requestCycle.getOriginalResponse().encodeURL(url);
 	}

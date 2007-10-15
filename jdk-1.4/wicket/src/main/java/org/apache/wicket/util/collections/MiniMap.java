@@ -26,9 +26,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * A fixed size map implementation. Holds an array of keys and array of values
- * which correspond by index. Null key entries are available for use. This means
- * that null is not a valid key.
+ * A fixed size map implementation. Holds an array of keys and array of values which correspond by
+ * index. Null key entries are available for use. This means that null is not a valid key.
  * 
  * @author Jonathan Locke
  */
@@ -365,8 +364,7 @@ public final class MiniMap implements Map, Serializable
 	}
 
 	/**
-	 * Computes the next index in the key or value array (both are the same
-	 * length)
+	 * Computes the next index in the key or value array (both are the same length)
 	 * 
 	 * @param index
 	 *            The index
@@ -378,8 +376,7 @@ public final class MiniMap implements Map, Serializable
 	}
 
 	/**
-	 * Finds the index of the next non-null key. If the map is empty, -1 will be
-	 * returned.
+	 * Finds the index of the next non-null key. If the map is empty, -1 will be returned.
 	 * 
 	 * @param start
 	 *            Index to start at
@@ -404,8 +401,8 @@ public final class MiniMap implements Map, Serializable
 	}
 
 	/**
-	 * Finds the index of the next null key. If no null key can be found, the
-	 * map is full and -1 will be returned.
+	 * Finds the index of the next null key. If no null key can be found, the map is full and -1
+	 * will be returned.
 	 * 
 	 * @param start
 	 *            Index to start at
@@ -430,9 +427,9 @@ public final class MiniMap implements Map, Serializable
 	}
 
 	/**
-	 * Finds a key by starting at lastSearchIndex and searching from there. If
-	 * the key is found, lastSearchIndex is advanced so the next key search can
-	 * find the next key in the array, which is the most likely to be retrieved.
+	 * Finds a key by starting at lastSearchIndex and searching from there. If the key is found,
+	 * lastSearchIndex is advanced so the next key search can find the next key in the array, which
+	 * is the most likely to be retrieved.
 	 * 
 	 * @param key
 	 *            Key to find in map

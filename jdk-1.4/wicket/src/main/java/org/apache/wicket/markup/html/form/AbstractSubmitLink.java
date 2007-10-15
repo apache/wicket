@@ -28,9 +28,7 @@ import org.apache.wicket.version.undo.Change;
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractSubmitLink extends AbstractLink
-		implements
-			IFormSubmittingComponent
+public abstract class AbstractSubmitLink extends AbstractLink implements IFormSubmittingComponent
 {
 	/**
 	 * 
@@ -43,8 +41,7 @@ public abstract class AbstractSubmitLink extends AbstractLink
 	private Form form;
 
 	/**
-	 * If false, all standard processing like validating and model updating is
-	 * skipped.
+	 * If false, all standard processing like validating and model updating is skipped.
 	 */
 	private boolean defaultFormProcessing = true;
 
@@ -96,10 +93,10 @@ public abstract class AbstractSubmitLink extends AbstractLink
 	}
 
 	/**
-	 * Sets the defaultFormProcessing property. When false (default is true),
-	 * all validation and formupdating is bypassed and the onSubmit method of
-	 * that button is called directly, and the onSubmit method of the parent
-	 * form is not called. A common use for this is to create a cancel button.
+	 * Sets the defaultFormProcessing property. When false (default is true), all validation and
+	 * formupdating is bypassed and the onSubmit method of that button is called directly, and the
+	 * onSubmit method of the parent form is not called. A common use for this is to create a cancel
+	 * button.
 	 * 
 	 * TODO: This is a copy & paste from Button
 	 * 
@@ -124,8 +121,8 @@ public abstract class AbstractSubmitLink extends AbstractLink
 
 				public String toString()
 				{
-					return "DefaultFormProcessingChange[component: " + getPath()
-							+ ", default processing: " + formerValue + "]";
+					return "DefaultFormProcessingChange[component: " + getPath() +
+							", default processing: " + formerValue + "]";
 				}
 			});
 		}
@@ -162,7 +159,7 @@ public abstract class AbstractSubmitLink extends AbstractLink
 	 */
 	public String getInputName()
 	{
-		// TODO: This is a copy & paste from the FormComponent class. 
+		// TODO: This is a copy & paste from the FormComponent class.
 		String id = getId();
 		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
 		Component c = this;
@@ -178,5 +175,5 @@ public abstract class AbstractSubmitLink extends AbstractLink
 			id = c.getId();
 		}
 		return inputName.toString();
-	}	
+	}
 }

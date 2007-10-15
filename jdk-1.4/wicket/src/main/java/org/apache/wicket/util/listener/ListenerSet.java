@@ -21,9 +21,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Holds a set of listeners implementing the IListener tag interface. Subclasses
- * can implement notification methods that cast the listener to the correct
- * subinterface and invoke the appropriate listener method.
+ * Holds a set of listeners implementing the IListener tag interface. Subclasses can implement
+ * notification methods that cast the listener to the correct subinterface and invoke the
+ * appropriate listener method.
  * 
  * @author Jonathan Locke
  */
@@ -37,8 +37,7 @@ public abstract class ListenerSet
 	 * 
 	 * @param listener
 	 *            The listener to add
-	 * @return  <tt>true</tt> if the set did not already contain the specified
-     * listener.
+	 * @return <tt>true</tt> if the set did not already contain the specified listener.
 	 */
 	public boolean add(final IListener listener)
 	{

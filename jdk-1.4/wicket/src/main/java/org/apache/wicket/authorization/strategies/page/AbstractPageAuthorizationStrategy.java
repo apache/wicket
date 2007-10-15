@@ -22,9 +22,9 @@ import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 
 /**
- * An abstract base class for implementing simple authorization of Pages. Users
- * should override {@link #isPageAuthorized(Class)}, which gets called for Page
- * classes when they are being constructed.
+ * An abstract base class for implementing simple authorization of Pages. Users should override
+ * {@link #isPageAuthorized(Class)}, which gets called for Page classes when they are being
+ * constructed.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -53,14 +53,13 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	}
 
 	/**
-	 * Works like instanceof operator where instanceOf(a, b) is the runtime
-	 * equivalent of (a instanceof b).
+	 * Works like instanceof operator where instanceOf(a, b) is the runtime equivalent of (a
+	 * instanceof b).
 	 * 
 	 * @param type
 	 *            The type to check
 	 * @param superType
-	 *            The interface or superclass that the type needs to implement
-	 *            or extend
+	 *            The interface or superclass that the type needs to implement or extend
 	 * @return True if the type is an instance of the superType
 	 */
 	protected boolean instanceOf(final Class type, final Class superType)

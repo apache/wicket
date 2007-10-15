@@ -31,14 +31,14 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A list of markup elements associated with a Markup. Might be all elements of
- * a markup resource, might be just the elements associated with a specific tag.
- *
+ * A list of markup elements associated with a Markup. Might be all elements of a markup resource,
+ * might be just the elements associated with a specific tag.
+ * 
  * @see org.apache.wicket.markup.MarkupResourceData
  * @see org.apache.wicket.markup.MarkupElement
  * @see org.apache.wicket.markup.ComponentTag
  * @see org.apache.wicket.markup.RawMarkup
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class Markup
@@ -55,20 +55,19 @@ public class Markup
 	private final MarkupResourceData markupResourceData;
 
 	/**
-	 * A cache which maps (componentPath + id) to the componentTags index in the
-	 * markup
+	 * A cache which maps (componentPath + id) to the componentTags index in the markup
 	 */
 	private Map componentMap;
 
 	/**
-	 * Used at markup load time to maintain the current component path (not id)
-	 * while adding markup elements to this Markup instance
+	 * Used at markup load time to maintain the current component path (not id) while adding markup
+	 * elements to this Markup instance
 	 */
 	private StringBuffer currentPath;
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param markupResourceData
 	 *            The associated Markup
 	 */
@@ -79,10 +78,9 @@ public class Markup
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
-	 *
+	 * For Wicket it would be sufficient for this method to be package protected. However to allow
+	 * wicket-bench easy access to the information ...
+	 * 
 	 * @param index
 	 *            Index into markup list
 	 * @return Markup element
@@ -94,7 +92,7 @@ public class Markup
 
 	/**
 	 * Gets the associate markup
-	 *
+	 * 
 	 * @return The associated markup
 	 */
 	public final MarkupResourceData getMarkupResourceData()
@@ -103,10 +101,9 @@ public class Markup
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
-	 *
+	 * For Wicket it would be sufficient for this method to be package protected. However to allow
+	 * wicket-bench easy access to the information ...
+	 * 
 	 * @return Number of markup elements
 	 */
 	public int size()
@@ -116,7 +113,7 @@ public class Markup
 
 	/**
 	 * Add a MarkupElement
-	 *
+	 * 
 	 * @param markupElement
 	 */
 	final public void addMarkupElement(final MarkupElement markupElement)
@@ -126,7 +123,7 @@ public class Markup
 
 	/**
 	 * Add a MarkupElement
-	 *
+	 * 
 	 * @param pos
 	 * @param markupElement
 	 */
@@ -155,9 +152,8 @@ public class Markup
 	}
 
 	/**
-	 * Add the tag to the local cache if open or open-close and if wicket:id is
-	 * present
-	 *
+	 * Add the tag to the local cache if open or open-close and if wicket:id is present
+	 * 
 	 * @param index
 	 * @param tag
 	 */
@@ -175,8 +171,7 @@ public class Markup
 
 			/*
 			 * XXX cleanup - this fragment check probably needs to be in
-			 * componenttag.isWantToBeDirectMarkupChild() or something similar
-			 * instead of being here
+			 * componenttag.isWantToBeDirectMarkupChild() or something similar instead of being here
 			 */
 			final boolean fragment = (tag instanceof WicketTag && ((WicketTag)tag).isFragementTag());
 
@@ -195,9 +190,8 @@ public class Markup
 	}
 
 	/**
-	 * Set the components path within the markup and add the component tag to
-	 * the local cache
-	 *
+	 * Set the components path within the markup and add the component tag to the local cache
+	 * 
 	 * @param componentPath
 	 * @param tag
 	 * @return componentPath
@@ -262,7 +256,7 @@ public class Markup
 
 	/**
 	 * Find the markup element index of the component with 'path'
-	 *
+	 * 
 	 * @param path
 	 *            The component path expression
 	 * @param id

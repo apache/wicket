@@ -29,12 +29,13 @@ import org.apache.wicket.RequestContext;
 public class PortletRenderServletResponseWrapper extends PortletServletResponseWrapper
 {
 	RenderResponse renderResponse;
-    
-    public PortletRenderServletResponseWrapper(HttpServletResponse response, RenderResponse renderResponse, WicketResponseState responseState)
-    {
-        super(response, responseState);
-        this.renderResponse = renderResponse;
-    }
+
+	public PortletRenderServletResponseWrapper(HttpServletResponse response,
+			RenderResponse renderResponse, WicketResponseState responseState)
+	{
+		super(response, responseState);
+		this.renderResponse = renderResponse;
+	}
 
 	/**
 	 * @see javax.servlet.ServletResponseWrapper#setContentType(java.lang.String)
@@ -44,29 +45,30 @@ public class PortletRenderServletResponseWrapper extends PortletServletResponseW
 		renderResponse.setContentType(arg0);
 	}
 
-    public void sendRedirect(String redirectLocation) throws IOException
+	public void sendRedirect(String redirectLocation) throws IOException
 	{
-    	RequestContext rc = RequestContext.get();
-    	if (rc instanceof PortletRequestContext)
-    	{
-    		String wicketUrl = ((PortletRequestContext)rc).getLastEncodedPath(redirectLocation);
-    		if (wicketUrl != null)
-    		{
-    			redirectLocation = wicketUrl;
-    		}
-    		else
-    		{
-    			String contextPath = ((PortletRequestContext)rc).getPortletRequest().getContextPath();
-    			if (redirectLocation.startsWith(contextPath+"/"))
-    			{
-    				redirectLocation = redirectLocation.substring(contextPath.length());
-    				if (redirectLocation.length() == 0)
-    				{
-    					redirectLocation = "/";
-    				}
-    			}
-    		}
-    	}
+		RequestContext rc = RequestContext.get();
+		if (rc instanceof PortletRequestContext)
+		{
+			String wicketUrl = ((PortletRequestContext)rc).getLastEncodedPath(redirectLocation);
+			if (wicketUrl != null)
+			{
+				redirectLocation = wicketUrl;
+			}
+			else
+			{
+				String contextPath = ((PortletRequestContext)rc).getPortletRequest()
+						.getContextPath();
+				if (redirectLocation.startsWith(contextPath + "/"))
+				{
+					redirectLocation = redirectLocation.substring(contextPath.length());
+					if (redirectLocation.length() == 0)
+					{
+						redirectLocation = "/";
+					}
+				}
+			}
+		}
 		super.sendRedirect(redirectLocation);
 	}
 }

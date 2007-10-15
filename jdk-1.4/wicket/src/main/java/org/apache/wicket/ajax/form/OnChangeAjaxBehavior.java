@@ -22,11 +22,10 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.string.JavascriptUtils;
 
 /**
- * A behavior that updates the hosting {@link FormComponent} via ajax when value
- * of the component is changed.
+ * A behavior that updates the hosting {@link FormComponent} via ajax when value of the component is
+ * changed.
  * 
- * This behavior uses best available method to track changes on different types
- * of form components.
+ * This behavior uses best available method to track changes on different types of form components.
  * 
  * @author Janne Hietam&auml;ki (janne)
  * 

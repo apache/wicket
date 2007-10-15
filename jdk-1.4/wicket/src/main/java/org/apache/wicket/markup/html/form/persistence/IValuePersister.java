@@ -20,13 +20,12 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.html.form.FormComponent;
 
 /**
- * Wicket users and developers should not need to care about where or how form
- * values are saved. An implementer of IValuePersister persister is responsible
- * for storing and retrieving FormComponent values. Different means of storing
- * values for form components may be implemented. CookieValuePersister, for
- * example, uses an HTTP cookie to persist the value of a form component. Other
- * implementations may instead persist form values to server-side storage for
- * security reasons.
+ * Wicket users and developers should not need to care about where or how form values are saved. An
+ * implementer of IValuePersister persister is responsible for storing and retrieving FormComponent
+ * values. Different means of storing values for form components may be implemented.
+ * CookieValuePersister, for example, uses an HTTP cookie to persist the value of a form component.
+ * Other implementations may instead persist form values to server-side storage for security
+ * reasons.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -57,4 +56,3 @@ public interface IValuePersister extends IClusterable
 	 */
 	void clear(FormComponent component);
 }
-

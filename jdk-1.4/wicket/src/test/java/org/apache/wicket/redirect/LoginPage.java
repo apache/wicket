@@ -25,7 +25,8 @@ public class LoginPage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public LoginPage() {
+	public LoginPage()
+	{
 	}
-    
+
 }

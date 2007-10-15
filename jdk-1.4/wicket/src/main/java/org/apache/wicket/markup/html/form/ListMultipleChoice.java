@@ -78,8 +78,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
 	public ListMultipleChoice(final String id, final List choices)
 	{
@@ -95,8 +94,7 @@ public class ListMultipleChoice extends AbstractChoice
 	 *            list of choices
 	 * @param maxRows
 	 *            the maximum number of visible rows.
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
 	public ListMultipleChoice(final String id, final List choices, final int maxRows)
 	{
@@ -114,8 +112,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel, List)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
 	public ListMultipleChoice(final String id, IModel object, final List choices)
 	{
@@ -123,8 +120,8 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel, List,IChoiceRenderer)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
+	 *      List,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(final String id, IModel object, final List choices,
 			final IChoiceRenderer renderer)
@@ -133,8 +130,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
 	public ListMultipleChoice(String id, IModel choices)
 	{
@@ -142,8 +138,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel,IModel)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
 	public ListMultipleChoice(String id, IModel model, IModel choices)
 	{
@@ -161,8 +156,8 @@ public class ListMultipleChoice extends AbstractChoice
 
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
-	 *      IModel, IModel,IChoiceRenderer)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,
+	 *      IModel,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
 	{
@@ -193,8 +188,8 @@ public class ListMultipleChoice extends AbstractChoice
 		if (modelObject != null && !(modelObject instanceof Collection))
 		{
 			throw new WicketRuntimeException(
-					"Model object for a ListMultipleChoice must be a Collection (found "
-							+ modelObject.getClass() + ")");
+					"Model object for a ListMultipleChoice must be a Collection (found " +
+							modelObject.getClass() + ")");
 		}
 		final Collection selectedValues = (Collection)modelObject;
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
@@ -214,8 +209,7 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractChoice#isSelected(Object,int,
-	 *      String)
+	 * @see org.apache.wicket.markup.html.form.AbstractChoice#isSelected(Object,int, String)
 	 */
 	protected final boolean isSelected(Object choice, int index, String selected)
 	{
@@ -270,8 +264,7 @@ public class ListMultipleChoice extends AbstractChoice
 	 * Converts submitted choice ids to choice objects.
 	 * 
 	 * @param ids
-	 *            choice ids. this array is nonnull and always contains at least
-	 *            one id.
+	 *            choice ids. this array is nonnull and always contains at least one id.
 	 * @return list of choices.
 	 */
 	protected List convertChoiceIdsToChoices(String[] ids)
@@ -304,11 +297,10 @@ public class ListMultipleChoice extends AbstractChoice
 	}
 
 	/**
-	 * If the model object exists, it is assumed to be a Collection, and it is
-	 * modified in-place. Then {@link Model#setObject(Object)} is called with
-	 * the same instance: it allows the Model to be notified of changes even
-	 * when {@link Model#getObject()} returns a different {@link Collection} at
-	 * every invocation.
+	 * If the model object exists, it is assumed to be a Collection, and it is modified in-place.
+	 * Then {@link Model#setObject(Object)} is called with the same instance: it allows the Model to
+	 * be notified of changes even when {@link Model#getObject()} returns a different
+	 * {@link Collection} at every invocation.
 	 * 
 	 * @see FormComponent#updateModel()
 	 * @throws UnsupportedOperationException

@@ -58,8 +58,8 @@
 package org.apache.wicket.util.diff;
 
 /**
- * Thrown whenever the differencing engine cannot produce the differences
- * between two revisions of ta text.
+ * Thrown whenever the differencing engine cannot produce the differences between two revisions of
+ * ta text.
  * 
  * @version $Revision: 1.1 $ $Date: 2006/03/12 00:24:21 $
  * 
@@ -70,7 +70,7 @@ package org.apache.wicket.util.diff;
 public class DifferentiationFailedException extends DiffException
 {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -79,15 +79,16 @@ public class DifferentiationFailedException extends DiffException
 	 * Construct.
 	 */
 	public DifferentiationFailedException()
-    {
-    }
+	{
+	}
 
-    /**
-     * Construct.
-     * @param msg
-     */
-    public DifferentiationFailedException(String msg)
-    {
-        super(msg);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param msg
+	 */
+	public DifferentiationFailedException(String msg)
+	{
+		super(msg);
+	}
 }

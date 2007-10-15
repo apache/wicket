@@ -33,9 +33,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Stores pages on disk.
  * <p>
- * Override {@link #getWorkDir()} to change the default directory for pages,
- * which is configured from the javax.servlet.context.tempdir attribute in the
- * servlet context.
+ * Override {@link #getWorkDir()} to change the default directory for pages, which is configured
+ * from the javax.servlet.context.tempdir attribute in the servlet context.
  * 
  * @author jcompagner
  */

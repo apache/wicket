@@ -20,13 +20,12 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RequestCycle;
 
 /**
- * Default implementation of {@link IPageRequestTarget}. Target that denotes a
- * page instance.
+ * Default implementation of {@link IPageRequestTarget}. Target that denotes a page instance.
  * 
  * @author Eelco Hillenius
  */
 public class PageRequestTarget implements IPageRequestTarget
-			
+
 {
 	/** the page instance. */
 	private final Page page;

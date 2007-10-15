@@ -27,6 +27,7 @@ import org.apache.wicket.util.tester.WicketTester;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
+ * 
  * @author Chris Turner
  */
 public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTestBase
@@ -34,7 +35,9 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 
 	/**
 	 * Create the test case.
-	 * @param message The test name
+	 * 
+	 * @param message
+	 *            The test name
 	 */
 	public ApplicationStringResourceLoaderTest(String message)
 	{
@@ -43,6 +46,7 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 
 	/**
 	 * Return the loader instance
+	 * 
 	 * @return The loader instance to test
 	 */
 	protected IStringResourceLoader createLoader()
@@ -58,8 +62,8 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 		WicketTester tester = new WicketTester();
 		WebApplication app = tester.getApplication();
 		IStringResourceLoader loader = new ClassStringResourceLoader(app.getClass());
-		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component.getClass(),
-				"test.string", Locale.getDefault(), null));
+		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
+				component.getClass(), "test.string", Locale.getDefault(), null));
 		tester.destroy();
 	}
 }

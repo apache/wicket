@@ -18,12 +18,12 @@ package org.apache.wicket;
 
 
 /**
- * A factory class that creates Pages. A Page can be created by Class, with or
- * without a PageParameters argument to pass to the Page's constructor.
+ * A factory class that creates Pages. A Page can be created by Class, with or without a
+ * PageParameters argument to pass to the Page's constructor.
  * <p>
  * IMPORTANT NOTE: Implementations must let subclasses of
- * {@link org.apache.wicket.AbstractRestartResponseException} thrown from the constructing
- * page's constructor bubble up.
+ * {@link org.apache.wicket.AbstractRestartResponseException} thrown from the constructing page's
+ * constructor bubble up.
  * 
  * @see org.apache.wicket.settings.ISessionSettings#setPageFactory(IPageFactory)
  * @see Session#getPageFactory()
@@ -46,10 +46,9 @@ public interface IPageFactory
 	Page newPage(final Class pageClass);
 
 	/**
-	 * Creates a new Page, passing PageParameters to the Page constructor if
-	 * such a constructor exists. If no such constructor exists and the
-	 * parameters argument is null or empty, then any available default
-	 * constructor will be used.
+	 * Creates a new Page, passing PageParameters to the Page constructor if such a constructor
+	 * exists. If no such constructor exists and the parameters argument is null or empty, then any
+	 * available default constructor will be used.
 	 * 
 	 * @param pageClass
 	 *            The class of Page to create

@@ -25,9 +25,9 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.request.IRequestCycleProcessor;
 
 /**
- * Default implementation of {@link IBookmarkablePageRequestTarget}. Target
- * that denotes a page that is to be created from the provided page class. This
- * is typically used for redirects to bookmarkable pages or mounted pages.
+ * Default implementation of {@link IBookmarkablePageRequestTarget}. Target that denotes a page
+ * that is to be created from the provided page class. This is typically used for redirects to
+ * bookmarkable pages or mounted pages.
  * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
@@ -38,7 +38,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	private Page page;
 
 	/** the class of the page. */
-	private final WeakReference/*<Class>*/ pageClassRef;
+	private final WeakReference/* <Class> */pageClassRef;
 
 	/** optional page map name. */
 	private final String pageMapName;
@@ -104,8 +104,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
-			throw new IllegalArgumentException("Argument pageClass must be an instance of "
-					+ Page.class.getName());
+			throw new IllegalArgumentException("Argument pageClass must be an instance of " +
+					Page.class.getName());
 		}
 		this.pageClassRef = new WeakReference(pageClass);
 		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
@@ -152,8 +152,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	}
 
 	/**
-	 * @return The page that was created, null if the response did not happen
-	 *         yet
+	 * @return The page that was created, null if the response did not happen yet
 	 */
 	public final Page getPage()
 	{
@@ -216,7 +215,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			if (requestCycle.isRedirect())
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
-				String redirectUrl = processor.getRequestCodingStrategy().encode(requestCycle, this).toString();
+				String redirectUrl = processor.getRequestCodingStrategy()
+						.encode(requestCycle, this).toString();
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
@@ -232,8 +232,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public String toString()
 	{
-		return "[BookmarkablePageRequestTarget@" + hashCode() + " pageClass=" + getPageClass().getName()
-				+ "]";
+		return "[BookmarkablePageRequestTarget@" + hashCode() + " pageClass=" +
+				getPageClass().getName() + "]";
 	}
 
 	/**

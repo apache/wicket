@@ -24,15 +24,16 @@ import org.apache.wicket.markup.html.basic.Label;
 public class MarkupInheritanceExtensionPanel_9 extends MarkupInheritanceBasePanel_9
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public MarkupInheritanceExtensionPanel_9(final String id) 
+	public MarkupInheritanceExtensionPanel_9(final String id)
 	{
-	    super(id);
-	    
-	    add(new Label("extendLabel", "extension label"));
-    }
+		super(id);
+
+		add(new Label("extendLabel", "extension label"));
+	}
 }

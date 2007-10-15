@@ -22,10 +22,10 @@ import org.apache.wicket.util.lang.Primitives;
 
 
 /**
- * A base class based on the Java <code>int</code> primitive for value classes
- * that want to implement standard operations on that value without the pain of
- * aggregating an <code>Integer</code> object.
- *
+ * A base class based on the Java <code>int</code> primitive for value classes that want to
+ * implement standard operations on that value without the pain of aggregating an
+ * <code>Integer</code> object.
+ * 
  * @author Jonathan Locke
  * @since 1.2.6
  */
@@ -38,7 +38,7 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param value
 	 *            the <code>int</code> value
 	 */
@@ -71,11 +71,11 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Compares this <code>Object</code> to a given <code>Object</code>.
-	 *
+	 * 
 	 * @param object
 	 *            the <code>Object</code> to compare with
-	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s
-	 *         value, or 1 if greater than given <code>Object</code>'s value
+	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s value, or 1 if greater
+	 *         than given <code>Object</code>'s value
 	 */
 	public final boolean equals(final Object that)
 	{
@@ -88,13 +88,12 @@ public class IntValue implements Comparable, Serializable
 	}
 
 	/**
-	 * Compares this <code>IntValue</code> with a primitive <code>int</code>
-	 * value.
-	 *
+	 * Compares this <code>IntValue</code> with a primitive <code>int</code> value.
+	 * 
 	 * @param value
 	 *            the <code>int</code> value to compare with
-	 * @return <code>true</code> if this <code>IntValue</code> is greater
-	 *         than the given <code>int</code> value
+	 * @return <code>true</code> if this <code>IntValue</code> is greater than the given
+	 *         <code>int</code> value
 	 */
 	public final boolean greaterThan(final int value)
 	{
@@ -103,11 +102,11 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Compares this <code>IntValue</code> with another <code>IntValue</code>.
-	 *
+	 * 
 	 * @param that
 	 *            the <code>IntValue</code> to compare with
-	 * @return <code>true</code> if this <code>IntValue</code> is greater
-	 *         than the given <code>IntValue</code>
+	 * @return <code>true</code> if this <code>IntValue</code> is greater than the given
+	 *         <code>IntValue</code>
 	 */
 	public final boolean greaterThan(final IntValue that)
 	{
@@ -116,7 +115,7 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Returns the hash code for this <code>Object</code>.
-	 *
+	 * 
 	 * @return hash code for this <code>Object</code>
 	 */
 	public final int hashCode()
@@ -125,13 +124,12 @@ public class IntValue implements Comparable, Serializable
 	}
 
 	/**
-	 * Compares this <code>IntValue</code> with a primitive <code>int</code>
-	 * value.
-	 *
+	 * Compares this <code>IntValue</code> with a primitive <code>int</code> value.
+	 * 
 	 * @param that
 	 *            the <code>int</code> value to compare with
-	 * @return <code>true</code> if this <code>IntValue</code> is less
-	 *         than the given <code>int</code> value
+	 * @return <code>true</code> if this <code>IntValue</code> is less than the given
+	 *         <code>int</code> value
 	 */
 	public final boolean lessThan(final int that)
 	{
@@ -140,11 +138,11 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Compares this <code>IntValue</code> with another <code>IntValue</code>.
-	 *
+	 * 
 	 * @param that
 	 *            the <code>IntValue</code> to compare with
-	 * @return <code>true</code> if this <code>IntValue</code> is less
-	 *         than the given <code>IntValue</code>
+	 * @return <code>true</code> if this <code>IntValue</code> is less than the given
+	 *         <code>IntValue</code>
 	 */
 	public final boolean lessThan(final IntValue that)
 	{
@@ -153,9 +151,8 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Converts this <code>LongValue</code> to a <code>String</code>.
-	 *
-	 * @return a <code>String</code> representation of this
-	 *         <code>LongValue</code>
+	 * 
+	 * @return a <code>String</code> representation of this <code>LongValue</code>
 	 */
 	public String toString()
 	{

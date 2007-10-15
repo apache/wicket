@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * @author marrink
- *
+ * 
  */
 public class UsernamePasswordSignInPanel extends Panel
 {
@@ -45,6 +45,7 @@ public class UsernamePasswordSignInPanel extends Panel
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = LoggerFactory.getLogger(UsernamePasswordSignInPanel.class);
+
 	/**
 	 * Constructor.
 	 */
@@ -81,7 +82,9 @@ public class UsernamePasswordSignInPanel extends Panel
 
 		/**
 		 * Constructor.
-		 * @param id id of the form component
+		 * 
+		 * @param id
+		 *            id of the form component
 		 */
 		public SignInForm(final String id)
 		{
@@ -109,7 +112,7 @@ public class UsernamePasswordSignInPanel extends Panel
 				getPage().removePersistedFormData(SignInForm.class, true);
 			}
 
-			ValueMap values = (ValueMap) getModelObject();
+			ValueMap values = (ValueMap)getModelObject();
 			String username = values.getString("username");
 			String password = values.getString("password");
 
@@ -143,7 +146,7 @@ public class UsernamePasswordSignInPanel extends Panel
 		public void setRememberMe(boolean rememberMe)
 		{
 			this.rememberMe = rememberMe;
-			((FormComponent) get("username")).setPersistent(rememberMe);
+			((FormComponent)get("username")).setPersistent(rememberMe);
 		}
 	}
 }

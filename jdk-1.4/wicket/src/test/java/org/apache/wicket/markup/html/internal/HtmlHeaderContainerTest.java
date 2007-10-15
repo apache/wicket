@@ -27,6 +27,7 @@ public class HtmlHeaderContainerTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public HtmlHeaderContainerTest(String name)
@@ -35,8 +36,7 @@ public class HtmlHeaderContainerTest extends WicketTestCase
 	}
 
 	/**
-	 * Test clean-up of auto added components after removal of the
-	 * HtmlHeaderContainer.
+	 * Test clean-up of auto added components after removal of the HtmlHeaderContainer.
 	 */
 	public void testCleanUpOfAutoAddedComponents()
 	{
@@ -45,7 +45,6 @@ public class HtmlHeaderContainerTest extends WicketTestCase
 		// onEndRequest() of auto added component was not called in
 		// MarkupContainer#internalEndRequest() using an iterator
 		ComponentResolvingPage page = (ComponentResolvingPage)tester.getLastRenderedPage();
-		assertTrue("onDetach() should have been called",
-				page.onDetachWasCalledOnAutoAddedComponent);
+		assertTrue("onDetach() should have been called", page.onDetachWasCalledOnAutoAddedComponent);
 	}
 }

@@ -39,7 +39,8 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 		WebApplication myApplication = new DummyWebApplication()
 		{
 			/**
-			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request, org.apache.wicket.Response)
+			 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.Request,
+			 *      org.apache.wicket.Response)
 			 */
 			public Session newSession(Request request, Response response)
 			{
@@ -48,9 +49,9 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 				return session;
 			}
 		};
-		
+
 		tester = new WicketTester(myApplication);
-		
+
 		executeTest(OnChangeAjaxBehaviorTestPage.class,
 				"OnChangeAjaxBehaviorTestPage_expected.html");
 	}

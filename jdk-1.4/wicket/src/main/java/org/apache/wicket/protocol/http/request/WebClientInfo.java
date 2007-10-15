@@ -38,10 +38,10 @@ public class WebClientInfo extends ClientInfo
 	private static final Logger log = LoggerFactory.getLogger(WebClientInfo.class);
 
 	/**
-	 * The user agent string from the User-Agent header, app. Theoretically,
-	 * this might differ from {@link ClientProperties#isJavaEnabled()} property,
-	 * which is not set until an actual reply from a browser (e.g. using
-	 * {@link org.apache.wicket.markup.html.pages.BrowserInfoPage} is set.
+	 * The user agent string from the User-Agent header, app. Theoretically, this might differ from
+	 * {@link ClientProperties#isJavaEnabled()} property, which is not set until an actual reply
+	 * from a browser (e.g. using {@link org.apache.wicket.markup.html.pages.BrowserInfoPage} is
+	 * set.
 	 */
 	private final String userAgent;
 

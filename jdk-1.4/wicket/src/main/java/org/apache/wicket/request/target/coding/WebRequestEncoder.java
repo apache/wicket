@@ -23,8 +23,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
- * {@link AppendingStringBuffer}-based query string encoder, handles String[]
- * and String properly, and properly URL-encodes the values
+ * {@link AppendingStringBuffer}-based query string encoder, handles String[] and String properly,
+ * and properly URL-encodes the values
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */

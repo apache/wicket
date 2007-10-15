@@ -23,8 +23,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
- * A subclass of {@link Image} that adds random noise to the url every request
- * to prevent the browser from caching the image.
+ * A subclass of {@link Image} that adds random noise to the url every request to prevent the
+ * browser from caching the image.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -125,7 +125,7 @@ public class NonCachingImage extends Image
 		String url = tag.getAttributes().getString("src");
 		url = url + ((url.indexOf("?") >= 0) ? "&" : "?");
 		url = url + "wicket:antiCache=" + System.currentTimeMillis();
-		
+
 		tag.put("src", url);
 	}
 

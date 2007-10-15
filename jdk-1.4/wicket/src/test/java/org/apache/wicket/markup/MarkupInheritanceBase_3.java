@@ -17,22 +17,21 @@
 package org.apache.wicket.markup;
 
 
-
 /**
  */
 public class MarkupInheritanceBase_3 extends MarkupInheritanceBaseBase_3
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBase_3() 
+	public MarkupInheritanceBase_3()
 	{
-	    super();
-	    
-	    //add(new Label("label3", "base label 3"));
-	    //add(new Label("label4", "base label 4"));
-    }
+		super();
+
+		// add(new Label("label3", "base label 3"));
+		// add(new Label("label4", "base label 4"));
+	}
 }

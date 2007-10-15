@@ -34,13 +34,15 @@ import org.apache.wicket.validation.validator.StringValidator;
  */
 public class MockAjaxFormPage extends WebPage
 {
-	private static final class MockDomainObject implements Serializable {
+	private static final class MockDomainObject implements Serializable
+	{
 		private static final long serialVersionUID = 1L;
 
 		private String text;
 
 		/**
 		 * Gets text.
+		 * 
 		 * @return text Text entered in the text field
 		 */
 		public String getText()
@@ -50,7 +52,9 @@ public class MockAjaxFormPage extends WebPage
 
 		/**
 		 * Sets text.
-		 * @param text New value for the text field
+		 * 
+		 * @param text
+		 *            New value for the text field
 		 */
 		public void setText(String text)
 		{
@@ -63,7 +67,8 @@ public class MockAjaxFormPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public MockAjaxFormPage() {
+	public MockAjaxFormPage()
+	{
 		Form form = new Form("form", new CompoundPropertyModel(new MockDomainObject()));
 		add(form);
 		final Button submit = new Button("submit");
@@ -73,7 +78,8 @@ public class MockAjaxFormPage extends WebPage
 		final TextField text = new TextField("text");
 		text.setRequired(true);
 		text.add(StringValidator.minimumLength(4));
-		text.add(new AjaxFormValidatingBehavior(form, "onkeyup") {
+		text.add(new AjaxFormValidatingBehavior(form, "onkeyup")
+		{
 			private static final long serialVersionUID = 1L;
 
 			protected void onEvent(AjaxRequestTarget target)

@@ -25,9 +25,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * Allows the use of lists with dataview. The only requirement is that either
- * list items must be serializable or model(Object) needs to be overridden to
- * provide the proper model implementation.
+ * Allows the use of lists with dataview. The only requirement is that either list items must be
+ * serializable or model(Object) needs to be overridden to provide the proper model implementation.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 
@@ -59,8 +58,8 @@ public class ListDataProvider implements IDataProvider
 	 */
 	public Iterator iterator(final int first, final int count)
 	{
-		int toIndex = first+count;
-		if(toIndex > list.size())
+		int toIndex = first + count;
+		if (toIndex > list.size())
 		{
 			toIndex = list.size();
 		}

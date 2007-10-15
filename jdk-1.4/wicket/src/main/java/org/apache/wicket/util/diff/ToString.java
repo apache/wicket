@@ -71,9 +71,9 @@ public class ToString
 	}
 
 	/**
-	 * Default implementation of the
-	 * {@link java.lang.Object#toString toString() } method that delegates work
-	 * to a {@link java.lang.StringBuffer StringBuffer} base version.
+	 * Default implementation of the {@link java.lang.Object#toString toString() } method that
+	 * delegates work to a {@link java.lang.StringBuffer StringBuffer} base version.
+	 * 
 	 * @return String
 	 */
 	public String toString()
@@ -95,8 +95,8 @@ public class ToString
 	}
 
 	/**
-	 * Breaks a string into an array of strings. Use the value of the
-	 * <code>line.separator</code> system property as the linebreak character.
+	 * Breaks a string into an array of strings. Use the value of the <code>line.separator</code>
+	 * system property as the linebreak character.
 	 * 
 	 * @param value
 	 *            the string to convert.
@@ -121,8 +121,8 @@ public class ToString
 	}
 
 	/**
-	 * Converts an array of {@link Object Object} to a string Use the value of
-	 * the <code>line.separator</code> system property the line separator.
+	 * Converts an array of {@link Object Object} to a string Use the value of the
+	 * <code>line.separator</code> system property the line separator.
 	 * 
 	 * @param o
 	 *            the array of objects.
@@ -134,8 +134,7 @@ public class ToString
 	}
 
 	/**
-	 * Converts an array of {@link Object Object} to a string using the given
-	 * line separator.
+	 * Converts an array of {@link Object Object} to a string using the given line separator.
 	 * 
 	 * @param o
 	 *            the array of objects.

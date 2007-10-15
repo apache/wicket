@@ -24,8 +24,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
- * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags, which are
- * silently ignored, because they have already been processed.
+ * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags, which are silently ignored, because
+ * they have already been processed.
  * 
  * @author Juergen Donnerstag
  */
@@ -79,8 +79,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	}
 
 	/**
-	 * This is a WebMarkupContainer, except that it is transparent for it child
-	 * components.
+	 * This is a WebMarkupContainer, except that it is transparent for it child components.
 	 */
 	private static class TransparentWebMarkupContainer extends WebMarkupContainer
 	{

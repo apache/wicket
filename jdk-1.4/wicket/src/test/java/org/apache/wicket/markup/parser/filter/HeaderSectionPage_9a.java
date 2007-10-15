@@ -23,19 +23,19 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class HeaderSectionPage_9a extends WebPage 
+public class HeaderSectionPage_9a extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public HeaderSectionPage_9a() 
+	public HeaderSectionPage_9a()
 	{
-	    add(new HeaderSectionPanel_2("panel"));
-	    ((MarkupContainer)get("panel")).get("cssHref").setVisible(false);
-    }
+		add(new HeaderSectionPanel_2("panel"));
+		((MarkupContainer)get("panel")).get("cssHref").setVisible(false);
+	}
 }

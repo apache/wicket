@@ -48,8 +48,7 @@ public interface IRequestTargetMounter
 	 * 
 	 * @param requestParameters
 	 *            the request parameters
-	 * @return the request target or null if nothing was mounted with the given
-	 *         request parameters
+	 * @return the request target or null if nothing was mounted with the given request parameters
 	 */
 	IRequestTarget targetForRequest(RequestParameters requestParameters);
 

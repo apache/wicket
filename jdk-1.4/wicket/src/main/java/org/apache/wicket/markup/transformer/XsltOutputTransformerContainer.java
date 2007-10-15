@@ -22,22 +22,20 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * A container which output markup will be processes by a XSLT processor prior
- * to writing the output into the web response. The *.xsl resource must be
- * located in the same path as the nearest parent with an associated markup and
- * must have a filename equal to the component's id.
+ * A container which output markup will be processes by a XSLT processor prior to writing the output
+ * into the web response. The *.xsl resource must be located in the same path as the nearest parent
+ * with an associated markup and must have a filename equal to the component's id.
  * <p>
- * The containers tag will be the root element of the xml data applied for
- * transformation to ensure the xml data are well formed (single root element).
- * In addition the attribute
- * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to the
- * root element to allow the XSL processor to handle the wicket namespace.
+ * The containers tag will be the root element of the xml data applied for transformation to ensure
+ * the xml data are well formed (single root element). In addition the attribute
+ * <code>xmlns:wicket="http://wicket.apache.org"</code> is added to the root element to allow the
+ * XSL processor to handle the wicket namespace.
  * <p>
- * Similar to this container, a <code>IBehavior</code> is available which does
- * the same, but does not require an additional Container.
+ * Similar to this container, a <code>IBehavior</code> is available which does the same, but does
+ * not require an additional Container.
  * 
  * @see org.apache.wicket.markup.transformer.XsltTransformerBehavior
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class XsltOutputTransformerContainer extends AbstractOutputTransformerContainer
@@ -48,14 +46,17 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	private final String xslFile;
 
 	/**
-	 * Instead of using the default mechanism to determine the associated XSL
-	 * file, it is given by the user.
+	 * Instead of using the default mechanism to determine the associated XSL file, it is given by
+	 * the user.
 	 * 
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 * 
-	 * @param id           the wicket:id
-	 * @param model        the model (unused)
-	 * @param xslFilePath  XSL input file path
+	 * @param id
+	 *            the wicket:id
+	 * @param model
+	 *            the model (unused)
+	 * @param xslFilePath
+	 *            XSL input file path
 	 */
 	public XsltOutputTransformerContainer(final String id, final IModel model,
 			final String xslFilePath)
@@ -77,8 +78,10 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
-	 * @param id           the wicket:id
-	 * @param model        the model (unused)
+	 * @param id
+	 *            the wicket:id
+	 * @param model
+	 *            the model (unused)
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public XsltOutputTransformerContainer(final String id, final IModel model)
@@ -89,7 +92,8 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
-	 * @param id           the wicket:id
+	 * @param id
+	 *            the wicket:id
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
 	public XsltOutputTransformerContainer(final String id)
@@ -111,7 +115,8 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @see org.apache.wicket.markup.transformer.ITransformer#transform(org.apache.wicket.Component,
 	 *      CharSequence)
 	 */
-	public CharSequence transform(final Component component, final CharSequence output) throws Exception
+	public CharSequence transform(final Component component, final CharSequence output)
+			throws Exception
 	{
 		return new XsltTransformer(this.xslFile).transform(component, output);
 	}

@@ -21,20 +21,21 @@ import org.apache.wicket.markup.html.border.Border;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class SimpleBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public SimpleBorder(final String id) 
+	public SimpleBorder(final String id)
 	{
-	    super(id);
-	    setRenderBodyOnly(true);
-    }
+		super(id);
+		setRenderBodyOnly(true);
+	}
 }

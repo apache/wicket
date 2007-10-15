@@ -19,8 +19,7 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.WicketTestCase;
 
 /**
- * Simple tester that demonstrates the mock http application code (and
- * checks that it is working)
+ * Simple tester that demonstrates the mock http application code (and checks that it is working)
  * 
  * @author Chris Turner
  */

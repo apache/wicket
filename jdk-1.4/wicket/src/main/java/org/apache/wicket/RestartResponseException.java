@@ -17,8 +17,8 @@
 package org.apache.wicket;
 
 /**
- * Causes wicket to interrupt current request processing and immediately respond
- * with the specified page.
+ * Causes wicket to interrupt current request processing and immediately respond with the specified
+ * page.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -38,8 +38,7 @@ public class RestartResponseException extends AbstractRestartResponseException
 	}
 
 	/**
-	 * Redirects to the specified bookmarkable page with the given page
-	 * parameters
+	 * Redirects to the specified bookmarkable page with the given page parameters
 	 * 
 	 * @param pageClass
 	 *            class of bookmarkable page

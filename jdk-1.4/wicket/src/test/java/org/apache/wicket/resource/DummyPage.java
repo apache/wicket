@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Dummy page used for resource testing.
+ * 
  * @author Chris Turner
  */
 public class DummyPage extends WebPage

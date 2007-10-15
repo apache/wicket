@@ -27,11 +27,12 @@ import org.slf4j.LoggerFactory;
 public class Page2 extends WebPage
 {
 	private static final Logger log = LoggerFactory.getLogger(Page2.class);
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
+	 * 
 	 * @param params
 	 */
 	public Page2(final PageParameters params)

@@ -22,19 +22,19 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class SimplePage_6 extends WebPage 
+public class SimplePage_6 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public SimplePage_6() 
+	public SimplePage_6()
 	{
-	    Panel panel = new SimplePanel_6("myPanel");
-	    add(panel);
-    }
+		Panel panel = new SimplePanel_6("myPanel");
+		add(panel);
+	}
 }

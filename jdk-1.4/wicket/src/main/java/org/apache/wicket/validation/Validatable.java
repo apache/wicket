@@ -21,26 +21,29 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This implementation of {@link IValidatable} is meant to be used outside of
- * Wicket. It allows other parts of the application to utilize
- * {@link IValidator}s for validation.
+ * This implementation of {@link IValidatable} is meant to be used outside of Wicket. It allows
+ * other parts of the application to utilize {@link IValidator}s for validation.
  * <p>
- * Example: 
- * <code><pre>
- * class WebService {
- *   public void addUser(String firstName, String lastName) {
- *     Validatable standin=new Validatable();
- *     standin.setValue(firstName);
- *     new FirstNameValidator().validate(standin);
- *     standing.setValue(lastName);
- *     new LastNameValidator().validate(standin);
- *     if (!standin.isValid()) {
- *       // roll your own ValidationException
- *       throw new ValidationException(standin.getErrors());
- *     } else {
- *         // add user here
- *     }
- *   }
+ * Example: <code><pre>
+ * class WebService
+ * {
+ * 	public void addUser(String firstName, String lastName)
+ * 	{
+ * 		Validatable standin = new Validatable();
+ * 		standin.setValue(firstName);
+ * 		new FirstNameValidator().validate(standin);
+ * 		standing.setValue(lastName);
+ * 		new LastNameValidator().validate(standin);
+ * 		if (!standin.isValid())
+ * 		{
+ * 			// roll your own ValidationException
+ * 			throw new ValidationException(standin.getErrors());
+ * 		}
+ * 		else
+ * 		{
+ * 			// add user here
+ * 		}
+ * 	}
  * }
  * </pre></code>
  * 
@@ -51,7 +54,7 @@ public class Validatable implements IValidatable
 {
 	/** the value object */
 	private Object value;
-	
+
 	/** the list of errors */
 	private ArrayList errors;
 
@@ -94,8 +97,8 @@ public class Validatable implements IValidatable
 	}
 
 	/**
-	 * Retrieves an unmodifiable list of any errors reported against this
-	 * <code>IValidatable</code> instance.
+	 * Retrieves an unmodifiable list of any errors reported against this <code>IValidatable</code>
+	 * instance.
 	 * 
 	 * @return an unmodifiable list of errors
 	 */

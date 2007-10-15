@@ -20,15 +20,14 @@ import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.resource.ComponentResourceRequestTarget;
 
 /**
- * Listens for requests regarding resources. Such resources are typically
- * non-static in nature and may even be created on the fly.
+ * Listens for requests regarding resources. Such resources are typically non-static in nature and
+ * may even be created on the fly.
  * <p>
- * One use for resource listeners is that they may be used to create components
- * such as Image which respond to requests with a localized resource loaded from
- * the classpath. The Image class allows reusable components to transparently
- * bundle localized image resources. Components that use Image resources
- * (instead of referencing static images in their markup) can be distributed as
- * a self-contained JAR file.
+ * One use for resource listeners is that they may be used to create components such as Image which
+ * respond to requests with a localized resource loaded from the classpath. The Image class allows
+ * reusable components to transparently bundle localized image resources. Components that use Image
+ * resources (instead of referencing static images in their markup) can be distributed as a
+ * self-contained JAR file.
  * 
  * @see org.apache.wicket.markup.html.image.Image
  * @see org.apache.wicket.markup.html.image.resource.RenderedDynamicImageResource

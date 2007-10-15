@@ -28,9 +28,9 @@ import org.apache.wicket.protocol.http.WebResponse;
 
 
 /**
- * Response target that is to be used in a servlet environment to send an error
- * code and optionally a message. NOTE: this target can only be used in a
- * servlet environment with {@link org.apache.wicket.protocol.http.WebRequestCycle}s.
+ * Response target that is to be used in a servlet environment to send an error code and optionally
+ * a message. NOTE: this target can only be used in a servlet environment with
+ * {@link org.apache.wicket.protocol.http.WebRequestCycle}s.
  * 
  * @author Eelco Hillenius
  */
@@ -72,8 +72,7 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	}
 
 	/**
-	 * Respond by sending the set errorCode and optionally the message to the
-	 * browser.
+	 * Respond by sending the set errorCode and optionally the message to the browser.
 	 * 
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
@@ -165,7 +164,7 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	 */
 	public String toString()
 	{
-		return "[WebErrorCodeResponseTarget@" + hashCode() + " errorCode=" + getErrorCode()
-				+ ((message != null) ? " (" + message + ")" : "" + "]");
+		return "[WebErrorCodeResponseTarget@" + hashCode() + " errorCode=" + getErrorCode() +
+				((message != null) ? " (" + message + ")" : "" + "]");
 	}
 }

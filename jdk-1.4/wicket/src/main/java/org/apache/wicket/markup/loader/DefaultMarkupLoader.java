@@ -24,9 +24,8 @@ import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * This is Wickets default markup loader. It uses the
- * InheritedMarkupMarkupLoader and SimpleMarkupLoader to load the markup
- * associated with a MarkupContainer.
+ * This is Wickets default markup loader. It uses the InheritedMarkupMarkupLoader and
+ * SimpleMarkupLoader to load the markup associated with a MarkupContainer.
  * 
  * @see InheritedMarkupMarkupLoader
  * @see SimpleMarkupLoader

@@ -27,14 +27,14 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * Tag tester is used to test that a generated markup tag contains the correct
- * attributes, values etc. This can be done instead of comparing generated
- * markup with some expected markup. The advantage of this is that a lot of
- * tests don't fail when the generated markup changes just a little bit.
+ * Tag tester is used to test that a generated markup tag contains the correct attributes, values
+ * etc. This can be done instead of comparing generated markup with some expected markup. The
+ * advantage of this is that a lot of tests don't fail when the generated markup changes just a
+ * little bit.
  * <p>
- * It also gives a more programmatic way of testing the generated output, by not
- * having to worry about precisely how the markup looks instead of which
- * attributes exists on the given tags, and what values they have.
+ * It also gives a more programmatic way of testing the generated output, by not having to worry
+ * about precisely how the markup looks instead of which attributes exists on the given tags, and
+ * what values they have.
  * <p>
  * Example:
  * 
@@ -59,9 +59,12 @@ public class TagTester
 	/**
 	 * Constructor.
 	 * 
-	 * @param parser an <code>XmlPullParser</code>
-	 * @param openTag an opening XML tag
-	 * @param closeTag a closing XML tag
+	 * @param parser
+	 *            an <code>XmlPullParser</code>
+	 * @param openTag
+	 *            an opening XML tag
+	 * @param closeTag
+	 *            a closing XML tag
 	 */
 	private TagTester(XmlPullParser parser, XmlTag openTag, XmlTag closeTag)
 	{
@@ -81,13 +84,12 @@ public class TagTester
 	}
 
 	/**
-	 * Tests if the tag contains the given attribute. Please note that this is
-	 * non case-sensitive, because attributes in HTML may be non case-sensitive.
+	 * Tests if the tag contains the given attribute. Please note that this is non case-sensitive,
+	 * because attributes in HTML may be non case-sensitive.
 	 * 
 	 * @param attribute
 	 *            an attribute to look for in the tag
-	 * @return <code>true</code> if the tag has the attribute,
-	 *         <code>false</code> if not.
+	 * @return <code>true</code> if the tag has the attribute, <code>false</code> if not.
 	 */
 	public boolean hasAttribute(String attribute)
 	{
@@ -102,13 +104,12 @@ public class TagTester
 	}
 
 	/**
-	 * Gets the value for a given attribute. Please note that this is non
-	 * case-sensitive, because attributes in HTML may be non case-sensitive.
+	 * Gets the value for a given attribute. Please note that this is non case-sensitive, because
+	 * attributes in HTML may be non case-sensitive.
 	 * 
 	 * @param attribute
 	 *            an attribute to look for in the tag
-	 * @return the value of the attribute or <code>null</code> if it isn't
-	 *         found.
+	 * @return the value of the attribute or <code>null</code> if it isn't found.
 	 */
 	public String getAttribute(String attribute)
 	{
@@ -116,11 +117,11 @@ public class TagTester
 
 		IValueMap attributeMap = openTag.getAttributes();
 
-		if (attributeMap != null) 
+		if (attributeMap != null)
 		{
 			for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();)
 			{
-				String attr = (String) iter.next();
+				String attr = (String)iter.next();
 
 				if (attr.equalsIgnoreCase(attribute))
 				{
@@ -156,8 +157,7 @@ public class TagTester
 	 *            the attribute to test on
 	 * @param partialValue
 	 *            the partial value to test if the attribute value contains it
-	 * @return <code>true</code> if the attribute value contains the partial
-	 *         value
+	 * @return <code>true</code> if the attribute value contains the partial value
 	 */
 	public boolean getAttributeContains(String attribute, String partialValue)
 	{
@@ -186,8 +186,7 @@ public class TagTester
 	 *            an attribute to test
 	 * @param expected
 	 *            the value which should be the same at the attribute's value
-	 * @return <code>true</code> if the attribute's value is the same as the
-	 *         given value
+	 * @return <code>true</code> if the attribute's value is the same as the given value
 	 */
 	public boolean getAttributeIs(String attribute, String expected)
 	{
@@ -210,8 +209,7 @@ public class TagTester
 	 *            an attribute to test
 	 * @param expected
 	 *            the expected value
-	 * @return <code>true</code> if the attribute's value ends with the
-	 *         expected value
+	 * @return <code>true</code> if the attribute's value ends with the expected value
 	 */
 	public boolean getAttributeEndsWith(String attribute, String expected)
 	{
@@ -238,8 +236,7 @@ public class TagTester
 	 * 
 	 * @param tagName
 	 *            the tag name to search for
-	 * @return <code>true</code> if this tag has a child with the given
-	 *         <code>tagName</code>.
+	 * @return <code>true</code> if this tag has a child with the given <code>tagName</code>.
 	 */
 	public boolean hasChildTag(String tagName)
 	{
@@ -249,10 +246,10 @@ public class TagTester
 		{
 			throw new IllegalArgumentException("You need to provide a not empty/not null argument.");
 		}
-		
+
 		if (openTag.isOpen())
 		{
-			try 
+			try
 			{
 				// Get the content of the tag
 				int startPos = openTag.getPos() + openTag.getLength();
@@ -265,7 +262,7 @@ public class TagTester
 					p.parse(markup);
 
 					XmlTag tag = null;
-					while((tag = (XmlTag) p.nextTag()) != null)
+					while ((tag = (XmlTag)p.nextTag()) != null)
 					{
 						if (tagName.equalsIgnoreCase(tag.getName()))
 						{
@@ -287,8 +284,8 @@ public class TagTester
 	}
 
 	/**
-	 * Gets a child tag for testing. If this tag contains child tags, you can
-	 * get one of them as a {@link TagTester} instance.
+	 * Gets a child tag for testing. If this tag contains child tags, you can get one of them as a
+	 * {@link TagTester} instance.
 	 * 
 	 * @param attribute
 	 *            an attribute on the child tag to search for
@@ -315,8 +312,8 @@ public class TagTester
 	}
 
 	/**
-	 * Gets the markup for this tag. This includes all markup between the open
-	 * tag and the close tag.
+	 * Gets the markup for this tag. This includes all markup between the open tag and the close
+	 * tag.
 	 * 
 	 * @return all the markup between the open tag and the close tag
 	 */
@@ -330,28 +327,26 @@ public class TagTester
 	}
 
 	/**
-	 * Static factory method for creating a <code>TagTester</code> based on a
-	 * tag found by an attribute with a specific value. Please note that it will
-	 * return the first tag which matches the criteria. It's therefore good for
-	 * attributes suck as "id" or "wicket:id", but only if "wicket:id" is unique
-	 * in the specified markup.
+	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
+	 * attribute with a specific value. Please note that it will return the first tag which matches
+	 * the criteria. It's therefore good for attributes suck as "id" or "wicket:id", but only if
+	 * "wicket:id" is unique in the specified markup.
 	 * 
 	 * @param markup
-	 *            the markup to look for the tag to create the
-	 *            <code>TagTester</code> from
+	 *            the markup to look for the tag to create the <code>TagTester</code> from
 	 * @param attribute
 	 *            the attribute which should be on the tag in the markup
 	 * @param value
 	 *            the value which the attribute must have
-	 * @return the <code>TagTester</code> which matches the tag in the markup,
-	 *         that has the given value on the given attribute
+	 * @return the <code>TagTester</code> which matches the tag in the markup, that has the given
+	 *         value on the given attribute
 	 */
 	public static TagTester createTagByAttribute(String markup, String attribute, String value)
 	{
 		TagTester tester = null;
 
-		if (Strings.isEmpty(markup) == false && Strings.isEmpty(attribute) == false
-				&& Strings.isEmpty(value) == false)
+		if (Strings.isEmpty(markup) == false && Strings.isEmpty(attribute) == false &&
+				Strings.isEmpty(value) == false)
 		{
 			try
 			{
@@ -374,8 +369,8 @@ public class TagTester
 
 							for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();)
 							{
-								String attr = (String) iter.next();
-								
+								String attr = (String)iter.next();
+
 								if (attr.equals(attribute) && value.equals(attributeMap.get(attr)))
 								{
 									if (xmlTag.isOpen())

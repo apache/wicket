@@ -27,7 +27,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 public final class MarkupException extends WicketRuntimeException
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The markup stream that was being parsed when the exception was thrown */
 	private MarkupStream markupStream;
 
@@ -63,7 +63,8 @@ public final class MarkupException extends WicketRuntimeException
 	 * @param cause
 	 *            The causing exception
 	 */
-	public MarkupException(final IResourceStream resource, final String message, final Throwable cause)
+	public MarkupException(final IResourceStream resource, final String message,
+			final Throwable cause)
 	{
 		super(resource.toString() + ": " + message, cause);
 		markupStream = null;
@@ -89,7 +90,8 @@ public final class MarkupException extends WicketRuntimeException
 	 * @param cause
 	 *            The causing exception
 	 */
-	public MarkupException(final MarkupStream markupStream, final String message, final Throwable cause)
+	public MarkupException(final MarkupStream markupStream, final String message,
+			final Throwable cause)
 	{
 		super(message + "\n" + markupStream.toString(), cause);
 		this.markupStream = markupStream;
@@ -102,9 +104,10 @@ public final class MarkupException extends WicketRuntimeException
 	{
 		return markupStream;
 	}
-	
+
 	/**
 	 * Set the markup stream which caused the exception
+	 * 
 	 * @param markupStream
 	 */
 	public void setMarkupStream(final MarkupStream markupStream)

@@ -19,10 +19,9 @@ package org.apache.wicket.model;
 import org.apache.wicket.Component;
 
 /**
- * Quick detachable model that is implements the IComponentAssignedModel and the
- * IModel interfaces. Its a quick replacement for the current
- * setObject(Component,Object) and getObject(Component) methods when the
- * component is needed in a detachable model.
+ * Quick detachable model that is implements the IComponentAssignedModel and the IModel interfaces.
+ * Its a quick replacement for the current setObject(Component,Object) and getObject(Component)
+ * methods when the component is needed in a detachable model.
  * 
  * @author jcompagner
  */
@@ -31,8 +30,8 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Transient flag to prevent multiple detach/attach scenario. We need to
-	 * maintain this flag as we allow 'null' model values.
+	 * Transient flag to prevent multiple detach/attach scenario. We need to maintain this flag as
+	 * we allow 'null' model values.
 	 */
 	private transient boolean attached = false;
 
@@ -65,8 +64,7 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	}
 
 	/**
-	 * Set this model in an attached state. Called if the constructor sets the
-	 * data. (attached)
+	 * Set this model in an attached state. Called if the constructor sets the data. (attached)
 	 */
 	protected final void setAttached()
 	{
@@ -75,16 +73,16 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 
 
 	/**
-	 * Detaches from the current request. Implement this method with custom
-	 * behavior, such as setting the model object to null.
+	 * Detaches from the current request. Implement this method with custom behavior, such as
+	 * setting the model object to null.
 	 */
 	public void detach()
 	{
 	}
 
 	/**
-	 * Attaches to the current request. Implement this method with custom
-	 * behavior, such as loading the model object.
+	 * Attaches to the current request. Implement this method with custom behavior, such as loading
+	 * the model object.
 	 */
 	protected void attach()
 	{
@@ -92,9 +90,8 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	}
 
 	/**
-	 * Called when getObject is called in order to retrieve the detachable
-	 * object. Before this method is called, attach() is always called to ensure
-	 * that the object is attached.
+	 * Called when getObject is called in order to retrieve the detachable object. Before this
+	 * method is called, attach() is always called to ensure that the object is attached.
 	 * 
 	 * @param component
 	 *            The component asking for the object
@@ -106,9 +103,8 @@ public class ComponentDetachableModel implements IModel, IComponentAssignedModel
 	}
 
 	/**
-	 * Called when setObject is called in order to change the detachable object.
-	 * Before this method is called, attach() is always called to ensure that
-	 * the object is attached.
+	 * Called when setObject is called in order to change the detachable object. Before this method
+	 * is called, attach() is always called to ensure that the object is attached.
 	 * 
 	 * @param component
 	 *            The component asking for replacement of the model object

@@ -38,7 +38,7 @@ import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Servlet specific WebRequest subclass for multipart content uploads.
- *
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Cameron Braid
@@ -55,8 +55,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 
 	/**
-	 * total bytes uploaded (downloaded from server's pov) so far. used for
-	 * upload notifications
+	 * total bytes uploaded (downloaded from server's pov) so far. used for upload notifications
 	 */
 	private int bytesUploaded;
 
@@ -66,7 +65,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param maxSize
 	 *            the maximum size allowed for this request
 	 * @param request
@@ -79,7 +78,8 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	{
 		super(request);
 
-		if (maxSize == null) {
+		if (maxSize == null)
+		{
 			throw new IllegalArgumentException("argument maxSize must be not null");
 		}
 
@@ -170,7 +170,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 	/**
 	 * Adds a parameter to the parameters value map
-	 *
+	 * 
 	 * @param name
 	 *            parameter name
 	 * @param value
@@ -207,7 +207,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 	/**
 	 * Gets the file that was uploaded using the given field name.
-	 *
+	 * 
 	 * @param fieldName
 	 *            the field name that was used for the upload
 	 * @return the upload with the given field name
@@ -244,7 +244,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 	/**
 	 * Subclasses that want to receive upload notifications should return true
-	 *
+	 * 
 	 * @return true if upload status update event should be invoked
 	 */
 	protected boolean wantUploadProgressUpdates()
@@ -254,7 +254,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 	/**
 	 * Upload start callback
-	 *
+	 * 
 	 * @param totalBytes
 	 */
 	protected void onUploadStarted(int totalBytes)
@@ -264,7 +264,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 	/**
 	 * Upload status update callback
-	 *
+	 * 
 	 * @param bytesUploaded
 	 * @param total
 	 */
@@ -283,7 +283,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 	/**
 	 * An {@link InputStream} that updates total number of bytes read
-	 *
+	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	private class CountingInputStream extends InputStream
@@ -293,7 +293,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 
 		/**
 		 * Constructs a new CountingInputStream.
-		 *
+		 * 
 		 * @param in
 		 *            InputStream to delegate to
 		 */

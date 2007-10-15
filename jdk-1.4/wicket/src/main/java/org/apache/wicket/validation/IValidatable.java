@@ -33,8 +33,8 @@ public interface IValidatable
 	Object getValue();
 
 	/**
-	 * Reports an error against this <code>IValidatable</code>'s value.
-	 * Multiple errors can be reported by calling this method multiple times.
+	 * Reports an error against this <code>IValidatable</code>'s value. Multiple errors can be
+	 * reported by calling this method multiple times.
 	 * 
 	 * @param error
 	 *            an <code>IValidationError</code> to be reported
@@ -46,8 +46,8 @@ public interface IValidatable
 	 * <code>IValidatable</code>s should assume they are valid until
 	 * {@link #error(IValidationError)} is called.
 	 * 
-	 * @return <code>true</code> if the object is in a valid state,
-	 *         <code>false</code> if otherwise
+	 * @return <code>true</code> if the object is in a valid state, <code>false</code> if
+	 *         otherwise
 	 */
 	boolean isValid();
 }

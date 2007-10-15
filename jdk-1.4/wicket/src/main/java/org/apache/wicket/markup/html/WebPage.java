@@ -42,20 +42,18 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Base class for HTML pages. This subclass of Page simply returns HTML when
- * asked for its markup type. It also has a method which subclasses can use to
- * retrieve a bookmarkable link to the application's home page.
+ * Base class for HTML pages. This subclass of Page simply returns HTML when asked for its markup
+ * type. It also has a method which subclasses can use to retrieve a bookmarkable link to the
+ * application's home page.
  * <p>
- * WebPages can be constructed with any constructor when they are being used in
- * a Wicket session, but if you wish to link to a Page using a URL that is
- * "bookmarkable" (which implies that the URL will not have any session
- * information encoded in it, and that you can call this page directly without
- * having a session first directly from your browser), you need to implement
- * your Page with a no-arg constructor or with a constructor that accepts a
- * PageParameters argument (which wraps any query string parameters for a
- * request). In case the page has both constructors, the constructor with
- * PageParameters will be used.
- *
+ * WebPages can be constructed with any constructor when they are being used in a Wicket session,
+ * but if you wish to link to a Page using a URL that is "bookmarkable" (which implies that the URL
+ * will not have any session information encoded in it, and that you can call this page directly
+ * without having a session first directly from your browser), you need to implement your Page with
+ * a no-arg constructor or with a constructor that accepts a PageParameters argument (which wraps
+ * any query string parameters for a request). In case the page has both constructors, the
+ * constructor with PageParameters will be used.
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
@@ -64,10 +62,9 @@ import org.slf4j.LoggerFactory;
 public class WebPage extends Page implements INewBrowserWindowListener
 {
 	/**
-	 * Tries to determine whether this page was opened in a new window or tab.
-	 * If it is (and this checker were able to recognize that), a new page map
-	 * is created for this page instance, so that it will start using it's own
-	 * history in sync with the browser window or tab.
+	 * Tries to determine whether this page was opened in a new window or tab. If it is (and this
+	 * checker were able to recognize that), a new page map is created for this page instance, so
+	 * that it will start using it's own history in sync with the browser window or tab.
 	 */
 	private static final class PageMapChecker extends AbstractBehavior
 			implements
@@ -79,7 +76,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param webPage
 		 */
 		PageMapChecker(WebPage webPage)
@@ -175,14 +172,14 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The url compressor that will compress the urls by collapsing the
-	 * component path and listener interface
+	 * The url compressor that will compress the urls by collapsing the component path and listener
+	 * interface
 	 */
 	private UrlCompressor compressor;
 
 	/**
-	 * Constructor. Having this constructor public means that your page is
-	 * 'bookmarkable' and hence can be called/ created from anywhere.
+	 * Constructor. Having this constructor public means that your page is 'bookmarkable' and hence
+	 * can be called/ created from anywhere.
 	 */
 	protected WebPage()
 	{
@@ -217,15 +214,14 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * Constructor which receives wrapped query string parameters for a request.
-	 * Having this constructor public means that your page is 'bookmarkable' and
-	 * hence can be called/ created from anywhere. For bookmarkable pages (as
-	 * opposed to when you construct page instances yourself, this constructor
-	 * will be used in preference to a no-arg constructor, if both exist. Note
-	 * that nothing is done with the page parameters argument. This constructor
-	 * is provided so that tools such as IDEs will include it their list of
-	 * suggested constructors for derived classes.
-	 *
+	 * Constructor which receives wrapped query string parameters for a request. Having this
+	 * constructor public means that your page is 'bookmarkable' and hence can be called/ created
+	 * from anywhere. For bookmarkable pages (as opposed to when you construct page instances
+	 * yourself, this constructor will be used in preference to a no-arg constructor, if both exist.
+	 * Note that nothing is done with the page parameters argument. This constructor is provided so
+	 * that tools such as IDEs will include it their list of suggested constructors for derived
+	 * classes.
+	 * 
 	 * @param parameters
 	 *            Wrapped query string parameters.
 	 */
@@ -236,13 +232,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * Gets the markup type for a WebPage, which is "html" by default. Support
-	 * for pages in another markup language, such as VXML, would require the
-	 * creation of a different Page subclass in an appropriate package under
-	 * org.apache.wicket.markup. To support VXML (voice markup), one might
-	 * create the package org.apache.wicket.markup.vxml and a subclass of Page
-	 * called VoicePage.
-	 *
+	 * Gets the markup type for a WebPage, which is "html" by default. Support for pages in another
+	 * markup language, such as VXML, would require the creation of a different Page subclass in an
+	 * appropriate package under org.apache.wicket.markup. To support VXML (voice markup), one might
+	 * create the package org.apache.wicket.markup.vxml and a subclass of Page called VoicePage.
+	 * 
 	 * @return Markup type for HTML
 	 */
 	public String getMarkupType()
@@ -251,20 +245,20 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * This method is called when the compressing coding and response strategies
-	 * are configured in your Application object like this:
-	 *
+	 * This method is called when the compressing coding and response strategies are configured in
+	 * your Application object like this:
+	 * 
 	 * <pre>
 	 * protected IRequestCycleProcessor newRequestCycleProcessor()
 	 * {
 	 * 	return new UrlCompressingWebRequestProcessor();
 	 * }
 	 * </pre>
-	 *
+	 * 
 	 * @return The URLCompressor for this webpage.
-	 *
+	 * 
 	 * @since 1.2
-	 *
+	 * 
 	 * @see UrlCompressingWebRequestProcessor
 	 * @see UrlCompressor
 	 */
@@ -335,7 +329,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
-	 *
+	 * 
 	 * @param id
 	 *            Name of link
 	 * @return Link to home page for this application
@@ -346,7 +340,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
 	protected void onDetach()

@@ -26,6 +26,7 @@ public class HeaderTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public HeaderTest(String name)

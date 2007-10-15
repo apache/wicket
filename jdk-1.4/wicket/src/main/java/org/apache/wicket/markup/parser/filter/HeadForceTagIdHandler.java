@@ -26,16 +26,14 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Handler that sets unique tag id for every inline script and style element in
- * &lt;wicket:head&gt;, unless the element already has one. <br/> This is needed
- * to be able to detect multiple ajax header contribution. Tags that are not
- * inline (stript with src attribute set and link with href attribute set) do
- * not require id, because the detection is done by comparing URLs.
+ * Handler that sets unique tag id for every inline script and style element in &lt;wicket:head&gt;,
+ * unless the element already has one. <br/> This is needed to be able to detect multiple ajax
+ * header contribution. Tags that are not inline (stript with src attribute set and link with href
+ * attribute set) do not require id, because the detection is done by comparing URLs.
  * <p>
- * Tags with wicket:id are <strong>not processed</strong>. To
- * setOutputWicketId(true) on attached component is developer's responsibility.
- * FIXME: Really? And if so, document properly
- *
+ * Tags with wicket:id are <strong>not processed</strong>. To setOutputWicketId(true) on attached
+ * component is developer's responsibility. FIXME: Really? And if so, document properly
+ * 
  * @author Matej Knopp
  */
 public class HeadForceTagIdHandler extends AbstractMarkupFilter
@@ -51,8 +49,9 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 
 	/**
 	 * Construct.
-	 *
-	 * @param markupFileClass Used to generated the a common prefix for the id
+	 * 
+	 * @param markupFileClass
+	 *            Used to generated the a common prefix for the id
 	 */
 	public HeadForceTagIdHandler(final Class markupFileClass)
 	{
@@ -88,8 +87,8 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 			else if (inHead == true)
 			{
 				// is the tag open and has empty wicket:id?
-				if ((tag instanceof WicketTag == false) && (tag.getId() == null)
-						&& (tag.isOpen() || tag.isOpenClose()) && needId(tag))
+				if ((tag instanceof WicketTag == false) && (tag.getId() == null) &&
+						(tag.isOpen() || tag.isOpenClose()) && needId(tag))
 				{
 					if (tag.getAttributes().get("id") == null)
 					{
@@ -104,7 +103,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 *
+	 * 
 	 * @param tag
 	 * @return true, if id is needed
 	 */
@@ -124,7 +123,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 *
+	 * 
 	 * @return The next value
 	 */
 	private final int nextValue()

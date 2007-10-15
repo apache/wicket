@@ -27,9 +27,9 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * An {@link IResourceStream} that reads data from a resource in the classpath.
- * It simply delegates all operations to the {@link IResourceStream} returned by
- * the application's {@link IResourceStreamLocator}.
+ * An {@link IResourceStream} that reads data from a resource in the classpath. It simply delegates
+ * all operations to the {@link IResourceStream} returned by the application's
+ * {@link IResourceStreamLocator}.
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
@@ -46,8 +46,8 @@ public class PackageResourceStream extends AbstractResourceStream
 	 * {@link IResourceStreamLocator#locate(Class, String)}
 	 * 
 	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in.
 	 * @param path
 	 *            The path to the resource
 	 */
@@ -59,8 +59,8 @@ public class PackageResourceStream extends AbstractResourceStream
 
 		if (resourceStream == null)
 		{
-			throw new WicketRuntimeException("Cannot find resource with " + scope.getName()
-					+ " and path " + path);
+			throw new WicketRuntimeException("Cannot find resource with " + scope.getName() +
+					" and path " + path);
 		}
 	}
 

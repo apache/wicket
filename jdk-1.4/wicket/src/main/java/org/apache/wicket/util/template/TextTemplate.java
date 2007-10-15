@@ -43,8 +43,7 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 * Construct.
 	 * 
 	 * @param contentType
-	 *            The mime type of this resource, such as "image/jpeg" or
-	 *            "text/html".
+	 *            The mime type of this resource, such as "image/jpeg" or "text/html".
 	 */
 	public TextTemplate(String contentType)
 	{
@@ -52,11 +51,10 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	}
 
 	/**
-	 * Interpolate the map of variables with the content and return the
-	 * resulting string without replacing the content. Variables are denoted in
-	 * this string by the syntax ${variableName}. The contents will be altered
-	 * by replacing each variable of the form ${variableName} with the value
-	 * returned by variables.getValue("variableName").
+	 * Interpolate the map of variables with the content and return the resulting string without
+	 * replacing the content. Variables are denoted in this string by the syntax ${variableName}.
+	 * The contents will be altered by replacing each variable of the form ${variableName} with the
+	 * value returned by variables.getValue("variableName").
 	 * 
 	 * @param variables
 	 *            The variables to interpolate

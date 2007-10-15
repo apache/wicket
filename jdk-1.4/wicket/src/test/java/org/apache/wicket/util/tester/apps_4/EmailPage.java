@@ -30,7 +30,7 @@ public class EmailPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private String email;
-	
+
 	/**
 	 * Construct
 	 * 

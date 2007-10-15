@@ -28,52 +28,54 @@ import org.apache.wicket.util.io.Streams;
 
 
 /**
- * An ImageResource subclass for dynamic images that come from database BLOB
- * fields. Subclasses override getBlob() to provide the image data to send back
- * to the user. A given subclass may decide how to produce this data and
- * whether/how to buffer it.
+ * An ImageResource subclass for dynamic images that come from database BLOB fields. Subclasses
+ * override getBlob() to provide the image data to send back to the user. A given subclass may
+ * decide how to produce this data and whether/how to buffer it.
  * 
  * @author Eelco Hillenius
  */
 public abstract class BlobImageResource extends DynamicImageResource
 {
-  /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-/**
-   * Construct.
-   * @param locale
-   */
-  public BlobImageResource(Locale locale)
-  {
-    super(locale);
-  }
-  
-  /**
-   * Construct.
-   * @param format
-   * @param locale
-   */
-  public BlobImageResource(String format, Locale locale)
-  {
-    super(format, locale);
-  }
-  
-  /**
-   * Construct.
-   * @param format
-   */
-  public BlobImageResource(String format)
-  {
-    super(format);
-  }
-  
-  /**
-   * Construct.
-   */
-  public BlobImageResource()
+	/**
+	 * Construct.
+	 * 
+	 * @param locale
+	 */
+	public BlobImageResource(Locale locale)
+	{
+		super(locale);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param format
+	 * @param locale
+	 */
+	public BlobImageResource(String format, Locale locale)
+	{
+		super(format, locale);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param format
+	 */
+	public BlobImageResource(String format)
+	{
+		super(format);
+	}
+
+	/**
+	 * Construct.
+	 */
+	public BlobImageResource()
 	{
 	}
 
@@ -103,11 +105,11 @@ public abstract class BlobImageResource extends DynamicImageResource
 			throw new WicketRuntimeException("Error while reading image data", e);
 		}
 	}
-    
-  /**
-   * Gets the BLOB (Binary Large OBject) that holds the raw image data.
-   *
-   * @return the BLOB
-   */
-  protected abstract Blob getBlob();
+
+	/**
+	 * Gets the BLOB (Binary Large OBject) that holds the raw image data.
+	 * 
+	 * @return the BLOB
+	 */
+	protected abstract Blob getBlob();
 }

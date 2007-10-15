@@ -29,16 +29,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is a filter that injects javascript code to the top head portion and
- * after the body so that the time can me measured what the client parse time
- * was for this page. It also reports the total server parse/response time in
- * the client and logs the server response time and response size it took for a
- * specific response in the server log.
+ * This is a filter that injects javascript code to the top head portion and after the body so that
+ * the time can me measured what the client parse time was for this page. It also reports the total
+ * server parse/response time in the client and logs the server response time and response size it
+ * took for a specific response in the server log.
  * 
- * You can specify what the status text should be like this:
- * ServerAndClientTimeFilter.statustext=My Application, Server parsetime:
- * ${servertime}, Client parsetime: ${clienttime} likewise for ajax request use
- * ajax.ServerAndClientTimeFilter.statustext
+ * You can specify what the status text should be like this: ServerAndClientTimeFilter.statustext=My
+ * Application, Server parsetime: ${servertime}, Client parsetime: ${clienttime} likewise for ajax
+ * request use ajax.ServerAndClientTimeFilter.statustext
  * 
  * @author jcompagner
  */
@@ -64,9 +62,9 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 			endScript.append(getStatusString(timeTaken, "ServerAndClientTimeFilter.statustext"));
 			endScript.append("';\n").append(JavascriptUtils.SCRIPT_CLOSE_TAG).append("\n");
 			responseBuffer.insert(bodyIndex - 1, endScript);
-			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG
-					+ "\nvar clientTimeVariable = new Date().getTime();\n"
-					+ JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
+			responseBuffer.insert(headIndex + 6, "\n" + JavascriptUtils.SCRIPT_OPEN_TAG +
+					"\nvar clientTimeVariable = new Date().getTime();\n" +
+					JavascriptUtils.SCRIPT_CLOSE_TAG + "\n");
 		}
 		else if (ajaxStart != -1 && ajaxEnd != -1)
 		{
@@ -79,15 +77,14 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 			responseBuffer.insert(ajaxStart + 15,
 					"<evaluate><![CDATA[clientTimeVariable = new Date().getTime();]]></evaluate>");
 		}
-		log.info(timeTaken + "ms server time taken for request "
-				+ RequestCycle.get().getRequest().getURL() + " response size: "
-				+ responseBuffer.length());
+		log.info(timeTaken + "ms server time taken for request " +
+				RequestCycle.get().getRequest().getURL() + " response size: " +
+				responseBuffer.length());
 		return responseBuffer;
 	}
 
 	/**
-	 * Returns a locale specific status message about the server and client
-	 * time.
+	 * Returns a locale specific status message about the server and client time.
 	 * 
 	 * @param timeTaken
 	 *            the server time it took
@@ -97,8 +94,9 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 	 */
 	private String getStatusString(long timeTaken, String resourceKey)
 	{
-		final String txt = Application.get().getResourceSettings().getLocalizer().getString(resourceKey, null,
-		"Server parsetime: ${servertime}, Client parsetime: ${clienttime}");
+		final String txt = Application.get().getResourceSettings().getLocalizer().getString(
+				resourceKey, null,
+				"Server parsetime: ${servertime}, Client parsetime: ${clienttime}");
 		final Map map = new HashMap(4);
 		map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 		map.put("servertime", ((double)timeTaken) / 1000 + "s");

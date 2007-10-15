@@ -25,8 +25,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * Ajax event behavior that submits the form and updates all form feedback
- * panels on the page. Useful for providing instant feedback.
+ * Ajax event behavior that submits the form and updates all form feedback panels on the page.
+ * Useful for providing instant feedback.
  * 
  * @since 1.2
  * 
@@ -43,8 +43,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param form
 	 *            form that will be submitted via ajax
 	 * @param event
-	 *            javascript event this behavior will be invoked on, like
-	 *            onclick
+	 *            javascript event this behavior will be invoked on, like onclick
 	 */
 	public AjaxFormValidatingBehavior(Form form, String event)
 	{
@@ -62,8 +61,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	}
 
 	/**
-	 * Adds all feedback panels on the page to the ajax request target so they
-	 * are updated
+	 * Adds all feedback panels on the page to the ajax request target so they are updated
 	 * 
 	 * @param target
 	 */

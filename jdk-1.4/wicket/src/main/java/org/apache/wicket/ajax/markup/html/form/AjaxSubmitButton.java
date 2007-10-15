@@ -20,9 +20,8 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 
 /**
- * A button that submits the form via ajax. Since this button takes the form as
- * a constructor argument it does not need to be added to it unlike the
- * {@link Button} component.
+ * A button that submits the form via ajax. Since this button takes the form as a constructor
+ * argument it does not need to be added to it unlike the {@link Button} component.
  * 
  * @since 1.2
  * 

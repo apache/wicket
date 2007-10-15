@@ -27,17 +27,14 @@ import org.apache.wicket.util.watch.IModifiable;
 
 
 /**
- * Interface to a streamed resource. The resource stream can be retrieved by
- * calling getInputStream(), but the resource should later be closed by calling
- * close() on the IResourceStream (as opposed to calling close on the
- * InputStream returned by getInputStream()).
+ * Interface to a streamed resource. The resource stream can be retrieved by calling
+ * getInputStream(), but the resource should later be closed by calling close() on the
+ * IResourceStream (as opposed to calling close on the InputStream returned by getInputStream()).
  * <p>
- * Once a resource has been closed with a call to close(), it is normally
- * possible to call getInputStream() again to retrieve a new input stream on the
- * same resource.
+ * Once a resource has been closed with a call to close(), it is normally possible to call
+ * getInputStream() again to retrieve a new input stream on the same resource.
  * <p>
- * Implementations of this interface are typically unsafe for use from multiple
- * threads.
+ * Implementations of this interface are typically unsafe for use from multiple threads.
  * 
  * @author Jonathan Locke
  */
@@ -46,10 +43,8 @@ public interface IResourceStream extends IModifiable, IClusterable
 	/**
 	 * Gets the mime type of this resource
 	 * 
-	 * @return The mime type of this resource, such as "image/jpeg" or
-	 *         "text/html". Return null to let
-	 *         {@link ResourceStreamRequestTarget} handle the Content-Type
-	 *         automatically
+	 * @return The mime type of this resource, such as "image/jpeg" or "text/html". Return null to
+	 *         let {@link ResourceStreamRequestTarget} handle the Content-Type automatically
 	 * @see WebResponse#detectContentType(org.apache.wicket.RequestCycle, String)
 	 */
 	String getContentType();
@@ -62,8 +57,8 @@ public interface IResourceStream extends IModifiable, IClusterable
 	long length();
 
 	/**
-	 * Gets the resource stream. You should not directly close this stream.
-	 * Instead call the close() method on IResourceStream.
+	 * Gets the resource stream. You should not directly close this stream. Instead call the close()
+	 * method on IResourceStream.
 	 * 
 	 * @see IResourceStream#close()
 	 * @return Returns the inputStream.
@@ -72,8 +67,8 @@ public interface IResourceStream extends IModifiable, IClusterable
 	InputStream getInputStream() throws ResourceStreamNotFoundException;
 
 	/**
-	 * Closes the resource. Normally, this includes closing any underlying input
-	 * stream returned by getInputStream().
+	 * Closes the resource. Normally, this includes closing any underlying input stream returned by
+	 * getInputStream().
 	 * 
 	 * @throws IOException
 	 */
@@ -85,8 +80,8 @@ public interface IResourceStream extends IModifiable, IClusterable
 	Locale getLocale();
 
 	/**
-	 * This method shouldn't be used for the outside, It is used by the Loaders
-	 * to set the resolved locale.
+	 * This method shouldn't be used for the outside, It is used by the Loaders to set the resolved
+	 * locale.
 	 * 
 	 * @param locale
 	 *            The Locale where this stream did resolve to.

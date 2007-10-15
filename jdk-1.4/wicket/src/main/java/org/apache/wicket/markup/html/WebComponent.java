@@ -21,9 +21,9 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 
 /**
- * Base class for simple HTML components which do not hold nested components. If
- * you need to support nested components, see WebMarkupContainer or use Panel if
- * the component will have its own associated markup.
+ * Base class for simple HTML components which do not hold nested components. If you need to support
+ * nested components, see WebMarkupContainer or use Panel if the component will have its own
+ * associated markup.
  * 
  * @see org.apache.wicket.markup.html.WebMarkupContainer
  * 

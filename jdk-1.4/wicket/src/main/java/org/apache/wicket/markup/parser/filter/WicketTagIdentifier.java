@@ -30,9 +30,8 @@ import org.apache.wicket.markup.parser.XmlTag;
 
 
 /**
- * This is a markup inline filter. It identifies xml tags which have a special
- * meaning for Wicket. There are two type of tags which have a special meaning
- * for Wicket.
+ * This is a markup inline filter. It identifies xml tags which have a special meaning for Wicket.
+ * There are two type of tags which have a special meaning for Wicket.
  * <p>
  * <ul>
  * <li>All tags with Wicket namespace, e.g. &lt;wicket:remove&gt;</li>
@@ -61,18 +60,15 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next tag from the next MarkupFilter in the chain and search for
-	 * Wicket specific tags.
+	 * Get the next tag from the next MarkupFilter in the chain and search for Wicket specific tags.
 	 * <p>
-	 * Note: The xml parser - the next MarkupFilter in the chain - returns
-	 * XmlTags which are a subclass of MarkupElement. The implementation of this
-	 * filter will return either ComponentTags or ComponentWicketTags. Both are
-	 * subclasses of MarkupElement as well and both maintain a reference to the
-	 * XmlTag. But no XmlTag is returned.
+	 * Note: The xml parser - the next MarkupFilter in the chain - returns XmlTags which are a
+	 * subclass of MarkupElement. The implementation of this filter will return either ComponentTags
+	 * or ComponentWicketTags. Both are subclasses of MarkupElement as well and both maintain a
+	 * reference to the XmlTag. But no XmlTag is returned.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag from markup to be processed. If null, no more tags
-	 *         are available
+	 * @return The next tag from markup to be processed. If null, no more tags are available
 	 */
 	public MarkupElement nextTag() throws ParseException
 	{

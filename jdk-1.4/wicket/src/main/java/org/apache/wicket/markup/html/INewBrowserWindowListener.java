@@ -21,15 +21,16 @@ import org.apache.wicket.RequestListenerInterface;
 
 
 /**
- * Internal listener. 
- *  
+ * Internal listener.
+ * 
  * @author Johan Compagner
  * @author Jonathan Locke
  */
 public interface INewBrowserWindowListener extends IRequestListener
 {
 	/** Listener interface object */
-	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(INewBrowserWindowListener.class);
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+			INewBrowserWindowListener.class);
 
 	/**
 	 * Called when a new browser window is detected.

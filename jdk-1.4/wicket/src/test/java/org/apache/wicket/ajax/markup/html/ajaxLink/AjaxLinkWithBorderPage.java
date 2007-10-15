@@ -28,7 +28,7 @@ import org.apache.wicket.model.PropertyModel;
 public class AjaxLinkWithBorderPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String labelText = "UpdateMe";
 
 	/**
@@ -37,7 +37,7 @@ public class AjaxLinkWithBorderPage extends WebPage
 	public AjaxLinkWithBorderPage()
 	{
 		add(new AjaxTestBorder("border").setTransparentResolver(true));
-		
+
 		final Label label = new Label("ajaxLabel", new PropertyModel(this, "labelText"));
 		label.setOutputMarkupId(true);
 		add(label);

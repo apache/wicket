@@ -21,19 +21,19 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class HeaderSectionPage_19 extends WebPage 
+public class HeaderSectionPage_19 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public HeaderSectionPage_19() 
+	public HeaderSectionPage_19()
 	{
-	    // for the test: the panel must the same id as the panels header contribution
+		// for the test: the panel must the same id as the panels header contribution
 		add(new HeaderSectionPanel_19("foo"));
-    }
+	}
 }

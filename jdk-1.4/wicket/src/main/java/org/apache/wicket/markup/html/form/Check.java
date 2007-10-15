@@ -45,8 +45,8 @@ public class Check extends LabeledWebMarkupContainer
 	private static final String ATTR_DISABLED = "disabled";
 
 	/**
-	 * page-scoped uuid of this check. this property must not be accessed
-	 * directly, instead {@link #getValue()} must be used
+	 * page-scoped uuid of this check. this property must not be accessed directly, instead
+	 * {@link #getValue()} must be used
 	 */
 	private short uuid = -1;
 
@@ -68,9 +68,8 @@ public class Check extends LabeledWebMarkupContainer
 
 
 	/**
-	 * Form submission value used for this radio component. This string will
-	 * appear as the value of the <code>value</code> html attribute for the
-	 * <code>input</code> tag.
+	 * Form submission value used for this radio component. This string will appear as the value of
+	 * the <code>value</code> html attribute for the <code>input</code> tag.
 	 * 
 	 * @return form submission value
 	 */
@@ -101,8 +100,8 @@ public class Check extends LabeledWebMarkupContainer
 		CheckGroup group = (CheckGroup)findParent(CheckGroup.class);
 		if (group == null)
 		{
-			throw new WicketRuntimeException("Check component [" + getPath()
-					+ "] cannot find its parent CheckGroup");
+			throw new WicketRuntimeException("Check component [" + getPath() +
+					"] cannot find its parent CheckGroup");
 		}
 
 		final String uuid = getValue();
@@ -118,10 +117,8 @@ public class Check extends LabeledWebMarkupContainer
 		// check for npe in group's model object
 		if (collection == null)
 		{
-			throw new WicketRuntimeException(
-					"CheckGroup ["
-							+ group.getPath()
-							+ "] contains a null model object, must be an object of type java.util.Collection");
+			throw new WicketRuntimeException("CheckGroup [" + group.getPath() +
+					"] contains a null model object, must be an object of type java.util.Collection");
 		}
 
 		if (group.hasRawInput())
@@ -155,19 +152,22 @@ public class Check extends LabeledWebMarkupContainer
 				RequestContext rc = RequestContext.get();
 				if (rc.isPortletRequest())
 				{
-					// restore url back to real wicket path as its going to be interpreted by the form itself
+					// restore url back to real wicket path as its going to be interpreted by the
+					// form itself
 					url = ((PortletRequestContext)rc).getLastEncodedPath();
 				}
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			else
 			{
-				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden form
+				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden
+				// form
 				// with an ActionURL or something
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "window.location.href='" + url + (url.toString().indexOf('?')>-1 ? "&amp;" : "?") + group.getInputName()
-						+ "=' + this.value;");
+				tag.put("onclick", "window.location.href='" + url +
+						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + group.getInputName() +
+						"=' + this.value;");
 			}
 		}
 
@@ -180,8 +180,8 @@ public class Check extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to Check itself.
+	 * The value will be made available to the validator property by means of ${label}. It does not
+	 * have any specific meaning to Check itself.
 	 * 
 	 * @param labelModel
 	 * @return this for chaining

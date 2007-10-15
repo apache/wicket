@@ -27,8 +27,8 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * Provides the ability to 'decorate' the actual template contents before it is
- * contributed to the header. E.g. to embed in a javascript tag pair.
+ * Provides the ability to 'decorate' the actual template contents before it is contributed to the
+ * header. E.g. to embed in a javascript tag pair.
  * 
  * @author Eelco Hillenius
  */
@@ -60,8 +60,8 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	}
 
 	/**
-	 * @return the contents decorated with {@link #getBeforeTemplateContents()}
-	 *         and {@link #getAfterTemplateContents()}.
+	 * @return the contents decorated with {@link #getBeforeTemplateContents()} and
+	 *         {@link #getAfterTemplateContents()}.
 	 * @see org.apache.wicket.util.template.TextTemplate#asString()
 	 */
 	public String asString()
@@ -74,8 +74,8 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	}
 
 	/**
-	 * @return the contents decorated with {@link #getBeforeTemplateContents()}
-	 *         and {@link #getAfterTemplateContents()}.
+	 * @return the contents decorated with {@link #getBeforeTemplateContents()} and
+	 *         {@link #getAfterTemplateContents()}.
 	 * @see org.apache.wicket.util.template.TextTemplate#asString(java.util.Map)
 	 */
 	public String asString(Map variables)

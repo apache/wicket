@@ -39,7 +39,7 @@ public class SimplePage_13 extends WebPage
 	 */
 	public SimplePage_13()
 	{
-//		Component header = new WebMarkupContainer("html");
+// Component header = new WebMarkupContainer("html");
 		Component header = new AjaxLink("html", new Model("test"))
 		{
 			private static final long serialVersionUID = 1L;

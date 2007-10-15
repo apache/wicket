@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A <code>ChangeList</code> is a sequence of changes that can be undone.
- *
+ * 
  * @author Jonathan Locke
  * @since 1.2.6
  */
@@ -43,7 +43,7 @@ class ChangeList implements IClusterable
 
 	/**
 	 * A <code>Component</code> was added.
-	 *
+	 * 
 	 * @param component
 	 *            the <code>Component</code> that was added
 	 */
@@ -54,10 +54,9 @@ class ChangeList implements IClusterable
 
 	/**
 	 * An <code>IModel</code> is about to change.
-	 *
+	 * 
 	 * @param component
-	 *            the <code>Component</code> for which the <code>IModel</code>
-	 *            changed
+	 *            the <code>Component</code> for which the <code>IModel</code> changed
 	 */
 	void componentModelChanging(Component component)
 	{
@@ -66,7 +65,7 @@ class ChangeList implements IClusterable
 
 	/**
 	 * The state of a <code>Component</code> is about to change.
-	 *
+	 * 
 	 * @param change
 	 *            the <code>Change</code> object
 	 */
@@ -82,7 +81,7 @@ class ChangeList implements IClusterable
 
 	/**
 	 * A <code>Component</code> was removed from its parent.
-	 *
+	 * 
 	 * @param component
 	 *            the <code>Component</code> that was removed
 	 */
@@ -93,7 +92,7 @@ class ChangeList implements IClusterable
 
 	/**
 	 * Adds the given <code>ChangeList</code> to this <code>ChangeList</code>.
-	 *
+	 * 
 	 * @param list
 	 *            the <code>ChangeList</code> to add
 	 */

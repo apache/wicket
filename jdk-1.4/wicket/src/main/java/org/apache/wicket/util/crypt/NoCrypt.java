@@ -18,11 +18,11 @@ package org.apache.wicket.util.crypt;
 
 
 /**
- * Due to legal reasons in some countries the JRE is shipped without a security
- * provider. As a convenience solution, we provide a default implementation
- * which does not encrypt/decrypt the data. It does not modify the data at all.
- * Thus we strongly recommend not to use it for production sites.
- *
+ * Due to legal reasons in some countries the JRE is shipped without a security provider. As a
+ * convenience solution, we provide a default implementation which does not encrypt/decrypt the
+ * data. It does not modify the data at all. Thus we strongly recommend not to use it for production
+ * sites.
+ * 
  * @author Juergen Donnerstag
  */
 public class NoCrypt implements ICrypt
@@ -36,7 +36,7 @@ public class NoCrypt implements ICrypt
 
 	/**
 	 * Decrypts a string into a string.
-	 *
+	 * 
 	 * @param text
 	 *            text to decrypt
 	 * @return the decrypted text
@@ -48,7 +48,7 @@ public class NoCrypt implements ICrypt
 
 	/**
 	 * Encrypt a string into a string
-	 *
+	 * 
 	 * @param plainText
 	 *            text to encrypt
 	 * @return encrypted string
@@ -60,7 +60,7 @@ public class NoCrypt implements ICrypt
 
 	/**
 	 * Set encryption private key
-	 *
+	 * 
 	 * @param key
 	 *            private key to make de-/encryption unique
 	 */

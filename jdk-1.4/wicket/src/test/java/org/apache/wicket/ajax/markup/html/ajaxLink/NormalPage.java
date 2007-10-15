@@ -19,8 +19,7 @@ package org.apache.wicket.ajax.markup.html.ajaxLink;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
- * Simple page used to test redirecting to a normal request from an ajax
- * request.
+ * Simple page used to test redirecting to a normal request from an ajax request.
  */
 public class NormalPage extends WebPage
 {

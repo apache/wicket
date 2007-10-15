@@ -20,8 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 
 /**
- * Convenience feedback panel that filters the feedback messages based on the
- * component given in the constructor.
+ * Convenience feedback panel that filters the feedback messages based on the component given in the
+ * constructor.
  * 
  * @author Martijn Dashorst
  * @author Igor Vaynberg
@@ -34,8 +34,10 @@ public class ComponentFeedbackPanel extends FeedbackPanel
 	/**
 	 * Constructor.
 	 * 
-	 * @param id the component id.
-	 * @param filter the component for which the messages need to be filtered.
+	 * @param id
+	 *            the component id.
+	 * @param filter
+	 *            the component for which the messages need to be filtered.
 	 */
 	public ComponentFeedbackPanel(String id, Component filter)
 	{

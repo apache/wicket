@@ -23,9 +23,8 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Simple ListVew subclass that wraps its item models in a
- * BoundCompoundPropertyModel. Useful for lists where the item components will
- * be mapped through property expressions.
+ * Simple ListVew subclass that wraps its item models in a BoundCompoundPropertyModel. Useful for
+ * lists where the item components will be mapped through property expressions.
  * 
  * @author Nathan Hamblen
  */
@@ -61,9 +60,8 @@ public abstract class PropertyListView extends ListView
 	}
 
 	/**
-	 * Construct with a "small," unmodeled List. The object can not be detached
-	 * and will reside in the session, but is convenient for lists of a limited
-	 * size.
+	 * Construct with a "small," unmodeled List. The object can not be detached and will reside in
+	 * the session, but is convenient for lists of a limited size.
 	 * 
 	 * @param id
 	 *            Wicket id

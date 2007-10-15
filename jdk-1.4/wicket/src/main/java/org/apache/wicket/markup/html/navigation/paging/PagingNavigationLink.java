@@ -29,13 +29,13 @@ import org.apache.wicket.markup.html.link.Link;
 public class PagingNavigationLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The pageable list view. */
 	protected final IPageable pageable;
 
 	/** The page of the PageableListView this link is for. */
 	private final int pageNumber;
-	    
+
 	/**
 	 * Constructor.
 	 * 
@@ -44,11 +44,10 @@ public class PagingNavigationLink extends Link
 	 * @param pageable
 	 *            The pageable component for this page link
 	 * @param pageNumber
-	 *            The page number in the PageableListView that this link links
-	 *            to. Negative pageNumbers are relative to the end of the list.
+	 *            The page number in the PageableListView that this link links to. Negative
+	 *            pageNumbers are relative to the end of the list.
 	 */
-	public PagingNavigationLink(final String id,
-			final IPageable pageable, final int pageNumber)
+	public PagingNavigationLink(final String id, final IPageable pageable, final int pageNumber)
 	{
 		super(id);
 		setAutoEnable(true);
@@ -71,12 +70,12 @@ public class PagingNavigationLink extends Link
 	 */
 	public final int getPageNumber()
 	{
-	    int idx = pageNumber;
+		int idx = pageNumber;
 		if (idx < 0)
 		{
 			idx = pageable.getPageCount() + idx;
 		}
-		
+
 		if (idx > (pageable.getPageCount() - 1))
 		{
 			idx = pageable.getPageCount() - 1;
@@ -86,13 +85,12 @@ public class PagingNavigationLink extends Link
 		{
 			idx = 0;
 		}
-		
+
 		return idx;
 	}
 
 	/**
-	 * @return True if this page is the first page of the containing
-	 *         PageableListView
+	 * @return True if this page is the first page of the containing PageableListView
 	 */
 	public final boolean isFirst()
 	{
@@ -100,8 +98,7 @@ public class PagingNavigationLink extends Link
 	}
 
 	/**
-	 * @return True if this page is the last page of the containing
-	 *         PageableListView
+	 * @return True if this page is the last page of the containing PageableListView
 	 */
 	public final boolean isLast()
 	{
@@ -109,8 +106,7 @@ public class PagingNavigationLink extends Link
 	}
 
 	/**
-	 * Returns true if this PageableListView navigation link links to the given
-	 * page.
+	 * Returns true if this PageableListView navigation link links to the given page.
 	 * 
 	 * @param page
 	 *            The page

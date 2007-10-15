@@ -21,9 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A compound {@link IValidator}. Once an error is reported against the
- * {@link IValidatable} being checked, the rest of the validator chain is
- * ignored.
+ * A compound {@link IValidator}. Once an error is reported against the {@link IValidatable} being
+ * checked, the rest of the validator chain is ignored.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @since 1.2.6

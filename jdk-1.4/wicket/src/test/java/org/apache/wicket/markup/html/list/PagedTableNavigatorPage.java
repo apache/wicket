@@ -32,8 +32,7 @@ public class PagedTableNavigatorPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
-	 *  page parameters.
+	 * Construct. page parameters.
 	 */
 	public PagedTableNavigatorPage()
 	{

@@ -23,8 +23,7 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Implementation of <code>IItemReuseStrategy</code> that returns new items
- * every time.
+ * Implementation of <code>IItemReuseStrategy</code> that returns new items every time.
  * 
  * @see org.apache.wicket.markup.repeater.IItemReuseStrategy
  * 
@@ -34,7 +33,7 @@ import org.apache.wicket.model.IModel;
 public class DefaultItemReuseStrategy implements IItemReuseStrategy
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final IItemReuseStrategy instance = new DefaultItemReuseStrategy();
 
 	/**
@@ -46,7 +45,8 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 	}
 
 	/**
-	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(IItemFactory, java.util.Iterator, java.util.Iterator) 
+	 * @see org.apache.wicket.markup.repeater.IItemReuseStrategy#getItems(IItemFactory,
+	 *      java.util.Iterator, java.util.Iterator)
 	 */
 	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
 			final Iterator existingItems)
@@ -68,9 +68,10 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 			public Object next()
 			{
 				Object next = newModels.next();
-				if (next != null && ! (next instanceof IModel))
+				if (next != null && !(next instanceof IModel))
 				{
-					throw new WicketRuntimeException("Expecting an instance of " + IModel.class.getName() + ", got " + next.getClass().getName());
+					throw new WicketRuntimeException("Expecting an instance of " +
+							IModel.class.getName() + ", got " + next.getClass().getName());
 				}
 				final IModel model = (IModel)next;
 

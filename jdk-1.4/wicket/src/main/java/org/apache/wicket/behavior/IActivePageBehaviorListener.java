@@ -24,7 +24,9 @@ import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.listener.BehaviorRequestTarget;
 
 /**
- * An extended {@link IBehaviorListener} which will be ignored if the page is not the last one the user accessed.
+ * An extended {@link IBehaviorListener} which will be ignored if the page is not the last one the
+ * user accessed.
+ * 
  * @see AbstractAjaxBehavior#getCallbackUrl(boolean)
  * 
  * @author Ate Douma

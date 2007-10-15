@@ -65,20 +65,20 @@ public class AuthorizationTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests that a component cannot be created when authorization is not
-	 * allowed.
+	 * Tests that a component cannot be created when authorization is not allowed.
 	 * 
 	 * @throws Exception
 	 */
 	public void testCreateDisallowedComponent() throws Exception
 	{
-		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
-		{
-			public boolean isInstantiationAuthorized(Class c)
-			{
-				return false;
-			}
-		});
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
+				new DummyAuthorizationStrategy()
+				{
+					public boolean isInstantiationAuthorized(Class c)
+					{
+						return false;
+					}
+				});
 		try
 		{
 			new WebComponent("test");
@@ -98,7 +98,8 @@ public class AuthorizationTest extends WicketTestCase
 	 */
 	public void testRenderAllowedComponent() throws Exception
 	{
-		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
+				new DummyAuthorizationStrategy());
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
@@ -112,21 +113,22 @@ public class AuthorizationTest extends WicketTestCase
 	 */
 	public void testRenderDisallowedComponent() throws Exception
 	{
-		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
-		{
-			/**
-			 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
-			 *      org.apache.wicket.authorization.Action)
-			 */
-			public boolean isActionAuthorized(Component component, Action action)
-			{
-				if (action == Component.RENDER && component instanceof Label)
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
+				new DummyAuthorizationStrategy()
 				{
-					return false;
-				}
-				return true;
-			}
-		});
+					/**
+					 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
+					 *      org.apache.wicket.authorization.Action)
+					 */
+					public boolean isActionAuthorized(Component component, Action action)
+					{
+						if (action == Component.RENDER && component instanceof Label)
+						{
+							return false;
+						}
+						return true;
+					}
+				});
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
 		tester.assertInvisible("label");
@@ -139,7 +141,8 @@ public class AuthorizationTest extends WicketTestCase
 	 */
 	public void testEnabledAllowedComponent() throws Exception
 	{
-		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
+				new DummyAuthorizationStrategy());
 
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
@@ -160,21 +163,23 @@ public class AuthorizationTest extends WicketTestCase
 	 */
 	public void testEnabledDisallowedComponent() throws Exception
 	{
-		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
-		{
-			/**
-			 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component, org.apache.wicket.authorization.Action)
-			 */
-			public boolean isActionAuthorized(Component c, Action action)
-			{
-				if (action == Component.ENABLE && c instanceof TextField
-						&& c.getId().equals("stringInput"))
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
+				new DummyAuthorizationStrategy()
 				{
-					return false;
-				}
-				return true;
-			}
-		});
+					/**
+					 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
+					 *      org.apache.wicket.authorization.Action)
+					 */
+					public boolean isActionAuthorized(Component c, Action action)
+					{
+						if (action == Component.ENABLE && c instanceof TextField &&
+								c.getId().equals("stringInput"))
+						{
+							return false;
+						}
+						return true;
+					}
+				});
 		tester.startPage(AuthTestPage1.class);
 		tester.assertRenderedPage(AuthTestPage1.class);
 		tester.setParameterForNextRequest("form:stringInput", "test");
@@ -191,8 +196,7 @@ public class AuthorizationTest extends WicketTestCase
 	}
 
 	/**
-	 * noop strategy so we don't have to implement the whole interface every
-	 * time.
+	 * noop strategy so we don't have to implement the whole interface every time.
 	 */
 	private static class DummyAuthorizationStrategy implements IAuthorizationStrategy
 	{

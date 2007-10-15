@@ -24,38 +24,38 @@ public interface IRequestLoggerSettings
 	/**
 	 * Enable/Disable the request logger.
 	 * 
-	 * @param enable boolean.
+	 * @param enable
+	 *            boolean.
 	 */
 	void setRequestLoggerEnabled(boolean enable);
-	
-	
+
+
 	/**
 	 * @return true if the request Logger is enabled. (default false)
 	 */
 	boolean isRequestLoggerEnabled();
-	
+
 	/**
-	 * Enable/Disable the recording of the session size
-	 * for every request.
+	 * Enable/Disable the recording of the session size for every request.
 	 * 
 	 * @param record
 	 */
 	void setRecordSessionSize(boolean record);
-	
+
 	/**
 	 * @return true if the session size is recorded. (default true)
 	 */
 	boolean getRecordSessionSize();
-	
+
 	/**
-	 * Set the window of all the requests that is kept in memory
-	 * for viewing. Default is 2000, You can set this to 0 then
-	 * only Sessions data is recorded (number of request, total time, latest size)
+	 * Set the window of all the requests that is kept in memory for viewing. Default is 2000, You
+	 * can set this to 0 then only Sessions data is recorded (number of request, total time, latest
+	 * size)
 	 * 
 	 * @param size
 	 */
 	void setRequestsWindowSize(int size);
-	
+
 	/**
 	 * @return The window size of the recorded requests. (default 2000)
 	 */

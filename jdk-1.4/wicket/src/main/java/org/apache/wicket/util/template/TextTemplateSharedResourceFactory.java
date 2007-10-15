@@ -29,24 +29,22 @@ import org.apache.wicket.util.resource.IResourceStream;
 
 
 /**
- * A resource (reference) factory that takes a TextTemplate and generates shared
- * resources for various interpolations of that template.
+ * A resource (reference) factory that takes a TextTemplate and generates shared resources for
+ * various interpolations of that template.
  * <p>
- * A scope for adding shared resources allows you to limit the namespace impact
- * of the shared resources created. If you omit the scope, the application-wide
- * scope Application.class will be used by default.
+ * A scope for adding shared resources allows you to limit the namespace impact of the shared
+ * resources created. If you omit the scope, the application-wide scope Application.class will be
+ * used by default.
  * <p>
- * You may use resources created by this factory directly by calling
- * resourceReference(Map) to get a resource reference to the given shared
- * resource interpolation represented by the variables in the map. Or, for
- * convenience, you can use TextTemplateLink to link to resources created by
- * this factory.
+ * You may use resources created by this factory directly by calling resourceReference(Map) to get a
+ * resource reference to the given shared resource interpolation represented by the variables in the
+ * map. Or, for convenience, you can use TextTemplateLink to link to resources created by this
+ * factory.
  * <p>
- * In many cases, it will be useful to extend this class and override
- * sharedResourceName(Map) to provide a unique name for resources created by the
- * factory using map values. If you don't provide an override, every value in
- * the map will be used to produce the unique name, which may create either
- * longer names or more unique shared resources than you really wanted.
+ * In many cases, it will be useful to extend this class and override sharedResourceName(Map) to
+ * provide a unique name for resources created by the factory using map values. If you don't provide
+ * an override, every value in the map will be used to produce the unique name, which may create
+ * either longer names or more unique shared resources than you really wanted.
  * 
  * @author Jonathan Locke
  */
@@ -58,7 +56,7 @@ public class TextTemplateSharedResourceFactory
 	/**
 	 * Shared resource scope
 	 */
-	private final WeakReference/*<Class>*/ scopeRef;
+	private final WeakReference/* <Class> */scopeRef;
 
 	/**
 	 * Template to use to create resources
@@ -93,8 +91,8 @@ public class TextTemplateSharedResourceFactory
 	/**
 	 * @param variables
 	 *            The variables to interpolate into the template
-	 * @return A resource reference to the template encoded as a resource with
-	 *         the given variables interpolated.
+	 * @return A resource reference to the template encoded as a resource with the given variables
+	 *         interpolated.
 	 */
 	public ResourceReference resourceReference(final Map variables)
 	{
@@ -155,8 +153,7 @@ public class TextTemplateSharedResourceFactory
 	}
 
 	/**
-	 * Simple encoder for key values. Letters and digits are unchanged. All
-	 * others are encoded as %<hexcode>.
+	 * Simple encoder for key values. Letters and digits are unchanged. All others are encoded as %<hexcode>.
 	 * 
 	 * @param value
 	 *            The value

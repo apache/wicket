@@ -21,7 +21,7 @@ import org.apache.wicket.model.Model;
 
 /**
  * Panel that tests setting an attribute modifier on a panel.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class PanelWithAttributeModifier extends Panel
@@ -30,11 +30,12 @@ public class PanelWithAttributeModifier extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public PanelWithAttributeModifier(final String id) 
+	public PanelWithAttributeModifier(final String id)
 	{
-	    super(id);
-	    add(new AttributeModifier("class", true, new Model("test")));
-    }
+		super(id);
+		add(new AttributeModifier("class", true, new Model("test")));
+	}
 }

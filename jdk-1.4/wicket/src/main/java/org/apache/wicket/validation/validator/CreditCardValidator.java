@@ -19,12 +19,12 @@ package org.apache.wicket.validation.validator;
 import org.apache.wicket.validation.IValidatable;
 
 /**
- * Performs the so-called "mod 10" algorithm to check the validity of credit
- * card numbers such as VISA.
+ * Performs the so-called "mod 10" algorithm to check the validity of credit card numbers such as
+ * VISA.
  * <p>
- * In addition to this, the credit card number can be further validated by its
- * length and prefix, but those properties depend upon the credit card type, and
- * such validation is not performed by this validator.
+ * In addition to this, the credit card number can be further validated by its length and prefix,
+ * but those properties depend upon the credit card type, and such validation is not performed by
+ * this validator.
  * 
  * @author Johan Compagner
  * @since 1.2.6

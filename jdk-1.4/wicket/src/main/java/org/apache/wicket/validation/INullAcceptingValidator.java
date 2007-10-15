@@ -19,13 +19,13 @@ package org.apache.wicket.validation;
 import org.apache.wicket.markup.html.form.FormComponent;
 
 /**
- * Marker interface for validators that will accept a <code>null</code> value.
- * Without implementing this interface Wicket will never pass <code>null</code>
- * values to {@link IValidator#validate(IValidatable)}.
+ * Marker interface for validators that will accept a <code>null</code> value. Without
+ * implementing this interface Wicket will never pass <code>null</code> values to
+ * {@link IValidator#validate(IValidatable)}.
  * <p>
- * Keep in mind that the {@link FormComponent} must have set the required
- * property to <code>false</code>, otherwise Wicket will not permit the
- * validator to process the <code>null</code> value.
+ * Keep in mind that the {@link FormComponent} must have set the required property to
+ * <code>false</code>, otherwise Wicket will not permit the validator to process the
+ * <code>null</code> value.
  * 
  * @author Matej Knopp
  * @since 1.2.6

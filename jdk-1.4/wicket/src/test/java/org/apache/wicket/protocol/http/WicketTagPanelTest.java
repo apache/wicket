@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Simple application that demonstrates the mock http application code (and
- * checks that it is working)
+ * Simple application that demonstrates the mock http application code (and checks that it is
+ * working)
  * 
  * @author Chris Turner
  */
@@ -54,6 +54,7 @@ public class WicketTagPanelTest extends TestCase
 		super.setUp();
 		application = new WicketTester();
 	}
+
 	protected void tearDown() throws Exception
 	{
 		application.destroy();
@@ -73,7 +74,9 @@ public class WicketTagPanelTest extends TestCase
 
 	/**
 	 * Validate page 2 of the paged table.
-	 * @param document The document
+	 * 
+	 * @param document
+	 *            The document
 	 * @return The validation result
 	 */
 	private boolean validatePage1(String document)
@@ -111,7 +114,9 @@ public class WicketTagPanelTest extends TestCase
 
 	/**
 	 * Validate page 2 of the paged table.
-	 * @param document The document
+	 * 
+	 * @param document
+	 *            The document
 	 * @return The validation result
 	 */
 	private boolean validatePage2(String document)

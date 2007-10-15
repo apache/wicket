@@ -19,15 +19,14 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.model.IModel;
 
 /**
- * TextField doesn't permit the html <input type='hidden'> so this is a simple
- * subclass to allow this
+ * TextField doesn't permit the html <input type='hidden'> so this is a simple subclass to allow
+ * this
  * 
- * A HiddenField is useful when you have a javascript based component that
- * updates the form state. Either
+ * A HiddenField is useful when you have a javascript based component that updates the form state.
+ * Either
  * 
  * <ul>
- * <li> add a AttributeModified to set the id attribute, then use
- * document.getElementById(id) </li>
+ * <li> add a AttributeModified to set the id attribute, then use document.getElementById(id) </li>
  * <li> lookup the field name=getPath() within the form </li>
  * </ul>
  * 

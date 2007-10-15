@@ -67,8 +67,8 @@ public final class DefaultPageFactory implements IPageFactory
 			}
 			else
 			{
-				throw new WicketRuntimeException("Unable to create page from " + pageClass
-						+ ". Class does not have a default contructor", e);
+				throw new WicketRuntimeException("Unable to create page from " + pageClass +
+						". Class does not have a default contructor", e);
 			}
 		}
 		catch (InstantiationException e)
@@ -107,8 +107,8 @@ public final class DefaultPageFactory implements IPageFactory
 	 *            The class of page
 	 * @param argumentType
 	 *            The argument type
-	 * @return The page constructor, or null if no one-arg constructor can be
-	 *         found taking the given argument type.
+	 * @return The page constructor, or null if no one-arg constructor can be found taking the given
+	 *         argument type.
 	 */
 	private final Constructor constructor(final Class pageClass, final Class argumentType)
 	{
@@ -144,8 +144,8 @@ public final class DefaultPageFactory implements IPageFactory
 	 *            The argument to pass to the constructor
 	 * @return The new page
 	 * @throws WicketRuntimeException
-	 *             Thrown if the Page cannot be instantiated using the given
-	 *             constructor and argument.
+	 *             Thrown if the Page cannot be instantiated using the given constructor and
+	 *             argument.
 	 */
 	private final Page newPage(final Constructor constructor, final Object argument)
 	{
@@ -155,25 +155,25 @@ public final class DefaultPageFactory implements IPageFactory
 		}
 		catch (InstantiationException e)
 		{
-			throw new WicketRuntimeException("Can't instantiate page using constructor "
-					+ constructor + " and argument " + argument, e);
+			throw new WicketRuntimeException("Can't instantiate page using constructor " +
+					constructor + " and argument " + argument, e);
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new WicketRuntimeException("Can't instantiate page using constructor "
-					+ constructor + " and argument " + argument, e);
+			throw new WicketRuntimeException("Can't instantiate page using constructor " +
+					constructor + " and argument " + argument, e);
 		}
 		catch (InvocationTargetException e)
 		{
 			// honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbortException || 
+			if (e.getTargetException() instanceof AbortException ||
 					e.getTargetException() instanceof AuthorizationException ||
-						e.getTargetException() instanceof MarkupException)
+					e.getTargetException() instanceof MarkupException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
-			throw new WicketRuntimeException("Can't instantiate page using constructor "
-					+ constructor + " and argument " + argument, e);
+			throw new WicketRuntimeException("Can't instantiate page using constructor " +
+					constructor + " and argument " + argument, e);
 		}
 	}
 }

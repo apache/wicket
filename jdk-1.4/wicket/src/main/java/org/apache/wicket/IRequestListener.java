@@ -18,15 +18,13 @@ package org.apache.wicket;
 
 
 /**
- * Base interface for all interfaces that listen for requests from the client
- * browser. All sub-interfaces of this interface must have a single method which
- * takes no arguments.
+ * Base interface for all interfaces that listen for requests from the client browser. All
+ * sub-interfaces of this interface must have a single method which takes no arguments.
  * <p>
  * New listener interfaces must be registered with Wicket by constructing a
- * {@link RequestListenerInterface} object for the given interface class. The
- * best way to do this is to create a public static final constant field in your
- * request listener interface. Doing this will cause the interface to
- * automatically register whenever it is used. For example, see
+ * {@link RequestListenerInterface} object for the given interface class. The best way to do this is
+ * to create a public static final constant field in your request listener interface. Doing this
+ * will cause the interface to automatically register whenever it is used. For example, see
  * {@link org.apache.wicket.IRedirectListener#INTERFACE}.
  * 
  * @author Jonathan Locke

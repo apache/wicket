@@ -25,6 +25,7 @@ public class ImageTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public ImageTest(String name)
@@ -39,29 +40,35 @@ public class ImageTest extends WicketTestCase
 	public void test_1() throws Exception
 	{
 		tester.startPage(Home.class);
-		
+
 		tester.clickLink("goCanadian");
 		tester.startPage(Home.class);
-		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_en_CA.gif\"");
-		
+		tester
+				.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_en_CA.gif\"");
+
 		tester.clickLink("goChinese");
 		tester.startPage(Home.class);
-		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_zh_CN.gif\"");
-		
+		tester
+				.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_zh_CN.gif\"");
+
 		tester.clickLink("goDanish");
 		tester.startPage(Home.class);
-		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_da_DK.gif\"");
-		
+		tester
+				.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_da_DK.gif\"");
+
 		tester.clickLink("goDutch");
 		tester.startPage(Home.class);
-		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_nl_NL.gif\"");
-		
+		tester
+				.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_nl_NL.gif\"");
+
 		tester.clickLink("goGerman");
 		tester.startPage(Home.class);
-		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_de_DE.gif\"");
-		
+		tester
+				.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_de_DE.gif\"");
+
 		tester.clickLink("goUS");
 		tester.startPage(Home.class);
-		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_en_US.gif\"");
+		tester
+				.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_en_US.gif\"");
 	}
 }

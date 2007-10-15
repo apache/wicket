@@ -86,8 +86,7 @@ public abstract class AbstractConverter implements IConverter
 	protected abstract Class getTargetType();
 
 	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
-	 *      Locale)
+	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
 	public String convertToString(Object value, Locale locale)
 	{

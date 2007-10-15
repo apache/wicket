@@ -39,8 +39,8 @@ public class InlinePanelPage_5 extends WebPage
 	}
 
 	/**
-	 * A special Fragment (WebMarkupContainer) which searches for the fragment
-	 * in the markup file associated with the class.
+	 * A special Fragment (WebMarkupContainer) which searches for the fragment in the markup file
+	 * associated with the class.
 	 */
 	public static class FragmentWithAssociatedMarkupStream extends Fragment
 	{

@@ -55,15 +55,15 @@ import org.slf4j.LoggerFactory;
  * Represents a localizable static resource.
  * <p>
  * Use like eg:
- *
+ * 
  * <pre>
  * PackageResource IMG_UNKNOWN = PackageResource.get(EditPage.class, &quot;questionmark.gif&quot;);
  * </pre>
- *
+ * 
  * where the static resource references image 'questionmark.gif' from the the package that EditPage
  * is in to get a package resource.
  * </p>
- *
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
@@ -78,7 +78,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 		/**
 		 * Construct.
-		 *
+		 * 
 		 * @param message
 		 */
 		public PackageResourceBlockedException(String message)
@@ -89,14 +89,14 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * common extension pattern for css files; matches all files with extension 'css'.
-	 *
+	 * 
 	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
 	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
 
 	/**
 	 * common extension pattern for javascript files; matches all files with extension 'js'.
-	 *
+	 * 
 	 * @deprecated Will be removed in 2.0; contribute resources one by one instead
 	 */
 	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
@@ -109,7 +109,7 @@ public class PackageResource extends WebResource implements IModifiable
 	/**
 	 * Binds the resources that match the provided pattern to the given application object. Will
 	 * create any resources if not already in the shared resources of the application object.
-	 *
+	 * 
 	 * @param application
 	 *            The application to bind to.
 	 * @param scope
@@ -118,7 +118,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            A regular expression to match against the contents of the package of the provided
 	 *            scope class (eg &quot;.*\\.js&quot; will add all the files with extension
 	 *            &quot;js&quot; from that package).
-	 *
+	 * 
 	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op.
 	 *             {@link PackageResource package resources} are automatically tried and bound as
 	 *             shared resources so that they don't have to be pre-registered anymore. Will be
@@ -133,7 +133,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * create any resources if not already in the shared resources of the application object and
 	 * does that recursively when the recurse parameter is true, or just for the scoped package if
 	 * that parameter is false
-	 *
+	 * 
 	 * @param application
 	 *            The application to bind to.
 	 * @param scope
@@ -144,7 +144,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 *            &quot;js&quot; from that package).
 	 * @param recurse
 	 *            Whether this method should recurse into sub packages
-	 *
+	 * 
 	 * @deprecated Since Wicket 1.2.1 this method is effectively a no-op.
 	 *             {@link PackageResource package resources} are automatically tried and bound as
 	 *             shared resources so that they don't have to be pre-registered anymore. Will be
@@ -157,7 +157,7 @@ public class PackageResource extends WebResource implements IModifiable
 	/**
 	 * Binds a resource to the given application object. Will create the resource if not already in
 	 * the shared resources of the application object.
-	 *
+	 * 
 	 * @param application
 	 *            The application to bind to.
 	 * @param scope
@@ -174,7 +174,7 @@ public class PackageResource extends WebResource implements IModifiable
 	/**
 	 * Binds a resource to the given application object. Will create the resource if not already in
 	 * the shared resources of the application object.
-	 *
+	 * 
 	 * @param application
 	 *            The application to bind to.
 	 * @param scope
@@ -193,7 +193,7 @@ public class PackageResource extends WebResource implements IModifiable
 	/**
 	 * Binds a resource to the given application object. Will create the resource if not already in
 	 * the shared resources of the application object.
-	 *
+	 * 
 	 * @param application
 	 *            The application to bind to.
 	 * @param scope
@@ -231,7 +231,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Gets whether a resource for a given set of criteria exists.
-	 *
+	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
 	 *            resource, and to determine what package it is in. Typically this is the class in
@@ -256,7 +256,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * Gets non-localized resources for a given set of criteria. Multiple resource can be loaded for
 	 * the same criteria if they match the pattern. If no resources were found, this method returns
 	 * null.
-	 *
+	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
 	 *            resource, and to determine what package it is in. Typically this is the calling
@@ -275,7 +275,7 @@ public class PackageResource extends WebResource implements IModifiable
 	 * Gets non-localized resources for a given set of criteria. Multiple resource can be loaded for
 	 * the same criteria if they match the pattern. If no resources were found, this method returns
 	 * null.
-	 *
+	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
 	 *            resource, and to determine what package it is in. Typically this is the calling
@@ -369,7 +369,7 @@ public class PackageResource extends WebResource implements IModifiable
 	/**
 	 * Gets a non-localized resource for a given set of criteria. Only one resource will be loaded
 	 * for the same criteria.
-	 *
+	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
 	 *            resource, and to determine what package it is in. Typically this is the calling
@@ -386,7 +386,7 @@ public class PackageResource extends WebResource implements IModifiable
 	/**
 	 * Gets the resource for a given set of criteria. Only one resource will be loaded for the same
 	 * criteria.
-	 *
+	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
 	 *            resource, and to determine what package it is in. Typically this is the class in
@@ -451,7 +451,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Hidden constructor.
-	 *
+	 * 
 	 * @param scope
 	 *            This argument will be used to get the class loader for loading the package
 	 *            resource, and to determine what package it is in
@@ -496,7 +496,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Gets the absolute path of the resource.
-	 *
+	 * 
 	 * @return the absolute resource path
 	 */
 	public final String getAbsolutePath()
@@ -506,7 +506,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Gets the locale.
-	 *
+	 * 
 	 * @return The Locale of this package resource
 	 */
 	public final Locale getLocale()
@@ -516,7 +516,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Gets the path this resource was created with.
-	 *
+	 * 
 	 * @return the path
 	 */
 	public final String getPath()
@@ -578,7 +578,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Gets the scoping class, used for class loading and to determine the package.
-	 *
+	 * 
 	 * @return the scoping class
 	 */
 	public final Class getScope()
@@ -588,7 +588,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Gets the style.
-	 *
+	 * 
 	 * @return the style
 	 */
 	public final String getStyle()
@@ -601,7 +601,7 @@ public class PackageResource extends WebResource implements IModifiable
 
 	/**
 	 * Returns the last modified time of resource
-	 *
+	 * 
 	 * @return last modified time or null if the time can not be determined
 	 */
 	public Time lastModifiedTime()

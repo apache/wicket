@@ -23,36 +23,36 @@ package org.apache.wicket.protocol.http.documentvalidation;
  */
 public class TextContent implements DocumentElement
 {
-    private final String value;
+	private final String value;
 
-    /**
-     * Construct the text content with the expected value.
-     * 
-     * @param value
-     *            The value
-     */
-    public TextContent(final String value)
-    {
-        this.value = value;
-    }
+	/**
+	 * Construct the text content with the expected value.
+	 * 
+	 * @param value
+	 *            The value
+	 */
+	public TextContent(final String value)
+	{
+		this.value = value;
+	}
 
-    /**
-     * Get the value of this text content.
-     * 
-     * @return The value
-     */
-    public String getValue()
-    {
-        return value;
-    }
+	/**
+	 * Get the value of this text content.
+	 * 
+	 * @return The value
+	 */
+	public String getValue()
+	{
+		return value;
+	}
 
-    /**
-     * Output a descriptive string.
-     * 
-     * @return The string
-     */
-    public String toString()
-    {
-        return "[text = '" + value + "']";
-    }
+	/**
+	 * Output a descriptive string.
+	 * 
+	 * @return The string
+	 */
+	public String toString()
+	{
+		return "[text = '" + value + "']";
+	}
 }

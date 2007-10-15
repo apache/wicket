@@ -23,6 +23,7 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 
 	/**
 	 * Construct.
+	 * 
 	 * @param ignoreFiles
 	 */
 	public JavaScriptLicenseHeaderHandler(String[] ignoreFiles)
@@ -44,13 +45,13 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 
 	public String[] getSuffixes()
 	{
-		return new String[]{"js"};
+		return new String[] { "js" };
 	}
 
 	public boolean addLicenseHeader(File file)
 	{
 		prependLicenseHeader(file);
-		
+
 		return true;
 	}
 

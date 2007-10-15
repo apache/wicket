@@ -21,8 +21,8 @@ import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigationLink;
 
 /**
- * An ajaxified navigation for a PageableListView that holds links to other
- * pages of the PageableListView.
+ * An ajaxified navigation for a PageableListView that holds links to other pages of the
+ * PageableListView.
  * <p>
  * Please
  * 
@@ -32,7 +32,9 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigationLink;
  * 
  * @author Martijn Dashorst
  */
-public class AjaxPagingNavigation extends org.apache.wicket.markup.html.navigation.paging.PagingNavigation
+public class AjaxPagingNavigation
+		extends
+			org.apache.wicket.markup.html.navigation.paging.PagingNavigation
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,8 +59,7 @@ public class AjaxPagingNavigation extends org.apache.wicket.markup.html.navigati
 	 * @param pageable
 	 *            The underlying pageable component to navigate
 	 * @param labelProvider
-	 *            The label provider for the text that the links should be
-	 *            displaying.
+	 *            The label provider for the text that the links should be displaying.
 	 */
 	public AjaxPagingNavigation(final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)

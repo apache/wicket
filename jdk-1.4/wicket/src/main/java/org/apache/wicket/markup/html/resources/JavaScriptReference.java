@@ -24,7 +24,7 @@ import org.apache.wicket.util.value.IValueMap;
 
 /**
  * Link to a packaged JavaScript file.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JavaScriptReference extends PackagedResourceReference
@@ -33,12 +33,11 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param referer
-	 *            the class that is referring; is used as the relative root for
-	 *            getting the resource
+	 *            the class that is referring; is used as the relative root for getting the resource
 	 * @param file
 	 *            reference as a string
 	 */
@@ -49,15 +48,13 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param referer
-	 *            the class that is referring; is used as the relative root for
-	 *            getting the resource
+	 *            the class that is referring; is used as the relative root for getting the resource
 	 * @param file
-	 *            reference as a string. The model must provide an instance of
-	 *            {@link String}
+	 *            reference as a string. The model must provide an instance of {@link String}
 	 */
 	public JavaScriptReference(String id, Class referer, IModel file)
 	{
@@ -66,7 +63,7 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param resourceReference
@@ -79,7 +76,7 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param resourceReference
@@ -106,9 +103,11 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * @see org.apache.wicket.markup.html.resources.PackagedResourceReference#createPackageResourceReference(org.apache.wicket.Application,
 	 *      java.lang.Class, java.lang.String)
 	 */
-	protected ResourceReference createPackageResourceReference(Application app, Class scope, String name)
+	protected ResourceReference createPackageResourceReference(Application app, Class scope,
+			String name)
 	{
-		CompressedResourceReference compressedResourceReference = new CompressedResourceReference(scope, name);
+		CompressedResourceReference compressedResourceReference = new CompressedResourceReference(
+				scope, name);
 		compressedResourceReference.bind(app);
 		return compressedResourceReference;
 	}

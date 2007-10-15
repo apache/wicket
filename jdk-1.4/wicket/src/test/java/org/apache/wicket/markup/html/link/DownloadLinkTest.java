@@ -74,7 +74,8 @@ public class DownloadLinkTest extends WicketTestCase
 		tester.startPage(DownloadPage.class);
 		tester.clickLink(DownloadPage.TEXT_DOWNLOAD_LINK);
 		assertTrue(tester.getContentTypeFromResponseHeader().startsWith("text/plain"));
-		assertTrue(tester.getContentDispositionFromResponseHeader().startsWith("attachment; filename="));
+		assertTrue(tester.getContentDispositionFromResponseHeader().startsWith(
+				"attachment; filename="));
 		assertEquals(0, tester.getContentLengthFromResponseHeader());
 	}
 }

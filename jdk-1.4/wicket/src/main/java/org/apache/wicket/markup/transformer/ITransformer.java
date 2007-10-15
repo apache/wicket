@@ -19,17 +19,17 @@ package org.apache.wicket.markup.transformer;
 import org.apache.wicket.Component;
 
 /**
- * A common interface to be implemented be OutputTransformerContainers and
- * TranformerBehaviors which post-process the output markup of a component.
- *
+ * A common interface to be implemented be OutputTransformerContainers and TranformerBehaviors which
+ * post-process the output markup of a component.
+ * 
  * @author Juergen Donnerstag
  */
 public interface ITransformer
 {
 	/**
-	 * Will be invoked after all child components have been processed to allow
-	 * for transforming the markup generated.
-	 *
+	 * Will be invoked after all child components have been processed to allow for transforming the
+	 * markup generated.
+	 * 
 	 * @param component
 	 *            The associated Wicket component
 	 * @param output

@@ -19,9 +19,8 @@ package org.apache.wicket.markup.html.panel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
- * Panel that does absolutely nothing and that can be used to display an empty
- * block. If you need to conditionally display markup, use a
- * {@link WebMarkupContainer} directly.
+ * Panel that does absolutely nothing and that can be used to display an empty block. If you need to
+ * conditionally display markup, use a {@link WebMarkupContainer} directly.
  */
 public final class EmptyPanel extends Panel
 {

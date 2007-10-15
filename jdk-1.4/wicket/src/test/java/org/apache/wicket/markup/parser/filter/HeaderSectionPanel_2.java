@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class HeaderSectionPanel_2 extends Panel
@@ -31,11 +31,12 @@ public class HeaderSectionPanel_2 extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public HeaderSectionPanel_2(final String id) 
+	public HeaderSectionPanel_2(final String id)
 	{
-	    super(id);
-	    add(new ExternalLink("cssHref", "myStyle.css"));
-    }
+		super(id);
+		add(new ExternalLink("cssHref", "myStyle.css"));
+	}
 }

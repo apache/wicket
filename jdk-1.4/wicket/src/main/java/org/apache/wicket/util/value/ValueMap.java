@@ -33,27 +33,24 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * A <code>IValueMap</code> implementation that holds values, parses
- * <code>String</code>s, and exposes a variety of convenience methods.
+ * A <code>IValueMap</code> implementation that holds values, parses <code>String</code>s, and
+ * exposes a variety of convenience methods.
  * <p>
- * In addition to a no-arg constructor and a copy constructor that takes a
- * <code>Map</code> argument, <code>ValueMap</code>s can be constructed
- * using a parsing constructor. <code>ValueMap(String)</code> will parse
- * values from the string in comma separated key/value assignment pairs. For
- * example, <code>new ValueMap("a=9,b=foo")</code>.
+ * In addition to a no-arg constructor and a copy constructor that takes a <code>Map</code>
+ * argument, <code>ValueMap</code>s can be constructed using a parsing constructor.
+ * <code>ValueMap(String)</code> will parse values from the string in comma separated key/value
+ * assignment pairs. For example, <code>new ValueMap("a=9,b=foo")</code>.
  * <p>
- * Values can be retrieved from the <code>ValueMap</code> in the usual way or
- * with methods that do handy conversions to various types, including
- * <code>String</code>, <code>StringValue</code>, <code>int</code>,
- * <code>long</code>, <code>double</code>, <code>Time</code> and
+ * Values can be retrieved from the <code>ValueMap</code> in the usual way or with methods that do
+ * handy conversions to various types, including <code>String</code>, <code>StringValue</code>,
+ * <code>int</code>, <code>long</code>, <code>double</code>, <code>Time</code> and
  * <code>Duration</code>.
  * <p>
- * The <code>makeImmutable</code> method will make the underlying
- * <code>Map</code> immutable. Further attempts to change the <code>Map</code>
- * will result in a <code>RuntimeException</code>.
+ * The <code>makeImmutable</code> method will make the underlying <code>Map</code> immutable.
+ * Further attempts to change the <code>Map</code> will result in a <code>RuntimeException</code>.
  * <p>
- * The <code>toString</code> method converts a <code>ValueMap</code> object
- * to a readable key/value string for diagnostics.
+ * The <code>toString</code> method converts a <code>ValueMap</code> object to a readable
+ * key/value string for diagnostics.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -66,8 +63,7 @@ public class ValueMap extends HashMap implements IValueMap
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * <code>true</code> if this <code>ValueMap</code> has been made
-	 * immutable.
+	 * <code>true</code> if this <code>ValueMap</code> has been made immutable.
 	 */
 	private boolean immutable = false;
 
@@ -92,12 +88,11 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * Constructor.
 	 * <p>
-	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you
-	 * wish to properly decode a request URL.
+	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you wish to properly
+	 * decode a request URL.
 	 * 
 	 * @param keyValuePairs
-	 *            list of key/value pairs separated by commas. 
-	 *            For example, "<code>param1=foo,param2=bar</code>"
+	 *            list of key/value pairs separated by commas. For example, "<code>param1=foo,param2=bar</code>"
 	 */
 	public ValueMap(final String keyValuePairs)
 	{
@@ -107,16 +102,14 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * Constructor.
 	 * <p>
-	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you
-	 * wish to properly decode a request URL.
+	 * NOTE: Please use <code>RequestUtils.decodeParameters()</code> if you wish to properly
+	 * decode a request URL.
 	 * 
 	 * @param keyValuePairs
-	 *            list of key/value pairs separated by a given delimiter. For
-	 *            example, "<code>param1=foo,param2=bar</code>" where
-	 *            delimiter is "<code>,</code>".
+	 *            list of key/value pairs separated by a given delimiter. For example, "<code>param1=foo,param2=bar</code>"
+	 *            where delimiter is "<code>,</code>".
 	 * @param delimiter
-	 *            delimiter <code>String</code> used to separate key/value
-	 *            pairs
+	 *            delimiter <code>String</code> used to separate key/value pairs
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
@@ -169,14 +162,12 @@ public class ValueMap extends HashMap implements IValueMap
 	 * Constructor.
 	 * 
 	 * @param keyValuePairs
-	 *            list of key/value pairs separated by a given delimiter. For
-	 *            example, "<code>param1=foo,param2=bar</code>" where
-	 *            delimiter is "<code>,</code>".
+	 *            list of key/value pairs separated by a given delimiter. For example, "<code>param1=foo,param2=bar</code>"
+	 *            where delimiter is "<code>,</code>".
 	 * @param delimiter
 	 *            delimiter string used to separate key/value pairs
 	 * @param valuePattern
-	 *            pattern for value. To pass a simple regular expression, 
-	 *            pass "<code>new MetaPattern(regexp)</code>".
+	 *            pattern for value. To pass a simple regular expression, pass "<code>new MetaPattern(regexp)</code>".
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter,
 			final MetaPattern valuePattern)
@@ -201,8 +192,8 @@ public class ValueMap extends HashMap implements IValueMap
 			}
 			else
 			{
-				throw new IllegalArgumentException("Invalid key value list: '" + keyValuePairs
-						+ "'");
+				throw new IllegalArgumentException("Invalid key value list: '" + keyValuePairs +
+						"'");
 			}
 		}
 	}
@@ -434,18 +425,16 @@ public class ValueMap extends HashMap implements IValueMap
 	}
 
 	/**
-	 * Adds the value to this <code>ValueMap</code> with the given key. If the
-	 * key already is in the <code>ValueMap</code> it will combine the values
-	 * into a <code>String</code> array, else it will just store the value
-	 * itself.
+	 * Adds the value to this <code>ValueMap</code> with the given key. If the key already is in
+	 * the <code>ValueMap</code> it will combine the values into a <code>String</code> array,
+	 * else it will just store the value itself.
 	 * 
 	 * @param key
 	 *            the key to store the value under
 	 * @param value
-	 *            the value that must be added/merged to the
-	 *            <code>ValueMap</code>
-	 * @return the value itself if there was no previous value, or a
-	 *         <code>String</code> array with the combined values
+	 *            the value that must be added/merged to the <code>ValueMap</code>
+	 * @return the value itself if there was no previous value, or a <code>String</code> array
+	 *         with the combined values
 	 */
 	public final Object add(final String key, final String value)
 	{
@@ -519,9 +508,9 @@ public class ValueMap extends HashMap implements IValueMap
 	/**
 	 * Generates a <code>String</code> representation of this object.
 	 * 
-	 * @return <code>String</code> representation of this
-	 *         <code>ValueMap</code> consistent with the tag-attribute style
-	 *         of markup elements. For example: <code>a="x" b="y" c="z"</code>.
+	 * @return <code>String</code> representation of this <code>ValueMap</code> consistent with
+	 *         the tag-attribute style of markup elements. For example:
+	 *         <code>a="x" b="y" c="z"</code>.
 	 */
 	public String toString()
 	{

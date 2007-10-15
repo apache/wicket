@@ -23,15 +23,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * Crypt factory that creates the {@link ICrypt} object by instantiating a
- * provided class. The class must implement {@link ICrypt}.
+ * Crypt factory that creates the {@link ICrypt} object by instantiating a provided class. The class
+ * must implement {@link ICrypt}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public class ClassCryptFactory implements ICryptFactory
 {
 	private static final Logger log = LoggerFactory.getLogger(ClassCryptFactory.class);
-	private final WeakReference/*<Class>*/ cryptClass;
+	private final WeakReference/* <Class> */cryptClass;
 	private final String encryptionKey;
 
 	/**
@@ -55,7 +55,7 @@ public class ClassCryptFactory implements ICryptFactory
 		}
 
 		this.cryptClass = new WeakReference(cryptClass);
-		this.encryptionKey=encryptionKey;
+		this.encryptionKey = encryptionKey;
 	}
 
 	/**

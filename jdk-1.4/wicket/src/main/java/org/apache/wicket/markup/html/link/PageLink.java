@@ -19,13 +19,11 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.Page;
 
 /**
- * Links to a given page via an object implementing the IPageLink delayed
- * linking interface. PageLinks can be constructed directly with an IPageLink
- * interface or with a Page Class object. In the latter case, an IPageLink
- * implementation is provided which constructs a Page of the given class when
- * the link is clicked. A default no-args constructor must be available in this
- * case or a WicketRuntimeException will be thrown when Wicket fails to
- * instantiate the class.
+ * Links to a given page via an object implementing the IPageLink delayed linking interface.
+ * PageLinks can be constructed directly with an IPageLink interface or with a Page Class object. In
+ * the latter case, an IPageLink implementation is provided which constructs a Page of the given
+ * class when the link is clicked. A default no-args constructor must be available in this case or a
+ * WicketRuntimeException will be thrown when Wicket fails to instantiate the class.
  * 
  * @see IPageLink
  * @author Jonathan Locke
@@ -38,8 +36,8 @@ public class PageLink extends Link
 	private final IPageLink pageLink;
 
 	/**
-	 * Constructs a link that instantiates the given Page class when the link is
-	 * clicked. The instantiated Page is used to render a response to the user.
+	 * Constructs a link that instantiates the given Page class when the link is clicked. The
+	 * instantiated Page is used to render a response to the user.
 	 * 
 	 * @param id
 	 *            See Component
@@ -76,16 +74,15 @@ public class PageLink extends Link
 	/**
 	 * This constructor is ideal for constructing pages lazily.
 	 * 
-	 * Constructs a link which invokes the getPage() method of the IPageLink
-	 * interface when the link is clicked. Whatever Page objects is returned by
-	 * this method will be rendered back to the user.
+	 * Constructs a link which invokes the getPage() method of the IPageLink interface when the link
+	 * is clicked. Whatever Page objects is returned by this method will be rendered back to the
+	 * user.
 	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageLink
-	 *            An implementation of IPageLink which will create the page
-	 *            linked to if and when this hyperlink is clicked at a later
-	 *            time.
+	 *            An implementation of IPageLink which will create the page linked to if and when
+	 *            this hyperlink is clicked at a later time.
 	 */
 	public PageLink(final String id, final IPageLink pageLink)
 	{
@@ -94,19 +91,17 @@ public class PageLink extends Link
 	}
 
 	/**
-	 * This constructor is ideal if a Page object was passed in from a previous
-	 * Page. Construct a link to the Page. Warning: DO NOT use this for
-	 * constructing links to pages you didn't already have an instance of. This
-	 * constructor is strongly discouraged for anything other than linking back
-	 * to the same page.
+	 * This constructor is ideal if a Page object was passed in from a previous Page. Construct a
+	 * link to the Page. Warning: DO NOT use this for constructing links to pages you didn't already
+	 * have an instance of. This constructor is strongly discouraged for anything other than linking
+	 * back to the same page.
 	 * 
 	 * @param id
 	 *            See component
 	 * @param page
 	 *            The page
-	 * @deprecated rather than using this class/ constructor, use normal
-	 *             {@link Link links} and call setResponsePage in their
-	 *             {@link Link#onClick() onClick} methods.
+	 * @deprecated rather than using this class/ constructor, use normal {@link Link links} and call
+	 *             setResponsePage in their {@link Link#onClick() onClick} methods.
 	 */
 	public PageLink(final String id, final Page page)
 	{
@@ -130,8 +125,8 @@ public class PageLink extends Link
 	}
 
 	/**
-	 * Returns true if the given page is of the same class as the (delayed)
-	 * destination of this page link.
+	 * Returns true if the given page is of the same class as the (delayed) destination of this page
+	 * link.
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
@@ -141,9 +136,8 @@ public class PageLink extends Link
 	}
 
 	/**
-	 * Handles a link click by asking for a concrete Page instance through the
-	 * IPageLink.getPage() delayed linking interface. This call will normally
-	 * cause the destination page to be created.
+	 * Handles a link click by asking for a concrete Page instance through the IPageLink.getPage()
+	 * delayed linking interface. This call will normally cause the destination page to be created.
 	 * 
 	 * @see org.apache.wicket.markup.html.link.Link#onClick()
 	 */

@@ -44,12 +44,13 @@ public class AjaxLinkClickTest extends WicketTestCase
 
 	/**
 	 * Make sure that our test flags are reset between every test.
+	 * 
 	 * @see org.apache.wicket.WicketTestCase#setUp()
 	 */
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		
+
 		linkClicked = false;
 		ajaxRequestTarget = null;
 	}
@@ -92,12 +93,12 @@ public class AjaxLinkClickTest extends WicketTestCase
 		assertTrue(linkClicked);
 		assertNotNull(ajaxRequestTarget);
 	}
-	
+
 	/**
 	 * Test that clickLink also works with AjaxFallbackLinks
 	 * 
-	 * AjaxFallbackLinks should be clicked and interpreted as an AjaxLink, which
-	 * means that AjaxRequestTarget is not null.
+	 * AjaxFallbackLinks should be clicked and interpreted as an AjaxLink, which means that
+	 * AjaxRequestTarget is not null.
 	 */
 	public void testAjaxFallbackLinkClick()
 	{
@@ -133,10 +134,10 @@ public class AjaxLinkClickTest extends WicketTestCase
 		assertTrue(linkClicked);
 		assertNotNull(ajaxRequestTarget);
 	}
-	
+
 	/**
-	 * Test that when AJAX is disabled, the AjaxFallbackLink is invoked with
-	 * null as AjaxRequestTarget.
+	 * Test that when AJAX is disabled, the AjaxFallbackLink is invoked with null as
+	 * AjaxRequestTarget.
 	 */
 	public void testFallbackLinkWithAjaxDisabled()
 	{

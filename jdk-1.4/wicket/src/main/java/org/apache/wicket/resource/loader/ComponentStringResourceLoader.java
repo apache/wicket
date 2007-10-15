@@ -38,38 +38,32 @@ import org.slf4j.LoggerFactory;
 /**
  * This is Wicket's default string resource loader.
  * <p>
- * The component based string resource loader attempts to find the resource from
- * a bundle that corresponds to the supplied component object or one of its
- * parent containers.
+ * The component based string resource loader attempts to find the resource from a bundle that
+ * corresponds to the supplied component object or one of its parent containers.
  * <p>
- * The search order for resources is built around the containers that hold the
- * component (if it is not a page). Consider a Page that contains a Panel that
- * contains a Label. If we pass the Label as the component then resource loading
- * will first look for the resource against the page, then against the panel and
- * finally against the label.
+ * The search order for resources is built around the containers that hold the component (if it is
+ * not a page). Consider a Page that contains a Panel that contains a Label. If we pass the Label as
+ * the component then resource loading will first look for the resource against the page, then
+ * against the panel and finally against the label.
  * <p>
- * The above search order may seem slightly odd at first, but can be explained
- * thus: Team A writes a new component X and packages it as a reusable Wicket
- * component along with all required resources. Team B then creates a new
- * container component Y that holds a instance of an X. However, Team B wishes
- * the text to be different to that which was provided with X so rather than
- * needing to change X, they include override values in the resources for Y.
- * Finally, Team C makes use of component Y in a page they are writing.
- * Initially they are happy with the text for Y so they do not include any
- * override values in the resources for the page. However, after demonstrating
- * to the customer, the customer requests the text for Y to be different. Team C
- * need only provide override values against their page and thus do not need to
- * change Y.
+ * The above search order may seem slightly odd at first, but can be explained thus: Team A writes a
+ * new component X and packages it as a reusable Wicket component along with all required resources.
+ * Team B then creates a new container component Y that holds a instance of an X. However, Team B
+ * wishes the text to be different to that which was provided with X so rather than needing to
+ * change X, they include override values in the resources for Y. Finally, Team C makes use of
+ * component Y in a page they are writing. Initially they are happy with the text for Y so they do
+ * not include any override values in the resources for the page. However, after demonstrating to
+ * the customer, the customer requests the text for Y to be different. Team C need only provide
+ * override values against their page and thus do not need to change Y.
  * <p>
- * This implementation is fully aware of both locale and style values when
- * trying to obtain the appropriate resources.
+ * This implementation is fully aware of both locale and style values when trying to obtain the
+ * appropriate resources.
  * <p>
- * In addition to the above search order, each key will be pre-pended with the
- * relative path of the current component related to the component that is being
- * searched. E.g. assume a component hierarchy like page1.form1.input1 and your
- * are requesting a key named 'Required'. Wicket will search the property in the
- * following order:
- *
+ * In addition to the above search order, each key will be pre-pended with the relative path of the
+ * current component related to the component that is being searched. E.g. assume a component
+ * hierarchy like page1.form1.input1 and your are requesting a key named 'Required'. Wicket will
+ * search the property in the following order:
+ * 
  * <pre>
  *        page1.properties =&gt; form1.input1.Required
  *        page1.properties =&gt; Required
@@ -79,28 +73,23 @@ import org.slf4j.LoggerFactory;
  *        myApplication.properties =&gt; page1.form1.input1.Required
  *        myApplication.properties =&gt; Required
  * </pre>
- *
- * Note that the latter two property files are only checked if the
- * ClassStringResourceLoader has been registered with Application as well, which
- * is the default.
+ * 
+ * Note that the latter two property files are only checked if the ClassStringResourceLoader has
+ * been registered with Application as well, which is the default.
  * <p>
- * In addition to the above search order, each component that is being searched
- * for a resource also includes the resources from any parent classes that it
- * inherits from. For example, PageA extends CommonBasePage which in turn
- * extends WebPage. When a resource lookup is requested on PageA, the resource
- * bundle for PageA is first checked. If the resource is not found in this
- * bundle then the resource bundle for CommonBasePage is checked. This allows
- * designers of base pages and components to define default sets of string
- * resources and then developers implementing subclasses to either override or
- * extend these in their own resource bundle.
+ * In addition to the above search order, each component that is being searched for a resource also
+ * includes the resources from any parent classes that it inherits from. For example, PageA extends
+ * CommonBasePage which in turn extends WebPage. When a resource lookup is requested on PageA, the
+ * resource bundle for PageA is first checked. If the resource is not found in this bundle then the
+ * resource bundle for CommonBasePage is checked. This allows designers of base pages and components
+ * to define default sets of string resources and then developers implementing subclasses to either
+ * override or extend these in their own resource bundle.
  * <p>
- * This implementation can be subclassed to implement modified behavior. The new
- * implementation must be registered with the Application (ResourceSettings)
- * though.
+ * This implementation can be subclassed to implement modified behavior. The new implementation must
+ * be registered with the Application (ResourceSettings) though.
  * <p>
- * You may enable log debug messages for this class to fully understand the
- * search order.
- *
+ * You may enable log debug messages for this class to fully understand the search order.
+ * 
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
@@ -117,20 +106,19 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Get the string resource for the given combination of class, key, locale
-	 * and style. The information is obtained from a resource bundle associated
-	 * with the provided Class (or one of its super classes).
-	 *
+	 * Get the string resource for the given combination of class, key, locale and style. The
+	 * information is obtained from a resource bundle associated with the provided Class (or one of
+	 * its super classes).
+	 * 
 	 * @param clazz
 	 *            The Class to find resources to be loaded
 	 * @param key
 	 *            The key to obtain the string for
 	 * @param locale
-	 *            The locale identifying the resource set to select the strings
-	 *            from
+	 *            The locale identifying the resource set to select the strings from
 	 * @param style
-	 *            The (optional) style identifying the resource set to select
-	 *            the strings from (see {@link org.apache.wicket.Session})
+	 *            The (optional) style identifying the resource set to select the strings from (see
+	 *            {@link org.apache.wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
 	public String loadStringResource(Class clazz, final String key, final Locale locale,
@@ -189,7 +177,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String)
 	 */
@@ -242,9 +230,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Traverse the component hierarchy up to the Page and add each component
-	 * class to the list (stack) returned
-	 *
+	 * Traverse the component hierarchy up to the Page and add each component class to the list
+	 * (stack) returned
+	 * 
 	 * @param component
 	 *            The component to evaluate
 	 * @return The stack of classes
@@ -274,9 +262,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Check the supplied class to see if it is one that we shouldn't bother
-	 * further searches up the class hierarchy for properties.
-	 *
+	 * Check the supplied class to see if it is one that we shouldn't bother further searches up the
+	 * class hierarchy for properties.
+	 * 
 	 * @param clazz
 	 *            The class to check
 	 * @return Whether to stop the search

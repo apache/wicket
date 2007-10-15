@@ -30,6 +30,6 @@ public class RedirectPage extends WebPage
 	 */
 	public RedirectPage()
 	{
-		
+
 	}
 }

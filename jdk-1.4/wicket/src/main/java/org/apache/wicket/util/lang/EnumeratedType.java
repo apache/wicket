@@ -26,12 +26,11 @@ import org.apache.wicket.util.string.StringValue;
 
 
 /**
- * A base class for defining enumerated types. Since this class extends
- * StringValue, every enumerated type subclass is a StringValue that can be
- * manipulated, converted and displayed in useful ways. In addition to
- * constructing a type with the given name, lists are kept of all enumeration
- * values by subclass. The list of available values in the enumeration
- * represented by a given subclass can be retrieved by calling getValues(Class).
+ * A base class for defining enumerated types. Since this class extends StringValue, every
+ * enumerated type subclass is a StringValue that can be manipulated, converted and displayed in
+ * useful ways. In addition to constructing a type with the given name, lists are kept of all
+ * enumeration values by subclass. The list of available values in the enumeration represented by a
+ * given subclass can be retrieved by calling getValues(Class).
  * 
  * @author Jonathan Locke
  */
@@ -80,21 +79,22 @@ public abstract class EnumeratedType extends StringValue
 
 		return valueList;
 	}
-	
+
 	/**
 	 * Method to ensure that == works after deserialization
+	 * 
 	 * @return object instance
 	 * @throws java.io.ObjectStreamException
 	 */
-	public Object readResolve() throws java.io.ObjectStreamException 
+	public Object readResolve() throws java.io.ObjectStreamException
 	{
 		EnumeratedType result = this;
 		List values = getValues(getClass());
 		if (values != null)
 		{
-			for (Iterator i = values.iterator(); i.hasNext(); )
+			for (Iterator i = values.iterator(); i.hasNext();)
 			{
-				EnumeratedType type = (EnumeratedType) i.next();
+				EnumeratedType type = (EnumeratedType)i.next();
 				if (type.toString() != null && type.toString().equals(this.toString()))
 				{
 					result = type;

@@ -21,22 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An abstract base class for string list implementations. Besides having an
- * implementation for IStringSequence (iterator(), get(int index) and size()),
- * an AbstractStringList can be converted to a String array or a List of
- * Strings.
+ * An abstract base class for string list implementations. Besides having an implementation for
+ * IStringSequence (iterator(), get(int index) and size()), an AbstractStringList can be converted
+ * to a String array or a List of Strings.
  * <p>
- * The total length of all Strings in the list can be determined by calling
- * totalLength().
+ * The total length of all Strings in the list can be determined by calling totalLength().
  * <p>
- * Strings or a subset of Strings in the list can be formatted using three
- * join() methods:
+ * Strings or a subset of Strings in the list can be formatted using three join() methods:
  * <p>
  * <ul>
  * <li>join(String) Joins strings together using a given separator
  * <li>join() Joins Strings using comma as a separator
- * <li>join(int first, int last, String) Joins a sublist of strings using a
- * given separator
+ * <li>join(int first, int last, String) Joins a sublist of strings using a given separator
  * </ul>
  * 
  * @author Jonathan Locke
@@ -69,8 +65,8 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	public abstract String get(int index);
 
 	/**
-	 * Returns this String sequence as an array of Strings. Subclasses may
-	 * provide a more efficient implementation than the one provided here.
+	 * Returns this String sequence as an array of Strings. Subclasses may provide a more efficient
+	 * implementation than the one provided here.
 	 * 
 	 * @return An array containing exactly this sequence of Strings
 	 */
@@ -92,8 +88,8 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	}
 
 	/**
-	 * Returns this String sequence as an array of Strings. Subclasses may
-	 * provide a more efficient implementation than the one provided here.
+	 * Returns this String sequence as an array of Strings. Subclasses may provide a more efficient
+	 * implementation than the one provided here.
 	 * 
 	 * @return An array containing exactly this sequence of Strings
 	 */
@@ -134,9 +130,8 @@ public abstract class AbstractStringList implements IStringSequence, Serializabl
 	}
 
 	/**
-	 * Joins this sequence of strings using a comma separator. For example, if
-	 * this sequence contains [1 2 3], the result of calling this method will be
-	 * "1, 2, 3".
+	 * Joins this sequence of strings using a comma separator. For example, if this sequence
+	 * contains [1 2 3], the result of calling this method will be "1, 2, 3".
 	 * 
 	 * @return The joined String
 	 */

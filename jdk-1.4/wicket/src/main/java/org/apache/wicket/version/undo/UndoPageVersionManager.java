@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A version manager implemented by recording <code>Component</code> changes
- * as undo records. These records can later be reversed to get back to a given
- * version of the <code>Page</code> being managed.
+ * A version manager implemented by recording <code>Component</code> changes as undo records.
+ * These records can later be reversed to get back to a given version of the <code>Page</code>
+ * being managed.
  * 
  * @author Jonathan Locke
  * @since 1.2.6
@@ -58,8 +58,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	private final Page page;
 
 	/**
-	 * If this is true, the version that was created is not merged with the
-	 * previous one.
+	 * If this is true, the version that was created is not merged with the previous one.
 	 */
 	private transient boolean ignoreMerge = false;
 
@@ -69,8 +68,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 * @param page
 	 *            the <code>Page</code> that we're tracking changes to
 	 * @param maxVersions
-	 *            the maximum number of versions to maintain before expiring
-	 *            old versions
+	 *            the maximum number of versions to maintain before expiring old versions
 	 */
 	public UndoPageVersionManager(final Page page, final int maxVersions)
 	{
@@ -87,7 +85,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 		changeList = new ChangeList();
 
 		// If we merge, then the version number shouldn't be upgraded.
-		if(!mergeVersion)
+		if (!mergeVersion)
 		{
 			// We are working on the next version now.
 			currentVersionNumber++;
@@ -98,7 +96,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 			currentAjaxVersionNumber++;
 		}
 	}
-	
+
 	/**
 	 * @see IPageVersionManager#ignoreVersionMerge()
 	 */
@@ -146,9 +144,9 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public void endVersion(boolean mergeVersion)
 	{
-		if(mergeVersion && !ignoreMerge)
+		if (mergeVersion && !ignoreMerge)
 		{
-			if(changeListStack.size() > 0)
+			if (changeListStack.size() > 0)
 			{
 				ChangeList previous = (ChangeList)changeListStack.peek();
 				previous.add(changeList);
@@ -157,26 +155,26 @@ public class UndoPageVersionManager implements IPageVersionManager
 		else
 		{
 			ignoreMerge = false;
-			
+
 			// Push change list onto stack.
 			changeListStack.push(changeList);
-			
+
 			// If stack is overfull, remove oldest entry.
 			if (getVersions() > maxVersions)
 			{
 				expireOldestVersion();
 			}
-	
+
 			// Make memory efficient for replication.
 			changeListStack.trimToSize();
-	
+
 			if (log.isDebugEnabled())
 			{
 				log.debug("Version " + currentVersionNumber + " for page " + page + " stored");
 			}
 		}
 	}
-	
+
 	/**
 	 * @see IPageVersionManager#expireOldestVersion()
 	 */
@@ -192,7 +190,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	{
 		return currentVersionNumber;
 	}
-	
+
 	/**
 	 * @see IPageVersionManager#getAjaxVersionNumber()
 	 */
@@ -228,7 +226,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 			return null;
 		}
 	}
-	
+
 	/**
 	 * @see IPageVersionManager#rollbackPage(int)
 	 */
@@ -249,8 +247,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	/**
 	 * Goes back a <code>Page</code> version from the current version.
 	 * 
-	 * @return <code>true</code> if the page was successfully reverted to its
-	 *         previous version
+	 * @return <code>true</code> if the page was successfully reverted to its previous version
 	 */
 	private boolean undo()
 	{
@@ -259,9 +256,9 @@ public class UndoPageVersionManager implements IPageVersionManager
 			log.debug("UNDO: rollback " + page + " to version " + currentVersionNumber);
 		}
 
-		if(changeListStack.isEmpty())
+		if (changeListStack.isEmpty())
 		{
-		    return false;
+			return false;
 		}
 
 		// Pop off the top change list.

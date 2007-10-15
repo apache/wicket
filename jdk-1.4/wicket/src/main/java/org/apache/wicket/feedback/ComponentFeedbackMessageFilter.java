@@ -26,7 +26,7 @@ import org.apache.wicket.Component;
 public class ComponentFeedbackMessageFilter implements IFeedbackMessageFilter
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The component to accept feedback messages for */
 	private final Component component;
 

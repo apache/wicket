@@ -27,7 +27,7 @@ import org.apache.wicket.model.Model;
 public class MyComponent extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int intParam;
 	private Integer integerParam;
 	private long long1Param;
@@ -37,7 +37,7 @@ public class MyComponent extends WebMarkupContainer
 	private double double1Param;
 	private Double double2Param;
 	private String hexParam;
-	//private Date dateParam;
+	// private Date dateParam;
 	private String dateParam;
 
 	/**
@@ -135,7 +135,7 @@ public class MyComponent extends WebMarkupContainer
 	 * 
 	 * @param param
 	 */
-	//public void setDateParam(final Date param)
+	// public void setDateParam(final Date param)
 	public void setDateParam(final String param)
 	{
 		this.dateParam = param;
@@ -150,27 +150,28 @@ public class MyComponent extends WebMarkupContainer
 	{
 		this.hexParam = param;
 	}
-	
+
 	/**
-	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
+	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
+	 *      org.apache.wicket.markup.ComponentTag)
 	 */
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		StringBuffer str = new StringBuffer();
-		
-	    str.append("intParam: " + intParam + "<br/>");
-	    str.append("integerParam: " + integerParam.toString() + "<br/>");
-	    str.append("long1Param: " + long1Param + "<br/>");
-	    str.append("long2Param: " + long2Param.toString() + "<br/>");
-	    str.append("float1Param: " + float1Param + "<br/>");
-	    str.append("float2Param: " + float2Param.toString() + "<br/>");
-	    str.append("double1Param: " + double1Param + "<br/>");
-	    str.append("double2Param: " + double2Param.toString() + "<br/>");
-	    str.append("dateParam: " + dateParam + "<br/>");
-	    str.append("hexParam: " + hexParam + "<br/>");
-	    
-	    getResponse().write(str);
-	    
+
+		str.append("intParam: " + intParam + "<br/>");
+		str.append("integerParam: " + integerParam.toString() + "<br/>");
+		str.append("long1Param: " + long1Param + "<br/>");
+		str.append("long2Param: " + long2Param.toString() + "<br/>");
+		str.append("float1Param: " + float1Param + "<br/>");
+		str.append("float2Param: " + float2Param.toString() + "<br/>");
+		str.append("double1Param: " + double1Param + "<br/>");
+		str.append("double2Param: " + double2Param.toString() + "<br/>");
+		str.append("dateParam: " + dateParam + "<br/>");
+		str.append("hexParam: " + hexParam + "<br/>");
+
+		getResponse().write(str);
+
 		super.onComponentTagBody(markupStream, openTag);
 	}
 }

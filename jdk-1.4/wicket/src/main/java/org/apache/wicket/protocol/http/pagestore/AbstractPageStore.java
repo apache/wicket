@@ -34,8 +34,8 @@ import org.apache.wicket.util.collections.IntHashMap;
 import org.apache.wicket.util.lang.Objects;
 
 /**
- * Abstract page store that implements the serialization logic so that the
- * subclasses can concentrate on actual storing of serialized page instances.
+ * Abstract page store that implements the serialization logic so that the subclasses can
+ * concentrate on actual storing of serialized page instances.
  * 
  * @author Matej Knopp
  */
@@ -161,18 +161,16 @@ public abstract class AbstractPageStore implements IPageStore
 	};
 
 	/**
-	 * Creates a list of {@link SerializedPage} instances obtained from
-	 * serializing the provided page.
+	 * Creates a list of {@link SerializedPage} instances obtained from serializing the provided
+	 * page.
 	 * <p>
-	 * One page instance can be serialized to multiple {@link SerializedPage}
-	 * instances, because each referenced page is serialized separately and
-	 * should also be separately saved On deserialization wicket detects a page
-	 * instance placeholder and loads the appropriate page.
+	 * One page instance can be serialized to multiple {@link SerializedPage} instances, because
+	 * each referenced page is serialized separately and should also be separately saved On
+	 * deserialization wicket detects a page instance placeholder and loads the appropriate page.
 	 * <p>
-	 * As an example, when there is PageA that has a member variable of type
-	 * PageB, serializing instanceof PageA will result in a list of two
-	 * {@link SerializedPage} instances, one for PageA and another one for the
-	 * referenced PageB.
+	 * As an example, when there is PageA that has a member variable of type PageB, serializing
+	 * instanceof PageA will result in a list of two {@link SerializedPage} instances, one for PageA
+	 * and another one for the referenced PageB.
 	 * 
 	 * @param page
 	 *            page to be serialized
@@ -208,14 +206,14 @@ public abstract class AbstractPageStore implements IPageStore
 	}
 
 	/**
-	 * Creates a page instance from given byte array. Optionally gets the
-	 * specified version of the page.
+	 * Creates a page instance from given byte array. Optionally gets the specified version of the
+	 * page.
 	 * 
 	 * @param data
 	 *            Serialized page instance data as byte array
 	 * @param versionNumber
-	 *            Requested page version or -1 if original version (the one
-	 *            serialized) should be kept
+	 *            Requested page version or -1 if original version (the one serialized) should be
+	 *            kept
 	 * @return page instance
 	 */
 	protected Page deserializePage(byte[] data, int versionNumber)
@@ -250,6 +248,7 @@ public abstract class AbstractPageStore implements IPageStore
 
 	/**
 	 * Internal class for page serialization and deserialization
+	 * 
 	 * @author Matej Knopp
 	 * @author Johan Compagner
 	 */
@@ -278,7 +277,8 @@ public abstract class AbstractPageStore implements IPageStore
 
 		/**
 		 * @throws IOException
-		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page, java.io.ObjectOutputStream)
+		 * @see org.apache.wicket.Page.IPageSerializer#serializePage(org.apache.wicket.Page,
+		 *      java.io.ObjectOutputStream)
 		 */
 		public void serializePage(Page page, ObjectOutputStream stream) throws IOException
 		{

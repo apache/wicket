@@ -17,9 +17,9 @@
 package org.apache.wicket.model;
 
 /**
- * Simple base class for IWrapModel objects see {@link IComponentAssignedModel}
- * or {@link IComponentInheritedModel} so that you don't have to have empty methods
- * like detach or setObject() when not used in the wrapper. 
+ * Simple base class for IWrapModel objects see {@link IComponentAssignedModel} or
+ * {@link IComponentInheritedModel} so that you don't have to have empty methods like detach or
+ * setObject() when not used in the wrapper.
  * 
  * @author jcompagner
  */

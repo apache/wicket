@@ -20,7 +20,6 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 
 
-
 /**
  * Test for simple table behavior.
  */
@@ -28,6 +27,7 @@ public class SimpleTableTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param arg0
 	 */
 	public SimpleTableTest(String arg0)
@@ -37,6 +37,7 @@ public class SimpleTableTest extends WicketTestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testSimpleTable_1() throws Exception
@@ -44,17 +45,19 @@ public class SimpleTableTest extends WicketTestCase
 		executeTest(SimpleTablePage_1.class, "SimpleTablePageExpectedResult_1.html");
 
 		// Does re-render do as well ??
-	    ListView view = (ListView)tester.getLastRenderedPage().get("table");
-	    assertNotNull(view);
+		ListView view = (ListView)tester.getLastRenderedPage().get("table");
+		assertNotNull(view);
 		tester.processRequestCycle(view);
 		String document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+		assertEquals(
+				"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>",
+				document);
 
 		// Does re-render do as well ??
-	    ListItem item = (ListItem)tester.getLastRenderedPage().get("table:0");
-	    assertNotNull(item);
+		ListItem item = (ListItem)tester.getLastRenderedPage().get("table:0");
+		assertNotNull(item);
 		tester.processRequestCycle(item);
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
@@ -62,8 +65,8 @@ public class SimpleTableTest extends WicketTestCase
 		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li>", document);
 
 		// Does re-render do as well ??
-	    Label label = (Label)tester.getLastRenderedPage().get("table:1:txt");
-	    assertNotNull(label);
+		Label label = (Label)tester.getLastRenderedPage().get("table:1:txt");
+		assertNotNull(label);
 		tester.processRequestCycle(label);
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
@@ -73,6 +76,7 @@ public class SimpleTableTest extends WicketTestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testSimpleTable_2() throws Exception
@@ -80,21 +84,25 @@ public class SimpleTableTest extends WicketTestCase
 		executeTest(SimpleTablePage_2.class, "SimpleTablePageExpectedResult_2.html");
 
 		// Does re-render do as well ??
-	    ListView view = (ListView)tester.getLastRenderedPage().get("table");
-	    assertNotNull(view);
+		ListView view = (ListView)tester.getLastRenderedPage().get("table");
+		assertNotNull(view);
 		tester.processRequestCycle(view);
 		String document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+		assertEquals(
+				"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>",
+				document);
 
 		// Does re-render do as well ??
-	    view = (ListView)tester.getLastRenderedPage().get("table");
-	    assertNotNull(view);
+		view = (ListView)tester.getLastRenderedPage().get("table");
+		assertNotNull(view);
 		tester.processRequestCycle(view);
 		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+		assertEquals(
+				"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>",
+				document);
 	}
 }

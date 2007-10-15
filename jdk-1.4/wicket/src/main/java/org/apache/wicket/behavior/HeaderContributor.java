@@ -23,12 +23,11 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
 
 /**
- * A {@link org.apache.wicket.behavior.AbstractHeaderContributor} behavior that is
- * specialized on package resources. If you use this class, you have to
- * pre-register the resources you want to contribute. A shortcut for common
- * cases is to call {@link #forCss(Class, String)} to contribute a package css
- * file or {@link #forJavaScript(Class, String)} to contribute a packaged
- * javascript file. For instance:
+ * A {@link org.apache.wicket.behavior.AbstractHeaderContributor} behavior that is specialized on
+ * package resources. If you use this class, you have to pre-register the resources you want to
+ * contribute. A shortcut for common cases is to call {@link #forCss(Class, String)} to contribute a
+ * package css file or {@link #forJavaScript(Class, String)} to contribute a packaged javascript
+ * file. For instance:
  * 
  * <pre>
  * add(HeaderContributor.forCss(MyPanel.class, &quot;mystyle.css&quot;));
@@ -42,13 +41,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in a package.
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a CSS file that lives in a package.
 	 * 
 	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
+	 *            The scope of the package resource (typically the class of the caller, or a class
+	 *            that lives in the package where the resource lives).
 	 * @param path
 	 *            The path
 	 * @return the new header contributor instance
@@ -67,13 +65,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in a package.
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a CSS file that lives in a package.
 	 * 
 	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
+	 *            The scope of the package resource (typically the class of the caller, or a class
+	 *            that lives in the package where the resource lives).
 	 * @param path
 	 *            The path
 	 * @param media
@@ -95,8 +92,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in a package.
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a CSS file that lives in a package.
 	 * 
 	 * @param reference
 	 * 
@@ -116,8 +113,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a CSS file that lives in a package.
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a CSS file that lives in a package.
 	 * 
 	 * @param reference
 	 * @param media
@@ -139,14 +136,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor referencing a CSS file using one of the following schemes:
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor referencing a
+	 * CSS file using one of the following schemes:
 	 * <ul>
 	 * <li>Starts with http:// or https:// for an external reference.</li>
-	 * <li>Starts with "/" for an absolute reference that Wicket will not
-	 * rewrite.</li>
-	 * <li>Starts with anything else, which Wicket will automatically prepend
-	 * to make relative to the context root of your web-app.</li>
+	 * <li>Starts with "/" for an absolute reference that Wicket will not rewrite.</li>
+	 * <li>Starts with anything else, which Wicket will automatically prepend to make relative to
+	 * the context root of your web-app.</li>
 	 * </ul>
 	 * 
 	 * @param location
@@ -167,14 +163,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor referencing a CSS file using one of the following schemes:
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor referencing a
+	 * CSS file using one of the following schemes:
 	 * <ul>
 	 * <li>Starts with http:// or https:// for an external reference.</li>
-	 * <li>Starts with "/" for an absolute reference that Wicket will not
-	 * rewrite.</li>
-	 * <li>Starts with anything else, which Wicket will automatically prepend
-	 * to make relative to the context root of your web-app.</li>
+	 * <li>Starts with "/" for an absolute reference that Wicket will not rewrite.</li>
+	 * <li>Starts with anything else, which Wicket will automatically prepend to make relative to
+	 * the context root of your web-app.</li>
 	 * </ul>
 	 * 
 	 * @param location
@@ -197,13 +192,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a java script file that lives in a package.
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a java script file that lives in a package.
 	 * 
 	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
+	 *            The scope of the package resource (typically the class of the caller, or a class
+	 *            that lives in the package where the resource lives).
 	 * @param path
 	 *            The path
 	 * @return the new header contributor instance
@@ -222,8 +216,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor that references a java script file that lives in a package.
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor that references
+	 * a java script file that lives in a package.
 	 * 
 	 * @param reference
 	 * 
@@ -243,14 +237,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a header
-	 * contributor referencing a CSS file using one of the following schemes:
+	 * Returns a new instance of {@link HeaderContributor} with a header contributor referencing a
+	 * CSS file using one of the following schemes:
 	 * <ul>
 	 * <li>Starts with http:// or https:// for an external reference.</li>
-	 * <li>Starts with "/" for an absolute reference that Wicket will not
-	 * rewrite.</li>
-	 * <li>Starts with anything else, which Wicket will automatically prepend
-	 * to make relative to the context root of your web-app.</li>
+	 * <li>Starts with "/" for an absolute reference that Wicket will not rewrite.</li>
+	 * <li>Starts with anything else, which Wicket will automatically prepend to make relative to
+	 * the context root of your web-app.</li>
 	 * </ul>
 	 * 
 	 * @param location
@@ -275,7 +268,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 	private static final String returnRelativePath(String location)
 	{
 		// WICKET-59 allow external URLs, WICKET-612 allow absolute URLs.
-		if (location.startsWith("http://") || location.startsWith("https://") || location.startsWith("/"))
+		if (location.startsWith("http://") || location.startsWith("https://") ||
+				location.startsWith("/"))
 		{
 			return location;
 		}

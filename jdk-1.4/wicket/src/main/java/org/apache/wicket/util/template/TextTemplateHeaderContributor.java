@@ -24,8 +24,8 @@ import org.apache.wicket.model.LoadableDetachableModel;
 
 
 /**
- * A header contributor that will contribute the contents of the given template
- * interpolated with the provided map of variables.
+ * A header contributor that will contribute the contents of the given template interpolated with
+ * the provided map of variables.
  * 
  * @author Eelco Hillenius
  */
@@ -34,8 +34,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * This model holds the template and returns the interpolation of the
-	 * template with of any of the
+	 * This model holds the template and returns the interpolation of the template with of any of
+	 * the
 	 */
 	private static final class TemplateModel extends LoadableDetachableModel
 	{
@@ -47,8 +47,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		private final TextTemplate template;
 
 		/**
-		 * The model that holds any variables for interpolation. It should
-		 * return a {@link Map} or null.
+		 * The model that holds any variables for interpolation. It should return a {@link Map} or
+		 * null.
 		 */
 		private final IModel variablesModel;
 
@@ -58,8 +58,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 * @param template
 		 *            the template to work on
 		 * @param variablesModel
-		 *            The model that holds any variables for interpolation. It
-		 *            should return a {@link Map} or null.
+		 *            The model that holds any variables for interpolation. It should return a
+		 *            {@link Map} or null.
 		 */
 		protected TemplateModel(TextTemplate template, IModel variablesModel)
 		{
@@ -71,6 +71,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 			this.template = template;
 			this.variablesModel = variablesModel;
 		}
+
 		/**
 		 * @see org.apache.wicket.model.IModel#detach()
 		 */
@@ -98,9 +99,9 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	}
 
 	/**
-	 * Gets a css header contributor based on the given text template. The
-	 * template will be interpolated with the given variables. The content will
-	 * be written as the body of a script tag pair.
+	 * Gets a css header contributor based on the given text template. The template will be
+	 * interpolated with the given variables. The content will be written as the body of a script
+	 * tag pair.
 	 * 
 	 * @param template
 	 *            The text template that is the base for the contribution
@@ -114,14 +115,13 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	}
 
 	/**
-	 * Gets a css header contributor that will load the template from the given
-	 * file name relative to (/in the same package as) the provided clazz
-	 * argument. The template will be interpolated with the given variables. The
-	 * content will be written as the body of a script tag pair.
+	 * Gets a css header contributor that will load the template from the given file name relative
+	 * to (/in the same package as) the provided clazz argument. The template will be interpolated
+	 * with the given variables. The content will be written as the body of a script tag pair.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for
-	 *            loading the packaged template.
+	 *            The class to be used for retrieving the classloader for loading the packaged
+	 *            template.
 	 * @param fileName
 	 *            The name of the file, relative to the clazz position
 	 * @param variablesModel
@@ -135,9 +135,9 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	}
 
 	/**
-	 * Gets a javascript header contributor based on the given text template.
-	 * The template will be interpolated with the given variables. The content
-	 * will be written as the body of a script tag pair.
+	 * Gets a javascript header contributor based on the given text template. The template will be
+	 * interpolated with the given variables. The content will be written as the body of a script
+	 * tag pair.
 	 * 
 	 * @param template
 	 *            The text template that is the base for the contribution
@@ -152,14 +152,14 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	}
 
 	/**
-	 * Gets a javascript header contributor that will load the template from the
-	 * given file name relative to (/in the same package as) the provided clazz
-	 * argument. The template will be interpolated with the given variables. The
-	 * content will be written as the body of a script tag pair.
+	 * Gets a javascript header contributor that will load the template from the given file name
+	 * relative to (/in the same package as) the provided clazz argument. The template will be
+	 * interpolated with the given variables. The content will be written as the body of a script
+	 * tag pair.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for
-	 *            loading the packaged template.
+	 *            The class to be used for retrieving the classloader for loading the packaged
+	 *            template.
 	 * @param fileName
 	 *            The name of the file, relative to the clazz position
 	 * @param variablesModel

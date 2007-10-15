@@ -25,9 +25,9 @@ import org.apache.wicket.markup.html.PackageResource;
 
 
 /**
- * Static resource reference for javascript resources. The resources are filtered
- * (stripped comments and whitespace) and gzipped.
- *
+ * Static resource reference for javascript resources. The resources are filtered (stripped comments
+ * and whitespace) and gzipped.
+ * 
  * @author Matej Knopp
  */
 public class JavascriptResourceReference extends ResourceReference
@@ -36,6 +36,7 @@ public class JavascriptResourceReference extends ResourceReference
 
 	/**
 	 * Creates a new javascript resource reference.
+	 * 
 	 * @param scope
 	 * @param name
 	 * @param locale
@@ -48,6 +49,7 @@ public class JavascriptResourceReference extends ResourceReference
 
 	/**
 	 * Creates a new javascript resource reference.
+	 * 
 	 * @param scope
 	 * @param name
 	 */
@@ -58,6 +60,7 @@ public class JavascriptResourceReference extends ResourceReference
 
 	/**
 	 * Creates a new javascript resource reference.
+	 * 
 	 * @param name
 	 */
 	public JavascriptResourceReference(String name)
@@ -75,8 +78,8 @@ public class JavascriptResourceReference extends ResourceReference
 		}
 		else
 		{
-			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name="
-					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
+					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 	}

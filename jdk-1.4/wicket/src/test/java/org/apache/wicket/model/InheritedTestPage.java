@@ -27,8 +27,7 @@ public class InheritedTestPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * public for querying in test case. Is the only component on this page,
-	 * rendered in a h1 tag.
+	 * public for querying in test case. Is the only component on this page, rendered in a h1 tag.
 	 */
 	public final Label label = new Label("label");
 

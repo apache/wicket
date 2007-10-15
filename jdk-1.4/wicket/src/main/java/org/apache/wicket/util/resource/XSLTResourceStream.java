@@ -25,21 +25,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.resource.AbstractResourceStream;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
 
 /**
- * {@link IResourceStream} that applies XSLT on an input {@link IResourceStream}.
- * The XSL stylesheet itself is also an {@link IResourceStream}. Override
- * {@link #getParameters()} to pass parameters to the XSL stylesheet.
+ * {@link IResourceStream} that applies XSLT on an input {@link IResourceStream}. The XSL
+ * stylesheet itself is also an {@link IResourceStream}. Override {@link #getParameters()} to pass
+ * parameters to the XSL stylesheet.
  * 
  * <p>
- * FIXME experimental feature, does not implement any kind of caching, use with
- * care, running an XSL transformation for every request is very expensive!
- * Please have a look at {@link ZipResourceStream} for an in-depth explanation
- * of what needs to be done with respect to caching.
+ * FIXME experimental feature, does not implement any kind of caching, use with care, running an XSL
+ * transformation for every request is very expensive! Please have a look at
+ * {@link ZipResourceStream} for an in-depth explanation of what needs to be done with respect to
+ * caching.
  * </p>
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
@@ -53,8 +50,8 @@ public class XSLTResourceStream extends AbstractResourceStream
 	ByteArrayOutputStream out;
 
 	/**
-	 * @return a {@link Map} of XSLT parameters, appropriate for passing
-	 *         information to the XSL stylesheet
+	 * @return a {@link Map} of XSLT parameters, appropriate for passing information to the XSL
+	 *         stylesheet
 	 */
 	protected Map getParameters()
 	{

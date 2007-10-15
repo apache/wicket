@@ -26,36 +26,36 @@ import org.apache.wicket.model.Model;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class SimplePage extends WebPage 
+public class SimplePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 */
-	public SimplePage() 
+	public SimplePage()
 	{
 		add(new Label("myLabel", "Test Label"));
-		
-	    WebMarkupContainer container = new WebMarkupContainer("test");
-	    container.setRenderBodyOnly(true);
-	    add(container);
 
-	    container.add(new Label("myLabel2", "Test Label2"));
+		WebMarkupContainer container = new WebMarkupContainer("test");
+		container.setRenderBodyOnly(true);
+		add(container);
 
-	    Panel panel = new SimplePanel("myPanel");
-	    panel.setRenderBodyOnly(true);
-	    add(panel);
+		container.add(new Label("myLabel2", "Test Label2"));
 
-	    Border border = new SimpleBorder("myBorder");
-	    add(border);
+		Panel panel = new SimplePanel("myPanel");
+		panel.setRenderBodyOnly(true);
+		add(panel);
 
-	    Border border2 = new SimpleBorder("myBorder2");
-	    border2.setRenderBodyOnly(false);
-	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-	    add(border2);
-    }
+		Border border = new SimpleBorder("myBorder");
+		add(border);
+
+		Border border2 = new SimpleBorder("myBorder2");
+		border2.setRenderBodyOnly(false);
+		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		add(border2);
+	}
 }

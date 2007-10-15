@@ -20,8 +20,8 @@ import org.apache.wicket.Component;
 
 
 /**
- * AbstractReadOnlyModel is an adapter base class for implementing models which
- * have no detach logic and are read-only.
+ * AbstractReadOnlyModel is an adapter base class for implementing models which have no detach logic
+ * and are read-only.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
@@ -40,16 +40,17 @@ public abstract class AbstractReadOnlyModel implements IModel
 
 	/**
 	 * This default implementation of setObject unconditionally throws an
-	 * UnsupportedOperationException. Since the method is final, any subclass is
-	 * effectively a read-only model.
+	 * UnsupportedOperationException. Since the method is final, any subclass is effectively a
+	 * read-only model.
 	 * 
-	 * @param object  The object to set into the model
+	 * @param object
+	 *            The object to set into the model
 	 * @throws UnsupportedOperationException
 	 */
 	public final void setObject(final Object object)
 	{
-		throw new UnsupportedOperationException("Model " + getClass()
-				+ " does not support setObject(Object)");
+		throw new UnsupportedOperationException("Model " + getClass() +
+				" does not support setObject(Object)");
 	}
 
 	/**

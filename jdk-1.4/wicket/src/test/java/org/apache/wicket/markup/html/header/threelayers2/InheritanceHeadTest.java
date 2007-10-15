@@ -19,8 +19,7 @@ package org.apache.wicket.markup.html.header.threelayers2;
 import org.apache.wicket.WicketTestCase;
 
 /**
- * Tests the inclusion of the wicket:head section from a panel in a subclassed
- * page.
+ * Tests the inclusion of the wicket:head section from a panel in a subclassed page.
  * 
  * @author Martijn Dashorst
  */

@@ -33,40 +33,35 @@ import org.apache.wicket.util.resource.UrlResourceStream;
 
 /**
  * <p>
- * Component that includes/ renders the import result of an URL, much like JSP
- * include.
+ * Component that includes/ renders the import result of an URL, much like JSP include.
  * </p>
  * <p>
- * Use this to integrate non-Wicket locations in your page. <strong>This
- * component is NOT meant for integrating more Wicket sources as a means of
- * quick and dirty page composition. Use Panels, Borders and (Markup)inheritance
- * for page composition instead.</strong>
+ * Use this to integrate non-Wicket locations in your page. <strong>This component is NOT meant for
+ * integrating more Wicket sources as a means of quick and dirty page composition. Use Panels,
+ * Borders and (Markup)inheritance for page composition instead.</strong>
  * </p>
  * <p>
- * You can feed this component the URL directly, or use a model that should
- * deliver a valid URL. You can both use absolute (e.g.
- * http://www.theserverside.com/) and relative (e.g. mydir/mypage.html) urls.
- * This component will try to resolve relative urls to resources in the same
- * webapplication.
+ * You can feed this component the URL directly, or use a model that should deliver a valid URL. You
+ * can both use absolute (e.g. http://www.theserverside.com/) and relative (e.g. mydir/mypage.html)
+ * urls. This component will try to resolve relative urls to resources in the same webapplication.
  * </p>
  * <p>
- * The following example shows how to integrate a header and footer, coming
- * from a plain HTML source on the same server is integrated using this
- * component. The files footer.html and header.html would be located in the web
- * application root directory
+ * The following example shows how to integrate a header and footer, coming from a plain HTML source
+ * on the same server is integrated using this component. The files footer.html and header.html
+ * would be located in the web application root directory
  * </p>
  * <p>
  * Java:
- *
+ * 
  * <pre>
  *   ...
  * 	add(new Include(&quot;header&quot;, &quot;header.html&quot;));
  * 	add(new Include(&quot;footer&quot;, &quot;footer.html&quot;));
  *   ...
  * </pre>
- *
+ * 
  * Html:
- *
+ * 
  * <pre>
  *   ...
  * 	&lt;div&gt;
@@ -76,9 +71,9 @@ import org.apache.wicket.util.resource.UrlResourceStream;
  * 	&lt;/div&gt;
  *   ...
  * </pre>
- *
+ * 
  * </p>
- *
+ * 
  * @author Eelco Hillenius
  */
 public class Include extends WebComponent
@@ -92,22 +87,19 @@ public class Include extends WebComponent
 	 * <p>
 	 * RFC 1738 says the following:
 	 * </p>
-	 * <blockquote>Scheme names consist of a sequence of characters. The lower
-	 * case letters "a"--"z", digits, and the characters plus ("+"), period
-	 * ("."), and hyphen ("-") are allowed. For resiliency, programs
-	 * interpreting URLs should treat upper case letters as equivalent to lower
-	 * case in scheme names (e.g., allow "HTTP" as well as "http").
-	 * </blockquote>
+	 * <blockquote>Scheme names consist of a sequence of characters. The lower case letters
+	 * "a"--"z", digits, and the characters plus ("+"), period ("."), and hyphen ("-") are allowed.
+	 * For resiliency, programs interpreting URLs should treat upper case letters as equivalent to
+	 * lower case in scheme names (e.g., allow "HTTP" as well as "http"). </blockquote>
 	 * <p>
-	 * We treat as absolute any URL that begins with such a scheme name,
-	 * followed by a colon.
+	 * We treat as absolute any URL that begins with such a scheme name, followed by a colon.
 	 * </p>
 	 */
 	private static final String VALID_SCHEME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+.-";
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 */
@@ -118,7 +110,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param model
@@ -131,7 +123,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param id
 	 *            component id
 	 * @param modelObject
@@ -144,7 +136,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports the contents of the url of the model object.
-	 *
+	 * 
 	 * @return the imported contents
 	 */
 	protected String importAsString()
@@ -175,7 +167,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Gets whether the given url is absolute (<tt>true</tt>) or relative (<tt>false</tt>).
-	 *
+	 * 
 	 * @param url
 	 *            the url
 	 * @return whether the given url is absolute (<tt>true</tt>) or relative (<tt>false</tt>)
@@ -210,7 +202,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports from a relative url.
-	 *
+	 * 
 	 * @param url
 	 *            the url to import
 	 * @return the imported url's contents
@@ -236,7 +228,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports from an absolute url.
-	 *
+	 * 
 	 * @param url
 	 *            the url to import
 	 * @return the imported url's contents
@@ -255,7 +247,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports the contents from the given url.
-	 *
+	 * 
 	 * @param url
 	 *            the url
 	 * @return the imported contents

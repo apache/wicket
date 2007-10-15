@@ -17,18 +17,16 @@
 package org.apache.wicket.markup;
 
 /**
- * Base class for different kinds of markup elements. Markup elements are held
- * in a Markup container object.
+ * Base class for different kinds of markup elements. Markup elements are held in a Markup container
+ * object.
  * <p>
- * Wicket divides markup like (x)html, wml etc. into two types of
- * MarkupElements:
+ * Wicket divides markup like (x)html, wml etc. into two types of MarkupElements:
  * <ul>
- * <li>ComponentTag, which represents a "significant" markup tag (meaning that
- * the tag has some meaning to Wicket)
- * <li>RawMarkup, which is a section of unparsed markup having no meaning to
- * Wicket.
+ * <li>ComponentTag, which represents a "significant" markup tag (meaning that the tag has some
+ * meaning to Wicket)
+ * <li>RawMarkup, which is a section of unparsed markup having no meaning to Wicket.
  * </ul>
- *
+ * 
  * @see MarkupResourceData
  * @see org.apache.wicket.markup.RawMarkup
  * @see ComponentTag
@@ -45,7 +43,7 @@ public abstract class MarkupElement
 
 	/**
 	 * Gets whether this element closes the given element.
-	 *
+	 * 
 	 * @param open
 	 *            The open tag
 	 * @return True if this markup element closes the given open tag
@@ -56,10 +54,10 @@ public abstract class MarkupElement
 	}
 
 	/**
-	 * This is not an implementation of equals because we don't care about
-	 * hashCodes for MarkupElements yet. Also, this method only compares the
-	 * namespace, name and attributes of the given MarkupElements.
-	 *
+	 * This is not an implementation of equals because we don't care about hashCodes for
+	 * MarkupElements yet. Also, this method only compares the namespace, name and attributes of the
+	 * given MarkupElements.
+	 * 
 	 * @param element
 	 *            The markup element to compare with
 	 * @return True if the other element equals this one
@@ -73,9 +71,9 @@ public abstract class MarkupElement
 
 	/**
 	 * Gets a string representation.
-	 *
-	 * @return A string representation suitable for displaying to the user when
-	 *         something goes wrong.
+	 * 
+	 * @return A string representation suitable for displaying to the user when something goes
+	 *         wrong.
 	 */
 	public abstract String toUserDebugString();
 }

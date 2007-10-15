@@ -35,8 +35,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Custom ClassLoader that reverses the classloader lookups, and that is able to
- * notify a listener when a class file is changed.
+ * Custom ClassLoader that reverses the classloader lookups, and that is able to notify a listener
+ * when a class file is changed.
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
@@ -130,8 +130,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	}
 
 	/**
-	 * Returns the list of all configured locations of directories containing
-	 * class files
+	 * Returns the list of all configured locations of directories containing class files
 	 * 
 	 * @return list of locations as URL
 	 */
@@ -181,12 +180,12 @@ public class ReloadingClassLoader extends URLClassLoader
 	}
 
 	/**
-	 * Create a new reloading ClassLoader from a list of URLs, and initialize
-	 * the ModificationWatcher to detect class file modifications
+	 * Create a new reloading ClassLoader from a list of URLs, and initialize the
+	 * ModificationWatcher to detect class file modifications
 	 * 
 	 * @param parent
-	 *            the parent classloader in case the class file cannot be loaded
-	 *            from the above locations
+	 *            the parent classloader in case the class file cannot be loaded from the above
+	 *            locations
 	 */
 	public ReloadingClassLoader(ClassLoader parent)
 	{
@@ -295,8 +294,8 @@ public class ReloadingClassLoader extends URLClassLoader
 	}
 
 	/**
-	 * Watch changes of a class file by locating it in the list of location URLs
-	 * and adding the corresponding file to the ModificationWatcher
+	 * Watch changes of a class file by locating it in the list of location URLs and adding the
+	 * corresponding file to the ModificationWatcher
 	 * 
 	 * @param clz
 	 *            the class to watch

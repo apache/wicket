@@ -22,14 +22,13 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * Adds throttling to the ajax call. Throttled behaviors only execute once
- * within the given delay even though they can be triggered multiple times.
+ * Adds throttling to the ajax call. Throttled behaviors only execute once within the given delay
+ * even though they can be triggered multiple times.
  * <p>
- * For example, this is useful when attaching an event behavior to the
- * onkeypress event. It is not desirable to have an ajax call made every time
- * the user types so we can throttle that call to a desirable delay, such as
- * once per second. This gives us a near real time ability to provide feedback
- * without overloading the server.
+ * For example, this is useful when attaching an event behavior to the onkeypress event. It is not
+ * desirable to have an ajax call made every time the user types so we can throttle that call to a
+ * desirable delay, such as once per second. This gives us a near real time ability to provide
+ * feedback without overloading the server.
  * 
  * @since 1.2
  * 
@@ -39,7 +38,7 @@ import org.apache.wicket.util.time.Duration;
 public final class AjaxCallThrottlingDecorator extends AjaxPostprocessingCallDecorator
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final Duration duration;
 	private final String id;
 

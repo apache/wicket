@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Default implementation of {@link ISharedResourceRequestTarget}. Target that
- * denotes a shared {@link org.apache.wicket.Resource}.
+ * Default implementation of {@link ISharedResourceRequestTarget}. Target that denotes a shared
+ * {@link org.apache.wicket.Resource}.
  * 
  * @author Eelco Hillenius
  */
@@ -113,8 +113,8 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * Respond by looking up the shared resource and delegating the actual
-	 * response to that resource.
+	 * Respond by looking up the shared resource and delegating the actual response to that
+	 * resource.
 	 * 
 	 * @see org.apache.wicket.IRequestTarget#respond(org.apache.wicket.RequestCycle)
 	 */
@@ -195,7 +195,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	 */
 	public String toString()
 	{
-		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey="
-				+ getRequestParameters().getResourceKey() + "]";
+		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey=" +
+				getRequestParameters().getResourceKey() + "]";
 	}
 }

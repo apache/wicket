@@ -36,8 +36,8 @@ public class ComponentTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests the number of detach calls on a Page, Component, Behavior and Model
-	 * during a normal request.
+	 * Tests the number of detach calls on a Page, Component, Behavior and Model during a normal
+	 * request.
 	 * 
 	 * @throws Exception
 	 */
@@ -56,8 +56,8 @@ public class ComponentTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests the number of detach calls on a Page, Component, Behavior and Model
-	 * during an Ajax request.
+	 * Tests the number of detach calls on a Page, Component, Behavior and Model during an Ajax
+	 * request.
 	 * 
 	 * @throws Exception
 	 */

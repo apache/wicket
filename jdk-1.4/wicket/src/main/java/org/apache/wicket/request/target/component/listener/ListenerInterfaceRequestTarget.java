@@ -23,8 +23,8 @@ import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.request.RequestParameters;
 
 /**
- * Target that denotes a page instance and a call to a component on that page
- * using a listener interface method.
+ * Target that denotes a page instance and a call to a component on that page using a listener
+ * interface method.
  * 
  * @author Eelco Hillenius
  */
@@ -70,6 +70,6 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	public final void processEvents(final RequestCycle requestCycle)
 	{
 		onProcessEvents(requestCycle);
-		getRequestListenerInterface().invoke(getPage(), getTarget()); 
+		getRequestListenerInterface().invoke(getPage(), getTarget());
 	}
 }

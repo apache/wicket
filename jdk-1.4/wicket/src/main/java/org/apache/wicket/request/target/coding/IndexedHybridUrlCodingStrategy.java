@@ -25,8 +25,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
- * {@link HybridUrlCodingStrategy} subclass that encodes the parameters in
- * an indexed way like {@link IndexedParamUrlCodingStrategy} does.
+ * {@link HybridUrlCodingStrategy} subclass that encodes the parameters in an indexed way like
+ * {@link IndexedParamUrlCodingStrategy} does.
  * 
  * @author Matej Knopp
  */

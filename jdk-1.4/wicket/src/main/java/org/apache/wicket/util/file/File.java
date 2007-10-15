@@ -29,10 +29,9 @@ import org.apache.wicket.util.watch.IModifiable;
 
 
 /**
- * Simple extension of File that adds an implementation of IModifiable for
- * files. This allows the ModificationWatcher class to watch files for
- * modification. The IModifiable.lastModifiedTime() method also returns a Time
- * object with a more convenient API than either Date or a value in
+ * Simple extension of File that adds an implementation of IModifiable for files. This allows the
+ * ModificationWatcher class to watch files for modification. The IModifiable.lastModifiedTime()
+ * method also returns a Time object with a more convenient API than either Date or a value in
  * milliseconds.
  * 
  * @author Jonathan Locke
@@ -56,6 +55,7 @@ public class File extends java.io.File implements IModifiable
 
 	/**
 	 * Construct.
+	 * 
 	 * @param parent
 	 * @param child
 	 */
@@ -110,19 +110,19 @@ public class File extends java.io.File implements IModifiable
 		super(uri);
 	}
 
-    /**
-     * @return File extension (whatever is after the last '.' in the file name)
-     */
-    public String getExtension()
-    {
-        final int lastDot = getName().lastIndexOf('.');
-        if (lastDot >= 0)
-        {
-            return getName().substring(lastDot + 1);
-        }
-        return null;
-    }
-	
+	/**
+	 * @return File extension (whatever is after the last '.' in the file name)
+	 */
+	public String getExtension()
+	{
+		final int lastDot = getName().lastIndexOf('.');
+		if (lastDot >= 0)
+		{
+			return getName().substring(lastDot + 1);
+		}
+		return null;
+	}
+
 	/**
 	 * @return Parent folder
 	 */
@@ -132,8 +132,7 @@ public class File extends java.io.File implements IModifiable
 	}
 
 	/**
-	 * Returns a Time object representing the most recent time this file was
-	 * modified.
+	 * Returns a Time object representing the most recent time this file was modified.
 	 * 
 	 * @return This file's lastModified() value as a Time object
 	 */
@@ -167,42 +166,43 @@ public class File extends java.io.File implements IModifiable
 	{
 		return Files.remove(this);
 	}
-	
+
 	/**
 	 * Force contents of file to physical storage
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public void sync() throws IOException
-	{	
+	{
 		final FileInputStream in = new FileInputStream(this);
 		try
 		{
-			in.getFD().sync();			
+			in.getFD().sync();
 		}
 		finally
 		{
 			in.close();
 		}
 	}
-	
+
 	/**
 	 * Writes the given file to this one
 	 * 
-	 * @param file 
+	 * @param file
 	 *            The file to copy
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public final void write(final File file) throws IOException
 	{
-        final InputStream in = new BufferedInputStream(new FileInputStream(file));
-        try
-        {
-        	write(in);
-        }
-        finally
-        {
-        	in.close();
-        }
+		final InputStream in = new BufferedInputStream(new FileInputStream(file));
+		try
+		{
+			write(in);
+		}
+		finally
+		{
+			in.close();
+		}
 	}
 
 	/**

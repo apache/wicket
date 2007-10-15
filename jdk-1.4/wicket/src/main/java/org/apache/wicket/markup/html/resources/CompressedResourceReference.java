@@ -25,9 +25,8 @@ import org.apache.wicket.markup.html.PackageResource;
 
 
 /**
- * A static resource reference which can be transferred to the browser using the
- * gzip compression. Reduces the download size of for example javascript
- * resources.
+ * A static resource reference which can be transferred to the browser using the gzip compression.
+ * Reduces the download size of for example javascript resources.
  * 
  * see {@link ResourceReference} and {@link CompressedPackageResource}
  * 
@@ -46,8 +45,8 @@ public class CompressedResourceReference extends ResourceReference
 	}
 
 	/**
-	 * @see ResourceReference#ResourceReference(Class scope, String name, Locale
-	 *      locale, String style)
+	 * @see ResourceReference#ResourceReference(Class scope, String name, Locale locale, String
+	 *      style)
 	 */
 	public CompressedResourceReference(Class scope, String name, Locale locale, String style)
 	{
@@ -75,8 +74,8 @@ public class CompressedResourceReference extends ResourceReference
 		}
 		else
 		{
-			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name="
-					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
+					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 	}

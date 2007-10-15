@@ -57,7 +57,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 	{
 		return this.timer;
 	}
-	
+
 	/**
 	 * @return Count
 	 */

@@ -17,22 +17,20 @@
 package org.apache.wicket.util.crypt;
 
 /**
- * Encryption and decryption implementations are accessed through this
- * interface. It provide some simple means to encrypt and decrypt strings, like
- * passwords etc.. It depends on the implementation itself which algorithms are
- * used to en-/decrypt the data.
+ * Encryption and decryption implementations are accessed through this interface. It provide some
+ * simple means to encrypt and decrypt strings, like passwords etc.. It depends on the
+ * implementation itself which algorithms are used to en-/decrypt the data.
  * <p>
- * If you value the privacy of your websites users, then please consider using a
- * one-way encryption algorithm instead of the Wicket provided ICrypt
- * implementations. The intention of these encryption facilities is to keep
- * passwords private when stored in cookies or in the session.The implementation
- * of the encryption algorithm may change between releases. As such, this
- * interface and its implementations are not intended and should not be used as
- * an encryption facility for persistent values.
+ * If you value the privacy of your websites users, then please consider using a one-way encryption
+ * algorithm instead of the Wicket provided ICrypt implementations. The intention of these
+ * encryption facilities is to keep passwords private when stored in cookies or in the session.The
+ * implementation of the encryption algorithm may change between releases. As such, this interface
+ * and its implementations are not intended and should not be used as an encryption facility for
+ * persistent values.
  * <p>
- * As of Wicket 1.2 the methods encrypt and decrypt are deprecated. Consider
- * changing your persistent encryption strategy to be based on a one-way
- * encryption such as a SHA1 hash, not depending on Wicket classes.
+ * As of Wicket 1.2 the methods encrypt and decrypt are deprecated. Consider changing your
+ * persistent encryption strategy to be based on a one-way encryption such as a SHA1 hash, not
+ * depending on Wicket classes.
  * 
  * @author Juergen Donnerstag
  */
@@ -58,9 +56,8 @@ public interface ICrypt
 	String encryptUrlSafe(final String plainText);
 
 	/**
-	 * Sets private encryption key. It depends on the implementation if a
-	 * default key is applied or an exception is thrown, if no private key has
-	 * been provided.
+	 * Sets private encryption key. It depends on the implementation if a default key is applied or
+	 * an exception is thrown, if no private key has been provided.
 	 * 
 	 * @param key
 	 *            private key

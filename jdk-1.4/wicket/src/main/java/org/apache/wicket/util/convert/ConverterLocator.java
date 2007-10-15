@@ -39,9 +39,9 @@ import org.apache.wicket.util.lang.Objects;
 
 
 /**
- * Implementation of {@link IConverterLocator} interface, which locates
- * converters for a given type. It serves as a registry for {@link IConverter}
- * instances stored by type, and is the default locator for Wicket.
+ * Implementation of {@link IConverterLocator} interface, which locates converters for a given type.
+ * It serves as a registry for {@link IConverter} instances stored by type, and is the default
+ * locator for Wicket.
  * 
  * @see IConverterLocator
  * @author Eelco Hillenius
@@ -56,7 +56,7 @@ public class ConverterLocator implements IConverterLocator
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final WeakReference/*<Class<?>>*/ type;
+		private final WeakReference/* <Class<?>> */type;
 
 		/**
 		 * Construct.
@@ -149,8 +149,8 @@ public class ConverterLocator implements IConverterLocator
 	 * 
 	 * @param c
 	 *            The class to get the type converter for
-	 * @return The type converter that is registered for class c or null if no
-	 *         type converter was registered for class c
+	 * @return The type converter that is registered for class c or null if no type converter was
+	 *         registered for class c
 	 */
 	public final IConverter get(Class/* ? */c)
 	{
@@ -189,10 +189,9 @@ public class ConverterLocator implements IConverterLocator
 	 * Removes the type converter currently registered for class c.
 	 * 
 	 * @param c
-	 *            The class for which the converter registration should be
-	 *            removed
-	 * @return The converter that was registered for class c before removal or
-	 *         null if none was registered
+	 *            The class for which the converter registration should be removed
+	 * @return The converter that was registered for class c before removal or null if none was
+	 *         registered
 	 */
 	public final IConverter remove(Class/* ? */c)
 	{
@@ -206,8 +205,8 @@ public class ConverterLocator implements IConverterLocator
 	 *            The converter to add
 	 * @param c
 	 *            The class for which the converter should be used
-	 * @return The previous registered converter for class c or null if none was
-	 *         registered yet for class c
+	 * @return The previous registered converter for class c or null if none was registered yet for
+	 *         class c
 	 */
 	public final IConverter set(final Class/* ? */c, final IConverter converter)
 	{

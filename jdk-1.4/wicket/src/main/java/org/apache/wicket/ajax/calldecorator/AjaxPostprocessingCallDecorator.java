@@ -19,8 +19,8 @@ package org.apache.wicket.ajax.calldecorator;
 import org.apache.wicket.ajax.IAjaxCallDecorator;
 
 /**
- * Ajax call decorator that decorates script after allowing the wrapped delegate
- * decorator to decorate it first.
+ * Ajax call decorator that decorates script after allowing the wrapped delegate decorator to
+ * decorate it first.
  * 
  * @see IAjaxCallDecorator for notes on escaping quotes in scripts
  * 
@@ -67,7 +67,7 @@ public abstract class AjaxPostprocessingCallDecorator implements IAjaxCallDecora
 	}
 
 	/**
-	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence) 
+	 * @see org.apache.wicket.ajax.IAjaxCallDecorator#decorateOnFailureScript(CharSequence)
 	 */
 	public final CharSequence decorateOnFailureScript(CharSequence script)
 	{

@@ -40,8 +40,8 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	 * @param pageable
 	 *            The pageable component for this page link
 	 * @param pageNumber
-	 *            The page number in the PageableListView that this link links
-	 *            to. Negative pageNumbers are relative to the end of the list.
+	 *            The page number in the PageableListView that this link links to. Negative
+	 *            pageNumbers are relative to the end of the list.
 	 */
 	public AjaxPagingNavigationLink(final String id, final IPageable pageable, final int pageNumber)
 	{
@@ -67,12 +67,12 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	}
 
 	/**
-	 * Performs the actual action of this component, performing a non-ajax
-	 * fallback when there was no AjaxRequestTarget available.
+	 * Performs the actual action of this component, performing a non-ajax fallback when there was
+	 * no AjaxRequestTarget available.
 	 * 
 	 * @param target
-	 *            the request target, when <code>null</code>, a full page
-	 *            refresh will be generated
+	 *            the request target, when <code>null</code>, a full page refresh will be
+	 *            generated
 	 */
 	public void onClick(AjaxRequestTarget target)
 	{

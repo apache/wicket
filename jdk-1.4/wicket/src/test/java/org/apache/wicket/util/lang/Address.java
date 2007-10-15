@@ -18,7 +18,7 @@ package org.apache.wicket.util.lang;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class Address
 {
@@ -56,6 +56,6 @@ public class Address
 	{
 		this.number = number;
 	}
-	
-	
+
+
 }

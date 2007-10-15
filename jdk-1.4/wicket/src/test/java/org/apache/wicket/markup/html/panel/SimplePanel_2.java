@@ -17,11 +17,9 @@
 package org.apache.wicket.markup.html.panel;
 
 
-
-
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
 public class SimplePanel_2 extends Panel
@@ -30,10 +28,11 @@ public class SimplePanel_2 extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public SimplePanel_2(final String id) 
+	public SimplePanel_2(final String id)
 	{
-	    super(id);
-    }
+		super(id);
+	}
 }

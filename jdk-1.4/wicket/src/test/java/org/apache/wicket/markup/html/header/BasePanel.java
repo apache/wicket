@@ -26,7 +26,7 @@ public class BasePanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	/** 
+	/**
 	 * Creates a new instance of BasePanel
 	 * 
 	 * @param id

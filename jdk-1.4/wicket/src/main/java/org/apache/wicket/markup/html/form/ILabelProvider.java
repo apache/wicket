@@ -26,8 +26,8 @@ import org.apache.wicket.model.IModel;
 public interface ILabelProvider
 {
 	/**
-	 * The value will be made available to the validator property by means of
-	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 * The value will be made available to the validator property by means of ${label}. It does not
+	 * have any specific meaning to FormComponent itself.
 	 * 
 	 * @return labelModel
 	 */

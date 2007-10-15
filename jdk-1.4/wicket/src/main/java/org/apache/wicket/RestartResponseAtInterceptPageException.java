@@ -19,11 +19,11 @@ package org.apache.wicket;
 import org.apache.wicket.request.RequestParameters;
 
 /**
- * Causes Wicket to interrupt current request processing and immediately
- * redirect to an intercept page.
+ * Causes Wicket to interrupt current request processing and immediately redirect to an intercept
+ * page.
  * <p>
- * Similar to calling redirectToInteceptPage(Page) with the difference that this
- * exception will interrupt processing of the current request.
+ * Similar to calling redirectToInteceptPage(Page) with the difference that this exception will
+ * interrupt processing of the current request.
  * 
  * @see org.apache.wicket.PageMap#redirectToInterceptPage(Page)
  * @see org.apache.wicket.Component#redirectToInterceptPage(Page)
@@ -78,9 +78,9 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		final Page requestPage = RequestCycle.get().getRequest().getPage();
 
 		/*
-		 * requestPage can be null if we throw the restart response exception
-		 * before any page is instantiated in user's session. if this happens we
-		 * switch to the pagemap of the interceptPage
+		 * requestPage can be null if we throw the restart response exception before any page is
+		 * instantiated in user's session. if this happens we switch to the pagemap of the
+		 * interceptPage
 		 */
 		final IPageMap pageMap;
 		if (requestPage != null)
@@ -94,7 +94,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 
 		pageMap.redirectToInterceptPage(interceptPage);
 	}
-	
+
 	/**
 	 * Redirects to intercept page using the page map for the current request
 	 * 
@@ -107,9 +107,8 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		final Page requestPage = cycle.getRequest().getPage();
 
 		/*
-		 * requestPage can be null if we throw the restart response exception
-		 * before any page is instantiated in user's session. if this happens we
-		 * switch to the pagemap of the request.
+		 * requestPage can be null if we throw the restart response exception before any page is
+		 * instantiated in user's session. if this happens we switch to the pagemap of the request.
 		 */
 		final IPageMap pageMap;
 		if (requestPage != null)
@@ -123,5 +122,5 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		}
 
 		pageMap.redirectToInterceptPage(interceptPageClass);
-	}	
+	}
 }

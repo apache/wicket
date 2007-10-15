@@ -32,24 +32,28 @@ public class MockPageParameterPage extends WebPage
 
 	/**
 	 * Construct.
+	 * 
 	 * @param pageParameters
 	 */
 	public MockPageParameterPage(PageParameters pageParameters)
 	{
-		add(new BookmarkablePageLink("link", MockPageParameterPage.class, new PageParameters("id=1")));
+		add(new BookmarkablePageLink("link", MockPageParameterPage.class,
+				new PageParameters("id=1")));
 		add(new Label("label", pageParameters.getString("id")));
 	}
 
 	/**
 	 * Mock Page for testing WebPages implements as inner pages.
 	 */
-	public static final class MockInnerClassPage extends WebPage {
+	public static final class MockInnerClassPage extends WebPage
+	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
 		 */
-		public MockInnerClassPage() {
+		public MockInnerClassPage()
+		{
 			add(new Label("title", "Hello world!"));
 		}
 	}

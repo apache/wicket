@@ -23,14 +23,12 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 
 /**
- * For each wicket:head tag a HeaderPartContainer is created and added to
- * the HtmlHeaderContainer which has been added to the Page.
+ * For each wicket:head tag a HeaderPartContainer is created and added to the HtmlHeaderContainer
+ * which has been added to the Page.
  * 
  * @author Juergen Donnerstag
  */
-public final class HeaderPartContainer extends WebMarkupContainer
-		implements
-			IComponentResolver
+public final class HeaderPartContainer extends WebMarkupContainer implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
@@ -44,13 +42,11 @@ public final class HeaderPartContainer extends WebMarkupContainer
 	 * @param id
 	 *            The component id
 	 * @param container
-	 *            The Panel (or bordered page) the header part is associated
-	 *            with
+	 *            The Panel (or bordered page) the header part is associated with
 	 * @param scope
 	 *            The scope of the wicket:head tag
 	 */
-	public HeaderPartContainer(final String id, final MarkupContainer container,
-			final String scope)
+	public HeaderPartContainer(final String id, final MarkupContainer container, final String scope)
 	{
 		super(id);
 		this.container = container;
@@ -68,11 +64,10 @@ public final class HeaderPartContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream,
-	 *      ComponentTag)
+	 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream, ComponentTag)
 	 */
-	public final boolean resolve(final MarkupContainer container,
-			final MarkupStream markupStream, final ComponentTag tag)
+	public final boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+			final ComponentTag tag)
 	{
 		// The tag must be resolved against the panel and not against the
 		// page

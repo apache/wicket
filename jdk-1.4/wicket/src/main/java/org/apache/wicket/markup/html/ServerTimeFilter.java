@@ -25,10 +25,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This filter logs the server time so the time it takes from the start of a
- * request and the end of the response. It will log this to the standard logger,
- * and will also change the response buffer if it finds a <head></head> part to
- * insert the script:
+ * This filter logs the server time so the time it takes from the start of a request and the end of
+ * the response. It will log this to the standard logger, and will also change the response buffer
+ * if it finds a <head></head> part to insert the script:
  * 
  * <script> window.defaultStatus = 'Server time: 0.01s' </script>
  * 
@@ -57,10 +56,10 @@ public class ServerTimeFilter implements IResponseFilter
 			script.append("\n");
 			responseBuffer.insert(index + 6, script);
 		}
-		
-		log.info(timeTaken + "ms server time taken for request "
-			+ RequestCycle.get().getRequest().getURL() + " response size: "
-				+ responseBuffer.length());
+
+		log.info(timeTaken + "ms server time taken for request " +
+				RequestCycle.get().getRequest().getURL() + " response size: " +
+				responseBuffer.length());
 		return responseBuffer;
 	}
 }

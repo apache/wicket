@@ -29,10 +29,9 @@ import org.apache.wicket.util.time.Time;
 
 
 /**
- * This class can be used to easy make a Resource from a predefined byte array.
- * If your data comes from a database then a DynamicWebResource is a
- * better choice. Only use this class if you have to have the byte array in
- * memory. Like a pdf that is generated on the fly.
+ * This class can be used to easy make a Resource from a predefined byte array. If your data comes
+ * from a database then a DynamicWebResource is a better choice. Only use this class if you have to
+ * have the byte array in memory. Like a pdf that is generated on the fly.
  * 
  * @author Johan Compagner
  */
@@ -69,7 +68,7 @@ public class ByteArrayResource extends WebResource
 		this.locale = null;
 		this.filename = null;
 	}
-	
+
 	/**
 	 * Creates a Resource from the given byte array with its content type
 	 * 
@@ -77,8 +76,8 @@ public class ByteArrayResource extends WebResource
 	 *            The Content type of the array.
 	 * @param array
 	 *            The binary content
-	 * @param filename 
-	 * 			  The filename that will be set as the Content-Disposition header.
+	 * @param filename
+	 *            The filename that will be set as the Content-Disposition header.
 	 */
 	public ByteArrayResource(String contentType, byte[] array, String filename)
 	{
@@ -89,8 +88,8 @@ public class ByteArrayResource extends WebResource
 	}
 
 	/**
-	 * Creates a Resource from the given byte array with its content type and
-	 * the locale for which it is valid.
+	 * Creates a Resource from the given byte array with its content type and the locale for which
+	 * it is valid.
 	 * 
 	 * @param contentType
 	 *            The Content type of the array.
@@ -108,8 +107,8 @@ public class ByteArrayResource extends WebResource
 	}
 
 	/**
-	 * Creates a Resource from the given byte array with its content type and
-	 * the locale for which it is valid.
+	 * Creates a Resource from the given byte array with its content type and the locale for which
+	 * it is valid.
 	 * 
 	 * @param contentType
 	 *            The Content type of the array.
@@ -117,8 +116,8 @@ public class ByteArrayResource extends WebResource
 	 *            The binary content.
 	 * @param locale
 	 *            The locale of this resource
-	 * @param filename 
-	 * 			  The filename that will be set as the Content-Disposition header.
+	 * @param filename
+	 *            The filename that will be set as the Content-Disposition header.
 	 */
 	public ByteArrayResource(String contentType, byte[] array, Locale locale, String filename)
 	{
@@ -134,12 +133,12 @@ public class ByteArrayResource extends WebResource
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
-		if(filename != null)
+		if (filename != null)
 		{
 			response.setAttachmentHeader(filename);
 		}
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Resource#getResourceStream()
 	 */

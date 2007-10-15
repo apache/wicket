@@ -22,69 +22,60 @@ import org.apache.wicket.Component;
 
 
 /**
- * The string resource loader interface allows a strategy pattern to be applied
- * to the loading of resource strings for an application. The loader (or chain
- * of loaders) that are used is configured via the application settings.
+ * The string resource loader interface allows a strategy pattern to be applied to the loading of
+ * resource strings for an application. The loader (or chain of loaders) that are used is configured
+ * via the application settings.
  * <p>
- * Each particular implementation of this interface may define its own mechanism
- * for searching for resources. Please see the documents for each particular
- * implementation to determine its behavior and to see how it can be configured.
+ * Each particular implementation of this interface may define its own mechanism for searching for
+ * resources. Please see the documents for each particular implementation to determine its behavior
+ * and to see how it can be configured.
  * <p>
- * It is important to note that if a resource is not found by a particular
- * loader than the loader should return <code>null</code> rather than throw an
- * exception. The reason for this is that loaders can be arranged in a chain and
- * it would be very inefficient for loaders earlier in the chain to throw
- * exceptions that must be caught and handled each time until the correct loader
- * in the chain is reached.
- *
+ * It is important to note that if a resource is not found by a particular loader than the loader
+ * should return <code>null</code> rather than throw an exception. The reason for this is that
+ * loaders can be arranged in a chain and it would be very inefficient for loaders earlier in the
+ * chain to throw exceptions that must be caught and handled each time until the correct loader in
+ * the chain is reached.
+ * 
  * @see org.apache.wicket.settings.IResourceSettings
- *
+ * 
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
 public interface IStringResourceLoader
 {
 	/**
-	 * Get the string resource for the given combination of component class,
-	 * resource key, locale and style. The component class provided is used to
-	 * allow implementation of component specific resource loading (e.g. per
-	 * page or per reusable component). The key should be a String containing a
-	 * lookup key into a resource bundle. The locale should contain the locale
-	 * of the current operation so that the appropriate set of resources can be
-	 * selected. The style allows the set of resources to select to be varied by
-	 * skin/brand.
-	 *
+	 * Get the string resource for the given combination of component class, resource key, locale
+	 * and style. The component class provided is used to allow implementation of component specific
+	 * resource loading (e.g. per page or per reusable component). The key should be a String
+	 * containing a lookup key into a resource bundle. The locale should contain the locale of the
+	 * current operation so that the appropriate set of resources can be selected. The style allows
+	 * the set of resources to select to be varied by skin/brand.
+	 * 
 	 * @param clazz
 	 *            The class to get the string resource for
 	 * @param key
-	 *            The key should be a String containing a lookup key into a
-	 *            resource bundle
+	 *            The key should be a String containing a lookup key into a resource bundle
 	 * @param locale
-	 *            The locale should contain the locale of the current operation
-	 *            so that the appropriate set of resources can be selected
+	 *            The locale should contain the locale of the current operation so that the
+	 *            appropriate set of resources can be selected
 	 * @param style
-	 *            The style identifying the resource set to select the strings
-	 *            from (see {@link org.apache.wicket.Session})
-	 * @return The string resource value or null if the resource could not be
-	 *         loaded by this loader
+	 *            The style identifying the resource set to select the strings from (see
+	 *            {@link org.apache.wicket.Session})
+	 * @return The string resource value or null if the resource could not be loaded by this loader
 	 */
 	String loadStringResource(Class clazz, String key, Locale locale, String style);
 
 	/**
-	 * Get the string resource for the given combination of component and
-	 * resource key. The component provided is used to allow implementation of
-	 * component specific resource loading (e.g. per page or per reusable
-	 * component). The key should be a String containing a lookup key into a
-	 * resource bundle. The Locale and the style will be taken from the
-	 * Component provided.
-	 *
+	 * Get the string resource for the given combination of component and resource key. The
+	 * component provided is used to allow implementation of component specific resource loading
+	 * (e.g. per page or per reusable component). The key should be a String containing a lookup key
+	 * into a resource bundle. The Locale and the style will be taken from the Component provided.
+	 * 
 	 * @param component
 	 *            The component to get the string resource for
 	 * @param key
-	 *            The key should be a String containing a lookup key into a
-	 *            resource bundle
-	 * @return The string resource value or null if the resource could not be
-	 *         loaded by this loader
+	 *            The key should be a String containing a lookup key into a resource bundle
+	 * @return The string resource value or null if the resource could not be loaded by this loader
 	 */
 	String loadStringResource(Component component, String key);
 }

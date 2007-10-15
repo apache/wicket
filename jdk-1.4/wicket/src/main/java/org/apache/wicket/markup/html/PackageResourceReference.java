@@ -25,10 +25,10 @@ import org.apache.wicket.ResourceReference;
 
 /**
  * A convenience class for creating resource references to static resources.
- *
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
- *
+ * 
  * @deprecated Use {@link ResourceReference} instead. This class will be removed in Wicket 2.0
  */
 public class PackageResourceReference extends ResourceReference
@@ -40,7 +40,7 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Constructor to get a resource reference to a packaged resource.
-	 *
+	 * 
 	 * @param application
 	 *            The application to bind to
 	 * @param scope
@@ -48,13 +48,12 @@ public class PackageResourceReference extends ResourceReference
 	 * @param name
 	 *            The name of the resource
 	 * @param locale
-	 *            The Locale from which the search for the PackageResource must
-	 *            start
+	 *            The Locale from which the search for the PackageResource must start
 	 * @param style
 	 *            The Style of the PackageResource
 	 * @throws IllegalArgumentException
 	 *             when no corresponding resource is found
-	 *
+	 * 
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
 	public PackageResourceReference(Application application, Class scope, String name,
@@ -66,15 +65,15 @@ public class PackageResourceReference extends ResourceReference
 		setLocale(locale);
 		setStyle(style);
 		bind(application);
-		if(getResource() instanceof PackageResource)
+		if (getResource() instanceof PackageResource)
 		{
-			setLocale( ((PackageResource)getResource()).getLocale());
+			setLocale(((PackageResource)getResource()).getLocale());
 		}
 	}
 
 	/**
 	 * Constructor to get a resource reference to a packaged resource.
-	 *
+	 * 
 	 * @param application
 	 *            The application to bind to
 	 * @param scope
@@ -92,10 +91,10 @@ public class PackageResourceReference extends ResourceReference
 
 	/**
 	 * Constructor to get a resource reference to a packaged resource.
-	 *
-	 * The scope of this constructor will be the org.apache.wicket.Application.class
-	 * itself. so the shared resources key will be "org.apache.wicket.Application/name"
-	 *
+	 * 
+	 * The scope of this constructor will be the org.apache.wicket.Application.class itself. so the
+	 * shared resources key will be "org.apache.wicket.Application/name"
+	 * 
 	 * @param application
 	 *            The application to bind to
 	 * @param name
@@ -110,9 +109,9 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Constructor to get a resource reference to a packaged resource that is
-	 * already bound to the current application.
-	 *
+	 * Constructor to get a resource reference to a packaged resource that is already bound to the
+	 * current application.
+	 * 
 	 * @param scope
 	 *            The scope of the binding
 	 * @param name
@@ -146,10 +145,10 @@ public class PackageResourceReference extends ResourceReference
 		if (obj instanceof PackageResourceReference)
 		{
 			PackageResourceReference that = (PackageResourceReference)obj;
-			return checkEquals(getScope(), that.getScope())
-					&& checkEquals(getName(), that.getName())
-					&& checkEquals(getLocale(), that.getLocale())
-					&& checkEquals(getStyle(), that.getStyle());
+			return checkEquals(getScope(), that.getScope()) &&
+					checkEquals(getName(), that.getName()) &&
+					checkEquals(getLocale(), that.getLocale()) &&
+					checkEquals(getStyle(), that.getStyle());
 		}
 		return false;
 	}
@@ -167,17 +166,16 @@ public class PackageResourceReference extends ResourceReference
 		}
 		else
 		{
-			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name="
-					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name=" +
+					getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
 	}
 
 	/**
-	 * Checks whether the packaged resource can be found. If it can't be found,
-	 * an {@link IllegalArgumentException} will be thrown. If it was found, this
-	 * method just returns.
-	 *
+	 * Checks whether the packaged resource can be found. If it can't be found, an
+	 * {@link IllegalArgumentException} will be thrown. If it was found, this method just returns.
+	 * 
 	 * @param scope
 	 *            the scope of the resource
 	 * @param name
@@ -191,8 +189,8 @@ public class PackageResourceReference extends ResourceReference
 	{
 		if (!PackageResource.exists(scope, name, locale, style))
 		{
-			throw new IllegalArgumentException("package resource [scope=" + scope + ",name=" + name
-					+ ",locale=" + locale + "style=" + style + "] not found");
+			throw new IllegalArgumentException("package resource [scope=" + scope + ",name=" +
+					name + ",locale=" + locale + "style=" + style + "] not found");
 		}
 	}
 

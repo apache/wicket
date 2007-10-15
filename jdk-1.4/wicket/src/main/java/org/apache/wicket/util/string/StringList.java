@@ -24,33 +24,30 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * A typesafe, mutable list of strings supporting a variety of convenient
- * operations as well as expected operations from List such as add(), size(),
- * remove(), iterator(), get(int index) and toArray(). Instances of the class
- * are not threadsafe.
+ * A typesafe, mutable list of strings supporting a variety of convenient operations as well as
+ * expected operations from List such as add(), size(), remove(), iterator(), get(int index) and
+ * toArray(). Instances of the class are not threadsafe.
  * <p>
- * StringList objects can be constructed empty or they can be created using any
- * of several static factory methods:
+ * StringList objects can be constructed empty or they can be created using any of several static
+ * factory methods:
  * <ul>
  * <li>valueOf(String[])
  * <li>valueOf(String)
  * <li>valueOf(Collection)
  * <li>valueOf(Object[])
  * </ul>
- * In the case of the Collection and Object[] factory methods, each Object in
- * the collection or array is converted to a String via toString() before being
- * added to the StringList.
+ * In the case of the Collection and Object[] factory methods, each Object in the collection or
+ * array is converted to a String via toString() before being added to the StringList.
  * <p>
- * The tokenize() factory methods allow easy creation of StringLists via
- * StringTokenizer. The repeat() static factory method creates a StringList that
- * repeats a given String a given number of times.
+ * The tokenize() factory methods allow easy creation of StringLists via StringTokenizer. The
+ * repeat() static factory method creates a StringList that repeats a given String a given number of
+ * times.
  * <p>
- * The prepend() method adds a String to the beginning of the StringList. The
- * removeLast() method pops a String off the end of the list. The sort() method
- * sorts strings in the List using Collections.sort(). The class also inherits
- * useful methods from AbstractStringList that include join() methods ala Perl
- * and a toString() method which joins the list of strings with comma separators
- * for easy viewing.
+ * The prepend() method adds a String to the beginning of the StringList. The removeLast() method
+ * pops a String off the end of the list. The sort() method sorts strings in the List using
+ * Collections.sort(). The class also inherits useful methods from AbstractStringList that include
+ * join() methods ala Perl and a toString() method which joins the list of strings with comma
+ * separators for easy viewing.
  * 
  * @author Jonathan Locke
  */
@@ -120,8 +117,8 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Converts a collection of objects into a list of string values by using
-	 * the conversion methods of the StringValue class.
+	 * Converts a collection of objects into a list of string values by using the conversion methods
+	 * of the StringValue class.
 	 * 
 	 * @param collection
 	 *            The collection to add as strings
@@ -147,8 +144,8 @@ public final class StringList extends AbstractStringList
 	}
 
 	/**
-	 * Converts an array of objects into a list of strings by using the object
-	 * to string conversion method of the StringValue class.
+	 * Converts an array of objects into a list of strings by using the object to string conversion
+	 * method of the StringValue class.
 	 * 
 	 * @param objects
 	 *            The objects to convert

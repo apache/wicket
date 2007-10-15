@@ -22,7 +22,7 @@ package org.apache.wicket.markup.html.border;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class BeforeAndAfterBorder extends MarkupComponentBorder
 {

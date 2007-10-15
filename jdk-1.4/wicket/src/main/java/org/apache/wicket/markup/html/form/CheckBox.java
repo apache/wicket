@@ -29,24 +29,23 @@ import org.apache.wicket.util.string.Strings;
  * HTML checkbox input component.
  * <p>
  * Java:
- *
+ * 
  * <pre>
  * form.add(new CheckBox(&quot;bool&quot;));
  * </pre>
- *
+ * 
  * HTML:
- *
+ * 
  * <pre>
  *  &lt;input type=&quot;checkbox&quot; wicket:id=&quot;bool&quot; /&gt;
  * </pre>
- *
+ * 
  * </p>
  * <p>
- * You can can extend this class and override method
- * wantOnSelectionChangedNotifications() to force server roundtrips on each
- * selection change.
+ * You can can extend this class and override method wantOnSelectionChangedNotifications() to force
+ * server roundtrips on each selection change.
  * </p>
- *
+ * 
  * @author Jonathan Locke
  */
 public class CheckBox extends FormComponent implements IOnChangeListener
@@ -80,32 +79,28 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * Template method that can be overridden by clients that implement
-	 * IOnChangeListener to be notified by onChange events of a select element.
-	 * This method does nothing by default.
+	 * Template method that can be overridden by clients that implement IOnChangeListener to be
+	 * notified by onChange events of a select element. This method does nothing by default.
 	 * <p>
-	 * Called when a option is selected of a dropdown list that wants to be
-	 * notified of this event. This method is to be implemented by clients that
-	 * want to be notified of selection events.
-	 *
+	 * Called when a option is selected of a dropdown list that wants to be notified of this event.
+	 * This method is to be implemented by clients that want to be notified of selection events.
+	 * 
 	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is
-	 *            the same as you would get by calling getModelObject() if the
-	 *            new selection were current
+	 *            The newly selected object of the backing model NOTE this is the same as you would
+	 *            get by calling getModelObject() if the new selection were current
 	 */
 	protected void onSelectionChanged(Object newSelection)
 	{
 	}
 
 	/**
-	 * Whether this component's onSelectionChanged event handler should called
-	 * using javascript if the selection changes. If true, a roundtrip will be
-	 * generated with each selection change, resulting in the model being
-	 * updated (of just this component) and onSelectionChanged being called.
-	 * This method returns false by default.
-	 *
-	 * @return True if this component's onSelectionChanged event handler should
-	 *         called using javascript if the selection changes
+	 * Whether this component's onSelectionChanged event handler should called using javascript if
+	 * the selection changes. If true, a roundtrip will be generated with each selection change,
+	 * resulting in the model being updated (of just this component) and onSelectionChanged being
+	 * called. This method returns false by default.
+	 * 
+	 * @return True if this component's onSelectionChanged event handler should called using
+	 *         javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{
@@ -126,7 +121,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 
 	/**
 	 * Processes the component tag.
-	 *
+	 * 
 	 * @param tag
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
@@ -169,19 +164,22 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 				RequestContext rc = RequestContext.get();
 				if (rc.isPortletRequest())
 				{
-					// restore url back to real wicket path as its going to be interpreted by the form itself
+					// restore url back to real wicket path as its going to be interpreted by the
+					// form itself
 					url = ((PortletRequestContext)rc).getLastEncodedPath();
 				}
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			else
 			{
-				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden form
+				// TODO: following doesn't work with portlets, should be posted to a dynamic hidden
+				// form
 				// with an ActionURL or something
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "window.location.href='" + url + (url.toString().indexOf('?')>-1 ? "&amp;" : "?") + getInputName()
-						+ "=' + this.checked;");
+				tag.put("onclick", "window.location.href='" + url +
+						(url.toString().indexOf('?') > -1 ? "&amp;" : "?") + getInputName() +
+						"=' + this.checked;");
 			}
 
 		}
@@ -210,8 +208,8 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		}
 		catch (StringValueConversionException e)
 		{
-			throw new ConversionException("Invalid boolean input value posted \"" + getInput()
-					+ "\"", e).setTargetType(Boolean.class);
+			throw new ConversionException("Invalid boolean input value posted \"" + getInput() +
+					"\"", e).setTargetType(Boolean.class);
 		}
 	}
 }

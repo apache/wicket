@@ -41,8 +41,8 @@ public class ResourceLink extends Link implements IResourceListener
 
 
 	/**
-	 * Constructs an ResourceLink from an resourcereference. That resource
-	 * reference will bind its resource to the current SharedResources.
+	 * Constructs an ResourceLink from an resourcereference. That resource reference will bind its
+	 * resource to the current SharedResources.
 	 * 
 	 * @param id
 	 *            See Component
@@ -55,8 +55,8 @@ public class ResourceLink extends Link implements IResourceListener
 	}
 
 	/**
-	 * Constructs an ResourceLink from an resourcereference. That resource
-	 * reference will bind its resource to the current SharedResources.
+	 * Constructs an ResourceLink from an resourcereference. That resource reference will bind its
+	 * resource to the current SharedResources.
 	 * 
 	 * @param id
 	 *            See Component

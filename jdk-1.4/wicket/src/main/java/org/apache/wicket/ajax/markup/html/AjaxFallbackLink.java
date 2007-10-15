@@ -25,8 +25,8 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 
 /**
- * An ajax link that will degrade to a normal request if ajax is not available
- * or javascript is disabled
+ * An ajax link that will degrade to a normal request if ajax is not available or javascript is
+ * disabled
  * 
  * @since 1.2
  * 
@@ -72,7 +72,7 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 				return new CancelEventIfNoAjaxDecorator(AjaxFallbackLink.this
 						.getAjaxCallDecorator());
 			}
-			
+
 			protected void onComponentTag(ComponentTag tag)
 			{
 				// only render handler if link is enabled
@@ -99,12 +99,11 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	}
 
 	/**
-	 * Callback for the onClick event. If ajax failed and this event was
-	 * generated via a normal link the target argument will be null
+	 * Callback for the onClick event. If ajax failed and this event was generated via a normal link
+	 * the target argument will be null
 	 * 
 	 * @param target
-	 *            ajax target if this linked was invoked using ajax, null
-	 *            otherwise
+	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 */
 	public abstract void onClick(final AjaxRequestTarget target);
 }

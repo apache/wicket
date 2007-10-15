@@ -22,6 +22,7 @@ import org.apache.wicket.model.Model;
 
 /**
  * Tests rendering of the RadioGroup and Radio components
+ * 
  * @author igor
  */
 public class RadioGroupDisabledTestPage extends WebPage
@@ -31,25 +32,26 @@ public class RadioGroupDisabledTestPage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+
 	/**
 	 * Constructor
 	 */
-	public RadioGroupDisabledTestPage() {
-		Form form=new Form("form");
-		RadioGroup group=new RadioGroup("group", new Model("radio2"));
+	public RadioGroupDisabledTestPage()
+	{
+		Form form = new Form("form");
+		RadioGroup group = new RadioGroup("group", new Model("radio2"));
 		group.setRenderBodyOnly(false);
-		WebMarkupContainer container=new WebMarkupContainer("container");
-		Radio radio1=new Radio("radio1", new Model("radio1"));
-		Radio radio2=new Radio("radio2", new Model("radio2"));
-		
-		
+		WebMarkupContainer container = new WebMarkupContainer("container");
+		Radio radio1 = new Radio("radio1", new Model("radio1"));
+		Radio radio2 = new Radio("radio2", new Model("radio2"));
+
+
 		add(form);
 		form.add(group);
 		group.add(radio1);
 		group.add(container);
 		container.add(radio2);
-		
+
 		group.setEnabled(false);
 	}
 }

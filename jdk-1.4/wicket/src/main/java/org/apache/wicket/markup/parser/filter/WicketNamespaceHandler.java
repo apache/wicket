@@ -29,9 +29,8 @@ import org.apache.wicket.util.value.IValueMap;
 
 
 /**
- * This is a markup inline filter. It determines the Wicket namespace name from
- * the markup Examples are xmlns:wicket or
- * xmlns:wicket="http://wicket.apache.org".
+ * This is a markup inline filter. It determines the Wicket namespace name from the markup Examples
+ * are xmlns:wicket or xmlns:wicket="http://wicket.apache.org".
  * 
  * @see org.apache.wicket.markup.MarkupParser
  * @author Juergen Donnerstag
@@ -45,8 +44,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	private final MarkupResourceData markup;
 
 	/**
-	 * namespace prefix: e.g. <html
-	 * xmlns:wicket="http://wicket.apache.org">
+	 * namespace prefix: e.g. <html xmlns:wicket="http://wicket.apache.org">
 	 */
 	private static final String XMLNS = "xmlns:";
 
@@ -62,12 +60,10 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Get the next tag from the next MarkupFilter in the chain and search for
-	 * Wicket specific tags.
+	 * Get the next tag from the next MarkupFilter in the chain and search for Wicket specific tags.
 	 * 
 	 * @see org.apache.wicket.markup.parser.IMarkupFilter#nextTag()
-	 * @return The next tag from markup to be processed. If null, no more tags
-	 *         are available
+	 * @return The next tag from markup to be processed. If null, no more tags are available
 	 */
 	public MarkupElement nextTag() throws ParseException
 	{
@@ -92,8 +88,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * Determine wicket namespace from xmlns:wicket or
-	 * xmlns:wicket="http://wicket.apache.org"
+	 * Determine wicket namespace from xmlns:wicket or xmlns:wicket="http://wicket.apache.org"
 	 * 
 	 * @param tag
 	 * @return Wicket namespace
@@ -114,8 +109,8 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 				final String xmlnsUrl = (String)entry.getValue();
 
 				// If Wicket relevant ...
-				if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0)
-						|| xmlnsUrl.startsWith(WICKET_URI))
+				if ((xmlnsUrl == null) || (xmlnsUrl.trim().length() == 0) ||
+						xmlnsUrl.startsWith(WICKET_URI))
 				{
 					// Set the Wicket namespace for wicket tags (e.g.
 					// <wicket:panel>) and attributes (e.g. wicket:id)
@@ -123,11 +118,11 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 					if (Application.get().getMarkupSettings().getStripWicketTags())
 					{
 						attributes.remove(attributeName);
-						
+
 						// Make sure the parser knows it has been changed
 						tag.setModified(true);
 					}
-					
+
 					return namespace;
 				}
 			}

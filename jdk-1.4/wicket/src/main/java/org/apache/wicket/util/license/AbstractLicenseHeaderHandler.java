@@ -36,7 +36,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 
 	/**
 	 * Construct.
-	 *
+	 * 
 	 * @param ignoreFiles
 	 */
 	public AbstractLicenseHeaderHandler(String[] ignoreFiles)
@@ -73,7 +73,8 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 
 			try
 			{
-				inputStream = ApacheLicenseHeaderTestCase.class.getResourceAsStream(getLicenseHeaderFilename());
+				inputStream = ApacheLicenseHeaderTestCase.class
+						.getResourceAsStream(getLicenseHeaderFilename());
 				inputStreamReader = new InputStreamReader(inputStream);
 				lineNumberReader = new LineNumberReader(inputStreamReader);
 
@@ -94,16 +95,37 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			{
 				if (lineNumberReader != null)
 				{
-					try { lineNumberReader.close(); }  catch (Exception e) { /* Ignore */ }
-				};
+					try
+					{
+						lineNumberReader.close();
+					}
+					catch (Exception e)
+					{ /* Ignore */
+					}
+				}
+				;
 				if (inputStream != null)
 				{
-					try { inputStream.close(); }	  catch (Exception e) { /* Ignore */ }
-				};
+					try
+					{
+						inputStream.close();
+					}
+					catch (Exception e)
+					{ /* Ignore */
+					}
+				}
+				;
 				if (inputStreamReader != null)
 				{
-					try { inputStreamReader.close(); } catch (Exception e) { /* Ignore */ }
-				};
+					try
+					{
+						inputStreamReader.close();
+					}
+					catch (Exception e)
+					{ /* Ignore */
+					}
+				}
+				;
 			}
 		}
 
@@ -148,9 +170,9 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	}
 
 	/**
-	 * Add the license header to the start of the file without caring about
-	 * existing license headers.
-	 *
+	 * Add the license header to the start of the file without caring about existing license
+	 * headers.
+	 * 
 	 * @param file
 	 *            The file to add the license header to.
 	 */

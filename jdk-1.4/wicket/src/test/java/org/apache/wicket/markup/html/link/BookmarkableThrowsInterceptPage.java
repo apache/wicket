@@ -32,6 +32,7 @@ public class BookmarkableThrowsInterceptPage extends WebPage
 	{
 		/**
 		 * Construct.
+		 * 
 		 * @param type
 		 */
 		public SecurityMetaDataKey(Class type)
@@ -40,9 +41,9 @@ public class BookmarkableThrowsInterceptPage extends WebPage
 		}
 
 		private static final long serialVersionUID = 1L;
-		
+
 	}
-	
+
 	/**
 	 * 
 	 */

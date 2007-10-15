@@ -21,17 +21,17 @@ import org.apache.wicket.Response;
 
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).
- *
+ * 
  * Implementation of this interface is responsible for filtering duplicate contributions (so that
  * for example the same javascript is not loaded twice) during the same request.
- *
+ * 
  * @author Matej Knopp
  */
 public interface IHeaderResponse
 {
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param reference
 	 *            resource reference pointing to the javascript resource
 	 */
@@ -39,7 +39,7 @@ public interface IHeaderResponse
 
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param reference
 	 *            resource reference pointing to the javascript resource
 	 * @param id
@@ -50,7 +50,7 @@ public interface IHeaderResponse
 
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param url
 	 *            url of the the javascript resource
 	 */
@@ -58,7 +58,7 @@ public interface IHeaderResponse
 
 	/**
 	 * Writes a javascript reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param url
 	 *            url of the the javascript resource
 	 * @param id
@@ -70,12 +70,12 @@ public interface IHeaderResponse
 
 	/**
 	 * Renders javascript code to the response, if the javascript has not already been rendered.
-	 *
+	 * 
 	 * the necessary surrounding <code>script</code> tags will be added to the output.
-	 *
+	 * 
 	 * @param javascript
 	 *            javascript content to be rendered.
-	 *
+	 * 
 	 * @param id
 	 *            unique id for the javascript element. This can be null, however in that case the
 	 *            ajax header contribution can't detect duplicate script fragments.
@@ -84,7 +84,7 @@ public interface IHeaderResponse
 
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param reference
 	 *            resource reference pointing to the CSS resource
 	 */
@@ -92,7 +92,7 @@ public interface IHeaderResponse
 
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param url
 	 *            url of the CSS resource
 	 */
@@ -100,7 +100,7 @@ public interface IHeaderResponse
 
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param reference
 	 *            resource reference pointing to the CSS resource
 	 * @param media
@@ -110,7 +110,7 @@ public interface IHeaderResponse
 
 	/**
 	 * Writes a CSS reference, if the specified reference hasn't been rendered yet.
-	 *
+	 * 
 	 * @param url
 	 *            url of the CSS resource
 	 * @param media
@@ -124,7 +124,7 @@ public interface IHeaderResponse
 	 * <p>
 	 * Note: This method is kind of dangerous as users are able to write to the output whatever they
 	 * like.
-	 *
+	 * 
 	 * @param string
 	 *            string to be rendered to head
 	 */
@@ -134,7 +134,7 @@ public interface IHeaderResponse
 	 * Marks the given object as rendered. The object can be anything (string, resource reference,
 	 * etc...). The purpose of this function is to allow user to manually keep track of rendered
 	 * items. This can be useful for items that are expensive to generate (like interpolated text).
-	 *
+	 * 
 	 * @param object
 	 *            object to be marked as rendered.
 	 */
@@ -150,7 +150,7 @@ public interface IHeaderResponse
 	 * <li>Method <code>renderString</code> marks the whole string as rendered.
 	 * <li>Method <code>markRendered</code> can be used to mark an arbitrary object as rendered
 	 * </ul>
-	 *
+	 * 
 	 * @param object
 	 *            Object that is queried to be rendered
 	 * @return Whether the object has been marked as rendered during the request
@@ -162,7 +162,7 @@ public interface IHeaderResponse
 	 * <p>
 	 * Note: This method is kind of dangerous as users are able to write to the output whatever they
 	 * like.
-	 *
+	 * 
 	 * @return Response
 	 */
 	public Response getResponse();
@@ -170,21 +170,21 @@ public interface IHeaderResponse
 	/**
 	 * Renders javascript that is executed right after the DOM is built, before external resources
 	 * (e.g. images) are loaded.
-	 *
+	 * 
 	 * @param javascript
 	 */
 	public void renderOnDomReadyJavascript(String javascript);
 
 	/**
 	 * Renders javascript that is executed after the entire page is loaded.
-	 *
+	 * 
 	 * @param javascript
 	 */
 	public void renderOnLoadJavascript(String javascript);
 
 	/**
 	 * Renders javascript that is executed after the given event happens on specified target
-	 *
+	 * 
 	 * @param target
 	 * @param event
 	 * @param javascript
@@ -192,8 +192,8 @@ public interface IHeaderResponse
 	public void renderOnEventJavacript(String target, String event, String javascript);
 
 	/**
-	 * Mark Header rendering is completed and subsequent usage will be ignored.
-	 * If some kind of buffering is used internally, this action will mark that the contents has to be flushed out.
+	 * Mark Header rendering is completed and subsequent usage will be ignored. If some kind of
+	 * buffering is used internally, this action will mark that the contents has to be flushed out.
 	 */
 	public void close();
 

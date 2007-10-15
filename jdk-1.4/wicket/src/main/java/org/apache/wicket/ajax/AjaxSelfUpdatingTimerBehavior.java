@@ -19,8 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * Automatically re-renders the component it is attached to via AJAX at a
- * regular interval.
+ * Automatically re-renders the component it is attached to via AJAX at a regular interval.
  * 
  * @since 1.2
  * 
@@ -52,9 +51,8 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	}
 
 	/**
-	 * Give the subclass a chance to add something to the target, like a
-	 * javascript effect call. Called after the hosting component has been added
-	 * to the target.
+	 * Give the subclass a chance to add something to the target, like a javascript effect call.
+	 * Called after the hosting component has been added to the target.
 	 * 
 	 * @param target
 	 *            The AJAX target

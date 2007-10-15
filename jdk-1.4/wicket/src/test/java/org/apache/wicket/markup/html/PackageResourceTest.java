@@ -94,8 +94,10 @@ public class PackageResourceTest extends TestCase
 	public void testInvalidPackageResource() throws Exception
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
-		Resource invalidResource = new PackageResource(PackageResourceTest.class, "packaged3.txt", Locale.ENGLISH, null); 
-		assertNotNull("resource packaged3.txt SHOULD be available as a packaged resource even if it doesn't exist",
+		Resource invalidResource = new PackageResource(PackageResourceTest.class, "packaged3.txt",
+				Locale.ENGLISH, null);
+		assertNotNull(
+				"resource packaged3.txt SHOULD be available as a packaged resource even if it doesn't exist",
 				invalidResource);
 
 		try

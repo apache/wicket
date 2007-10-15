@@ -20,8 +20,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.Link;
 
 /**
- * An incremental link to a page of a PageableListView. Assuming your list view
- * navigation looks like
+ * An incremental link to a page of a PageableListView. Assuming your list view navigation looks
+ * like
  * 
  * <pre>
  *    
@@ -30,8 +30,8 @@ import org.apache.wicket.markup.html.link.Link;
  * </pre>
  * 
  * <p>
- * and "&lt;" meaning the previous and "&lt;&lt;" goto the "current page - 5",
- * than it is this kind of incremental page links which can easily be created.
+ * and "&lt;" meaning the previous and "&lt;&lt;" goto the "current page - 5", than it is this kind
+ * of incremental page links which can easily be created.
  * 
  * @author Juergen Donnerstag
  * @author Martijn Dashorst
@@ -96,8 +96,7 @@ public class PagingNavigationIncrementLink extends Link
 	}
 
 	/**
-	 * @return True if it is referring to the first page of the underlying
-	 *         PageableListView.
+	 * @return True if it is referring to the first page of the underlying PageableListView.
 	 */
 	public boolean isFirst()
 	{
@@ -105,8 +104,7 @@ public class PagingNavigationIncrementLink extends Link
 	}
 
 	/**
-	 * @return True if it is referring to the last page of the underlying
-	 *         PageableListView.
+	 * @return True if it is referring to the last page of the underlying PageableListView.
 	 */
 	public boolean isLast()
 	{

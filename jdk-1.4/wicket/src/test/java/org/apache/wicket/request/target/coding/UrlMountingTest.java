@@ -89,16 +89,17 @@ public class UrlMountingTest extends TestCase
 	}
 
 	/**
-	 * Test direct access (with wicket parameters) to a mounted page that should
-	 * be allowed. By default, enforcement is not turned on, so we don't set it
-	 * as a setting here.
+	 * Test direct access (with wicket parameters) to a mounted page that should be allowed. By
+	 * default, enforcement is not turned on, so we don't set it as a setting here.
 	 */
 	public void testDirectAccessToMountedPageAllowed()
 	{
 		tester.setupRequestAndResponse();
-		tester.getServletRequest().setURL(
-				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:"
-						+ TestPage.class.getName() + "");
+		tester
+				.getServletRequest()
+				.setURL(
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:" +
+								TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}
@@ -112,9 +113,8 @@ public class UrlMountingTest extends TestCase
 	}
 
 	/**
-	 * Test direct access (with wicket parameters) to a mounted page that should
-	 * NOT be allowed due to the {@link ISecuritySettings#getEnforceMounts()}
-	 * setting being set to true.
+	 * Test direct access (with wicket parameters) to a mounted page that should NOT be allowed due
+	 * to the {@link ISecuritySettings#getEnforceMounts()} setting being set to true.
 	 */
 	public void testDirectAccessToMountedPageNotAllowed()
 	{
@@ -136,12 +136,11 @@ public class UrlMountingTest extends TestCase
 	}
 
 	/**
-	 * Test direct access (with wicket parameters) to a mounted page including
-	 * (part of the) mount path.
+	 * Test direct access (with wicket parameters) to a mounted page including (part of the) mount
+	 * path.
 	 * 
 	 * @see WebRequestCycleProcessor#resolve(org.apache.wicket.RequestCycle,
-	 *      org.apache.wicket.request.RequestParameters) for an explanation of
-	 *      this test
+	 *      org.apache.wicket.request.RequestParameters) for an explanation of this test
 	 */
 	public void testDirectAccessToMountedPageWithExtraPath()
 	{
@@ -149,8 +148,8 @@ public class UrlMountingTest extends TestCase
 		tester
 				.getServletRequest()
 				.setURL(
-						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/foo/bar/?wicket:bookmarkablePage=:"
-								+ TestPage.class.getName() + "");
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/foo/bar/?wicket:bookmarkablePage=:" +
+								TestPage.class.getName() + "");
 		tester.processRequestCycle();
 		tester.assertRenderedPage(TestPage.class);
 	}

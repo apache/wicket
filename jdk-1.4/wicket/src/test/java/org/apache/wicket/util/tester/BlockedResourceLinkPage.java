@@ -34,6 +34,7 @@ public class BlockedResourceLinkPage extends WebPage
 	 */
 	public BlockedResourceLinkPage()
 	{
-		add(new ResourceLink("link", new ResourceReference(BlockedResourceLinkPage.class, "BlockedResourceLinkPage.html")));
+		add(new ResourceLink("link", new ResourceReference(BlockedResourceLinkPage.class,
+				"BlockedResourceLinkPage.html")));
 	}
 }

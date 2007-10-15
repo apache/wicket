@@ -25,10 +25,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Lightweight document parser for HTML. This parser is only intended to process
- * well formed and simple HTML of the kind that would generally be utilized
- * during testing.
- *
+ * Lightweight document parser for HTML. This parser is only intended to process well formed and
+ * simple HTML of the kind that would generally be utilized during testing.
+ * 
  * @author Chris Turner
  */
 public class HtmlDocumentParser
@@ -72,7 +71,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Create the parser for the current document.
-	 *
+	 * 
 	 * @param document
 	 *            The document to parse
 	 */
@@ -86,7 +85,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Get the attributes of the tag.
-	 *
+	 * 
 	 * @return The attributes
 	 */
 	public Map getAttributes()
@@ -96,7 +95,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Get the comment.
-	 *
+	 * 
 	 * @return The comment
 	 */
 	public String getComment()
@@ -105,10 +104,10 @@ public class HtmlDocumentParser
 	}
 
 	/**
-	 * Iterates through the document searching for tokens. Returns the type of
-	 * token that was found. If an unexpected token was encountered then the
-	 * parser writes this fact to the console and continues
-	 *
+	 * Iterates through the document searching for tokens. Returns the type of token that was found.
+	 * If an unexpected token was encountered then the parser writes this fact to the console and
+	 * continues
+	 * 
 	 * @return The token that was found
 	 */
 	public int getNextToken()
@@ -130,7 +129,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Get the tag name.
-	 *
+	 * 
 	 * @return The tag name
 	 */
 	public String getTag()
@@ -140,7 +139,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Get the text.
-	 *
+	 * 
 	 * @return The text
 	 */
 	public String getText()
@@ -150,7 +149,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Extract attributes from the given string.
-	 *
+	 * 
 	 * @param attributeString
 	 *            The string
 	 * @return The map of attributes
@@ -197,7 +196,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Process a directive starting at the current position.
-	 *
+	 * 
 	 * @return The token found
 	 */
 	private int processDirective()
@@ -265,7 +264,7 @@ public class HtmlDocumentParser
 
 	/**
 	 * Process text up to the next token.
-	 *
+	 * 
 	 * @return The token code
 	 */
 	private int processText()

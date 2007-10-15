@@ -18,6 +18,7 @@ package org.apache.wicket.resource;
 
 /**
  * Dummy subclass page used for resource testing.
+ * 
  * @author Chris Turner
  */
 public class DummySubClassPage extends DummyPage

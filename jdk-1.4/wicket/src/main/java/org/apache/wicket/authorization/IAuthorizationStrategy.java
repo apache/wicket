@@ -20,12 +20,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.settings.ISecuritySettings;
 
 /**
- * Authorization strategies specify aspect-like constraints on significant
- * actions taken by the framework in a given application. These constraints are
- * guaranteed by the framework to be applied consistently throughout. Violations
- * will result in a security action directed by the strategy, such as the
- * throwing of an AuthorizationException or the filtering out of
- * security-sensitive information.
+ * Authorization strategies specify aspect-like constraints on significant actions taken by the
+ * framework in a given application. These constraints are guaranteed by the framework to be applied
+ * consistently throughout. Violations will result in a security action directed by the strategy,
+ * such as the throwing of an AuthorizationException or the filtering out of security-sensitive
+ * information.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -57,17 +56,15 @@ public interface IAuthorizationStrategy
 	};
 
 	/**
-	 * Checks whether an instance of the given component class may be created.
-	 * If this method returns false, the
-	 * {@link IUnauthorizedComponentInstantiationListener} that is configured in
-	 * the {@link ISecuritySettings security settings} will be called. The
-	 * default implementation of that listener throws a
-	 * {@link UnauthorizedInstantiationException}.
+	 * Checks whether an instance of the given component class may be created. If this method
+	 * returns false, the {@link IUnauthorizedComponentInstantiationListener} that is configured in
+	 * the {@link ISecuritySettings security settings} will be called. The default implementation of
+	 * that listener throws a {@link UnauthorizedInstantiationException}.
 	 * <p>
-	 * If you wish to implement a strategy that authenticates users which cannot
-	 * access a given Page (or other Component), you can simply throw a
-	 * {@link org.apache.wicket.RestartResponseAtInterceptPageException} in your
-	 * implementation of this method.
+	 * If you wish to implement a strategy that authenticates users which cannot access a given Page
+	 * (or other Component), you can simply throw a
+	 * {@link org.apache.wicket.RestartResponseAtInterceptPageException} in your implementation of
+	 * this method.
 	 * 
 	 * @param componentClass
 	 *            The component class to check
@@ -76,11 +73,10 @@ public interface IAuthorizationStrategy
 	boolean isInstantiationAuthorized(Class componentClass);
 
 	/**
-	 * Gets whether the given action is permitted. If it is, this method should
-	 * return true. If it isn't, this method should either return false or - in
-	 * case of a serious breach - throw a security exception. Returning is
-	 * generally preferable over throwing an exception as that doesn't break the
-	 * normal flow.
+	 * Gets whether the given action is permitted. If it is, this method should return true. If it
+	 * isn't, this method should either return false or - in case of a serious breach - throw a
+	 * security exception. Returning is generally preferable over throwing an exception as that
+	 * doesn't break the normal flow.
 	 * 
 	 * @param component
 	 *            The component to be acted upon

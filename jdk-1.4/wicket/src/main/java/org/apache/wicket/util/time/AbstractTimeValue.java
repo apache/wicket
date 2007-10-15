@@ -19,8 +19,8 @@ package org.apache.wicket.util.time;
 import org.apache.wicket.util.value.LongValue;
 
 /**
- * Package local class for representing immutable time values in milliseconds
- * and typical operations on such values.
+ * Package local class for representing immutable time values in milliseconds and typical operations
+ * on such values.
  * 
  * @author Jonathan Locke
  * @since 1.2.6

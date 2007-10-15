@@ -27,6 +27,7 @@ public class AjaxTestBorder extends Border
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
 	public AjaxTestBorder(String id)

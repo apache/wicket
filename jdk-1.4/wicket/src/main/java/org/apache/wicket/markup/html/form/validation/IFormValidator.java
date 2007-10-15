@@ -21,14 +21,14 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 
 /**
- * Interface that represents validators that check multiple components. These
- * validators are added to the form and only executed if all form components
- * returned by {@link IFormValidator#getDependentFormComponents()} have been
- * successfully validated before this validator runs.
+ * Interface that represents validators that check multiple components. These validators are added
+ * to the form and only executed if all form components returned by
+ * {@link IFormValidator#getDependentFormComponents()} have been successfully validated before this
+ * validator runs.
  * 
- * TODO post 1.3: remove validate(form) *make IFormValidator extends IValidator
- * where IValidatable's value is form.modelobject and error reports on form -
- * that way IBehaviorProvider can extend IValidator
+ * TODO post 1.3: remove validate(form) *make IFormValidator extends IValidator where IValidatable's
+ * value is form.modelobject and error reports on form - that way IBehaviorProvider can extend
+ * IValidator
  * 
  * @author Igor Vaynberg (ivaynberg)
  */

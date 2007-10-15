@@ -23,8 +23,7 @@ import org.apache.wicket.IClusterable;
 
 
 /**
- * A compound property model that supports type conversions and property
- * expression bindings.
+ * A compound property model that supports type conversions and property expression bindings.
  * 
  * @author Jonathan Locke
  */
@@ -64,11 +63,10 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * List of Bindings. Although a Map would be a more natural implementation
-	 * here, a List is much more compact in terms of space. Although it may take
-	 * longer to find a component binding in theory, in practice it's unlikely
-	 * that any BoundCompoundPropertyModel will really have enough bindings to
-	 * matter.
+	 * List of Bindings. Although a Map would be a more natural implementation here, a List is much
+	 * more compact in terms of space. Although it may take longer to find a component binding in
+	 * theory, in practice it's unlikely that any BoundCompoundPropertyModel will really have enough
+	 * bindings to matter.
 	 */
 	private final ArrayList bindings = new ArrayList(1);
 
@@ -84,8 +82,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * Adds a property binding, using the component's id as the property
-	 * expression.
+	 * Adds a property binding, using the component's id as the property expression.
 	 * 
 	 * @param component
 	 *            The component to bind
@@ -175,7 +172,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	}
 
 	/**
-	 * @see org.apache.wicket.model.CompoundPropertyModel#propertyExpression(org.apache.wicket.Component) 
+	 * @see org.apache.wicket.model.CompoundPropertyModel#propertyExpression(org.apache.wicket.Component)
 	 */
 	protected String propertyExpression(final Component component)
 	{

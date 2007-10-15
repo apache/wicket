@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Wicket default implementation for loading the markup resource stream
- * associated with a MarkupContainer.
+ * Wicket default implementation for loading the markup resource stream associated with a
+ * MarkupContainer.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -36,7 +36,8 @@ import org.slf4j.LoggerFactory;
 public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
 {
 	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(DefaultMarkupResourceStreamProvider.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(DefaultMarkupResourceStreamProvider.class);
 
 	/**
 	 * Constructor.
@@ -48,12 +49,10 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 	/**
 	 * Create a new markup resource stream for the container.
 	 * <p>
-	 * Note: it will only called once, the IResourceStream will be cached by
-	 * MarkupCache.
+	 * Note: it will only called once, the IResourceStream will be cached by MarkupCache.
 	 * <p>
-	 * Note: IResourceStreamLocators should be used in case the strategy to find
-	 * a markup resource should be extended for ALL components of your
-	 * application.
+	 * Note: IResourceStreamLocators should be used in case the strategy to find a markup resource
+	 * should be extended for ALL components of your application.
 	 * 
 	 * @see org.apache.wicket.util.resource.locator.IResourceStream
 	 * @see org.apache.wicket.markup.DefaultMarkupResourceStreamProvider

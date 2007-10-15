@@ -24,8 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
- * Provides access to the request information needed for a request made to an
- * HTTP servlet.
+ * Provides access to the request information needed for a request made to an HTTP servlet.
  * </p>
  * 
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
@@ -95,7 +94,7 @@ public class ServletRequestContext implements RequestContext
 	 */
 	public String toString()
 	{
-		return "ContentLength=" + this.getContentLength() + ", ContentType="
-				+ this.getContentType();
+		return "ContentLength=" + this.getContentLength() + ", ContentType=" +
+				this.getContentType();
 	}
 }

@@ -19,14 +19,13 @@ package org.apache.wicket.util.string.interpolator;
 import org.apache.wicket.util.lang.PropertyResolver;
 
 /**
- * Interpolates values into strings that are produced by interpreting property
- * expressions against a beans model.
+ * Interpolates values into strings that are produced by interpreting property expressions against a
+ * beans model.
  * <p>
- * The interpolate(String string, Object model) method takes a string such as
- * "My name is ${name}" and a beans model such as a Person, and reflects on the
- * object using any property expressions found inside ${} markers in the string.
- * In this case, if the Person model had a getName() method, the results of
- * calling that method would be substituted for ${name}. If getName() returned
+ * The interpolate(String string, Object model) method takes a string such as "My name is ${name}"
+ * and a beans model such as a Person, and reflects on the object using any property expressions
+ * found inside ${} markers in the string. In this case, if the Person model had a getName() method,
+ * the results of calling that method would be substituted for ${name}. If getName() returned
  * Jonathan, interpolate() would then return "My name is Jonathan".
  * 
  * @author Jonathan Locke

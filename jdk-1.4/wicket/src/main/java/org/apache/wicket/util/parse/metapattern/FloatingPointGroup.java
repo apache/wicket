@@ -28,8 +28,8 @@ public final class FloatingPointGroup extends Group
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructs an FloatingPointGroup that parses Strings that match the
-	 * FLOATING_POINT_NUMBER pattern.
+	 * Constructs an FloatingPointGroup that parses Strings that match the FLOATING_POINT_NUMBER
+	 * pattern.
 	 * 
 	 * @see MetaPattern#FLOATING_POINT_NUMBER
 	 */
@@ -54,8 +54,7 @@ public final class FloatingPointGroup extends Group
 	 * @param matcher
 	 *            The matcher
 	 * @param defaultValue
-	 *            The default value to use if this group is omitted because it
-	 *            is optional
+	 *            The default value to use if this group is omitted because it is optional
 	 * @return The parsed value
 	 */
 	public float getFloat(final Matcher matcher, final float defaultValue)
@@ -80,8 +79,7 @@ public final class FloatingPointGroup extends Group
 	 * @param matcher
 	 *            The matcher
 	 * @param defaultValue
-	 *            The default value to use if this group is omitted because it
-	 *            is optional
+	 *            The default value to use if this group is omitted because it is optional
 	 * @return The parsed value
 	 */
 	public double getDouble(final Matcher matcher, final double defaultValue)

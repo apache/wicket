@@ -21,17 +21,16 @@ import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 
 /**
- * Implementations of this interface are responsible for digesting the incoming
- * request and creating a suitable {@link org.apache.wicket.request.RequestParameters} object
- * for it, as well as creating url representations for request targets.
+ * Implementations of this interface are responsible for digesting the incoming request and creating
+ * a suitable {@link org.apache.wicket.request.RequestParameters} object for it, as well as creating
+ * url representations for request targets.
  * 
  * @author Eelco Hillenius
  */
 public interface IRequestCodingStrategy extends IRequestTargetMounter
 {
 	/**
-	 * Analyze the request and create a corresponding request parameters object
-	 * for it.
+	 * Analyze the request and create a corresponding request parameters object for it.
 	 * 
 	 * @param request
 	 *            the incoming request
@@ -44,8 +43,8 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 * Gets the url that will point to the provided request target.
 	 * </p>
 	 * <p>
-	 * If an implementation supports mounting, it should return the mounted path
-	 * for the provided request target if any.
+	 * If an implementation supports mounting, it should return the mounted path for the provided
+	 * request target if any.
 	 * </p>
 	 * 
 	 * @param requestCycle
@@ -53,7 +52,7 @@ public interface IRequestCodingStrategy extends IRequestTargetMounter
 	 * 
 	 * @param requestTarget
 	 *            the request target
-	 *
+	 * 
 	 * @return the url to the provided target
 	 */
 	CharSequence encode(RequestCycle requestCycle, IRequestTarget requestTarget);
