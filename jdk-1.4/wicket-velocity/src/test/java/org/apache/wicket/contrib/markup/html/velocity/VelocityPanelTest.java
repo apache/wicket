@@ -29,7 +29,8 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 public class VelocityPanelTest extends TestCase
 {
-	static {
+	static
+	{
 		try
 		{
 			Velocity.init();
@@ -43,7 +44,8 @@ public class VelocityPanelTest extends TestCase
 	/**
 	 * Basic test
 	 */
-	public void testVelocityPanel() {
+	public void testVelocityPanel()
+	{
 		WicketTester tester = new WicketTester();
 		tester.startPage(VelocityPage.class);
 		tester.assertContains(VelocityPage.TEST_STRING);
@@ -53,7 +55,8 @@ public class VelocityPanelTest extends TestCase
 	/**
 	 * Test with Wicket markup parsing
 	 */
-	public void testVelocityPanelWithMarkupParsing() {
+	public void testVelocityPanelWithMarkupParsing()
+	{
 		WicketTester tester = new WicketTester();
 		tester.startPage(VelocityWithMarkupParsingPage.class);
 		tester.assertLabel("velocityPanel:message", VelocityPage.TEST_STRING);

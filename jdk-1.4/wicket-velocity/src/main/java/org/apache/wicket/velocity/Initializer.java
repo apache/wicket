@@ -34,12 +34,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An implementation of {@link wicket.IInitializer} for the Velocity Runtime
- * Singleton. If Application is an instance of WebApplication, Initializer will
- * retrieve "velocityPropertiesFolder" as an initparam to point to the directory
- * the properties file lives in, and "velocity.properties" for the name of the
- * properties file. If the params don't exist, then velocity.properties next to
- * this class will be loaded.
+ * An implementation of {@link wicket.IInitializer} for the Velocity Runtime Singleton. If
+ * Application is an instance of WebApplication, Initializer will retrieve
+ * "velocityPropertiesFolder" as an initparam to point to the directory the properties file lives
+ * in, and "velocity.properties" for the name of the properties file. If the params don't exist,
+ * then velocity.properties next to this class will be loaded.
  * 
  */
 public class Initializer implements IInitializer
@@ -79,7 +78,7 @@ public class Initializer implements IInitializer
 	{
 		if (application instanceof WebApplication)
 		{
-			WebApplication webapp = (WebApplication) application;
+			WebApplication webapp = (WebApplication)application;
 			ServletContext servletContext = webapp.getServletContext();
 			ServletContext sc = servletContext;
 			velocityPropertiesFolder = sc.getInitParameter("velocityPropertiesFolder");
@@ -94,8 +93,7 @@ public class Initializer implements IInitializer
 			{
 				WebApplicationPath webPath = new WebApplicationPath(sc);
 				webPath.add(velocityPropertiesFolder);
-				IResourceStream stream = webPath.find(Initializer.class,
-						velocityPropertiesFile);
+				IResourceStream stream = webPath.find(Initializer.class, velocityPropertiesFile);
 				InputStream is = null;
 				try
 				{

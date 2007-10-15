@@ -42,11 +42,10 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Panel that displays the result of rendering a <a
- * href="http://jakarta.apache.org/velocity">Velocity</a> template. The
- * template itself can be any
+ * href="http://jakarta.apache.org/velocity">Velocity</a> template. The template itself can be any
  * <code><a href="http://wicket.apache.org/wicket/apidocs/org/apache/wicket/util/resource/IStringResourceStream.html">IStringResourceStream</a></code>
- * implementation, of which there are a number of convenient implementations in
- * the wicket.util package. The model can be any normal
+ * implementation, of which there are a number of convenient implementations in the wicket.util
+ * package. The model can be any normal
  * <code><a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Map.html">Map</a></code>,
  * which will be used to create the
  * <code><a href="http://jakarta.apache.org/velocity/docs/api/org/apache/velocity/VelocityContext.html">VelocityContext</a></code>.
@@ -59,8 +58,8 @@ import org.apache.wicket.util.string.Strings;
 public abstract class VelocityPanel extends Panel
 {
 	/**
-	 * Convenience factory method to create a {@link VelocityPanel} instance
-	 * with a given {@link IStringResourceStream template resource}.
+	 * Convenience factory method to create a {@link VelocityPanel} instance with a given
+	 * {@link IStringResourceStream template resource}.
 	 * 
 	 * @param id
 	 *            Component id
@@ -75,8 +74,7 @@ public abstract class VelocityPanel extends Panel
 	{
 		if (templateResource == null)
 		{
-			throw new IllegalArgumentException(
-					"argument templateResource must be not null");
+			throw new IllegalArgumentException("argument templateResource must be not null");
 		}
 
 		return new VelocityPanel(id, model)
@@ -96,8 +94,8 @@ public abstract class VelocityPanel extends Panel
 	 * @param templateResource
 	 *            The velocity template as a string resource
 	 * @param model
-	 *            Model with variables that can be substituted by Velocity. Must
-	 *            return a {@link Map}.
+	 *            Model with variables that can be substituted by Velocity. Must return a
+	 *            {@link Map}.
 	 */
 	public VelocityPanel(final String id, final IModel/* <Map> */model)
 	{
@@ -114,8 +112,7 @@ public abstract class VelocityPanel extends Panel
 		final IStringResourceStream resource = getTemplateResource();
 		if (resource == null)
 		{
-			throw new IllegalArgumentException(
-					"getTemplateResource must return a resource");
+			throw new IllegalArgumentException("getTemplateResource must return a resource");
 		}
 
 		final String template = resource.asString();
@@ -174,14 +171,13 @@ public abstract class VelocityPanel extends Panel
 	 * @see org.apache.wicket.markup.html.panel.Panel#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
-	protected void onComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag openTag)
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		final Reader templateReader = getTemplateReader();
 		if (templateReader != null)
 		{
 			// Get model as a map
-			final Map map = (Map) getModelObject();
+			final Map map = (Map)getModelObject();
 
 			// create a Velocity context object using the model if set
 			final VelocityContext ctx = new VelocityContext(map);
@@ -221,8 +217,7 @@ public abstract class VelocityPanel extends Panel
 					{
 						MarkupParser parser = getApplication().getMarkupSettings()
 								.getMarkupParserFactory().newMarkupParser(
-										new MarkupResourceStream(
-												new StringResourceStream(result)));
+										new MarkupResourceStream(new StringResourceStream(result)));
 						markup = parser.parse();
 					}
 					catch (ResourceStreamNotFoundException e)
@@ -259,8 +254,7 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * Gets whether to parse the resulting Wicket markup.
 	 * 
-	 * @return whether to parse the resulting Wicket markup. The default is
-	 *         false.
+	 * @return whether to parse the resulting Wicket markup. The default is false.
 	 */
 	protected boolean parseGeneratedMarkup()
 	{
@@ -268,21 +262,18 @@ public abstract class VelocityPanel extends Panel
 	}
 
 	/**
-	 * Whether any velocity exception should be trapped and displayed on the
-	 * panel (false) or thrown up to be handled by the exception mechanism of
-	 * Wicket (true). The default is false, which traps and displays any
-	 * exception without having consequences for the other components on the
+	 * Whether any velocity exception should be trapped and displayed on the panel (false) or thrown
+	 * up to be handled by the exception mechanism of Wicket (true). The default is false, which
+	 * traps and displays any exception without having consequences for the other components on the
 	 * page.
 	 * <p>
-	 * Trapping these exceptions without disturbing the other components is
-	 * especially usefull in CMS like applications, where 'normal' users are
-	 * allowed to do basic scripting. On errors, you want them to be able to
-	 * have them correct them while the rest of the application keeps on
+	 * Trapping these exceptions without disturbing the other components is especially usefull in
+	 * CMS like applications, where 'normal' users are allowed to do basic scripting. On errors, you
+	 * want them to be able to have them correct them while the rest of the application keeps on
 	 * working.
 	 * </p>
 	 * 
-	 * @return Whether any velocity exceptions should be thrown or trapped. The
-	 *         default is false.
+	 * @return Whether any velocity exceptions should be thrown or trapped. The default is false.
 	 */
 	protected boolean throwVelocityExceptions()
 	{

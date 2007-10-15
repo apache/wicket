@@ -25,8 +25,7 @@ import org.apache.wicket.behavior.AbstractHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderContributor;
 
 /**
- * a simple header contributor that delegates to a List of
- * {@link VelocityContributor}
+ * a simple header contributor that delegates to a List of {@link VelocityContributor}
  * 
  */
 public class VelocityHeaderContributor extends AbstractHeaderContributor
@@ -53,7 +52,7 @@ public class VelocityHeaderContributor extends AbstractHeaderContributor
 	{
 		for (Iterator i = contributors.iterator(); i.hasNext();)
 		{
-			VelocityContributor vc = (VelocityContributor) i.next();
+			VelocityContributor vc = (VelocityContributor)i.next();
 			vc.detach(component);
 		}
 	}
@@ -63,7 +62,7 @@ public class VelocityHeaderContributor extends AbstractHeaderContributor
 	 */
 	public IHeaderContributor[] getHeaderContributors()
 	{
-		return (IHeaderContributor[]) contributors
-				.toArray(new IHeaderContributor[contributors.size()]);
+		return (IHeaderContributor[])contributors.toArray(new IHeaderContributor[contributors
+				.size()]);
 	}
 }
