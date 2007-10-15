@@ -73,7 +73,7 @@ import org.apache.wicket.util.diff.Revision;
  * See the paper at <a
  * href="http://www.cs.arizona.edu/people/gene/PAPERS/diff.ps">
  * http://www.cs.arizona.edu/people/gene/PAPERS/diff.ps</a>
- * 
+ *
  * @version $Revision: 1.1 $ $Date: 2006/03/12 00:24:21 $
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  * @see Delta
@@ -103,12 +103,12 @@ public class MyersDiff implements DiffAlgorithm
      * Computes the minimum diffpath that expresses de differences between the
      * original and revised sequences, according to Gene Myers differencing
      * algorithm.
-     * 
+     *
      * @param orig
      *            The original sequence.
      * @param rev
      *            The revised sequence.
-     * @return A minimum {@link PathNode Path} accross the differences graph.
+     * @return A minimum {@link PathNode Path} across the differences graph.
      * @throws DifferentiationFailedException
      *             if a diff path could not be found.
      */
@@ -191,7 +191,7 @@ public class MyersDiff implements DiffAlgorithm
 
     /**
      * Constructs a {@link Revision} from a difference path.
-     * 
+     *
      * @param path
      *            The path.
      * @param orig

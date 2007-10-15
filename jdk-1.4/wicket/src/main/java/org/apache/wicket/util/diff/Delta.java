@@ -61,19 +61,19 @@ import java.util.List;
 
 /**
  * Holds a "delta" difference between to revisions of a text.
- * 
+ *
  * @version $Revision: 1.1 $ $Date: 2006/03/12 00:24:21 $
- * 
+ *
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  * @author <a href="mailto:bwm@hplb.hpl.hp.com">Brian McBride</a>
  * @see Diff
  * @see Chunk
  * @see Revision
- * 
+ *
  * modifications
- * 
+ *
  * 27 Apr 2003 bwm
- * 
+ *
  * Added getOriginal() and getRevised() accessor methods Added visitor pattern
  * accept() method
  */
@@ -106,7 +106,7 @@ public abstract class Delta extends ToString
     /**
      * Returns a Delta that corresponds to the given chunks in the original and
      * revised text respectively.
-     * 
+     *
      * @param orig
      *            the chunk in the original text.
      * @param rev
@@ -139,8 +139,8 @@ public abstract class Delta extends ToString
     /**
      * Creates a delta object with the given chunks from the original and
      * revised texts.
-     * @param orig 
-     * @param rev 
+     * @param orig
+     * @param rev
      */
     protected Delta(Chunk orig, Chunk rev)
     {
@@ -148,10 +148,10 @@ public abstract class Delta extends ToString
     }
 
     /**
-     * Initializaes the delta with the given chunks from the original and
+     * Initializes the delta with the given chunks from the original and
      * revised texts.
-     * @param orig 
-     * @param rev 
+     * @param orig
+     * @param rev
      */
     protected void init(Chunk orig, Chunk rev)
     {
@@ -161,7 +161,7 @@ public abstract class Delta extends ToString
 
     /**
      * Verifies that this delta can be used to patch the given text.
-     * 
+     *
      * @param target
      *            the text to patch.
      * @throws PatchFailedException
@@ -171,7 +171,7 @@ public abstract class Delta extends ToString
 
     /**
      * Applies this delta as a patch to the given text.
-     * 
+     *
      * @param target
      *            the text to patch.
      * @throws PatchFailedException
@@ -192,7 +192,7 @@ public abstract class Delta extends ToString
 
     /**
      * Applies this delta as a patch to the given text.
-     * 
+     *
      * @param target
      *            the text to patch.
      * @throws PatchFailedException
@@ -202,7 +202,7 @@ public abstract class Delta extends ToString
 
     /**
      * Converts this delta into its Unix diff style string representation.
-     * 
+     *
      * @param s
      *            a {@link StringBuffer StringBuffer} to which the string
      *            representation will be appended.
@@ -221,7 +221,7 @@ public abstract class Delta extends ToString
 
     /**
      * Converts this delta into its RCS style string representation.
-     * 
+     *
      * @param s
      *            a {@link StringBuffer StringBuffer} to which the string
      *            representation will be appended.
@@ -232,7 +232,7 @@ public abstract class Delta extends ToString
 
     /**
      * Converts this delta into its RCS style string representation.
-     * 
+     *
      * @param EOL
      *            the string to use as line separator.
      * @return String
@@ -247,7 +247,7 @@ public abstract class Delta extends ToString
     /**
      * Accessor method to return the chunk representing the original sequence of
      * items
-     * 
+     *
      * @return the original sequence
      */
     public Chunk getOriginal()
@@ -258,7 +258,7 @@ public abstract class Delta extends ToString
     /**
      * Accessor method to return the chunk representing the updated sequence of
      * items.
-     * 
+     *
      * @return the updated sequence
      */
     public Chunk getRevised()
@@ -270,7 +270,7 @@ public abstract class Delta extends ToString
      * Accepts a visitor.
      * <p>
      * See the Visitor pattern in "Design Patterns" by the GOF4.
-     * 
+     *
      * @param visitor
      *            The visitor.
      */

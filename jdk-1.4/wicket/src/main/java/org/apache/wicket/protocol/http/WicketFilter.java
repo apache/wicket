@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Filter for initiating handling of Wicket requests.
- * 
+ *
  * @author jcompagner
  */
 public class WicketFilter implements Filter
@@ -99,17 +99,17 @@ public class WicketFilter implements Filter
 	 * Value should be true
 	 */
 	private final String PORTLET_ONLY_FILTER = "portletOnlyFilter";
-	
+
 	/* init marker if running in a portlet container context */
 	private Boolean portletContextAvailable;
-	
+
 	/* Delegate for handling Portlet specific filtering. Not instantiated if not running in a portlet container context */
 	private WicketFilterPortletContext filterPortletContext;
-	
+
 	/* Flag if this filter may only process request from within a Portlet context.
 	 */
 	private boolean portletOnlyFilter;
-	
+
 	/**
 	 * Servlet cleanup.
 	 */
@@ -131,7 +131,7 @@ public class WicketFilter implements Filter
 	{
 		HttpServletRequest httpServletRequest;
 		HttpServletResponse httpServletResponse;
-		
+
 		boolean inPortletContext = false;
         if (filterPortletContext != null)
         {
@@ -151,7 +151,7 @@ public class WicketFilter implements Filter
 			chain.doFilter(request, response);
 			return;
 		}
-		        
+
 		String relativePath = getRelativePath(httpServletRequest);
 
 		if (isWicketRequest(relativePath))
@@ -199,7 +199,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Handles servlet page requests.
-	 * 
+	 *
 	 * @param servletRequest
 	 *            Servlet request object
 	 * @param servletResponse
@@ -302,14 +302,14 @@ public class WicketFilter implements Filter
 				}
 
 				// Create a response object and set the output encoding according to
-				// wicket's application setttings.
+				// wicket's application settings.
 				response = webApplication.newWebResponse(servletResponse);
 				response.setAjax(request.isAjax());
 				response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 						.getResponseRequestEncoding());
 
 	            createRequestContext(request, response);
-	            
+
 				// Create request cycle
 				final RequestCycle cycle = webApplication.newRequestCycle(request, response);
 
@@ -359,7 +359,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Returns a relative path from an HttpServletRequest Use this to resolve a Wicket request.
-	 * 
+	 *
 	 * @param request
 	 * @return Path requested, minus query string, context path, and filterPath. Relative, no
 	 *         leading '/'.
@@ -401,7 +401,7 @@ public class WicketFilter implements Filter
 	}
 
 	/**
-	 * 
+	 *
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
@@ -472,7 +472,7 @@ public class WicketFilter implements Filter
 			Application.set(webApplication);
 
 			// Call internal init method of web application for default
-			// initialisation
+			// initialization
 			webApplication.internalInit();
 
 			// Call init method of web application
@@ -487,8 +487,8 @@ public class WicketFilter implements Filter
 			// Give the application the option to log that it is started
 			webApplication.logStarted();
 
-			this.portletOnlyFilter = Boolean.valueOf(filterConfig.getInitParameter(PORTLET_ONLY_FILTER)).booleanValue();
-			
+			portletOnlyFilter = Boolean.valueOf(filterConfig.getInitParameter(PORTLET_ONLY_FILTER)).booleanValue();
+
 	        if ( portletContextAvailable == null )
 	        {
 	        	try
@@ -504,7 +504,7 @@ public class WicketFilter implements Filter
 	        }
 	        if (filterPortletContext != null)
 	        {
-	        	filterPortletContext.initFilter(filterConfig, this.webApplication);
+	        	filterPortletContext.initFilter(filterConfig, webApplication);
 	        }
 		}
 		finally
@@ -529,7 +529,7 @@ public class WicketFilter implements Filter
         	new RequestContext();
         }
     }
-    
+
 	private String getFilterPath(String filterName, InputStream is) throws ServletException
 	{
 		String prefix = servletMode ? "servlet" : "filter";
@@ -537,7 +537,7 @@ public class WicketFilter implements Filter
 		String name = prefix + "-name";
 
 		// Filter mappings look like this:
-		//		  
+		//
 		// <filter-mapping> <filter-name>WicketFilter</filter-name>
 		// <url-pattern>/*</url-pattern> <...> <filter-mapping>
 		try
@@ -633,7 +633,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Is this a Wicket request?
-	 * 
+	 *
 	 * @param relativePath
 	 *            The relativePath
 	 * @return True if this is a Wicket request
@@ -663,7 +663,7 @@ public class WicketFilter implements Filter
 	/**
 	 * If the response has not already a 'lastModified' header set and if 'lastModified' >= 0 than
 	 * set the response header accordingly.
-	 * 
+	 *
 	 * @param resp
 	 * @param lastModified
 	 */
@@ -681,12 +681,12 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Creates the web application factory instance.
-	 * 
+	 *
 	 * If no APP_FACT_PARAM is specified in web.xml ContextParamWebApplicationFactory will be used
 	 * by default.
-	 * 
+	 *
 	 * @see ContextParamWebApplicationFactory
-	 * 
+	 *
 	 * @return application factory instance
 	 */
 	protected IWebApplicationFactory getApplicationFactory()
@@ -778,7 +778,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Strip trailing '*' and keep leading '/'
-	 * 
+	 *
 	 * @param result
 	 * @return
 	 */
@@ -789,7 +789,7 @@ public class WicketFilter implements Filter
 
 	/**
 	 * Gets the last modified time stamp for the given request.
-	 * 
+	 *
 	 * @param servletRequest
 	 * @return The last modified time stamp
 	 */

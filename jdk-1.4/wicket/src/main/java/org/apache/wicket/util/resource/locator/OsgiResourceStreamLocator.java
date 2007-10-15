@@ -21,8 +21,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 
 /**
  * OSGI specific resource stream factory
- * 
- * @author Juergen Donnerstah
+ *
+ * @author Juergen Donnerstag
  */
 public class OsgiResourceStreamLocator extends ResourceStreamLocator
 {
@@ -35,7 +35,7 @@ public class OsgiResourceStreamLocator extends ResourceStreamLocator
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param finder
 	 */
 	public OsgiResourceStreamLocator(final IResourceFinder finder)
@@ -44,7 +44,7 @@ public class OsgiResourceStreamLocator extends ResourceStreamLocator
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class, java.lang.String)
 	 */
 	public IResourceStream locate(final Class clazz, final String path)

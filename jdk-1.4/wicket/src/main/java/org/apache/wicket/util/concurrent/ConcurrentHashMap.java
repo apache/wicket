@@ -44,10 +44,10 @@ import org.apache.wicket.IClusterable;
 /**
  * A version of Hashtable supporting concurrency for both retrievals and
  * updates:
- * 
+ *
  * <dl>
  * <dt> Retrievals
- * 
+ *
  * <dd> Retrievals may overlap updates. (This is the same policy as
  * ConcurrentReaderHashMap.) Successful retrievals using get(key) and
  * containsKey(key) usually run without locking. Unsuccessful retrievals (i.e.,
@@ -62,7 +62,7 @@ import org.apache.wicket.IClusterable;
  * operations such as putAll and clear, concurrent reads may reflect insertion
  * or removal of only some entries.
  * <p>
- * 
+ *
  * Iterators and Enumerations (i.e., those returned by keySet().iterator(),
  * entrySet().iterator(), values().iterator(), keys(), and elements()) return
  * elements reflecting the state of the hash table at some point at or since the
@@ -74,10 +74,10 @@ import org.apache.wicket.IClusterable;
  * iterator across multiple threads may lead to unpredictable results if the
  * table is being concurrently modified.
  * <p>
- * 
- * 
+ *
+ *
  * <dt> Updates
- * 
+ *
  * <dd> This class supports a hard-wired preset <em>concurrency
  * level</em> of
  * 32. This allows a maximum of 32 put and/or remove operations to proceed
@@ -89,20 +89,20 @@ import org.apache.wicket.IClusterable;
  * operations triggering internal resizing and clearing do not execute
  * concurrently with any operation.
  * <p>
- * 
+ *
  * There is <em>NOT</em> any support for locking the entire table to prevent
- * updates. This makes it imposssible, for example, to add an element only if it
+ * updates. This makes it impossible, for example, to add an element only if it
  * is not already present, since another thread may be in the process of doing
  * the same thing. If you need such capabilities, consider instead using the
  * ConcurrentReaderHashMap class.
- * 
+ *
  * </dl>
- * 
+ *
  * Because of how concurrency control is split up, the size() and isEmpty()
  * methods require accumulations across 32 control segments, and so might be
  * slightly slower than you expect.
  * <p>
- * 
+ *
  * This class may be used as a direct replacement for java.util.Hashtable in any
  * application that does not rely on the ability to lock the entire table to
  * prevent updates. As of this writing, it performs much faster than Hashtable
@@ -110,14 +110,14 @@ import org.apache.wicket.IClusterable;
  * Like Hashtable but unlike java.util.HashMap, this class does NOT allow
  * <tt>null</tt> to be used as a key or value.
  * <p>
- * 
+ *
  * Implementation note: A slightly faster implementation of this class will be
  * possible once planned Java Memory Model revisions are in place.
- * 
+ *
  * <p>[<a
  * href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
  * Introduction to this package. </a>]
- * 
+ *
  */
 
 
@@ -129,7 +129,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * The basic strategy is an optimistic-style scheme based on the guarantee
 	 * that the hash table and its lists are always kept in a consistent enough
 	 * state to be read without locking:
-	 * 
+	 *
 	 * Read operations first proceed without locking, by traversing the
 	 * apparently correct list of the apparently correct bin. If an entry is
 	 * found, but not invalidated (value field null), it is returned. If not
@@ -137,14 +137,14 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * are using both the right list and the right table (which can change under
 	 * resizes). If invalidated, reads must acquire main update lock to wait out
 	 * the update, and then re-traverse.
-	 * 
+	 *
 	 * All list additions are at the front of each bin, making it easy to check
 	 * changes, and also fast to traverse. Entry next pointers are never
 	 * assigned. Remove() builds new nodes when necessary to preserve this.
-	 * 
+	 *
 	 * Remove() (also clear()) invalidates removed nodes to alert read
 	 * operations that they must wait out the full modifications.
-	 * 
+	 *
 	 * Locking for puts, removes (and, when necessary gets, etc) is controlled
 	 * by Segments, each covering a portion of the table. During operations
 	 * requiring global exclusivity (mainly resize and clear), ALL of these
@@ -154,7 +154,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * necessary for supporting concurrent retrievals. This comes at the price
 	 * of a mismatch of logical vs physical locality, but this seems not to be a
 	 * performance problem in practice.
-	 * 
+	 *
 	 */
 
 	/**
@@ -164,7 +164,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * The number of concurrency control segments. The value can be at most 32
-	 * since ints are used as bitsets over segments. Emprically, it doesn't seem
+	 * since ints are used as bitsets over segments. Empirically, it doesn't seem
 	 * to pay to decrease it either, so the value should be at least 32. In
 	 * other words, do not redefine this :-)
 	 */
@@ -183,7 +183,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	protected final static class Segment implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * The number of elements in this segment's region. It is always updated
 		 * within synchronized blocks.
@@ -239,14 +239,14 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * The load factor for the hash table.
-	 * 
+	 *
 	 * @serial
 	 */
 	protected final float loadFactor;
 
 	/**
 	 * Per-segment resize threshold.
-	 * 
+	 *
 	 * @serial
 	 */
 	protected int threshold;
@@ -308,7 +308,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * Return hash code for Object x. Since we are using power-of-two tables, it
 	 * is worth the effort to improve hashcode via the same multiplicative
 	 * scheme as used in IdentityHashMap.
-	 * @param x 
+	 * @param x
 	 * @return hash code
 	 */
 	protected static int hash(Object x)
@@ -332,8 +332,8 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	}
 
 	/**
-	 * Create table array and set the per-segment threshold * 
-	 * @param capacity 
+	 * Create table array and set the per-segment threshold *
+	 * @param capacity
 	 * @return table array
 	 */
 	protected Entry[] newTable(int capacity)
@@ -345,7 +345,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Constructs a new, empty map with the specified initial capacity and the
 	 * specified load factor.
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            the initial capacity. The actual initial capacity is rounded
 	 *            to the nearest power of two.
@@ -379,7 +379,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Constructs a new, empty map with the specified initial capacity and
 	 * default load factor.
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            the initial capacity of the ConcurrentHashMap.
 	 * @throws IllegalArgumentException
@@ -414,7 +414,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Returns the number of key-value mappings in this map.
-	 * 
+	 *
 	 * @return the number of key-value mappings in this map.
 	 */
 	public int size()
@@ -429,7 +429,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Returns <tt>true</tt> if this map contains no key-value mappings.
-	 * 
+	 *
 	 * @return <tt>true</tt> if this map contains no key-value mappings.
 	 */
 	public boolean isEmpty()
@@ -446,7 +446,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Returns the value to which the specified key is mapped in this table.
-	 * 
+	 *
 	 * @param key
 	 *            a key in the table.
 	 * @return the value to which the key is mapped in this table;
@@ -505,7 +505,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Tests if the specified object is a key in this table.
-	 * 
+	 *
 	 * @param key
 	 *            possible key.
 	 * @return <code>true</code> if and only if the specified object is a key
@@ -526,10 +526,10 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * (Note that this policy is the same as for java.util.Hashtable, but unlike
 	 * java.util.HashMap, which does accept nulls as valid keys and values.)
 	 * <p>
-	 * 
+	 *
 	 * The value can be retrieved by calling the <code>get</code> method with
 	 * a key that is equal to the original key.
-	 * 
+	 *
 	 * @param key
 	 *            the table key.
 	 * @param value
@@ -600,7 +600,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Gather all locks in order to call rehash, by recursing within synch
 	 * blocks for each segment index.
-	 * 
+	 *
 	 * @param index
 	 *            the current segment. initially call value must be 0
 	 * @param assumedTab
@@ -655,7 +655,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		 * at same index, or move to oldCapacity+index. We also eliminate
 		 * unnecessary node creation by catching cases where old nodes can be
 		 * reused because their next fields won't change. Statistically, at the
-		 * default threshhold, only about one-sixth of them need cloning. (The
+		 * default threshold, only about one-sixth of them need cloning. (The
 		 * nodes they replace will be garbage collectable as soon as they are no
 		 * longer referenced by any reader thread that may be in the midst of
 		 * traversing table right now.)
@@ -709,7 +709,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Removes the key (and its corresponding value) from this table. This
 	 * method does nothing if the key is not in the table.
-	 * 
+	 *
 	 * @param key
 	 *            the key that needs to be removed.
 	 * @return the value to which the key had been mapped in this table, or
@@ -726,7 +726,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * Removes the (key, value) pair from this table. This method does nothing
 	 * if the key is not in the table, or if the key is associated with a
 	 * different value. This method is needed by EntrySet.
-	 * 
+	 *
 	 * @param key
 	 *            the key that needs to be removed.
 	 * @param value
@@ -793,7 +793,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * Returns <tt>true</tt> if this map maps one or more keys to the
 	 * specified value. Note: This method requires a full internal traversal of
 	 * the hash table, and so is much slower than method <tt>containsKey</tt>.
-	 * 
+	 *
 	 * @param value
 	 *            value whose presence in this map is to be tested.
 	 * @return <tt>true</tt> if this map maps one or more keys to the
@@ -833,10 +833,10 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * Tests if some key maps into the specified value in this table. This
 	 * operation is more expensive than the <code>containsKey</code> method.
 	 * <p>
-	 * 
+	 *
 	 * Note that this method is identical in functionality to containsValue,
 	 * (which is part of the Map interface in the collections framework).
-	 * 
+	 *
 	 * @param value
 	 *            a value to search for.
 	 * @return <code>true</code> if and only if some key maps to the
@@ -855,10 +855,10 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Copies all of the mappings from the specified map to this one.
-	 * 
+	 *
 	 * These mappings replace any mappings that this map had for any of the keys
 	 * currently in the specified Map.
-	 * 
+	 *
 	 * @param t
 	 *            Mappings to be stored in this map.
 	 */
@@ -925,7 +925,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Returns a shallow copy of this <tt>ConcurrentHashMap</tt> instance: the
 	 * keys and values themselves are not cloned.
-	 * 
+	 *
 	 * @return a shallow copy of this map.
 	 */
 	public Object clone()
@@ -950,7 +950,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
 	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or
 	 * <tt>addAll</tt> operations.
-	 * 
+	 *
 	 * @return a set view of the keys contained in this map.
 	 */
 	public Set keySet()
@@ -982,7 +982,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		 */
 		public boolean contains(Object o)
 		{
-			return ConcurrentHashMap.this.containsKey(o);
+			return containsKey(o);
 		}
 
 		/**
@@ -1011,7 +1011,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
 	 * operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
 	 * operations.
-	 * 
+	 *
 	 * @return a collection view of the values contained in this map.
 	 */
 	public Collection values()
@@ -1043,7 +1043,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		 */
 		public boolean contains(Object o)
 		{
-			return ConcurrentHashMap.this.containsValue(o);
+			return containsValue(o);
 		}
 
 		/**
@@ -1065,7 +1065,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
 	 * operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
 	 * operations.
-	 * 
+	 *
 	 * @return a collection view of the mappings contained in this map.
 	 */
 	public Set entrySet()
@@ -1094,7 +1094,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 				return false;
 			}
 			Map.Entry entry = (Map.Entry)o;
-			Object v = ConcurrentHashMap.this.get(entry.getKey());
+			Object v = get(entry.getKey());
 			return v != null && v.equals(entry.getValue());
 		}
 
@@ -1130,7 +1130,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 	/**
 	 * Returns an enumeration of the keys in this table.
-	 * 
+	 *
 	 * @return an enumeration of the keys in this table.
 	 * @see Enumeration
 	 * @see #elements()
@@ -1145,7 +1145,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Returns an enumeration of the values in this table. Use the Enumeration
 	 * methods on the returned object to fetch the elements sequentially.
-	 * 
+	 *
 	 * @return an enumeration of the values in this table.
 	 * @see java.util.Enumeration
 	 * @see #keys()
@@ -1198,7 +1198,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		 * that the entry has been concurrently removed. However, there are no
 		 * assurances that concurrent removals will be reflected using this
 		 * method.
-		 * 
+		 *
 		 * @return the current value, or null if the entry has been detectably
 		 *         removed.
 		 */
@@ -1218,14 +1218,14 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 		 * sometimes even to <em>other</em> entries, then this change is not
 		 * guaranteed to be reflected in the hash table. (It might, or it might
 		 * not. There are no assurances either way.)
-		 * 
+		 *
 		 * @param value
 		 *            the new value.
 		 * @return the previous value, or null if entry has been detectably
 		 *         removed.
 		 * @exception NullPointerException
 		 *                if the value is <code>null</code>.
-		 * 
+		 *
 		 */
 		public Object setValue(Object value)
 		{
@@ -1404,9 +1404,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Save the state of the <tt>ConcurrentHashMap</tt> instance to a stream
 	 * (i.e., serialize it).
-	 * @param s 
-	 * @throws IOException 
-	 * 
+	 * @param s
+	 * @throws IOException
+	 *
 	 * @serialData An estimate of the table size, followed by the key (Object)
 	 *             and value (Object) for each key-value mapping, followed by a
 	 *             null pair. The key-value mappings are emitted in no
@@ -1419,7 +1419,7 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 
 		// Write out capacity estimate. It is OK if this
 		// changes during the write, since it is only used by
-		// readObject to set initial capacity, to avoid needless resizings.
+		// readObject to set initial capacity, to avoid needless resizing.
 
 		int cap;
 		synchronized (segments[0])
@@ -1454,9 +1454,9 @@ public class ConcurrentHashMap extends AbstractMap implements Map, Cloneable, Se
 	/**
 	 * Reconstitute the <tt>ConcurrentHashMap</tt> instance from a stream
 	 * (i.e., deserialize it).
-	 * @param s 
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * @param s
+	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 */
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{

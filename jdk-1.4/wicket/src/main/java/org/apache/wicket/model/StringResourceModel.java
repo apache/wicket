@@ -37,7 +37,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * The model should be created with four parameters, which are described in detail below:
  * <ul>
  * <li><b>resourceKey </b>- This is the most important parameter as it contains the key that should
- * be used to obtain resources from any string resource loaders. This paramater is mandatory: a null
+ * be used to obtain resources from any string resource loaders. This parameter is mandatory: a null
  * value will throw an exception. Typically it will contain an ordinary string such as
  * &quot;label.username&quot;. To add extra power to the key functionality the key may also contain
  * a property expression which will be evaluated if the model parameter (see below) is not null.
@@ -79,27 +79,27 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * <b>Example 1 </b>
  * <p>
  * In its simplest form, the model can be used as follows:
- * 
+ *
  * <pre>
- * public MyPage extends WebPage 
+ * public MyPage extends WebPage
  * {
- *    public MyPage(final PageParameters parameters) 
+ *    public MyPage(final PageParameters parameters)
  *    {
  *        add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
  *    }
  * }
  * </pre>
- * 
+ *
  * Where the resource bundle for the page contains the entry <code>label.username=Username</code>
  * <p>
  * <b>Example 2 </b>
  * <p>
  * In this example, the resource key is selected based on the evaluation of a property expression:
- * 
+ *
  * <pre>
- * public MyPage extends WebPage 
+ * public MyPage extends WebPage
  * {
- *     public MyPage(final PageParameters parameters) 
+ *     public MyPage(final PageParameters parameters)
  *     {
  *         WeatherStation ws = new WeatherStation();
  *         add(new Label(&quot;weatherMessage&quot;,
@@ -107,27 +107,27 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  *     }
  * }
  * </pre>
- * 
+ *
  * Which will call the WeatherStation.getCurrentStatus() method each time the string resource model
  * is used and where the resource bundle for the page contains the entries:
- * 
+ *
  * <pre>
  * weather.sunny=Don't forget sunscreen!
- * weather.raining=You might need an umberella
+ * weather.raining=You might need an umbrella
  * weather.snowing=Got your skis?
  * weather.overcast=Best take a coat to be safe
  * </pre>
- * 
+ *
  * <p>
  * <b>Example 3 </b>
  * <p>
  * In this example the found resource string contains a property expression that is substituted via
  * the model:
- * 
+ *
  * <pre>
- * public MyPage extends WebPage 
+ * public MyPage extends WebPage
  * {
- *     public MyPage(final PageParameters parameters) 
+ *     public MyPage(final PageParameters parameters)
  *     {
  *         WeatherStation ws = new WeatherStation();
  *         add(new Label(&quot;weatherMessage&quot;,
@@ -135,7 +135,7 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  *     }
  * }
  * </pre>
- * 
+ *
  * Where the resource bundle contains the entry <code>weather.message=Weather station reports that
  * the temperature is ${currentTemperature} ${units}</code>
  * <p>
@@ -143,18 +143,18 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  * <p>
  * In this example, the use of substitution parameters is employed to format a quite complex message
  * string. This is an example of the most complex and powerful use of the string resource model:
- * 
+ *
  * <pre>
- * public MyPage extends WebPage 
+ * public MyPage extends WebPage
  * {
- *     public MyPage(final PageParameters parameters) 
+ *     public MyPage(final PageParameters parameters)
  *     {
  *         WeatherStation ws = new WeatherStation();
  *         Model model = new Model(ws);
  *         add(new Label(&quot;weatherMessage&quot;,
  *             new StringResourceModel(
  *                 &quot;weather.detail&quot;, this, model,
- *                     new Object[] 
+ *                     new Object[]
  *                     {
  *                         new Date(),
  *                         new PropertyModel(model, &quot;currentStatus&quot;),
@@ -164,14 +164,14 @@ import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
  *     }
  * }
  * </pre>
- * 
+ *
  * And where the resource bundle entry is:
- * 
+ *
  * <pre>
  * weather.detail=The report for {0,date}, shows the temperature as {2,number,###.##} {3} \
  *     and the weather to be {1}
  * </pre>
- * 
+ *
  * @author Chris Turner
  */
 public class StringResourceModel extends LoadableDetachableModel
@@ -204,7 +204,7 @@ public class StringResourceModel extends LoadableDetachableModel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param resourceKey
 	 *            The resource key for this string resource
 	 * @param component
@@ -221,7 +221,7 @@ public class StringResourceModel extends LoadableDetachableModel
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param resourceKey
 	 *            The resource key for this string resource
 	 * @param component
@@ -230,7 +230,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 *            The model to use for property substitutions
 	 * @param defaultValue
 	 *            The default value if the resource key is not found.
-	 * 
+	 *
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
@@ -243,7 +243,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * Creates a new string resource model using the supplied parameters.
 	 * <p>
 	 * The relative component parameter should generally be supplied, as without it resources can
-	 * not be obtained from resouce bundles that are held relative to a particular component or
+	 * not be obtained from resource bundles that are held relative to a particular component or
 	 * page. However, for application that use only global resources then this parameter may be
 	 * null.
 	 * <p>
@@ -251,7 +251,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * to take place on either the resource key or the actual resource strings.
 	 * <p>
 	 * The parameters parameter is also optional and is used for substitutions.
-	 * 
+	 *
 	 * @param resourceKey
 	 *            The resource key for this string resource
 	 * @param component
@@ -271,7 +271,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * Creates a new string resource model using the supplied parameters.
 	 * <p>
 	 * The relative component parameter should generally be supplied, as without it resources can
-	 * not be obtained from resouce bundles that are held relative to a particular component or
+	 * not be obtained from resource bundles that are held relative to a particular component or
 	 * page. However, for application that use only global resources then this parameter may be
 	 * null.
 	 * <p>
@@ -279,7 +279,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * to take place on either the resource key or the actual resource strings.
 	 * <p>
 	 * The parameters parameter is also optional and is used for substitutions.
-	 * 
+	 *
 	 * @param resourceKey
 	 *            The resource key for this string resource
 	 * @param component
@@ -307,7 +307,7 @@ public class StringResourceModel extends LoadableDetachableModel
 
 	/**
 	 * Gets the localizer that is being used by this string resource model.
-	 * 
+	 *
 	 * @return The localizer
 	 */
 	public Localizer getLocalizer()
@@ -319,7 +319,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * Gets the string currently represented by this string resource model. The string that is
 	 * returned may vary for each call to this method depending on the values contained in the model
 	 * and an the parameters that were passed when this string resource model was created.
-	 * 
+	 *
 	 * @return The string
 	 */
 	public final String getString()
@@ -384,7 +384,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	/**
 	 * Sets the localizer that is being used by this string resource model. This method is provided
 	 * to allow the default application localizer to be overridden if required.
-	 * 
+	 *
 	 * @param localizer
 	 *            The localizer to use
 	 */
@@ -397,7 +397,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * Override of the default method to return the resource string represented by this string
 	 * resource model. Useful in debugging and so on, to avoid the explicit need to call the
 	 * getString() method.
-	 * 
+	 *
 	 * @return The string for this model object
 	 */
 	public String toString()
@@ -418,7 +418,7 @@ public class StringResourceModel extends LoadableDetachableModel
 
 	/**
 	 * Gets the Java MessageFormat substitution parameters.
-	 * 
+	 *
 	 * @return The substitution parameters
 	 */
 	protected Object[] getParameters()
@@ -430,7 +430,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * Gets the resource key for this string resource. If the resource key contains property
 	 * expressions and the model is null then the returned value is the actual resource key with all
 	 * substitutions undertaken.
-	 * 
+	 *
 	 * @return The (possibly substituted) resource key
 	 */
 	protected final String getResourceKey()
@@ -448,11 +448,11 @@ public class StringResourceModel extends LoadableDetachableModel
 	/**
 	 * Gets the string that this string resource model currently represents. The string is returned
 	 * as an object to allow it to be used generically within components.
-	 * 
+	 *
 	 */
 	protected Object load()
 	{
-		// Initialise information that we need to work successfully
+		// Initialize information that we need to work successfully
 		final Session session = Session.get();
 		if (session != null)
 		{

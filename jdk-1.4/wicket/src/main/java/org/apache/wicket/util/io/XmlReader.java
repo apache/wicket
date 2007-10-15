@@ -31,7 +31,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * This is a simple XmlReader. Its only purpose is to read the xml decl string
  * from the input and apply proper character encoding to all subsequent
  * characters. The xml decl string itself is removed from the output.
- * 
+ *
  * @author Juergen Donnerstag
  */
 public final class XmlReader extends Reader
@@ -57,7 +57,7 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param inputStream
 	 *            The InputStream to read the xml data from
 	 * @param defaultEncoding
@@ -72,7 +72,7 @@ public final class XmlReader extends Reader
 		super();
 
 		this.inputStream = inputStream;
-		this.encoding = defaultEncoding;
+		encoding = defaultEncoding;
 
 		if (inputStream == null)
 		{
@@ -84,7 +84,7 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Return the encoding used while reading the markup file.
-	 * 
+	 *
 	 * @return if null, then JVM default
 	 */
 	public String getEncoding()
@@ -94,22 +94,22 @@ public final class XmlReader extends Reader
 
 	/**
 	 * Return the XML declaration string, in case if found in the markup.
-	 * 
+	 *
 	 * @return Null, if not found.
 	 */
 	public String getXmlDeclaration()
 	{
-		return this.xmlDeclarationString;
+		return xmlDeclarationString;
 	}
 
 	/**
 	 * Reads and parses markup from a resource such as file.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void init() throws IOException
 	{
-		if (!this.inputStream.markSupported())
+		if (!inputStream.markSupported())
 		{
 			throw new IOException("The InputStream must support mark/reset");
 		}
@@ -117,35 +117,35 @@ public final class XmlReader extends Reader
 		// read ahead buffer required for the first line of the markup
 		// (encoding)
 		final int readAheadSize = 80;
-		this.inputStream.mark(readAheadSize);
+		inputStream.mark(readAheadSize);
 
-		// read-ahead the input stream and check if it starts with <?xml..?>. 
-		if (getXmlDeclaration(this.inputStream, readAheadSize))
+		// read-ahead the input stream and check if it starts with <?xml..?>.
+		if (getXmlDeclaration(inputStream, readAheadSize))
 		{
 			// If yes than determine the encoding from the xml decl
-			this.encoding = determineEncoding(this.xmlDeclarationString);
+			encoding = determineEncoding(xmlDeclarationString);
 		}
 		else
 		{
-			// If not, reset the input stream to the begining of the file
-			this.inputStream.reset();
+			// If not, reset the input stream to the beginning of the file
+			inputStream.reset();
 		}
-		
-		if (this.encoding == null)
+
+		if (encoding == null)
 		{
 			// Use JVM default
-			this.reader = new BufferedReader(new InputStreamReader(this.inputStream));
+			reader = new BufferedReader(new InputStreamReader(inputStream));
 		}
 		else
 		{
 			// Use the encoding provided
-			this.reader = new BufferedReader(new InputStreamReader(this.inputStream, this.encoding));
+			reader = new BufferedReader(new InputStreamReader(inputStream, encoding));
 		}
 	}
 
 	/**
 	 * Determine the encoding from the xml decl.
-	 * 
+	 *
 	 * @param string The xmlDecl string
 	 * @return The encoding. Null, if not found
 	 */
@@ -177,10 +177,10 @@ public final class XmlReader extends Reader
 	/**
 	 * Read-ahead the input stream (markup file). If the first line contains
 	 * &lt;?xml...?&gt;, than remember the xml decl for later to determine the
-	 * encoding. 
+	 * encoding.
 	 * <p>
 	 * The xml decl will not be forwarded to the user.
-	 * 
+	 *
 	 * @param in
 	 *            The markup file
 	 * @param readAheadSize
@@ -219,7 +219,7 @@ public final class XmlReader extends Reader
 		}
 
 		// Save the whole <?xml ..> string for later
-		this.xmlDeclarationString = pushBack.toString().trim();
+		xmlDeclarationString = pushBack.toString().trim();
 		return true;
 	}
 
@@ -228,8 +228,8 @@ public final class XmlReader extends Reader
 	 */
 	public void close() throws IOException
 	{
-		this.reader.close();
-		this.inputStream.close();
+		reader.close();
+		inputStream.close();
 	}
 
 	/**
@@ -237,7 +237,7 @@ public final class XmlReader extends Reader
 	 */
 	public int read(char[] buf, int from, int to) throws IOException
 	{
-		return this.reader.read(buf, from, to);
+		return reader.read(buf, from, to);
 	}
 
 	/**
@@ -245,6 +245,6 @@ public final class XmlReader extends Reader
 	 */
 	public String toString()
 	{
-		return this.inputStream.toString() + " (" + this.encoding + ")";
+		return inputStream.toString() + " (" + encoding + ")";
 	}
 }

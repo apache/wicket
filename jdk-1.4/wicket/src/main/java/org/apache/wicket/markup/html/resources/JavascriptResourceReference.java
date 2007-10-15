@@ -25,9 +25,9 @@ import org.apache.wicket.markup.html.PackageResource;
 
 
 /**
- * Static resource reference for javacript resources. The resources are filtered
+ * Static resource reference for javascript resources. The resources are filtered
  * (stripped comments and whitespace) and gzipped.
- * 
+ *
  * @author Matej Knopp
  */
 public class JavascriptResourceReference extends ResourceReference
@@ -64,7 +64,7 @@ public class JavascriptResourceReference extends ResourceReference
 	{
 		super(name);
 	}
-	
+
 	protected Resource newResource()
 	{
 		PackageResource packageResource = JavascriptPackageResource.get(getScope(), getName(),

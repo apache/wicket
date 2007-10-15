@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.border.Border;
  * <p>
  * <strong>Note: </strong> Since this border checks its children do not use
  * setTransparentResolver(true) and add the children directly into the border
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
@@ -52,7 +52,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
 		 *            component id
 		 */
@@ -72,7 +72,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 */
@@ -83,7 +83,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	}
 
 	/**
-	 * Update the 'visible' flag to indicate the existance (or lack thereof) of feedback messages 
+	 * Update the 'visible' flag to indicate the existence (or lack thereof) of feedback messages
 	 */
 	public void updateFeedback()
 	{

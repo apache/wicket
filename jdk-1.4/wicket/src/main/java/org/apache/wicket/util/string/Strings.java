@@ -47,13 +47,13 @@ import org.apache.wicket.WicketRuntimeException;
  * another (replaceAll), do type conversions (toBoolean(), toChar(),
  * toString()), check a String for emptiness (isEmpty()), convert a Throwable to
  * a String (toString(Throwable)) or capitalize a String (capitalize()).
- * 
+ *
  * @author Jonathan Locke
  */
 public final class Strings
 {
 	/**
-	 * The line seperator for the current platform.
+	 * The line separator for the current platform.
 	 */
 	public static final String LINE_SEPARATOR;
 
@@ -77,7 +77,7 @@ public final class Strings
 	/**
 	 * Returns everything after the first occurrence of the given character in
 	 * s.
-	 * 
+	 *
 	 * @param s
 	 *            The string
 	 * @param c
@@ -107,7 +107,7 @@ public final class Strings
 	 * <p>
 	 * For example, afterFirstPathComponent("foo.bar.baz", '.') would return
 	 * "bar.baz" and afterFirstPathComponent("foo", '.') would return "".
-	 * 
+	 *
 	 * @param path
 	 *            The path to parse
 	 * @param separator
@@ -120,8 +120,8 @@ public final class Strings
 	}
 
 	/**
-	 * Returns everything after the last occurence of the given character in s.
-	 * 
+	 * Returns everything after the last occurrence of the given character in s.
+	 *
 	 * @param s
 	 *            The string
 	 * @param c
@@ -148,7 +148,7 @@ public final class Strings
 	/**
 	 * Returns everything before the first occurrence of the given character in
 	 * s.
-	 * 
+	 *
 	 * @param s
 	 *            The string
 	 * @param c
@@ -175,7 +175,7 @@ public final class Strings
 	/**
 	 * Returns everything before the last occurrence of the given character in
 	 * s.
-	 * 
+	 *
 	 * @param s
 	 *            The string
 	 * @param c
@@ -205,7 +205,7 @@ public final class Strings
 	 * <p>
 	 * For example, beforeLastPathComponent("foo.bar.baz", '.') would return
 	 * "foo.bar" and beforeLastPathComponent("foo", '.') would return "".
-	 * 
+	 *
 	 * @param path
 	 *            The path to parse
 	 * @param separator
@@ -219,7 +219,7 @@ public final class Strings
 
 	/**
 	 * Capitalizes a string.
-	 * 
+	 *
 	 * @param s
 	 *            The string
 	 * @return The capitalized string
@@ -243,7 +243,7 @@ public final class Strings
 	/**
 	 * Converts a Java String to an HTML markup string, but does not convert
 	 * normal spaces to non-breaking space entities (&lt;nbsp&gt;).
-	 * 
+	 *
 	 * @param s
 	 *            The string to escape
 	 * @see Strings#escapeMarkup(String, boolean)
@@ -260,7 +260,7 @@ public final class Strings
 	 * non-breaking spaces (&lt;nbsp&gt;) if escapeSpaces is true, tabs are
 	 * converted to four non-breaking spaces, less than signs are converted to
 	 * &amp;lt; entities and greater than signs to &amp;gt; entities.
-	 * 
+	 *
 	 * @param s
 	 *            The string to escape
 	 * @param escapeSpaces
@@ -278,7 +278,7 @@ public final class Strings
 	 * non-breaking spaces (&lt;nbsp&gt;) if escapeSpaces is true, tabs are
 	 * converted to four non-breaking spaces, less than signs are converted to
 	 * &amp;lt; entities and greater than signs to &amp;gt; entities.
-	 * 
+	 *
 	 * @param s
 	 *            The string to escape
 	 * @param escapeSpaces
@@ -397,7 +397,7 @@ public final class Strings
 	 * <p>
 	 * For example, firstPathComponent("foo.bar", '.') would return "foo" and
 	 * firstPathComponent("foo", '.') would return "foo".
-	 * 
+	 *
 	 * @param path
 	 *            The path to parse
 	 * @param separator
@@ -424,10 +424,10 @@ public final class Strings
 	/**
 	 * Converts encoded &#92;uxxxx to unicode chars and changes special saved
 	 * chars to their original forms.
-	 * 
+	 *
 	 * @param escapedUnicodeString
 	 *            escaped unicode string, like '\u4F60\u597D'.
-	 * 
+	 *
 	 * @return The actual unicode. Can be used for instance with message bundles
 	 */
 	public static String fromEscapedUnicode(String escapedUnicodeString)
@@ -532,9 +532,9 @@ public final class Strings
 	/**
 	 * Checks whether the <code>string</code> is considered empty. Empty means
 	 * that the string may contain whitespace, but no visible characters.
-	 * 
+	 *
 	 * "\n\t " is considered empty, while " a" is not.
-	 * 
+	 *
 	 * @param string
 	 *            The string
 	 * @return True if the string is null or ""
@@ -547,7 +547,7 @@ public final class Strings
 	/**
 	 * Checks whether two strings are equals taken care of 'null' values and
 	 * treating 'null' same as trim(string).equals("")
-	 * 
+	 *
 	 * @param string1
 	 * @param string2
 	 * @return true, if both strings are equal
@@ -578,9 +578,9 @@ public final class Strings
 	 * string is converted to <code>false</code>. Conversion is
 	 * case-insensitive, and does <em>not</em> take internationalization into
 	 * account.
-	 * 
+	 *
 	 * 'Ja', 'Oui', 'Igen', 'Nein', 'Nee', 'Non', 'Nem' are all illegal values.
-	 * 
+	 *
 	 * @param s
 	 *            the value to convert into a boolean
 	 * @return Boolean the converted value of <code>s</code>
@@ -626,7 +626,7 @@ public final class Strings
 
 	/**
 	 * Joins string fragments using the specified separator
-	 * 
+	 *
 	 * @param separator
 	 * @param fragments
 	 * @return combined fragments
@@ -681,7 +681,7 @@ public final class Strings
 	 * <p>
 	 * For example, lastPathComponent("foo.bar", '.') would return "bar" and
 	 * lastPathComponent("foo", '.') would return "foo".
-	 * 
+	 *
 	 * @param path
 	 *            The path to parse
 	 * @param separator
@@ -708,7 +708,7 @@ public final class Strings
 
 	/**
 	 * Replace all occurrences of one string replaceWith another string.
-	 * 
+	 *
 	 * @param s
 	 *            The string to process
 	 * @param searchFor
@@ -786,7 +786,7 @@ public final class Strings
 
 	/**
 	 * Replace HTML numbers like &#20540 by the appropriate character.
-	 * 
+	 *
 	 * @param str
 	 *            The text to be evaluated
 	 * @return The text with "numbers" replaced
@@ -814,7 +814,7 @@ public final class Strings
 	/**
 	 * Simpler, faster version of String.split() for splitting on a simple
 	 * character.
-	 * 
+	 *
 	 * @param s
 	 *            The string to split
 	 * @param c
@@ -850,7 +850,7 @@ public final class Strings
 
 	/**
 	 * Strips the ending from the string <code>s</code>.
-	 * 
+	 *
 	 * @param s
 	 *            The string to strip
 	 * @param ending
@@ -894,7 +894,7 @@ public final class Strings
 	/**
 	 * Strip any jsessionid and possibly other redundant info that might be in
 	 * our way.
-	 * 
+	 *
 	 * @param url
 	 *            The url to strip
 	 * @return The stripped url
@@ -924,7 +924,7 @@ public final class Strings
 	/**
 	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
 	 * values of s.
-	 * 
+	 *
 	 * @param s
 	 *            The string to convert.
 	 * @return Boolean <code>TRUE</code> when <code>isTrue(s)</code>.
@@ -939,7 +939,7 @@ public final class Strings
 
 	/**
 	 * Converts the 1 character string s to a character.
-	 * 
+	 *
 	 * @param s
 	 *            The 1 character string to convert to a char.
 	 * @return Character value to convert
@@ -967,7 +967,7 @@ public final class Strings
 
 	/**
 	 * Converts unicodes to encoded &#92;uxxxx.
-	 * 
+	 *
 	 * @param unicodeString
 	 *            The unicode string
 	 * @return The escaped unicode string, like '\u4F60\u597D'.
@@ -1052,7 +1052,7 @@ public final class Strings
 	 * Converts a String to multiline HTML markup by replacing newlines with
 	 * line break entities (&lt;br/&gt;) and multiple occurrences of newline
 	 * with paragraph break entities (&lt;p&gt;).
-	 * 
+	 *
 	 * @param s
 	 *            String to transform
 	 * @return String with all single occurrences of newline replaced with
@@ -1115,7 +1115,7 @@ public final class Strings
 	 * {@link Throwable throwables} and String arrays of length 1 (in which case
 	 * it just returns to string in that array, as this is a common thing to
 	 * have in the Servlet API).
-	 * 
+	 *
 	 * @param object
 	 *            The object
 	 * @return The string
@@ -1151,7 +1151,7 @@ public final class Strings
 	 * the unnecessary parts of the stack trace. The message of the
 	 * <code>location</code> is used as a verb in the rendered string. Use
 	 * "added", "constructed" or similar verbs as values.
-	 * 
+	 *
 	 * @param component
 	 *            the component that was constructed or added and failed to
 	 *            render
@@ -1235,7 +1235,7 @@ public final class Strings
 
 	/**
 	 * Converts a Throwable to a string.
-	 * 
+	 *
 	 * @param throwable
 	 *            The throwable
 	 * @return The string
@@ -1305,7 +1305,7 @@ public final class Strings
 	 * stopAtWicketSerlvet is true then the output will stop when the
 	 * org.apache.wicket servlet is reached. sun.reflect. packages are filtered
 	 * out.
-	 * 
+	 *
 	 * @param cause
 	 * @param sb
 	 * @param stopAtWicketServlet
@@ -1358,7 +1358,7 @@ public final class Strings
 
 	/**
 	 * Convert a nibble to a hex character
-	 * 
+	 *
 	 * @param nibble
 	 *            the nibble to convert.
 	 * @return hex character

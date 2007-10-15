@@ -19,7 +19,7 @@ package org.apache.wicket;
 import org.apache.wicket.markup.html.border.MarkupComponentBorder;
 
 /**
- * This class gives you call backs to genererate swing like borders.
+ * This class gives you call backs to generate swing like borders.
  * 
  * @author jcompagner
  * 
@@ -29,12 +29,14 @@ public interface IComponentBorder extends IClusterable
 {
 	/**
 	 * Called before the component is rendered.
+	 * 
 	 * @param component
 	 */
 	public void renderBefore(Component component);
-	
+
 	/**
 	 * Called after the component is renderd.
+	 * 
 	 * @param component
 	 */
 	public void renderAfter(Component component);

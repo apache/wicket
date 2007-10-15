@@ -31,9 +31,9 @@ import org.apache.wicket.util.concurrent.ConcurrentReaderHashMap;
 public final class DefaultClassResolver implements IClassResolver
 {
 	/**
-	 * Usually class loaders implement more efficent caching strategies than we
-	 * could possibly do, but we experienced synchronization issue resulting in
-	 * stack traces like: java.lang.LinkageError: duplicate class definition:
+	 * Usually class loaders implement more efficient caching strategies than we could possibly do,
+	 * but we experienced synchronization issue resulting in stack traces like:
+	 * java.lang.LinkageError: duplicate class definition:
 	 * 
 	 * <pre>
 	 *    wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 

@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Implement a component resolver which walks up the component tree until a Page
- * or Panel and tries to find a component with a matching wicket id, effectivly
+ * or Panel and tries to find a component with a matching wicket id, effectively
  * providing something like scoping for wicket id resolution.
  * <p>
  * Note: This resolver is not activated by default. It has to be added by means of
@@ -36,45 +36,45 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Example:
  * <pre>
  * MyPage()
- * { 
- *    add(new Label("hidden-by-cont1","hidden")); 
- *    add(new Label("global","can be everywhere")); //the intresting case
- * 
- *    WebMarkupContainer cont1 = new WebMarkupContainer("cont1"); 
+ * {
+ *    add(new Label("hidden-by-cont1","hidden"));
+ *    add(new Label("global","can be everywhere")); //the interesting case
+ *
+ *    WebMarkupContainer cont1 = new WebMarkupContainer("cont1");
  *    add(cont1);
- * 
- *     cont1.add(new Label("hidden-by-cont1","cont1 hides")); 
+ *
+ *     cont1.add(new Label("hidden-by-cont1","cont1 hides"));
  *     cont1.add(new Label("same-id","cont1 same-id"));
- * 
- *     WebMarkupContainer cont2 = new WebMarkupContainer("cont2"); 
+ *
+ *     WebMarkupContainer cont2 = new WebMarkupContainer("cont2");
  *     add(cont2);
- * 
- *     cont2.add(new Label("same-id","cont2 same-id")); 
+ *
+ *     cont2.add(new Label("same-id","cont2 same-id"));
  * }
  * </pre>
  * <pre>
  * HTML:
- * <html> 
- * <body> 
- *   <span wicket:id="hidden-by-cont1">Prints: hidden</span> 
- *   <div wicket:id="cont1"> 
+ * <html>
+ * <body>
+ *   <span wicket:id="hidden-by-cont1">Prints: hidden</span>
+ *   <div wicket:id="cont1">
  *     <span wicket:id="hidden-by-cont1">Prints: cont1 hides</span>
- *     <span wicket:id="same-id">Prints: cont1 same-id</span> 
+ *     <span wicket:id="same-id">Prints: cont1 same-id</span>
  *   </div>
- * 
- *   <div wicket:id="cont2"> 
+ *
+ *   <div wicket:id="cont2">
  *     <span wicket:id="global">Prints: can be everywhere</span>
- *     <span wicket:id="same-id">Prints: cont2 same-id</span> 
+ *     <span wicket:id="same-id">Prints: cont2 same-id</span>
  *   </div>
  * </pre>
- * 
+ *
  * So you can use the same ids in the same page. If the containing containers
  * are not in the same hierarchy-line nothing changes. A comp with the same id
  * hides the one of the parent-container with the same id.
- * 
+ *
  * @see org.apache.wicket.MarkupContainer#isTransparentResolver()
  * @see org.apache.wicket.markup.resolver.ParentResolver
- * 
+ *
  * @author Christian Essl
  * @author Juergen Donnerstag
  */
@@ -91,7 +91,7 @@ public class ScopedComponentResolver implements IComponentResolver
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */

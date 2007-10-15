@@ -29,7 +29,7 @@ import org.apache.wicket.util.string.Strings;
 /**
  * Request target for bookmarkable page links that also contain component path
  * and interface name. This is used for stateless forms and stateless links.
- * 
+ *
  * @author Matej Knopp
  */
 public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePageRequestTarget
@@ -40,9 +40,9 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	/**
 	 * This constructor is called when a stateless link is clicked on but the
 	 * page wasn't found in the session. Then this class will recreate the page
-	 * and call the interface method on the component that is targetted with the
+	 * and call the interface method on the component that is targeted with the
 	 * component path.
-	 * 
+	 *
 	 * @param pageMapName
 	 * @param pageClass
 	 * @param pageParameters
@@ -63,7 +63,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * the 2 org.apache.wicket params
 	 * {@link WebRequestCodingStrategy#BOOKMARKABLE_PAGE_PARAMETER_NAME} and
 	 * {@link WebRequestCodingStrategy#INTERFACE_PARAMETER_NAME}
-	 * 
+	 *
 	 * @param pageMapName
 	 * @param pageClass
 	 * @param pageParameters
@@ -78,7 +78,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 				.getName());
 
 		int version = component.getPage().getCurrentVersionNumber();
-		
+
 		// add the wicket:interface param to the params.
 		// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:urlDepth
 		AppendingStringBuffer param = new AppendingStringBuffer(4 + componentPath.length()
@@ -97,10 +97,10 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		// Interface
 		param.append(Component.PATH_SEPARATOR);
 		param.append(getInterfaceName());
-		
+
 		// Behavior (none)
 		param.append(Component.PATH_SEPARATOR);
-		
+
 		// URL depth (not required)
 		param.append(Component.PATH_SEPARATOR);
 

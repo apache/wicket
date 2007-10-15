@@ -20,10 +20,10 @@ import org.apache.wicket.util.convert.ConverterLocator;
 import org.apache.wicket.util.convert.IConverter;
 
 /**
- * Locates the proper converter instance for a given type. Classes that
- * implement this interface must return the right converter for the given class
- * type. Instances are created by {@link IConverterLocator}, which can be
- * configured using {@link Application#newConverterLocator()}.
+ * Locates the proper converter instance for a given type. Classes that implement this interface
+ * must return the right converter for the given class type. Instances are created by
+ * {@link IConverterLocator}, which can be configured using
+ * {@link Application#newConverterLocator()}.
  * 
  * @see ConverterLocator
  * @see IConverterLocatorFactory
@@ -34,7 +34,7 @@ public interface IConverterLocator extends IClusterable
 {
 
 	/**
-	 * Returns the Conveter for the class that is given.
+	 * Returns the Converter for the class that is given.
 	 * 
 	 * @param type
 	 * @return The converter for the given type.

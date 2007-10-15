@@ -23,7 +23,7 @@ import org.apache.wicket.model.IModel;
 /**
  * A container of HTML markup and components. It is very similar to the base
  * class MarkupContainer, except that the markup type is defined to be HTML.
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -49,7 +49,7 @@ public class WebMarkupContainer extends MarkupContainer
 
 	/**
 	 * Gets the markup type for this component.
-	 * 
+	 *
 	 * @return Markup type of HTML
 	 */
 	public String getMarkupType()
@@ -58,8 +58,8 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
-	 * A convinience method to return the WebPage. Same as getPage().
-	 * 
+	 * A convenience method to return the WebPage. Same as getPage().
+	 *
 	 * @return WebPage
 	 */
 	public final WebPage getWebPage()

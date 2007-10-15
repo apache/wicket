@@ -24,9 +24,8 @@ import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
- * Abstract class for handling Ajax roundtrips. This class serves as a base for
- * javascript specific implementations, like ones based on Dojo or
- * Scriptaculous, or Wicket's default.
+ * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific
+ * implementations, like ones based on Dojo or Scriptaculous, or Wicket's default.
  * 
  * @author Eelco Hillenius
  * @author Ralf Ebert
@@ -64,17 +63,17 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			throw new IllegalArgumentException("Argument hostComponent must be not null");
 		}
 
-		if (this.component != null)
+		if (component != null)
 		{
-			throw new IllegalStateException("this kind of handler cannot be attached to "
-					+ "multiple components; it is already attached to component " + this.component
-					+ ", but component " + hostComponent + " wants to be attached too");
+			throw new IllegalStateException("this kind of handler cannot be attached to " +
+					"multiple components; it is already attached to component " + component +
+					", but component " + hostComponent + " wants to be attached too");
 
 		}
 
-		this.component = hostComponent;
+		component = hostComponent;
 
-		// call the calback
+		// call the callback
 		onBind();
 	}
 
@@ -92,8 +91,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * Gets the url that references this handler.
 	 * 
 	 * @param onlyTargetActivePage
-	 *            if true the callback to this behavior will be ignore if the
-	 *            page is not the last one the user accessed
+	 *            if true the callback to this behavior will be ignore if the page is not the last
+	 *            one the user accessed
 	 * 
 	 * @return the url that references this handler
 	 */
@@ -104,9 +103,9 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			throw new IllegalArgumentException(
 					"Behavior must be bound to a component to create the URL");
 		}
-		
+
 		final RequestListenerInterface rli;
-		
+
 		if (onlyTargetActivePage)
 		{
 			rli = IActivePageBehaviorListener.INTERFACE;
@@ -115,7 +114,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		{
 			rli = IBehaviorListener.INTERFACE;
 		}
-				
+
 		return getComponent().urlFor(this, rli);
 	}
 
@@ -154,9 +153,8 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	}
 
 	/**
-	 * Called any time a component that has this handler registered is rendering
-	 * the component tag. Use this method e.g. to bind to javascript event
-	 * handlers of the tag
+	 * Called any time a component that has this handler registered is rendering the component tag.
+	 * Use this method e.g. to bind to javascript event handlers of the tag
 	 * 
 	 * @param tag
 	 *            the tag that is rendered
@@ -166,17 +164,16 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	}
 
 	/**
-	 * Called when the component was bound to it's host component. You can get
-	 * the bound host component by calling getComponent.
+	 * Called when the component was bound to it's host component. You can get the bound host
+	 * component by calling getComponent.
 	 */
 	protected void onBind()
 	{
 	}
 
 	/**
-	 * Called to indicate that the component that has this handler registered
-	 * has been rendered. Use this method to do any cleaning up of temporary
-	 * state
+	 * Called to indicate that the component that has this handler registered has been rendered. Use
+	 * this method to do any cleaning up of temporary state
 	 */
 	protected void onComponentRendered()
 	{

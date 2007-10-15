@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * An implemenation of IRequestTarget that is used for the IResourceListener
+ * An implementation of IRequestTarget that is used for the IResourceListener
  * event request.
- * 
+ *
  * @author jcompagner
  */
 public final class ComponentResourceRequestTarget implements IRequestTarget
@@ -46,7 +46,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param page
 	 * @param component
 	 * @param listener

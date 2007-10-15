@@ -248,7 +248,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		public static final Object CONTINUE_TRAVERSAL = null;
 
 		/**
-		 * A generic value to return to contiue a traversal, but if the component is a container,
+		 * A generic value to return to continue a traversal, but if the component is a container,
 		 * don't visit its children.
 		 */
 		public static final Object CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER = new Object();
@@ -544,7 +544,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/** Ignore attribute modifiers */
 	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
-	/** Flag for escaping HTML in model strings */
+	/**
+	 * Boolean whether this component's model is inheritable.
+	 */
 	private static final int FLAG_INHERITABLE_MODEL = 0x0004;
 
 	/**

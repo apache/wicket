@@ -25,20 +25,20 @@ import org.apache.wicket.util.lang.Primitives;
  * A base class based on the Java <code>int</code> primitive for value classes
  * that want to implement standard operations on that value without the pain of
  * aggregating an <code>Integer</code> object.
- * 
+ *
  * @author Jonathan Locke
  * @since 1.2.6
  */
 public class IntValue implements Comparable, Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** the <code>int</code> value */
 	protected final int value;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param value
 	 *            the <code>int</code> value
 	 */
@@ -56,12 +56,12 @@ public class IntValue implements Comparable, Serializable
 	{
 		final IntValue that = (IntValue)object;
 
-		if (this.value < that.value)
+		if (value < that.value)
 		{
 			return -1;
 		}
 
-		if (this.value > that.value)
+		if (value > that.value)
 		{
 			return 1;
 		}
@@ -71,7 +71,7 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Compares this <code>Object</code> to a given <code>Object</code>.
-	 * 
+	 *
 	 * @param object
 	 *            the <code>Object</code> to compare with
 	 * @return 0 if equal, -1 if less than the given <code>Object</code>'s
@@ -81,7 +81,7 @@ public class IntValue implements Comparable, Serializable
 	{
 		if (that instanceof IntValue)
 		{
-			return this.value == ((IntValue)that).value;
+			return value == ((IntValue)that).value;
 		}
 
 		return false;
@@ -90,7 +90,7 @@ public class IntValue implements Comparable, Serializable
 	/**
 	 * Compares this <code>IntValue</code> with a primitive <code>int</code>
 	 * value.
-	 * 
+	 *
 	 * @param value
 	 *            the <code>int</code> value to compare with
 	 * @return <code>true</code> if this <code>IntValue</code> is greater
@@ -103,7 +103,7 @@ public class IntValue implements Comparable, Serializable
 
 	/**
 	 * Compares this <code>IntValue</code> with another <code>IntValue</code>.
-	 * 
+	 *
 	 * @param that
 	 *            the <code>IntValue</code> to compare with
 	 * @return <code>true</code> if this <code>IntValue</code> is greater
@@ -111,12 +111,12 @@ public class IntValue implements Comparable, Serializable
 	 */
 	public final boolean greaterThan(final IntValue that)
 	{
-		return this.value > that.value;
+		return value > that.value;
 	}
 
 	/**
 	 * Returns the hash code for this <code>Object</code>.
-	 * 
+	 *
 	 * @return hash code for this <code>Object</code>
 	 */
 	public final int hashCode()
@@ -127,20 +127,20 @@ public class IntValue implements Comparable, Serializable
 	/**
 	 * Compares this <code>IntValue</code> with a primitive <code>int</code>
 	 * value.
-	 * 
-	 * @param value
+	 *
+	 * @param that
 	 *            the <code>int</code> value to compare with
 	 * @return <code>true</code> if this <code>IntValue</code> is less
 	 *         than the given <code>int</code> value
 	 */
 	public final boolean lessThan(final int that)
 	{
-		return this.value < that;
+		return value < that;
 	}
 
 	/**
 	 * Compares this <code>IntValue</code> with another <code>IntValue</code>.
-	 * 
+	 *
 	 * @param that
 	 *            the <code>IntValue</code> to compare with
 	 * @return <code>true</code> if this <code>IntValue</code> is less
@@ -148,12 +148,12 @@ public class IntValue implements Comparable, Serializable
 	 */
 	public final boolean lessThan(final IntValue that)
 	{
-		return this.value < that.value;
+		return value < that.value;
 	}
 
 	/**
 	 * Converts this <code>LongValue</code> to a <code>String</code>.
-	 * 
+	 *
 	 * @return a <code>String</code> representation of this
 	 *         <code>LongValue</code>
 	 */

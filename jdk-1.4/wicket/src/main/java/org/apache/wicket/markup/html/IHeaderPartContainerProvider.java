@@ -19,15 +19,15 @@ package org.apache.wicket.markup.html;
 /**
  * WebMarkupContainers that implement this know how to provide header parts for
  * wicket:head fragments.
- * 
+ *
  * @author eelcohillenius
  */
 public interface IHeaderPartContainerProvider
 {
 	/**
 	 * Create a new HeaderPartContainer. Users may wish to do that to
-	 * implemented more sophisticated header scoping stragegies.
-	 * 
+	 * implemented more sophisticated header scoping strategies.
+	 *
 	 * @param id
 	 *            The header component's id
 	 * @param scope

@@ -25,10 +25,10 @@ import org.apache.wicket.ResourceReference;
 
 /**
  * A convenience class for creating resource references to static resources.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
- * 
+ *
  * @deprecated Use {@link ResourceReference} instead. This class will be removed in Wicket 2.0
  */
 public class PackageResourceReference extends ResourceReference
@@ -39,8 +39,8 @@ public class PackageResourceReference extends ResourceReference
 	private int hash;
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource.
-	 * 
+	 * Constructor to get a resource reference to a packaged resource.
+	 *
 	 * @param application
 	 *            The application to bind to
 	 * @param scope
@@ -54,7 +54,7 @@ public class PackageResourceReference extends ResourceReference
 	 *            The Style of the PackageResource
 	 * @throws IllegalArgumentException
 	 *             when no corresponding resource is found
-	 * 
+	 *
 	 * @see ResourceReference#ResourceReference(Class, String)
 	 */
 	public PackageResourceReference(Application application, Class scope, String name,
@@ -73,8 +73,8 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource.
-	 * 
+	 * Constructor to get a resource reference to a packaged resource.
+	 *
 	 * @param application
 	 *            The application to bind to
 	 * @param scope
@@ -91,11 +91,11 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource.
-	 * 
+	 * Constructor to get a resource reference to a packaged resource.
+	 *
 	 * The scope of this constructor will be the org.apache.wicket.Application.class
-	 * itself. so the shared resources key wil be "org.apache.wicket.Application/name"
-	 * 
+	 * itself. so the shared resources key will be "org.apache.wicket.Application/name"
+	 *
 	 * @param application
 	 *            The application to bind to
 	 * @param name
@@ -110,9 +110,9 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Constuctor to get a resource reference to a packaged resource that is
-	 * already bound to the current applicaiton.
-	 * 
+	 * Constructor to get a resource reference to a packaged resource that is
+	 * already bound to the current application.
+	 *
 	 * @param scope
 	 *            The scope of the binding
 	 * @param name
@@ -146,10 +146,10 @@ public class PackageResourceReference extends ResourceReference
 		if (obj instanceof PackageResourceReference)
 		{
 			PackageResourceReference that = (PackageResourceReference)obj;
-			return checkEquals(this.getScope(), that.getScope())
-					&& checkEquals(this.getName(), that.getName())
-					&& checkEquals(this.getLocale(), that.getLocale())
-					&& checkEquals(this.getStyle(), that.getStyle());
+			return checkEquals(getScope(), that.getScope())
+					&& checkEquals(getName(), that.getName())
+					&& checkEquals(getLocale(), that.getLocale())
+					&& checkEquals(getStyle(), that.getStyle());
 		}
 		return false;
 	}
@@ -177,7 +177,7 @@ public class PackageResourceReference extends ResourceReference
 	 * Checks whether the packaged resource can be found. If it can't be found,
 	 * an {@link IllegalArgumentException} will be thrown. If it was found, this
 	 * method just returns.
-	 * 
+	 *
 	 * @param scope
 	 *            the scope of the resource
 	 * @param name

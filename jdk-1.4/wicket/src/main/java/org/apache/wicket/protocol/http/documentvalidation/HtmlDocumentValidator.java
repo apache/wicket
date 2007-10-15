@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * HTML (which should not be a problem during testing). In particular it expects
  * tags to be matched and that the following tags with optional close tags are
  * actually closed: p, td, th, li and option.
- * 
+ *
  * @author Chris Turner
  */
 public class HtmlDocumentValidator
@@ -57,7 +57,7 @@ public class HtmlDocumentValidator
      * Add a root element to the validator. This will generally be the HTML
      * element to which all children are added. However, it may also be other
      * elements to represent comments or similar.
-     * 
+     *
      * @param e
      *            The element to add
      */
@@ -69,7 +69,7 @@ public class HtmlDocumentValidator
     /**
      * Check whether the supplied document is valid against the spec that has
      * been built up within the validator.
-     * 
+     *
      * @param document
      *            The document to validate
      * @return Whether the document is valid or not
@@ -151,7 +151,7 @@ public class HtmlDocumentValidator
      * Set whether to skip comments of not when validating. The default is true.
      * If this is set to false then Comment elements must be added to represent
      * each comment to be validated.
-     * 
+     *
      * @param skipComments
      *            Whether to skip comments or not
      */
@@ -161,8 +161,8 @@ public class HtmlDocumentValidator
     }
 
     /**
-     * Check whether the open close tag eas actually expected to have children.
-     * 
+     * Check whether the open close tag was actually expected to have children.
+     *
      * @return Whether valid or not
      */
     private boolean checkOpenCloseTag()
@@ -179,7 +179,7 @@ public class HtmlDocumentValidator
 
     /**
      * Check if the supplied tag is one that expects to be closed or not.
-     * 
+     *
      * @param tag
      *            The tag
      * @return Whether the tag requires closing or not
@@ -261,7 +261,7 @@ public class HtmlDocumentValidator
     /**
      * Save the new open tag state and find the iterator to continue to use for
      * processing.
-     * 
+     *
      * @param iteratorStack
      *            The current stack of iterators
      * @param expectedElements
@@ -284,7 +284,7 @@ public class HtmlDocumentValidator
 
     /**
      * Validate the close tag that was found.
-     * 
+     *
      * @param tagNameStack
      *            The stack of tag names
      * @param parser
@@ -341,7 +341,7 @@ public class HtmlDocumentValidator
 
     /**
      * Validate the comment token that was found.
-     * 
+     *
      * @param expectedElements
      *            The iterator of expected elements
      * @param parser
@@ -385,7 +385,7 @@ public class HtmlDocumentValidator
 
     /**
      * Validate the tag token that was found.
-     * 
+     *
      * @param expectedElements
      *            The iterator of expected elements
      * @param parser
@@ -473,7 +473,7 @@ public class HtmlDocumentValidator
 
     /**
      * Validate the text token that was found.
-     * 
+     *
      * @param expectedElements
      *            The iterator of expected elements
      * @param parser

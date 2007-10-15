@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  * searched. E.g. assume a component hierarchy like page1.form1.input1 and your
  * are requesting a key named 'Required'. Wicket will search the property in the
  * following order:
- * 
+ *
  * <pre>
  *        page1.properties =&gt; form1.input1.Required
  *        page1.properties =&gt; Required
@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  *        myApplication.properties =&gt; page1.form1.input1.Required
  *        myApplication.properties =&gt; Required
  * </pre>
- * 
+ *
  * Note that the latter two property files are only checked if the
  * ClassStringResourceLoader has been registered with Application as well, which
  * is the default.
@@ -100,7 +100,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * You may enable log debug messages for this class to fully understand the
  * search order.
- * 
+ *
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
@@ -110,7 +110,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	private static final Logger log = LoggerFactory.getLogger(ComponentStringResourceLoader.class);
 
 	/**
-	 * Create and initialise the resource loader.
+	 * Create and initialize the resource loader.
 	 */
 	public ComponentStringResourceLoader()
 	{
@@ -120,7 +120,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * Get the string resource for the given combination of class, key, locale
 	 * and style. The information is obtained from a resource bundle associated
 	 * with the provided Class (or one of its super classes).
-	 * 
+	 *
 	 * @param clazz
 	 *            The Class to find resources to be loaded
 	 * @param key
@@ -189,7 +189,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.resource.loader.IStringResourceLoader#loadStringResource(org.apache.wicket.Component,
 	 *      java.lang.String)
 	 */
@@ -205,7 +205,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		Locale locale = component.getLocale();
 		String style = component.getStyle();
 
-		// The key prefix is equal to the component path relativ to the
+		// The key prefix is equal to the component path relative to the
 		// current component on the top of the stack.
 		String prefix = Strings.replaceAll(component.getPageRelativePath(), ":", ".").toString();
 
@@ -242,9 +242,9 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	}
 
 	/**
-	 * Traverse the component hierachy up to the Page and add each component
+	 * Traverse the component hierarchy up to the Page and add each component
 	 * class to the list (stack) returned
-	 * 
+	 *
 	 * @param component
 	 *            The component to evaluate
 	 * @return The stack of classes
@@ -276,7 +276,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	/**
 	 * Check the supplied class to see if it is one that we shouldn't bother
 	 * further searches up the class hierarchy for properties.
-	 * 
+	 *
 	 * @param clazz
 	 *            The class to check
 	 * @return Whether to stop the search

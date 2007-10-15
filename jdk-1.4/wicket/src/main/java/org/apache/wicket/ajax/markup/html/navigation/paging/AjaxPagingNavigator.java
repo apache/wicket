@@ -27,15 +27,14 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 
 /**
- * A Wicket panel component to draw and maintain a complete page navigator,
- * meant to be easily added to any PageableListView. A navigation which contains
- * links to the first and last page, the current page +- some increment and
- * which supports paged navigation bars (@see
+ * A Wicket panel component to draw and maintain a complete page navigator, meant to be easily added
+ * to any PageableListView. A navigation which contains links to the first and last page, the
+ * current page +- some increment and which supports paged navigation bars (@see
  * PageableListViewNavigationWithMargin).
  * <p>
- * <strong>NOTE</strong> To use the, you <i>have</i> to put your listview in a
- * webmarkupcontainer, otherwise it is not possible to update the contents of
- * the listview using Ajax.
+ * <strong>NOTE</strong> To use the <code>AjaxPagingNavigator</code>, you <i>have</i> to put
+ * your <code>ListView</code> in a <code>WebMarkupContainer</code>, otherwise it is not
+ * possible to update the contents of the listview using Ajax.
  * 
  * @since 1.2
  * 
@@ -80,8 +79,8 @@ public class AjaxPagingNavigator extends PagingNavigator
 	}
 
 	/**
-	 * Create a new increment link. May be subclassed to make use of specialized
-	 * links, e.g. Ajaxian links.
+	 * Create a new increment link. May be subclassed to make use of specialized links, e.g. Ajaxian
+	 * links.
 	 * 
 	 * @param id
 	 *            the link id
@@ -97,8 +96,8 @@ public class AjaxPagingNavigator extends PagingNavigator
 	}
 
 	/**
-	 * Create a new pagenumber link. May be subclassed to make use of
-	 * specialized links, e.g. Ajaxian links.
+	 * Create a new pagenumber link. May be subclassed to make use of specialized links, e.g.
+	 * Ajaxian links.
 	 * 
 	 * @param id
 	 *            the link id
@@ -114,8 +113,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	}
 
 	/**
-	 * Create a new PagingNavigation. May be subclassed to make us of
-	 * specialized PagingNavigation.
+	 * Create a new PagingNavigation. May be subclassed to make us of specialized PagingNavigation.
 	 * 
 	 * @param pageable
 	 *            the pageable component
@@ -130,14 +128,13 @@ public class AjaxPagingNavigator extends PagingNavigator
 	}
 
 	/**
-	 * Override this method to specify the markup container where your IPageable
-	 * is part of. This implementation is a default implementation that tries to
-	 * find a parent markup container and update that container. This is
-	 * necessary as ListViews can't be updated themselves.
+	 * Override this method to specify the markup container where your IPageable is part of. This
+	 * implementation is a default implementation that tries to find a parent markup container and
+	 * update that container. This is necessary as ListViews can't be updated themselves.
 	 * 
 	 * @param target
-	 *            the request target to add the components that need to be
-	 *            updated in the ajax event.
+	 *            the request target to add the components that need to be updated in the ajax
+	 *            event.
 	 */
 	protected void onAjaxEvent(AjaxRequestTarget target)
 	{

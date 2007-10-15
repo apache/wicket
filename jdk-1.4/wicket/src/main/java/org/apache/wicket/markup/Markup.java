@@ -33,12 +33,12 @@ import org.slf4j.LoggerFactory;
 /**
  * A list of markup elements associated with a Markup. Might be all elements of
  * a markup resource, might be just the elements associated with a specific tag.
- * 
+ *
  * @see org.apache.wicket.markup.MarkupResourceData
  * @see org.apache.wicket.markup.MarkupElement
  * @see org.apache.wicket.markup.ComponentTag
  * @see org.apache.wicket.markup.RawMarkup
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class Markup
@@ -68,7 +68,7 @@ public class Markup
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param markupResourceData
 	 *            The associated Markup
 	 */
@@ -82,7 +82,7 @@ public class Markup
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
-	 * 
+	 *
 	 * @param index
 	 *            Index into markup list
 	 * @return Markup element
@@ -94,7 +94,7 @@ public class Markup
 
 	/**
 	 * Gets the associate markup
-	 * 
+	 *
 	 * @return The associated markup
 	 */
 	public final MarkupResourceData getMarkupResourceData()
@@ -106,7 +106,7 @@ public class Markup
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
-	 * 
+	 *
 	 * @return Number of markup elements
 	 */
 	public int size()
@@ -116,7 +116,7 @@ public class Markup
 
 	/**
 	 * Add a MarkupElement
-	 * 
+	 *
 	 * @param markupElement
 	 */
 	final public void addMarkupElement(final MarkupElement markupElement)
@@ -126,7 +126,7 @@ public class Markup
 
 	/**
 	 * Add a MarkupElement
-	 * 
+	 *
 	 * @param pos
 	 * @param markupElement
 	 */
@@ -136,7 +136,7 @@ public class Markup
 	}
 
 	/**
-	 * Make all tags immutable and the list of elements unmodifable.
+	 * Make all tags immutable and the list of elements unmodifiable.
 	 */
 	final void makeImmutable()
 	{
@@ -157,7 +157,7 @@ public class Markup
 	/**
 	 * Add the tag to the local cache if open or open-close and if wicket:id is
 	 * present
-	 * 
+	 *
 	 * @param index
 	 * @param tag
 	 */
@@ -197,7 +197,7 @@ public class Markup
 	/**
 	 * Set the components path within the markup and add the component tag to
 	 * the local cache
-	 * 
+	 *
 	 * @param componentPath
 	 * @param tag
 	 * @return componentPath
@@ -262,7 +262,7 @@ public class Markup
 
 	/**
 	 * Find the markup element index of the component with 'path'
-	 * 
+	 *
 	 * @param path
 	 *            The component path expression
 	 * @param id
@@ -281,7 +281,7 @@ public class Markup
 		// for each list item. E.g. list:0:label. What we currently do is simply
 		// remove the number from the path and hope that no user uses an integer
 		// for a component id. This is a hack only. A much better solution would
-		// delegate to the various components recursivly to search within there
+		// delegate to the various components recursively to search within there
 		// realm only for the components markup. ListItems could then simply
 		// do nothing and delegate to their parents.
 		String completePath = (path == null || path.length() == 0 ? id : path + ":" + id);

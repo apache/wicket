@@ -21,7 +21,7 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * A stream of {@link org.apache.wicket.markup.MarkupElement}s, subclases of
+ * A stream of {@link org.apache.wicket.markup.MarkupElement}s, subclasses of
  * which are {@link org.apache.wicket.markup.ComponentTag} and
  * {@link org.apache.wicket.markup.RawMarkup}. A markup stream has a current
  * index in the list of markup elements. The next markup element can be
@@ -31,7 +31,7 @@ import org.apache.wicket.util.string.Strings;
  * The current markup element can be accessed with get() and as a ComponentTag
  * with getTag().
  * <p>
- * The stream can be seeked to a particular location with setCurrentIndex().
+ * The stream can be sought to a particular location with setCurrentIndex().
  * <p>
  * Convenience methods also exist to skip component tags (and any potentially
  * nested markup) or raw markup.
@@ -41,7 +41,7 @@ import org.apache.wicket.util.string.Strings;
  * <p>
  * The resource from which the markup was loaded can be retrieved with
  * getResource().
- * 
+ *
  * @author Jonathan Locke
  */
 public final class MarkupStream
@@ -57,7 +57,7 @@ public final class MarkupStream
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param markup
 	 *            List of markup elements
 	 */
@@ -127,7 +127,7 @@ public final class MarkupStream
 
 	/**
 	 * Compare this markup stream with another one
-	 * 
+	 *
 	 * @param that
 	 *            The other markup stream
 	 * @return True if each MarkupElement in this matches each element in that
@@ -177,7 +177,7 @@ public final class MarkupStream
 	/**
 	 * True, if associate markup is the same. It will change e.g. if the markup
 	 * file has been re-loaded or the locale has been changed.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream to compare with.
 	 * @return true, if markup has not changed
@@ -193,7 +193,7 @@ public final class MarkupStream
 
 	/**
 	 * Find the markup element index of the component with 'path'
-	 * 
+	 *
 	 * @param path
 	 *            The component path expression
 	 * @param id
@@ -226,7 +226,7 @@ public final class MarkupStream
 	/**
 	 * Get the component/container's Class which is directly associated with the
 	 * stream.
-	 * 
+	 *
 	 * @return The component's class
 	 */
 	public final Class getContainerClass()
@@ -246,7 +246,7 @@ public final class MarkupStream
 	 * Gets the markup encoding. A markup encoding may be specified in a markup
 	 * file with an XML encoding specifier of the form &lt;?xml ...
 	 * encoding="..." ?&gt;.
-	 * 
+	 *
 	 * @return The encoding, or null if not found
 	 */
 	public final String getEncoding()
@@ -279,7 +279,7 @@ public final class MarkupStream
 
 	/**
 	 * Get the wicket namespace valid for this specific markup
-	 * 
+	 *
 	 * @return wicket namespace
 	 */
 	public final String getWicketNamespace()
@@ -289,7 +289,7 @@ public final class MarkupStream
 
 	/**
 	 * Return the XML declaration string, in case if found in the markup.
-	 * 
+	 *
 	 * @return Null, if not found.
 	 */
 	public String getXmlDeclaration()
@@ -306,7 +306,7 @@ public final class MarkupStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @return true, if underlying markup has been merged (inheritance)
 	 */
 	public final boolean isMergedMarkup()
@@ -316,7 +316,7 @@ public final class MarkupStream
 
 	/**
 	 * Note:
-	 * 
+	 *
 	 * @return The next markup element in the stream
 	 */
 	public MarkupElement next()
@@ -414,7 +414,7 @@ public final class MarkupStream
 	/**
 	 * Skips any markup at the current position until the wicket tag name is
 	 * found.
-	 * 
+	 *
 	 * @param wicketTagName
 	 *            wicket tag name to seek
 	 */
@@ -438,7 +438,7 @@ public final class MarkupStream
 
 	/**
 	 * Renders markup until a closing tag for openTag is reached.
-	 * 
+	 *
 	 * @param openTag
 	 *            The open tag
 	 */
@@ -462,7 +462,7 @@ public final class MarkupStream
 
 	/**
 	 * Throws a new markup exception
-	 * 
+	 *
 	 * @param message
 	 *            The exception message
 	 * @throws MarkupException

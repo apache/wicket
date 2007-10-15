@@ -59,13 +59,13 @@ package org.apache.wicket.util.diff.myers;
 
 /**
  * A node in a diffpath.
- * 
+ *
  * @version $Revision: 1.1 $ $Date: 2006/03/12 00:24:21 $
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
- * 
+ *
  * @see DiffNode
  * @see Snake
- * 
+ *
  */
 public abstract class PathNode
 {
@@ -78,7 +78,7 @@ public abstract class PathNode
 
     /**
      * Concatenates a new path node with an existing diffpath.
-     * 
+     *
      * @param i
      *            The position in the original sequence for the new node.
      * @param j
@@ -95,7 +95,7 @@ public abstract class PathNode
 
     /**
      * Is this node a {@link Snake Snake node}?
-     * 
+     *
      * @return true if this is a {@link Snake Snake node}
      */
     public abstract boolean isSnake();
@@ -103,9 +103,9 @@ public abstract class PathNode
     /**
      * Is this a bootstrap node?
      * <p>
-     * In bottstrap nodes one of the two corrdinates is less than zero.
-     * 
-     * @return tru if this is a bootstrap node.
+     * In bootstrap nodes one of the two coordinates is less than zero.
+     *
+     * @return true if this is a bootstrap node.
      */
     public boolean isBootstrap()
     {
@@ -115,7 +115,7 @@ public abstract class PathNode
     /**
      * Skips sequences of {@link DiffNode DiffNodes} until a {@link Snake} or
      * bootstrap node is found, or the end of the path is reached.
-     * 
+     *
      * @return The next first {@link Snake} or bootstrap node in the path, or
      *         <code>null</code> if none found.
      */

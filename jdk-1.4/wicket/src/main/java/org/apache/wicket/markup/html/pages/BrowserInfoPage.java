@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * which in turn uses {@link IRequestCycleSettings#getGatherExtendedBrowserInfo() a setting} to
  * determine whether this page should be redirected to (it does when it is true).
  * </p>
- * 
+ *
  * @author Eelco Hillenius
  */
 public class BrowserInfoPage extends WebPage
@@ -67,7 +67,7 @@ public class BrowserInfoPage extends WebPage
 	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
 	 * whenever Javascript is not supported, and the browser info page's meta refresh fires to this
 	 * page. Prior to this, the other constructor should already have been called.
-	 * 
+	 *
 	 * @param parameters
 	 *            page parameters with the original url in it
 	 */
@@ -104,7 +104,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * Constructor. The page will redirect to the given url after waiting for the given number of
 	 * seconds.
-	 * 
+	 *
 	 * @param continueTo
 	 *            the url to redirect to when the browser info is handled
 	 */
@@ -160,14 +160,14 @@ public class BrowserInfoPage extends WebPage
 	 */
 	protected final void continueToPrevious()
 	{
-		// continue to original distination
+		// continue to original destination
 		RequestCycle.get().setRequestTarget(new RedirectRequestTarget(continueTo));
 	}
 
 	/**
 	 * Log a warning that for in order to use this page, you should really be using
 	 * {@link WebClientInfo}.
-	 * 
+	 *
 	 * @param clientInfo
 	 *            the actual client info object
 	 */
@@ -180,7 +180,7 @@ public class BrowserInfoPage extends WebPage
 
 	/**
 	 * Set the url to continue to after this page.
-	 * 
+	 *
 	 * @param continueTo
 	 *            the url
 	 */

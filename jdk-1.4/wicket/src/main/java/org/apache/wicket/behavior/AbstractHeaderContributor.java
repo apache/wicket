@@ -20,9 +20,8 @@ import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
- * Behaviour that delegates header contribution to a number of other
- * contributors. It checks the contributions that were made in the same request
- * to avoid double contributions.
+ * Behavior that delegates header contribution to a number of other contributors. It checks the
+ * contributions that were made in the same request to avoid double contributions.
  * 
  * @author Eelco Hillenius
  */
@@ -63,7 +62,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 
 		for (int i = 0; i < contributors.length; i++)
 		{
-			if (response.wasRendered(contributors[i]) == false) 
+			if (response.wasRendered(contributors[i]) == false)
 			{
 				contributors[i].renderHead(response);
 				response.markRendered(contributors[i]);

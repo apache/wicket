@@ -69,11 +69,11 @@ import org.apache.wicket.util.diff.myers.MyersDiff;
 /**
  * Implements a differencing engine that works on arrays of
  * {@link Object Object}.
- * 
+ *
  * <p>
  * Within this library, the word <i>text</i> means a unit of information
  * subject to version control.
- * 
+ *
  * <p>
  * Text is represented as <code>Object[]</code> because the diff engine is
  * capable of handling more than plain ascci. In fact, arrays of any type that
@@ -81,25 +81,25 @@ import org.apache.wicket.util.diff.myers.MyersDiff;
  * {@link java.lang.Object#equals equals()} correctly can be subject to
  * differencing using this library.
  * </p>
- * 
+ *
  * <p>
  * This library provides a framework in which different differencing algorithms
- * may be used. If no algorithm is specififed, a default algorithm is used.
+ * may be used. If no algorithm is specified, a default algorithm is used.
  * </p>
- * 
+ *
  * @version $Revision: 1.1 $ $Date: 2006/03/12 00:24:21 $
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  * @see Delta
  * @see DiffAlgorithm
- * 
+ *
  * modifications:
- * 
+ *
  * 27 Apr 2003 bwm
- * 
+ *
  * Added some comments whilst trying to figure out the algorithm
- * 
+ *
  * 03 May 2003 bwm
- * 
+ *
  * Factored out the algorithm implementation into a separate difference
  * algorithm class to allow pluggable algorithms.
  */
@@ -139,7 +139,7 @@ public class Diff extends ToString
             throw new IllegalArgumentException();
         }
 
-        this.orig = original;
+        orig = original;
         if (algorithm != null)
 		{
 			this.algorithm = algorithm;
@@ -157,11 +157,11 @@ public class Diff extends ToString
 
     /**
      * compute the difference between an original and a revision.
-     * 
+     *
      * @param orig  the original
      * @param rev   the revision to compare with the original.
      * @return a Revision describing the differences
-     * @throws DifferentiationFailedException 
+     * @throws DifferentiationFailedException
      */
     public static Revision diff(Object[] orig, Object[] rev)
             throws DifferentiationFailedException
@@ -176,12 +176,12 @@ public class Diff extends ToString
 
     /**
      * compute the difference between an original and a revision.
-     * 
+     *
 	 * @param orig       the original
 	 * @param rev        the revision to compare with the original.
      * @param algorithm  the difference algorithm to use
      * @return a Revision describing the differences
-     * @throws DifferentiationFailedException 
+     * @throws DifferentiationFailedException
      */
     public static Revision diff(Object[] orig, Object[] rev,
             DiffAlgorithm algorithm) throws DifferentiationFailedException
@@ -196,10 +196,10 @@ public class Diff extends ToString
 
     /**
      * compute the difference between the original and a revision.
-     * 
+     *
      * @param rev  the revision to compare with the original.
      * @return a Revision describing the differences
-     * @throws DifferentiationFailedException 
+     * @throws DifferentiationFailedException
      */
     public Revision diff(Object[] rev) throws DifferentiationFailedException
     {
@@ -215,7 +215,7 @@ public class Diff extends ToString
 
     /**
      * Compares the two input sequences.
-     * 
+     *
      * @param orig
      *            The original sequence.
      * @param rev
@@ -244,7 +244,7 @@ public class Diff extends ToString
     /**
      * Converts an array of {@link Object Object} to a string using
      * {@link Diff#NL Diff.NL} as the line separator.
-     * 
+     *
      * @param o
      *            the array of objects.
      * @return String
@@ -256,7 +256,7 @@ public class Diff extends ToString
 
     /**
      * Edits all of the items in the input sequence.
-     * 
+     *
      * @param text
      *            The input sequence.
      * @return A sequence of the same length with all the lines differing from
@@ -276,7 +276,7 @@ public class Diff extends ToString
 
     /**
      * Performs random edits on the input sequence. Useful for testing.
-     * 
+     *
      * @param text
      *            The input sequence.
      * @return The sequence with random edits performed.
@@ -288,7 +288,7 @@ public class Diff extends ToString
 
     /**
      * Performs random edits on the input sequence. Useful for testing.
-     * 
+     *
      * @param text
      *            The input sequence.
      * @param seed
@@ -323,7 +323,7 @@ public class Diff extends ToString
 
     /**
      * Shuffles around the items in the input sequence.
-     * 
+     *
 	 * @param text  the input sequence.
      * @return The shuffled sequence.
      */
@@ -334,7 +334,7 @@ public class Diff extends ToString
 
     /**
      * Shuffles around the items in the input sequence.
-     * 
+     *
      * @param text  the input sequence.
 	 * @param seed  a seed value for randomizing the generation.
      * @return The shuffled sequence.

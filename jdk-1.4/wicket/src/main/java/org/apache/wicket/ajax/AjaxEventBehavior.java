@@ -22,8 +22,8 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * An ajax behavior that is attached to a certain client-side (usually
- * javascript) event, such as onClick, onChange, onKeyDown, etc.
+ * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
+ * onClick, onChange, onKeyDown, etc.
  * <p>
  * Example:
  * 
@@ -37,9 +37,9 @@ import org.apache.wicket.util.time.Duration;
  *         }
  * </pre>
  * 
- * This behavior will be linked to the onclick javascript event of the div
- * WebMarkupContainer represents, and so anytime a user clicks this div the
- * {@link #onEvent(AjaxRequestTarget)} of the behavior is invoked.
+ * This behavior will be linked to the onclick javascript event of the div WebMarkupContainer
+ * represents, and so anytime a user clicks this div the {@link #onEvent(AjaxRequestTarget)} of the
+ * behavior is invoked.
  * 
  * @since 1.2
  * 
@@ -75,14 +75,12 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	/**
-	 * Sets the throttle delay for this behavior. Throttled behaviors only
-	 * execute once withing the given delay even though they are triggered
-	 * multiple times.
+	 * Sets the throttle delay for this behavior. Throttled behaviors only execute once within the
+	 * given delay even though they are triggered multiple times.
 	 * <p>
-	 * For example, this is useful when attaching this behavior to the
-	 * onkeypress event. It is not desirable to have an ajax call made every
-	 * time the user types so we throttle that call to a desirable delay, such
-	 * as once per second. This gives us a near real time ability to provide
+	 * For example, this is useful when attaching this behavior to the onkeypress event. It is not
+	 * desirable to have an ajax call made every time the user types so we throttle that call to a
+	 * desirable delay, such as once per second. This gives us a near real time ability to provide
 	 * feedback without overloading the server with ajax calls.
 	 * 
 	 * 
@@ -105,7 +103,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		super.onComponentTag(tag);
 
 		// only add the event handler when the component is enabled.
-		if (this.getComponent().isEnabled())
+		if (getComponent().isEnabled())
 		{
 			tag.put(event, getEventHandler());
 		}

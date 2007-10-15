@@ -89,7 +89,7 @@ import org.slf4j.Logger;
  * <p>
  * Finally, the <code>sleep</code> method will sleep for the value of a
  * <code>Duration</code>.
- * 
+ *
  * @author Jonathan Locke
  * @since 1.2.6
  */
@@ -98,7 +98,7 @@ public class Duration extends AbstractTimeValue
 	private static final long serialVersionUID = 1L;
 
 	/** Constant for maximum duration. */
-	public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE); 
+	public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE);
 
 	/** Constant for no duration. */
 	public static final Duration NONE = milliseconds(0);
@@ -125,7 +125,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Benchmark the given command.
-	 * 
+	 *
 	 * @param code
 	 *            an <code>ICode</code>
 	 * @param log
@@ -146,7 +146,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Benchmark the given command.
-	 * 
+	 *
 	 * @param code
 	 *            a <code>Runnable</code>
 	 * @return the <code>Time</code> value it took to run the code
@@ -165,7 +165,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on days.
-	 * 
+	 *
 	 * @param days
 	 *            days <code>double</code> value
 	 * @return the <code>Duration</code> based on days
@@ -177,7 +177,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on days.
-	 * 
+	 *
 	 * @param days
 	 *            days <code>int</code> value
 	 * @return the <code>Duration</code> based on days
@@ -189,7 +189,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Calculates the amount of time elapsed since start time.
-	 * 
+	 *
 	 * @param start
 	 *            the start <code>Time</code>
 	 * @return the elapsed period as a <code>Duration</code>
@@ -203,7 +203,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on hours.
-	 * 
+	 *
 	 * @param hours
 	 *            hours <code>double</code> value
 	 * @return the <code>Duration</code> based on hours
@@ -215,7 +215,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on hours.
-	 * 
+	 *
 	 * @param hours
 	 *            hours <code>int</code> value
 	 * @return the <code>Duration</code> based on hours
@@ -227,7 +227,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on milliseconds.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            milliseconds <code>double</code> value
 	 * @return the <code>Duration</code> based on milliseconds
@@ -238,8 +238,8 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
-	 * Retrieves the <code>Duration</code> based on miliseconds.
-	 * 
+	 * Retrieves the <code>Duration</code> based on milliseconds.
+	 *
 	 * @param milliseconds
 	 *            milliseconds <code>long</code> value
 	 * @return the <code>Duration</code> based on milliseconds
@@ -251,7 +251,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on minutes.
-	 * 
+	 *
 	 * @param minutes
 	 *            minutes <code>double</code> value
 	 * @return the <code>Duration</code> based on minutes
@@ -263,7 +263,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on minutes.
-	 * 
+	 *
 	 * @param minutes
 	 *            minutes <code>int</code> value
 	 * @return the <code>Duration</code> based on minutes
@@ -275,7 +275,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on seconds.
-	 * 
+	 *
 	 * @param seconds
 	 *            seconds <code>double</code> value
 	 * @return the <code>Duration</code> based on seconds
@@ -287,7 +287,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the <code>Duration</code> based on seconds.
-	 * 
+	 *
 	 * @param seconds
 	 *            seconds <code>int</code> value
 	 * @return the <code>Duration</code> based on seconds
@@ -299,7 +299,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the given <code>long</code> as a <code>Duration</code>.
-	 * 
+	 *
 	 * @param time
 	 *            the duration <code>long</code> value in milliseconds
 	 * @return the <code>Duration</code> value
@@ -314,7 +314,7 @@ public class Duration extends AbstractTimeValue
 	 * object. The string can take the form of a floating point number followed
 	 * by a number of milliseconds, seconds, minutes, hours or days. For example
 	 * "6 hours" or "3.4 days". Parsing is case-insensitive.
-	 * 
+	 *
 	 * @param string
 	 *            a <code>String</code> to parse
 	 * @return the <code>Duration</code> value of the given
@@ -331,7 +331,7 @@ public class Duration extends AbstractTimeValue
 	 * object. The string can take the form of a floating point number followed
 	 * by a number of milliseconds, seconds, minutes, hours or days. For example
 	 * "6 hours" or "3.4 days". Parsing is case-insensitive.
-	 * 
+	 *
 	 * @param string
 	 *            a <code>String</code> to parse
 	 * @param locale
@@ -383,7 +383,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Private constructor forces use of static factory methods.
-	 * 
+	 *
 	 * @param milliseconds
 	 *            number of milliseconds in this <code>Duration</code>
 	 */
@@ -394,7 +394,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Adds a given <code>Duration</code> to this <code>Duration</code>.
-	 * 
+	 *
 	 * @param duration
 	 *            the <code>Duration</code> to add
 	 * @return the sum of the <code>Duration</code>s
@@ -406,7 +406,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the number of days of the current <code>Duration</code>.
-	 * 
+	 *
 	 * @return number of days of the current <code>Duration</code>
 	 */
 	public final double days()
@@ -416,7 +416,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the number of hours of the current <code>Duration</code>.
-	 * 
+	 *
 	 * @return number of hours of the current <code>Duration</code>
 	 */
 	public final double hours()
@@ -426,7 +426,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the number of minutes of the current <code>Duration</code>.
-	 * 
+	 *
 	 * @return number of minutes of the current <code>Duration</code>
 	 */
 	public final double minutes()
@@ -436,7 +436,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Retrieves the number of seconds of the current <code>Duration</code>.
-	 * 
+	 *
 	 * @return number of seconds of the current <code>Duration</code>
 	 */
 	public final double seconds()
@@ -464,7 +464,7 @@ public class Duration extends AbstractTimeValue
 
 	/**
 	 * Subtracts a given <code>Duration</code> from this <code>Duration</code>.
-	 * 
+	 *
 	 * @param that
 	 *            the <code>Duration</code> to subtract
 	 * @return this <code>Duration</code> minus that <code>Duration</code>
@@ -478,7 +478,7 @@ public class Duration extends AbstractTimeValue
 	 * Retrieves the <code>String</code> representation of this
 	 * <code>Duration</code> in days, hours, minutes, seconds or milliseconds,
 	 * as appropriate. Uses the default <code>Locale</code>.
-	 * 
+	 *
 	 * @return a <code>String</code> representation
 	 */
 	public String toString()
@@ -490,7 +490,7 @@ public class Duration extends AbstractTimeValue
 	 * Retrieves the <code>String</code> representation of this
 	 * <code>Duration</code> in days, hours, minutes, seconds or milliseconds,
 	 * as appropriate.
-	 * 
+	 *
 	 * @param locale
 	 *            a <code>Locale</code>
 	 * @return a <code>String</code> representation
@@ -530,7 +530,7 @@ public class Duration extends AbstractTimeValue
 	/**
 	 * Converts a value to a unit-suffixed value, taking care of English
 	 * singular/plural suffix.
-	 * 
+	 *
 	 * @param value
 	 *            a <code>double</code> value to format
 	 * @param units

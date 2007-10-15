@@ -44,9 +44,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * MarkupCache is registered with {@link IMarkupSettings} and thus can be replaced with a subclassed
  * version.
- * 
+ *
  * @see IMarkupSettings
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -72,7 +72,7 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param application
 	 */
 	public MarkupCache(Application application)
@@ -95,7 +95,7 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.IMarkupCache#shutdown()
 	 */
 	public void shutdown()
@@ -240,7 +240,7 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * Get a unmodifiable map which contains the cached data. The map key is of type String and the
 	 * value is of type Markup.
-	 * 
+	 *
 	 * @return
 	 */
 	protected final ICache getMarkupCache()
@@ -250,10 +250,10 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * THIS IS NOT PART OF WICKET'S PUBLIC API. DO NOT USE IT.
-	 * 
+	 *
 	 * I still don't like this method being part of the API but I didn't find a suitable other
 	 * solution.
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.IMarkupCache#getMarkup(org.apache.wicket.MarkupContainer,
 	 *      java.lang.Class, boolean)
 	 */
@@ -323,7 +323,7 @@ public class MarkupCache implements IMarkupCache
 	 * Subclasses may change the default implementation. E.g. they might choose not update the cache
 	 * to enforce reloading of any markup not found. This might be useful in very dynamic
 	 * environments.
-	 * 
+	 *
 	 * @param cacheKey
 	 * @param container
 	 * @return Markup.NO_MARKUP
@@ -342,7 +342,7 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * Put the markup into the cache if cacheKey is not null and the cache does not yet contain the
 	 * cacheKey. Return the markup stored in the cache if cacheKey is present already.
-	 * 
+	 *
 	 * @param cacheKey
 	 *            If null, than ignore the cache
 	 * @param markup
@@ -374,9 +374,9 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * Wicket's default implementation just uses the cacheKey to retrieve the markup from the cache.
-	 * More sofisticated implementations may call a container method to e.g. ignore the cached
+	 * More sophisticated implementations may call a container method to e.g. ignore the cached
 	 * markup under certain situations.
-	 * 
+	 *
 	 * @param cacheKey
 	 *            If null, than the cache will be ignored
 	 * @param container
@@ -393,7 +393,7 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * Loads markup from a resource stream.
-	 * 
+	 *
 	 * @param container
 	 *            The original requesting markup container
 	 * @param markupResourceStream
@@ -437,7 +437,7 @@ public class MarkupCache implements IMarkupCache
 	 * Load markup from an IResourceStream and add an {@link IChangeListener}to the
 	 * {@link ModificationWatcher} so that if the resource changes, we can remove it from the cache
 	 * automatically and subsequently reload when needed.
-	 * 
+	 *
 	 * @param container
 	 *            The original requesting markup container
 	 * @param markupResourceStream
@@ -485,7 +485,7 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * Get the markup cache key provider to be used
-	 * 
+	 *
 	 * @param container
 	 *            The MarkupContainer requesting the markup resource stream
 	 * @return IMarkupResourceStreamProvider
@@ -506,7 +506,7 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * Get the markup resource stream provider to be used
-	 * 
+	 *
 	 * @param container
 	 *            The MarkupContainer requesting the markup resource stream
 	 * @return IMarkupResourceStreamProvider
@@ -528,7 +528,7 @@ public class MarkupCache implements IMarkupCache
 
 	/**
 	 * In case there is a need to extend the default chain of MarkupLoaders
-	 * 
+	 *
 	 * @return MarkupLoader
 	 */
 	protected IMarkupLoader getMarkupLoader()
@@ -543,7 +543,7 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * Allows you to change the map implementation which will hold the cache data. By default it is
 	 * a ConcurrentHashMap() in order to allow multiple thread to access the data in a secure way.
-	 * 
+	 *
 	 * @return
 	 */
 	protected ICache newCacheImplementation()
@@ -554,7 +554,7 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * MarkupCache allows you to implement you own cache implementation. ICache is the interface the
 	 * implementation must comply with.
-	 * 
+	 *
 	 * @see MarkupCache
 	 */
 	public interface ICache
@@ -566,7 +566,7 @@ public class MarkupCache implements IMarkupCache
 
 		/**
 		 * Remove an entry from the cache.
-		 * 
+		 *
 		 * @param key
 		 * @return true, if found and removed
 		 */
@@ -574,7 +574,7 @@ public class MarkupCache implements IMarkupCache
 
 		/**
 		 * Get the cache element associated with the key
-		 * 
+		 *
 		 * @param key
 		 * @return
 		 */
@@ -582,14 +582,14 @@ public class MarkupCache implements IMarkupCache
 
 		/**
 		 * Get all the keys referencing cache entries
-		 * 
+		 *
 		 * @return
 		 */
 		Collection getKeys();
 
 		/**
 		 * Check if key is in the cache
-		 * 
+		 *
 		 * @param key
 		 * @return
 		 */
@@ -597,14 +597,14 @@ public class MarkupCache implements IMarkupCache
 
 		/**
 		 * Get the number of cache entries
-		 * 
+		 *
 		 * @return
 		 */
 		int size();
 
 		/**
 		 * Put an entry into the cache
-		 * 
+		 *
 		 * @param key
 		 *            The reference key to find the element
 		 * @param value
@@ -619,7 +619,7 @@ public class MarkupCache implements IMarkupCache
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public class DefaultCacheImplementation implements ICache
 	{

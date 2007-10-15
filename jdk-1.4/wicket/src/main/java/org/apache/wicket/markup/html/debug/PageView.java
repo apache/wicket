@@ -33,10 +33,10 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * This is a simple Wicket component that displays all components of a Page in a
- * table representation. Useful for debugging.
+ * This is a simple Wicket component that displays all components of a Page in a table
+ * representation. Useful for debugging.
  * <p>
- * Simply add this code to your page's contructor:
+ * Simply add this code to your page's constructor:
  * 
  * <pre>
  * add(new PageView(&quot;componentTree&quot;, this));
@@ -138,8 +138,8 @@ public final class PageView extends Panel
 	}
 
 	/**
-	 * Get recursively all components of the page, extract the information
-	 * relevant for us and add them to a list.
+	 * Get recursively all components of the page, extract the information relevant for us and add
+	 * them to a list.
 	 * 
 	 * @param page
 	 * @return List of component data objects

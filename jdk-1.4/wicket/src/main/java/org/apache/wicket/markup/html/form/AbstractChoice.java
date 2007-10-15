@@ -31,7 +31,7 @@ import org.apache.wicket.version.undo.Change;
 
 /**
  * Abstract base class for all choice (html select) options.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -39,7 +39,7 @@ import org.apache.wicket.version.undo.Change;
 abstract class AbstractChoice extends FormComponent
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -51,7 +51,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @see org.apache.wicket.Component#Component(String)
@@ -63,7 +63,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param choices
@@ -77,7 +77,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param renderer
@@ -93,7 +93,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -109,7 +109,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -128,7 +128,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param choices
@@ -142,7 +142,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param renderer
@@ -160,7 +160,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -176,7 +176,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -213,7 +213,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Sets the list of choices
-	 * 
+	 *
 	 * @param choices
 	 *            model representing the list of choices
 	 * @return this for chaining
@@ -233,7 +233,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Sets the list of choices.
-	 * 
+	 *
 	 * @param choices
 	 *            the list of choices
 	 * @return this for chaining
@@ -261,7 +261,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Set the choice renderer to be used.
-	 * 
+	 *
 	 * @param renderer
 	 * @return this for chaining
 	 */
@@ -289,7 +289,7 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * 
+	 *
 	 * @param selected
 	 *            The object that's currently selected
 	 * @return Any default choice, such as "Choose One", depending on the subclass
@@ -301,7 +301,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Gets whether the given value represents the current selection.
-	 * 
+	 *
 	 * @param object
 	 *            The object to check
 	 * @param index
@@ -314,7 +314,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Gets whether the given value is disabled. This default implementation always returns false.
-	 * 
+	 *
 	 * @param object
 	 *            The object to check
 	 * @param index
@@ -330,7 +330,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Handle the container's body.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -357,8 +357,8 @@ abstract class AbstractChoice extends FormComponent
 	}
 
 	/**
-	 * Generats and appends html for a single choice into the provided buffer
-	 * 
+	 * Generates and appends html for a single choice into the provided buffer
+	 *
 	 * @param buffer
 	 *            Appending string buffer that will have the generated html appended
 	 * @param choice
@@ -414,7 +414,7 @@ abstract class AbstractChoice extends FormComponent
 	 * Override this method if you want to localize the display values of the generated options. By
 	 * default false is returned so that the display values of options are not tested if they have a
 	 * i18n key.
-	 * 
+	 *
 	 * @return true If you want to localize the display values, default == false
 	 */
 	protected boolean localizeDisplayValues()
@@ -424,7 +424,7 @@ abstract class AbstractChoice extends FormComponent
 
 	/**
 	 * Change object to represent the change of the choices property
-	 * 
+	 *
 	 * @author ivaynberg
 	 */
 	private class ChoicesListChange extends Change
@@ -451,7 +451,7 @@ abstract class AbstractChoice extends FormComponent
 
 		/**
 		 * Make debugging easier
-		 * 
+		 *
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString()

@@ -60,8 +60,8 @@ import org.slf4j.LoggerFactory;
  * processRequestCycle() to do all the normal work of a Wicket request.
  * <p>
  * Between calling setupRequestAndResponse() and processRequestCycle() you can get hold of any of
- * the objects for initialisation. The servlet request object has some handy convenience methods for
- * initialising the request to invoke certain types of pages and components.
+ * the objects for initialization. The servlet request object has some handy convenience methods for
+ * Initializing the request to invoke certain types of pages and components.
  * <p>
  * After completion of processRequestCycle() you will probably just be testing component states.
  * However, you also have full access to the response document (or binary data) and result codes via
@@ -72,7 +72,7 @@ import org.slf4j.LoggerFactory;
  * <li>This harness is SINGLE THREADED - there is only one global session. For multi-threaded
  * testing you must do integration testing with a full tester server.
  * </ul>
- * 
+ *
  * @author Chris Turner
  */
 public class MockWebApplication
@@ -116,7 +116,7 @@ public class MockWebApplication
 
 	/**
 	 * Create the mock http tester that can be used for testing.
-	 * 
+	 *
 	 * @param application
 	 *            The wicket application object
 	 * @param path
@@ -213,7 +213,7 @@ public class MockWebApplication
 
 	/**
 	 * Used to create a new mock servlet context.
-	 * 
+	 *
 	 * @param path
 	 *            The absolute path on disk to the web tester contents (e.g. war root) - may be null
 	 * @return ServletContext
@@ -225,7 +225,7 @@ public class MockWebApplication
 
 	/**
 	 * Gets the application object.
-	 * 
+	 *
 	 * @return Wicket application
 	 */
 	public final WebApplication getApplication()
@@ -235,7 +235,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the page that was just rendered by the last request cycle processing.
-	 * 
+	 *
 	 * @return The last rendered page
 	 */
 	public Page getLastRenderedPage()
@@ -245,7 +245,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the page that was previously
-	 * 
+	 *
 	 * @return The last rendered page
 	 */
 	public Page getPreviousRenderedPage()
@@ -255,7 +255,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the request object so that we can apply configurations to it.
-	 * 
+	 *
 	 * @return The request object
 	 */
 	public MockHttpServletRequest getServletRequest()
@@ -265,7 +265,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the response object so that we can apply configurations to it.
-	 * 
+	 *
 	 * @return The response object
 	 */
 	public MockHttpServletResponse getServletResponse()
@@ -275,7 +275,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the session object so that we can apply configurations to it.
-	 * 
+	 *
 	 * @return The session object
 	 */
 	public MockHttpSession getServletSession()
@@ -285,7 +285,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the wicket request object.
-	 * 
+	 *
 	 * @return The wicket request object
 	 */
 	public WebRequest getWicketRequest()
@@ -295,7 +295,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the wicket response object.
-	 * 
+	 *
 	 * @return The wicket response object
 	 */
 	public WebResponse getWicketResponse()
@@ -305,7 +305,7 @@ public class MockWebApplication
 
 	/**
 	 * Get the wicket session.
-	 * 
+	 *
 	 * @return The wicket session object
 	 */
 	public WebSession getWicketSession()
@@ -315,7 +315,7 @@ public class MockWebApplication
 
 	/**
 	 * Initialize a new WebRequestCycle and all its dependent objects
-	 * 
+	 *
 	 * @param component
 	 */
 	public void processRequestCycle(final Component component)
@@ -333,7 +333,7 @@ public class MockWebApplication
 
 	/**
 	 * Initialize a new WebRequestCycle and all its dependent objects
-	 * 
+	 *
 	 * @param pageClass
 	 */
 	public void processRequestCycle(final Class pageClass)
@@ -361,7 +361,7 @@ public class MockWebApplication
 
 	/**
 	 * Create and process the request cycle using the current request and response information.
-	 * 
+	 *
 	 * @param cycle
 	 */
 	public void processRequestCycle(WebRequestCycle cycle)
@@ -378,7 +378,7 @@ public class MockWebApplication
 	}
 
 	/**
-	 * 
+	 *
 	 * @param cycle
 	 */
 	private void postProcessRequestCycle(WebRequestCycle cycle)
@@ -416,7 +416,7 @@ public class MockWebApplication
 	}
 
 	/**
-	 * 
+	 *
 	 * @param cycle
 	 * @return Last page
 	 */
@@ -465,7 +465,7 @@ public class MockWebApplication
 
 	/**
 	 * Create and process the request cycle using the current request and response information.
-	 * 
+	 *
 	 * @return A new and initialized WebRequestCyle
 	 */
 	public WebRequestCycle createRequestCycle()
@@ -487,7 +487,7 @@ public class MockWebApplication
 	/**
 	 * Reset the request and the response back to a starting state and recreate the necessary wicket
 	 * request, response and session objects. The request and response objects can be accessed and
-	 * initialised at this point.
+	 * Initialized at this point.
 	 */
 	public WebRequestCycle setupRequestAndResponse()
 	{
@@ -505,7 +505,7 @@ public class MockWebApplication
 
 	/**
 	 * Gets the parameters to be set on the next request.
-	 * 
+	 *
 	 * @return the parameters to be set on the next request
 	 */
 	public Map getParametersForNextRequest()
@@ -515,7 +515,7 @@ public class MockWebApplication
 
 	/**
 	 * Sets the parameters to be set on the next request.
-	 * 
+	 *
 	 * @param parametersForNextRequest
 	 *            the parameters to be set on the next request
 	 */

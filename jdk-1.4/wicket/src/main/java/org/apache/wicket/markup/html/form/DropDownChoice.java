@@ -29,10 +29,10 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * A choice implemented as a dropdown menu/list.
  * <p>
  * Java:
- * 
+ *
  * <pre>
  * List SITES = Arrays.asList(new String[] { &quot;The Server Side&quot;, &quot;Java Lobby&quot;, &quot;Java.Net&quot; });
- * 
+ *
  * // Add a dropdown choice component that uses Input's 'site' property to designate the
  * // current selection, and that uses the SITES list for the available options.
  * // Note that when the selection is null, Wicket will lookup a localized string to
@@ -40,24 +40,24 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
  * // which can be found in DropDownChoicePage.properties
  * form.add(new DropDownChoice(&quot;site&quot;, SITES));
  * </pre>
- * 
+ *
  * HTML:
- * 
+ *
  * <pre>
  *   	&lt;select wicket:id=&quot;site&quot;&gt;
  *   		&lt;option&gt;site 1&lt;/option&gt;
  *   		&lt;option&gt;site 2&lt;/option&gt;
  *   	&lt;/select&gt;
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * <p>
  * You can can extend this class and override method
  * wantOnSelectionChangedNotifications() to force server roundtrips on each
  * selection change.
  * </p>
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -159,7 +159,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 
 	/**
 	 * Processes the component tag.
-	 * 
+	 *
 	 * @param tag
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
@@ -183,7 +183,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 				{
 					// restore url back to real wicket path as its going to be interpreted by the form itself
 					url = ((PortletRequestContext)rc).getLastEncodedPath();
-				}				
+				}
 				tag.put("onchange", form.getJsForInterfaceUrl(url));
 			}
 			else
@@ -199,14 +199,14 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	}
 
 	/**
-	 * Template method that can be overriden by clients that implement
+	 * Template method that can be overridden by clients that implement
 	 * IOnChangeListener to be notified by onChange events of a select element.
 	 * This method does nothing by default.
 	 * <p>
 	 * Called when a option is selected of a dropdown list that wants to be
 	 * notified of this event. This method is to be implemented by clients that
 	 * want to be notified of selection events.
-	 * 
+	 *
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is
 	 *            the same as you would get by calling getModelObject() if the
@@ -226,7 +226,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 * {@link #wantOnSelectionChangedNotifications()} return false and add an
 	 * {@link AjaxFormComponentUpdatingBehavior} to the component using the
 	 * <tt>onchange</tt> event.
-	 * 
+	 *
 	 * @return True if this component's onSelectionChanged event handler should
 	 *         called using javascript if the selection changes
 	 */
@@ -234,7 +234,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	{
 		return false;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
 	 */

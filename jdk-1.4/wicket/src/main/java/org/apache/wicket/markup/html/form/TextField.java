@@ -21,7 +21,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * A simple text field.
- * 
+ *
  * @author Jonathan Locke
  */
 public class TextField extends AbstractTextComponent
@@ -73,7 +73,7 @@ public class TextField extends AbstractTextComponent
 
 	/**
 	 * Processes the component tag.
-	 * 
+	 *
 	 * @param tag
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
@@ -104,9 +104,9 @@ public class TextField extends AbstractTextComponent
 	}
 
 	/**
-	 * Subclass should override this method if this textfields mappes on a different input type as
+	 * Subclass should override this method if this textfield is mapped on a different input type as
 	 * text. Like PasswordField or HiddenField.
-	 * 
+	 *
 	 * @return The input type of this textfield, default is null
 	 */
 	protected String getInputType()

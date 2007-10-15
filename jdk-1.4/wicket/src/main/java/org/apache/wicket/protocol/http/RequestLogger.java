@@ -51,12 +51,12 @@ import org.slf4j.LoggerFactory;
  * target and what {@link IRequestTarget} was the response target. It also
  * records what session data was touched for this and how long the request did
  * take.
- * 
+ *
  * To view this information live see the {@link InspectorBug} that shows the
  * {@link InspectorPage} with the {@link LiveSessionsPage}
- * 
+ *
  * @author jcompagner
- * 
+ *
  * @since 1.2
  */
 public class RequestLogger implements IRequestLogger
@@ -69,7 +69,7 @@ public class RequestLogger implements IRequestLogger
 	 * This interface can be implemented in a custom session object. to give an
 	 * object that has more information for the current session (state of
 	 * session).
-	 * 
+	 *
 	 * @author jcompagner
 	 */
 	public interface ISessionLogInfo
@@ -79,7 +79,7 @@ public class RequestLogger implements IRequestLogger
 		 * If you use the request logger log functionality then this object
 		 * should have a nice String representation. So make sure that the
 		 * toString() is implemented for the returned object.
-		 * 
+		 *
 		 * @return The custom object stored in the request loggers current
 		 *         request.
 		 */
@@ -232,7 +232,7 @@ public class RequestLogger implements IRequestLogger
 				{
 					// log the error and let the request logging continue (this is what happens in the
 					// detach phase of the request cycle anyway. This provides better diagnostics).
-					log.error("Exception while determining the size of the session in the request logger: " 
+					log.error("Exception while determining the size of the session in the request logger: "
 					        + e.getMessage(), e);
 				}
 			}
@@ -487,7 +487,7 @@ public class RequestLogger implements IRequestLogger
 
 	/**
 	 * This class hold the information one request of a session has.
-	 * 
+	 *
 	 * @author jcompagner
 	 */
 	public static class SessionData implements IClusterable, Comparable
@@ -504,14 +504,14 @@ public class RequestLogger implements IRequestLogger
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param sessionId
 		 */
 		public SessionData(String sessionId)
 		{
 			this.sessionId = sessionId;
-			this.startDate = System.currentTimeMillis();
-			this.numberOfRequests = 1;
+			startDate = System.currentTimeMillis();
+			numberOfRequests = 1;
 		}
 
 		/**
@@ -573,9 +573,9 @@ public class RequestLogger implements IRequestLogger
 
 		void addTimeTaken(long time)
 		{
-			this.lastActive = System.currentTimeMillis();
-			this.numberOfRequests++;
-			this.totalTimeTaken += time;
+			lastActive = System.currentTimeMillis();
+			numberOfRequests++;
+			totalTimeTaken += time;
 		}
 
 		void setSessionInfo(Object sessionInfo)
@@ -585,7 +585,7 @@ public class RequestLogger implements IRequestLogger
 
 		void setSessionSize(long size)
 		{
-			this.sessionSize = size;
+			sessionSize = size;
 		}
 
 		public int compareTo(Object sd)
@@ -597,7 +597,7 @@ public class RequestLogger implements IRequestLogger
 
 	/**
 	 * This class hold the information one request of a session has.
-	 * 
+	 *
 	 * @author jcompagner
 	 */
 	public static class RequestData implements IClusterable
@@ -628,7 +628,7 @@ public class RequestLogger implements IRequestLogger
 
 		/**
 		 * @param activeRequest
-		 *            The number of active request when this request happend
+		 *            The number of active request when this request happened
 		 */
 		public void setActiveRequest(int activeRequest)
 		{
@@ -636,7 +636,7 @@ public class RequestLogger implements IRequestLogger
 		}
 
 		/**
-		 * @return The number of active request when this request happend
+		 * @return The number of active request when this request happened
 		 */
 		public int getActiveRequest()
 		{
@@ -654,7 +654,7 @@ public class RequestLogger implements IRequestLogger
 
 		/**
 		 * Set the session info object of the session for this request.
-		 * 
+		 *
 		 * @param sessionInfo
 		 */
 		public void setSessionInfo(Object sessionInfo)
@@ -707,7 +707,7 @@ public class RequestLogger implements IRequestLogger
 		 */
 		public void addResponseTarget(String target)
 		{
-			this.responseTarget = target;
+			responseTarget = target;
 		}
 
 		/**
@@ -715,7 +715,7 @@ public class RequestLogger implements IRequestLogger
 		 */
 		public void addEventTarget(String target)
 		{
-			this.eventTarget = target;
+			eventTarget = target;
 		}
 
 		/**
@@ -724,7 +724,7 @@ public class RequestLogger implements IRequestLogger
 		public void setTimeTaken(long timeTaken)
 		{
 			this.timeTaken = timeTaken;
-			this.startDate = System.currentTimeMillis() - timeTaken;
+			startDate = System.currentTimeMillis() - timeTaken;
 		}
 
 		/**

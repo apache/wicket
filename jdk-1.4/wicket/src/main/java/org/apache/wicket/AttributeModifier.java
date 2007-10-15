@@ -25,33 +25,28 @@ import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.value.IValueMap;
 
 /**
- * This class allows a tag attribute of a component to be modified dynamically
- * with a value obtained from a model object. This concept can be used to
- * programatically alter the attributes of components, overriding the values
- * specified in the markup. The two primary uses of this class are to allow
- * overriding of markup attributes based on business logic and to support
- * dynamic localization. The replacement occurs as the component tag is rendered
- * to the response.
+ * This class allows a tag attribute of a component to be modified dynamically with a value obtained
+ * from a model object. This concept can be used to programmatically alter the attributes of
+ * components, overriding the values specified in the markup. The two primary uses of this class are
+ * to allow overriding of markup attributes based on business logic and to support dynamic
+ * localization. The replacement occurs as the component tag is rendered to the response.
  * <p>
- * The attribute whose value is to be modified must be given on construction of
- * the instance of this class along with the model containing the value to
- * replace with. Optionally a pattern can be supplied that is a regular
- * expression that the existing value must match before the replacement can be
- * carried out.
+ * The attribute whose value is to be modified must be given on construction of the instance of this
+ * class along with the model containing the value to replace with. Optionally a pattern can be
+ * supplied that is a regular expression that the existing value must match before the replacement
+ * can be carried out.
  * <p>
- * If an attribute is not in the markup, this modifier will add an attribute to
- * the tag only if addAttributeIfNotPresent is true and the replacement value is
- * not null.
+ * If an attribute is not in the markup, this modifier will add an attribute to the tag only if
+ * addAttributeIfNotPresent is true and the replacement value is not null.
  * </p>
  * <p>
  * Instances of this class should be added to components via the
- * {@link org.apache.wicket.Component#add(AttributeModifier)} method after the
- * component has been constucted.
+ * {@link org.apache.wicket.Component#add(AttributeModifier)} method after the component has been
+ * constructed.
  * <p>
- * It is possible to create new subclasses of AttributeModifier by overriding
- * the newValue(String, String) method. For example, you could create an
- * AttributeModifier subclass which appends the replacement value like this:
- * <code>
+ * It is possible to create new subclasses of AttributeModifier by overriding the newValue(String,
+ * String) method. For example, you could create an AttributeModifier subclass which appends the
+ * replacement value like this: <code>
  * 	new AttributeModifier("myAttribute", model)
  *  {
  * 		protected String newValue(final String currentValue, final String replacementValue)
@@ -93,9 +88,8 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	private final IModel replaceModel;
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and model
-	 * to replace with. The additional boolean flag specifies whether to add the
-	 * attribute if it is not present.
+	 * Create a new attribute modifier with the given attribute name and model to replace with. The
+	 * additional boolean flag specifies whether to add the attribute if it is not present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
@@ -111,8 +105,8 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and model
-	 * to replace with. The attribute will not be added if it is not present.
+	 * Create a new attribute modifier with the given attribute name and model to replace with. The
+	 * attribute will not be added if it is not present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
@@ -125,18 +119,18 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and
-	 * expected pattern to match plus the model to replace with. A null pattern
-	 * will match the attribute regardless of its value. The additional boolean
-	 * flag specifies whether to add the attribute if it is not present.
+	 * Create a new attribute modifier with the given attribute name and expected pattern to match
+	 * plus the model to replace with. A null pattern will match the attribute regardless of its
+	 * value. The additional boolean flag specifies whether to add the attribute if it is not
+	 * present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
 	 * @param pattern
 	 *            The pattern of the current attribute value to match
 	 * @param addAttributeIfNotPresent
-	 *            Whether to add the attribute if it is not present and the
-	 *            replacement value is not null
+	 *            Whether to add the attribute if it is not present and the replacement value is not
+	 *            null
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
@@ -156,10 +150,9 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and
-	 * expected pattern to match plus the model to replace with. A null pattern
-	 * will match the attribute regardless of its value. The attribute will not
-	 * be added if it is not present.
+	 * Create a new attribute modifier with the given attribute name and expected pattern to match
+	 * plus the model to replace with. A null pattern will match the attribute regardless of its
+	 * value. The attribute will not be added if it is not present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
@@ -174,12 +167,12 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Detach the model if it was a IDetachableModel Internal method. shouldn't
-	 * be called from the outside. If the attribute modifier is shared, the
-	 * detach method will be called multiple times.
+	 * Detach the model if it was a IDetachableModel Internal method. shouldn't be called from the
+	 * outside. If the attribute modifier is shared, the detach method will be called multiple
+	 * times.
 	 * 
 	 * @param component
-	 *            the model that initiates the detachement
+	 *            the model that initiates the detachment
 	 */
 	public final void detach(Component component)
 	{
@@ -190,8 +183,7 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * @return whether to add the attribute if it is not an attribute in the
-	 *         markup
+	 * @return whether to add the attribute if it is not an attribute in the markup
 	 */
 	public final boolean getAddAttributeIfNotPresent()
 	{
@@ -248,9 +240,9 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Checks the given component tag for an instance of the attribute to modify
-	 * and if all criteria are met then replace the value of this attribute with
-	 * the value of the contained model object.
+	 * Checks the given component tag for an instance of the attribute to modify and if all criteria
+	 * are met then replace the value of this attribute with the value of the contained model
+	 * object.
 	 * 
 	 * @param component
 	 *            The component
@@ -297,13 +289,14 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 			}
 		}
 	}
-	
+
 	protected String getContextRelativeValue(String value)
 	{
 		if ("href".equals(attribute) || "src".equals(attribute))
 		{
 			RequestContext rc = RequestContext.get();
-			if (rc.isPortletRequest() && !(value.startsWith("http://") || value.startsWith("https://")))
+			if (rc.isPortletRequest() &&
+					!(value.startsWith("http://") || value.startsWith("https://")))
 			{
 				if ("href".equals(attribute))
 				{
@@ -366,10 +359,10 @@ public class AttributeModifier extends AbstractBehavior implements IClusterable
 	}
 
 	/**
-	 * Gets the value that should replace the current attribute value. This
-	 * gives users the ultimate means to customize what will be used as the
-	 * attribute value. For instance, you might decide to append the replacement
-	 * value to the current instead of just replacing it as is Wicket's default.
+	 * Gets the value that should replace the current attribute value. This gives users the ultimate
+	 * means to customize what will be used as the attribute value. For instance, you might decide
+	 * to append the replacement value to the current instead of just replacing it as is Wicket's
+	 * default.
 	 * 
 	 * @param currentValue
 	 *            The current attribute value. This value might be null!

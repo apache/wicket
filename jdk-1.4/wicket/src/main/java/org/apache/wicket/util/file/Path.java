@@ -25,8 +25,8 @@ import org.apache.wicket.util.string.StringList;
 
 
 /**
- * Mantains a list of folders as a path.
- * 
+ * Maintains a list of folders as a path.
+ *
  * @author Jonathan Locke
  */
 public final class Path implements IResourcePath
@@ -43,7 +43,7 @@ public final class Path implements IResourcePath
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param folder
 	 *            A single folder to add to the path
 	 */
@@ -54,7 +54,7 @@ public final class Path implements IResourcePath
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param folders
 	 *            An array of folders to add to the path
 	 */
@@ -94,7 +94,7 @@ public final class Path implements IResourcePath
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
 	public IResourceStream find(final Class clazz, final String pathname)

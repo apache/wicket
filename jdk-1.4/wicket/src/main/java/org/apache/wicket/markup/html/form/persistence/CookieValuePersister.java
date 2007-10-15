@@ -224,7 +224,7 @@ public class CookieValuePersister implements IValuePersister
 	}
 
 	/**
-	 * Convinience method to get the http response.
+	 * Convenience method to get the http response.
 	 * 
 	 * @return WebResponse related to the RequestCycle
 	 */

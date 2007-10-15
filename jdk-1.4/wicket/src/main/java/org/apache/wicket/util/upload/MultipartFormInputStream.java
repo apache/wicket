@@ -25,21 +25,21 @@ import java.io.UnsupportedEncodingException;
 /**
  * <p>
  * Low level API for processing file uploads.
- * 
+ *
  * <p>
  * This class can be used to process data streams conforming to MIME 'multipart'
  * format as defined in <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.
  * Arbitrarily large amounts of data in the stream can be processed under
  * constant memory usage.
- * 
+ *
  * <p>
  * The format of the stream is defined in the following way:<br>
- * 
+ *
  * <code>
  *   multipart-body := preamble 1*encapsulation close-delimiter epilogue<br>
  *   encapsulation := delimiter body CRLF<br>
  *   delimiter := "--" boundary CRLF<br>
- *   close-delimiter := "--" boudary "--"<br>
+ *   close-delimiter := "--" boundary "--"<br>
  *   preamble := &lt;ignore&gt;<br>
  *   epilogue := &lt;ignore&gt;<br>
  *   body := header-part CRLF body-part<br>
@@ -49,16 +49,16 @@ import java.io.UnsupportedEncodingException;
  *   header-value := &lt;any ascii characters except CR & LF&gt;<br>
  *   body-data := &lt;arbitrary data&gt;<br>
  * </code>
- * 
+ *
  * <p>
- * Note that body-data can contain another mulipart entity. There is limited
+ * Note that body-data can contain another multipart entity. There is limited
  * support for single pass processing of such nested streams. The nested stream
  * is <strong>required</strong> to have a boundary token of the same length as
  * the parent stream (see {@link #setBoundary(byte[])}).
- * 
+ *
  * <p>
- * Here is an exaple of usage of this class.<br>
- * 
+ * Here is an example of usage of this class.<br>
+ *
  * <pre>
  *      try {
  *          MultipartStream multipartStream = new MultipartStream(input,
@@ -77,13 +77,13 @@ import java.io.UnsupportedEncodingException;
  *      } catch(IOException) {
  *            // a read or write error occurred
  *      }
- *  
+ *
  * </pre>
- * 
+ *
  * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
  * @author <a href="mailto:martinc@apache.org">Martin Cooper</a>
  * @author Sean C. Sullivan
- * 
+ *
  * @version $Id: MultipartFormInputStream.java,v 1.2 2006/02/05 18:41:32
  *          jonathanlocke Exp $
  */
@@ -192,7 +192,7 @@ public class MultipartFormInputStream
 
 
 	/**
-	 * The index of last valid characer in the buffer + 1. <br>
+	 * The index of last valid character in the buffer + 1. <br>
 	 * 0 <= tail <= bufSize
 	 */
 	private int tail;
@@ -209,10 +209,10 @@ public class MultipartFormInputStream
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @see #MultipartFormInputStream(InputStream, byte[], int)
 	 * @see #MultipartFormInputStream(InputStream, byte[])
-	 * 
+	 *
 	 */
 	public MultipartFormInputStream()
 	{
@@ -222,12 +222,12 @@ public class MultipartFormInputStream
 	/**
 	 * <p>
 	 * Constructs a <code>MultipartStream</code> with a custom size buffer.
-	 * 
+	 *
 	 * <p>
 	 * Note that the buffer must be at least big enough to contain the boundary
 	 * string, plus 4 characters for CR/LF and double dash, plus at least one
 	 * byte of data. Too small a buffer size setting will degrade performance.
-	 * 
+	 *
 	 * @param input
 	 *            The <code>InputStream</code> to serve as a data source.
 	 * @param boundary
@@ -235,23 +235,23 @@ public class MultipartFormInputStream
 	 *            <code>encapsulations</code>.
 	 * @param bufSize
 	 *            The size of the buffer to be used, in bytes.
-	 * 
-	 * 
+	 *
+	 *
 	 * @see #MultipartFormInputStream()
 	 * @see #MultipartFormInputStream(InputStream, byte[])
-	 * 
+	 *
 	 */
 	public MultipartFormInputStream(InputStream input, byte[] boundary, int bufSize)
 	{
 		this.input = input;
 		this.bufSize = bufSize;
-		this.buffer = new byte[bufSize];
+		buffer = new byte[bufSize];
 
-		// We prepend CR/LF to the boundary to chop trailng CR/LF from
+		// We prepend CR/LF to the boundary to chop trailing CR/LF from
 		// body-data tokens.
 		this.boundary = new byte[boundary.length + 4];
-		this.boundaryLength = boundary.length + 4;
-		this.keepRegion = boundary.length + 3;
+		boundaryLength = boundary.length + 4;
+		keepRegion = boundary.length + 3;
 		this.boundary[0] = CR;
 		this.boundary[1] = LF;
 		this.boundary[2] = DASH;
@@ -266,16 +266,16 @@ public class MultipartFormInputStream
 	/**
 	 * <p>
 	 * Constructs a <code>MultipartStream</code> with a default size buffer.
-	 * 
+	 *
 	 * @param input
 	 *            The <code>InputStream</code> to serve as a data source.
 	 * @param boundary
 	 *            The token used for dividing the stream into
 	 *            <code>encapsulations</code>.
-	 * 
+	 *
 	 * @see #MultipartFormInputStream()
 	 * @see #MultipartFormInputStream(InputStream, byte[], int)
-	 * 
+	 *
 	 */
 	public MultipartFormInputStream(InputStream input, byte[] boundary)
 	{
@@ -290,8 +290,8 @@ public class MultipartFormInputStream
 	 * Retrieves the character encoding used when reading the headers of an
 	 * individual part. When not specified, or <code>null</code>, the
 	 * platform default encoding is used.
-	 * 
-	 * 
+	 *
+	 *
 	 * @return The encoding used to read part headers.
 	 */
 	public String getHeaderEncoding()
@@ -304,7 +304,7 @@ public class MultipartFormInputStream
 	 * Specifies the character encoding to be used when reading the headers of
 	 * individual parts. When not specified, or <code>null</code>, the
 	 * platform default encoding is used.
-	 * 
+	 *
 	 * @param encoding
 	 *            The encoding used to read part headers.
 	 */
@@ -317,9 +317,9 @@ public class MultipartFormInputStream
 	/**
 	 * Reads a byte from the <code>buffer</code>, and refills it as
 	 * necessary.
-	 * 
+	 *
 	 * @return The next byte from the input stream.
-	 * 
+	 *
 	 * @exception IOException
 	 *                if there is no more data available.
 	 */
@@ -344,12 +344,12 @@ public class MultipartFormInputStream
 	/**
 	 * Skips a <code>boundary</code> token, and checks whether more
 	 * <code>encapsulations</code> are contained in the stream.
-	 * 
+	 *
 	 * @return <code>true</code> if there are more encapsulations in this
 	 *         stream; <code>false</code> otherwise.
-	 * 
+	 *
 	 * @exception MalformedStreamException
-	 *                if the stream ends unexpecetedly or fails to follow
+	 *                if the stream ends unexpectedly or fails to follow
 	 *                required syntax.
 	 */
 	public boolean readBoundary() throws MalformedStreamException
@@ -397,21 +397,21 @@ public class MultipartFormInputStream
 	/**
 	 * <p>
 	 * Changes the boundary token used for partitioning the stream.
-	 * 
+	 *
 	 * <p>
 	 * This method allows single pass processing of nested multipart streams.
-	 * 
+	 *
 	 * <p>
 	 * The boundary token of the nested stream is <code>required</code> to be
 	 * of the same length as the boundary token in parent stream.
-	 * 
+	 *
 	 * <p>
 	 * Restoring the parent stream boundary token after processing of a nested
 	 * stream is left to the application.
-	 * 
+	 *
 	 * @param boundary
 	 *            The boundary to be used for parsing of the nested stream.
-	 * 
+	 *
 	 * @exception IllegalBoundaryException
 	 *                if the <code>boundary</code> has a different length than
 	 *                the one being currently parsed.
@@ -432,14 +432,14 @@ public class MultipartFormInputStream
 	 * <p>
 	 * Headers are returned verbatim to the input stream, including the trailing
 	 * <code>CRLF</code> marker. Parsing is left to the application.
-	 * 
+	 *
 	 * @param maxSize
 	 *            The maximum amount to read before giving up
-	 * 
+	 *
 	 * @return The <code>header-part</code> of the current encapsulation.
-	 * 
+	 *
 	 * @exception MalformedStreamException
-	 *                if the stream ends unexpecetedly.
+	 *                if the stream ends unexpectedly.
 	 */
 	public String readHeaders(final int maxSize) throws MalformedStreamException
 	{
@@ -506,17 +506,17 @@ public class MultipartFormInputStream
 	 * Reads <code>body-data</code> from the current
 	 * <code>encapsulation</code> and writes its contents into the output
 	 * <code>Stream</code>.
-	 * 
+	 *
 	 * <p>
 	 * Arbitrary large amounts of data can be processed by this method using a
 	 * constant size buffer. (see {@link
 	 * #MultipartFormInputStream(InputStream,byte[],int) constructor}).
-	 * 
+	 *
 	 * @param output
 	 *            The <code>Stream</code> to write data into.
-	 * 
+	 *
 	 * @return the amount of data written.
-	 * 
+	 *
 	 * @exception MalformedStreamException
 	 *                if the stream ends unexpectedly.
 	 * @exception IOException
@@ -531,7 +531,7 @@ public class MultipartFormInputStream
 		int total = 0;
 		while (!done)
 		{
-			// Is boundary token present somewere in the buffer?
+			// Is boundary token present somewhere in the buffer?
 			pos = findSeparator();
 			if (pos != -1)
 			{
@@ -590,13 +590,13 @@ public class MultipartFormInputStream
 	 * <p>
 	 * Reads <code>body-data</code> from the current
 	 * <code>encapsulation</code> and discards it.
-	 * 
+	 *
 	 * <p>
 	 * Use this method to skip encapsulations you don't need or don't
 	 * understand.
-	 * 
+	 *
 	 * @return The amount of data discarded.
-	 * 
+	 *
 	 * @exception MalformedStreamException
 	 *                if the stream ends unexpectedly.
 	 * @exception IOException
@@ -611,7 +611,7 @@ public class MultipartFormInputStream
 		int total = 0;
 		while (!done)
 		{
-			// Is boundary token present somewere in the buffer?
+			// Is boundary token present somewhere in the buffer?
 			pos = findSeparator();
 			if (pos != -1)
 			{
@@ -662,10 +662,10 @@ public class MultipartFormInputStream
 
 	/**
 	 * Finds the beginning of the first <code>encapsulation</code>.
-	 * 
+	 *
 	 * @return <code>true</code> if an <code>encapsulation</code> was found
 	 *         in the stream.
-	 * 
+	 *
 	 * @exception IOException
 	 *                if an i/o error occurs.
 	 */
@@ -679,7 +679,7 @@ public class MultipartFormInputStream
 			// Discard all data up to the delimiter.
 			discardBodyData();
 
-			// Read boundary - if succeded, the stream contains an
+			// Read boundary - if succeeded, the stream contains an
 			// encapsulation.
 			return readBoundary();
 		}
@@ -701,14 +701,14 @@ public class MultipartFormInputStream
 	/**
 	 * Compares <code>count</code> first bytes in the arrays <code>a</code>
 	 * and <code>b</code>.
-	 * 
+	 *
 	 * @param a
 	 *            The first array to compare.
 	 * @param b
 	 *            The second array to compare.
 	 * @param count
 	 *            How many bytes should be compared.
-	 * 
+	 *
 	 * @return <code>true</code> if <code>count</code> first bytes in arrays
 	 *         <code>a</code> and <code>b</code> are equal.
 	 */
@@ -728,12 +728,12 @@ public class MultipartFormInputStream
 	/**
 	 * Searches for a byte of specified value in the <code>buffer</code>,
 	 * starting at the specified <code>position</code>.
-	 * 
+	 *
 	 * @param value
 	 *            The value to find.
 	 * @param pos
 	 *            The starting position for searching.
-	 * 
+	 *
 	 * @return The position of byte found, counting from beginning of the
 	 *         <code>buffer</code>, or <code>-1</code> if not found.
 	 */
@@ -754,7 +754,7 @@ public class MultipartFormInputStream
 	/**
 	 * Searches for the <code>boundary</code> in the <code>buffer</code>
 	 * region delimited by <code>head</code> and <code>tail</code>.
-	 * 
+	 *
 	 * @return The position of the boundary found, counting from the beginning
 	 *         of the <code>buffer</code>, or <code>-1</code> if not found.
 	 */
@@ -787,7 +787,7 @@ public class MultipartFormInputStream
 
 	/**
 	 * Returns a string representation of this object.
-	 * 
+	 *
 	 * @return The string representation of this object.
 	 */
 	public String toString()
@@ -821,7 +821,7 @@ public class MultipartFormInputStream
 		/**
 		 * Constructs an <code>MalformedStreamException</code> with the
 		 * specified detail message.
-		 * 
+		 *
 		 * @param message
 		 *            The detail message.
 		 */
@@ -852,7 +852,7 @@ public class MultipartFormInputStream
 		/**
 		 * Constructs an <code>IllegalBoundaryException</code> with the
 		 * specified detail message.
-		 * 
+		 *
 		 * @param message
 		 *            The detail message.
 		 */
@@ -881,15 +881,15 @@ public class MultipartFormInputStream
 	 * File("boundary.dat"); int boundarySize = (int)boundaryFile.length();
 	 * byte[] boundary = new byte[boundarySize]; FileInputStream input = new
 	 * FileInputStream(boundaryFile); input.read(boundary,0,boundarySize);
-	 * 
+	 *
 	 * input = new FileInputStream("multipart.dat"); MultipartStream chunks =
 	 * new MultipartStream(input, boundary);
-	 * 
+	 *
 	 * int i = 0; String header; OutputStream output; boolean nextChunk =
 	 * chunks.skipPreamble(); while (nextChunk) { header = chunks.readHeaders();
 	 * System.out.println("!"+header+"!"); System.out.println("wrote
 	 * part"+i+".dat"); output = new FileOutputStream("part"+(i++)+".dat");
 	 * chunks.readBodyData(output); nextChunk = chunks.readBoundary(); } }
-	 * 
+	 *
 	 */
 }

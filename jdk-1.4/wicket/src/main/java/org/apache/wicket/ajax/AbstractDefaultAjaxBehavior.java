@@ -113,7 +113,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @return an optional javacript expression that determines whether the request will actually
+	 * @return an optional javascript expression that determines whether the request will actually
 	 *         execute (in form of return XXX;);
 	 */
 	protected CharSequence getPreconditionScript()
@@ -148,7 +148,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *            <code>function(params, onSuccessHandler, onFailureHandler</code>. Example:
 	 *            <code>wicketAjaxGet('callbackurl'</code>
 	 * 
-	 * @return script that peforms ajax callback to this behavior
+	 * @return script that performs ajax callback to this behavior
 	 */
 	protected CharSequence generateCallbackScript(final CharSequence partialCall)
 	{

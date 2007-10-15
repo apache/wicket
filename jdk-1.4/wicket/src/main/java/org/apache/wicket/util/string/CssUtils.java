@@ -18,7 +18,7 @@ package org.apache.wicket.util.string;
 
 /**
  * Utility methods for CSS.
- * 
+ *
  * @author eelcohillenius
  */
 public final class CssUtils
@@ -30,7 +30,7 @@ public final class CssUtils
 	public final static String INLINE_CLOSE_TAG = "--></style>\n";
 
 	/**
-	 * Hiden constructor.
+	 * Hidden constructor.
 	 */
 	private CssUtils()
 	{

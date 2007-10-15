@@ -52,7 +52,7 @@ import org.apache.wicket.util.value.ValueMap;
  * <code>QueryStringRequestTargetUrlCodingStrategy</code> is appropriate for a
  * given mount depends on:
  * <ul>
- * <li>Aesthetic criteria
+ * <li>Esthetic criteria
  * <li>Interpretations of <a
  * href="http://www.gbiv.com/protocols/uri/rfc/rfc3986.html">RFC 3986</a>. This
  * defines the URI standard, including query strings, and states that whereas
@@ -91,7 +91,7 @@ import org.apache.wicket.util.value.ValueMap;
  * and the client has cookies turned off, the client's session ID will be stored
  * in a path parameter, like so:
  * "/mywebapp/myservlet/admin/productmanagement;jsessionid=730EC527564AF1C73F8C2FB19B604F55?action=edit&amp;product=4995".
- * 
+ *
  * @author Benjamin Hawkes-Lewis
  */
 public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetUrlCodingStrategy
@@ -99,7 +99,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 
 	/**
 	 * Sole constructor.
-	 * 
+	 *
 	 * @param mountPath
 	 *            the relative reference URL on which the page is mounted
 	 * @param bookmarkablePageClass
@@ -112,7 +112,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 
 	/**
 	 * Append the parameters to the end of the URL.
-	 * 
+	 *
 	 * @param url
 	 *            the relative reference URL
 	 * @param parameters
@@ -170,13 +170,13 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 
 	/**
 	 * Decodes parameters object from the provided query string
-	 * 
+	 *
 	 * @param fragment
 	 *            contains the query string
 	 * @param passedParameters
-	 *            paremeters decoded by wicket before this method - usually off
+	 *            parameters decoded by wicket before this method - usually off
 	 *            the query string
-	 * 
+	 *
 	 * @return Parameters
 	 */
 	protected ValueMap decodeParameters(String fragment, Map passedParameters)

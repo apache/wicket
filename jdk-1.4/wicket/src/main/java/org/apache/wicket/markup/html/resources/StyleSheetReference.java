@@ -33,8 +33,8 @@ public final class StyleSheetReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * @param id component id
-	 * @param referer the class that is refering; is used as the relative
-	 * root for gettting the resource
+	 * @param referer the class that is referring; is used as the relative
+	 * root for getting the resource
 	 * @param file reference as a string
 	 */
 	public StyleSheetReference(String id, Class referer, String file)
@@ -45,8 +45,8 @@ public final class StyleSheetReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * @param id component id
-	 * @param referer the class that is refering; is used as the relative
-	 * root for gettting the resource
+	 * @param referer the class that is referring; is used as the relative
+	 * root for getting the resource
 	 * @param file reference. The model must provide an instance
 	 * 		of {@link String}
 	 */

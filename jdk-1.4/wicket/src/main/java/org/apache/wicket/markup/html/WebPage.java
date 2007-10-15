@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
@@ -56,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * PageParameters argument (which wraps any query string parameters for a
  * request). In case the page has both constructors, the constructor with
  * PageParameters will be used.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
@@ -80,7 +79,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param webPage
 		 */
 		PageMapChecker(WebPage webPage)
@@ -139,7 +138,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				// Here is our trickery to detect whether the current request
 				// was made in a new window/ tab, in which case it should go in
-				// a different page map so that we don't intermangle the history
+				// a different page map so that we don't intermingle the history
 				// of those windows
 				CharSequence url = null;
 				if (target instanceof IBookmarkablePageRequestTarget)
@@ -226,7 +225,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * that nothing is done with the page parameters argument. This constructor
 	 * is provided so that tools such as IDEs will include it their list of
 	 * suggested constructors for derived classes.
-	 * 
+	 *
 	 * @param parameters
 	 *            Wrapped query string parameters.
 	 */
@@ -243,7 +242,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * org.apache.wicket.markup. To support VXML (voice markup), one might
 	 * create the package org.apache.wicket.markup.vxml and a subclass of Page
 	 * called VoicePage.
-	 * 
+	 *
 	 * @return Markup type for HTML
 	 */
 	public String getMarkupType()
@@ -252,20 +251,20 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * This method is called when the compressing coding and response stategies
+	 * This method is called when the compressing coding and response strategies
 	 * are configured in your Application object like this:
-	 * 
+	 *
 	 * <pre>
 	 * protected IRequestCycleProcessor newRequestCycleProcessor()
 	 * {
 	 * 	return new UrlCompressingWebRequestProcessor();
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @return The URLCompressor for this webpage.
-	 * 
+	 *
 	 * @since 1.2
-	 * 
+	 *
 	 * @see UrlCompressingWebRequestProcessor
 	 * @see UrlCompressor
 	 */
@@ -336,7 +335,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
-	 * 
+	 *
 	 * @param id
 	 *            Name of link
 	 * @return Link to home page for this application
@@ -347,7 +346,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
 	protected void onDetach()

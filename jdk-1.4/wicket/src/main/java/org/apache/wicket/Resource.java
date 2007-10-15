@@ -145,7 +145,7 @@ public abstract class Resource implements IResourceListener
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * @param parameters
-	 *            Map of query parameters that paramterize this resource
+	 *            Map of query parameters that parameterize this resource
 	 */
 	public final void setParameters(final Map parameters)
 	{
@@ -163,7 +163,7 @@ public abstract class Resource implements IResourceListener
 	 * Allows implementations to do configure the response, like setting headers etc.
 	 * 
 	 * @param response
-	 *            the respone
+	 *            the response
 	 */
 	protected void configureResponse(final Response response)
 	{

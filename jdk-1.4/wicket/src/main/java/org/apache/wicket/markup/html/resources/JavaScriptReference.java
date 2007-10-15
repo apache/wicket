@@ -24,7 +24,7 @@ import org.apache.wicket.util.value.IValueMap;
 
 /**
  * Link to a packaged JavaScript file.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class JavaScriptReference extends PackagedResourceReference
@@ -33,12 +33,12 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 * @param referer
-	 *            the class that is refering; is used as the relative root for
-	 *            gettting the resource
+	 *            the class that is referring; is used as the relative root for
+	 *            getting the resource
 	 * @param file
 	 *            reference as a string
 	 */
@@ -49,12 +49,12 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 * @param referer
-	 *            the class that is refering; is used as the relative root for
-	 *            gettting the resource
+	 *            the class that is referring; is used as the relative root for
+	 *            getting the resource
 	 * @param file
 	 *            reference as a string. The model must provide an instance of
 	 *            {@link String}
@@ -66,7 +66,7 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 * @param resourceReference
@@ -79,7 +79,7 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 * @param resourceReference

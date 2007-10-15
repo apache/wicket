@@ -52,14 +52,14 @@ import org.slf4j.LoggerFactory;
  * <p>
  * As this class depends heavily on JDK's serialization internals using
  * introspection, analyzing may not be possible, for instance when the runtime
- * environment does not have sufficient rights to set fields accesible that
+ * environment does not have sufficient rights to set fields accessible that
  * would otherwise be hidden. You should call
  * {@link SerializableChecker#isAvailable()} to see whether this class can
  * operate properly. If it doesn't, you should fall back to e.g. re-throwing/
  * printing the {@link NotSerializableException} you probably got before using
  * this class.
  * </p>
- * 
+ *
  * @author eelcohillenius
  * @author Al Maw
  */
@@ -270,7 +270,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	 * will just return and you are advised to rely on the
 	 * {@link NotSerializableException}. Clients are advised to call this
 	 * method prior to calling the check method.
-	 * 
+	 *
 	 * @return whether security settings and underlying API etc allow for
 	 *         accessing the serialization API using introspection
 	 */
@@ -305,11 +305,11 @@ public final class SerializableChecker extends ObjectOutputStream
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param exception
 	 *            exception that should be set as the cause when throwing a new
 	 *            exception
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public SerializableChecker(NotSerializableException exception) throws IOException
@@ -584,7 +584,7 @@ public final class SerializableChecker extends ObjectOutputStream
 						|| objVals[i] instanceof Date || objVals[i] instanceof Boolean
 						|| objVals[i] instanceof Class)
 				{
-					// fitler out common cases
+					// filter out common cases
 					continue;
 				}
 
@@ -618,7 +618,7 @@ public final class SerializableChecker extends ObjectOutputStream
 	}
 
 	/**
-	 * @return name from root to current node concatted with slashes
+	 * @return name from root to current node concatenated with slashes
 	 */
 	private StringBuffer currentPath()
 	{
@@ -635,8 +635,8 @@ public final class SerializableChecker extends ObjectOutputStream
 	}
 
 	/**
-	 * Dump with identation.
-	 * 
+	 * Dump with indentation.
+	 *
 	 * @param type
 	 *            the type that couldn't be serialized
 	 * @return A very pretty dump

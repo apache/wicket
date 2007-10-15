@@ -24,13 +24,13 @@ import org.apache.wicket.util.convert.ConversionException;
 
 /**
  * Base class for all number converters.
- * 
+ *
  * @author Jonathan Locke
  */
 public abstract class AbstractNumberConverter extends AbstractConverter
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 
 	/**
 	 * Parses a value as a String and returns a Number.
-	 * 
+	 *
 	 * @param value
 	 *            The object to parse (after converting with toString())
 	 * @param min
@@ -67,7 +67,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 		if (value instanceof String)
 		{
 			// Convert spaces to no-break space (U+00A0) to fix problems with
-			// broser conversions.
+			// browser conversions.
 			// Space is not valid thousands-separator, but no-br space is.
 			String v = (String)value;
 			value = v.replace(' ', '\u00A0');

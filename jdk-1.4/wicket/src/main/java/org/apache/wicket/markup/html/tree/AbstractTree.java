@@ -50,14 +50,14 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * This class encapsulates the logic for displaying and (partial) updating the tree. Actual
  * presentation is out of scope of this class. User should derive they own tree (if needed) from
  * {@link BaseTree} (recommended).
- * 
+ *
  * @author Matej Knopp
  */
 public abstract class AbstractTree extends Panel implements ITreeStateListener, TreeModelListener
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -68,7 +68,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		/**
 		 * Visits the tree item.
-		 * 
+		 *
 		 * @param item
 		 *            the item to visit
 		 */
@@ -101,7 +101,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
 		 *            The component id
 		 * @param node
@@ -145,7 +145,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		 */
 		public String getMarkupId()
 		{
-			// this is overriden to produce id that begins with id of tree
+			// this is overridden to produce id that begins with id of tree
 			// if the tree has set (shorter) id in markup, we can use it to
 			// shorten the id of individual TreeItems
 			return AbstractTree.this.getMarkupId() + "_" + getId();
@@ -161,7 +161,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		/**
 		 * Sets the children.
-		 * 
+		 *
 		 * @param children
 		 *            The children
 		 */
@@ -172,7 +172,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		/**
 		 * Whether to render children.
-		 * 
+		 *
 		 * @return whether to render children
 		 */
 		protected final boolean isRenderChildren()
@@ -189,7 +189,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			if (this == rootItem && isRootLess() == true)
 			{
 				// yes, write empty div with id
-				// this is necesary for createElement js to work correctly
+				// this is necessary for createElement js to work correctly
 				getResponse().write(
 						"<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
 				markupStream.skipComponent();
@@ -216,7 +216,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 							item.onRender(markupStream);
 						}
 					});
-					// 
+					//
 				}
 			}
 		}
@@ -319,7 +319,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * Components that holds tree items. This is similiar to ListView, but it renders tree items in
+	 * Components that holds tree items. This is similar to ListView, but it renders tree items in
 	 * the right order.
 	 */
 	private class TreeItemContainer extends WebMarkupContainer
@@ -328,7 +328,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
 		 *            The component id
 		 */
@@ -353,7 +353,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 		/**
 		 * renders the tree items, making sure that items are rendered in the order they should be
-		 * 
+		 *
 		 * @param markupStream
 		 */
 		protected void onRender(final MarkupStream markupStream)
@@ -400,7 +400,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Returns an iterator that iterates trough the enumeration.
-	 * 
+	 *
 	 * @param enumeration
 	 *            The enumeration to iterate through
 	 * @return The iterator
@@ -439,7 +439,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	private boolean dirtyAll = false;
 
 	/**
-	 * list of dirty items. if children property of these items is null, the chilren will be
+	 * list of dirty items. if children property of these items is null, the children will be
 	 * rebuild.
 	 */
 	private final List dirtyItems = new ArrayList();
@@ -456,14 +456,14 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	private TreeItemContainer itemContainer;
 
 	/**
-	 * map that maps TreeNode to TreeItem. TreeItems only exists for TreeNodes, that are visibled
+	 * map that maps TreeNode to TreeItem. TreeItems only exists for TreeNodes, that are visible
 	 * (their parents are not collapsed).
 	 */
 	private final Map nodeToItemMap = new HashMap();
 
 	/**
 	 * we need to track previous model. if the model changes, we unregister the tree from listeners
-	 * of old model and register the tree as litener of new model.
+	 * of old model and register the tree as listener of new model.
 	 */
 	private TreeModel previousModel = null;
 
@@ -478,7 +478,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Tree constructor
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 */
@@ -490,7 +490,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Tree constructor
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param model
@@ -508,7 +508,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		invalidateAll();
 	}
 
-	/** called when all nodes are expaned. */
+	/** called when all nodes are expanded. */
 	public final void allNodesExpanded()
 	{
 		invalidateAll();
@@ -516,7 +516,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Returns the TreeState of this tree.
-	 * 
+	 *
 	 * @return Tree state instance
 	 */
 	public ITreeState getTreeState()
@@ -550,14 +550,14 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 			checkModel();
 
-			// Do we have to rebuld the whole tree?
+			// Do we have to rebuild the whole tree?
 			if (dirtyAll && rootItem != null)
 			{
 				clearAllItem();
 			}
 			else
 			{
-				// rebuild chilren of dirty nodes that need it
+				// rebuild children of dirty nodes that need it
 				rebuildDirty();
 			}
 
@@ -669,7 +669,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Determines whether the TreeNode needs to be rebuilt if it is selected or deselected
-	 * 
+	 *
 	 * @return true if the node should be rebuilt after (de)selection, false otherwise
 	 */
 	protected boolean isForceRebuildOnSelectionChange()
@@ -679,7 +679,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Sets whether the root of the tree should be visible.
-	 * 
+	 *
 	 * @param rootLess
 	 *            whether the root should be visible
 	 */
@@ -734,10 +734,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Marks the last but one visible child node of the given item as dirty, if give child is the
 	 * last item of parent.
-	 * 
-	 * We need this to refresh the previous visible item in case the inserted / deleteditem was
-	 * last. The reason is that the line shape of previous item chages from L to |- .
-	 * 
+	 *
+	 * We need this to refresh the previous visible item in case the inserted / deleted item was
+	 * last. The reason is that the line shape of previous item changes from L to |- .
+	 *
 	 * @param parent
 	 * @param child
 	 */
@@ -745,7 +745,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	{
 		if (parent.getChildren().indexOf(child) == parent.getChildren().size() - 1)
 		{
-			// go through the childrend backwards, start at the last but one
+			// go through the children backwards, start at the last but one
 			// item
 			for (int i = parent.getChildren().size() - 2; i >= 0; --i)
 			{
@@ -816,7 +816,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 						{
 							removeItem(item);
 
-							// unselect the node
+							// deselect the node
 							getTreeState().selectNode((TreeNode)item.getModelObject(), false);
 						}
 					});
@@ -867,7 +867,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 * the component on page. Make sure that the tree model has fired the proper listener functions.
 	 * <p>
 	 * <b>You can only call this method once in a request.</b>
-	 * 
+	 *
 	 * @param target
 	 *            Ajax request target used to send the update to the page
 	 */
@@ -957,7 +957,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				// does the item need to rebuild children?
 				if (item.getChildren() == null)
 				{
-					// rebuld the children
+					// rebuild the children
 					buildItemChildren(item);
 
 					// set flag on item so that it renders itself together with
@@ -976,7 +976,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Returns whether the given node is expanded.
-	 * 
+	 *
 	 * @param node
 	 *            The node to inspect
 	 * @return true if the node is expanded, false otherwise
@@ -995,7 +995,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Creates the TreeState, which is an object where the current state of tree (which nodes are
 	 * expanded / collapsed, selected, ...) is stored.
-	 * 
+	 *
 	 * @return Tree state instance
 	 */
 	protected ITreeState newTreeState()
@@ -1016,10 +1016,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * This method is called after creating every TreeItem. This is the place for adding components
 	 * on item (junction links, labels, icons...)
-	 * 
+	 *
 	 * @param item
 	 *            newly created tree item. The node can be obtained as item.getModelObject()
-	 * 
+	 *
 	 * @param level
 	 *            how deep the component is in tree hierarchy (0 for root item)
 	 */
@@ -1028,7 +1028,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Builds the children for given TreeItem. It recursively traverses children of it's TreeNode
 	 * and creates TreeItem for every visible TreeNode.
-	 * 
+	 *
 	 * @param item
 	 *            The parent tree item
 	 */
@@ -1054,7 +1054,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Builds (recursively) TreeItems for the given Iterator of TreeNodes.
-	 * 
+	 *
 	 * @param nodes
 	 *            The nodes to build tree items for
 	 * @param level
@@ -1084,7 +1084,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * Checks whether the model has been chaned, and if so unregister and register listeners.
+	 * Checks whether the model has been changed, and if so unregister and register listeners.
 	 */
 	private final void checkModel()
 	{
@@ -1125,7 +1125,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Returns the javascript used to delete removed elements.
-	 * 
+	 *
 	 * @return The javascript
 	 */
 	private String getElementsDeleteJavascript()
@@ -1160,7 +1160,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * returns the short version of item id (just the number part).
-	 * 
+	 *
 	 * @param item
 	 *            The tree item
 	 * @return The id
@@ -1197,7 +1197,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Invalidates single node (without children). On the next render, this node will be updated.
 	 * Node will not be rebuilt, unless forceRebuild is true.
-	 * 
+	 *
 	 * @param node
 	 *            The node to invalidate
 	 * @param forceRebuild
@@ -1261,7 +1261,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Invalidates node and it's children. On the next render, the node and children will be
 	 * updated. Node children will be rebuilt.
-	 * 
+	 *
 	 * @param node
 	 *            The node to invalidate
 	 */
@@ -1294,8 +1294,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * Returns whether the given node is visibled, e.g. all it's parents are expanded.
-	 * 
+	 * Returns whether the given node is visible, e.g. all it's parents are expanded.
+	 *
 	 * @param node
 	 *            The node to inspect
 	 * @return true if the node is visible, false otherwise
@@ -1315,7 +1315,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Creates a tree item for given node.
-	 * 
+	 *
 	 * @param node
 	 *            The tree node
 	 * @param level
@@ -1329,7 +1329,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Creates a tree item for given node with specified id.
-	 * 
+	 *
 	 * @param node
 	 *            The tree node
 	 * @param level
@@ -1345,7 +1345,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Return the representation of node children as Iterator interface.
-	 * 
+	 *
 	 * @param node
 	 *            The tree node
 	 * @return iterable presentation of node children
@@ -1365,7 +1365,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		for (Iterator i = dirtyItems.iterator(); i.hasNext();)
 		{
 			TreeItem item = (TreeItem)i.next();
-			// item chilren need to be rebuilt
+			// item children need to be rebuilt
 			if (item.getChildren() == null)
 			{
 				buildItemChildren(item);
@@ -1376,7 +1376,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Removes the item, appends it's id to deleteIds. This is called when a items parent is being
 	 * deleted or rebuilt.
-	 * 
+	 *
 	 * @param item
 	 *            The item to remove
 	 */
@@ -1417,8 +1417,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
-	 * Call the callback#visitItem method for the given item and all it's chilren.
-	 * 
+	 * Call the callback#visitItem method for the given item and all it's children.
+	 *
 	 * @param item
 	 *            The tree item
 	 * @param callback
@@ -1432,7 +1432,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Call the callback#visitItem method for every child of given item.
-	 * 
+	 *
 	 * @param item
 	 *            The tree item
 	 * @param callback
@@ -1453,7 +1453,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	/**
 	 * Returns the component associated with given node, or null, if node is not visible. This is
 	 * useful in situations when you want to touch the node element in html.
-	 * 
+	 *
 	 * @param node
 	 *            Tree node
 	 * @return Component associated with given node, or null if node is not visible.

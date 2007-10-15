@@ -54,13 +54,12 @@ public class FileUpload implements IClusterable
 	}
 
 	/**
-	 * Close the streams which has been opened when getting the InputStream
-	 * using {@link #getInputStream()}. All the input streams are closed at the
-	 * end of the request. This is done when the FileUploadField, which is
-	 * associated with this FileUpload is detached.
+	 * Close the streams which has been opened when getting the InputStream using
+	 * {@link #getInputStream()}. All the input streams are closed at the end of the request. This
+	 * is done when the FileUploadField, which is associated with this FileUpload is detached.
 	 * <p>
-	 * If an exception is thrown when closing the input streams, we ignore it,
-	 * because the stream might have been closed already.
+	 * If an exception is thrown when closing the input streams, we ignore it, because the stream
+	 * might have been closed already.
 	 */
 	public final void closeStreams()
 	{
@@ -120,15 +119,14 @@ public class FileUpload implements IClusterable
 	}
 
 	/**
-	 * Get an input stream for the file uploaded. Use this input stream if you
-	 * can't use {@link #writeTo(File)} for persisting the uploaded file. This
-	 * can be if you need to react upon the content of the file or need to
-	 * persist it elsewhere, i.e. a database or external filesystem.
+	 * Get an input stream for the file uploaded. Use this input stream if you can't use
+	 * {@link #writeTo(File)} for persisting the uploaded file. This can be if you need to react
+	 * upon the content of the file or need to persist it elsewhere, i.e. a database or external
+	 * filesystem.
 	 * <p>
 	 * <b>PLEASE NOTE!</b><br>
-	 * The InputStream return will be closed be Wicket at the end of the
-	 * request. If you need it across a request you need to hold on to this
-	 * FileUpload instead.
+	 * The InputStream return will be closed be Wicket at the end of the request. If you need it
+	 * across a request you need to hold on to this FileUpload instead.
 	 * 
 	 * @return Input stream with file contents.
 	 * @throws IOException
@@ -175,11 +173,11 @@ public class FileUpload implements IClusterable
 	}
 
 	/**
-	 * Convinience method that copies the input stream returned by
-	 * {@link #getInputStream()} into a temporary file.
+	 * Convenience method that copies the input stream returned by {@link #getInputStream()} into a
+	 * temporary file.
 	 * <p>
-	 * Only use this if you actually need a {@link File} to work with, in all
-	 * other cases use {@link #getInputStream()} or {@link #getBytes()}
+	 * Only use this if you actually need a {@link File} to work with, in all other cases use
+	 * {@link #getInputStream()} or {@link #getBytes()}
 	 * 
 	 * @since 1.2
 	 * 

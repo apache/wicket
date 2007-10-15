@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.Session;
 
 /**
- * This exeption is thrown in {@link Session} class when an Ajax requests attempts 
+ * This exception is thrown in {@link Session} class when an Ajax requests attempts
  * to get a lock on pagemap while a regular request is processing the same page.
  * <p>
  * @author Matej Knopp

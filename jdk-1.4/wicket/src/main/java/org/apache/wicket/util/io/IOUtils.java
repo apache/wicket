@@ -60,7 +60,7 @@ import java.io.Writer;
  * closing streams after use.
  * <p>
  * Origin of code: Apache Avalon (Excalibur)
- * 
+ *
  * @author Peter Donald
  * @author Jeff Turner
  * @author Matthew Hawthorne
@@ -70,7 +70,7 @@ import java.io.Writer;
  */
 public final class IOUtils
 {
-	// NOTE: This class is focussed on InputStream, OutputStream, Reader and
+	// NOTE: This class is focused on InputStream, OutputStream, Reader and
 	// Writer. Each method should take at least one of these as a parameter.
 	// NOTE: This class should not depend on any other classes
 
@@ -92,7 +92,7 @@ public final class IOUtils
 	 * <p>
 	 * Equivalent to {@link Reader#close()}, except any exceptions will be
 	 * ignored. This is typically used in finally blocks.
-	 * 
+	 *
 	 * @param input
 	 *            the Reader to close, may be null or already closed
 	 */
@@ -116,7 +116,7 @@ public final class IOUtils
 	 * <p>
 	 * Equivalent to {@link Writer#close()}, except any exceptions will be
 	 * ignored. This is typically used in finally blocks.
-	 * 
+	 *
 	 * @param output
 	 *            the Writer to close, may be null or already closed
 	 */
@@ -140,7 +140,7 @@ public final class IOUtils
 	 * <p>
 	 * Equivalent to {@link InputStream#close()}, except any exceptions will be
 	 * ignored. This is typically used in finally blocks.
-	 * 
+	 *
 	 * @param input
 	 *            the InputStream to close, may be null or already closed
 	 */
@@ -164,7 +164,7 @@ public final class IOUtils
 	 * <p>
 	 * Equivalent to {@link OutputStream#close()}, except any exceptions will
 	 * be ignored. This is typically used in finally blocks.
-	 * 
+	 *
 	 * @param output
 	 *            the OutputStream to close, may be null or already closed
 	 */
@@ -191,7 +191,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedInputStream</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>InputStream</code> to read from
 	 * @return the requested byte array
@@ -213,7 +213,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedReader</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>Reader</code> to read from
 	 * @return the requested byte array
@@ -238,7 +238,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedReader</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>Reader</code> to read from
 	 * @param encoding
@@ -265,7 +265,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedInputStream</code>.
-	 * 
+	 *
 	 * @param is
 	 *            the <code>InputStream</code> to read from
 	 * @return the requested character array
@@ -290,7 +290,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedInputStream</code>.
-	 * 
+	 *
 	 * @param is
 	 *            the <code>InputStream</code> to read from
 	 * @param encoding
@@ -313,7 +313,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedReader</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>Reader</code> to read from
 	 * @return the requested character array
@@ -337,7 +337,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedInputStream</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>InputStream</code> to read from
 	 * @return the requested String
@@ -362,7 +362,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedInputStream</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>InputStream</code> to read from
 	 * @param encoding
@@ -385,7 +385,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedReader</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>Reader</code> to read from
 	 * @return the requested String
@@ -405,7 +405,7 @@ public final class IOUtils
 	// -----------------------------------------------------------------------
 	/**
 	 * Writes bytes from a <code>byte[]</code> to an <code>OutputStream</code>.
-	 * 
+	 *
 	 * @param data
 	 *            the byte array to write, do not modify during output, null
 	 *            ignored
@@ -431,7 +431,7 @@ public final class IOUtils
 	 * platform.
 	 * <p>
 	 * This method uses {@link String#String(byte[])}.
-	 * 
+	 *
 	 * @param data
 	 *            the byte array to write, do not modify during output, null
 	 *            ignored
@@ -459,7 +459,7 @@ public final class IOUtils
 	 * href="http://www.iana.org/assignments/character-sets">IANA</a>.
 	 * <p>
 	 * This method uses {@link String#String(byte[], String)}.
-	 * 
+	 *
 	 * @param data
 	 *            the byte array to write, do not modify during output, null
 	 *            ignored
@@ -493,7 +493,7 @@ public final class IOUtils
 	/**
 	 * Writes chars from a <code>char[]</code> to a <code>Writer</code>
 	 * using the default character encoding of the platform.
-	 * 
+	 *
 	 * @param data
 	 *            the char array to write, do not modify during output, null
 	 *            ignored
@@ -519,7 +519,7 @@ public final class IOUtils
 	 * <p>
 	 * This method uses {@link String#String(char[])} and
 	 * {@link String#getBytes()}.
-	 * 
+	 *
 	 * @param data
 	 *            the char array to write, do not modify during output, null
 	 *            ignored
@@ -548,7 +548,7 @@ public final class IOUtils
 	 * <p>
 	 * This method uses {@link String#String(char[])} and
 	 * {@link String#getBytes(String)}.
-	 * 
+	 *
 	 * @param data
 	 *            the char array to write, do not modify during output, null
 	 *            ignored
@@ -581,7 +581,7 @@ public final class IOUtils
 	// -----------------------------------------------------------------------
 	/**
 	 * Writes chars from a <code>String</code> to a <code>Writer</code>.
-	 * 
+	 *
 	 * @param data
 	 *            the <code>String</code> to write, null ignored
 	 * @param output
@@ -606,7 +606,7 @@ public final class IOUtils
 	 * platform.
 	 * <p>
 	 * This method uses {@link String#getBytes()}.
-	 * 
+	 *
 	 * @param data
 	 *            the <code>String</code> to write, null ignored
 	 * @param output
@@ -633,7 +633,7 @@ public final class IOUtils
 	 * href="http://www.iana.org/assignments/character-sets">IANA</a>.
 	 * <p>
 	 * This method uses {@link String#getBytes(String)}.
-	 * 
+	 *
 	 * @param data
 	 *            the <code>String</code> to write, null ignored
 	 * @param output
@@ -666,7 +666,7 @@ public final class IOUtils
 	/**
 	 * Writes chars from a <code>AppendingStringBuffer</code> to a
 	 * <code>Writer</code>.
-	 * 
+	 *
 	 * @param data
 	 *            the <code>AppendingStringBuffer</code> to write, null
 	 *            ignored
@@ -692,7 +692,7 @@ public final class IOUtils
 	 * platform.
 	 * <p>
 	 * This method uses {@link String#getBytes()}.
-	 * 
+	 *
 	 * @param data
 	 *            the <code>AppendingStringBuffer</code> to write, null
 	 *            ignored
@@ -720,7 +720,7 @@ public final class IOUtils
 	 * href="http://www.iana.org/assignments/character-sets">IANA</a>.
 	 * <p>
 	 * This method uses {@link String#getBytes(String)}.
-	 * 
+	 *
 	 * @param data
 	 *            the <code>AppendingStringBuffer</code> to write, null
 	 *            ignored
@@ -758,7 +758,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedInputStream</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>InputStream</code> to read from
 	 * @param output
@@ -792,7 +792,7 @@ public final class IOUtils
 	 * <code>BufferedInputStream</code>.
 	 * <p>
 	 * This method uses {@link InputStreamReader}.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>InputStream</code> to read from
 	 * @param output
@@ -820,7 +820,7 @@ public final class IOUtils
 	 * href="http://www.iana.org/assignments/character-sets">IANA</a>.
 	 * <p>
 	 * This method uses {@link InputStreamReader}.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>InputStream</code> to read from
 	 * @param output
@@ -853,7 +853,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally, so there is no need to use a
 	 * <code>BufferedReader</code>.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>Reader</code> to read from
 	 * @param output
@@ -890,7 +890,7 @@ public final class IOUtils
 	 * flush.
 	 * <p>
 	 * This method uses {@link OutputStreamWriter}.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>Reader</code> to read from
 	 * @param output
@@ -923,7 +923,7 @@ public final class IOUtils
 	 * flush.
 	 * <p>
 	 * This method uses {@link OutputStreamWriter}.
-	 * 
+	 *
 	 * @param input
 	 *            the <code>Reader</code> to read from
 	 * @param output
@@ -958,7 +958,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally using
 	 * <code>BufferedInputStream</code> if they are not already buffered.
-	 * 
+	 *
 	 * @param input1
 	 *            the first stream
 	 * @param input2
@@ -1002,7 +1002,7 @@ public final class IOUtils
 	 * <p>
 	 * This method buffers the input internally using
 	 * <code>BufferedReader</code> if they are not already buffered.
-	 * 
+	 *
 	 * @param input1
 	 *            the first reader
 	 * @param input2

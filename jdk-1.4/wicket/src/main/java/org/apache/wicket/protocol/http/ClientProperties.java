@@ -31,17 +31,17 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * <p>
  * A convenient way of letting Wicket do a sneaky redirect to {@link BrowserInfoPage} (and back
  * again) is to put this in your Application's init method:
- * 
+ *
  * <pre>
  * getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * WARNING: Be sure you think about the dangers of depending on information you pull from the client
  * too much. They may be easily spoofed or inaccurate in other ways, and properties like window and
  * browser size are all too easy to be used naively.
- * 
+ *
  * @see BrowserInfoPage
  * @author Frank Bille (frankbille)
  */
@@ -206,7 +206,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Get the client's time zone if that could be detected.
-	 * 
+	 *
 	 * @return The client's time zone
 	 */
 	public TimeZone getTimeZone()
@@ -353,7 +353,7 @@ public class ClientProperties implements IClusterable
 	/**
 	 * Flag indicating that the browser is a derivative of the Microsoft Internet Explorer browser
 	 * platform.
-	 * 
+	 *
 	 * @return True if a derivative of the Microsoft Internet Explorer browser platform.
 	 */
 	public boolean isBrowserInternetExplorer()
@@ -363,7 +363,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the KDE Konqueror browser platform.
-	 * 
+	 *
 	 * @return True if a derivative of the KDE Konqueror browser platform.
 	 */
 	public boolean isBrowserKonqueror()
@@ -373,7 +373,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 * 
+	 *
 	 * @return True if a derivative of the Mozilla 1.0-1.8+ browser platform.
 	 */
 	public boolean isBrowserMozilla()
@@ -384,7 +384,7 @@ public class ClientProperties implements IClusterable
 	/**
 	 * Flag indicating that the browser is a derivative of the Mozilla Firefox 1.0+ browser
 	 * platform.
-	 * 
+	 *
 	 * @return True if a derivative of the Mozilla Firefox 1.0+ browser platform.
 	 */
 	public boolean isBrowserMozillaFirefox()
@@ -394,7 +394,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the Opera browser platform.
-	 * 
+	 *
 	 * @return True if a derivative of the Opera browser platform.
 	 */
 	public boolean isBrowserOpera()
@@ -404,7 +404,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the Apple Safari browser platform.
-	 * 
+	 *
 	 * @return True if a derivative of the Apple Safari browser platform.
 	 */
 	public boolean isBrowserSafari()
@@ -413,8 +413,8 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @return The client's navigator.cookieEnabled property.
 	 */
 	public boolean isCookiesEnabled()
@@ -437,7 +437,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if support for IE-style CSS expressions.
 	 */
 	public boolean isProprietaryIECssExpressionsSupported()
@@ -453,7 +453,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if PNG alpha channel support is available only by using a 'filter'.
 	 */
 	public boolean isProprietaryIEPngAlphaFilterRequired()
@@ -469,7 +469,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if the 'fixed' attribute should be used to for fixed-to-element background
 	 *         attachment.
 	 */
@@ -486,7 +486,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if the only means of achieving 0 padding in table cells is to use 0px padding.
 	 */
 	public boolean isQuirkCssBorderCollapseFor0Padding()
@@ -502,7 +502,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if the client will incorrectly render CSS collapsed borders such that they
 	 *         reside entirely within the region of a component.
 	 */
@@ -519,7 +519,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if CSS positioning values do not work correctly when either both "top" and
 	 *         "bottom" or "left" and "right" positions are set at the same time.
 	 */
@@ -539,8 +539,8 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
-	 * @return True if means needs to be taken agains weird Internet Explorer repaint behaviors.
+	 *
+	 * @return True if means needs to be taken against weird Internet Explorer repaint behaviors.
 	 */
 	public boolean isQuirkIERepaint()
 	{
@@ -555,7 +555,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if listbox-style select fields cannot be reliably manipulated using the client
 	 *         DOM API.
 	 */
@@ -571,7 +571,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if select fields with percentage widths are not reliably rendered.
 	 */
 	public boolean isQuirkIESelectPercentWidth()
@@ -588,7 +588,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if the browser do not render correctly with regard to z-index value.
 	 */
 	public boolean isQuirkIESelectZIndex()
@@ -604,7 +604,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if incorrect calculation of 100% table widths when within a vertically scrolling
 	 *         region.
 	 */
@@ -620,7 +620,7 @@ public class ClientProperties implements IClusterable
 	 * <ul>
 	 * <li>Internet Explorer 6 (Windows)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if the browser has incorrect parsing of newlines in the content of a 'textarea'.
 	 */
 	public boolean isQuirkIETextareaNewlineObliteration()
@@ -638,7 +638,7 @@ public class ClientProperties implements IClusterable
 	 * <li>Mozilla (all platforms)</li>
 	 * <li>Mozilla Firefox ((all platforms)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if the client has poor performance when attempting to remove large element
 	 *         hierarchies from a DOM.
 	 */
@@ -657,7 +657,7 @@ public class ClientProperties implements IClusterable
 	 * <li>Mozilla (all platforms)</li>
 	 * <li>Mozilla Firefox ((all platforms)</li>
 	 * </ul>
-	 * 
+	 *
 	 * @return True if the text contained within text input fields may be drawn outside of text
 	 *         input component due to the component having shifted its location on the page.
 	 */
@@ -678,7 +678,7 @@ public class ClientProperties implements IClusterable
 	/**
 	 * Flag indicating that the browser is a derivative of the Microsoft Internet Explorer browser
 	 * platform.
-	 * 
+	 *
 	 * @param browserInternetExplorer
 	 *            True if a derivative of the Microsoft Internet Explorer browser platform.
 	 */
@@ -689,7 +689,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the KDE Konqueror browser platform.
-	 * 
+	 *
 	 * @param browserKonqueror
 	 *            True if a derivative of the KDE Konqueror browser platform.
 	 */
@@ -700,7 +700,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 * 
+	 *
 	 * @param browserMozilla
 	 *            True if a derivative of the Mozilla 1.0-1.8+ browser platform.
 	 */
@@ -712,7 +712,7 @@ public class ClientProperties implements IClusterable
 	/**
 	 * Flag indicating that the browser is a derivative of the Mozilla Firefox 1.0+ browser
 	 * platform.
-	 * 
+	 *
 	 * @param browserMozillaFirefox
 	 *            True if a derivative of the Mozilla Firefox 1.0+ browser platform.
 	 */
@@ -723,7 +723,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the Opera browser platform.
-	 * 
+	 *
 	 * @param browserOpera
 	 *            True if a derivative of the Opera browser platform.
 	 */
@@ -734,7 +734,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating that the browser is a derivative of the Apple Safari browser platform.
-	 * 
+	 *
 	 * @param browserSafari
 	 *            True if a derivative of the Apple Safari browser platform.
 	 */
@@ -902,7 +902,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * @param quirkIERepaint
-	 *            True if means needs to be taken agains weird Internet Explorer repaint behaviors.
+	 *            True if means needs to be taken against weird Internet Explorer repaint behaviors.
 	 */
 	public void setQuirkIERepaint(boolean quirkIERepaint)
 	{
@@ -1017,7 +1017,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Sets time zone.
-	 * 
+	 *
 	 * @param timeZone
 	 */
 	public void setTimeZone(TimeZone timeZone)

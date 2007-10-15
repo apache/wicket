@@ -28,7 +28,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * A session subclass for the HTTP protocol.
- * 
+ *
  * @author Jonathan Locke
  */
 public class WebSession extends Session
@@ -63,9 +63,9 @@ public class WebSession extends Session
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
-	 * 
+	 *
 	 * @deprecated Use #WebSession(Request) instead
-	 * 
+	 *
 	 * @param application
 	 *            The application
 	 * @param request
@@ -78,9 +78,9 @@ public class WebSession extends Session
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
-	 * 
+	 *
 	 * @deprecated Use #WebSession(Request)
-	 * 
+	 *
 	 * @param application
 	 *            The application
 	 * @param request
@@ -93,7 +93,7 @@ public class WebSession extends Session
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
-	 * 
+	 *
 	 * @param request
 	 *            The current request
 	 */
@@ -134,7 +134,7 @@ public class WebSession extends Session
 
 		if (currentPageId.equals(lockedPageId) && currentVersion == lockedVersion)
 		{
-			// we don't allow tis request
+			// we don't allow this request
 			return false;
 		}
 

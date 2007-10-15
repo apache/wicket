@@ -143,14 +143,15 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * Listener method that is invoked after the form has ben submitted and processed without errors
+	 * Listener method that is invoked after the form has been submitted and processed without
+	 * errors
 	 * 
 	 * @param target
 	 */
 	protected abstract void onSubmit(AjaxRequestTarget target);
 
 	/**
-	 * Listener method invoked when the form has been processed and errors occured
+	 * Listener method invoked when the form has been processed and errors occurred
 	 * 
 	 * @param target
 	 * 

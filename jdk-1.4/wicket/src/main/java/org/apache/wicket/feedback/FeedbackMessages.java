@@ -31,8 +31,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Holds list of feedback messages. The list can be added to, cleared, queried
- * and filtered.
+ * Holds list of feedback messages. The list can be added to, cleared, queried and filtered.
  * <p>
  * WARNING: This class should typically NOT be used directly.
  * <p>
@@ -83,11 +82,10 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
-	 * Clears all messsages that are accepted by the filter.
+	 * Clears all messages that are accepted by the filter.
 	 * 
 	 * @param filter
-	 *            Filter for selecting messages. If null, all messages will be
-	 *            returned
+	 *            Filter for selecting messages. If null, all messages will be returned
 	 * @return The number of messages deleted
 	 */
 	public final int clear(final IFeedbackMessageFilter filter)
@@ -145,13 +143,12 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
-	 * Convenience method that looks up whether the given component registered a
-	 * message with this list with the level ERROR.
+	 * Convenience method that looks up whether the given component registered a message with this
+	 * list with the level ERROR.
 	 * 
 	 * @param component
 	 *            the component to look up whether it registered a message
-	 * @return whether the given component registered a message with this list
-	 *         with level ERROR
+	 * @return whether the given component registered a message with this list with level ERROR
 	 */
 	public final boolean hasErrorMessageFor(Component component)
 	{
@@ -181,15 +178,14 @@ public final class FeedbackMessages implements IClusterable
 	}
 
 	/**
-	 * Looks up whether the given component registered a message with this list
-	 * with the given level.
+	 * Looks up whether the given component registered a message with this list with the given
+	 * level.
 	 * 
 	 * @param component
 	 *            The component to look up whether it registered a message
 	 * @param level
 	 *            The level of the message
-	 * @return Whether the given component registered a message with this list
-	 *         with the given level
+	 * @return Whether the given component registered a message with this list with the given level
 	 */
 	public final boolean hasMessageFor(Component component, int level)
 	{
@@ -235,8 +231,8 @@ public final class FeedbackMessages implements IClusterable
 	 * 
 	 * @param component
 	 *            the component to look up the message for
-	 * @return the message that is found for the given component (first match)
-	 *         or null if none was found
+	 * @return the message that is found for the given component (first match) or null if none was
+	 *         found
 	 */
 	public final FeedbackMessage messageForComponent(final Component component)
 	{
@@ -255,8 +251,7 @@ public final class FeedbackMessages implements IClusterable
 	 * Gets a list of messages from the page using a filter.
 	 * 
 	 * @param filter
-	 *            Filter for selecting messages. If null, all messages will be
-	 *            returned
+	 *            Filter for selecting messages. If null, all messages will be returned
 	 * @return The messages or an empty list if no messages are found
 	 */
 	public final List messages(final IFeedbackMessageFilter filter)
@@ -292,8 +287,7 @@ public final class FeedbackMessages implements IClusterable
 	 * Gets the number of messages.
 	 * 
 	 * @param filter
-	 *            Filter for counting messages. If null, the count of all
-	 *            messages will be returned
+	 *            Filter for counting messages. If null, the count of all messages will be returned
 	 * 
 	 * @return the number of messages
 	 */

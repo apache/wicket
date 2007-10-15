@@ -31,7 +31,7 @@ import org.apache.wicket.Session;
  * appropriate bundle.
  * <p>
  * An instance of this loader is registered with the Application by default.
- * 
+ *
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
@@ -41,8 +41,8 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	private final WeakReference/*<Class<? extends Application>>*/ clazzRef;
 
 	/**
-	 * Create and initialise the resource loader.
-	 * 
+	 * Create and initialize the resource loader.
+	 *
 	 * @param clazz
 	 *            The class that this resource loader is associated with
 	 */
@@ -52,7 +52,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 		{
 			throw new IllegalArgumentException("Parameter 'clazz' must not be null");
 		}
-		this.clazzRef = new WeakReference(clazz);
+		clazzRef = new WeakReference(clazz);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	public String loadStringResource(final Class clazz, final String key, final Locale locale,
 			final String style)
 	{
-		return super.loadStringResource((Class)this.clazzRef.get(), key, locale, style);
+		return super.loadStringResource((Class)clazzRef.get(), key, locale, style);
 	}
 
 	/**

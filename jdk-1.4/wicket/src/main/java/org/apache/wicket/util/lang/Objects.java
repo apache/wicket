@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Object utilities.
- * 
+ *
  * @author Jonathan Locke
  */
 public final class Objects
@@ -58,7 +58,7 @@ public final class Objects
 		/**
 		 * Computes the size of an object. This typically is an estimation, not
 		 * an absolute accurate size.
-		 * 
+		 *
 		 * @param object
 		 *            Object to compute size of
 		 * @return The size of the object in bytes.
@@ -114,9 +114,9 @@ public final class Objects
 			enableResolveObject(true);
 		}
 
-		// This overide is required to resolve classess inside in different
+		// This override is required to resolve classes inside in different
 		// bundle, i.e.
-		// The classess can be resolved by OSGI classresolver implementation
+		// The classes can be resolved by OSGI classresolver implementation
 		protected Class resolveClass(ObjectStreamClass desc) throws IOException,
 				ClassNotFoundException
 		{
@@ -272,7 +272,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a BigDecimal.
-	 * 
+	 *
 	 * @param value
 	 *            an object to interpret as a BigDecimal
 	 * @return the BigDecimal value implied by the given object
@@ -311,7 +311,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a BigInteger.
-	 * 
+	 *
 	 * @param value
 	 *            an object to interpret as a BigInteger
 	 * @return the BigInteger value implied by the given object
@@ -352,7 +352,7 @@ public final class Objects
 	 * Evaluates the given object as a boolean: if it is a Boolean object, it's
 	 * easy; if it's a Number or a Character, returns true for non-zero objects;
 	 * and otherwise returns true for non-null objects.
-	 * 
+	 *
 	 * @param value
 	 *            an object to interpret as a boolean
 	 * @return the boolean value implied by the given object
@@ -381,7 +381,7 @@ public final class Objects
 
 	/**
 	 * De-serializes an object from a byte array.
-	 * 
+	 *
 	 * @param data
 	 *            The serialized object
 	 * @return The object
@@ -417,7 +417,7 @@ public final class Objects
 	 * object must be fully serializable to be cloned. This method will not
 	 * clone wicket Components, it will just reuse those instances so that the
 	 * complete component tree is not copied over only the model data.
-	 * 
+	 *
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
@@ -455,7 +455,7 @@ public final class Objects
 	 * Makes a deep clone of an object by serializing and deserializing it. The
 	 * object must be fully serializable to be cloned. No extra debug info is
 	 * gathered.
-	 * 
+	 *
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
@@ -477,8 +477,8 @@ public final class Objects
 				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
 						.toByteArray()))
 				{
-					// This overide is required to resolve classess inside in different bundle, i.e.
-					// The classess can be resolved by OSGI classresolver implementation
+					// This override is required to resolve classes inside in different bundle, i.e.
+					// The classes can be resolved by OSGI classresolver implementation
 					protected Class resolveClass(ObjectStreamClass desc) throws IOException,
 							ClassNotFoundException
 					{
@@ -541,16 +541,16 @@ public final class Objects
 	 * compared with Comparable.compareTo(). If both values are non-numeric and
 	 * not Comparable or of incompatible classes this will throw and
 	 * IllegalArgumentException.
-	 * 
+	 *
 	 * @param v1
 	 *            First value to compare
 	 * @param v2
 	 *            second value to compare
-	 * 
+	 *
 	 * @return integer describing the comparison between the two objects. A
 	 *         negative number indicates that v1 < v2. Positive indicates that
 	 *         v1 > v2. Zero indicates v1 == v2.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             if the objects are both non-numeric yet of incompatible types
 	 *             or do not implement Comparable.
@@ -613,10 +613,10 @@ public final class Objects
 
 	/**
 	 * Returns the value converted numerically to the given class type
-	 * 
+	 *
 	 * This method also detects when arrays are being converted and converts the
 	 * components of one array to the type of the other.
-	 * 
+	 *
 	 * @param value
 	 *            an object to be converted to the given type
 	 * @param toType
@@ -701,7 +701,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a double-precision floating-point number.
-	 * 
+	 *
 	 * @param value
 	 *            an object to interpret as a double
 	 * @return the double value implied by the given object
@@ -734,7 +734,7 @@ public final class Objects
 
 	/**
 	 * Returns true if a and b are equal. Either object may be null.
-	 * 
+	 *
 	 * @param a
 	 *            Object a
 	 * @param b
@@ -761,7 +761,7 @@ public final class Objects
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of an operation, which can be either numeric or not, on the two
 	 * given types.
-	 * 
+	 *
 	 * @param t1
 	 *            type of one argument to an operator
 	 * @param t2
@@ -828,7 +828,7 @@ public final class Objects
 	/**
 	 * Returns a constant from the NumericTypes interface that represents the
 	 * numeric type of the given object.
-	 * 
+	 *
 	 * @param value
 	 *            an object that needs to be interpreted as a number
 	 * @return the appropriate constant from the NumericTypes interface
@@ -885,7 +885,7 @@ public final class Objects
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of a numeric operation on the two given objects.
-	 * 
+	 *
 	 * @param v1
 	 *            one argument to a numeric operator
 	 * @param v2
@@ -901,7 +901,7 @@ public final class Objects
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of an operation, which can be either numeric or not, on the two
 	 * given objects.
-	 * 
+	 *
 	 * @param v1
 	 *            one argument to an operator
 	 * @param v2
@@ -919,12 +919,12 @@ public final class Objects
 	 * Returns true if object1 is equal to object2 in either the sense that they
 	 * are the same object or, if both are non-null if they are equal in the
 	 * <CODE>equals()</CODE> sense.
-	 * 
+	 *
 	 * @param object1
 	 *            First object to compare
 	 * @param object2
 	 *            Second object to compare
-	 * 
+	 *
 	 * @return true if v1 == v2
 	 */
 	public static boolean isEqual(Object object1, Object object2)
@@ -967,7 +967,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a long integer.
-	 * 
+	 *
 	 * @param value
 	 *            an object to interpret as a long integer
 	 * @return the long integer value implied by the given object
@@ -999,7 +999,7 @@ public final class Objects
 	/**
 	 * Creates a new instance using the current application's class resolver.
 	 * Returns null if className is null.
-	 * 
+	 *
 	 * @param className
 	 *            The full class name
 	 * @return The new object instance
@@ -1036,7 +1036,7 @@ public final class Objects
 	 * Returns a new Number object of an appropriate type to hold the given
 	 * integer value. The type of the returned object is consistent with the
 	 * given type argument, which is a constant from the NumericTypes interface.
-	 * 
+	 *
 	 * @param type
 	 *            the nominal numeric type of the result, a constant from the
 	 *            NumericTypes interface
@@ -1082,7 +1082,7 @@ public final class Objects
 
 	/**
 	 * Serializes an object into a byte array.
-	 * 
+	 *
 	 * @param object
 	 *            The object
 	 * @return The serialized object
@@ -1112,7 +1112,7 @@ public final class Objects
 
 	/**
 	 * Sets the strategy for determining the sizes of objects.
-	 * 
+	 *
 	 * @param objectSizeOfStrategy
 	 *            the strategy. Pass null to reset to the default.
 	 */
@@ -1132,7 +1132,7 @@ public final class Objects
 	/**
 	 * Configure this utility class to use the provided
 	 * {@link IObjectStreamFactory} instance.
-	 * 
+	 *
 	 * @param objectStreamFactory
 	 *            The factory instance to use. If you pass in null, the
 	 *            {@link DefaultObjectStreamFactory default} will be set
@@ -1154,7 +1154,7 @@ public final class Objects
 	/**
 	 * Computes the size of an object. Note that this is an estimation, never an
 	 * absolute accurate size.
-	 * 
+	 *
 	 * @param object
 	 *            Object to compute size of
 	 * @return The size of the object in bytes
@@ -1166,7 +1166,7 @@ public final class Objects
 
 	/**
 	 * Evaluates the given object as a String.
-	 * 
+	 *
 	 * @param value
 	 *            an object to interpret as a String
 	 * @return the String value implied by the given object as returned by the
@@ -1180,7 +1180,7 @@ public final class Objects
 	/**
 	 * returns hashcode of the objects by calling obj.hashcode(). safe to use
 	 * when obj is null.
-	 * 
+	 *
 	 * @param obj
 	 * @return hashcode of the object or 0 if obj is null
 	 */
@@ -1202,7 +1202,7 @@ public final class Objects
 	/**
 	 * Evaluates the given object as a String and trims it if the trim flag is
 	 * true.
-	 * 
+	 *
 	 * @param value
 	 *            an object to interpret as a String
 	 * @param trim

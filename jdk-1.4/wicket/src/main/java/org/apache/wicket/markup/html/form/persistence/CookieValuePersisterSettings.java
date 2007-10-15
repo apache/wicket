@@ -57,7 +57,7 @@ public class CookieValuePersisterSettings implements IClusterable
 	 * Sets the maximum age of the cookie in seconds.
 	 * 
 	 * @param maxAge
-	 *            the max age in secs.
+	 *            the max age in seconds.
 	 */
 	public void setMaxAge(int maxAge)
 	{

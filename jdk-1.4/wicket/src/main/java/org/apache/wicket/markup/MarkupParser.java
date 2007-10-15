@@ -50,12 +50,12 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * <p>
  * The result will be an Markup object, which is basically a list, containing Wicket relevant tags
  * and RawMarkup.
- * 
+ *
  * @see IMarkupFilter
  * @see IMarkupParserFactory
  * @see IMarkupSettings
  * @see MarkupResourceData
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -79,7 +79,7 @@ public class MarkupParser
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param resource
 	 *            The markup resource (file)
 	 */
@@ -90,7 +90,7 @@ public class MarkupParser
 
 	/**
 	 * Constructor. Usually for testing purposes only
-	 * 
+	 *
 	 * @param markup
 	 *            The markup resource.
 	 */
@@ -101,7 +101,7 @@ public class MarkupParser
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param xmlParser
 	 *            The streaming xml parser to read and parse the markup
 	 * @param resource
@@ -124,7 +124,7 @@ public class MarkupParser
 	/**
 	 * In case you want to analyze markup which BY DEFAULT does not use "wicket" to find relevant
 	 * tags.
-	 * 
+	 *
 	 * @param namespace
 	 */
 	public final void setWicketNamespace(final String namespace)
@@ -135,7 +135,7 @@ public class MarkupParser
 	/**
 	 * Applications which subclass initFilterChain() might also wish to access the markup resource
 	 * stream.
-	 * 
+	 *
 	 * @return The markup resource stream
 	 */
 	protected MarkupResourceStream getMarkupResourceStream()
@@ -185,7 +185,7 @@ public class MarkupParser
 
 	/**
 	 * By default don't do anything. Subclasses may append additional markup filters if required.
-	 * 
+	 *
 	 * @see #appendMarkupFilter(IMarkupFilter)
 	 * @deprecated since 1.3
 	 */
@@ -196,7 +196,7 @@ public class MarkupParser
 
 	/**
 	 * Append a new filter to the list of already pre-configured markup filters.
-	 * 
+	 *
 	 * @param filter
 	 *            The filter to be appended
 	 */
@@ -208,7 +208,7 @@ public class MarkupParser
 	/**
 	 * Append a new filter to the list of already pre-configured markup filters. Add the new filter
 	 * before the "beforeFilter" which is identified by its class.
-	 * 
+	 *
 	 * @param filter
 	 *            The filter to be appended
 	 * @param beforeFilter
@@ -246,7 +246,7 @@ public class MarkupParser
 
 	/**
 	 * Reads and parses markup from a file.
-	 * 
+	 *
 	 * @return The markup
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
@@ -271,7 +271,7 @@ public class MarkupParser
 
 	/**
 	 * Get the next tag from the markup file
-	 * 
+	 *
 	 * @return The next tag
 	 * @throws ParseException
 	 */
@@ -282,7 +282,7 @@ public class MarkupParser
 
 	/**
 	 * Scans the given markup and extracts balancing tags.
-	 * 
+	 *
 	 */
 	private void parseMarkup()
 	{
@@ -392,13 +392,13 @@ public class MarkupParser
 			markup.addMarkupElement(new RawMarkup(rawMarkup));
 		}
 
-		// Make all tags immutable and the list of elements unmodifable
+		// Make all tags immutable and the list of elements unmodifiable
 		markup.makeImmutable();
 	}
 
 	/**
-	 * Remove whitespaces from the raw markup
-	 * 
+	 * Remove whitespace from the raw markup
+	 *
 	 * @param rawMarkup
 	 * @return rawMarkup
 	 */
@@ -426,7 +426,7 @@ public class MarkupParser
 			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
 
 			// Don't create a StringBuffer if we don't actually need one.
-			// This optimises the trivial common case where there is no <pre>
+			// This optimizes the trivial common case where there is no <pre>
 			// tag at all down to just doing the replaceAlls above.
 			if (lastend == 0)
 			{
@@ -456,8 +456,8 @@ public class MarkupParser
 	/**
 	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For reasons I don't
 	 * understand, the following regex <code>"<!--(.|\n|\r)*?-->"<code>
-	 * causes a stack overflow in some circumstances (jdk 1.5) 
-	 * 
+	 * causes a stack overflow in some circumstances (jdk 1.5)
+	 *
 	 * @param rawMarkup
 	 * @return raw markup
 	 */

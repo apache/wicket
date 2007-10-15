@@ -70,9 +70,9 @@ import org.slf4j.LoggerFactory;
  * for a servlet container. See javadoc of <code>WicketTester</code> for
  * example usage. This class can be used as is, but JUnit users should use
  * derived class <code>WicketTester</code>.
- * 
+ *
  * @see WicketTester
- * 
+ *
  * @author Ingram Chen
  * @author Juergen Donnerstag
  * @author Frank Bille
@@ -93,7 +93,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param page
 		 */
 		private TestPageSource(Page page) {
@@ -135,7 +135,7 @@ public class BaseWicketTester extends MockWebApplication {
 	/**
 	 * Creates <code>WicketTester</code> and automatically creates a
 	 * <code>WebApplication</code>.
-	 * 
+	 *
 	 * @param homePage
 	 *            a home page <code>Class</code>
 	 */
@@ -163,7 +163,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Creates a <code>WicketTester</code>.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code>
 	 *            object
@@ -174,14 +174,14 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Creates a <code>WicketTester</code> for unit testing.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code>
 	 *            object
 	 * @param path
 	 *            the absolute path on disk to the <code>WebApplication</code>'s
 	 *            contents (e.g. war root) - may be <code>null</code>
-	 * 
+	 *
 	 * @see org.apache.wicket.protocol.http.MockWebApplication#MockWebApplication(
 	 *      org.apache.wicket.protocol.http.WebApplication, String)
 	 */
@@ -194,7 +194,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * This is usually used when a page does not have default constructor. For
 	 * example, a <code>ViewBook</code> page requires a <code>Book</code>
 	 * instance:
-	 * 
+	 *
 	 * <pre>
 	 * tester.startPage(new TestPageSource() {
 	 * 	public Page getTestPage() {
@@ -203,7 +203,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * 	}
 	 * });
 	 * </pre>
-	 * 
+	 *
 	 * @param testPageSource
 	 *            a <code>Page</code> factory that creates a test page
 	 *            instance
@@ -222,7 +222,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * Builds and processes a request suitable for invoking a listener. The
 	 * <code>Component</code> must implement any of the known
 	 * <code>IListener</code> interfaces.
-	 * 
+	 *
 	 * @param component
 	 *            the listener to invoke
 	 */
@@ -235,7 +235,7 @@ public class BaseWicketTester extends MockWebApplication {
 	/**
 	 * Builds and processes a request suitable for executing an
 	 * <code>AbstractAjaxBehavior</code>.
-	 * 
+	 *
 	 * @param behavior
 	 *            an <code>AbstractAjaxBehavior</code> to execute
 	 */
@@ -251,7 +251,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Renders the <code>Page</code>.
-	 * 
+	 *
 	 * @param page
 	 *            a <code>Page</code> to render
 	 * @return the rendered <code>Page</code>
@@ -262,7 +262,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Renders a <code>Page</code> from its default constructor.
-	 * 
+	 *
 	 * @param pageClass
 	 *            a test <code>Page</code> class with default constructor
 	 * @return the rendered <code>Page</code>
@@ -277,7 +277,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * and fills all child
 	 * {@link org.apache.wicket.markup.html.form.FormComponent}s with blank
 	 * <code>String</code>s.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>FormComponent</code>
 	 * @return a <code>FormTester</code> instance for testing the
@@ -290,7 +290,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Creates a {@link FormTester} for the <code>Form</code> at a given path.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>FormComponent</code>
 	 * @param fillBlankString
@@ -338,7 +338,7 @@ public class BaseWicketTester extends MockWebApplication {
 	/**
 	 * Renders a <code>Panel</code> from a <code>Panel(String id)</code>
 	 * constructor.
-	 * 
+	 *
 	 * @param panelClass
 	 *            a test <code>Panel</code> class with
 	 *            <code>Panel(String id)</code> constructor
@@ -377,15 +377,15 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * A helper method for starting a component for a test without attaching it to a Page.
-	 * 
+	 *
 	 * Components which are somehow dependent on the page structure can not be currently tested with
 	 * this method.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * UserDataView view = new UserDataView("view", new ListDataProvider(userList));
 	 * tester.startComponent(view); assertEquals(4, view.size());
-	 * 
+	 *
 	 * @param component
 	 */
 	public void startComponent(Component component)
@@ -399,7 +399,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Throw "standard" WicketRuntimeException
-	 * 
+	 *
 	 * @param e
 	 * @return RuntimeException
 	 */
@@ -412,7 +412,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * Gets the component with the given path from last rendered page. This method fails in case the
 	 * component couldn't be found, and it will return null if the component was found, but is not
 	 * visible.
-	 * 
+	 *
 	 * @param path
 	 *            Path to component
 	 * @return The component at the path
@@ -436,7 +436,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * assert the text of <code>Label</code> component.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Label</code> component
 	 * @param expectedLabelText
@@ -451,7 +451,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * assert <code>PageLink</code> link to page class.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>PageLink</code> component
 	 * @param expectedPageClass
@@ -484,7 +484,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * assert component class
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @param expectedComponentClass
@@ -501,7 +501,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * assert component visible.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return
@@ -520,7 +520,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * assert component invisible.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return
@@ -532,7 +532,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * assert the content of last rendered page contains(matches) regex pattern.
-	 * 
+	 *
 	 * @param pattern
 	 *            reqex pattern to match
 	 * @return
@@ -545,7 +545,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * assert the model of {@link ListView} use expectedList
-	 * 
+	 *
 	 * @param path
 	 *            path to {@link ListView} component
 	 * @param expectedList
@@ -561,7 +561,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * Click the {@link Link} in the last rendered Page.
 	 * <p>
 	 * Simulate that AJAX is enabled.
-	 * 
+	 *
 	 * @see WicketTester#clickLink(String, boolean)
 	 * @param path
 	 *            Click the <code>Link</code> in the last rendered Page.
@@ -589,7 +589,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * This method is also able to simulate that AJAX (javascript) is disabled on the client. This
 	 * is done by setting the isAjax parameter to false. If you have an AjaxFallbackLink you can
 	 * then check that it doesn't fail when invoked as a normal link.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Link</code> component
 	 * @param isAjax
@@ -713,7 +713,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Submits the <code>Form</code> in the last rendered <code>Page</code>.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Form</code> component
 	 */
@@ -728,7 +728,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * <p>
 	 * NOTE: this method only works when a <code>Page</code> was rendered
 	 * first.
-	 * 
+	 *
 	 * @param componentPath
 	 *            path to the <code>Component</code>
 	 * @param value
@@ -756,10 +756,10 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Asserts the last rendered <code>Page</code> class.
-	 * 
+	 *
 	 * FIXME explain why the code is so complicated to compare two classes, or
 	 * simplify
-	 * 
+	 *
 	 * @param expectedRenderedPageClass
 	 *            expected class of last rendered page
 	 * @return a <code>Result</code>
@@ -783,7 +783,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to
 	 * automatically replace the expected output file.
 	 * </p>
-	 * 
+	 *
 	 * @param pageClass
 	 *            used to load the <code>File</code> (relative to
 	 *            <code>clazz</code> package)
@@ -801,7 +801,7 @@ public class BaseWicketTester extends MockWebApplication {
 	/**
 	 * Asserts last rendered <code>Page</code> against an expected HTML
 	 * document as a <code>String</code>.
-	 * 
+	 *
 	 * @param expectedDocument
 	 *            expected output
 	 * @return a <code>Result</code>
@@ -816,7 +816,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Asserts no error-level feedback messages.
-	 * 
+	 *
 	 * @return a <code>Result</code>
 	 */
 	public Result hasNoErrorMessage() {
@@ -827,7 +827,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Asserts no info-level feedback messages.
-	 * 
+	 *
 	 * @return a <code>Result</code>
 	 */
 	public Result hasNoInfoMessage() {
@@ -838,7 +838,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Retrieves <code>FeedbackMessages</code>.
-	 * 
+	 *
 	 * @param level
 	 *            level of feedback message, for example:
 	 *            <code>FeedbackMessage.DEBUG or FeedbackMessage.INFO.. etc</code>
@@ -880,7 +880,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * Dumps the <code>Component</code> trees to log. Show only the
 	 * <code>Component</code>s whose paths contain the filter
 	 * <code>String</code>.
-	 * 
+	 *
 	 * @param filter
 	 *            a filter <code>String</code>
 	 */
@@ -908,7 +908,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * <code>Component</code> in the client DOM tree, using Javascript. But it
 	 * shouldn't be needed because you have to trust that the Wicket Ajax
 	 * Javascript just works.
-	 * 
+	 *
 	 * @param component
 	 *            the <code>Component</code> to test
 	 * @return a <code>Result</code>
@@ -949,9 +949,9 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Simulates the firing of an Ajax event.
-	 * 
+	 *
 	 * @see #executeAjaxEvent(Component, String)
-	 * 
+	 *
 	 * @since 1.2.3
 	 * @param componentPath
 	 *            the <code>Component</code> path
@@ -967,7 +967,7 @@ public class BaseWicketTester extends MockWebApplication {
 	/**
 	 * Simulates the firing of an Ajax event. You add an Ajax event to a
 	 * <code>Component</code> by using:
-	 * 
+	 *
 	 * <pre>
 	 *     ...
 	 *     component.add(new AjaxEventBehavior(&quot;ondblclick&quot;) {
@@ -975,24 +975,24 @@ public class BaseWicketTester extends MockWebApplication {
 	 *     });
 	 *     ...
 	 * </pre>
-	 * 
+	 *
 	 * You can then test that the code inside <code>onEvent</code> actually
 	 * does what it's supposed to, using the <code>WicketTester</code>:
-	 * 
+	 *
 	 * <pre>
 	 *     ...
 	 *     tester.executeAjaxEvent(component, &quot;ondblclick&quot;);
 	 *     // Test that the code inside onEvent is correct.
 	 *     ...
 	 * </pre>
-	 * 
+	 *
 	 * This also works with <code>AjaxFormSubmitBehavior</code>, where it
 	 * will "submit" the <code>Form</code> before executing the command.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the
 	 * <code>Component</code> in the client DOM tree, using Javascript.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param component
 	 *            the <code>Component</code> that has the
 	 *            <code>AjaxEventBehavior</code> we want to test. If the
@@ -1027,7 +1027,7 @@ public class BaseWicketTester extends MockWebApplication {
 		}
 
 		// If there haven't been found any event behaviors on the component
-		// which maches the parameters we fail.
+		// which matches the parameters we fail.
 		failMessage = "No AjaxEventBehavior found on component: "
 				+ component.getId() + " which matches the event: "
 				+ event.toString();
@@ -1059,7 +1059,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * Retrieves a <code>TagTester</code> based on a <code>wicket:id</code>.
 	 * If more <code>Component</code>s exist with the same
 	 * <code>wicket:id</code> in the markup, only the first one is returned.
-	 * 
+	 *
 	 * @param wicketId
 	 *            the <code>wicket:id</code> to search for
 	 * @return the <code>TagTester</code> for the tag which has the given
@@ -1074,7 +1074,7 @@ public class BaseWicketTester extends MockWebApplication {
 	 * Retrieves a <code>TagTester</code> based on an DOM id. If more
 	 * <code>Component</code>s exist with the same id in the markup, only the
 	 * first one is returned.
-	 * 
+	 *
 	 * @param id
 	 *            the DOM id to search for.
 	 * @return the <code>TagTester</code> for the tag which has the given DOM
@@ -1088,7 +1088,7 @@ public class BaseWicketTester extends MockWebApplication {
 	/**
 	 * Helper method for all the places where an Ajax call should submit an
 	 * associated <code>Form</code>.
-	 * 
+	 *
 	 * @param behavior
 	 *            The <code>AjaxFormSubmitBehavior</code> with the
 	 *            <code>Form</code> to "submit"
@@ -1131,7 +1131,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Retrieves the content type from the response header.
-	 * 
+	 *
 	 * @return the content type from the response header
 	 */
 	public String getContentTypeFromResponseHeader() {
@@ -1145,7 +1145,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Retrieves the content length from the response header.
-	 * 
+	 *
 	 * @return the content length from the response header
 	 */
 	public int getContentLengthFromResponseHeader() {
@@ -1159,7 +1159,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Retrieves the last-modified value from the response header.
-	 * 
+	 *
 	 * @return the last-modified value from the response header
 	 */
 	public String getLastModifiedFromResponseHeader() {
@@ -1169,7 +1169,7 @@ public class BaseWicketTester extends MockWebApplication {
 
 	/**
 	 * Retrieves the content disposition from the response header.
-	 * 
+	 *
 	 * @return the content disposition from the response header
 	 */
 	public String getContentDispositionFromResponseHeader() {

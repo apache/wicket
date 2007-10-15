@@ -66,17 +66,17 @@ public class WicketPortlet extends GenericPortlet
 	public static final String WICKET_PORTLET_PROPERTIES = WicketPortlet.class.getName().replace('.', '/')+".properties";
 	public static final String WICKET_FILTER_PATH = WicketPortlet.class.getName() + ".FILTERPATH";
 	public static final String WICKET_FILTER_QUERY = WicketPortlet.class.getName() + ".FILTERQUERY";
-	
+
     /**
      * Name of portlet init parameter for Action page
      */
     public static final String PARAM_ACTION_PAGE = "actionPage";
     /**
-     * Name of portlet  init parameterfor Custom page
+     * Name of portlet  init parameter for Custom page
      */
     public static final String PARAM_CUSTOM_PAGE = "customPage";
     /**
-     * Name of portlet  init parameterfor Edit page
+     * Name of portlet  init parameter for Edit page
      */
     public static final String PARAM_EDIT_PAGE = "editPage";
     /**
@@ -92,7 +92,7 @@ public class WicketPortlet extends GenericPortlet
 	private PortletResourceURLFactory resourceURLFactory;
 	private String wicketFilterPath;
 	private String wicketFilterQuery;
-	private HashMap defaultPages = new HashMap();
+	private final HashMap defaultPages = new HashMap();
 
 	public void init(PortletConfig config) throws PortletException
 	{
@@ -129,7 +129,7 @@ public class WicketPortlet extends GenericPortlet
 			}
 			throw new PortletException("Initialization failure", e);
 		}
-		
+
 		String resourceURLFactoryClassName = getPortletResourceURLFactoryClassNameParameter(config);
 		if (resourceURLFactoryClassName == null)
 		{
@@ -161,31 +161,31 @@ public class WicketPortlet extends GenericPortlet
 			}
 			throw new PortletException("Initialization failure", e);
 		}
-		
+
 		wicketFilterPath = buildWicketFilterPath(config.getInitParameter(WICKET_FILTER_PATH_PARAM));
 		wicketFilterQuery = buildWicketFilterQuery(wicketFilterPath);
-		
+
 		defaultPages.put(PARAM_VIEW_PAGE,config.getInitParameter(PARAM_VIEW_PAGE));
 		defaultPages.put(PARAM_ACTION_PAGE,config.getInitParameter(PARAM_ACTION_PAGE));
 		defaultPages.put(PARAM_CUSTOM_PAGE,config.getInitParameter(PARAM_CUSTOM_PAGE));
 		defaultPages.put(PARAM_HELP_PAGE,config.getInitParameter(PARAM_HELP_PAGE));
 		defaultPages.put(PARAM_EDIT_PAGE,config.getInitParameter(PARAM_EDIT_PAGE));
-        
+
 		validateDefaultPages(defaultPages, wicketFilterPath, wicketFilterQuery);
 	}
-	
+
 	public void destroy()
 	{
 		resourceURLFactory = null;
 		servletContextProvider = null;
 		super.destroy();
 	}
-	
+
 	protected String getDefaultPage(String pageType)
 	{
 		return (String)defaultPages.get(pageType);
 	}
-	
+
 	protected String buildWicketFilterPath(String filterPath)
 	{
 		if (filterPath == null || filterPath.length() == 0)
@@ -209,7 +209,7 @@ public class WicketPortlet extends GenericPortlet
 		}
 		return filterPath;
 	}
-	
+
 	protected String buildWicketFilterQuery(String wicketFilterPath)
 	{
 		if (wicketFilterPath.equals("/"))
@@ -221,7 +221,7 @@ public class WicketPortlet extends GenericPortlet
 			return wicketFilterPath.substring(0,wicketFilterPath.length()-1)+"?";
 		}
 	}
-	
+
 	protected String fixWicketUrl(String url, String wicketFilterPath, String wicketFilterQuery)
 	{
 		if (url == null)
@@ -240,10 +240,10 @@ public class WicketPortlet extends GenericPortlet
 				// correct url: path?query -> path/?query
 				url = wicketFilterPath + "?" + url.substring(wicketFilterQuery.length());
 			}
-		}			
+		}
 		return url;
 	}
-	
+
 	protected void validateDefaultPages(Map defaultPages, String wicketFilterPath, String wicketFilterQuery)
 	{
 		String viewPage = fixWicketUrl((String)defaultPages.get(PARAM_VIEW_PAGE), wicketFilterPath, wicketFilterQuery);
@@ -259,7 +259,7 @@ public class WicketPortlet extends GenericPortlet
 			defaultPage = fixWicketUrl(defaultPage, wicketFilterPath, wicketFilterQuery);
 			defaultPages.put(PARAM_ACTION_PAGE, defaultPage.startsWith(wicketFilterPath) ? defaultPage : viewPage);
 		}
-		
+
 		defaultPage = (String)defaultPages.get(PARAM_CUSTOM_PAGE);
 		if (defaultPage == null)
 		{
@@ -270,7 +270,7 @@ public class WicketPortlet extends GenericPortlet
 			defaultPage = fixWicketUrl(defaultPage, wicketFilterPath, wicketFilterQuery);
 			defaultPages.put(PARAM_CUSTOM_PAGE, defaultPage.startsWith(wicketFilterPath) ? defaultPage : viewPage);
 		}
-		
+
 		defaultPage = (String)defaultPages.get(PARAM_HELP_PAGE);
 		if (defaultPage == null)
 		{
@@ -291,7 +291,7 @@ public class WicketPortlet extends GenericPortlet
 		{
 			defaultPage = fixWicketUrl(defaultPage, wicketFilterPath, wicketFilterQuery);
 			defaultPages.put(PARAM_EDIT_PAGE, defaultPage.startsWith(wicketFilterPath) ? defaultPage : viewPage);
-		}		
+		}
 	}
 
 	protected Properties getWicketPortletProperties(Properties properties) throws PortletException
@@ -314,7 +314,7 @@ public class WicketPortlet extends GenericPortlet
 		}
 		return properties;
 	}
-	
+
 	protected String getContextProviderClassNameParameter(PortletConfig config)
 	{
 		return config.getInitParameter(PARAM_SERVLET_CONTEXT_PROVIDER);
@@ -347,22 +347,22 @@ public class WicketPortlet extends GenericPortlet
 	{
 		return getServletContextProvider().getHttpServletResponse(portlet, response);
 	}
-	
+
 	protected String getWicketConfigParameter(PortletRequest request, String paramName, String defaultValue)
 	{
 		return defaultValue;
 	}
-	
+
 	protected String getWicketUrlPortletParameter(PortletRequest request)
 	{
 		return WICKET_URL_PORTLET_PARAMETER;
 	}
-	
+
 	protected String getWicketFilterPath()
 	{
 		return wicketFilterPath;
 	}
-	
+
 	protected String getWicketURL(PortletRequest request, String pageType, String defaultPage)
 	{
 		String wicketURL = null;
@@ -417,15 +417,15 @@ public class WicketPortlet extends GenericPortlet
 		String wicketURL = null;
 		String wicketFilterPath = null;
 		String wicketFilterQuery = null;
-		
+
 		request.setAttribute(WICKET_URL_PORTLET_PARAMETER_ATTR, getWicketUrlPortletParameter(request));
-		
+
 		wicketURL = getWicketURL(request, pageType, getDefaultPage(pageType));
-		wicketFilterPath = getWicketConfigParameter(request, WICKET_FILTER_PATH, this.wicketFilterPath);			
+		wicketFilterPath = getWicketConfigParameter(request, WICKET_FILTER_PATH, this.wicketFilterPath);
 		wicketFilterQuery = getWicketConfigParameter(request, WICKET_FILTER_QUERY, this.wicketFilterQuery);
-		
+
 		boolean actionRequest = ACTION_REQUEST.equals(requestType);
-		
+
 		WicketResponseState responseState = new WicketResponseState();
 
 		request.setAttribute(RESPONSE_STATE_ATTR, responseState);
@@ -518,7 +518,7 @@ public class WicketPortlet extends GenericPortlet
 			}
 		}
 	}
-	
+
 	protected void processActionResponseState(String wicketURL, String wicketFilterPath, String wicketFilterQuery, ActionRequest request, ActionResponse response, WicketResponseState responseState) throws PortletException, IOException
 	{
 		if ( responseState.getRedirectLocation() != null )

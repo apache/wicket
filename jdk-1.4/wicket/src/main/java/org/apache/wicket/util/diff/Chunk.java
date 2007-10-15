@@ -1,35 +1,35 @@
 /*
  * ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2003 The Apache Software Foundation. All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution, if any, must
  * include the following acknowledgement: "This product includes software
  * developed by the Apache Software Foundation (http://www.apache.org/)."
  * Alternately, this acknowledgement may appear in the software itself, if and
  * wherever such third-party acknowledgements normally appear.
- * 
+ *
  * 4. The names "The Jakarta Project", "Commons", and "Apache Software
  * Foundation" must not be used to endorse or promote products derived from this
  * software without prior written permission. For written permission, please
  * contact apache@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache" nor may
  * "Apache" appear in their names without prior written permission of the Apache
  * Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE APACHE
@@ -41,11 +41,11 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many individuals on
  * behalf of the Apache Software Foundation. For more information on the Apache
  * Software Foundation, please see <http://www.apache.org/>.
- * 
+ *
  */
 
 package org.apache.wicket.util.diff;
@@ -56,9 +56,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Holds a information about a parrt of the text involved in a differencing or
+ * Holds a information about a part of the text involved in a differencing or
  * patching operation.
- * 
+ *
  * @version $Id: Chunk.java,v 1.1 2006/03/12 00:24:21 juanca Exp $
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  * @see Diff
@@ -75,7 +75,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Creates a chunk that doesn't copy the original text.
-	 * 
+	 *
 	 * @param pos
 	 *            the start position in the text.
 	 * @param count
@@ -83,13 +83,13 @@ public class Chunk extends ToString
 	 */
 	public Chunk(int pos, int count)
 	{
-		this.anchor = pos;
+		anchor = pos;
 		this.count = (count >= 0 ? count : 0);
 	}
 
 	/**
 	 * Creates a chunk and saves a copy the original chunk's text.
-	 * 
+	 *
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -106,7 +106,7 @@ public class Chunk extends ToString
 	/**
 	 * Creates a chunk that will be displaced in the resulting text, and saves a
 	 * copy the original chunk's text.
-	 * 
+	 *
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -124,7 +124,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Creates a chunk and saves a copy the original chunk's text.
-	 * 
+	 *
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -141,7 +141,7 @@ public class Chunk extends ToString
 	/**
 	 * Creates a chunk that will be displaced in the resulting text, and saves a
 	 * copy the original chunk's text.
-	 * 
+	 *
 	 * @param iseq
 	 *            the original text.
 	 * @param pos
@@ -159,7 +159,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the anchor position of the chunk.
-	 * 
+	 *
 	 * @return the anchor position.
 	 */
 	public int anchor()
@@ -169,7 +169,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the size of the chunk.
-	 * 
+	 *
 	 * @return the size.
 	 */
 	public int size()
@@ -179,7 +179,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the index of the first line of the chunk.
-	 * 
+	 *
 	 * @return int
 	 */
 	public int first()
@@ -189,7 +189,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the index of the last line of the chunk.
-	 * 
+	 *
 	 * @return int
 	 */
 	public int last()
@@ -199,7 +199,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the <i>from</i> index of the chunk in RCS terms.
-	 * 
+	 *
 	 * @return int
 	 */
 	public int rcsfrom()
@@ -209,7 +209,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the <i>to</i> index of the chunk in RCS terms.
-	 * 
+	 *
 	 * @return int
 	 */
 	public int rcsto()
@@ -219,7 +219,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Returns the text saved for this chunk.
-	 * 
+	 *
 	 * @return the text.
 	 */
 	public List chunk()
@@ -230,7 +230,7 @@ public class Chunk extends ToString
 	/**
 	 * Verifies that this chunk's saved text matches the corresponding text in
 	 * the given sequence.
-	 * 
+	 *
 	 * @param target
 	 *            the sequence to verify against.
 	 * @return true if the texts match.
@@ -257,7 +257,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Delete this chunk from he given text.
-	 * 
+	 *
 	 * @param target
 	 *            the text to delete from.
 	 */
@@ -271,7 +271,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Add the text of this chunk to the target at the given position.
-	 * 
+	 *
 	 * @param start
 	 *            where to add the text.
 	 * @param target
@@ -289,7 +289,7 @@ public class Chunk extends ToString
 	/**
 	 * Provide a string image of the chunk using the an empty prefix and
 	 * postfix.
-	 * 
+	 *
 	 * @param s
 	 */
 	public void toString(StringBuffer s)
@@ -299,11 +299,11 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string image of the chunk using the given prefix and postfix.
-	 * 
+	 *
 	 * @param s
 	 *            where the string image should be appended.
 	 * @param prefix
-	 *            the text thatshould prefix each line.
+	 *            the text that should prefix each line.
 	 * @param postfix
 	 *            the text that should end each line.
 	 * @return StringBuffer
@@ -324,10 +324,10 @@ public class Chunk extends ToString
 	}
 
 	/**
-	 * Retreives the specified part from a {@link List List}.
-	 * 
+	 * Retrieves the specified part from a {@link List List}.
+	 *
 	 * @param seq
-	 *            the list to retreive a slice from.
+	 *            the list to retrieve a slice from.
 	 * @param pos
 	 *            the start position.
 	 * @param count
@@ -348,9 +348,9 @@ public class Chunk extends ToString
 
 	/**
 	 * Retrieves a slice from an {@link Object Object} array.
-	 * 
+	 *
 	 * @param seq
-	 *            the list to retreive a slice from.
+	 *            the list to retrieve a slice from.
 	 * @param pos
 	 *            the start position.
 	 * @param count
@@ -364,7 +364,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string representation of the numeric range of this chunk.
-	 * 
+	 *
 	 * @return String
 	 */
 	public String rangeString()
@@ -376,7 +376,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string representation of the numeric range of this chunk.
-	 * 
+	 *
 	 * @param s
 	 *            where the string representation should be appended.
 	 */
@@ -387,7 +387,7 @@ public class Chunk extends ToString
 
 	/**
 	 * Provide a string representation of the numeric range of this chunk.
-	 * 
+	 *
 	 * @param s
 	 *            where the string representation should be appended.
 	 * @param separ

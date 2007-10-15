@@ -21,17 +21,14 @@ import org.apache.wicket.IClusterable;
 import org.apache.wicket.markup.ComponentTag;
 
 /**
- * Behaviors are kind of plug-ins for Components. They allow to be added to a
- * component and get essential events forwarded by the component. they can be
- * bound to a concrete component (using the bind method is called when the
- * behavior is attached), but they don't need to. They can modify the components
- * markup by changing the rendered ComponentTag. Behaviors can have their own
- * models as well, and they are notified when these are to be detached by the
- * component.
+ * Behaviors are kind of plug-ins for Components. They allow to be added to a component and get
+ * essential events forwarded by the component. they can be bound to a concrete component (using the
+ * bind method is called when the behavior is attached), but they don't need to. They can modify the
+ * components markup by changing the rendered ComponentTag. Behaviors can have their own models as
+ * well, and they are notified when these are to be detached by the component.
  * <p>
- * It is recommended that you extend from
- * {@link org.apache.wicket.behavior.AbstractBehavior} instead of directly
- * implementing this interface.
+ * It is recommended that you extend from {@link org.apache.wicket.behavior.AbstractBehavior}
+ * instead of directly implementing this interface.
  * </p>
  * 
  * @see org.apache.wicket.behavior.IBehaviorListener
@@ -60,15 +57,14 @@ public interface IBehavior extends IClusterable
 	 *            the component that has this behavior coupled
 	 */
 	void afterRender(Component component);
-	
+
 	/**
-	 * Bind this handler to the given component. This method is called by the
-	 * host component immediately after this behavior is added to it. This
-	 * method is useful if you need to do initialization based on the component
-	 * it is attached and you can't wait to do it at render time. Keep in mind
-	 * that if you decide to keep a reference to the host component, it is not
-	 * thread safe anymore, and should thus only be used in situations where you
-	 * do not reuse the behavior for multiple components.
+	 * Bind this handler to the given component. This method is called by the host component
+	 * immediately after this behavior is added to it. This method is useful if you need to do
+	 * initialization based on the component it is attached and you can't wait to do it at render
+	 * time. Keep in mind that if you decide to keep a reference to the host component, it is not
+	 * thread safe anymore, and should thus only be used in situations where you do not reuse the
+	 * behavior for multiple components.
 	 * 
 	 * @param component
 	 *            the component to bind to
@@ -76,32 +72,30 @@ public interface IBehavior extends IClusterable
 	void bind(Component component);
 
 	/**
-	 * Allows the behavior to detach any state it has attached during request
-	 * processing.
+	 * Allows the behavior to detach any state it has attached during request processing.
 	 * 
 	 * @param component
-	 *            the component that initiates the detachement of this behavior
+	 *            the component that initiates the detachment of this behavior
 	 */
 	void detach(Component component);
 
 	/**
-	 * In case an unexpected exception happened anywhere between
-	 * onComponentTag() and rendered(), onException() will be called for any
-	 * behavior. Typically, if you clean up resources in
-	 * {@link #afterRender(Component)}, you should do the same in the
-	 * implementation of this method.
+	 * In case an unexpected exception happened anywhere between onComponentTag() and rendered(),
+	 * onException() will be called for any behavior. Typically, if you clean up resources in
+	 * {@link #afterRender(Component)}, you should do the same in the implementation of this
+	 * method.
 	 * 
 	 * @param component
-	 *            the component that has a reference to this behavior and during
-	 *            which processing the exception occured
+	 *            the component that has a reference to this behavior and during which processing
+	 *            the exception occurred
 	 * @param exception
 	 *            the unexpected exception
 	 */
 	void exception(Component component, RuntimeException exception);
 
 	/**
-	 * This method returns false if the behaviour generates a callback url (for
-	 * example ajax behaviours)
+	 * This method returns false if the behavior generates a callback url (for example ajax
+	 * behaviors)
 	 * 
 	 * @param component
 	 *            the component that has this behavior coupled.
@@ -111,19 +105,18 @@ public interface IBehavior extends IClusterable
 	boolean getStatelessHint(Component component);
 
 	/**
-	 * Called when a components is rendering and wants to render this behavior.
-	 * If false is returned this behavior will be ignored.
+	 * Called when a components is rendering and wants to render this behavior. If false is returned
+	 * this behavior will be ignored.
 	 * 
 	 * @param component
 	 *            the component that has this behavior coupled
 	 * 
-	 * @return true if this behaviour must be executed/rendered
+	 * @return true if this behavior must be executed/rendered
 	 */
 	boolean isEnabled(Component component);
 
 	/**
-	 * Called any time a component that has this behavior registered is
-	 * rendering the component tag.
+	 * Called any time a component that has this behavior registered is rendering the component tag.
 	 * 
 	 * @param component
 	 *            the component that renders this tag currently
@@ -133,10 +126,9 @@ public interface IBehavior extends IClusterable
 	void onComponentTag(Component component, ComponentTag tag);
 
 	/**
-	 * Specifies whether or not this behavior is temporary. Temporary behaviors
-	 * are removed at the end of request. Such behaviors are useful for
-	 * modifying component rendering only when it renders next. Usecases include
-	 * javascript effects, initial clientside dom setup, etc.
+	 * Specifies whether or not this behavior is temporary. Temporary behaviors are removed at the
+	 * end of request. Such behaviors are useful for modifying component rendering only when it
+	 * renders next. Usecases include javascript effects, initial clientside dom setup, etc.
 	 * 
 	 * @return true if this behavior is temporary
 	 */

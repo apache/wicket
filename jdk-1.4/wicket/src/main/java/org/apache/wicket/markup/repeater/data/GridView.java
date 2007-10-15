@@ -31,7 +31,7 @@ import org.apache.wicket.version.undo.Change;
  * top-down so that for each third item a new row is created.
  * <p>
  * Example
- * 
+ *
  * <pre>
  *   &lt;tbody&gt;
  *     &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
@@ -39,24 +39,24 @@ import org.apache.wicket.version.undo.Change;
  *         &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
  *       &lt;/td&gt;
  *     &lt;/tr&gt;
- *   &lt;/tbody&gt;  
+ *   &lt;/tbody&gt;
  * </pre>
- * 
+ *
  * and in java:
- * 
+ *
  * <pre>
  * add(new GridView(&quot;rows&quot;, dataProvider).setColumns(3));
  * </pre>
- * 
+ *
  * @author Igor Vaynberg
  * @author Christian Essl
- * 
+ *
  */
 public abstract class GridView extends DataViewBase
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int columns = 1;
@@ -85,9 +85,9 @@ public abstract class GridView extends DataViewBase
 
 	/**
 	 * Sets number of columns
-	 * 
+	 *
 	 * @param cols
-	 *            number of colums
+	 *            number of columns
 	 * @return this for chaining
 	 */
 	public GridView setColumns(int cols)
@@ -135,7 +135,7 @@ public abstract class GridView extends DataViewBase
 
 	/**
 	 * Sets number of rows per page
-	 * 
+	 *
 	 * @param rows
 	 *            number of rows
 	 * @return this for chaining
@@ -258,7 +258,7 @@ public abstract class GridView extends DataViewBase
 	/**
 	 * Add component to an Item for which there is no model anymore and is shown
 	 * in a cell
-	 * 
+	 *
 	 * @param item
 	 *            Item object
 	 */
@@ -267,7 +267,7 @@ public abstract class GridView extends DataViewBase
 	/**
 	 * Create a Item which represents an empty cell (there is no model for it in
 	 * the DataProvider)
-	 * 
+	 *
 	 * @param id
 	 * @param index
 	 * @return created item
@@ -279,7 +279,7 @@ public abstract class GridView extends DataViewBase
 
 	/**
 	 * Create a new Item which will hold a row.
-	 * 
+	 *
 	 * @param id
 	 * @param index
 	 * @return created Item
@@ -290,10 +290,10 @@ public abstract class GridView extends DataViewBase
 	}
 
 	/**
-	 * Iterator that iterats over all items in the cells
-	 * 
+	 * Iterator that iterates over all items in the cells
+	 *
 	 * @author igor
-	 * 
+	 *
 	 */
 	private static class ItemsIterator implements Iterator
 	{

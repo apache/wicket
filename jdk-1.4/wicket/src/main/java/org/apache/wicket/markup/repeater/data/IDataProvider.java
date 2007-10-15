@@ -24,49 +24,49 @@ import org.apache.wicket.model.IModel;
 
 /**
  * Interface used to provide data to data views.
- * 
+ *
  * Example:
- * 
+ *
  * <pre>
  *         class UsersProvider implements IDataProvider {
- *           
+ *
  *           public Iterator iterator(int first, int count) {
  *             ((MyApplication)Application.get()).getUserDao().iterator(first, count);
  *           }
- *           
+ *
  *           public int size() {
  *             ((MyApplication)Application.get()).getUserDao().getCount();
  *           }
- *           
+ *
  *           public IModel model(Object object) {
  *             return new DetachableUserModel((User)object);
  *           }
  *         }
  * </pre>
- * 
+ *
  * You can use the {@link IDetachable#detach()} method for cleaning up your
  * IDataProvider instance. So that you can do one query that returns both
  * the size and the values if your dataset is small enough the be able to
  * do that.
- * 
+ *
  * @see IDetachable
  * @see DataViewBase
  * @see DataView
  * @see GridView
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
 public interface IDataProvider extends IDetachable
 {
 	/**
 	 * Gets an iterator for the subset of total data
-	 * 
+	 *
 	 * @param first
 	 *            first row of data
 	 * @param count
-	 *            minumum number of elements to retrieve
-	 * 
+	 *            minimum number of elements to retrieve
+	 *
 	 * @return iterator capable of iterating over {first, first+count} items
 	 */
 	Iterator iterator(int first, int count);
@@ -74,7 +74,7 @@ public interface IDataProvider extends IDetachable
 	/**
 	 * Gets total number of items in the collection represented by the
 	 * DataProvider
-	 * 
+	 *
 	 * @return total item count
 	 */
 	int size();
@@ -83,10 +83,10 @@ public interface IDataProvider extends IDetachable
 	 * Callback used by the consumer of this data provider to wrap objects
 	 * retrieved from {@link #iterator(int, int)} with a model (usually a
 	 * detachable one).
-	 * 
+	 *
 	 * @param object
 	 *            the object that needs to be wrapped
-	 * 
+	 *
 	 * @return the model representation of the object
 	 */
 	IModel model(Object object);

@@ -34,7 +34,7 @@ public final class RequestUtils
 	/**
 	 * Decode the provided queryString as a series of key/ value pairs and set
 	 * them in the provided value map.
-	 * 
+	 *
 	 * @param queryString
 	 *            string to decode, uses '&' to separate parameters and '=' to
 	 *            separate key from value
@@ -67,7 +67,7 @@ public final class RequestUtils
 	}
 
 	/**
-	 * Remove occurences of ".." from the path
+	 * Remove occurrences of ".." from the path
 	 * @param path
 	 * @return
 	 */
@@ -105,7 +105,7 @@ public final class RequestUtils
 
 	/**
 	 * Does a URLDecoder.decode() in UTF-8
-	 * @param servletPath
+	 * @param path
 	 * @return
 	 */
 	public static String decode(String path)

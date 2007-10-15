@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default request processor implementation for normal web applications.
- * 
+ *
  * @author eelcohillenius
  */
 public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
@@ -166,7 +166,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 		// absolutely sure this is a great way to go, but it seems to have been
 		// established as the default way of doing things. If we ever want to
 		// tighten the algorithm up, it should be combined by going back to
-		// mountless paths so that requests with Wicket parameters like
+		// unmounted paths so that requests with Wicket parameters like
 		// 'bookmarkablePage' are always created and resolved in the same
 		// fashion. There is a test for this in UrlMountingTest.
 		if (target == null)
@@ -203,7 +203,7 @@ public class WebRequestCycleProcessor extends AbstractRequestCycleProcessor
 
 		if (target == null)
 		{
-			// if we get here, we have no regconized Wicket target, and thus
+			// if we get here, we have no recognized Wicket target, and thus
 			// regard this as a external (non-wicket) resource request on
 			// this server
 			return resolveExternalResource(requestCycle);

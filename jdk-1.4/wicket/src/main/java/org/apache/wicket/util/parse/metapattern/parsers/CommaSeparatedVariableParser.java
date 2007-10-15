@@ -24,13 +24,13 @@ import org.apache.wicket.util.parse.metapattern.MetaPattern;
  * Notes:
  * <p>
  * <ul>
- * <li>It'll not trim the elements (it'll not remove whitespaces)</li>
+ * <li>It'll not trim the elements (it'll not remove whitespace)</li>
  * <li>It is able to handle quotes like "a", 'b', "b,c" etc..</li>
  * <li>But no escapes like "c\"d"</li>
  * <li>Empty list elements like "a,," are not supported. It'll return the "a"
  * only.</li>
- * </lu>
- * 
+ * </ul>
+ *
  * @author Jonathan Locke
  */
 public final class CommaSeparatedVariableParser extends ListParser
@@ -42,7 +42,7 @@ public final class CommaSeparatedVariableParser extends ListParser
 	/**
 	 * Construct a new parser with parameter 'input' to be parsed. Base classes
 	 * provide the method to access the elements of the input parsed.
-	 * 
+	 *
 	 * @param input
 	 *            to parse
 	 */

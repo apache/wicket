@@ -45,12 +45,12 @@ import org.slf4j.LoggerFactory;
  * This is a request coding strategy which encrypts the URL and hence makes it
  * impossible for users to guess what is in the url and rebuild it manually. It
  * uses the CryptFactory registered with the application to encode and decode
- * the URL. Hence, the coding algorithm must be a two-way one (reversable).
- * Because the algrithm is reversible, URLs which were bookmarkable before will
+ * the URL. Hence, the coding algorithm must be a two-way one (reversible).
+ * Because the algorithm is reversible, URLs which were bookmarkable before will
  * remain bookmarkable.
  * <p>
  * To register the request coding strategy to need to do the following:
- * 
+ *
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
  * {
@@ -63,11 +63,11 @@ import org.slf4j.LoggerFactory;
  * 	};
  * }
  * </pre>
- * 
+ *
  * <b>Note:</b> When trying to hack urls in the browser an exception might be
  * caught while decoding the URL. By default, for safety reasons a very simple
  * WicketRuntimeException is thrown. The original stack trace is only logged.
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrategy
@@ -80,7 +80,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param defaultStrategy
 	 *            The default strategy most requests are forwarded to
 	 */
@@ -91,7 +91,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * Decode the querystring of the URL
-	 * 
+	 *
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#decode(org.apache.wicket.Request)
 	 */
 	public RequestParameters decode(final Request request)
@@ -104,21 +104,21 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			// doesn't know the just decoded url which is why must create
 			// a fake Request for.
 			Request fakeRequest = new DecodedUrlRequest(request, url, decodedQueryParams);
-			return this.defaultStrategy.decode(fakeRequest);
+			return defaultStrategy.decode(fakeRequest);
 		}
 
-		return this.defaultStrategy.decode(request);
+		return defaultStrategy.decode(request);
 	}
 
 	/**
 	 * Encode the querystring of the URL
-	 * 
+	 *
 	 * @see org.apache.wicket.request.IRequestCodingStrategy#encode(org.apache.wicket.RequestCycle,
 	 *      org.apache.wicket.IRequestTarget)
 	 */
 	public CharSequence encode(final RequestCycle requestCycle, final IRequestTarget requestTarget)
 	{
-		CharSequence url = this.defaultStrategy.encode(requestCycle, requestTarget);
+		CharSequence url = defaultStrategy.encode(requestCycle, requestTarget);
 		url = encodeURL(url);
 		return url;
 	}
@@ -129,7 +129,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	public void mount(IRequestTargetUrlCodingStrategy urlCodingStrategy)
 	{
-		this.defaultStrategy.mount(urlCodingStrategy);
+		defaultStrategy.mount(urlCodingStrategy);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	public void unmount(String path)
 	{
-		this.defaultStrategy.unmount(path);
+		defaultStrategy.unmount(path);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	public IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
-		return this.defaultStrategy.urlCodingStrategyForPath(path);
+		return defaultStrategy.urlCodingStrategyForPath(path);
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	public CharSequence pathForTarget(IRequestTarget requestTarget)
 	{
-		return this.defaultStrategy.pathForTarget(requestTarget);
+		return defaultStrategy.pathForTarget(requestTarget);
 	}
 
 	/**
@@ -161,12 +161,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	public IRequestTarget targetForRequest(RequestParameters requestParameters)
 	{
-		return this.defaultStrategy.targetForRequest(requestParameters);
+		return defaultStrategy.targetForRequest(requestParameters);
 	}
 
 	/**
 	 * Returns the given url encoded.
-	 * 
+	 *
 	 * @param url
 	 *            The URL to encode
 	 * @return The encoded url
@@ -225,7 +225,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * Decode the "x" parameter of the querystring
-	 * 
+	 *
 	 * @param url
 	 *            The encoded URL
 	 * @return The decoded 'x' parameter of the querystring
@@ -274,7 +274,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 	/**
 	 * @param ex
-	 * 
+	 *
 	 * @return decoded URL
 	 */
 	protected String onError(final Exception ex)
@@ -287,7 +287,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	/**
 	 * Try to shorten the querystring without loosing information. Note:
 	 * WebRequestWithCryptedUrl must implement exactly the opposite logic.
-	 * 
+	 *
 	 * @param queryString
 	 *            The original query string
 	 * @return The shortened querystring
@@ -330,7 +330,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 * In case the query string has been shortened prior to encryption, than
 	 * rebuild (lengthen) the query string now. Note: This implementation must
 	 * exactly match the reverse one implemented in WebResponseWithCryptedUrl.
-	 * 
+	 *
 	 * @param queryString
 	 *            The URL's query string
 	 * @return The lengthened query string
@@ -377,7 +377,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param request
 		 * @param url
 		 * @param encodedParamReplacement
@@ -388,10 +388,10 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			this.request = request;
 
 			// Create a copy of the original parameter map
-			this.parameterMap = this.request.getParameterMap();
+			parameterMap = this.request.getParameterMap();
 
 			// Remove the 'x' parameter which contains ALL the encoded params
-			this.parameterMap.remove("x");
+			parameterMap.remove("x");
 			String decodedParamReplacement = encodedParamReplacement;
 			try
 			{
@@ -406,7 +406,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			// Add ALL of the params from the decoded 'x' param
 			ValueMap params = new ValueMap();
 			RequestUtils.decodeParameters(decodedParamReplacement, params);
-			this.parameterMap.putAll(params);
+			parameterMap.putAll(params);
 
 			// Rebuild the URL with the 'x' param removed
 			int pos1 = url.indexOf("?x=");
@@ -429,12 +429,12 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 		/**
 		 * Delegate to the original request
-		 * 
+		 *
 		 * @see org.apache.wicket.Request#getLocale()
 		 */
 		public Locale getLocale()
 		{
-			return this.request.getLocale();
+			return request.getLocale();
 		}
 
 		/**
@@ -447,7 +447,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 				return null;
 			}
 
-			Object val = this.parameterMap.get(key);
+			Object val = parameterMap.get(key);
 			if (val == null)
 			{
 				return null;
@@ -473,7 +473,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 */
 		public Map getParameterMap()
 		{
-			return this.parameterMap;
+			return parameterMap;
 		}
 
 		/**
@@ -486,7 +486,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 				return null;
 			}
 
-			Object val = this.parameterMap.get(key);
+			Object val = parameterMap.get(key);
 			if (val == null)
 			{
 				return null;
@@ -512,30 +512,30 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		public String getPath()
 		{
 			// Hasn't changed. We only encoded the querystring
-			return this.request.getPath();
+			return request.getPath();
 		}
-		
+
 		public String getRelativePathPrefixToContextRoot()
 		{
 			return request.getRelativePathPrefixToContextRoot();
 		}
-		
+
 		public String getRelativePathPrefixToWicketHandler()
 		{
 			return request.getRelativePathPrefixToWicketHandler();
 		}
-		
+
 		/**
 		 * @see org.apache.wicket.Request#getURL()
 		 */
 		public String getURL()
 		{
-			return this.url;
+			return url;
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public class HackAttackException extends WicketRuntimeException
 	{
@@ -543,7 +543,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param msg
 		 */
 		public HackAttackException(final String msg)
@@ -554,7 +554,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * No stack trace. We won't tell the hackers about the internals of
 		 * wicket
-		 * 
+		 *
 		 * @see java.lang.Throwable#getStackTrace()
 		 */
 		public StackTraceElement[] getStackTrace()
@@ -565,7 +565,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * No additional information. We won't tell the hackers about the
 		 * internals of wicket
-		 * 
+		 *
 		 * @see java.lang.Throwable#toString()
 		 */
 		public String toString()

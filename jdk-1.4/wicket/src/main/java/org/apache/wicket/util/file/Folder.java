@@ -25,14 +25,14 @@ import java.util.List;
 /**
  * This folder subclass provides some type safety and extensibility for "files"
  * that hold other files.
- * 
+ *
  * @author Jonathan Locke
  */
 public final class Folder extends File
 {
 	/**
 	 * Filter for files
-	 * 
+	 *
 	 * @author Jonathan Locke
 	 */
 	public static interface FileFilter
@@ -47,7 +47,7 @@ public final class Folder extends File
 				return true;
 			}
 		};
-		
+
 		/**
 		 * @param file
 		 *            The file to test
@@ -58,7 +58,7 @@ public final class Folder extends File
 
 	/**
 	 * Filter for folders
-	 * 
+	 *
 	 * @author Jonathan Locke
 	 */
 	public static interface FolderFilter
@@ -75,7 +75,7 @@ public final class Folder extends File
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            parent
 	 * @param child
@@ -88,7 +88,7 @@ public final class Folder extends File
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param file
 	 *            File
 	 */
@@ -99,7 +99,7 @@ public final class Folder extends File
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param pathname
 	 *            path name
 	 */
@@ -110,7 +110,7 @@ public final class Folder extends File
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            parent
 	 * @param child
@@ -123,7 +123,7 @@ public final class Folder extends File
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param uri
 	 *            folder uri
 	 */
@@ -135,7 +135,7 @@ public final class Folder extends File
 	/**
 	 * Does a mkdirs() on this folder if it does not exist. If the folder cannot
 	 * be created, an IOException is thrown.
-	 * 
+	 *
 	 * @throws IOException
 	 *             Thrown if folder cannot be created
 	 */
@@ -154,18 +154,18 @@ public final class Folder extends File
 	{
 		return getFiles(FileFilter.ALL_FILES);
 	}
-	
+
 	/**
 	 * @return All files nested within this folder
 	 */
 	public File[] getNestedFiles()
 	{
-		return getNestedFiles(FileFilter.ALL_FILES);		
+		return getNestedFiles(FileFilter.ALL_FILES);
 	}
 
 	/**
-	 * Gets files in this folder matching a given filter recusively.
-	 * 
+	 * Gets files in this folder matching a given filter recursively.
+	 *
 	 * @param filter
 	 *            The filter
 	 * @return The list of files
@@ -181,7 +181,7 @@ public final class Folder extends File
 		}
 		return (File[])files.toArray(new File[files.size()]);
 	}
-	
+
 	/**
 	 * @param filter
 	 *            File filter
@@ -216,7 +216,7 @@ public final class Folder extends File
 
 	/**
 	 * Gets all folders in this folder, except "." and ".."
-	 * 
+	 *
 	 * @return Folders
 	 */
 	public Folder[] getFolders()
@@ -233,7 +233,7 @@ public final class Folder extends File
 
 	/**
 	 * @param filter
-	 *            Folder fiter
+	 *            Folder filter
 	 * @return Folders
 	 */
 	public Folder[] getFolders(final FolderFilter filter)
@@ -266,7 +266,7 @@ public final class Folder extends File
 	/**
 	 * Removes this folder and everything in it, recursively. A best effort is
 	 * made to remove nested folders and files in depth-first order.
-	 * 
+	 *
 	 * @return True if the folder was successfully removed
 	 */
 	public boolean remove()
@@ -276,7 +276,7 @@ public final class Folder extends File
 
 	/**
 	 * Removes all the files in this folder.
-	 * 
+	 *
 	 * @return True if any files were successfully removed
 	 */
 	public boolean removeFiles()
@@ -292,7 +292,7 @@ public final class Folder extends File
 
 	/**
 	 * Removes everything in the given folder and then the folder itself.
-	 * 
+	 *
 	 * @param folder
 	 *            The folder
 	 * @return True if the folder was successfully removed

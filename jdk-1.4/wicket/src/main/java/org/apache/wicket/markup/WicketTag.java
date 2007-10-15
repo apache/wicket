@@ -24,18 +24,18 @@ import org.apache.wicket.markup.parser.XmlTag;
  * "wicket", so wicket tags are then of the form &lt;wicket:*&gt;
  * <p>
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html
- * xmlns:wicket&gt; to create a XHTML conformant namespace for such tags.
+ * xmlns:wicket&gt; to create a XHTML conform namespace for such tags.
  * <p>
  * Note 2: The namespace name is configurable. E.g. &lt;html
  * xmlns:wcn="http://wicket"&gt;
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class WicketTag extends ComponentTag
 {
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param tag
 	 *            The XML tag which this wicket tag is based upon.
 	 */
@@ -46,7 +46,7 @@ public class WicketTag extends ComponentTag
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param tag
 	 *            The ComponentTag tag which this wicket tag is based upon.
 	 */
@@ -59,7 +59,7 @@ public class WicketTag extends ComponentTag
 
 	/**
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
-	 * 
+	 *
 	 * @return The tag's name attribute
 	 */
 	public final String getNameAttribute()
@@ -174,7 +174,7 @@ public class WicketTag extends ComponentTag
 	/**
 	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
 	 * it is immutable.
-	 * 
+	 *
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */

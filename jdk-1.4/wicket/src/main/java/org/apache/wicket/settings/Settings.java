@@ -68,7 +68,7 @@ import org.apache.wicket.util.watch.ModificationWatcher;
 /**
  * Contains settings exposed via IXXXSettings interfaces. It is not a good idea to use this class
  * directly, instead use the provided IXXXSettings interfaces.
- * 
+ *
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -129,7 +129,7 @@ public final class Settings
 	/** Default values for persistence of form data (by means of cookies) */
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
 
-	/** facotry for creating crypt objects */
+	/** factory for creating crypt objects */
 	private ICryptFactory cryptFactory;
 
 	/** Default markup for after a disabled link */
@@ -270,7 +270,7 @@ public final class Settings
 		/**
 		 * Called when an unauthorized component instantiation is about to take place (but before it
 		 * happens).
-		 * 
+		 *
 		 * @param component
 		 *            The partially constructed component (only the id is guaranteed to be valid).
 		 */
@@ -296,7 +296,7 @@ public final class Settings
 	private boolean requestLoggerEnabled;
 
 	/**
-	 * Whether the comments and whitespaces will be stripped from javascript resources
+	 * Whether the comments and whitespace will be stripped from javascript resources
 	 */
 	private boolean stripJavascriptCommentsAndWhitespace;
 
@@ -308,8 +308,8 @@ public final class Settings
 	private boolean addLastModifiedTimeToResourceReferenceUrl = false;
 
 	/**
-	 * Create the application settings, carrying out any necessary initialisations.
-	 * 
+	 * Create the application settings, carrying out any necessary initializations.
+	 *
 	 * @param application
 	 *            The application that these settings are for
 	 */
@@ -432,7 +432,7 @@ public final class Settings
 
 	/**
 	 * Get the (modifiable) list of IComponentResolvers.
-	 * 
+	 *
 	 * @see AutoComponentResolver for an example
 	 * @return List of ComponentResolvers
 	 */
@@ -1164,7 +1164,7 @@ public final class Settings
 
 	/**
 	 * Throws an IllegalArgumentException if the given class is not a subclass of Page.
-	 * 
+	 *
 	 * @param pageClass
 	 *            the page class to check
 	 */

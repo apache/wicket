@@ -31,15 +31,14 @@ import org.apache.wicket.model.IModel;
 /**
  * An attribute modifier specifically for body tags.
  * <p>
- * Panels have associated markup files and if they contain
- * <code>&lt;wicket:head&gt;</code> and <code>&lt;body onLoad="..."&gt;</code>
- * then the body's <code>onLoad</code> attribute will be appended to the page's
- * onLoad attribute. That appendation happens by means of an AttributeModifier
- * which the Panel adds to the body container. In the case where the Panel is
- * removed or replaced, then the AttributeModifier must be removed or at least
- * disabled. That exactly is what this special purpose AttributeModifier does,
- * i.e. it disables itself if the owner component (Panel) is removed or replaced.
- *
+ * Panels have associated markup files and if they contain <code>&lt;wicket:head&gt;</code> and
+ * <code>&lt;body onLoad="..."&gt;</code> then the body's <code>onLoad</code> attribute will be
+ * appended to the page's onLoad attribute. That accretion happens by means of an AttributeModifier
+ * which the Panel adds to the body container. In the case where the Panel is removed or replaced,
+ * then the AttributeModifier must be removed or at least disabled. That exactly is what this
+ * special purpose AttributeModifier does, i.e. it disables itself if the owner component (Panel) is
+ * removed or replaced.
+ * 
  * @author Juergen Donnerstag
  */
 public final class BodyTagAttributeModifier extends AttributeModifier
@@ -47,15 +46,13 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Make sure we don't keep a reference to the component longer than realy
-	 * needed.
+	 * Make sure we don't keep a reference to the component longer than really needed.
 	 */
 	private transient WeakReference componentReference;
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and model
-	 * to replace with. The additional boolean flag specifies whether to add the
-	 * attribute if it is not present.
+	 * Create a new attribute modifier with the given attribute name and model to replace with. The
+	 * additional boolean flag specifies whether to add the attribute if it is not present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
@@ -74,8 +71,8 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	}
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and model
-	 * to replace with. The attribute will not be added if it is not present.
+	 * Create a new attribute modifier with the given attribute name and model to replace with. The
+	 * attribute will not be added if it is not present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
@@ -92,18 +89,18 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	}
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and
-	 * expected pattern to match plus the model to replace with. A null pattern
-	 * will match the attribute regardless of its value. The additional boolean
-	 * flag specifies whether to add the attribute if it is not present.
+	 * Create a new attribute modifier with the given attribute name and expected pattern to match
+	 * plus the model to replace with. A null pattern will match the attribute regardless of its
+	 * value. The additional boolean flag specifies whether to add the attribute if it is not
+	 * present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
 	 * @param pattern
 	 *            The pattern of the current attribute value to match
 	 * @param addAttributeIfNotPresent
-	 *            Whether to add the attribute if it is not present and the
-	 *            replacement value is not null
+	 *            Whether to add the attribute if it is not present and the replacement value is not
+	 *            null
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 * @param behaviorOwner
@@ -118,10 +115,9 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	}
 
 	/**
-	 * Create a new attribute modifier with the given attribute name and
-	 * expected pattern to match plus the model to replace with. A null pattern
-	 * will match the attribute regardless of its value. The attribute will not
-	 * be added if it is not present.
+	 * Create a new attribute modifier with the given attribute name and expected pattern to match
+	 * plus the model to replace with. A null pattern will match the attribute regardless of its
+	 * value. The attribute will not be added if it is not present.
 	 * 
 	 * @param attribute
 	 *            The attribute name to replace the value for
@@ -149,19 +145,18 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	{
 		if (behaviorOwner != null)
 		{
-			this.componentReference = new WeakReference(behaviorOwner);
+			componentReference = new WeakReference(behaviorOwner);
 		}
 	}
 
 	/**
-	 * @see org.apache.wicket.AttributeModifier#newValue(java.lang.String,
-	 *      java.lang.String)
+	 * @see org.apache.wicket.AttributeModifier#newValue(java.lang.String, java.lang.String)
 	 */
 	protected String newValue(final String currentValue, final String replacementValue)
 	{
 		// If no behavior owner has been provided, than behave as if this
 		// were a standard normal attribute modifier
-		if (this.componentReference != null)
+		if (componentReference != null)
 		{
 			// Get the owner of the attribute modifier (e.g. the Panel, not the
 			// Body)
@@ -180,7 +175,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 			// return the attribute value unchanged.
 
 			// Component.findPage() is 'protected'. But this works as well.
-			if ( !(behaviorOwner instanceof Page) && behaviorOwner.findParent(Page.class) == null)
+			if (!(behaviorOwner instanceof Page) && behaviorOwner.findParent(Page.class) == null)
 			{
 				setEnabled(false);
 				return currentValue;
@@ -194,16 +189,16 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 				return currentValue;
 			}
 		}
-		if(currentValue != null && !currentValue.trim().endsWith(";"))
+		if (currentValue != null && !currentValue.trim().endsWith(";"))
 		{
-			return currentValue + ";"+ replacementValue;
+			return currentValue + ";" + replacementValue;
 		}
 		return (currentValue == null ? replacementValue : currentValue + replacementValue);
 	}
 
 	/**
-	 * AttributeModifiers must be Serialzable but WeakReferences are not. Hence,
-	 * we need to implement our read/write methods to properly support it.
+	 * AttributeModifiers must be Serialzable but WeakReferences are not. Hence, we need to
+	 * implement our read/write methods to properly support it.
 	 * 
 	 * @see Serializable
 	 * 
@@ -225,8 +220,8 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	}
 
 	/**
-	 * AttributeModifiers must be Serialzable but WeakReferences are not. Hence,
-	 * we need to implement our read/write methods to properly support it.
+	 * AttributeModifiers must be Serialzable but WeakReferences are not. Hence, we need to
+	 * implement our read/write methods to properly support it.
 	 * 
 	 * @see Serializable
 	 * 

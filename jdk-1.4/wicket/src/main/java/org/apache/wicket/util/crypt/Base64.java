@@ -159,18 +159,18 @@ public class Base64
     }
 
     /**
-     * Returns whether or not the <code>octect</code> is in the base 64 alphabet.
+     * Returns whether or not the <code>octet</code> is in the base 64 alphabet.
      *
-     * @param octect The value to test
+     * @param octet The value to test
      * @return <code>true</code> if the value is defined in the the base 64 alphabet, <code>false</code> otherwise.
      */
-    private static boolean isBase64(byte octect)
+    private static boolean isBase64(byte octet)
     {
-        if (octect == PAD)
+        if (octet == PAD)
         {
             return true;
         }
-        else if (octect < 0 || base64Alphabet[octect] == -1)
+        else if (octet < 0 || base64Alphabet[octet] == -1)
         {
             return false;
         }
@@ -296,8 +296,8 @@ public class Base64
             encodedDataLength = numberTriplets * 4;
         }
 
-        // If the output is to be "chunked" into 76 character sections, 
-        // for compliance with RFC 2045 MIME, then it is important to 
+        // If the output is to be "chunked" into 76 character sections,
+        // for compliance with RFC 2045 MIME, then it is important to
         // allow for extra length to account for the separator(s)
         if (isChunked)
         {
@@ -424,7 +424,7 @@ public class Base64
     }
 
     /**
-     * Decodes Base64 data into octects
+     * Decodes Base64 data into octets
      *
      * @param base64Data Byte array containing Base64 data
      * @return Array containing decoded data.

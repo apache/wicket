@@ -21,14 +21,14 @@ import java.util.Map;
 
 /**
  * A simple parser intended to parse sequences of name/value pairs. Parameter
- * values are exptected to be enclosed in quotes if they contain unsafe
+ * values are expected to be enclosed in quotes if they contain unsafe
  * characters, such as '=' characters or separators. Parameter values are
  * optional and can be omitted.
- * 
+ *
  * <p>
  * <code>param1 = value; param2 = "anything goes; really"; param3</code>
  * </p>
- * 
+ *
  * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
  */
 
@@ -74,19 +74,19 @@ public class ParameterParser
 
 	/**
 	 * Are there any characters left to parse?
-	 * 
+	 *
 	 * @return <tt>true</tt> if there are unparsed characters, <tt>false</tt>
 	 *         otherwise.
 	 */
 	private boolean hasChar()
 	{
-		return this.pos < this.len;
+		return pos < len;
 	}
 
 	/**
 	 * A helper method to process the parsed token. This method removes leading
 	 * and trailing blanks as well as enclosing quotation marks, when necessary.
-	 * 
+	 *
 	 * @param quoted
 	 *            <tt>true</tt> if quotation marks are expected,
 	 *            <tt>false</tt> otherwise.
@@ -123,12 +123,12 @@ public class ParameterParser
 
 	/**
 	 * Tests if the given character is present in the array of characters.
-	 * 
+	 *
 	 * @param ch
-	 *            the character to test for presense in the array of characters
+	 *            the character to test for presence in the array of characters
 	 * @param charray
 	 *            the array of characters to test against
-	 * 
+	 *
 	 * @return <tt>true</tt> if the character is present in the array of
 	 *         characters, <tt>false</tt> otherwise.
 	 */
@@ -148,11 +148,11 @@ public class ParameterParser
 
 	/**
 	 * Parses out a token until any of the given terminators is encountered.
-	 * 
+	 *
 	 * @param terminators
 	 *            the array of terminating characters. Any of these characters
 	 *            when encountered signify the end of the token
-	 * 
+	 *
 	 * @return the token
 	 */
 	private String parseToken(final char[] terminators)
@@ -176,12 +176,12 @@ public class ParameterParser
 	/**
 	 * Parses out a token until any of the given terminators is encountered
 	 * outside the quotation marks.
-	 * 
+	 *
 	 * @param terminators
 	 *            the array of terminating characters. Any of these characters
 	 *            when encountered outside the quotation marks signify the end
 	 *            of the token
-	 * 
+	 *
 	 * @return the token
 	 */
 	private String parseQuotedToken(final char[] terminators)
@@ -213,20 +213,20 @@ public class ParameterParser
 	/**
 	 * Returns <tt>true</tt> if parameter names are to be converted to lower
 	 * case when name/value pairs are parsed.
-	 * 
+	 *
 	 * @return <tt>true</tt> if parameter names are to be converted to lower
 	 *         case when name/value pairs are parsed. Otherwise returns
 	 *         <tt>false</tt>
 	 */
 	public boolean isLowerCaseNames()
 	{
-		return this.lowerCaseNames;
+		return lowerCaseNames;
 	}
 
 	/**
 	 * Sets the flag if parameter names are to be converted to lower case when
 	 * name/value pairs are parsed.
-	 * 
+	 *
 	 * @param b
 	 *            <tt>true</tt> if parameter names are to be converted to
 	 *            lower case when name/value pairs are parsed. <tt>false</tt>
@@ -234,18 +234,18 @@ public class ParameterParser
 	 */
 	public void setLowerCaseNames(boolean b)
 	{
-		this.lowerCaseNames = b;
+		lowerCaseNames = b;
 	}
 
 	/**
 	 * Extracts a map of name/value pairs from the given string. Names are
 	 * expected to be unique.
-	 * 
+	 *
 	 * @param str
 	 *            the string that contains a sequence of name/value pairs
 	 * @param separator
 	 *            the name/value pairs separator
-	 * 
+	 *
 	 * @return a map of name/value pairs
 	 */
 	public Map parse(final String str, char separator)
@@ -260,13 +260,13 @@ public class ParameterParser
 	/**
 	 * Extracts a map of name/value pairs from the given array of characters.
 	 * Names are expected to be unique.
-	 * 
+	 *
 	 * @param chars
 	 *            the array of characters that contains a sequence of name/value
 	 *            pairs
 	 * @param separator
 	 *            the name/value pairs separator
-	 * 
+	 *
 	 * @return a map of name/value pairs
 	 */
 	public Map parse(final char[] chars, char separator)
@@ -281,7 +281,7 @@ public class ParameterParser
 	/**
 	 * Extracts a map of name/value pairs from the given array of characters.
 	 * Names are expected to be unique.
-	 * 
+	 *
 	 * @param chars
 	 *            the array of characters that contains a sequence of name/value
 	 *            pairs
@@ -291,7 +291,7 @@ public class ParameterParser
 	 *            the length.
 	 * @param separator
 	 *            the name/value pairs separator
-	 * 
+	 *
 	 * @return a map of name/value pairs
 	 */
 	public Map parse(final char[] chars, int offset, int length, char separator)
@@ -303,8 +303,8 @@ public class ParameterParser
 		}
 		HashMap params = new HashMap();
 		this.chars = chars;
-		this.pos = offset;
-		this.len = length;
+		pos = offset;
+		len = length;
 
 		String paramName = null;
 		String paramValue = null;
@@ -323,7 +323,7 @@ public class ParameterParser
 			}
 			if ((paramName != null) && (paramName.length() > 0))
 			{
-				if (this.lowerCaseNames)
+				if (lowerCaseNames)
 				{
 					paramName = paramName.toLowerCase();
 				}

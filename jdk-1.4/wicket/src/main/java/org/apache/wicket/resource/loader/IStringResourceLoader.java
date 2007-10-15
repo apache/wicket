@@ -36,9 +36,9 @@ import org.apache.wicket.Component;
  * it would be very inefficient for loaders earlier in the chain to throw
  * exceptions that must be caught and handled each time until the correct loader
  * in the chain is reached.
- * 
+ *
  * @see org.apache.wicket.settings.IResourceSettings
- * 
+ *
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
@@ -50,10 +50,10 @@ public interface IStringResourceLoader
 	 * allow implementation of component specific resource loading (e.g. per
 	 * page or per reusable component). The key should be a String containing a
 	 * lookup key into a resource bundle. The locale should contain the locale
-	 * of the current operation so that the appopriate set of resources can be
+	 * of the current operation so that the appropriate set of resources can be
 	 * selected. The style allows the set of resources to select to be varied by
 	 * skin/brand.
-	 * 
+	 *
 	 * @param clazz
 	 *            The class to get the string resource for
 	 * @param key
@@ -61,7 +61,7 @@ public interface IStringResourceLoader
 	 *            resource bundle
 	 * @param locale
 	 *            The locale should contain the locale of the current operation
-	 *            so that the appopriate set of resources can be selected
+	 *            so that the appropriate set of resources can be selected
 	 * @param style
 	 *            The style identifying the resource set to select the strings
 	 *            from (see {@link org.apache.wicket.Session})
@@ -77,7 +77,7 @@ public interface IStringResourceLoader
 	 * component). The key should be a String containing a lookup key into a
 	 * resource bundle. The Locale and the style will be taken from the
 	 * Component provided.
-	 * 
+	 *
 	 * @param component
 	 *            The component to get the string resource for
 	 * @param key

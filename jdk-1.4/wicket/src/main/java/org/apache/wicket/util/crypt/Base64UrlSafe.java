@@ -21,8 +21,8 @@ package org.apache.wicket.util.crypt;
  * as defined by RFC 3548, section 4.
  * <p/>
  * This Base64 encoder is modified to meet URL requirements. The changes are:
- * '+' => '*', 
- * '/' => '-', 
+ * '+' => '*',
+ * '/' => '-',
  * and no padding.
  * <p/>
  * This class is taken from the Apache commons-codec, and adjusted to fit the
@@ -34,7 +34,7 @@ package org.apache.wicket.util.crypt;
  *
  * @author Apache Software Foundation
  * @author Juergen Donnerstag
- * 
+ *
  * @since 1.2
  */
 public class Base64UrlSafe
@@ -144,14 +144,14 @@ public class Base64UrlSafe
     }
 
     /**
-     * Returns whether or not the <code>octect</code> is in the base 64 alphabet.
+     * Returns whether or not the <code>octet</code> is in the base 64 alphabet.
      *
-     * @param octect The value to test
+     * @param octet The value to test
      * @return <code>true</code> if the value is defined in the the base 64 alphabet, <code>false</code> otherwise.
      */
-    private static boolean isBase64(byte octect)
+    private static boolean isBase64(byte octet)
     {
-        if (octect < 0 || base64Alphabet[octect] == -1)
+        if (octet < 0 || base64Alphabet[octet] == -1)
         {
             return false;
         }
@@ -334,7 +334,7 @@ public class Base64UrlSafe
     }
 
     /**
-     * Decodes Base64 data into octects
+     * Decodes Base64 data into octets
      *
      * @param base64Data Byte array containing Base64 data
      * @return Array containing decoded data.

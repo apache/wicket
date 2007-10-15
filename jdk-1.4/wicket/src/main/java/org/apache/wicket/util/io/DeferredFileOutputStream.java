@@ -50,7 +50,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 
 	/**
-	 * The output stream to which data will be written prior to the theshold being
+	 * The output stream to which data will be written prior to the threshold being
 	 * reached.
 	 */
 	private ByteArrayOutputStream memoryOutputStream;
@@ -143,7 +143,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 
 	/**
 	 * Switches the underlying output stream from a memory based stream to one that is
-	 * backed by disk. This is the point at which we realise that too much data is being
+	 * backed by disk. This is the point at which we realize that too much data is being
 	 * written to keep in memory, so we elect to switch to disk-based storage.
 	 * @exception IOException if an error occurs.
 	 */

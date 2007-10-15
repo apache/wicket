@@ -36,10 +36,9 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
- * This is a IComponentBorder implementation that can be used if you have markup
- * that should be around a component. It works just like {@link Border} so you
- * have to have a <wicket:border>HTML before<wicket:body/>HTML after</wicket:border>
- * in the html of your subclass.
+ * This is a IComponentBorder implementation that can be used if you have markup that should be
+ * around a component. It works just like {@link Border} so you have to have a <wicket:border>HTML
+ * before<wicket:body/>HTML after</wicket:border> in the html of your subclass.
  * 
  * @author jcompagner
  */
@@ -86,9 +85,9 @@ public class MarkupComponentBorder implements IComponentBorder
 					else
 					{
 						throw new WicketRuntimeException(
-								"Unexpected tag encountered in markup of component border "
-										+ getClass().getName() + ". Tag: " + wt.toString()
-										+ ", expected tag: <wicket:border>");
+								"Unexpected tag encountered in markup of component border " +
+										getClass().getName() + ". Tag: " + wt.toString() +
+										", expected tag: <wicket:border>");
 					}
 				}
 				else
@@ -100,9 +99,9 @@ public class MarkupComponentBorder implements IComponentBorder
 					else
 					{
 						throw new WicketRuntimeException(
-								"Unexpected tag encountered in markup of component border "
-										+ getClass().getName() + ". Tag: " + wt.toString()
-										+ ", expected tag: <wicket:body> or </wicket:body>");
+								"Unexpected tag encountered in markup of component border " +
+										getClass().getName() + ". Tag: " + wt.toString() +
+										", expected tag: <wicket:body> or </wicket:body>");
 					}
 				}
 			}
@@ -114,14 +113,14 @@ public class MarkupComponentBorder implements IComponentBorder
 
 		if (!stream.hasMore())
 		{
-			throw new WicketRuntimeException("Markup for component border " + getClass().getName()
-					+ " ended prematurely, was expecting </wicket:border>");
+			throw new WicketRuntimeException("Markup for component border " + getClass().getName() +
+					" ended prematurely, was expecting </wicket:border>");
 		}
 	}
 
 	/**
 	 * 
-	 * @see IComponentBorder#renderAfter(org.apache.wicket.Component) 
+	 * @see IComponentBorder#renderAfter(org.apache.wicket.Component)
 	 */
 	public void renderAfter(Component component)
 	{
@@ -141,9 +140,9 @@ public class MarkupComponentBorder implements IComponentBorder
 				else
 				{
 					throw new WicketRuntimeException(
-							"Unexpected tag encountered in markup of component border "
-									+ getClass().getName() + ". Tag: " + wt.toString()
-									+ ", expected tag: </wicket:border>");
+							"Unexpected tag encountered in markup of component border " +
+									getClass().getName() + ". Tag: " + wt.toString() +
+									", expected tag: </wicket:border>");
 				}
 			}
 			response.write(e.toCharSequence());
@@ -164,7 +163,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		final String markupType = getMarkupType(owner);
 
 		// TODO we need to expose this functionality for any class not just for
-		// markupcontainers in markupcache so we dont have to replicate this
+		// markupcontainers in markupcache so we don't have to replicate this
 		// logic here
 
 		// Get locator to search for the resource
@@ -201,8 +200,8 @@ public class MarkupComponentBorder implements IComponentBorder
 
 		if (markupResourceStream == null)
 		{
-			throw new WicketRuntimeException("Could not find markup for component border `"
-					+ getClass().getName() + "`");
+			throw new WicketRuntimeException("Could not find markup for component border `" +
+					getClass().getName() + "`");
 		}
 
 		try
@@ -213,8 +212,9 @@ public class MarkupComponentBorder implements IComponentBorder
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("Could not parse markup from markup resource stream: "
-					+ markupResourceStream.toString());
+			throw new WicketRuntimeException(
+					"Could not parse markup from markup resource stream: " +
+							markupResourceStream.toString());
 		}
 	}
 

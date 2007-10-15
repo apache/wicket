@@ -22,8 +22,8 @@ import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
- * Adapter implementation of {@link org.apache.wicket.behavior.IBehavior}. It
- * is recommended to extend from this class instead of directly implementing
+ * Adapter implementation of {@link org.apache.wicket.behavior.IBehavior}. It is recommended to
+ * extend from this class instead of directly implementing
  * {@link org.apache.wicket.behavior.IBehavior} as this class has an extra clean
  * 
  * @author Ralf Ebert
@@ -59,9 +59,8 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 
 	/**
 	 * This method is called either by {@link #onRendered(Component)} or
-	 * {@link #onException(Component, RuntimeException)} AFTER they called their
-	 * respective template methods. Override this template method to do any
-	 * necessary cleanup.
+	 * {@link #onException(Component, RuntimeException)} AFTER they called their respective template
+	 * methods. Override this template method to do any necessary cleanup.
 	 */
 	public void cleanup()
 	{
@@ -108,13 +107,12 @@ public abstract class AbstractBehavior implements IBehavior, IHeaderContributor
 	}
 
 	/**
-	 * In case an unexpected exception happened anywhere between
-	 * onComponentTag() and rendered(), onException() will be called for any
-	 * behavior.
+	 * In case an unexpected exception happened anywhere between onComponentTag() and rendered(),
+	 * onException() will be called for any behavior.
 	 * 
 	 * @param component
-	 *            the component that has a reference to this behavior and during
-	 *            which processing the exception occured
+	 *            the component that has a reference to this behavior and during which processing
+	 *            the exception occurred
 	 * @param exception
 	 *            the unexpected exception
 	 */

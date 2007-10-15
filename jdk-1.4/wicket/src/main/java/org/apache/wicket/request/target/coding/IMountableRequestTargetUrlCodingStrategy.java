@@ -18,9 +18,9 @@ package org.apache.wicket.request.target.coding;
 
 /**
  * Temporary interface to make the transition to 2.0, where
- * {@link IRequestTargetUrlCodingStrategy} has a method that reviels the mount
+ * {@link IRequestTargetUrlCodingStrategy} has a method that reveals the mount
  * path.
- * 
+ *
  * @author eelcohillenius
  */
 public interface IMountableRequestTargetUrlCodingStrategy extends IRequestTargetUrlCodingStrategy
@@ -28,7 +28,7 @@ public interface IMountableRequestTargetUrlCodingStrategy extends IRequestTarget
 
 	/**
 	 * Returns the path of the url where this request target is mounted on.
-	 * 
+	 *
 	 * @return String The path of the url
 	 */
 	String getMountPath();

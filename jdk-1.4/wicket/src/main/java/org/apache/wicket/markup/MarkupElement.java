@@ -28,7 +28,7 @@ package org.apache.wicket.markup;
  * <li>RawMarkup, which is a section of unparsed markup having no meaning to
  * Wicket.
  * </ul>
- * 
+ *
  * @see MarkupResourceData
  * @see org.apache.wicket.markup.RawMarkup
  * @see ComponentTag
@@ -45,7 +45,7 @@ public abstract class MarkupElement
 
 	/**
 	 * Gets whether this element closes the given element.
-	 * 
+	 *
 	 * @param open
 	 *            The open tag
 	 * @return True if this markup element closes the given open tag
@@ -59,7 +59,7 @@ public abstract class MarkupElement
 	 * This is not an implementation of equals because we don't care about
 	 * hashCodes for MarkupElements yet. Also, this method only compares the
 	 * namespace, name and attributes of the given MarkupElements.
-	 * 
+	 *
 	 * @param element
 	 *            The markup element to compare with
 	 * @return True if the other element equals this one
@@ -67,13 +67,13 @@ public abstract class MarkupElement
 	public abstract boolean equalTo(MarkupElement element);
 
 	/**
-	 * @return Gets the charseqence representation of this element
+	 * @return Gets the charsequence representation of this element
 	 */
 	public abstract CharSequence toCharSequence();
 
 	/**
-	 * Gets a string represenetation.
-	 * 
+	 * Gets a string representation.
+	 *
 	 * @return A string representation suitable for displaying to the user when
 	 *         something goes wrong.
 	 */

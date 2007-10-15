@@ -59,11 +59,11 @@ import org.apache.wicket.response.StringResponse;
  * <li> &lt;wicket:head&gt; makes sense in Panels, Borders and inherited markup
  * (of Panels, Borders and Pages)</li>
  * <li> components within &lt;wicket:head&gt; must be added by means of add(),
- * like allways with Wicket. No difference.</li>
+ * like always with Wicket. No difference.</li>
  * <li> &lt;wicket:head&gt; and it's content is copied to the output. Components
  * contained in &lt;org.apache.wicket.head&gt; are rendered as usual</li>
  * </ul>
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class HtmlHeaderContainer extends WebMarkupContainer
@@ -87,7 +87,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 
 	/**
 	 * Construct
-	 * 
+	 *
 	 * @see Component#Component(String)
 	 */
 	public HtmlHeaderContainer(final String id)
@@ -106,8 +106,8 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	/**
 	 * First render the body of the component. And if it is the header component
 	 * of a Page (compared to a Panel or Border), than get the header sections
-	 * from all component in the hierachie and render them as well.
-	 * 
+	 * from all component in the hierarchy and render them as well.
+	 *
 	 * @see org.apache.wicket.MarkupContainer#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */
@@ -120,19 +120,19 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		// web response.
 
 		// Temporarily replace the web response with a String response
-		final Response webResponse = this.getResponse();
+		final Response webResponse = getResponse();
 
 		try
 		{
 			final StringResponse response = new StringResponse();
-			this.getRequestCycle().setResponse(response);
+			getRequestCycle().setResponse(response);
 
 			IHeaderResponse headerResponse = getHeaderResponse();
 			if (!response.equals(headerResponse.getResponse()))
 			{
-				this.getRequestCycle().setResponse(headerResponse.getResponse());
+				getRequestCycle().setResponse(headerResponse.getResponse());
 			}
-			
+
 			// In any case, first render the header section directly associated
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
@@ -181,7 +181,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		finally
 		{
 			// Restore the original response
-			this.getRequestCycle().setResponse(webResponse);
+			getRequestCycle().setResponse(webResponse);
 		}
 	}
 
@@ -190,13 +190,13 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * to the &lt;head&gt; section of the HTML output. Every component
 	 * interested must implement IHeaderContributor.
 	 * <p>
-	 * Note: HtmlHeaderContainer will be removed from the component hierachie at
+	 * Note: HtmlHeaderContainer will be removed from the component hierarchy at
 	 * the end of the request (@see #onEndRequest()) and thus can not transport
 	 * status from one request to the next. This is true for all components
 	 * added to the header.
-	 * 
+	 *
 	 * @param page
-	 *            Usually it is the page object, but there might also be that a WebMarkupContainer has been attached to the &lt;html&gt; tag 
+	 *            Usually it is the page object, but there might also be that a WebMarkupContainer has been attached to the &lt;html&gt; tag
 	 * @param container
 	 *            The header component container
 	 */
@@ -235,7 +235,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 
 	/**
 	 * Check if the header component is ok to render within the scope given.
-	 * 
+	 *
 	 * @param scope
 	 *            The scope of the header component
 	 * @param id
@@ -244,9 +244,9 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 */
 	public final boolean okToRenderComponent(final String scope, final String id)
 	{
-		if (this.renderedComponentsPerScope == null)
+		if (renderedComponentsPerScope == null)
 		{
-			this.renderedComponentsPerScope = new HashMap();
+			renderedComponentsPerScope = new HashMap();
 		}
 
 		// if (scope == null)
@@ -254,11 +254,11 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		// scope = header.getMarkupStream().getContainerClass().getName();
 		// }
 
-		List componentScope = (List)this.renderedComponentsPerScope.get(scope);
+		List componentScope = (List)renderedComponentsPerScope.get(scope);
 		if (componentScope == null)
 		{
 			componentScope = new ArrayList();
-			this.renderedComponentsPerScope.put(scope, componentScope);
+			renderedComponentsPerScope.put(scope, componentScope);
 		}
 
 		if (componentScope.contains(id))
@@ -273,13 +273,13 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	{
 		super.onDetach();
 
-		this.renderedComponentsPerScope = null;
-		this.headerResponse = null;
+		renderedComponentsPerScope = null;
+		headerResponse = null;
 	}
 
 	/**
 	 * Factory method for creating header response
-	 * 
+	 *
 	 * @return new header response
 	 */
 	protected IHeaderResponse newHeaderResponse()
@@ -301,12 +301,12 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 
 	/**
 	 * Returns the header response.
-	 * 
+	 *
 	 * @return header response
 	 */
 	public IHeaderResponse getHeaderResponse()
 	{
-		if (this.headerResponse == null)
+		if (headerResponse == null)
 		{
 			headerResponse = newHeaderResponse();
 		}

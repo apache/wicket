@@ -179,7 +179,7 @@ public class FileUploadField extends FormComponent
 	 * The FileUploadField will close any input streams you have opened in its
 	 * FileUpload by default. If you wish to manage the stream yourself (e.g.
 	 * you want to use it in another thread) then you can override this method
-	 * to prevent this behaviour.
+	 * to prevent this behavior.
 	 * 
 	 * @return
 	 */

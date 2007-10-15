@@ -27,8 +27,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 
 /**
- * Ajax behavior for the paging navigation links. This behavior can only have
- * one parent: the link it is attached to.
+ * Ajax behavior for the paging navigation links. This behavior can only have one parent: the link
+ * it is attached to.
  * 
  * @since 1.2
  * 
@@ -40,13 +40,13 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The ajaxian link that should recieve the event.
+	 * The ajaxian link that should receive the event.
 	 */
 	private final IAjaxLink owner;
 
 	/**
-	 * Attaches the navigation behavior to the owner link and drives the
-	 * pageable component. The behavior is attached to the markup event.
+	 * Attaches the navigation behavior to the owner link and drives the pageable component. The
+	 * behavior is attached to the markup event.
 	 * 
 	 * @param owner
 	 *            the owner ajax link
@@ -62,11 +62,10 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * The ajax event handler. This will execute the event, and update the
-	 * following components, when present: the navigator the owner link is part
-	 * of, or when the link is a stand alone component, the link itself. Also
-	 * the pageable's parent markup container is updated, so its contents can be
-	 * replaced with the newly generated pageable.
+	 * The ajax event handler. This will execute the event, and update the following components,
+	 * when present: the navigator the owner link is part of, or when the link is a stand alone
+	 * component, the link itself. Also the pageable's parent markup container is updated, so its
+	 * contents can be replaced with the newly generated pageable.
 	 * 
 	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
 	 */
@@ -81,12 +80,12 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		if (navigator == null)
 		{
 			throw new WicketRuntimeException(
-					"Unable to find AjaxPagingNavigator component in hierarchy starting from "
-							+ owner);
+					"Unable to find AjaxPagingNavigator component in hierarchy starting from " +
+							owner);
 		}
 
 		// tell the PagingNavigator to update the IPageable
-		navigator.onAjaxEvent(target);		
+		navigator.onAjaxEvent(target);
 	}
 
 	/**

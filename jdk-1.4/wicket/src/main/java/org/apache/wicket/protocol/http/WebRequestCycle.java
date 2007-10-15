@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * bookmarkable pages as well as non-bookmarkable component interfaces. The protected handleRender
  * method is the internal entrypoint which takes care of the details of rendering a response to an
  * HTTP request.
- * 
+ *
  * @see RequestCycle
  * @author Jonathan Locke
  * @author Johan Compagner
@@ -60,9 +60,9 @@ public class WebRequestCycle extends RequestCycle
 	/**
 	 * Constructor which simply passes arguments to superclass for storage there. This instance will
 	 * be set as the current one for this thread.
-	 * 
+	 *
 	 * @param application
-	 *            The applicaiton
+	 *            The application
 	 * @param request
 	 *            The request
 	 * @param response
@@ -83,7 +83,7 @@ public class WebRequestCycle extends RequestCycle
 	 * {@link #onRuntimeException(Page, RuntimeException)} is not called unless you deliberately put
 	 * effort in it to make it work.</strong>
 	 * </p>
-	 * 
+	 *
 	 * @see org.apache.wicket.RequestCycle#getProcessor()
 	 */
 	public IRequestCycleProcessor getProcessor()
@@ -120,7 +120,7 @@ public class WebRequestCycle extends RequestCycle
 	 * directly, but work with setResponsePage instead. This method is part of Wicket's internal
 	 * behavior and should only be used when you want to circumvent the normal framework behavior
 	 * and issue the redirect directly.
-	 * 
+	 *
 	 * @param page
 	 *            The page to redirect to
 	 */
@@ -183,7 +183,7 @@ public class WebRequestCycle extends RequestCycle
 
 					// Set the final character encoding before calling close
 					servletResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
-					// close it so that the reponse is fixed and encoded from
+					// close it so that the response is fixed and encoded from
 					// here on.
 					servletResponse.close();
 
@@ -272,7 +272,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * If it's an ajax request we always redirect.
-	 * 
+	 *
 	 * @see org.apache.wicket.RequestCycle#isRedirect()
 	 */
 	public final boolean isRedirect()

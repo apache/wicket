@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * value allows all of the resource location functionality to work as in a fully functioning web
  * application. This value is not set then not resource location functionality will work and instead
  * null will always be returned.
- * 
+ *
  * @author Chris Turner
  */
 public class MockServletContext implements ServletContext
@@ -70,11 +70,11 @@ public class MockServletContext implements ServletContext
 	private File webappRoot;
 
 	/**
-	 * Create the mock object. As part of the creation, the context ets the root directory where web
+	 * Create the mock object. As part of the creation, the context sets the root directory where web
 	 * application content is stored. This must be an ABSOLUTE directory relative to where the tests
 	 * are being executed. For example: <code>System.getProperty("user.dir") +
 	 * "/src/webapp"</code>
-	 * 
+	 *
 	 * @param application
 	 *            The application that this context is for
 	 * @param path
@@ -115,7 +115,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Add an init parameter.
-	 * 
+	 *
 	 * @param name
 	 *            The parameter name
 	 * @param value
@@ -129,8 +129,8 @@ public class MockServletContext implements ServletContext
 	// Configuration methods
 
 	/**
-	 * Add a new recognised mime type.
-	 * 
+	 * Add a new recognized mime type.
+	 *
 	 * @param fileExtension
 	 *            The file extension (e.g. "jpg")
 	 * @param mimeType
@@ -143,7 +143,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get an attribute with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            The attribute name
 	 * @return The value, or null
@@ -155,7 +155,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get all of the attribute names.
-	 * 
+	 *
 	 * @return The attribute names
 	 */
 	public Enumeration getAttributeNames()
@@ -167,7 +167,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the context for the given URL path
-	 * 
+	 *
 	 * @param name
 	 *            The url path
 	 * @return Always returns this
@@ -179,7 +179,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the init parameter with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            The name
 	 * @return The parameter, or null if no such parameter
@@ -191,7 +191,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the name of all of the init parameters.
-	 * 
+	 *
 	 * @return The init parameter names
 	 */
 	public Enumeration getInitParameterNames()
@@ -209,8 +209,8 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the mime type for the given file. Uses a hardcoded map of mime types set at
-	 * initialisation time.
-	 * 
+	 * Initialization time.
+	 *
 	 * @param name
 	 *            The name to get the mime type for
 	 * @return The mime type
@@ -238,7 +238,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Wicket does not use the RequestDispatcher, so this implementation just returns a dummy value.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the servlet or JSP
 	 * @return The dispatcher
@@ -250,7 +250,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the real file path of the given resource name.
-	 * 
+	 *
 	 * @param name
 	 *            The name
 	 * @return The real path or null
@@ -280,7 +280,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Wicket does not use the RequestDispatcher, so this implementation just returns a dummy value.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the resource to get the dispatcher for
 	 * @return The dispatcher
@@ -305,7 +305,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the URL for a particular resource that is relative to the web app root directory.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the resource to get
 	 * @return The resource, or null if resource not found
@@ -337,7 +337,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get an input stream for a particular resource that is relative to the web app root directory.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the resource to get
 	 * @return The input stream for the resource, or null of resource is not found
@@ -376,7 +376,7 @@ public class MockServletContext implements ServletContext
 	/**
 	 * Get the resource paths starting from the web app root directory and then relative to the the
 	 * given name.
-	 * 
+	 *
 	 * @param name
 	 *            The starting name
 	 * @return The set of resource paths at this location
@@ -443,7 +443,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the server info.
-	 * 
+	 *
 	 * @return The server info
 	 */
 	public String getServerInfo()
@@ -453,7 +453,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * NOT USED - Servlet Spec requires that this always returns null.
-	 * 
+	 *
 	 * @param name
 	 *            Not used
 	 * @return null
@@ -467,7 +467,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Return the name of the servlet context.
-	 * 
+	 *
 	 * @return The name
 	 */
 	public String getServletContextName()
@@ -477,7 +477,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * NOT USED - Servlet spec requires that this always returns null.
-	 * 
+	 *
 	 * @return null
 	 */
 	public Enumeration getServletNames()
@@ -487,7 +487,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * NOT USED - Servlet spec requires that this always returns null.
-	 * 
+	 *
 	 * @return null
 	 */
 	public Enumeration getServlets()
@@ -497,7 +497,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * As part of testing we always log to the console.
-	 * 
+	 *
 	 * @param e
 	 *            The exception to log
 	 * @param msg
@@ -510,7 +510,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * As part of testing we always log to the console.
-	 * 
+	 *
 	 * @param msg
 	 *            The message to log
 	 */
@@ -521,7 +521,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * As part of testing we always log to the console.
-	 * 
+	 *
 	 * @param msg
 	 *            The message to log
 	 * @param cause
@@ -534,7 +534,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Remove an attribute with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            The name
 	 */
@@ -545,7 +545,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Set an attribute.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the attribute
 	 * @param o

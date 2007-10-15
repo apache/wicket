@@ -34,7 +34,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
  * A fairly shallow markup pull parser which parses a markup string of a given
  * type of markup (for example, html, xml, vxml or wml) into ComponentTag and
  * RawMarkup tokens.
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -42,22 +42,22 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 {
 	/** next() must be called at least once for the Type to be valid */
 	public static final int NOT_INITIALIZED = 0;
-	
+
 	/** <name ...> */
 	public static final int TAG = 1;
 
 	/** Tag body in between two tags */
 	public static final int BODY = 2;
-		
+
 	/** <!-- ... --> */
 	public static final int COMMENT = 3;
-		
+
 	/** <![CDATA[ .. ]]> */
 	public static final int CDATA = 4;
-	
+
 	/** <?...> */
 	public static final int PROCESSING_INSTRUCTION = 5;
-	
+
 	/** all other tags which look like <!.. > */
 	public static final int SPECIAL_TAG = 6;
 
@@ -69,7 +69,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 	/**
 	 * A XML independent reader which loads the whole source data into memory
-	 * and which provides convinience methods to access the data.
+	 * and which provides convenience methods to access the data.
 	 */
 	private FullyBufferedReader input;
 
@@ -93,149 +93,149 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getEncoding()
 	 */
 	public String getEncoding()
 	{
-		return this.xmlReader.getEncoding();
+		return xmlReader.getEncoding();
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getXmlDeclaration()
 	 */
 	public String getXmlDeclaration()
 	{
-		return this.xmlReader.getXmlDeclaration();
+		return xmlReader.getXmlDeclaration();
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getInputFromPositionMarker(int)
 	 */
 	public final CharSequence getInputFromPositionMarker(final int toPos)
 	{
-		return this.input.getSubstring(toPos);
+		return input.getSubstring(toPos);
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#getInput(int, int)
 	 */
 	public final CharSequence getInput(final int fromPos, final int toPos)
 	{
-		return this.input.getSubstring(fromPos, toPos);
+		return input.getSubstring(fromPos, toPos);
 	}
 
 	/**
 	 * Whatever will be in between the current index and the closing tag, will
 	 * be ignored (and thus treated as raw markup (text). This is useful for
 	 * tags like 'script'.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	private final void skipUntil() throws ParseException
 	{
 		// this is a tag with non-XHTML text as body - skip this until the
 		// skipUntilText is found.
-		final int startIndex = this.input.getPosition();
-		final int tagNameLen = this.skipUntilText.length();
+		final int startIndex = input.getPosition();
+		final int tagNameLen = skipUntilText.length();
 
-		int pos = this.input.getPosition() - 1;
+		int pos = input.getPosition() - 1;
 		String endTagText = null;
 		int lastPos = 0;
 		while (!skipUntilText.equalsIgnoreCase(endTagText))
 		{
-			pos = this.input.find("</", pos + 1);
-			if ((pos == -1) || ((pos + (tagNameLen + 2)) >= this.input.size()))
+			pos = input.find("</", pos + 1);
+			if ((pos == -1) || ((pos + (tagNameLen + 2)) >= input.size()))
 			{
 				throw new ParseException(skipUntilText + " tag not closed (line "
-						+ this.input.getLineNumber() + ", column " + this.input.getColumnNumber()
+						+ input.getLineNumber() + ", column " + input.getColumnNumber()
 						+ ")", startIndex);
 			}
 
 			lastPos = pos + 2;
-			endTagText = this.input.getSubstring(lastPos, lastPos + tagNameLen).toString();
+			endTagText = input.getSubstring(lastPos, lastPos + tagNameLen).toString();
 		}
 
-		this.input.setPosition(pos);
-		this.lastText = this.input.getSubstring(startIndex, pos);
-		this.lastType = BODY;
+		input.setPosition(pos);
+		lastText = input.getSubstring(startIndex, pos);
+		lastType = BODY;
 
 		// Check that the tag is properly closed
-		lastPos = this.input.find('>', lastPos + tagNameLen);
+		lastPos = input.find('>', lastPos + tagNameLen);
 		if (lastPos == -1)
 		{
-			throw new ParseException("Script tag not closed (line " + this.input.getLineNumber()
-					+ ", column " + this.input.getColumnNumber() + ")", startIndex);
+			throw new ParseException("Script tag not closed (line " + input.getLineNumber()
+					+ ", column " + input.getColumnNumber() + ")", startIndex);
 		}
 
 		// Reset the state variable
-		this.skipUntilText = null;
+		skipUntilText = null;
 	}
 
 	/**
 	 * Gets the next tag from the input string.
-	 * 
+	 *
 	 * @return The extracted tag (will always be of type XmlTag).
 	 * @throws ParseException
 	 */
 	public final boolean next() throws ParseException
 	{
 		// Reached end of markup file?
-		if (this.input.getPosition() >= this.input.size())
+		if (input.getPosition() >= input.size())
 		{
 			return false;
 		}
 
-		if (this.skipUntilText != null)
+		if (skipUntilText != null)
 		{
 			skipUntil();
 			return true;
 		}
 
 		// Any more tags in the markup?
-		final int openBracketIndex = this.input.find('<');
+		final int openBracketIndex = input.find('<');
 
 		// Tag or Body?
-		if (this.input.charAt(this.input.getPosition()) != '<')
+		if (input.charAt(input.getPosition()) != '<')
 		{
 			if (openBracketIndex == -1)
 			{
 				// There is no next matching tag.
-				this.lastText = this.input.getSubstring(-1);
-				this.input.setPosition(this.input.size());
-				this.lastType = BODY;
+				lastText = input.getSubstring(-1);
+				input.setPosition(input.size());
+				lastType = BODY;
 				return true;
 			}
 
-			this.lastText = this.input.getSubstring(openBracketIndex);
-			this.input.setPosition(openBracketIndex);
-			this.lastType = BODY;
+			lastText = input.getSubstring(openBracketIndex);
+			input.setPosition(openBracketIndex);
+			lastType = BODY;
 			return true;
 		}
 
 		// Determine the line number
-		this.input.countLinesTo(openBracketIndex);
+		input.countLinesTo(openBracketIndex);
 
 		// Get index of closing tag and advance past the tag
-		int closeBracketIndex = this.input.find('>', openBracketIndex + 1);
+		int closeBracketIndex = input.find('>', openBracketIndex + 1);
 		if (closeBracketIndex == -1)
 		{
 			throw new ParseException("No matching close bracket at position " + openBracketIndex,
-					this.input.getPosition());
+					input.getPosition());
 		}
 
 		// Get the complete tag text
-		this.lastText = this.input.getSubstring(openBracketIndex, closeBracketIndex + 1);
+		lastText = input.getSubstring(openBracketIndex, closeBracketIndex + 1);
 
 		// Get the tagtext between open and close brackets
-		String tagText = this.lastText.subSequence(1, this.lastText.length() - 1).toString();
+		String tagText = lastText.subSequence(1, lastText.length() - 1).toString();
 		if (tagText.length() == 0)
 		{
 			throw new ParseException("Found empty tag: '<>' at position " + openBracketIndex,
-					this.input.getPosition());
+					input.getPosition());
 		}
 
 		// Handle special tags like <!-- and <![CDATA ...
@@ -275,44 +275,44 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				if (lowerCase.startsWith("script"))
 				{
 					// prepare to skip everything between the open and close tag
-					this.skipUntilText = "script";
+					skipUntilText = "script";
 				}
 				else if (lowerCase.startsWith("style"))
 				{
 					// prepare to skip everything between the open and close tag
-					this.skipUntilText = "style";
+					skipUntilText = "style";
 				}
 			}
 		}
 
 		// Parse remaining tag text, obtaining a tag object or null
 		// if it's invalid
-		this.lastTag = parseTagText(tagText);
-		if (this.lastTag != null)
+		lastTag = parseTagText(tagText);
+		if (lastTag != null)
 		{
 			// Populate tag fields
-			this.lastTag.type = type;
-			this.lastTag.pos = openBracketIndex;
-			this.lastTag.length = this.lastText.length();
-			this.lastTag.text = this.lastText;
-			this.lastTag.lineNumber = this.input.getLineNumber();
-			this.lastTag.columnNumber = this.input.getColumnNumber();
+			lastTag.type = type;
+			lastTag.pos = openBracketIndex;
+			lastTag.length = lastText.length();
+			lastTag.text = lastText;
+			lastTag.lineNumber = input.getLineNumber();
+			lastTag.columnNumber = input.getColumnNumber();
 
 			// Move to position after the tag
-			this.input.setPosition(closeBracketIndex + 1);
-			this.lastType = TAG;
+			input.setPosition(closeBracketIndex + 1);
+			lastType = TAG;
 			return true;
 		}
 		else
 		{
-			throw new ParseException("Malformed tag (line " + this.input.getLineNumber()
-					+ ", column " + this.input.getColumnNumber() + ")", openBracketIndex);
+			throw new ParseException("Malformed tag (line " + input.getLineNumber()
+					+ ", column " + input.getColumnNumber() + ")", openBracketIndex);
 		}
 	}
 
 	/**
 	 * Handle special tags like <!-- --> or <![CDATA[..]]> or <?xml>
-	 * 
+	 *
 	 * @param tagText
 	 * @param openBracketIndex
 	 * @param closeBracketIndex
@@ -328,41 +328,41 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			// Skip ahead to "-->". Note that you can not simply test for
 			// tagText.endsWith("--") as the comment might contain a '>'
 			// inside.
-			int pos = this.input.find("-->", openBracketIndex + 1);
+			int pos = input.find("-->", openBracketIndex + 1);
 			if (pos == -1)
 			{
 				throw new ParseException("Unclosed comment beginning at line:"
 						+ input.getLineNumber() + " column:" + input.getColumnNumber(),
 						openBracketIndex);
 			}
-			
+
 			pos += 3;
-			this.lastText = this.input.getSubstring(openBracketIndex, pos);
-			this.lastType = COMMENT;
-			
+			lastText = input.getSubstring(openBracketIndex, pos);
+			lastType = COMMENT;
+
 			// Conditional comment? <!--[if ...]>..<![endif]-->
-			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") 
-					&& this.lastText.toString().endsWith("<![endif]-->"))
+			if (tagText.startsWith("!--[if ") && tagText.endsWith("]")
+					&& lastText.toString().endsWith("<![endif]-->"))
 			{
 				// Actually it is no longer a comment. It is now
 				// up to the browser to select the section appropriate.
-				this.input.setPosition(closeBracketIndex + 1);
+				input.setPosition(closeBracketIndex + 1);
 			}
 			else
 			{
-				this.input.setPosition(pos);
+				input.setPosition(pos);
 			}
 			return;
 		}
-		
+
 		// The closing tag of a conditional comment <!--[if IE]>...<![endif]-->
 		if (tagText.equals("![endif]--"))
 		{
-			this.lastType = COMMENT;
-			this.input.setPosition(closeBracketIndex + 1);
+			lastType = COMMENT;
+			input.setPosition(closeBracketIndex + 1);
 			return;
 		}
-		
+
 		// CDATA sections might contain "<" which is not part of an XML tag.
 		// Make sure escaped "<" are treated right
 		if (tagText.startsWith("!["))
@@ -380,11 +380,11 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 					{
 						throw new ParseException("No matching close bracket at line:"
 								+ input.getLineNumber() + " column:" + input.getColumnNumber(),
-								this.input.getPosition());
+								input.getPosition());
 					}
 
 					// Get the tagtext between open and close brackets
-					tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
+					tagText = input.getSubstring(openBracketIndex + 1, closeBracketIndex)
 							.toString();
 
 					pos1 = closeBracketIndex + 1;
@@ -392,31 +392,31 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				while (tagText.endsWith("]]") == false);
 
 				// Move to position after the tag
-				this.input.setPosition(closeBracketIndex + 1);
+				input.setPosition(closeBracketIndex + 1);
 
-				this.lastText = tagText;
-				this.lastType = CDATA;
+				lastText = tagText;
+				lastType = CDATA;
 				return;
 			}
 		}
 
 		if (tagText.charAt(0) == '?')
 		{
-			this.lastType = PROCESSING_INSTRUCTION;
+			lastType = PROCESSING_INSTRUCTION;
 
 			// Move to position after the tag
-			this.input.setPosition(closeBracketIndex + 1);
+			input.setPosition(closeBracketIndex + 1);
 			return;
 		}
 
 		// Move to position after the tag
-		this.lastType = SPECIAL_TAG;
-		this.input.setPosition(closeBracketIndex + 1);
+		lastType = SPECIAL_TAG;
+		input.setPosition(closeBracketIndex + 1);
 	}
 
 	/**
 	 * Gets the next tag from the input string.
-	 * 
+	 *
 	 * @return The extracted tag (will always be of type XmlTag).
 	 * @throws ParseException
 	 */
@@ -424,10 +424,10 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	{
 		while (next())
 		{
-			switch (this.lastType)
+			switch (lastType)
 			{
 				case TAG :
-					return this.lastTag;
+					return lastTag;
 
 				case BODY :
 					break;
@@ -451,7 +451,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 	/**
 	 * Find the char but ignore any text within ".." and '..'
-	 * 
+	 *
 	 * @param ch
 	 *            The character to search
 	 * @param startIndex
@@ -462,9 +462,9 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	{
 		char quote = 0;
 
-		for (; startIndex < this.input.size(); startIndex++)
+		for (; startIndex < input.size(); startIndex++)
 		{
-			final char charAt = this.input.charAt(startIndex);
+			final char charAt = input.charAt(startIndex);
 			if (quote != 0)
 			{
 				if (quote == charAt)
@@ -490,7 +490,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * <p>
 	 * Note: xml character encoding is NOT applied. It is assumed the input
 	 * provided does have the correct encoding already.
-	 * 
+	 *
 	 * @param string
 	 *            The input string
 	 * @throws IOException
@@ -507,7 +507,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	/**
 	 * Reads and parses markup from an input stream, using UTF-8 encoding by
 	 * default when not specified in XML declaration.
-	 * 
+	 *
 	 * @param in
 	 *            The input stream to read and parse
 	 * @throws IOException
@@ -522,7 +522,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 	/**
 	 * Reads and parses markup from an input stream
-	 * 
+	 *
 	 * @param inputStream
 	 *            The input stream to read and parse
 	 * @param encoding
@@ -535,50 +535,50 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	{
 		try
 		{
-			this.xmlReader = new XmlReader(
+			xmlReader = new XmlReader(
 					new BufferedInputStream(inputStream, 4000), encoding);
-			this.input = new FullyBufferedReader(this.xmlReader);
+			input = new FullyBufferedReader(xmlReader);
 		}
 		finally
 		{
 			inputStream.close();
-			if(this.xmlReader != null)
+			if(xmlReader != null)
 			{
-				this.xmlReader.close();
+				xmlReader.close();
 			}
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#setPositionMarker()
 	 */
 	public final void setPositionMarker()
 	{
-		this.input.setPositionMarker(this.input.getPosition());
+		input.setPositionMarker(input.getPosition());
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.parser.IXmlPullParser#setPositionMarker(int)
 	 */
 	public final void setPositionMarker(final int pos)
 	{
-		this.input.setPositionMarker(pos);
+		input.setPositionMarker(pos);
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-		return this.input.toString();
+		return input.toString();
 	}
 
 	/**
 	 * Parses the text between tags. For example, "a href=foo.html".
-	 * 
+	 *
 	 * @param tagText
 	 *            The text between tags
 	 * @return A new Tag object or null if the tag is invalid
@@ -638,7 +638,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				// Put the attribute in the attributes hash
 				if (null != tag.put(key, value))
 				{
-					throw new ParseException("Same attribute found twice: " + key, this.input
+					throw new ParseException("Same attribute found twice: " + key, input
 							.getPosition());
 				}
 

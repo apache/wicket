@@ -37,10 +37,10 @@ import org.apache.wicket.model.IModel;
  * It is recommended that you override {@link #convertInput()} and let it set
  * the value that represents the compound value of the nested components. Often,
  * this goes hand-in-hand with overriding {@link #onBeforeRender()}, where you
- * would analyse the model value, break it up and distribute the appropriate
+ * would analyze the model value, break it up and distribute the appropriate
  * values over the child components.
  * </p>
- * 
+ *
  * <p>
  * Here is a simple example of a panel with two components that multiplies and
  * sets that as the master model object. Note that for this simple example,
@@ -48,7 +48,7 @@ import org.apache.wicket.model.IModel;
  * known. For more complete examples of using this class, see the
  * wicket-datetime project.
  * </p>
- * 
+ *
  * <pre>
  * public class Multiply extends FormComponentPanel
  * {
@@ -56,26 +56,26 @@ import org.apache.wicket.model.IModel;
  * 	private int lhs = 0;
  * 	private int rhs = 0;
  * 	private TextField right;
- * 
+ *
  * 	public Multiply(String id)
  * 	{
  * 		super(id);
  * 		init();
  * 	}
- * 
+ *
  * 	public Multiply(String id, IModel model)
  * 	{
  * 		super(id, model);
  * 		init();
  * 	}
- * 
+ *
  * 	protected void convertInput()
  * 	{
  * 		Integer lhs = (Integer)left.getConvertedInput();
  * 		Integer rhs = (Integer)right.getConvertedInput();
  * 		setConvertedInput(lhs * rhs);
  * 	}
- * 
+ *
  * 	private void init()
  * 	{
  * 		add(left = new TextField(&quot;left&quot;, new PropertyModel(this, &quot;lhs&quot;), Integer.class));
@@ -85,31 +85,31 @@ import org.apache.wicket.model.IModel;
  * 	}
  * }
  * </pre>
- * 
+ *
  * With this markup:
- * 
+ *
  * <pre>
  *   &lt;wicket:panel&gt;
  *     &lt;input type=&quot;text&quot; wicket:id=&quot;left&quot; size=&quot;2&quot; /&gt; * &lt;input type=&quot;text&quot; wicket:id=&quot;right&quot; size=&quot;2&quot; /&gt;
  *   &lt;/wicket:panel&gt;
  * </pre>
- * 
+ *
  * Which could be used, for example as:
- * 
+ *
  * <pre>
  *   add(new Multiply(&quot;multiply&quot;), new PropertyModel(m, &quot;multiply&quot;)));
  *   add(new Label(&quot;multiplyLabel&quot;, new PropertyModel(m, &quot;multiply&quot;)));
  * </pre>
- * 
+ *
  * and:
- * 
+ *
  * <pre>
  *   &lt;span wicket:id=&quot;multiply&quot;&gt;[multiply]&lt;/span&gt;
  *   = &lt;span wicket:id=&quot;multiplyLabel&quot;&gt;[result]&lt;/span&gt;
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * @author eelcohillenius
  */
 public abstract class FormComponentPanel extends FormComponent
@@ -125,7 +125,7 @@ public abstract class FormComponentPanel extends FormComponent
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 */
 	public FormComponentPanel(String id)
@@ -135,7 +135,7 @@ public abstract class FormComponentPanel extends FormComponent
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 */
@@ -163,7 +163,7 @@ public abstract class FormComponentPanel extends FormComponent
 
 	/**
 	 * Check the associated markup file for a wicket header tag
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#renderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
 	public void renderHead(HtmlHeaderContainer container)
@@ -179,7 +179,7 @@ public abstract class FormComponentPanel extends FormComponent
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
 	 */
 	protected void onComponentTag(final ComponentTag tag)
@@ -196,7 +196,7 @@ public abstract class FormComponentPanel extends FormComponent
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
 	 *      org.apache.wicket.markup.ComponentTag)
 	 */

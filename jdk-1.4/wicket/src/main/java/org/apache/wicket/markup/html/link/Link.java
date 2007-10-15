@@ -34,43 +34,43 @@ import org.apache.wicket.version.undo.Change;
  * onclick javascript event handler attribute will be generated.
  * <p>
  * You can use a link like:
- * 
+ *
  * <pre>
  * add(new Link(&quot;myLink&quot;)
  * {
  *     public void onClick(RequestCycle cycle)
  *     {
- *         // do something here...  
+ *         // do something here...
  *     }
  * );
  * </pre>
- * 
+ *
  * and in your HTML file:
- * 
+ *
  * <pre>
  *  &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
- * 
+ *
  * or:
- * 
+ *
  * <pre>
  *  &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
- * 
+ *
  * </p>
  * The following snippet shows how to pass a parameter from the Page creating
  * the Page to the Page responded by the Link.
- * 
+ *
  * <pre>
- * add(new Link(&quot;link&quot;, listItem.getModel()) 
+ * add(new Link(&quot;link&quot;, listItem.getModel())
  * {
- *     public void onClick() 
+ *     public void onClick()
  *     {
  *         MyObject obj = (MyObject)getModelObject();
  *         setResponsePage(new MyPage(obj.getId(), ... ));
  *     }
  * </pre>
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
@@ -86,7 +86,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param anchor
 		 */
 		public AnchorChange(Component anchor)
@@ -142,7 +142,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 
 	/**
 	 * Gets any anchor component.
-	 * 
+	 *
 	 * @return Any anchor component to jump to, might be null
 	 */
 	public Component getAnchor()
@@ -153,7 +153,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	/**
 	 * Gets whether link should automatically enable/disable based on current
 	 * page.
-	 * 
+	 *
 	 * @return Whether this link should automatically enable/disable based on
 	 *         current page.
 	 */
@@ -166,7 +166,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 * Gets the popup specification. If not-null, a javascript on-click event
 	 * handler will be generated that opens a new window using the popup
 	 * properties.
-	 * 
+	 *
 	 * @return the popup specification.
 	 */
 	public PopupSettings getPopupSettings()
@@ -201,11 +201,11 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR
 	 * CALL IT.
-	 * 
+	 *
 	 * Called when a link is clicked. The implementation of this method is
 	 * currently to simply call onClick(), but this may be augmented in the
 	 * future.
-	 * 
+	 *
 	 * @see ILinkListener
 	 */
 	public final void onLinkClicked()
@@ -230,7 +230,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 * {@link Component#getOutputMarkupId()} flag true, or it must be attached
 	 * to a &lt;a tag with a href attribute of more than one character starting
 	 * with '#' ('&lt;a href="#someAnchor" ... ').
-	 * 
+	 *
 	 * @param anchor
 	 *            The anchor
 	 * @return this
@@ -245,7 +245,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	/**
 	 * Sets whether this link should automatically enable/disable based on
 	 * current page.
-	 * 
+	 *
 	 * @param autoEnable
 	 *            whether this link should automatically enable/disable based on
 	 *            current page.
@@ -261,7 +261,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 * Sets the popup specification. If not-null, a javascript on-click event
 	 * handler will be generated that opens a new window using the popup
 	 * properties.
-	 * 
+	 *
 	 * @param popupSettings
 	 *            the popup specification.
 	 * @return This
@@ -280,7 +280,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 * {@link Component#getMarkupId()} if {@link Component#getOutputMarkupId()}
 	 * returns true, or if the anchor component does not output it's id, this
 	 * method will try to retrieve the id from the markup directly. If neither
-	 * is found, an {@link WicketRuntimeException excpeption} is thrown. If no
+	 * is found, an {@link WicketRuntimeException exception} is thrown. If no
 	 * anchor component was set, but the link component is attached to a &lt;a
 	 * element, this method will append what is in the href attribute <i>if</i>
 	 * there is one, starts with a '#' and has more than one character.
@@ -289,7 +289,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 	 * whatever is done with any set anchor component yourself. You also have to
 	 * manually append the '#' at the right place.
 	 * </p>
-	 * 
+	 *
 	 * @param tag
 	 *            The component tag
 	 * @param url
@@ -370,7 +370,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 
 	/**
 	 * Gets the url to use for this link.
-	 * 
+	 *
 	 * @return The URL that this link links to
 	 */
 	protected CharSequence getURL()
@@ -380,7 +380,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 
 	/**
 	 * Whether this link refers to the given page.
-	 * 
+	 *
 	 * @param page
 	 *            A page
 	 * @return True if this link goes to the given page
@@ -392,7 +392,7 @@ public abstract class Link extends AbstractLink implements ILinkListener
 
 	/**
 	 * Handles this link's tag. OVERRIDES MUST CALL SUPER.
-	 * 
+	 *
 	 * @param tag
 	 *            the component tag
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)

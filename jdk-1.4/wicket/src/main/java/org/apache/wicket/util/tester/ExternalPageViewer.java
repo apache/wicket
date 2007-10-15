@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * <code>ExternalPageViewer</code> class. This class is experimental only and
  * may not yet work in your environment.
- * 
+ *
  * TODO need Javadoc from author.
  * 
  * @author Ingram Chen
@@ -48,7 +48,7 @@ public class ExternalPageViewer
 	private final WicketTester tester;
 
 	/**
-	 * 
+	 *
 	 * @param tester
 	 */
 	public ExternalPageViewer(final WicketTester tester)
@@ -57,8 +57,8 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 * register addtional browser path for viewInBrowser()
-	 * 
+	 * register additional browser path for viewInBrowser()
+	 *
 	 * @param path
 	 */
 	public static final void registerBrowserPath(String path)
@@ -67,7 +67,7 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 * open a web browser and see lastet rendered WebPage.
+	 * open a web browser and see latest rendered WebPage.
 	 */
 	public final void viewInBrowser()
 	{
@@ -124,7 +124,7 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 * 
+	 *
 	 * @return path
 	 */
 	private String getBrowserPath()
@@ -142,20 +142,20 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 * define a temperary file name that stores source of last rendered page.
+	 * define a temporary file name that stores source of last rendered page.
 	 * This file is used by external browser
-	 * 
+	 *
 	 * @return String
 	 */
 	protected String getTemperaryDumpHtmlFileName()
 	{
-		// this pattern will hide from eclipe and ignore by cvs
+		// this pattern will hide from eclipse and ignore by cvs
 		return ".del-wicketTestDump.html";
 	}
 
 	/**
-	 * set default encoding for writing temperary file.
-	 * 
+	 * set default encoding for writing temporary file.
+	 *
 	 * @return String
 	 */
 	protected String getHtmlEncoding()
@@ -164,18 +164,18 @@ public class ExternalPageViewer
 	}
 
 	/**
-	 * 
+	 *
 	 * @return URL
 	 */
 	private URL getThisClassFileURL()
 	{
-		URL url = this.getClass().getClassLoader().getResource(
-				this.getClass().getName().replace('.', '/') + ".class");
+		URL url = getClass().getClassLoader().getResource(
+				getClass().getName().replace('.', '/') + ".class");
 		return url;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param e
 	 * @return RuntimeException
 	 */

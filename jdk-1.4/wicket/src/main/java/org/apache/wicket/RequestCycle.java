@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * <p>
  * Bookmarkable pages must either implement a constructor that takes a PageParameters argument or a
- * default constructor. If a Page has both constructors the constuctor with the PageParameters
+ * default constructor. If a Page has both constructors the constructor with the PageParameters
  * argument will be used. Links to bookmarkable pages are created by calling the urlFor(Class,
  * PageParameters) method, where Class is the page class and PageParameters are the parameters to
  * encode into the URL.
@@ -960,7 +960,7 @@ public abstract class RequestCycle
 	{
 		// clean up target stack; calling detach has effects like
 		// NOTE: don't remove the targets as testing code might need them
-		// furthermore, the targets will be cg-ed with this cycle too
+		// furthermore, the targets will be gc-ed with this cycle too
 		for (Iterator iter = requestTargets.iterator(); iter.hasNext();)
 		{
 			IRequestTarget target = (IRequestTarget)iter.next();

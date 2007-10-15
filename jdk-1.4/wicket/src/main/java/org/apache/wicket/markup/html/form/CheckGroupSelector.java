@@ -21,20 +21,20 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
- * Selects and unselects all Check components under the same
+ * Selects and deselects all Check components under the same
  * CheckGroup as itself. Selection toggling is accomplished by generating an
  * onclick javascript event handler.
- * 
+ *
  * @see org.apache.wicket.markup.html.form.CheckGroup
  * @see org.apache.wicket.markup.html.form.Check
 
  * @author Igor Vaynberg
- * 
+ *
  */
 public class CheckGroupSelector extends WebMarkupContainer
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

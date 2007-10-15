@@ -109,7 +109,7 @@ public class ResourceReference implements IClusterable
 	}
 
 	/**
-	 * Contructs a resource reference with Application.class scope and the given name. All resource
+	 * Constructs a resource reference with Application.class scope and the given name. All resource
 	 * references constructed with this constructor must have unique names since they all have the
 	 * same Application-wide scope that is the org.apache.wicket.Application.class
 	 * 

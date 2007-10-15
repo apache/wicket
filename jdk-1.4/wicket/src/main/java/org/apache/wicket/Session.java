@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <li><b>Style </b>- Besides having an appearance based on locale, resources can also have
  * different looks in the same locale (a.k.a. "skins"). The style for a session determines the look
- * which is used within the appopriate locale. The session style ("skin") can be set with the
+ * which is used within the appropriate locale. The session style ("skin") can be set with the
  * setStyle() method.
  * 
  * <li><b>Resource Loading </b>- Based on the Session locale and style, searching for resources
@@ -91,7 +91,7 @@ import org.slf4j.LoggerFactory;
  * typesafe properties specific to the application (see {@link Application} for details). To
  * discourage non-typesafe access to Session properties, no setProperty() or getProperty() method is
  * provided. In a clustered environment, you should take care to call the dirty() method when you
- * change a property or youre own. This way the session will be reset again in the http session so
+ * change a property on your own. This way the session will be reset again in the http session so
  * that the http session knows the session is changed.
  * 
  * <li><b>Class Resolver </b>- Sessions have a class resolver ( {@link IClassResolver})
@@ -613,7 +613,7 @@ public abstract class Session implements IClusterable
 	 * allow ajax requests to same page and version.
 	 * 
 	 * @param lockedRequestCycle
-	 * @return whether current request is valid or sould be discarded
+	 * @return whether current request is valid or should be discarded
 	 */
 	protected boolean isCurrentRequestValid(RequestCycle lockedRequestCycle)
 	{
@@ -960,7 +960,7 @@ public abstract class Session implements IClusterable
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets the client info object for this session. This will only work when
-	 * {@link #getClientInfo()} is not overriden.
+	 * {@link #getClientInfo()} is not overridden.
 	 * 
 	 * @param clientInfo
 	 *            the client info object

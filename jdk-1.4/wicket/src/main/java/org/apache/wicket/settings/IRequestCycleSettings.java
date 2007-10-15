@@ -72,7 +72,7 @@ import org.apache.wicket.util.time.Duration;
  * rendered and streamed in one pass.
  * <p>
  * More documentation is available about each setting in the setter method for the property.
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public interface IRequestCycleSettings
@@ -117,7 +117,7 @@ public interface IRequestCycleSettings
 	/**
 	 * The render part of a request (opposed to the 'action part' which is either the construction
 	 * of a bookmarkable page or the execution of a IRequestListener handler) is handled by a
-	 * seperate request by issuing a redirect request to the browser. This is commonly known as the
+	 * separate request by issuing a redirect request to the browser. This is commonly known as the
 	 * 'redirect after submit' pattern, though in our case, we use it for GET and POST requests
 	 * instead of just the POST requests. To cancel the client side redirect for a request, users
 	 * can set the 'redirect' property of {@link RequestCycle}to false
@@ -145,7 +145,7 @@ public interface IRequestCycleSettings
 
 	/**
 	 * Adds a response filter to the list. Filters are evaluated in the order they have been added.
-	 * 
+	 *
 	 * @param responseFilter
 	 *            The {@link IResponseFilter} that is added
 	 */
@@ -161,14 +161,14 @@ public interface IRequestCycleSettings
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
 	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
-	 * 
+	 *
 	 * @return Whether to gather extensive client info
 	 */
 	boolean getGatherExtendedBrowserInfo();
 
 	/**
 	 * Gets in what way the render part of a request is handled.
-	 * 
+	 *
 	 * @return the render strategy
 	 */
 	IRequestCycleSettings.RenderStrategy getRenderStrategy();
@@ -182,7 +182,7 @@ public interface IRequestCycleSettings
 	 * In order to do proper form parameter decoding it is important that the response and the
 	 * following request have the same encoding. see
 	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for additional information.
-	 * 
+	 *
 	 * @return The request and response encoding
 	 */
 	String getResponseRequestEncoding();
@@ -190,14 +190,14 @@ public interface IRequestCycleSettings
 	/**
 	 * Gets the time that a request will by default be waiting for the previous request to be
 	 * handled before giving up.
-	 * 
+	 *
 	 * @return The time out
 	 */
 	Duration getTimeout();
 
 	/**
 	 * @see org.apache.wicket.settings.IExceptionSettings#getUnexpectedExceptionDisplay()
-	 * 
+	 *
 	 * @return UnexpectedExceptionDisplay
 	 */
 	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
@@ -213,7 +213,7 @@ public interface IRequestCycleSettings
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
 	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
 	 * overridden, there is no guarantee this method will be taken into account.
-	 * 
+	 *
 	 * <p>
 	 * <strong>WARNING: </strong> though this facility should work transparently in most cases, it
 	 * is recommended that you trigger the roundtrip to get the browser info somewhere where it
@@ -225,7 +225,7 @@ public interface IRequestCycleSettings
 	 * {@link Session#getClientInfo()} e.g. in a page constructor or somewhere else where you didn't
 	 * do a lot of processing first.
 	 * </p>
-	 * 
+	 *
 	 * @param gatherExtendedBrowserInfo
 	 *            Whether to gather extensive client info
 	 */
@@ -266,7 +266,7 @@ public interface IRequestCycleSettings
 	 * REDIRECT_TO_RENDER. When the application is configured to use REDIRECT_TO_RENDER or
 	 * REDIRECT_TO_BUFFER, setting the redirect flag to false, will result in that request begin
 	 * rendered and streamed in one pass.
-	 * 
+	 *
 	 * @param renderStrategy
 	 *            the render strategy that should be used by default.
 	 */
@@ -276,9 +276,9 @@ public interface IRequestCycleSettings
 	 * In order to do proper form parameter decoding it is important that the response and the
 	 * following request have the same encoding. see
 	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for additional information.
-	 * 
+	 *
 	 * Default encoding: UTF-8
-	 * 
+	 *
 	 * @param responseRequestEncoding
 	 *            The request and response encoding to be used.
 	 */
@@ -287,14 +287,14 @@ public interface IRequestCycleSettings
 	/**
 	 * Sets the time that a request will by default be waiting for the previous request to be
 	 * handled before giving up.
-	 * 
+	 *
 	 * @param timeout
 	 */
 	void setTimeout(Duration timeout);
 
 	/**
 	 * @see org.apache.wicket.settings.IExceptionSettings#setUnexpectedExceptionDisplay(org.apache.wicket.settings.Settings.UnexpectedExceptionDisplay)
-	 * 
+	 *
 	 * @param unexpectedExceptionDisplay
 	 */
 	void setUnexpectedExceptionDisplay(final UnexpectedExceptionDisplay unexpectedExceptionDisplay);

@@ -42,7 +42,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * Implementation of {@link HttpServletResponse} that saves the output in a string buffer. This is
  * used in REDIRECT_TO_BUFFER render strategy to create the buffer of the output that can be held on
  * to until the redirect part of the render strategy.
- * 
+ *
  * @author jcompagner
  */
 class BufferedHttpServletResponse implements HttpServletResponse
@@ -71,7 +71,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param realResponse
 	 *            The real response for encoding the url
 	 */
@@ -300,8 +300,8 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Set the charackter encoding to use for the output.
-	 * 
+	 * Set the character encoding to use for the output.
+	 *
 	 * @param encoding
 	 */
 	public void setCharacterEncoding(String encoding)
@@ -435,7 +435,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.
-	 * 
+	 *
 	 * @param response
 	 */
 	public final void filter(Response response)
@@ -450,7 +450,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void close()
 	{
@@ -465,9 +465,9 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Convert the string into the output encoding required
-	 * 
+	 *
 	 * @param output
-	 * 
+	 *
 	 * @param encoding
 	 *            The output encoding
 	 * @return byte[] The encoded characters converted into bytes

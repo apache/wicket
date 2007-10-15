@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for JCE based ICrypt implementations.
- * 
+ *
  * @author Juergen Donnerstag
  */
 public abstract class AbstractCrypt implements ICrypt
@@ -54,9 +54,9 @@ public abstract class AbstractCrypt implements ICrypt
 
 	/**
 	 * Decrypts a string into a string.
-	 * 
+	 *
 	 * @param text
-	 *            text to decript
+	 *            text to decrypt
 	 * @return the decrypted text
 	 */
 	public final String decryptUrlSafe(final String text)
@@ -74,7 +74,7 @@ public abstract class AbstractCrypt implements ICrypt
 
 	/**
 	 * Encrypt a string into a string using URL safe Base64 encoding.
-	 * 
+	 *
 	 * @param plainText
 	 *            text to encrypt
 	 * @return encrypted string
@@ -95,28 +95,28 @@ public abstract class AbstractCrypt implements ICrypt
 
 	/**
 	 * Get encryption private key
-	 * 
+	 *
 	 * @return encryption private key
 	 */
 	public String getKey()
 	{
-		return this.encryptionKey;
+		return encryptionKey;
 	}
 
 	/**
 	 * Set encryption private key
-	 * 
+	 *
 	 * @param key
 	 *            private key to make de-/encryption unique
 	 */
 	public void setKey(final String key)
 	{
-		this.encryptionKey = key;
+		encryptionKey = key;
 	}
 
 	/**
 	 * Crypts the given byte array
-	 * 
+	 *
 	 * @param input
 	 *            byte array to be crypted
 	 * @param mode
@@ -129,7 +129,7 @@ public abstract class AbstractCrypt implements ICrypt
 
 	/**
 	 * Decrypts an encrypted, but Base64 decoded byte array into a byte array.
-	 * 
+	 *
 	 * @param encrypted
 	 *            byte array to decrypt
 	 * @return the decrypted text
@@ -148,7 +148,7 @@ public abstract class AbstractCrypt implements ICrypt
 
 	/**
 	 * Encrypts the given text into a byte array.
-	 * 
+	 *
 	 * @param plainText
 	 *            text to encrypt
 	 * @return the string encrypted

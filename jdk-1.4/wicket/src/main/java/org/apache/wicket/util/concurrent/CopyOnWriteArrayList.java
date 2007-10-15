@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * This class implements a variant of java.util.ArrayList in which all mutative
@@ -71,7 +72,7 @@ import java.util.NoSuchElementException;
  * <p>[<a
  * href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
  * Introduction to this package. </a>]
- * 
+ *
  * @see CopyOnWriteArraySet
  */
 
@@ -89,7 +90,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Accessor to the array intended to be called from within unsynchronized
 	 * read-only methods
-	 * 
+	 *
 	 * @return The internal array
 	 */
 	protected synchronized Object[] array()
@@ -99,7 +100,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Constructs an empty list
-	 * 
+	 *
 	 */
 	public CopyOnWriteArrayList()
 	{
@@ -109,8 +110,8 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Constructs an list containing the elements of the specified Collection,
 	 * in the order they are returned by the Collection's iterator.
-	 * 
-	 * @param c The collection to get the objects from. 
+	 *
+	 * @param c The collection to get the objects from.
 	 */
 	public CopyOnWriteArrayList(Collection c)
 	{
@@ -125,7 +126,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Create a new CopyOnWriteArrayList holding a copy of given array
-	 * 
+	 *
 	 * @param toCopyIn
 	 *            the array. A copy of this array is used as the internal array.
 	 */
@@ -138,7 +139,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * Replace the held array with a copy of the <code>n</code> elements of
 	 * the provided array, starting at position <code>first</code>. To copy
 	 * an entire array, call with arguments (array, 0, array.length).
-	 * 
+	 *
 	 * @param toCopyIn
 	 *            the array. A copy of the indicated elements of this array is
 	 *            used as the internal array.
@@ -157,7 +158,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Returns the number of components in this list.
-	 * 
+	 *
 	 * @return the number of components in this list.
 	 */
 	public int size()
@@ -167,7 +168,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Tests if this list has no components.
-	 * 
+	 *
 	 * @return <code>true</code> if this list has no components;
 	 *         <code>false</code> otherwise.
 	 */
@@ -178,7 +179,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Returns true if this list contains the specified element.
-	 * 
+	 *
 	 * @param o
 	 *            element whose presence in this List is to be tested.
 	 */
@@ -190,9 +191,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	}
 
 	/**
-	 * Searches for the first occurence of the given argument, testing for
+	 * Searches for the first occurrence of the given argument, testing for
 	 * equality using the <code>equals</code> method.
-	 * 
+	 *
 	 * @param elem
 	 *            an object.
 	 * @return the index of the first occurrence of the argument in this list;
@@ -210,9 +211,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * static version allows repeated call without needed to grab lock for array
 	 * each time
-	 * @param elem 
-	 * @param elementData 
-	 * @param len 
+	 * @param elem
+	 * @param elementData
+	 * @param len
 	 * @return The index that is found. -1 if not found
 	 */
 
@@ -242,10 +243,10 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	}
 
 	/**
-	 * Searches for the first occurence of the given argument, beginning the
+	 * Searches for the first occurrence of the given argument, beginning the
 	 * search at <code>index</code>, and testing for equality using the
 	 * <code>equals</code> method.
-	 * 
+	 *
 	 * @param elem
 	 *            an object.
 	 * @param index
@@ -288,7 +289,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Returns the index of the last occurrence of the specified object in this
 	 * list.
-	 * 
+	 *
 	 * @param elem
 	 *            the desired component.
 	 * @return the index of the last occurrence of the specified object in this
@@ -329,7 +330,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Searches backwards for the specified object, starting from the specified
 	 * index, and returns an index to it.
-	 * 
+	 *
 	 * @param elem
 	 *            the desired component.
 	 * @param index
@@ -369,7 +370,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Returns a shallow copy of this list. (The elements themselves are not
 	 * copied.)
-	 * 
+	 *
 	 * @return a clone of this list.
 	 */
 	public Object clone()
@@ -413,7 +414,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * immediately following the end of the collection is set to null. This is
 	 * useful in determining the length of the list <em>only</em> if the
 	 * caller knows that the list does not contain any null elements.
-	 * 
+	 *
 	 * @param a
 	 *            the array into which the elements of the list are to be
 	 *            stored, if it is big enough; otherwise, a new array of the
@@ -447,7 +448,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Returns the element at the specified position in this list.
-	 * 
+	 *
 	 * @param index
 	 *            index of element to return.
 	 * @exception IndexOutOfBoundsException
@@ -464,7 +465,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Replaces the element at the specified position in this list with the
 	 * specified element.
-	 * 
+	 *
 	 * @param index
 	 *            index of element to replace.
 	 * @param element
@@ -492,7 +493,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Appends the specified element to the end of this list.
-	 * 
+	 *
 	 * @param element
 	 *            element to be appended to this list.
 	 * @return true (as per the general contract of Collection.add).
@@ -511,7 +512,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * Inserts the specified element at the specified position in this list.
 	 * Shifts the element currently at that position (if any) and any subsequent
 	 * elements to the right (adds one to their indices).
-	 * 
+	 *
 	 * @param index
 	 *            index at which the specified element is to be inserted.
 	 * @param element
@@ -538,7 +539,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * Removes the element at the specified position in this list. Shifts any
 	 * subsequent elements to the left (subtracts one from their indices).
 	 * Returns the element that was removed from the list.
-	 * 
+	 *
 	 * @param index
 	 *            the index of the element to removed.
 	 * @exception IndexOutOfBoundsException
@@ -568,7 +569,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * if the Collection contains one or more such elements. Returns true if the
 	 * Collection contained the specified element (or equivalently, if the
 	 * Collection changed as a result of the call).
-	 * 
+	 *
 	 * @param element
 	 *            element to be removed from this Collection, if present.
 	 * @return true if the Collection changed as a result of the call.
@@ -625,7 +626,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * elements to the left (reduces their index). This call shortens the List
 	 * by (toIndex - fromIndex) elements. (If toIndex==fromIndex, this operation
 	 * has no effect.)
-	 * 
+	 *
 	 * @param fromIndex
 	 *            index of first element to be removed.
 	 * @param toIndex
@@ -656,7 +657,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Append the element if not present. This operation can be used to obtain
 	 * Set semantics for lists.
-	 * 
+	 *
 	 * @param element
 	 *            element to be added to this Collection, if absent.
 	 * @return true if added
@@ -691,7 +692,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * element returned by the Iterator in turn to see if it's contained in this
 	 * Collection. If all elements are so contained true is returned, otherwise
 	 * false.
-	 * 
+	 *
 	 */
 	public boolean containsAll(Collection c)
 	{
@@ -715,7 +716,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * the specified Collection. This is a particularly expensive operation in
 	 * this class because of the need for an internal temporary array.
 	 * <p>
-	 * 
+	 *
 	 * @return true if this Collection changed as a result of the call.
 	 */
 	public synchronized boolean removeAll(Collection c)
@@ -756,7 +757,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * specified Collection (optional operation). In other words, removes from
 	 * this Collection all of its elements that are not contained in the
 	 * specified Collection.
-	 * 
+	 *
 	 * @return true if this Collection changed as a result of the call.
 	 */
 	public synchronized boolean retainAll(Collection c)
@@ -794,7 +795,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * Appends all of the elements in the specified Collection that are not
 	 * already contained in this list, to the end of this list, in the order
 	 * that they are returned by the specified Collection's Iterator.
-	 * 
+	 *
 	 * @param c
 	 *            elements to be added into this list.
 	 * @return the number of elements added
@@ -840,7 +841,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Removes all of the elements from this list.
-	 * 
+	 *
 	 */
 	public synchronized void clear()
 	{
@@ -851,7 +852,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * Appends all of the elements in the specified Collection to the end of
 	 * this list, in the order that they are returned by the specified
 	 * Collection's Iterator.
-	 * 
+	 *
 	 * @param c
 	 *            elements to be inserted into this list.
 	 */
@@ -882,7 +883,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * position (if any) and any subsequent elements to the right (increases
 	 * their indices). The new elements will appear in the list in the order
 	 * that they are returned by the specified Collection's iterator.
-	 * 
+	 *
 	 * @param index
 	 *            index at which to insert first element from the specified
 	 *            collection.
@@ -925,8 +926,8 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * Check if the given index is in range. If not, throw an appropriate
 	 * runtime exception.
-	 * @param index 
-	 * @param length 
+	 * @param index
+	 * @param length
 	 */
 	protected void rangeCheck(int index, int length)
 	{
@@ -938,9 +939,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Save the state of the list to a stream (i.e., serialize it).
-	 * @param s 
-	 * @throws java.io.IOException 
-	 * 
+	 * @param s
+	 * @throws java.io.IOException
+	 *
 	 * @serialData The length of the array backing the list is emitted (int),
 	 *             followed by all of its elements (each an Object) in the
 	 *             proper order.
@@ -963,9 +964,9 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 	/**
 	 * Reconstitute the list from a stream (i.e., deserialize it).
-	 * @param s 
-	 * @throws java.io.IOException 
-	 * @throws ClassNotFoundException 
+	 * @param s
+	 * @throws java.io.IOException
+	 * @throws ClassNotFoundException
 	 */
 	private synchronized void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
 			ClassNotFoundException
@@ -1025,7 +1026,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * method returns false. If either Iterator runs out of elements before
 	 * before the other it returns false (as the Lists are of unequal length);
 	 * otherwise it returns true when the iterations complete.
-	 * 
+	 *
 	 * @param o
 	 *            the Object to be compared for equality with this List.
 	 * @return true if the specified Object is equal to this List.
@@ -1098,7 +1099,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * the iterator. The iterator does <em>NOT</em> support the
 	 * <code>remove</code>, <code>set</code>, or <code>add</code>
 	 * methods.
-	 * 
+	 *
 	 */
 
 	public ListIterator listIterator()
@@ -1114,7 +1115,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * with the specified index minus one. The ListIterator returned by this
 	 * implementation will throw an UnsupportedOperationException in its remove,
 	 * set and add methods.
-	 * 
+	 *
 	 * @param index
 	 *            index of first element to be returned from the ListIterator
 	 *            (by a call to getNext).
@@ -1196,7 +1197,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 		/**
 		 * Not supported. Always throws UnsupportedOperationException.
-		 * 
+		 *
 		 * @exception UnsupportedOperationException
 		 *                remove is not supported by this Iterator.
 		 */
@@ -1208,7 +1209,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 		/**
 		 * Not supported. Always throws UnsupportedOperationException.
-		 * 
+		 *
 		 * @exception UnsupportedOperationException
 		 *                set is not supported by this Iterator.
 		 */
@@ -1219,7 +1220,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 
 		/**
 		 * Not supported. Always throws UnsupportedOperationException.
-		 * 
+		 *
 		 * @exception UnsupportedOperationException
 		 *                add is not supported by this Iterator.
 		 */
@@ -1242,7 +1243,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	 * way other than via the returned List. (Structural modifications are those
 	 * that change the size of the List, or otherwise perturb it in such a
 	 * fashion that iterations in progress may yield incorrect results.)
-	 * 
+	 *
 	 * @param fromIndex
 	 *            low endpoint (inclusive) of the subList.
 	 * @param toKey
@@ -1275,7 +1276,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 		 * the array that we expect the backing list to use is checked and
 		 * updated. Since we do this for all of the base operations invoked by
 		 * those defined in AbstractList, all is well.
-		 * 
+		 *
 		 * It's not clear whether this is worth cleaning up. The kinds of list
 		 * operations inherited from AbstractList are are already so slow on COW
 		 * sublists that adding a bit more space/time doesn't seem even

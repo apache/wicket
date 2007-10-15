@@ -232,8 +232,8 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	private final AjaxResponse encodingBodyResponse;
 
 	/**
-	 * Response for header contributon that will escape output to make it safe to use inside a CDATA
-	 * block
+	 * Response for header contribution that will escape output to make it safe to use inside a
+	 * CDATA block
 	 */
 	private final AjaxResponse encodingHeaderResponse;
 
@@ -648,7 +648,7 @@ public class AjaxRequestTarget implements IPageRequestTarget
 	{
 		/*
 		 * TODO Post 1.2: Ajax: we can improve this by keeping a buffer of at least 3 characters and
-		 * checking that buffer so that we can narrow down escaping occuring only for ']]>'
+		 * checking that buffer so that we can narrow down escaping occurring only for ']]>'
 		 * sequence, or at least for ]] if ] is the last char in this buffer.
 		 * 
 		 * but this improvement will only work if we write first and encode later instead of working

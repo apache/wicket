@@ -29,24 +29,24 @@ import org.apache.wicket.util.string.Strings;
  * HTML checkbox input component.
  * <p>
  * Java:
- * 
+ *
  * <pre>
  * form.add(new CheckBox(&quot;bool&quot;));
  * </pre>
- * 
+ *
  * HTML:
- * 
+ *
  * <pre>
  *  &lt;input type=&quot;checkbox&quot; wicket:id=&quot;bool&quot; /&gt;
  * </pre>
- * 
+ *
  * </p>
  * <p>
  * You can can extend this class and override method
  * wantOnSelectionChangedNotifications() to force server roundtrips on each
  * selection change.
  * </p>
- * 
+ *
  * @author Jonathan Locke
  */
 public class CheckBox extends FormComponent implements IOnChangeListener
@@ -80,14 +80,14 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * Template method that can be overriden by clients that implement
+	 * Template method that can be overridden by clients that implement
 	 * IOnChangeListener to be notified by onChange events of a select element.
 	 * This method does nothing by default.
 	 * <p>
 	 * Called when a option is selected of a dropdown list that wants to be
 	 * notified of this event. This method is to be implemented by clients that
 	 * want to be notified of selection events.
-	 * 
+	 *
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is
 	 *            the same as you would get by calling getModelObject() if the
@@ -103,7 +103,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 * generated with each selection change, resulting in the model being
 	 * updated (of just this component) and onSelectionChanged being called.
 	 * This method returns false by default.
-	 * 
+	 *
 	 * @return True if this component's onSelectionChanged event handler should
 	 *         called using javascript if the selection changes
 	 */
@@ -123,10 +123,10 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		}
 		return super.getStatelessHint();
 	}
-	
+
 	/**
 	 * Processes the component tag.
-	 * 
+	 *
 	 * @param tag
 	 *            Tag to modify
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)

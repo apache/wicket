@@ -38,13 +38,13 @@ import org.apache.wicket.util.string.Strings;
  * Use this processor to minimize the wicket:interface urls. The component path
  * and the interface name will be removed from the url and only an uid will be
  * inserted into the url.
- * 
- * To use this url compressing behaviour you must override the
+ *
+ * To use this url compressing behavior you must override the
  * {@link Application}'s newRequestCycleProcessor() method and return an
  * instance of this.
- * 
+ *
  * @author jcompagner
- * 
+ *
  * @since 1.3
  */
 public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
@@ -88,7 +88,7 @@ public class UrlCompressingWebRequestProcessor extends WebRequestCycleProcessor
 		}
 
 		requestParameters.setInterfaceName(interfaceName);
-		
+
 		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);

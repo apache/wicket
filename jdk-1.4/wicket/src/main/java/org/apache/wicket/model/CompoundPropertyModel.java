@@ -22,15 +22,15 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 /**
  * A simple compound model which uses the component's name as the property
  * expression to retrieve properties on the nested model object.
- * 
+ *
  * CompoundPropertyModel is a chaining model so it will call get/setobject
  * on the given object if the object is an instanceof IModel itself.
- * 
+ *
  * @see org.apache.wicket.model.IModel
  * @see org.apache.wicket.model.Model
  * @see org.apache.wicket.model.LoadableDetachableModel
  * @see IChainingModel
- * 
+ *
  * @author Jonathan Locke
  */
 public class CompoundPropertyModel implements IComponentInheritedModel, IChainingModel
@@ -41,13 +41,13 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param object
 	 *            The model object, which may or may not implement IModel
 	 */
 	public CompoundPropertyModel(final Object object)
 	{
-		this.target = object;
+		target = object;
 	}
 
 	/**
@@ -69,14 +69,14 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	{
 		if (target instanceof IModel)
 		{
-			((IModel)target).setObject(object); 
+			((IModel)target).setObject(object);
 		}
 		else
 		{
-			this.target = object;
+			target = object;
 		}
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
 	 */
@@ -88,7 +88,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
 	 */
@@ -111,7 +111,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	/**
 	 * Returns the property expression that should be used against the target
 	 * object
-	 * 
+	 *
 	 * @param component
 	 * @return property expression that should be used against the target object
 	 */
@@ -127,14 +127,14 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	{
 		return new AttachedCompoundPropertyModel(component);
 	}
-	
+
 	/**
 	 * Binds this model to a special property by returning a model
 	 * that has this compound model as its nested/wrapped model and
-	 * the property which should be evaluted.
+	 * the property which should be evaluated.
 	 * This can be used if the id of the Component isn't a valid property
-	 * for the data object. 
-	 * 
+	 * for the data object.
+	 *
 	 * @param property
 	 * @return The IModel that is a wrapper around the current model and the property
 	 */
@@ -146,7 +146,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 	/**
 	 * Component aware variation of the {@link CompoundPropertyModel} that
 	 * components that inherit the model get
-	 * 
+	 *
 	 * @author ivaynberg
 	 */
 	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
@@ -158,7 +158,7 @@ public class CompoundPropertyModel implements IComponentInheritedModel, IChainin
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param owner
 		 *            component that this model has been attached to
 		 */

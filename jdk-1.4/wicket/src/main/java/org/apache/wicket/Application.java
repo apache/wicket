@@ -74,46 +74,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Base class for all Wicket applications. To create a Wicket application, you
- * generally should <i>not </i> directly subclass this class. Instead, you will
- * want to subclass some subclass of Application, like WebApplication, which is
- * appropriate for the protocol and markup type you are working with.
+ * Base class for all Wicket applications. To create a Wicket application, you generally should
+ * <i>not </i> directly subclass this class. Instead, you will want to subclass some subclass of
+ * Application, like WebApplication, which is appropriate for the protocol and markup type you are
+ * working with.
  * <p>
  * Application has the following interesting features / attributes:
  * <ul>
- * <li><b>Name </b>- The Application's name, which is the same as its class
- * name.
+ * <li><b>Name </b>- The Application's name, which is the same as its class name.
  * 
- * <li><b>Home Page </b>- The Application's home Page class. Subclasses must
- * override getHomePage() to provide this property value.
+ * <li><b>Home Page </b>- The Application's home Page class. Subclasses must override getHomePage()
+ * to provide this property value.
  * 
- * <li><b>Settings </b>- Application settings are partitioned into sets of
- * related settings using interfaces in the org.apache.wicket.settings package.
- * These interfaces are returned by the following methods, which should be used
- * to configure framework settings for your application:
- * getApplicationSettings(), getDebugSettings(), getExceptionSettings(),
- * getMarkupSettings(), getPageSettings(), getRequestCycleSettings(),
- * getSecuritySettings and getSessionSettings(). These settings are configured
- * by default through the constructor or internalInit methods. Default the
- * application is configured for DEVELOPMENT. You can configure this globally to
- * DEPLOYMENT or override specific settings by implementing the init() method.
+ * <li><b>Settings </b>- Application settings are partitioned into sets of related settings using
+ * interfaces in the org.apache.wicket.settings package. These interfaces are returned by the
+ * following methods, which should be used to configure framework settings for your application:
+ * getApplicationSettings(), getDebugSettings(), getExceptionSettings(), getMarkupSettings(),
+ * getPageSettings(), getRequestCycleSettings(), getSecuritySettings and getSessionSettings(). These
+ * settings are configured by default through the constructor or internalInit methods. Default the
+ * application is configured for DEVELOPMENT. You can configure this globally to DEPLOYMENT or
+ * override specific settings by implementing the init() method.
  * 
- * <li><b>Shared Resources </b>- Resources added to an Application's
- * SharedResources have application-wide scope and can be referenced using a
- * logical scope and a name with the ResourceReference class. ResourceReferences
- * can then be used by multiple components in the same application without
- * additional overhead (beyond the ResourceReference instance held by each
- * referee) and will yield a stable URL, permitting efficient browser caching of
- * the resource (even if the resource is dynamically generated). Resources
- * shared in this manner may also be localized. See
- * {@link org.apache.wicket.ResourceReference} for more details.
+ * <li><b>Shared Resources </b>- Resources added to an Application's SharedResources have
+ * application-wide scope and can be referenced using a logical scope and a name with the
+ * ResourceReference class. ResourceReferences can then be used by multiple components in the same
+ * application without additional overhead (beyond the ResourceReference instance held by each
+ * referee) and will yield a stable URL, permitting efficient browser caching of the resource (even
+ * if the resource is dynamically generated). Resources shared in this manner may also be localized.
+ * See {@link org.apache.wicket.ResourceReference} for more details.
  * 
- * <li><b>Session Factory </b>- The Application subclass WebApplication
- * supplies an implementation of getSessionFactory() which returns an
- * implementation of ISessionFactory that creates WebSession Session objects
- * appropriate for web applications. You can (and probably will want to)
- * override getSessionFactory() to provide your own session factory that creates
- * Session instances of your own application-specific subclass of WebSession.
+ * <li><b>Session Factory </b>- The Application subclass WebApplication supplies an implementation
+ * of getSessionFactory() which returns an implementation of ISessionFactory that creates WebSession
+ * Session objects appropriate for web applications. You can (and probably will want to) override
+ * getSessionFactory() to provide your own session factory that creates Session instances of your
+ * own application-specific subclass of WebSession.
  * 
  * </ul>
  * 
@@ -126,8 +120,7 @@ public abstract class Application
 	public static final String CONFIGURATION = "configuration";
 
 	/**
-	 * Configuration type constant for getting the context path out of the
-	 * web.xml
+	 * Configuration type constant for getting the context path out of the web.xml
 	 */
 	public static final String CONTEXTPATH = "contextpath";
 
@@ -138,9 +131,9 @@ public abstract class Application
 	public static final String DEVELOPMENT = "development";
 
 	/**
-	 * Applications keyed on the {@link #getApplicationKey()} so that they can
-	 * be retrieved even without being in a request/ being set in the thread
-	 * local (we need that e.g. for when we are in a destruction thread).
+	 * Applications keyed on the {@link #getApplicationKey()} so that they can be retrieved even
+	 * without being in a request/ being set in the thread local (we need that e.g. for when we are
+	 * in a destruction thread).
 	 */
 	private static final Map applicationKeyToApplication = new HashMap(1);
 
@@ -151,11 +144,10 @@ public abstract class Application
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	/**
-	 * Checks if the <code>Application</code> threadlocal is set in this
-	 * thread
+	 * Checks if the <code>Application</code> threadlocal is set in this thread
 	 * 
-	 * @return true if {@link Application#get()} can return the instance of
-	 *         application, false otherwise
+	 * @return true if {@link Application#get()} can return the instance of application, false
+	 *         otherwise
 	 */
 	public static boolean exists()
 	{
@@ -179,13 +171,12 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets the Application based on the application key of that application.
-	 * You typically never have to use this method unless you are working on an
-	 * integration project.
+	 * Gets the Application based on the application key of that application. You typically never
+	 * have to use this method unless you are working on an integration project.
 	 * 
 	 * @param applicationKey
-	 *            The unique key of the application within a certain context
-	 *            (e.g. a web application)
+	 *            The unique key of the application within a certain context (e.g. a web
+	 *            application)
 	 * @return The application
 	 * @throws IllegalArgumentException
 	 *             When no application was found with the provided key
@@ -197,12 +188,11 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets the keys of the currently registered Wicket applications for this
-	 * web application. You typically never have to use this method unless you
-	 * are working on an integration project.
+	 * Gets the keys of the currently registered Wicket applications for this web application. You
+	 * typically never have to use this method unless you are working on an integration project.
 	 * 
-	 * @return unmodifiable set with keys that correspond with
-	 *         {@link #getApplicationKey()}. Never null, but possibly empty
+	 * @return unmodifiable set with keys that correspond with {@link #getApplicationKey()}. Never
+	 *         null, but possibly empty
 	 */
 	public static Set/* <String> */getApplicationKeys()
 	{
@@ -263,16 +253,16 @@ public abstract class Application
 	private final SharedResources sharedResources;
 
 	/**
-	 * Constructor. <strong>Use {@link #init()} for any configuration of your
-	 * application instead of overriding the constructor.</strong>
+	 * Constructor. <strong>Use {@link #init()} for any configuration of your application instead of
+	 * overriding the constructor.</strong>
 	 */
 	public Application()
 	{
 		// Create name from subclass
-		this.name = Classes.simpleName(getClass());
+		name = Classes.simpleName(getClass());
 
 		// Create shared resources repository
-		this.sharedResources = new SharedResources(this);
+		sharedResources = new SharedResources(this);
 
 		// Install default component instantiation listener that uses
 		// authorization strategy to check component instantiations.
@@ -297,8 +287,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Adds a component instantiation listener. This method should typicaly only
-	 * be called during application startup; it is not thread safe.
+	 * Adds a component instantiation listener. This method should typically only be called during
+	 * application startup; it is not thread safe.
 	 * <p>
 	 * Note: wicket does not guarantee the execution order of added listeners
 	 * 
@@ -366,8 +356,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets the unique key of this application within a given context (like a
-	 * web application). NOT INTENDED FOR FRAMEWORK CLIENTS.
+	 * Gets the unique key of this application within a given context (like a web application). NOT
+	 * INTENDED FOR FRAMEWORK CLIENTS.
 	 * 
 	 * @return The unique key of this application
 	 */
@@ -384,20 +374,18 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets the configuration mode to use for configuring the app, either
-	 * {@link #DEVELOPMENT} or {@link #DEPLOYMENT}.
+	 * Gets the configuration mode to use for configuring the app, either {@link #DEVELOPMENT} or
+	 * {@link #DEPLOYMENT}.
 	 * <p>
-	 * The configuration type. Must currently be either DEVELOPMENT or
-	 * DEPLOYMENT. Currently, if the configuration type is DEVELOPMENT,
-	 * resources are polled for changes, component usage is checked, wicket tags
-	 * are not stripped from ouput and a detailed exception page is used. If the
-	 * type is DEPLOYMENT, component usage is not checked, wicket tags are
-	 * stripped from output and a non-detailed exception page is used to display
-	 * errors.
+	 * The configuration type. Must currently be either DEVELOPMENT or DEPLOYMENT. Currently, if the
+	 * configuration type is DEVELOPMENT, resources are polled for changes, component usage is
+	 * checked, wicket tags are not stripped from output and a detailed exception page is used. If
+	 * the type is DEPLOYMENT, component usage is not checked, wicket tags are stripped from output
+	 * and a non-detailed exception page is used to display errors.
 	 * <p>
-	 * Note that you should not run Wicket in DEVELOPMENT mode on production
-	 * servers - the various debugging checks and resource polling is
-	 * inefficient and may leak resources, particularly on webapp redeploy.
+	 * Note that you should not run Wicket in DEVELOPMENT mode on production servers - the various
+	 * debugging checks and resource polling is inefficient and may leak resources, particularly on
+	 * webapp redeploy.
 	 * 
 	 * @return configuration
 	 * @since 1.2.3 (function existed as a property getter)
@@ -444,8 +432,7 @@ public abstract class Application
 	}
 
 	/**
-	 * Application subclasses must specify a home page class by implementing
-	 * this abstract method.
+	 * Application subclasses must specify a home page class by implementing this abstract method.
 	 * 
 	 * @return Home page class for this application
 	 */
@@ -657,8 +644,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Creates a new RequestCycle object. Override this method if you want to
-	 * provide a custom request cycle.
+	 * Creates a new RequestCycle object. Override this method if you want to provide a custom
+	 * request cycle.
 	 * 
 	 * @param request
 	 *            The request
@@ -679,8 +666,7 @@ public abstract class Application
 	 * @return nothing
 	 * @throws UnsupportedOperationException
 	 *             always
-	 * @deprecated  Applications wishing to provide custom request
-	 *             cycles should override method
+	 * @deprecated Applications wishing to provide custom request cycles should override method
 	 *             {@link #newRequestCycle(Request, Response)}
 	 */
 	public final RequestCycle newRequestCycle(Application application, Request request,
@@ -690,16 +676,14 @@ public abstract class Application
 	}
 
 	/**
-	 * Creates a new session. Override this method if you want to provide a
-	 * custom session.
+	 * Creates a new session. Override this method if you want to provide a custom session.
 	 * 
 	 * @param request
 	 *            The request that will create this session.
 	 * @param response
-	 *            The response to initialize, for example with cookies. This is
-	 *            important to use cases involving unit testing because those
-	 *            use cases might want to be able to sign a user in
-	 *            automatically when the session is created.
+	 *            The response to initialize, for example with cookies. This is important to use
+	 *            cases involving unit testing because those use cases might want to be able to sign
+	 *            a user in automatically when the session is created.
 	 * 
 	 * @return The session
 	 * 
@@ -708,8 +692,8 @@ public abstract class Application
 	public abstract Session newSession(Request request, Response response);
 
 	/**
-	 * Removes a component instantiation listener. This method should typicaly
-	 * only be called during application startup; it is not thread safe.
+	 * Removes a component instantiation listener. This method should typicaly only be called during
+	 * application startup; it is not thread safe.
 	 * 
 	 * @param listener
 	 *            the listener to remove
@@ -744,10 +728,9 @@ public abstract class Application
 	}
 
 	/**
-	 * Sets the metadata for this application using the given key. If the
-	 * metadata object is not of the correct type for the metadata key, an
-	 * IllegalArgumentException will be thrown. For information on creating
-	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * Sets the metadata for this application using the given key. If the metadata object is not of
+	 * the correct type for the metadata key, an IllegalArgumentException will be thrown. For
+	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
 	 * 
 	 * @param key
 	 *            The singleton key for the metadata
@@ -776,8 +759,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Iterate initializers list, calling any {@link org.apache.wicket.IDestroyer}
-	 * instances found in it.
+	 * Iterate initializers list, calling any {@link org.apache.wicket.IDestroyer} instances found
+	 * in it.
 	 */
 	private final void callDestroyers()
 	{
@@ -806,9 +789,8 @@ public abstract class Application
 	}
 
 	/**
-	 * This method is still here for backwards compatibility with 1.1 source
-	 * code. The getXXXSettings() methods are now preferred. This method will be
-	 * removed post 1.2 version.
+	 * This method is still here for backwards compatibility with 1.1 source code. The
+	 * getXXXSettings() methods are now preferred. This method will be removed post 1.2 version.
 	 * 
 	 * @return Application settings
 	 * 
@@ -848,8 +830,7 @@ public abstract class Application
 	}
 
 	/**
-	 * Called when wicket servlet is destroyed. Overrides do not have to call
-	 * super.
+	 * Called when wicket servlet is destroyed. Overrides do not have to call super.
 	 * 
 	 * @deprecated use {@link #onDestroy()} instead
 	 */
@@ -859,8 +840,7 @@ public abstract class Application
 	}
 
 	/**
-	 * Called when wicket servlet is destroyed. Overrides do not have to call
-	 * super.
+	 * Called when wicket servlet is destroyed. Overrides do not have to call super.
 	 */
 	protected void onDestroy()
 	{
@@ -889,8 +869,8 @@ public abstract class Application
 	}
 
 	/**
-	 * Allows for initialization of the application by a subclass. <strong>Use
-	 * this method for any application setup instead of the constructor.</strong>
+	 * Allows for initialization of the application by a subclass. <strong>Use this method for any
+	 * application setup instead of the constructor.</strong>
 	 */
 	protected void init()
 	{
@@ -914,8 +894,7 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
-	 * CALL.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR CALL.
 	 * 
 	 * Internal initialization.
 	 */
@@ -972,16 +951,16 @@ public abstract class Application
 	}
 
 	/**
-	 * Creates a new session facade. Is called once per application, and is
-	 * typically not something clients reimplement.
+	 * Creates a new session facade. Is called once per application, and is typically not something
+	 * clients reimplement.
 	 * 
 	 * @return The session facade
 	 */
 	protected abstract ISessionStore newSessionStore();
 
 	/**
-	 * Notifies the registered component instantiation listeners of the
-	 * construction of the provided component
+	 * Notifies the registered component instantiation listeners of the construction of the provided
+	 * component
 	 * 
 	 * @param component
 	 *            the component that is being instantiated
@@ -998,9 +977,8 @@ public abstract class Application
 	private List componentOnBeforeRenderListeners = null;
 
 	/**
-	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should
-	 * typicaly only be called during application startup; it is not thread
-	 * safe.
+	 * Adds an {@link IComponentOnBeforeRenderListener}. This method should typically only be
+	 * called during application startup; it is not thread safe.
 	 * 
 	 * @param listener
 	 */
@@ -1056,9 +1034,8 @@ public abstract class Application
 	private List componentOnAfterRenderListeners = null;
 
 	/**
-	 * Adds an {@link IComponentOnAfterRenderListener}. This method should
-	 * typicaly only be called during application startup; it is not thread
-	 * safe.
+	 * Adds an {@link IComponentOnAfterRenderListener}. This method should typically only be called
+	 * during application startup; it is not thread safe.
 	 * 
 	 * @param listener
 	 */
@@ -1109,14 +1086,15 @@ public abstract class Application
 			}
 		}
 	}
-	
+
 	private List renderHeadListeners = null;
-	
+
 	/**
-	 * Adds a listener that will be invoked for every header response 
+	 * Adds a listener that will be invoked for every header response
+	 * 
 	 * @param listener
 	 */
-	public final void addRenderHeadListener(IHeaderContributor listener) 
+	public final void addRenderHeadListener(IHeaderContributor listener)
 	{
 		if (renderHeadListeners == null)
 		{
@@ -1124,7 +1102,7 @@ public abstract class Application
 		}
 		renderHeadListeners.add(listener);
 	}
-	
+
 	/**
 	 * 
 	 * @param listener
@@ -1140,9 +1118,10 @@ public abstract class Application
 			}
 		}
 	}
-	
+
 	/**
 	 * INTERNAL
+	 * 
 	 * @param response
 	 */
 	public void notifyRenderHeadListener(IHeaderResponse response)
@@ -1151,7 +1130,7 @@ public abstract class Application
 		{
 			for (Iterator i = renderHeadListeners.iterator(); i.hasNext();)
 			{
-				IHeaderContributor listener = (IHeaderContributor) i.next();
+				IHeaderContributor listener = (IHeaderContributor)i.next();
 				listener.renderHead(response);
 			}
 		}

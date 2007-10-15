@@ -28,10 +28,10 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * This is a int hashmap that has the exact same features and interface as a
+ * This is an integer hashmap that has the exact same features and interface as a
  * normal Map except that the key is directly an integer. So no hash is
  * calculated or key object is stored.
- * 
+ *
  * @author jcompagner
  */
 public class IntHashMap implements Cloneable, Serializable
@@ -68,14 +68,14 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * The next size value at which to resize (capacity * load factor).
-	 * 
+	 *
 	 * @serial
 	 */
 	int threshold;
 
 	/**
 	 * The load factor for the hash table.
-	 * 
+	 *
 	 * @serial
 	 */
 	final float loadFactor;
@@ -92,7 +92,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Constructs an empty <tt>HashMap</tt> with the specified initial
 	 * capacity and load factor.
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            The initial capacity.
 	 * @param loadFactor
@@ -134,7 +134,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Constructs an empty <tt>HashMap</tt> with the specified initial
 	 * capacity and the default load factor (0.75).
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            the initial capacity.
 	 * @throws IllegalArgumentException
@@ -151,7 +151,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 */
 	public IntHashMap()
 	{
-		this.loadFactor = DEFAULT_LOAD_FACTOR;
+		loadFactor = DEFAULT_LOAD_FACTOR;
 		threshold = (int)(DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR);
 		table = new Entry[DEFAULT_INITIAL_CAPACITY];
 		init();
@@ -172,7 +172,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Returns index for hash code h.
-	 * 
+	 *
 	 * @param h
 	 * @param length
 	 * @return The index for the hash integer for the given length
@@ -184,7 +184,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Returns the number of key-value mappings in this map.
-	 * 
+	 *
 	 * @return the number of key-value mappings in this map.
 	 */
 	public int size()
@@ -194,7 +194,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Returns <tt>true</tt> if this map contains no key-value mappings.
-	 * 
+	 *
 	 * @return <tt>true</tt> if this map contains no key-value mappings.
 	 */
 	public boolean isEmpty()
@@ -209,7 +209,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * that the map contains no mapping for the key; it is also possible that
 	 * the map explicitly maps the key to <tt>null</tt>. The
 	 * <tt>containsKey</tt> method may be used to distinguish these two cases.
-	 * 
+	 *
 	 * @param key
 	 *            the key whose associated value is to be returned.
 	 * @return the value to which this map maps the specified key, or
@@ -237,7 +237,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Returns <tt>true</tt> if this map contains a mapping for the specified
 	 * key.
-	 * 
+	 *
 	 * @param key
 	 *            The key whose presence in this map is to be tested
 	 * @return <tt>true</tt> if this map contains a mapping for the specified
@@ -261,7 +261,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Returns the entry associated with the specified key in the HashMap.
 	 * Returns null if the HashMap contains no mapping for this key.
-	 * 
+	 *
 	 * @param key
 	 * @return The Entry object for the given hash key
 	 */
@@ -280,7 +280,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * Associates the specified value with the specified key in this map. If the
 	 * map previously contained a mapping for this key, the old value is
 	 * replaced.
-	 * 
+	 *
 	 * @param key
 	 *            key with which the specified value is to be associated.
 	 * @param value
@@ -313,7 +313,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * This method is used instead of put by constructors and pseudoconstructors
 	 * (clone, readObject). It does not resize the table, check for
 	 * comodification, etc. It calls createEntry rather than addEntry.
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 */
@@ -351,11 +351,11 @@ public class IntHashMap implements Cloneable, Serializable
 	 * Rehashes the contents of this map into a new array with a larger
 	 * capacity. This method is called automatically when the number of keys in
 	 * this map reaches its threshold.
-	 * 
+	 *
 	 * If current capacity is MAXIMUM_CAPACITY, this method does not resize the
 	 * map, but but sets threshold to Integer.MAX_VALUE. This has the effect of
 	 * preventing future calls.
-	 * 
+	 *
 	 * @param newCapacity
 	 *            the new capacity, MUST be a power of two; must be greater than
 	 *            current capacity unless current capacity is MAXIMUM_CAPACITY
@@ -379,7 +379,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Transfer all entries from current table to newTable.
-	 * 
+	 *
 	 * @param newTable
 	 */
 	void transfer(Entry[] newTable)
@@ -409,7 +409,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * Copies all of the mappings from the specified map to this map These
 	 * mappings will replace any mappings that this map had for any of the keys
 	 * currently in the specified map.
-	 * 
+	 *
 	 * @param m
 	 *            mappings to be stored in this map.
 	 * @throws NullPointerException
@@ -459,7 +459,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Removes the mapping for this key from this map if present.
-	 * 
+	 *
 	 * @param key
 	 *            key whose mapping is to be removed from the map.
 	 * @return previous value associated with specified key, or <tt>null</tt>
@@ -476,7 +476,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Removes and returns the entry associated with the specified key in the
 	 * HashMap. Returns null if the HashMap contains no mapping for this key.
-	 * 
+	 *
 	 * @param key
 	 * @return The Entry object that was removed
 	 */
@@ -512,7 +512,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Special version of remove for EntrySet.
-	 * 
+	 *
 	 * @param o
 	 * @return The entry that was removed
 	 */
@@ -570,7 +570,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Returns <tt>true</tt> if this map maps one or more keys to the
 	 * specified value.
-	 * 
+	 *
 	 * @param value
 	 *            value whose presence in this map is to be tested.
 	 * @return <tt>true</tt> if this map maps one or more keys to the
@@ -599,7 +599,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 	/**
 	 * Special-case code for containsValue with null argument
-	 * 
+	 *
 	 * @return boolean true if there is a null value in this map
 	 */
 	private boolean containsNullValue()
@@ -621,7 +621,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Returns a shallow copy of this <tt>HashMap</tt> instance: the keys and
 	 * values themselves are not cloned.
-	 * 
+	 *
 	 * @return a shallow copy of this map.
 	 */
 	public Object clone() throws CloneNotSupportedException
@@ -655,7 +655,7 @@ public class IntHashMap implements Cloneable, Serializable
 
 		/**
 		 * Create new entry.
-		 * 
+		 *
 		 * @param k
 		 * @param v
 		 * @param n
@@ -739,9 +739,9 @@ public class IntHashMap implements Cloneable, Serializable
 	 * Add a new entry with the specified key, value and hash code to the
 	 * specified bucket. It is the responsibility of this method to resize the
 	 * table if appropriate.
-	 * 
+	 *
 	 * Subclass overrides this to alter the behavior of put method.
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 * @param bucketIndex
@@ -759,10 +759,10 @@ public class IntHashMap implements Cloneable, Serializable
 	 * Like addEntry except that this version is used when creating entries as
 	 * part of Map construction or "pseudo-construction" (cloning,
 	 * deserialization). This version needn't worry about resizing the table.
-	 * 
+	 *
 	 * Subclass overrides this to alter the behavior of HashMap(Map), clone, and
 	 * readObject.
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 * @param bucketIndex
@@ -844,7 +844,7 @@ public class IntHashMap implements Cloneable, Serializable
 			}
 			int k = current.key;
 			current = null;
-			IntHashMap.this.removeEntryForKey(k);
+			removeEntryForKey(k);
 			expectedModCount = modCount;
 		}
 
@@ -911,7 +911,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * <tt>Set.remove</tt>, <tt>removeAll</tt>, <tt>retainAll</tt>, and
 	 * <tt>clear</tt> operations. It does not support the <tt>add</tt> or
 	 * <tt>addAll</tt> operations.
-	 * 
+	 *
 	 * @return a set view of the keys contained in this map.
 	 */
 	public Set keySet()
@@ -957,7 +957,7 @@ public class IntHashMap implements Cloneable, Serializable
 		{
 			if (o instanceof Number)
 			{
-				return IntHashMap.this.removeEntryForKey(((Number)o).intValue()) != null;
+				return removeEntryForKey(((Number)o).intValue()) != null;
 			}
 			return false;
 		}
@@ -980,7 +980,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
 	 * operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
 	 * operations.
-	 * 
+	 *
 	 * @return a collection view of the values contained in this map.
 	 */
 	public Collection values()
@@ -1034,7 +1034,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * <tt>removeAll</tt>, <tt>retainAll</tt>, and <tt>clear</tt>
 	 * operations. It does not support the <tt>add</tt> or <tt>addAll</tt>
 	 * operations.
-	 * 
+	 *
 	 * @return a collection view of the mappings contained in this map.
 	 * @see Map.Entry
 	 */
@@ -1096,11 +1096,11 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Save the state of the <tt>HashMap</tt> instance to a stream (i.e.,
 	 * serialize it).
-	 * 
+	 *
 	 * @param s
 	 *            The ObjectOutputStream
 	 * @throws IOException
-	 * 
+	 *
 	 * @serialData The <i>capacity</i> of the HashMap (the length of the bucket
 	 *             array) is emitted (int), followed by the <i>size</i> of the
 	 *             HashMap (the number of key-value mappings), followed by the
@@ -1108,7 +1108,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 *             represented by the HashMap The key-value mappings are emitted
 	 *             in the order that they are returned by
 	 *             <tt>entrySet().iterator()</tt>.
-	 * 
+	 *
 	 */
 	private void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
@@ -1135,7 +1135,7 @@ public class IntHashMap implements Cloneable, Serializable
 	/**
 	 * Reconstitute the <tt>HashMap</tt> instance from a stream (i.e.,
 	 * deserialize it).
-	 * 
+	 *
 	 * @param s
 	 * @throws IOException
 	 * @throws ClassNotFoundException

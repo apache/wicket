@@ -27,7 +27,7 @@ import org.apache.wicket.session.ISessionStore;
 /**
  * Interface for the request logger and viewer.
  * @see org.apache.wicket.Application#newRequestLogger()
- * 
+ *
  * @author jcompagner
  */
 public interface IRequestLogger
@@ -46,26 +46,26 @@ public interface IRequestLogger
 	/**
 	 * This method returns a List of the current requests that are in mem.
 	 * This is a readonly list.
-	 * 
+	 *
 	 * @return Collection of the current requests
 	 */
 	public abstract List getRequests();
-	
-	
+
+
 	/**
 	 * @return Collection of live Sessions Data
 	 */
 	public SessionData[] getLiveSessions();
-	
+
 	/**
-	 * @return The current active requests 
+	 * @return The current active requests
 	 */
 	public int getCurrentActiveRequestCount();
 
 	/**
-	 * called when the session is created and has an id. 
+	 * called when the session is created and has an id.
 	 * (for http it means that the http session is created)
-	 * 
+	 *
 	 * @param id  the session id
 	 */
 	public abstract void sessionCreated(String id);
@@ -73,51 +73,51 @@ public interface IRequestLogger
 	/**
 	 * Method used to cleanup a livesession when the session was
 	 * invalidated by the webcontainer
-	 * 
+	 *
 	 * @param sessionId  the session id
 	 */
 	public abstract void sessionDestroyed(String sessionId);
 
 	/**
 	 * This method is called when the request is over. This will
-	 * set the total time a request takes and cleans up the current 
+	 * set the total time a request takes and cleans up the current
 	 * request data.
-	 * 
-	 * @param timeTaken  the time taken in millisecs
+	 *
+	 * @param timeTaken  the time taken in milliseconds
 	 */
 	public abstract void requestTime(long timeTaken);
 
 	/**
 	 * Called to monitor removals of objects out of the {@link ISessionStore}
-	 * 
+	 *
 	 * @param value  the object being removed
 	 */
 	public abstract void objectRemoved(Object value);
 
 	/**
 	 * Called to monitor updates of objects in the {@link ISessionStore}
-	 * 
+	 *
 	 * @param value  the object being updated
 	 */
 	public abstract void objectUpdated(Object value);
 
 	/**
 	 * Called to monitor additions of objects in the {@link ISessionStore}
-	 * 
+	 *
 	 * @param value  the object being created/added
 	 */
 	public abstract void objectCreated(Object value);
 
 	/**
 	 * Sets the target that was the response target for the current request
-	 * 
+	 *
 	 * @param target  the response target
 	 */
 	public abstract void logResponseTarget(IRequestTarget target);
 
 	/**
 	 * Sets the target that was the event target for the current request
-	 * 
+	 *
 	 * @param target  the event target
 	 */
 	public abstract void logEventTarget(IRequestTarget target);

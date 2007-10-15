@@ -37,9 +37,9 @@ import org.apache.wicket.util.string.Strings;
  * group component. The model of the CheckGroup component has to be an instance
  * of java.util.Collection. The model collection of the group is filled with
  * model objects of all selected Check components.
- * 
+ *
  * ie
- * 
+ *
  * <code>
  * <span wicket:id="checkboxgroup">
  *   ...
@@ -49,15 +49,15 @@ import org.apache.wicket.util.string.Strings;
  *   ...
  * </span>
  * </code>
- * 
+ *
  * @see org.apache.wicket.markup.html.form.Check
  * @see org.apache.wicket.markup.html.form.CheckGroupSelector
- * 
+ *
  * <p>
  * Note: This component does not support cookie persistence
- * 
+ *
  * @author Igor Vaynberg
- * 
+ *
  */
 public class CheckGroup extends FormComponent implements IOnChangeListener
 {
@@ -65,7 +65,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 
 	/**
 	 * Constructor that will create a default model collection
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 */
@@ -78,12 +78,12 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * Constructor that wraps the provided collection with the
 	 * org.apache.wicket.model.Model object
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 * @param collection
 	 *            collection to be used as the model
-	 * 
+	 *
 	 */
 	public CheckGroup(String id, Collection collection)
 	{
@@ -180,7 +180,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 
 	/**
 	 * Check group does not support persistence through cookies
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
 	protected final boolean supportsPersistence()
@@ -198,7 +198,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 		tag.remove("disabled");
 		tag.remove("name");
 	}
-	
+
 	/**
 	 * Called when a selection changes.
 	 */
@@ -217,7 +217,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 * Called when a {@link Check} is clicked in a {@link CheckGroup} that wants
 	 * to be notified of this event. This method is to be implemented by clients
 	 * that want to be notified of selection events.
-	 * 
+	 *
 	 * @param newSelection
 	 *            The new selection of the {@link CheckGroup}. NOTE this is the
 	 *            same as you would get by calling getModelObject() if the new
@@ -229,8 +229,8 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 
 	/**
 	 * This method should be overridden to return true if it is desirable to
-	 * have on-selection-changed notifiaction.
-	 * 
+	 * have on-selection-changed notification.
+	 *
 	 * @return true if component should receive on-selection-changed
 	 *         notifications, false otherwise
 	 */

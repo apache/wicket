@@ -31,7 +31,7 @@ import org.apache.wicket.model.IModel;
  * component has an error. The default content for this indicator is a red star,
  * but you can subclass this panel and provide your own markup to give any
  * custom look you desire.
- * 
+ *
  * @author Jonathan Locke
  */
 public class FormComponentFeedbackIndicator extends Panel implements IFeedback
@@ -43,7 +43,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 */
@@ -70,7 +70,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	}
 
 	/**
-	 * Set the component's visibility according to the existance (or not) of feedback messages
+	 * Set the component's visibility according to the existence (or not) of feedback messages
 	 */
 	public void updateFeedback()
 	{

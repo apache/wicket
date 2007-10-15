@@ -46,11 +46,11 @@ import org.slf4j.LoggerFactory;
  * <p>
  * "property.index": If the property is a List or Array then the second property can be a index on
  * that list like: 'mylist.0' this expression will also map on a getProperty(index) or
- * setProperty(index,value) methods. If the object is a List then the list will grow automaticaly if
+ * setProperty(index,value) methods. If the object is a List then the list will grow automatically if
  * the index is greater then the size <p/>
  * <p>
  * Index or map properties can also be written as: "property[index]" or "property[key]" <p/>
- * 
+ *
  * @author jcompagner
  */
 public final class PropertyResolver
@@ -65,14 +65,14 @@ public final class PropertyResolver
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
 	/**
-	 * Looks up the value from the object with the given expression. If the expresion, the object
-	 * itself or one property evalutes to null then a null will be returned.
-	 * 
+	 * Looks up the value from the object with the given expression. If the expression, the object
+	 * itself or one property evaluates to null then a null will be returned.
+	 *
 	 * @param expression
 	 *            The expression string with the property to be lookup.
 	 * @param object
 	 *            The object which is evaluated.
-	 * @return The value that is evaluted. Null something in the expression evaluted to null.
+	 * @return The value that is evaluated. Null something in the expression evaluated to null.
 	 */
 	public final static Object getValue(final String expression, final Object object)
 	{
@@ -92,11 +92,11 @@ public final class PropertyResolver
 
 	/**
 	 * Set the value on the object with the given expression. If the expression can't be evaluated
-	 * then a WicketRuntimeException will be thrown. If a null object is encounted then it will try
+	 * then a WicketRuntimeException will be thrown. If a null object is encountered then it will try
 	 * to generate it by calling the default constructor and set it on the object.
-	 * 
+	 *
 	 * The value will be tried to convert to the right type with the given converter.
-	 * 
+	 *
 	 * @param expression
 	 *            The expression string with the property to be set.
 	 * @param object
@@ -319,7 +319,7 @@ public final class PropertyResolver
 					}
 					catch (NumberFormatException ex)
 					{
-						// can't parse the exp als a index maybe the exp was a
+						// can't parse the exp as an index, maybe the exp was a
 						// method.
 						method = findMethod(clz, exp);
 						if (method != null)
@@ -527,7 +527,7 @@ public final class PropertyResolver
 
 	/**
 	 * @author jcompagner
-	 * 
+	 *
 	 */
 	private final static class ObjectAndGetSetter
 	{
@@ -602,7 +602,7 @@ public final class PropertyResolver
 		/**
 		 * @param object
 		 *            The object where the value must be taken from.
-		 * 
+		 *
 		 * @return The value of this property
 		 */
 		public Object getValue(final Object object);
@@ -615,7 +615,7 @@ public final class PropertyResolver
 		/**
 		 * @param object
 		 *            The object where the new value must be set on.
-		 * 
+		 *
 		 * @return The new value for the property that is set back on that object.
 		 */
 		public Object newValue(Object object);
@@ -1176,7 +1176,7 @@ public final class PropertyResolver
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param field
 		 */
 		public FieldGetAndSetter(Field field)
@@ -1277,7 +1277,7 @@ public final class PropertyResolver
 
 	/**
 	 * Clean up cache for this app.
-	 * 
+	 *
 	 * @param application
 	 */
 	public static void destroy(Application application)

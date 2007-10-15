@@ -50,23 +50,23 @@ import org.apache.wicket.util.resource.UrlResourceStream;
  * webapplication.
  * </p>
  * <p>
- * The following example shows how to integrate a header and footer, comming
+ * The following example shows how to integrate a header and footer, coming
  * from a plain HTML source on the same server is integrated using this
  * component. The files footer.html and header.html would be located in the web
  * application root directory
  * </p>
  * <p>
  * Java:
- * 
+ *
  * <pre>
  *   ...
  * 	add(new Include(&quot;header&quot;, &quot;header.html&quot;));
  * 	add(new Include(&quot;footer&quot;, &quot;footer.html&quot;));
  *   ...
  * </pre>
- * 
+ *
  * Html:
- * 
+ *
  * <pre>
  *   ...
  * 	&lt;div&gt;
@@ -76,9 +76,9 @@ import org.apache.wicket.util.resource.UrlResourceStream;
  * 	&lt;/div&gt;
  *   ...
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * @author Eelco Hillenius
  */
 public class Include extends WebComponent
@@ -107,7 +107,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 */
@@ -118,7 +118,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 * @param model
@@ -131,7 +131,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            component id
 	 * @param modelObject
@@ -144,7 +144,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports the contents of the url of the model object.
-	 * 
+	 *
 	 * @return the imported contents
 	 */
 	protected String importAsString()
@@ -175,7 +175,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Gets whether the given url is absolute (<tt>true</tt>) or relative (<tt>false</tt>).
-	 * 
+	 *
 	 * @param url
 	 *            the url
 	 * @return whether the given url is absolute (<tt>true</tt>) or relative (<tt>false</tt>)
@@ -210,7 +210,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports from a relative url.
-	 * 
+	 *
 	 * @param url
 	 *            the url to import
 	 * @return the imported url's contents
@@ -236,7 +236,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports from an absolute url.
-	 * 
+	 *
 	 * @param url
 	 *            the url to import
 	 * @return the imported url's contents
@@ -255,7 +255,7 @@ public class Include extends WebComponent
 
 	/**
 	 * Imports the contents from the given url.
-	 * 
+	 *
 	 * @param url
 	 *            the url
 	 * @return the imported contents

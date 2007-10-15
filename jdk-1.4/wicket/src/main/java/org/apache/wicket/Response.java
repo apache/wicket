@@ -38,11 +38,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Abstract base class for different implementations of response writing. A
- * subclass must implement write(String) to write a String to the response
- * destination (whether it be a browser, a file, a test harness or some other
- * place). A subclass may optionally implement close(), encodeURL(String),
- * redirect(String), isRedirect() or setContentType(String) as appropriate.
+ * Abstract base class for different implementations of response writing. A subclass must implement
+ * write(String) to write a String to the response destination (whether it be a browser, a file, a
+ * test harness or some other place). A subclass may optionally implement close(),
+ * encodeURL(String), redirect(String), isRedirect() or setContentType(String) as appropriate.
  * 
  * @author Jonathan Locke
  */
@@ -61,17 +60,16 @@ public abstract class Response
 	}
 
 	/**
-	 * Called when the Response needs to reset itself. Subclasses can empty
-	 * there buffer or build up state.
+	 * Called when the Response needs to reset itself. Subclasses can empty there buffer or build up
+	 * state.
 	 */
 	public void reset()
 	{
 	}
 
 	/**
-	 * An implementation of this method is only required if a subclass wishes to
-	 * support sessions via URL rewriting. This default implementation simply
-	 * returns the URL String it is passed.
+	 * An implementation of this method is only required if a subclass wishes to support sessions
+	 * via URL rewriting. This default implementation simply returns the URL String it is passed.
 	 * 
 	 * @param url
 	 *            The URL to encode
@@ -85,9 +83,9 @@ public abstract class Response
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
 	 * 
-	 * Loops over all the response filters that were set (if any) with the give
-	 * response returns the response buffer itself if there where now filters or
-	 * the response buffer that was created/returned by the filter(s)
+	 * Loops over all the response filters that were set (if any) with the give response returns the
+	 * response buffer itself if there where now filters or the response buffer that was
+	 * created/returned by the filter(s)
 	 * 
 	 * @param responseBuffer
 	 *            The response buffer to be filtered
@@ -115,13 +113,13 @@ public abstract class Response
 	 */
 	public String getCharacterEncoding()
 	{
-		if (this.defaultEncoding == null)
+		if (defaultEncoding == null)
 		{
 			return Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
 		else
 		{
-			return this.defaultEncoding;
+			return defaultEncoding;
 		}
 	}
 
@@ -131,11 +129,10 @@ public abstract class Response
 	public abstract OutputStream getOutputStream();
 
 	/**
-	 * Returns true if a redirection has occurred. The default implementation
-	 * always returns false since redirect is not implemented by default.
+	 * Returns true if a redirection has occurred. The default implementation always returns false
+	 * since redirect is not implemented by default.
 	 * 
-	 * @return True if the redirect method has been called, making this response
-	 *         a redirect.
+	 * @return True if the redirect method has been called, making this response a redirect.
 	 */
 	public boolean isRedirect()
 	{
@@ -145,19 +142,16 @@ public abstract class Response
 	/**
 	 * CLIENTS SHOULD NEVER CALL THIS METHOD FOR DAY TO DAY USE!
 	 * <p>
-	 * A subclass may override this method to implement redirection. Subclasses
-	 * which have no need to do redirection may choose not to override this
-	 * default implementation, which does nothing. For example, if a subclass
-	 * wishes to write output to a file or is part of a testing harness, there
-	 * may be no meaning to redirection.
+	 * A subclass may override this method to implement redirection. Subclasses which have no need
+	 * to do redirection may choose not to override this default implementation, which does nothing.
+	 * For example, if a subclass wishes to write output to a file or is part of a testing harness,
+	 * there may be no meaning to redirection.
 	 * </p>
 	 * <p>
-	 * Framework users who want to redirect should use a construction like
-	 * <code>
+	 * Framework users who want to redirect should use a construction like <code>
 	 * RequestCycle.get().setRequestTarget(new RedirectRequestTarget(...));
 	 * </code>
-	 * or
-	 * <code>
+	 * or <code>
 	 * setResponsePage(new RedirectPage(...));
 	 * </code>
 	 * </p>
@@ -170,20 +164,20 @@ public abstract class Response
 	}
 
 	/**
-	 * Set the default encoding for the output. Note: It is up to the derived
-	 * class to make use of the information. Class Respsonse simply stores the
-	 * value, but does not apply it anywhere automatically.
+	 * Set the default encoding for the output. Note: It is up to the derived class to make use of
+	 * the information. Class Response simply stores the value, but does not apply it anywhere
+	 * automatically.
 	 * 
 	 * @param encoding
 	 */
 	public void setCharacterEncoding(final String encoding)
 	{
-		this.defaultEncoding = encoding;
+		defaultEncoding = encoding;
 	}
 
 	/**
-	 * Set the content length on the response, if appropriate in the subclass.
-	 * This default implementation does nothing.
+	 * Set the content length on the response, if appropriate in the subclass. This default
+	 * implementation does nothing.
 	 * 
 	 * @param length
 	 *            The length of the content
@@ -193,8 +187,8 @@ public abstract class Response
 	}
 
 	/**
-	 * Set the content type on the response, if appropriate in the subclass.
-	 * This default implementation does nothing.
+	 * Set the content type on the response, if appropriate in the subclass. This default
+	 * implementation does nothing.
 	 * 
 	 * @param mimeType
 	 *            The mime type
@@ -204,8 +198,8 @@ public abstract class Response
 	}
 
 	/**
-	 * Set the contents last modified time, if appropriate in the subclass. This
-	 * default implementation does nothing.
+	 * Set the contents last modified time, if appropriate in the subclass. This default
+	 * implementation does nothing.
 	 * 
 	 * @param time
 	 *            The time object
@@ -242,15 +236,15 @@ public abstract class Response
 	public abstract void write(final CharSequence string);
 
 	/**
-	 * Either throws the exception wrapped as {@link WicketRuntimeException} or
-	 * silently ignores it. This method should ignore IO related exceptions like
-	 * connection reset by peer or broken pipe.
+	 * Either throws the exception wrapped as {@link WicketRuntimeException} or silently ignores it.
+	 * This method should ignore IO related exceptions like connection reset by peer or broken pipe.
 	 * 
 	 * @param e
 	 */
-	private void handleException(Exception e) {
+	private void handleException(Exception e)
+	{
 		// FIXME this doesn't catch all. For instance, Jetty (6/ NIO) on
-		// Unix like platforms will not be recogninzed as exceptions
+		// Unix like platforms will not be recognized as exceptions
 		// that should be ignored
 		Throwable throwable = e;
 		boolean ignoreException = false;
@@ -263,16 +257,16 @@ public abstract class Response
 			else if (throwable instanceof SocketException)
 			{
 				String message = throwable.getMessage();
-				ignoreException = message != null
-						&& (message.indexOf("Connection reset") != -1
-								|| message.indexOf("Broken pipe") != -1
-								|| message.indexOf("Socket closed") != -1 
-								|| message.indexOf("connection abort") != -1);
+				ignoreException = message != null &&
+						(message.indexOf("Connection reset") != -1 ||
+								message.indexOf("Broken pipe") != -1 ||
+								message.indexOf("Socket closed") != -1 || message
+								.indexOf("connection abort") != -1);
 			}
 			else
 			{
-				ignoreException = throwable.getClass().getName().indexOf("ClientAbortException") >= 0
-						|| throwable.getClass().getName().indexOf("EofException") >= 0;
+				ignoreException = throwable.getClass().getName().indexOf("ClientAbortException") >= 0 ||
+						throwable.getClass().getName().indexOf("EofException") >= 0;
 			}
 			if (ignoreException)
 			{
@@ -288,14 +282,13 @@ public abstract class Response
 		if (!ignoreException)
 		{
 			throw new WicketRuntimeException("Unable to write the response", e);
-		}		
+		}
 	}
-	 
+
 	/**
 	 * Copies the given input stream to the servlet response
 	 * <p>
-	 * NOTE Content-Length is not set because it would require to buffer the
-	 * whole input stream
+	 * NOTE Content-Length is not set because it would require to buffer the whole input stream
 	 * </p>
 	 * 
 	 * @param in
@@ -332,8 +325,8 @@ public abstract class Response
 	}
 
 	/**
-	 * Writes the given string to the Response subclass output destination and
-	 * appends a cr/nl depending on the OS
+	 * Writes the given string to the Response subclass output destination and appends a cr/nl
+	 * depending on the OS
 	 * 
 	 * @param string
 	 */
@@ -344,9 +337,9 @@ public abstract class Response
 	}
 
 	/**
-	 * Sets the Content-Type header with servlet-context-defined content-types
-	 * (application's web.xml or servlet container's configuration), and fall
-	 * back to system or JVM-defined (FileNameMap) content types.
+	 * Sets the Content-Type header with servlet-context-defined content-types (application's
+	 * web.xml or servlet container's configuration), and fall back to system or JVM-defined
+	 * (FileNameMap) content types.
 	 * 
 	 * @param requestCycle
 	 * @param uri

@@ -41,7 +41,7 @@ import org.apache.wicket.util.value.ValueMap;
 /**
  * Mock servlet response. Implements all of the methods from the standard HttpServletResponse class
  * plus helper methods to aid viewing the generated response.
- * 
+ *
  * @author Chris Turner
  */
 public class MockHttpServletResponse implements HttpServletResponse
@@ -88,7 +88,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Add a cookie to the response.
-	 * 
+	 *
 	 * @param cookie
 	 *            The cookie to add
 	 */
@@ -99,7 +99,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Add a date header.
-	 * 
+	 *
 	 * @param name
 	 *            The header value
 	 * @param l
@@ -113,7 +113,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Add the given header value, including an additional entry if one already exists.
-	 * 
+	 *
 	 * @param name
 	 *            The name for the header
 	 * @param value
@@ -132,7 +132,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Add an int header value.
-	 * 
+	 *
 	 * @param name
 	 *            The header name
 	 * @param i
@@ -145,7 +145,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Check if the response contains the given header name.
-	 * 
+	 *
 	 * @param name
 	 *            The name to check
 	 * @return Whether header in response or not
@@ -158,7 +158,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	/**
 	 * Encode the redirectLocation URL. Does no changes as this test implementation uses cookie
 	 * based url tracking.
-	 * 
+	 *
 	 * @param url
 	 *            The url to encode
 	 * @return The encoded url
@@ -171,7 +171,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	/**
 	 * Encode the redirectLocation URL. Does no changes as this test implementation uses cookie
 	 * based url tracking.
-	 * 
+	 *
 	 * @param url
 	 *            The url to encode
 	 * @return The encoded url
@@ -182,8 +182,8 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Encode thr URL. Does no changes as this test implementation uses cookie based url tracking.
-	 * 
+	 * Encode the URL. Does no changes as this test implementation uses cookie based url tracking.
+	 *
 	 * @param url
 	 *            The url to encode
 	 * @return The encoded url
@@ -194,8 +194,8 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Encode thr URL. Does no changes as this test implementation uses cookie based url tracking.
-	 * 
+	 * Encode the URL. Does no changes as this test implementation uses cookie based url tracking.
+	 *
 	 * @param url
 	 *            The url to encode
 	 * @return The encoded url
@@ -207,7 +207,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Flush the buffer.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void flushBuffer() throws IOException
@@ -216,7 +216,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the binary content that was written to the servlet stream.
-	 * 
+	 *
 	 * @return The binary content
 	 */
 	public byte[] getBinaryContent()
@@ -226,7 +226,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Return the current buffer size
-	 * 
+	 *
 	 * @return The buffer size
 	 */
 	public int getBufferSize()
@@ -247,7 +247,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the character encoding of the response.
-	 * 
+	 *
 	 * @return The character encoding
 	 */
 	public String getCharacterEncoding()
@@ -257,7 +257,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the response code for this request.
-	 * 
+	 *
 	 * @return The response code
 	 */
 	public int getCode()
@@ -267,7 +267,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get all of the cookies that have been added to the response.
-	 * 
+	 *
 	 * @return The collection of cookies
 	 */
 	public Collection getCookies()
@@ -277,7 +277,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the text document that was written as part of this response.
-	 * 
+	 *
 	 * @return The document
 	 */
 	public String getDocument()
@@ -294,7 +294,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the error message.
-	 * 
+	 *
 	 * @return The error message, or null if no message
 	 */
 	public String getErrorMessage()
@@ -304,7 +304,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Return the value of the given named header.
-	 * 
+	 *
 	 * @param name
 	 *            The header name
 	 * @return The value, or null
@@ -324,7 +324,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the names of all of the headers.
-	 * 
+	 *
 	 * @return The header names
 	 */
 	public Set getHeaderNames()
@@ -334,7 +334,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the encoded locale
-	 * 
+	 *
 	 * @return The locale
 	 */
 	public Locale getLocale()
@@ -344,7 +344,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the output stream for writing binary data from the servlet.
-	 * 
+	 *
 	 * @return The binary output stream.
 	 */
 	public ServletOutputStream getOutputStream()
@@ -359,7 +359,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the location that was redirected to.
-	 * 
+	 *
 	 * @return The redirect location, or null if not a redirect
 	 */
 	public String getRedirectLocation()
@@ -369,7 +369,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the status code.
-	 * 
+	 *
 	 * @return The status code
 	 */
 	public int getStatus()
@@ -379,7 +379,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Get the print writer for writing text output for this response.
-	 * 
+	 *
 	 * @return The writer
 	 * @throws IOException
 	 *             Not used
@@ -434,7 +434,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Always returns false.
-	 * 
+	 *
 	 * @return Always false
 	 */
 	public boolean isCommitted()
@@ -444,7 +444,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Return whether the servlet returned an error code or not.
-	 * 
+	 *
 	 * @return Whether an error occurred or not
 	 */
 	public boolean isError()
@@ -454,7 +454,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Check whether the response was redirected or not.
-	 * 
+	 *
 	 * @return Whether the state was redirected or not
 	 */
 	public boolean isRedirect()
@@ -463,7 +463,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * Delegate to initialise method.
+	 * Delegate to initialize method.
 	 */
 	public void reset()
 	{
@@ -487,7 +487,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Send an error code. This implementation just sets the internal error state information.
-	 * 
+	 *
 	 * @param code
 	 *            The code
 	 * @throws IOException
@@ -501,7 +501,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Send an error code. This implementation just sets the internal error state information.
-	 * 
+	 *
 	 * @param code
 	 *            The error code
 	 * @param msg
@@ -518,7 +518,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	/**
 	 * Indicate sending of a redirectLocation to a particular named resource. This implementation
 	 * just keeps hold of the redirectLocation info and makes it available for query.
-	 * 
+	 *
 	 * @param location
 	 *            The location to redirectLocation to
 	 * @throws IOException
@@ -531,7 +531,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Method ignored.
-	 * 
+	 *
 	 * @param size
 	 *            The size
 	 */
@@ -541,7 +541,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the character encoding.
-	 * 
+	 *
 	 * @param characterEncoding
 	 *            The character encoding
 	 */
@@ -552,7 +552,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the content length.
-	 * 
+	 *
 	 * @param length
 	 *            The length
 	 */
@@ -563,7 +563,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the content type.
-	 * 
+	 *
 	 * @param type
 	 *            The content type
 	 */
@@ -579,7 +579,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set a date header.
-	 * 
+	 *
 	 * @param name
 	 *            The header name
 	 * @param l
@@ -611,7 +611,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 	/**
 	 * Format HTTP date "EEE, dd MMM yyyy HH:mm:ss 'GMT'" or "EEE, dd-MMM-yy HH:mm:ss 'GMT'"for
 	 * cookies
-	 * 
+	 *
 	 * @param buf
 	 * @param calendar
 	 * @param cookie
@@ -680,7 +680,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the given header value.
-	 * 
+	 *
 	 * @param name
 	 *            The name for the header
 	 * @param value
@@ -695,7 +695,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set an int header value.
-	 * 
+	 *
 	 * @param name
 	 *            The header name
 	 * @param i
@@ -708,7 +708,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the locale in the response header.
-	 * 
+	 *
 	 * @param locale
 	 *            The locale
 	 */
@@ -719,7 +719,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the status for this response.
-	 * 
+	 *
 	 * @param status
 	 *            The status
 	 */
@@ -730,7 +730,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the status for this response.
-	 * 
+	 *
 	 * @param status
 	 *            The status
 	 * @param msg

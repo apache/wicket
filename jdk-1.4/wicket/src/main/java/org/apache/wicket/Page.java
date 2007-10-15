@@ -99,7 +99,7 @@ import org.slf4j.LoggerFactory;
  * 
  * <li><b>Back Button </b>- Pages can support the back button by enabling versioning with a call to
  * setVersioned(boolean). If a Page is versioned and changes occur to it which need to be tracked, a
- * verison manager will be installed using the overridable factory method newVersionManager(). The
+ * version manager will be installed using the overridable factory method newVersionManager(). The
  * default version manager returned by the base implementation of this method is an instance of
  * UndoPageVersionManager, which manages versions of a page by keeping change records that can be
  * reversed at a later time.
@@ -311,7 +311,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * Called just before a component's listener method (the provided method argument) is called.
 	 * This method may be used to set up dependencies, enforce authorization, etc. NOTE: if this
-	 * method fails, the method will not be excuted. Method
+	 * method fails, the method will not be executed. Method
 	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)} will always be
 	 * called.
 	 * 
@@ -395,8 +395,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * This method is called when a component was rendered standalone. If it is a markupcontainer
-	 * then the rendering for that container is checked.
+	 * This method is called when a component was rendered standalone. If it is a
+	 * <code>MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
 	 * 

@@ -29,7 +29,7 @@ import org.apache.wicket.util.time.Time;
 /**
  * An IResourceStream implementation with specific extensions for markup
  * resource streams.
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class MarkupResourceStream implements IResourceStream
@@ -56,14 +56,14 @@ public class MarkupResourceStream implements IResourceStream
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param resourceStream
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream)
 	{
 		this.resourceStream = resourceStream;
-		this.containerInfo = null;
-		this.markupClassName = null;
+		containerInfo = null;
+		markupClassName = null;
 
 		if (resourceStream == null)
 		{
@@ -73,7 +73,7 @@ public class MarkupResourceStream implements IResourceStream
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param resourceStream
 	 * @param containerInfo
 	 * @param markupClass
@@ -83,7 +83,7 @@ public class MarkupResourceStream implements IResourceStream
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = containerInfo;
-		this.markupClassName = markupClass == null ? null : markupClass.getName();
+		markupClassName = markupClass == null ? null : markupClass.getName();
 
 		if (resourceStream == null)
 		{
@@ -92,7 +92,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.resource.IResourceStream#close()
 	 */
 	public void close() throws IOException
@@ -101,7 +101,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.resource.IResourceStream#getContentType()
 	 */
 	public String getContentType()
@@ -110,7 +110,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.resource.IResourceStream#getInputStream()
 	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
@@ -119,7 +119,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.resource.IResourceStream#getLocale()
 	 */
 	public Locale getLocale()
@@ -128,7 +128,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
 	public Time lastModifiedTime()
@@ -137,7 +137,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.resource.IResourceStream#length()
 	 */
 	public long length()
@@ -146,7 +146,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
 	 */
 	public void setLocale(Locale locale)
@@ -157,7 +157,7 @@ public class MarkupResourceStream implements IResourceStream
 	/**
 	 * Get the actual component class the markup is directly associated with.
 	 * Note: it not necessarily must be the container class.
-	 * 
+	 *
 	 * @return The directly associated class
 	 */
 	public Class getMarkupClass()
@@ -166,8 +166,8 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * Get the container infos associated with the markup
-	 * 
+	 * Get the container info associated with the markup
+	 *
 	 * @return ContainerInfo
 	 */
 	public ContainerInfo getContainerInfo()
@@ -194,7 +194,7 @@ public class MarkupResourceStream implements IResourceStream
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()

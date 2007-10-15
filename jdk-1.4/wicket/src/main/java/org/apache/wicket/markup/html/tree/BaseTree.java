@@ -41,17 +41,17 @@ import org.apache.wicket.util.string.Strings;
 /**
  * An abstract Tree component that should serve as a base for custom Tree
  * Components.
- * 
+ *
  * It has one abstract method - {@link #newNodeComponent(String, IModel)} that
- * needs to be overriden.
- * 
+ * needs to be overridden.
+ *
  * @author Matej Knopp
  */
 public abstract class BaseTree extends AbstractTree
 {
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 */
 	public BaseTree(String id)
@@ -61,7 +61,7 @@ public abstract class BaseTree extends AbstractTree
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 */
@@ -82,7 +82,7 @@ public abstract class BaseTree extends AbstractTree
 
 	/**
 	 * Returns the stylesheet reference
-	 * 
+	 *
 	 * @return stylesheet reference
 	 */
 	protected ResourceReference getCSS()
@@ -101,7 +101,7 @@ public abstract class BaseTree extends AbstractTree
 	 */
 	protected void populateTreeItem(WebMarkupContainer item, int level)
 	{
-		// add juunction link
+		// add junction link
 		TreeNode node = (TreeNode)item.getModelObject();
 		Component junctionLink = newJunctionLink(item, JUNCTION_LINK_ID, node);
 		junctionLink.setComponentBorder(new JunctionBorder(node, level));
@@ -138,7 +138,7 @@ public abstract class BaseTree extends AbstractTree
 	/**
 	 * Returns the class name that will be added to row's CSS class for selected
 	 * rows
-	 * 
+	 *
 	 * @return CSS class name
 	 */
 	protected String getSelectedClass()
@@ -148,7 +148,7 @@ public abstract class BaseTree extends AbstractTree
 
 	/**
 	 * Creates a new component for the given TreeNode.
-	 * 
+	 *
 	 * @param id
 	 *            component ID
 	 * @param model
@@ -159,7 +159,7 @@ public abstract class BaseTree extends AbstractTree
 
 	/**
 	 * Returns whether the provided node is last child of it's parent.
-	 * 
+	 *
 	 * @param node
 	 *            The node
 	 * @return whether the provided node is the last child
@@ -190,7 +190,7 @@ public abstract class BaseTree extends AbstractTree
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param node
 		 * @param level
 		 */
@@ -245,7 +245,7 @@ public abstract class BaseTree extends AbstractTree
 	 * Creates the junction link for given node. Also (optionally) creates the
 	 * junction image. If the node is a leaf (it has no children), the created
 	 * junction link is non-functional.
-	 * 
+	 *
 	 * @param parent  parent component of the link
 	 * @param id      wicket:id of the component
 	 * @param node    tree node for which the link should be created.
@@ -317,10 +317,10 @@ public abstract class BaseTree extends AbstractTree
 	/**
 	 * Callback function called after user clicked on an junction link. The node
 	 * has already been expanded/collapsed (depending on previous status).
-	 * 
+	 *
 	 * @param target
 	 *            Request target - may be null on non-ajax call
-	 * 
+	 *
 	 * @param node
 	 *            Node for which this callback is relevant
 	 */
@@ -364,7 +364,7 @@ public abstract class BaseTree extends AbstractTree
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param name  the name of the type of the link
 		 */
 		public LinkType(String name)
@@ -375,14 +375,14 @@ public abstract class BaseTree extends AbstractTree
 
 	/**
 	 * Helper class for calling an action from a link.
-	 * 
+	 *
 	 * @author Matej Knopp
 	 */
 	public interface ILinkCallback extends IClusterable
 	{
 		/**
 		 * Called when the click is executed.
-		 * 
+		 *
 		 * @param target
 		 *            The ajax request target
 		 */
@@ -392,7 +392,7 @@ public abstract class BaseTree extends AbstractTree
 	/**
 	 * Creates a link of type specified by current linkType. When the links is
 	 * clicked it calls the specified callback.
-	 * 
+	 *
 	 * @param id
 	 *            The component id
 	 * @param callback
@@ -450,7 +450,7 @@ public abstract class BaseTree extends AbstractTree
 
 	/**
 	 * Returns the current type of links on tree items.
-	 * 
+	 *
 	 * @return The link type
 	 */
 	public LinkType getLinkType()
@@ -461,7 +461,7 @@ public abstract class BaseTree extends AbstractTree
 	/**
 	 * Sets the type of links on tree items. After the link type is changed, the
 	 * whole tree is rebuild and re-rendered.
-	 * 
+	 *
 	 * @param linkType
 	 *            type of links
 	 */
@@ -473,7 +473,7 @@ public abstract class BaseTree extends AbstractTree
 			invalidateAll();
 		}
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.tree.AbstractTree#isForceRebuildOnSelectionChange()
 	 */

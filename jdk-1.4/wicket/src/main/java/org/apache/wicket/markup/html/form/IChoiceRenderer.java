@@ -19,17 +19,17 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.IClusterable;
 
 /**
- * Renders one choice. Seperates the 'id' values used for internal
+ * Renders one choice. Separates the 'id' values used for internal
  * representation from 'display values' which are the values shown to the user
  * of components that use this renderer.
- * 
+ *
  * @author jcompagner
  */
 public interface IChoiceRenderer extends IClusterable
 {
 	/**
 	 * Get the value for displaying to an end user.
-	 * 
+	 *
 	 * @param object
 	 *            the actual object
 	 * @return the value meant for displaying to an end user
@@ -41,7 +41,7 @@ public interface IChoiceRenderer extends IClusterable
 	 * attribute of a choice element) The id can be extracted from the object
 	 * like a primary key, or if the list is stable you could just return a
 	 * toString of the index.
-	 * 
+	 *
 	 * @param object
 	 *            The object for which the id should be generated
 	 * @param index

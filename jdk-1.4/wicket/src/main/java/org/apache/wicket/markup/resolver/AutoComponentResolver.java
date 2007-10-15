@@ -49,7 +49,7 @@ import org.apache.wicket.util.convert.IConverter;
  * <p>
  * Note: The component must provide a setter for each key/value attribute
  * provided.
- * 
+ *
  * @author Juergen Donnerstag
  */
 public final class AutoComponentResolver implements IComponentResolver
@@ -135,7 +135,7 @@ public final class AutoComponentResolver implements IComponentResolver
 					component.render(markupStream);
 					return true;
 				}
-				
+
 				parent = parent.getParent();
 				if (nestedComponents.containsKey(parent))
 				{
@@ -149,10 +149,10 @@ public final class AutoComponentResolver implements IComponentResolver
 	}
 
 	/**
-	 * Based on the tag, create and initalize the component.
-	 * 
+	 * Based on the tag, create and initialize the component.
+	 *
 	 * @param container
-	 *            The current container. The new compent will be added to that
+	 *            The current container. The new component will be added to that
 	 *            container.
 	 * @param tag
 	 *            The tag containing the information about component
@@ -176,7 +176,7 @@ public final class AutoComponentResolver implements IComponentResolver
 		{
 			throw new MarkupException("Tag <wicket:component> must have attribute 'class'");
 		}
-		
+
 		// construct the component. It must have a constructor with a single
 		// String (componentId) parameter.
 		final Component component;
@@ -251,7 +251,7 @@ public final class AutoComponentResolver implements IComponentResolver
 
 	/**
 	 * Invoke the setter method for 'name' on object and provide the 'value'
-	 * 
+	 *
 	 * @param object
 	 * @param name
 	 * @param value

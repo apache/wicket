@@ -61,7 +61,7 @@ public class FeedbackMessagesModel implements IModel
 	}
 
 	/**
-	 * Constructor. Creates a model for all feedback messags accepted by the given filter.
+	 * Constructor. Creates a model for all feedback messages accepted by the given filter.
 	 * 
 	 * @param filter
 	 *            The filter to apply

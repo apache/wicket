@@ -30,14 +30,14 @@ import org.apache.wicket.markup.MarkupParserFactory;
  * <p>
  * <i>stripComments </i> (defaults to false) - Set to true to strip HTML
  * comments during markup loading
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public interface IMarkupSettings
 {
 	/**
 	 * If true, automatic link resolution is enabled. Disabled by default.
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver
 	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler
 	 * @return Returns the automaticLinking.
@@ -73,8 +73,8 @@ public interface IMarkupSettings
 	IMarkupParserFactory getMarkupParserFactory();
 
 	/**
-	 * The markup cache also loads the markup if not yet avaiable in the cache.
-	 * 
+	 * The markup cache also loads the markup if not yet available in the cache.
+	 *
 	 * @return markup cache
 	 */
 	IMarkupCache getMarkupCache();
@@ -87,13 +87,13 @@ public interface IMarkupSettings
 
 	/**
 	 * Gets whether to remove wicket tags from the output.
-	 * 
+	 *
 	 * @return whether to remove wicket tags from the output
 	 */
 	boolean getStripWicketTags();
 
 	/**
-	 * 
+	 *
 	 * @since 1.1
 	 * @return if true, xml declaration will be removed.
 	 */
@@ -101,11 +101,11 @@ public interface IMarkupSettings
 
 	/**
 	 * Application default for automatic link resolution. Please
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.resolver.AutoLinkResolver and
 	 * @see org.apache.wicket.markup.parser.filter.WicketLinkTagHandler for more
 	 *      details.
-	 * 
+	 *
 	 * @param automaticLinking
 	 *            The automaticLinking to set.
 	 */
@@ -119,12 +119,12 @@ public interface IMarkupSettings
 	 * Compression is currently not HTML aware and so it may be possible for
 	 * whitespace compression to break pages. For this reason, whitespace
 	 * compression is off by default and you should test your application
-	 * throroughly after turning whitespace compression on.
+	 * thoroughly after turning whitespace compression on.
 	 * <p>
 	 * Spaces are removed from markup at markup load time and there should be no
 	 * effect on page rendering speed. In fact, your pages should render faster
 	 * with whitespace compression enabled.
-	 * 
+	 *
 	 * @param compressWhitespace
 	 *            The compressWhitespace to set.
 	 */
@@ -145,7 +145,7 @@ public interface IMarkupSettings
 	/**
 	 * Set default encoding for markup files. If null, the encoding provided by
 	 * the operating system will be used.
-	 * 
+	 *
 	 * @since 1.1
 	 * @param encoding
 	 */
@@ -154,7 +154,7 @@ public interface IMarkupSettings
 	/**
 	 * Sets the markup parser factory that will be used to generate parsers for
 	 * markup. By default {@link MarkupParserFactory} will be used.
-	 * 
+	 *
 	 * @param factory
 	 *            new factory
 	 */
@@ -163,7 +163,7 @@ public interface IMarkupSettings
 	/**
 	 * Sets a new markup cache which will also be used to load markup if not yet
 	 * available in the cache.
-	 * 
+	 *
 	 * @param markupCache
 	 *            new markup cache
 	 */
@@ -172,7 +172,7 @@ public interface IMarkupSettings
 	/**
 	 * Enables stripping of markup comments denoted in markup by HTML comment
 	 * tagging.
-	 * 
+	 *
 	 * @param stripComments
 	 *            True to strip markup comments from rendered pages
 	 */
@@ -180,14 +180,14 @@ public interface IMarkupSettings
 
 	/**
 	 * Sets whether to remove wicket tags from the output.
-	 * 
+	 *
 	 * @param stripWicketTags
 	 *            whether to remove wicket tags from the output
 	 */
 	void setStripWicketTags(boolean stripWicketTags);
 
 	/**
-	 * 
+	 *
 	 * @since 1.1
 	 * @param strip
 	 *            if true, xml declaration will be stripped from output
