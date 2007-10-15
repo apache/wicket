@@ -38,7 +38,6 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
 
-
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
@@ -48,13 +47,13 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @author almaw
  */
 public class ResourceTestPage extends WebPage {
-	
+
 	public static final int IMAGES_PER_PAGE = 20;
-	
+
 	public ResourceTestPage() {
 		List list = Arrays.asList(new Object[IMAGES_PER_PAGE]);
 		add(new ListView("listView", list) {
-		
+
 			@Override
 			protected void populateItem(ListItem item) {
 				final Random random = new Random();
@@ -63,57 +62,56 @@ public class ResourceTestPage extends WebPage {
 				gfx.setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
 				gfx.fillRect(0, 0, 32, 32);
 				gfx.dispose();
-				
+
 				// Write it into a byte array as a JPEG.
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
-                try {
-                    encoder.encode(image);
-                }
-				catch (IOException e) {
+				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
+				try {
+					encoder.encode(image);
+				} catch (IOException e) {
 					throw new WicketRuntimeException(e);
 				}
-                final byte[] imageData = baos.toByteArray();
-                
+				final byte[] imageData = baos.toByteArray();
+
 				item.add(new Image("image", new WebResource() {
-				
+
 					@Override
 					public IResourceStream getResourceStream() {
 						return new IResourceStream() {
-						
+
 							public Time lastModifiedTime() {
 								return Time.now();
 							}
-						
+
 							public void setLocale(Locale locale) {
 							}
-						
+
 							public long length() {
 								return imageData.length;
 							}
-						
+
 							public Locale getLocale() {
 								return null;
 							}
-						
+
 							// Make a 16x16 randomly background-coloured JPEG.
 							public InputStream getInputStream() throws ResourceStreamNotFoundException {
 								return new ByteArrayInputStream(imageData);
 							}
-						
+
 							public String getContentType() {
 								return "image/jpeg";
 							}
-						
+
 							public void close() throws IOException {
 							}
-						
+
 						};
 					}
-				
+
 				}));
 			}
-		
+
 		});
 	}
 }

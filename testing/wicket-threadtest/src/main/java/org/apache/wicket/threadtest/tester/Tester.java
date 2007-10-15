@@ -31,7 +31,6 @@ import org.apache.wicket.util.time.Duration;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
-
 /**
  * @author eelcohillenius
  */

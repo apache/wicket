@@ -25,7 +25,6 @@ import org.apache.wicket.threadtest.apps.app1.ResourceTestPage;
 import org.apache.wicket.threadtest.tester.SimpleGetCommand;
 import org.apache.wicket.threadtest.tester.Tester;
 
-
 /**
  * @author almaw
  */

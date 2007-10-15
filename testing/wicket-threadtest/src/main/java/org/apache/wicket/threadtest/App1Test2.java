@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.threadtest.tester.SimpleGetCommand;
 import org.apache.wicket.threadtest.tester.Tester;
 
-
 /**
  * @author eelcohillenius
  */

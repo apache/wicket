@@ -36,7 +36,7 @@ public class TestApp1 extends WebApplication {
 
 	/**
 	 * Gets contactsDB.
-	 *
+	 * 
 	 * @return contactsDB
 	 */
 	public ContactsDatabase getContactsDB() {
@@ -55,7 +55,7 @@ public class TestApp1 extends WebApplication {
 
 	@Override
 	protected ISessionStore newSessionStore() {
-		return new SecondLevelCacheSessionStore(this,new FilePageStore());
-		//return new HttpSessionStore();
+		return new SecondLevelCacheSessionStore(this, new FilePageStore());
+		// return new HttpSessionStore();
 	}
 }
