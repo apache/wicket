@@ -46,12 +46,13 @@ public class GuiceInjectorTest extends TestCase
 			{
 				return null;
 			}
-			
-            protected ISessionStore newSessionStore()
-            {
-                    // Don't use a filestore, or we spawn lots of threads, which makes things slow.
-                    return new HttpSessionStore(this);
-            }
+
+			protected ISessionStore newSessionStore()
+			{
+				// Don't use a filestore, or we spawn lots of threads, which
+				// makes things slow.
+				return new HttpSessionStore(this);
+			}
 		}, null);
 
 		// Make a new webapp and injector, and register the injector with the
@@ -76,7 +77,8 @@ public class GuiceInjectorTest extends TestCase
 			});
 			app.addComponentInstantiationListener(injector);
 
-			// Create a new component, which should be automatically injected, and test to make sure the injection has worked.
+			// Create a new component, which should be automatically injected,
+			// and test to make sure the injection has worked.
 			TestComponent testComponent = new TestComponent("id");
 			doChecksForComponent(testComponent);
 

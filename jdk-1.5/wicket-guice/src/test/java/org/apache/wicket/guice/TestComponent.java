@@ -31,7 +31,7 @@ public class TestComponent extends Component
 	@Inject
 	@Red
 	private ITestService injectedFieldRed;
-	
+
 	@Inject
 	@Blue
 	private ITestService injectedFieldBlue;
@@ -41,21 +41,23 @@ public class TestComponent extends Component
 	{
 		injectedMethod = service;
 	}
-	
+
 	@Inject
-	public void injectServiceRed(@Red ITestService service)
+	public void injectServiceRed(@Red
+	ITestService service)
 	{
 		injectedMethodRed = service;
 	}
 
 	@Inject
-	public void injectServiceBlue(@Blue ITestService service)
+	public void injectServiceBlue(@Blue
+	ITestService service)
 	{
 		injectedMethodBlue = service;
 	}
-	
+
 	private ITestService injectedMethod, injectedMethodRed, injectedMethodBlue;
-	
+
 	public TestComponent(String id)
 	{
 		super(id);
@@ -86,7 +88,7 @@ public class TestComponent extends Component
 	{
 		return injectedMethod;
 	}
-	
+
 	public ITestService getInjectedMethodRed()
 	{
 		return injectedMethodRed;

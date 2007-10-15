@@ -21,5 +21,6 @@ public interface ITestService
 	public static final String RESULT = "foo";
 	public static final String RESULT_RED = "red";
 	public static final String RESULT_BLUE = "blue";
+
 	public String getString();
 }

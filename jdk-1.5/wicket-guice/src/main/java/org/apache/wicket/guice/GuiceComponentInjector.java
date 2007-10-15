@@ -38,14 +38,15 @@ import com.google.inject.Stage;
 /**
  * Injects fields/members of components using Guice.
  * <p>
- * Add this to your application in its {@link Application#init()} method like
- * so:
+ * Add this to your application in its {@link Application#init()} method like so:
+ * 
  * <pre>
  * addComponentInstantiationListener(new GuiceComponentInjector(this));
  * </pre>
+ * 
  * <p>
- * There are different constructors for this object depending on how you want to
- * wire things. See the javadoc for the constructors for more information.
+ * There are different constructors for this object depending on how you want to wire things. See
+ * the javadoc for the constructors for more information.
  * 
  * @author Alastair Maw
  */
@@ -54,10 +55,10 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	/**
 	 * Creates a new Wicket GuiceComponentInjector instance.
 	 * <p>
-	 * Internally this will create a new Guice {@link Injector} instance, with
-	 * no {@link Module} instances. This is only useful if your beans have
-	 * appropriate {@link ImplementedBy} annotations on them so that they can be
-	 * automatically picked up with no extra configuration code.
+	 * Internally this will create a new Guice {@link Injector} instance, with no {@link Module}
+	 * instances. This is only useful if your beans have appropriate {@link ImplementedBy}
+	 * annotations on them so that they can be automatically picked up with no extra configuration
+	 * code.
 	 * 
 	 * @param app
 	 */
@@ -65,16 +66,15 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	{
 		this(app, new Module[0]);
 	}
-	
+
 	/**
-	 * Creates a new Wicket GuiceComponentInjector instance, using the supplied
-	 * Guice {@link Module} instances to create a new Guice {@link Injector}
-	 * instance internally.
+	 * Creates a new Wicket GuiceComponentInjector instance, using the supplied Guice {@link Module}
+	 * instances to create a new Guice {@link Injector} instance internally.
 	 * 
 	 * @param app
 	 * @param modules
 	 */
-	public GuiceComponentInjector(Application app, Module ... modules)
+	public GuiceComponentInjector(Application app, Module... modules)
 	{
 		this(app, Guice.createInjector(app.getConfigurationType().equals(Application.DEVELOPMENT)
 				? Stage.DEVELOPMENT
@@ -82,8 +82,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	}
 
 	/**
-	 * Creates a new Wicket GuiceComponentInjector instance, using the provided
-	 * Guice {@link Injector} instance.
+	 * Creates a new Wicket GuiceComponentInjector instance, using the provided Guice
+	 * {@link Injector} instance.
 	 * 
 	 * @param app
 	 * @param modules
@@ -92,10 +92,10 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
 	}
-	
+
 	public void inject(Object object)
 	{
-		Class<?> current = object.getClass();
+		Class< ? > current = object.getClass();
 		do
 		{
 			Field[] currentFields = current.getDeclaredFields();
@@ -106,7 +106,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 					try
 					{
 						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
-						Object proxy = LazyInitProxyFactory.createProxy(field.getType(), new GuiceProxyTargetLocator(field.getType(), bindingAnnotation));
+						Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
+								new GuiceProxyTargetLocator(field.getType(), bindingAnnotation));
 
 						if (!field.isAccessible())
 						{
@@ -116,14 +117,15 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 					}
 					catch (IllegalAccessException e)
 					{
-						throw new WicketRuntimeException("Error Guice-injecting field " + field.getName() + " in " + object, e);
+						throw new WicketRuntimeException("Error Guice-injecting field " +
+								field.getName() + " in " + object, e);
 					}
 					catch (MoreThanOneBindingException e)
 					{
 						throw new RuntimeException(
-								"Can't have more than one BindingAnnotation on field "
-										+ field.getName() + " of class "
-										+ object.getClass().getName());
+								"Can't have more than one BindingAnnotation on field " +
+										field.getName() + " of class " +
+										object.getClass().getName());
 					}
 				}
 			}
@@ -133,22 +135,23 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 				if (method.getAnnotation(Inject.class) != null)
 				{
 					Annotation[][] paramAnnotations = method.getParameterAnnotations();
-					Class<?>[] paramTypes = method.getParameterTypes();
+					Class< ? >[] paramTypes = method.getParameterTypes();
 					Object[] args = new Object[paramTypes.length];
 					for (int i = 0; i < paramTypes.length; i++)
 					{
 						try
 						{
 							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
-							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i], new GuiceProxyTargetLocator(paramTypes[i], bindingAnnotation));
+							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i],
+									new GuiceProxyTargetLocator(paramTypes[i], bindingAnnotation));
 						}
 						catch (MoreThanOneBindingException e)
 						{
 							throw new RuntimeException(
-									"Can't have more than one BindingAnnotation on parameter "
-											+ i + "(" + paramTypes[i].getSimpleName() + ") of method " + method.getName()
-											+ " of class "
-											+ object.getClass().getName());
+									"Can't have more than one BindingAnnotation on parameter " + i +
+											"(" + paramTypes[i].getSimpleName() + ") of method " +
+											method.getName() + " of class " +
+											object.getClass().getName());
 						}
 					}
 					try
@@ -170,16 +173,17 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		// Do a null check in case Object isn't in the current classloader.
 		while (current != null && current != Object.class);
 	}
-	
+
 	public void onInstantiation(Component component)
 	{
 		inject(component);
 	}
-	
-	private Annotation findBindingAnnotation(Annotation[] annotations) throws MoreThanOneBindingException
+
+	private Annotation findBindingAnnotation(Annotation[] annotations)
+			throws MoreThanOneBindingException
 	{
 		Annotation bindingAnnotation = null;
-		
+
 		// Work out if we have a BindingAnnotation on this parameter.
 		for (int i = 0; i < annotations.length; i++)
 		{
@@ -194,7 +198,7 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 		}
 		return bindingAnnotation;
 	}
-	
+
 	private static class MoreThanOneBindingException extends Exception
 	{
 		private static final long serialVersionUID = 1L;

@@ -22,29 +22,26 @@ import org.apache.wicket.MetaDataKey;
 import com.google.inject.Injector;
 
 /**
- * This is a holder for the Injector. The reason we need a holder
- * is that metadata only supports storing serializable objects but
- * Injector is not. The holder acts as a serializable wrapper for
- * the context. Notice that although holder implements IClusterable it
- * really is not because it has a reference to non-serializable context -
- * but this is ok because metadata objects in application are never
- * serialized.
+ * This is a holder for the Injector. The reason we need a holder is that metadata only supports
+ * storing serializable objects but Injector is not. The holder acts as a serializable wrapper for
+ * the context. Notice that although holder implements IClusterable it really is not because it has
+ * a reference to non-serializable context - but this is ok because metadata objects in application
+ * are never serialized.
  */
 public class GuiceInjectorHolder implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Metadata key used to store Injector holder in application's
-	 * metadata
+	 * Metadata key used to store Injector holder in application's metadata
 	 */
-	public static MetaDataKey INJECTOR_KEY = new MetaDataKey(
-			GuiceInjectorHolder.class) {
+	public static MetaDataKey INJECTOR_KEY = new MetaDataKey(GuiceInjectorHolder.class)
+	{
 
 		private static final long serialVersionUID = 1L;
 
 	};
-	
+
 	private final Injector injector;
 
 	/**
@@ -52,14 +49,16 @@ public class GuiceInjectorHolder implements IClusterable
 	 * 
 	 * @param context
 	 */
-	public GuiceInjectorHolder(Injector injector) {
+	public GuiceInjectorHolder(Injector injector)
+	{
 		this.injector = injector;
 	}
 
 	/**
 	 * @return the context
 	 */
-	public Injector getInjector() {
+	public Injector getInjector()
+	{
 		return injector;
 	}
 }

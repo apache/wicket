@@ -27,7 +27,7 @@ import com.google.inject.BindingAnnotation;
  * Indicates we want the blue version of a binding.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target( { ElementType.FIELD, ElementType.PARAMETER })
 @BindingAnnotation
 public @interface Blue {
 	// No values.

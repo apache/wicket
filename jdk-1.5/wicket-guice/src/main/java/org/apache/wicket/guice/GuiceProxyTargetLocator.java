@@ -30,17 +30,18 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 
 	private String typeName;
 	private Annotation bindingAnnotation;
-	
-	GuiceProxyTargetLocator(Class<?> type, Annotation bindingAnnotation)
+
+	GuiceProxyTargetLocator(Class< ? > type, Annotation bindingAnnotation)
 	{
 		this.typeName = type.getName();
 		this.bindingAnnotation = bindingAnnotation;
 	}
-	
+
 	public Object locateProxyTarget()
 	{
-		GuiceInjectorHolder holder = (GuiceInjectorHolder)Application.get().getMetaData(GuiceInjectorHolder.INJECTOR_KEY);
-		final Key<?> key;
+		GuiceInjectorHolder holder = (GuiceInjectorHolder)Application.get().getMetaData(
+				GuiceInjectorHolder.INJECTOR_KEY);
+		final Key< ? > key;
 		if (bindingAnnotation == null)
 		{
 			key = Key.get(Classes.resolveClass(typeName));
