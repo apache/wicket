@@ -20,12 +20,10 @@ import org.apache.wicket.extensions.wizard.IWizardModel;
 import org.apache.wicket.extensions.wizard.IWizardStep;
 
 /**
- * Wizard step that is intelligent enough to know how to navigate to the next
- * and previous steps. Using such steps, you can build wizard that consists of
- * steps that are linked on the fly rather than in a static, pre-determined
- * fashion. The basic idea here is that the wizard step takes over much of what
- * otherwise would be done by the wizard model. You trade simplicity for
- * flexibility.
+ * Wizard step that is intelligent enough to know how to navigate to the next and previous steps.
+ * Using such steps, you can build wizard that consists of steps that are linked on the fly rather
+ * than in a static, pre-determined fashion. The basic idea here is that the wizard step takes over
+ * much of what otherwise would be done by the wizard model. You trade simplicity for flexibility.
  * 
  * <p>
  * Warning: only use these steps with the {@link DynamicWizardModel}.
@@ -38,8 +36,7 @@ public interface IDynamicWizardStep extends IWizardStep
 	/**
 	 * Checks if the last button should be enabled.
 	 * 
-	 * @return <tt>true</tt> if the last button should be enabled,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the last button should be enabled, <tt>false</tt> otherwise.
 	 * @see IWizardModel#isLastVisible
 	 */
 	boolean isLastAvailable();
@@ -80,11 +77,11 @@ public interface IDynamicWizardStep extends IWizardStep
 	IDynamicWizardStep last();
 
 	/**
-	 * Gets the next wizard step from here. Can only be called when
-	 * {@link #isNextAvailable()} returns true.
+	 * Gets the next wizard step from here. Can only be called when {@link #isNextAvailable()}
+	 * returns true.
 	 * 
-	 * @return The next wizard step. May not be null unless this is the last
-	 *         step ({@link #isLastStep()} returns true).
+	 * @return The next wizard step. May not be null unless this is the last step ({@link #isLastStep()}
+	 *         returns true).
 	 */
 	IDynamicWizardStep next();
 
@@ -92,8 +89,8 @@ public interface IDynamicWizardStep extends IWizardStep
 	 * Gets the previous wizard step from here. Can only be called when
 	 * {@link #isPreviousAvailable()} returns true.
 	 * 
-	 * @return The next wizard step. May not be null unless this is the first
-	 *         step (in which case it should never be called).
+	 * @return The next wizard step. May not be null unless this is the first step (in which case it
+	 *         should never be called).
 	 */
 	IDynamicWizardStep previous();
 }

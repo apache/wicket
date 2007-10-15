@@ -31,24 +31,22 @@ import org.apache.wicket.MarkupContainer;
 public interface IColumn extends IClusterable
 {
 	/**
-	 * Returns a location of this column. Location specifies how is column
-	 * aligned and what is it's size.
+	 * Returns a location of this column. Location specifies how is column aligned and what is it's
+	 * size.
 	 * <p>
-	 * In case location of a column changes, it is necessary to call the
-	 * <code>invalidateAll</code> methods on the {@link TreeTable} to prevent
-	 * incorrect rendering.
+	 * In case location of a column changes, it is necessary to call the <code>invalidateAll</code>
+	 * methods on the {@link TreeTable} to prevent incorrect rendering.
 	 * 
 	 * @return The location of this column
 	 */
 	ColumnLocation getLocation();
 
 	/**
-	 * Returns the span for this cell. This method is called only for cells that
-	 * are aligned in the middle.
+	 * Returns the span for this cell. This method is called only for cells that are aligned in the
+	 * middle.
 	 * <p>
-	 * The returned value implicates, over how many cells the cell in this
-	 * column (in row determined by node) should span. This is analogical to
-	 * colspan property of html element td.
+	 * The returned value implicates, over how many cells the cell in this column (in row determined
+	 * by node) should span. This is analogical to colspan property of html element td.
 	 * 
 	 * @param node
 	 *            The tree node
@@ -59,9 +57,8 @@ public interface IColumn extends IClusterable
 	/**
 	 * Returns, whether the column is visible.
 	 * <p>
-	 * In case the visibility changes, it is necessary to call the
-	 * <code>invalidateAll</code> methods on the {@link TreeTable} to prevent
-	 * incorrect rendering.
+	 * In case the visibility changes, it is necessary to call the <code>invalidateAll</code>
+	 * methods on the {@link TreeTable} to prevent incorrect rendering.
 	 * 
 	 * @return Whether the column is visible
 	 */
@@ -72,9 +69,8 @@ public interface IColumn extends IClusterable
 	 * {@link IColumn#newCell(TreeNode, int)} returned null.
 	 * 
 	 * @param parent
-	 *            The parent to which the cell must be added. Can also be used
-	 *            to find the TreeTable instance (using
-	 *            <code>parent.findParent(TreeTable.cass)</code>)
+	 *            The parent to which the cell must be added. Can also be used to find the TreeTable
+	 *            instance (using <code>parent.findParent(TreeTable.cass)</code>)
 	 * @param id
 	 *            The component id
 	 * 
@@ -82,35 +78,31 @@ public interface IColumn extends IClusterable
 	 *            TreeNode for the cell
 	 * 
 	 * @param level
-	 *            Convenience parameter that indicates how deep the node is in
-	 *            hierarchy
+	 *            Convenience parameter that indicates how deep the node is in hierarchy
 	 * @return The populated cell component
 	 */
 	Component newCell(MarkupContainer parent, String id, TreeNode node, int level);
 
 	/**
-	 * Creates the {@link IRenderable} instance for given node.
-	 * {@link IRenderable} can be used as lightweight alternative to regular
-	 * Component for cells, that don't require user interaction (just display
-	 * data).
+	 * Creates the {@link IRenderable} instance for given node. {@link IRenderable} can be used as
+	 * lightweight alternative to regular Component for cells, that don't require user interaction
+	 * (just display data).
 	 * <p>
-	 * If this method returns null,
-	 * {@link IColumn#newCell(MarkupContainer, String, TreeNode, int)} is used
-	 * to popuplate the cell.
+	 * If this method returns null, {@link IColumn#newCell(MarkupContainer, String, TreeNode, int)}
+	 * is used to popuplate the cell.
 	 * 
 	 * @param node
 	 *            TreeNode for the cell
 	 * 
 	 * @param level
-	 *            Convenience parameter that indicates how deep the node is in
-	 *            hierarchy
+	 *            Convenience parameter that indicates how deep the node is in hierarchy
 	 * @return The cell renderer
 	 */
 	IRenderable newCell(TreeNode node, int level);
 
 	/**
-	 * Creates the header element for this column. In most situations this will
-	 * be just a simple label showing column title.
+	 * Creates the header element for this column. In most situations this will be just a simple
+	 * label showing column title.
 	 * 
 	 * @param parent
 	 *            The parent component
@@ -121,9 +113,8 @@ public interface IColumn extends IClusterable
 	Component newHeader(MarkupContainer parent, String id);
 
 	/**
-	 * Sets the tree table this cell belongs to. This function is guaranteed to
-	 * be called before any other function. The treeTable instance is fully
-	 * initialized.
+	 * Sets the tree table this cell belongs to. This function is guaranteed to be called before any
+	 * other function. The treeTable instance is fully initialized.
 	 * 
 	 * @param treeTable
 	 *            The tree table

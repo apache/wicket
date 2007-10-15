@@ -21,17 +21,19 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.IModel;
 
 /**
- * A variant of the {@link AjaxFallbackLink} that displays a busy indicator while the
- * ajax request is in progress.
+ * A variant of the {@link AjaxFallbackLink} that displays a busy indicator while the ajax request
+ * is in progress.
  * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink implements IAjaxIndicatorAware
+public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink
+		implements
+			IAjaxIndicatorAware
 {
-	
+
 	/**
 	 * 
 	 */
@@ -40,6 +42,7 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink implem
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 */
 	public IndicatingAjaxFallbackLink(String id)
@@ -49,6 +52,7 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink implem
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 * @param model
 	 */
@@ -65,5 +69,5 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink implem
 	{
 		return indicatorAppender.getMarkupId();
 	}
-	
+
 }

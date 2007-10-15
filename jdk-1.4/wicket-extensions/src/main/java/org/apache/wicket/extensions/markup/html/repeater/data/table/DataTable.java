@@ -34,13 +34,11 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * A data table builds on data grid view to introduce toolbars. Toolbars can be
- * used to display sortable column headers, paging information, filter controls,
- * and other information.
+ * A data table builds on data grid view to introduce toolbars. Toolbars can be used to display
+ * sortable column headers, paging information, filter controls, and other information.
  * <p>
- * Data table also provides its own markup for an html table so the user does
- * not need to provide it himself. This makes it very simple to add a datatable
- * to the markup, however, some flexibility.
+ * Data table also provides its own markup for an html table so the user does not need to provide it
+ * himself. This makes it very simple to add a datatable to the markup, however, some flexibility.
  * <p>
  * Example
  * 
@@ -48,8 +46,8 @@ import org.apache.wicket.util.string.Strings;
  *             &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
- * And the related Java code: ( the first column will be sortable because its
- * sort property is specified, the second column will not )
+ * And the related Java code: ( the first column will be sortable because its sort property is
+ * specified, the second column will not )
  * 
  * <pre>
  * 
@@ -103,8 +101,7 @@ public class DataTable extends Panel implements IPageable
 	}
 
 	/**
-	 * The component id that toolbars must be created with in order to be added
-	 * to the data table
+	 * The component id that toolbars must be created with in order to be added to the data table
 	 */
 	public static final String TOOLBAR_COMPONENT_ID = "toolbar";
 
@@ -274,8 +271,7 @@ public class DataTable extends Panel implements IPageable
 
 
 	/**
-	 * Sets the item reuse strategy. This strategy controls the creation of
-	 * {@link Item}s.
+	 * Sets the item reuse strategy. This strategy controls the creation of {@link Item}s.
 	 * 
 	 * @see RefreshingView#setItemReuseStrategy(IItemReuseStrategy)
 	 * @see IItemReuseStrategy
@@ -326,8 +322,7 @@ public class DataTable extends Panel implements IPageable
 	}
 
 	/**
-	 * Factory method for Item container that represents a cell in the
-	 * underlying DataGridView
+	 * Factory method for Item container that represents a cell in the underlying DataGridView
 	 * 
 	 * @see Item
 	 * 
@@ -346,8 +341,7 @@ public class DataTable extends Panel implements IPageable
 	}
 
 	/**
-	 * Factory method for Item container that represents a row in the underlying
-	 * DataGridView
+	 * Factory method for Item container that represents a row in the underlying DataGridView
 	 * 
 	 * @see Item
 	 * 

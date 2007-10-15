@@ -91,13 +91,13 @@ public abstract class AbstractColumn implements IStyledColumn
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
 	public void detach()
-	{	
+	{
 		if (displayModel != null)
 		{
 			displayModel.detach();
 		}
 	}
-	
+
 	/**
 	 * @ssee {@link IStyledColumn#getCssClass()}
 	 */

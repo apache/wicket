@@ -77,8 +77,7 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 	}
 
 	/**
-	 * Returns a decorator that will be used to decorate ajax links used in
-	 * sortable headers
+	 * Returns a decorator that will be used to decorate ajax links used in sortable headers
 	 * 
 	 * @return decorator or null for none
 	 */

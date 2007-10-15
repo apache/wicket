@@ -50,8 +50,7 @@ public class TextFilter extends AbstractFilter
 	}
 
 	/**
-	 * @return underlying {@link TextField} form component that represents this
-	 *         filter
+	 * @return underlying {@link TextField} form component that represents this filter
 	 */
 	public final TextField getFilter()
 	{

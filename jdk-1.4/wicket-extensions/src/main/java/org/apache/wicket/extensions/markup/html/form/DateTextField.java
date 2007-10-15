@@ -31,12 +31,11 @@ import org.apache.wicket.util.convert.converters.DateConverter;
 /**
  * A TextField that is mapped to a <code>java.util.Date</code> object.
  * 
- * If you provide a <code>SimpleDateFormat</code> pattern, it will both parse
- * and validate the text field according to it.
+ * If you provide a <code>SimpleDateFormat</code> pattern, it will both parse and validate the
+ * text field according to it.
  * 
  * If you don't, it is the same as creating a <code>TextField</code> with
- * <code>java.util.Date</code> as it's type (it will get the pattern from the
- * user's locale)
+ * <code>java.util.Date</code> as it's type (it will get the pattern from the user's locale)
  * 
  * @author Stefan Kanev
  * @author Igor Vaynberg (ivaynberg)
@@ -62,8 +61,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	private IConverter converter = null;
 
 	/**
-	 * Creates a new DateTextField, without a specified pattern. This is the
-	 * same as calling <code>new TextField(id, Date.class)</code>
+	 * Creates a new DateTextField, without a specified pattern. This is the same as calling
+	 * <code>new TextField(id, Date.class)</code>
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -76,8 +75,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	}
 
 	/**
-	 * Creates a new DateTextField, without a specified pattern. This is the
-	 * same as calling <code>new TextField(id, object, Date.class)</code>
+	 * Creates a new DateTextField, without a specified pattern. This is the same as calling
+	 * <code>new TextField(id, object, Date.class)</code>
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -92,8 +91,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	}
 
 	/**
-	 * Creates a new DateTextField bound with a specific
-	 * <code>SimpleDateFormat</code> pattern.
+	 * Creates a new DateTextField bound with a specific <code>SimpleDateFormat</code> pattern.
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -108,8 +106,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	}
 
 	/**
-	 * Creates a new DateTextField bound with a specific
-	 * <code>SimpleDateFormat</code> pattern.
+	 * Creates a new DateTextField bound with a specific <code>SimpleDateFormat</code> pattern.
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -127,7 +124,7 @@ public class DateTextField extends TextField implements ITextFormatProvider
 		this.converter = new DateConverter()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			/**
 			 * @see org.apache.wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
 			 */
@@ -139,8 +136,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	}
 
 	/**
-	 * Returns the default converter if created without pattern; otherwise it
-	 * returns a pattern-specific converter.
+	 * Returns the default converter if created without pattern; otherwise it returns a
+	 * pattern-specific converter.
 	 * 
 	 * @param type
 	 *            The type for which the convertor should work

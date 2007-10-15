@@ -22,9 +22,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * A convinience implementation of {@link ICellPopulator} that adds a label that
- * will display the value of the specified property. Non-string properties will
- * be converted to a string before display.
+ * A convinience implementation of {@link ICellPopulator} that adds a label that will display the
+ * value of the specified property. Non-string properties will be converted to a string before
+ * display.
  * <p>
  * Example
  * 
@@ -44,8 +44,8 @@ public class PropertyPopulator implements ICellPopulator
 	 * Constructor
 	 * 
 	 * @param property
-	 *            property whose value will be displayed in the cell. uses
-	 *            wicket's {@link PropertyModel} notation.
+	 *            property whose value will be displayed in the cell. uses wicket's
+	 *            {@link PropertyModel} notation.
 	 */
 	public PropertyPopulator(String property)
 	{
@@ -60,7 +60,7 @@ public class PropertyPopulator implements ICellPopulator
 	 * @see org.apache.wicket.model.IDetachable#detach()
 	 */
 	public void detach()
-	{	
+	{
 	}
 
 	/**

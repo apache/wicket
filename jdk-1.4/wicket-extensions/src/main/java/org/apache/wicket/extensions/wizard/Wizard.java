@@ -29,22 +29,19 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 
 /**
- * A wizard is a dialog component that takes users through a number of steps to
- * complete a task. It has common functionality like a next, previous, finish
- * and cancel button, and it uses a {@link IWizardModel} to navigate through the
- * steps.
+ * A wizard is a dialog component that takes users through a number of steps to complete a task. It
+ * has common functionality like a next, previous, finish and cancel button, and it uses a
+ * {@link IWizardModel} to navigate through the steps.
  * <p>
- * Before you can use the wizard component, it needs to be initialized with a
- * model. You do this by calling {@link #init(IWizardModel)} with the wizard
- * model you intent to use.
+ * Before you can use the wizard component, it needs to be initialized with a model. You do this by
+ * calling {@link #init(IWizardModel)} with the wizard model you intent to use.
  * </p>
  * 
  * <p>
- * This default implementation should be useful for basic cases, if the layout
- * is exactly what you need. If you want to provide your own layout and/ or have
- * more or less components (e.g. you want to additionally provide an overview
- * component), you can override this class and add the components you want
- * yourself using methods like {@link #newButtonBar(String)} et-cetera.
+ * This default implementation should be useful for basic cases, if the layout is exactly what you
+ * need. If you want to provide your own layout and/ or have more or less components (e.g. you want
+ * to additionally provide an overview component), you can override this class and add the
+ * components you want yourself using methods like {@link #newButtonBar(String)} et-cetera.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -67,8 +64,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	public static final String FORM_ID = "form";
 
 	/**
-	 * Component id of the view panel (where the main wizard contents go) as
-	 * used by the default wizard panel.
+	 * Component id of the view panel (where the main wizard contents go) as used by the default
+	 * wizard panel.
 	 */
 	public static final String VIEW_ID = "view";
 
@@ -78,8 +75,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	private IWizardStep activeStep;
 
 	/**
-	 * The form in which the view is nested, and on which the wizard buttons
-	 * work.
+	 * The form in which the view is nested, and on which the wizard buttons work.
 	 */
 	private Form form;
 
@@ -89,9 +85,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Construct. Adds the default style.
 	 * <p>
-	 * If you override this class, it makes sense to call this constructor
-	 * (super(id)), then - in your constructor - construct a transition model
-	 * and then call {@link #init(IWizardModel)} to initialize the wizard.
+	 * If you override this class, it makes sense to call this constructor (super(id)), then - in
+	 * your constructor - construct a transition model and then call {@link #init(IWizardModel)} to
+	 * initialize the wizard.
 	 * </p>
 	 * <p>
 	 * This constructor is not meant for normal clients of this class
@@ -108,9 +104,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Construct.
 	 * <p>
-	 * If you override this class, it makes sense to call this constructor
-	 * (super(id)), then - in your constructor - construct a transition model
-	 * and then call {@link #init(IWizardModel)} to initialize the wizard.
+	 * If you override this class, it makes sense to call this constructor (super(id)), then - in
+	 * your constructor - construct a transition model and then call {@link #init(IWizardModel)} to
+	 * initialize the wizard.
 	 * </p>
 	 * <p>
 	 * This constructor is not meant for normal clients of this class
@@ -173,9 +169,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Will let the wizard contribute a CSS include to the page's header. It
-	 * will add Wizard.css from this package. This method is typically called by
-	 * the class that creates the wizard.
+	 * Will let the wizard contribute a CSS include to the page's header. It will add Wizard.css
+	 * from this package. This method is typically called by the class that creates the wizard.
 	 */
 	public final void addDefaultCssStyle()
 	{
@@ -193,8 +188,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Gets the form in which the view is nested, and on which the wizard
-	 * buttons work.
+	 * Gets the form in which the view is nested, and on which the wizard buttons work.
 	 * 
 	 * @return The wizard form
 	 */
@@ -212,9 +206,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Turn versioning off for wizards. This works best when the wizard is
-	 * <strong>not</strong> accessed from bookmarkable pages, so that the url
-	 * doesn't change at all.
+	 * Turn versioning off for wizards. This works best when the wizard is <strong>not</strong>
+	 * accessed from bookmarkable pages, so that the url doesn't change at all.
 	 * 
 	 * @return False
 	 * @see org.apache.wicket.Component#isVersioned()
@@ -251,9 +244,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Initialize this wizard with a transition model.
 	 * <p>
-	 * If you constructed this wizard using a constructor without the
-	 * transitions model argument, <strong>you must</strong> call this method
-	 * prior to actually using it.
+	 * If you constructed this wizard using a constructor without the transitions model argument,
+	 * <strong>you must</strong> call this method prior to actually using it.
 	 * </p>
 	 * 
 	 * @param wizardModel
@@ -293,8 +285,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Create a new button bar. Clients can override this method to provide a
-	 * custom button bar.
+	 * Create a new button bar. Clients can override this method to provide a custom button bar.
 	 * 
 	 * @param id
 	 *            The id to be used to construct the component
@@ -307,8 +298,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Create a new feedback panel. Clients can override this method to provide
-	 * a custom feedback panel.
+	 * Create a new feedback panel. Clients can override this method to provide a custom feedback
+	 * panel.
 	 * 
 	 * @param id
 	 *            The id to be used to construct the component
@@ -321,8 +312,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Create a new form. Clients can override this method to provide a custom
-	 * {@link Form}.
+	 * Create a new form. Clients can override this method to provide a custom {@link Form}.
 	 * 
 	 * @param id
 	 *            The id to be used to construct the component
@@ -346,8 +336,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
-	 * Create a new overview bar. Clients can override this method to provide a
-	 * custom bar.
+	 * Create a new overview bar. Clients can override this method to provide a custom bar.
 	 * 
 	 * @param id
 	 *            The id to be used to construct the component

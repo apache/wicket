@@ -33,8 +33,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * And inplace editor much like {@link AjaxEditableLabel}, but now with support
- * for multi line content and a {@link TextArea text area} as its editor.
+ * And inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
+ * content and a {@link TextArea text area} as its editor.
  * 
  * @author Eelco Hillenius
  */
@@ -190,11 +190,11 @@ public class AjaxEditableChoiceLabel extends AjaxEditableLabel
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl()
-						+ "&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
+				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl() +
+						"&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
 
-				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl()
-						+ "&save=false'); return false;}";
+				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
+						"&save=false'); return false;}";
 
 				tag.put("onchange", saveCall);
 			}

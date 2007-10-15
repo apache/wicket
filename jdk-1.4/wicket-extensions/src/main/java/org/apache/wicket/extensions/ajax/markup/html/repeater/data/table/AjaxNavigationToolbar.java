@@ -24,9 +24,8 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 
 
 /**
- * Toolbar that displays (Ajax) links used to navigate the pages of the
- * datatable as well as a message about which rows are being displayed and their
- * total number in the data table.
+ * Toolbar that displays (Ajax) links used to navigate the pages of the datatable as well as a
+ * message about which rows are being displayed and their total number in the data table.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Martijn Dashorst (dashorst)
@@ -49,8 +48,7 @@ public class AjaxNavigationToolbar extends NavigationToolbar
 
 
 	/**
-	 * Factory method used to create the paging navigator that will be used by
-	 * the datatable.
+	 * Factory method used to create the paging navigator that will be used by the datatable.
 	 * 
 	 * @param navigatorId
 	 *            component id the navigator should be created with
@@ -65,9 +63,8 @@ public class AjaxNavigationToolbar extends NavigationToolbar
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * Implement our own ajax event handling in order to update the
-			 * datatable itself, as the default implementation doesn't support
-			 * DataViews.
+			 * Implement our own ajax event handling in order to update the datatable itself, as the
+			 * default implementation doesn't support DataViews.
 			 * 
 			 * @see AjaxPagingNavigator#onAjaxEvent(AjaxRequestTarget)
 			 */

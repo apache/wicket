@@ -54,7 +54,7 @@ public class FilterForm extends Form
 
 		// add hidden field used for managing current focus
 		hidden = new HiddenField("focus-tracker", new Model());
-		
+
 		hidden.add(new AbstractBehavior()
 		{
 			private static final long serialVersionUID = 1L;
@@ -66,7 +66,7 @@ public class FilterForm extends Form
 			}
 		});
 		add(hidden);
-		
+
 		// add javascript to restore focus to a filter component
 		add(new WebMarkupContainer("focus-restore")
 		{
@@ -74,16 +74,16 @@ public class FilterForm extends Form
 
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				AppendingStringBuffer script = new AppendingStringBuffer("<script>_filter_focus_restore('").append(
-						getFocusTrackerFieldCssId()).append("');</script>");
+				AppendingStringBuffer script = new AppendingStringBuffer(
+						"<script>_filter_focus_restore('").append(getFocusTrackerFieldCssId())
+						.append("');</script>");
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
 		});
 	}
 
 	/**
-	 * @return css id of the hidden form input that keeps track of the focused
-	 *         input field
+	 * @return css id of the hidden form input that keeps track of the focused input field
 	 */
 	public final String getFocusTrackerFieldCssId()
 	{
@@ -100,8 +100,8 @@ public class FilterForm extends Form
 	}
 
 	/**
-	 * Adds behavior to the form component to allow this form to keep track of
-	 * the component's focus which will be restored after a form submit.
+	 * Adds behavior to the form component to allow this form to keep track of the component's focus
+	 * which will be restored after a form submit.
 	 * 
 	 * @param fc
 	 *            form component
@@ -122,19 +122,18 @@ public class FilterForm extends Form
 	}
 
 	/**
-	 * Returns the javascript focus handler necessary to notify the form of
-	 * focus tracking changes on the component
+	 * Returns the javascript focus handler necessary to notify the form of focus tracking changes
+	 * on the component
 	 * 
-	 * Useful when components want to participate in focus tracking but want to
-	 * add the handler their own way.
+	 * Useful when components want to participate in focus tracking but want to add the handler
+	 * their own way.
 	 * 
-	 * A unique css id is required on the form component for focus tracking to
-	 * work.
+	 * A unique css id is required on the form component for focus tracking to work.
 	 * 
 	 * @param component
-	 *            component to 
-	 * @return the javascript focus handler necessary to notify the form of
-	 *         focus tracking changes on the component
+	 *            component to
+	 * @return the javascript focus handler necessary to notify the form of focus tracking changes
+	 *         on the component
 	 */
 	public final String getFocusTrackingHandler(Component component)
 	{
@@ -157,8 +156,7 @@ public class FilterForm extends Form
 		 * Constructor
 		 * 
 		 * @param locator
-		 *            IFilterStateLocator implementation used to provide model
-		 *            object for this model
+		 *            IFilterStateLocator implementation used to provide model object for this model
 		 */
 		public FilterStateModel(IFilterStateLocator locator)
 		{

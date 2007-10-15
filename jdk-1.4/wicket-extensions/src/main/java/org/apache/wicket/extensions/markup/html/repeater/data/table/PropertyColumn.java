@@ -24,10 +24,9 @@ import org.apache.wicket.model.PropertyModel;
 
 
 /**
- * A convinience implementation of column that adds a label to the cell whose
- * model is determined by the provided wicket property expression (same as used
- * by {@link PropertyModel}) that is evaluated against the current row's model
- * object
+ * A convinience implementation of column that adds a label to the cell whose model is determined by
+ * the provided wicket property expression (same as used by {@link PropertyModel}) that is
+ * evaluated against the current row's model object
  * <p>
  * Example
  * 
@@ -35,8 +34,8 @@ import org.apache.wicket.model.PropertyModel;
  * columns[0] = new PropertyColumn(new Model(&quot;First Name&quot;), &quot;name.first&quot;);
  * </pre>
  * 
- * The above will attach a label to the cell with a property model for the
- * expression &quot;name.first&quot;
+ * The above will attach a label to the cell with a property model for the expression
+ * &quot;name.first&quot;
  * 
  * @see PropertyModel
  * 
@@ -81,8 +80,8 @@ public class PropertyColumn extends AbstractColumn
 	}
 
 	/**
-	 * Implementation of populateItem which adds a label to the cell whose model
-	 * is the provided property expression evaluated agains rowModelObject
+	 * Implementation of populateItem which adds a label to the cell whose model is the provided
+	 * property expression evaluated agains rowModelObject
 	 * 
 	 * @see ICellPopulator#populateItem(Item, String, IModel)
 	 */

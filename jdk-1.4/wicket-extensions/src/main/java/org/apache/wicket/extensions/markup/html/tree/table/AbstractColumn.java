@@ -45,8 +45,7 @@ public abstract class AbstractColumn implements IColumn
 	 * Creates the tree column.
 	 * 
 	 * @param location
-	 *            Specifies how the column should be aligned and what his size
-	 *            should be
+	 *            Specifies how the column should be aligned and what his size should be
 	 * 
 	 * @param header
 	 *            Header caption
@@ -98,9 +97,8 @@ public abstract class AbstractColumn implements IColumn
 	}
 
 	/**
-	 * Returns the tree table that this columns belongs to. If you call this
-	 * method from constructor it will return null, as the column is constructed
-	 * before the tree is.
+	 * Returns the tree table that this columns belongs to. If you call this method from constructor
+	 * it will return null, as the column is constructed before the tree is.
 	 * 
 	 * @return The tree table this column belongs to
 	 */

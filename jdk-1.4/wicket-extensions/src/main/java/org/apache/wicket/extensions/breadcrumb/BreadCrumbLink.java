@@ -23,11 +23,10 @@ import org.apache.wicket.version.undo.Change;
 
 /**
  * A link that when clicked will set the the active
- * {@link IBreadCrumbParticipant bread crumb participant} to the one that is
- * returned by {@link #getParticipant(String)}. It is used internally by
- * {@link BreadCrumbBar the the bread crumb bar component}, and you can use it
- * for rendering links e.g. with
- * {@link BreadCrumbPanel bread crumb panel components}.
+ * {@link IBreadCrumbParticipant bread crumb participant} to the one that is returned by
+ * {@link #getParticipant(String)}. It is used internally by
+ * {@link BreadCrumbBar the the bread crumb bar component}, and you can use it for rendering links
+ * e.g. with {@link BreadCrumbPanel bread crumb panel components}.
  * 
  * <p>
  * When clicked, it registers a change for backbutton support.
@@ -65,8 +64,8 @@ public abstract class BreadCrumbLink extends Link
 		final IBreadCrumbParticipant active = breadCrumbModel.getActive();
 		if (active == null)
 		{
-			throw new IllegalStateException("The model has no active bread crumb. Before using "
-					+ this + ", you have to have at least one bread crumb in the model");
+			throw new IllegalStateException("The model has no active bread crumb. Before using " +
+					this + ", you have to have at least one bread crumb in the model");
 		}
 
 		// get the participant to set as active
@@ -88,13 +87,13 @@ public abstract class BreadCrumbLink extends Link
 	}
 
 	/**
-	 * Gets the {@link IBreadCrumbParticipant bread crumb participant} to be set
-	 * active when the link is clicked.
+	 * Gets the {@link IBreadCrumbParticipant bread crumb participant} to be set active when the
+	 * link is clicked.
 	 * 
 	 * @param componentId
-	 *            When the participant creates it's own view, it typically
-	 *            should use this component id for the component that is
-	 *            returned by {@link IBreadCrumbParticipant#getComponent()}.
+	 *            When the participant creates it's own view, it typically should use this component
+	 *            id for the component that is returned by
+	 *            {@link IBreadCrumbParticipant#getComponent()}.
 	 * @return The bread crumb participant
 	 */
 	protected abstract IBreadCrumbParticipant getParticipant(String componentId);

@@ -22,25 +22,21 @@ import org.apache.wicket.util.lang.EnumeratedType;
 /**
  * This class represents location of a column in tree table.
  * <p>
- * First attribute of location is <b>alignment</b>. Alignment specifies,
- * whether the column is located on the left side of the table, on the right
- * side, or in the middle. Columns in the middle of the table take all space
- * between columns on the left and columns on the right.
+ * First attribute of location is <b>alignment</b>. Alignment specifies, whether the column is
+ * located on the left side of the table, on the right side, or in the middle. Columns in the middle
+ * of the table take all space between columns on the left and columns on the right.
  * <p>
  * Next two attributes are <b>size</b> and <b>unit</b>:
  * <ul>
- * <li> For columns aligned to the left and to the right, the <b>size</b>
- * represents the actual width of the column, according to chosen unit. Possible
- * units for left and right aligned columns are <em>PX</em>, <em>EM</em>
- * and <em>PERCENT</em>. </li>
- * <li> For columns in the middle, the only valid unit is <em>PROPORTIONAL</em>.
- * These columns take all available space between columns on the left and
- * columns on the right. How this space is divided between middle columns is
- * determined by the <b>size</b>. In this case the size can be understand as
- * weight. Columns with bigger size take more space than columns with smaller
- * size. For example, if there are three columns and their sizes are 2, 1, 1,
- * the first column thakes 50% of the space and the second two columns take 25%
- * each. </li>
+ * <li> For columns aligned to the left and to the right, the <b>size</b> represents the actual
+ * width of the column, according to chosen unit. Possible units for left and right aligned columns
+ * are <em>PX</em>, <em>EM</em> and <em>PERCENT</em>. </li>
+ * <li> For columns in the middle, the only valid unit is <em>PROPORTIONAL</em>. These columns
+ * take all available space between columns on the left and columns on the right. How this space is
+ * divided between middle columns is determined by the <b>size</b>. In this case the size can be
+ * understand as weight. Columns with bigger size take more space than columns with smaller size.
+ * For example, if there are three columns and their sizes are 2, 1, 1, the first column thakes 50%
+ * of the space and the second two columns take 25% each. </li>
  * </ul>
  * 
  * @author Matej Knopp

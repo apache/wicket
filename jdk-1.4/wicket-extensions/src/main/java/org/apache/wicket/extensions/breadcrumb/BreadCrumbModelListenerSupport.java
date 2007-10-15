@@ -24,8 +24,7 @@ import org.apache.wicket.IClusterable;
 
 
 /**
- * Utility class for working with
- * {@link IBreadCrumbModelListener bread crumb model listeners}.
+ * Utility class for working with {@link IBreadCrumbModelListener bread crumb model listeners}.
  * 
  * @author Eelco Hillenius
  */

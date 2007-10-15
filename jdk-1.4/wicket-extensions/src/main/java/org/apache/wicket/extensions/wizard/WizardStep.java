@@ -36,8 +36,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * default implementation of {@link IWizardStep}. It is also a panel, which is
- * used as the view component.
+ * default implementation of {@link IWizardStep}. It is also a panel, which is used as the view
+ * component.
  * 
  * <p>
  * And example of a custom step with a panel follows.
@@ -81,8 +81,8 @@ import org.apache.wicket.model.Model;
 public class WizardStep extends Panel implements IWizardStep
 {
 	/**
-	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know
-	 * at construction time from then.
+	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know at construction time
+	 * from then.
 	 */
 	private final class AddFormValidatorAction
 	{
@@ -99,8 +99,8 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Wraps form validators for this step such that they are only executed when
-	 * this step is active.
+	 * Wraps form validators for this step such that they are only executed when this step is
+	 * active.
 	 */
 	private final class FormValidatorWrapper implements IFormValidator
 	{
@@ -213,11 +213,10 @@ public class WizardStep extends Panel implements IWizardStep
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Marks this step as being fully configured. Only when this is
-	 * <tt>true</tt> can the wizard progress. True by default as that works
-	 * best with normal forms. Clients can set this to false if some
-	 * intermediate step, like a file upload, needs to be completed before the
-	 * wizard may progress.
+	 * Marks this step as being fully configured. Only when this is <tt>true</tt> can the wizard
+	 * progress. True by default as that works best with normal forms. Clients can set this to false
+	 * if some intermediate step, like a file upload, needs to be completed before the wizard may
+	 * progress.
 	 */
 	private boolean complete = true;
 
@@ -239,8 +238,8 @@ public class WizardStep extends Panel implements IWizardStep
 	private IWizardModel wizardModel;
 
 	/**
-	 * Construct without a title and a summary. Useful for when you provide a
-	 * custom header by overiding {@link #getHeader(String, Component, IWizard)}.
+	 * Construct without a title and a summary. Useful for when you provide a custom header by
+	 * overiding {@link #getHeader(String, Component, IWizard)}.
 	 */
 	public WizardStep()
 	{
@@ -248,9 +247,8 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param title
 	 *            the title of this step.
@@ -263,9 +261,8 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param title
 	 *            the title of this step.
@@ -283,9 +280,8 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param title
 	 *            the title of this step.
@@ -298,9 +294,8 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param title
 	 *            the title of this step.
@@ -337,8 +332,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
-	 *      org.apache.wicket.Component,
-	 *      org.apache.wicket.extensions.wizard.IWizard)
+	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
 	public Component getHeader(String id, Component parent, IWizard wizard)
 	{
@@ -346,9 +340,9 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Gets the summary of this step. This will be displayed in the title of the
-	 * wizard while this step is active. The summary is typically an overview of
-	 * the step or some usage guidelines for the user.
+	 * Gets the summary of this step. This will be displayed in the title of the wizard while this
+	 * step is active. The summary is typically an overview of the step or some usage guidelines for
+	 * the user.
 	 * 
 	 * @return the summary of this step.
 	 */
@@ -369,8 +363,7 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
-	 *      org.apache.wicket.Component,
-	 *      org.apache.wicket.extensions.wizard.IWizard)
+	 *      org.apache.wicket.Component, org.apache.wicket.extensions.wizard.IWizard)
 	 */
 	public Component getView(String id, Component parent, IWizard wizard)
 	{
@@ -378,15 +371,15 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Called to initialize the step. When this method is called depends on the
-	 * kind of wizard model that is used.
+	 * Called to initialize the step. When this method is called depends on the kind of wizard model
+	 * that is used.
 	 * 
-	 * The {@link WizardModel static wizard model} knows all the steps upfront
-	 * and initializes themm when starting up. This method will be called when
-	 * the wizard is {@link #init(IWizardModel) initializing}.
+	 * The {@link WizardModel static wizard model} knows all the steps upfront and initializes themm
+	 * when starting up. This method will be called when the wizard is
+	 * {@link #init(IWizardModel) initializing}.
 	 * 
-	 * The {@link DynamicWizardModel dynamic wizard model} initializes steps
-	 * every time they are encountered.
+	 * The {@link DynamicWizardModel dynamic wizard model} initializes steps every time they are
+	 * encountered.
 	 * 
 	 * This method sets the wizard model and then calls template method
 	 * {@link #onInit(IWizardModel)}
@@ -401,12 +394,11 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Checks if this step is compete. This method should return true if the
-	 * wizard can proceed to the next step. This property is bound and changes
-	 * can be made at anytime by calling {@link #setComplete(boolean)} .
+	 * Checks if this step is compete. This method should return true if the wizard can proceed to
+	 * the next step. This property is bound and changes can be made at anytime by calling
+	 * {@link #setComplete(boolean)} .
 	 * 
-	 * @return <tt>true</tt> if the wizard can proceed from this step,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the wizard can proceed from this step, <tt>false</tt> otherwise.
 	 * @see #setComplete
 	 */
 	public boolean isComplete()
@@ -415,12 +407,11 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * Marks this step as compete. The wizard will not be able to proceed from
-	 * this step until this property is configured to <tt>true</tt>.
+	 * Marks this step as compete. The wizard will not be able to proceed from this step until this
+	 * property is configured to <tt>true</tt>.
 	 * 
 	 * @param complete
-	 *            <tt>true</tt> to allow the wizard to proceed, <tt>false</tt>
-	 *            otherwise.
+	 *            <tt>true</tt> to allow the wizard to proceed, <tt>false</tt> otherwise.
 	 * @see #isComplete
 	 */
 	public void setComplete(boolean complete)

@@ -21,8 +21,8 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
 
 /**
- * Bread crumb link specifically for {@link BreadCrumbPanel bread crumb panels}.
- * It uses a {@link IBreadCrumbPanelFactory bread crumb factory} to function.
+ * Bread crumb link specifically for {@link BreadCrumbPanel bread crumb panels}. It uses a
+ * {@link IBreadCrumbPanelFactory bread crumb factory} to function.
  * 
  * @author Eelco Hillenius
  */
@@ -45,8 +45,8 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            The calling panel which will be used to get the
 	 *            {@link IBreadCrumbModel bread crumb model} from.
 	 * @param panelClass
-	 *            The class to use for creating instances. Must be of type
-	 *            {@link BreadCrumbPanel}, and must have constructor
+	 *            The class to use for creating instances. Must be of type {@link BreadCrumbPanel},
+	 *            and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelLink(final String id, final BreadCrumbPanel caller, final Class panelClass)
@@ -62,8 +62,8 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @param breadCrumbModel
 	 *            The bread crumb model
 	 * @param panelClass
-	 *            The class to use for creating instances. Must be of type
-	 *            {@link BreadCrumbPanel}, and must have constructor
+	 *            The class to use for creating instances. Must be of type {@link BreadCrumbPanel},
+	 *            and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelLink(final String id, final IBreadCrumbModel breadCrumbModel,
@@ -101,8 +101,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	}
 
 	/**
-	 * Uses the set factory for creating a new instance of
-	 * {@link IBreadCrumbParticipant}.
+	 * Uses the set factory for creating a new instance of {@link IBreadCrumbParticipant}.
 	 * 
 	 * @see org.apache.wicket.extensions.breadcrumb.BreadCrumbLink#getParticipant(java.lang.String)
 	 */

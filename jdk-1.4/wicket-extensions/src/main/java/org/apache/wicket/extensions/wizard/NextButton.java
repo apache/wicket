@@ -18,9 +18,8 @@ package org.apache.wicket.extensions.wizard;
 
 
 /**
- * Models a next button in the wizard. When pressed, it calls
- * {@link IWizardStep#applyState()} on the active wizard step, and then moves
- * the wizard state to the next step of the model by calling
+ * Models a next button in the wizard. When pressed, it calls {@link IWizardStep#applyState()} on
+ * the active wizard step, and then moves the wizard state to the next step of the model by calling
  * {@link IWizardModel#next() next} on the wizard's model.
  * 
  * @author Eelco Hillenius

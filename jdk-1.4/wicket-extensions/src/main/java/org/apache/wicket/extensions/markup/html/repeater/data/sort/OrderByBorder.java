@@ -19,9 +19,9 @@ package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 import org.apache.wicket.markup.html.border.Border;
 
 /**
- * A component that wraps markup with an OrderByLink. This has the advantage of
- * being able to add the attribute modifier to the wrapping element as opposed
- * to the link, so that it can be attached to &lt;th&gt; or any other element.
+ * A component that wraps markup with an OrderByLink. This has the advantage of being able to add
+ * the attribute modifier to the wrapping element as opposed to the link, so that it can be attached
+ * to &lt;th&gt; or any other element.
  * 
  * For example:
  * 
@@ -70,8 +70,7 @@ public class OrderByBorder extends Border
 	}
 
 	/**
-	 * This method is a hook for subclasses to perform an action after sort has
-	 * changed
+	 * This method is a hook for subclasses to perform an action after sort has changed
 	 */
 	protected void onSortChanged()
 	{
@@ -80,14 +79,11 @@ public class OrderByBorder extends Border
 
 	/**
 	 * @param id
-	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
 	 * @param property
-	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
 	 * @param stateLocator
-	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            see {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
 	 */
 	public OrderByBorder(String id, String property, ISortStateLocator stateLocator)
 	{

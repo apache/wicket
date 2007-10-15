@@ -116,9 +116,9 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	}
 
 	/**
-	 * Callback method when an ajax click occurs. All the behavior of changing
-	 * the sort, etc is already performed bfore this is called so this method
-	 * should primarily be used to configure the target.
+	 * Callback method when an ajax click occurs. All the behavior of changing the sort, etc is
+	 * already performed bfore this is called so this method should primarily be used to configure
+	 * the target.
 	 * 
 	 * @param target
 	 */

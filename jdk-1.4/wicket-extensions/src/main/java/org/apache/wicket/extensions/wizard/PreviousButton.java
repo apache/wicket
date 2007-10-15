@@ -17,9 +17,8 @@
 package org.apache.wicket.extensions.wizard;
 
 /**
- * Models a previous button in the wizard. When pressed, it moves the wizard
- * state to the previous step of the model by calling
- * {@link IWizardModel#previous() previous} on the wizard's model.
+ * Models a previous button in the wizard. When pressed, it moves the wizard state to the previous
+ * step of the model by calling {@link IWizardModel#previous() previous} on the wizard's model.
  * 
  * @author Eelco Hillenius
  */

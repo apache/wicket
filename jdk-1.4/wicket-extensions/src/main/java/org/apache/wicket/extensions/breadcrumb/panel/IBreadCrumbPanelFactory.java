@@ -21,15 +21,15 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 
 
 /**
- * Factory interface to enabled defered creation of a bread crumb panel while
- * getting the proper id for creation. Mainly meant for supporting
+ * Factory interface to enabled defered creation of a bread crumb panel while getting the proper id
+ * for creation. Mainly meant for supporting
  * {@link BreadCrumbPanel#activate(IBreadCrumbPanelFactory)}.
  */
 public interface IBreadCrumbPanelFactory extends IClusterable
 {
 	/**
-	 * Creates a new {@link BreadCrumbPanel bread crumb panel} instance. The
-	 * provided component id must be used when creating the panel.
+	 * Creates a new {@link BreadCrumbPanel bread crumb panel} instance. The provided component id
+	 * must be used when creating the panel.
 	 * 
 	 * @param componentId
 	 *            The component id for the new panel.

@@ -31,9 +31,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * Acts as a base for data-grid views. Unlike a data view a data-grid view
- * populates both rows and columns. The columns are populated by an array of
- * provided ICellPopulator objects.
+ * Acts as a base for data-grid views. Unlike a data view a data-grid view populates both rows and
+ * columns. The columns are populated by an array of provided ICellPopulator objects.
  * 
  * @see DataGridView
  * 
@@ -57,8 +56,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 * @param id
 	 *            component id
 	 * @param populators
-	 *            array of ICellPopulator objects that will be used to populate
-	 *            cell items
+	 *            array of ICellPopulator objects that will be used to populate cell items
 	 * @param dataProvider
 	 *            data provider
 	 */
@@ -70,9 +68,8 @@ public abstract class AbstractDataGridView extends DataViewBase
 	}
 
 	/**
-	 * Returns iterator over ICellPopulator elements in the populators array.
-	 * This method caches the iterator implemenation in a transient member
-	 * instance.
+	 * Returns iterator over ICellPopulator elements in the populators array. This method caches the
+	 * iterator implemenation in a transient member instance.
 	 * 
 	 * @return iterator over ICellPopulator elements in the populators array
 	 */
@@ -173,7 +170,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 		for (int i = 0; populators.hasNext(); i++)
 		{
-			IModel populatorModel=(IModel)populators.next();
+			IModel populatorModel = (IModel)populators.next();
 			Item cellItem = newCellItem(cells.newChildId(), i, populatorModel);
 			cells.add(cellItem);
 
@@ -183,10 +180,10 @@ public abstract class AbstractDataGridView extends DataViewBase
 			if (cellItem.get("cell") == null)
 			{
 				throw new WicketRuntimeException(
-						populator.getClass().getName()
-								+ ".populateItem() failed to add a component with id ["
-								+ CELL_ITEM_ID
-								+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
+						populator.getClass().getName() +
+								".populateItem() failed to add a component with id [" +
+								CELL_ITEM_ID +
+								"] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
 			}
 		}
 

@@ -19,8 +19,8 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * Component used to represent a filter component when no filter is provided.
- * This component generates a blank space.
+ * Component used to represent a filter component when no filter is provided. This component
+ * generates a blank space.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

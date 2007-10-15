@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 
 /**

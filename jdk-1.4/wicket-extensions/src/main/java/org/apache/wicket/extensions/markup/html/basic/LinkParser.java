@@ -25,9 +25,8 @@ import java.util.regex.Pattern;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * This base implementation iterates over all provided
- * <code>ILinkRenderStrategy</code> implementations and applies them to the
- * input text.
+ * This base implementation iterates over all provided <code>ILinkRenderStrategy</code>
+ * implementations and applies them to the input text.
  * 
  * @author Gerolf Seitz
  */
@@ -39,11 +38,10 @@ public class LinkParser implements ILinkParser
 	 * Adds a render strategy to the parser.
 	 * 
 	 * @param pattern
-	 *            the pattern to which the provided <code>renderStrategy</code>
-	 *            should be applied.
+	 *            the pattern to which the provided <code>renderStrategy</code> should be applied.
 	 * @param renderStrategy
-	 *            the <code>ILinkRenderStrategy</code> which is applied to the
-	 *            text found by the provided <code>pattern</code>.
+	 *            the <code>ILinkRenderStrategy</code> which is applied to the text found by the
+	 *            provided <code>pattern</code>.
 	 * @return this <code>ILinkParser</code>.
 	 */
 	public ILinkParser addLinkRenderStrategy(String pattern, ILinkRenderStrategy renderStrategy)
@@ -61,9 +59,9 @@ public class LinkParser implements ILinkParser
 		{
 			return text;
 		}
-		
+
 		String work = text;
-		Iterator iter = renderStrategies.keySet().iterator(); 
+		Iterator iter = renderStrategies.keySet().iterator();
 		while (iter.hasNext())
 		{
 			String pattern = (String)iter.next();

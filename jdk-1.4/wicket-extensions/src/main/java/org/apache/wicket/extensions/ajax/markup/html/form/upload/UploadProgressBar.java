@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A panel to show the progress of an HTTP upload.
  * <p>
- * NB: For this to work, you *must* use an {@link UploadWebRequest}. See the
- * javadoc in that class for details.
+ * NB: For this to work, you *must* use an {@link UploadWebRequest}. See the javadoc in that class
+ * for details.
  * 
  * @author Andrew Lombardi
  */
@@ -64,11 +64,11 @@ public class UploadProgressBar extends Panel
 		}
 	}
 
-	private static final ResourceReference JS = new ResourceReference(
-			UploadProgressBar.class, "progressbar.js");
+	private static final ResourceReference JS = new ResourceReference(UploadProgressBar.class,
+			"progressbar.js");
 
-	private static final ResourceReference CSS = new ResourceReference(
-			UploadProgressBar.class, "UploadProgressBar.css");
+	private static final ResourceReference CSS = new ResourceReference(UploadProgressBar.class,
+			"UploadProgressBar.css");
 
 	private static final String RESOURCE_NAME = UploadProgressBar.class.getName();
 
@@ -102,9 +102,10 @@ public class UploadProgressBar extends Panel
 
 		if (!(RequestCycle.get().getRequest() instanceof UploadWebRequest))
 		{
-			log.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
+			log
+					.warn("UploadProgressBar will not work without an UploadWebRequest. See the javadoc for details.");
 		}
-		
+
 		form.add(new AttributeModifier("onsubmit", true, new Model()
 		{
 
@@ -115,13 +116,13 @@ public class UploadProgressBar extends Panel
 			{
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 
-				return "var def=new Wicket.WUPB.Def('" + form.getMarkupId() + "', '"
-						+ statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '"
-						+ getPage().urlFor(ref) + "'); Wicket.WUPB.start(def); return false;";
+				return "var def=new Wicket.WUPB.Def('" + form.getMarkupId() + "', '" +
+						statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '" +
+						getPage().urlFor(ref) + "'); Wicket.WUPB.start(def); return false;";
 			}
 		}));
 	}
-	
+
 	/**
 	 * Override this to provide your own CSS, or return null to avoid including the default.
 	 * 

@@ -25,8 +25,8 @@ import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.version.undo.Change;
 
 /**
- * A component that represents a sort header. When the link is clicked it will
- * toggle the state of a sortable property within the sort state object.
+ * A component that represents a sort header. When the link is clicked it will toggle the state of a
+ * sortable property within the sort state object.
  * 
  * @author Phil Kulak
  * @author Igor Vaynberg (ivaynberg)
@@ -47,13 +47,12 @@ public class OrderByLink extends Link
 	 * @param id
 	 *            the component id of the link
 	 * @param property
-	 *            the name of the sortable property this link represents. this
-	 *            value will be used as parameter for sort state object methods.
-	 *            sort state object will be located via the stateLocator
-	 *            argument.
+	 *            the name of the sortable property this link represents. this value will be used as
+	 *            parameter for sort state object methods. sort state object will be located via the
+	 *            stateLocator argument.
 	 * @param stateLocator
-	 *            locator used to locate sort state object that this will use to
-	 *            read/write state of sorted properties
+	 *            locator used to locate sort state object that this will use to read/write state of
+	 *            sorted properties
 	 */
 	public OrderByLink(String id, String property, ISortStateLocator stateLocator)
 	{
@@ -66,16 +65,14 @@ public class OrderByLink extends Link
 	 * @param id
 	 *            the component id of the link
 	 * @param property
-	 *            the name of the sortable property this link represents. this
-	 *            value will be used as parameter for sort state object methods.
-	 *            sort state object will be located via the stateLocator
-	 *            argument.
+	 *            the name of the sortable property this link represents. this value will be used as
+	 *            parameter for sort state object methods. sort state object will be located via the
+	 *            stateLocator argument.
 	 * @param stateLocator
-	 *            locator used to locate sort state object that this will use to
-	 *            read/write state of sorted properties
+	 *            locator used to locate sort state object that this will use to read/write state of
+	 *            sorted properties
 	 * @param cssProvider
-	 *            CSS provider that will be used generate the value of class
-	 *            attribute for this link
+	 *            CSS provider that will be used generate the value of class attribute for this link
 	 * 
 	 * @see OrderByLink.ICssProvider
 	 * 
@@ -110,8 +107,7 @@ public class OrderByLink extends Link
 	}
 
 	/**
-	 * This method is a hook for subclasses to perform an action after sort has
-	 * changed
+	 * This method is a hook for subclasses to perform an action after sort has changed
 	 */
 	protected void onSortChanged()
 	{
@@ -221,8 +217,8 @@ public class OrderByLink extends Link
 
 
 	/**
-	 * Interface used to generate values of css class attribute for the anchor
-	 * tag If the generated value is null class attribute will not be added
+	 * Interface used to generate values of css class attribute for the anchor tag If the generated
+	 * value is null class attribute will not be added
 	 * 
 	 * @author igor
 	 */
@@ -233,8 +229,8 @@ public class OrderByLink extends Link
 		 *            current sort state
 		 * @param property
 		 *            sort property represented by the {@link OrderByLink}
-		 * @return the value of the "class" attribute for the given sort
-		 *         state/sort property combination
+		 * @return the value of the "class" attribute for the given sort state/sort property
+		 *         combination
 		 */
 		public String getClassAttributeValue(ISortState state, String property);
 	}
@@ -294,8 +290,8 @@ public class OrderByLink extends Link
 	}
 
 	/**
-	 * Convineince implementation of ICssProvider that always returns a null and
-	 * so never adds a class attribute
+	 * Convineince implementation of ICssProvider that always returns a null and so never adds a
+	 * class attribute
 	 * 
 	 * @author Igor Vaynberg ( ivaynberg )
 	 */

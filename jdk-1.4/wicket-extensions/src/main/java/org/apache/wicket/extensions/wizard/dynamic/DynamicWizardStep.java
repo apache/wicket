@@ -35,12 +35,11 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	private final IDynamicWizardStep previousStep;
 
 	/**
-	 * Construct without a title and a summary. Useful for when you provide a
-	 * custom header by overiding {@link #getHeader(String, Component, IWizard)}.
+	 * Construct without a title and a summary. Useful for when you provide a custom header by
+	 * overiding {@link #getHeader(String, Component, IWizard)}.
 	 * 
 	 * @param previousStep
-	 *            The previous step. May be null if this is the first step in
-	 *            the wizard
+	 *            The previous step. May be null if this is the first step in the wizard
 	 */
 	public DynamicWizardStep(IDynamicWizardStep previousStep)
 	{
@@ -49,13 +48,11 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param previousStep
-	 *            The previous step. May be null if this is the first step in
-	 *            the wizard
+	 *            The previous step. May be null if this is the first step in the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary
@@ -68,13 +65,11 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param previousStep
-	 *            The previous step. May be null if this is the first step in
-	 *            the wizard
+	 *            The previous step. May be null if this is the first step in the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary
@@ -90,13 +85,11 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param previousStep
-	 *            The previous step. May be null if this is the first step in
-	 *            the wizard
+	 *            The previous step. May be null if this is the first step in the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary
@@ -109,13 +102,11 @@ public abstract class DynamicWizardStep extends WizardStep implements IDynamicWi
 	}
 
 	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
+	 * Creates a new step with the specified title and summary. The title and summary are displayed
+	 * in the wizard title block while this step is active.
 	 * 
 	 * @param previousStep
-	 *            The previous step. May be null if this is the first step in
-	 *            the wizard
+	 *            The previous step. May be null if this is the first step in the wizard
 	 * @param title
 	 *            the title of this step.
 	 * @param summary

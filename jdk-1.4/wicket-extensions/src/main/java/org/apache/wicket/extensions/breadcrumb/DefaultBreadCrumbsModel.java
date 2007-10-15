@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Default breadcrumb model implementation that should be good for 99% of the
- * use cases out there.
+ * Default breadcrumb model implementation that should be good for 99% of the use cases out there.
  * 
  * @author eelcohillenius
  */

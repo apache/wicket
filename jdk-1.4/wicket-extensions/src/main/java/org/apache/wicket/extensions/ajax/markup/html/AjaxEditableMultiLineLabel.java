@@ -28,8 +28,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 /**
- * And inplace editor much like {@link AjaxEditableLabel}, but now with support
- * for multi line content and a {@link TextArea text area} as its editor.
+ * And inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
+ * content and a {@link TextArea text area} as its editor.
  * 
  * @author eelcohillenius
  */
@@ -68,7 +68,8 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(org.apache.wicket.MarkupContainer, java.lang.String, org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(org.apache.wicket.MarkupContainer,
+	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	protected Component newLabel(MarkupContainer parent, String componentId, IModel model)
 	{
@@ -94,7 +95,8 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	}
 
 	/**
-	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(org.apache.wicket.MarkupContainer, java.lang.String, org.apache.wicket.model.IModel)
+	 * @see org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(org.apache.wicket.MarkupContainer,
+	 *      java.lang.String, org.apache.wicket.model.IModel)
 	 */
 	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
 	{
@@ -129,14 +131,14 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl()
-						+ "&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
+				final String saveCall = "{wicketAjaxGet('" + getCallbackUrl() +
+						"&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
 
-				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl()
-						+ "&save=false'); return false;}";
+				final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl() +
+						"&save=false'); return false;}";
 
-				final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall
-						+ "; ";
+				final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall +
+						"; ";
 
 				tag.put("onblur", saveCall);
 				tag.put("onkeypress", keypress);
@@ -188,11 +190,10 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	}
 
 	/**
-	 * Override this to display a different value when the model object is null.
-	 * Default is <code>...</code>
+	 * Override this to display a different value when the model object is null. Default is
+	 * <code>...</code>
 	 * 
-	 * @return The string which should be displayed when the model object is
-	 *         null.
+	 * @return The string which should be displayed when the model object is null.
 	 */
 	protected String defaultNullLabel()
 	{

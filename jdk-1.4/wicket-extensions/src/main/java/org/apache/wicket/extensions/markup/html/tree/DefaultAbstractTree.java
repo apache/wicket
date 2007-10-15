@@ -42,13 +42,13 @@ import org.apache.wicket.util.lang.EnumeratedType;
 
 
 /**
- * Tree class that contains convenient functions related to presentation of the
- * tree, which includes junction link, tree item selection link, spacers (with
- * lines) and default tree item and folder icons.
+ * Tree class that contains convenient functions related to presentation of the tree, which includes
+ * junction link, tree item selection link, spacers (with lines) and default tree item and folder
+ * icons.
  * <p>
- * The class itself adds no component to tree items. If you use this class
- * directly, you have to implement populateTreeItem() on your own. If you want
- * to use an existing (complete) tree class, use {@link Tree}
+ * The class itself adds no component to tree items. If you use this class directly, you have to
+ * implement populateTreeItem() on your own. If you want to use an existing (complete) tree class,
+ * use {@link Tree}
  * <p>
  * This class allows you to choose between 3 types of links.
  * {@link DefaultAbstractTree#setLinkType(org.apache.wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType)}
@@ -66,15 +66,12 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * The type of junction links and node selection links.
 	 * <dl>
 	 * <dt>Regular link</dt>
-	 * <dd>Non-ajax link, always refreshes the whole page. Works with
-	 * javascript disabled.</dd>
+	 * <dd>Non-ajax link, always refreshes the whole page. Works with javascript disabled.</dd>
 	 * <dt>Ajax link</dt>
-	 * <dd>Links that supports partial updates. Doesn't work with javascript
-	 * disabled</dd>
+	 * <dd>Links that supports partial updates. Doesn't work with javascript disabled</dd>
 	 * <dt>Ajax fallback link</dt>
-	 * <dd>Link that supports partial updates. With javascript disabled acts
-	 * like regular link. The drawback is that generated url (thus the entire
-	 * html) is larger then using the other two</dd>
+	 * <dd>Link that supports partial updates. With javascript disabled acts like regular link. The
+	 * drawback is that generated url (thus the entire html) is larger then using the other two</dd>
 	 * </dl>
 	 */
 	public static final class LinkType extends EnumeratedType
@@ -84,8 +81,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		public static final LinkType AJAX = new LinkType("AJAX");
 
 		/**
-		 * partial updates that falls back to a regular link in case the client
-		 * does not support javascript.
+		 * partial updates that falls back to a regular link in case the client does not support
+		 * javascript.
 		 */
 		public static final LinkType AJAX_FALLBACK = new LinkType("AJAX_FALLBACK");
 
@@ -126,8 +123,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Reference to the css file.
 	 */
-	private static final ResourceReference CSS = new ResourceReference(
-			DefaultAbstractTree.class, "res/tree.css");
+	private static final ResourceReference CSS = new ResourceReference(DefaultAbstractTree.class,
+			"res/tree.css");
 
 	/** Reference to the icon of closed tree folder */
 	private static final ResourceReference FOLDER_CLOSED = new ResourceReference(
@@ -138,8 +135,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			DefaultAbstractTree.class, "res/folder-open.gif");
 
 	/** Reference to the icon of tree item (not a folder) */
-	private static final ResourceReference ITEM = new ResourceReference(
-			DefaultAbstractTree.class, "res/item.gif");
+	private static final ResourceReference ITEM = new ResourceReference(DefaultAbstractTree.class,
+			"res/item.gif");
 
 	/** The link type, default is {@link LinkType#AJAX ajax}. */
 	private LinkType linkType = LinkType.AJAX;
@@ -195,8 +192,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Sets the type of links on tree items. After the link type is changed, the
-	 * whole tree is rebuild and re-rendered.
+	 * Sets the type of links on tree items. After the link type is changed, the whole tree is
+	 * rebuild and re-rendered.
 	 * 
 	 * @param linkType
 	 *            type of links
@@ -277,9 +274,9 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Creates the indentation element. This element should be placed as first
-	 * element in the tree item markup to ensure proper indentaion of the tree
-	 * item. This implementation also takes care of lines that connect nodes.
+	 * Creates the indentation element. This element should be placed as first element in the tree
+	 * item markup to ensure proper indentaion of the tree item. This implementation also takes care
+	 * of lines that connect nodes.
 	 * 
 	 * @param parent
 	 *            The component parent
@@ -333,10 +330,9 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Creates an image placed on junction link. This image actually consists of
-	 * two spans with different css classes. These classes are specified
-	 * according to the stylesheet to make the junction image look well together
-	 * with lines connecting nodes.
+	 * Creates an image placed on junction link. This image actually consists of two spans with
+	 * different css classes. These classes are specified according to the stylesheet to make the
+	 * junction image look well together with lines connecting nodes.
 	 * 
 	 * @param parent
 	 *            The component parent
@@ -373,16 +369,15 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				final String cssClassOuter = isNodeLast(node) ? "junction-last" : "junction";
 
 				Response response = RequestCycle.get().getResponse();
-				response.write("<span class=\"" + cssClassOuter + "\"><span class=\""
-						+ cssClassInner + "\"></span></span>");
+				response.write("<span class=\"" + cssClassOuter + "\"><span class=\"" +
+						cssClassInner + "\"></span></span>");
 			}
 		}.setRenderBodyOnly(true);
 	}
 
 	/**
-	 * Creates the junction link for given node. Also (optionally) creates the
-	 * junction image. If the node is a leaf (it has no children), the created
-	 * junction link is non-functional.
+	 * Creates the junction link for given node. Also (optionally) creates the junction image. If
+	 * the node is a leaf (it has no children), the created junction link is non-functional.
 	 * 
 	 * @param parent
 	 *            parent component of the link
@@ -391,9 +386,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            wicket:id of the component
 	 * 
 	 * @param imageId
-	 *            wicket:id of the image. this can be null, in that case image
-	 *            is not created. image is supposed to be placed on the link
-	 *            (link is parent of image)
+	 *            wicket:id of the image. this can be null, in that case image is not created. image
+	 *            is supposed to be placed on the link (link is parent of image)
 	 * 
 	 * @param node
 	 *            tree node for which the link should be created.
@@ -452,8 +446,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Creates a link of type specified by current linkType. When the links is
-	 * clicked it calls the specified callback.
+	 * Creates a link of type specified by current linkType. When the links is clicked it calls the
+	 * specified callback.
 	 * 
 	 * @param parent
 	 *            The parent component
@@ -514,8 +508,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Creates the icon for current node. By default uses image reference
-	 * specified by {@link DefaultAbstractTree#getNodeIcon(TreeNode)}.
+	 * Creates the icon for current node. By default uses image reference specified by
+	 * {@link DefaultAbstractTree#getNodeIcon(TreeNode)}.
 	 * 
 	 * @param parent
 	 *            The parent component
@@ -534,7 +528,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				tag.put("style", "background-image: url('" + RequestCycle.get().urlFor(getNodeIcon(node)) + "')");
+				tag.put("style", "background-image: url('" +
+						RequestCycle.get().urlFor(getNodeIcon(node)) + "')");
 			}
 		};
 
@@ -567,8 +562,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Callback function called after user clicked on an junction link. The node
-	 * has already been expanded/collapsed (depending on previous status).
+	 * Callback function called after user clicked on an junction link. The node has already been
+	 * expanded/collapsed (depending on previous status).
 	 * 
 	 * @param target
 	 *            Request target - may be null on non-ajax call
@@ -581,8 +576,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * This callback method is called after user has selected / deselected the
-	 * given node.
+	 * This callback method is called after user has selected / deselected the given node.
 	 * 
 	 * @param target
 	 *            Request target - may be null on non-ajax call
@@ -595,13 +589,12 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	}
 
 	/**
-	 * Performs the tree initialization. Adds header contribution for the
-	 * stylesheet.
+	 * Performs the tree initialization. Adds header contribution for the stylesheet.
 	 */
 	private void init()
 	{
 		ResourceReference css = getCSS();
-		if (css != null) 
+		if (css != null)
 		{
 			add(HeaderContributor.forCss(css.getScope(), css.getName()));
 		}

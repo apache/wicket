@@ -22,10 +22,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * A filtered property column that creates a textfield filter component. The
- * default model of the created textfield is a property model with the same
- * property expression as the one used to display data. This works well when the
- * filter state object is of the same type as the objects in the data table.
+ * A filtered property column that creates a textfield filter component. The default model of the
+ * created textfield is a property model with the same property expression as the one used to
+ * display data. This works well when the filter state object is of the same type as the objects in
+ * the data table.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -92,8 +92,8 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	}
 
 	/**
-	 * Returns the model that will be passed on to the text filter. Users can
-	 * override this method to change the model.
+	 * Returns the model that will be passed on to the text filter. Users can override this method
+	 * to change the model.
 	 * 
 	 * @param form
 	 *            filter form
@@ -105,8 +105,8 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	}
 
 	/**
-	 * Returns true if the constructed choice filter should autosubmit the form
-	 * when its value is changed.
+	 * Returns true if the constructed choice filter should autosubmit the form when its value is
+	 * changed.
 	 * 
 	 * @return true to make choice filter autosubmit, false otherwise
 	 */

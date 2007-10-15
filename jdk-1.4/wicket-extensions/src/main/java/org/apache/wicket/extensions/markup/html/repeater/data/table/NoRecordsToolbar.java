@@ -24,8 +24,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 
 /**
- * A toolbar that displays a "no records found" message when the data table
- * contains no rows.
+ * A toolbar that displays a "no records found" message when the data table contains no rows.
  * <p>
  * The message can be overridden by providing a resource with key
  * <code>datatable.no-records-found</code>
@@ -57,8 +56,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 * @param messageModel
-	 *            model that will be used to display the "no records found"
-	 *            message
+	 *            model that will be used to display the "no records found" message
 	 */
 	public NoRecordsToolbar(final DataTable table, IModel messageModel)
 	{

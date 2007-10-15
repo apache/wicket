@@ -20,8 +20,8 @@ import org.apache.wicket.IClusterable;
 
 
 /**
- * Locator interface for ISortState implementations. OrderByLink uses this
- * interface to locate and version ISortState objects.
+ * Locator interface for ISortState implementations. OrderByLink uses this interface to locate and
+ * version ISortState objects.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

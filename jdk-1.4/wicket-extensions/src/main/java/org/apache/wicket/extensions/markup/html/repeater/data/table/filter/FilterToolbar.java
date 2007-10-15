@@ -25,9 +25,8 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 
 
 /**
- * Toolbar that creates a form to hold form components used to filter data in
- * the data table. Form components are provided by columns that implement
- * IFilteredColumn.
+ * Toolbar that creates a form to hold form components used to filter data in the data table. Form
+ * components are provided by columns that implement IFilteredColumn.
  * 
  * @author Igor Vaynberg (ivaynber)
  * 
@@ -43,10 +42,10 @@ public class FilterToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be added to
 	 * @param stateLocator
-	 *            locator responsible for finding object used to store filter's
-	 *            state
+	 *            locator responsible for finding object used to store filter's state
 	 */
-	public FilterToolbar(final DataTable table, final FilterForm form, final IFilterStateLocator stateLocator)
+	public FilterToolbar(final DataTable table, final FilterForm form,
+			final IFilterStateLocator stateLocator)
 	{
 		super(table);
 
@@ -73,13 +72,13 @@ public class FilterToolbar extends AbstractToolbar
 
 			IColumn col = cols[i];
 			Component filter = null;
-			
+
 			if (col instanceof IFilteredColumn)
 			{
 				IFilteredColumn filteredCol = (IFilteredColumn)col;
 				filter = filteredCol.getFilter(FILTER_COMPONENT_ID, form);
 			}
-	
+
 			if (filter == null)
 			{
 				filter = new NoFilter(FILTER_COMPONENT_ID);
@@ -89,15 +88,18 @@ public class FilterToolbar extends AbstractToolbar
 				if (!filter.getId().equals(FILTER_COMPONENT_ID))
 				{
 					throw new IllegalStateException(
-							"filter component returned  with an invalid component id. invalid component id ["
-									+ filter.getId() + "] required component id ["
-									+ FILTER_COMPONENT_ID + "] generating column ["
-									+ col.toString() + "] ");
+							"filter component returned  with an invalid component id. invalid component id [" +
+									filter.getId() +
+									"] required component id [" +
+									FILTER_COMPONENT_ID +
+									"] generating column [" +
+									col.toString() +
+									"] ");
 				}
 			}
 
 			item.add(filter);
-			
+
 			filters.add(item);
 		}
 
@@ -105,11 +107,11 @@ public class FilterToolbar extends AbstractToolbar
 
 	protected void onBeforeRender()
 	{
-		if (findParent(FilterForm.class)==null) 
-		{ 
+		if (findParent(FilterForm.class) == null)
+		{
 			throw new IllegalStateException("FilterToolbar must be contained within a Form");
 		}
 		super.onBeforeRender();
 	}
-	
+
 }

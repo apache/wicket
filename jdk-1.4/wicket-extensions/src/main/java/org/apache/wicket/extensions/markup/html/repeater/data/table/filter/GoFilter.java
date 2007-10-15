@@ -22,8 +22,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Filter component that generates a 'go' button that when pressed submits the
- * filter form
+ * Filter component that generates a 'go' button that when pressed submits the filter form
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -80,13 +79,12 @@ public class GoFilter extends Panel
 	}
 
 	/**
-	 * This method can be overridden by subclasses to provide non-standard
-	 * behavior for the 'go' button.
+	 * This method can be overridden by subclasses to provide non-standard behavior for the 'go'
+	 * button.
 	 * 
 	 * @param button
-	 *            the 'go' button, can be used to get to the Form object and
-	 *            through that to the filter state object by retrieving the
-	 *            form's model object
+	 *            the 'go' button, can be used to get to the Form object and through that to the
+	 *            filter state object by retrieving the form's model object
 	 * 
 	 */
 	protected void onGoSubmit(Button button)

@@ -29,16 +29,15 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Utility class. Initialize Locale to character encoding mapping based on 
- * defaults and optionally a properties file CharSetMap.CHARSET_RESOURCE
- * to be found in WEB-INF.
+ * Utility class. Initialize Locale to character encoding mapping based on defaults and optionally a
+ * properties file CharSetMap.CHARSET_RESOURCE to be found in WEB-INF.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
 public class CharSetUtil
 {
-    /** Logging */
+	/** Logging */
 	private static final Logger log = LoggerFactory.getLogger(CharSetUtil.class);
 
 	/** Locale to character encoding mapping */
@@ -52,10 +51,11 @@ public class CharSetUtil
 	}
 
 	/**
-	 * Initialize the mapping table based on defaults and optionally modified by 
-	 * entries from a properties file to be found in WEB-INF.
+	 * Initialize the mapping table based on defaults and optionally modified by entries from a
+	 * properties file to be found in WEB-INF.
 	 * 
-	 * @param application Wicket application object
+	 * @param application
+	 *            Wicket application object
 	 */
 	private synchronized static final void initialize(final WebApplication application)
 	{
@@ -63,10 +63,10 @@ public class CharSetUtil
 		{
 			// Get servlet context
 			final ServletContext context = application.getServletContext();
-			
-			final InputStream inputStream = context.getResourceAsStream("/WEB-INF/"
-					+ CharSetMap.CHARSET_RESOURCE);
-			
+
+			final InputStream inputStream = context.getResourceAsStream("/WEB-INF/" +
+					CharSetMap.CHARSET_RESOURCE);
+
 			if (inputStream == null)
 			{
 				charSetMap = new CharSetMap();

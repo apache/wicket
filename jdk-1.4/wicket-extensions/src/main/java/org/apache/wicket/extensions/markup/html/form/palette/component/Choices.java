@@ -34,8 +34,10 @@ public class Choices extends AbstractOptions
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param id component id
-	 * @param palette parent palette
+	 * @param id
+	 *            component id
+	 * @param palette
+	 *            parent palette
 	 */
 	public Choices(String id, Palette palette)
 	{
@@ -52,8 +54,8 @@ public class Choices extends AbstractOptions
 		{
 			attrs.put("onFocus", onFocus);
 		}
-		
-		tag.getAttributes().put("ondblclick", getPalette().getAddOnClickJS()); 
+
+		tag.getAttributes().put("ondblclick", getPalette().getAddOnClickJS());
 	}
 
 	protected Iterator getOptionsIterator()

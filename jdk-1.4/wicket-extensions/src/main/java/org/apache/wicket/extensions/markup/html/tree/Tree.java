@@ -30,8 +30,7 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * A complete tree implementation where three item consists of junction link,
- * icon and label.
+ * A complete tree implementation where three item consists of junction link, icon and label.
  * 
  * @author Matej Knopp
  */
@@ -77,8 +76,7 @@ public class Tree extends DefaultAbstractTree
 	}
 
 	/**
-	 * Populates the tree item. It creates all necesary components for the tree
-	 * to work properly.
+	 * Populates the tree item. It creates all necesary components for the tree to work properly.
 	 * 
 	 * @param item
 	 * @param level

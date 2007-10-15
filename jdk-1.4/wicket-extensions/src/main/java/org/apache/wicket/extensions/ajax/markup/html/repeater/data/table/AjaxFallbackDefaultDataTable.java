@@ -30,13 +30,11 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * An implementation of the DataTable that aims to solve the 90% usecase by
- * adding navigation, headers, an no-records-found toolbars to a standard
- * {@link DataTable}.
+ * An implementation of the DataTable that aims to solve the 90% usecase by adding navigation,
+ * headers, an no-records-found toolbars to a standard {@link DataTable}.
  * <p>
- * The {@link NavigationToolbar} and the {@link HeadersToolbar} are added as top
- * toolbars, while the {@link NoRecordsToolbar} toolbar is added as a bottom
- * toolbar.
+ * The {@link NavigationToolbar} and the {@link HeadersToolbar} are added as top toolbars, while the
+ * {@link NoRecordsToolbar} toolbar is added as a bottom toolbar.
  * 
  * @see DataTable
  * @see HeadersToolbar

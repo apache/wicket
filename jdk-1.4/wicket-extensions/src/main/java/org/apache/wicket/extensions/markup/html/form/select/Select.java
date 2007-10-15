@@ -29,14 +29,13 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Component that represents a <code>&lt;select&gt;</code> box. Elements are
- * provided by one or more <code>SelectChoice</code> or
- * <code>SelectOptions</code> components in the hierarchy below the
- * <code>Select</code> component.
+ * Component that represents a <code>&lt;select&gt;</code> box. Elements are provided by one or
+ * more <code>SelectChoice</code> or <code>SelectOptions</code> components in the hierarchy
+ * below the <code>Select</code> component.
  * 
- * Advantages to the standard choice components is that the user has a lot more
- * control over the markup between the &lt;select&gt; tag and its children
- * &lt;option&gt; tags: allowing for such things as &lt;optgroup&gt; tags.
+ * Advantages to the standard choice components is that the user has a lot more control over the
+ * markup between the &lt;select&gt; tag and its children &lt;option&gt; tags: allowing for such
+ * things as &lt;optgroup&gt; tags.
  * 
  * TODO Post 1.2: General: Example
  * 
@@ -73,9 +72,8 @@ public class Select extends FormComponent
 		boolean supportsMultiple = getModelObject() instanceof Collection;
 
 		/*
-		 * the input contains an array of full path of the selected option
-		 * components unless nothing was selected in which case the input
-		 * contains null
+		 * the input contains an array of full path of the selected option components unless nothing
+		 * was selected in which case the input contains null
 		 */
 		String[] paths = getInputAsArray();
 
@@ -88,16 +86,16 @@ public class Select extends FormComponent
 		if (!supportsMultiple && paths.length > 1)
 		{
 			throw new WicketRuntimeException(
-					"The model of Select component ["
-							+ getPath()
-							+ "] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
+					"The model of Select component [" +
+							getPath() +
+							"] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
 		}
 
 		List converted = new ArrayList(paths.length);
 
 		/*
-		 * if the input is null we do not need to do anything since the model
-		 * collection has already been cleared
+		 * if the input is null we do not need to do anything since the model collection has already
+		 * been cleared
 		 */
 		for (int i = 0; i < paths.length; i++)
 		{
@@ -105,9 +103,8 @@ public class Select extends FormComponent
 			if (!Strings.isEmpty(path))
 			{
 				/*
-				 * option component path sans select component path = relative
-				 * path from group to option since we know the option is child
-				 * of select
+				 * option component path sans select component path = relative path from group to
+				 * option since we know the option is child of select
 				 */
 				path = path.substring(getPath().length() + 1);
 
@@ -117,13 +114,13 @@ public class Select extends FormComponent
 				if (option == null)
 				{
 					throw new WicketRuntimeException(
-							"submitted http post value ["
-									+ paths.toString()
-									+ "] for SelectOption component ["
-									+ getPath()
-									+ "] contains an illegal relative path element ["
-									+ path
-									+ "] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
+							"submitted http post value [" +
+									paths.toString() +
+									"] for SelectOption component [" +
+									getPath() +
+									"] contains an illegal relative path element [" +
+									path +
+									"] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
 				}
 				converted.add(option.getModelObject());
 			}

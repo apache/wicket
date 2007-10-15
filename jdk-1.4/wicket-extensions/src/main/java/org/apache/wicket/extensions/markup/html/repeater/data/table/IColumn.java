@@ -40,8 +40,8 @@ public interface IColumn extends ICellPopulator
 	Component getHeader(String componentId);
 
 	/**
-	 * Returns the name of the property that this header sorts. If null is
-	 * returned the header will be unsortable.
+	 * Returns the name of the property that this header sorts. If null is returned the header will
+	 * be unsortable.
 	 * 
 	 * @return a string representing the sort property
 	 */

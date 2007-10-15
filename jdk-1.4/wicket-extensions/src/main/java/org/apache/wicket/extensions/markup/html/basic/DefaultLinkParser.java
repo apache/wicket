@@ -35,8 +35,7 @@ public class DefaultLinkParser extends LinkParser
 	private static final String urlPattern = "([a-zA-Z]+://[\\w\\.\\-\\:\\/]+)[\\w\\.:\\-/?&=%]*";
 
 	/**
-	 * Email address render strategy.<br/> Renders &lt;a
-	 * href="mailto:{EMAIL}"&gt;{EMAIL}&lt;/a&gt;
+	 * Email address render strategy.<br/> Renders &lt;a href="mailto:{EMAIL}"&gt;{EMAIL}&lt;/a&gt;
 	 */
 	public static final ILinkRenderStrategy EMAIL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
@@ -47,9 +46,8 @@ public class DefaultLinkParser extends LinkParser
 	};
 
 	/**
-	 * Email address render strategy. Similar to
-	 * <code>EMAIL_RENDER_STRATEGY</code>, but encrypts the email address
-	 * with html entities.
+	 * Email address render strategy. Similar to <code>EMAIL_RENDER_STRATEGY</code>, but encrypts
+	 * the email address with html entities.
 	 */
 	public static final ILinkRenderStrategy ENCRYPTED_EMAIL_RENDER_STRATEGY = new ILinkRenderStrategy()
 	{
@@ -62,14 +60,14 @@ public class DefaultLinkParser extends LinkParser
 				cryptedEmail.append(Integer.toString(linkTarget.charAt(i)));
 				cryptedEmail.append(";");
 			}
-			
+
 			AppendingStringBuffer result = new AppendingStringBuffer(256);
 			result.append("<a href=\"mailto:");
 			result.append(cryptedEmail.toString());
 			result.append("\">");
 			result.append(cryptedEmail.toString());
 			result.append("</a>");
-			
+
 			return result.toString();
 		}
 	};
@@ -81,10 +79,10 @@ public class DefaultLinkParser extends LinkParser
 	{
 		public String buildLink(String linkTarget)
 		{
-			return "<a href=\""
-					+ linkTarget
-					+ "\">"
-					+ (linkTarget.indexOf('?') == -1 ? linkTarget : linkTarget.substring(0,
+			return "<a href=\"" +
+					linkTarget +
+					"\">" +
+					(linkTarget.indexOf('?') == -1 ? linkTarget : linkTarget.substring(0,
 							linkTarget.indexOf('?'))) + "</a>";
 		}
 	};

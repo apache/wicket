@@ -26,9 +26,8 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * Base implementation for {@link Panel}/ {@link Component} based
- * {@link IBreadCrumbParticipant} that decouples the implementation from the
- * actual panel class.
+ * Base implementation for {@link Panel}/ {@link Component} based {@link IBreadCrumbParticipant}
+ * that decouples the implementation from the actual panel class.
  * 
  * @author eelcohillenius
  */
@@ -61,8 +60,8 @@ public abstract class BreadCrumbParticipantDelegate implements IBreadCrumbPartic
 	}
 
 	/**
-	 * If the previous participant is not null (and a component, which it should
-	 * be), replace that component on it's parent with this one.
+	 * If the previous participant is not null (and a component, which it should be), replace that
+	 * component on it's parent with this one.
 	 * 
 	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#onActivate(org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */

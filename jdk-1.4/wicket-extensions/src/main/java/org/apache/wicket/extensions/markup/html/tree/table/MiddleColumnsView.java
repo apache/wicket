@@ -35,8 +35,8 @@ import org.apache.wicket.response.NullResponse;
 
 
 /**
- * Class that renders cells of columns aligned in the middle. This class also
- * takes care of counting their widths and of column spans.
+ * Class that renders cells of columns aligned in the middle. This class also takes care of counting
+ * their widths and of column spans.
  * 
  * @author Matej Knopp
  */
@@ -51,7 +51,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 	private TreeNode node;
 
 	private final List renderables = new ArrayList();
-	
+
 	private boolean treeHasLeftColumn;
 
 	/**
@@ -62,7 +62,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 	 * @param node
 	 *            The tree node
 	 * @param treeHasLeftColumn
-	 * 			  Whether there is a column aligned to left in the tree table
+	 *            Whether there is a column aligned to left in the tree table
 	 */
 	public MiddleColumnsView(String id, TreeNode node, boolean treeHasLeftColumn)
 	{
@@ -92,8 +92,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 	}
 
 	/**
-	 * Computes the percentagle widths of columns. If a column spans over other
-	 * columns, the widths of those columns will be zero.
+	 * Computes the percentagle widths of columns. If a column spans over other columns, the widths
+	 * of those columns will be zero.
 	 * 
 	 * @return widths of columns
 	 */
@@ -187,7 +187,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		return result;
 	}
-	
+
 	/**
 	 * Renders all columns.
 	 * 
@@ -205,8 +205,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
 		nf.setMaximumFractionDigits(0);
-		nf.setMaximumFractionDigits(2);										
-		
+		nf.setMaximumFractionDigits(2);
+
 		for (int i = 0; i < columns.size(); ++i)
 		{
 			Component component = (Component)components.get(i);
@@ -215,7 +215,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 			// write the wrapping column markup
 			response.write("<span class=\"b_\" style=\"width:" + nf.format(widths[i]) + "%\">");
-			
+
 			// determine whether we should render the left border
 			if (!treeHasLeftColumn && i == 0)
 				response.write("<span class=\"d_\">");

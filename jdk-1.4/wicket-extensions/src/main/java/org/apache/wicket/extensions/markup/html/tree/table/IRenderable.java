@@ -23,10 +23,9 @@ import org.apache.wicket.Response;
 
 
 /**
- * Interface for lightweight cell renders. If you are concerned about server
- * state size, have larger trees with read-only cells, implementing this
- * interface and using it instead of e.g. Label can decrease the memory
- * footprint of tree table.
+ * Interface for lightweight cell renders. If you are concerned about server state size, have larger
+ * trees with read-only cells, implementing this interface and using it instead of e.g. Label can
+ * decrease the memory footprint of tree table.
  * 
  * @author Matej Knopp
  */

@@ -17,9 +17,8 @@
 package org.apache.wicket.extensions.wizard;
 
 /**
- * Models a cancel button in the wizard. When pressed, it calls
- * {@link IWizardStep#applyState()} on the active wizard step, and then
- * {@link Wizard#onFinish()} on the wizard.
+ * Models a cancel button in the wizard. When pressed, it calls {@link IWizardStep#applyState()} on
+ * the active wizard step, and then {@link Wizard#onFinish()} on the wizard.
  * 
  * @author Eelco Hillenius
  */

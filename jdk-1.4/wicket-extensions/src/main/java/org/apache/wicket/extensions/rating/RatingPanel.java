@@ -31,16 +31,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
 /**
- * Rating component that generates a number of stars where a user can click on
- * to rate something. Subclasses should implement
- * {@link #onRated(int, AjaxRequestTarget)} to provide the calculation of the
- * rating, and {@link #onIsStarActive(int)} to indicate whether to render an
- * active star or an inactive star.
+ * Rating component that generates a number of stars where a user can click on to rate something.
+ * Subclasses should implement {@link #onRated(int, AjaxRequestTarget)} to provide the calculation
+ * of the rating, and {@link #onIsStarActive(int)} to indicate whether to render an active star or
+ * an inactive star.
  * <p>
- * Active stars are the stars that show the rating, inactive stars are the left
- * overs. E.G. a rating of 3.4 on a scale of 5 stars will render 3 active stars,
- * and 2 inactive stars (provided that the {@link #onIsStarActive(int)} returns
- * <code>true</code> for each of the first three stars).
+ * Active stars are the stars that show the rating, inactive stars are the left overs. E.G. a rating
+ * of 3.4 on a scale of 5 stars will render 3 active stars, and 2 inactive stars (provided that the
+ * {@link #onIsStarActive(int)} returns <code>true</code> for each of the first three stars).
  * <p>
  * Use this component in the following way:
  * 
@@ -59,26 +57,24 @@ import org.apache.wicket.model.StringResourceModel;
  * });
  * </pre>
  * 
- * The user of this component is responsible for creating a model that supplies
- * a Double (or Float) value for the rating message, however the rating panel
- * doesn't necessarily have to contain a float or number rating value.
+ * The user of this component is responsible for creating a model that supplies a Double (or Float)
+ * value for the rating message, however the rating panel doesn't necessarily have to contain a
+ * float or number rating value.
  * <p>
- * Though not obligatory, you could also supply a value for the number of votes
- * cast, which allows the component to render a more complete message in the
- * rating label.
+ * Though not obligatory, you could also supply a value for the number of votes cast, which allows
+ * the component to render a more complete message in the rating label.
  * 
  * <h2>Customizing the rating value and label</h2>
  * To customize the rating value, one should override the
- * {@link #newRatingLabel(String, IModel, IModel)} method and create another
- * label instead, based on the provided models. If you do so, and use another
- * system of rating than returning a Float or Double, then you should also
- * customize the rating resource bundle to reflect your message. The default
- * resource bundle assumes a numeric value for the rating.
+ * {@link #newRatingLabel(String, IModel, IModel)} method and create another label instead, based on
+ * the provided models. If you do so, and use another system of rating than returning a Float or
+ * Double, then you should also customize the rating resource bundle to reflect your message. The
+ * default resource bundle assumes a numeric value for the rating.
  * 
  * <h2>Resource bundle</h2>
- * This component uses two types of messages: rating.simple and rating.complete.
- * The first message is used when no model is given for the number of cast
- * votes. The complete message shows the text 'Rating xx.yy from zz votes'.
+ * This component uses two types of messages: rating.simple and rating.complete. The first message
+ * is used when no model is given for the number of cast votes. The complete message shows the text
+ * 'Rating xx.yy from zz votes'.
  * 
  * <pre>
  *       rating.simple=Rated {0,number,#.#}
@@ -86,10 +82,9 @@ import org.apache.wicket.model.StringResourceModel;
  * </pre>
  * 
  * <h2>Customizing the star images</h2>
- * To customize the images shown, override the {@link #getActiveStarUrl(int)}
- * and {@link #getInactiveStarUrl(int)} methods. Using the iteration parameter
- * it is possible to use a different image for each star, creating a fade effect
- * or something similar.
+ * To customize the images shown, override the {@link #getActiveStarUrl(int)} and
+ * {@link #getInactiveStarUrl(int)} methods. Using the iteration parameter it is possible to use a
+ * different image for each star, creating a fade effect or something similar.
  * 
  * @author Martijn Dashorst
  */
@@ -167,14 +162,12 @@ public abstract class RatingPanel extends Panel
 			"star1.gif");
 
 	/**
-	 * The number of stars that need to be shown, should result in an Integer
-	 * object.
+	 * The number of stars that need to be shown, should result in an Integer object.
 	 */
 	private IModel nrOfStars = new Model(new Integer(5));
 
 	/**
-	 * The number of votes that have been cast, should result in an Integer
-	 * object.
+	 * The number of votes that have been cast, should result in an Integer object.
 	 */
 	private IModel nrOfVotes;
 
@@ -189,8 +182,8 @@ public abstract class RatingPanel extends Panel
 	private Component ratingLabel;
 
 	/**
-	 * Constructs a rating component with 5 stars, using a compound property
-	 * model as its model to retrieve the rating.
+	 * Constructs a rating component with 5 stars, using a compound property model as its model to
+	 * retrieve the rating.
 	 * 
 	 * @param id
 	 *            the component id.
@@ -201,8 +194,7 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Constructs a rating component with 5 stars, using the rating for
-	 * retrieving the rating.
+	 * Constructs a rating component with 5 stars, using the rating for retrieving the rating.
 	 * 
 	 * @param id
 	 *            the component id
@@ -215,8 +207,8 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Constructs a rating component with nrOfStars stars, using a compound
-	 * property model as its model to retrieve the rating.
+	 * Constructs a rating component with nrOfStars stars, using a compound property model as its
+	 * model to retrieve the rating.
 	 * 
 	 * @param id
 	 *            the component id
@@ -229,8 +221,8 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Constructs a rating component with nrOfStars stars, using the rating for
-	 * retrieving the rating.
+	 * Constructs a rating component with nrOfStars stars, using the rating for retrieving the
+	 * rating.
 	 * 
 	 * @param id
 	 *            the component id
@@ -248,10 +240,9 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Constructs a rating panel with nrOfStars stars, where the rating model is
-	 * used to retrieve the rating, the nrOfVotes model to retrieve the number
-	 * of casted votes. This panel doens't keep track of whether the user has
-	 * already voted.
+	 * Constructs a rating panel with nrOfStars stars, where the rating model is used to retrieve
+	 * the rating, the nrOfVotes model to retrieve the number of casted votes. This panel doens't
+	 * keep track of whether the user has already voted.
 	 * 
 	 * @param id
 	 *            the component id
@@ -272,10 +263,9 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Constructs a rating panel with nrOfStars stars, where the rating model is
-	 * used to retrieve the rating, the nrOfVotes model used to retrieve the
-	 * number of votes cast and the hasVoted model to retrieve whether the user
-	 * already had cast a vote.
+	 * Constructs a rating panel with nrOfStars stars, where the rating model is used to retrieve
+	 * the rating, the nrOfVotes model used to retrieve the number of votes cast and the hasVoted
+	 * model to retrieve whether the user already had cast a vote.
 	 * 
 	 * @param id
 	 *            the component id.
@@ -320,9 +310,9 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Will let the rating panel contribute a CSS include to the page's header.
-	 * It will add RatingPanel.css from this package. This method is typically
-	 * called by the class that creates the rating panel.
+	 * Will let the rating panel contribute a CSS include to the page's header. It will add
+	 * RatingPanel.css from this package. This method is typically called by the class that creates
+	 * the rating panel.
 	 */
 	public final void addDefaultCssStyle()
 	{
@@ -344,8 +334,7 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Creates a new rating label, showing a message like 'Rated 5.4 from 53
-	 * votes'.
+	 * Creates a new rating label, showing a message like 'Rated 5.4 from 53 votes'.
 	 * 
 	 * @param id
 	 *            the id of the label
@@ -372,9 +361,8 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Returns the url pointing to the image of active stars, is used to set the
-	 * URL for the image of an active star. Override this method to provide your
-	 * own images.
+	 * Returns the url pointing to the image of active stars, is used to set the URL for the image
+	 * of an active star. Override this method to provide your own images.
 	 * 
 	 * @param iteration
 	 *            the sequence number of the star
@@ -386,9 +374,8 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Returns the url pointing to the image of inactive stars, is used to set
-	 * the URL for the image of an inactive star. Override this method to
-	 * provide your own images.
+	 * Returns the url pointing to the image of inactive stars, is used to set the URL for the image
+	 * of an inactive star. Override this method to provide your own images.
 	 * 
 	 * @param iteration
 	 *            the sequence number of the star
@@ -413,8 +400,8 @@ public abstract class RatingPanel extends Panel
 	}
 
 	/**
-	 * Returns <code>true</code> when the star identified by its sequence
-	 * number should be shown as active.
+	 * Returns <code>true</code> when the star identified by its sequence number should be shown
+	 * as active.
 	 * 
 	 * @param star
 	 *            the sequence number of the star (ranging from 0 to nrOfStars)
@@ -423,17 +410,14 @@ public abstract class RatingPanel extends Panel
 	protected abstract boolean onIsStarActive(int star);
 
 	/**
-	 * Notification of a click on a rating star. Add your own components to the
-	 * request target when you want to have them updated in the Ajax request.
-	 * <strong>NB</strong> the target may be null when the click isn't handled
-	 * using AJAX, but using a fallback scenario.
+	 * Notification of a click on a rating star. Add your own components to the request target when
+	 * you want to have them updated in the Ajax request. <strong>NB</strong> the target may be
+	 * null when the click isn't handled using AJAX, but using a fallback scenario.
 	 * 
 	 * @param rating
-	 *            the number of the star that is clicked, ranging from 1 to
-	 *            nrOfStars
+	 *            the number of the star that is clicked, ranging from 1 to nrOfStars
 	 * @param target
-	 *            the request target, null if the request is a regular, non-AJAX
-	 *            request.
+	 *            the request target, null if the request is a regular, non-AJAX request.
 	 */
 	protected abstract void onRated(int rating, AjaxRequestTarget target);
 }

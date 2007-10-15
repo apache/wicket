@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
  * Component representing a single <code>&lt;option&gt;</code> html element
  * 
  * TODO Post 1.2: General: Example
- *  
+ * 
  * @see Select
  * 
  * @author Igor Vaynberg
@@ -67,16 +67,16 @@ public class SelectOption extends WebMarkupContainer
 		if (select == null)
 		{
 			throw new WicketRuntimeException(
-					"SelectOption component ["
-							+ getPath()
-							+ "] cannot find its parent Select. All SelectOption components must be a child of or below in the hierarchy of a Select component.");
+					"SelectOption component [" +
+							getPath() +
+							"] cannot find its parent Select. All SelectOption components must be a child of or below in the hierarchy of a Select component.");
 		}
 
 		// assign name and value
 		tag.put("value", getPath());
 
-		boolean isSelected=false;
-		
+		boolean isSelected = false;
+
 		if (select.isSelected(this))
 		{
 			tag.put("selected", "true");

@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 
-
 /**
  * Simple concrete implementation of {@link AbstractDataGridView}
  * 
@@ -39,8 +38,8 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  * </pre>
  * 
  * <p>
- * Though this example is about a HTML table, DataGridView is not at all limited
- * to HTML tables. Any kind of grid can be rendered using DataGridView.
+ * Though this example is about a HTML table, DataGridView is not at all limited to HTML tables. Any
+ * kind of grid can be rendered using DataGridView.
  * <p>
  * And the related Java code:
  * 
@@ -86,8 +85,7 @@ public class DataGridView extends AbstractDataGridView
 	/**
 	 * Constructor
 	 * 
-	 * Notice cells are created in the same order as cell populators in the
-	 * array
+	 * Notice cells are created in the same order as cell populators in the array
 	 * 
 	 * @param id
 	 *            component id

@@ -21,12 +21,11 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
 
 
 /**
- * Convenience implementation of a data provider that can also act as a locator
- * for a {@link SingleSortState} object.
+ * Convenience implementation of a data provider that can also act as a locator for a
+ * {@link SingleSortState} object.
  * 
- * Most times it is convenient to keep sort and filtering information inside the
- * data provider implementation because it makes that information easy to access
- * within the data provider.
+ * Most times it is convenient to keep sort and filtering information inside the data provider
+ * implementation because it makes that information easy to access within the data provider.
  * 
  * @author Igor Vaynberg (ivaynberg at apache dot org)
  */
@@ -54,8 +53,8 @@ public abstract class SortableDataProvider implements ISortableDataProvider
 		if (!(state instanceof SingleSortState))
 		{
 			throw new IllegalArgumentException(
-					"argument [state] must be an instance of SingleSortState, but it is ["
-							+ state.getClass().getName() + "]:[" + state.toString() + "]");
+					"argument [state] must be an instance of SingleSortState, but it is [" +
+							state.getClass().getName() + "]:[" + state.toString() + "]");
 		}
 		this.state = (SingleSortState)state;
 	}
@@ -101,5 +100,5 @@ public abstract class SortableDataProvider implements ISortableDataProvider
 	{
 	}
 
-	
+
 }

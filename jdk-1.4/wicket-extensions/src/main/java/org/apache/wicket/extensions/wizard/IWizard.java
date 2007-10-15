@@ -19,14 +19,13 @@ package org.apache.wicket.extensions.wizard;
 import org.apache.wicket.IClusterable;
 
 /**
- * Interface for the wizard component. This interface is here for ultimate
- * flexibility, though it doesn't guarantee much. Typically, you would extend
- * from {@link Wizard the default wizard component} instead of implementing this
- * interface directly.
+ * Interface for the wizard component. This interface is here for ultimate flexibility, though it
+ * doesn't guarantee much. Typically, you would extend from
+ * {@link Wizard the default wizard component} instead of implementing this interface directly.
  * 
  * <p>
- * Part of the contract of wizards is that {@link IWizardStep wizard steps} are
- * initialized when the wizard receives the {@link IWizardModel wizard model}.
+ * Part of the contract of wizards is that {@link IWizardStep wizard steps} are initialized when the
+ * wizard receives the {@link IWizardModel wizard model}.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -34,8 +33,8 @@ import org.apache.wicket.IClusterable;
 public interface IWizard extends IClusterable
 {
 	/**
-	 * Gets the model this wizard is using. This should never be null; a wizard
-	 * is supposed to have a model.
+	 * Gets the model this wizard is using. This should never be null; a wizard is supposed to have
+	 * a model.
 	 * 
 	 * @return The wizard model.
 	 */

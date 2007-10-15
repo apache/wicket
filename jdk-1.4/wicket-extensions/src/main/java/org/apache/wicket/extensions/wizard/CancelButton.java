@@ -17,8 +17,8 @@
 package org.apache.wicket.extensions.wizard;
 
 /**
- * Models a cancel button in the wizard. When pressed, it calls
- * {@link Wizard#onCancel()} which should do the real work.
+ * Models a cancel button in the wizard. When pressed, it calls {@link Wizard#onCancel()} which
+ * should do the real work.
  * 
  * @author Eelco Hillenius
  */

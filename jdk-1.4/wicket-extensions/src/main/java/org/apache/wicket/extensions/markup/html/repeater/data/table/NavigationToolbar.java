@@ -23,9 +23,8 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.model.Model;
 
 /**
- * Toolbar that displays links used to navigate the pages of the datatable as
- * well as a message about which rows are being displayed and their total number
- * in the data table.
+ * Toolbar that displays links used to navigate the pages of the datatable as well as a message
+ * about which rows are being displayed and their total number in the data table.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -58,8 +57,7 @@ public class NavigationToolbar extends AbstractToolbar
 
 
 	/**
-	 * Factory method used to create the paging navigator that will be used by
-	 * the datatable
+	 * Factory method used to create the paging navigator that will be used by the datatable
 	 * 
 	 * @param navigatorId
 	 *            component id the navigator should be created with
@@ -73,8 +71,7 @@ public class NavigationToolbar extends AbstractToolbar
 	}
 
 	/**
-	 * Factory method used to create the navigator label that will be used by
-	 * the datatable
+	 * Factory method used to create the navigator label that will be used by the datatable
 	 * 
 	 * @param navigatorId
 	 *            component id navigator label should be created with

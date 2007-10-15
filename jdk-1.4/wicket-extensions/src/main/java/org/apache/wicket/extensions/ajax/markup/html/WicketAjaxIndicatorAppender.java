@@ -26,9 +26,9 @@ import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.markup.html.IHeaderResponse;
 
 /**
- * A behavior that adds a span with wicket's default indicator gif to the end of
- * the component's markup. This span can be used as an ajax busy indicator. For
- * an example usage see {@link IndicatingAjaxLink}
+ * A behavior that adds a span with wicket's default indicator gif to the end of the component's
+ * markup. This span can be used as an ajax busy indicator. For an example usage see
+ * {@link IndicatingAjaxLink}
  * <p>
  * Instances of this behavior must not be shared between components.
  * 
@@ -69,9 +69,8 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 
 		if (AjaxRequestTarget.get() != null)
 		{
-			final String javascript = "var e = Wicket.$('"
-					+ getMarkupId()
-					+ "'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);";
+			final String javascript = "var e = Wicket.$('" + getMarkupId() +
+					"'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);";
 
 			response.renderJavascript(javascript, null);
 		}
@@ -112,9 +111,8 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	}
 
 	/**
-	 * Returns the markup id attribute of the outer most span of this indicator.
-	 * This is the id of the span that should be hidden or show to hide or show
-	 * the indicator.
+	 * Returns the markup id attribute of the outer most span of this indicator. This is the id of
+	 * the span that should be hidden or show to hide or show the indicator.
 	 * 
 	 * @return markup id of outer most span
 	 */

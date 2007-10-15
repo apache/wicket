@@ -20,12 +20,11 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.ResourceModel;
 
 /**
- * Base class for buttons that work with {@link IWizard the wizard component}.
- * It uses resource bundles to display the button label.
+ * Base class for buttons that work with {@link IWizard the wizard component}. It uses resource
+ * bundles to display the button label.
  * <p>
- * When wizard buttons are presses (and they pass validation if that is
- * relevant), they pass control to {@link #onClick() their action method},
- * which should do the real work.
+ * When wizard buttons are presses (and they pass validation if that is relevant), they pass control
+ * to {@link #onClick() their action method}, which should do the real work.
  * </p>
  * 
  * @author Eelco Hillenius

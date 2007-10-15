@@ -21,8 +21,7 @@ import java.util.EventListener;
 import org.apache.wicket.IClusterable;
 
 /**
- * Bread crumb model listeners get notified by
- * {@link IBreadCrumbModel bread crumb models} of
+ * Bread crumb model listeners get notified by {@link IBreadCrumbModel bread crumb models} of
  * {@link #breadCrumbActivated(IBreadCrumbParticipant, IBreadCrumbParticipant) activation},
  * {@link #breadCrumbAdded(IBreadCrumbParticipant) addition} and
  * {@link #breadCrumbRemoved(IBreadCrumbParticipant) removal} events.

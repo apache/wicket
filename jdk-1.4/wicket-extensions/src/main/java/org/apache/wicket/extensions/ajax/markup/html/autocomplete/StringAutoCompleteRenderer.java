@@ -17,8 +17,8 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 /**
- * An renderer that assumes that assist objects are {@link String}s. Great for
- * quickly generating a list of assists.
+ * An renderer that assumes that assist objects are {@link String}s. Great for quickly generating a
+ * list of assists.
  * 
  * @since 1.2
  * 

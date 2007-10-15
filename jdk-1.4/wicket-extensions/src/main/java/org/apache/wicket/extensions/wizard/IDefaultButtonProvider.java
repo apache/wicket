@@ -23,11 +23,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 
 /**
- * Optional interface that can be implemented by button bars if they can provide
- * what button should be the 'default' one - the one that is selected when a
- * user presses enter. Note that this is not completely water proof as it
- * depends on non-standard browser behavior (i.e. the fact that most browsers
- * select the first button they encounter).
+ * Optional interface that can be implemented by button bars if they can provide what button should
+ * be the 'default' one - the one that is selected when a user presses enter. Note that this is not
+ * completely water proof as it depends on non-standard browser behavior (i.e. the fact that most
+ * browsers select the first button they encounter).
  * 
  * @see Form#setDefaultButton(IFormSubmittingComponent)
  * 
@@ -36,8 +35,8 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 public interface IDefaultButtonProvider
 {
 	/**
-	 * Gets the default button - the button that is selected when a user presses
-	 * enter - based on the current state.
+	 * Gets the default button - the button that is selected when a user presses enter - based on
+	 * the current state.
 	 * 
 	 * @param model
 	 *            wizard model

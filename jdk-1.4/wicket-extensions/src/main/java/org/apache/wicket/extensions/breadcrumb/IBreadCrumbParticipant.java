@@ -22,18 +22,17 @@ import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 
 
 /**
- * Bread crumb participants function as proxies for components that are part of
- * a bread crumb hierarchy. An example of a bread crumb is:
+ * Bread crumb participants function as proxies for components that are part of a bread crumb
+ * hierarchy. An example of a bread crumb is:
  * 
  * <pre>
  *     Home &gt; Products &amp; Solutions &gt; Hardware &gt; Desktop Systems
  * </pre>
  * 
  * In a {@link BreadCrumbPanel panel based implementation}, <tt>Home</tt>,
- * <tt>Products &amp; Solutions</tt> etc would be seperate panels that all are
- * bread crumb participants: for instance the <tt>Home</tt> participant's
- * {@link #getTitle() title} would return 'Home', and
- * {@link #getComponent() the component} would be the corresponding panel.
+ * <tt>Products &amp; Solutions</tt> etc would be seperate panels that all are bread crumb
+ * participants: for instance the <tt>Home</tt> participant's {@link #getTitle() title} would
+ * return 'Home', and {@link #getComponent() the component} would be the corresponding panel.
  * 
  * @author Eelco Hillenius
  */

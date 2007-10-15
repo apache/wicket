@@ -26,11 +26,10 @@ import org.apache.wicket.version.undo.Change;
 
 
 /**
- * A panel that participates with a {@link IBreadCrumbModel bread crumb model}.
- * The idea is that you would have a dialog-like component that is much like a
- * wizard, but more decoupled. A typical setup is that you have a panel, where
- * the content is dynamic but hierarchical in nature, and that there are links
- * on the panel that <i>take you deeper into the hierarchy<i>
+ * A panel that participates with a {@link IBreadCrumbModel bread crumb model}. The idea is that
+ * you would have a dialog-like component that is much like a wizard, but more decoupled. A typical
+ * setup is that you have a panel, where the content is dynamic but hierarchical in nature, and that
+ * there are links on the panel that <i>take you deeper into the hierarchy<i>
  * 
  * <p>
  * An example of using {@link BreadCrumbPanel bread crumb panels} and
@@ -46,11 +45,10 @@ import org.apache.wicket.version.undo.Change;
  * });
  * </pre>
  * 
- * where <tt>MyPanel</tt> is a {@link BreadCrumbPanel bread crumb panel} and
- * the link is added to another {@link BreadCrumbPanel bread crumb panel}
- * instance (this). When clicked, MyPanel will replace the panel that the link
- * is placed on, and it will set (and add) <tt>MyPanel</tt> as the active
- * bread crumb in the {@link IBreadCrumbModel bread crumb component model}.
+ * where <tt>MyPanel</tt> is a {@link BreadCrumbPanel bread crumb panel} and the link is added to
+ * another {@link BreadCrumbPanel bread crumb panel} instance (this). When clicked, MyPanel will
+ * replace the panel that the link is placed on, and it will set (and add) <tt>MyPanel</tt> as the
+ * active bread crumb in the {@link IBreadCrumbModel bread crumb component model}.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -106,10 +104,9 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	}
 
 	/**
-	 * Activates the {@link BreadCrumbPanel bread crumb panel} that is the
-	 * result of calling
-	 * {@link IBreadCrumbPanelFactory#create(String, IBreadCrumbModel) the create method}
-	 * of the bread crumb panel factory.
+	 * Activates the {@link BreadCrumbPanel bread crumb panel} that is the result of calling
+	 * {@link IBreadCrumbPanelFactory#create(String, IBreadCrumbModel) the create method} of the
+	 * bread crumb panel factory.
 	 * 
 	 * @param breadCrumbPanelFactory
 	 */
@@ -119,11 +116,10 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	}
 
 	/**
-	 * Activates the provided participant, which typically has the effect of
-	 * replacing this current panel with the one provided - as the participant
-	 * typically would be a {@link BreadCrumbPanel bread crumb panel} - and
-	 * updating the bread crumb model of this panel, pushing the bread crumb for
-	 * the given participant on top.
+	 * Activates the provided participant, which typically has the effect of replacing this current
+	 * panel with the one provided - as the participant typically would be a
+	 * {@link BreadCrumbPanel bread crumb panel} - and updating the bread crumb model of this panel,
+	 * pushing the bread crumb for the given participant on top.
 	 * 
 	 * @param participant
 	 *            The participant to set as the active one
@@ -134,8 +130,8 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 		final IBreadCrumbParticipant active = breadCrumbModel.getActive();
 		if (active == null)
 		{
-			throw new IllegalStateException("The model has no active bread crumb. Before using "
-					+ this + ", you have to have at least one bread crumb in the model");
+			throw new IllegalStateException("The model has no active bread crumb. Before using " +
+					this + ", you have to have at least one bread crumb in the model");
 		}
 
 		// add back button support

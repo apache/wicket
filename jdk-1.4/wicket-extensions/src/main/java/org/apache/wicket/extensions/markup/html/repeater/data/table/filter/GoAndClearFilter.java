@@ -40,8 +40,7 @@ public class GoAndClearFilter extends GoFilter
 	/**
 	 * Constructor
 	 * 
-	 * This constructor will use default models for the 'clear' and 'go' button
-	 * labels
+	 * This constructor will use default models for the 'clear' and 'go' button labels
 	 * 
 	 * @param id
 	 *            component id
@@ -95,14 +94,14 @@ public class GoAndClearFilter extends GoFilter
 	}
 
 	/**
-	 * This method should be implemented by subclasses to provide behavior for
-	 * the clear button.
+	 * This method should be implemented by subclasses to provide behavior for the clear button.
 	 * 
 	 * @param button
 	 *            the 'clear' button
 	 * 
 	 */
-	protected void onClearSubmit(Button button) {
+	protected void onClearSubmit(Button button)
+	{
 		button.getForm().setModelObject(Objects.cloneModel(originalState));
 	}
 

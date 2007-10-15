@@ -59,7 +59,7 @@ public class SelectOptions extends RepeatingView
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param elements 
+	 * @param elements
 	 * @param renderer
 	 */
 	public SelectOptions(String id, Collection elements, IOptionRenderer renderer)
@@ -95,7 +95,8 @@ public class SelectOptions extends RepeatingView
 			{
 				if (!(modelObject instanceof Collection))
 				{
-					throw new WicketRuntimeException("Model object " + modelObject + " not a collection");
+					throw new WicketRuntimeException("Model object " + modelObject +
+							" not a collection");
 				}
 
 				// iterator over model objects for SelectOption components

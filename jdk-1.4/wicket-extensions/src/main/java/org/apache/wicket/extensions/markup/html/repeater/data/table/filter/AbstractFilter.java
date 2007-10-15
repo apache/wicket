@@ -45,10 +45,9 @@ public class AbstractFilter extends Panel
 	}
 
 	/**
-	 * Enables the tracking of focus for the specified form component. This
-	 * allows the filter form to restore focus to the component which caused the
-	 * form submission. Great for when you are inside a filter textbox and use
-	 * the enter key to submit the filter.
+	 * Enables the tracking of focus for the specified form component. This allows the filter form
+	 * to restore focus to the component which caused the form submission. Great for when you are
+	 * inside a filter textbox and use the enter key to submit the filter.
 	 * 
 	 * @param fc
 	 *            form component for which focus tracking will be enabled

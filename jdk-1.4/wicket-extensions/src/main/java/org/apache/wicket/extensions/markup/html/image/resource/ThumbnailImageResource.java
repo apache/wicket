@@ -33,11 +33,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Image resource that dynamically scales the given original resource to a thumbnail.
- * It is scaled either using the given maxSize as width or height, depending on
- * its shape. If both the width and height are less than maxSize, no scaling is
- * performed.
- *
+ * Image resource that dynamically scales the given original resource to a thumbnail. It is scaled
+ * either using the given maxSize as width or height, depending on its shape. If both the width and
+ * height are less than maxSize, no scaling is performed.
+ * 
  * @author Eelco Hillenius
  */
 public class ThumbnailImageResource extends DynamicImageResource
@@ -62,8 +61,11 @@ public class ThumbnailImageResource extends DynamicImageResource
 
 	/**
 	 * Construct.
-	 * @param unscaledImageResource the unscaled, original image resource. Must be not null
-	 * @param maxSize maximum size (width or height) for resize operation
+	 * 
+	 * @param unscaledImageResource
+	 *            the unscaled, original image resource. Must be not null
+	 * @param maxSize
+	 *            maximum size (width or height) for resize operation
 	 */
 	public ThumbnailImageResource(WebResource unscaledImageResource, int maxSize)
 	{
@@ -86,12 +88,13 @@ public class ThumbnailImageResource extends DynamicImageResource
 			final BufferedImage image = getScaledImageInstance();
 			thumbnail = toImageData(image);
 			setLastModifiedTime(Time.now());
-		} 
+		}
 		return thumbnail;
 	}
 
 	/**
 	 * get resized image instance.
+	 * 
 	 * @return BufferedImage
 	 */
 	protected final BufferedImage getScaledImageInstance()
@@ -120,14 +123,21 @@ public class ThumbnailImageResource extends DynamicImageResource
 		{
 			if (is != null)
 			{
-				try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+				try
+				{
+					is.close();
+				}
+				catch (IOException e)
+				{
+					log.error(e.getMessage(), e);
+				}
 			}
 		}
 
 		int originalWidth = originalImage.getWidth();
 		int originalHeight = originalImage.getHeight();
 
-		if (originalWidth > maxSize  || originalHeight > maxSize)
+		if (originalWidth > maxSize || originalHeight > maxSize)
 		{
 			final int newWidth;
 			final int newHeight;
@@ -158,14 +168,16 @@ public class ThumbnailImageResource extends DynamicImageResource
 
 	/**
 	 * Sets hint(s) for the scale operation.
-	 * @param scaleHints hint(s) for the scale operation
+	 * 
+	 * @param scaleHints
+	 *            hint(s) for the scale operation
 	 */
 	public synchronized final void setScaleHints(int scaleHints)
 	{
 		this.scaleHints = scaleHints;
 		invalidate();
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.markup.html.DynamicWebResource#invalidate()
 	 */

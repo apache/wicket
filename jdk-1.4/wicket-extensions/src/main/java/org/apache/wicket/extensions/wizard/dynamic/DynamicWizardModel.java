@@ -23,10 +23,9 @@ import org.apache.wicket.extensions.wizard.IWizardStep;
 import org.apache.wicket.extensions.wizard.WizardModel;
 
 /**
- * Wizard model that is specialized on dynamic wizards. Unlike the default,
- * static {@link WizardModel wizard model}, this model isn't very intelligent,
- * but rather delegates much of the work and knowledge to the
- * {@link IDynamicWizardStep dynamic wizard steps} it uses.
+ * Wizard model that is specialized on dynamic wizards. Unlike the default, static
+ * {@link WizardModel wizard model}, this model isn't very intelligent, but rather delegates much
+ * of the work and knowledge to the {@link IDynamicWizardStep dynamic wizard steps} it uses.
  * 
  * @author eelcohillenius
  */
@@ -66,9 +65,8 @@ public class DynamicWizardModel extends AbstractWizardModel
 	}
 
 	/**
-	 * @return the step this wizard was constructed with (starts the wizard).
-	 *         Will be used for resetting the wizard, unless you override
-	 *         {@link #reset()}.
+	 * @return the step this wizard was constructed with (starts the wizard). Will be used for
+	 *         resetting the wizard, unless you override {@link #reset()}.
 	 */
 	public final IDynamicWizardStep getStartStep()
 	{

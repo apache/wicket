@@ -25,8 +25,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 
 
 /**
- * Ajaxified version of the tabbed panel. Uses AjaxFallbackLink instead of
- * regular wicket links so it can update itself inplace.
+ * Ajaxified version of the tabbed panel. Uses AjaxFallbackLink instead of regular wicket links so
+ * it can update itself inplace.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -45,7 +45,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	{
 		super(id, tabs);
 		setOutputMarkupId(true);
-		 
+
 		setVersioned(false);
 	}
 
@@ -70,14 +70,13 @@ public class AjaxTabbedPanel extends TabbedPanel
 	}
 
 	/**
-	 * A template method that lets users add additional behavior when ajax
-	 * update occurs. This method is called after the current tab has been set
-	 * so access to it can be obtained via {@link #getSelectedTab()}.
+	 * A template method that lets users add additional behavior when ajax update occurs. This
+	 * method is called after the current tab has been set so access to it can be obtained via
+	 * {@link #getSelectedTab()}.
 	 * <p>
-	 * <strong>Note</strong> Since an {@link AjaxFallbackLink} is used to back
-	 * the ajax update the <code>target</code> argument can be null when the client
-	 * browser does not support ajax and the fallback mode is used. See
-	 * {@link AjaxFallbackLink} for details.
+	 * <strong>Note</strong> Since an {@link AjaxFallbackLink} is used to back the ajax update the
+	 * <code>target</code> argument can be null when the client browser does not support ajax and
+	 * the fallback mode is used. See {@link AjaxFallbackLink} for details.
 	 * 
 	 * @param target
 	 *            ajax target used to update this component

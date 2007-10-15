@@ -126,23 +126,25 @@ public class NavigatorLabel extends Label
 	private NavigatorLabel(final String id, final PageableComponent table)
 	{
 		super(id);
-		setModel(new StringResourceModel("NavigatorLabel", this, new Model(new LabelModelObject(table)), "Showing ${from} to ${to} of ${of}"));
+		setModel(new StringResourceModel("NavigatorLabel", this, new Model(new LabelModelObject(
+				table)), "Showing ${from} to ${to} of ${of}"));
 	}
 
 	private class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		private PageableComponent table;
-		
+
 		/**
 		 * Construct.
+		 * 
 		 * @param table
 		 */
 		public LabelModelObject(PageableComponent table)
 		{
 			this.table = table;
 		}
-		
+
 		/**
 		 * @return "z" in "Showing x to y of z"
 		 */
@@ -150,7 +152,7 @@ public class NavigatorLabel extends Label
 		{
 			return table.getRowCount();
 		}
-		
+
 		/**
 		 * @return "x" in "Showing x to y of z"
 		 */
@@ -162,7 +164,7 @@ public class NavigatorLabel extends Label
 			}
 			return (table.getCurrentPage() * table.getRowsPerPage()) + 1;
 		}
-		
+
 		/**
 		 * @return "y" in "Showing x to y of z"
 		 */
@@ -172,8 +174,8 @@ public class NavigatorLabel extends Label
 			{
 				return 0;
 			}
-			return Math.min(getOf(), getFrom() + table.getRowsPerPage()-1);
+			return Math.min(getOf(), getFrom() + table.getRowsPerPage() - 1);
 		}
-		
+
 	}
 }

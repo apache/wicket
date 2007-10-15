@@ -22,42 +22,42 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 
 /**
- * A variant of the {@link AjaxButton} that displays a busy indicator while the
- * ajax request is in progress.
- *
+ * A variant of the {@link AjaxButton} that displays a busy indicator while the ajax request is in
+ * progress.
+ * 
  * @author evan
- *
+ * 
  */
-public abstract class IndicatingAjaxButton
-       extends AjaxButton implements IAjaxIndicatorAware {
+public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIndicatorAware
+{
 
-       /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
 
-       /**
-        *
-        * @param id
-        * @param form
-        */
-       public IndicatingAjaxButton(String id, Form form)
-       {
-               super(id, form);
-               add(indicatorAppender);
-       }
+	/**
+	 * 
+	 * @param id
+	 * @param form
+	 */
+	public IndicatingAjaxButton(String id, Form form)
+	{
+		super(id, form);
+		add(indicatorAppender);
+	}
 
-       protected abstract void onSubmit(AjaxRequestTarget target, Form form);
+	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
 
-       /**
-        * @see IAjaxIndicatorAware#getAjaxIndicatorMarkupId()
-        * @return the markup id of the ajax indicator
-        *
-        */
-       public String getAjaxIndicatorMarkupId()
-       {
-               return indicatorAppender.getMarkupId();
-       }
+	/**
+	 * @see IAjaxIndicatorAware#getAjaxIndicatorMarkupId()
+	 * @return the markup id of the ajax indicator
+	 * 
+	 */
+	public String getAjaxIndicatorMarkupId()
+	{
+		return indicatorAppender.getMarkupId();
+	}
 
 }

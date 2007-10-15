@@ -30,9 +30,8 @@ import org.apache.wicket.model.LoadableDetachableModel;
 
 
 /**
- * A component that renders bread crumbs. By default, it renders a horizontal
- * list from left to right (oldest left) with bread crumb links and a ' / ' as a
- * seperator, e.g.
+ * A component that renders bread crumbs. By default, it renders a horizontal list from left to
+ * right (oldest left) with bread crumb links and a ' / ' as a seperator, e.g.
  * 
  * <pre>
  * first / second / third
@@ -42,8 +41,8 @@ import org.apache.wicket.model.LoadableDetachableModel;
  * Delegates how the bread crumb model works to {@link DefaultBreadCrumbsModel}.
  * </p>
  * <p>
- * Override and provide your own markup file if you want to work with other
- * elements, e.g. uls instead of spans.
+ * Override and provide your own markup file if you want to work with other elements, e.g. uls
+ * instead of spans.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -246,12 +245,12 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	}
 
 	/**
-	 * Gets whether the current bread crumb should be displayed as a link (e.g.
-	 * for refreshing) or as a disabled link (effictively just a label). The
-	 * latter is the default. Override if you want different behavior.
+	 * Gets whether the current bread crumb should be displayed as a link (e.g. for refreshing) or
+	 * as a disabled link (effictively just a label). The latter is the default. Override if you
+	 * want different behavior.
 	 * 
-	 * @return Whether the current bread crumb should be displayed as a link;
-	 *         this method returns false
+	 * @return Whether the current bread crumb should be displayed as a link; this method returns
+	 *         false
 	 */
 	protected boolean getEnableLinkToCurrent()
 	{
@@ -259,9 +258,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	}
 
 	/**
-	 * Creates a new bread crumb component. That component will be rendered as
-	 * part of the bread crumbs list (which is a &lt;ul&gt; &lt;li&gt;
-	 * structure).
+	 * Creates a new bread crumb component. That component will be rendered as part of the bread
+	 * crumbs list (which is a &lt;ul&gt; &lt;li&gt; structure).
 	 * 
 	 * @param id
 	 *            The component id

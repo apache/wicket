@@ -23,8 +23,8 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 
 
 /**
- * Toolbars that displays column headers. If the column is sortable a sortable
- * header will be displayed.
+ * Toolbars that displays column headers. If the column is sortable a sortable header will be
+ * displayed.
  * 
  * @see DefaultDataTable
  * 
@@ -34,15 +34,14 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 public class HeadersToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor
 	 * 
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 * @param stateLocator
-	 *            locator for the ISortState implementation used by sortable
-	 *            headers
+	 *            locator for the ISortState implementation used by sortable headers
 	 */
 	public HeadersToolbar(final DataTable table, final ISortStateLocator stateLocator)
 	{
@@ -69,20 +68,20 @@ public class HeadersToolbar extends AbstractToolbar
 			{
 				header = new WebMarkupContainer("header");
 			}
-			
+
 			if (column instanceof IStyledColumn)
 			{
-				header.add(new DataTable.CssAttributeBehavior() 
+				header.add(new DataTable.CssAttributeBehavior()
 				{
 					private static final long serialVersionUID = 1L;
-	
+
 					protected String getCssClass()
 					{
 						return ((IStyledColumn)column).getCssClass();
 					}
 				});
 			}
-			
+
 			item.add(header);
 			item.setRenderBodyOnly(true);
 			header.add(column.getHeader("label"));
@@ -91,9 +90,8 @@ public class HeadersToolbar extends AbstractToolbar
 	}
 
 	/**
-	 * Factory method for sortable header components. A sortable header
-	 * component must have id of <code>headerId</code> and conform to markup
-	 * specified in <code>HeadersToolbar.html</code>
+	 * Factory method for sortable header components. A sortable header component must have id of
+	 * <code>headerId</code> and conform to markup specified in <code>HeadersToolbar.html</code>
 	 * 
 	 * @param headerId
 	 *            header component id

@@ -66,8 +66,8 @@ public class SortParam implements IClusterable
 		if (rhs instanceof SortParam)
 		{
 			SortParam param = (SortParam)rhs;
-			return getProperty().equals(param.getProperty())
-					&& isAscending() == param.isAscending();
+			return getProperty().equals(param.getProperty()) &&
+					isAscending() == param.isAscending();
 		}
 		return false;
 	}

@@ -30,8 +30,8 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Component to keep track of selections on the html side. Also used for
- * encoding and decoding those selections between html and java.
+ * Component to keep track of selections on the html side. Also used for encoding and decoding those
+ * selections between html and java.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */

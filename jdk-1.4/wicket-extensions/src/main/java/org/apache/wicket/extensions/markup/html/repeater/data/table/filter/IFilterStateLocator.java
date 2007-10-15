@@ -19,11 +19,10 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import org.apache.wicket.IClusterable;
 
 /**
- * Locator that locates the object that represents the state of the filter.
- * Usually it is convinient to let the data provider object implement this
- * interface so that the data provider can be itself used to locate the filter
- * state object. This also makes it easy for the data provider to locate the
- * filter state which it will most likely need to filter the data.
+ * Locator that locates the object that represents the state of the filter. Usually it is convinient
+ * to let the data provider object implement this interface so that the data provider can be itself
+ * used to locate the filter state object. This also makes it easy for the data provider to locate
+ * the filter state which it will most likely need to filter the data.
  * <p>
  * Example
  * 

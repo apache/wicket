@@ -25,11 +25,10 @@ import org.apache.wicket.util.collections.ArrayListStack;
 
 
 /**
- * Default implementation of {@link IWizardModel}, which models a semi-static
- * wizard. This means that all steps should be known upfront, and added to the
- * model on construction. Steps can be optional by using {@link ICondition}.
- * The wizard is initialized with a wizard model through calling method
- * {@link Wizard#init(IWizardModel)}.
+ * Default implementation of {@link IWizardModel}, which models a semi-static wizard. This means
+ * that all steps should be known upfront, and added to the model on construction. Steps can be
+ * optional by using {@link ICondition}. The wizard is initialized with a wizard model through
+ * calling method {@link Wizard#init(IWizardModel)}.
  * <p>
  * Steps can be added to this model directly using either the
  * {@link #add(IWizardStep) normal add method} or
@@ -37,8 +36,8 @@ import org.apache.wicket.util.collections.ArrayListStack;
  * </p>
  * 
  * <p>
- * <a href="https://wizard-framework.dev.java.net/">Swing Wizard Framework</a>
- * served as a valuable source of inspiration.
+ * <a href="https://wizard-framework.dev.java.net/">Swing Wizard Framework</a> served as a valuable
+ * source of inspiration.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -51,11 +50,10 @@ public class WizardModel extends AbstractWizardModel
 	public interface ICondition extends IClusterable
 	{
 		/**
-		 * Evaluates the current state and returns whether the step that is
-		 * coupled to this condition is available.
+		 * Evaluates the current state and returns whether the step that is coupled to this
+		 * condition is available.
 		 * 
-		 * @return True if the step this condition is coupled to is available,
-		 *         false otherwise
+		 * @return True if the step this condition is coupled to is available, false otherwise
 		 */
 		public boolean evaluate();
 	}
@@ -100,8 +98,8 @@ public class WizardModel extends AbstractWizardModel
 	}
 
 	/**
-	 * Adds the next step to the wizard. If the {@link WizardStep} implements
-	 * {@link ICondition}, then this method is equivalent to calling
+	 * Adds the next step to the wizard. If the {@link WizardStep} implements {@link ICondition},
+	 * then this method is equivalent to calling
 	 * {@link #add(IWizardStep, ICondition) add(step, (ICondition)step)}.
 	 * 
 	 * @param step
@@ -116,14 +114,13 @@ public class WizardModel extends AbstractWizardModel
 	}
 
 	/**
-	 * Adds an optional step to the model. The step will only be displayed if
-	 * the specified condition is met.
+	 * Adds an optional step to the model. The step will only be displayed if the specified
+	 * condition is met.
 	 * 
 	 * @param step
 	 *            The step to add
 	 * @param condition
-	 *            the {@link ICondition} under which it should be included in
-	 *            the wizard.
+	 *            the {@link ICondition} under which it should be included in the wizard.
 	 */
 	public void add(IWizardStep step, ICondition condition)
 	{
@@ -144,8 +141,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * Checks if the last button should be enabled.
 	 * 
-	 * @return <tt>true</tt> if the last button should be enabled,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the last button should be enabled, <tt>false</tt> otherwise.
 	 * @see IWizardModel#isLastVisible
 	 */
 	public boolean isLastAvailable()
@@ -164,8 +160,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * Checks if the next button should be enabled.
 	 * 
-	 * @return <tt>true</tt> if the next button should be enabled,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the next button should be enabled, <tt>false</tt> otherwise.
 	 */
 	public boolean isNextAvailable()
 	{
@@ -175,8 +170,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * Checks if the previous button should be enabled.
 	 * 
-	 * @return <tt>true</tt> if the previous button should be enabled,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the previous button should be enabled, <tt>false</tt> otherwise.
 	 */
 	public boolean isPreviousAvailable()
 	{
@@ -250,11 +244,11 @@ public class WizardModel extends AbstractWizardModel
 
 	/**
 	 * Returns true if all the steps in the wizard return <tt>true</tt> from
-	 * {@link IWizardStep#isComplete}. This is primarily used to determine if
-	 * the last button can be enabled.
+	 * {@link IWizardStep#isComplete}. This is primarily used to determine if the last button can
+	 * be enabled.
 	 * 
-	 * @return <tt>true</tt> if all the steps in the wizard are complete,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if all the steps in the wizard are complete, <tt>false</tt>
+	 *         otherwise.
 	 */
 	protected final boolean allStepsComplete()
 	{

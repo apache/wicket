@@ -25,8 +25,7 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Convenience class for creating non-interactive lightweight (IRenderable
- * based) columns.
+ * Convenience class for creating non-interactive lightweight (IRenderable based) columns.
  * 
  * @author Matej Knopp
  */
@@ -45,8 +44,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	 * Creates the column
 	 * 
 	 * @param location
-	 *            Specifies how the column should be aligned and what his size
-	 *            should be
+	 *            Specifies how the column should be aligned and what his size should be
 	 * 
 	 * @param header
 	 *            Header caption
@@ -66,8 +64,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	public abstract String getNodeValue(TreeNode node);
 
 	/**
-	 * Returns whether the content should also be visible as tooltip of the
-	 * cell.
+	 * Returns whether the content should also be visible as tooltip of the cell.
 	 * 
 	 * @return whether the content should also be visible as tooltip
 	 */
@@ -126,8 +123,8 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	}
 
 	/**
-	 * Sets whether the content should also be visible as tooltip (html title
-	 * attribute) of the cell.
+	 * Sets whether the content should also be visible as tooltip (html title attribute) of the
+	 * cell.
 	 * 
 	 * @param contentAsTooltip
 	 *            whether the content should also be visible as tooltip

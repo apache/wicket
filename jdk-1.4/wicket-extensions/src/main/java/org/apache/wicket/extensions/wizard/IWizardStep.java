@@ -20,17 +20,16 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IClusterable;
 
 /**
- * Models one step in a wizard, and is the equivalent of one panel in a wizard
- * from an end-user's perspective.
+ * Models one step in a wizard, and is the equivalent of one panel in a wizard from an end-user's
+ * perspective.
  * <p>
- * Typically, you would extend {@link WizardStep panel based wizard steps} and
- * provide a custom panel for the step instead of directly implementing this
- * interface.
+ * Typically, you would extend {@link WizardStep panel based wizard steps} and provide a custom
+ * panel for the step instead of directly implementing this interface.
  * </p>
  * 
  * <p>
- * <a href="https://wizard-framework.dev.java.net/">Swing Wizard Framework</a>
- * served as a valuable source of inspiration.
+ * <a href="https://wizard-framework.dev.java.net/">Swing Wizard Framework</a> served as a valuable
+ * source of inspiration.
  * </p>
  * 
  * @author Eelco Hillenius
@@ -38,17 +37,16 @@ import org.apache.wicket.IClusterable;
 public interface IWizardStep extends IClusterable
 {
 	/**
-	 * This method is called whenever the user presses next while this step is
-	 * active.
+	 * This method is called whenever the user presses next while this step is active.
 	 * <p>
-	 * This method will only be called if {@link IWizardModel#isNextAvailable}
-	 * and {@link #isComplete} return true.
+	 * This method will only be called if {@link IWizardModel#isNextAvailable} and
+	 * {@link #isComplete} return true.
 	 */
 	void applyState();
 
 	/**
-	 * Gets the header component for this step. This component is displayed in a
-	 * special section of the wizard.
+	 * Gets the header component for this step. This component is displayed in a special section of
+	 * the wizard.
 	 * 
 	 * @param id
 	 *            The id that the component should be created with
@@ -61,10 +59,9 @@ public interface IWizardStep extends IClusterable
 	Component getHeader(String id, Component parent, IWizard wizard);
 
 	/**
-	 * Returns the current view this step is displaying. This component will be
-	 * displayed in the main section of the wizard with this step is active.
-	 * This may changed at any time by as long as an appropriate property change
-	 * event is fired.
+	 * Returns the current view this step is displaying. This component will be displayed in the
+	 * main section of the wizard with this step is active. This may changed at any time by as long
+	 * as an appropriate property change event is fired.
 	 * 
 	 * @param id
 	 *            The id that the component should be created with
@@ -85,11 +82,10 @@ public interface IWizardStep extends IClusterable
 	void init(IWizardModel wizardModel);
 
 	/**
-	 * Checks if this step is compete. This method should return true if the
-	 * wizard can proceed to the next step.
+	 * Checks if this step is compete. This method should return true if the wizard can proceed to
+	 * the next step.
 	 * 
-	 * @return <tt>true</tt> if the wizard can proceed from this step,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the wizard can proceed from this step, <tt>false</tt> otherwise.
 	 */
 	boolean isComplete();
 }

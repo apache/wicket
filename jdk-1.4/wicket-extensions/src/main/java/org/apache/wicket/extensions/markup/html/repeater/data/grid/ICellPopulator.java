@@ -22,8 +22,8 @@ import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 
 /**
- * Represents an object that is capable of populating an {@link Item} container
- * representing a cell in a {@link DataGridView} with components.
+ * Represents an object that is capable of populating an {@link Item} container representing a cell
+ * in a {@link DataGridView} with components.
  * <p>
  * Example
  * <p>
@@ -31,16 +31,16 @@ import org.apache.wicket.model.IModel;
  * <pre>
  * class NamePopulator implements ICellPopulator
  * {
- * void populateItem(final Item cellItem, final String componentId, final IModel rowModel) {
+ * 	void populateItem(final Item cellItem, final String componentId, final IModel rowModel) {
  *       User user=(User)rowModel.getObject(cellItem);
  *       String name=user.getFirstName()+&quot; &quot;+user.getLastName();
  *       cellItem.add(new Label(componentId, name);
  *     }}
  * </pre>
  * 
- * In this example the IDataProvider assigned to the DataGridView retrieves User
- * objects from the database. The cell populator adds a label to the cell that
- * will display the full name of the user.
+ * In this example the IDataProvider assigned to the DataGridView retrieves User objects from the
+ * database. The cell populator adds a label to the cell that will display the full name of the
+ * user.
  * 
  * @see DataGridView
  * @see Item
@@ -53,18 +53,17 @@ public interface ICellPopulator extends IClusterable, IDetachable
 	/**
 	 * Method used to populate a cell in the {@link DataGridView}
 	 * 
-	 * <b>Implementation MUST add a component to the cellItem using the
-	 * component id provided by componentId argument, otherwise a
-	 * WicketRuntimeException will be thrown</b>
+	 * <b>Implementation MUST add a component to the cellItem using the component id provided by
+	 * componentId argument, otherwise a WicketRuntimeException will be thrown</b>
 	 * 
 	 * @param cellItem
 	 *            the item representing the current table cell being rendered
 	 * @param componentId
-	 *            the id of the component used to render the cell (only one
-	 *            component should be added to the cell)
+	 *            the id of the component used to render the cell (only one component should be
+	 *            added to the cell)
 	 * @param rowModel
-	 *            the model of the row item being rendered. this model usually
-	 *            contains the model provided by the data provider.
+	 *            the model of the row item being rendered. this model usually contains the model
+	 *            provided by the data provider.
 	 * 
 	 * @see Item
 	 */

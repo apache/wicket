@@ -23,8 +23,7 @@ import org.apache.wicket.MarkupContainer;
 
 
 /**
- * Convenience class for building tree columns, i.e. columns that contain the
- * actual tree.
+ * Convenience class for building tree columns, i.e. columns that contain the actual tree.
  * 
  * @author Matej Knopp
  */
@@ -36,12 +35,11 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Creates new column. Checks if the column is not aligned in middle. In
-	 * case it is, throws an exception.
+	 * Creates new column. Checks if the column is not aligned in middle. In case it is, throws an
+	 * exception.
 	 * 
 	 * @param location
-	 *            Specifies how the column should be aligned and what his size
-	 *            should be
+	 *            Specifies how the column should be aligned and what his size should be
 	 * 
 	 * @param header
 	 *            Header caption

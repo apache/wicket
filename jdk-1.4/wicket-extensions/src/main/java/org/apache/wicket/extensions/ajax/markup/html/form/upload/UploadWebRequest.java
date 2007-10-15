@@ -28,11 +28,11 @@ import org.apache.wicket.util.upload.FileUploadException;
 
 
 /**
- * A request object that stores information about the current upload in session
- * so it is accessible to the {@link UploadProgressBar}.
+ * A request object that stores information about the current upload in session so it is accessible
+ * to the {@link UploadProgressBar}.
  * <p>
- * This request object is necessary for the UploadProgressBar to function
- * properly. It is installed like so:
+ * This request object is necessary for the UploadProgressBar to function properly. It is installed
+ * like so:
  * 
  * <code>
  * class MyApplication extends WebApplication {

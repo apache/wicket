@@ -32,8 +32,7 @@ import org.apache.wicket.model.IModel;
 public interface ITab extends IClusterable
 {
 	/**
-	 * @return IModel used to represent the title of the tab. Must contain a
-	 *         string.
+	 * @return IModel used to represent the title of the tab. Must contain a string.
 	 */
 	IModel getTitle();
 

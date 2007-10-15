@@ -37,8 +37,7 @@ public interface IOptionRenderer extends IClusterable
 	/**
 	 * Gets the model that will be used to represent the value object.
 	 * 
-	 * This is a good place to wrap the value object with a detachable model one
-	 * is desired
+	 * This is a good place to wrap the value object with a detachable model one is desired
 	 * 
 	 * @param value
 	 * @return model that will contain the value object

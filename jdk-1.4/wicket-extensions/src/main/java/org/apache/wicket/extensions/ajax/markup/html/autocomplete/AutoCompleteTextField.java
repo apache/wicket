@@ -25,12 +25,12 @@ import org.apache.wicket.model.IModel;
 
 /**
  * An implementation of a textfield with the autoassist ajax behavior
- *
+ * 
  * @see AutoCompleteBehavior
  * @see IAutoCompleteRenderer
- *
+ * 
  * @since 1.2
- *
+ * 
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AutoCompleteTextField extends TextField
@@ -158,12 +158,12 @@ public abstract class AutoCompleteTextField extends TextField
 	}
 
 	/**
-	 * Callback method that should return an iterator over all possible assist
-	 * choice objects. These objects will be passed to the renderer to generate
-	 * output. Usually it is enough to return an iterator over strings.
-	 *
+	 * Callback method that should return an iterator over all possible assist choice objects. These
+	 * objects will be passed to the renderer to generate output. Usually it is enough to return an
+	 * iterator over strings.
+	 * 
 	 * @see AutoCompleteBehavior#getChoices(String)
-	 *
+	 * 
 	 * @param input
 	 *            current input
 	 * @return iterator ver all possible choice objects

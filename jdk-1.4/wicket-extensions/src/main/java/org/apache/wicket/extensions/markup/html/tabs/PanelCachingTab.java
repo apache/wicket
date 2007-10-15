@@ -20,8 +20,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 /**
- * A simple decorator that will cache the panel returned from the first call to
- * getPanel()
+ * A simple decorator that will cache the panel returned from the first call to getPanel()
  * 
  * @see org.apache.wicket.extensions.markup.html.tabs.ITab
  * @see org.apache.wicket.extensions.markup.html.tabs.TabbedPanel

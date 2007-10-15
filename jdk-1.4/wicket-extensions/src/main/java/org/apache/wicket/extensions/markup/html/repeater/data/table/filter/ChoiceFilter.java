@@ -132,8 +132,7 @@ public class ChoiceFilter extends AbstractFilter
 	}
 
 	/**
-	 * @return the DropDownChoice form component created to represent this
-	 *         filter
+	 * @return the DropDownChoice form component created to represent this filter
 	 */
 	public DropDownChoice getChoice()
 	{

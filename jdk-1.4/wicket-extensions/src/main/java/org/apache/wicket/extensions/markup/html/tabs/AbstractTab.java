@@ -39,8 +39,7 @@ public abstract class AbstractTab implements ITab
 	 * Constructor
 	 * 
 	 * @param title
-	 *            IModel used to represent the title of the tab. Must contain a
-	 *            string
+	 *            IModel used to represent the title of the tab. Must contain a string
 	 */
 	public AbstractTab(IModel title)
 	{

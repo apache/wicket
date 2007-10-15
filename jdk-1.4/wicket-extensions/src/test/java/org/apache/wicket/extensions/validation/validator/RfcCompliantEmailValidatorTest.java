@@ -18,8 +18,6 @@ package org.apache.wicket.extensions.validation.validator;
 
 import java.util.regex.Matcher;
 
-import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
-
 import junit.framework.TestCase;
 
 /**

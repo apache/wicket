@@ -20,8 +20,8 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitButton;
 import org.apache.wicket.markup.html.form.Form;
 
 /**
- * A variant of the {@link AjaxSubmitButton} that displays a busy indicator
- * while the ajax request is in progress.
+ * A variant of the {@link AjaxSubmitButton} that displays a busy indicator while the ajax request
+ * is in progress.
  * 
  * @author evan
  * @deprecated Use {@link IndicatingAjaxButton} instead.

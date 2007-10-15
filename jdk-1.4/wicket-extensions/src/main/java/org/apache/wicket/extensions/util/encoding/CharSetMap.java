@@ -27,11 +27,10 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * This class maintains a set of mappers defining mappings between locales and
- * the corresponding charsets. The mappings are defined as properties between
- * locale and charset names. The definitions can be listed in property files
- * located in user's home directory, Java home directory or the current class
- * jar. In addition, this class maintains static default mappings and
+ * This class maintains a set of mappers defining mappings between locales and the corresponding
+ * charsets. The mappings are defined as properties between locale and charset names. The
+ * definitions can be listed in property files located in user's home directory, Java home directory
+ * or the current class jar. In addition, this class maintains static default mappings and
  * constructors support application specific mappings.
  * 
  * This source has originally been taken from the jakarta Turbine project.
@@ -206,8 +205,8 @@ public final class CharSetMap
 		try
 		{
 			// Check whether the system directory contains mappings.
-			path = System.getProperty("java.home") + File.separator + "lib" + File.separator
-					+ CHARSET_RESOURCE;
+			path = System.getProperty("java.home") + File.separator + "lib" + File.separator +
+					CHARSET_RESOURCE;
 
 			mappers[MAP_SYS] = loadPath(path);
 		}
@@ -298,9 +297,9 @@ public final class CharSetMap
 	}
 
 	/**
-	 * Gets the charset for a locale. First a locale specific charset is
-	 * searched for, then a country specific one and lastly a language specific
-	 * one. If none is found, the default charset is returned.
+	 * Gets the charset for a locale. First a locale specific charset is searched for, then a
+	 * country specific one and lastly a language specific one. If none is found, the default
+	 * charset is returned.
 	 * 
 	 * @param locale
 	 *            the locale.
@@ -341,11 +340,10 @@ public final class CharSetMap
 	}
 
 	/**
-	 * Gets the charset for a locale with a variant. The search is performed in
-	 * the following order: "lang"_"country"_"variant"="charset",
-	 * _"counry"_"variant"="charset", "lang"__"variant"="charset",
-	 * __"variant"="charset", "lang"_"country"="charset", _"country"="charset",
-	 * "lang"="charset". If nothing of the above is found, the default charset
+	 * Gets the charset for a locale with a variant. The search is performed in the following order:
+	 * "lang"_"country"_"variant"="charset", _"counry"_"variant"="charset",
+	 * "lang"__"variant"="charset", __"variant"="charset", "lang"_"country"="charset",
+	 * _"country"="charset", "lang"="charset". If nothing of the above is found, the default charset
 	 * is returned.
 	 * 
 	 * @param locale

@@ -26,8 +26,7 @@ import org.apache.wicket.util.lang.PropertyResolver;
 
 
 /**
- * TreeColumn class that uses a property expression to get the value from the
- * node.
+ * TreeColumn class that uses a property expression to get the value from the node.
  * 
  * @author Matej Knopp
  */
@@ -45,8 +44,7 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	 * Creates the columns.
 	 * 
 	 * @param location
-	 *            Specifies how the column should be aligned and what his size
-	 *            should be
+	 *            Specifies how the column should be aligned and what his size should be
 	 * 
 	 * @param header
 	 *            Header caption
@@ -102,9 +100,8 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	}
 
 	/**
-	 * By default the property is converted to string using
-	 * <code>toString</code> method. If you want to alter this behavior, you
-	 * can specify a custom converter.
+	 * By default the property is converted to string using <code>toString</code> method. If you
+	 * want to alter this behavior, you can specify a custom converter.
 	 * 
 	 * @param converter
 	 *            Any converter
@@ -115,8 +112,8 @@ public class PropertyTreeColumn extends AbstractTreeColumn
 	}
 
 	/**
-	 * Sets the locale to be used as parameter for custom converter (if one is
-	 * specified). If no locale is set, session locale is used.
+	 * Sets the locale to be used as parameter for custom converter (if one is specified). If no
+	 * locale is set, session locale is used.
 	 * 
 	 * @param locale
 	 *            The locale

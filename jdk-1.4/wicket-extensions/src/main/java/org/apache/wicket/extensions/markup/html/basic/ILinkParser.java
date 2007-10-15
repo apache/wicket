@@ -17,8 +17,8 @@
 package org.apache.wicket.extensions.markup.html.basic;
 
 /**
- * <code>ILinkParser</code> parses an input text and performs modififactions
- * according to its render strategies.
+ * <code>ILinkParser</code> parses an input text and performs modififactions according to its
+ * render strategies.
  * 
  * @author Gerolf Seitz
  */

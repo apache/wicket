@@ -22,10 +22,9 @@ import java.util.List;
 
 /**
  * Abstract wizard model that provides an implementation for handling
- * {@link IWizardModelListener wizard model listeners} and provides base
- * implementations of many methods. If you want to provide a custom
- * implementation of {@link IWizardModel}, it is recommended you start by
- * overriding this class.
+ * {@link IWizardModelListener wizard model listeners} and provides base implementations of many
+ * methods. If you want to provide a custom implementation of {@link IWizardModel}, it is
+ * recommended you start by overriding this class.
  * 
  * @author eelcohillenius
  */
@@ -65,10 +64,8 @@ public abstract class AbstractWizardModel implements IWizardModel
 	}
 
 	/**
-	 * This implementation just fires
-	 * {@link IWizardModelListener#onCancel() a cancel event}. Though this
-	 * isn't a very strong contract, it gives all the power to the user of this
-	 * model.
+	 * This implementation just fires {@link IWizardModelListener#onCancel() a cancel event}.
+	 * Though this isn't a very strong contract, it gives all the power to the user of this model.
 	 * 
 	 * @see IWizardModel#cancel()
 	 */
@@ -78,10 +75,8 @@ public abstract class AbstractWizardModel implements IWizardModel
 	}
 
 	/**
-	 * This implementation just fires
-	 * {@link IWizardModelListener#onFinish() a finish event}. Though this
-	 * isn't a very strong contract, it gives all the power to the user of this
-	 * model.
+	 * This implementation just fires {@link IWizardModelListener#onFinish() a finish event}.
+	 * Though this isn't a very strong contract, it gives all the power to the user of this model.
 	 * 
 	 * @see IWizardModel#finish()
 	 */
@@ -101,13 +96,11 @@ public abstract class AbstractWizardModel implements IWizardModel
 	}
 
 	/**
-	 * Checks if the last button should be displayed. This method should only
-	 * return true if {@link IWizardModel#isLastAvailable} can return true at
-	 * any point. Returning false will prevent the last button from appearing on
-	 * the wizard at all.
+	 * Checks if the last button should be displayed. This method should only return true if
+	 * {@link IWizardModel#isLastAvailable} can return true at any point. Returning false will
+	 * prevent the last button from appearing on the wizard at all.
 	 * 
-	 * @return <tt>true</tt> if the previou last should be displayed,
-	 *         <tt>false</tt> otherwise.
+	 * @return <tt>true</tt> if the previou last should be displayed, <tt>false</tt> otherwise.
 	 */
 	public boolean isLastVisible()
 	{
@@ -140,8 +133,7 @@ public abstract class AbstractWizardModel implements IWizardModel
 	 * Configures if the last button should be displayed.
 	 * 
 	 * @param lastVisible
-	 *            <tt>true</tt> to display the last button, <tt>false</tt>
-	 *            otherwise.
+	 *            <tt>true</tt> to display the last button, <tt>false</tt> otherwise.
 	 * @see #isLastVisible
 	 */
 	public void setLastVisible(boolean lastVisible)

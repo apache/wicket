@@ -37,9 +37,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * TreeTable is a component that represents a grid with a tree. It's divided
- * into columns. One of the columns has to be column derived from
- * {@link AbstractTreeColumn}.
+ * TreeTable is a component that represents a grid with a tree. It's divided into columns. One of
+ * the columns has to be column derived from {@link AbstractTreeColumn}.
  * 
  * @author Matej Knopp
  */
@@ -61,8 +60,7 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	/**
-	 * Represents a content of a cell in TreeColumn (column containing the
-	 * actual tree).
+	 * Represents a content of a cell in TreeColumn (column containing the actual tree).
 	 * 
 	 * @author Matej Knopp
 	 */
@@ -116,8 +114,8 @@ public class TreeTable extends DefaultAbstractTree
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Creates a tree cell for given node. This method is supposed to be used by
-	 * TreeColumns (columns that draw the actual tree).
+	 * Creates a tree cell for given node. This method is supposed to be used by TreeColumns
+	 * (columns that draw the actual tree).
 	 * 
 	 * @param parent
 	 *            Parent component
@@ -215,8 +213,8 @@ public class TreeTable extends DefaultAbstractTree
 			for (int i = 0; i < columns.length; i++)
 			{
 				IColumn column = columns[i];
-				if (column.getLocation().getAlignment() == Alignment.LEFT
-						|| column.getLocation().getAlignment() == Alignment.RIGHT)
+				if (column.getLocation().getAlignment() == Alignment.LEFT ||
+						column.getLocation().getAlignment() == Alignment.RIGHT)
 				{
 					Component component = column.newHeader(sideColumns, "" + i);
 					sideColumns.add(component);
@@ -310,8 +308,8 @@ public class TreeTable extends DefaultAbstractTree
 			for (int i = 0; i < columns.length; i++)
 			{
 				IColumn column = columns[i];
-				if (column.getLocation().getAlignment() == Alignment.LEFT
-						|| column.getLocation().getAlignment() == Alignment.RIGHT)
+				if (column.getLocation().getAlignment() == Alignment.LEFT ||
+						column.getLocation().getAlignment() == Alignment.RIGHT)
 				{
 					Component component;
 					// first try to create a renderable
@@ -386,8 +384,8 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	/**
-	 * Internal initialization. Also checks if at least one of the columns is
-	 * derived from AbstractTreeColumn.
+	 * Internal initialization. Also checks if at least one of the columns is derived from
+	 * AbstractTreeColumn.
 	 * 
 	 * @param columns
 	 *            The columns
@@ -412,14 +410,14 @@ public class TreeTable extends DefaultAbstractTree
 		}
 
 		this.columns = columns;
-		
+
 		// Attach the javascript that resizes the header according to the body
 		// This is necessary to support fixed position header. The header does
 		// not
 		// scroll together with body. The body contains vertical scrollbar. The
 		// header width must be same as body content width, so that the columns
 		// are properly aligned.
-		add(new Label("attachJavascript", new Model() 
+		add(new Label("attachJavascript", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 

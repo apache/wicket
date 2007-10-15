@@ -21,8 +21,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 
 
 /**
- * Implementation of ISortState that can keep track of sort information for a
- * single property.
+ * Implementation of ISortState that can keep track of sort information for a single property.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

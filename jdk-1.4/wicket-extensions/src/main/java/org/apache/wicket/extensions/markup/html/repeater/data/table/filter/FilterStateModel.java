@@ -19,8 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import org.apache.wicket.model.Model;
 
 /**
- * Model that wraps filter state locator to make its use transparent to wicket
- * components.
+ * Model that wraps filter state locator to make its use transparent to wicket components.
  * <p>
  * Example:
  * 
@@ -29,8 +28,7 @@ import org.apache.wicket.model.Model;
  * TextField tf = new TextField(&quot;tf&quot;, new FilterStateModel(locator));
  * </pre>
  * 
- * Text field tf will now user the object that filter state locator locates as
- * its underlying model.
+ * Text field tf will now user the object that filter state locator locates as its underlying model.
  * </p>
  * 
  * @author Igor Vaynberg (ivaynberg)
@@ -45,8 +43,7 @@ class FilterStateModel extends Model
 	 * Constructor
 	 * 
 	 * @param locator
-	 *            IFilterStateLocator implementation used to provide model
-	 *            object for this model
+	 *            IFilterStateLocator implementation used to provide model object for this model
 	 */
 	public FilterStateModel(IFilterStateLocator locator)
 	{

@@ -25,9 +25,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * A panel where you can lazy load another panel.
- * This can be used if you have a panel/component that is pretty heavy in creation
- * and you first want to show the user the page and the replace the panel when it is ready.
+ * A panel where you can lazy load another panel. This can be used if you have a panel/component
+ * that is pretty heavy in creation and you first want to show the user the page and the replace the
+ * panel when it is ready.
  * 
  * @author jcompagner
  * 
@@ -36,7 +36,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 public abstract class AjaxLazyLoadPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @param id
 	 */
@@ -46,7 +46,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 		setOutputMarkupId(true);
 		Component loadingComponent = getLoadingComponent("content");
 		add(loadingComponent.setRenderBodyOnly(true));
-		
+
 		loadingComponent.add(new AbstractDefaultAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;
@@ -57,7 +57,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 				AjaxLazyLoadPanel.this.replace(component.setRenderBodyOnly(true));
 				target.addComponent(AjaxLazyLoadPanel.this);
 			}
-		
+
 			public void renderHead(IHeaderResponse response)
 			{
 				super.renderHead(response);
@@ -65,21 +65,25 @@ public abstract class AjaxLazyLoadPanel extends Panel
 			}
 		});
 	}
-	
-	
+
+
 	/**
-	 * @param markupId The components markupid.
+	 * @param markupId
+	 *            The components markupid.
 	 * @return The component that must be lazy created.
 	 */
 	public abstract Component getLazyLoadComponent(String markupId);
-	
+
 	/**
-	 * @param markupId The components markupid.
+	 * @param markupId
+	 *            The components markupid.
 	 * @return The component to show while the real component is being created.
 	 */
 	public Component getLoadingComponent(String markupId)
 	{
-		return new Label(markupId,"<img src=\"" + RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>").setEscapeModelStrings(false);
+		return new Label(markupId, "<img src=\"" +
+				RequestCycle.get().urlFor(AbstractDefaultAjaxBehavior.INDICATOR) + "\"/>")
+				.setEscapeModelStrings(false);
 	}
 
 }

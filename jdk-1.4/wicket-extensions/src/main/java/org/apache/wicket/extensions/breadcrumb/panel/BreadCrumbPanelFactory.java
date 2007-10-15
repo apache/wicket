@@ -22,9 +22,8 @@ import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 
 
 /**
- * Simple factory that creates instances of a
- * {@link BreadCrumbPanel bread crumb panel} based on the class it is
- * constructed with.
+ * Simple factory that creates instances of a {@link BreadCrumbPanel bread crumb panel} based on the
+ * class it is constructed with.
  * 
  * @author Eelco Hillenius
  */
@@ -39,8 +38,8 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * Construct.
 	 * 
 	 * @param panelClass
-	 *            The class to use for creating instances. Must be of type
-	 *            {@link BreadCrumbPanel}, and must have constructor
+	 *            The class to use for creating instances. Must be of type {@link BreadCrumbPanel},
+	 *            and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelFactory(final Class panelClass)
@@ -52,8 +51,8 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 
 		if (!BreadCrumbPanel.class.isAssignableFrom(panelClass))
 		{
-			throw new IllegalArgumentException("argument panelClass (" + panelClass
-					+ ") must extend class " + BreadCrumbPanel.class.getName());
+			throw new IllegalArgumentException("argument panelClass (" + panelClass +
+					") must extend class " + BreadCrumbPanel.class.getName());
 		}
 
 

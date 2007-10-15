@@ -118,8 +118,7 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	}
 
 	/**
-	 * This method is a hook for subclasses to perform an action after sort has
-	 * changed
+	 * This method is a hook for subclasses to perform an action after sort has changed
 	 */
 	protected void onSortChanged()
 	{

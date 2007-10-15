@@ -41,17 +41,16 @@ import org.apache.wicket.model.ResourceModel;
 
 
 /**
- * Palette is a component that allows the user to easily select and order
- * multiple items by moving them from one select box into another.
+ * Palette is a component that allows the user to easily select and order multiple items by moving
+ * them from one select box into another.
  * <p>
- * When creating a Palette object make sure your IChoiceRenderer returns a
- * specific ID, not the index.
+ * When creating a Palette object make sure your IChoiceRenderer returns a specific ID, not the
+ * index.
  * <p>
- * <strong>Ajaxifying the palette</strong>: The palette itself cannot be
- * ajaxified because it is a panel and therefore does not receive any javascript
- * events. Instead ajax behaviors can be attached to the recorder component
- * which supports the javascript <code>onchange</code> event. The recorder
- * component can be retrieved via a call to {@link #getRecorderComponent()}.
+ * <strong>Ajaxifying the palette</strong>: The palette itself cannot be ajaxified because it is a
+ * panel and therefore does not receive any javascript events. Instead ajax behaviors can be
+ * attached to the recorder component which supports the javascript <code>onchange</code> event.
+ * The recorder component can be retrieved via a call to {@link #getRecorderComponent()}.
  * 
  * Example:
  * 
@@ -76,8 +75,7 @@ public class Palette extends Panel implements IHeaderContributor
 	private IModel choicesModel;
 
 	/**
-	 * choice render used to render the choices in both available and selected
-	 * collections
+	 * choice render used to render the choices in both available and selected collections
 	 */
 	private IChoiceRenderer choiceRenderer;
 
@@ -88,20 +86,19 @@ public class Palette extends Panel implements IHeaderContributor
 	private final boolean allowOrder;
 
 	/**
-	 * recorder component used to track user's selection. it is updated by
-	 * javascript on changes.
+	 * recorder component used to track user's selection. it is updated by javascript on changes.
 	 */
 	private Recorder recorderComponent;
 
 	/**
-	 * component used to represent all available choices. by default this is a
-	 * select box with multiple attribute
+	 * component used to represent all available choices. by default this is a select box with
+	 * multiple attribute
 	 */
 	private Component choicesComponent;
 
 	/**
-	 * component used to represent selected items. by default this is a select
-	 * box with multiple attribute
+	 * component used to represent selected items. by default this is a select box with multiple
+	 * attribute
 	 */
 	private Component selectionComponent;
 
@@ -134,11 +131,10 @@ public class Palette extends Panel implements IHeaderContributor
 	 * @param choicesModel
 	 *            Model representing collection of all available choices
 	 * @param choiceRenderer
-	 *            Render used to render choices. This must use unique IDs for
-	 *            the objects, not the index.
+	 *            Render used to render choices. This must use unique IDs for the objects, not the
+	 *            index.
 	 * @param rows
-	 *            Number of choices to be visible on the screen with out
-	 *            scrolling
+	 *            Number of choices to be visible on the screen with out scrolling
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
@@ -156,11 +152,10 @@ public class Palette extends Panel implements IHeaderContributor
 	 * @param choicesModel
 	 *            Model representing collection of all available choices
 	 * @param choiceRenderer
-	 *            Render used to render choices. This must use unique IDs for
-	 *            the objects, not the index.
+	 *            Render used to render choices. This must use unique IDs for the objects, not the
+	 *            index.
 	 * @param rows
-	 *            Number of choices to be visible on the screen with out
-	 *            scrolling
+	 *            Number of choices to be visible on the screen with out scrolling
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
@@ -186,9 +181,8 @@ public class Palette extends Panel implements IHeaderContributor
 
 
 	/**
-	 * One-time init method for components that are created via overridable
-	 * factories. This method is here because we do not want to call overridable
-	 * methods form palette's constructor.
+	 * One-time init method for components that are created via overridable factories. This method
+	 * is here because we do not want to call overridable methods form palette's constructor.
 	 */
 	private void initFactories()
 	{
@@ -212,8 +206,8 @@ public class Palette extends Panel implements IHeaderContributor
 	}
 
 	/**
-	 * Returns the resource reference of the default stylesheet. You may return
-	 * null to avoid using any stylesheet.
+	 * Returns the resource reference of the default stylesheet. You may return null to avoid using
+	 * any stylesheet.
 	 * 
 	 * @return A resource reference
 	 */
@@ -446,9 +440,9 @@ public class Palette extends Panel implements IHeaderContributor
 	}
 
 	/**
-	 * Returns recorder component. Recorder component is a form component used
-	 * to track the selection of the palette. It receives <code>onchange</code>
-	 * javascript event whenever a change in selection occurs.
+	 * Returns recorder component. Recorder component is a form component used to track the
+	 * selection of the palette. It receives <code>onchange</code> javascript event whenever a
+	 * change in selection occurs.
 	 * 
 	 * @return recorder component
 	 */
@@ -491,11 +485,10 @@ public class Palette extends Panel implements IHeaderContributor
 	}
 
 	/**
-	 * The model object is assumed to be a Collection, and it is modified
-	 * in-place. Then {@link Model#setObject(Object)} is called with the same
-	 * instance: it allows the Model to be notified of changes even when
-	 * {@link Model#getObject()} returns a different {@link Collection} at every
-	 * invocation.
+	 * The model object is assumed to be a Collection, and it is modified in-place. Then
+	 * {@link Model#setObject(Object)} is called with the same instance: it allows the Model to be
+	 * notified of changes even when {@link Model#getObject()} returns a different
+	 * {@link Collection} at every invocation.
 	 * 
 	 * @see FormComponent#updateModel()
 	 */

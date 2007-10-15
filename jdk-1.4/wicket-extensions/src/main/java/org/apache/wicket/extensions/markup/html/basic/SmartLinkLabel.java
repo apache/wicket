@@ -23,17 +23,15 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * If you have email addresses or web URLs in the data that you are displaying,
- * then you can automatically display those pieces of data as hyperlinks, you
- * will not have to take any action to convert that data.
+ * If you have email addresses or web URLs in the data that you are displaying, then you can
+ * automatically display those pieces of data as hyperlinks, you will not have to take any action to
+ * convert that data.
  * <p>
- * Email addresses will be wrapped with a &lt;a
- * href="mailto:xxx"&gt;xxx&lt;/a&gt; tag, where "xxx" is the email address that
- * was detected.
+ * Email addresses will be wrapped with a &lt;a href="mailto:xxx"&gt;xxx&lt;/a&gt; tag, where "xxx"
+ * is the email address that was detected.
  * <p>
- * Web URLs will be wrapped with a &lt;a href="xxx"&gt;xxx&lt;/a&gt; tag, where
- * "xxx" is the URL that was detected (it can be any valid URL type, http://,
- * https://, ftp://, etc...)
+ * Web URLs will be wrapped with a &lt;a href="xxx"&gt;xxx&lt;/a&gt; tag, where "xxx" is the URL
+ * that was detected (it can be any valid URL type, http://, https://, ftp://, etc...)
  * 
  * @author Juergen Donnerstag
  */

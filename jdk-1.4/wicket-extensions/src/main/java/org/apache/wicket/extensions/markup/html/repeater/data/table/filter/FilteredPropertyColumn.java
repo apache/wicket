@@ -40,11 +40,9 @@ public abstract class FilteredPropertyColumn extends PropertyColumn implements I
 	 * @param displayModel
 	 *            model used to construct header text
 	 * @param sortProperty
-	 *            sort property this column represents, if null this column will
-	 *            not be sortable
+	 *            sort property this column represents, if null this column will not be sortable
 	 * @param propertyExpression
-	 *            wicket property expression for the column, see
-	 *            {@link PropertyModel} for details
+	 *            wicket property expression for the column, see {@link PropertyModel} for details
 	 */
 	public FilteredPropertyColumn(IModel displayModel, String sortProperty,
 			String propertyExpression)
@@ -56,8 +54,7 @@ public abstract class FilteredPropertyColumn extends PropertyColumn implements I
 	 * @param displayModel
 	 *            model used to construct header text
 	 * @param propertyExpression
-	 *            wicket property expression for the column, see
-	 *            {@link PropertyModel} for details
+	 *            wicket property expression for the column, see {@link PropertyModel} for details
 	 */
 	public FilteredPropertyColumn(IModel displayModel, String propertyExpression)
 	{

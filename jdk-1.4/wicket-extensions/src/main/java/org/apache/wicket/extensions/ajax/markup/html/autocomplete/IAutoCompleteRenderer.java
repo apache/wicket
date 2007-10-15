@@ -22,13 +22,12 @@ import org.apache.wicket.Response;
 /**
  * A renderer used to generate html output for the {@link AutoCompleteBehavior}.
  * <p>
- * Helper implementations of this interface may abstract the implementation
- * specific details. Direct implementations of this interface should only be
- * used when total control is required.
+ * Helper implementations of this interface may abstract the implementation specific details. Direct
+ * implementations of this interface should only be used when total control is required.
  * <p>
- * The autocompletion value is supplied via an attribute on the first html
- * element named <code>textvalue</code>, if no attribute is found the
- * innerHtml property of the first element will be used instead.
+ * The autocompletion value is supplied via an attribute on the first html element named
+ * <code>textvalue</code>, if no attribute is found the innerHtml property of the first element
+ * will be used instead.
  * 
  * For example:
  * 
@@ -62,8 +61,8 @@ import org.apache.wicket.Response;
 public interface IAutoCompleteRenderer extends IClusterable
 {
 	/**
-	 * Render the html fragment for the given completion object. Usually the
-	 * html is written out by calling {@link Response#write(CharSequence)}.
+	 * Render the html fragment for the given completion object. Usually the html is written out by
+	 * calling {@link Response#write(CharSequence)}.
 	 * 
 	 * @param object
 	 *            completion choice object
@@ -76,16 +75,16 @@ public interface IAutoCompleteRenderer extends IClusterable
 
 
 	/**
-	 * Render the html header fragment for the completion. Usually the html is
-	 * written out by calling {@link Response#write(CharSequence)}.
+	 * Render the html header fragment for the completion. Usually the html is written out by
+	 * calling {@link Response#write(CharSequence)}.
 	 * 
 	 * @param response
 	 */
 	void renderHeader(Response response);
 
 	/**
-	 * Render the html footer fragment for the completion. Usually the html is
-	 * written out by calling {@link Response#write(CharSequence)}.
+	 * Render the html footer fragment for the completion. Usually the html is written out by
+	 * calling {@link Response#write(CharSequence)}.
 	 * 
 	 * @param response
 	 */

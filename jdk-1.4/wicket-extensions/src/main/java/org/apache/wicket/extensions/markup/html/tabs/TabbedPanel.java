@@ -32,8 +32,8 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * TabbedPanel component represets a panel with tabs that are used to switch
- * between different content panels inside the TabbedPanel panel.
+ * TabbedPanel component represets a panel with tabs that are used to switch between different
+ * content panels inside the TabbedPanel panel.
  * <p>
  * Example:
  * 
@@ -69,8 +69,7 @@ import org.apache.wicket.model.Model;
  * </p>
  * 
  * <p>
- * For a complete example see the component references in wicket-examples
- * project
+ * For a complete example see the component references in wicket-examples project
  * </p>
  * 
  * @see org.apache.wicket.extensions.markup.html.tabs.ITab
@@ -106,7 +105,7 @@ public class TabbedPanel extends Panel
 		{
 			throw new IllegalArgumentException("argument [tabs] cannot be null");
 		}
-		
+
 		this.tabs = tabs;
 
 		final IModel tabCount = new AbstractReadOnlyModel()
@@ -180,20 +179,21 @@ public class TabbedPanel extends Panel
 
 		});
 	}
-	
-	//@see org.apache.wicket.Component#onAttach()
+
+	// @see org.apache.wicket.Component#onAttach()
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		if (!hasBeenRendered() && getSelectedTab() == -1) {
+		if (!hasBeenRendered() && getSelectedTab() == -1)
+		{
 			// select the first tab by default
 			setSelectedTab(0);
 		}
 	}
 
 	/**
-	 * @return the value of css class attribute that will be added to a div
-	 *         containing the tabs. The default value is <code>tab-row</code>
+	 * @return the value of css class attribute that will be added to a div containing the tabs. The
+	 *         default value is <code>tab-row</code>
 	 */
 	protected String getTabContainerCssClass()
 	{
@@ -201,8 +201,7 @@ public class TabbedPanel extends Panel
 	}
 
 	/**
-	 * @return list of tabs that can be used by the user to add/remove/reorder
-	 *         tabs in the panel
+	 * @return list of tabs that can be used by the user to add/remove/reorder tabs in the panel
 	 */
 	public final List getTabs()
 	{
@@ -210,8 +209,8 @@ public class TabbedPanel extends Panel
 	}
 
 	/**
-	 * Factory method for tab titles. Returned component can be anything that
-	 * can attach to span tags such as a fragment, panel, or a label
+	 * Factory method for tab titles. Returned component can be anything that can attach to span
+	 * tags such as a fragment, panel, or a label
 	 * 
 	 * @param titleId
 	 *            id of title component
@@ -230,8 +229,8 @@ public class TabbedPanel extends Panel
 	/**
 	 * Factory method for links used to switch between tabs.
 	 * 
-	 * The created component is attached to the following markup. Label
-	 * component with id: title will be added for you by the tabbed panel.
+	 * The created component is attached to the following markup. Label component with id: title
+	 * will be added for you by the tabbed panel.
 	 * 
 	 * <pre>
 	 *            &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
@@ -257,8 +256,8 @@ public class TabbedPanel extends Panel
 	 * @param linkId
 	 *            component id with which the link should be created
 	 * @param index
-	 *            index of the tab that should be activated when this link is
-	 *            clicked. See {@link #setSelectedTab(int)}.
+	 *            index of the tab that should be activated when this link is clicked. See
+	 *            {@link #setSelectedTab(int)}.
 	 * @return created link component
 	 */
 	protected WebMarkupContainer newLink(String linkId, final int index)
@@ -296,18 +295,18 @@ public class TabbedPanel extends Panel
 
 		if (panel == null)
 		{
-			throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel ["
-					+ getPath() + "] ITab index [" + index + "]");
+			throw new WicketRuntimeException("ITab.getPanel() returned null. TabbedPanel [" +
+					getPath() + "] ITab index [" + index + "]");
 
 		}
 
 		if (!panel.getId().equals(TAB_PANEL_ID))
 		{
 			throw new WicketRuntimeException(
-					"ITab.getPanel() returned a panel with invalid id ["
-							+ panel.getId()
-							+ "]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel ["
-							+ getPath() + "] ITab index [" + index + "]");
+					"ITab.getPanel() returned a panel with invalid id [" +
+							panel.getId() +
+							"]. You must always return a panel with id equal to the provided panelId parameter. TabbedPanel [" +
+							getPath() + "] ITab index [" + index + "]");
 		}
 
 

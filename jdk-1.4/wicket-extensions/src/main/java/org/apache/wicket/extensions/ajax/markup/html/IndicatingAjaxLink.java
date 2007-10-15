@@ -21,8 +21,8 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 
 /**
- * A variant of the {@link AjaxLink} that displays a busy indicator while the
- * ajax request is in progress.
+ * A variant of the {@link AjaxLink} that displays a busy indicator while the ajax request is in
+ * progress.
  * 
  * @since 1.2
  * 
@@ -39,6 +39,7 @@ public abstract class IndicatingAjaxLink extends AjaxLink implements IAjaxIndica
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 */
 	public IndicatingAjaxLink(String id)
@@ -48,6 +49,7 @@ public abstract class IndicatingAjaxLink extends AjaxLink implements IAjaxIndica
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 * @param model
 	 */

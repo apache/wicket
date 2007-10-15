@@ -24,9 +24,9 @@ import org.apache.wicket.protocol.http.WebRequest;
 
 
 /**
- * A resource that prints out basic statistics about the current upload. This
- * resource is used to feed the progress bar information by the progress bar
- * javascript which requests this resource through ajax.
+ * A resource that prints out basic statistics about the current upload. This resource is used to
+ * feed the progress bar information by the progress bar javascript which requests this resource
+ * through ajax.
  * 
  * @author Andrew Lombardi
  * @author Igor Vaynberg (ivaynberg)
@@ -64,11 +64,11 @@ class UploadStatusResource extends DynamicWebResource
 			}
 			else
 			{
-				status = "" + info.getPercentageComplete() + "|" + info.getBytesUploadedString()
-						+ "|" + info.getTotalBytesString() + "|" + info.getTransferRateString()
-						+ "|" + info.getRemainingTimeString();
+				status = "" + info.getPercentageComplete() + "|" + info.getBytesUploadedString() +
+						"|" + info.getTotalBytesString() + "|" + info.getTransferRateString() +
+						"|" + info.getRemainingTimeString();
 			}
-			status="<html>|"+status+"|</html>";
+			status = "<html>|" + status + "|</html>";
 		}
 
 		/**
