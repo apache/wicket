@@ -19,9 +19,9 @@ package org.apache.wicket.examples.ajax.builtin.tree;
 import java.io.Serializable;
 
 /**
- * Bean that is set to every node of tree as user object.
- * This bean has properties that are used to hold values for the cells.
- *  
+ * Bean that is set to every node of tree as user object. This bean has properties that are used to
+ * hold values for the cells.
+ * 
  * @author Matej Knopp
  */
 public class ModelBean implements Serializable
@@ -34,10 +34,10 @@ public class ModelBean implements Serializable
 	private String property6;
 
 	/**
-	 * Creates the bean. 
+	 * Creates the bean.
 	 * 
 	 * @param s
-	 *		String that will be suffix of each property. 		
+	 *            String that will be suffix of each property.
 	 */
 	public ModelBean(String s)
 	{
@@ -52,8 +52,7 @@ public class ModelBean implements Serializable
 	/**
 	 * Returns the first property.
 	 * 
-	 * @return
-	 * 		First property
+	 * @return First property
 	 */
 	public String getProperty1()
 	{
@@ -64,7 +63,7 @@ public class ModelBean implements Serializable
 	 * Sets the value of first property.
 	 * 
 	 * @param property1
-	 * 		Mew value
+	 *            Mew value
 	 */
 	public void setProperty1(String property1)
 	{
@@ -74,8 +73,7 @@ public class ModelBean implements Serializable
 	/**
 	 * Returns the second property.
 	 * 
-	 * @return
-	 * 		Second property
+	 * @return Second property
 	 */
 	public String getProperty2()
 	{
@@ -86,7 +84,7 @@ public class ModelBean implements Serializable
 	 * Sets the value of second property
 	 * 
 	 * @param property2
-	 * 			New value
+	 *            New value
 	 */
 	public void setProperty2(String property2)
 	{
@@ -96,8 +94,7 @@ public class ModelBean implements Serializable
 	/**
 	 * Returns the value of third property.
 	 * 
-	 * @return
-	 * 		Third property
+	 * @return Third property
 	 */
 	public String getProperty3()
 	{
@@ -108,7 +105,7 @@ public class ModelBean implements Serializable
 	 * Sets the value of third property
 	 * 
 	 * @param property3
-	 * 		New value
+	 *            New value
 	 */
 	public void setProperty3(String property3)
 	{
@@ -118,8 +115,7 @@ public class ModelBean implements Serializable
 	/**
 	 * Returns the value of fourth property
 	 * 
-	 * @return
-	 * 		Value of fourth property
+	 * @return Value of fourth property
 	 */
 	public String getProperty4()
 	{
@@ -130,7 +126,7 @@ public class ModelBean implements Serializable
 	 * Sets the value of fourth property
 	 * 
 	 * @param property4
-	 * 		New value
+	 *            New value
 	 */
 	public void setProperty4(String property4)
 	{
@@ -140,8 +136,7 @@ public class ModelBean implements Serializable
 	/**
 	 * Returns the value of fifth property
 	 * 
-	 * @return
-	 * 		Value of fifth property	
+	 * @return Value of fifth property
 	 */
 	public String getProperty5()
 	{
@@ -152,18 +147,17 @@ public class ModelBean implements Serializable
 	 * Sets the value of fifth property
 	 * 
 	 * @param property5
-	 * 		New value
+	 *            New value
 	 */
 	public void setProperty5(String property5)
 	{
 		this.property5 = property5;
 	}
-	
+
 	/**
 	 * Returns the value of sixth property.
 	 * 
-	 * @return
-	 * 		Value of sixth property
+	 * @return Value of sixth property
 	 */
 	public String getProperty6()
 	{
@@ -174,13 +168,13 @@ public class ModelBean implements Serializable
 	 * Sets the value of sixth property
 	 * 
 	 * @param property6
-	 * 		New value
+	 *            New value
 	 */
 	public void setProperty6(String property6)
 	{
 		this.property6 = property6;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */

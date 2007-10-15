@@ -49,8 +49,8 @@ public class Contact implements IClusterable
 	 */
 	public String toString()
 	{
-		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName
-				+ " homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
+		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName +
+				" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
 	}
 
 
@@ -70,10 +70,10 @@ public class Contact implements IClusterable
 		if (obj instanceof Contact)
 		{
 			Contact other = (Contact)obj;
-			return other.getFirstName().equals(getFirstName())
-					&& other.getLastName().equals(getLastName())
-					&& other.getHomePhone().equals(getHomePhone())
-					&& other.getCellPhone().equals(getCellPhone());
+			return other.getFirstName().equals(getFirstName()) &&
+					other.getLastName().equals(getLastName()) &&
+					other.getHomePhone().equals(getHomePhone()) &&
+					other.getCellPhone().equals(getCellPhone());
 
 		}
 		else

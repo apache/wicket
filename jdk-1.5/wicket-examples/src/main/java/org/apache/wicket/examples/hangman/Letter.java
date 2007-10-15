@@ -75,8 +75,8 @@ public class Letter implements IClusterable
 	 */
 	public ResourceReference getSharedImageResource()
 	{
-		return new ResourceReference(Letter.class, asString()
-				+ (isGuessed() ? "_enabled" : "_disabled"))
+		return new ResourceReference(Letter.class, asString() +
+				(isGuessed() ? "_enabled" : "_disabled"))
 		{
 			protected Resource newResource()
 			{

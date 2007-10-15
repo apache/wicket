@@ -23,14 +23,17 @@ import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.common.web.ContactDetachableModel;
 import org.apache.wicket.spring.common.web.ExampleApplication;
 
-public class DirectModel extends ContactDetachableModel {
+public class DirectModel extends ContactDetachableModel
+{
 
-	public DirectModel(Contact contact) {
+	public DirectModel(Contact contact)
+	{
 		super(contact);
 	}
 
-	protected ContactDao getContactDao() {
-		return ((ExampleApplication) Application.get()).getContactDao();
+	protected ContactDao getContactDao()
+	{
+		return ((ExampleApplication)Application.get()).getContactDao();
 	}
 
 }

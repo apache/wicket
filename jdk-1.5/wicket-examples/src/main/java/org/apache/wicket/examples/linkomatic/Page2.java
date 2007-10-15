@@ -20,7 +20,6 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 
 
-
 /**
  * Trivial page.
  * 

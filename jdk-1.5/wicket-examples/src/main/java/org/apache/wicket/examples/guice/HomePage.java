@@ -33,9 +33,9 @@ public class HomePage extends WicketExamplePage
 {
 	@Inject
 	private IMyService service;
-	
+
 	private String labelValue = "<not yet initialized>";
-	
+
 	/**
 	 * Constructor
 	 */
@@ -54,13 +54,13 @@ public class HomePage extends WicketExamplePage
 		});
 		add(new Label("message", new AbstractReadOnlyModel()
 		{
-		
+
 			@Override
 			public Object getObject()
 			{
 				return labelValue;
 			}
-		
+
 		}));
 	}
 }

@@ -31,13 +31,13 @@ import org.apache.wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class ContactsDisplayPage extends BasePage {
-	public ContactsDisplayPage() {
+public abstract class ContactsDisplayPage extends BasePage
+{
+	public ContactsDisplayPage()
+	{
 		IColumn[] cols = new IColumn[4];
-		cols[0] = new PropertyColumn(new Model("first name"), "firstName",
-				"firstName");
-		cols[1] = new PropertyColumn(new Model("last name"), "lastName",
-				"lastName");
+		cols[0] = new PropertyColumn(new Model("first name"), "firstName", "firstName");
+		cols[1] = new PropertyColumn(new Model("last name"), "lastName", "lastName");
 		cols[2] = new PropertyColumn(new Model("home phone"), "homePhone");
 		cols[3] = new PropertyColumn(new Model("cell phone"), "cellPhone");
 

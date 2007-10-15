@@ -67,8 +67,10 @@ public class Application extends WebApplication
 				return new ResourceStreamRequestTarget(new XSLTResourceStream(xslStream, docStream));
 			}
 		});
-		
-		// All requests to bookmarkable page "Page" will be captured, and the "Sent" page is shown instead
-		mount(new CapturingBookmarkablePageRequestTargetUrlCodingStrategy("/capturedpage", EmailPage.class, Sent.class));
+
+		// All requests to bookmarkable page "Page" will be captured, and the
+		// "Sent" page is shown instead
+		mount(new CapturingBookmarkablePageRequestTargetUrlCodingStrategy("/capturedpage",
+				EmailPage.class, Sent.class));
 	}
 }

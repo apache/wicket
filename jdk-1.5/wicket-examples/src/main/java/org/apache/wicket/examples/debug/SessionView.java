@@ -31,8 +31,7 @@ import org.apache.wicket.util.lang.Objects;
 
 
 /**
- * A Wicket panel that shows interesting information about a given Wicket
- * session.
+ * A Wicket panel that shows interesting information about a given Wicket session.
  * 
  * @author Jonathan Locke
  */
@@ -59,7 +58,7 @@ public final class SessionView extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject() 
+			public Object getObject()
 			{
 				return Bytes.bytes(Objects.sizeof(session));
 			}
@@ -68,7 +67,7 @@ public final class SessionView extends Panel
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject() 
+			public Object getObject()
 			{
 				return Bytes.bytes(session.getSizeInBytes());
 			}

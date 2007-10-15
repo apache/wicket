@@ -66,7 +66,8 @@ public class User implements IClusterable
 	/**
 	 * Whether this user has any of the given roles.
 	 * 
-	 * @param roles set of roles
+	 * @param roles
+	 *            set of roles
 	 * @return whether this user has any of the given roles
 	 */
 	public boolean hasAnyRole(Roles roles)

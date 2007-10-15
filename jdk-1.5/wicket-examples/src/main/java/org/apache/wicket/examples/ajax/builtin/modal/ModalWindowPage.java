@@ -36,7 +36,7 @@ public class ModalWindowPage extends BasePage
 	public ModalWindowPage()
 	{
 		final Label result;
-		add (result= new Label("result", new PropertyModel(this, "result")));
+		add(result = new Label("result", new PropertyModel(this, "result")));
 		result.setOutputMarkupId(true);
 
 		/*
@@ -85,7 +85,7 @@ public class ModalWindowPage extends BasePage
 		 */
 
 		final ModalWindow modal2;
-		add (modal2 = new ModalWindow("modal2"));
+		add(modal2 = new ModalWindow("modal2"));
 
 		modal2.setContent(new ModalPanel1(modal2.getContentId()));
 		modal2.setTitle("This is modal window with panel content.");

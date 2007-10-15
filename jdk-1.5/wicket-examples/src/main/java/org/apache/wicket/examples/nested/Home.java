@@ -35,9 +35,8 @@ import org.apache.wicket.markup.html.link.Link;
 
 
 /**
- * Examples that shows how you can display a tree like structure (in this case
- * nested lists with string elements) using nested panels and using a tree
- * component.
+ * Examples that shows how you can display a tree like structure (in this case nested lists with
+ * string elements) using nested panels and using a tree component.
  * 
  * @author Eelco Hillenius
  */

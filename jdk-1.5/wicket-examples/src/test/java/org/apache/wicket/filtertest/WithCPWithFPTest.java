@@ -42,13 +42,14 @@ public class WithCPWithFPTest extends WithoutCPWithFPTest
 	{
 		super(name);
 	}
+
 	/**
 	 * 
 	 * @return Test
 	 */
 	public static Test suite()
 	{
-		JettyTestCaseDecorator deco = (JettyTestCaseDecorator) suite(WithCPWithFPTest.class);
+		JettyTestCaseDecorator deco = (JettyTestCaseDecorator)suite(WithCPWithFPTest.class);
 		deco.setContextPath("/somecontext");
 		String basedir = System.getProperty("basedir");
 		String path = "";

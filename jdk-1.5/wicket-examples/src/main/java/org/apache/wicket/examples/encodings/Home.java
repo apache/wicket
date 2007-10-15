@@ -46,8 +46,8 @@ public class Home extends WicketExamplePage
 	}
 
 	/**
-	 * Because only servlet 2.4 supports web.xml locale-encoding-mapping-list
-	 * deployment descriptors, this is a workaround for servlet 2.3
+	 * Because only servlet 2.4 supports web.xml locale-encoding-mapping-list deployment
+	 * descriptors, this is a workaround for servlet 2.3
 	 */
 	protected void configureResponse()
 	{

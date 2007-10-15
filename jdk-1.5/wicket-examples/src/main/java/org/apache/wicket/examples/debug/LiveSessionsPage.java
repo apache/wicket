@@ -48,30 +48,31 @@ public class LiveSessionsPage extends WebPage
 	public LiveSessionsPage()
 	{
 		add(new Image("bug"));
-		
+
 		add(new ApplicationView("application", Application.get()));
-		
+
 		Link link = new Link("togglelink")
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void onClick() 
+			public void onClick()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
 				webApplication.getRequestLoggerSettings().setRequestsWindowSize(500);
-				boolean enabled = webApplication.getRequestLoggerSettings().isRequestLoggerEnabled();
+				boolean enabled = webApplication.getRequestLoggerSettings()
+						.isRequestLoggerEnabled();
 				webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(!enabled);
 			}
 		};
-		link.add( new Label("toggletext", new Model()
+		link.add(new Label("toggletext", new Model()
 		{
 			private static final long serialVersionUID = 1L;
-			
-			public Object getObject() 
+
+			public Object getObject()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
 				IRequestLogger requestLogger = webApplication.getRequestLogger();
-				if(requestLogger == null)
+				if (requestLogger == null)
 				{
 					return "Enable request recording";
 				}
@@ -80,10 +81,10 @@ public class LiveSessionsPage extends WebPage
 					return "Disable request recording";
 				}
 			};
-			
+
 		}));
 		add(link);
-		add(new Label("totalSessions",new Model()
+		add(new Label("totalSessions", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -92,46 +93,47 @@ public class LiveSessionsPage extends WebPage
 				return new Integer(getRequestLogger().getTotalCreatedSessions());
 			}
 		}));
-		add(new Label("peakSessions",new Model()
+		add(new Label("peakSessions", new Model()
 		{
 			private static final long serialVersionUID = 1L;
-		
+
 			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getPeakSessions());
 			}
 		}));
-		add(new Label("liveSessions",new Model()
+		add(new Label("liveSessions", new Model()
 		{
 			private static final long serialVersionUID = 1L;
-		
+
 			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getPeakSessions());
 			}
 		}));
-		
+
 		Model sessionModel = new Model()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			public Object getObject()
 			{
 				return Arrays.asList(getRequestLogger().getLiveSessions());
 			}
 		};
-		PageableListView listView = new PageableListView("sessions",sessionModel,50)
+		PageableListView listView = new PageableListView("sessions", sessionModel, 50)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
-			
-			protected void populateItem(ListItem item) 
+
+			protected void populateItem(ListItem item)
 			{
 				final SessionData sd = (SessionData)item.getModelObject();
 				Link link = new Link("id")
 				{
 					private static final long serialVersionUID = 1L;
+
 					/**
 					 * @see org.apache.wicket.markup.html.link.Link#onClick()
 					 */
@@ -140,25 +142,25 @@ public class LiveSessionsPage extends WebPage
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				link.add( new Label("id",new Model(sd.getSessionId())));
-				item.add( link);
-				item.add( new Label("lastRequestTime",new Model(sdf.format(sd.getLastActive()))) );
-				item.add( new Label("requestCount",new Model(new Long(sd.getNumberOfRequests()))) );
-				item.add( new Label("requestsTime",new Model(new Long(sd.getTotalTimeTaken()))) );
-				item.add( new Label("sessionSize",new Model(Bytes.bytes(sd.getSessionSize()))) );
+				link.add(new Label("id", new Model(sd.getSessionId())));
+				item.add(link);
+				item.add(new Label("lastRequestTime", new Model(sdf.format(sd.getLastActive()))));
+				item.add(new Label("requestCount", new Model(new Long(sd.getNumberOfRequests()))));
+				item.add(new Label("requestsTime", new Model(new Long(sd.getTotalTimeTaken()))));
+				item.add(new Label("sessionSize", new Model(Bytes.bytes(sd.getSessionSize()))));
 			}
 		};
 		add(listView);
-		
-		PagingNavigator navigator = new PagingNavigator("navigator",listView);
+
+		PagingNavigator navigator = new PagingNavigator("navigator", listView);
 		add(navigator);
 	}
-	
+
 	IRequestLogger getRequestLogger()
 	{
 		WebApplication webApplication = (WebApplication)Application.get();
 		final IRequestLogger requestLogger;
-		if(webApplication.getRequestLogger() == null)
+		if (webApplication.getRequestLogger() == null)
 		{
 			// make default one.
 			requestLogger = new RequestLogger();

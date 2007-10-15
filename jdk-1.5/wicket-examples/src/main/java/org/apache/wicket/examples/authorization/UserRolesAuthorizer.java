@@ -22,8 +22,7 @@ import org.apache.wicket.authorization.strategies.role.Roles;
 
 
 /**
- * The authorizer we need to provide to the authorization strategy
- * implementation
+ * The authorizer we need to provide to the authorization strategy implementation
  * {@link org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy}.
  * 
  * @author Eelco Hillenius

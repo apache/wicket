@@ -121,7 +121,8 @@ public class Home extends WicketExamplePage
 				new BookmarkablePageLink("page1", Page1.class)).addCircleLink(160, 50, 35,
 				new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(
 				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-				new BookmarkablePageLink("page3", Page3.class)).add(RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
+				new BookmarkablePageLink("page3", Page3.class)).add(
+				RelativePathPrefixHandler.RELATIVE_PATH_BEHAVIOR));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
@@ -129,14 +130,15 @@ public class Home extends WicketExamplePage
 		add(new BookmarkablePageLink("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// Popup example
-		add(new BookmarkablePageLink("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink("popupButtonLink", Popup.class)
+				.setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
 
 		// And that link as a popup
-		PopupSettings googlePopupSettings = new PopupSettings(PopupSettings.RESIZABLE
-				| PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
+		PopupSettings googlePopupSettings = new PopupSettings(PopupSettings.RESIZABLE |
+				PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
 		add(new ExternalLink("googlePopup", "http://www.google.com",
 				"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
@@ -147,7 +149,7 @@ public class Home extends WicketExamplePage
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 		add(new RedirectForm("redirectForm"));
-		
+
 		Link linkToAnchor = new Link("linkToAnchor")
 		{
 			public void onClick()

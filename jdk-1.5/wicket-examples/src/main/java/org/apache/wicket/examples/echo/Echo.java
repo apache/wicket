@@ -24,8 +24,7 @@ import org.apache.wicket.model.PropertyModel;
 
 
 /**
- * The simplest form application possible. Just prints any user input to a
- * label.
+ * The simplest form application possible. Just prints any user input to a label.
  * 
  * @author Eelco Hillenius
  */

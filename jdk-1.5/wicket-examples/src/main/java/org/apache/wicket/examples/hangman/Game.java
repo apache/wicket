@@ -23,10 +23,9 @@ import org.apache.wicket.IClusterable;
 
 
 /**
- * Implementation of the actual hangman game model. The model holds the word
- * generator, the current word, retries remaining and the correctLetters that
- * have been guessed. It also answers questions such as whether all retries have
- * been used.
+ * Implementation of the actual hangman game model. The model holds the word generator, the current
+ * word, retries remaining and the correctLetters that have been guessed. It also answers questions
+ * such as whether all retries have been used.
  * 
  * @author Chris Turner
  * @author Jonathan Locke
@@ -77,9 +76,8 @@ public class Game implements IClusterable
 	}
 
 	/**
-	 * Guess the given letter for the current word. If the letter matches then
-	 * the word is updated otherwise the guesses remaining counter is reduced.
-	 * The letter guessed is also recorded.
+	 * Guess the given letter for the current word. If the letter matches then the word is updated
+	 * otherwise the guesses remaining counter is reduced. The letter guessed is also recorded.
 	 * 
 	 * @param letter
 	 *            The letter being guessed
@@ -110,8 +108,7 @@ public class Game implements IClusterable
 	}
 
 	/**
-	 * Check whether the user has successfully guessed all of the correctLetters
-	 * in the word.
+	 * Check whether the user has successfully guessed all of the correctLetters in the word.
 	 * 
 	 * @return Whether all of the correctLetters have been guessed or not
 	 */

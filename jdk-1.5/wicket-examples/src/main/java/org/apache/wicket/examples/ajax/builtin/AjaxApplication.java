@@ -45,7 +45,7 @@ public class AjaxApplication extends WicketExampleApplication
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 		getDebugSettings().setAjaxDebugModeEnabled(true);
-		
+
 		mount(new HybridUrlCodingStrategy("autocomplete", AutoCompletePage.class));
 		mount(new HybridUrlCodingStrategy("choice", ChoicePage.class));
 		mount(new HybridUrlCodingStrategy("clock", ClockPage.class));
@@ -66,7 +66,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mount(new HybridUrlCodingStrategy("tree/table", TreeTablePage.class));
 		mount(new HybridUrlCodingStrategy("tree/table/editable", EditableTreeTablePage.class));
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */

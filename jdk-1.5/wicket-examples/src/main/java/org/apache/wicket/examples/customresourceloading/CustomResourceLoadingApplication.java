@@ -31,7 +31,6 @@ import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.string.Strings;
 
 
-
 /**
  * Application class for the custom resource loading example.
  * 
@@ -56,8 +55,8 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 			// Log attempt
 			if (log.isDebugEnabled())
 			{
-				log.debug("Attempting to locate resource '" + path
-						+ "' using classloader the servlet context");
+				log.debug("Attempting to locate resource '" + path +
+						"' using classloader the servlet context");
 			}
 
 			String location;

@@ -46,8 +46,7 @@ public class HangmanApplication extends WicketExampleApplication
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request,
-	 *      Response)
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
 	 */
 	public Session newSession(Request request, Response response)
 	{

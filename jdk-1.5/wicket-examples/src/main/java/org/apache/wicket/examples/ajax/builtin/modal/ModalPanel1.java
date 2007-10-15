@@ -24,15 +24,18 @@ import org.apache.wicket.markup.html.panel.Panel;
 /**
  * @author Matej Knopp
  */
-public class ModalPanel1 extends Panel {
+public class ModalPanel1 extends Panel
+{
 
 	/**
 	 * @param id
 	 */
-	public ModalPanel1(String id) {
+	public ModalPanel1(String id)
+	{
 		super(id);
-		
-		add(new DateTimeField("dateTimeField") {
+
+		add(new DateTimeField("dateTimeField")
+		{
 			/**
 			 * @see org.apache.wicket.extensions.yui.calendar.DateTimeField#configure(java.util.Map)
 			 */

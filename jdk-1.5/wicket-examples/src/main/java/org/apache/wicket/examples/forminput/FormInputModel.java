@@ -19,7 +19,6 @@ package org.apache.wicket.examples.forminput;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -29,14 +28,13 @@ import org.apache.wicket.IClusterable;
 
 
 /**
- * Simple model object for FormInput example. Has a number of simple properties
- * that can be retrieved and set.
+ * Simple model object for FormInput example. Has a number of simple properties that can be
+ * retrieved and set.
  */
 public final class FormInputModel implements IClusterable
 {
 	/**
-	 * Represents a line of text. Hack to get around the fact that strings are
-	 * immutable.
+	 * Represents a line of text. Hack to get around the fact that strings are immutable.
 	 */
 	public final class Line implements IClusterable
 	{

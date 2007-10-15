@@ -25,14 +25,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * Examples for serving static files. These examples show how to serve files (or
- * more generally data streams) by reusing the powerful Wicket concepts like
- * IResourceStream, IRequestTarget and IRequestTargetUrlCodingStrategy.
+ * Examples for serving static files. These examples show how to serve files (or more generally data
+ * streams) by reusing the powerful Wicket concepts like IResourceStream, IRequestTarget and
+ * IRequestTargetUrlCodingStrategy.
  * 
- * XXX Notice the use of a WebMarkupContainer to produce the static links, since
- * with plain <tt>href</tt> attribute Wicket's
- * {@link RelativePathPrefixHandler} would prepend the servlet context path but
- * without Wicket's filter path.
+ * XXX Notice the use of a WebMarkupContainer to produce the static links, since with plain
+ * <tt>href</tt> attribute Wicket's {@link RelativePathPrefixHandler} would prepend the servlet
+ * context path but without Wicket's filter path.
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
@@ -46,13 +45,12 @@ public class Home extends WicketExamplePage
 		add(new StaticLink("helloxslt", new Model("xsldocs/hello.html")));
 
 		/*
-		 * Sending a Wicket page by email: all requests to bookmarkable page
-		 * "Page" will be captured, and the "Sent" page is shown instead, see
-		 * the "/capture" mount in staticpages.Application. Unfortunately, you
-		 * cannot use CapturingBookmarkablePageRequestTarget in an event
-		 * listener like onClick() unless you change the application's
-		 * IRequestCycleSettings to ONE_PASS_RENDER, thus we use mount() in the
-		 * application
+		 * Sending a Wicket page by email: all requests to bookmarkable page "Page" will be
+		 * captured, and the "Sent" page is shown instead, see the "/capture" mount in
+		 * staticpages.Application. Unfortunately, you cannot use
+		 * CapturingBookmarkablePageRequestTarget in an event listener like onClick() unless you
+		 * change the application's IRequestCycleSettings to ONE_PASS_RENDER, thus we use mount() in
+		 * the application
 		 */
 		add(new BookmarkablePageLink("emailwicketpage", EmailPage.class));
 	}

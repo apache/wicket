@@ -46,8 +46,7 @@ public class Clock extends Label
 	}
 
 	/**
-	 * A model that returns current time in the specified timezone via a
-	 * formatted string
+	 * A model that returns current time in the specified timezone via a formatted string
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */

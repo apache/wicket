@@ -58,7 +58,7 @@ public final class WicketExampleHeader extends Panel
 			{
 				return !RequestContext.get().isPortletRequest();
 			}
-		});		
+		});
 		add(new InspectorBug("inspector", page));
 		add(new Label("exampleTitle", exampleTitle));
 		Link link = new Link("sources")
@@ -70,7 +70,8 @@ public final class WicketExampleHeader extends Panel
 		};
 		add(link);
 
-		PopupSettings settings = new PopupSettings(PageMap.forName("sources"), PopupSettings.RESIZABLE);
+		PopupSettings settings = new PopupSettings(PageMap.forName("sources"),
+				PopupSettings.RESIZABLE);
 		settings.setWidth(800);
 		settings.setHeight(600);
 		settings.setWindowName("sources");

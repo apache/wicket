@@ -183,8 +183,7 @@ public class TodoList extends BasePage
 			/**
 			 * Toggles the visibility with the add form.
 			 * 
-			 * @return <code>true</code> when the add links is visible and the
-			 *         form isn't.
+			 * @return <code>true</code> when the add links is visible and the form isn't.
 			 */
 			public boolean isVisible()
 			{
@@ -193,8 +192,8 @@ public class TodoList extends BasePage
 		}
 
 		/**
-		 * Link for removing all completed todos from the list, this link
-		 * follows the same visibility rules as the add link.
+		 * Link for removing all completed todos from the list, this link follows the same
+		 * visibility rules as the add link.
 		 */
 		private final class RemoveCompletedTodosLink extends AjaxFallbackLink
 		{
@@ -220,8 +219,7 @@ public class TodoList extends BasePage
 			/**
 			 * Toggles the visibility with the add form.
 			 * 
-			 * @return <code>true</code> when the add links is visible and the
-			 *         form isn't.
+			 * @return <code>true</code> when the add links is visible and the form isn't.
 			 */
 			public boolean isVisible()
 			{
@@ -230,10 +228,9 @@ public class TodoList extends BasePage
 		}
 
 		/**
-		 * Displays a form which offers an edit field and two buttons: one for
-		 * adding the todo item, and one for canceling the addition. The
-		 * visibility of this component is mutual exclusive with the visibility
-		 * of the add-link.
+		 * Displays a form which offers an edit field and two buttons: one for adding the todo item,
+		 * and one for canceling the addition. The visibility of this component is mutual exclusive
+		 * with the visibility of the add-link.
 		 */
 		private final class AddTodoForm extends Form
 		{
@@ -270,8 +267,7 @@ public class TodoList extends BasePage
 			}
 
 			/**
-			 * Toggles the visibility with the add link. When the link is
-			 * visible, the form isn't.
+			 * Toggles the visibility with the add link. When the link is visible, the form isn't.
 			 * 
 			 * @return true when the form is visible and the link isn't.
 			 */
@@ -299,8 +295,7 @@ public class TodoList extends BasePage
 		}
 
 		/**
-		 * Called then the add link was clicked, shows the form, and hides the
-		 * link.
+		 * Called then the add link was clicked, shows the form, and hides the link.
 		 * 
 		 * @param target
 		 *            the request target.
@@ -335,9 +330,8 @@ public class TodoList extends BasePage
 		}
 
 		/**
-		 * Called when the form is submitted through the add button, stores the
-		 * todo item, hides the form, displays the add link and updates the
-		 * listview.
+		 * Called when the form is submitted through the add button, stores the todo item, hides the
+		 * form, displays the add link and updates the listview.
 		 * 
 		 * @param target
 		 *            the request target
@@ -362,8 +356,8 @@ public class TodoList extends BasePage
 		}
 
 		/**
-		 * Called when adding a new todo item was canceled. Hides the add form
-		 * and displays the add link.
+		 * Called when adding a new todo item was canceled. Hides the add form and displays the add
+		 * link.
 		 * 
 		 * @param target
 		 *            the request target.

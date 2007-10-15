@@ -24,17 +24,21 @@ import org.apache.wicket.spring.common.web.ContactsDisplayPage;
 import org.apache.wicket.spring.common.web.ExampleApplication;
 
 
-public class ProxyPage extends ContactsDisplayPage {
+public class ProxyPage extends ContactsDisplayPage
+{
 
-	public ProxyPage() {
+	public ProxyPage()
+	{
 
 	}
 
-	private ContactDao getContactDao() {
-		return ((ExampleApplication) Application.get()).getContactDaoProxy();
+	private ContactDao getContactDao()
+	{
+		return ((ExampleApplication)Application.get()).getContactDaoProxy();
 	}
 
-	protected SortableDataProvider getDataProvider() {
+	protected SortableDataProvider getDataProvider()
+	{
 		return new ProxyDataProvider(getContactDao());
 	}
 }

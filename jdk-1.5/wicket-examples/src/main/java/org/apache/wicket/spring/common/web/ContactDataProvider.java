@@ -23,28 +23,31 @@ import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.common.QueryParam;
 
 /**
- * Base class for contact data provider implementations. This class implements
- * everything except retrieval of the dao object, this way we can isolate that
- * for our examples.
+ * Base class for contact data provider implementations. This class implements everything except
+ * retrieval of the dao object, this way we can isolate that for our examples.
  * 
  * @author Igor Vaynberg (ivaynerg)
  * 
  */
-public abstract class ContactDataProvider extends SortableDataProvider {
+public abstract class ContactDataProvider extends SortableDataProvider
+{
 
-	public ContactDataProvider() {
+	public ContactDataProvider()
+	{
 		setSort("firstName", true);
 	}
 
 	protected abstract ContactDao getContactDao();
 
-	public final Iterator iterator(int first, int count) {
-		QueryParam qp = new QueryParam(first, count, getSort().getProperty(),
-				getSort().isAscending());
+	public final Iterator iterator(int first, int count)
+	{
+		QueryParam qp = new QueryParam(first, count, getSort().getProperty(), getSort()
+				.isAscending());
 		return getContactDao().find(qp);
 	}
 
-	public final int size() {
+	public final int size()
+	{
 		return getContactDao().count();
 	}
 }

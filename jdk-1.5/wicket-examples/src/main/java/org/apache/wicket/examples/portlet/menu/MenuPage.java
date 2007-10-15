@@ -32,23 +32,28 @@ public class MenuPage extends WebPage
 {
 	public MenuPage()
 	{
-		add(new Loop("examples", WicketExamplesMenuApplication.getExamples().size()-1)
+		add(new Loop("examples", WicketExamplesMenuApplication.getExamples().size() - 1)
 		{
-			
+
 			@Override
 			protected void populateItem(LoopItem item)
 			{
 				final int index = item.getIteration();
-				ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication.getExamples().get(index+1);
+				ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication
+						.getExamples().get(index + 1);
 				Link link = new Link("example")
 				{
 					@Override
 					public void onClick()
 					{
 						int index = ((LoopItem)getParent()).getIteration();
-						ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication.getExamples().get(index+1);
-						PortletSession session = ((PortletRequestContext)RequestContext.get()).getPortletRequest().getPortletSession();
-						session.setAttribute(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, ea);
+						ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication
+								.getExamples().get(index + 1);
+						PortletSession session = ((PortletRequestContext)RequestContext.get())
+								.getPortletRequest().getPortletSession();
+						session
+								.setAttribute(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR,
+										ea);
 					}
 				};
 				link.add(new Label("name", ea.getDisplayName()));

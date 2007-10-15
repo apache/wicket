@@ -88,16 +88,14 @@ public class Signin2Test extends WicketWebTestCase
 		log.debug("Click 'Home'");
 		this.clickLinkWithText("Home");
 		/*
-		 * jWebUnit is missing assertCookieNotPresent() try { // jWebUnit does
-		 * not offer an assertCookieNotPresent
-		 * this.assertCookiePresent("signInPanel.signInForm.username");
-		 * assertTrue("Should have thrown an excpetion", false); } catch
-		 * (AssertionFailedError ex) { ; // ok }
+		 * jWebUnit is missing assertCookieNotPresent() try { // jWebUnit does not offer an
+		 * assertCookieNotPresent this.assertCookiePresent("signInPanel.signInForm.username");
+		 * assertTrue("Should have thrown an excpetion", false); } catch (AssertionFailedError ex) { ; //
+		 * ok }
 		 * 
 		 * try { // jWebUnit does not offer an assertCookieNotPresent
-		 * this.assertCookiePresent("signInPanel.signInForm.password");
-		 * assertTrue("Should have thrown an excpetion", false); } catch
-		 * (AssertionFailedError ex) { ; // ok }
+		 * this.assertCookiePresent("signInPanel.signInForm.password"); assertTrue("Should have
+		 * thrown an excpetion", false); } catch (AssertionFailedError ex) { ; // ok }
 		 */
 		assertTitleEquals("Wicket Examples - signin2");
 	}

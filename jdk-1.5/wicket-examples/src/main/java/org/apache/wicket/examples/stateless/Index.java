@@ -37,7 +37,8 @@ public class Index extends WebPage
 		add(new Label("message", new SessionModel()));
 		// First a normal bookmarkable link (which is stateless by default)
 		add(new BookmarkablePageLink("linkToStatelessPage", StatelessPage.class));
-		// The second with a stateless link, so the onclick will be called but on a stateless page.
+		// The second with a stateless link, so the onclick will be called but
+		// on a stateless page.
 		add(new StatelessLink("linkToStatefulPage")
 		{
 			/**

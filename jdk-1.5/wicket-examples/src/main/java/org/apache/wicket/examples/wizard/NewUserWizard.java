@@ -42,10 +42,10 @@ import org.apache.wicket.validation.validator.EmailAddressValidator;
 
 
 /**
- * This wizard shows some basic form use. It uses custom panels for the form
- * elements, and a single domain object ({@link User}) as it's subject. Also,
- * the user roles step}is an optional step, that will only be executed when
- * assignRoles is true (and that value is edited in the user details step).
+ * This wizard shows some basic form use. It uses custom panels for the form elements, and a single
+ * domain object ({@link User}) as it's subject. Also, the user roles step}is an optional step,
+ * that will only be executed when assignRoles is true (and that value is edited in the user details
+ * step).
  * 
  * @author Eelco Hillenius
  */

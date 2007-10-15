@@ -36,8 +36,7 @@ import org.apache.wicket.model.Model;
 
 
 /**
- * Page with examples on
- * {@link org.apache.wicket.extensions.markup.html.form.select.Select}.
+ * Page with examples on {@link org.apache.wicket.extensions.markup.html.form.select.Select}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius

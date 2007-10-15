@@ -28,37 +28,37 @@ import org.apache.wicket.model.PropertyModel;
 
 
 /**
- * Column, that either shows a readonly cell or an editable panel, depending on whether
- * the current row is selected.
- *  
+ * Column, that either shows a readonly cell or an editable panel, depending on whether the current
+ * row is selected.
+ * 
  * @author Matej Knopp
  */
-public class PropertyEditableColumn extends PropertyRenderableColumn 
+public class PropertyEditableColumn extends PropertyRenderableColumn
 {
 	/**
 	 * Column constructor.
-
+	 * 
 	 * @param location
 	 * @param header
 	 * @param propertyExpression
 	 */
-	public PropertyEditableColumn(ColumnLocation location, String header, String propertyExpression) 
+	public PropertyEditableColumn(ColumnLocation location, String header, String propertyExpression)
 	{
 		super(location, header, propertyExpression);
 	}
-	
+
 	/**
 	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
 	 */
-	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level) 
+	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level)
 	{
 		return new EditablePanel(id, new PropertyModel(node, getPropertyExpression()));
 	}
-	
+
 	/**
 	 * @see IColumn#newCell(TreeNode, int)
 	 */
-	public IRenderable newCell(TreeNode node, int level) 
+	public IRenderable newCell(TreeNode node, int level)
 	{
 		if (getTreeTable().getTreeState().isNodeSelected(node))
 			return null;

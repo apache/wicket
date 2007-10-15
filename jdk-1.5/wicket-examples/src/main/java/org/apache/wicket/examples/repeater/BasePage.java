@@ -91,6 +91,7 @@ public class BasePage extends ExamplePage
 
 	/**
 	 * sets selected contact
+	 * 
 	 * @param selected
 	 */
 	public void setSelected(Contact selected)

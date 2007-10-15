@@ -64,8 +64,8 @@ public class StockQuotePage extends WicketExamplePage
 	}
 
 	/**
-	 * Quote instance used for communicating between the form input field and
-	 * the display labels for showing the stock quote.
+	 * Quote instance used for communicating between the form input field and the display labels for
+	 * showing the stock quote.
 	 */
 	private final Quote quote = new Quote();
 

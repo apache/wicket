@@ -36,7 +36,7 @@ public class JettyTestCaseDecorator extends TestSetup
 	private Server server;
 	private String contextPath;
 	private String webappLocation;
-	
+
 	/**
 	 * @param test
 	 */
@@ -45,6 +45,7 @@ public class JettyTestCaseDecorator extends TestSetup
 		super(test);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		server = new Server();
@@ -79,6 +80,7 @@ public class JettyTestCaseDecorator extends TestSetup
 		super.setUp();
 	}
 
+	@Override
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();

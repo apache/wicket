@@ -65,8 +65,8 @@ public final class BookDetails extends AuthenticatedWebPage
 				"noBookTitle", this)));
 
 		String writingStyles;
-		final boolean hasStyles = (book.getWritingStyles() != null)
-				&& (book.getWritingStyles().size() > 0);
+		final boolean hasStyles = (book.getWritingStyles() != null) &&
+				(book.getWritingStyles().size() > 0);
 
 		if (hasStyles)
 		{

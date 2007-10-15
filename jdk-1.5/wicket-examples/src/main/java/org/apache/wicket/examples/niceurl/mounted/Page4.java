@@ -22,7 +22,6 @@ import org.apache.wicket.examples.niceurl.Home;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 
-
 /**
  * Simple bookmarkable page.
  * 

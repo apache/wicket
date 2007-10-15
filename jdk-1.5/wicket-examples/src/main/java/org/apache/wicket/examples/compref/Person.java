@@ -151,7 +151,7 @@ public class Person implements IClusterable
 	 */
 	public String toString()
 	{
-		return "[Person name=" + name + ", lastName=" + lastName + ", dateOfBirth=" + dateOfBirth
-				+ "]";
+		return "[Person name=" + name + ", lastName=" + lastName + ", dateOfBirth=" + dateOfBirth +
+				"]";
 	}
 }

@@ -47,15 +47,13 @@ public class PageWithCustomLoading extends WicketExamplePage
 	}
 
 	/**
-	 * This implementation loads from a custom name/ location. While not
-	 * advisable as the default way of loading resources, overriding this method
-	 * can provide a component specific break out so that you e.g. can load a
-	 * template from a database without any other component or the application
-	 * having to know about it.
+	 * This implementation loads from a custom name/ location. While not advisable as the default
+	 * way of loading resources, overriding this method can provide a component specific break out
+	 * so that you e.g. can load a template from a database without any other component or the
+	 * application having to know about it.
 	 * 
 	 * @param container
-	 *            The MarkupContainer which requests to load the Markup resource
-	 *            stream
+	 *            The MarkupContainer which requests to load the Markup resource stream
 	 * @param containerClass
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
@@ -76,10 +74,9 @@ public class PageWithCustomLoading extends WicketExamplePage
 	}
 
 	/**
-	 * Prevent the markup from ever be cached. This is optionally - components
-	 * that don't implement {@link IMarkupCacheKeyProvider} will just have their
-	 * markup cached - but is useful when markup varies. If you don't need such
-	 * dynamic loading, it is advisible to not implement
+	 * Prevent the markup from ever be cached. This is optionally - components that don't implement
+	 * {@link IMarkupCacheKeyProvider} will just have their markup cached - but is useful when
+	 * markup varies. If you don't need such dynamic loading, it is advisible to not implement
 	 * {@link IMarkupCacheKeyProvider}.
 	 * 
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,

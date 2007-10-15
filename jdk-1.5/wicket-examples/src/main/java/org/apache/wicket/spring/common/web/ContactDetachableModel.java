@@ -22,9 +22,8 @@ import org.apache.wicket.spring.common.Contact;
 import org.apache.wicket.spring.common.ContactDao;
 
 /**
- * Base class for contact detachable models. This class implements all necessary
- * logic except retrieval of the dao object, this way we can isolate that logic
- * in our example implementations.
+ * Base class for contact detachable models. This class implements all necessary logic except
+ * retrieval of the dao object, this way we can isolate that logic in our example implementations.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

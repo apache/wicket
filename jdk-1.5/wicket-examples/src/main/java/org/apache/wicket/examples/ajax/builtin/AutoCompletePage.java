@@ -33,7 +33,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Page that demos the ajax auto complete text field
- *
+ * 
  * @author ivaynberg
  */
 public class AutoCompletePage extends BasePage
@@ -79,11 +79,12 @@ public class AutoCompletePage extends BasePage
 		};
 		form.add(field);
 
-		final Label label = new Label("selectedValue",field.getModel());
+		final Label label = new Label("selectedValue", field.getModel());
 		label.setOutputMarkupId(true);
 		form.add(label);
 
-		field.add(new AjaxFormSubmitBehavior(form, "onchange"){
+		field.add(new AjaxFormSubmitBehavior(form, "onchange")
+		{
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				target.addComponent(label);

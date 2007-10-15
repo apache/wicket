@@ -19,10 +19,9 @@ package org.apache.wicket.examples.forminput;
 import org.apache.wicket.IClusterable;
 
 /**
- * Represents a US phone number. We use this instead of the direct string to
- * trigger conversion to and from string. Conversion in general may be
- * re-evaluated in Wicket 1.3, hopefully making this a hack from the past by
- * then.
+ * Represents a US phone number. We use this instead of the direct string to trigger conversion to
+ * and from string. Conversion in general may be re-evaluated in Wicket 1.3, hopefully making this a
+ * hack from the past by then.
  * 
  * @author Eelco Hillenius
  */

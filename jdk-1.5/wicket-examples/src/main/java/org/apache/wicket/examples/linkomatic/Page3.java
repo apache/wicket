@@ -21,7 +21,6 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 
 
-
 /**
  * Trivial page.
  * 

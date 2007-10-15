@@ -34,13 +34,14 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 	{
 		getTestContext().setBaseUrl("http://localhost:8098/");
 	}
+
 	/**
 	 * 
 	 * @return Test
 	 */
 	public static Test suite()
 	{
-		JettyTestCaseDecorator deco = (JettyTestCaseDecorator) suite(WithoutCPWithoutFPTest.class);
+		JettyTestCaseDecorator deco = (JettyTestCaseDecorator)suite(WithoutCPWithoutFPTest.class);
 		deco.setContextPath("");
 		String basedir = System.getProperty("basedir");
 		String path = "";
@@ -74,6 +75,7 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 		assertTitleEquals("Wicket Examples - helloworld");
 		assertTextInElement("message", "Message is: 'Test'");
 	}
+
 	public void testWithSlash() throws Exception
 	{
 		beginAt("/hello/message/Test%2FWith%20a%20Slash");

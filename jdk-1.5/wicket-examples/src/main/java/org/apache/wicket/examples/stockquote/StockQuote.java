@@ -27,14 +27,14 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Provides access to a SOAP service for getting stock quotes based on a symbol.
- * Found on http://www.devx.com/Java/Article/27559/0/page/2
+ * Provides access to a SOAP service for getting stock quotes based on a symbol. Found on
+ * http://www.devx.com/Java/Article/27559/0/page/2
  */
 public class StockQuote
 {
 	/**
-	 * We used to use the www.xmethods.com demo webservice for stockquotes.
-	 * We now use webservicex, as xmethods was really overloaded and unreliable.
+	 * We used to use the www.xmethods.com demo webservice for stockquotes. We now use webservicex,
+	 * as xmethods was really overloaded and unreliable.
 	 */
 	private static final String serviceUrl = "http://www.webservicex.net/stockquote.asmx";
 
@@ -211,7 +211,8 @@ public class StockQuote
 	private String createMessage(String symbol)
 	{
 		StringBuffer message = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		message.append("<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
+		message
+				.append("<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
 		message.append("  <soap:Body>");
 		message.append("    <GetQuote xmlns=\"http://www.webserviceX.NET/\">");
 		message.append("      <symbol>").append(symbol).append("</symbol>");

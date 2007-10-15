@@ -24,13 +24,16 @@ import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.common.web.ContactDataProvider;
 import org.apache.wicket.spring.common.web.ExampleApplication;
 
-public class DirectDataProvider extends ContactDataProvider {
+public class DirectDataProvider extends ContactDataProvider
+{
 
-	protected ContactDao getContactDao() {
+	protected ContactDao getContactDao()
+	{
 		return ((ExampleApplication)Application.get()).getContactDao();
 	}
 
-	public IModel model(Object object) {
+	public IModel model(Object object)
+	{
 		return new DirectModel((Contact)object);
 	}
 

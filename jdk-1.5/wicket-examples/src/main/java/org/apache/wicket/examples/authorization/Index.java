@@ -23,7 +23,6 @@ import org.apache.wicket.examples.authorization.pages.AdminBookmarkablePage;
 import org.apache.wicket.examples.authorization.pages.AdminInternalPage;
 import org.apache.wicket.examples.authorization.pages.AnnotationsPanelsPage;
 import org.apache.wicket.examples.authorization.pages.PanelsPage;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -76,7 +75,8 @@ public class Index extends BasePage
 		add(new BookmarkablePageLink("panelsPageLink", PanelsPage.class));
 
 		// pages that are protected using annotations
-		add(new BookmarkablePageLink("adminAnnotBookmarkableLink", AdminAnnotationsBookmarkablePage.class));
+		add(new BookmarkablePageLink("adminAnnotBookmarkableLink",
+				AdminAnnotationsBookmarkablePage.class));
 		add(new Link("adminAnnotInternalLink")
 		{
 			@Override

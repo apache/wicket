@@ -83,8 +83,7 @@ public final class Book implements IClusterable
 	 * @param author
 	 *            The author of the book
 	 * @param isFiction
-	 *            True (FICTION) if the book is fiction, false (NON_FICTION) if
-	 *            it is not.
+	 *            True (FICTION) if the book is fiction, false (NON_FICTION) if it is not.
 	 */
 	public Book(final String title, final String author, final boolean isFiction)
 	{

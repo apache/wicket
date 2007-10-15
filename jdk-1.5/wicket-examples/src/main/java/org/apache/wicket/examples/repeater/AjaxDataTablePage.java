@@ -35,7 +35,8 @@ public class AjaxDataTablePage extends BasePage
 	/**
 	 * Constructor.
 	 */
-	public AjaxDataTablePage() {
+	public AjaxDataTablePage()
+	{
 		List columns = new ArrayList();
 
 		columns.add(new AbstractColumn(new Model("Actions"))

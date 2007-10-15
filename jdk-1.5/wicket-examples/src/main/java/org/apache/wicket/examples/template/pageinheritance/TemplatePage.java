@@ -26,9 +26,8 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * Base page that serves as a template for pages that inherit from it. Doesn't
- * have to be abstract, but was made abstract here to stress the fact that this
- * page is not meant for direct use.
+ * Base page that serves as a template for pages that inherit from it. Doesn't have to be abstract,
+ * but was made abstract here to stress the fact that this page is not meant for direct use.
  * 
  * @author Eelco Hillenius
  */

@@ -21,8 +21,7 @@ import org.apache.wicket.RequestCycle;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
 /**
- * Model that displays whether a session was created yet, and if it was, prints
- * the session id.
+ * Model that displays whether a session was created yet, and if it was, prints the session id.
  * 
  * @author Eelco Hillenius
  */

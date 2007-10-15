@@ -20,13 +20,16 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvid
 import org.apache.wicket.spring.common.web.ContactsDisplayPage;
 
 
-public class DirectPage extends ContactsDisplayPage {
+public class DirectPage extends ContactsDisplayPage
+{
 
-	public DirectPage() {
+	public DirectPage()
+	{
 
 	}
 
-	protected SortableDataProvider getDataProvider() {
+	protected SortableDataProvider getDataProvider()
+	{
 		return new DirectDataProvider();
 	}
 }

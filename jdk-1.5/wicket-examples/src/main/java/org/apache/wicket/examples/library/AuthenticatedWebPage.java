@@ -21,14 +21,13 @@ import org.apache.wicket.markup.html.border.Border;
 
 
 /**
- * Ensures that user is authenticated in session. If no user is signed in, a
- * sign in is forced by redirecting the browser to the SignIn page.
+ * Ensures that user is authenticated in session. If no user is signed in, a sign in is forced by
+ * redirecting the browser to the SignIn page.
  * <p>
- * This base class also creates a border for each page subclass, automatically
- * adding children of the page to the border. This accomplishes two important
- * things: (1) subclasses do not have to repeat the code to create the border
- * navigation and (2) since subclasses do not repeat this code, they are not
- * hardwired to page navigation structure details
+ * This base class also creates a border for each page subclass, automatically adding children of
+ * the page to the border. This accomplishes two important things: (1) subclasses do not have to
+ * repeat the code to create the border navigation and (2) since subclasses do not repeat this code,
+ * they are not hardwired to page navigation structure details
  * 
  * @author Jonathan Locke
  */

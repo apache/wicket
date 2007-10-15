@@ -54,8 +54,8 @@ public abstract class CapturingBookmarkablePageRequestTarget extends Bookmarkabl
 	 * @param displayedPageClass
 	 *            the bookmarkable page to display in the browser
 	 */
-	public CapturingBookmarkablePageRequestTarget(Class capturedPageClass, Class displayedPageClass,
-			PageParameters pageParameters)
+	public CapturingBookmarkablePageRequestTarget(Class capturedPageClass,
+			Class displayedPageClass, PageParameters pageParameters)
 	{
 		super(capturedPageClass, pageParameters);
 		this.displayedPageClass = displayedPageClass;

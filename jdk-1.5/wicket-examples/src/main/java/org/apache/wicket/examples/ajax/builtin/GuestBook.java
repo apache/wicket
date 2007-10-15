@@ -50,9 +50,9 @@ public class GuestBook extends BasePage
 
 	/** The list view that shows comments */
 	private final ListView commentListView;
-	/** Container for the comments, used to update the listview.  */
+	/** Container for the comments, used to update the listview. */
 	private WebMarkupContainer comments;
-	
+
 	/** The textarea for entering the comments, is updated in the ajax call. */
 	private Component text;
 
@@ -68,7 +68,7 @@ public class GuestBook extends BasePage
 		// the WebMarkupContainer is used to update the listview in an ajax call
 		comments = new WebMarkupContainer("comments");
 		add(comments.setOutputMarkupId(true));
-		
+
 		// Add commentListView of existing comments
 		comments.add(commentListView = new ListView("comments", new PropertyModel(this,
 				"commentList"))
@@ -80,13 +80,17 @@ public class GuestBook extends BasePage
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
-		
-		// we need to cancel the standard submit of the form in the onsubmit handler,
-		// otherwise we'll get double submits. To do so, we return false after the
+
+		// we need to cancel the standard submit of the form in the onsubmit
+		// handler,
+		// otherwise we'll get double submits. To do so, we return false after
+		// the
 		// ajax submit has occurred.
-		
-		// The AjaxFormSubmitBehavior already calls the onSubmit of the form, all
-		// we need to do in the onSubmit(AjaxRequestTarget) handler is do our Ajax
+
+		// The AjaxFormSubmitBehavior already calls the onSubmit of the form,
+		// all
+		// we need to do in the onSubmit(AjaxRequestTarget) handler is do our
+		// Ajax
 		// specific stuff, like rendering our components.
 		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "onsubmit")
 		{
@@ -106,10 +110,10 @@ public class GuestBook extends BasePage
 				// add the list of components that need to be updated
 				target.addComponent(comments);
 				target.addComponent(text);
-				
+
 				// focus the textarea again
-				target.appendJavascript("document.getElementById('" + text.getMarkupId()
-						+ "').focus();");
+				target.appendJavascript("document.getElementById('" + text.getMarkupId() +
+						"').focus();");
 			}
 
 			@Override

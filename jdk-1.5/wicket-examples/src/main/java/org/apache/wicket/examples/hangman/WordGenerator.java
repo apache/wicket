@@ -30,10 +30,9 @@ import org.apache.wicket.util.resource.locator.ResourceStreamLocator;
 
 
 /**
- * The word generator is responsible for reading in a list of words from a data
- * file and serving them up in a random order. The generator keeps a state
- * record of which words it has served and randomises them again when the last
- * word has been served.
+ * The word generator is responsible for reading in a list of words from a data file and serving
+ * them up in a random order. The generator keeps a state record of which words it has served and
+ * randomises them again when the last word has been served.
  * 
  * @author Chris Turner
  * @version 1.0
@@ -47,8 +46,7 @@ public class WordGenerator implements IClusterable
 	private int index;
 
 	/**
-	 * Create the word generator, loading the words and preparing them for
-	 * serving.
+	 * Create the word generator, loading the words and preparing them for serving.
 	 */
 	public WordGenerator()
 	{
@@ -71,8 +69,7 @@ public class WordGenerator implements IClusterable
 	}
 
 	/**
-	 * Create the word generator using the supplied array of words as the word
-	 * source to use.
+	 * Create the word generator using the supplied array of words as the word source to use.
 	 * 
 	 * @param words
 	 *            The words to use
@@ -108,8 +105,8 @@ public class WordGenerator implements IClusterable
 	}
 
 	/**
-	 * Randomises the list of loaded words and sets the index back to the
-	 * beginning of the word list.
+	 * Randomises the list of loaded words and sets the index back to the beginning of the word
+	 * list.
 	 */
 	private void shuffle()
 	{

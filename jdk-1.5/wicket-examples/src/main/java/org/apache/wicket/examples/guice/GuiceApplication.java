@@ -34,7 +34,7 @@ public class GuiceApplication extends WicketExampleApplication
 	{
 		addComponentInstantiationListener(new GuiceComponentInjector(this));
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */

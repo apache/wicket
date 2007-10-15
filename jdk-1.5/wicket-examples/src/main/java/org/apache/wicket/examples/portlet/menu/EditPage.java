@@ -19,7 +19,6 @@ package org.apache.wicket.examples.portlet.menu;
 import java.util.List;
 
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
@@ -55,9 +54,9 @@ public class EditPage extends WebPage
 			return Integer.toString(index);
 		}
 	};
-	
+
 	private DropDownChoice ddc;
-	
+
 	public EditPage()
 	{
 		Form form = new Form("form")
@@ -70,25 +69,28 @@ public class EditPage extends WebPage
 			{
 				ExampleApplication selected = (ExampleApplication)ddc.getModelObject();
 				PortletRequestContext prc = (PortletRequestContext)RequestContext.get();
-				PortletPreferences prefs = prc.getPortletRequest().getPreferences();				
-				prc.getPortletRequest().getPortletSession().setAttribute(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, selected);
+				PortletPreferences prefs = prc.getPortletRequest().getPreferences();
+				prc.getPortletRequest().getPortletSession().setAttribute(
+						WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, selected);
 				try
 				{
 					((ActionResponse)prc.getPortletResponse()).setPortletMode(PortletMode.VIEW);
-					prefs.setValue(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF,selected.getFilterPath());
+					prefs.setValue(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF, selected
+							.getFilterPath());
 					prefs.store();
 				}
 				catch (Exception pe)
 				{
 					throw new RuntimeException(pe);
 				}
-			}			
+			}
 		};
 		List examples = WicketExamplesMenuApplication.getExamples();
 		ddc = new DropDownChoice("examples", examples, exampleChoiceRenderer);
 		ddc.setNullValid(false);
 		PortletRequestContext prc = (PortletRequestContext)RequestContext.get();
-		String eaFilterPath = prc.getPortletRequest().getPreferences().getValue(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF, null);
+		String eaFilterPath = prc.getPortletRequest().getPreferences().getValue(
+				WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_PREF, null);
 		Model selected = new Model((ExampleApplication)examples.get(0));
 		if (eaFilterPath != null)
 		{
@@ -100,11 +102,11 @@ public class EditPage extends WebPage
 					break;
 				}
 			}
-		}		
+		}
 		ddc.setModel(selected);
 		form.add(ddc);
 		form.add(new Button("setButton"));
 		add(form);
 	}
-	
+
 }

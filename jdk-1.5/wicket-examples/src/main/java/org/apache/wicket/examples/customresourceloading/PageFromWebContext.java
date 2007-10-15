@@ -22,8 +22,7 @@ import org.apache.wicket.util.resource.locator.IResourceStreamLocator;
 
 /**
  * The markup for this page is loaded from the web context by a custom
- * {@link IResourceStreamLocator} locator set in
- * {@link CustomResourceLoadingApplication}.
+ * {@link IResourceStreamLocator} locator set in {@link CustomResourceLoadingApplication}.
  * 
  * @author Eelco Hillenius
  */

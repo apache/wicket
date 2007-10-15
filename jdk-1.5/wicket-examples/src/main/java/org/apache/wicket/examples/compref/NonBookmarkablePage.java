@@ -20,9 +20,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.PageLink;
 
 /**
- * Example page that cannot be bookmarked. A page is bookmarkable when it has a
- * public default constructor and/or a constructor with a
- * {@link org.apache.wicket.PageParameters} argument.
+ * Example page that cannot be bookmarked. A page is bookmarkable when it has a public default
+ * constructor and/or a constructor with a {@link org.apache.wicket.PageParameters} argument.
  * 
  * @author Eelco Hillenius
  */

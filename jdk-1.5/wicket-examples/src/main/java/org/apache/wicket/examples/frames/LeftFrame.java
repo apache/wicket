@@ -24,23 +24,21 @@ import org.apache.wicket.markup.html.link.Link;
 
 
 /**
- * The left frame. This page is not bookmarkable, but it's instance is created
- * by {@link org.apache.wicket.examples.frames.BodyFrame} and hold in the same page map as
- * index. It uses the frameTarget object as a shared model; this page updates
- * that model, and as the Index uses that to set the frame tag, any changes to
- * it should be reflected with the next render.
+ * The left frame. This page is not bookmarkable, but it's instance is created by
+ * {@link org.apache.wicket.examples.frames.BodyFrame} and hold in the same page map as index. It
+ * uses the frameTarget object as a shared model; this page updates that model, and as the Index
+ * uses that to set the frame tag, any changes to it should be reflected with the next render.
  * 
  * @author Eelco Hillenius
  */
 public class LeftFrame extends WebPage
 {
 	/**
-	 * Link that, when clicked, changes the frame target's frame class (and as
-	 * that is a shared model which is also being used by the 'master page'
-	 * {@link BodyFrame}, changes are immediately reflected) and set the
-	 * response page to the top level page {@link BodyFrame}. Tags that use
-	 * this link should have a <code>target="_parent"</code> attribute, so
-	 * that the top frame will be refreshed.
+	 * Link that, when clicked, changes the frame target's frame class (and as that is a shared
+	 * model which is also being used by the 'master page' {@link BodyFrame}, changes are
+	 * immediately reflected) and set the response page to the top level page {@link BodyFrame}.
+	 * Tags that use this link should have a <code>target="_parent"</code> attribute, so that the
+	 * top frame will be refreshed.
 	 */
 	private static final class ChangeFramePageLink extends Link
 	{

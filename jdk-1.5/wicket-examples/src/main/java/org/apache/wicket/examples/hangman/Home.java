@@ -20,8 +20,8 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 /**
- * The home page for the hangman application. Contains just a single hyperlink
- * to the actual guess page that runs the game.
+ * The home page for the hangman application. Contains just a single hyperlink to the actual guess
+ * page that runs the game.
  * 
  * @author Chris Turner
  * @author Jonathan Locke

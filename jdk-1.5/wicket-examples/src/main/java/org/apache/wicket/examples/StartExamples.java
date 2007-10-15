@@ -29,9 +29,8 @@ import org.mortbay.jetty.webapp.WebAppContext;
 import org.mortbay.management.MBeanContainer;
 
 /**
- * Seperate startup class for people that want to run the examples directly. Use
- * parameter -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect
- * with jconsole).
+ * Seperate startup class for people that want to run the examples directly. Use parameter
+ * -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect with jconsole).
  */
 public class StartExamples
 {

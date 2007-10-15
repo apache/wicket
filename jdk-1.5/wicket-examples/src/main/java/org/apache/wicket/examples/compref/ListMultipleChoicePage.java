@@ -75,9 +75,11 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		ListMultipleChoice listChoice = new ListMultipleChoice("sites", SITES);
 		form.add(listChoice);
 
-		listChoice = new ListMultipleChoice("choices", MANY_CHOICES) {
+		listChoice = new ListMultipleChoice("choices", MANY_CHOICES)
+		{
 			/**
-			 * @see org.apache.wicket.markup.html.form.AbstractChoice#isDisabled(java.lang.Object, int, java.lang.String)
+			 * @see org.apache.wicket.markup.html.form.AbstractChoice#isDisabled(java.lang.Object,
+			 *      int, java.lang.String)
 			 */
 			@Override
 			protected boolean isDisabled(Object object, int index, String selected)

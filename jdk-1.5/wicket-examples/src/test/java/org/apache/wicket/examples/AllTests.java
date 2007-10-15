@@ -36,7 +36,6 @@ import org.apache.wicket.examples.repeater.RepeaterTest;
 import org.apache.wicket.examples.signin2.Signin2Test;
 import org.apache.wicket.util.license.ApacheLicenceHeaderTest;
 
-
 import com.meterware.httpunit.HttpUnitOptions;
 
 /**

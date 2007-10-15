@@ -24,8 +24,7 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * implementation of IDataProvider for contacts that keeps track of sort
- * information
+ * implementation of IDataProvider for contacts that keeps track of sort information
  * 
  * @author igor
  * 

@@ -24,8 +24,10 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class BasePage extends WebPage {
-	public BasePage() {
+public class BasePage extends WebPage
+{
+	public BasePage()
+	{
 		add(new BookmarkablePageLink("home-link", HomePage.class));
 	}
 }

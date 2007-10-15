@@ -117,8 +117,8 @@ public class DropDownChoicePage extends WicketExamplePage
 			}
 
 			/**
-			 * Gets the value that is invisble to the end user, and that is used
-			 * as the selection id.
+			 * Gets the value that is invisble to the end user, and that is used as the selection
+			 * id.
 			 * 
 			 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object,
 			 *      int)

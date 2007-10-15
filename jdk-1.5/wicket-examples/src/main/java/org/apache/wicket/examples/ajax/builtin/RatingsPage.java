@@ -82,8 +82,7 @@ public class RatingsPage extends BasePage
 	}
 
 	/**
-	 * Rating model for storing the ratings, typically this comes from a
-	 * database.
+	 * Rating model for storing the ratings, typically this comes from a database.
 	 */
 	public static class RatingModel implements IClusterable
 	{
@@ -114,8 +113,7 @@ public class RatingsPage extends BasePage
 		}
 
 		/**
-		 * Adds the vote from the user to the total of votes, and calculates the
-		 * rating.
+		 * Adds the vote from the user to the total of votes, and calculates the rating.
 		 * 
 		 * @param nrOfStars
 		 *            the number of stars the user has cast
@@ -149,20 +147,18 @@ public class RatingsPage extends BasePage
 	}
 
 	/**
-	 * static models for the ratings, not thread safe, but in this case, we
-	 * don't care.
+	 * static models for the ratings, not thread safe, but in this case, we don't care.
 	 */
 	private static RatingModel rating1 = new RatingModel();
 
 	/**
-	 * static model for the ratings, not thread safe, but in this case, we don't
-	 * care.
+	 * static model for the ratings, not thread safe, but in this case, we don't care.
 	 */
 	private static RatingModel rating2 = new RatingModel();
 
 	/**
-	 * keeps track whether the user has already voted on this page, comes
-	 * typically from the database, or is stored in a cookie on the client side.
+	 * keeps track whether the user has already voted on this page, comes typically from the
+	 * database, or is stored in a cookie on the client side.
 	 */
 	private Boolean hasVoted = Boolean.FALSE;
 

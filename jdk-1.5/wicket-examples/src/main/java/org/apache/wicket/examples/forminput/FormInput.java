@@ -309,8 +309,7 @@ public class FormInput extends WicketExamplePage
 	}
 
 	/**
-	 * Sets locale for the user's session (getLocale() is inherited from
-	 * Component)
+	 * Sets locale for the user's session (getLocale() is inherited from Component)
 	 * 
 	 * @param locale
 	 *            The new locale

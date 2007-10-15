@@ -23,8 +23,7 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Implementation of IDataProvider that retrieves contacts from the contact
- * database.
+ * Implementation of IDataProvider that retrieves contacts from the contact database.
  * 
  * @author igor
  * 
@@ -37,8 +36,8 @@ public class ContactDataProvider implements IDataProvider
 	}
 
 	/**
-	 * retrieves contacts from database starting with index <code>first</code>
-	 * and ending with <code>first+count</code>
+	 * retrieves contacts from database starting with index <code>first</code> and ending with
+	 * <code>first+count</code>
 	 * 
 	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
 	 */

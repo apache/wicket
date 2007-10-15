@@ -29,7 +29,7 @@ public class AdminBookmarkablePage extends BasePage
 	 * See for configuration of this class the {@link RolesApplication#init)
 	 * MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
 	 */
-	
+
 	/**
 	 * Construct.
 	 */

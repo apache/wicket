@@ -22,8 +22,8 @@ import org.apache.wicket.examples.panels.signin.SignInPanel;
 
 
 /**
- * Simple example of a sign in page. It extends SignInPage, a base class which
- * provide standard functionality for typical log-in pages
+ * Simple example of a sign in page. It extends SignInPage, a base class which provide standard
+ * functionality for typical log-in pages
  * 
  * @author Jonathan Locke
  */

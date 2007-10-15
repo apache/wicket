@@ -33,9 +33,9 @@ import org.apache.wicket.model.PropertyModel;
 
 
 /**
- * Page that demonstrates using RefreshingView in a form. The component reuses
- * its items, to allow adding or removing rows without necessarily validating
- * the form, and preserving component state which preserves error messages, etc.
+ * Page that demonstrates using RefreshingView in a form. The component reuses its items, to allow
+ * adding or removing rows without necessarily validating the form, and preserving component state
+ * which preserves error messages, etc.
  */
 public class FormPage extends BasePage
 {

@@ -30,8 +30,9 @@ public class LazyLoadingPage extends BasePage
 	 */
 	public LazyLoadingPage()
 	{
-		add(new AjaxLazyLoadPanel("lazy"){
-		
+		add(new AjaxLazyLoadPanel("lazy")
+		{
+
 			@Override
 			public Component getLazyLoadComponent(String id)
 			{
@@ -44,9 +45,9 @@ public class LazyLoadingPage extends BasePage
 				{
 					throw new RuntimeException(e);
 				}
-				return new Label(id,"Lazy Loaded after 5 seconds");
+				return new Label(id, "Lazy Loaded after 5 seconds");
 			}
-		
+
 		});
 	}
 }

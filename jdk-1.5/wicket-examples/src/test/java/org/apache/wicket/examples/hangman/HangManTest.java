@@ -18,13 +18,10 @@ package org.apache.wicket.examples.hangman;
 
 import java.util.Iterator;
 
-import org.apache.wicket.examples.WicketWebTestCase;
-import org.apache.wicket.examples.hangman.Game;
-import org.apache.wicket.examples.hangman.Letter;
-import org.apache.wicket.examples.hangman.WordGenerator;
-
 import junit.framework.Assert;
 import junit.framework.Test;
+
+import org.apache.wicket.examples.WicketWebTestCase;
 
 /**
  * Testcase for the <code>Game</code> class.
@@ -157,7 +154,7 @@ public class HangManTest extends WicketWebTestCase
 	 */
 	public void testHangmanSuccessWebGame()
 	{
-		
+
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
 		beginAt("/hangman/?word=hangman");
 
@@ -174,16 +171,16 @@ public class HangManTest extends WicketWebTestCase
 
 		assertElementPresent("guessesRemaining");
 		assertTextInElement("guessesRemaining", "4");
-		
+
 		clickLink("letter_h");
-		assertElementPresent("guessesRemaining");		
+		assertElementPresent("guessesRemaining");
 		assertTextInElement("guessesRemaining", "4");
 
 		clickLink("letter_a");
 		clickLink("letter_n");
 		clickLink("letter_g");
 		clickLink("letter_m");
-		
+
 		assertTextPresent("Congratulations! You guessed that the word was ");
 	}
 
@@ -211,7 +208,7 @@ public class HangManTest extends WicketWebTestCase
 
 		// todo jwebunit doesn't really test if it is a link!
 		// it just finds a html element by that id, and we have one
-//		assertLinkNotPresent("letter_f");
+// assertLinkNotPresent("letter_f");
 		clickLink("letter_x");
 		assertTextInElement("guessesRemaining", "3");
 

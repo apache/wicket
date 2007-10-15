@@ -67,8 +67,7 @@ public class SourcesPage extends WebPage
 	private static final Log log = LogFactory.getLog(SourcesPage.class);
 
 	/**
-	 * Model for retrieving the source code from the classpath of a packaged
-	 * resource.
+	 * Model for retrieving the source code from the classpath of a packaged resource.
 	 */
 	public class SourceModel extends AbstractReadOnlyModel
 	{
@@ -118,24 +117,24 @@ public class SourcesPage extends WebPage
 						return renderer.highlight(name, sb.toString(), "UTF-8", true);
 					}
 				}
-				return Strings.escapeMarkup(sb.toString(), false, true).toString().replaceAll("\n", "<br />");
+				return Strings.escapeMarkup(sb.toString(), false, true).toString().replaceAll("\n",
+						"<br />");
 			}
 			catch (IOException e)
 			{
-				log.error("Unable to read resource stream for: " + name + "; Page="
-						+ page.toString(), e);
+				log.error("Unable to read resource stream for: " + name + "; Page=" +
+						page.toString(), e);
 				return "";
 			}
 			finally
 			{
 				IOUtils.closeQuietly(br);
 			}
-		}		
+		}
 	}
 
 	/**
-	 * Model for retrieving the contents of a package directory from the class
-	 * path.
+	 * Model for retrieving the contents of a package directory from the class path.
 	 */
 	public class PackagedResourcesModel extends AbstractReadOnlyModel implements IDetachable
 	{
@@ -166,31 +165,31 @@ public class SourcesPage extends WebPage
 			if (resources.isEmpty())
 			{
 				get(page);
-//				PackageName name = PackageName.forClass(page);
-//				ClassLoader loader = page.getClassLoader();
-//				String path = Strings.replaceAll(name.getName(), ".", "/").toString();
-//				try
-//				{
-//					// gives the urls for each place where the package
-//					// path could be found. There could be multiple
-//					// jar files containing the same package, so each
-//					// jar file has its own url.
+// PackageName name = PackageName.forClass(page);
+// ClassLoader loader = page.getClassLoader();
+// String path = Strings.replaceAll(name.getName(), ".", "/").toString();
+// try
+// {
+// // gives the urls for each place where the package
+// // path could be found. There could be multiple
+// // jar files containing the same package, so each
+// // jar file has its own url.
 //
-//					Enumeration urls = loader.getResources(path);
-//					while (urls.hasMoreElements())
-//					{
-//						URL url = (URL)urls.nextElement();
+// Enumeration urls = loader.getResources(path);
+// while (urls.hasMoreElements())
+// {
+// URL url = (URL)urls.nextElement();
 //
-//						// the url points to the directory structure
-//						// embedded in the classpath.
+// // the url points to the directory structure
+// // embedded in the classpath.
 //
-//						getPackageContents(url);
-//					}
-//				}
-//				catch (IOException e)
-//				{
-//					log.error("Unable to read resource for: " + path, e);
-//				}
+// getPackageContents(url);
+// }
+// }
+// catch (IOException e)
+// {
+// log.error("Unable to read resource for: " + path, e);
+// }
 			}
 			return resources;
 		}
@@ -233,7 +232,8 @@ public class SourcesPage extends WebPage
 			}
 		}
 
-		private final void addResources(final Class scope, final AppendingStringBuffer relativePath, final File dir)
+		private final void addResources(final Class scope,
+				final AppendingStringBuffer relativePath, final File dir)
 		{
 			File[] files = dir.listFiles();
 			for (int i = 0; i < files.length; i++)
@@ -241,7 +241,8 @@ public class SourcesPage extends WebPage
 				File file = files[i];
 				if (file.isDirectory())
 				{
-					addResources(scope,  new AppendingStringBuffer(relativePath).append(file.getName()).append('/'), file);
+					addResources(scope, new AppendingStringBuffer(relativePath).append(
+							file.getName()).append('/'), file);
 				}
 				else
 				{
@@ -251,14 +252,15 @@ public class SourcesPage extends WebPage
 					{
 						resources.add(relativePath + name);
 					}
-					
+
 				}
 			}
 		}
 
 		private void get(Class scope)
 		{
-			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/").toString();
+			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
+					.toString();
 			ClassLoader loader = scope.getClassLoader();
 			try
 			{
@@ -290,27 +292,38 @@ public class SourcesPage extends WebPage
 						{
 							basedir = new File(uri);
 						}
-						catch(IllegalArgumentException e)
+						catch (IllegalArgumentException e)
 						{
 							log.debug("Can't construct the uri as a file: " + absolutePath);
-							// if this is throwen then the path is not really a file. but could be a zip.
+							// if this is throwen then the path is not really a
+							// file. but could be a zip.
 							String jarZipPart = uri.getSchemeSpecificPart();
-							// lowercased for testing if jar/zip, but leave the real filespec unchanged
+							// lowercased for testing if jar/zip, but leave the
+							// real filespec unchanged
 							String lowerJarZipPart = jarZipPart.toLowerCase();
 							int index = lowerJarZipPart.indexOf(".zip");
-							if(index == -1) index = lowerJarZipPart.indexOf(".jar");
-							if(index == -1) throw e;
-							
-							String filename = jarZipPart.substring(0, index+4); // 4 = len of ".jar" or ".zip"
-							log.debug("trying the filename: " + filename + " to load as a zip/jar.");
-							JarFile jarFile = new JarFile(filename,false);
+							if (index == -1)
+								index = lowerJarZipPart.indexOf(".jar");
+							if (index == -1)
+								throw e;
+
+							String filename = jarZipPart.substring(0, index + 4); // 4 =
+							// len
+							// of
+							// ".jar"
+							// or
+							// ".zip"
+							log
+									.debug("trying the filename: " + filename +
+											" to load as a zip/jar.");
+							JarFile jarFile = new JarFile(filename, false);
 							scanJarFile(scope, packageRef, jarFile);
 							return;
 						}
 						if (!basedir.isDirectory())
 						{
-							throw new IllegalStateException("unable to read resources from directory "
-									+ basedir);
+							throw new IllegalStateException(
+									"unable to read resources from directory " + basedir);
 						}
 						addResources(scope, new AppendingStringBuffer(), basedir);
 					}
@@ -324,7 +337,7 @@ public class SourcesPage extends WebPage
 			return;
 		}
 
-		private void scanJarFile(Class scope,String packageRef, JarFile jf)
+		private void scanJarFile(Class scope, String packageRef, JarFile jf)
 		{
 			Enumeration enumeration = jf.entries();
 			while (enumeration.hasMoreElements())
@@ -384,8 +397,8 @@ public class SourcesPage extends WebPage
 	}
 
 	/**
-	 * Container for displaying the source of the selected page, resource or
-	 * other element from the package.
+	 * Container for displaying the source of the selected page, resource or other element from the
+	 * package.
 	 */
 	public class CodePanel extends WebMarkupContainer
 	{

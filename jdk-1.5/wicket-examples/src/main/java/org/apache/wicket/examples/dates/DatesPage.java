@@ -38,8 +38,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * Demonstrates components from the wicket-date project and a bunch of locale
- * fiddling.
+ * Demonstrates components from the wicket-date project and a bunch of locale fiddling.
  */
 public class DatesPage extends WicketExamplePage
 {
@@ -138,7 +137,7 @@ public class DatesPage extends WicketExamplePage
 	public DatesPage()
 	{
 		selectedLocale = Session.get().getLocale();
-		Form localeForm = new Form("localeForm");		
+		Form localeForm = new Form("localeForm");
 		localeForm.add(new LocaleDropDownChoice("localeSelect"));
 		localeForm.add(new Link("localeUSLink")
 		{

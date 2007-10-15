@@ -1,24 +1,25 @@
 package com.meterware.httpunit;
+
 /********************************************************************************************************************
-* $Id$
-*
-* Copyright (c) 2000-2004, Russell Gold
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-* documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-* the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
-* to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions
-* of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-* THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-* CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-* DEALINGS IN THE SOFTWARE.
-*
-*******************************************************************************************************************/
+ * $Id$
+ *
+ * Copyright (c) 2000-2004, Russell Gold
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
+ * to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions
+ * of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ *******************************************************************************************************************/
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -170,8 +171,7 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the top-level block elements found in the page in the order in
-	 * which they appear.
+	 * Returns the top-level block elements found in the page in the order in which they appear.
 	 * 
 	 * @return Text blocks
 	 */
@@ -187,8 +187,8 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first text block found in the page which matches the
-	 * specified predicate and value.
+	 * Returns the first text block found in the page which matches the specified predicate and
+	 * value.
 	 * 
 	 * @param predicate
 	 * @param criteria
@@ -224,8 +224,7 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the top-level tables found in the page in the order in which they
-	 * appear.
+	 * Returns the top-level tables found in the page in the order in which they appear.
 	 * 
 	 * @return Tables
 	 */
@@ -268,8 +267,7 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the HTML elements with an attribute with the specified name and
-	 * value.
+	 * Returns the HTML elements with an attribute with the specified name and value.
 	 * 
 	 * @param name
 	 * @param value
@@ -493,8 +491,7 @@ class ParsedHTML
 
 
 	/**
-	 * If noscript node content is enabled, returns null - otherwise returns a
-	 * concealing element.
+	 * If noscript node content is enabled, returns null - otherwise returns a concealing element.
 	 */
 	private HTMLElement toNoscriptElement(Element element)
 	{
@@ -856,8 +853,8 @@ class ParsedHTML
 
 		private HTMLElement newControlWithoutForm(ParsedHTML parsedHTML, Element element)
 		{
-			if (element.getNodeName().equalsIgnoreCase("button")
-					&& isValidNonFormButtonType(NodeUtils.getNodeAttribute(element, "type")))
+			if (element.getNodeName().equalsIgnoreCase("button") &&
+					isValidNonFormButtonType(NodeUtils.getNodeAttribute(element, "type")))
 			{
 				return parsedHTML.toButtonWithoutForm(element);
 			}
@@ -1213,8 +1210,8 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the link which contains the first image with the specified text
-	 * as its 'alt' attribute.
+	 * Returns the link which contains the first image with the specified text as its 'alt'
+	 * attribute.
 	 * 
 	 * @param text
 	 * @return Link
@@ -1302,8 +1299,7 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first image found in the page with the specified src
-	 * attribute.
+	 * Returns the first image found in the page with the specified src attribute.
 	 * 
 	 * @param source
 	 * @return Image
@@ -1323,8 +1319,7 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first image found in the page with the specified alt
-	 * attribute.
+	 * Returns the first image found in the page with the specified alt attribute.
 	 * 
 	 * @param altText
 	 * @return Image
@@ -1344,8 +1339,8 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first table in the response which matches the specified
-	 * predicate and value. Will recurse into any nested tables, as needed.
+	 * Returns the first table in the response which matches the specified predicate and value. Will
+	 * recurse into any nested tables, as needed.
 	 * 
 	 * @param predicate
 	 * @param criteria
@@ -1357,8 +1352,8 @@ class ParsedHTML
 	}
 
 	/**
-	 * Returns the tables in the response which match the specified predicate
-	 * and value. Will recurse into any nested tables, as needed.
+	 * Returns the tables in the response which match the specified predicate and value. Will
+	 * recurse into any nested tables, as needed.
 	 * 
 	 * @param predicate
 	 * @param criteria
@@ -1371,9 +1366,8 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first table in the response which has the specified text as
-	 * the full text of its first non-blank row and non-blank column. Will
-	 * recurse into any nested tables, as needed.
+	 * Returns the first table in the response which has the specified text as the full text of its
+	 * first non-blank row and non-blank column. Will recurse into any nested tables, as needed.
 	 * 
 	 * @param text
 	 * @return the selected table, or null if none is found
@@ -1385,9 +1379,9 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first table in the response which has the specified text as a
-	 * prefix of the text in its first non-blank row and non-blank column. Will
-	 * recurse into any nested tables, as needed.
+	 * Returns the first table in the response which has the specified text as a prefix of the text
+	 * in its first non-blank row and non-blank column. Will recurse into any nested tables, as
+	 * needed.
 	 * 
 	 * @param text
 	 * @return the selected table, or null if none is found
@@ -1399,8 +1393,8 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first table in the response which has the specified text as
-	 * its summary attribute. Will recurse into any nested tables, as needed.
+	 * Returns the first table in the response which has the specified text as its summary
+	 * attribute. Will recurse into any nested tables, as needed.
 	 * 
 	 * @param summary
 	 * @return the selected table, or null if none is found
@@ -1412,8 +1406,8 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the first table in the response which has the specified text as
-	 * its ID attribute. Will recurse into any nested tables, as needed.
+	 * Returns the first table in the response which has the specified text as its ID attribute.
+	 * Will recurse into any nested tables, as needed.
 	 * 
 	 * @param ID
 	 * @return the selected table, or null if none is found
@@ -1460,8 +1454,8 @@ class ParsedHTML
 	{
 		if (_rootNode != null && rootNode != _rootNode)
 		{
-			throw new IllegalStateException("The root node has already been defined as "
-					+ _rootNode + " and cannot be redefined as " + rootNode);
+			throw new IllegalStateException("The root node has already been defined as " +
+					_rootNode + " and cannot be redefined as " + rootNode);
 		}
 		_rootNode = rootNode;
 		_links = null;
@@ -1491,8 +1485,7 @@ class ParsedHTML
 
 
 	/**
-	 * Returns the domain object model associated with this page, to be used
-	 * internally.
+	 * Returns the domain object model associated with this page, to be used internally.
 	 */
 	Node getOriginalDOM()
 	{

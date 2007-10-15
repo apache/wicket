@@ -21,7 +21,6 @@ import junit.framework.Test;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.examples.WicketWebTestCase;
-import org.apache.wicket.examples.guestbook.GuestBook;
 
 
 /**

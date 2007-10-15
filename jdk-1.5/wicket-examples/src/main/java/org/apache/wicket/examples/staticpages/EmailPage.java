@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.staticpages;
 
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.examples.WicketExamplePage;
 
 /**

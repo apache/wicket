@@ -28,66 +28,75 @@ import org.apache.wicket.markup.html.WebPage;
  * @author Matej Knopp
  * 
  */
-public class ModalContent1Page extends WebPage {
- 
+public class ModalContent1Page extends WebPage
+{
+
 	/**
 	 * 
 	 * @param modalWindowPage
 	 * @param window
 	 */
-	public ModalContent1Page(final ModalWindowPage modalWindowPage, final ModalWindow window) 
+	public ModalContent1Page(final ModalWindowPage modalWindowPage, final ModalWindow window)
 	{
-		add(new AjaxLink("closeOK") 
+		add(new AjaxLink("closeOK")
 		{
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(AjaxRequestTarget target)
+			{
 				if (modalWindowPage != null)
-				modalWindowPage.setResult("Modal window 1 - close link OK");
+					modalWindowPage.setResult("Modal window 1 - close link OK");
 				window.close(target);
 			}
 		});
 
-		add(new AjaxLink("closeCancel") 
+		add(new AjaxLink("closeCancel")
 		{
-			public void onClick(AjaxRequestTarget target) 
+			public void onClick(AjaxRequestTarget target)
 			{
 				if (modalWindowPage != null)
 					modalWindowPage.setResult("Modal window 1 - close link Cancel");
 				window.close(target);
 			}
 		});
-		
+
 		add(new DateTimeField("dateTimeField"));
 
 		final ModalWindow modal;
-		add (modal= new ModalWindow("modal"));
+		add(modal = new ModalWindow("modal"));
 		modal.setPageMapName("modal-2");
-				
+
 		modal.setCookieName("modal window 2");
-		
-		modal.setResizable(false);		
+
+		modal.setResizable(false);
 		modal.setInitialWidth(30);
 		modal.setInitialHeight(15);
 		modal.setWidthUnit("em");
 		modal.setHeightUnit("em");
-		
+
 		modal.setCssClassName(ModalWindow.CSS_CLASS_GRAY);
 
-		modal.setPageCreator(new ModalWindow.PageCreator() {
-			public Page createPage() {
+		modal.setPageCreator(new ModalWindow.PageCreator()
+		{
+			public Page createPage()
+			{
 				return new ModalContent2Page(modal);
 			}
 		});
 
-		modal.setCloseButtonCallback(new ModalWindow.CloseButtonCallback() {
-			public boolean onCloseButtonClicked(AjaxRequestTarget target) {
-				target.appendJavascript("alert('You can\\'t close this modal window using close button."
-						+ " Use the link inside the window instead.');");
+		modal.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
+		{
+			public boolean onCloseButtonClicked(AjaxRequestTarget target)
+			{
+				target
+						.appendJavascript("alert('You can\\'t close this modal window using close button."
+								+ " Use the link inside the window instead.');");
 				return false;
 			}
 		});
 
-		add(new AjaxLink("open") {
-			public void onClick(AjaxRequestTarget target) {
+		add(new AjaxLink("open")
+		{
+			public void onClick(AjaxRequestTarget target)
+			{
 				modal.show(target);
 			}
 		});

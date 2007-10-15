@@ -22,19 +22,23 @@ import org.apache.wicket.spring.common.Contact;
 import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.common.web.ContactDataProvider;
 
-public class ProxyDataProvider extends ContactDataProvider {
+public class ProxyDataProvider extends ContactDataProvider
+{
 	private ContactDao dao;
 
-	public ProxyDataProvider(ContactDao dao) {
+	public ProxyDataProvider(ContactDao dao)
+	{
 		this.dao = dao;
 	}
 
-	protected ContactDao getContactDao() {
+	protected ContactDao getContactDao()
+	{
 		return dao;
 	}
 
-	public IModel model(Object object) {
-		return new ProxyModel((Contact) object, dao);
+	public IModel model(Object object)
+	{
+		return new ProxyModel((Contact)object, dao);
 	}
 
 }

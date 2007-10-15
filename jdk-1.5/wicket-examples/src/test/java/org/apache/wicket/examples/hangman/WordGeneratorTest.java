@@ -38,7 +38,7 @@ public class WordGeneratorTest extends TestCase
 	private static final Log log = LogFactory.getLog(WordGeneratorTest.class);
 
 	public WicketTester tester;
-	
+
 	/**
 	 * Create the test case.
 	 * 
@@ -49,7 +49,7 @@ public class WordGeneratorTest extends TestCase
 	{
 		super(message);
 	}
-	
+
 	protected void setUp() throws Exception
 	{
 		tester = new WicketTester();

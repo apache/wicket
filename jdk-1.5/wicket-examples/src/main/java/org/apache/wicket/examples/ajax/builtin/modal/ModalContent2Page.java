@@ -24,23 +24,25 @@ import org.apache.wicket.markup.html.WebPage;
 
 /**
  * @author Matej Knopp
- *
+ * 
  */
-public class ModalContent2Page extends WebPage {
+public class ModalContent2Page extends WebPage
+{
 
 	/**
 	 * @param window
 	 */
-	public ModalContent2Page(final ModalWindow window) 
+	public ModalContent2Page(final ModalWindow window)
 	{
 		add(new AjaxLink("close")
 		{
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(AjaxRequestTarget target)
+			{
 				window.close(target);
 			}
 		});
 
-		
+
 	}
 
 

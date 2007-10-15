@@ -31,8 +31,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 
 
 /**
- * A simple "guest book" example that allows visitors to the page to add a
- * comment and see the comments others have added.
+ * A simple "guest book" example that allows visitors to the page to add a comment and see the
+ * comments others have added.
  * 
  * For unit testing, added a parameter to clear the commentList.
  * 
@@ -80,7 +80,7 @@ public final class GuestBook extends WicketExamplePage
 		{
 			// Construct form with no validation listener
 			super(id, new CompoundPropertyModel(new Comment()));
-			
+
 			// this is just to make the unit test happy
 			setMarkupId("commentForm");
 

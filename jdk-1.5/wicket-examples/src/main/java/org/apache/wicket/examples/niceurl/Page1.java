@@ -21,7 +21,6 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 
-
 /**
  * Simple bookmarkable page.
  * 

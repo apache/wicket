@@ -22,7 +22,8 @@ package org.apache.wicket.spring.common;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class QueryParam {
+public class QueryParam
+{
 	private int first;
 
 	private int count;
@@ -32,21 +33,20 @@ public class QueryParam {
 	private boolean sortAsc;
 
 	/**
-	 * Set to return <tt>count</tt> elements, starting at the <tt>first</tt>
-	 * element.
+	 * Set to return <tt>count</tt> elements, starting at the <tt>first</tt> element.
 	 * 
 	 * @param first
 	 *            First element to return.
 	 * @param count
 	 *            Number of elements to return.
 	 */
-	public QueryParam(int first, int count) {
+	public QueryParam(int first, int count)
+	{
 		this(first, count, null, true);
 	}
 
 	/**
-	 * Set to return <tt>count</tt> sorted elements, starting at the
-	 * <tt>first</tt> element.
+	 * Set to return <tt>count</tt> sorted elements, starting at the <tt>first</tt> element.
 	 * 
 	 * @param first
 	 *            First element to return.
@@ -57,30 +57,36 @@ public class QueryParam {
 	 * @param sortAsc
 	 *            Sort ascending or descending.
 	 */
-	public QueryParam(int first, int count, String sort, boolean sortAsc) {
+	public QueryParam(int first, int count, String sort, boolean sortAsc)
+	{
 		this.first = first;
 		this.count = count;
 		this.sort = sort;
 		this.sortAsc = sortAsc;
 	}
 
-	public int getCount() {
+	public int getCount()
+	{
 		return count;
 	}
 
-	public int getFirst() {
+	public int getFirst()
+	{
 		return first;
 	}
 
-	public String getSort() {
+	public String getSort()
+	{
 		return sort;
 	}
 
-	public boolean isSortAsc() {
+	public boolean isSortAsc()
+	{
 		return sortAsc;
 	}
 
-	public boolean hasSort() {
+	public boolean hasSort()
+	{
 		return sort != null;
 	}
 

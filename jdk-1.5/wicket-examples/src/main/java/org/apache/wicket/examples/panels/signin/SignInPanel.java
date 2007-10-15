@@ -27,12 +27,11 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
- * Reusable user sign in panel with username and password as well as support for
- * cookie persistence of the both. When the SignInPanel's form is submitted, the
- * abstract method signIn(String, String) is called, passing the username and
- * password submitted. The signIn() method should sign the user in and return
- * null if no error ocurred, or a descriptive String in the event that the sign
- * in fails.
+ * Reusable user sign in panel with username and password as well as support for cookie persistence
+ * of the both. When the SignInPanel's form is submitted, the abstract method signIn(String, String)
+ * is called, passing the username and password submitted. The signIn() method should sign the user
+ * in and return null if no error ocurred, or a descriptive String in the event that the sign in
+ * fails.
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag

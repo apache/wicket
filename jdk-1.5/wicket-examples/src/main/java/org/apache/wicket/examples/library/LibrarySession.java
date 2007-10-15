@@ -46,8 +46,8 @@ public final class LibrarySession extends WebSession
 	}
 
 	/**
-	 * Checks the given username and password, returning a User object if if the
-	 * username and password identify a valid user.
+	 * Checks the given username and password, returning a User object if if the username and
+	 * password identify a valid user.
 	 * 
 	 * @param username
 	 *            The username

@@ -28,15 +28,15 @@ import org.apache.wicket.session.pagemap.IPageMapEntry;
 import org.apache.wicket.util.string.StringValueConversionException;
 
 /**
- * A page that shows interesting attributes of the Wicket environment, including
- * the current session and the component tree for the current page.
+ * A page that shows interesting attributes of the Wicket environment, including the current session
+ * and the component tree for the current page.
  * 
  * @author Jonathan Locke
  */
 public final class InspectorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -58,10 +58,10 @@ public final class InspectorPage extends WebPage
 		}
 		add(new PageView("page", entry == null ? null : entry.getPage()));
 		add(new Image("bug"));
-		add(new BookmarkablePageLink("allsessions",LiveSessionsPage.class));
+		add(new BookmarkablePageLink("allsessions", LiveSessionsPage.class));
 		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Component#isVersioned()
 	 */

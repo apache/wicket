@@ -52,24 +52,26 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model("ID"), "id") {
+		columns.add(new PropertyColumn(new Model("ID"), "id")
+		{
 			@Override
 			public String getCssClass()
 			{
 				return "numeric";
 			}
 		});
-		
+
 		columns.add(new PropertyColumn(new Model("First Name"), "firstName", "firstName"));
-		
-		columns.add(new PropertyColumn(new Model("Last Name"), "lastName", "lastName") {
+
+		columns.add(new PropertyColumn(new Model("Last Name"), "lastName", "lastName")
+		{
 			@Override
 			public String getCssClass()
 			{
 				return "last-name";
 			}
 		});
-		
+
 		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
 

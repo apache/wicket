@@ -24,8 +24,7 @@ import org.apache.wicket.util.time.Duration;
 
 
 /**
- * A world clock example page. Demonstrates timer behavior as well as multiple
- * component update.
+ * A world clock example page. Demonstrates timer behavior as well as multiple component update.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */

@@ -29,8 +29,9 @@ public class ExampleApplication implements Serializable
 	private final String filterQuery;
 	private final Map initParameters;
 	private final String description;
-	
-	public ExampleApplication(String displayName, String filterPath, String filterQuery, Map initParameters, String description)
+
+	public ExampleApplication(String displayName, String filterPath, String filterQuery,
+			Map initParameters, String description)
 	{
 		this.displayName = displayName;
 		this.filterPath = filterPath;
@@ -41,6 +42,7 @@ public class ExampleApplication implements Serializable
 
 	/**
 	 * Gets displayName.
+	 * 
 	 * @return displayName
 	 */
 	public String getDisplayName()
@@ -50,6 +52,7 @@ public class ExampleApplication implements Serializable
 
 	/**
 	 * Gets description.
+	 * 
 	 * @return description
 	 */
 	public String getDescription()
@@ -59,6 +62,7 @@ public class ExampleApplication implements Serializable
 
 	/**
 	 * Gets filterPath.
+	 * 
 	 * @return filterPath
 	 */
 	public String getFilterPath()
@@ -68,6 +72,7 @@ public class ExampleApplication implements Serializable
 
 	/**
 	 * Gets filterQuery.
+	 * 
 	 * @return filterQuery
 	 */
 	public String getFilterQuery()
@@ -77,13 +82,15 @@ public class ExampleApplication implements Serializable
 
 	/**
 	 * Gets initParameter.
-	 * @param name initParameter name
+	 * 
+	 * @param name
+	 *            initParameter name
 	 * @return initParameter
 	 */
 	public String getInitParameter(String name)
 	{
 		return (String)initParameters.get(name);
 	}
-	
-	
+
+
 }

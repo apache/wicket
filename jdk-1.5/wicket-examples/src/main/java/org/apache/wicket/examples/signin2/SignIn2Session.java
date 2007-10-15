@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.signin2;
 
 import org.apache.wicket.Request;
-import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 
@@ -45,8 +44,8 @@ public final class SignIn2Session extends WebSession
 	}
 
 	/**
-	 * Checks the given username and password, returning a User object if if the
-	 * username and password identify a valid user.
+	 * Checks the given username and password, returning a User object if if the username and
+	 * password identify a valid user.
 	 * 
 	 * @param username
 	 *            The username

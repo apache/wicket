@@ -39,8 +39,8 @@ import org.apache.wicket.model.Model;
 public final class Home extends WicketExamplePage
 {
 	/**
-	 * A dynamic image resource using {@link Home#drawCircle(Graphics2D)} to
-	 * draw a random circle on the canvas.
+	 * A dynamic image resource using {@link Home#drawCircle(Graphics2D)} to draw a random circle on
+	 * the canvas.
 	 * 
 	 */
 	private final class CircleDynamicImageResource extends RenderedDynamicImageResource

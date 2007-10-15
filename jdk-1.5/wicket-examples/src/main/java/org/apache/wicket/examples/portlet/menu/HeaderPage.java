@@ -36,8 +36,10 @@ public class HeaderPage extends WebPage
 			public void onClick()
 			{
 				this.setResponsePage(MenuPage.class);
-				ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication.getExamples().get(0);
-				PortletSession session = ((PortletRequestContext)RequestContext.get()).getPortletRequest().getPortletSession();
+				ExampleApplication ea = (ExampleApplication)WicketExamplesMenuApplication
+						.getExamples().get(0);
+				PortletSession session = ((PortletRequestContext)RequestContext.get())
+						.getPortletRequest().getPortletSession();
 				session.setAttribute(WicketExamplesMenuPortlet.EXAMPLE_APPLICATION_ATTR, ea);
 			}
 		});

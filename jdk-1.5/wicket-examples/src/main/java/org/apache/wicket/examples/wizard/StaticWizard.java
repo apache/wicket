@@ -21,12 +21,12 @@ import org.apache.wicket.extensions.wizard.Wizard;
 import org.apache.wicket.extensions.wizard.WizardModel;
 
 /**
- * This is kind of the hello world example for wizards. It doesn't do anything
- * useful, except displaying some static text and following static flow.
+ * This is kind of the hello world example for wizards. It doesn't do anything useful, except
+ * displaying some static text and following static flow.
  * <p>
- * {@link StaticContentStep static content steps} are useful when you have some
- * text to display that you don't want to define seperate panels for. E.g. when
- * the contents come from a database, this is a convenient class to use.
+ * {@link StaticContentStep static content steps} are useful when you have some text to display that
+ * you don't want to define seperate panels for. E.g. when the contents come from a database, this
+ * is a convenient class to use.
  * </p>
  * 
  * @author Eelco Hillenius

@@ -72,8 +72,8 @@ public abstract class BaseTreePage extends BasePage
 	}
 
 	/**
-	 * Returns the tree on this pages. This is used to collapse, expand the tree
-	 * and to switch the rootless mode.
+	 * Returns the tree on this pages. This is used to collapse, expand the tree and to switch the
+	 * rootless mode.
 	 * 
 	 * @return Tree instance on this page
 	 */

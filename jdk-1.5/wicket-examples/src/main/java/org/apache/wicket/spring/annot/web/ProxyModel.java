@@ -20,15 +20,18 @@ import org.apache.wicket.spring.common.Contact;
 import org.apache.wicket.spring.common.ContactDao;
 import org.apache.wicket.spring.common.web.ContactDetachableModel;
 
-public class ProxyModel extends ContactDetachableModel {
+public class ProxyModel extends ContactDetachableModel
+{
 	private ContactDao dao;
 
-	public ProxyModel(Contact contact, ContactDao dao) {
+	public ProxyModel(Contact contact, ContactDao dao)
+	{
 		super(contact);
 		this.dao = dao;
 	}
 
-	protected ContactDao getContactDao() {
+	protected ContactDao getContactDao()
+	{
 		return dao;
 	}
 

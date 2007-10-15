@@ -38,8 +38,7 @@ import org.apache.wicket.util.lang.Objects;
 
 
 /**
- * A Wicket panel that shows interesting information about a given Wicket
- * pagemap.
+ * A Wicket panel that shows interesting information about a given Wicket pagemap.
  * 
  * @author Jonathan Locke
  */
@@ -63,7 +62,7 @@ public final class PageMapView extends Panel
 		add(new Label("name", pageMap.getName() == null ? "null" : pageMap.getName()));
 		add(new Label("size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
 
-		// Get entry accesses 
+		// Get entry accesses
 		// Get entry accesses
 		final ArrayListStack accessStack;
 		if (pageMap instanceof AccessStackPageMap)

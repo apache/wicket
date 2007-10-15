@@ -34,8 +34,7 @@ import org.apache.wicket.model.Model;
 public class BodyFrame extends WebPage
 {
 	/**
-	 * Model that returns the url to the bookmarkable page that is set in the
-	 * current frame target.
+	 * Model that returns the url to the bookmarkable page that is set in the current frame target.
 	 */
 	private final class FrameModel extends Model
 	{

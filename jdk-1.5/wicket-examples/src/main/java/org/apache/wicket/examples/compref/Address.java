@@ -124,7 +124,7 @@ public class Address implements IClusterable
 	 */
 	public String toString()
 	{
-		return "[Address address=" + address + ", postcode=" + postcode + ", city=" + city
-				+ ", country=" + country + "]";
+		return "[Address address=" + address + ", postcode=" + postcode + ", city=" + city +
+				", country=" + country + "]";
 	}
 }

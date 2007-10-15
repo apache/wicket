@@ -28,9 +28,8 @@ import org.apache.wicket.util.time.Duration;
 
 
 /**
- * Displays server host name (combination of name, ipaddress and unique id,
- * which is either based) and time it took to handle the request in the
- * browser's status bar like this:
+ * Displays server host name (combination of name, ipaddress and unique id, which is either based)
+ * and time it took to handle the request in the browser's status bar like this:
  * <code>window.defaultStatus = 'Host: myhost/192.168.1.66/someid, handled in: 0.01s'</code>
  * 
  * @author eelco hillenius
@@ -40,8 +39,8 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 	private String host;
 
 	/**
-	 * Construct, trying system property 'examples.hostname' for the server id
-	 * or else current time milis.
+	 * Construct, trying system property 'examples.hostname' for the server id or else current time
+	 * milis.
 	 */
 	public ServerHostNameAndTimeFilter()
 	{
@@ -114,8 +113,8 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 			InetAddress localMachine = InetAddress.getLocalHost();
 			String hostName = localMachine.getHostName();
 			String address = localMachine.getHostAddress();
-			host = ((!Strings.isEmpty(hostName)) ? hostName + "/" + address : address) + "/"
-					+ hostId;
+			host = ((!Strings.isEmpty(hostName)) ? hostName + "/" + address : address) + "/" +
+					hostId;
 		}
 		catch (UnknownHostException e)
 		{

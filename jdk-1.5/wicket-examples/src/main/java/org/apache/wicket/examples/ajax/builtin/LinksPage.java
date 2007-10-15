@@ -185,7 +185,7 @@ public class LinksPage extends BasePage
 				setResponsePage(new LinksPage());
 			}
 		});
-		
+
 		add(new AjaxLink("exception")
 		{
 			public void onClick(AjaxRequestTarget target)

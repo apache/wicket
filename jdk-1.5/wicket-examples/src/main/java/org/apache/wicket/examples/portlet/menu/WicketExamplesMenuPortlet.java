@@ -43,17 +43,21 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 {
 	public static final String EXAMPLE_APPLICATION_PREF = "exampleApplication";
 	public static final String EXAMPLES = WicketExamplesMenuPortlet.class.getName() + ".examples";
-	public static final String EXAMPLE_APPLICATION_ATTR = WicketExamplesMenuPortlet.class.getName() + "." + EXAMPLE_APPLICATION_PREF;
+	public static final String EXAMPLE_APPLICATION_ATTR = WicketExamplesMenuPortlet.class.getName() +
+			"." + EXAMPLE_APPLICATION_PREF;
 	private static final String MENU_APPLICATION_URL_PORTLET_PARAMETER = "_wmu";
-	private static final String PROCESS_MENU_APPLICATION = WicketExamplesMenuPortlet.class.getName() + ".processMenuApplication";
-	private static final String PROCESS_HEADER_PAGE = WicketExamplesMenuPortlet.class.getName() + ".renderHeaderPage";
-    /**
-     * Name of portlet init Parameter for the ExampleHeader page
-     */
-    public static final String PARAM_HEADER_PAGE = "headerPage";
-	
+	private static final String PROCESS_MENU_APPLICATION = WicketExamplesMenuPortlet.class
+			.getName() +
+			".processMenuApplication";
+	private static final String PROCESS_HEADER_PAGE = WicketExamplesMenuPortlet.class.getName() +
+			".renderHeaderPage";
+	/**
+	 * Name of portlet init Parameter for the ExampleHeader page
+	 */
+	public static final String PARAM_HEADER_PAGE = "headerPage";
+
 	private static List examples;
-	
+
 	/**
 	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#init(javax.portlet.PortletConfig)
 	 */
@@ -77,18 +81,22 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#getWicketConfigParameter(javax.portlet.PortletRequest, java.lang.String, java.lang.String)
+	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#getWicketConfigParameter(javax.portlet.PortletRequest,
+	 *      java.lang.String, java.lang.String)
 	 */
 	@Override
-	protected String getWicketConfigParameter(PortletRequest request, String paramName, String defaultValue)
+	protected String getWicketConfigParameter(PortletRequest request, String paramName,
+			String defaultValue)
 	{
 		if (paramName.equals(WICKET_FILTER_PATH))
 		{
-			return ((ExampleApplication)request.getAttribute(EXAMPLE_APPLICATION_ATTR)).getFilterPath();
+			return ((ExampleApplication)request.getAttribute(EXAMPLE_APPLICATION_ATTR))
+					.getFilterPath();
 		}
 		else if (paramName.equals(WICKET_FILTER_QUERY))
 		{
-			return ((ExampleApplication)request.getAttribute(EXAMPLE_APPLICATION_ATTR)).getFilterQuery();
+			return ((ExampleApplication)request.getAttribute(EXAMPLE_APPLICATION_ATTR))
+					.getFilterQuery();
 		}
 		return super.getWicketConfigParameter(request, paramName, defaultValue);
 	}
@@ -99,28 +107,33 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 	@Override
 	protected String getWicketUrlPortletParameter(PortletRequest request)
 	{
-		return request.getAttribute(PROCESS_MENU_APPLICATION) != null ? MENU_APPLICATION_URL_PORTLET_PARAMETER : super.getWicketUrlPortletParameter(request);
+		return request.getAttribute(PROCESS_MENU_APPLICATION) != null
+				? MENU_APPLICATION_URL_PORTLET_PARAMETER
+				: super.getWicketUrlPortletParameter(request);
 	}
-	
+
 	/**
-	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#getWicketURL(javax.portlet.PortletRequest, java.lang.String, java.lang.String)
+	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#getWicketURL(javax.portlet.PortletRequest,
+	 *      java.lang.String, java.lang.String)
 	 */
 	@Override
 	protected String getWicketURL(PortletRequest request, String pageType, String defaultPage)
-	{		
+	{
 		ExampleApplication ea = (ExampleApplication)request.getAttribute(EXAMPLE_APPLICATION_ATTR);
 		if (request.getAttribute(PROCESS_HEADER_PAGE) != null)
 		{
-			return ea.getInitParameter(PARAM_HEADER_PAGE);				
+			return ea.getInitParameter(PARAM_HEADER_PAGE);
 		}
 		return super.getWicketURL(request, pageType, ea.getInitParameter(pageType));
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#processRequest(javax.portlet.PortletRequest, javax.portlet.PortletResponse, java.lang.String, java.lang.String, java.lang.String)
+	 * @see org.apache.wicket.protocol.http.portlet.WicketPortlet#processRequest(javax.portlet.PortletRequest,
+	 *      javax.portlet.PortletResponse, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	protected void processRequest(PortletRequest request, PortletResponse response, String requestType, String pageType) throws PortletException, IOException
+	protected void processRequest(PortletRequest request, PortletResponse response,
+			String requestType, String pageType) throws PortletException, IOException
 	{
 		PortletSession session = request.getPortletSession();
 		ExampleApplication ea = (ExampleApplication)session.getAttribute(EXAMPLE_APPLICATION_ATTR);
@@ -146,7 +159,8 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 			}
 			session.setAttribute(EXAMPLE_APPLICATION_ATTR, ea);
 		}
-		if (ea == null || ea.getFilterPath().equals(getWicketFilterPath()) || !PortletMode.VIEW.equals(request.getPortletMode()))
+		if (ea == null || ea.getFilterPath().equals(getWicketFilterPath()) ||
+				!PortletMode.VIEW.equals(request.getPortletMode()))
 		{
 			request.setAttribute(PROCESS_MENU_APPLICATION, Boolean.TRUE);
 			request.setAttribute(EXAMPLE_APPLICATION_ATTR, examples.get(0));
@@ -154,7 +168,8 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 		}
 		else
 		{
-			if (WicketPortlet.ACTION_REQUEST.equals(requestType) || request.getParameter(PORTLET_RESOURCE_URL_PARAMETER) != null)
+			if (WicketPortlet.ACTION_REQUEST.equals(requestType) ||
+					request.getParameter(PORTLET_RESOURCE_URL_PARAMETER) != null)
 			{
 				if (request.getParameter(MENU_APPLICATION_URL_PORTLET_PARAMETER) != null)
 				{
@@ -181,9 +196,9 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 			}
 		}
 	}
-	
+
 	protected List discoverExamples(PortletContext portletContext)
-	{		
+	{
 		ArrayList examples = new ArrayList();
 		InputStream is = portletContext.getResourceAsStream("/WEB-INF/portlet.xml");
 		if (is != null)
@@ -197,7 +212,7 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 					XmlTag elem;
 					String name;
 					int level;
-					
+
 					do
 					{
 						elem = (XmlTag)parser.nextTag();
@@ -214,22 +229,22 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 					String filterQuery = null;
 					String displayName = null;
 					HashMap initParameters = new HashMap();
-					
+
 					level = 0;
-					
+
 					do
 					{
 						elem = (XmlTag)parser.nextTag();
 						name = elem.getName();
-						level = elem.isOpen() ? (level+1) : (level-1);
-						
+						level = elem.isOpen() ? (level + 1) : (level - 1);
+
 						if (level == 1)
 						{
-							if (name.equals("description")||name.equals("display-name"))
+							if (name.equals("description") || name.equals("display-name"))
 							{
 								parser.setPositionMarker();
 							}
-							
+
 							else if (name.equals("init-param"))
 							{
 								String initParamName = null;
@@ -238,10 +253,10 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 								{
 									elem = (XmlTag)parser.nextTag();
 									name = elem.getName();
-									level = elem.isOpen() ? (level+1) : (level-1);
+									level = elem.isOpen() ? (level + 1) : (level - 1);
 									if (level == 2)
 									{
-										if (name.equals("name")||name.equals("value"))
+										if (name.equals("name") || name.equals("value"))
 										{
 											parser.setPositionMarker();
 										}
@@ -250,11 +265,13 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 									{
 										if (name.equals("name"))
 										{
-											initParamName = parser.getInputFromPositionMarker(elem.getPos()).toString();
+											initParamName = parser.getInputFromPositionMarker(
+													elem.getPos()).toString();
 										}
 										else if (name.equals("value"))
 										{
-											initParamValue = parser.getInputFromPositionMarker(elem.getPos()).toString();
+											initParamValue = parser.getInputFromPositionMarker(
+													elem.getPos()).toString();
 										}
 									}
 								}
@@ -266,24 +283,28 @@ public class WicketExamplesMenuPortlet extends WicketPortlet
 							}
 						}
 						else if (level == 0)
-						{							
+						{
 							if (name.equals("description"))
 							{
-								description = parser.getInputFromPositionMarker(elem.getPos()).toString();
+								description = parser.getInputFromPositionMarker(elem.getPos())
+										.toString();
 							}
 							else if (name.equals("display-name"))
 							{
-								displayName = parser.getInputFromPositionMarker(elem.getPos()).toString();
+								displayName = parser.getInputFromPositionMarker(elem.getPos())
+										.toString();
 							}
 						}
 					}
 					while (level > -1);
-					filterPath = buildWicketFilterPath((String)initParameters.get(WICKET_FILTER_PATH_PARAM));					
+					filterPath = buildWicketFilterPath((String)initParameters
+							.get(WICKET_FILTER_PATH_PARAM));
 					if (displayName != null && filterPath != null && description != null)
 					{
 						filterQuery = buildWicketFilterQuery(filterPath);
 						validateDefaultPages(initParameters, filterPath, filterQuery);
-						ExampleApplication exampleApplication = new ExampleApplication(displayName, filterPath, filterQuery, initParameters, description);
+						ExampleApplication exampleApplication = new ExampleApplication(displayName,
+								filterPath, filterQuery, initParameters, description);
 						if (exampleApplication.getFilterPath().equals(getWicketFilterPath()))
 						{
 							examples.add(0, exampleApplication);

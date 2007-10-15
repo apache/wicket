@@ -21,8 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * A Wicket panel that shows interesting information about a given Wicket
- * session.
+ * A Wicket panel that shows interesting information about a given Wicket session.
  * 
  * @author Jonathan Locke
  */
@@ -44,18 +43,18 @@ public final class ApplicationView extends Panel
 
 		// Basic attributes
 		add(new Label("name", application.getName()));
-		add(new Label("componentUseCheck", ""
-				+ application.getDebugSettings().getComponentUseCheck()));
-		add(new Label("compressWhitespace", ""
-				+ application.getMarkupSettings().getCompressWhitespace()));
+		add(new Label("componentUseCheck", "" +
+				application.getDebugSettings().getComponentUseCheck()));
+		add(new Label("compressWhitespace", "" +
+				application.getMarkupSettings().getCompressWhitespace()));
 		add(new Label("stripComments", "" + application.getMarkupSettings().getStripComments()));
 		add(new Label("stripWicketTags", "" + application.getMarkupSettings().getStripWicketTags()));
-		add(new Label("bufferResponse", ""
-				+ application.getRequestCycleSettings().getBufferResponse()));
-		add(new Label("resourcePollFrequency", ""
-				+ application.getResourceSettings().getResourcePollFrequency()));
+		add(new Label("bufferResponse", "" +
+				application.getRequestCycleSettings().getBufferResponse()));
+		add(new Label("resourcePollFrequency", "" +
+				application.getResourceSettings().getResourcePollFrequency()));
 		add(new Label("versionPages", "" + application.getPageSettings().getVersionPagesByDefault()));
-		add(new Label("pageMapEvictionStrategy", ""
-				+ application.getSessionSettings().getPageMapEvictionStrategy()));
+		add(new Label("pageMapEvictionStrategy", "" +
+				application.getSessionSettings().getPageMapEvictionStrategy()));
 	}
 }

@@ -20,12 +20,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
 /**
- * StockQuote example provided by Jonathan Locke. This component shows you how
- * to reuse existing components (the StockQuoteLabel ISA Label), and how to use
- * models internally in your component.
+ * StockQuote example provided by Jonathan Locke. This component shows you how to reuse existing
+ * components (the StockQuoteLabel ISA Label), and how to use models internally in your component.
  * 
- * Note that this component doesn't work with CompoundPropertyModel's lazy
- * initialization.
+ * Note that this component doesn't work with CompoundPropertyModel's lazy initialization.
  */
 public class StockQuoteLabel2 extends Label
 {

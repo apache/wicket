@@ -35,14 +35,14 @@ public class WicketExamplesMenuApplication extends WebApplication
 	private static ServletContext servletContext;
 
 	public static List getExamples()
-	{		
+	{
 		if (examples == null)
 		{
 			examples = (List)servletContext.getAttribute(WicketExamplesMenuPortlet.EXAMPLES);
 		}
 		return examples != null ? examples : Collections.EMPTY_LIST;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
@@ -56,7 +56,7 @@ public class WicketExamplesMenuApplication extends WebApplication
 		}
 		return MenuPage.class;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#init()
 	 */

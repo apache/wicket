@@ -26,10 +26,10 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Example displaying partial page rendering using the counting link example and
- * prototype.js. Prototype.js is a javascript library that provides several
- * handy JavaScript functions, amongst others an Ajax.Updater function, which
- * updates the HTML document with the response of the Ajax call.
+ * Example displaying partial page rendering using the counting link example and prototype.js.
+ * Prototype.js is a javascript library that provides several handy JavaScript functions, amongst
+ * others an Ajax.Updater function, which updates the HTML document with the response of the Ajax
+ * call.
  * 
  * @author ivaynberg
  */
@@ -50,9 +50,8 @@ public class Index extends WicketExamplePage
 		add(new Link("link")
 		{
 			/**
-			 * Handles a click on the link. This method is accessed normally
-			 * using a standard http request, but in this example, we use Ajax
-			 * to perform the call.
+			 * Handles a click on the link. This method is accessed normally using a standard http
+			 * request, but in this example, we use Ajax to perform the call.
 			 */
 			public void onClick()
 			{
@@ -64,8 +63,8 @@ public class Index extends WicketExamplePage
 			}
 
 			/**
-			 * Alter the javascript 'onclick' event to emit the Ajax call and
-			 * update the counter label.
+			 * Alter the javascript 'onclick' event to emit the Ajax call and update the counter
+			 * label.
 			 */
 			protected String getOnClickScript(String url)
 			{

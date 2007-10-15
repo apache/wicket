@@ -20,8 +20,8 @@ import org.apache.wicket.PageParameters;
 import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
 /**
- * Simple bookmarkable page that displays page parameters which is mounted with
- * another parameter encoder.
+ * Simple bookmarkable page that displays page parameters which is mounted with another parameter
+ * encoder.
  * 
  * @see QueryStringUrlCodingStrategy
  * @author Eelco Hillenius

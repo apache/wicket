@@ -24,8 +24,8 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- * A page that shows interesting attributes of the Wicket environment, including
- * the current session and the component tree for the current page.
+ * A page that shows interesting attributes of the Wicket environment, including the current session
+ * and the component tree for the current page.
  * 
  * @author Jonathan Locke
  */
@@ -46,7 +46,7 @@ public final class InspectorBug extends Panel
 		super(id);
 		PageParameters parameters = new PageParameters();
 		parameters.put("pageId", page.getId());
-		Link link =  new BookmarkablePageLink("link", InspectorPage.class, parameters);
+		Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
 		link.add(new Image("bug"));
 		add(link);
 	}

@@ -24,7 +24,8 @@ import java.util.Iterator;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ContactDao {
+public interface ContactDao
+{
 	/**
 	 * @return total number of contacts available
 	 */

@@ -70,8 +70,8 @@ public class Captcha extends WicketExamplePage
 		{
 			if (!imagePass.equals(getPassword()))
 			{
-				error("Captcha password '" + getPassword() + "' is wrong.\n"
-						+ "Correct password was: " + imagePass);
+				error("Captcha password '" + getPassword() + "' is wrong.\n" +
+						"Correct password was: " + imagePass);
 			}
 			else
 			{

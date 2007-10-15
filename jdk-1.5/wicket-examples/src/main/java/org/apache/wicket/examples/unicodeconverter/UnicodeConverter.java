@@ -30,8 +30,8 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Converts between unescaped and escaped unicode and shows a custom model.
- * Handy for message bundles.
+ * Converts between unescaped and escaped unicode and shows a custom model. Handy for message
+ * bundles.
  * 
  * @author Eelco Hillenius
  */
@@ -49,17 +49,14 @@ public class UnicodeConverter extends WicketExamplePage
 	private String translationType = (String)translationTypes.get(0);
 
 	/**
-	 * Model that does the conversion. Note that as we 'pull' the value every
-	 * time we render (we get the current value of message), we don't need to
-	 * update the model itself. The alternative strategy would be to have a
-	 * model with it's own, translated, string representation of the source,
-	 * which should be updated on every form post (e.g. by overriding
-	 * {@link Form#onSubmit} and in that method explicitly setting the new
-	 * value). But as you can see, this method is slighly easier, and if we
-	 * wanted to use the translated value in e.g. a database, we could just
-	 * query this model directly or indirectly by calling
-	 * {@link Component#getModelObject()} on the component that holds it, and we
-	 * would have a recent value.
+	 * Model that does the conversion. Note that as we 'pull' the value every time we render (we get
+	 * the current value of message), we don't need to update the model itself. The alternative
+	 * strategy would be to have a model with it's own, translated, string representation of the
+	 * source, which should be updated on every form post (e.g. by overriding {@link Form#onSubmit}
+	 * and in that method explicitly setting the new value). But as you can see, this method is
+	 * slighly easier, and if we wanted to use the translated value in e.g. a database, we could
+	 * just query this model directly or indirectly by calling {@link Component#getModelObject()} on
+	 * the component that holds it, and we would have a recent value.
 	 */
 	private final class ConverterModel extends Model
 	{

@@ -30,6 +30,7 @@ public class CapturingBookmarkablePageRequestTargetUrlCodingStrategy
 {
 	Class capturedPageClass;
 	Class displayedPageClass;
+
 	/**
 	 * Construct.
 	 * 

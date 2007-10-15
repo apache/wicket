@@ -26,8 +26,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 
 /**
- * This example list knows how to display sublists. It expects a list where each
- * element is either a string or another list.
+ * This example list knows how to display sublists. It expects a list where each element is either a
+ * string or another list.
  * 
  * @author Eelco Hillenius
  */
@@ -59,8 +59,7 @@ public final class RecursivePanel extends Panel
 		 * @param name
 		 *            name of the component
 		 * @param list
-		 *            a list where each element is either a string or another
-		 *            list
+		 *            a list where each element is either a string or another list
 		 */
 		public Rows(String name, List list)
 		{

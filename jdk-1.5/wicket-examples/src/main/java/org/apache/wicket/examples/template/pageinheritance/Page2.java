@@ -18,8 +18,8 @@ package org.apache.wicket.examples.template.pageinheritance;
 
 /**
  * Concrete page. Note that it extends {@link TemplatePage} and the markup uses
- * &lt;wicket:extend&gt; tags to define the region that is to be expanded into
- * the parent's &lt;wicket:child&gt; element.
+ * &lt;wicket:extend&gt; tags to define the region that is to be expanded into the parent's
+ * &lt;wicket:child&gt; element.
  * 
  * @author Eelco Hillenius
  */

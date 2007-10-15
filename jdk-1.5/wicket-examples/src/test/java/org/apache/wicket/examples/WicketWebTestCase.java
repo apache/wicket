@@ -52,7 +52,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 
 		System.setProperty("wicket.configuration", "deployment");
-		
+
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(clazz);
 		JettyTestCaseDecorator deco = new JettyTestCaseDecorator(suite);
@@ -129,8 +129,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 	}
 
 	/**
-	 * Assert the tag body of the tag identified by wicket:id="wicketId" matches
-	 * 'assertValue'
+	 * Assert the tag body of the tag identified by wicket:id="wicketId" matches 'assertValue'
 	 * 
 	 * @param wicketId
 	 * @param assertValue

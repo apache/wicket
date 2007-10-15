@@ -28,8 +28,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.servlet.WicketSessionFilter;
 
 /**
- * Simple servlet that if configured with {@link WicketSessionFilter} prints the
- * current session.
+ * Simple servlet that if configured with {@link WicketSessionFilter} prints the current session.
  */
 public class HelloWorldServlet extends HttpServlet
 {

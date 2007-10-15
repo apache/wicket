@@ -20,8 +20,7 @@ import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInst
 import org.apache.wicket.examples.authorization.BasePage;
 
 /**
- * Non-bookmarkable page that may only be accessed by users that have role
- * ADMIN.
+ * Non-bookmarkable page that may only be accessed by users that have role ADMIN.
  * 
  * @author Eelco Hillenius
  */

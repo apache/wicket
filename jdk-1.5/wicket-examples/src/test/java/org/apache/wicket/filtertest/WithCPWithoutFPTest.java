@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.filtertest;
 
-import org.apache.wicket.examples.JettyTestCaseDecorator;
-import org.apache.wicket.examples.WicketWebTestCase;
-
 import junit.framework.Test;
+
+import org.apache.wicket.examples.JettyTestCaseDecorator;
 
 /**
  * jWebUnit test for Hello World.
@@ -42,13 +41,14 @@ public class WithCPWithoutFPTest extends WithoutCPWithoutFPTest
 	{
 		super(name);
 	}
+
 	/**
 	 * 
 	 * @return Test
 	 */
 	public static Test suite()
 	{
-		JettyTestCaseDecorator deco = (JettyTestCaseDecorator) suite(WithCPWithoutFPTest.class);
+		JettyTestCaseDecorator deco = (JettyTestCaseDecorator)suite(WithCPWithoutFPTest.class);
 		deco.setContextPath("/somecontext");
 		String basedir = System.getProperty("basedir");
 		String path = "";
