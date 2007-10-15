@@ -64,9 +64,9 @@ public abstract class AbstractRoleAuthorizationStrategy implements IAuthorizatio
 	}
 
 	/**
-	 * Conducts a check to see if the roles object is empty. Since the roles
-	 * object does not contain any null values and will always hold an empty
-	 * string, an extra test is required beyond roles.isEmpty().
+	 * Conducts a check to see if the roles object is empty. Since the roles object does not contain
+	 * any null values and will always hold an empty string, an extra test is required beyond
+	 * roles.isEmpty().
 	 * 
 	 * @param roles
 	 *            the Roles object to test

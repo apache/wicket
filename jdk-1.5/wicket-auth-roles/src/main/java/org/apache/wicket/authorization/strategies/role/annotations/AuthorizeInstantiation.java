@@ -24,14 +24,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for configuring what roles are allowed for instantiation the
- * annotated component or package. This annotation can be used for classes and
- * packages, and can be used like this:
+ * Annotation for configuring what roles are allowed for instantiation the annotated component or
+ * package. This annotation can be used for classes and packages, and can be used like this:
  * 
  * <pre>
  *  // only users with role ADMIN are allowed to create instances of this page, whether it is
  *  // either bookmarkable or not
- *  &#64;AuthorizeInstantiation(&quot;ADMIN&quot;)
+ *  &#064;AuthorizeInstantiation(&quot;ADMIN&quot;)
  *  public class AdminAnnotationsBookmarkablePage extends WebPage
  * </pre>
  * 
@@ -51,8 +50,7 @@ public @interface AuthorizeInstantiation {
 	/**
 	 * Gets the roles that are allowed to take the action.
 	 * 
-	 * @return the roles that are allowed. Returns a zero length array by
-	 *         default
+	 * @return the roles that are allowed. Returns a zero length array by default
 	 */
 	String[] value() default {};
 }

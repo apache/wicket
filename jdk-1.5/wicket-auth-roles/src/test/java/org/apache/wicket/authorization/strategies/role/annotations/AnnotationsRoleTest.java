@@ -38,9 +38,9 @@ import junit.framework.TestCase;
  */
 public class AnnotationsRoleTest extends TestCase
 {
-    WicketTester tester;
+	WicketTester tester;
 
-    /**
+	/**
 	 * Construct.
 	 */
 	public AnnotationsRoleTest()
@@ -58,14 +58,18 @@ public class AnnotationsRoleTest extends TestCase
 		super(arg0);
 	}
 
-    @Override
-    protected void setUp() throws Exception {
-        tester = new WicketTester();
-    }
-    @Override
-    protected void tearDown() throws Exception {
-        tester.destroy();
-    }
+	@Override
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester();
+	}
+
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -123,7 +127,8 @@ public class AnnotationsRoleTest extends TestCase
 			}
 		}
 		Listener listener = new Listener();
-		tester.getApplication().getSecuritySettings().setUnauthorizedComponentInstantiationListener(listener);
+		tester.getApplication().getSecuritySettings()
+				.setUnauthorizedComponentInstantiationListener(listener);
 
 		try
 		{

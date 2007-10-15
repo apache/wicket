@@ -25,8 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * A mapping of 1..n roles to an action. This annotions must be embedded in the
- * {@link org.apache.wicket.authorization.strategies.role.annotations.AuthorizeActions}
- * annotation.
+ * {@link org.apache.wicket.authorization.strategies.role.annotations.AuthorizeActions} annotation.
  * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
  * @see org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
@@ -42,9 +41,8 @@ import java.lang.annotation.Target;
 public @interface AuthorizeAction {
 
 	/**
-	 * The action that is allowed. The default actions that are supported by
-	 * Wicket are <code>RENDER</code> and
-	 * <code>ENABLE<code> as defined as constants
+	 * The action that is allowed. The default actions that are supported by Wicket are
+	 * <code>RENDER</code> and <code>ENABLE<code> as defined as constants
 	 * of {@link org.apache.wicket.Component}.
 	 * 
 	 * @see org.apache.wicket.Component#RENDER
@@ -57,16 +55,16 @@ public @interface AuthorizeAction {
 	/**
 	 * The roles for this action.
 	 * 
-	 * @return the roles for this action. The default is an empty string
-	 *         (annotations do not allow null default values)
+	 * @return the roles for this action. The default is an empty string (annotations do not allow
+	 *         null default values)
 	 */
 	String[] roles() default "";
 
 	/**
 	 * The roles to deny for this action.
 	 * 
-	 * @return the roles to deny for this action. The default is an empty string
-	 *         (annotations do not allow null default values)
+	 * @return the roles to deny for this action. The default is an empty string (annotations do not
+	 *         allow null default values)
 	 */
 	String[] deny() default "";
 }

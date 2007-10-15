@@ -25,10 +25,9 @@ import org.apache.wicket.authorization.strategies.role.Roles;
 
 
 /**
- * For each Action, holds a set of roles that can perform that action. Roles can
- * be granted access to a given action via authorize(Action, String role) and
- * denied access via unauthorize(Action, String role). All permissions can be
- * removed for a given action via authorizeAll(Action).
+ * For each Action, holds a set of roles that can perform that action. Roles can be granted access
+ * to a given action via authorize(Action, String role) and denied access via unauthorize(Action,
+ * String role). All permissions can be removed for a given action via authorizeAll(Action).
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -49,7 +48,7 @@ final class ActionPermissions implements IClusterable
 	 *            The roles
 	 */
 	public final void authorize(final Action action, final Roles rolesToAdd)
-	{		
+	{
 		if (action == null)
 		{
 			throw new IllegalArgumentException("Argument action cannot be null");

@@ -35,7 +35,7 @@ public class SignOutPage extends WebPage
 	{
 		this(null);
 	}
-	
+
 	/**
 	 * Constructor
 	 * 

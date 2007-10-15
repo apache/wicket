@@ -30,11 +30,10 @@ import org.apache.wicket.util.value.ValueMap;
 
 
 /**
- * Reusable user sign in panel with username and password as well as support for
- * cookie persistence of the both. When the SignInPanel's form is submitted, the
- * method signIn(String, String) is called, passing the username and password
- * submitted. The signIn() method should authenticate the user's session. The
- * default implementation calls AuthenticatedWebSession.get().signIn().
+ * Reusable user sign in panel with username and password as well as support for cookie persistence
+ * of the both. When the SignInPanel's form is submitted, the method signIn(String, String) is
+ * called, passing the username and password submitted. The signIn() method should authenticate the
+ * user's session. The default implementation calls AuthenticatedWebSession.get().signIn().
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -104,11 +103,11 @@ public class SignInPanel extends Panel
 		{
 			if (signIn(getUsername(), getPassword()))
 			{
-			    onSignInSucceeded();
+				onSignInSucceeded();
 			}
 			else
 			{
-			    onSignInFailed();
+				onSignInFailed();
 			}
 		}
 	}

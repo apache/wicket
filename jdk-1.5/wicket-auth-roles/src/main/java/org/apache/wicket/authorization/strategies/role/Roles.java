@@ -31,10 +31,10 @@ import org.apache.wicket.util.string.StringList;
 public final class Roles extends HashSet<String> implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** USER role (for use in annotations) */
 	public static final String USER = "USER";
-	
+
 	/** ADMIN role (for use in annotations) */
 	public static final String ADMIN = "ADMIN";
 
@@ -116,8 +116,8 @@ public final class Roles extends HashSet<String> implements IClusterable
 	 * 
 	 * @param roles
 	 *            the roles to check
-	 * @return true if it contains all the roles or the provided roles object is
-	 *         null, false otherwise
+	 * @return true if it contains all the roles or the provided roles object is null, false
+	 *         otherwise
 	 */
 	public boolean hasAllRoles(Roles roles)
 	{

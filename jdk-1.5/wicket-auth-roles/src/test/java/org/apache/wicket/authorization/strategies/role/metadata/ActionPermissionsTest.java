@@ -38,6 +38,7 @@ public class ActionPermissionsTest extends TestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param arg0
 	 */
 	public ActionPermissionsTest(String arg0)

@@ -26,11 +26,10 @@ import org.apache.wicket.authorization.strategies.role.Roles;
 
 
 /**
- * Strategy that uses the Wicket metadata facility to check authorization. The
- * static <code>authorize</code> methods are for authorizing component actions
- * and component instantiation by role. This class is is the main entry point
- * for users wanting to use the roles-based authorization of the
- * wicket-auth-roles package based on wicket metadata.
+ * Strategy that uses the Wicket metadata facility to check authorization. The static
+ * <code>authorize</code> methods are for authorizing component actions and component
+ * instantiation by role. This class is is the main entry point for users wanting to use the
+ * roles-based authorization of the wicket-auth-roles package based on wicket metadata.
  * 
  * For instance, use like:
  * 
@@ -54,9 +53,8 @@ import org.apache.wicket.authorization.strategies.role.Roles;
 public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorizationStrategy
 {
 	/**
-	 * Component meta data key for ations/ roles information. Typically, you do
-	 * not need to use this meta data key directly, but instead use one of the
-	 * bind methods of this class.
+	 * Component meta data key for ations/ roles information. Typically, you do not need to use this
+	 * meta data key directly, but instead use one of the bind methods of this class.
 	 */
 	public static final MetaDataKey ACTION_PERMISSIONS = new MetaDataKey(ActionPermissions.class)
 	{
@@ -64,9 +62,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	};
 
 	/**
-	 * Application meta data key for ations/ roles information. Typically, you
-	 * do not need to use this meta data key directly, but instead use one of
-	 * the bind methods of this class.
+	 * Application meta data key for ations/ roles information. Typically, you do not need to use
+	 * this meta data key directly, but instead use one of the bind methods of this class.
 	 */
 	public static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
 			InstantiationPermissions.class)
@@ -78,15 +75,14 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	public static final String NO_ROLE = "wicket:NO_ROLE";
 
 	/**
-	 * Authorizes the given role to create component instances of type
-	 * componentClass. This authorization is added to any previously authorized
-	 * roles.
+	 * Authorizes the given role to create component instances of type componentClass. This
+	 * authorization is added to any previously authorized roles.
 	 * 
 	 * @param componentClass
 	 *            The component type that is subject for the authorization
 	 * @param roles
-	 *            The comma separated roles that are authorized to create
-	 *            component instances of type componentClass
+	 *            The comma separated roles that are authorized to create component instances of
+	 *            type componentClass
 	 */
 	public static final void authorize(final Class< ? extends Component> componentClass,
 			final String roles)
@@ -103,8 +99,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Authorizes the given role to perform the given action on the given
-	 * component.
+	 * Authorizes the given role to perform the given action on the given component.
 	 * 
 	 * @param component
 	 *            The component that is subject to the authorization
@@ -127,8 +122,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Grants permission to all roles to create instances of the given component
-	 * class.
+	 * Grants permission to all roles to create instances of the given component class.
 	 * 
 	 * @param componentClass
 	 *            The component class
@@ -145,8 +139,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Grants permission to all roles to perform the given action on the given
-	 * component.
+	 * Grants permission to all roles to perform the given action on the given component.
 	 * 
 	 * @param component
 	 *            The component that is subject to the authorization
@@ -164,19 +157,17 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Removes permission for the given roles to create instances of the given
-	 * component class. There is no danger in removing authorization by calling
-	 * this method. If the last authorization grant is removed for a given
-	 * componentClass, the internal role NO_ROLE will automatically be added,
-	 * effectively denying access to all roles (if this was not done, all roles
-	 * would suddenly have access since no authorization is equivalent to full
-	 * access).
+	 * Removes permission for the given roles to create instances of the given component class.
+	 * There is no danger in removing authorization by calling this method. If the last
+	 * authorization grant is removed for a given componentClass, the internal role NO_ROLE will
+	 * automatically be added, effectively denying access to all roles (if this was not done, all
+	 * roles would suddenly have access since no authorization is equivalent to full access).
 	 * 
 	 * @param componentClass
 	 *            The component type
 	 * @param roles
-	 *            The comma separated list of roles that are no longer to be
-	 *            authorized to create instances of type componentClass
+	 *            The comma separated list of roles that are no longer to be authorized to create
+	 *            instances of type componentClass
 	 */
 	public static final void unauthorize(final Class< ? extends Component> componentClass,
 			final String roles)
@@ -190,21 +181,19 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Removes permission for the given role to perform the given action on the
-	 * given component. There is no danger in removing authorization by calling
-	 * this method. If the last authorization grant is removed for a given
-	 * action, the internal role NO_ROLE will automatically be added,
-	 * effectively denying access to all roles (if this was not done, all roles
-	 * would suddenly have access since no authorization is equivalent to full
-	 * access).
+	 * Removes permission for the given role to perform the given action on the given component.
+	 * There is no danger in removing authorization by calling this method. If the last
+	 * authorization grant is removed for a given action, the internal role NO_ROLE will
+	 * automatically be added, effectively denying access to all roles (if this was not done, all
+	 * roles would suddenly have access since no authorization is equivalent to full access).
 	 * 
 	 * @param component
 	 *            The component
 	 * @param action
 	 *            The action
 	 * @param roles
-	 *            The comma separated list of roles that are no longer allowed
-	 *            to perform the given action
+	 *            The comma separated list of roles that are no longer allowed to perform the given
+	 *            action
 	 */
 	public static final void unauthorize(final Component component, final Action action,
 			final String roles)
@@ -218,8 +207,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Grants authorization to instantiate the given class to just the role
-	 * NO_ROLE, effectively denying all other roles.
+	 * Grants authorization to instantiate the given class to just the role NO_ROLE, effectively
+	 * denying all other roles.
 	 * 
 	 * @param componentClass
 	 *            The component class
@@ -231,8 +220,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Grants authorization to perform the given action to just the role
-	 * NO_ROLE, effectively denying all other roles.
+	 * Grants authorization to perform the given action to just the role NO_ROLE, effectively
+	 * denying all other roles.
 	 * 
 	 * @param component
 	 *            the component that is subject to the authorization
@@ -257,8 +246,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Uses component level meta data to match roles for component action
-	 * execution.
+	 * Uses component level meta data to match roles for component action execution.
 	 * 
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
@@ -283,8 +271,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Uses application level meta data to match roles for component
-	 * instantiation.
+	 * Uses application level meta data to match roles for component instantiation.
 	 * 
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
@@ -299,8 +286,8 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 		// as long as the interface does not use generics, we should check this
 		if (!Component.class.isAssignableFrom(componentClass))
 		{
-			throw new IllegalArgumentException("argument componentClass must be of type "
-					+ Component.class.getName());
+			throw new IllegalArgumentException("argument componentClass must be of type " +
+					Component.class.getName());
 		}
 
 		final Roles roles = rolesAuthorizedToInstantiate(componentClass);
@@ -312,13 +299,12 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	}
 
 	/**
-	 * Gets the roles for creation of the given component class, or null if none
-	 * were registered.
+	 * Gets the roles for creation of the given component class, or null if none were registered.
 	 * 
 	 * @param componentClass
 	 *            the component class
-	 * @return the roles that are authorized for creation of the componentClass,
-	 *         or null if no specific authorization was configured
+	 * @return the roles that are authorized for creation of the componentClass, or null if no
+	 *         specific authorization was configured
 	 */
 	private static Roles rolesAuthorizedToInstantiate(
 			final Class< ? extends Component> componentClass)

@@ -45,7 +45,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			IUnauthorizedComponentInstantiationListener
 {
 	/** Subclass of authenticated web session to instantiate */
-	private final WeakReference<Class<? extends AuthenticatedWebSession>> webSessionClassRef;
+	private final WeakReference<Class< ? extends AuthenticatedWebSession>> webSessionClassRef;
 
 	/**
 	 * Constructor
@@ -53,7 +53,8 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	public AuthenticatedWebApplication()
 	{
 		// Get web session class to instantiate
-		this.webSessionClassRef = new WeakReference<Class<? extends AuthenticatedWebSession>>(getWebSessionClass());
+		this.webSessionClassRef = new WeakReference<Class< ? extends AuthenticatedWebSession>>(
+				getWebSessionClass());
 	}
 
 	@Override
@@ -110,31 +111,31 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	{
 		try
 		{
-			return webSessionClassRef.get().getDeclaredConstructor(AuthenticatedWebApplication.class,
-					Request.class).newInstance(AuthenticatedWebApplication.this, request);
+			return webSessionClassRef.get().getDeclaredConstructor(
+					AuthenticatedWebApplication.class, Request.class).newInstance(
+					AuthenticatedWebApplication.this, request);
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException(
-					"Unable to instantiate web session " + webSessionClassRef.get(), e);
+			throw new WicketRuntimeException("Unable to instantiate web session " +
+					webSessionClassRef.get(), e);
 		}
 	}
 
 	/**
-	 * @return AuthenticatedWebSession subclass to use in this authenticated web
-	 *         application.
+	 * @return AuthenticatedWebSession subclass to use in this authenticated web application.
 	 */
-	protected abstract Class<? extends AuthenticatedWebSession> getWebSessionClass();
+	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
 
 	/**
 	 * @return Subclass of sign-in page
 	 */
-	protected abstract Class<? extends WebPage> getSignInPageClass();
+	protected abstract Class< ? extends WebPage> getSignInPageClass();
 
 	/**
-	 * Called when an AUTHENTICATED user tries to navigate to a page that they
-	 * are not authorized to access. You might want to override this to navigate
-	 * to some explanatory page or to the application's home page.
+	 * Called when an AUTHENTICATED user tries to navigate to a page that they are not authorized to
+	 * access. You might want to override this to navigate to some explanatory page or to the
+	 * application's home page.
 	 * 
 	 * @param page
 	 *            The page

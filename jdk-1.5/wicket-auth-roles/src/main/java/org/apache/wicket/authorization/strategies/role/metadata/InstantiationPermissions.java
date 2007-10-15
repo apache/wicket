@@ -25,11 +25,10 @@ import org.apache.wicket.authorization.strategies.role.Roles;
 
 
 /**
- * An internal data structure that maps a given component class to a set of role
- * strings. Permissions can be granted to instantiate a given component class
- * via authorize(Class, Roles roles) and denied via unauthorize(Class, Roles
- * roles). All authorization can be removed for a given class with
- * authorizeAll(Class).
+ * An internal data structure that maps a given component class to a set of role strings.
+ * Permissions can be granted to instantiate a given component class via authorize(Class, Roles
+ * roles) and denied via unauthorize(Class, Roles roles). All authorization can be removed for a
+ * given class with authorizeAll(Class).
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -92,8 +91,8 @@ public class InstantiationPermissions implements IClusterable
 	 * 
 	 * @param componentClass
 	 *            the component class
-	 * @return the roles that have a binding with the given component class, or
-	 *         null if no entries are found
+	 * @return the roles that have a binding with the given component class, or null if no entries
+	 *         are found
 	 */
 	public Roles authorizedRoles(final Class< ? extends Component> componentClass)
 	{
