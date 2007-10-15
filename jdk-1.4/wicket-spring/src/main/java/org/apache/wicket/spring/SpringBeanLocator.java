@@ -27,9 +27,9 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 /**
- * Implementation of {@link IProxyTargetLocator} that can locate beans within a
- * spring application context. Beans are looked up by the combination of name
- * and type, if name is omitted only type is used.
+ * Implementation of {@link IProxyTargetLocator} that can locate beans within a spring application
+ * context. Beans are looked up by the combination of name and type, if name is omitted only type is
+ * used.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author Istvan Devai
@@ -70,8 +70,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(String beanName, Class beanType,
-			ISpringContextLocator locator)
+	public SpringBeanLocator(String beanName, Class beanType, ISpringContextLocator locator)
 	{
 		if (locator == null)
 		{
@@ -90,8 +89,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	}
 
 	/**
-	 * Returns the name of the Bean as registered to Spring. Throws IllegalState
-	 * exception if none or more then one beans are found.
+	 * Returns the name of the Bean as registered to Spring. Throws IllegalState exception if none
+	 * or more then one beans are found.
 	 * 
 	 * @param ctx
 	 *            spring application context
@@ -105,8 +104,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz);
 		if (names.length == 0)
 		{
-			throw new IllegalStateException("bean of type ["
-					+ clazz.getName() + "] not found");
+			throw new IllegalStateException("bean of type [" + clazz.getName() + "] not found");
 		}
 		if (names.length > 1)
 		{
@@ -125,15 +123,14 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	}
 
 	/**
-	 * @return returns whether the bean (the locator is supposed to istantiate)
-	 *         is a singleton or not
+	 * @return returns whether the bean (the locator is supposed to istantiate) is a singleton or
+	 *         not
 	 */
 	public boolean isSingletonBean()
 	{
 		if (singletonCache == null)
 		{
-			singletonCache = Boolean.valueOf(getSpringContext()
-					.isSingleton(getBeanName()));
+			singletonCache = Boolean.valueOf(getSpringContext().isSingleton(getBeanName()));
 		}
 		return singletonCache.booleanValue();
 	}
@@ -143,16 +140,15 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	public Class getBeanType()
 	{
-		Class clazz = beanTypeCache == null ? null : (Class) beanTypeCache.get();
+		Class clazz = beanTypeCache == null ? null : (Class)beanTypeCache.get();
 		if (clazz == null)
 		{
 			beanTypeCache = new WeakReference(clazz = Classes.resolveClass(beanTypeName));
 			if (clazz == null)
 			{
-				throw new RuntimeException("SpringBeanLocator could not find class ["
-						+ beanTypeName + "] needed to locate the ["
-						+ ((beanName != null) ? (beanName) : ("bean name not specified"))
-						+ "] bean");
+				throw new RuntimeException("SpringBeanLocator could not find class [" +
+						beanTypeName + "] needed to locate the [" +
+						((beanName != null) ? (beanName) : ("bean name not specified")) + "] bean");
 			}
 		}
 		return clazz;
@@ -181,8 +177,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 		if (context == null)
 		{
-			throw new IllegalStateException(
-					"spring application context locator returned null");
+			throw new IllegalStateException("spring application context locator returned null");
 		}
 		return context;
 	}
@@ -209,8 +204,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	}
 
 	/**
-	 * Looks up a bean by its class. Throws IllegalState exception if none or
-	 * more then one beans are found.
+	 * Looks up a bean by its class. Throws IllegalState exception if none or more then one beans
+	 * are found.
 	 * 
 	 * @param ctx
 	 *            spring application context
@@ -226,8 +221,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	}
 
 	/**
-	 * Looks up a bean by its name and class. Throws IllegalState exception if
-	 * bean not found.
+	 * Looks up a bean by its name and class. Throws IllegalState exception if bean not found.
 	 * 
 	 * @param ctx
 	 *            spring application context
@@ -239,8 +233,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @throws IllegalStateException
 	 * @return found bean
 	 */
-	private static Object lookupSpringBean(ApplicationContext ctx, String name,
-			Class clazz)
+	private static Object lookupSpringBean(ApplicationContext ctx, String name, Class clazz)
 	{
 		try
 		{
@@ -248,8 +241,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 		catch (NoSuchBeanDefinitionException e)
 		{
-			throw new IllegalStateException("bean with name ["
-					+ name + "] and class [" + clazz.getName() + "] not found");
+			throw new IllegalStateException("bean with name [" + name + "] and class [" +
+					clazz.getName() + "] not found");
 		}
 	}
 
@@ -260,9 +253,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		if (obj instanceof SpringBeanLocator)
 		{
-			SpringBeanLocator other = (SpringBeanLocator) obj;
-			return beanTypeName.equals(other.beanTypeName)
-					&& Objects.equal(beanName, other.beanName);
+			SpringBeanLocator other = (SpringBeanLocator)obj;
+			return beanTypeName.equals(other.beanTypeName) &&
+					Objects.equal(beanName, other.beanName);
 		}
 		return false;
 	}

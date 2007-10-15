@@ -28,14 +28,15 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 /**
- * Base class for spring aware wicket web application object. This class has
- * helper methods to create lazy init proxies based on spring beans, as well as
- * an implementation of {@link ISpringContextLocator}.
+ * Base class for spring aware wicket web application object. This class has helper methods to
+ * create lazy init proxies based on spring beans, as well as an implementation of
+ * {@link ISpringContextLocator}.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class SpringWebApplication extends WebApplication implements
-		ApplicationContextAware
+public abstract class SpringWebApplication extends WebApplication
+		implements
+			ApplicationContextAware
 {
 	private ApplicationContext applicationContext;
 
@@ -48,7 +49,7 @@ public abstract class SpringWebApplication extends WebApplication implements
 		public ApplicationContext getSpringContext()
 		{
 			Application app = Application.get();
-			return ((SpringWebApplication) app).internalGetApplicationContext();
+			return ((SpringWebApplication)app).internalGetApplicationContext();
 		}
 	};
 
@@ -73,8 +74,7 @@ public abstract class SpringWebApplication extends WebApplication implements
 			// locate the app context from servlet context
 
 			ServletContext sc = getServletContext();
-			applicationContext = WebApplicationContextUtils
-					.getRequiredWebApplicationContext(sc);
+			applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
 
 		}
 	}
@@ -89,12 +89,10 @@ public abstract class SpringWebApplication extends WebApplication implements
 	}
 
 	/**
-	 * Retrieves the spring application context associated with this application
-	 * object
+	 * Retrieves the spring application context associated with this application object
 	 * 
-	 * This method is protected and named internalGetApplicationContext so that
-	 * the subclass can choose whether or not to add a public
-	 * getApplicationContext() method
+	 * This method is protected and named internalGetApplicationContext so that the subclass can
+	 * choose whether or not to add a public getApplicationContext() method
 	 * 
 	 * @return spring application context
 	 */
@@ -114,8 +112,7 @@ public abstract class SpringWebApplication extends WebApplication implements
 	}
 
 	/**
-	 * Creates a proxy for a spring bean that is safe to put into session and
-	 * serialize
+	 * Creates a proxy for a spring bean that is safe to put into session and serialize
 	 * 
 	 * @param clazz
 	 *            class of spring bean
@@ -125,13 +122,12 @@ public abstract class SpringWebApplication extends WebApplication implements
 	 */
 	protected Object createSpringBeanProxy(Class clazz, String beanName)
 	{
-		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(beanName,
-				clazz, getSpringContextLocator()));
+		return LazyInitProxyFactory.createProxy(clazz, new SpringBeanLocator(beanName, clazz,
+				getSpringContextLocator()));
 	}
 
 	/**
-	 * Creates a proxy for a spring bean that is safe to put into session and
-	 * serialize
+	 * Creates a proxy for a spring bean that is safe to put into session and serialize
 	 * 
 	 * @param clazz
 	 *            class of spring bean

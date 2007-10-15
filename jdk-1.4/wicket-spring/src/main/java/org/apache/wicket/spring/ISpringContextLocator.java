@@ -21,11 +21,11 @@ import org.springframework.context.ApplicationContext;
 
 
 /**
- * Interface representing object that can locate a spring context. The
- * implementation should take up little room when serialized.
+ * Interface representing object that can locate a spring context. The implementation should take up
+ * little room when serialized.
  * 
- * SpringObjectLocator uses this interface to locate the spring context so that
- * it in turn can locate a bean.
+ * SpringObjectLocator uses this interface to locate the spring context so that it in turn can
+ * locate a bean.
  * 
  * Ideal implementations use a static lookup to locate the context.
  * 
@@ -37,7 +37,7 @@ import org.springframework.context.ApplicationContext;
  * 	public ApplicationContext getSpringContext()
  * 	{
  * 		//MyApplication is the subclass of WebApplication used by the application
- * 		return ((MyApplication) Application.get()).getContext();
+ * 		return ((MyApplication)Application.get()).getContext();
  * 	}
  * }
  * </pre>

@@ -46,7 +46,7 @@ public class SpringBeanLocatorTest extends TestCase
 
 	protected void setUp() throws Exception
 	{
-		ctx=new ApplicationContextMock();
+		ctx = new ApplicationContextMock();
 		ctxLocator = new SpringContextLocatorMock(ctx);
 	}
 
@@ -69,11 +69,11 @@ public class SpringBeanLocatorTest extends TestCase
 	public void testLookupByClassAfterDeserialization()
 	{
 		Bean bean = new Bean();
-		
+
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator) Objects
-				.cloneObject(new SpringBeanLocator(Bean.class, ctxLocator));
+		SpringBeanLocator locator = (SpringBeanLocator)Objects.cloneObject(new SpringBeanLocator(
+				Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}
@@ -138,8 +138,8 @@ public class SpringBeanLocatorTest extends TestCase
 		Bean bean = new Bean();
 		ctx.putBean("bean", bean);
 
-		SpringBeanLocator locator = (SpringBeanLocator) Objects
-				.cloneObject(new SpringBeanLocator("bean", Bean.class, ctxLocator));
+		SpringBeanLocator locator = (SpringBeanLocator)Objects.cloneObject(new SpringBeanLocator(
+				"bean", Bean.class, ctxLocator));
 
 		assertNotNull(locator.locateProxyTarget());
 	}
@@ -209,22 +209,17 @@ public class SpringBeanLocatorTest extends TestCase
 	 */
 	public void testEqualsAndHashcode()
 	{
-		SpringBeanLocator a = new SpringBeanLocator("bean", SpringBeanLocator.class,
-				ctxLocator);
+		SpringBeanLocator a = new SpringBeanLocator("bean", SpringBeanLocator.class, ctxLocator);
 		SpringBeanLocator aprime = new SpringBeanLocator("bean", SpringBeanLocator.class,
 				ctxLocator);
 
-		SpringBeanLocator b = new SpringBeanLocator("bean2", SpringBeanLocator.class,
-				ctxLocator);
-		SpringBeanLocator c = new SpringBeanLocator("bean", SpringBeanLocatorTest.class,
-				ctxLocator);
+		SpringBeanLocator b = new SpringBeanLocator("bean2", SpringBeanLocator.class, ctxLocator);
+		SpringBeanLocator c = new SpringBeanLocator("bean", SpringBeanLocatorTest.class, ctxLocator);
 
 		SpringBeanLocator d = new SpringBeanLocator(SpringBeanLocator.class, ctxLocator);
-		SpringBeanLocator dprime = new SpringBeanLocator(SpringBeanLocator.class,
-				ctxLocator);
+		SpringBeanLocator dprime = new SpringBeanLocator(SpringBeanLocator.class, ctxLocator);
 
-		SpringBeanLocator e = new SpringBeanLocator(SpringBeanLocatorTest.class,
-				ctxLocator);
+		SpringBeanLocator e = new SpringBeanLocator(SpringBeanLocatorTest.class, ctxLocator);
 
 		assertEquals(a, aprime);
 		assertEquals(aprime, a);
