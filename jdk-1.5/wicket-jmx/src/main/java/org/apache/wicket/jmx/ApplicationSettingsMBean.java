@@ -43,9 +43,8 @@ public interface ApplicationSettingsMBean
 	String getClassResolver();
 
 	/**
-	 * Gets the default maximum size for uploads. This is used by
-	 * {@link Form#getMaxSize()} if no value is explicitly set through
-	 * {@link Form#setMaxSize(Bytes)}.
+	 * Gets the default maximum size for uploads. This is used by {@link Form#getMaxSize()} if no
+	 * value is explicitly set through {@link Form#setMaxSize(Bytes)}.
 	 * 
 	 * @return the default maximum size for uploads
 	 */
@@ -75,12 +74,11 @@ public interface ApplicationSettingsMBean
 	String getUnexpectedExceptionDisplay();
 
 	/**
-	 * Sets the default maximum size for uploads. This is used by
-	 * {@link Form#getMaxSize()} if no value is explicitly set through
-	 * {@link Form#setMaxSize(Bytes)}. The String value should be a floating
-	 * point value followed by K, M, G or T for kilobytes, megabytes, gigabytes
-	 * or terabytes, respectively. The abbreviations KB, MB, GB and TB are also
-	 * accepted. Matching is case insensitive.
+	 * Sets the default maximum size for uploads. This is used by {@link Form#getMaxSize()} if no
+	 * value is explicitly set through {@link Form#setMaxSize(Bytes)}. The String value should be a
+	 * floating point value followed by K, M, G or T for kilobytes, megabytes, gigabytes or
+	 * terabytes, respectively. The abbreviations KB, MB, GB and TB are also accepted. Matching is
+	 * case insensitive.
 	 * 
 	 * @param defaultUploadSize
 	 *            the default maximum size for uploads

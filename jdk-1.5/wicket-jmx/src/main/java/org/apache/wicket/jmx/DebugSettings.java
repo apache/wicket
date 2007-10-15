@@ -21,7 +21,8 @@ package org.apache.wicket.jmx;
  * 
  * @author eelcohillenius
  */
-public class DebugSettings implements DebugSettingsMBean {
+public class DebugSettings implements DebugSettingsMBean
+{
 	private final org.apache.wicket.Application application;
 
 	/**
@@ -29,35 +30,40 @@ public class DebugSettings implements DebugSettingsMBean {
 	 * 
 	 * @param application
 	 */
-	public DebugSettings(org.apache.wicket.Application application) {
+	public DebugSettings(org.apache.wicket.Application application)
+	{
 		this.application = application;
 	}
 
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#getComponentUseCheck()
 	 */
-	public boolean getComponentUseCheck() {
+	public boolean getComponentUseCheck()
+	{
 		return application.getDebugSettings().getComponentUseCheck();
 	}
 
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isAjaxDebugModeEnabled()
 	 */
-	public boolean isAjaxDebugModeEnabled() {
+	public boolean isAjaxDebugModeEnabled()
+	{
 		return application.getDebugSettings().isAjaxDebugModeEnabled();
 	}
 
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setAjaxDebugModeEnabled(boolean)
 	 */
-	public void setAjaxDebugModeEnabled(boolean enable) {
+	public void setAjaxDebugModeEnabled(boolean enable)
+	{
 		application.getDebugSettings().setAjaxDebugModeEnabled(enable);
 	}
 
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setComponentUseCheck(boolean)
 	 */
-	public void setComponentUseCheck(boolean check) {
+	public void setComponentUseCheck(boolean check)
+	{
 		application.getDebugSettings().setComponentUseCheck(check);
 	}
 }

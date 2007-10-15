@@ -18,7 +18,8 @@ package org.apache.wicket.jmx;
 
 class Stringz
 {
-	static String className(Object o) {
+	static String className(Object o)
+	{
 		return (o != null) ? o.getClass().getName() : null;
 	}
 }

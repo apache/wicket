@@ -52,8 +52,8 @@ public interface MarkupSettingsMBean
 
 	/**
 	 * @since 1.1
-	 * @return Returns default encoding of markup files. If null, the operating
-	 *         system provided encoding will be used.
+	 * @return Returns default encoding of markup files. If null, the operating system provided
+	 *         encoding will be used.
 	 */
 	String getDefaultMarkupEncoding();
 
@@ -92,18 +92,17 @@ public interface MarkupSettingsMBean
 	void setAutomaticLinking(boolean automaticLinking);
 
 	/**
-	 * Turns on whitespace compression. Multiple occurrences of space/tab
-	 * characters will be compressed to a single space. Multiple line breaks
-	 * newline/carriage-return will also be compressed to a single newline.
+	 * Turns on whitespace compression. Multiple occurrences of space/tab characters will be
+	 * compressed to a single space. Multiple line breaks newline/carriage-return will also be
+	 * compressed to a single newline.
 	 * <p>
-	 * Compression is currently not HTML aware and so it may be possible for
-	 * whitespace compression to break pages. For this reason, whitespace
-	 * compression is off by default and you should test your application
-	 * throroughly after turning whitespace compression on.
+	 * Compression is currently not HTML aware and so it may be possible for whitespace compression
+	 * to break pages. For this reason, whitespace compression is off by default and you should test
+	 * your application throroughly after turning whitespace compression on.
 	 * <p>
-	 * Spaces are removed from markup at markup load time and there should be no
-	 * effect on page rendering speed. In fact, your pages should render faster
-	 * with whitespace compression enabled.
+	 * Spaces are removed from markup at markup load time and there should be no effect on page
+	 * rendering speed. In fact, your pages should render faster with whitespace compression
+	 * enabled.
 	 * 
 	 * @param compressWhitespace
 	 *            The compressWhitespace to set.
@@ -123,16 +122,15 @@ public interface MarkupSettingsMBean
 	void setDefaultBeforeDisabledLink(String defaultBeforeDisabledLink);
 
 	/**
-	 * Set default encoding for markup files. If null, the encoding provided by
-	 * the operating system will be used.
+	 * Set default encoding for markup files. If null, the encoding provided by the operating system
+	 * will be used.
 	 * 
 	 * @param encoding
 	 */
 	void setDefaultMarkupEncoding(final String encoding);
 
 	/**
-	 * Enables stripping of markup comments denoted in markup by HTML comment
-	 * tagging.
+	 * Enables stripping of markup comments denoted in markup by HTML comment tagging.
 	 * 
 	 * @param stripComments
 	 *            True to strip markup comments from rendered pages

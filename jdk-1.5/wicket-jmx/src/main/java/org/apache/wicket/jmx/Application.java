@@ -116,8 +116,8 @@ public class Application implements ApplicationMBean
 					{
 						// ugly hack for 1.2 to avoid breaking the API
 						results[i] = ((IMountableRequestTargetUrlCodingStrategy)targets[i])
-								.getMountPath()
-								+ " - " + targets[i].toString();
+								.getMountPath() +
+								" - " + targets[i].toString();
 					}
 					else
 					{

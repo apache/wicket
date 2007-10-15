@@ -32,30 +32,27 @@ public interface RequestCycleSettingsMBean
 	boolean getBufferResponse();
 
 	/**
-	 * Gets whether Wicket should try to get extensive client info by
-	 * redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
-	 * method is used by the default implementation of
-	 * {@link WebRequestCycle#newClientInfo()}, so if that method is overriden,
-	 * there is no guarantee this method will be taken into account.
+	 * Gets whether Wicket should try to get extensive client info by redirecting to
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
+	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * overriden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @return Whether to gather extensive client info
 	 */
 	boolean getGatherExtendedBrowserInfo();
 
 	/**
-	 * In order to do proper form parameter decoding it is important that the
-	 * response and the following request have the same encoding. see
-	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
-	 * additional information.
+	 * In order to do proper form parameter decoding it is important that the response and the
+	 * following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for additional information.
 	 * 
 	 * @return The request and response encoding
 	 */
 	String getResponseRequestEncoding();
 
 	/**
-	 * Gets the time that a request will by default be waiting for the previous
-	 * request to be handled before giving up.
+	 * Gets the time that a request will by default be waiting for the previous request to be
+	 * handled before giving up.
 	 * 
 	 * @return The time out
 	 */
@@ -68,12 +65,10 @@ public interface RequestCycleSettingsMBean
 	void setBufferResponse(boolean bufferResponse);
 
 	/**
-	 * Sets whether Wicket should try to get extensive client info by
-	 * redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
-	 * method is used by the default implementation of
-	 * {@link WebRequestCycle#newClientInfo()}, so if that method is overriden,
-	 * there is no guarantee this method will be taken into account.
+	 * Sets whether Wicket should try to get extensive client info by redirecting to
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by
+	 * the default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
+	 * overriden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @param gatherExtendedBrowserInfo
 	 *            Whether to gather extensive client info
@@ -81,10 +76,9 @@ public interface RequestCycleSettingsMBean
 	void setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo);
 
 	/**
-	 * In order to do proper form parameter decoding it is important that the
-	 * response and the following request have the same encoding. see
-	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for
-	 * additional information.
+	 * In order to do proper form parameter decoding it is important that the response and the
+	 * following request have the same encoding. see
+	 * http://www.crazysquirrel.com/computing/general/form-encoding.jspx for additional information.
 	 * 
 	 * Default encoding: UTF-8
 	 * 
@@ -94,8 +88,8 @@ public interface RequestCycleSettingsMBean
 	void setResponseRequestEncoding(final String responseRequestEncoding);
 
 	/**
-	 * Sets the time that a request will by default be waiting for the previous
-	 * request to be handled before giving up.
+	 * Sets the time that a request will by default be waiting for the previous request to be
+	 * handled before giving up.
 	 * 
 	 * @param timeout
 	 */

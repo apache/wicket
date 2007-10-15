@@ -119,8 +119,8 @@ public class RequestLogger implements RequestLoggerMBean
 	/**
 	 * Gets the request logger for this application.
 	 * 
-	 * @return The request logger or null if no request is active, or if this is
-	 *         not a web application
+	 * @return The request logger or null if no request is active, or if this is not a web
+	 *         application
 	 */
 	protected org.apache.wicket.protocol.http.IRequestLogger getRequestLogger()
 	{

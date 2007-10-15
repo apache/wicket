@@ -34,8 +34,7 @@ public interface RequestLoggerMBean
 	 * Only available for {@link WebApplication web applications}.
 	 * </p>
 	 * 
-	 * @return the total number of sessions ever created since the application
-	 *         was started
+	 * @return the total number of sessions ever created since the application was started
 	 * @throws IOException
 	 */
 	Integer getNumberOfCreatedSessions() throws IOException;
@@ -52,24 +51,21 @@ public interface RequestLoggerMBean
 	Integer getNumberOfLiveSessions() throws IOException;
 
 	/**
-	 * The largest number of concurrent sessions since the application was
-	 * started.
+	 * The largest number of concurrent sessions since the application was started.
 	 * <p>
 	 * Only available for {@link WebApplication web applications}.
 	 * </p>
 	 * 
-	 * @return the largest number of concurrent sessions since the application
-	 *         was started
+	 * @return the largest number of concurrent sessions since the application was started
 	 * @throws IOException
 	 */
 	Integer getPeakNumberOfSessions() throws IOException;
 
 	/**
-	 * Registers a new request logger at the application. You need a request
-	 * logger for some functions of the session bean. Be aware that sessions
-	 * will be logged from this time on, so they may not reflect the actual
-	 * number of sessions. Also, if one was registered, it will be replaced by a
-	 * new one, which then starts over counting, disregarding the current ones.
+	 * Registers a new request logger at the application. You need a request logger for some
+	 * functions of the session bean. Be aware that sessions will be logged from this time on, so
+	 * they may not reflect the actual number of sessions. Also, if one was registered, it will be
+	 * replaced by a new one, which then starts over counting, disregarding the current ones.
 	 * <p>
 	 * Only available for {@link WebApplication web applications}.
 	 * </p>
@@ -79,8 +75,8 @@ public interface RequestLoggerMBean
 	void restart() throws IOException;
 
 	/**
-	 * Removes any set request logger from the application. You need a request
-	 * logger for some functions of the session bean.
+	 * Removes any set request logger from the application. You need a request logger for some
+	 * functions of the session bean.
 	 * <p>
 	 * Only available for {@link WebApplication web applications}.
 	 * </p>

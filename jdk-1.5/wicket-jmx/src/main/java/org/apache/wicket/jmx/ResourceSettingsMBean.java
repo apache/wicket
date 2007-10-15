@@ -81,8 +81,7 @@ public interface ResourceSettingsMBean
 	boolean getThrowExceptionOnMissingResource();
 
 	/**
-	 * @return Whether to use a default value (if available) when a missing
-	 *         resource is requested
+	 * @return Whether to use a default value (if available) when a missing resource is requested
 	 */
 	boolean getUseDefaultOnMissingResource();
 
@@ -95,8 +94,7 @@ public interface ResourceSettingsMBean
 
 	/**
 	 * @param useDefaultOnMissingResource
-	 *            Whether to use a default value (if available) when a missing
-	 *            resource is requested
+	 *            Whether to use a default value (if available) when a missing resource is requested
 	 */
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
 }

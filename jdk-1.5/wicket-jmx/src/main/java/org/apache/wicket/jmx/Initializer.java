@@ -39,14 +39,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Registers Wicket's MBeans.
  * <p>
- * Users can specify the MBeanServer implementation in which to register the
- * MBeans by setting the <code>org.apache.wicket.mbean.server.agentid</code> property to
- * the agent id of the MBeanServer implementation they want, or by setting
- * <code>org.apache.wicket.mbean.server.class</code> to the mbean server class they want
- * (if both are provided, and the agent id returns a server, that one is used).
- * This initializer will log an error when no mbean server with the provided
- * agent id can be found, and will then fall back to use the platform mbean
- * server. When no agent id is provided, the platform mbean server will be used.
+ * Users can specify the MBeanServer implementation in which to register the MBeans by setting the
+ * <code>org.apache.wicket.mbean.server.agentid</code> property to the agent id of the MBeanServer
+ * implementation they want, or by setting <code>org.apache.wicket.mbean.server.class</code> to
+ * the mbean server class they want (if both are provided, and the agent id returns a server, that
+ * one is used). This initializer will log an error when no mbean server with the provided agent id
+ * can be found, and will then fall back to use the platform mbean server. When no agent id is
+ * provided, the platform mbean server will be used.
  * 
  * @author eelcohillenius
  * @author David Hosier
@@ -159,24 +158,24 @@ public class Initializer implements IInitializer, IDestroyer
 			Application appBean = new Application(application);
 			register(appBean, appBeanName);
 
-			register(new ApplicationSettings(application), new ObjectName(domain
-					+ ":type=Application,name=ApplicationSettings"));
-			register(new DebugSettings(application), new ObjectName(domain
-					+ ":type=Application,name=DebugSettings"));
-			register(new MarkupSettings(application), new ObjectName(domain
-					+ ":type=Application,name=MarkupSettings"));
-			register(new ResourceSettings(application), new ObjectName(domain
-					+ ":type=Application,name=ResourceSettings"));
-			register(new PageSettings(application), new ObjectName(domain
-					+ ":type=Application,name=PageSettings"));
-			register(new RequestCycleSettings(application), new ObjectName(domain
-					+ ":type=Application,name=RequestCycleSettings"));
-			register(new SecuritySettings(application), new ObjectName(domain
-					+ ":type=Application,name=SecuritySettings"));
-			register(new SessionSettings(application), new ObjectName(domain
-					+ ":type=Application,name=SessionSettings"));
-			register(new CookieValuePersisterSettings(application), new ObjectName(domain
-					+ ":type=Application,name=CookieValuePersisterSettings"));
+			register(new ApplicationSettings(application), new ObjectName(domain +
+					":type=Application,name=ApplicationSettings"));
+			register(new DebugSettings(application), new ObjectName(domain +
+					":type=Application,name=DebugSettings"));
+			register(new MarkupSettings(application), new ObjectName(domain +
+					":type=Application,name=MarkupSettings"));
+			register(new ResourceSettings(application), new ObjectName(domain +
+					":type=Application,name=ResourceSettings"));
+			register(new PageSettings(application), new ObjectName(domain +
+					":type=Application,name=PageSettings"));
+			register(new RequestCycleSettings(application), new ObjectName(domain +
+					":type=Application,name=RequestCycleSettings"));
+			register(new SecuritySettings(application), new ObjectName(domain +
+					":type=Application,name=SecuritySettings"));
+			register(new SessionSettings(application), new ObjectName(domain +
+					":type=Application,name=SessionSettings"));
+			register(new CookieValuePersisterSettings(application), new ObjectName(domain +
+					":type=Application,name=CookieValuePersisterSettings"));
 
 			RequestLogger sessionsBean = new RequestLogger(application);
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");

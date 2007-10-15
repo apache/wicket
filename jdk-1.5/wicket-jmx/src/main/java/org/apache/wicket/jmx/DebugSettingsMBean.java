@@ -39,8 +39,7 @@ public interface DebugSettingsMBean
 	boolean isAjaxDebugModeEnabled();
 
 	/**
-	 * Enables or disables ajax debug mode. See {@link IDebugSettings} for
-	 * details
+	 * Enables or disables ajax debug mode. See {@link IDebugSettings} for details
 	 * 
 	 * @param enable
 	 * 
