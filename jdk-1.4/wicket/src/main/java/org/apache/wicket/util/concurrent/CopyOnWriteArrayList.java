@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * This class implements a variant of java.util.ArrayList in which all mutative
