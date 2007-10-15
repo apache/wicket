@@ -54,23 +54,22 @@ import org.joda.time.DateTime;
 
 
 /**
- * Pops up a YUI calendar component so that the user can select a date. On
- * selection, the date is set in the component it is coupled to, after which the
- * popup is closed again. This behavior can only be used with components that
- * either implement {@link ITextFormatProvider} or that use
- * {@link DateConverter} configured with an instance of {@link SimpleDateFormat}
- * (like Wicket's default configuration has).
+ * Pops up a YUI calendar component so that the user can select a date. On selection, the date is
+ * set in the component it is coupled to, after which the popup is closed again. This behavior can
+ * only be used with components that either implement {@link ITextFormatProvider} or that use
+ * {@link DateConverter} configured with an instance of {@link SimpleDateFormat} (like Wicket's
+ * default configuration has).
  * 
- * To use, simply add a new instance to your component, which would typically a
- * TextField, like {@link DateTextField}.
+ * To use, simply add a new instance to your component, which would typically a TextField, like
+ * {@link DateTextField}.
  * 
  * @author eelcohillenius
  */
 public class DatePicker extends AbstractBehavior implements IHeaderContributor
 {
 	/**
-	 * Exception thrown when the bound component does not produce a format this
-	 * date picker can work with.
+	 * Exception thrown when the bound component does not produce a format this date picker can work
+	 * with.
 	 */
 	private static final class UnableToDetermineFormatException extends WicketRuntimeException
 	{
@@ -78,25 +77,24 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 		public UnableToDetermineFormatException()
 		{
-			super("This behavior can only be added to components that either implement "
-					+ ITextFormatProvider.class.getName()
-					+ " AND produce a non-null format, or that use"
-					+ " converters that this datepicker can use to determine"
-					+ " the pattern being used. Alternatively, you can extend "
-					+ " the date picker and override getDatePattern to provide your own");
+			super("This behavior can only be added to components that either implement " +
+					ITextFormatProvider.class.getName() +
+					" AND produce a non-null format, or that use" +
+					" converters that this datepicker can use to determine" +
+					" the pattern being used. Alternatively, you can extend " +
+					" the date picker and override getDatePattern to provide your own");
 		}
 	}
 
 	/**
-	 * Format to be used when configuring YUI calendar. Can be used when using
-	 * the &quot;selected&quot; property.
+	 * Format to be used when configuring YUI calendar. Can be used when using the
+	 * &quot;selected&quot; property.
 	 */
 	public static final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
 
 	/**
-	 * For specifying which page (month/year) to show in the calendar, use this
-	 * format for the date. This is to be used together with the property
-	 * &quot;pagedate&quot;
+	 * For specifying which page (month/year) to show in the calendar, use this format for the date.
+	 * This is to be used together with the property &quot;pagedate&quot;
 	 */
 	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
 
@@ -170,8 +168,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 			response.renderCSSReference(new ResourceReference(YuiLib.class,
 					"calendar/assets/wicket-calendar.css"));
 			String idSelector = "#" + getEscapedComponentMarkupId() + "DpJs";
-			new StringHeaderContributor("<style>" + idSelector + ".yui-calendar .calnavleft, "
-					+ idSelector + ".yui-calendar .calnavright {display: none;}</style>")
+			new StringHeaderContributor("<style>" + idSelector + ".yui-calendar .calnavleft, " +
+					idSelector + ".yui-calendar .calnavright {display: none;}</style>")
 					.renderHead(response);
 		}
 
@@ -200,8 +198,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		Properties p = new Properties();
 		configure(p);
 
-		if (enableMonthYearSelection() && p.containsKey("pages")
-				&& Objects.longValue(p.get("pages")) > 1)
+		if (enableMonthYearSelection() && p.containsKey("pages") &&
+				Objects.longValue(p.get("pages")) > 1)
 		{
 			throw new IllegalStateException(
 					"You cannot use a CalendarGroup with month/year selection!");
@@ -261,19 +259,19 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		// ajax requests to not render the yui calendar multiple times
 		if (AjaxRequestTarget.get() != null)
 		{
-			final String javascript = "var e = Wicket.$('" + getEscapedComponentMarkupId() + "Dp"
-					+ "'); if (e != null && typeof(e.parentNode) != 'undefined' && "
-					+ "typeof(e.parentNode.parentNode != 'undefined')) "
-					+ "e.parentNode.parentNode.removeChild(e.parentNode);";
+			final String javascript = "var e = Wicket.$('" + getEscapedComponentMarkupId() + "Dp" +
+					"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
+					"typeof(e.parentNode.parentNode != 'undefined')) " +
+					"e.parentNode.parentNode.removeChild(e.parentNode);";
 
 			response.renderJavascript(javascript, null);
 		}
 	}
 
 	/**
-	 * Check that this behavior can get a date format out of the component it is
-	 * coupled to. It checks whether {@link #getDatePattern()} produces a
-	 * non-null value. If that method returns null, and exception will be thrown
+	 * Check that this behavior can get a date format out of the component it is coupled to. It
+	 * checks whether {@link #getDatePattern()} produces a non-null value. If that method returns
+	 * null, and exception will be thrown
 	 * 
 	 * @param component
 	 *            the component this behavior is being coupled to
@@ -306,10 +304,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	/**
 	 * Whether to position the date picker relative to the trigger icon.
 	 * 
-	 * @return If true, the date picker is aligned with the left position of the
-	 *         icon, and with the top right under. If false, the date picker
-	 *         will skip positioning and will let you do the positioning
-	 *         yourself. Returns true by default.
+	 * @return If true, the date picker is aligned with the left position of the icon, and with the
+	 *         top right under. If false, the date picker will skip positioning and will let you do
+	 *         the positioning yourself. Returns true by default.
 	 */
 	protected boolean alignWithIcon()
 	{
@@ -317,9 +314,9 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Append javascript to the initialization function for the YUI widget. Can
-	 * be used by subclasses to conveniently extend configuration without having
-	 * to write a separate contribution.
+	 * Append javascript to the initialization function for the YUI widget. Can be used by
+	 * subclasses to conveniently extend configuration without having to write a separate
+	 * contribution.
 	 * 
 	 * @param markupId
 	 *            The markup id of the calendar component
@@ -336,14 +333,13 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Gives overriding classes the option of adding (or even changing/
-	 * removing) configuration properties for the javascript widget. See <a
-	 * href="http://developer.yahoo.com/yui/calendar/">the widget's
-	 * documentation</a> for the available options. If you want to override/
-	 * remove properties, you should call
-	 * {@link super#setWidgetProperties(Properties)} first. If you don't call
-	 * that, be aware that you will have to call {@link #localize(Map)} manually
-	 * if you like localized strings to be added.
+	 * Gives overriding classes the option of adding (or even changing/ removing) configuration
+	 * properties for the javascript widget. See <a
+	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
+	 * available options. If you want to override/ remove properties, you should call
+	 * {@link super#setWidgetProperties(Properties)} first. If you don't call that, be aware that
+	 * you will have to call {@link #localize(Map)} manually if you like localized strings to be
+	 * added.
 	 * 
 	 * @param widgetProperties
 	 *            the current widget properties
@@ -379,8 +375,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Filter all empty elements (workaround for {@link DateFormatSymbols}
-	 * returning arrays with empty elements).
+	 * Filter all empty elements (workaround for {@link DateFormatSymbols} returning arrays with
+	 * empty elements).
 	 * 
 	 * @param array
 	 *            array to filter
@@ -404,8 +400,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Gets the id of the component that the calendar widget will get attached
-	 * to.
+	 * Gets the id of the component that the calendar widget will get attached to.
 	 * 
 	 * @return The DOM id of the component
 	 */
@@ -417,8 +412,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 
 	/**
 	 * @return if true, the base path for all YUI components will be set to
-	 *         /resources/org.apache.wicket.extensions.yui.YuiLib/. True by
-	 *         default.
+	 *         /resources/org.apache.wicket.extensions.yui.YuiLib/. True by default.
 	 */
 	protected boolean getConfigureYUIBasePath()
 	{
@@ -426,8 +420,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Gets the date pattern to use for putting selected values in the coupled
-	 * component.
+	 * Gets the date pattern to use for putting selected values in the coupled component.
 	 * 
 	 * @return The date pattern
 	 */
@@ -456,11 +449,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Gets the escaped DOM id that the calendar widget will get attached to.
-	 * All non word characters (\W) will be removed from the string.
+	 * Gets the escaped DOM id that the calendar widget will get attached to. All non word
+	 * characters (\W) will be removed from the string.
 	 * 
-	 * @return The DOM id of the calendar widget - same as the component's
-	 *         markup id + 'Dp'}
+	 * @return The DOM id of the calendar widget - same as the component's markup id + 'Dp'}
 	 */
 	protected final String getEscapedComponentMarkupId()
 	{
@@ -488,8 +480,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Gets the url for the popup button. Users can override to provide their
-	 * own icon URL.
+	 * Gets the url for the popup button. Users can override to provide their own icon URL.
 	 * 
 	 * @return the url to use for the popup button/ icon
 	 */
@@ -509,24 +500,20 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Configure the localized strings for the datepicker widget. This
-	 * implementation uses {@link DateFormatSymbols} and some slight string
-	 * manupilation to get the strings for months and week days. It should work
-	 * well for most locales.
+	 * Configure the localized strings for the datepicker widget. This implementation uses
+	 * {@link DateFormatSymbols} and some slight string manupilation to get the strings for months
+	 * and week days. It should work well for most locales.
 	 * <p>
-	 * This method is called from {@link #configureWidgetProperties(Map)} and
-	 * can be overriden if you want to customize setting up the localized
-	 * strings but are happy with the rest of
-	 * {@link #configureWidgetProperties(Map)}'s behavior. Note that you can
-	 * call (overridable) method {@link #getLocale()} to get the locale that
-	 * should be used for setting up the widget.
+	 * This method is called from {@link #configureWidgetProperties(Map)} and can be overriden if
+	 * you want to customize setting up the localized strings but are happy with the rest of
+	 * {@link #configureWidgetProperties(Map)}'s behavior. Note that you can call (overridable)
+	 * method {@link #getLocale()} to get the locale that should be used for setting up the widget.
 	 * </p>
 	 * <p>
-	 * See YUI Calendar's <a
-	 * href="http://developer.yahoo.com/yui/examples/calendar/germany/1.html">
+	 * See YUI Calendar's <a href="http://developer.yahoo.com/yui/examples/calendar/germany/1.html">
 	 * German</a> and <a
-	 * href="http://developer.yahoo.com/yui/examples/calendar/japan/1.html">Japanese</a>
-	 * examples for more info.
+	 * href="http://developer.yahoo.com/yui/examples/calendar/japan/1.html">Japanese</a> examples
+	 * for more info.
 	 * </p>
 	 * 
 	 * @param widgetProperties
@@ -547,14 +534,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Whether to notify the associated component when a date is selected.
-	 * Notifying is done by calling the associated component's onchange
-	 * Javascript event handler. You can for instance attach an
-	 * {@link AjaxEventBehavior} to that component to get a call back to the
-	 * server. The default is true.
+	 * Whether to notify the associated component when a date is selected. Notifying is done by
+	 * calling the associated component's onchange Javascript event handler. You can for instance
+	 * attach an {@link AjaxEventBehavior} to that component to get a call back to the server. The
+	 * default is true.
 	 * 
-	 * @return if true, notifies the associated component when a date is
-	 *         selected
+	 * @return if true, notifies the associated component when a date is selected
 	 */
 	protected boolean notifyComponentOnDateSelected()
 	{
@@ -562,8 +547,8 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Makes a copy of the provided array and for each element copy the
-	 * substring 0..len to the new array
+	 * Makes a copy of the provided array and for each element copy the substring 0..len to the new
+	 * array
 	 * 
 	 * @param array
 	 *            array to copy from
@@ -597,12 +582,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Indicates whether plain text is rendered or two select boxes are used to
-	 * allow direct selection of month and year.
+	 * Indicates whether plain text is rendered or two select boxes are used to allow direct
+	 * selection of month and year.
 	 * 
-	 * @return <code>true</code> if select boxes should be rendered to allow
-	 *         month and year selection.<br/><code>false</code> to render
-	 *         just plain text.
+	 * @return <code>true</code> if select boxes should be rendered to allow month and year
+	 *         selection.<br/><code>false</code> to render just plain text.
 	 */
 	protected boolean enableMonthYearSelection()
 	{
@@ -610,12 +594,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Indicates whether the calendar should be hidden after a date was
-	 * selected.
+	 * Indicates whether the calendar should be hidden after a date was selected.
 	 * 
-	 * @return <code>true</code> (default) if the calendar should be hidden
-	 *         after the date selection <br/><code>false</code> if the
-	 *         calendar should remain visible after the date selection.
+	 * @return <code>true</code> (default) if the calendar should be hidden after the date
+	 *         selection <br/><code>false</code> if the calendar should remain visible after the
+	 *         date selection.
 	 */
 	protected boolean hideOnSelect()
 	{
@@ -623,12 +606,10 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Indicates whether the calendar should be rendered after it has been
-	 * loaded.
+	 * Indicates whether the calendar should be rendered after it has been loaded.
 	 * 
-	 * @return <code>true</code> if the calendar should be rendered after it
-	 *         has been loaded.<br/><code>false</code> (default) if it's
-	 *         initially hidden.
+	 * @return <code>true</code> if the calendar should be rendered after it has been loaded.<br/><code>false</code>
+	 *         (default) if it's initially hidden.
 	 */
 	protected boolean renderOnLoad()
 	{
@@ -636,13 +617,11 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	}
 
 	/**
-	 * Override this method to further customize the YUI Calendar with
-	 * additional Javascript code. The code returned by this method is executed
-	 * right after the Calendar has been constructed and initialized. To refer
-	 * to the actual Calendar DOM object, use <code>${calendar}</code> in your
-	 * code.<br/>See <a href="http://developer.yahoo.com/yui/calendar/">the
-	 * widget's documentation</a> for more information about the YUI Calendar.<br/>
-	 * Example:
+	 * Override this method to further customize the YUI Calendar with additional Javascript code.
+	 * The code returned by this method is executed right after the Calendar has been constructed
+	 * and initialized. To refer to the actual Calendar DOM object, use <code>${calendar}</code>
+	 * in your code.<br/>See <a href="http://developer.yahoo.com/yui/calendar/">the widget's
+	 * documentation</a> for more information about the YUI Calendar.<br/> Example:
 	 * 
 	 * <pre>
 	 * protected String getAdditionalJavascript()

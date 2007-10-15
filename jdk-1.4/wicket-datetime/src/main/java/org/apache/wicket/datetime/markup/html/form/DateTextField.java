@@ -31,17 +31,16 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
 /**
- * A TextField that is mapped to a <code>java.util.Date</code> object and that
- * uses Joda time to parse and format values.
+ * A TextField that is mapped to a <code>java.util.Date</code> object and that uses Joda time to
+ * parse and format values.
  * <p>
- * You should use on of the factory methods to construct the kind you want or
- * use the public constructor and pass in the converter to use.
+ * You should use on of the factory methods to construct the kind you want or use the public
+ * constructor and pass in the converter to use.
  * </p>
  * <p>
- * This component tries to apply the time zone difference between the client and
- * server. See the
- * {@link DateConverter#getApplyTimeZoneDifference() date converter} of this
- * package for more information on that.
+ * This component tries to apply the time zone difference between the client and server. See the
+ * {@link DateConverter#getApplyTimeZoneDifference() date converter} of this package for more
+ * information on that.
  * </p>
  * 
  * @see StyleDateConverter
@@ -64,8 +63,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * @param model
 	 *            The model
 	 * @param datePattern
-	 *            The pattern to use. Must be not null. See
-	 *            {@link SimpleDateFormat} for available patterns.
+	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
+	 *            patterns.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
@@ -80,8 +79,8 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * @param id
 	 *            The id of the text field
 	 * @param datePattern
-	 *            The pattern to use. Must be not null. See
-	 *            {@link SimpleDateFormat} for available patterns.
+	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
+	 *            patterns.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
@@ -98,10 +97,9 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * @param model
 	 *            The model
 	 * @param dateStyle
-	 *            Date style to use. The first character is the date style, and
-	 *            the second character is the time style. Specify a character of
-	 *            'S' for short style, 'M' for medium, 'L' for long, and 'F' for
-	 *            full. A date or time may be ommitted by specifying a style
+	 *            Date style to use. The first character is the date style, and the second character
+	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
+	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
 	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
@@ -117,10 +115,9 @@ public class DateTextField extends TextField implements ITextFormatProvider
 	 * @param id
 	 *            The id of the text field
 	 * @param dateStyle
-	 *            Date style to use. The first character is the date style, and
-	 *            the second character is the time style. Specify a character of
-	 *            'S' for short style, 'M' for medium, 'L' for long, and 'F' for
-	 *            full. A date or time may be ommitted by specifying a style
+	 *            Date style to use. The first character is the date style, and the second character
+	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
+	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
 	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField

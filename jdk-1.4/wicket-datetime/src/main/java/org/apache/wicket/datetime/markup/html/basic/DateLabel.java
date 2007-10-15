@@ -32,16 +32,15 @@ import org.joda.time.format.DateTimeFormat;
 
 
 /**
- * A label that is mapped to a <code>java.util.Date</code> object and that
- * uses Joda time to format values.
+ * A label that is mapped to a <code>java.util.Date</code> object and that uses Joda time to
+ * format values.
  * <p>
  * You can provide a date pattern in two of the constructors. When not provided,
  * {@link DateTimeFormat#shortDate()} will be used.
  * </p>
  * <p>
- * A special option is applyTimeZoneDifference which is an option that says
- * whether to correct for the difference between the client's time zone and
- * server's time zone. This is true by default.
+ * A special option is applyTimeZoneDifference which is an option that says whether to correct for
+ * the difference between the client's time zone and server's time zone. This is true by default.
  * </p>
  * 
  * @see DateTime
@@ -62,8 +61,8 @@ public class DateLabel extends Label
 	 * @param model
 	 *            The model
 	 * @param datePattern
-	 *            The pattern to use. Must be not null. See
-	 *            {@link SimpleDateFormat} for available patterns.
+	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
+	 *            patterns.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
@@ -78,8 +77,8 @@ public class DateLabel extends Label
 	 * @param id
 	 *            The id of the text field
 	 * @param datePattern
-	 *            The pattern to use. Must be not null. See
-	 *            {@link SimpleDateFormat} for available patterns.
+	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
+	 *            patterns.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
@@ -96,9 +95,9 @@ public class DateLabel extends Label
 	 * @param model
 	 *            The model
 	 * @param dateStyle
-	 *            style to use in case no pattern is provided. Must be two
-	 *            characters from the set {"S", "M", "L", "F", "-"}. Must be not
-	 *            null. See {@link DateTimeFormat#forStyle(String)} for options.
+	 *            style to use in case no pattern is provided. Must be two characters from the set
+	 *            {"S", "M", "L", "F", "-"}. Must be not null. See
+	 *            {@link DateTimeFormat#forStyle(String)} for options.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
@@ -113,9 +112,9 @@ public class DateLabel extends Label
 	 * @param id
 	 *            The id of the text field
 	 * @param dateStyle
-	 *            style to use in case no pattern is provided. Must be two
-	 *            characters from the set {"S", "M", "L", "F", "-"}. Must be not
-	 *            null. See {@link DateTimeFormat#forStyle(String)} for options.
+	 *            style to use in case no pattern is provided. Must be two characters from the set
+	 *            {"S", "M", "L", "F", "-"}. Must be not null. See
+	 *            {@link DateTimeFormat#forStyle(String)} for options.
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */

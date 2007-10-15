@@ -41,8 +41,8 @@ import org.joda.time.MutableDateTime;
 
 
 /**
- * Works on a {@link java.util.Date} object. Displays a date field and a date
- * picker, a field for hours and a field for minutes, and a AM/ PM field.
+ * Works on a {@link java.util.Date} object. Displays a date field and a date picker, a field for
+ * hours and a field for minutes, and a AM/ PM field.
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
@@ -52,8 +52,7 @@ import org.joda.time.MutableDateTime;
 public class DateTimeField extends FormComponentPanel
 {
 	/**
-	 * Enumerated type for different ways of handling the render part of
-	 * requests.
+	 * Enumerated type for different ways of handling the render part of requests.
 	 */
 	// enums are mucho nicer, but let's keep this project at 1.4 for now
 	private static class AM_PM extends EnumeratedType
@@ -104,7 +103,7 @@ public class DateTimeField extends FormComponentPanel
 	{
 		this(id, null);
 	}
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -117,11 +116,12 @@ public class DateTimeField extends FormComponentPanel
 		setType(Date.class);
 		PropertyModel dateFieldModel = new PropertyModel(this, "date");
 		add(dateField = newDateTextField("date", dateFieldModel));
-		dateField.add(new DatePicker() {			
+		dateField.add(new DatePicker()
+		{
 			private static final long serialVersionUID = 1L;
 
 			protected void configure(Map widgetProperties)
-			{				
+			{
 				super.configure(widgetProperties);
 				DateTimeField.this.configure(widgetProperties);
 			}
@@ -174,9 +174,10 @@ public class DateTimeField extends FormComponentPanel
 	{
 		return hours;
 	}
-	
-	protected void configure(Map widgetProperties) {
-		
+
+	protected void configure(Map widgetProperties)
+	{
+
 	}
 
 	/**
@@ -260,16 +261,14 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
-	 * Sets the converted input, which is an instance of {@link Date}, possibly
-	 * null. It combines the inputs of the nested date, hours, minutes and am/pm
-	 * fields and constructs a date from it.
+	 * Sets the converted input, which is an instance of {@link Date}, possibly null. It combines
+	 * the inputs of the nested date, hours, minutes and am/pm fields and constructs a date from it.
 	 * <p>
-	 * Note that overriding this method is a better option than overriding
-	 * {@link #updateModel()} like the first versions of this class did. The
-	 * reason for that is that this method can be used by form validators
-	 * without having to depend on the actual model being updated, and this
-	 * method is called by the default implementation of {@link #updateModel()}
-	 * anyway (so we don't have to override that anymore).
+	 * Note that overriding this method is a better option than overriding {@link #updateModel()}
+	 * like the first versions of this class did. The reason for that is that this method can be
+	 * used by form validators without having to depend on the actual model being updated, and this
+	 * method is called by the default implementation of {@link #updateModel()} anyway (so we don't
+	 * have to override that anymore).
 	 * </p>
 	 * 
 	 * @see org.apache.wicket.markup.html.form.FormComponent#convertInput()

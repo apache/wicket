@@ -26,10 +26,10 @@ import org.joda.time.format.DateTimeFormatter;
 
 
 /**
- * Date converter that uses Joda Time and can be configured to take the time
- * zone difference between clients and server into account. This converter is
- * hard coded to use the provided custom date pattern, no matter what current
- * locale is used. See {@link SimpleDateFormat} for available patterns.
+ * Date converter that uses Joda Time and can be configured to take the time zone difference between
+ * clients and server into account. This converter is hard coded to use the provided custom date
+ * pattern, no matter what current locale is used. See {@link SimpleDateFormat} for available
+ * patterns.
  * <p>
  * This converter is especially suited on a per-component base.
  * </p>
@@ -54,21 +54,19 @@ public class PatternDateConverter extends DateConverter
 	/**
 	 * Construct.
 	 * </p>
-	 * When applyTimeZoneDifference is true, the current time is applied on the
-	 * parsed date, and the date will be corrected for the time zone difference
-	 * between the server and the client. For instance, if I'm in Seattle and
-	 * the server I'm working on is in Amsterdam, the server is 9 hours ahead.
-	 * So, if I'm inputting say 12/24 at a couple of hours before midnight, at
-	 * the server it is already 12/25. If this boolean is true, it will be
-	 * transformed to 12/25, while the client sees 12/24.
+	 * When applyTimeZoneDifference is true, the current time is applied on the parsed date, and the
+	 * date will be corrected for the time zone difference between the server and the client. For
+	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
+	 * hours ahead. So, if I'm inputting say 12/24 at a couple of hours before midnight, at the
+	 * server it is already 12/25. If this boolean is true, it will be transformed to 12/25, while
+	 * the client sees 12/24.
 	 * </p>
 	 * 
 	 * @param datePattern
-	 *            The pattern to use. Must be not null. See
-	 *            {@link SimpleDateFormat} for available patterns.
+	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
+	 *            patterns.
 	 * @param applyTimeZoneDifference
-	 *            whether to apply the difference in time zones between client
-	 *            and server
+	 *            whether to apply the difference in time zones between client and server
 	 * @throws IllegalArgumentException
 	 *             in case the date pattern is null
 	 */

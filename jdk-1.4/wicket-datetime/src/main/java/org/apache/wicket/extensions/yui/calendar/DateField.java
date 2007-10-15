@@ -96,16 +96,15 @@ public class DateField extends FormComponentPanel
 	}
 
 	/**
-	 * Sets the converted input. In this case, we're really just interested in
-	 * the nested date field, as that is the element that receives the real user
-	 * input. So we're just passing that on.
+	 * Sets the converted input. In this case, we're really just interested in the nested date
+	 * field, as that is the element that receives the real user input. So we're just passing that
+	 * on.
 	 * <p>
-	 * Note that overriding this method is a better option than overriding
-	 * {@link #updateModel()} like the first versions of this class did. The
-	 * reason for that is that this method can be used by form validators
-	 * without having to depend on the actual model being updated, and this
-	 * method is called by the default implementation of {@link #updateModel()}
-	 * anyway (so we don't have to override that anymore).
+	 * Note that overriding this method is a better option than overriding {@link #updateModel()}
+	 * like the first versions of this class did. The reason for that is that this method can be
+	 * used by form validators without having to depend on the actual model being updated, and this
+	 * method is called by the default implementation of {@link #updateModel()} anyway (so we don't
+	 * have to override that anymore).
 	 * </p>
 	 * 
 	 * @return instance of {@link Date}, possibly null

@@ -24,10 +24,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 
 /**
- * Date converter that uses Joda Time and can be configured to take the time
- * zone difference between clients and server into account, and that is
- * configured for a certain date style. The pattern will always be locale
- * specific.
+ * Date converter that uses Joda Time and can be configured to take the time zone difference between
+ * clients and server into account, and that is configured for a certain date style. The pattern
+ * will always be locale specific.
  * <p>
  * This converter is especially suited on a per-component base.
  * </p>
@@ -50,22 +49,19 @@ public class StyleDateConverter extends DateConverter
 	private final String dateStyle;
 
 	/**
-	 * Construct. The dateStyle 'S-' (which is the same as
-	 * {@link DateTimeFormat#shortDate()}) will be used for constructing the
-	 * date format for the current locale.
+	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormat#shortDate()}) will
+	 * be used for constructing the date format for the current locale.
 	 * </p>
-	 * When applyTimeZoneDifference is true, the current time is applied on the
-	 * parsed date, and the date will be corrected for the time zone difference
-	 * between the server and the client. For instance, if I'm in Seattle and
-	 * the server I'm working on is in Amsterdam, the server is 9 hours ahead.
-	 * So, if I'm inputting say 12/24 at a couple of hours before midnight, at
-	 * the server it is already 12/25. If this boolean is true, it will be
-	 * transformed to 12/25, while the client sees 12/24.
+	 * When applyTimeZoneDifference is true, the current time is applied on the parsed date, and the
+	 * date will be corrected for the time zone difference between the server and the client. For
+	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
+	 * hours ahead. So, if I'm inputting say 12/24 at a couple of hours before midnight, at the
+	 * server it is already 12/25. If this boolean is true, it will be transformed to 12/25, while
+	 * the client sees 12/24.
 	 * </p>
 	 * 
 	 * @param applyTimeZoneDifference
-	 *            whether to apply the difference in time zones between client
-	 *            and server
+	 *            whether to apply the difference in time zones between client and server
 	 */
 	public StyleDateConverter(boolean applyTimeZoneDifference)
 	{
@@ -73,28 +69,24 @@ public class StyleDateConverter extends DateConverter
 	}
 
 	/**
-	 * Construct. The provided pattern will be used as the base format (but they
-	 * will be localized for the current locale) and if null,
-	 * {@link DateTimeFormat#shortDate()} will be used.
+	 * Construct. The provided pattern will be used as the base format (but they will be localized
+	 * for the current locale) and if null, {@link DateTimeFormat#shortDate()} will be used.
 	 * </p>
-	 * When applyTimeZoneDifference is true, the current time is applied on the
-	 * parsed date, and the date will be corrected for the time zone difference
-	 * between the server and the client. For instance, if I'm in Seattle and
-	 * the server I'm working on is in Amsterdam, the server is 9 hours ahead.
-	 * So, if I'm inputting say 12/24 at a couple of hours before midnight, at
-	 * the server it is already 12/25. If this boolean is true, it will be
-	 * transformed to 12/25, while the client sees 12/24.
+	 * When applyTimeZoneDifference is true, the current time is applied on the parsed date, and the
+	 * date will be corrected for the time zone difference between the server and the client. For
+	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
+	 * hours ahead. So, if I'm inputting say 12/24 at a couple of hours before midnight, at the
+	 * server it is already 12/25. If this boolean is true, it will be transformed to 12/25, while
+	 * the client sees 12/24.
 	 * </p>
 	 * 
 	 * @param dateStyle
-	 *            Date style to use. The first character is the date style, and
-	 *            the second character is the time style. Specify a character of
-	 *            'S' for short style, 'M' for medium, 'L' for long, and 'F' for
-	 *            full. A date or time may be ommitted by specifying a style
+	 *            Date style to use. The first character is the date style, and the second character
+	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
+	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
 	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
 	 * @param applyTimeZoneDifference
-	 *            whether to apply the difference in time zones between client
-	 *            and server
+	 *            whether to apply the difference in time zones between client and server
 	 * @throws IllegalArgumentException
 	 *             in case dateStyle is null
 	 */

@@ -36,9 +36,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 
 /**
- * Base class for Joda Time based date converters. It contains the logic to
- * parse and format, optionally taking the time zone difference between clients
- * and the server into account.
+ * Base class for Joda Time based date converters. It contains the logic to parse and format,
+ * optionally taking the time zone difference between clients and the server into account.
  * <p>
  * Converters of this class are best suited for per-component use.
  * </p>
@@ -65,18 +64,16 @@ public abstract class DateConverter implements IConverter
 	/**
 	 * Construct.
 	 * </p>
-	 * When applyTimeZoneDifference is true, the current time is applied on the
-	 * parsed date, and the date will be corrected for the time zone difference
-	 * between the server and the client. For instance, if I'm in Seattle and
-	 * the server I'm working on is in Amsterdam, the server is 9 hours ahead.
-	 * So, if I'm inputting say 12/24 at a couple of hours before midnight, at
-	 * the server it is already 12/25. If this boolean is true, it will be
-	 * transformed to 12/25, while the client sees 12/24.
+	 * When applyTimeZoneDifference is true, the current time is applied on the parsed date, and the
+	 * date will be corrected for the time zone difference between the server and the client. For
+	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
+	 * hours ahead. So, if I'm inputting say 12/24 at a couple of hours before midnight, at the
+	 * server it is already 12/25. If this boolean is true, it will be transformed to 12/25, while
+	 * the client sees 12/24.
 	 * </p>
 	 * 
 	 * @param applyTimeZoneDifference
-	 *            whether to apply the difference in time zones between client
-	 *            and server
+	 *            whether to apply the difference in time zones between client and server
 	 */
 	public DateConverter(boolean applyTimeZoneDifference)
 	{
@@ -117,8 +114,8 @@ public abstract class DateConverter implements IConverter
 				int result = format.parseInto(dt, value, 0);
 				if (result < 0)
 				{
-					throw new ConversionException(new ParseException("unable to parse date "
-							+ value, ~result));
+					throw new ConversionException(new ParseException("unable to parse date " +
+							value, ~result));
 				}
 			}
 			catch (RuntimeException e)
@@ -168,17 +165,14 @@ public abstract class DateConverter implements IConverter
 	 * Gets whether to apply the time zone difference when interpreting dates.
 	 * 
 	 * </p>
-	 * When true, the current time is applied on the parsed date, and the date
-	 * will be corrected for the time zone difference between the server and the
-	 * client. For instance, if I'm in Seattle and the server I'm working on is
-	 * in Amsterdam, the server is 9 hours ahead. So, if I'm inputting say 12/24
-	 * at a couple of hours before midnight, at the server it is already 12/25.
-	 * If this boolean is true, it will be transformed to 12/25, while the
-	 * client sees 12/24.
+	 * When true, the current time is applied on the parsed date, and the date will be corrected for
+	 * the time zone difference between the server and the client. For instance, if I'm in Seattle
+	 * and the server I'm working on is in Amsterdam, the server is 9 hours ahead. So, if I'm
+	 * inputting say 12/24 at a couple of hours before midnight, at the server it is already 12/25.
+	 * If this boolean is true, it will be transformed to 12/25, while the client sees 12/24.
 	 * </p>
 	 * 
-	 * @return whether to apply the difference in time zones between client and
-	 *         server
+	 * @return whether to apply the difference in time zones between client and server
 	 */
 	public final boolean getApplyTimeZoneDifference()
 	{
@@ -232,8 +226,7 @@ public abstract class DateConverter implements IConverter
 	/**
 	 * Gets the locale to use.
 	 * 
-	 * @return the locale from either the component if that is set, or from the
-	 *         session
+	 * @return the locale from either the component if that is set, or from the session
 	 */
 	protected Locale getLocale()
 	{
@@ -242,8 +235,8 @@ public abstract class DateConverter implements IConverter
 	}
 
 	/**
-	 * Gets the server time zone. Override this method if you want to fix to a
-	 * certain time zone, regardless of what actual time zone the server is in.
+	 * Gets the server time zone. Override this method if you want to fix to a certain time zone,
+	 * regardless of what actual time zone the server is in.
 	 * 
 	 * @return The server time zone
 	 */

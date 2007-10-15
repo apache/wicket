@@ -32,19 +32,18 @@ import org.apache.wicket.util.string.JavascriptUtils;
 
 
 /**
- * Abstract calendar component based on the YUI (Yahoo User Interface library)
- * javascript widget.
+ * Abstract calendar component based on the YUI (Yahoo User Interface library) javascript widget.
  * <p>
- * Although this component by itself is fully functional, it doesn't do much
- * other than just displaying the calendar. Hence, this class is abstract.
+ * Although this component by itself is fully functional, it doesn't do much other than just
+ * displaying the calendar. Hence, this class is abstract.
  * </p>
  * <p>
  * An easy way to build upon this component is to override
- * {@link #appendToInit(String, String, String, StringBuffer)} and add event
- * handlers etc. in the YUI widget's initialization function.
+ * {@link #appendToInit(String, String, String, StringBuffer)} and add event handlers etc. in the
+ * YUI widget's initialization function.
  * </p>
- * See <a href="http://developer.yahoo.com/yui/calendar/">YUI's calendar
- * documentation</a> for more info.
+ * See <a href="http://developer.yahoo.com/yui/calendar/">YUI's calendar documentation</a> for more
+ * info.
  * 
  * @author eelcohillenius
  * 
@@ -55,15 +54,14 @@ import org.apache.wicket.util.string.JavascriptUtils;
 public abstract class AbstractCalendar extends WebComponent
 {
 	/**
-	 * Format to be used when configuring YUI calendar. Can be used when using
-	 * the &quot;selected&quot; property.
+	 * Format to be used when configuring YUI calendar. Can be used when using the
+	 * &quot;selected&quot; property.
 	 */
 	public static final DateFormat FORMAT_DATE = new SimpleDateFormat("MM/dd/yyyy");
 
 	/**
-	 * For specifying which page (month/year) to show in the calendar, use this
-	 * format for the date. This is to be used together with the property
-	 * &quot;pagedate&quot;
+	 * For specifying which page (month/year) to show in the calendar, use this format for the date.
+	 * This is to be used together with the property &quot;pagedate&quot;
 	 */
 	public static final DateFormat FORMAT_PAGEDATE = new SimpleDateFormat("MM/yyyy");
 	private static final long serialVersionUID = 1L;
@@ -85,11 +83,10 @@ public abstract class AbstractCalendar extends WebComponent
 	 * @param id
 	 *            The component id
 	 * @param contributeDependencies
-	 *            Whether to contribute the packaged dependencies. Pass false in
-	 *            case you want to include the dependencies manually in your own
-	 *            page, e.g. when you want to keep them in your web application
-	 *            dir. To contribute yourself (in case you want to pass false),
-	 *            your page header should look like:
+	 *            Whether to contribute the packaged dependencies. Pass false in case you want to
+	 *            include the dependencies manually in your own page, e.g. when you want to keep
+	 *            them in your web application dir. To contribute yourself (in case you want to pass
+	 *            false), your page header should look like:
 	 * 
 	 * <pre>
 	 * 	 &lt;script type=&quot;text/javascript&quot; src=&quot;yahoo.js&quot;&gt;&lt;/script&gt; 
@@ -204,10 +201,9 @@ public abstract class AbstractCalendar extends WebComponent
 	}
 
 	/**
-	 * Gets the id of the javascript widget. Note that this is the
-	 * non-namespaced id, so depending on what you want to do with it, you may
-	 * need to prepend 'YAHOO.wicket.' to it. Or you can call
-	 * {@link #getJavascriptWidgetId()}.
+	 * Gets the id of the javascript widget. Note that this is the non-namespaced id, so depending
+	 * on what you want to do with it, you may need to prepend 'YAHOO.wicket.' to it. Or you can
+	 * call {@link #getJavascriptWidgetId()}.
 	 * 
 	 * @return The javascript id
 	 * @see #getJavascriptWidgetId()
@@ -241,9 +237,9 @@ public abstract class AbstractCalendar extends WebComponent
 	}
 
 	/**
-	 * Append javascript to the initialization function for the YUI widget. Can
-	 * be used by subclasses to conveniently extend configuration without having
-	 * to write a separate contribution.
+	 * Append javascript to the initialization function for the YUI widget. Can be used by
+	 * subclasses to conveniently extend configuration without having to write a separate
+	 * contribution.
 	 * 
 	 * @param markupId
 	 *            The markup id of the calendar component
@@ -260,11 +256,10 @@ public abstract class AbstractCalendar extends WebComponent
 	}
 
 	/**
-	 * Gives overriding classes the option of adding (or even changing/
-	 * removing) configuration properties for the javascript widget. See <a
-	 * href="http://developer.yahoo.com/yui/calendar/">the widget's
-	 * documentation</a> for the available options. If you want to override/
-	 * remove properties, you obviously should call
+	 * Gives overriding classes the option of adding (or even changing/ removing) configuration
+	 * properties for the javascript widget. See <a
+	 * href="http://developer.yahoo.com/yui/calendar/">the widget's documentation</a> for the
+	 * available options. If you want to override/ remove properties, you obviously should call
 	 * {@link super#setWidgetProperties(Properties)} first.
 	 * 
 	 * @param widgetProperties
