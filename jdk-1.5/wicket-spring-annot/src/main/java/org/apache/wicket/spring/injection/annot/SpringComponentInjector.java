@@ -31,49 +31,48 @@ import org.apache.wicket.spring.ISpringContextLocator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-
 /**
- * {@link IComponentInstantiationListener} that injects component properties
- * annotated with {@link SpringBean} annotations.
+ * {@link IComponentInstantiationListener} that injects component properties annotated with
+ * {@link SpringBean} annotations.
  * 
  * To install in yourapplication.init() call
  * <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
  * 
- * Non-wicket components such as {@link Session}, {@link Model}, and any other
- * pojo can be injected by calling
- * <code>InjectorHolder.getInjector().inject(this)</code> in their
+ * Non-wicket components such as {@link Session}, {@link Model}, and any other pojo can be
+ * injected by calling <code>InjectorHolder.getInjector().inject(this)</code> in their
  * constructor.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @author <a href="mailto:jlee@antwerkz.com">Justin Lee</a>
  * 
  */
-public class SpringComponentInjector extends ComponentInjector {
+public class SpringComponentInjector extends ComponentInjector
+{
 
 	/**
-	 * Metadata key used to store application context holder in application's
-	 * metadata
+	 * Metadata key used to store application context holder in application's metadata
 	 */
-	private static MetaDataKey CONTEXT_KEY = new MetaDataKey(
-			ApplicationContextHolder.class) {
+	private static MetaDataKey CONTEXT_KEY = new MetaDataKey(ApplicationContextHolder.class)
+	{
 
 		private static final long serialVersionUID = 1L;
 
 	};
 
 	/**
-	 * Constructor used when spring application context is declared in the
-	 * spring standard way and can be located through
+	 * Constructor used when spring application context is declared in the spring standard way and
+	 * can be located through
 	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
 	 * 
 	 * @param webapp
 	 *            wicket web application
 	 */
-	public SpringComponentInjector(WebApplication webapp) {
+	public SpringComponentInjector(WebApplication webapp)
+	{
 		// locate application context through spring's default location
 		// mechanism and pass it on to the proper constructor
-		this(webapp, WebApplicationContextUtils
-				.getRequiredWebApplicationContext(webapp.getServletContext()));
+		this(webapp, WebApplicationContextUtils.getRequiredWebApplicationContext(webapp
+				.getServletContext()));
 	}
 
 	/**
@@ -84,38 +83,37 @@ public class SpringComponentInjector extends ComponentInjector {
 	 * @param ctx
 	 *            spring's application context
 	 */
-	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx) {
-		if (webapp == null) {
-			throw new IllegalArgumentException(
-					"Argument [[webapp]] cannot be null");
+	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx)
+	{
+		if (webapp == null)
+		{
+			throw new IllegalArgumentException("Argument [[webapp]] cannot be null");
 		}
 
-		if (ctx == null) {
-			throw new IllegalArgumentException(
-					"Argument [[ctx]] cannot be null");
+		if (ctx == null)
+		{
+			throw new IllegalArgumentException("Argument [[ctx]] cannot be null");
 		}
 
 		// store context in application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
-		InjectorHolder
-				.setInjector(new AnnotSpringInjector(new ContextLocator()));
+		InjectorHolder.setInjector(new AnnotSpringInjector(new ContextLocator()));
 	}
 
 	/**
-	 * This is a holder for the application context. The reason we need a holder
-	 * is that metadata only supports storing serializable objects but
-	 * application context is not. The holder acts as a serializable wrapper for
-	 * the context. Notice that although holder implements IClusterable it
-	 * really is not because it has a reference to non serializable context -
-	 * but this is ok because metadata objects in application are never
-	 * serialized.
+	 * This is a holder for the application context. The reason we need a holder is that metadata
+	 * only supports storing serializable objects but application context is not. The holder acts as
+	 * a serializable wrapper for the context. Notice that although holder implements IClusterable
+	 * it really is not because it has a reference to non serializable context - but this is ok
+	 * because metadata objects in application are never serialized.
 	 * 
 	 * @author ivaynberg
 	 * 
 	 */
-	private static class ApplicationContextHolder implements IClusterable {
+	private static class ApplicationContextHolder implements IClusterable
+	{
 		private static final long serialVersionUID = 1L;
 
 		private final ApplicationContext context;
@@ -125,34 +123,39 @@ public class SpringComponentInjector extends ComponentInjector {
 		 * 
 		 * @param context
 		 */
-		public ApplicationContextHolder(ApplicationContext context) {
+		public ApplicationContextHolder(ApplicationContext context)
+		{
 			this.context = context;
 		}
 
 		/**
 		 * @return the context
 		 */
-		public ApplicationContext getContext() {
+		public ApplicationContext getContext()
+		{
 			return context;
 		}
 	}
 
 	/**
-	 * A context locator that locates the context in application's metadata.
-	 * This locator also keeps a transient cache of the lookup.
+	 * A context locator that locates the context in application's metadata. This locator also keeps
+	 * a transient cache of the lookup.
 	 * 
 	 * @author ivaynberg
 	 * 
 	 */
-	private static class ContextLocator implements ISpringContextLocator {
+	private static class ContextLocator implements ISpringContextLocator
+	{
 		private transient ApplicationContext context;
 
 		private static final long serialVersionUID = 1L;
 
-		public ApplicationContext getSpringContext() {
-			if (context == null) {
-				context = ((ApplicationContextHolder) Application.get()
-						.getMetaData(CONTEXT_KEY)).getContext();
+		public ApplicationContext getSpringContext()
+		{
+			if (context == null)
+			{
+				context = ((ApplicationContextHolder)Application.get().getMetaData(CONTEXT_KEY))
+						.getContext();
 			}
 			return context;
 		}

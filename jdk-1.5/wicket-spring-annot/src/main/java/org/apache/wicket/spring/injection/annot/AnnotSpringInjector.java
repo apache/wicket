@@ -20,7 +20,6 @@ import org.apache.wicket.injection.ConfigurableInjector;
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.spring.ISpringContextLocator;
 
-
 /**
  * Injector that injects classes based on {@link SpringBean} annotation
  * 

@@ -20,25 +20,24 @@ import org.apache.wicket.injection.ComponentInjector;
 import org.apache.wicket.injection.web.InjectorHolder;
 import org.apache.wicket.spring.SpringWebApplication;
 
-
 /**
  * Convinience subclass of {@link SpringWebApplication} that puts an instance of
- * {@link AnnotSpringInjector} into the {@link InjectorHolder} when the
- * application is initialized.
+ * {@link AnnotSpringInjector} into the {@link InjectorHolder} when the application is initialized.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  * @deprecated instead in application.init() do
  *             <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
- *
+ * 
  * TODO remove post 1.3
  */
-public abstract class AnnotSpringWebApplication extends SpringWebApplication {
+public abstract class AnnotSpringWebApplication extends SpringWebApplication
+{
 
-	protected void internalInit() {
+	protected void internalInit()
+	{
 		super.internalInit();
-		InjectorHolder.setInjector(new AnnotSpringInjector(
-				getSpringContextLocator()));
+		InjectorHolder.setInjector(new AnnotSpringInjector(getSpringContextLocator()));
 		addComponentInstantiationListener(new ComponentInjector());
 	}
 

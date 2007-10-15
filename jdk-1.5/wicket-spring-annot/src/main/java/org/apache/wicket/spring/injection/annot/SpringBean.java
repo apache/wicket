@@ -22,19 +22,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
  * Annotation used to tag a field as a placeholder for a spring bean.
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target( {/* ElementType.METHOD, */ElementType.FIELD})
+@Target( {/* ElementType.METHOD, */ElementType.FIELD })
 @Documented
 public @interface SpringBean {
 	/**
-	 * Optional attribute for specifying the name of the bean. If not specified,
-	 * the bean will be looked up by the type of the field with the annotation.
+	 * Optional attribute for specifying the name of the bean. If not specified, the bean will be
+	 * looked up by the type of the field with the annotation.
 	 * 
 	 * @return name attr
 	 */

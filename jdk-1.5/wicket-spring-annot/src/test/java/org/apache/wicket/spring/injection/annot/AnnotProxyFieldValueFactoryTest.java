@@ -29,18 +29,20 @@ import org.apache.wicket.spring.injection.util.Injectable;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.springframework.context.ApplicationContext;
 
-
 /**
  * Tests for BeanAnnotLocatorFactory
  * 
  * @author igor
  * 
  */
-public class AnnotProxyFieldValueFactoryTest extends TestCase {
-	ISpringContextLocator mockCtxLocator = new ISpringContextLocator() {
+public class AnnotProxyFieldValueFactoryTest extends TestCase
+{
+	ISpringContextLocator mockCtxLocator = new ISpringContextLocator()
+	{
 		private static final long serialVersionUID = 1L;
 
-		public ApplicationContext getSpringContext() {
+		public ApplicationContext getSpringContext()
+		{
 			ApplicationContextMock mock = new ApplicationContextMock();
 			mock.putBean(new Bean());
 			mock.putBean("somebean", new Bean2());
@@ -50,15 +52,15 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase {
 
 	Injectable obj = new Injectable();
 
-	AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(
-			mockCtxLocator);
+	AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(mockCtxLocator);
 
 	/**
 	 * Test the factory
 	 * 
 	 * @throws Exception
 	 */
-	public void testFactory() throws Exception {
+	public void testFactory() throws Exception
+	{
 		SpringBeanLocator locator = null;
 		Object proxy = null;
 
@@ -68,16 +70,14 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase {
 
 		field = obj.getClass().getDeclaredField("beanByClass");
 		proxy = factory.getFieldValue(field, obj);
-		locator = (SpringBeanLocator) ((ILazyInitProxy) proxy)
-				.getObjectLocator();
+		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
 		assertTrue(locator.getBeanType().equals(Bean.class));
 		assertTrue(locator.getSpringContextLocator() == mockCtxLocator);
 		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
 
 		field = obj.getClass().getDeclaredField("beanByName");
 		proxy = factory.getFieldValue(field, obj);
-		locator = (SpringBeanLocator) ((ILazyInitProxy) proxy)
-				.getObjectLocator();
+		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
 		assertTrue(locator.getBeanName().equals("somebean"));
 		assertTrue(locator.getBeanType().equals(Bean2.class));
 		assertTrue(locator.getSpringContextLocator() == mockCtxLocator);
@@ -85,12 +85,12 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase {
 	}
 
 	/**
-	 * test the cache, make sure the same proxy is returned for the same
-	 * dependency it represents
+	 * test the cache, make sure the same proxy is returned for the same dependency it represents
 	 * 
 	 * @throws Exception
 	 */
-	public void testCache() throws Exception {
+	public void testCache() throws Exception
+	{
 		Field field = obj.getClass().getDeclaredField("beanByClass");
 		Object proxy1 = factory.getFieldValue(field, obj);
 		Object proxy2 = factory.getFieldValue(field, obj);
@@ -105,30 +105,36 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase {
 	/**
 	 * Test creation fails with null springcontextlocator
 	 */
-	public void testNullContextLocator() {
-		try {
+	public void testNullContextLocator()
+	{
+		try
+		{
 			new AnnotProxyFieldValueFactory(null);
 			fail();
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e)
+		{
 			// noop
 		}
 	}
-	
+
 	public void testFailsIfBeanWithIdIsNotFound() throws Exception
 	{
 		InjectableWithReferenceToNonexistingBean obj = new InjectableWithReferenceToNonexistingBean();
 		Field field = obj.getClass().getDeclaredField("nonExisting");
-		try 
+		try
 		{
 			factory.getFieldValue(field, obj);
 			fail();
 		}
-		catch (RuntimeException e) {			
+		catch (RuntimeException e)
+		{
 		}
 	}
-	
-	static class InjectableWithReferenceToNonexistingBean {
-		@SpringBean(name="nonExisting")
+
+	static class InjectableWithReferenceToNonexistingBean
+	{
+		@SpringBean(name = "nonExisting")
 		@SuppressWarnings("unused")
 		private Bean nonExisting;
 	}

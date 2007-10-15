@@ -18,7 +18,6 @@ package org.apache.wicket.spring.injection.util;
 
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-
 /**
  * Mock for an object with some SpringBean annotations
  * 
@@ -35,18 +34,19 @@ public class Injectable
 	@SpringBean(name = "somebean")
 	private Bean2 beanByName;
 
-	public Bean getBeanByClass() {
+	public Bean getBeanByClass()
+	{
 		return beanByClass;
 	}
 
-	public Bean2 getBeanByName() {
+	public Bean2 getBeanByName()
+	{
 		return beanByName;
 	}
 
-	public Bean getNobean() {
+	public Bean getNobean()
+	{
 		return nobean;
 	}
-	
-	
 
 }

@@ -21,11 +21,9 @@ import org.apache.wicket.spring.injection.annot.AnnotSpringInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
 
-
 /**
- * Spring application context mock that does all the initialization required to
- * setup an {@link AnnotSpringInjector} that will use this mock context as its
- * source of beans.
+ * Spring application context mock that does all the initialization required to setup an
+ * {@link AnnotSpringInjector} that will use this mock context as its source of beans.
  * <p>
  * Example
  * 
@@ -38,8 +36,7 @@ import org.apache.wicket.spring.test.SpringContextLocatorMock;
  *  Page deletePage=new DeleteContactPage(new DummyHomePage(), 10));
  * </pre>
  * 
- * DeleteContactPage will have its dependencies initialized by the
- * {@link AnnotSpringInjector}
+ * DeleteContactPage will have its dependencies initialized by the {@link AnnotSpringInjector}
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -51,8 +48,7 @@ public class AnnotApplicationContextMock extends ApplicationContextMock
 	/**
 	 * Constructor
 	 * <p>
-	 * Sets up an {@link AnnotSpringInjector} that will use this mock context as
-	 * its source of beans
+	 * Sets up an {@link AnnotSpringInjector} that will use this mock context as its source of beans
 	 * 
 	 * 
 	 */
