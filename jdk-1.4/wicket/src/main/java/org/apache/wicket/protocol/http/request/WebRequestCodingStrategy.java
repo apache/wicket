@@ -386,7 +386,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	/**
 	 * @see org.apache.wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
-	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
+	public IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
 		synchronized (mountsOnPath)
 		{
