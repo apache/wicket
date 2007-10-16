@@ -238,7 +238,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header contributor referencing a
-	 * CSS file using one of the following schemes:
+	 * java script file using one of the following schemes:
 	 * <ul>
 	 * <li>Starts with http:// or https:// for an external reference.</li>
 	 * <li>Starts with "/" for an absolute reference that Wicket will not rewrite.</li>
@@ -247,7 +247,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * </ul>
 	 * 
 	 * @param location
-	 *            The location of the css file.
+	 *            The location of the java script file.
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forJavaScript(final String location)
