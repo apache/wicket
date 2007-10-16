@@ -1283,7 +1283,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Gets a model object as a string. Depending on the "escape model strings" flag of the
 	 * component, the string is either HTML escaped or not. "HTML escaped" meaning that only HTML
 	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
-	 * instead. In case you realy need a fully escaped model string you may call
+	 * instead. In case you really need a fully escaped model string you may call
 	 * {@link Strings#escapeMarkup(String, boolean, boolean)} on the model string returned.
 	 * 
 	 * @see Strings#escapeMarkup(String, boolean, boolean)
@@ -1300,7 +1300,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Gets a model object as a string. Depending on the "escape model strings" flag of the
 	 * component, the string is either HTML escaped or not. "HTML escaped" meaning that only HTML
 	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
-	 * instead. In case you realy need a fully escaped model string you may call
+	 * instead. In case you really need a fully escaped model string you may call
 	 * {@link Strings#escapeMarkup(String, boolean, boolean)} on the model string returned.
 	 * 
 	 * @see Strings#escapeMarkup(String, boolean, boolean)
@@ -1705,7 +1705,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Returns if the component is stateless or not. It checks the stateless hint if that is false
-	 * it returns directly false. If that is still true it checks all its behaviours if they can be
+	 * it returns directly false. If that is still true it checks all its behaviors if they can be
 	 * stateless.
 	 * 
 	 * @return whether the component is stateless.
@@ -2314,7 +2314,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * border will be cleared.
 	 * 
 	 * @param border
-	 *            componnet border to assign, or <code>null</code> to clear any previous
+	 *            component border to assign, or <code>null</code> to clear any previous
 	 * @return component for chaining
 	 */
 	public final Component setComponentBorder(final IComponentBorder border)
@@ -2699,11 +2699,11 @@ public abstract class Component implements IClusterable, IConverterLocator
 	}
 
 	/**
-	 * Gets a URL for the listener interface on a behaviour (e.g. IBehaviorListener on
+	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
 	 * AjaxPagingNavigationBehavior).
 	 * 
 	 * @param behaviour
-	 *            The behaviour that the URL should point to
+	 *            The behavior that the URL should point to
 	 * @param listener
 	 *            The listener interface that the URL should call
 	 * @return The URL
@@ -3092,7 +3092,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/**
 	 * Returns whether the component can be stateless. Also the component behaviors must be
-	 * stateless, otherwise the component will be treat as statefull. In order for page to be
+	 * stateless, otherwise the component will be treat as stateful. In order for page to be
 	 * stateless (and not to be stored in session), all components (and component behaviors) must be
 	 * stateless.
 	 * 
@@ -3116,7 +3116,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			// Dont call the getModel() that could initialize many inbetween
+			// Don't call the getModel() that could initialize many inbetween
 			// completely useless models.
 			// IModel model = current.getModel();
 			IModel model = current.model;
@@ -3247,7 +3247,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * {@link #onBeforeRender()} or do the initialization lazily (on first demand, such as
 	 * {@link LoadableDetachableModel} does.
 	 * <p>
-	 * If you need to get notification when page is taken out of Session (before calling the even
+	 * If you need to get notification when page is taken out of Session (before calling the event
 	 * listener), you can use the {@link Page#onPageAttached()} method.
 	 * 
 	 * @deprecated
@@ -3724,7 +3724,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Sets the render allowed flag.
 	 * 
-	 * Visit all this page's children (overriden in MarkupContainer) to check rendering
+	 * Visit all this page's children (overridden in MarkupContainer) to check rendering
 	 * authorization, as appropriate. We set any result; positive or negative as a temporary boolean
 	 * in the components, and when a authorization exception is thrown it will block the rendering
 	 * of this page
