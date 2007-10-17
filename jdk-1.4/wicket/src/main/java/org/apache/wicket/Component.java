@@ -299,11 +299,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		public void undo()
 		{
-			behaviors.remove(behavior);
-			if (behaviors.size() == 0)
-			{
-				behaviors = null;
-			}
+			removeBehavior(behavior);
 		}
 
 	}
@@ -355,11 +351,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 		public void undo()
 		{
-			if (behaviors == null)
-			{
-				behaviors = new ArrayList(1);
-			}
-			behaviors.add(behavior);
+			addBehavior(behavior);
 		}
 
 	}
@@ -521,33 +513,45 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 	};
 
-	private static final int FLAG_AFTER_RENDERING = 0x8000000;
-
 	/** True when a component is being auto-added */
 	private static final int FLAG_AUTO = 0x0001;
-
-	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
-
-	private static final int FLAG_DETACHING = 0x80000000;
-
-	/** True when a component is enabled for model updates and is reachable. */
-	private static final int FLAG_ENABLED = 0x0080;
 
 	/** Flag for escaping HTML in model strings */
 	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/**
-	 * Boolean whether this component was rendered at least once for tracking changes.
+	 * Boolean whether this component's model is inheritable.
 	 */
-	private static final int FLAG_HAS_BEEN_RENDERED = 0x1000;
+	private static final int FLAG_INHERITABLE_MODEL = 0x0004;
+
+	/** Versioning boolean */
+	private static final int FLAG_VERSIONED = 0x0008;
+
+	/** Visibility boolean */
+	private static final int FLAG_VISIBLE = 0x0010;
+
+	/** Render tag boolean */
+	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
 
 	/** Ignore attribute modifiers */
 	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
+	/** True when a component is enabled for model updates and is reachable. */
+	private static final int FLAG_ENABLED = 0x0080;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED1 = 0x0100;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED2 = 0x0200;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED3 = 0x0400;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED4 = 0x0800;
+
 	/**
-	 * Boolean whether this component's model is inheritable.
+	 * Boolean whether this component was rendered at least once for tracking changes.
 	 */
-	private static final int FLAG_INHERITABLE_MODEL = 0x0004;
+	private static final int FLAG_HAS_BEEN_RENDERED = 0x1000;
 
 	/**
 	 * Internal indicator of whether this component may be rendered given the current context's
@@ -567,19 +571,33 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * to visible(false) to visible(true) without the overhead of repainting a visible parent
 	 * container
 	 */
-
 	private static final int FLAG_PLACEHOLDER = 0x8000;
 
-	/** Render tag boolean */
-	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED5 = 0x10000;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED6 = 0x20000;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED7 = 0x40000;
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED8 = 0x80000;
 
+	private static final int FLAG_MODEL_SET = 0x100000;
+
+	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
+
+	/**
+	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
+	 * invoked (right before invoking beforeRender on children)
+	 */
+	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
 	private static final int FLAG_RENDERING = 0x2000000;
+	private static final int FLAG_AFTER_RENDERING = 0x8000000;
 
-	/** Versioning boolean */
-	private static final int FLAG_VERSIONED = 0x0008;
 
-	/** Visibility boolean */
-	private static final int FLAG_VISIBLE = 0x0010;
+	private static final int FLAG_ATTACHED = 0x20000000;
+	private static final int FLAG_DETACHING = 0x80000000;
+
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
@@ -599,28 +617,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	};
 	private static final long serialVersionUID = 1L;
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED1 = 0x0100;
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED2 = 0x0200;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED3 = 0x0400;
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED4 = 0x0800;
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED5 = 0x10000;
-
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED6 = 0x20000;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED7 = 0x40000;
-
-	/** Reserved subclass-definable flag bit */
-	protected static final int FLAG_RESERVED8 = 0x80000;
-
 	/**
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
 	 * for access in {@link MarkupContainer} and {@link Page}
@@ -639,33 +635,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		private static final long serialVersionUID = 1L;
 	};
 
-	// static final int FLAG_ATTACH_SUPER_CALL_VERIFIED = 0x10000000;
-
-
-	static final int FLAG_ATTACHED = 0x20000000;
-
-	// static final int FLAG_ATTACHING = 0x40000000;
-
-	/**
-	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
-	 * invoked (right before invoking beforeRender on children)
-	 */
-	static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
-
-	/** List of behaviors to be applied for this Component */
-	private ArrayList behaviors = null;
-
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
 			FLAG_IS_RENDER_ALLOWED;
 
 	/** Component id. */
 	private String id;
-
-	/**
-	 * MetaDataEntry array.
-	 */
-	private MetaDataEntry[] metaData;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -676,8 +651,18 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	int markupIndex = -1;
 
-	/** The model for this component. */
-	IModel model;
+	/**
+	 * MetaDataEntry array.
+	 */
+// private MetaDataEntry[] metaData;
+//
+// /** List of behaviors to be applied for this Component */
+// private Object behaviors;
+//
+// /** The model for this component. */
+// IModel model;
+	/** the object that holds the model/metadata and or behaviors */
+	Object data;
 
 	/**
 	 * Constructor. All components have names. A component's id cannot be null. This is the minimal
@@ -716,7 +701,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public Component(final String id, final IModel model)
 	{
 		this(id);
-		this.model = wrap(model);
+		setModelImp(model);
 	}
 
 	/**
@@ -739,13 +724,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			throw new IllegalArgumentException("Argument may not be null");
 		}
 
-		// Lazy create
-		if (behaviors == null)
-		{
-			behaviors = new ArrayList(1);
-		}
-
-		behaviors.add(behavior);
+		addBehavior(behavior);
 
 		if (!behavior.isTemporary())
 		{
@@ -756,6 +735,68 @@ public abstract class Component implements IClusterable, IConverterLocator
 		behavior.bind(this);
 
 		return this;
+	}
+
+	private void addBehavior(final IBehavior behavior)
+	{
+		if (data == null)
+		{
+			data = behavior;
+		}
+		else
+		{
+			if (data instanceof Object[])
+			{
+				Object[] tmp = (Object[])data;
+				Object[] array = new Object[tmp.length + 1];
+				System.arraycopy(tmp, 0, array, 0, tmp.length);
+				array[tmp.length] = behavior;
+				data = array;
+			}
+			else
+			{
+				Object[] array = new Object[2];
+				array[0] = data;
+				array[1] = behavior;
+				data = array;
+			}
+		}
+	}
+
+	private List getBehaviorsIntern()
+	{
+		if (data != null)
+		{
+			boolean modelSet = getFlag(FLAG_MODEL_SET);
+			if (data instanceof Object[])
+			{
+				Object[] tmp = (Object[])data;
+				int i = 0;
+				// If the model is set jump one
+				if (modelSet)
+					i++;
+				// if the current one is not a behavior (metadata) jump one.
+				if (!(tmp[i] instanceof IBehavior))
+					i++;
+
+				if (i < tmp.length)
+				{
+					ArrayList al = new ArrayList(tmp.length - i);
+					for (int j = i; j < tmp.length; j++)
+					{
+						al.add(tmp[j]);
+					}
+					return al;
+				}
+			}
+			else if (!modelSet && data instanceof IBehavior)
+			{
+				ArrayList al = new ArrayList();
+				al.add(data);
+				return al;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -907,7 +948,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// The model will be created next time.
 		if (getFlag(FLAG_INHERITABLE_MODEL))
 		{
-			model = null;
+			setModelImp(null);
 			setFlag(FLAG_INHERITABLE_MODEL, false);
 		}
 	}
@@ -922,6 +963,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void detachBehaviors()
 	{
+		List behaviors = getBehaviorsIntern();
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -1240,7 +1282,28 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final Serializable getMetaData(final MetaDataKey key)
 	{
-		return key.get(metaData);
+		return key.get(getMetaData());
+	}
+
+	private MetaDataEntry[] getMetaData()
+	{
+		if (data instanceof MetaDataEntry[])
+		{
+			return (MetaDataEntry[])data;
+		}
+		else if (data instanceof Object[])
+		{
+			Object[] tmp = (Object[])data;
+			if (tmp[0] instanceof MetaDataEntry[])
+			{
+				return (MetaDataEntry[])tmp[0];
+			}
+			else if (tmp[1] instanceof MetaDataEntry[])
+			{
+				return (MetaDataEntry[])tmp[1];
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -1250,11 +1313,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final IModel getModel()
 	{
+		IModel model = getModelImpl();
 		// If model is null
 		if (model == null)
 		{
 			// give subclass a chance to lazy-init model
 			model = initModel();
+			setModelImp(model);
 		}
 
 		return model;
@@ -1924,25 +1989,64 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			throw new IllegalArgumentException("Argument `behavior` cannot be null");
 		}
-		if (behaviors == null || !behaviors.contains(behavior))
+
+		if (removeBehavior(behavior))
+		{
+			if (!behavior.isTemporary())
+			{
+				addStateChange(new RemovedBehaviorChange(behavior));
+			}
+		}
+		else
 		{
 			throw new IllegalStateException(
 					"Tried to remove a behavior that was not added to the component. Behavior: " +
 							behavior.toString());
 		}
-
-		if (!behavior.isTemporary())
-		{
-			addStateChange(new RemovedBehaviorChange(behavior));
-		}
-		behaviors.remove(behavior);
-
-		if (behaviors.size() == 0)
-		{
-			behaviors = null;
-		}
-
 		return this;
+	}
+
+	private boolean removeBehavior(final IBehavior behavior)
+	{
+		if (behavior.equals(data))
+		{
+			data = null;
+			return true;
+		}
+		else if (data instanceof Object[])
+		{
+			Object[] array = (Object[])data;
+			for (int i = 0; i < array.length; i++)
+			{
+				if (array[i].equals(behavior))
+				{
+					if (array.length == 2)
+					{
+						if (i == 0)
+						{
+							data = array[1];
+						}
+						else
+						{
+							data = array[0];
+						}
+					}
+					else
+					{
+						Object[] tmp = new Object[array.length - 1];
+						System.arraycopy(array, 0, tmp, 0, i);
+						i++;
+						if (i != array.length)
+						{
+							System.arraycopy(array, i, tmp, i - 1, array.length - i);
+						}
+						data = array;
+					}
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -2018,6 +2122,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			{
 				// Call each behaviors onException() to allow the
 				// behavior to clean up
+				List behaviors = getBehaviorsIntern();
 				if (behaviors != null)
 				{
 					for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -2233,6 +2338,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
+			List behaviors = getBehaviorsIntern();
 			if (behaviors != null)
 			{
 				final Iterator iter = behaviors.iterator();
@@ -2411,7 +2517,91 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
-		metaData = key.set(metaData, object);
+		MetaDataEntry[] metaData = key.set(getMetaData(), object);
+		if (data == null || data instanceof MetaDataEntry[])
+		{
+			data = metaData;
+		}
+		else if (data instanceof Object[])
+		{
+			Object[] tmp = (Object[])data;
+			boolean modelSet = getFlag(FLAG_MODEL_SET);
+			if (modelSet)
+			{
+				if (tmp[1] instanceof MetaDataEntry[])
+				{
+					if (metaData == null)
+					{
+						if (tmp.length == 2)
+						{
+							data = tmp[0];
+						}
+						else
+						{
+							Object[] array = new Object[tmp.length - 1];
+							array[0] = tmp[0]; // model
+							System.arraycopy(tmp, 2, array, 1, tmp.length - 2);
+							data = array;
+						}
+					}
+					else
+					{
+						tmp[1] = metaData;
+					}
+				}
+				else if (metaData != null)
+				{
+					Object[] array = new Object[tmp.length + 1];
+					array[0] = tmp[0]; // the model
+					array[1] = metaData;
+					System.arraycopy(tmp, 1, array, 2, tmp.length - 1); // behaviors
+					data = array;
+				}
+			}
+			else if (tmp[0] instanceof MetaDataEntry[])
+			{
+				if (metaData == null)
+				{
+					if (tmp.length == 2)
+					{
+						data = tmp[1];
+					}
+					else
+					{
+						Object[] array = new Object[tmp.length - 1];
+						System.arraycopy(tmp, 1, array, 0, tmp.length - 1);
+						data = array;
+					}
+				}
+				else
+				{
+					tmp[0] = metaData;
+				}
+			}
+			else if (metaData != null)
+			{
+				Object[] array = new Object[tmp.length + 1];
+				array[0] = metaData;
+				System.arraycopy(tmp, 0, array, 1, tmp.length); // behaviors
+				data = array;
+			}
+		}
+		else if (metaData != null)
+		{
+			Object[] array = new Object[2];
+			boolean modelSet = getFlag(FLAG_MODEL_SET);
+			if (modelSet)
+			{
+				array[0] = data;
+				array[1] = metaData;
+			}
+			else
+			{
+				array[0] = metaData;
+				array[1] = data;
+			}
+			data = array;
+		}
 	}
 
 	/**
@@ -2427,13 +2617,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public Component setModel(final IModel model)
 	{
+		IModel prevModel = getModelImpl();
 		// Detach current model
-		if (this.model != null)
+		if (prevModel != null)
 		{
-			this.model.detach();
+			prevModel.detach();
 		}
 
-		IModel prevModel = this.model;
 		if (prevModel instanceof IWrapModel)
 		{
 			prevModel = ((IWrapModel)prevModel).getWrappedModel();
@@ -2447,11 +2637,86 @@ public abstract class Component implements IClusterable, IConverterLocator
 				addStateChange(new ComponentModelChange(prevModel));
 			}
 
-			this.model = wrap(model);
+			setModelImp(wrap(model));
 		}
 
 		modelChanged();
 		return this;
+	}
+
+	IModel getModelImpl()
+	{
+		if (getFlag(FLAG_MODEL_SET))
+		{
+			if (data instanceof IModel)
+			{
+				return (IModel)data;
+			}
+			else if (data instanceof Object[])
+			{
+				return (IModel)((Object[])data)[0];
+			}
+		}
+		return null;
+	}
+
+	void setModelImp(IModel model)
+	{
+		if (getFlag(FLAG_MODEL_SET))
+		{
+			if (data instanceof IModel)
+			{
+				data = model;
+			}
+			else if (data instanceof Object[])
+			{
+				if (model == null)
+				{
+					Object[] tmp = (Object[])data;
+					if (tmp.length > 2)
+					{
+						Object[] array = new Object[tmp.length - 1];
+						System.arraycopy(tmp, 1, array, 0, array.length);
+						data = array;
+					}
+					else
+					{
+						data = tmp[1];
+					}
+				}
+				else
+				{
+					((Object[])data)[0] = model;
+				}
+			}
+		}
+		else if (model != null)
+		{
+			if (data == null)
+			{
+				data = model;
+			}
+			else
+			{
+				if (data instanceof Object[])
+				{
+					Object[] tmp = (Object[])data;
+					Object[] array = new Object[tmp.length + 1];
+					System.arraycopy(tmp, 0, array, 1, tmp.length);
+					array[0] = model;
+					data = array;
+				}
+				else
+				{
+					Object[] array = new Object[2];
+					array[0] = model;
+					array[1] = data;
+					data = array;
+				}
+			}
+		}
+		setFlag(FLAG_MODEL_SET, model != null);
+
 	}
 
 	/**
@@ -2830,6 +3095,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	private void notifyBehaviorsComponentBeforeRender()
 	{
+		List behaviors = getBehaviorsIntern();
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -2850,6 +3116,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private void notifyBehaviorsComponentRendered()
 	{
 		// notify the behaviors that component has been rendered
+		List behaviors = getBehaviorsIntern();
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -2949,6 +3216,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected void detachModel()
 	{
+		IModel model = getModelImpl();
 		if (model != null)
 		{
 			model.detach();
@@ -3015,6 +3283,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected List/* <IBehavior> */getBehaviors(Class type)
 	{
+		List behaviors = getBehaviorsIntern();
 		if (behaviors == null)
 		{
 			return Collections.EMPTY_LIST;
@@ -3119,7 +3388,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// Don't call the getModel() that could initialize many inbetween
 			// completely useless models.
 			// IModel model = current.getModel();
-			IModel model = current.model;
+			IModel model = current.getModelImpl();
 
 			if (model instanceof IWrapModel)
 			{
@@ -3323,10 +3592,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected void onDetach()
 	{
-		if (behaviors != null)
-		{
-			behaviors.trimToSize();
-		}
 		setFlag(FLAG_DETACHING, false);
 
 	}
@@ -3376,6 +3641,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behavior modifiers
+			List behaviors = getBehaviorsIntern();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
 					(isIgnoreAttributeModifier() == false))
 			{
@@ -3396,10 +3662,10 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
-				Iterator behaviors = tag.getBehaviors();
-				while (behaviors.hasNext())
+				Iterator tagBehaviors = tag.getBehaviors();
+				while (tagBehaviors.hasNext())
 				{
-					final IBehavior behavior = (IBehavior)behaviors.next();
+					final IBehavior behavior = (IBehavior)tagBehaviors.next();
 					behavior.onComponentTag(this, tag);
 				}
 			}
