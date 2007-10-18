@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.RequestContext;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
@@ -79,6 +80,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		{
 			response.renderJavascriptReference(JAVASCRIPT_DEBUG);
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
+		}
+
+		RequestContext context = RequestContext.get();
+		if (context.isPortletRequest())
+		{
+			response.renderJavascript("Wicket.portlet=true", "wicket-ajax-portlet-flag");
 		}
 	}
 
