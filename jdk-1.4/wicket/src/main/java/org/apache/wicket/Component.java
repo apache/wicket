@@ -23,8 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.crypto.Data;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
@@ -594,7 +592,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Flag that determines whether the model is set. This is necessary because of the way we
 	 * represent component state ({@link #data}). We can't distinguish between model and behavior
 	 * using instanceof, because one object can implement both interfaces. Thus we need this flag -
-	 * when the flag is set, first object in {@link Data} is always model.
+	 * when the flag is set, first object in {@link #data} is always model.
 	 */
 	private static final int FLAG_MODEL_SET = 0x100000;
 
