@@ -815,7 +815,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		{
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(sharedResourceKey
 					.length());
-			buffer.append("resources/");
+			buffer.append(RESOURCES_PATH_PREFIX);
 			buffer.append(sharedResourceKey);
 			Map map = requestTarget.getRequestParameters().getParameters();
 			if (map != null && map.size() > 0)
