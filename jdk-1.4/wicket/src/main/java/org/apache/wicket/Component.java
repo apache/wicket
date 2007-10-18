@@ -745,7 +745,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 		else
 		{
-			if (data instanceof Object[])
+			if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
 			{
 				Object[] tmp = (Object[])data;
 				Object[] array = new Object[tmp.length + 1];
@@ -768,7 +768,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (data != null)
 		{
 			boolean modelSet = getFlag(FLAG_MODEL_SET);
-			if (data instanceof Object[])
+			if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
 			{
 				Object[] tmp = (Object[])data;
 				int i = 0;
@@ -2013,7 +2013,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			data = null;
 			return true;
 		}
-		else if (data instanceof Object[])
+		else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
 		{
 			Object[] array = (Object[])data;
 			for (int i = 0; i < array.length; i++)
@@ -2652,7 +2652,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			{
 				return (IModel)data;
 			}
-			else if (data instanceof Object[])
+			else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
 			{
 				return (IModel)((Object[])data)[0];
 			}
@@ -2668,7 +2668,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			{
 				data = model;
 			}
-			else if (data instanceof Object[])
+			else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
 			{
 				if (model == null)
 				{
@@ -2698,7 +2698,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 			else
 			{
-				if (data instanceof Object[])
+				if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
 				{
 					Object[] tmp = (Object[])data;
 					Object[] array = new Object[tmp.length + 1];
