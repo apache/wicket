@@ -411,7 +411,7 @@ public class ValueMap extends HashMap implements IValueMap
 	 */
 	public final IValueMap makeImmutable()
 	{
-		this.immutable = true;
+		immutable = true;
 		return this;
 	}
 
@@ -489,7 +489,7 @@ public class ValueMap extends HashMap implements IValueMap
 	 */
 	public String getKey(final String key)
 	{
-		Iterator iter = this.keySet().iterator();
+		Iterator iter = keySet().iterator();
 		while (iter.hasNext())
 		{
 			Object keyValue = iter.next();

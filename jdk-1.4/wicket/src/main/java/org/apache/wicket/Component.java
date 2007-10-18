@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.xml.crypto.Data;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
@@ -493,6 +495,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 		private static final long serialVersionUID = 1L;
 	};
 
+	/* meta data for user specified markup id */
+	private static final MetaDataKey MARKUP_ID_KEY = new MetaDataKey(String.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -582,6 +590,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
+	/**
+	 * Flag that determines whether the model is set. This is necessary because of the way we
+	 * represent component state ({@link #data}). We can't distinguish between model and behavior
+	 * using instanceof, because one object can implement both interfaces. Thus we need this flag -
+	 * when the flag is set, first object in {@link Data} is always model.
+	 */
 	private static final int FLAG_MODEL_SET = 0x100000;
 
 	private static final int FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED = 0x1000000;
@@ -607,15 +621,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	private static final String MARKUP_ID_ATTR_NAME = "id";
 
-	/**
-	 * Metadata key used to store/retrieve markup id
-	 */
-	private static MetaDataKey MARKUP_ID_KEY = new MetaDataKey(String.class)
-	{
-
-		private static final long serialVersionUID = 1L;
-
-	};
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
@@ -652,6 +657,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 	int markupIndex = -1;
 
 	/**
+	 * Instead of remembering the whole markupId, we just remember the number for this component so
+	 * we can "reconstruct" the markupId on demand. While this could be part of {@link #data},
+	 * profiling showed that having it as separate property consumes less memory.
+	 */
+	int generatedMarkupId = -1;
+
+	/**
 	 * MetaDataEntry array.
 	 */
 // private MetaDataEntry[] metaData;
@@ -661,8 +673,184 @@ public abstract class Component implements IClusterable, IConverterLocator
 //
 // /** The model for this component. */
 // IModel model;
-	/** the object that holds the model/metadata and or behaviors */
-	Object data;
+	/**
+	 * The object that holds the component state.
+	 * <p>
+	 * What's stored here depends on what attributes are set on component. Data can contains
+	 * combination of following attributes:
+	 * <ul>
+	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
+	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
+	 * <li>{@link IBehavior}(s) added to component. The behaviors are not stored in separate
+	 * array, they are part of the {@link #data} array
+	 * </ul>
+	 * If there is only one attribute set (i.e. model or MetaDataEntry([]) or one behavior), the
+	 * #data object points directly to value of that attribute. Otherwise the data is of type
+	 * Object[] where the attributes are ordered as specified above.
+	 * <p>
+	 */
+	Object data = null;
+
+	private final int data_length()
+	{
+		if (data == null)
+		{
+			return 0;
+		}
+		else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
+		{
+			return ((Object[])data).length;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+
+	private final Object data_get(int index)
+	{
+		if (data == null)
+		{
+			return null;
+		}
+		else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
+		{
+			Object[] array = (Object[])data;
+			return index < array.length ? array[index] : null;
+		}
+		else if (index == 0)
+		{
+			return data;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	private final Object data_set(int index, Object object)
+	{
+		if (index > data_length() - 1)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		else if (index == 0 && !(data instanceof Object[] && !(data instanceof MetaDataEntry[])))
+		{
+			Object old = data;
+			data = object;
+			return old;
+		}
+		else
+		{
+			Object[] array = (Object[])data;
+			Object old = array[index];
+			array[index] = object;
+			return old;
+		}
+
+	}
+
+	private final void data_add(Object object)
+	{
+		data_insert(-1, object);
+	}
+
+	private final void data_insert(int position, Object object)
+	{
+		int currentLength = data_length();
+		if (position == -1)
+		{
+			position = currentLength;
+		}
+		if (position > currentLength)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+		if (currentLength == 0)
+		{
+			data = object;
+		}
+		else if (currentLength == 1)
+		{
+			Object[] array = new Object[2];
+			if (position == 0)
+			{
+				array[0] = object;
+				array[1] = data;
+			}
+			else
+			{
+				array[0] = data;
+				array[1] = object;
+			}
+			data = array;
+		}
+		else
+		{
+			Object[] array = new Object[currentLength + 1];
+			Object[] current = (Object[])data;
+			int before = position;
+			int after = currentLength - position;
+			if (before > 0)
+			{
+				System.arraycopy(current, 0, array, 0, before);
+			}
+			array[position] = object;
+			if (after > 0)
+			{
+				System.arraycopy(current, position, array, position + 1, after);
+			}
+			data = array;
+		}
+	}
+
+	private Object data_remove(int position)
+	{
+		int currentLength = data_length();
+
+		if (position > currentLength - 1)
+		{
+			throw new IndexOutOfBoundsException();
+		}
+
+		else if (currentLength == 1)
+		{
+			Object old = data;
+			data = null;
+			return old;
+		}
+		else if (currentLength == 2)
+		{
+			Object[] current = (Object[])data;
+			if (position == 0)
+			{
+				data = current[1];
+				return current[0];
+			}
+			else
+			{
+				data = current[0];
+				return current[1];
+			}
+		}
+		else
+		{
+			Object[] current = (Object[])data;
+			data = new Object[currentLength - 1];
+
+			if (position > 0)
+			{
+				System.arraycopy(current, 0, data, 0, position);
+			}
+			if (position != currentLength - 1)
+			{
+				final int left = currentLength - position - 1;
+				System.arraycopy(current, position + 1, data, position, left);
+			}
+
+			return current[position];
+		}
+	}
 
 	/**
 	 * Constructor. All components have names. A component's id cannot be null. This is the minimal
@@ -701,7 +889,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public Component(final String id, final IModel model)
 	{
 		this(id);
-		setModelImp(model);
+		setModelImpl(model);
 	}
 
 	/**
@@ -739,61 +927,29 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	private void addBehavior(final IBehavior behavior)
 	{
-		if (data == null)
-		{
-			data = behavior;
-		}
-		else
-		{
-			if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
-			{
-				Object[] tmp = (Object[])data;
-				Object[] array = new Object[tmp.length + 1];
-				System.arraycopy(tmp, 0, array, 0, tmp.length);
-				array[tmp.length] = behavior;
-				data = array;
-			}
-			else
-			{
-				Object[] array = new Object[2];
-				array[0] = data;
-				array[1] = behavior;
-				data = array;
-			}
-		}
+		data_add(behavior);
 	}
 
-	private List getBehaviorsIntern()
+	private List getBehaviorsImpl()
 	{
 		if (data != null)
 		{
-			boolean modelSet = getFlag(FLAG_MODEL_SET);
-			if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
-			{
-				Object[] tmp = (Object[])data;
-				int i = 0;
-				// If the model is set jump one
-				if (modelSet)
-					i++;
-				// if the current one is not a behavior (metadata) jump one.
-				if (!(tmp[i] instanceof IBehavior))
-					i++;
+			// if the model is set, we must skip it
+			final int startIndex = getFlag(FLAG_MODEL_SET) ? 1 : 0;
+			int length = data_length();
 
-				if (i < tmp.length)
-				{
-					ArrayList al = new ArrayList(tmp.length - i);
-					for (int j = i; j < tmp.length; j++)
-					{
-						al.add(tmp[j]);
-					}
-					return al;
-				}
-			}
-			else if (!modelSet && data instanceof IBehavior)
+			if (length > startIndex)
 			{
-				ArrayList al = new ArrayList();
-				al.add(data);
-				return al;
+				final ArrayList result = new ArrayList();
+				for (int i = startIndex; i < length; ++i)
+				{
+					Object o = data_get(i);
+					if (o instanceof IBehavior)
+					{
+						result.add(o);
+					}
+				}
+				return result;
 			}
 		}
 		return null;
@@ -948,7 +1104,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		// The model will be created next time.
 		if (getFlag(FLAG_INHERITABLE_MODEL))
 		{
-			setModelImp(null);
+			setModelImpl(null);
 			setFlag(FLAG_INHERITABLE_MODEL, false);
 		}
 	}
@@ -963,7 +1119,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void detachBehaviors()
 	{
-		List behaviors = getBehaviorsIntern();
+		List behaviors = getBehaviorsImpl();
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -1214,6 +1370,30 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return attrs;
 	}
 
+	final Object getMarkupIdImpl()
+	{
+		if (generatedMarkupId != -1)
+		{
+			return new Integer(generatedMarkupId);
+		}
+
+		return getMetaData(MARKUP_ID_KEY);
+	}
+
+	private final int nextAutoIndex()
+	{
+		Page page = findPage();
+		if (page == null)
+		{
+			throw new WicketRuntimeException(
+					"This component is not (yet) coupled to a page. It has to be able "
+							+ "to find the page it is supposed to operate in before you can call "
+							+ "this method (Component#getMarkupId)");
+		}
+
+		return page.getAutoIndex();
+	}
+
 	/**
 	 * Retrieves id by which this component is represented within the markup. This is either the id
 	 * attribute set explicitly via a call to {@link #setMarkupId(String)}, id attribute defined in
@@ -1229,46 +1409,41 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public String getMarkupId()
 	{
-		String markupId = (String)getMetaData(MARKUP_ID_KEY);
-		if (markupId == null)
+		Object storedMarkupId = getMarkupIdImpl();
+
+		if (storedMarkupId instanceof String)
 		{
-			Page page = findPage();
-			if (page == null)
-			{
-				throw new WicketRuntimeException(
-						"This component is not (yet) coupled to a page. It has to be able "
-								+ "to find the page it is supposed to operate in before you can call "
-								+ "this method (Component#getMarkupId)");
-			}
-			// try to read from markup
-			// TODO getting the id from markup doesn't work everywhere yet.
-			// unfortunately, we have to drop this until we have a good solution
-			// for issue http://issues.apache.org/jira/browse/WICKET-694
-			// markupId = getMarkupAttributes().getString("id");
-
-			// if (markupId == null)
-			// {
-			// if not in the markup, generate one
-
-			markupId = RequestContext.get().encodeMarkupId(getId() + page.getAutoIndex());
-			// make sure id is compliant with w3c requirements (starts with a
-			// letter)
-			char c = markupId.charAt(0);
-			if (!Character.isLetter(c))
-			{
-				markupId = "id" + markupId;
-			}
-
-			// escape some noncompliant characters
-			markupId = Strings.replaceAll(markupId, "_", "__").toString();
-			markupId = markupId.replace('.', '_');
-			markupId = markupId.replace('-', '_');
-
-
-			// }
-			setMetaData(MARKUP_ID_KEY, markupId);
-
+			return (String)storedMarkupId;
 		}
+
+		final int generatedMarkupId = storedMarkupId instanceof Integer ? ((Integer)storedMarkupId)
+				.intValue() : nextAutoIndex();
+
+		if (storedMarkupId == null)
+		{
+			setMarkupIdImpl(new Integer(generatedMarkupId));
+		}
+
+		// try to read from markup
+		// TODO getting the id from markup doesn't work everywhere yet.
+		// unfortunately, we have to drop this until we have a good solution
+		// for issue http://issues.apache.org/jira/browse/WICKET-694
+		// markupId = getMarkupAttributes().getString("id");
+
+		String markupId = RequestContext.get().encodeMarkupId(getId() + generatedMarkupId);
+		// make sure id is compliant with w3c requirements (starts with a
+		// letter)
+		char c = markupId.charAt(0);
+		if (!Character.isLetter(c))
+		{
+			markupId = "id" + markupId;
+		}
+
+		// escape some noncompliant characters
+		markupId = Strings.replaceAll(markupId, "_", "__").toString();
+		markupId = markupId.replace('.', '_');
+		markupId = markupId.replace('-', '_');
+
 		return markupId;
 	}
 
@@ -1287,23 +1462,27 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	private MetaDataEntry[] getMetaData()
 	{
-		if (data instanceof MetaDataEntry[])
+		MetaDataEntry[] metaData = null;
+
+		// index where we should expect the entry
+		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
+
+		int length = data_length();
+
+		if (index < length)
 		{
-			return (MetaDataEntry[])data;
-		}
-		else if (data instanceof Object[])
-		{
-			Object[] tmp = (Object[])data;
-			if (tmp[0] instanceof MetaDataEntry[])
+			Object object = data_get(index);
+			if (object instanceof MetaDataEntry[])
 			{
-				return (MetaDataEntry[])tmp[0];
+				metaData = (MetaDataEntry[])object;
 			}
-			else if (tmp[1] instanceof MetaDataEntry[])
+			else if (object instanceof MetaDataEntry)
 			{
-				return (MetaDataEntry[])tmp[1];
+				metaData = new MetaDataEntry[] { (MetaDataEntry)object };
 			}
 		}
-		return null;
+
+		return metaData;
 	}
 
 	/**
@@ -1319,7 +1498,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			// give subclass a chance to lazy-init model
 			model = initModel();
-			setModelImp(model);
+			setModelImpl(model);
 		}
 
 		return model;
@@ -2008,42 +2187,14 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	private boolean removeBehavior(final IBehavior behavior)
 	{
-		if (behavior.equals(data))
+		final int start = getFlag(FLAG_MODEL_SET) ? 1 : 0;
+		for (int i = start; i < data_length(); ++i)
 		{
-			data = null;
-			return true;
-		}
-		else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
-		{
-			Object[] array = (Object[])data;
-			for (int i = 0; i < array.length; i++)
+			Object o = data_get(i);
+			if (o.equals(behavior))
 			{
-				if (array[i].equals(behavior))
-				{
-					if (array.length == 2)
-					{
-						if (i == 0)
-						{
-							data = array[1];
-						}
-						else
-						{
-							data = array[0];
-						}
-					}
-					else
-					{
-						Object[] tmp = new Object[array.length - 1];
-						System.arraycopy(array, 0, tmp, 0, i);
-						i++;
-						if (i != array.length)
-						{
-							System.arraycopy(array, i, tmp, i - 1, array.length - i);
-						}
-						data = array;
-					}
-					return true;
-				}
+				data_remove(i);
+				return true;
 			}
 		}
 		return false;
@@ -2122,7 +2273,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			{
 				// Call each behaviors onException() to allow the
 				// behavior to clean up
-				List behaviors = getBehaviorsIntern();
+				List behaviors = getBehaviorsImpl();
 				if (behaviors != null)
 				{
 					for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -2338,7 +2489,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
-			List behaviors = getBehaviorsIntern();
+			List behaviors = getBehaviorsImpl();
 			if (behaviors != null)
 			{
 				final Iterator iter = behaviors.iterator();
@@ -2478,6 +2629,23 @@ public abstract class Component implements IClusterable, IConverterLocator
 		return this;
 	}
 
+	final void setMarkupIdImpl(Object markupId)
+	{
+		if (markupId != null && !(markupId instanceof String) && !(markupId instanceof Integer))
+		{
+			throw new IllegalArgumentException("markupId must be String or Integer");
+		}
+
+		if (markupId instanceof Integer)
+		{
+			generatedMarkupId = ((Integer)markupId).intValue();
+			setMetaData(MARKUP_ID_KEY, null);
+			return;
+		}
+		generatedMarkupId = -1;
+		setMetaData(MARKUP_ID_KEY, (Serializable)markupId);
+	}
+
 	/**
 	 * Sets this component's markup id to a user defined value. It is up to the user to ensure this
 	 * value is unique.
@@ -2499,8 +2667,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			throw new IllegalArgumentException("Markup id cannot be an empty string");
 		}
-		setMetaData(MARKUP_ID_KEY, markupId);
 
+		setMarkupIdImpl(markupId);
 	}
 
 	/**
@@ -2517,90 +2685,28 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
-		MetaDataEntry[] metaData = key.set(getMetaData(), object);
-		if (data == null || data instanceof MetaDataEntry[])
+		MetaDataEntry[] old = getMetaData();
+
+		Object metaData = null;
+		MetaDataEntry[] metaDataArray = key.set(getMetaData(), object);
+		if (metaDataArray != null && metaDataArray.length > 0)
 		{
-			data = metaData;
+			metaData = (metaDataArray.length > 1) ? (Object)metaDataArray : metaDataArray[0];
 		}
-		else if (data instanceof Object[])
+
+		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
+
+		if (old == null && metaData != null)
 		{
-			Object[] tmp = (Object[])data;
-			boolean modelSet = getFlag(FLAG_MODEL_SET);
-			if (modelSet)
-			{
-				if (tmp[1] instanceof MetaDataEntry[])
-				{
-					if (metaData == null)
-					{
-						if (tmp.length == 2)
-						{
-							data = tmp[0];
-						}
-						else
-						{
-							Object[] array = new Object[tmp.length - 1];
-							array[0] = tmp[0]; // model
-							System.arraycopy(tmp, 2, array, 1, tmp.length - 2);
-							data = array;
-						}
-					}
-					else
-					{
-						tmp[1] = metaData;
-					}
-				}
-				else if (metaData != null)
-				{
-					Object[] array = new Object[tmp.length + 1];
-					array[0] = tmp[0]; // the model
-					array[1] = metaData;
-					System.arraycopy(tmp, 1, array, 2, tmp.length - 1); // behaviors
-					data = array;
-				}
-			}
-			else if (tmp[0] instanceof MetaDataEntry[])
-			{
-				if (metaData == null)
-				{
-					if (tmp.length == 2)
-					{
-						data = tmp[1];
-					}
-					else
-					{
-						Object[] array = new Object[tmp.length - 1];
-						System.arraycopy(tmp, 1, array, 0, tmp.length - 1);
-						data = array;
-					}
-				}
-				else
-				{
-					tmp[0] = metaData;
-				}
-			}
-			else if (metaData != null)
-			{
-				Object[] array = new Object[tmp.length + 1];
-				array[0] = metaData;
-				System.arraycopy(tmp, 0, array, 1, tmp.length); // behaviors
-				data = array;
-			}
+			data_insert(index, metaData);
 		}
-		else if (metaData != null)
+		else if (old != null && metaData != null)
 		{
-			Object[] array = new Object[2];
-			boolean modelSet = getFlag(FLAG_MODEL_SET);
-			if (modelSet)
-			{
-				array[0] = data;
-				array[1] = metaData;
-			}
-			else
-			{
-				array[0] = metaData;
-				array[1] = data;
-			}
-			data = array;
+			data_set(index, metaData);
+		}
+		else if (old != null && metaData == null)
+		{
+			data_remove(index);
 		}
 	}
 
@@ -2637,7 +2743,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 				addStateChange(new ComponentModelChange(prevModel));
 			}
 
-			setModelImp(wrap(model));
+			setModelImpl(wrap(model));
 		}
 
 		modelChanged();
@@ -2648,74 +2754,37 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		if (getFlag(FLAG_MODEL_SET))
 		{
-			if (data instanceof IModel)
-			{
-				return (IModel)data;
-			}
-			else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
-			{
-				return (IModel)((Object[])data)[0];
-			}
+			return (IModel)data_get(0);
 		}
-		return null;
+		else
+		{
+			return null;
+		}
 	}
 
-	void setModelImp(IModel model)
+	void setModelImpl(IModel model)
 	{
 		if (getFlag(FLAG_MODEL_SET))
 		{
-			if (data instanceof IModel)
+			if (model != null)
 			{
-				data = model;
-			}
-			else if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
-			{
-				if (model == null)
-				{
-					Object[] tmp = (Object[])data;
-					if (tmp.length > 2)
-					{
-						Object[] array = new Object[tmp.length - 1];
-						System.arraycopy(tmp, 1, array, 0, array.length);
-						data = array;
-					}
-					else
-					{
-						data = tmp[1];
-					}
-				}
-				else
-				{
-					((Object[])data)[0] = model;
-				}
-			}
-		}
-		else if (model != null)
-		{
-			if (data == null)
-			{
-				data = model;
+				data_set(0, model);
 			}
 			else
 			{
-				if (data instanceof Object[] && !(data instanceof MetaDataEntry[]))
-				{
-					Object[] tmp = (Object[])data;
-					Object[] array = new Object[tmp.length + 1];
-					System.arraycopy(tmp, 0, array, 1, tmp.length);
-					array[0] = model;
-					data = array;
-				}
-				else
-				{
-					Object[] array = new Object[2];
-					array[0] = model;
-					array[1] = data;
-					data = array;
-				}
+				data_remove(0);
+				setFlag(FLAG_MODEL_SET, false);
 			}
 		}
-		setFlag(FLAG_MODEL_SET, model != null);
+		else
+		{
+			if (model != null)
+			{
+				data_insert(0, model);
+				setFlag(FLAG_MODEL_SET, true);
+			}
+		}
+
 
 	}
 
@@ -3095,7 +3164,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	private void notifyBehaviorsComponentBeforeRender()
 	{
-		List behaviors = getBehaviorsIntern();
+		List behaviors = getBehaviorsImpl();
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -3116,7 +3185,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	private void notifyBehaviorsComponentRendered()
 	{
 		// notify the behaviors that component has been rendered
-		List behaviors = getBehaviorsIntern();
+		List behaviors = getBehaviorsImpl();
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -3283,7 +3352,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected List/* <IBehavior> */getBehaviors(Class type)
 	{
-		List behaviors = getBehaviorsIntern();
+		List behaviors = getBehaviorsImpl();
 		if (behaviors == null)
 		{
 			return Collections.EMPTY_LIST;
@@ -3641,7 +3710,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behavior modifiers
-			List behaviors = getBehaviorsIntern();
+			List behaviors = getBehaviorsImpl();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
 					(isIgnoreAttributeModifier() == false))
 			{
@@ -3854,7 +3923,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	final boolean hasMarkupIdMetaData()
 	{
-		return getMetaData(MARKUP_ID_KEY) != null;
+		return getMarkupId() != null;
 	}
 
 	void internalMarkRendering()

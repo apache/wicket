@@ -31,7 +31,7 @@ import java.util.Set;
  * 
  * @author Jonathan Locke
  */
-public final class MiniMap implements Map, Serializable
+public class MiniMap implements Map, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,8 +55,8 @@ public final class MiniMap implements Map, Serializable
 	 */
 	public MiniMap(final int maxEntries)
 	{
-		this.keys = new Object[maxEntries];
-		this.values = new Object[maxEntries];
+		keys = new Object[maxEntries];
+		values = new Object[maxEntries];
 	}
 
 	/**
@@ -143,7 +143,7 @@ public final class MiniMap implements Map, Serializable
 		{
 			// Replace existing value
 			final Object oldValue = values[index];
-			this.values[index] = value;
+			values[index] = value;
 			return oldValue;
 		}
 

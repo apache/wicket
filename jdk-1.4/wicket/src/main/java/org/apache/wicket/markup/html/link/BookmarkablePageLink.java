@@ -16,12 +16,16 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.IPageMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -40,7 +44,7 @@ public class BookmarkablePageLink extends Link
 	private String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
-	protected final PageParameters parameters;
+	protected final MiniMap parameters;
 
 	/**
 	 * Constructor.
@@ -52,7 +56,40 @@ public class BookmarkablePageLink extends Link
 	 */
 	public BookmarkablePageLink(final String id, final Class pageClass)
 	{
-		this(id, pageClass, new PageParameters());
+		this(id, pageClass, null);
+	}
+
+	private MiniMap pageParametersToMiniMap(PageParameters parameters)
+	{
+		if (parameters != null)
+		{
+			MiniMap map = new MiniMap(parameters.keySet().size());
+			for (Iterator i = parameters.entrySet().iterator(); i.hasNext();)
+			{
+				Entry entry = (Entry)i.next();
+				map.put(entry.getKey(), entry.getValue());
+			}
+			return map;
+		}
+		else
+		{
+			return null;
+		}
+
+	}
+
+	private PageParameters getPageParameters()
+	{
+		PageParameters result = new PageParameters();
+		if (parameters != null)
+		{
+			for (Iterator i = parameters.entrySet().iterator(); i.hasNext();)
+			{
+				Entry entry = (Entry)i.next();
+				result.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -69,6 +106,9 @@ public class BookmarkablePageLink extends Link
 			final PageParameters parameters)
 	{
 		super(id);
+
+		this.parameters = pageParametersToMiniMap(parameters);
+
 		if (pageClass == null)
 		{
 			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");
@@ -78,8 +118,7 @@ public class BookmarkablePageLink extends Link
 			throw new IllegalArgumentException("Page class must be derived from " +
 					Page.class.getName());
 		}
-		this.pageClassName = pageClass.getName();
-		this.parameters = parameters;
+		pageClassName = pageClass.getName();
 	}
 
 	/**
@@ -89,7 +128,7 @@ public class BookmarkablePageLink extends Link
 	 */
 	public final Class getPageClass()
 	{
-		return Classes.resolveClass(this.pageClassName);
+		return Classes.resolveClass(pageClassName);
 	}
 
 	/**
@@ -145,7 +184,7 @@ public class BookmarkablePageLink extends Link
 	{
 		if (pageMap != null)
 		{
-			this.pageMapName = pageMap.getName();
+			pageMapName = pageMap.getName();
 			add(new AttributeModifier("target", true, new Model(pageMapName)));
 		}
 		return this;
@@ -208,6 +247,8 @@ public class BookmarkablePageLink extends Link
 		{
 			throw new IllegalStateException("You cannot specify popup settings and a page map");
 		}
+
+		PageParameters parameters = getPageParameters();
 
 		if (getPopupSettings() != null)
 		{

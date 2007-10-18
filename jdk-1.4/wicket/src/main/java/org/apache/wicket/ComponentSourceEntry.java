@@ -69,20 +69,21 @@ abstract class ComponentSourceEntry implements Serializable
 		checkId("Component id", component.getId());
 		buffer.append(component.getId());
 		buffer.append(' ');
-		if (component.hasMarkupIdMetaData())
+		Object markupId = component.getMarkupIdImpl();
+		if (markupId != null)
 		{
+			if (markupId instanceof String)
+			{
+				checkId("Component markup id", (String)markupId);
+			}
 
-			checkId("Component markup id", component.getMarkupId());
-			// if the markup id starts with component id, append only the difference prefixed by '*'
-			if (component.getMarkupId().startsWith(component.getId()))
+			// if the markup id is an integer, prefixed it with '*'
+			if (markupId instanceof Integer)
 			{
 				buffer.append('*');
-				buffer.append(component.getMarkupId().substring(component.getId().length()));
 			}
-			else
-			{
-				buffer.append(component.getMarkupId());
-			}
+			buffer.append(markupId);
+
 			buffer.append(' ');
 		}
 		buffer.append(component.markupIndex);
@@ -214,7 +215,7 @@ abstract class ComponentSourceEntry implements Serializable
 		String parts[] = info.split(" ");
 
 		final String id = parts[0];
-		final String markupId;
+		final Object markupId;
 		final int markupIndex;
 
 		if (parts.length == 2)
@@ -224,9 +225,10 @@ abstract class ComponentSourceEntry implements Serializable
 		}
 		else if (parts.length == 3)
 		{
+
 			if (parts[1] != null && parts[1].startsWith("*"))
 			{
-				markupId = id + parts[1].substring(1);
+				markupId = Integer.valueOf(parts[1].substring(1));
 			}
 			else
 			{
@@ -254,9 +256,9 @@ abstract class ComponentSourceEntry implements Serializable
 		{
 			if (markupId != null)
 			{
-				component.setMarkupId(markupId);
+				component.setMarkupIdImpl(markupId);
 			}
-			component.markupIndex = markupIndex;
+			component.markupIndex = (short)markupIndex;
 		}
 		return component instanceof MarkupContainer ? (MarkupContainer)component : null;
 	}

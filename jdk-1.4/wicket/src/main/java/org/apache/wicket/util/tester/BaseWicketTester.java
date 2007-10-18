@@ -19,6 +19,7 @@ package org.apache.wicket.util.tester;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -725,9 +726,12 @@ public class BaseWicketTester extends MockWebApplication
 				{
 					Field parametersField = BookmarkablePageLink.class
 							.getDeclaredField("parameters");
-					parametersField.setAccessible(true);
-					PageParameters parameters = (PageParameters)parametersField
-							.get(bookmarkablePageLink);
+					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
+							"getPageParameters", null);
+					getParametersMethod.setAccessible(true);
+
+					PageParameters parameters = (PageParameters)getParametersMethod.invoke(
+							bookmarkablePageLink, null);
 					setParametersForNextRequest(parameters);
 				}
 				catch (Exception e)
