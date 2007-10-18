@@ -57,6 +57,7 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.MaskConverter;
 import org.apache.wicket.validation.validator.NumberValidator;
+import org.apache.wicket.version.undo.Change;
 
 public class Home extends WebPage {
 
@@ -273,6 +274,11 @@ public class Home extends WebPage {
 			@Override
 			public void onClick() {
 				i++;
+				addStateChange(new Change() {
+					@Override
+					public void undo() {
+					}
+				});
 			}
 		});
 
