@@ -26,6 +26,7 @@ import org.apache.wicket.threadtest.tester.Tester;
 import org.apache.wicket.util.io.WicketObjectStreamFactory;
 import org.apache.wicket.util.lang.Objects;
 
+
 /**
  * @author eelcohillenius
  */
@@ -40,10 +41,10 @@ public class App1Test1 {
 	public static void main(String[] args) throws Exception {
 
 		List<String> gets = Arrays.asList(new String[] {
-				"/app1/?wicket:bookmarkablePage=:wicket.threadtest.apps.app1.Home",
-				"/app1/?wicket:interface=:${iteration}:link::ILinkListener:",
-				"/app1/?wicket:interface=:${iteration}:link:1:ILinkListener:",
-				"/app1/?wicket:interface=:${iteration}:link:2:ILinkListener:" });
+				"/app1/?wicket:bookmarkablePage=:org.apache.wicket.threadtest.apps.app1.Home" ,
+				"/app1/?wicket:interface=:${iteration}:link::ILinkListener::" ,
+				"/app1/?wicket:interface=:${iteration}:link:1:ILinkListener::",
+				"/app1/?wicket:interface=:${iteration}:link:2:ILinkListener::" });
 
 		// you can turn this on if you e.g. want to attach to a profiler
 		// Thread.sleep(5000);
@@ -51,7 +52,7 @@ public class App1Test1 {
 		Objects.setObjectStreamFactory(new WicketObjectStreamFactory());
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 10);
 		// getCmd.setPrintResponse(true);
-		Tester tester = new Tester(getCmd, 1000, true);
+		Tester tester = new Tester(getCmd, 100, true);
 		tester.run();
 	}
 }
