@@ -44,7 +44,7 @@ public class BookmarkablePageLink extends Link
 	private String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
-	protected final MiniMap parameters;
+	protected MiniMap parameters;
 
 	/**
 	 * Constructor.
@@ -63,12 +63,7 @@ public class BookmarkablePageLink extends Link
 	{
 		if (parameters != null)
 		{
-			MiniMap map = new MiniMap(parameters.keySet().size());
-			for (Iterator i = parameters.entrySet().iterator(); i.hasNext();)
-			{
-				Entry entry = (Entry)i.next();
-				map.put(entry.getKey(), entry.getValue());
-			}
+			MiniMap map = new MiniMap(parameters, parameters.keySet().size());
 			return map;
 		}
 		else
@@ -90,6 +85,13 @@ public class BookmarkablePageLink extends Link
 			}
 		}
 		return result;
+	}
+
+	private void setParameterImpl(String key, Object value)
+	{
+		PageParameters parameters = getPageParameters();
+		parameters.put(key, value);
+		this.parameters = pageParametersToMiniMap(parameters);
 	}
 
 	/**
@@ -201,7 +203,7 @@ public class BookmarkablePageLink extends Link
 	 */
 	public BookmarkablePageLink setParameter(final String property, final int value)
 	{
-		parameters.put(property, Integer.toString(value));
+		setParameterImpl(property, Integer.toString(value));
 		return this;
 	}
 
@@ -216,7 +218,7 @@ public class BookmarkablePageLink extends Link
 	 */
 	public BookmarkablePageLink setParameter(final String property, final long value)
 	{
-		parameters.put(property, Long.toString(value));
+		setParameterImpl(property, Long.toString(value));
 		return this;
 	}
 
@@ -231,7 +233,7 @@ public class BookmarkablePageLink extends Link
 	 */
 	public BookmarkablePageLink setParameter(final String property, final String value)
 	{
-		parameters.put(property, value);
+		setParameterImpl(property, value);
 		return this;
 	}
 
