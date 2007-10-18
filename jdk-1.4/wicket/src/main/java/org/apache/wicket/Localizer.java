@@ -25,6 +25,7 @@ import java.util.MissingResourceException;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
 import org.slf4j.Logger;
@@ -51,9 +52,11 @@ public class Localizer
 {
 	private static final Logger logger = LoggerFactory.getLogger(Localizer.class);
 
-
 	/** Cache properties */
-	private Map cache = new HashMap();
+	private Map cache = new ConcurrentHashMap();
+
+	/** ConcurrentHashMap does not allow null values */
+	private static final String NULL_VALUE = "<null-value>";
 
 	/**
 	 * Create the utils instance class backed by the configuration information contained within the
@@ -247,8 +250,8 @@ public class Localizer
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: " +
-					key);
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: "
+					+ key);
 			if (component != null)
 			{
 				message.append(" for component: ");
@@ -270,7 +273,15 @@ public class Localizer
 	 */
 	protected void putIntoCache(final String cacheKey, final String string)
 	{
-		cache.put(cacheKey, string);
+		// ConcurrentHashMap does not allow null values
+		if (string == null)
+		{
+			cache.put(cacheKey, NULL_VALUE);
+		}
+		else
+		{
+			cache.put(cacheKey, string);
+		}
 	}
 
 	/**
@@ -281,7 +292,17 @@ public class Localizer
 	 */
 	protected String getFromCache(final String cacheKey)
 	{
-		return (String)cache.get(cacheKey);
+		final String value = (String)cache.get(cacheKey);
+
+		// ConcurrentHashMap does not allow null values
+		if (value == NULL_VALUE)
+		{
+			return null;
+		}
+		else
+		{
+			return value;
+		}
 	}
 
 	/**
