@@ -81,39 +81,6 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	/**
 	 * 
 	 */
-// public void testNonPageComponent()
-// {
-// Component c = new DummyComponent("hello", application)
-// {
-// private static final long serialVersionUID = 1L;
-// };
-// IStringResourceLoader loader = new ComponentStringResourceLoader(tester.getApplication());
-// try
-// {
-// loader.loadStringResource(c.getClass(), "test.string", Locale.getDefault(), null);
-// Assert.fail("IllegalStateException should be thrown");
-// }
-// catch (IllegalStateException e)
-// {
-// // Expected result since component is not attached to a Page
-// }
-// }
-// /**
-// *
-// */
-// public void testPageEmbeddedComponentLoadFromPage()
-// {
-// DummyPage p = new DummyPage();
-// DummyComponent c = new DummyComponent("hello", application);
-// p.add(c);
-// IStringResourceLoader loader = new ComponentStringResourceLoader(tester.getApplication());
-// Assert.assertEquals("Valid resourse string should be found", "Another string",
-// loader.loadStringResource(
-// c.getClass(), "another.test.string", Locale.getDefault(), null));
-// }
-	/**
-	 * 
-	 */
 	public void testMultiLevelEmbeddedComponentLoadFromComponent()
 	{
 		DummyPage p = new DummyPage();
