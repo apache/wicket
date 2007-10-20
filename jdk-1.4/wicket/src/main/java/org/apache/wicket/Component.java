@@ -887,7 +887,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	public Component(final String id, final IModel model)
 	{
 		this(id);
-		setModelImpl(model);
+		setModelImpl(wrap(model));
 	}
 
 	/**
