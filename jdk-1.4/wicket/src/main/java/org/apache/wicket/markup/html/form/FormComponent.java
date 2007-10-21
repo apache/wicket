@@ -1287,15 +1287,6 @@ public abstract class FormComponent extends LabeledWebMarkupContainer
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onAfterRender()
-	 */
-	protected void onAfterRender()
-	{
-		super.onAfterRender();
-		rawInput = NO_RAW_INPUT;
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
