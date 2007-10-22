@@ -203,21 +203,29 @@ public abstract class MarkupContainer extends Component
 
 		/* Replace strategy */
 		component.setAuto(true);
-// if (get(component.getId()) != null)
-// {
-// this.remove(component);
-// }
+
+		int index = children_indexOf(component);
+		if (index >= 0)
+		{
+			children_remove(index);
+		}
 		add(component);
 		component.prepareForRender();
-		if (markupStream == null)
+		try
 		{
-			component.render();
+			if (markupStream == null)
+			{
+				component.render();
+			}
+			else
+			{
+				component.render(markupStream);
+			}
 		}
-		else
+		finally
 		{
-			component.render(markupStream);
+			component.afterRender();
 		}
-		remove(component);
 		return true;
 	}
 
@@ -1438,18 +1446,23 @@ public abstract class MarkupContainer extends Component
 	{
 		super.detachChildren();
 
-		for (int i = 0; i < children_size(); ++i)
+		for (int i = children_size(); i-- > 0;)
 		{
 			Object child = children_get(i, false);
 			if (child instanceof Component)
 			{
-				((Component)child).detach();
+				Component component = (Component)child;
+				component.detach();
 
 				if (child instanceof IComponentSourceProvider)
 				{
-					ComponentSourceEntry entry = new ComponentSourceEntry(this, (Component)child,
+					ComponentSourceEntry entry = new ComponentSourceEntry(this, component,
 							((IComponentSourceProvider)child).getComponentSource());
 					children_set(i, entry, false);
+				}
+				else if (component.isAuto())
+				{
+					children_remove(i);
 				}
 			}
 		}
