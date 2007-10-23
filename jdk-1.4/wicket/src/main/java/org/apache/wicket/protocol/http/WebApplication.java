@@ -580,6 +580,9 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Set the application key value
+	 * 
+	 * @param applicationKey
+	 *            Unique application key (typically the filter name).
 	 */
 	protected final void setApplicationKey(String applicationKey)
 	{
