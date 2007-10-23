@@ -83,10 +83,15 @@ public class BorderBodyResolver implements IComponentResolver
 						{
 							component.render(markupStream);
 
-							log
-									.warn("Please consider to change your java code to something like: " +
-											container.getId() +
-											".add(getBodyContainer()); for the component hierarchy to better reflect the markup hierarchy.");
+							log.warn("Please consider to change your java code to " +
+									"something like: " + container.getId() +
+									".add(getBodyContainer()); for the component hierarchy to " +
+									"better reflect the markup hierarchy. For example, say that " +
+									"you have a border class in which you do: " +
+									"\'WebMarkupContainer div = new " +
+									"WebMarkupContainer(\"roundDiv\"); add(div);\' you should " +
+									"now do \'add(div); div.add(getBodyContainer());\'. " +
+									"Please fix this before Wicket 1.4");
 						}
 
 						return true;
