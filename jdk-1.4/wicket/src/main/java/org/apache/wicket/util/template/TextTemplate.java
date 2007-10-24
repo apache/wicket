@@ -27,23 +27,24 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public abstract class TextTemplate extends AbstractStringResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 */
 	public TextTemplate()
 	{
 	}
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param contentType
-	 *            The mime type of this resource, such as "image/jpeg" or "text/html".
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "<code>text/html</code>"
 	 */
 	public TextTemplate(String contentType)
 	{
@@ -51,13 +52,14 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	}
 
 	/**
-	 * Interpolate the map of variables with the content and return the resulting string without
-	 * replacing the content. Variables are denoted in this string by the syntax ${variableName}.
-	 * The contents will be altered by replacing each variable of the form ${variableName} with the
-	 * value returned by variables.getValue("variableName").
+	 * Interpolates the <code>Map</code> of variables with the content and returns the resulting
+	 * <code>String</code> without replacing the content. Variables are denoted in this string by
+	 * the syntax <code>${variableName}</code>. The contents will be altered by replacing each
+	 * variable of the form <code>${variableName}</code> with the value returned by
+	 * <code>variables.getValue("variableName")</code>.
 	 * 
 	 * @param variables
-	 *            The variables to interpolate
+	 *            the variables to interpolate
 	 * @return the result of the interpolation
 	 */
 	public String asString(Map variables)
@@ -78,18 +80,18 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	}
 
 	/**
-	 * Gets the string resource.
+	 * Retrieves the <code>String</code> resource.
 	 * 
-	 * @return The string resource
+	 * @return the <code>String</code> resource
 	 */
 	public abstract String getString();
 
 	/**
-	 * Interpolates values into this text template.
+	 * Interpolates values into this <code>TextTemplate</code>.
 	 * 
 	 * @param variables
-	 *            Variables to interpolate into this text template
-	 * @return This for chaining
+	 *            variables to interpolate into this <code>TextTemplate</code>
+	 * @return <code>this</code>, for chaining purposes
 	 */
 	public abstract TextTemplate interpolate(Map variables);
 }

@@ -19,16 +19,19 @@ package org.apache.wicket.util.string.interpolator;
 import org.apache.wicket.util.lang.PropertyResolver;
 
 /**
- * Interpolates values into strings that are produced by interpreting property expressions against a
- * beans model.
+ * Interpolates values into <code>String</code>s that are produced by interpreting property
+ * expressions against a beans model.
  * <p>
- * The interpolate(String string, Object model) method takes a string such as "My name is ${name}"
- * and a beans model such as a Person, and reflects on the object using any property expressions
- * found inside ${} markers in the string. In this case, if the Person model had a getName() method,
- * the results of calling that method would be substituted for ${name}. If getName() returned
- * Jonathan, interpolate() would then return "My name is Jonathan".
+ * The <code>interpolate(String string, Object model)</code> method takes a string such as "<code>My name is ${name}</code>"
+ * and a beans model such as a <code>Person</code>, and reflects on the object using any property
+ * expressions found inside <code>${}</code> markers in the <code>String</code>. In this case,
+ * if the <code>Person</code> model has a <code>getName()</code> method. The results of calling
+ * that method would be substituted for <code>${name}</code>. If <code>getName()</code>
+ * returned <code>"Jonathan"</code>, then <code>interpolate()</code> would return
+ * <code>"My name is Jonathan"</code>.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public final class PropertyVariableInterpolator extends VariableInterpolator
 {
@@ -36,12 +39,12 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	private final Object model;
 
 	/**
-	 * Private constructor to force use of static interpolate method
+	 * Private constructor to force use of static interpolate method.
 	 * 
 	 * @param string
-	 *            The string to interpolate into
+	 *            a <code>String</code> to interpolate into
 	 * @param model
-	 *            The model to apply property expressions to
+	 *            the model to apply property expressions to
 	 */
 	private PropertyVariableInterpolator(final String string, final Object model)
 	{
@@ -50,13 +53,13 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
-	 * Interpolates string, substituting values for property expressions
+	 * Interpolates the given <code>String</code>, substituting values for property expressions.
 	 * 
 	 * @param string
-	 *            String containing property expressions like ${xyz}
+	 *            a <code>String</code> containing property expressions like <code>${xyz}</code>
 	 * @param object
-	 *            The object to reflect on
-	 * @return The interpolated string
+	 *            the <code>Object</code> to reflect on
+	 * @return the interpolated <code>String</code>
 	 */
 	public static String interpolate(final String string, final Object object)
 	{
@@ -72,11 +75,11 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
-	 * Gets a value for a variable name during interpolation
+	 * Retrieves a value for a variable name during interpolation.
 	 * 
 	 * @param variableName
-	 *            The variable
-	 * @return The value
+	 *            the variable name
+	 * @return the value
 	 */
 	protected String getValue(final String variableName)
 	{

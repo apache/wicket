@@ -22,19 +22,20 @@ import org.apache.wicket.util.string.JavascriptUtils;
 
 
 /**
- * Decorates the template with javascript tags.
+ * Decorates a <code>TextTemplate</code> with JavaScript tags.
  * 
  * @author Eelco Hillenius
+ * @since 1.2.6
  */
 public final class JavaScriptTemplate extends TextTemplateDecorator
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param textTemplate
-	 *            The template to decorate
+	 *            a <code>TextTemplate</code> to decorate
 	 */
 	public JavaScriptTemplate(TextTemplate textTemplate)
 	{
@@ -58,11 +59,12 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	}
 
 	/**
-	 * This class decorates another text template class and so does not allow interpolation.
+	 * This class decorates another <code>TextTemplate</code> class and so does not allow
+	 * interpolation.
 	 * 
 	 * @param variables
-	 *            Ignored
-	 * @return This for chaining
+	 *            ignored
+	 * @return <code>this</code>, for chaining purposes
 	 */
 	public TextTemplate interpolate(final Map variables)
 	{

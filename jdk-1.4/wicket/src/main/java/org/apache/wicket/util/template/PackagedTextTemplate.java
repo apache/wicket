@@ -36,9 +36,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A string resource that can be appended to.
+ * A <code>String</code> resource that can be appended to.
  * 
  * @author Eelco Hillenius
+ * @since 1.2.6
  */
 // TODO cache templates application scoped with a watch
 public class PackagedTextTemplate extends TextTemplate
@@ -60,7 +61,7 @@ public class PackagedTextTemplate extends TextTemplate
 
 		CachedTextTemplateKey(Class clazz, String path)
 		{
-			this.className = clazz.getName();
+			className = clazz.getName();
 		}
 
 	}
@@ -103,10 +104,10 @@ public class PackagedTextTemplate extends TextTemplate
 	 * Constructor.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for loading the packaged
-	 *            template.
+	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
+	 *            <code>PackagedTextTemplate</code>
 	 * @param fileName
-	 *            The name of the file, relative to the clazz position
+	 *            the name of the file, relative to the <code>clazz</code> position
 	 */
 	public PackagedTextTemplate(final Class clazz, final String fileName)
 	{
@@ -117,12 +118,12 @@ public class PackagedTextTemplate extends TextTemplate
 	 * Constructor.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for loading the packaged
-	 *            template.
+	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
+	 *            <code>PackagedTextTemplate</code>
 	 * @param fileName
-	 *            the name of the file, relative to the clazz position
+	 *            the name of the file, relative to the <code>clazz</code> position
 	 * @param contentType
-	 *            The mime type of this resource, such as "image/jpeg" or "text/html"
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "<code>text/html</code>"
 	 */
 	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType)
 	{
@@ -133,14 +134,14 @@ public class PackagedTextTemplate extends TextTemplate
 	 * Constructor.
 	 * 
 	 * @param clazz
-	 *            The class to be used for retrieving the classloader for loading the packaged
-	 *            template.
+	 *            the <code>Class</code> to be used for retrieving the classloader for loading the
+	 *            <code>PackagedTextTemplate</code>
 	 * @param fileName
-	 *            the name of the file, relative to the clazz position
+	 *            the name of the file, relative to the <code>clazz</code> position
 	 * @param contentType
-	 *            The mime type of this resource, such as "image/jpeg" or "text/html"
+	 *            the mime type of this resource, such as "<code>image/jpeg</code>" or "<code>text/html</code>"
 	 * @param encoding
-	 *            The file's encoding, e.g. 'UTF-8'
+	 *            the file's encoding, for example, "<code>UTF-8</code>"
 	 */
 	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType,
 			final String encoding)
@@ -210,19 +211,20 @@ public class PackagedTextTemplate extends TextTemplate
 	}
 
 	/**
-	 * Interpolate the map of variables with the content and replace the content with the result.
-	 * Variables are denoted in this string by the syntax ${variableName}. The contents will be
-	 * altered by replacing each variable of the form ${variableName} with the value returned by
-	 * variables.getValue("variableName").
+	 * Interpolates a <code>Map</code> of variables with the content and replaces the content with
+	 * the result. Variables are denoted in the <code>String</code> by the
+	 * <code>syntax ${variableName}</code>. The contents will be altered by replacing each
+	 * variable of the form <code>${variableName}</code> with the value returned by
+	 * <code>variables.getValue("variableName")</code>.
 	 * <p>
-	 * WARNING there is no going back to the original contents after the interpolation is done. if
-	 * you need to do different interpolations on the same original contents, use method
+	 * WARNING: there is no going back to the original contents after the interpolation is done. If
+	 * you need to do different interpolations on the same original contents, use the method
 	 * {@link #asString(Map)} instead.
 	 * </p>
 	 * 
 	 * @param variables
-	 *            The variables to interpolate
-	 * @return This for chaining
+	 *            a <code>Map</code> of variables to interpolate
+	 * @return this for chaining
 	 */
 	public final TextTemplate interpolate(Map variables)
 	{

@@ -28,26 +28,25 @@ import org.apache.wicket.util.time.Time;
 
 /**
  * Provides the ability to 'decorate' the actual template contents before it is contributed to the
- * header. E.g. to embed in a javascript tag pair.
+ * header. For example, to embed it inside a JavaScript tag pair.
  * 
  * @author Eelco Hillenius
+ * @since 1.2.6
  */
 public abstract class TextTemplateDecorator extends TextTemplate
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	/**
-	 * The decorated template.
+	 * The decorated <code>TextTemplate</code>.
 	 */
 	protected final TextTemplate decorated;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param textTemplate
-	 *            The text template to decorate
+	 *            a <code>TextTemplate</code> to decorate
 	 */
 	public TextTemplateDecorator(TextTemplate textTemplate)
 	{
@@ -56,12 +55,14 @@ public abstract class TextTemplateDecorator extends TextTemplate
 			throw new IllegalArgumentException("argument textTemplate must be not null");
 		}
 
-		this.decorated = textTemplate;
+		decorated = textTemplate;
 	}
 
 	/**
+	 * Returns the decorated contents as a <code>String</code>.
+	 * 
 	 * @return the contents decorated with {@link #getBeforeTemplateContents()} and
-	 *         {@link #getAfterTemplateContents()}.
+	 *         {@link #getAfterTemplateContents()}
 	 * @see org.apache.wicket.util.template.TextTemplate#asString()
 	 */
 	public String asString()
@@ -74,6 +75,8 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	}
 
 	/**
+	 * Returns the decorated contents as a <code>String</code>.
+	 * 
 	 * @return the contents decorated with {@link #getBeforeTemplateContents()} and
 	 *         {@link #getAfterTemplateContents()}.
 	 * @see org.apache.wicket.util.template.TextTemplate#asString(java.util.Map)
@@ -88,24 +91,24 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	}
 
 	/**
-	 * Gets the string to put before the actual template contents, e.g.
+	 * Retrieves the <code>String</code> to put before the actual template contents, for example:
 	 * 
 	 * <pre>
 	 *    &lt;script type=&quot;text/javascript&quot;&gt;
 	 * </pre>
 	 * 
-	 * @return The string to put before the actual template contents
+	 * @return the <code>String</code> to put before the actual template contents
 	 */
 	public abstract String getBeforeTemplateContents();
 
 	/**
-	 * Gets the string to put after the actual template contents, e.g.
+	 * Retrieves the <code>String</code> to put after the actual template contents, for example:
 	 * 
 	 * <pre>
 	 *    &lt;/script&gt;
 	 * </pre>
 	 * 
-	 * @return The string to put after the actual template contents
+	 * @return the <code>String</code> to put after the actual template contents
 	 */
 	public abstract String getAfterTemplateContents();
 

@@ -22,9 +22,10 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Interpolates variables into a string from a Map.
+ * Interpolates variables into a <code>String</code> from a <code>Map</code>.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public class MapVariableInterpolator extends VariableInterpolator
 {
@@ -32,12 +33,12 @@ public class MapVariableInterpolator extends VariableInterpolator
 	private Map variables;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param string
-	 *            The string to interpolate into
+	 *            a <code>String</code> to interpolate into
 	 * @param variables
-	 *            The variables to substitute
+	 *            the variables to substitute
 	 */
 	public MapVariableInterpolator(final String string, final Map variables)
 	{
@@ -46,16 +47,17 @@ public class MapVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param string
-	 *            The string to interpolate into
+	 *            a <code>String</code> to interpolate into
 	 * @param variables
-	 *            The variables to substitute
+	 *            the variables to substitute
 	 * @param exceptionOnNullVarValue
-	 *            if true an {@link IllegalStateException} will be thrown if a
-	 *            {@link #getValue(String)} returns null, otherwise the ${varname} string will be
-	 *            left in the <code>string</code> so multiple interpolators can be chained
+	 *            if <code>true</code> an {@link IllegalStateException} will be thrown if
+	 *            {@link #getValue(String)} returns <code>null</code>, otherwise the
+	 *            <code>${varname}</code> string will be left in the <code>String</code> so that
+	 *            multiple interpolators can be chained
 	 */
 	public MapVariableInterpolator(String string, final Map variables,
 			boolean exceptionOnNullVarValue)
@@ -65,10 +67,10 @@ public class MapVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
-	 * Accessor to set variables
+	 * Sets the <code>Map</code> of variables.
 	 * 
 	 * @param variables
-	 *            New value
+	 *            the <code>Map</code> of variables
 	 */
 	public final void setVariables(final Map variables)
 	{
@@ -76,11 +78,11 @@ public class MapVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
-	 * Gets a value for a variable name during interpolation
+	 * Retrieves a value for a variable name during interpolation.
 	 * 
 	 * @param variableName
-	 *            The variable
-	 * @return The value
+	 *            the variable name
+	 * @return the value
 	 */
 	protected final String getValue(final String variableName)
 	{
@@ -88,11 +90,13 @@ public class MapVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
-	 * Interpolate the string with the arguments defined in a map
+	 * Interpolates a <code>String</code> with the arguments defined in the given <code>Map</code>.
 	 * 
 	 * @param string
+	 *            a <code>String</code> to interpolate into
 	 * @param variables
-	 * @return interpolated string
+	 *            the variables to substitute
+	 * @return the interpolated <code>String</code>
 	 */
 	public static String interpolate(String string, Map variables)
 	{

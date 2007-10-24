@@ -20,14 +20,15 @@ package org.apache.wicket.util.string.interpolator;
  * Convenient way of interpolating system properties.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public final class SystemVariableInterpolator extends MapVariableInterpolator
 {
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param string
-	 *            The string to interpolate with system properties
+	 *            a <code>String</code> to interpolate with system properties
 	 */
 	public SystemVariableInterpolator(final String string)
 	{

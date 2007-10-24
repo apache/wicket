@@ -17,29 +17,32 @@
 package org.apache.wicket.util.string.interpolator;
 
 /**
- * Base class for variable interpolators. An interpolator substitutes values into a string. So a
- * variable interpolator substitutes the values of one or more variables into a string.
+ * Base class for variable interpolators. An interpolator substitutes values into a
+ * <code>String</code>. So, a variable interpolator substitutes the values of one or more
+ * variables into a <code>String</code>.
  * <p>
- * The String to interpolate (substitute in) is passed to the VariableInterpolator constructor.
- * Variables are denoted in this string by the syntax ${variableName}. A subclass provides an
- * implementation for the abstract method getValue(String variableName). The toString() method then
- * performs an interpolation by replacing each variable of the form ${variableName} with the value
- * returned by getValue("variableName").
+ * The <code>String</code> to interpolate (substitute into) is passed to the
+ * <code>VariableInterpolator</code>'s constructor. Variables are denoted in this string by the
+ * syntax <code>${variableName}</code>. A subclass provides an implementation for the abstract
+ * method <code>getValue(String variableName)</code>. The <code>toString()</code> method then
+ * performs an interpolation by replacing each variable of the form <code>${variableName}</code>
+ * with the value returned by <code>getValue("variableName")</code>.
  * 
  * @author Jonathan Locke
+ * @since 1.2.6
  */
 public abstract class VariableInterpolator
 {
-	/** The string to interpolate within */
+	/** The <code>String</code> to interpolate into */
 	protected final String string;
 
 	private boolean exceptionOnNullVarValue = false;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param string
-	 *            String to interpolate with variable values
+	 *            a <code>String</code> to interpolate with variable values
 	 */
 	public VariableInterpolator(final String string)
 	{
@@ -47,14 +50,15 @@ public abstract class VariableInterpolator
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * 
 	 * @param string
-	 *            String to interpolate with variable values
+	 *            a <code>String</code> to interpolate with variable values
 	 * @param exceptionOnNullVarValue
-	 *            if true an {@link IllegalStateException} will be thrown if a
-	 *            {@link #getValue(String)} returns null, otherwise the ${varname} string will be
-	 *            left in the <code>string</code> so multiple interpolators can be chained
+	 *            if <code>true</code> an {@link IllegalStateException} will be thrown if
+	 *            {@link #getValue(String)} returns <code>null</code>, otherwise the
+	 *            <code>${varname}</code> string will be left in the <code>String</code> so that
+	 *            multiple interpolators can be chained
 	 */
 	public VariableInterpolator(final String string, boolean exceptionOnNullVarValue)
 	{
@@ -63,11 +67,11 @@ public abstract class VariableInterpolator
 	}
 
 	/**
-	 * Gets a value for a variable name during interpolation
+	 * Retrieves a value for a variable name during interpolation.
 	 * 
 	 * @param variableName
-	 *            The variable
-	 * @return The value
+	 *            a variable name
+	 * @return the value
 	 */
 	protected abstract String getValue(String variableName);
 
@@ -82,9 +86,9 @@ public abstract class VariableInterpolator
 	}
 
 	/**
-	 * Interpolate using variables
+	 * Interpolates using variables.
 	 * 
-	 * @return The interpolated string
+	 * @return the interpolated <code>String</code>
 	 */
 	public String toString()
 	{
