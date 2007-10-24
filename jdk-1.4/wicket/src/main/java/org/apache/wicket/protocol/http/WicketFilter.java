@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -99,9 +100,26 @@ public class WicketFilter implements Filter
 	 * a Portlet context. Value should be true
 	 */
 	private final String PORTLET_ONLY_FILTER = "portletOnlyFilter";
-
-	/* init marker if running in a portlet container context */
-	private Boolean portletContextAvailable;
+	
+	/**
+	 * The name of the optional filter parameter indicating a javax.portlet.PortletContext class should be looked up
+	 * to determine if portlet support should be provided.
+	 */
+	private final String DETECT_PORTLET_CONTEXT = "detectPortletContext";
+	
+	/**
+	 * The name of the optional web.xml context parameter indicating if a portlet context is to be determined
+	 * by looking up the javax.portlet.PortletContext class. Default value is false.
+	 * This context parameter is only queried if the filter parameter DETECT_PORTLET_CONTEXT isn't provided.
+	 * If additionally the context parameter is not specified, a WicketPortlet.properties resource will be looked up
+	 * through the classpath which, if found, is queried for a property with the same name.
+	 */
+	private final String DETECT_PORTLET_CONTEXT_FULL_NAME = "org.apache.wicket.detectPortletContext";
+	
+	/**
+	 * The classpath resource name of an optional WicketPortlet.properties file. 
+	 */
+	private final String WICKET_PORTLET_PROPERTIES = "org/apache/wicket/protocol/http/portlet/WicketPortlet.properties";
 
 	/*
 	 * Delegate for handling Portlet specific filtering. Not instantiated if not running in a
@@ -496,18 +514,9 @@ public class WicketFilter implements Filter
 			portletOnlyFilter = Boolean.valueOf(filterConfig.getInitParameter(PORTLET_ONLY_FILTER))
 					.booleanValue();
 
-			if (portletContextAvailable == null)
+			if (isPortletContextAvailable(filterConfig))
 			{
-				try
-				{
-					Class portletClass = Class.forName("javax.portlet.PortletContext");
-					portletContextAvailable = Boolean.TRUE;
-					filterPortletContext = newWicketFilterPortletContext();
-				}
-				catch (ClassNotFoundException e)
-				{
-					portletContextAvailable = Boolean.FALSE;
-				}
+				filterPortletContext = newWicketFilterPortletContext();
 			}
 			if (filterPortletContext != null)
 			{
@@ -522,6 +531,56 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
 		}
+	}
+	
+	protected boolean isPortletContextAvailable(FilterConfig config) throws ServletException
+	{
+		boolean detectPortletContext = false;
+		String parameter = config.getInitParameter(DETECT_PORTLET_CONTEXT);
+		if (parameter != null)
+		{
+			detectPortletContext = Boolean.valueOf(parameter).booleanValue();
+		}
+		else
+		{
+			parameter = config.getServletContext().getInitParameter(DETECT_PORTLET_CONTEXT_FULL_NAME);
+			if (parameter != null)
+			{
+				detectPortletContext = Boolean.valueOf(parameter).booleanValue();
+			}
+			else
+			{
+				InputStream is = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream(WICKET_PORTLET_PROPERTIES);
+				if (is != null)
+				{
+					try
+					{
+						Properties properties = new Properties();
+						properties.load(is);
+						detectPortletContext = Boolean.valueOf(properties.getProperty(
+								DETECT_PORTLET_CONTEXT_FULL_NAME, "false")).booleanValue();
+					}
+					catch (IOException e)
+					{
+						throw new ServletException(
+								"Failed to load WicketPortlet.properties from classpath", e);
+					}
+				}
+			}
+		}
+		if (detectPortletContext)
+		{
+			try
+			{
+				Class portletClass = Class.forName("javax.portlet.PortletContext");
+				return true;
+			}
+			catch (ClassNotFoundException e)
+			{
+			}
+		}
+		return false;
 	}
 
 	protected WicketFilterPortletContext newWicketFilterPortletContext()
