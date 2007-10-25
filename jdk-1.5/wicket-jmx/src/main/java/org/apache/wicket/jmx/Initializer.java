@@ -61,7 +61,7 @@ public class Initializer implements IInitializer, IDestroyer
 	/**
 	 * List of registered names
 	 */
-	private List<ObjectName> registered = new ArrayList<ObjectName>();
+	private final List<ObjectName> registered = new ArrayList<ObjectName>();
 
 	/**
 	 * @see org.apache.wicket.IDestroyer#destroy(org.apache.wicket.Application)
@@ -95,11 +95,20 @@ public class Initializer implements IInitializer, IDestroyer
 		{
 			String name = application.getName();
 
-			String agentId = System.getProperty("wicket.mbean.server.agentid");
+			String agentId = null;
+			try
+			{
+				agentId = System.getProperty("wicket.mbean.server.agentid");
+			}
+			catch (SecurityException e)
+			{
+				// Ignore - we're not allowed to read this property.
+				log
+						.warn("not allowed to read property wicket.mbean.server.agentid due to security settings; ignoring");
+			}
 			if (agentId != null)
 			{
-				ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
-						.findMBeanServer(agentId);
+				ArrayList<MBeanServer> mbeanServers = MBeanServerFactory.findMBeanServer(agentId);
 				if (!mbeanServers.isEmpty())
 				{
 					mbeanServer = mbeanServers.get(0); // get first
@@ -111,11 +120,20 @@ public class Initializer implements IInitializer, IDestroyer
 			}
 			if (mbeanServer == null)
 			{
-				String impl = System.getProperty("wicket.mbean.server.class");
+				String impl = null;
+				try
+				{
+					System.getProperty("wicket.mbean.server.class");
+				}
+				catch (SecurityException e)
+				{
+					// Ignore - we're not allowed to read this property.
+					log
+							.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
+				}
 				if (impl != null)
 				{
-					ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
-							.findMBeanServer(null);
+					ArrayList<MBeanServer> mbeanServers = MBeanServerFactory.findMBeanServer(null);
 					if (!mbeanServers.isEmpty())
 					{
 						for (MBeanServer mbs : mbeanServers)
