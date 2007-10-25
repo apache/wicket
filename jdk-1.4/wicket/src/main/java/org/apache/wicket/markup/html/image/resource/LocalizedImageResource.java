@@ -91,10 +91,10 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	private ValueMap resourceParameters;
 
 	/** The locale of the image resource */
-	private transient Locale locale;
+	private Locale locale;
 
 	/** The style of the image resource */
-	private transient String style;
+	private String style;
 
 	/**
 	 * Parses image value specifications of the form "[factoryName]:
