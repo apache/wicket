@@ -43,7 +43,7 @@ Wicket.AutoComplete=function(elementId, callbackUrl, preselect){
     var elementCount=0; // number of items on the auto complete list
     var visible=0;		// is the list visible
     var mouseactive=0;	// is mouse selection active
-	var	hidingautocomplete=0;		// are we hiding the autocomplete list
+	var	hidingAutocomplete=0;		// are we hiding the autocomplete list
 
 	// pointers of the browser events
    	var objonkeydown;
