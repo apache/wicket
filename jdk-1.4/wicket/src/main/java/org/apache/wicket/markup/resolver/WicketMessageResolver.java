@@ -125,7 +125,7 @@ public class WicketMessageResolver implements IComponentResolver
 		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 		{
 			final String key = getModelObjectAsString();
-			final String value = getLocalizer().getString(key, this, DEFAULT_VALUE);
+			final String value = getLocalizer().getString(key, getParent(), DEFAULT_VALUE);
 			if (value != null && !DEFAULT_VALUE.equals(value))
 			{
 				replaceComponentTagBody(markupStream, openTag, value.trim());

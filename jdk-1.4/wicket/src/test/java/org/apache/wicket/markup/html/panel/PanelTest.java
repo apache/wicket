@@ -86,6 +86,14 @@ public class PanelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
+	public void testPanel3() throws Exception
+	{
+		executeTest(PanelPage_3.class, "PanelPageExpectedResult_3.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testInlinePanel() throws Exception
 	{
 		executeTest(InlinePanelPage_1.class, "InlinePanelPageExpectedResult_1.html");
