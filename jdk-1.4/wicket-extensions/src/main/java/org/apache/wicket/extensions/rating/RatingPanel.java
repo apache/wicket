@@ -217,7 +217,7 @@ public abstract class RatingPanel extends Panel
 	 */
 	public RatingPanel(String id, int nrOfStars)
 	{
-		this(id, null, 5, true);
+		this(id, null, nrOfStars, true);
 	}
 
 	/**
