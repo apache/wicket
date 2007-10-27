@@ -20,8 +20,6 @@ import junit.framework.TestCase;
 
 /**
  * Test of TagTester
- * 
- * @author Frank Bille (billen)
  */
 public class TagTesterTest extends TestCase
 {
@@ -226,5 +224,28 @@ public class TagTesterTest extends TestCase
 
 		assertFalse(tester.hasChildTag("span"));
 		assertFalse(tester.hasChildTag("p"));
+	}
+
+	/**
+	 * Test getMarkup returns the open-tag + content + close-tag
+	 */
+	public void testGetMarkup()
+	{
+		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
+
+		assertEquals("<span class=\"class2\" id=\"test2\">mock</span>", tagTester.getMarkup());
+	}
+
+	/**
+	 * Test getValue returns the data between the open and close tag.
+	 */
+	public void testGetValue()
+	{
+		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
+		assertEquals("mock", tagTester.getValue());
+
+		// Check that getValue also returns tags if the content of a tag is containing tags
+		TagTester tagTester2 = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
+		assertEquals(tagTester.getMarkup(), tagTester2.getValue());
 	}
 }

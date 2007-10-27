@@ -45,7 +45,6 @@ import org.apache.wicket.util.value.IValueMap;
  *  ...
  * </pre>
  * 
- * @author Frank Bille (billen)
  * @since 1.2.6
  */
 public class TagTester
@@ -321,9 +320,25 @@ public class TagTester
 	{
 		int openPos = openTag.getPos();
 		int closePos = closeTag.getPos() + closeTag.getLength();
-		String markup = parser.getInput(openPos, closePos).toString();
+		String value = parser.getInput(openPos, closePos).toString();
 
-		return markup;
+		return value;
+	}
+
+	/**
+	 * Returns the value for this tag. This includes all data between the open tag and the close
+	 * tag.
+	 * 
+	 * @return all the data between the open tag and the close tag
+	 * @since 1.3
+	 */
+	public String getValue()
+	{
+		int openPos = openTag.getPos() + openTag.getLength();
+		int closePos = closeTag.getPos();
+		String value = parser.getInput(openPos, closePos).toString();
+
+		return value;
 	}
 
 	/**
