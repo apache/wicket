@@ -27,7 +27,8 @@ import org.apache.wicket.model.StringResourceModel;
 /**
  * Label that provides Showing x to y of z message given for a DataTable. The message can be
  * overridden using the <code>NavigatorLabel</code> property key, the default message is used is
- * of the format <code>Showing ${from} to ${to} of ${of}</code>.
+ * of the format <code>Showing ${from} to ${to} of ${of}</code>. The message can also be
+ * configured pragmatically by setting it as the model object of the label.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
