@@ -25,7 +25,9 @@ import org.apache.wicket.model.StringResourceModel;
 
 
 /**
- * Label that provides Showing x to y of z message given for a DataTable
+ * Label that provides Showing x to y of z message given for a DataTable. The message can be
+ * overridden using the <code>NavigatorLabel</code> property key, the default message is used is
+ * of the format <code>Showing ${from} to ${to} of ${of}</code>.
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
@@ -133,7 +135,7 @@ public class NavigatorLabel extends Label
 	private class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
-		private PageableComponent table;
+		private final PageableComponent table;
 
 		/**
 		 * Construct.
