@@ -36,6 +36,7 @@ public class StatelessPage extends WebPage
 	 */
 	public StatelessPage()
 	{
+		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink("indexLink", Index.class));
 		final TextField field = new TextField("textfield", new Model());
@@ -46,6 +47,7 @@ public class StatelessPage extends WebPage
 			/**
 			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 			 */
+			@Override
 			protected void onSubmit()
 			{
 				info("Submitted text: " + field.getModelObject());
