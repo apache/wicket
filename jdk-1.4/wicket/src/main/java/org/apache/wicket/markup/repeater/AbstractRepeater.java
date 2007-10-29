@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -125,23 +126,24 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	{
 		onPopulate();
 
-		// TODO possibly enable this only in development mode
-		Iterator i = iterator();
-		while (i.hasNext())
+		if (Application.get().getConfigurationType().equals(Application.DEVELOPMENT))
 		{
-			Component c = (Component)i.next();
-			Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
-			if (!matcher.matches())
+			Iterator i = iterator();
+			while (i.hasNext())
 			{
-				log.warn("Child component of repeater " + getClass().getName() + ":" + getId() +
-						" has a non-safe child id of " + c.getId() +
-						". Safe child ids must be composed of digits only.");
-				// do not flood the log
-				break;
+				Component c = (Component)i.next();
+				Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
+				if (!matcher.matches())
+				{
+					log.warn("Child component of repeater " + getClass().getName() + ":" + getId() +
+							" has a non-safe child id of " + c.getId() +
+							". Safe child ids must be composed of digits only.");
+					// do not flood the log
+					break;
+				}
+
 			}
-
 		}
-
 		super.onBeforeRender();
 	}
 
