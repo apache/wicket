@@ -662,7 +662,7 @@ public final class PageMap implements Serializable
 							// Remove version the top access version (-1)
 							topPage.getVersion(topAccess.getVersion()-1);
 						}
-						else
+						else if (topPage.getNumericId() != access.id && topPage.getCurrentVersionNumber() != access. version) 
 						{
 							// Remove whole page
 							remove(topPage);
