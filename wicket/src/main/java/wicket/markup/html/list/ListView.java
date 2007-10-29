@@ -526,7 +526,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	protected void internalOnAttach()
 	{
-		if (isVisibleInHierarchy())
+		if (isVisible())
 		{
 			// Get number of items to be displayed
 			final int size = getViewSize();
