@@ -39,7 +39,6 @@ import org.apache.wicket.IClusterable;
  * }
  * </pre>
  * 
- * 
  * @author Juergen Donnerstag
  * @author Matej Knopp
  */
@@ -47,6 +46,9 @@ public interface IHeaderContributor extends IClusterable
 {
 	/**
 	 * Render to the web response whatever the component wants to contribute to the head section.
+	 * 
+	 * TODO: Post 1.3, add component parameter, so that the behaviors dont' have to track component
+	 * instances
 	 * 
 	 * @param response
 	 *            Response object
