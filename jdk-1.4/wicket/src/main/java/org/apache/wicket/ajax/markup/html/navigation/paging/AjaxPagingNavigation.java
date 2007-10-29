@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.ajax.markup.html.navigation.paging;
 
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigationLink;
 
 /**
  * An ajaxified navigation for a PageableListView that holds links to other pages of the
@@ -78,8 +78,7 @@ public class AjaxPagingNavigation
 	 *            the index the link points to
 	 * @return the ajaxified page number link.
 	 */
-	protected PagingNavigationLink newPagingNavigationLink(String id, IPageable pageable,
-			int pageIndex)
+	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageIndex);
 	}

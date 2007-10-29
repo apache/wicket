@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.version.undo.Change;
 
@@ -302,7 +303,7 @@ public class PagingNavigation extends Loop
 		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
-		final PagingNavigationLink link = newPagingNavigationLink("pageLink", pageable, pageIndex);
+		final Link link = newPagingNavigationLink("pageLink", pageable, pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -329,8 +330,7 @@ public class PagingNavigation extends Loop
 	 *            the page index the link points to
 	 * @return the page navigation link.
 	 */
-	protected PagingNavigationLink newPagingNavigationLink(String id, IPageable pageable,
-			int pageIndex)
+	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageIndex)
 	{
 		return new PagingNavigationLink(id, pageable, pageIndex);
 	}
