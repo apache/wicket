@@ -73,12 +73,24 @@ public abstract class WebResource extends Resource
 		if (isCacheable())
 		{
 			// If time is set also set cache headers.
-			response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-			response.setHeader("Cache-Control", "max-age=" + 3600);
+			response.setDateHeader("Expires", System.currentTimeMillis() +
+					(getCacheDuration() * 1000));
+			response.setHeader("Cache-Control", "max-age=" + getCacheDuration());
 		}
 		else
 		{
 			response.setHeader("Cache-Control", "no-cache, must-revalidate");
 		}
+	}
+
+	/**
+	 * default implementation is to cache resources for 1 hour. can be overridden by extension
+	 * classes.
+	 * 
+	 * @return The cache duration in seconds
+	 */
+	protected int getCacheDuration()
+	{
+		return 3600;
 	}
 }
