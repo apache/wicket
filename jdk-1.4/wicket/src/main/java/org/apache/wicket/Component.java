@@ -528,7 +528,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	/**
 	 * Boolean whether this component's model is inheritable.
 	 */
-	private static final int FLAG_INHERITABLE_MODEL = 0x0004;
+	static final int FLAG_INHERITABLE_MODEL = 0x0004;
 
 	/** Versioning boolean */
 	private static final int FLAG_VERSIONED = 0x0008;
@@ -3457,20 +3457,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// IModel model = current.getModel();
 			IModel model = current.getModelImpl();
 
-			if (model instanceof IWrapModel)
+			if (model instanceof IWrapModel && !(model instanceof IComponentInheritedModel))
 			{
 				model = ((IWrapModel)model).getWrappedModel();
 			}
 
 			if (model instanceof IComponentInheritedModel)
 			{
-				// we turn off versioning as we share the model with another
-				// component that is the owner of the model (that component
-				// has to decide whether to version or not
-				// TODO can we really do this?? Model shouldn't versioned but
-				// all other things?? (add/remove)
-				setVersioned(false);
-
 				// return the shared inherited
 				model = ((IComponentInheritedModel)model).wrapOnInheritance(this);
 				setFlag(FLAG_INHERITABLE_MODEL, true);

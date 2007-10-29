@@ -1388,7 +1388,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		dirty();
 		if (mayTrackChangesFor(component, null))
 		{
-			versionManager.componentModelChanging(component);
+			// If it is an inhertiable model then don't call model changing
+			// on the version manager.
+			if (!component.getFlag(FLAG_INHERITABLE_MODEL))
+			{
+				versionManager.componentModelChanging(component);
+			}
 		}
 	}
 
