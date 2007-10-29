@@ -33,6 +33,7 @@ Wicket.DateTime = { }
  */
 Wicket.DateTime.parseDate = function(pattern, value) {
 	numbers = value.match(/(\d+)/g);
+	if (numbers == null) return Number.NaN;
 	var day, month, year;
 	arrayPos = 0;
 	for (i = 0; i < pattern.length; i++) {
@@ -142,7 +143,7 @@ Wicket.DateTime.substituteDate = function(datePattern, date) {
 Wicket.DateTime.showCalendar = function(widget, date, datePattern) {
 	if (date) {
 		date = Wicket.DateTime.parseDate(datePattern, date);
-		if (!isNaN(date.getTime())) { 		
+		if (!isNaN(date) && !isNaN(date.getTime())) { 		
 			widget.select(date);
 			firstDate = widget.getSelectedDates()[0];
 			widget.cfg.setProperty("pagedate", (firstDate.getMonth() + 1) + "/" + firstDate.getFullYear());
