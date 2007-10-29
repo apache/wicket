@@ -32,7 +32,6 @@ import java.util.Map;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.protocol.http.FilePageStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore.ISerializationAwarePageStore;
