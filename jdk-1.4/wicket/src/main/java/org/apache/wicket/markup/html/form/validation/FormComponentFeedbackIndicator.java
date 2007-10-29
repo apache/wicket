@@ -71,8 +71,9 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	/**
 	 * Set the component's visibility according to the existence (or not) of feedback messages
 	 */
-	public void updateFeedback()
+	public void onBeforeRender()
 	{
+		super.onBeforeRender();
 		// Get the messages for the current page
 		setVisible(Session.get().getFeedbackMessages().hasMessage(getFeedbackMessageFilter()));
 	}

@@ -85,8 +85,9 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	/**
 	 * Update the 'visible' flag to indicate the existence (or lack thereof) of feedback messages
 	 */
-	public void updateFeedback()
+	protected void onBeforeRender()
 	{
+		super.onBeforeRender();
 		// Get the messages for the current page
 		visible = Session.get().getFeedbackMessages().messages(getMessagesFilter()).size() != 0;
 	}
