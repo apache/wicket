@@ -22,6 +22,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.portlet.PortletRequestContext;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.converters.BooleanConverter;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
 
@@ -117,6 +119,17 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 			return false;
 		}
 		return super.getStatelessHint();
+	}
+
+	/**
+	 * CheckBox will by default always just use the boolean converter because the implementation
+	 * expects that the string is can be converted to a boolean {@link Strings#isTrue(String)}
+	 * 
+	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
+	 */
+	public IConverter getConverter(Class type)
+	{
+		return BooleanConverter.INSTANCE;
 	}
 
 	/**
