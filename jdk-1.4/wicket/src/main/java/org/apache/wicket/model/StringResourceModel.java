@@ -394,9 +394,8 @@ public class StringResourceModel extends LoadableDetachableModel
 	}
 
 	/**
-	 * Override of the default method to return the resource string represented by this string
-	 * resource model. Useful in debugging and so on, to avoid the explicit need to call the
-	 * getString() method.
+	 * This method just returns debug information, so it won't return the localized string. Please
+	 * use getString() for that.
 	 * 
 	 * @return The string for this model object
 	 */
