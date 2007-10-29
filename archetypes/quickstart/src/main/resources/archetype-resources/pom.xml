@@ -7,6 +7,7 @@
 	<artifactId>${artifactId}</artifactId>
 	<packaging>war</packaging>
 	<version>${version}</version>
+#literal()
 	<!-- TODO project name  -->
 	<name>quickstart</name>
 	<description></description>
@@ -127,4 +128,5 @@
 		<jetty.version>6.1.4</jetty.version>
 	</properties>
 
+#end
 </project>
