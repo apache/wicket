@@ -238,7 +238,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 				{
 					return new BookmarkableListenerInterfaceRequestTarget(requestParameters
 							.getPageMapName(), pageClass, params, requestParameters
-							.getComponentPath(), requestParameters.getInterfaceName());
+							.getComponentPath(), requestParameters.getInterfaceName(),
+							requestParameters.getVersionNumber());
 				}
 			}
 			else

@@ -118,7 +118,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
 					bookmarkablePageClass, parameters, requestParameters.getComponentPath(),
-					requestParameters.getInterfaceName());
+					requestParameters.getInterfaceName(), requestParameters.getVersionNumber());
 		}
 		else
 		{

@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -36,6 +37,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 {
 	private final String componentPath;
 	private final String interfaceName;
+	private final int versionNumber;
 
 	/**
 	 * This constructor is called when a stateless link is clicked on but the page wasn't found in
@@ -47,13 +49,16 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param pageParameters
 	 * @param componentPath
 	 * @param interfaceName
+	 * @param versionNumber
 	 */
 	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class pageClass,
-			PageParameters pageParameters, String componentPath, String interfaceName)
+			PageParameters pageParameters, String componentPath, String interfaceName,
+			int versionNumber)
 	{
 		super(pageMapName, pageClass, pageParameters);
 		this.componentPath = componentPath;
 		this.interfaceName = interfaceName;
+		this.versionNumber = versionNumber;
 	}
 
 	/**
@@ -73,7 +78,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 			RequestListenerInterface listenerInterface)
 	{
 		this(pageMapName, pageClass, pageParameters, component.getPath(), listenerInterface
-				.getName());
+				.getName(), component.getPage().getCurrentVersionNumber());
 
 		int version = component.getPage().getCurrentVersionNumber();
 
@@ -107,7 +112,15 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 
 	public void processEvents(RequestCycle requestCycle)
 	{
-		Page page = getPage(requestCycle);
+		Page page = getPage();
+		if (page == null)
+		{
+			page = Session.get().getPage(getPageMapName(), componentPath, -1);
+			if (page == null)
+			{
+				page = getPage(requestCycle);
+			}
+		}
 		final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 				Component.PATH_SEPARATOR);
 		Component component = page.get(pageRelativeComponentPath);

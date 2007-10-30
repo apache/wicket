@@ -62,7 +62,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			throw new IllegalArgumentException("Argument bookmarkablePageClass must be not null");
 		}
 
-		this.bookmarkablePageClassRef = new WeakReference(bookmarkablePageClass);
+		bookmarkablePageClassRef = new WeakReference(bookmarkablePageClass);
 		this.pageMapName = pageMapName;
 	}
 
@@ -97,7 +97,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
 					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters
-							.getComponentPath(), requestParameters.getInterfaceName());
+							.getComponentPath(), requestParameters.getInterfaceName(),
+					requestParameters.getVersionNumber());
 		}
 		else
 		{
@@ -145,13 +146,13 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 			if (((Class)bookmarkablePageClassRef.get()).equals(target.getPageClass()))
 			{
-				if (this.pageMapName == null)
+				if (pageMapName == null)
 				{
 					return true;
 				}
 				else
 				{
-					return this.pageMapName.equals(target.getPageMapName());
+					return pageMapName.equals(target.getPageMapName());
 				}
 			}
 		}

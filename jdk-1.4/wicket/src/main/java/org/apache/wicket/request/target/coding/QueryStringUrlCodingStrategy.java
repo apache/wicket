@@ -153,7 +153,8 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 		{
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName,
 					(Class)bookmarkablePageClassRef.get(), parameters, requestParameters
-							.getComponentPath(), requestParameters.getInterfaceName());
+							.getComponentPath(), requestParameters.getInterfaceName(),
+					requestParameters.getVersionNumber());
 		}
 		else
 		{

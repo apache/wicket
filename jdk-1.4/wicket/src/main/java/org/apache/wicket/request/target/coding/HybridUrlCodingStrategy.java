@@ -186,7 +186,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName, (Class)pageClassRef
 					.get(), parameters, requestParameters.getComponentPath(), requestParameters
-					.getInterfaceName());
+					.getInterfaceName(), requestParameters.getVersionNumber());
 		}
 		else if (pageId == null)
 		{
