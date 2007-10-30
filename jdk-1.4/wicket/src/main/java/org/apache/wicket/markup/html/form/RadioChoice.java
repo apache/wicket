@@ -426,8 +426,15 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
 			Class objectClass = displayValue == null ? null : displayValue.getClass();
 			// Get label for choice
-			final String label = getConverter(objectClass).convertToString(displayValue,
-					getLocale());
+			String label = "";
+			if (objectClass != null && objectClass != String.class)
+			{
+				label = getConverter(objectClass).convertToString(displayValue, getLocale());
+			}
+			else if (displayValue != null)
+			{
+				label = displayValue.toString();
+			}
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know

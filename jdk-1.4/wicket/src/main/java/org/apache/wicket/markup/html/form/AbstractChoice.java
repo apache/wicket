@@ -373,8 +373,15 @@ abstract class AbstractChoice extends FormComponent
 	{
 		Object objectValue = renderer.getDisplayValue(choice);
 		Class objectClass = objectValue == null ? null : objectValue.getClass();
-		final String displayValue = getConverter(objectClass).convertToString(objectValue,
-				getLocale());
+		String displayValue = "";
+		if (objectClass != null && objectClass != String.class)
+		{
+			displayValue = getConverter(objectClass).convertToString(objectValue, getLocale());
+		}
+		else if (objectValue != null)
+		{
+			displayValue = objectValue.toString();
+		}
 		buffer.append("\n<option ");
 		if (isSelected(choice, index, selected))
 		{
