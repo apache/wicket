@@ -46,16 +46,20 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * 
  * @author almaw
  */
-public class ResourceTestPage extends WebPage {
+public class ResourceTestPage extends WebPage
+{
 
 	public static final int IMAGES_PER_PAGE = 20;
 
-	public ResourceTestPage() {
+	public ResourceTestPage()
+	{
 		List list = Arrays.asList(new Object[IMAGES_PER_PAGE]);
-		add(new ListView("listView", list) {
+		add(new ListView("listView", list)
+		{
 
 			@Override
-			protected void populateItem(ListItem item) {
+			protected void populateItem(ListItem item)
+			{
 				final Random random = new Random();
 				BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
 				Graphics gfx = image.getGraphics();
@@ -66,44 +70,58 @@ public class ResourceTestPage extends WebPage {
 				// Write it into a byte array as a JPEG.
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
-				try {
+				try
+				{
 					encoder.encode(image);
-				} catch (IOException e) {
+				}
+				catch (IOException e)
+				{
 					throw new WicketRuntimeException(e);
 				}
 				final byte[] imageData = baos.toByteArray();
 
-				item.add(new Image("image", new WebResource() {
+				item.add(new Image("image", new WebResource()
+				{
 
 					@Override
-					public IResourceStream getResourceStream() {
-						return new IResourceStream() {
+					public IResourceStream getResourceStream()
+					{
+						return new IResourceStream()
+						{
 
-							public Time lastModifiedTime() {
+							public Time lastModifiedTime()
+							{
 								return Time.now();
 							}
 
-							public void setLocale(Locale locale) {
+							public void setLocale(Locale locale)
+							{
 							}
 
-							public long length() {
+							public long length()
+							{
 								return imageData.length;
 							}
 
-							public Locale getLocale() {
+							public Locale getLocale()
+							{
 								return null;
 							}
 
 							// Make a 16x16 randomly background-coloured JPEG.
-							public InputStream getInputStream() throws ResourceStreamNotFoundException {
+							public InputStream getInputStream()
+									throws ResourceStreamNotFoundException
+							{
 								return new ByteArrayInputStream(imageData);
 							}
 
-							public String getContentType() {
+							public String getContentType()
+							{
 								return "image/jpeg";
 							}
 
-							public void close() throws IOException {
+							public void close() throws IOException
+							{
 							}
 
 						};
