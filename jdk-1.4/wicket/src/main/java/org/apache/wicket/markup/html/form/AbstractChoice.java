@@ -385,7 +385,7 @@ abstract class AbstractChoice extends FormComponent
 			buffer.append("disabled=\"disabled\" ");
 		}
 		buffer.append("value=\"");
-		buffer.append(renderer.getIdValue(choice, index));
+		buffer.append(Strings.escapeMarkup(renderer.getIdValue(choice, index)));
 		buffer.append("\">");
 
 		String display = displayValue;
