@@ -217,7 +217,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 	 */
 	public final boolean isStateless()
 	{
-		return resource == null;
+		return resourceReference != null;
 	}
 
 	/**
