@@ -59,20 +59,25 @@ import org.apache.wicket.util.convert.MaskConverter;
 import org.apache.wicket.validation.validator.NumberValidator;
 import org.apache.wicket.version.undo.Change;
 
-public class Home extends WebPage {
+public class Home extends WebPage
+{
 
-	private class ActionPanel extends Panel {
+	private class ActionPanel extends Panel
+	{
 		/**
 		 * @param id
 		 *            component id
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(String id, IModel model) {
+		public ActionPanel(String id, IModel model)
+		{
 			super(id, model);
-			add(new Link("select") {
-				public void onClick() {
-					Home.this.selected = (Contact) getParent().getModelObject();
+			add(new Link("select")
+			{
+				public void onClick()
+				{
+					Home.this.selected = (Contact)getParent().getModelObject();
 				}
 			});
 		}
@@ -81,19 +86,23 @@ public class Home extends WebPage {
 	/**
 	 * Form for collecting input.
 	 */
-	private class InputForm extends Form {
+	private class InputForm extends Form
+	{
 		/**
 		 * Construct.
 		 * 
 		 * @param name
 		 *            Component name
 		 */
-		public InputForm(String name) {
+		public InputForm(String name)
+		{
 			super(name, new CompoundPropertyModel(new FormInputModel()));
 			add(new LocaleDropDownChoice("localeSelect"));
-			add(new Link("defaultLocaleLink") {
-				public void onClick() {
-					WebRequest request = (WebRequest) getRequest();
+			add(new Link("defaultLocaleLink")
+			{
+				public void onClick()
+				{
+					WebRequest request = (WebRequest)getRequest();
 					setLocale(request.getLocale());
 				}
 			});
@@ -107,7 +116,8 @@ public class Home extends WebPage {
 			add(dateLabel);
 			TextField datePropertyTextField = new TextField("dateProperty", Date.class);
 			add(datePropertyTextField);
-			add(new TextField("integerInRangeProperty", Integer.class).add(NumberValidator.range(0, 100)));
+			add(new TextField("integerInRangeProperty", Integer.class).add(NumberValidator.range(0,
+					100)));
 			add(new CheckBox("booleanProperty"));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
@@ -115,8 +125,10 @@ public class Home extends WebPage {
 
 			RadioGroup group = new RadioGroup("numbersGroup");
 			add(group);
-			ListView persons = new ListView("numbers", NUMBERS) {
-				protected void populateItem(ListItem item) {
+			ListView persons = new ListView("numbers", NUMBERS)
+			{
+				protected void populateItem(ListItem item)
+				{
 					item.add(new Radio("radio", item.getModel()));
 					item.add(new Label("number", item.getModelObjectAsString()));
 				};
@@ -125,8 +137,10 @@ public class Home extends WebPage {
 
 			CheckGroup checks = new CheckGroup("numbersCheckGroup");
 			add(checks);
-			ListView checksList = new ListView("numbers", NUMBERS) {
-				protected void populateItem(ListItem item) {
+			ListView checksList = new ListView("numbers", NUMBERS)
+			{
+				protected void populateItem(ListItem item)
+				{
 					item.add(new Check("check", item.getModel()));
 					item.add(new Label("number", item.getModelObjectAsString()));
 				};
@@ -135,17 +149,24 @@ public class Home extends WebPage {
 
 			add(new ListMultipleChoice("siteSelection", SITES));
 
-			add(new TextField("urlProperty", URL.class) {
-				public IConverter getConverter(Class clazz) {
-					return new IConverter() {
+			add(new TextField("urlProperty", URL.class)
+			{
+				public IConverter getConverter(Class clazz)
+				{
+					return new IConverter()
+					{
 						/**
 						 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
 						 *      java.util.Locale)
 						 */
-						public Object convertToObject(String value, Locale locale) {
-							try {
+						public Object convertToObject(String value, Locale locale)
+						{
+							try
+							{
 								return new URL(value.toString());
-							} catch (MalformedURLException e) {
+							}
+							catch (MalformedURLException e)
+							{
 								throw new ConversionException("'" + value + "' is not a valid URL");
 							}
 						}
@@ -154,15 +175,18 @@ public class Home extends WebPage {
 						 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
 						 *      java.util.Locale)
 						 */
-						public String convertToString(Object value, Locale locale) {
+						public String convertToString(Object value, Locale locale)
+						{
 							return value != null ? value.toString() : null;
 						}
 					};
 				}
 			});
 
-			add(new TextField("phoneNumberUS", UsPhoneNumber.class) {
-				public IConverter getConverter(Class clazz) {
+			add(new TextField("phoneNumberUS", UsPhoneNumber.class)
+			{
+				public IConverter getConverter(Class clazz)
+				{
 					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
 				}
 			});
@@ -171,8 +195,10 @@ public class Home extends WebPage {
 
 			add(new ImageButton("saveButton"));
 
-			add(new Link("resetButtonLink") {
-				public void onClick() {
+			add(new Link("resetButtonLink")
+			{
+				public void onClick()
+				{
 					InputForm.this.modelChanged();
 				}
 			}.add(new Image("resetButtonImage")));
@@ -181,25 +207,29 @@ public class Home extends WebPage {
 		/**
 		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
 		 */
-		public void onSubmit() {
+		public void onSubmit()
+		{
 			info("Saved model " + getModelObject());
 		}
 	}
 
 	/** list view to be nested in the form. */
-	private static final class LinesListView extends ListView {
+	private static final class LinesListView extends ListView
+	{
 
 		/**
 		 * Construct.
 		 * 
 		 * @param id
 		 */
-		public LinesListView(String id) {
+		public LinesListView(String id)
+		{
 			super(id);
 			setReuseItems(true);
 		}
 
-		protected void populateItem(ListItem item) {
+		protected void populateItem(ListItem item)
+		{
 			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
 		}
 	}
@@ -207,18 +237,21 @@ public class Home extends WebPage {
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoiceRenderer extends ChoiceRenderer {
+	private final class LocaleChoiceRenderer extends ChoiceRenderer
+	{
 		/**
 		 * Constructor.
 		 */
-		public LocaleChoiceRenderer() {
+		public LocaleChoiceRenderer()
+		{
 		}
 
 		/**
 		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
-		public Object getDisplayValue(Object object) {
-			Locale locale = (Locale) object;
+		public Object getDisplayValue(Object object)
+		{
+			Locale locale = (Locale)object;
 			String display = locale.getDisplayName(getLocale());
 			return display;
 		}
@@ -227,14 +260,16 @@ public class Home extends WebPage {
 	/**
 	 * Dropdown with Locales.
 	 */
-	private final class LocaleDropDownChoice extends DropDownChoice {
+	private final class LocaleDropDownChoice extends DropDownChoice
+	{
 		/**
 		 * Construct.
 		 * 
 		 * @param id
 		 *            component id
 		 */
-		public LocaleDropDownChoice(String id) {
+		public LocaleDropDownChoice(String id)
+		{
 			super(id, LOCALES, new LocaleChoiceRenderer());
 			setModel(new PropertyModel(Home.this, "locale"));
 		}
@@ -242,41 +277,49 @@ public class Home extends WebPage {
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
-		public void onSelectionChanged(Object newSelection) {
+		public void onSelectionChanged(Object newSelection)
+		{
 		}
 
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 		 */
-		protected boolean wantOnSelectionChangedNotifications() {
+		protected boolean wantOnSelectionChangedNotifications()
+		{
 			return true;
 		}
 	}
 
 	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH, new Locale("nl"), Locale.GERMAN,
-			Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE, new Locale("pt", "BR"), new Locale("fa", "IR"),
-			new Locale("da", "DK") });
+	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
+			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
+			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK") });
 
 	/** available sites for the multiple select. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+			"Java.Net" });
 
 	/** available numbers for the radio selection. */
 	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
 
 	private Contact selected;
 
-	public Home() {
+	public Home()
+	{
 
-		add(new Link("link") {
+		add(new Link("link")
+		{
 			int i = 0;
 
 			@Override
-			public void onClick() {
+			public void onClick()
+			{
 				i++;
-				addStateChange(new Change() {
+				addStateChange(new Change()
+				{
 					@Override
-					public void undo() {
+					public void undo()
+					{
 					}
 				});
 			}
@@ -284,9 +327,11 @@ public class Home extends WebPage {
 
 		add(new Label("selectedLabel", new PropertyModel(this, "selectedContactLabel")));
 
-		add(new DataView("simple", new ContactDataProvider()) {
-			protected void populateItem(final Item item) {
-				Contact contact = (Contact) item.getModelObject();
+		add(new DataView("simple", new ContactDataProvider())
+		{
+			protected void populateItem(final Item item)
+			{
+				Contact contact = (Contact)item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
 				item.add(new Label("contactid", String.valueOf(contact.getId())));
 				item.add(new Label("firstname", contact.getFirstName()));
@@ -294,8 +339,10 @@ public class Home extends WebPage {
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel() {
-					public Object getObject() {
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+				{
+					public Object getObject()
+					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
 				}));
@@ -310,10 +357,14 @@ public class Home extends WebPage {
 	/**
 	 * @return string representation of selceted contact property
 	 */
-	public String getSelectedContactLabel() {
-		if (selected == null) {
+	public String getSelectedContactLabel()
+	{
+		if (selected == null)
+		{
 			return "No Contact Selected";
-		} else {
+		}
+		else
+		{
 			return selected.getFirstName() + " " + selected.getLastName();
 		}
 	}
@@ -325,8 +376,10 @@ public class Home extends WebPage {
 	 * @param locale
 	 *            The new locale
 	 */
-	public void setLocale(Locale locale) {
-		if (locale != null) {
+	public void setLocale(Locale locale)
+	{
+		if (locale != null)
+		{
 			getSession().setLocale(locale);
 		}
 	}

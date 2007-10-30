@@ -27,9 +27,11 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author eelcohillenius
  */
-public class CommandRunner implements Runnable {
+public class CommandRunner implements Runnable
+{
 
-	public static interface CommandRunnerObserver {
+	public static interface CommandRunnerObserver
+	{
 
 		void onDone(CommandRunner runner);
 
@@ -50,7 +52,8 @@ public class CommandRunner implements Runnable {
 	 * @param commands
 	 * @param client
 	 */
-	public CommandRunner(List<Command> commands, HttpClient client, CommandRunnerObserver observer) {
+	public CommandRunner(List<Command> commands, HttpClient client, CommandRunnerObserver observer)
+	{
 		this.commands = commands;
 		this.client = client;
 		this.observer = observer;
@@ -61,20 +64,27 @@ public class CommandRunner implements Runnable {
 	 * 
 	 * @return the HTTP client
 	 */
-	public HttpClient getClient() {
+	public HttpClient getClient()
+	{
 		return this.client;
 	}
 
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run() {
+	public void run()
+	{
 
-		for (Command command : commands) {
-			try {
+		for (Command command : commands)
+		{
+			try
+			{
 				command.execute(this);
-			} catch (Exception e) {
-				log.fatal("execution of command " + command + ", thread " + Thread.currentThread() + " failed", e);
+			}
+			catch (Exception e)
+			{
+				log.fatal("execution of command " + command + ", thread " + Thread.currentThread()
+						+ " failed", e);
 				observer.onError(this, e);
 				return;
 			}

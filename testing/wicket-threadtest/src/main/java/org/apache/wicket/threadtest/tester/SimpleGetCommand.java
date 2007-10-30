@@ -25,7 +25,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.wicket.util.io.Streams;
 
-public class SimpleGetCommand extends AbstractGetCommand {
+public class SimpleGetCommand extends AbstractGetCommand
+{
 
 	private static final Log log = LogFactory.getLog(SimpleGetCommand.class);
 
@@ -39,7 +40,8 @@ public class SimpleGetCommand extends AbstractGetCommand {
 	 * @param iterations
 	 *            number of executions of the urls
 	 */
-	public SimpleGetCommand(List<String> urls, int iterations) {
+	public SimpleGetCommand(List<String> urls, int iterations)
+	{
 		super(urls, iterations);
 	}
 
@@ -51,7 +53,8 @@ public class SimpleGetCommand extends AbstractGetCommand {
 	 * @param iterations
 	 *            number of executions of the urls
 	 */
-	public SimpleGetCommand(String url, int iterations) {
+	public SimpleGetCommand(String url, int iterations)
+	{
 		super(Arrays.asList(new String[] { url }), iterations);
 	}
 
@@ -60,7 +63,8 @@ public class SimpleGetCommand extends AbstractGetCommand {
 	 * 
 	 * @return printResponse
 	 */
-	public boolean getPrintResponse() {
+	public boolean getPrintResponse()
+	{
 		return printResponse;
 	}
 
@@ -70,7 +74,8 @@ public class SimpleGetCommand extends AbstractGetCommand {
 	 * @param printResponse
 	 *            printResponse
 	 */
-	public void setPrintResponse(boolean printResponse) {
+	public void setPrintResponse(boolean printResponse)
+	{
 		this.printResponse = printResponse;
 	}
 
@@ -79,22 +84,28 @@ public class SimpleGetCommand extends AbstractGetCommand {
 	 *      java.lang.String)
 	 */
 	@Override
-	protected void doGet(HttpClient client, String url) throws Exception {
+	protected void doGet(HttpClient client, String url) throws Exception
+	{
 
 		GetMethod method = new GetMethod(url);
 		method.setFollowRedirects(true);
-		try {
+		try
+		{
 			int code = client.executeMethod(method);
-			if (code != 200) {
+			if (code != 200)
+			{
 				log.error("ERROR! code: " + code);
 				log.error(Streams.readString(method.getResponseBodyAsStream()));
 				// TODO rather than failing, just gather statistics
 				// throw new Exception(new String(method.getResponseBody()));
 			}
-			if (getPrintResponse()) {
+			if (getPrintResponse())
+			{
 				log.info("\n" + Streams.readString(method.getResponseBodyAsStream()));
 			}
-		} finally {
+		}
+		finally
+		{
 			method.releaseConnection();
 		}
 	}

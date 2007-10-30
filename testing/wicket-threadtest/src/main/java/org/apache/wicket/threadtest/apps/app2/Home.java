@@ -21,14 +21,18 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
-public class Home extends WebPage {
+public class Home extends WebPage
+{
 
-	public Home() {
+	public Home()
+	{
 
-		IModel model = new AbstractReadOnlyModel() {
+		IModel model = new AbstractReadOnlyModel()
+		{
 
 			@Override
-			public Object getObject() {
+			public Object getObject()
+			{
 				return Pool.getConnection().getData();
 			}
 		};

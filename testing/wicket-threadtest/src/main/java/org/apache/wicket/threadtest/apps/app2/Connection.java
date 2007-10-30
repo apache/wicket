@@ -18,21 +18,26 @@ package org.apache.wicket.threadtest.apps.app2;
 
 import org.apache.wicket.Session;
 
-public class Connection {
+public class Connection
+{
 
 	private final String id;
 
-	public Connection(String id) {
+	public Connection(String id)
+	{
 		this.id = id;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return ((Connection) obj).id.equals(id);
+	public boolean equals(Object obj)
+	{
+		return ((Connection)obj).id.equals(id);
 	}
 
-	public String getData() {
-		return "data[Connection=" + id + ",Session=" + Session.get() + ",Thread=" + Thread.currentThread() + "]";
+	public String getData()
+	{
+		return "data[Connection=" + id + ",Session=" + Session.get() + ",Thread="
+				+ Thread.currentThread() + "]";
 	}
 
 	/**
@@ -40,17 +45,20 @@ public class Connection {
 	 * 
 	 * @return id
 	 */
-	public String getId() {
+	public String getId()
+	{
 		return id;
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		return id.hashCode();
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "Connection[" + id + "]";
 	}
 }

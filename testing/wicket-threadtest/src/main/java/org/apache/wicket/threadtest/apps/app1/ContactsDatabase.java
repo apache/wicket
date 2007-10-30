@@ -29,7 +29,8 @@ import java.util.Map;
  * @author igor
  * 
  */
-public class ContactsDatabase {
+public class ContactsDatabase
+{
 
 	private List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
@@ -47,8 +48,10 @@ public class ContactsDatabase {
 	 * @param count
 	 *            number of contacts to generate at startup
 	 */
-	public ContactsDatabase(int count) {
-		for (int i = 0; i < count; i++) {
+	public ContactsDatabase(int count)
+	{
+		for (int i = 0; i < count; i++)
+		{
 			add(ContactGenerator.getInstance().generate());
 		}
 		updateIndecies();
@@ -59,8 +62,9 @@ public class ContactsDatabase {
 	 * 
 	 * @param contact
 	 */
-	public void delete(final Contact contact) {
-		Contact c = (Contact) map.remove(new Long(contact.getId()));
+	public void delete(final Contact contact)
+	{
+		Contact c = (Contact)map.remove(new Long(contact.getId()));
 
 		fnameIdx.remove(contact);
 		lnameIdx.remove(contact);
@@ -79,7 +83,8 @@ public class ContactsDatabase {
 	 * @param sortAsc
 	 * @return list of contacts
 	 */
-	public List find(int first, int count, String sortProperty, boolean sortAsc) {
+	public List find(int first, int count, String sortProperty, boolean sortAsc)
+	{
 		List sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
 		return sublist;
 	}
@@ -90,9 +95,11 @@ public class ContactsDatabase {
 	 * @param id
 	 * @return contact
 	 */
-	public Contact get(long id) {
-		Contact c = (Contact) map.get(new Long(id));
-		if (c == null) {
+	public Contact get(long id)
+	{
+		Contact c = (Contact)map.get(new Long(id));
+		if (c == null)
+		{
 			throw new RuntimeException("contact with id [" + id + "] not found in the database");
 		}
 		return c;
@@ -101,7 +108,8 @@ public class ContactsDatabase {
 	/**
 	 * @return number of contacts in the database
 	 */
-	public int getCount() {
+	public int getCount()
+	{
 		return fnameIdx.size();
 	}
 
@@ -110,17 +118,23 @@ public class ContactsDatabase {
 	 * 
 	 * @param contact
 	 */
-	public void save(final Contact contact) {
-		if (contact.getId() == 0) {
+	public void save(final Contact contact)
+	{
+		if (contact.getId() == 0)
+		{
 			contact.setId(ContactGenerator.getInstance().generateId());
 			add(contact);
 			updateIndecies();
-		} else {
-			throw new IllegalArgumentException("contact [" + contact.getFirstName() + "] is already persistent");
+		}
+		else
+		{
+			throw new IllegalArgumentException("contact [" + contact.getFirstName()
+					+ "] is already persistent");
 		}
 	}
 
-	protected void add(final Contact contact) {
+	protected void add(final Contact contact)
+	{
 		map.put(new Long(contact.getId()), contact);
 		fnameIdx.add(contact);
 		lnameIdx.add(contact);
@@ -128,39 +142,54 @@ public class ContactsDatabase {
 		lnameDescIdx.add(contact);
 	}
 
-	protected List getIndex(String prop, boolean asc) {
-		if (prop == null) {
+	protected List getIndex(String prop, boolean asc)
+	{
+		if (prop == null)
+		{
 			return fnameIdx;
 		}
-		if (prop.equals("firstName")) {
+		if (prop.equals("firstName"))
+		{
 			return (asc) ? fnameIdx : fnameDescIdx;
-		} else if (prop.equals("lastName")) {
+		}
+		else if (prop.equals("lastName"))
+		{
 			return (asc) ? lnameIdx : lnameDescIdx;
 		}
-		throw new RuntimeException("uknown sort option [" + prop + "]. valid options: [firstName] , [lastName]");
+		throw new RuntimeException("uknown sort option [" + prop
+				+ "]. valid options: [firstName] , [lastName]");
 	}
 
-	private void updateIndecies() {
-		Collections.sort(fnameIdx, new Comparator<Contact>() {
-			public int compare(Contact arg0, Contact arg1) {
+	private void updateIndecies()
+	{
+		Collections.sort(fnameIdx, new Comparator<Contact>()
+		{
+			public int compare(Contact arg0, Contact arg1)
+			{
 				return arg0.getFirstName().compareTo(arg1.getFirstName());
 			}
 		});
 
-		Collections.sort(lnameIdx, new Comparator<Contact>() {
-			public int compare(Contact arg0, Contact arg1) {
+		Collections.sort(lnameIdx, new Comparator<Contact>()
+		{
+			public int compare(Contact arg0, Contact arg1)
+			{
 				return arg0.getLastName().compareTo(arg1.getLastName());
 			}
 		});
 
-		Collections.sort(fnameDescIdx, new Comparator<Contact>() {
-			public int compare(Contact arg0, Contact arg1) {
+		Collections.sort(fnameDescIdx, new Comparator<Contact>()
+		{
+			public int compare(Contact arg0, Contact arg1)
+			{
 				return arg1.getFirstName().compareTo(arg0.getFirstName());
 			}
 		});
 
-		Collections.sort(lnameDescIdx, new Comparator<Contact>() {
-			public int compare(Contact arg0, Contact arg1) {
+		Collections.sort(lnameDescIdx, new Comparator<Contact>()
+		{
+			public int compare(Contact arg0, Contact arg1)
+			{
 				return arg1.getLastName().compareTo(arg0.getLastName());
 			}
 		});

@@ -21,27 +21,33 @@ import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.ISessionStore;
 
-public class TestApp2 extends WebApplication {
+public class TestApp2 extends WebApplication
+{
 
-	public static TestApp2 get() {
-		return (TestApp2) Application.get();
+	public static TestApp2 get()
+	{
+		return (TestApp2)Application.get();
 	}
 
-	public TestApp2() {
+	public TestApp2()
+	{
 	}
 
 	@Override
-	public Class getHomePage() {
+	public Class getHomePage()
+	{
 		return Home.class;
 	}
 
 	@Override
-	protected void init() {
+	protected void init()
+	{
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 
 	@Override
-	protected ISessionStore newSessionStore() {
+	protected ISessionStore newSessionStore()
+	{
 		return super.newSessionStore();
 	}
 }

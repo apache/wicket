@@ -30,7 +30,8 @@ import org.apache.wicket.util.lang.Objects;
 /**
  * @author eelcohillenius
  */
-public class App1Test1 {
+public class App1Test1
+{
 
 	private static final Log log = LogFactory.getLog(App1Test1.class);
 
@@ -38,11 +39,12 @@ public class App1Test1 {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception
+	{
 
 		List<String> gets = Arrays.asList(new String[] {
-				"/app1/?wicket:bookmarkablePage=:org.apache.wicket.threadtest.apps.app1.Home" ,
-				"/app1/?wicket:interface=:${iteration}:link::ILinkListener::" ,
+				"/app1/?wicket:bookmarkablePage=:org.apache.wicket.threadtest.apps.app1.Home",
+				"/app1/?wicket:interface=:${iteration}:link::ILinkListener::",
 				"/app1/?wicket:interface=:${iteration}:link:1:ILinkListener::",
 				"/app1/?wicket:interface=:${iteration}:link:2:ILinkListener::" });
 

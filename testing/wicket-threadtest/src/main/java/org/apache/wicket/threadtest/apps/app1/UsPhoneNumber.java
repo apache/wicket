@@ -26,7 +26,8 @@ import java.io.Serializable;
  * 
  * @author Eelco Hillenius
  */
-public class UsPhoneNumber implements Serializable {
+public class UsPhoneNumber implements Serializable
+{
 	private String number;
 
 	/**
@@ -34,7 +35,8 @@ public class UsPhoneNumber implements Serializable {
 	 * 
 	 * @param number
 	 */
-	public UsPhoneNumber(String number) {
+	public UsPhoneNumber(String number)
+	{
 		this.number = number;
 	}
 
@@ -43,7 +45,8 @@ public class UsPhoneNumber implements Serializable {
 	 * 
 	 * @return text
 	 */
-	public String getNumber() {
+	public String getNumber()
+	{
 		return number;
 	}
 
@@ -53,14 +56,16 @@ public class UsPhoneNumber implements Serializable {
 	 * @param number
 	 *            text
 	 */
-	public void setNumber(String number) {
+	public void setNumber(String number)
+	{
 		this.number = number;
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return number;
 	}
 }

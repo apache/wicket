@@ -21,7 +21,8 @@ import java.util.List;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.wicket.util.string.Strings;
 
-public abstract class AbstractGetCommand extends AbstractCommand {
+public abstract class AbstractGetCommand extends AbstractCommand
+{
 
 	/**
 	 * Construct.
@@ -31,21 +32,26 @@ public abstract class AbstractGetCommand extends AbstractCommand {
 	 * @param iterations
 	 *            number of executions of the urls
 	 */
-	public AbstractGetCommand(List<String> urls, int iterations) {
+	public AbstractGetCommand(List<String> urls, int iterations)
+	{
 		super(urls, iterations);
 	}
 
 	/**
 	 * @see org.apache.wicket.threadtest.tester.Command#execute(CommandRunner)
 	 */
-	public void execute(CommandRunner runner) throws Exception {
+	public void execute(CommandRunner runner) throws Exception
+	{
 
 		int iterations = getIterations();
-		for (int i = 0; i < iterations; i++) {
+		for (int i = 0; i < iterations; i++)
+		{
 			List<String> urls = getUrls();
-			for (String url : urls) {
+			for (String url : urls)
+			{
 
-				String modUrl = Strings.replaceAll(url, "${iteration}", String.valueOf(i)).toString();
+				String modUrl = Strings.replaceAll(url, "${iteration}", String.valueOf(i))
+						.toString();
 				doGet(runner.getClient(), modUrl);
 			}
 		}

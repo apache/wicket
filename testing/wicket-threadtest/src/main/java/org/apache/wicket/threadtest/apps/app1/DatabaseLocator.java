@@ -22,11 +22,13 @@ package org.apache.wicket.threadtest.apps.app1;
  * @author igor
  * 
  */
-public class DatabaseLocator {
+public class DatabaseLocator
+{
 	/**
 	 * @return contacts database
 	 */
-	public static ContactsDatabase getDatabase() {
+	public static ContactsDatabase getDatabase()
+	{
 		return TestApp1.get().getContactsDB();
 	}
 }

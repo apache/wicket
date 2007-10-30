@@ -28,22 +28,25 @@ import javax.servlet.ServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class TestFilter implements Filter {
+public class TestFilter implements Filter
+{
 
 	private static final Log log = LogFactory.getLog(TestFilter.class);
 
 	/**
 	 * @see javax.servlet.Filter#destroy()
 	 */
-	public void destroy() {
+	public void destroy()
+	{
 	}
 
 	/**
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException
+	{
 
 		chain.doFilter(request, response);
 
@@ -53,7 +56,8 @@ public class TestFilter implements Filter {
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
-	public void init(FilterConfig config) throws ServletException {
+	public void init(FilterConfig config) throws ServletException
+	{
 	}
 
 }

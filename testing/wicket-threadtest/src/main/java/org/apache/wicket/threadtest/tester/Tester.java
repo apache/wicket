@@ -34,13 +34,15 @@ import org.mortbay.jetty.webapp.WebAppContext;
 /**
  * @author eelcohillenius
  */
-public final class Tester implements CommandRunnerObserver {
+public final class Tester implements CommandRunnerObserver
+{
 
 	private static final Log log = LogFactory.getLog(Tester.class);
 
 	private static HttpClientParams params;
 
-	static {
+	static
+	{
 		params = new HttpClientParams();
 		params.setParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 	}
@@ -50,20 +52,28 @@ public final class Tester implements CommandRunnerObserver {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		// start server on its own
 		int port = 8090;
-		if (args.length > 0) {
+		if (args.length > 0)
+		{
 			port = Integer.valueOf(args[0]);
 		}
 		Server server = startServer(port);
-		try {
+		try
+		{
 			server.start();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-			try {
+			try
+			{
 				server.stop();
-			} catch (Exception e1) {
+			}
+			catch (Exception e1)
+			{
 				e1.printStackTrace();
 			}
 			System.exit(1);
@@ -76,15 +86,19 @@ public final class Tester implements CommandRunnerObserver {
 	 * @param port
 	 * @return server handle
 	 */
-	private static Server startServer(int port) {
+	private static Server startServer(int port)
+	{
 		Server server;
 		// start up server
 		server = new Server(port);
 		WebAppContext ctx = new WebAppContext("./src/main/webapp", "/");
 		server.addHandler(ctx);
-		try {
+		try
+		{
 			server.start();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			throw new RuntimeException(e);
 		}
 		return server;
@@ -119,7 +133,8 @@ public final class Tester implements CommandRunnerObserver {
 	 *            false, the test behaves like one client issuing multiple
 	 *            concurrent requests
 	 */
-	public Tester(Command command, int numberOfThreads, boolean multipleSessions) {
+	public Tester(Command command, int numberOfThreads, boolean multipleSessions)
+	{
 		this(Arrays.asList(new Command[] { command }), numberOfThreads, multipleSessions);
 	}
 
@@ -136,7 +151,8 @@ public final class Tester implements CommandRunnerObserver {
 	 *            false, the test behaves like one client issuing multiple
 	 *            concurrent requests
 	 */
-	public Tester(List<Command> commands, int numberOfThreads, boolean multipleSessions) {
+	public Tester(List<Command> commands, int numberOfThreads, boolean multipleSessions)
+	{
 		this.commands = commands;
 		this.numberOfThreads = numberOfThreads;
 		this.multipleSessions = multipleSessions;
@@ -147,7 +163,8 @@ public final class Tester implements CommandRunnerObserver {
 	 * 
 	 * @return host
 	 */
-	public String getHost() {
+	public String getHost()
+	{
 		return host;
 	}
 
@@ -156,16 +173,19 @@ public final class Tester implements CommandRunnerObserver {
 	 * 
 	 * @return port
 	 */
-	public int getPort() {
+	public int getPort()
+	{
 		return port;
 	}
 
-	public synchronized void onDone(CommandRunner runner) {
+	public synchronized void onDone(CommandRunner runner)
+	{
 		activeThreads--;
 		notifyAll();
 	}
 
-	public synchronized void onError(CommandRunner runner, Exception e) {
+	public synchronized void onError(CommandRunner runner, Exception e)
+	{
 		activeThreads--;
 		notifyAll();
 	}
@@ -175,7 +195,8 @@ public final class Tester implements CommandRunnerObserver {
 	 * 
 	 * @throws Exception
 	 */
-	public void run() throws Exception {
+	public void run() throws Exception
+	{
 
 		activeThreads = 0;
 
@@ -186,31 +207,43 @@ public final class Tester implements CommandRunnerObserver {
 
 		Server server = null;
 		GetMethod getMethod = new GetMethod("http://localhost:" + port + "/");
-		try {
+		try
+		{
 			getMethod.setFollowRedirects(true);
 			HttpClient httpClient = new HttpClient(params, manager);
 			int code = httpClient.executeMethod(getMethod);
-			if (code != 200) {
+			if (code != 200)
+			{
 				server = startServer(port);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			server = startServer(port);
-		} finally {
+		}
+		finally
+		{
 			getMethod.releaseConnection();
 		}
 
-		try {
+		try
+		{
 
 			ThreadGroup g = new ThreadGroup("runners");
 			Thread[] threads = new Thread[numberOfThreads];
 			HttpClient client = null;
-			for (int i = 0; i < numberOfThreads; i++) {
+			for (int i = 0; i < numberOfThreads; i++)
+			{
 
-				if (multipleSessions) {
+				if (multipleSessions)
+				{
 					client = new HttpClient(params, manager);
 					client.getHostConfiguration().setHost(host, port);
-				} else {
-					if (client == null) {
+				}
+				else
+				{
+					if (client == null)
+					{
 						client = new HttpClient(params, manager);
 						client.getHostConfiguration().setHost(host, port);
 					}
@@ -220,24 +253,31 @@ public final class Tester implements CommandRunnerObserver {
 
 			long start = System.currentTimeMillis();
 
-			for (int i = 0; i < numberOfThreads; i++) {
+			for (int i = 0; i < numberOfThreads; i++)
+			{
 				activeThreads++;
 				threads[i].start();
 			}
 
-			while (activeThreads > 0) {
-				synchronized (this) {
+			while (activeThreads > 0)
+			{
+				synchronized (this)
+				{
 					wait();
 				}
 			}
 
 			long end = System.currentTimeMillis();
 			long time = end - start;
-			log.info("\n******** finished in " + Duration.milliseconds(time) + " (" + time + " milis)");
+			log.info("\n******** finished in " + Duration.milliseconds(time) + " (" + time
+					+ " milis)");
 
-		} finally {
+		}
+		finally
+		{
 			MultiThreadedHttpConnectionManager.shutdownAll();
-			if (server != null) {
+			if (server != null)
+			{
 				server.stop();
 			}
 		}
@@ -249,7 +289,8 @@ public final class Tester implements CommandRunnerObserver {
 	 * @param host
 	 *            host
 	 */
-	public void setHost(String host) {
+	public void setHost(String host)
+	{
 		this.host = host;
 	}
 
@@ -259,7 +300,8 @@ public final class Tester implements CommandRunnerObserver {
 	 * @param port
 	 *            port
 	 */
-	public void setPort(int port) {
+	public void setPort(int port)
+	{
 		this.port = port;
 	}
 }

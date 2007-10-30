@@ -25,15 +25,18 @@ import org.apache.wicket.model.LoadableDetachableModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends LoadableDetachableModel {
+public class DetachableContactModel extends LoadableDetachableModel
+{
 	private long id;
 
 	/**
 	 * @param c
 	 */
-	public DetachableContactModel(final Contact c) {
+	public DetachableContactModel(final Contact c)
+	{
 		super(c);
-		if (c == null) {
+		if (c == null)
+		{
 			throw new IllegalArgumentException();
 
 		}
@@ -44,8 +47,10 @@ public class DetachableContactModel extends LoadableDetachableModel {
 	/**
 	 * @param id
 	 */
-	public DetachableContactModel(final long id) {
-		if (id == 0) {
+	public DetachableContactModel(final long id)
+	{
+		if (id == 0)
+		{
 			throw new IllegalArgumentException();
 		}
 		this.id = id;
@@ -59,13 +64,19 @@ public class DetachableContactModel extends LoadableDetachableModel {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(final Object obj) {
-		if (obj == this) {
+	public boolean equals(final Object obj)
+	{
+		if (obj == this)
+		{
 			return true;
-		} else if (obj == null) {
+		}
+		else if (obj == null)
+		{
 			return false;
-		} else if (obj instanceof DetachableContactModel) {
-			DetachableContactModel other = (DetachableContactModel) obj;
+		}
+		else if (obj instanceof DetachableContactModel)
+		{
+			DetachableContactModel other = (DetachableContactModel)obj;
 			return other.id == this.id;
 		}
 		return false;
@@ -75,11 +86,13 @@ public class DetachableContactModel extends LoadableDetachableModel {
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		return new Long(id).hashCode();
 	}
 
-	protected ContactsDatabase getContactsDB() {
+	protected ContactsDatabase getContactsDB()
+	{
 		return DatabaseLocator.getDatabase();
 	}
 
@@ -87,7 +100,8 @@ public class DetachableContactModel extends LoadableDetachableModel {
 	 * @see org.apache.wicket.model.LoadableDetachableModel#load()
 	 */
 	@Override
-	protected Contact load() {
+	protected Contact load()
+	{
 		// loads contact from the database
 		return getContactsDB().get(id);
 	}

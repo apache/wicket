@@ -30,12 +30,14 @@ import java.util.Set;
  * Simple model object for FormInput example. Has a number of simple properties
  * that can be retrieved and set.
  */
-public final class FormInputModel implements Serializable {
+public final class FormInputModel implements Serializable
+{
 	/**
 	 * Represents a line of text. Hack to get around the fact that strings are
 	 * immutable.
 	 */
-	public final class Line implements Serializable {
+	public final class Line implements Serializable
+	{
 		private String text;
 
 		/**
@@ -43,7 +45,8 @@ public final class FormInputModel implements Serializable {
 		 * 
 		 * @param text
 		 */
-		public Line(String text) {
+		public Line(String text)
+		{
 			this.text = text;
 		}
 
@@ -52,7 +55,8 @@ public final class FormInputModel implements Serializable {
 		 * 
 		 * @return text
 		 */
-		public String getText() {
+		public String getText()
+		{
 			return text;
 		}
 
@@ -62,14 +66,16 @@ public final class FormInputModel implements Serializable {
 		 * @param text
 		 *            text
 		 */
-		public void setText(String text) {
+		public void setText(String text)
+		{
 			this.text = text;
 		}
 
 		/**
 		 * @see java.lang.Object#toString()
 		 */
-		public String toString() {
+		public String toString()
+		{
 			return text;
 		}
 	}
@@ -86,7 +92,7 @@ public final class FormInputModel implements Serializable {
 
 	private List<Line> lines = new ArrayList<Line>();
 
-	private String numberRadioChoice = (String) Home.NUMBERS.get(0);
+	private String numberRadioChoice = (String)Home.NUMBERS.get(0);
 
 	private List numbersCheckGroup = new ArrayList();
 
@@ -104,10 +110,14 @@ public final class FormInputModel implements Serializable {
 	/**
 	 * Construct.
 	 */
-	public FormInputModel() {
-		try {
+	public FormInputModel()
+	{
+		try
+		{
 			urlProperty = new URL("http://wicket.apache.org");
-		} catch (MalformedURLException e) {
+		}
+		catch (MalformedURLException e)
+		{
 			e.printStackTrace();
 		}
 		lines.add(new Line("line one"));
@@ -120,7 +130,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return booleanProperty
 	 */
-	public Boolean getBooleanProperty() {
+	public Boolean getBooleanProperty()
+	{
 		return booleanProperty;
 	}
 
@@ -129,7 +140,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return dateProperty
 	 */
-	public Date getDateProperty() {
+	public Date getDateProperty()
+	{
 		return dateProperty;
 	}
 
@@ -138,7 +150,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return doubleProperty
 	 */
-	public Double getDoubleProperty() {
+	public Double getDoubleProperty()
+	{
 		return doubleProperty;
 	}
 
@@ -147,7 +160,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return integerInRangeProperty
 	 */
-	public Integer getIntegerInRangeProperty() {
+	public Integer getIntegerInRangeProperty()
+	{
 		return integerInRangeProperty;
 	}
 
@@ -156,7 +170,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return integerProperty
 	 */
-	public Integer getIntegerProperty() {
+	public Integer getIntegerProperty()
+	{
 		return integerProperty;
 	}
 
@@ -165,7 +180,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return lines
 	 */
-	public List<Line> getLines() {
+	public List<Line> getLines()
+	{
 		return lines;
 	}
 
@@ -174,28 +190,32 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return favoriteColor
 	 */
-	public String getNumberRadioChoice() {
+	public String getNumberRadioChoice()
+	{
 		return numberRadioChoice;
 	}
 
 	/**
 	 * @return the numbers list
 	 */
-	public List getNumbersCheckGroup() {
+	public List getNumbersCheckGroup()
+	{
 		return numbersCheckGroup;
 	}
 
 	/**
 	 * @return the group number
 	 */
-	public String getNumbersGroup() {
+	public String getNumbersGroup()
+	{
 		return this.numbersGroup;
 	}
 
 	/**
 	 * @return the phoneNumberUS
 	 */
-	public UsPhoneNumber getPhoneNumberUS() {
+	public UsPhoneNumber getPhoneNumberUS()
+	{
 		return phoneNumberUS;
 	}
 
@@ -204,7 +224,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return selectedSites
 	 */
-	public Set getSiteSelection() {
+	public Set getSiteSelection()
+	{
 		return siteSelection;
 	}
 
@@ -213,7 +234,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return stringProperty
 	 */
-	public String getStringProperty() {
+	public String getStringProperty()
+	{
 		return stringProperty;
 	}
 
@@ -222,7 +244,8 @@ public final class FormInputModel implements Serializable {
 	 * 
 	 * @return urlProperty
 	 */
-	public URL getUrlProperty() {
+	public URL getUrlProperty()
+	{
 		return urlProperty;
 	}
 
@@ -232,7 +255,8 @@ public final class FormInputModel implements Serializable {
 	 * @param booleanProperty
 	 *            booleanProperty
 	 */
-	public void setBooleanProperty(Boolean booleanProperty) {
+	public void setBooleanProperty(Boolean booleanProperty)
+	{
 		this.booleanProperty = booleanProperty;
 	}
 
@@ -242,7 +266,8 @@ public final class FormInputModel implements Serializable {
 	 * @param dateProperty
 	 *            dateProperty
 	 */
-	public void setDateProperty(Date dateProperty) {
+	public void setDateProperty(Date dateProperty)
+	{
 		this.dateProperty = dateProperty;
 	}
 
@@ -252,7 +277,8 @@ public final class FormInputModel implements Serializable {
 	 * @param doubleProperty
 	 *            doubleProperty
 	 */
-	public void setDoubleProperty(Double doubleProperty) {
+	public void setDoubleProperty(Double doubleProperty)
+	{
 		this.doubleProperty = doubleProperty;
 	}
 
@@ -262,7 +288,8 @@ public final class FormInputModel implements Serializable {
 	 * @param integerInRangeProperty
 	 *            integerInRangeProperty
 	 */
-	public void setIntegerInRangeProperty(Integer integerInRangeProperty) {
+	public void setIntegerInRangeProperty(Integer integerInRangeProperty)
+	{
 		this.integerInRangeProperty = integerInRangeProperty;
 	}
 
@@ -272,7 +299,8 @@ public final class FormInputModel implements Serializable {
 	 * @param integerProperty
 	 *            integerProperty
 	 */
-	public void setIntegerProperty(Integer integerProperty) {
+	public void setIntegerProperty(Integer integerProperty)
+	{
 		this.integerProperty = integerProperty;
 	}
 
@@ -282,7 +310,8 @@ public final class FormInputModel implements Serializable {
 	 * @param lines
 	 *            lines
 	 */
-	public void setLines(List<Line> lines) {
+	public void setLines(List<Line> lines)
+	{
 		this.lines = lines;
 	}
 
@@ -292,7 +321,8 @@ public final class FormInputModel implements Serializable {
 	 * @param favoriteColor
 	 *            favoriteColor
 	 */
-	public void setNumberRadioChoice(String favoriteColor) {
+	public void setNumberRadioChoice(String favoriteColor)
+	{
 		this.numberRadioChoice = favoriteColor;
 	}
 
@@ -302,7 +332,8 @@ public final class FormInputModel implements Serializable {
 	 * @param group
 	 *            number
 	 */
-	public void setNumbersGroup(String group) {
+	public void setNumbersGroup(String group)
+	{
 		this.numbersGroup = group;
 	}
 
@@ -310,7 +341,8 @@ public final class FormInputModel implements Serializable {
 	 * @param phoneNumberUS
 	 *            the phoneNumberUS to set
 	 */
-	public void setPhoneNumberUS(UsPhoneNumber phoneNumberUS) {
+	public void setPhoneNumberUS(UsPhoneNumber phoneNumberUS)
+	{
 		this.phoneNumberUS = phoneNumberUS;
 	}
 
@@ -320,7 +352,8 @@ public final class FormInputModel implements Serializable {
 	 * @param selectedSites
 	 *            selectedSites
 	 */
-	public void setSiteSelection(Set selectedSites) {
+	public void setSiteSelection(Set selectedSites)
+	{
 		this.siteSelection = selectedSites;
 	}
 
@@ -330,7 +363,8 @@ public final class FormInputModel implements Serializable {
 	 * @param stringProperty
 	 *            stringProperty
 	 */
-	public void setStringProperty(String stringProperty) {
+	public void setStringProperty(String stringProperty)
+	{
 		this.stringProperty = stringProperty;
 	}
 
@@ -340,34 +374,42 @@ public final class FormInputModel implements Serializable {
 	 * @param urlProperty
 	 *            urlProperty
 	 */
-	public void setUrlProperty(URL urlProperty) {
+	public void setUrlProperty(URL urlProperty)
+	{
 		this.urlProperty = urlProperty;
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer b = new StringBuffer();
-		b.append("[TestInputObject stringProperty = '").append(stringProperty).append("', integerProperty = ").append(
-				integerProperty).append(", doubleProperty = ").append(doubleProperty).append(", dateProperty = ")
-				.append(dateProperty).append(", booleanProperty = ").append(booleanProperty).append(
-						", integerInRangeProperty = ").append(integerInRangeProperty).append(", urlProperty = ")
-				.append(urlProperty).append(", phoneNumberUS = ").append(phoneNumberUS)
-				.append(", numberRadioChoice = ").append(numberRadioChoice).append(", numbersCheckgroup ").append(
-						numbersCheckGroup).append(", numberRadioGroup= ").append(numbersGroup);
+		b.append("[TestInputObject stringProperty = '").append(stringProperty).append(
+				"', integerProperty = ").append(integerProperty).append(", doubleProperty = ")
+				.append(doubleProperty).append(", dateProperty = ").append(dateProperty).append(
+						", booleanProperty = ").append(booleanProperty).append(
+						", integerInRangeProperty = ").append(integerInRangeProperty).append(
+						", urlProperty = ").append(urlProperty).append(", phoneNumberUS = ")
+				.append(phoneNumberUS).append(", numberRadioChoice = ").append(numberRadioChoice)
+				.append(", numbersCheckgroup ").append(numbersCheckGroup).append(
+						", numberRadioGroup= ").append(numbersGroup);
 		b.append(", selected sites {");
-		for (Iterator i = siteSelection.iterator(); i.hasNext();) {
+		for (Iterator i = siteSelection.iterator(); i.hasNext();)
+		{
 			b.append(i.next());
-			if (i.hasNext()) {
+			if (i.hasNext())
+			{
 				b.append(",");
 			}
 		}
 		b.append("]");
 		b.append(", lines [");
-		for (Iterator i = lines.iterator(); i.hasNext();) {
+		for (Iterator i = lines.iterator(); i.hasNext();)
+		{
 			b.append(i.next());
-			if (i.hasNext()) {
+			if (i.hasNext())
+			{
 				b.append(", ");
 			}
 		}

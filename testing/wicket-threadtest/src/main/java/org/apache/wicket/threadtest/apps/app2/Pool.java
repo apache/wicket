@@ -26,21 +26,25 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author eelcohillenius
  */
-public class Pool {
+public class Pool
+{
 
 	private static Pool _instance = new Pool();
 
 	private static Log log = LogFactory.getLog(Pool.class);
 
-	public static Connection getConnection() {
+	public static Connection getConnection()
+	{
 		return getInstance().doGetConnection();
 	}
 
-	public static Pool getInstance() {
+	public static Pool getInstance()
+	{
 		return _instance;
 	}
 
-	public static void release() {
+	public static void release()
+	{
 		getInstance().doRelease();
 	}
 
@@ -52,36 +56,49 @@ public class Pool {
 
 	private int size = 3;
 
-	private Pool() {
+	private Pool()
+	{
 
 		allConnections = new Connection[size];
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++)
+		{
 			Connection connection = new Connection(String.valueOf(i));
 			allConnections[i] = connection;
 			available.push(connection);
 		}
 	}
 
-	private synchronized Connection doGetConnection() {
+	private synchronized Connection doGetConnection()
+	{
 
 		Connection c = locks.get();
 
-		if (c != null) {
+		if (c != null)
+		{
 			return c;
 
-		} else {
+		}
+		else
+		{
 
-			while (c == null) {
+			while (c == null)
+			{
 
-				if (!available.isEmpty()) {
+				if (!available.isEmpty())
+				{
 					c = available.pop();
 					locks.set(c);
 					log.info("returning " + c + " for " + Thread.currentThread());
-				} else {
-					try {
+				}
+				else
+				{
+					try
+					{
 						log.info("enter wait for " + Thread.currentThread());
 						wait();
-					} catch (InterruptedException e) {
+					}
+					catch (InterruptedException e)
+					{
 						throw new RuntimeException(e);
 					}
 				}
@@ -90,9 +107,11 @@ public class Pool {
 		return c;
 	}
 
-	private synchronized void doRelease() {
+	private synchronized void doRelease()
+	{
 		Connection c = locks.get();
-		if (c != null) {
+		if (c != null)
+		{
 			available.push(c);
 			locks.remove();
 			log.info("releasing " + c + " for " + Thread.currentThread());

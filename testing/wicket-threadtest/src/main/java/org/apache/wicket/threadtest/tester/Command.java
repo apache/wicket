@@ -21,7 +21,8 @@ package org.apache.wicket.threadtest.tester;
  * 
  * @author eelcohillenius
  */
-public interface Command {
+public interface Command
+{
 
 	/**
 	 * Execute one iteration.

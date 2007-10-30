@@ -18,7 +18,8 @@ package org.apache.wicket.threadtest.tester;
 
 import java.util.List;
 
-public abstract class AbstractCommand implements Command {
+public abstract class AbstractCommand implements Command
+{
 
 	/** number of executions of the urls. */
 	private final int iterations;
@@ -34,7 +35,8 @@ public abstract class AbstractCommand implements Command {
 	 * @param iterations
 	 *            number of executions of the urls
 	 */
-	public AbstractCommand(List<String> urls, int iterations) {
+	public AbstractCommand(List<String> urls, int iterations)
+	{
 		this.urls = urls;
 		this.iterations = iterations;
 	}
@@ -44,7 +46,8 @@ public abstract class AbstractCommand implements Command {
 	 * 
 	 * @return iterations
 	 */
-	public int getIterations() {
+	public int getIterations()
+	{
 		return iterations;
 	}
 
@@ -53,7 +56,8 @@ public abstract class AbstractCommand implements Command {
 	 * 
 	 * @return urls
 	 */
-	public List<String> getUrls() {
+	public List<String> getUrls()
+	{
 		return urls;
 	}
 }

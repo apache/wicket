@@ -23,12 +23,14 @@ package org.apache.wicket.util.license;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase {
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+{
 
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest() {
+	public ApacheLicenceHeaderTest()
+	{
 
 		// addHeaders = true;
 	}

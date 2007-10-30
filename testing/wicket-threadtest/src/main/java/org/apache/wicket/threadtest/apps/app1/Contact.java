@@ -24,7 +24,8 @@ import java.io.Serializable;
  * @author igor
  * 
  */
-public class Contact implements Serializable {
+public class Contact implements Serializable
+{
 	private String cellPhone;
 
 	private String firstName;
@@ -38,7 +39,8 @@ public class Contact implements Serializable {
 	/**
 	 * Constructor
 	 */
-	public Contact() {
+	public Contact()
+	{
 
 	}
 
@@ -48,7 +50,8 @@ public class Contact implements Serializable {
 	 * @param firstName
 	 * @param lastName
 	 */
-	public Contact(String firstName, String lastName) {
+	public Contact(String firstName, String lastName)
+	{
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
@@ -57,19 +60,27 @@ public class Contact implements Serializable {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
+	public boolean equals(Object obj)
+	{
+		if (obj == this)
+		{
 			return true;
 		}
-		if (obj == null) {
+		if (obj == null)
+		{
 			return false;
 		}
-		if (obj instanceof Contact) {
-			Contact other = (Contact) obj;
-			return other.getFirstName().equals(getFirstName()) && other.getLastName().equals(getLastName())
-					&& other.getHomePhone().equals(getHomePhone()) && other.getCellPhone().equals(getCellPhone());
+		if (obj instanceof Contact)
+		{
+			Contact other = (Contact)obj;
+			return other.getFirstName().equals(getFirstName())
+					&& other.getLastName().equals(getLastName())
+					&& other.getHomePhone().equals(getHomePhone())
+					&& other.getCellPhone().equals(getCellPhone());
 
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
@@ -77,70 +88,80 @@ public class Contact implements Serializable {
 	/**
 	 * @return cellPhone
 	 */
-	public String getCellPhone() {
+	public String getCellPhone()
+	{
 		return cellPhone;
 	}
 
 	/**
 	 * @return firstName
 	 */
-	public String getFirstName() {
+	public String getFirstName()
+	{
 		return firstName;
 	}
 
 	/**
 	 * @return homePhone
 	 */
-	public String getHomePhone() {
+	public String getHomePhone()
+	{
 		return homePhone;
 	}
 
 	/**
 	 * @return id
 	 */
-	public long getId() {
+	public long getId()
+	{
 		return id;
 	}
 
 	/**
 	 * @return lastName
 	 */
-	public String getLastName() {
+	public String getLastName()
+	{
 		return lastName;
 	}
 
 	/**
 	 * @param cellPhone
 	 */
-	public void setCellPhone(String cellPhone) {
+	public void setCellPhone(String cellPhone)
+	{
 		this.cellPhone = cellPhone;
 	}
 
 	/**
 	 * @param firstName
 	 */
-	public void setFirstName(String firstName) {
+	public void setFirstName(String firstName)
+	{
 		this.firstName = firstName;
 	}
 
 	/**
 	 * @param homePhone
 	 */
-	public void setHomePhone(String homePhone) {
+	public void setHomePhone(String homePhone)
+	{
 		this.homePhone = homePhone;
 	}
 
 	/**
 	 * @param id
 	 */
-	public void setId(long id) {
+	public void setId(long id)
+	{
 		this.id = id;
 	}
 
 	/**
 	 * @param lastName
 	 */
-	public void setLastName(String lastName) {
+	public void setLastName(String lastName)
+	{
 		this.lastName = lastName;
 	}
 
@@ -148,9 +169,10 @@ public class Contact implements Serializable {
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString() {
-		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName + " homePhone=" + homePhone
-				+ " cellPhone=" + cellPhone + "]";
+	public String toString()
+	{
+		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName
+				+ " homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
 	}
 
 }

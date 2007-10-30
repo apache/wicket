@@ -27,7 +27,8 @@ import org.apache.wicket.threadtest.tester.Tester;
 /**
  * @author eelcohillenius
  */
-public class App2Test1 {
+public class App2Test1
+{
 
 	private static final Log log = LogFactory.getLog(App2Test1.class);
 
@@ -35,7 +36,8 @@ public class App2Test1 {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception
+	{
 
 		List<String> gets = Arrays
 				.asList(new String[] { "/app2?wicket:bookmarkablePage=one:org.apache.wicket.threadtest.apps.app2.Home" });
