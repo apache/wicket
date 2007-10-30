@@ -52,7 +52,6 @@ import org.apache.wicket.util.template.PackagedTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
 import org.joda.time.DateTime;
 
-
 /**
  * Pops up a YUI calendar component so that the user can select a date. On selection, the date is
  * set in the component it is coupled to, after which the popup is closed again. This behavior can
@@ -407,16 +406,6 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	protected final String getComponentMarkupId()
 	{
 		return component.getMarkupId();
-	}
-
-
-	/**
-	 * @return if true, the base path for all YUI components will be set to
-	 *         /resources/org.apache.wicket.extensions.yui.YuiLib/. True by default.
-	 */
-	protected boolean getConfigureYUIBasePath()
-	{
-		return true;
 	}
 
 	/**
