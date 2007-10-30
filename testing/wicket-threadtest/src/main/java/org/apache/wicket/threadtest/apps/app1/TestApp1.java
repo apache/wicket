@@ -18,20 +18,23 @@ package org.apache.wicket.threadtest.apps.app1;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
-import org.apache.wicket.protocol.http.FilePageStore;
 import org.apache.wicket.protocol.http.SecondLevelCacheSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.session.ISessionStore;
 
-public class TestApp1 extends WebApplication {
+public class TestApp1 extends WebApplication
+{
 
-	public static TestApp1 get() {
-		return (TestApp1) Application.get();
+	public static TestApp1 get()
+	{
+		return (TestApp1)Application.get();
 	}
 
-	private ContactsDatabase contactsDB = new ContactsDatabase(50);
+	private final ContactsDatabase contactsDB = new ContactsDatabase(50);
 
-	public TestApp1() {
+	public TestApp1()
+	{
 	}
 
 	/**
@@ -39,23 +42,27 @@ public class TestApp1 extends WebApplication {
 	 * 
 	 * @return contactsDB
 	 */
-	public ContactsDatabase getContactsDB() {
+	public ContactsDatabase getContactsDB()
+	{
 		return contactsDB;
 	}
 
 	@Override
-	public Class getHomePage() {
+	public Class getHomePage()
+	{
 		return Home.class;
 	}
 
 	@Override
-	protected void init() {
+	protected void init()
+	{
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 
 	@Override
-	protected ISessionStore newSessionStore() {
-		return new SecondLevelCacheSessionStore(this, new FilePageStore());
+	protected ISessionStore newSessionStore()
+	{
+		return new SecondLevelCacheSessionStore(this, new DiskPageStore());
 		// return new HttpSessionStore();
 	}
 }
