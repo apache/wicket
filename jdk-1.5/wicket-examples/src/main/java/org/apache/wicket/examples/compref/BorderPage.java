@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.basic.Label;
 
 
 /**
- * Page with examples on {@link org.apache.wicket.markup.html.basic.MultiLineLabel}.
+ * Page with examples on {@link org.apache.wicket.markup.html.border.Border}.
  * 
  * @author Eelco Hillenius
  */
