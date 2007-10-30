@@ -577,9 +577,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final CharSequence getJsForInterfaceUrl(CharSequence url)
 	{
-		return new AppendingStringBuffer("document.getElementById('").append(getHiddenFieldId())
-				.append("').value='").append(url).append("';document.getElementById('").append(
-						getJavascriptId()).append("').submit();");
+		Form root = getRootForm();
+		return new AppendingStringBuffer("document.getElementById('").append(
+				root.getHiddenFieldId()).append("').value='").append(url).append(
+				"';document.getElementById('").append(root.getJavascriptId())
+				.append("').submit();");
 	}
 
 	/**
