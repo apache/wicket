@@ -113,8 +113,20 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		Component component = page.get(pageRelativeComponentPath);
 		if (component == null)
 		{
-			throw new WicketRuntimeException("unable to find component with path " +
-					pageRelativeComponentPath + " on page " + page);
+			// this is quite a hack to get components in repeater work.
+			// But it still can fail if the repeater is a paging one or on every render
+			// it will generate new index for the items...
+			page.beforeRender();
+			component = page.get(pageRelativeComponentPath);
+			if (component == null)
+			{
+				throw new WicketRuntimeException(
+						"unable to find component with path " +
+								pageRelativeComponentPath +
+								" on stateless page " +
+								page +
+								" it could be that the component is inside a repeater make your component return false in getStatelessHint()");
+			}
 		}
 		RequestListenerInterface listenerInterface = RequestListenerInterface
 				.forName(interfaceName);
