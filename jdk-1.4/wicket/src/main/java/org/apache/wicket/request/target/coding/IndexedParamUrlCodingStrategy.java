@@ -131,23 +131,27 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			urlFragment = urlFragment.substring(0, urlFragment.length() - 1);
 		}
 
-		String[] parts = urlFragment.split("/");
-		for (int i = 0; i < parts.length; i++)
+		if (urlFragment.length() > 0)
 		{
-			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+			String[] parts = urlFragment.split("/");
+			for (int i = 0; i < parts.length; i++)
 			{
-				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
-						.decodePageMapName(urlDecode(parts[i])));
-			}
-			else if (WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.equals(parts[i]))
-			{
-				i++;
-				params.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, urlDecode(parts[i]));
-			}
-			else
-			{
-				params.put(String.valueOf(i), urlDecode(parts[i]));
+				if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+				{
+					i++;
+					params.put(WebRequestCodingStrategy.PAGEMAP, WebRequestCodingStrategy
+							.decodePageMapName(urlDecode(parts[i])));
+				}
+				else if (WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.equals(parts[i]))
+				{
+					i++;
+					params.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,
+							urlDecode(parts[i]));
+				}
+				else
+				{
+					params.put(String.valueOf(i), urlDecode(parts[i]));
+				}
 			}
 		}
 		return params;
