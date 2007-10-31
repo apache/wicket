@@ -338,11 +338,22 @@ public class MockWebApplication
 	 */
 	public void processRequestCycle(final Class pageClass)
 	{
+		processRequestCycle(pageClass, null);
+	}
+
+	/**
+	 * Initialize a new WebRequestCycle and all its dependent objects
+	 * 
+	 * @param pageClass
+	 * @param params
+	 */
+	public void processRequestCycle(final Class pageClass, PageParameters params)
+	{
 		setupRequestAndResponse();
 		final WebRequestCycle cycle = createRequestCycle();
 		try
 		{
-			cycle.request(new BookmarkablePageRequestTarget(pageClass));
+			cycle.request(new BookmarkablePageRequestTarget(pageClass, params));
 		}
 		finally
 		{

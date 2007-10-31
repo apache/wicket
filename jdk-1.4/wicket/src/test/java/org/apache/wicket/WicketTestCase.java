@@ -85,6 +85,25 @@ public abstract class WicketTestCase extends TestCase
 	}
 
 	/**
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the
+	 * expected output file.
+	 * 
+	 * @param pageClass
+	 * @param parameters
+	 * @param filename
+	 * @throws Exception
+	 */
+	protected void executeTest(final Class pageClass, PageParameters parameters,
+			final String filename) throws Exception
+	{
+		System.out.println("=== " + pageClass.getName() + " ===");
+
+		tester.startPage(pageClass, parameters);
+		tester.assertRenderedPage(pageClass);
+		tester.assertResultPage(getClass(), filename);
+	}
+
+	/**
 	 * 
 	 * @param clazz
 	 * @param component

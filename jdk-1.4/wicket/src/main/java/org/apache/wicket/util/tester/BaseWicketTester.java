@@ -288,6 +288,21 @@ public class BaseWicketTester extends MockWebApplication
 	}
 
 	/**
+	 * Renders a <code>Page</code> from its default constructor.
+	 * 
+	 * @param pageClass
+	 *            a test <code>Page</code> class with default constructor
+	 * @param parameters
+	 *            the parameters to use for the class.
+	 * @return the rendered <code>Page</code>
+	 */
+	public final Page startPage(Class pageClass, PageParameters parameters)
+	{
+		processRequestCycle(pageClass, parameters);
+		return getLastRenderedPage();
+	}
+
+	/**
 	 * Creates a {@link FormTester} for the <code>Form</code> at a given path, and fills all child
 	 * {@link org.apache.wicket.markup.html.form.FormComponent}s with blank <code>String</code>s.
 	 * 
