@@ -626,4 +626,12 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 	{
 		return "";
 	}
+
+	/**
+	 * @see org.apache.wicket.behavior.AbstractBehavior#isEnabled(org.apache.wicket.Component)
+	 */
+	public boolean isEnabled(Component component)
+	{
+		return component.isEnabled() && component.isEnableAllowed();
+	}
 }
