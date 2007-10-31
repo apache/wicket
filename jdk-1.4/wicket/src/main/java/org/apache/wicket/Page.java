@@ -218,6 +218,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
+	/** The page parameters object hat constructed this page */
+	private PageParameters parameters;
+
 	/**
 	 * Constructor.
 	 */
@@ -276,7 +279,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Constructor.
+	 * The {@link PageParameters} parameter will be stored in this page and then those parameters
+	 * will be used to create stateless links to this bookmarkable page.
 	 * 
 	 * @param parameters
 	 *            externally passed parameters
@@ -285,7 +289,19 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	protected Page(final PageParameters parameters)
 	{
 		super(null);
+		this.parameters = parameters;
 		init();
+	}
+
+	/**
+	 * The {@link PageParameters} object that was used to construct this page. This will be used in
+	 * creating stateless/bookmarkable links to this page
+	 * 
+	 * @return
+	 */
+	public PageParameters getPageParameters()
+	{
+		return parameters;
 	}
 
 	/**

@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.stateless;
 
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 
 /**
  * @author jcompagner
@@ -83,4 +85,91 @@ public class StatelessComponentTest extends WicketTestCase
 		}
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public void testStatelessComponentPageWithParams() throws Exception
+	{
+		PageParameters params = new PageParameters();
+		params.put("testParam1", "testValue1");
+		params.put("testParam2", "testValue2");
+
+		executeTest(StatelessComponentPageWithParams.class, params,
+				"StatelessComponentPageWithParams_result.html");
+
+		tester.setupRequestAndResponse();
+		tester
+				.getServletRequest()
+				.setURL(
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:bookmarkablePage=:org.apache.wicket.stateless.StatelessComponentPageWithParams&testParam1=testValue1&testParam2=testValue2&wicket:interface=:0:link::ILinkListener::");
+		try
+		{
+			tester.processRequestCycle();
+			assertTrue(false);
+		}
+		catch (Exception e)
+		{
+			assertEquals("wanted exception", e.getMessage());
+		}
+
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testStatelessComponentPageWithParamsWithMount() throws Exception
+	{
+		PageParameters params = new PageParameters();
+		params.put("testParam1", "testValue1");
+		params.put("testParam2", "testValue2");
+		tester.getApplication().mountBookmarkablePage("/stateless",
+				StatelessComponentPageWithParams.class);
+		// test is always the home page. it doesn't work then
+		executeTest(StatelessComponentPageWithParams.class, params,
+				"StatelessComponentPageWithParams_mount_result.html");
+		tester.setupRequestAndResponse();
+		tester
+				.getServletRequest()
+				.setURL(
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testParam1/testValue1/testParam2/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/");
+		try
+		{
+			tester.processRequestCycle();
+			fail("An exception should have been thrown for this request!");
+		}
+		catch (Exception e)
+		{
+			assertEquals("wanted exception", e.getMessage());
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testStatelessComponentPageWithParamsWithIndexMount() throws Exception
+	{
+		PageParameters params = new PageParameters();
+		params.put("0", "testValue1");
+		params.put("1", "testValue2");
+		tester.getApplication().mount(
+				new IndexedParamUrlCodingStrategy("/stateless",
+						StatelessComponentPageWithParams.class));
+		// test is always the home page. it doesn't work then
+		executeTest(StatelessComponentPageWithParams.class, params,
+				"StatelessComponentPageWithParams_indexed_mount_result.html");
+		tester.setupRequestAndResponse();
+		tester
+				.getServletRequest()
+				.setURL(
+						"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/stateless/testValue1/testValue2/wicket:interface/%3A0%3Alink%3A%3AILinkListener%3A%3A/");
+		try
+		{
+			tester.processRequestCycle();
+			fail("An exception should have been thrown for this request!");
+		}
+		catch (Exception e)
+		{
+			assertEquals("wanted exception", e.getMessage());
+		}
+	}
 }
