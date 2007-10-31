@@ -1327,7 +1327,7 @@ public final class Strings
 		}
 		else
 		{
-			matchIndex = s.toString().indexOf(searchString);
+			matchIndex = s.toString().indexOf(searchString, pos);
 		}
 		return matchIndex;
 	}
