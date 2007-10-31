@@ -22,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +41,6 @@ import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.value.Count;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.Change;
 import org.slf4j.Logger;
@@ -146,7 +146,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		 * 
 		 */
 		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream)
-				throws IOException, ClassNotFoundException;
+			throws IOException, ClassNotFoundException;
 
 		/**
 		 * Called from the {@link Page#writeObject(java.io.ObjectOutputStream)} method.
@@ -337,7 +337,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
 	public void afterCallComponent(final Component component,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 	}
 
@@ -358,7 +358,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
 	public void beforeCallComponent(final Component component,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 	}
 
@@ -380,7 +380,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (renderedComponents.add(component) == false)
 			{
 				throw new MarkupException("The component " + component +
-						" has the same wicket:id as another component already added at the same level");
+					" has the same wicket:id as another component already added at the same level");
 			}
 			if (log.isDebugEnabled())
 			{
@@ -585,7 +585,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			else
 			{
 				log.info("No version manager available to retrieve requested versionNumber " +
-						versionNumber);
+					versionNumber);
 				return null;
 			}
 		}
@@ -614,7 +614,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 				// If we went all the way back to the original page
 				if (page != null && page.getCurrentVersionNumber() == 0 &&
-						page.getAjaxVersionNumber() == 0)
+					page.getAjaxVersionNumber() == 0)
 				{
 					// remove version info
 					page.versionManager = null;
@@ -655,7 +655,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					levels++;
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath() +
-						":" + Classes.simpleName(component.getClass()));
+					":" + Classes.simpleName(component.getClass()));
 				return null;
 			}
 		});
@@ -751,7 +751,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (getStatelessHint())
 			{
 				log.warn("Page '" + this + "' is not stateless because it is not bookmarkable, " +
-						"but the stateless hint is set to true!");
+					"but the stateless hint is set to true!");
 			}
 		}
 
@@ -783,7 +783,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (!stateless.booleanValue() && getStatelessHint())
 			{
 				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0] +
-						"' but the stateless hint is set to true!");
+					"' but the stateless hint is set to true!");
 			}
 		}
 
@@ -812,13 +812,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            will remain unchanged.
 	 */
 	public final void removePersistedFormData(final Class formClass,
-			final boolean disablePersistence)
+		final boolean disablePersistence)
 	{
 		// Check that formClass is an instanceof Form
 		if (!Form.class.isAssignableFrom(formClass))
 		{
 			throw new WicketRuntimeException("Form class " + formClass.getName() +
-					" is not a subclass of Form");
+				" is not a subclass of Form");
 		}
 
 		// Visit all children which are an instance of formClass
@@ -965,8 +965,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (value && !isBookmarkable())
 		{
 			throw new WicketRuntimeException(
-					"Can't set stateless hint to true on a page when the page is not bookmarkable, page: " +
-							this);
+				"Can't set stateless hint to true on a page when the page is not bookmarkable, page: " +
+					this);
 		}
 		setFlag(FLAG_STATELESS_HINT, value);
 	}
@@ -994,13 +994,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (versionManager != null)
 		{
 			return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " +
-					versionManager.getCurrentVersionNumber() + ", ajax = " +
-					versionManager.getAjaxVersionNumber() + "]";
+				versionManager.getCurrentVersionNumber() + ", ajax = " +
+				versionManager.getAjaxVersionNumber() + "]";
 		}
 		else
 		{
 			return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " +
-					0 + "]";
+				0 + "]";
 		}
 	}
 
@@ -1018,8 +1018,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
-			final Count unrenderedComponents = new Count();
-			final List unrenderedAutoComponents = new ArrayList();
+			final List unrenderedComponents = new ArrayList();
 			final StringBuffer buffer = new StringBuffer();
 			renderedContainer.visitChildren(new IVisitor()
 			{
@@ -1029,22 +1028,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					if (renderedComponents == null || !renderedComponents.contains(component))
 					{
 						// If auto component ...
-						if (component.isAuto())
-						{
-							// Add to list of unrendered auto components to
-							// delete below
-							unrenderedAutoComponents.add(component);
-						}
-						else if (component.isVisibleInHierarchy())
+						if (!component.isAuto() && component.isVisibleInHierarchy())
 						{
 							// Increase number of unrendered components
-							unrenderedComponents.increment();
+							unrenderedComponents.add(component);
 
 							// Add to explanatory string to buffer
-							buffer.append(Integer.toString(unrenderedComponents.getCount()) + ". " +
-									component + "\n");
+							buffer.append(Integer.toString(unrenderedComponents.size()) + ". " +
+								component + "\n");
 							String metadata = (String)component
-									.getMetaData(Component.CONSTRUCTED_AT_KEY);
+								.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
 								buffer.append(metadata);
@@ -1067,24 +1060,44 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				}
 			});
 
-			// Remove any unrendered auto components since versioning couldn't
-			// do it. We can't remove the component in the above visitChildren
-			// callback because we're traversing the list at that time.
-			for (int i = 0; i < unrenderedAutoComponents.size(); i++)
-			{
-				((Component)unrenderedAutoComponents.get(i)).remove();
-			}
-
 			// Throw exception if any errors were found
-			if (unrenderedComponents.getCount() > 0)
+			if (unrenderedComponents.size() > 0)
 			{
 				// Get rid of set
 				renderedComponents = null;
 
-				// Throw exception
-				throw new WicketRuntimeException(
+				Iterator iterator = unrenderedComponents.iterator();
+
+				while (iterator.hasNext())
+				{
+					Component component = (Component)iterator.next();
+					// Now first test if the component has a sibling that is a transparent resolver.
+
+					Iterator iterator2 = component.getParent().iterator();
+					while (iterator2.hasNext())
+					{
+						Component sibling = (Component)iterator2.next();
+						if (!sibling.isVisible() && sibling instanceof MarkupContainer &&
+							((MarkupContainer)sibling).isTransparentResolver())
+						{
+							// we found a transparent container that isn't visible
+							// then ignore this component and only do a debug statement here.
+							log.warn("Component " + component +
+								" wasn't rendered but most likely it has a transparent parent: " +
+								sibling);
+							iterator.remove();
+							break;
+						}
+					}
+				}
+				// if still > 0
+				if (unrenderedComponents.size() > 0)
+				{
+					// Throw exception
+					throw new WicketRuntimeException(
 						"The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n" +
-								buffer.toString());
+							buffer.toString());
+				}
 			}
 		}
 
@@ -1190,7 +1203,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
 		if (component.isAuto() || (parent == null && !component.isVersioned()) ||
-				(parent != null && !parent.isVersioned()))
+			(parent != null && !parent.isVersioned()))
 		{
 			return false;
 		}
@@ -1302,7 +1315,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Write out an xml declaration if the markup stream and settings allow
 		final MarkupStream markupStream = findMarkupStream();
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
-				(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
+			(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
 			response.write("<?xml version='1.0' encoding='");
 			response.write(encoding);
