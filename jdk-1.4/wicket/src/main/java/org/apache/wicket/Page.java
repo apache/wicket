@@ -265,7 +265,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * Constructor.
 	 * 
 	 * @param pageMap
-	 *            the name of the page map to put this page in
+	 *            the page map to put this page in
 	 * @param model
 	 *            See Component
 	 * @see Component#Component(String, IModel)
@@ -291,6 +291,23 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		super(null);
 		this.parameters = parameters;
 		init();
+	}
+
+	/**
+	 * The {@link PageParameters} parameter will be stored in this page and then those parameters
+	 * will be used to create stateless links to this bookmarkable page.
+	 * 
+	 * @param pageMap
+	 *            the page map to put this page in
+	 * @param parameters
+	 *            externally passed parameters
+	 * @see PageParameters
+	 */
+	protected Page(final IPageMap pageMap, final PageParameters parameters)
+	{
+		super(null);
+		this.parameters = parameters;
+		init(pageMap);
 	}
 
 	/**
