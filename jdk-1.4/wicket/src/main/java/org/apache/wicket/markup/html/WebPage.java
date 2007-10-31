@@ -222,12 +222,38 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * that tools such as IDEs will include it their list of suggested constructors for derived
 	 * classes.
 	 * 
+	 * Please call this constructor (or the one with the pagemap) if you want to remember the
+	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
+	 * 
 	 * @param parameters
 	 *            Wrapped query string parameters.
 	 */
 	protected WebPage(final PageParameters parameters)
 	{
 		super(parameters);
+		commonInit();
+	}
+
+	/**
+	 * Constructor which receives wrapped query string parameters for a request. Having this
+	 * constructor public means that your page is 'bookmarkable' and hence can be called/ created
+	 * from anywhere. For bookmarkable pages (as opposed to when you construct page instances
+	 * yourself, this constructor will be used in preference to a no-arg constructor, if both exist.
+	 * Note that nothing is done with the page parameters argument. This constructor is provided so
+	 * that tools such as IDEs will include it their list of suggested constructors for derived
+	 * classes.
+	 * 
+	 * Please call this constructor (or the one without the pagemap) if you want to remember the
+	 * pageparameters {@link #getPageParameters()}. So that they are reused for stateless links.
+	 * 
+	 * @param pageMap
+	 *            The pagemap where the webpage needs to be constructed in.
+	 * @param parameters
+	 *            Wrapped query string parameters.
+	 */
+	protected WebPage(final IPageMap pageMap, final PageParameters parameters)
+	{
+		super(pageMap, parameters);
 		commonInit();
 	}
 
