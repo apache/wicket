@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.MockServletContext;
 import org.slf4j.Logger;
@@ -77,5 +80,27 @@ public class DownloadLinkTest extends WicketTestCase
 		assertTrue(tester.getContentDispositionFromResponseHeader().startsWith(
 				"attachment; filename="));
 		assertEquals(0, tester.getContentLengthFromResponseHeader());
+	}
+
+	/**
+	 * Tests file removal after download
+	 */
+	public void testDeleteAfterLink()
+	{
+		DownloadPage page;
+
+		try
+		{
+			page = new DownloadPage();
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		tester.startPage(page);
+		File temporary = page.getTemporaryFile();
+		tester.clickLink(DownloadPage.DELETE_DOWNLOAD_LINK);
+		assertFalse(temporary.exists());
 	}
 }

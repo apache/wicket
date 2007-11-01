@@ -33,8 +33,10 @@ public class DownloadPage extends WebPage
 	static final String HELLO_WORLD = "Hello, World!";
 	static final String TEXT_DOWNLOAD_LINK = "textDownload";
 	static final String PDF_DOWNLOAD_LINK = "pdfDownload";
-
+	static final String DELETE_DOWNLOAD_LINK = "deleteDownload";
 	static final String CUSTOM_DOWNLOAD_LINK = "customDownload";
+
+	private final File temporaryFile;
 
 	/**
 	 * Construct.
@@ -54,5 +56,17 @@ public class DownloadPage extends WebPage
 
 		File customFile = File.createTempFile("Download", ".custom");
 		add(new DownloadLink(CUSTOM_DOWNLOAD_LINK, customFile));
+
+		temporaryFile = File.createTempFile("Download", ".delete");
+		add(new DownloadLink(DELETE_DOWNLOAD_LINK, temporaryFile).setDeleteAfterDownload(true));
+	}
+
+	/**
+	 * 
+	 * @return temporary file
+	 */
+	public File getTemporaryFile()
+	{
+		return temporaryFile;
 	}
 }

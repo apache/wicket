@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.link;
 
 import java.io.File;
 
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
@@ -48,6 +49,8 @@ public class DownloadLink extends Link
 	 * File name to stream
 	 */
 	private String fileName;
+
+	private boolean deleteAfter;
 
 
 	/**
@@ -146,6 +149,32 @@ public class DownloadLink extends Link
 			{
 				return fn;
 			}
+
+			public void respond(RequestCycle requestCycle)
+			{
+				super.respond(requestCycle);
+
+				if (deleteAfter)
+					file.delete();
+			}
 		});
+	}
+
+	/**
+	 * USE THIS METHOD WITH CAUTION!
+	 * 
+	 * If true, the file will be deleted! The recommended way to use this setting, is to set this
+	 * DownloadLink object's model with a LoadableDetachableModel instance and the resulting file
+	 * being generated in a temporary folder.
+	 * 
+	 * @param deleteAfter
+	 *            true to delete file after download succeeds
+	 * @return component
+	 */
+	public final DownloadLink setDeleteAfterDownload(boolean deleteAfter)
+	{
+		this.deleteAfter = deleteAfter;
+
+		return this;
 	}
 }
