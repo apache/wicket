@@ -121,7 +121,7 @@ abstract class AbstractChoice extends FormComponent
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public AbstractChoice(final String id, IModel model, final List choices,
-			final IChoiceRenderer renderer)
+		final IChoiceRenderer renderer)
 	{
 		this(id, model, new Model((Serializable)choices), renderer);
 	}
@@ -188,7 +188,7 @@ abstract class AbstractChoice extends FormComponent
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
 	public AbstractChoice(final String id, IModel model, final IModel choices,
-			final IChoiceRenderer renderer)
+		final IChoiceRenderer renderer)
 	{
 		super(id, model);
 		this.choices = wrap(choices);
@@ -205,7 +205,7 @@ abstract class AbstractChoice extends FormComponent
 		if (choices == null)
 		{
 			throw new NullPointerException(
-					"List of choices is null - Was the supplied 'Choices' model empty?");
+				"List of choices is null - Was the supplied 'Choices' model empty?");
 		}
 		return choices;
 	}
@@ -369,7 +369,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The currently selected string value
 	 */
 	protected void appendOptionHtml(AppendingStringBuffer buffer, Object choice, int index,
-			String selected)
+		String selected)
 	{
 		Object objectValue = renderer.getDisplayValue(choice);
 		Class objectClass = objectValue == null ? null : objectValue.getClass();
@@ -403,10 +403,21 @@ abstract class AbstractChoice extends FormComponent
 		CharSequence escaped = display;
 		if (getEscapeModelStrings())
 		{
-			escaped = Strings.escapeMarkup(display, false, true);
+			escaped = escapeOptionHtml(display);
 		}
 		buffer.append(escaped);
 		buffer.append("</option>");
+	}
+
+	/**
+	 * Method to override if you want special escaping of the options html.
+	 * 
+	 * @param displayValue
+	 * @return The escaped display value
+	 */
+	protected CharSequence escapeOptionHtml(String displayValue)
+	{
+		return Strings.escapeMarkup(displayValue, false, true);
 	}
 
 	/**
@@ -464,7 +475,7 @@ abstract class AbstractChoice extends FormComponent
 		public String toString()
 		{
 			return "ChoiceListChange[component: " + getPath() + ", old choices: " + oldChoices +
-					"]";
+				"]";
 		}
 
 
