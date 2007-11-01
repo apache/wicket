@@ -121,21 +121,21 @@ public class Enclosure extends WebMarkupContainer
 		if (parent == null)
 		{
 			throw new WicketRuntimeException(
-					"Unable to find parent component which is not a transparent resolver");
+				"Unable to find parent component which is not a transparent resolver");
 		}
 
 		if (childId == null)
 		{
 			throw new MarkupException(
-					"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
+				"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
 		}
 
 		final Component child = parent.get(childId.toString());
 		if (child == null)
 		{
 			throw new MarkupException(
-					"Didn't find child component of <wicket:enclosure> with id='" + childId +
-							"'. Component: " + this.toString());
+				"Didn't find child component of <wicket:enclosure> with id='" + childId +
+					"'. Component: " + this.toString());
 		}
 
 		return child;
@@ -156,12 +156,12 @@ public class Enclosure extends WebMarkupContainer
 		if (childComponent == this)
 		{
 			throw new WicketRuntimeException(
-					"Programming error: childComponent == enclose component; endless loop");
+				"Programming error: childComponent == enclose component; endless loop");
 		}
 		else if (childComponent != null)
 		{
 			// Delegate to child component
-			setVisible(childComponent.isVisible());
+			setVisible(childComponent.isVisible() && childComponent.isRenderAllowed());
 		}
 
 		if (isVisible() == true)
