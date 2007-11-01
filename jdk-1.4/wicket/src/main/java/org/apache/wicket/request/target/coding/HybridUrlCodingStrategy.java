@@ -26,6 +26,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
 import org.apache.wicket.request.RequestParameters;
 import org.apache.wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
@@ -70,7 +71,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 *            redirected to hybrid URL - needed for ajax to work properly after page refresh
 	 */
 	public HybridUrlCodingStrategy(String mountPath, Class pageClass,
-			boolean redirectOnBookmarkableRequest)
+		boolean redirectOnBookmarkableRequest)
 	{
 		super(mountPath);
 		pageClassRef = new WeakReference(pageClass);
@@ -132,7 +133,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		// returns true if the pageId is unique, so we can get rid of the
 		// pageMap name in the url this way
 		return Application.exists() &&
-				Application.get().getSessionSettings().isPageIdUniquePerSession();
+			Application.get().getSessionSettings().isPageIdUniquePerSession();
 	}
 
 	/**
@@ -152,7 +153,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 
 		// decode parameters
 		PageParameters parameters = new PageParameters(decodeParameters(extraction
-				.getUrlAfterExtraction(), requestParameters.getParameters()));
+			.getUrlAfterExtraction(), requestParameters.getParameters()));
 
 		if (requestParameters.getPageMapName() == null)
 		{
@@ -167,12 +168,12 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		// bookmarkable page, or a request to a stateless page (in which case a
 		// wicket:interface parameter should be available
 		final String interfaceParameter = (String)parameters
-				.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+			.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
 
 		// we need to remember the amount of trailing slashes after the redirect
 		// (otherwise we'll break relative urls)
 		int originalUrlTrailingSlashesCount = getTrailingSlashesCount(extraction
-				.getUrlAfterExtraction());
+			.getUrlAfterExtraction());
 
 		boolean redirect = isRedirectOnBookmarkableRequest();
 		if (Strings.isEmpty(pageMapName) != true && alwaysRedirectWhenPageMapIsSpecified())
@@ -185,14 +186,14 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			// stateless listener interface
 			WebRequestCodingStrategy.addInterfaceParameters(interfaceParameter, requestParameters);
 			return new BookmarkableListenerInterfaceRequestTarget(pageMapName, (Class)pageClassRef
-					.get(), parameters, requestParameters.getComponentPath(), requestParameters
-					.getInterfaceName(), requestParameters.getVersionNumber());
+				.get(), parameters, requestParameters.getComponentPath(), requestParameters
+				.getInterfaceName(), requestParameters.getVersionNumber());
 		}
 		else if (pageId == null)
 		{
 			// bookmarkable page request
 			return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef.get(),
-					parameters, originalUrlTrailingSlashesCount, redirect);
+				parameters, originalUrlTrailingSlashesCount, redirect);
 		}
 		else
 		// hybrid url
@@ -200,15 +201,15 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			Page page;
 
 			if (Strings.isEmpty(pageMapName) && Application.exists() &&
-					Application.get().getSessionSettings().isPageIdUniquePerSession())
+				Application.get().getSessionSettings().isPageIdUniquePerSession())
 			{
 				page = Session.get().getPage(pageId.intValue(),
-						pageVersion != null ? pageVersion.intValue() : 0);
+					pageVersion != null ? pageVersion.intValue() : 0);
 			}
 			else
 			{
 				page = Session.get().getPage(pageMapName, "" + pageId,
-						pageVersion != null ? pageVersion.intValue() : 0);
+					pageVersion != null ? pageVersion.intValue() : 0);
 			}
 
 			// check if the found page match the required class
@@ -223,7 +224,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				// we didn't find the page, act as bookmarkable page request -
 				// create new instance
 				return new HybridBookmarkablePageRequestTarget(pageMapName, (Class)pageClassRef
-						.get(), parameters, originalUrlTrailingSlashesCount, redirect);
+					.get(), parameters, originalUrlTrailingSlashesCount, redirect);
 			}
 		}
 
@@ -297,7 +298,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
 			Page page = target.getPage();
 			return new PageInfo(new Integer(page.getNumericId()), new Integer(page
-					.getCurrentVersionNumber()), page.getPageMapName());
+				.getCurrentVersionNumber()), page.getPageMapName());
 		}
 		else
 		{
@@ -431,7 +432,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			ListenerInterfaceRequestTarget target = (ListenerInterfaceRequestTarget)requestTarget;
 			return target.getPage().getClass().equals(pageClassRef.get()) &&
-					target.getRequestListenerInterface().equals(IRedirectListener.INTERFACE);
+				target.getRequestListenerInterface().equals(IRedirectListener.INTERFACE);
 		}
 		return false;
 	}
@@ -491,11 +492,11 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		{
 			lastSubstring = url.substring(begin);
 			if (lastSubstring.length() > getBeginSeparator().length() + getEndSeparator().length() &&
-					lastSubstring.startsWith(getBeginSeparator()) &&
-					lastSubstring.endsWith(getEndSeparator()))
+				lastSubstring.startsWith(getBeginSeparator()) &&
+				lastSubstring.endsWith(getEndSeparator()))
 			{
 				String pageInfoString = lastSubstring.substring(getBeginSeparator().length(), //
-						lastSubstring.length() - getEndSeparator().length());
+					lastSubstring.length() - getEndSeparator().length());
 				PageInfo info = PageInfo.parsePageInfo(pageInfoString);
 				last = info;
 			}
@@ -562,10 +563,10 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		public PageInfo(Integer pageId, Integer versionNumber, String pageMapName)
 		{
 			if ((pageId == null && (versionNumber != null || pageMapName == null)) ||
-					(versionNumber == null && (pageId != null || pageMapName == null)))
+				(versionNumber == null && (pageId != null || pageMapName == null)))
 			{
 				throw new IllegalArgumentException(
-						"Either both pageId and versionNumber must be null or none of them.");
+					"Either both pageId and versionNumber must be null or none of them.");
 			}
 			this.pageId = pageId;
 			this.versionNumber = versionNumber;
@@ -618,7 +619,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			// we don't need to encode the pageMapName when the pageId is unique
 			// per session
 			if (pageMapName != null && pageId != null && Application.exists() &&
-					Application.get().getSessionSettings().isPageIdUniquePerSession())
+				Application.get().getSessionSettings().isPageIdUniquePerSession())
 			{
 				pageMapName = null;
 			}
@@ -730,7 +731,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			{
 				// pageId:pageVersion
 				return new PageInfo(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]),
-						null);
+					null);
 			}
 			else if (segments.length == 1 && !isNumber(segments[0]))
 			{
@@ -760,7 +761,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 				{
 					// pageMapName.pageId.pageVersion
 					return new PageInfo(Integer.valueOf(segments[1]), Integer.valueOf(segments[2]),
-							segments[0]);
+						segments[0]);
 				}
 			}
 
@@ -790,7 +791,7 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		 * @param redirect
 		 */
 		public HybridBookmarkablePageRequestTarget(String pageMapName, Class pageClass,
-				PageParameters pageParameters, int originalUrlTrailingSlashesCount, boolean redirect)
+			PageParameters pageParameters, int originalUrlTrailingSlashesCount, boolean redirect)
 		{
 			super(pageMapName, pageClass, pageParameters);
 			this.originalUrlTrailingSlashesCount = originalUrlTrailingSlashesCount;
@@ -802,22 +803,20 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			Page page = super.newPage(pageClass, requestCycle);
 			page.setMetaData(PAGE_PARAMETERS_META_DATA_KEY, getPageParameters());
 			page.setMetaData(ORIGINAL_TRAILING_SLASHES_COUNT_METADATA_KEY, new Integer(
-					originalUrlTrailingSlashesCount));
+				originalUrlTrailingSlashesCount));
 			return page;
 		}
 
 		public void respond(RequestCycle requestCycle)
 		{
+			Page page = getPage(requestCycle);
+			if (page.isPageStateless() == false && redirect)
 			{
-				Page page = getPage(requestCycle);
-				if (page.isPageStateless() == false && redirect)
-				{
-					requestCycle.redirectTo(page);
-				}
-				else
-				{
-					super.respond(requestCycle);
-				}
+				requestCycle.redirectTo(page);
+			}
+			else
+			{
+				super.respond(requestCycle);
 			}
 		}
 	};
@@ -827,6 +826,16 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 	 */
 	public boolean matches(String path)
 	{
+		RequestCycle rc = RequestCycle.get();
+
+		// the null check is necessary, as this method is first time called from WicketFilter when
+		// no RequestCycle exists yet
+		if (rc != null && ((WebRequest)rc.getRequest()).isAjax())
+		{
+			// HybridUrlCodingStrategy doesn't make sense for ajax request
+			return false;
+		}
+
 		if (path.startsWith(getMountPath()))
 		{
 			/*
@@ -842,11 +851,10 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			 * We also need to accept /mount/point(XXX)
 			 */
 			if (remainder.length() > getBeginSeparator().length() + getEndSeparator().length() &&
-					remainder.startsWith(getBeginSeparator()) &&
-					remainder.endsWith(getEndSeparator()))
+				remainder.startsWith(getBeginSeparator()) && remainder.endsWith(getEndSeparator()))
 			{
 				String substring = remainder.substring(getBeginSeparator().length(), //
-						remainder.length() - getEndSeparator().length());
+					remainder.length() - getEndSeparator().length());
 				PageInfo info = PageInfo.parsePageInfo(substring);
 				if (info != null)
 				{
