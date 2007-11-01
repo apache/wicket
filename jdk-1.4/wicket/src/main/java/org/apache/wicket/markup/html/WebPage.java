@@ -67,8 +67,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * that it will start using it's own history in sync with the browser window or tab.
 	 */
 	private static final class PageMapChecker extends AbstractBehavior
-			implements
-				IHeaderContributor
+		implements
+			IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -113,7 +113,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			Session session = Session.get();
 
 			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session
-					.getMetaData(Session.PAGEMAP_ACCESS_MDK);
+				.getMetaData(Session.PAGEMAP_ACCESS_MDK);
 			if (meta == null)
 			{
 				meta = new Session.PageMapAccessMetaData();
@@ -126,7 +126,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				// this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
 				response
-						.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
+					.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
 				response.write("wicket-" + name);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
@@ -142,8 +142,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				{
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-							session.createAutoPageMapName(), current.getPageClass(), current
-									.getPageParameters());
+						session.createAutoPageMapName(), current.getPageClass(), current
+							.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else
@@ -152,11 +152,11 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				}
 				JavascriptUtils.writeOpenTag(response);
 				response
-						.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" +
-								"wicket-" + name + "')) { window.location=\"");
+					.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" +
+						"wicket-" + name + "')) { window.location=\"");
 				response.write(url);
 				response
-						.write("\" + (window.location.hash != null ? window.location.hash : \"\"); }");
+					.write("\" + (window.location.hash != null ? window.location.hash : \"\"); }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 		}
@@ -167,7 +167,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/** The resource references used for new window/tab support */
 	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
-			"cookies.js");
+		"cookies.js");
 
 	private static final long serialVersionUID = 1L;
 
@@ -339,9 +339,29 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		if (getWebRequestCycle().getResponse() instanceof WebResponse)
 		{
 			final WebResponse response = getWebRequestCycle().getWebResponse();
-			response.setHeader("Pragma", "no-cache");
-			response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store
+			setHeaders(response);
 		}
+	}
+
+	/**
+	 * Subclasses can override this to set there headers when the Page is being served. By default 2
+	 * headers will be set
+	 * 
+	 * <pre>
+	 * response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
+	 * response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache, max-age=0, must-revalidate&quot;);
+	 * </pre>
+	 * 
+	 * So if a Page wants to control this or doesn't want to set this info it should override this
+	 * method and don't call super.
+	 * 
+	 * @param response
+	 *            The WebResponse where set(Date)Header can be called on.
+	 */
+	protected void setHeaders(WebResponse response)
+	{
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store
 	}
 
 	/**
