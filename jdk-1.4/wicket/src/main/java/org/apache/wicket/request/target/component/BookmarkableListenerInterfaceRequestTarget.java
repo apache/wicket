@@ -52,8 +52,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param versionNumber
 	 */
 	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class pageClass,
-			PageParameters pageParameters, String componentPath, String interfaceName,
-			int versionNumber)
+		PageParameters pageParameters, String componentPath, String interfaceName, int versionNumber)
 	{
 		super(pageMapName, pageClass, pageParameters);
 		this.componentPath = componentPath;
@@ -74,18 +73,18 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param listenerInterface
 	 */
 	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class pageClass,
-			PageParameters pageParameters, Component component,
-			RequestListenerInterface listenerInterface)
+		PageParameters pageParameters, Component component,
+		RequestListenerInterface listenerInterface)
 	{
 		this(pageMapName, pageClass, pageParameters, component.getPath(), listenerInterface
-				.getName(), component.getPage().getCurrentVersionNumber());
+			.getName(), component.getPage().getCurrentVersionNumber());
 
 		int version = component.getPage().getCurrentVersionNumber();
 
 		// add the wicket:interface param to the params.
 		// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:urlDepth
 		AppendingStringBuffer param = new AppendingStringBuffer(4 + componentPath.length() +
-				interfaceName.length());
+			interfaceName.length());
 		if (pageMapName != null)
 		{
 			param.append(pageMapName);
@@ -116,13 +115,18 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		if (page == null)
 		{
 			page = Session.get().getPage(getPageMapName(), componentPath, -1);
-			if (page == null)
+			if (page != null)
+			{
+				setPage(page);
+			}
+			else if (page == null)
 			{
 				page = getPage(requestCycle);
 			}
 		}
+
 		final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
-				Component.PATH_SEPARATOR);
+			Component.PATH_SEPARATOR);
 		Component component = page.get(pageRelativeComponentPath);
 		if (component == null)
 		{
@@ -134,15 +138,15 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 			if (component == null)
 			{
 				throw new WicketRuntimeException(
-						"unable to find component with path " +
-								pageRelativeComponentPath +
-								" on stateless page " +
-								page +
-								" it could be that the component is inside a repeater make your component return false in getStatelessHint()");
+					"unable to find component with path " +
+						pageRelativeComponentPath +
+						" on stateless page " +
+						page +
+						" it could be that the component is inside a repeater make your component return false in getStatelessHint()");
 			}
 		}
 		RequestListenerInterface listenerInterface = RequestListenerInterface
-				.forName(interfaceName);
+			.forName(interfaceName);
 		if (listenerInterface == null)
 		{
 			throw new WicketRuntimeException("unable to find listener interface " + interfaceName);
@@ -152,7 +156,18 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 
 	public void respond(RequestCycle requestCycle)
 	{
-		getPage(requestCycle).renderPage();
+		Page page = getPage(requestCycle);
+		// if the listener call wanted to redirect
+		// then do that if the page is not stateless.
+		if (requestCycle.isRedirect() && !page.isPageStateless())
+		{
+			requestCycle.redirectTo(page);
+		}
+		else
+		{
+			// else render the page directly
+			page.renderPage();
+		}
 	}
 
 	/**

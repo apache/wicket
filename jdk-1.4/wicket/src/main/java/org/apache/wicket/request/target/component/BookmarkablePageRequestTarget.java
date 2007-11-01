@@ -95,7 +95,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            optional page parameters
 	 */
 	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass,
-			PageParameters pageParameters)
+		PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -105,7 +105,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		if (!Page.class.isAssignableFrom(pageClass))
 		{
 			throw new IllegalArgumentException("Argument pageClass must be an instance of " +
-					Page.class.getName());
+				Page.class.getName());
 		}
 		this.pageClassRef = new WeakReference(pageClass);
 		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
@@ -158,6 +158,12 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	{
 		return page;
 	}
+
+	protected final void setPage(Page page)
+	{
+		this.page = page;
+	}
+
 
 	/**
 	 * @see org.apache.wicket.request.target.component.IBookmarkablePageRequestTarget#getPageClass()
@@ -216,7 +222,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
 				String redirectUrl = processor.getRequestCodingStrategy()
-						.encode(requestCycle, this).toString();
+					.encode(requestCycle, this).toString();
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
@@ -233,7 +239,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	public String toString()
 	{
 		return "[BookmarkablePageRequestTarget@" + hashCode() + " pageClass=" +
-				getPageClass().getName() + "]";
+			getPageClass().getName() + "]";
 	}
 
 	/**
@@ -249,7 +255,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	{
 		// Construct a new instance using the default page factory
 		IPageFactory pageFactory = requestCycle.getApplication().getSessionSettings()
-				.getPageFactory();
+			.getPageFactory();
 
 		if (pageParameters == null || pageParameters.size() == 0)
 		{
