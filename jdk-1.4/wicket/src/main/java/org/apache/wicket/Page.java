@@ -1200,6 +1200,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	private final boolean mayTrackChangesFor(final Component component, MarkupContainer parent)
 	{
+		// first call the method so that people can track dirty components
+		componentChanged(component, parent);
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
 		if (component.isAuto() || (parent == null && !component.isVersioned()) ||
@@ -1234,6 +1236,20 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			// we are not tracking changes or the component not versioned
 			return false;
 		}
+	}
+
+	/**
+	 * This method will be called for all components that are changed on the page So also auto
+	 * components or components that are not versioned.
+	 * 
+	 * If the parent is given that it was a remove or add from that parent of the given component.
+	 * else it was just a internal property change of that component.
+	 * 
+	 * @param component
+	 * @param parent
+	 */
+	protected void componentChanged(Component component, MarkupContainer parent)
+	{
 	}
 
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
