@@ -44,15 +44,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 	/** reference to the default indicator gif file. */
 	public static final ResourceReference INDICATOR = new ResourceReference(
-			AbstractDefaultAjaxBehavior.class, "indicator.gif");
-
-	/** reference to the default ajax support javascript file. */
-	private static final ResourceReference JAVASCRIPT = new JavascriptResourceReference(
-			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
+		AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
 	/** reference to the default ajax debug support javascript file. */
 	private static final ResourceReference JAVASCRIPT_DEBUG = new JavascriptResourceReference(
-			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
+		AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -74,7 +70,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 
 		response.renderJavascriptReference(WicketEventReference.INSTANCE);
-		response.renderJavascriptReference(JAVASCRIPT);
+		response.renderJavascriptReference(WicketAjaxReference.INSTANCE);
 
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
@@ -116,7 +112,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	protected CharSequence getCallbackScript(boolean onlyTargetActivePage)
 	{
 		return generateCallbackScript("wicketAjaxGet('" + getCallbackUrl(onlyTargetActivePage) +
-				"'");
+			"'");
 	}
 
 	/**
@@ -235,7 +231,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (!Strings.isEmpty(indicatorId))
 		{
 			call = new AppendingStringBuffer("wicketShow('").append(indicatorId).append("');")
-					.append(call);
+				.append(call);
 		}
 
 		if (decorator != null)
@@ -319,7 +315,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * @return wrapped javascript
 	 */
 	public static final CharSequence throttleScript(CharSequence script, String throttleId,
-			Duration throttleDelay)
+		Duration throttleDelay)
 	{
 		if (Strings.isEmpty(script))
 		{
@@ -337,7 +333,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 
 		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId).append(
-				"', ").append(throttleDelay.getMilliseconds()).append(", function() { ").append(
-				script).append("});");
+			"', ").append(throttleDelay.getMilliseconds()).append(", function() { ").append(script)
+			.append("});");
 	}
 }
