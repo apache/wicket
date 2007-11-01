@@ -18,8 +18,12 @@ package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.StatelessForm;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -43,6 +47,7 @@ public class StatefulPage extends WebPage
 		// Action link counts link clicks
 		final Link actionLink = new Link("actionLink")
 		{
+			@Override
 			public void onClick()
 			{
 				linkClickCount++;
@@ -50,6 +55,24 @@ public class StatefulPage extends WebPage
 		};
 		add(actionLink);
 		actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
+
+		final TextField field = new TextField("textfield", new Model());
+
+		StatelessForm statelessForm = new StatelessForm("statelessform")
+		{
+			/**
+			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
+			 */
+			@Override
+			protected void onSubmit()
+			{
+				info("Submitted text: " + field.getModelObject() + ", link click count: " +
+					linkClickCount);
+			}
+		};
+		statelessForm.add(field);
+		add(statelessForm);
+		add(new FeedbackPanel("feedback"));
 	}
 
 	/**

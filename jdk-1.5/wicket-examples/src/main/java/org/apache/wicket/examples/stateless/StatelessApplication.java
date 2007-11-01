@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.util.lang.PackageName;
+import org.apache.wicket.request.target.coding.QueryStringUrlCodingStrategy;
 
 /**
  * Application class for the stateless application.
@@ -36,6 +36,7 @@ public class StatelessApplication extends WicketExampleApplication
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Index.class;
@@ -47,7 +48,9 @@ public class StatelessApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		mount("/public", PackageName.forClass(StatelessApplication.class));
+		mount(new QueryStringUrlCodingStrategy("/statefull", StatefulPage.class));
+		mount(new QueryStringUrlCodingStrategy("/stateless", StatelessPage.class));
+		// mount("/public", PackageName.forClass(StatelessApplication.class));
 		// mountBookmarkablePage("foo", StatelessPage.class);
 	}
 }
