@@ -151,7 +151,7 @@ Wicket.Event = {
 					    document.readyState == "complete") {
 					    domReady();
 					}
-				}, 1);
+				}, 10);
 			} else if (document.readyState && Wicket.Browser.isIE()) { 
 				if (document.getElementById('ie_ready') == null) {
 					// for internet explorer we need to load a "dummy" scrip from ::/ to get the 
