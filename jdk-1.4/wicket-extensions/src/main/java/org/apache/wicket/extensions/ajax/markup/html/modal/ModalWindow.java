@@ -131,7 +131,7 @@ public class ModalWindow extends Panel
 	{
 		super(id);
 		setVersioned(false);
-		this.cookieName = null;
+		cookieName = null;
 		add(empty = new WebMarkupContainer(getContentId()));
 
 		add(new CloseButtonBehavior());
@@ -240,7 +240,7 @@ public class ModalWindow extends Panel
 	 */
 	public void setPageCreator(PageCreator creator)
 	{
-		this.pageCreator = creator;
+		pageCreator = creator;
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class ModalWindow extends Panel
 	 */
 	public void setCloseButtonCallback(CloseButtonCallback callback)
 	{
-		this.closeButtonCallback = callback;
+		closeButtonCallback = callback;
 	}
 
 	/**
@@ -262,7 +262,7 @@ public class ModalWindow extends Panel
 	 */
 	public void setWindowClosedCallback(WindowClosedCallback callback)
 	{
-		this.windowClosedCallback = callback;
+		windowClosedCallback = callback;
 	}
 
 	/**
@@ -606,7 +606,7 @@ public class ModalWindow extends Panel
 	 * @param title
 	 *            Title of the window
 	 */
-	public void setTitle(Model title)
+	public void setTitle(IModel title)
 	{
 		this.title = title;
 	}
@@ -665,7 +665,7 @@ public class ModalWindow extends Panel
 	 */
 	public void setMaskType(MaskType mask)
 	{
-		this.maskType = mask;
+		maskType = mask;
 	}
 
 	/**
