@@ -1432,10 +1432,21 @@ Wicket.Head.addJavascript = function(content, id, fakeSrc) {
 // Goes through all script elements contained by the element and add them to head
 Wicket.Head.addJavascripts = function(element) {	
 	function add(element) {
-		var content = Wicket.DOM.serializeNodeChildren(element);
-		if (content == null || content == "")
-			content = element.text;
-		Wicket.Head.addJavascript(content);		
+		var src = element.getAttribute("src");
+		
+		// if it is a reference, just add it to head				
+		if (src != null && src.length > 0) {			
+			var e = document.createElement("script");
+			e.setAttribute("type","text/javascript");
+			e.setAttribute("src", src);
+			Wicket.Head.addElement(e);											
+		} else {	
+			var content = Wicket.DOM.serializeNodeChildren(element);		
+			if (content == null || content == "")
+				content = element.text;
+			
+			Wicket.Head.addJavascript(content);
+		}		
 	}
 	if (typeof(element) != "undefined" &&
 	    typeof(element.tagName) != "undefined" &&
