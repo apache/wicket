@@ -142,7 +142,7 @@ public class ServletWebRequest extends WebRequest
 	public String getPath()
 	{
 		return ((WebApplication)Application.get()).getWicketFilter().getRelativePath(
-				httpServletRequest);
+			httpServletRequest);
 	}
 
 	public String getRelativePathPrefixToContextRoot()
@@ -207,7 +207,7 @@ public class ServletWebRequest extends WebRequest
 	/**
 	 * Gets the depth of this request relative to the Wicket handler.
 	 * 
-	 * @return
+	 * @return the depth
 	 */
 	public int getDepthRelativeToWicketHandler()
 	{
@@ -267,7 +267,7 @@ public class ServletWebRequest extends WebRequest
 		// stuff, with a leading slash.
 		String forwardUrl = (String)httpRequest.getAttribute("javax.servlet.forward.servlet_path");
 
-		if (forwardUrl != null)
+		if (forwardUrl != null && forwardUrl.length() > 0)
 		{
 			// If this is an error page, this will be /mount or /?wicket:foo
 			relativeUrl = forwardUrl.substring(1);
@@ -455,15 +455,15 @@ public class ServletWebRequest extends WebRequest
 	public String toString()
 	{
 		return "[method = " + httpServletRequest.getMethod() + ", protocol = " +
-				httpServletRequest.getProtocol() + ", requestURL = " +
-				httpServletRequest.getRequestURL() + ", contentType = " +
-				httpServletRequest.getContentType() + ", contentLength = " +
-				httpServletRequest.getContentLength() + ", contextPath = " +
-				httpServletRequest.getContextPath() + ", pathInfo = " +
-				httpServletRequest.getPathInfo() + ", requestURI = " +
-				httpServletRequest.getRequestURI() + ", servletPath = " +
-				httpServletRequest.getServletPath() + ", pathTranslated = " +
-				httpServletRequest.getPathTranslated() + "]";
+			httpServletRequest.getProtocol() + ", requestURL = " +
+			httpServletRequest.getRequestURL() + ", contentType = " +
+			httpServletRequest.getContentType() + ", contentLength = " +
+			httpServletRequest.getContentLength() + ", contextPath = " +
+			httpServletRequest.getContextPath() + ", pathInfo = " +
+			httpServletRequest.getPathInfo() + ", requestURI = " +
+			httpServletRequest.getRequestURI() + ", servletPath = " +
+			httpServletRequest.getServletPath() + ", pathTranslated = " +
+			httpServletRequest.getPathTranslated() + "]";
 	}
 
 	/**
