@@ -17,9 +17,10 @@
 package org.apache.wicket.util.convert.converters;
 
 import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base class for all number converters.
@@ -33,10 +34,10 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	 */
 	private static final long serialVersionUID = 1L;
 	/** The date format to use */
-	private final Map/* <Locale, NumberFormat> */numberFormats = new HashMap/*
-																			 * <Locale,
-																			 * NumberFormat>
-																			 */();
+	private final Map/* <Locale, NumberFormat> */numberFormats = new ConcurrentHashMap/*
+	 * <Locale,
+	 * NumberFormat>
+	 */();
 
 
 	/**

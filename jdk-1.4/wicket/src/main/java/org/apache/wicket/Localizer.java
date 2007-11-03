@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -71,7 +70,7 @@ public class Localizer
 	 */
 	public final void clearCache()
 	{
-		cache = new HashMap();
+		cache = new ConcurrentHashMap();
 	}
 
 	/**
@@ -86,7 +85,7 @@ public class Localizer
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component)
-			throws MissingResourceException
+		throws MissingResourceException
 	{
 		return getString(key, component, null, null);
 	}
@@ -105,7 +104,7 @@ public class Localizer
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final IModel model)
-			throws MissingResourceException
+		throws MissingResourceException
 	{
 		return getString(key, component, model, null);
 	}
@@ -124,7 +123,7 @@ public class Localizer
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final String defaultValue)
-			throws MissingResourceException
+		throws MissingResourceException
 	{
 		return getString(key, component, null, defaultValue);
 	}
@@ -144,8 +143,8 @@ public class Localizer
 	 * @Deprecated please use {@link #getString(String, Component, IModel, String)}
 	 */
 	public String getString(final String key, final Component component, final IModel model,
-			final Locale locale, final String style, final String defaultValue)
-			throws MissingResourceException
+		final Locale locale, final String style, final String defaultValue)
+		throws MissingResourceException
 	{
 		return getString(key, component, model, defaultValue);
 	}
@@ -169,7 +168,7 @@ public class Localizer
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final IModel model,
-			final String defaultValue) throws MissingResourceException
+		final String defaultValue) throws MissingResourceException
 	{
 		final IResourceSettings resourceSettings = Application.get().getResourceSettings();
 
@@ -184,11 +183,11 @@ public class Localizer
 			if (!addedToPage)
 			{
 				logger
-						.warn(
-								"Tried to retrieve a localized string for a component that has not yet been added to the page. "
-										+ "This can sometimes lead to an invalid or no localized resource returned. "
-										+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
-										+ "Offending component: {}", component);
+					.warn(
+						"Tried to retrieve a localized string for a component that has not yet been added to the page. "
+							+ "This can sometimes lead to an invalid or no localized resource returned. "
+							+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
+							+ "Offending component: {}", component);
 			}
 		}
 
@@ -250,8 +249,8 @@ public class Localizer
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: "
-					+ key);
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: " +
+				key);
 			if (component != null)
 			{
 				message.append(" for component: ");
@@ -259,7 +258,7 @@ public class Localizer
 				message.append(" [class=").append(component.getClass().getName()).append("]");
 			}
 			throw new MissingResourceException(message.toString(), (component != null ? component
-					.getClass().getName() : ""), key);
+				.getClass().getName() : ""), key);
 		}
 
 		return "[Warning: String resource for '" + key + "' not found]";
@@ -288,7 +287,7 @@ public class Localizer
 	 * Get the value associated with the key from the cache.
 	 * 
 	 * @param cacheKey
-	 * @return
+	 * @return The value of the key
 	 */
 	protected String getFromCache(final String cacheKey)
 	{
@@ -310,7 +309,7 @@ public class Localizer
 	 * 
 	 * @param key
 	 * @param component
-	 * @return
+	 * @return The value of the key
 	 */
 	protected String getCacheKey(final String key, final Component component)
 	{
@@ -342,7 +341,7 @@ public class Localizer
 	 * @return The resulting string
 	 */
 	private String substitutePropertyExpressions(final Component component, final String string,
-			final IModel model)
+		final IModel model)
 	{
 		if ((string != null) && (model != null))
 		{

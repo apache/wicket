@@ -17,11 +17,11 @@
 package org.apache.wicket.util.lang;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.string.StringValue;
 
 
@@ -41,7 +41,7 @@ public abstract class EnumeratedType extends StringValue
 	 */
 	private static final long serialVersionUID = 1L;
 	/** Map of type values by class */
-	private static final Map valueListByClass = new HashMap();
+	private static final Map valueListByClass = new ConcurrentHashMap();
 
 	/**
 	 * Constructor.

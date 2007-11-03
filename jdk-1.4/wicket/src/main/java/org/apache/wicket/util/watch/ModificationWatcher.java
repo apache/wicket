@@ -17,11 +17,11 @@
 package org.apache.wicket.util.watch;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.wicket.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.util.listener.ChangeListenerSet;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.thread.ICode;
@@ -45,7 +45,7 @@ public final class ModificationWatcher
 	private static final Logger log = LoggerFactory.getLogger(ModificationWatcher.class);
 
 	/** maps <code>IModifiable</code> objects to <code>Entry</code> objects */
-	private final Map modifiableToEntry = new HashMap();
+	private final Map modifiableToEntry = new ConcurrentHashMap();
 
 	/** the <code>Task</code> to run */
 	private Task task;
@@ -166,7 +166,7 @@ public final class ModificationWatcher
 				// modification problems without the associated liveness issues
 				// of holding a lock while potentially polling file times!
 				for (final Iterator iterator = new ArrayList(modifiableToEntry.values()).iterator(); iterator
-						.hasNext();)
+					.hasNext();)
 				{
 					// Get next entry
 					final Entry entry = (Entry)iterator.next();
@@ -207,6 +207,6 @@ public final class ModificationWatcher
 	 */
 	public final Set getEntries()
 	{
-		return this.modifiableToEntry.keySet();
+		return modifiableToEntry.keySet();
 	}
 }
