@@ -135,6 +135,8 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 		{
 			Class pageExpiredErrorPageClass = application.getApplicationSettings()
 					.getPageExpiredErrorPage();
+			boolean mounted = isPageMounted(pageExpiredErrorPageClass);
+			RequestCycle.get().setRedirect(mounted);
 			throw new RestartResponseException(pageExpiredErrorPageClass);
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
@@ -166,6 +168,21 @@ public abstract class AbstractRequestCycleProcessor implements IRequestCycleProc
 						internalErrorPageClass, e);
 			}
 		}
+	}
+
+	/**
+	 * Checks whether the given <code>pageClass</code> is mounted.
+	 * 
+	 * @param pageClass
+	 *            the <code>Class</code> of the <code>Page</code> to be checked
+	 * @return true if the given <code>pageClass</code> is mounted, false otherwise
+	 */
+	private boolean isPageMounted(Class /* <? extends Page> */pageClass)
+	{
+		RequestCycle cycle = RequestCycle.get();
+		CharSequence path = getRequestCodingStrategy().pathForTarget(
+				new BookmarkablePageRequestTarget(pageClass));
+		return path != null;
 	}
 
 	/**
