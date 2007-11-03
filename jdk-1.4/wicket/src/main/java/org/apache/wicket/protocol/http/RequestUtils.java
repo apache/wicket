@@ -52,7 +52,7 @@ public final class RequestUtils
 				if (bits.length == 2)
 				{
 					params.add(URLDecoder.decode(bits[0], "UTF-8"), URLDecoder.decode(bits[1],
-							"UTF-8"));
+						"UTF-8"));
 				}
 				else
 				{
@@ -74,20 +74,21 @@ public final class RequestUtils
 	 */
 	static String removeDoubleDots(String path)
 	{
-		String[] components = path.split("/");
-		List newcomponents = new ArrayList(Arrays.asList(components));
+		List newcomponents = new ArrayList(Arrays.asList(path.split("/")));
 
-		for (int i = 0; i < components.length; i++)
+		for (int i = 0; i < newcomponents.size(); i++)
 		{
-			if (i < components.length - 1)
+			if (i < newcomponents.size() - 1)
 			{
 				// Verify for a ".." component at next iteration
-				if (components[i].length() > 0 && components[i + 1].equals(".."))
+				if (((String)newcomponents.get(i)).length() > 0 &&
+					newcomponents.get(i + 1).equals(".."))
 				{
 					newcomponents.remove(i);
 					newcomponents.remove(i);
-					// Skip the ".." component
-					i++;
+					i = i - 2;
+					if (i < -1)
+						i = -1;
 				}
 			}
 		}

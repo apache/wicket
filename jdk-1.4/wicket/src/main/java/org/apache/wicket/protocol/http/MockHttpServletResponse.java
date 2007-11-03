@@ -35,6 +35,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.RequestCycle;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -526,6 +527,24 @@ public class MockHttpServletResponse implements HttpServletResponse
 	 */
 	public void sendRedirect(String location) throws IOException
 	{
+		// If the location starts with ../
+		if (location.startsWith("../"))
+		{
+			// Test if the current url has a / in it. (a mount)
+			String url = RequestCycle.get().getRequest().getURL();
+			int index = url.lastIndexOf("/");
+			if (index != -1)
+			{
+				// Then we have to recalculate what the real redirect is for the next request
+				// which is just getContext() + getServletPath() + "/" + location;
+				url = url.substring(0, index + 1) + location;
+				url = RequestUtils.removeDoubleDots(url);
+
+				// stril the servlet path again from it.
+				index = url.indexOf("/");
+				location = url.substring(index + 1);
+			}
+		}
 		redirectLocation = location;
 	}
 
