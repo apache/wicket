@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.text.SimpleDateFormat;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.convert.ConversionException;
@@ -31,6 +32,9 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractTextComponent extends FormComponent
 {
+	// Flag for the type resolving. FLAG_RESERVED1-3 is taken by form component
+	private static final int TYPE_RESOLVED = Component.FLAG_RESERVED4;
+
 	/**
 	 * 
 	 */
@@ -103,7 +107,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		if (getType() == null)
+		if (!getFlag(TYPE_RESOLVED))
 		{
 			// Set the type, but only if it's not a String (see WICKET-606).
 			// Otherwise, getConvertEmptyInputStringToNull() won't work.
@@ -112,6 +116,7 @@ public abstract class AbstractTextComponent extends FormComponent
 			{
 				setType(type);
 			}
+			setFlag(TYPE_RESOLVED, true);
 		}
 	}
 
