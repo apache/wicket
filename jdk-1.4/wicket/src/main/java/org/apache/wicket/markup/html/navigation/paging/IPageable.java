@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import java.io.Serializable;
+import org.apache.wicket.IClusterable;
 
 /**
  * Components that implement this interface will be pageable, they should return the pagecount so
@@ -27,7 +27,7 @@ import java.io.Serializable;
  * 
  * @author jcompagner
  */
-public interface IPageable extends Serializable
+public interface IPageable extends IClusterable
 {
 	/**
 	 * @return The current page that is or will be rendered rendered.
