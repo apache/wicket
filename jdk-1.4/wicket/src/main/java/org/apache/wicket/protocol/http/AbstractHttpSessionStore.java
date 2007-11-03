@@ -28,7 +28,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.Session;
 import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.settings.IPageSettings;
 import org.apache.wicket.version.IPageVersionManager;
 import org.apache.wicket.version.undo.UndoPageVersionManager;
 import org.slf4j.Logger;
@@ -248,7 +247,6 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	public IPageVersionManager newVersionManager(Page page)
 	{
-		final IPageSettings settings = page.getSession().getApplication().getPageSettings();
 		return new UndoPageVersionManager(page, 20);
 	}
 
