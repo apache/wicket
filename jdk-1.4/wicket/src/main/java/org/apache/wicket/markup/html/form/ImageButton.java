@@ -216,7 +216,6 @@ public class ImageButton extends Button implements IResourceListener
 	{
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "image");
-		super.onComponentTag(tag);
 
 		final Resource resource = getImageResource();
 		if (resource != null)
@@ -229,6 +228,7 @@ public class ImageButton extends Button implements IResourceListener
 			localizedImageResource.setResourceReference(resourceReference);
 		}
 		localizedImageResource.setSrcAttribute(tag);
+		super.onComponentTag(tag);
 	}
 
 	/**
