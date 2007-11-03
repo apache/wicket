@@ -42,7 +42,7 @@ import org.apache.wicket.util.convert.ConverterLocator;
 public class PropertyResolverTest extends TestCase
 {
 	private static final PropertyResolverConverter CONVERTER = new PropertyResolverConverter(
-			new ConverterLocator(), Locale.US);
+		new ConverterLocator(), Locale.US);
 
 	private Person person;
 	private MockWebApplication app;
@@ -151,7 +151,7 @@ public class PropertyResolverTest extends TestCase
 		{
 			PropertyResolver.setValue("country.name", person, "US", CONVERTER);
 			throw new Exception(
-					"name can't be set on a country that doesn't have default constructor");
+				"name can't be set on a country that doesn't have default constructor");
 		}
 		catch (WicketRuntimeException ex)
 		{
@@ -212,6 +212,23 @@ public class PropertyResolverTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
+	public void testMapWithDotLookup() throws Exception
+	{
+		Address address = new Address();
+		HashMap hm = new HashMap();
+		PropertyResolver.setValue("addressMap", person, hm, CONVERTER);
+		PropertyResolver.setValue("addressMap[address.test]", person, address, CONVERTER);
+		assertNotNull(hm.get("address.test"));
+		PropertyResolver.setValue("addressMap[address.test].street", person, "wicket-street",
+			CONVERTER);
+		String street = (String)PropertyResolver
+			.getValue("addressMap[address.test].street", person);
+		assertEquals(street, "wicket-street");
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	public void testListLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressList", person, new ArrayList(), CONVERTER);
@@ -232,7 +249,7 @@ public class PropertyResolverTest extends TestCase
 	public void testArrayLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressArray", person, new Address[] { new Address(), null },
-				CONVERTER);
+			CONVERTER);
 		PropertyResolver.setValue("addressArray.0.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressArray.0.street", person);
 		assertEquals(street, "wicket-street");
@@ -248,7 +265,7 @@ public class PropertyResolverTest extends TestCase
 	public void testArrayLookupByBrackets() throws Exception
 	{
 		PropertyResolver.setValue("addressArray", person, new Address[] { new Address(), null },
-				CONVERTER);
+			CONVERTER);
 		PropertyResolver.setValue("addressArray[0].street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressArray[0].street", person);
 		assertEquals(street, "wicket-street");
