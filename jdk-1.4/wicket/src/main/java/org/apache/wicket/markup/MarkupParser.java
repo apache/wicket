@@ -31,6 +31,7 @@ import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.TagTypeHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
@@ -63,7 +64,7 @@ public class MarkupParser
 {
 	/** Conditional comment section, which is NOT treated as a comment section */
 	private static final Pattern CONDITIONAL_COMMENT = Pattern
-			.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
+		.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
 
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
@@ -179,6 +180,7 @@ public class MarkupParser
 			}
 		}
 
+		appendMarkupFilter(new OpenCloseTagExpander());
 		appendMarkupFilter(new RelativePathPrefixHandler());
 		appendMarkupFilter(new EnclosureHandler());
 	}
@@ -257,7 +259,7 @@ public class MarkupParser
 
 		// Initialize the xml parser
 		xmlParser.parse(markupResourceData.getResource().getInputStream(), markupSettings
-				.getDefaultMarkupEncoding());
+			.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
@@ -421,7 +423,7 @@ public class MarkupParser
 		{
 			boolean matched = m.find();
 			String nonPre = matched ? rawMarkup.substring(lastend, m.start()) : rawMarkup
-					.substring(lastend);
+				.substring(lastend);
 			nonPre = nonPre.replaceAll("[ \\t]+", " ");
 			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
 
