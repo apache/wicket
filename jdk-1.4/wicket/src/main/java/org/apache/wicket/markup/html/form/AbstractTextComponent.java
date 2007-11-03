@@ -107,7 +107,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	protected void onBeforeRender()
 	{
 		super.onBeforeRender();
-		if (!getFlag(TYPE_RESOLVED))
+		if (!getFlag(TYPE_RESOLVED) && getType() == null)
 		{
 			// Set the type, but only if it's not a String (see WICKET-606).
 			// Otherwise, getConvertEmptyInputStringToNull() won't work.
