@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.util.string.Strings;
 
 /**
  * This base implementation iterates over all provided <code>ILinkRenderStrategy</code>
@@ -32,7 +31,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class LinkParser implements ILinkParser
 {
-	private Map renderStrategies = new HashMap();
+	private final Map renderStrategies = new HashMap();
 
 	/**
 	 * Adds a render strategy to the parser.
@@ -55,7 +54,7 @@ public class LinkParser implements ILinkParser
 	 */
 	public String parse(String text)
 	{
-		if ((text == null) || (text == ""))
+		if ((text == null) || ("".equals(text)))
 		{
 			return text;
 		}
@@ -64,16 +63,18 @@ public class LinkParser implements ILinkParser
 		Iterator iter = renderStrategies.keySet().iterator();
 		while (iter.hasNext())
 		{
-			String pattern = (String)iter.next();
+			String pattern = (String) iter.next();
 			ILinkRenderStrategy strategy = (ILinkRenderStrategy)renderStrategies.get(pattern);
 
 			Matcher matcher = Pattern.compile(pattern, Pattern.DOTALL).matcher(work);
+			StringBuffer buffer = new StringBuffer();
 			while (matcher.find())
 			{
 				String str = matcher.group();
-				String result = strategy.buildLink(str);
-				work = Strings.replaceAll(work, str, result).toString();
+				matcher.appendReplacement(buffer, strategy.buildLink(str));
 			}
+			matcher.appendTail(buffer);
+			work = buffer.toString();
 		}
 		return work;
 	}
