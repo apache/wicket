@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Wicket Examples - stateless</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<br />
+		<a wicket:id="indexLink" href="#">go to index</a>
+
+		<p>
+			This page is stateful as it has a callback (the link that points to
+			this page). If the actual session wasn't created before, this page
+			triggered it's creation.
+		</p>
+
+		<p>
+			This link is what makes this page stateful:
+			<br />
+			<a wicket:id="actionLink">Link clicked <span
+				wicket:id="linkClickCount">0</span> times</a>
+		</p>
+
+
+		<p>
+		<form wicket:id="statelessform">
+		<input type="text" wicket:id="textfield">
+		<input type="submit"> 
+		</form>
+		</p>
+			<p>
+			<span wicket:id="feedback" />
+		</p>
+	</body>
+</html>

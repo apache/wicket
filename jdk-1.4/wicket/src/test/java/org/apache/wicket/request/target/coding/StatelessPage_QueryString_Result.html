@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Wicket Examples - stateless</title>
+		<link href="../style.css" rel="stylesheet" type="text/css"/>
+	</head>
+	<body>
+		<br />
+		<a href="?wicket:bookmarkablePage=%3Aorg.apache.wicket.markup.html.autolink.Index" wicket:id="indexLink">go to index</a>
+		
+		<form action="stateless/?wicket:interface=%3A0%3Astatelessform%3A%3AIFormSubmitListener%3A%3A" wicket:id="statelessform" method="post" id="statelessform2"><div style="display:none"><input type="hidden" name="statelessform2_hf_0" id="statelessform2_hf_0" /></div>
+		<input value="" type="text" wicket:id="textfield" name="textfield">
+		<input type="submit"> 
+		</form>
+
+		<p>
+			This page is stateless as it doesn't have any callbacks (like statefull links or forms).
+			If a page doesn't have any, there is no use keeping it around in the
+			session. Furthermore, as long as you don't have any stateful pages,
+			the actual session creation will be deferred. A Wicket session object
+			is available, but is a temporary one.
+		</p>
+		
+		<p>
+			<span wicket:id="feedback"><wicket:panel>
+  
+</wicket:panel></span>
+		</p>
+
+	</body>
+</html>
