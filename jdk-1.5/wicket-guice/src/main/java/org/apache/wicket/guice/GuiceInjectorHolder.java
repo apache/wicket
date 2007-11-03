@@ -47,7 +47,7 @@ public class GuiceInjectorHolder implements IClusterable
 	/**
 	 * Constructor
 	 * 
-	 * @param context
+	 * @param injector
 	 */
 	public GuiceInjectorHolder(Injector injector)
 	{

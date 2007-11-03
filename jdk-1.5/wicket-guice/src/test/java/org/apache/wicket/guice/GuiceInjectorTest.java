@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.guice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.apache.wicket.Application;
@@ -28,6 +31,8 @@ import org.apache.wicket.util.lang.Objects;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.Provider;
+import com.google.inject.TypeLiteral;
 
 public class GuiceInjectorTest extends TestCase
 {
@@ -47,6 +52,7 @@ public class GuiceInjectorTest extends TestCase
 				return null;
 			}
 
+			@Override
 			protected ISessionStore newSessionStore()
 			{
 				// Don't use a filestore, or we spawn lots of threads, which
@@ -72,6 +78,19 @@ public class GuiceInjectorTest extends TestCase
 							TestServiceRed.class);
 					binder.bind(ITestService.class).annotatedWith(Blue.class).to(
 							TestServiceBlue.class);
+					binder.bind(new TypeLiteral<Map<String, String>>()
+					{
+					}).toProvider(new Provider<Map<String, String>>()
+					{
+						public Map<String, String> get()
+						{
+							Map<String, String> strings = new HashMap<String, String>();
+
+							strings.put(ITestService.RESULT, ITestService.RESULT);
+
+							return strings;
+						}
+					});
 				}
 
 			});
@@ -101,5 +120,13 @@ public class GuiceInjectorTest extends TestCase
 		assertEquals(ITestService.RESULT, component.getInjectedMethod().getString());
 		assertEquals(ITestService.RESULT_BLUE, component.getInjectedMethodBlue().getString());
 		assertEquals(ITestService.RESULT_RED, component.getInjectedMethodRed().getString());
+
+		assertEquals(ITestService.RESULT, component.getInjectedFieldProvider().get().getString());
+		assertEquals(ITestService.RESULT, component.getInjectedMethodProvider().get().getString());
+
+		assertEquals(ITestService.RESULT, component.getInjectedTypeLiteralField().get(
+				ITestService.RESULT));
+		assertEquals(ITestService.RESULT, component.getInjectedTypeLiteralMethod().get(
+				ITestService.RESULT));
 	}
 }

@@ -17,38 +17,52 @@
 package org.apache.wicket.guice;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.util.lang.Classes;
 
 import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 
 class GuiceProxyTargetLocator implements IProxyTargetLocator
 {
 	private static final long serialVersionUID = 1L;
 
-	private String typeName;
-	private Annotation bindingAnnotation;
+	private final String typeName;
+	private final Annotation bindingAnnotation;
 
-	GuiceProxyTargetLocator(Class< ? > type, Annotation bindingAnnotation)
+	GuiceProxyTargetLocator(Type type, Annotation bindingAnnotation)
 	{
-		this.typeName = type.getName();
+		// I'm not too happy about
+		typeName = type.toString();
 		this.bindingAnnotation = bindingAnnotation;
+
+		GuiceTypeStore typeStore = (GuiceTypeStore)Application.get().getMetaData(
+				GuiceTypeStore.TYPESTORE_KEY);
+		typeStore.setType(typeName, type);
 	}
 
 	public Object locateProxyTarget()
 	{
-		GuiceInjectorHolder holder = (GuiceInjectorHolder)Application.get().getMetaData(
+		final GuiceInjectorHolder holder = (GuiceInjectorHolder)Application.get().getMetaData(
 				GuiceInjectorHolder.INJECTOR_KEY);
+
+		final GuiceTypeStore typeStore = (GuiceTypeStore)Application.get().getMetaData(
+				GuiceTypeStore.TYPESTORE_KEY);
+		final Type type = typeStore.getType(typeName);
+
+		// using TypeLiteral to retrieve the key gives us automatic support for
+		// Providers and other injectable TypeLiterals
 		final Key< ? > key;
+
 		if (bindingAnnotation == null)
 		{
-			key = Key.get(Classes.resolveClass(typeName));
+			key = Key.get(TypeLiteral.get(type));
 		}
 		else
 		{
-			key = Key.get(Classes.resolveClass(typeName), bindingAnnotation);
+			key = Key.get(TypeLiteral.get(type), bindingAnnotation);
 		}
 		return holder.getInjector().getInstance(key);
 	}

@@ -20,6 +20,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -86,11 +88,12 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 	 * {@link Injector} instance.
 	 * 
 	 * @param app
-	 * @param modules
+	 * @param injector
 	 */
 	public GuiceComponentInjector(Application app, Injector injector)
 	{
 		app.setMetaData(GuiceInjectorHolder.INJECTOR_KEY, new GuiceInjectorHolder(injector));
+		app.setMetaData(GuiceTypeStore.TYPESTORE_KEY, new GuiceTypeStore());
 	}
 
 	public void inject(Object object)
@@ -107,7 +110,8 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 					{
 						Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
 						Object proxy = LazyInitProxyFactory.createProxy(field.getType(),
-								new GuiceProxyTargetLocator(field.getType(), bindingAnnotation));
+								new GuiceProxyTargetLocator(field.getGenericType(),
+										bindingAnnotation));
 
 						if (!field.isAccessible())
 						{
@@ -136,22 +140,32 @@ public class GuiceComponentInjector implements IComponentInstantiationListener
 				{
 					Annotation[][] paramAnnotations = method.getParameterAnnotations();
 					Class< ? >[] paramTypes = method.getParameterTypes();
+					Type[] genericParamTypes = method.getGenericParameterTypes();
 					Object[] args = new Object[paramTypes.length];
 					for (int i = 0; i < paramTypes.length; i++)
 					{
+						Type paramType;
+						if (genericParamTypes[i] instanceof ParameterizedType)
+						{
+							paramType = ((ParameterizedType)genericParamTypes[i]).getRawType();
+						}
+						else
+						{
+							paramType = paramTypes[i];
+						}
 						try
 						{
 							Annotation bindingAnnotation = findBindingAnnotation(paramAnnotations[i]);
 							args[i] = LazyInitProxyFactory.createProxy(paramTypes[i],
-									new GuiceProxyTargetLocator(paramTypes[i], bindingAnnotation));
+									new GuiceProxyTargetLocator(genericParamTypes[i],
+											bindingAnnotation));
 						}
 						catch (MoreThanOneBindingException e)
 						{
 							throw new RuntimeException(
 									"Can't have more than one BindingAnnotation on parameter " + i +
-											"(" + paramTypes[i].getSimpleName() + ") of method " +
-											method.getName() + " of class " +
-											object.getClass().getName());
+											"(" + paramType + ") of method " + method.getName() +
+											" of class " + object.getClass().getName());
 						}
 					}
 					try

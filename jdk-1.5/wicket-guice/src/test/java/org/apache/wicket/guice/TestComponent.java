@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.guice;
 
+import java.util.Map;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.MarkupStream;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class TestComponent extends Component
 {
@@ -37,9 +40,89 @@ public class TestComponent extends Component
 	private ITestService injectedFieldBlue;
 
 	@Inject
+	private Provider<ITestService> injectedFieldProvider;
+
+	@Inject
+	private Map<String, String> injectedTypeLiteralField;
+
+	private ITestService injectedMethod, injectedMethodRed, injectedMethodBlue;
+
+	private Provider<ITestService> injectedMethodProvider;
+
+	private Map<String, String> injectedTypeLiteralMethod;
+
+	public TestComponent(String id)
+	{
+		super(id);
+	}
+
+	public ITestService getInjectedField()
+	{
+		return injectedField;
+	}
+
+	public ITestService getInjectedFieldBlue()
+	{
+		return injectedFieldBlue;
+	}
+
+	public ITestService getInjectedFieldRed()
+	{
+		return injectedFieldRed;
+	}
+
+	public ITestService getInjectedMethod()
+	{
+		return injectedMethod;
+	}
+
+	public ITestService getInjectedMethodBlue()
+	{
+		return injectedMethodBlue;
+	}
+
+	public ITestService getInjectedMethodRed()
+	{
+		return injectedMethodRed;
+	}
+
+	public Provider<ITestService> getInjectedFieldProvider()
+	{
+		return injectedFieldProvider;
+	}
+
+	public Map<String, String> getInjectedTypeLiteralField()
+	{
+		return injectedTypeLiteralField;
+	}
+
+	public Provider<ITestService> getInjectedMethodProvider()
+	{
+		return injectedMethodProvider;
+	}
+
+	public Map<String, String> getInjectedTypeLiteralMethod()
+	{
+		return injectedTypeLiteralMethod;
+	}
+
+	@Inject
+	public void injectProvider(Provider<ITestService> provider)
+	{
+		injectedMethodProvider = provider;
+	}
+
+	@Inject
 	public void injectService(ITestService service)
 	{
 		injectedMethod = service;
+	}
+
+	@Inject
+	public void injectServiceBlue(@Blue
+	ITestService service)
+	{
+		injectedMethodBlue = service;
 	}
 
 	@Inject
@@ -50,52 +133,14 @@ public class TestComponent extends Component
 	}
 
 	@Inject
-	public void injectServiceBlue(@Blue
-	ITestService service)
+	public void injectTypeLiteral(Map<String, String> map)
 	{
-		injectedMethodBlue = service;
-	}
-
-	private ITestService injectedMethod, injectedMethodRed, injectedMethodBlue;
-
-	public TestComponent(String id)
-	{
-		super(id);
+		injectedTypeLiteralMethod = map;
 	}
 
 	@Override
 	protected void onRender(MarkupStream markupStream)
 	{
 		// Do nothing.
-	}
-
-	public ITestService getInjectedField()
-	{
-		return injectedField;
-	}
-
-	public ITestService getInjectedFieldRed()
-	{
-		return injectedFieldRed;
-	}
-
-	public ITestService getInjectedFieldBlue()
-	{
-		return injectedFieldBlue;
-	}
-
-	public ITestService getInjectedMethod()
-	{
-		return injectedMethod;
-	}
-
-	public ITestService getInjectedMethodRed()
-	{
-		return injectedMethodRed;
-	}
-
-	public ITestService getInjectedMethodBlue()
-	{
-		return injectedMethodBlue;
 	}
 }
