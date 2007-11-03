@@ -80,6 +80,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 			.getName(), component.getPage().getCurrentVersionNumber());
 
 		int version = component.getPage().getCurrentVersionNumber();
+		setPage(component.getPage());
 
 		// add the wicket:interface param to the params.
 		// pagemap:(pageid:componenta:componentb:...):version:interface:behavior:urlDepth
