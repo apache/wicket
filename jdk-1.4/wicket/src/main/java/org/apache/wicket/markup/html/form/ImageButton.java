@@ -16,12 +16,16 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
+import org.apache.wicket.Resource;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebResource;
-import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.markup.html.image.resource.LocalizedImageResource;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.value.ValueMap;
+
 
 /**
  * &lt;input type="image"&gt; component - like {@link Button} only with an image.
@@ -39,30 +43,27 @@ public class ImageButton extends Button implements IResourceListener
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
+	 * This constructor can be used if you have an <code>img</code> tag that has a
+	 * <code>src</code> that points to a <code>PackageResource</code> (which will be created and
+	 * bind to the shared resources) or if you have a <code>value</code> attribute in your tag for
+	 * which the image factory can make an image.
+	 * 
 	 * @see org.apache.wicket.Component#Component(String)
 	 */
-	public ImageButton(String id)
+	public ImageButton(final String id)
 	{
 		super(id);
 	}
 
 	/**
-	 * Constructs an image button directly from an image resource.
+	 * Constructs an image button from an image <code>ResourceReference</code>. That resource
+	 * reference will bind its resource to the current SharedResources.
 	 * 
-	 * @param id
-	 *            See Component
-	 * 
-	 * @param imageResource
-	 *            The image resource
-	 */
-	public ImageButton(final String id, final WebResource imageResource)
-	{
-		super(id);
-		this.localizedImageResource.setResource(imageResource);
-	}
-
-	/**
-	 * Constructs an image directly from an image resource.
+	 * If you are using non sticky session clustering and the resource reference is pointing to a
+	 * <code>Resource</code> that isn't guaranteed to be on every server, for example a dynamic
+	 * image or resources that aren't added with a <code>IInitializer</code> at application
+	 * startup. Then if only that resource is requested from another server, without the rendering
+	 * of the page, the image won't be there and will result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
@@ -71,22 +72,72 @@ public class ImageButton extends Button implements IResourceListener
 	 */
 	public ImageButton(final String id, final ResourceReference resourceReference)
 	{
-		super(id);
-		localizedImageResource.setResourceReference(resourceReference);
+		this(id, resourceReference, null);
 	}
 
 	/**
-	 * Constructor
+	 * Constructs an image button from an image <code>ResourceReference</code>. That resource
+	 * reference will bind its resource to the current SharedResources.
+	 * 
+	 * If you are using non sticky session clustering and the resource reference is pointing to a
+	 * <code>Resource</code> that isn't guaranteed to be on every server, for example a dynamic
+	 * image or resources that aren't added with a <code>IInitializer</code> at application
+	 * startup. Then if only that resource is requested from another server, without the rendering
+	 * of the page, the image won't be there and will result in a broken link.
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param label
-	 *            The button label
+	 * @param resourceReference
+	 *            The shared image resource
+	 * @param resourceParameters
+	 *            The resource parameters
 	 */
-	public ImageButton(final String id, final String label)
+	public ImageButton(final String id, final ResourceReference resourceReference,
+			ValueMap resourceParameters)
 	{
-		this(id, new DefaultButtonImageResource(label));
+		super(id);
+		setImageResourceReference(resourceReference, resourceParameters);
 	}
+
+	/**
+	 * Constructs an image directly from an image resource.
+	 * 
+	 * This one doesn't have the 'non sticky session clustering' problem that the
+	 * <code>ResourceReference</code> constructor has. But this will result in a non 'stable' url
+	 * and the url will have request parameters.
+	 * 
+	 * @param id
+	 *            See Component
+	 * 
+	 * @param imageResource
+	 *            The image resource
+	 */
+	public ImageButton(final String id, final Resource imageResource)
+	{
+		super(id);
+		setImageResource(imageResource);
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#Component(String, IModel)
+	 */
+	public ImageButton(final String id, final IModel model)
+	{
+		super(id, model);
+	}
+
+	/**
+	 * @param id
+	 *            See Component
+	 * @param string
+	 *            Name of image
+	 * @see org.apache.wicket.Component#Component(String, IModel)
+	 */
+	public ImageButton(final String id, final String string)
+	{
+		this(id, new Model(string));
+	}
+
 
 	/**
 	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
@@ -94,6 +145,64 @@ public class ImageButton extends Button implements IResourceListener
 	public void onResourceRequested()
 	{
 		localizedImageResource.onResourceRequested();
+	}
+
+	/**
+	 * @param imageResource
+	 *            The new ImageResource to set.
+	 */
+	public void setImageResource(final Resource imageResource)
+	{
+		localizedImageResource.setResource(imageResource);
+	}
+
+	/**
+	 * @param resourceReference
+	 *            The shared ImageResource to set.
+	 */
+	public void setImageResourceReference(final ResourceReference resourceReference)
+	{
+		localizedImageResource.setResourceReference(resourceReference);
+	}
+
+	/**
+	 * @param resourceReference
+	 *            The shared ImageResource to set.
+	 * @param parameters
+	 *            Set the resource parameters for the resource.
+	 */
+	public void setImageResourceReference(final ResourceReference resourceReference,
+			final ValueMap parameters)
+	{
+		localizedImageResource.setResourceReference(resourceReference, parameters);
+	}
+
+	/**
+	 * @see org.apache.wicket.Component#setModel(org.apache.wicket.model.IModel)
+	 */
+	public Component setModel(IModel model)
+	{
+		// Null out the image resource, so we reload it (otherwise we'll be
+		// stuck with the old model.
+		localizedImageResource.setResourceReference(null);
+		localizedImageResource.setResource(null);
+		return super.setModel(model);
+	}
+
+	/**
+	 * @return Resource returned from subclass
+	 */
+	protected Resource getImageResource()
+	{
+		return localizedImageResource.getResource();
+	}
+
+	/**
+	 * @return ResourceReference returned from subclass
+	 */
+	protected ResourceReference getImageResourceReference()
+	{
+		return localizedImageResource.getResourceReference();
 	}
 
 	/**
@@ -108,6 +217,17 @@ public class ImageButton extends Button implements IResourceListener
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "image");
 		super.onComponentTag(tag);
+
+		final Resource resource = getImageResource();
+		if (resource != null)
+		{
+			localizedImageResource.setResource(resource);
+		}
+		final ResourceReference resourceReference = getImageResourceReference();
+		if (resourceReference != null)
+		{
+			localizedImageResource.setResourceReference(resourceReference);
+		}
 		localizedImageResource.setSrcAttribute(tag);
 	}
 
@@ -116,6 +236,6 @@ public class ImageButton extends Button implements IResourceListener
 	 */
 	protected boolean getStatelessHint()
 	{
-		return localizedImageResource.isStateless();
+		return getImageResource() == null && localizedImageResource.isStateless();
 	}
 }
