@@ -145,6 +145,7 @@ public class DateField extends FormComponentPanel
 	protected void onBeforeRender()
 	{
 		dateField.setRequired(isRequired());
+		dateField.setEnabled(isEnabled() && isEnableAllowed());
 
 		Date d = (Date)getModelObject();
 		if (d != null)
