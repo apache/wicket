@@ -76,7 +76,7 @@ public class WebRequestCycle extends RequestCycle
 
 	/**
 	 * By default returns the WebApplication's default request cycle processor. Typically, you don't
-	 * override this method but instead override {@link WebApplication#getRequestCycleProcessor()}.
+	 * override this method but instead override {@link WebApplication#newRequestCycleProcessor()}.
 	 * <p>
 	 * <strong>if you decide to override this method to provide a custom processor per request
 	 * cycle, any mounts done via WebApplication will not work and and
