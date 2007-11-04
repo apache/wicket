@@ -303,11 +303,6 @@ Wicket.replaceOuterHtml = function(element, text) {
         range.selectNode(element);
 		var fragment = range.createContextualFragment(text);
 		
-		// get the elements to be added
-		var elements = new Array();
-		for (var i = 0; i < fragment.childNodes.length; ++i)
-			elements.push(fragment.childNodes[i]);
-
         element.parentNode.replaceChild(fragment, element);        
     }		
 }	
@@ -1583,11 +1578,13 @@ Wicket.Drag = {
 				
 				element.old_onmousemove = document.onmousemove;
 				element.old_onmouseup = document.onmouseup;
-				element.old_onselectstart = document.onselectstart;			
+				element.old_onselectstart = document.onselectstart;	
+				element.old_onmouseout = document.onmouseout;		
 				
 				document.onselectstart = function() { return false; }
 				document.onmousemove = Wicket.Drag.mouseMove;
 				document.onmouseup = Wicket.Drag.mouseUp;
+				document.onmouseout = Wicket.Drag.mouseOut;				
 							
 				Wicket.Drag.current = element;
 							
@@ -1622,7 +1619,7 @@ Wicket.Drag = {
 		// this happens sometimes in Safari 
 		if (e.clientX < 0 || e.clientY < 0) {
 			return;
-		}
+		}		
 
 		if (o != null) {		
 			var deltaX = e.clientX - o.lastMouseX;
@@ -1650,23 +1647,47 @@ Wicket.Drag = {
 		e = Wicket.fixEvent(e);
 		var o = Wicket.Drag.current;
 		
-		o.onDragEnd(o);		
-		
-		o.onDrag = null;
-		o.onDragEnd = null;
-		o.lastMouseX = null;
-		o.lastMouseY = null;
-		
-		document.onmousemove = o.old_onmousemove;
-		document.onmouseup = o.old_onmouseup;		
-		document.onselectstart = o.old_onselectstart;
-		
-		o.old_mousemove = null;		
-		o.old_mouseup = null;
-		o.old_onselectstart = null;
-		
-		Wicket.Drag.current = null;
+		if (o != null && typeof(o) != "undefined") {
+			o.onDragEnd(o);		
+			
+			o.onDrag = null;
+			o.onDragEnd = null;
+			o.lastMouseX = null;
+			o.lastMouseY = null;
+			
+			document.onmousemove = o.old_onmousemove;
+			document.onmouseup = o.old_onmouseup;		
+			document.onselectstart = o.old_onselectstart;
+					
+			document.onmouseout = o.old_onmouseout;
+			
+			o.old_mousemove = null;		
+			o.old_mouseup = null;
+			o.old_onselectstart = null;
+			o.old_onmouseout = null;
+			
+			Wicket.Drag.current = null;
+		}
+	},
+	
+	/**
+	 * Called when mouse leaves an element. We need this for firefox, as otherwise
+	 * the dragging would continue after mouse leaves the document.
+	 * Unfortunately this break dragging in firefox immediately after the mouse leaves
+	 * page. 
+	 */
+	mouseOut: function(e) {
+		if (false && Wicket.Browser.isGecko()) {
+			// other browsers handle this more gracefully		
+			e = Wicket.fixEvent(e);
+			
+			if (e.target.tagName == "HTML") {
+				Wicket.Drag.mouseUp(e);				
+			}
+		}
 	}
+	
+	
 };
 
 Wicket.ChangeHandler=function(elementId){
