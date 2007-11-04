@@ -17,6 +17,7 @@
 package org.apache.wicket.util.string.interpolator;
 
 import org.apache.wicket.util.lang.PropertyResolver;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Interpolates values into <code>String</code>s that are produced by interpreting property
@@ -84,6 +85,6 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	protected String getValue(final String variableName)
 	{
 		Object value = PropertyResolver.getValue(variableName, model);
-		return (value != null) ? value.toString() : null;
+		return value != null ? Strings.replaceAll(value.toString(), "'", "''").toString() : null;
 	}
 }
