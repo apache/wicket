@@ -39,10 +39,26 @@ application should adhere to the servlet specification version 2.3 or newer.
 What is in this package
 -----------------------
 
-The archive you just downloaded and unpacked contains the jars of the core 
-projects of Wicket. If you are just starting out, you probably only need to
-include wicket-x.jar, where x stands for the version. As a rule, use just 
-the jars you need.
+The archive you just downloaded and unpacked contains the source code and the
+jars of the core projects of Wicket. If you are just starting out, you probably
+only need to include wicket-x.jar, where x stands for the version. As a rule,
+use just the jars you need.
+
+You will find the source code here:
+
+ - src/jdk-1.4
+   - wicket
+   - wicket-extensions
+   - wicket-datetime
+   - wicket-spring
+   - wicket-velocity
+ - src/jdk-1.5
+   - wicket-examples
+   - wicket-auth-roles
+   - wicket-spring-annot
+   - wicket-guice
+   - wicket-jmx
+   - wicket-objectssizeof-agent
 
 Here is a list of projects in this distribution and what they do.
 
