@@ -192,7 +192,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 					public String toString()
 					{
 						return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: " +
-								old + "]";
+							old + "]";
 					}
 				});
 			}
@@ -259,10 +259,10 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 */
 	public final void setCurrentPage(int page)
 	{
-		if (page < 0 || (page >= getPageCount() && getPageCount() > 0))
+		if (page != 0 && (page < 0 || (page >= getPageCount() && getPageCount() > 0)))
 		{
 			throw new IndexOutOfBoundsException("argument [page]=" + page + ", must be 0<=page<" +
-					getPageCount());
+				getPageCount());
 		}
 
 		if (currentPage != page)
@@ -283,7 +283,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 					public String toString()
 					{
 						return "CurrentPageChange[component: " + getPath() + ", currentPage: " +
-								old + "]";
+							old + "]";
 					}
 				});
 
