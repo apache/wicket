@@ -60,7 +60,7 @@ public class StringResourceModelTest extends TestCase
 	{
 		tester = new WicketTester();
 		tester.getApplication().getResourceSettings().addStringResourceLoader(
-				new BundleStringResourceLoader("org.apache.wicket.model.StringResourceModelTest"));
+			new BundleStringResourceLoader("org.apache.wicket.model.StringResourceModelTest"));
 		page = new MockPage();
 		ws = new WeatherStation();
 		wsModel = new Model(ws);
@@ -107,12 +107,12 @@ public class StringResourceModelTest extends TestCase
 	public void testGetSimpleResourceWithKeySubstitution()
 	{
 		StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page,
-				wsModel);
-		Assert.assertEquals("Text should be as expected", "It's sunny, wear sunscreen", model
-				.getString());
+			wsModel);
+		Assert.assertEquals("Text should be as expected", "It's sunny, wear sunscreen",
+			model.getString());
 		ws.setCurrentStatus("raining");
-		Assert.assertEquals("Text should be as expected", "It's raining, take an umbrella", model
-				.getString());
+		Assert.assertEquals("Text should be as expected", "It's raining, take an umbrella",
+			model.getString());
 	}
 
 	/**
@@ -122,17 +122,36 @@ public class StringResourceModelTest extends TestCase
 	public void testGetPropertySubstitutedResource()
 	{
 		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
-		Assert
-				.assertEquals(
-						"Text should be as expected",
-						"Weather station \"Europe''s main weather station\" reports that the temperature is 25.7 \u00B0C",
-						model.getString());
+		Assert.assertEquals(
+			"Text should be as expected",
+			"Weather station \"Europe''s main weather station\" reports that the temperature is 25.7 \u00B0C",
+			model.getString());
 		ws.setCurrentTemperature(11.5);
-		Assert
-				.assertEquals(
-						"Text should be as expected",
-						"Weather station \"Europe''s main weather station\" reports that the temperature is 11.5 \u00B0C",
-						model.getString());
+		Assert.assertEquals(
+			"Text should be as expected",
+			"Weather station \"Europe''s main weather station\" reports that the temperature is 11.5 \u00B0C",
+			model.getString());
+	}
+
+	/**
+	 * 
+	 * 
+	 */
+	public void testSubstitutedPropertyAndParameterResource()
+	{
+		StringResourceModel model = new StringResourceModel("weather.mixed", page, wsModel,
+			new Object[] { new PropertyModel(wsModel, "currentTemperature"),
+					new PropertyModel(wsModel, "units") });
+		MessageFormat format = new MessageFormat(
+			"Weather station \"Europe''s main weather station\" reports that the temperature is {0} {1}");
+
+		ws.setCurrentTemperature(25.7);
+		String expected = format.format(new Object[] { new Double(25.7), "\u00B0C" });
+		Assert.assertEquals("Text should be as expected", expected, model.getString());
+
+		ws.setCurrentTemperature(11.5);
+		expected = format.format(new Object[] { new Double(11.5), "\u00B0C" });
+		Assert.assertEquals("Text should be as expected", expected, model.getString());
 	}
 
 	/**
@@ -144,12 +163,12 @@ public class StringResourceModelTest extends TestCase
 		Calendar cal = Calendar.getInstance();
 		cal.set(2004, Calendar.OCTOBER, 15, 13, 21);
 		MessageFormat format = new MessageFormat(
-				"The report for {0,date,medium}, shows the temperature as {2,number,###.##} {3} and the weather to be {1}",
-				page.getLocale());
+			"The report for {0,date,medium}, shows the temperature as {2,number,###.##} {3} and the weather to be {1}",
+			page.getLocale());
 		StringResourceModel model = new StringResourceModel("weather.detail", page, wsModel,
-				new Object[] { cal.getTime(), "${currentStatus}",
-						new PropertyModel(wsModel, "currentTemperature"),
-						new PropertyModel(wsModel, "units") });
+			new Object[] { cal.getTime(), "${currentStatus}",
+					new PropertyModel(wsModel, "currentTemperature"),
+					new PropertyModel(wsModel, "units") });
 		String expected = format.format(new Object[] { cal.getTime(), "sunny", new Double(25.7),
 				"\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
@@ -207,7 +226,7 @@ public class StringResourceModelTest extends TestCase
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
 		tester.setupRequestAndResponse();
 		RequestCycle cycle = new WebRequestCycle(tester.getApplication(),
-				tester.getWicketRequest(), tester.getWicketResponse());
+			tester.getWicketRequest(), tester.getWicketResponse());
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
@@ -233,7 +252,7 @@ public class StringResourceModelTest extends TestCase
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		tester.setupRequestAndResponse();
 		RequestCycle cycle = new WebRequestCycle(tester.getApplication(),
-				tester.getWicketRequest(), tester.getWicketResponse());
+			tester.getWicketRequest(), tester.getWicketResponse());
 		model.getObject();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
