@@ -427,8 +427,8 @@ public class StringResourceModel extends LoadableDetachableModel
 
 	/**
 	 * Gets the resource key for this string resource. If the resource key contains property
-	 * expressions and the model is null then the returned value is the actual resource key with all
-	 * substitutions undertaken.
+	 * expressions and the model is not null then the returned value is the actual resource key with
+	 * all substitutions undertaken.
 	 * 
 	 * @return The (possibly substituted) resource key
 	 */
