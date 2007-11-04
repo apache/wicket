@@ -64,6 +64,12 @@ Wicket.Browser = {
 		return Wicket.Browser.isIE() && document.documentElement.clientHeight == 0;
 	},		
 	
+	isIELessThan7: function() {
+		var index = navigator.userAgent.indexOf("MSIE");
+		var version = parseFloat(navigator.userAgent.substring(index + 5));
+		return Wicket.Browser.isIE() && version < 7;
+	},
+	
 	isIE7: function() {
 		var index = navigator.userAgent.indexOf("MSIE");
 		var version = parseFloat(navigator.userAgent.substring(index + 5));
