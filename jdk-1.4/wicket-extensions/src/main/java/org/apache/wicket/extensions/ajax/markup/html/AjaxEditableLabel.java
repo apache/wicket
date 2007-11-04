@@ -257,7 +257,22 @@ public class AjaxEditableLabel extends Panel
 	 */
 	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
 	{
-		TextField editor = new TextField(componentId, model);
+		TextField editor = new TextField(componentId, model)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onModelChanged()
+			{
+				super.onModelChanged();
+				AjaxEditableLabel.this.onModelChanged();
+			}
+
+			protected void onModelChanging()
+			{
+				super.onModelChanging();
+				AjaxEditableLabel.this.onModelChanging();
+			}
+		};
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior());
@@ -265,7 +280,7 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
-	 * Create a new form component instance to serve as editor.
+	 * Create a new form component instance to serve as label.
 	 * 
 	 * @param parent
 	 *            The parent component
