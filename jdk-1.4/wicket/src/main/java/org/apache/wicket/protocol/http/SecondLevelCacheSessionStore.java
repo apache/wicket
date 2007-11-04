@@ -27,6 +27,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.PageMap;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.pagestore.DiskPageStore;
 import org.apache.wicket.session.pagemap.IPageMapEntry;
@@ -80,7 +81,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @return The page
 		 */
 		Page getPage(String sessionId, String pagemap, int id, int versionNumber,
-				int ajaxVersionNumber);
+			int ajaxVersionNumber);
 
 		/**
 		 * This method is called when the page is accessed. A IPageStore implementation can block
@@ -127,7 +128,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param pageMapName
 		 * @param pageId
 		 * @param pageVersion
-		 * @return
+		 * @return boolean If the page was found
 		 */
 		boolean containsPage(String sessionId, String pageMapName, int pageId, int pageVersion);
 	}
@@ -163,7 +164,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * Process the page before the it gets serialized
 		 * 
 		 * @param page
-		 * @return
+		 * @return The Page itself or a SerializedContainer for that page
 		 */
 		public Serializable prepareForSerialization(Page page);
 
@@ -171,7 +172,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * This method should restore the given object to the original page.
 		 * 
 		 * @param serializable
-		 * @return
+		 * @return Page
 		 */
 		public Page restoreAfterSerialization(Serializable serializable);
 	};
@@ -226,8 +227,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				// until the first demand)
 				if (store instanceof ISerializationAwarePageStore)
 				{
-					lastPage = ((ISerializationAwarePageStore)store)
-							.restoreAfterSerialization(lastPageDeserialized);
+					lastPage = ((ISerializationAwarePageStore)store).restoreAfterSerialization(lastPageDeserialized);
 				}
 				else if (lastPageDeserialized instanceof Page)
 				{
@@ -261,7 +261,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			Page lastPage = this.lastPage;
 			if (lastPage != null && lastPage.getNumericId() == id &&
-					lastPage.getCurrentVersionNumber() == versionNumber)
+				lastPage.getCurrentVersionNumber() == versionNumber)
 			{
 				return true;
 			}
@@ -302,9 +302,8 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			String sessionId = getSession().getId();
 			if (getLastPage() != null && getLastPage().getNumericId() == id)
 			{
-				page = versionNumber != -1
-						? getLastPage().getVersion(versionNumber)
-						: getLastPage();
+				page = versionNumber != -1 ? getLastPage().getVersion(versionNumber)
+					: getLastPage();
 				if (page != null)
 				{
 					// ask the page store if it is ready saving the page.
@@ -331,8 +330,9 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		{
 			if (!page.isPageStateless())
 			{
-				String sessionId = getSession().getId();
-				if (sessionId != null)
+				Session session = getSession();
+				String sessionId = session.getId();
+				if (sessionId != null && !session.isSessionInvalidated())
 				{
 					getStore().storePage(sessionId, page);
 					setLastPage(page);
@@ -400,7 +400,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 
 		private void readObject(java.io.ObjectInputStream s) throws IOException,
-				ClassNotFoundException
+			ClassNotFoundException
 		{
 			s.defaultReadObject();
 
@@ -468,7 +468,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			else
 			{
 				if (RequestCycle.get().getRequest() instanceof WebRequest &&
-						((WebRequest)RequestCycle.get().getRequest()).isAjax())
+					((WebRequest)RequestCycle.get().getRequest()).isAjax())
 				{
 					currentAjaxVersionNumber++;
 				}
@@ -586,13 +586,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				}
 
 				IPageStore store = ((SecondLevelCacheSessionStore)Application.get()
-						.getSessionStore()).getStore();
+					.getSessionStore()).getStore();
 				// if the number of versions to rollback can be done inside the
 				// current page version.
 				if (ajaxNumber >= numberOfVersions)
 				{
 					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
-							versionNumber, ajaxNumber - numberOfVersions);
+						versionNumber, ajaxNumber - numberOfVersions);
 				}
 				else
 				{
@@ -605,12 +605,11 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 					{
 						// currently it is not supported to jump over 2
 						// pages....
-						log
-								.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
+						log.error("trying to rollback to many versions, jumping over 2 page versions is not supported yet.");
 						return null;
 					}
 					return store.getPage(sessionId, page.getPageMapName(), page.getNumericId(),
-							versionNumber, ajaxNumber);
+						versionNumber, ajaxNumber);
 				}
 			}
 
@@ -618,7 +617,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		}
 
 		private void readObject(java.io.ObjectInputStream s) throws IOException,
-				ClassNotFoundException
+			ClassNotFoundException
 		{
 			s.defaultReadObject();
 			// this is an hack.. when object is read in. It must ignore the
