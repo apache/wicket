@@ -145,7 +145,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		 * 
 		 */
 		public Page deserializePage(int id, String name, Page page, ObjectInputStream stream)
-				throws IOException, ClassNotFoundException;
+			throws IOException, ClassNotFoundException;
 
 		/**
 		 * Called from the {@link Page#writeObject(java.io.ObjectOutputStream)} method.
@@ -313,7 +313,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * The {@link PageParameters} object that was used to construct this page. This will be used in
 	 * creating stateless/bookmarkable links to this page
 	 * 
-	 * @return
+	 * @return {@link PageParameters} The construction page parameter
 	 */
 	public PageParameters getPageParameters()
 	{
@@ -336,7 +336,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
 	public void afterCallComponent(final Component component,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 	}
 
@@ -357,7 +357,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	// that forwards to IAuthorizationStrategy for RequestListenerInterface
 	// invocations.
 	public void beforeCallComponent(final Component component,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 	}
 
@@ -379,7 +379,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (renderedComponents.add(component) == false)
 			{
 				throw new MarkupException("The component " + component +
-						" has the same wicket:id as another component already added at the same level");
+					" has the same wicket:id as another component already added at the same level");
 			}
 			if (log.isDebugEnabled())
 			{
@@ -535,7 +535,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return
+	 * @return String The PageMap name
 	 */
 	public final String getPageMapName()
 	{
@@ -584,7 +584,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			else
 			{
 				log.info("No version manager available to retrieve requested versionNumber " +
-						versionNumber);
+					versionNumber);
 				return null;
 			}
 		}
@@ -613,7 +613,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 				// If we went all the way back to the original page
 				if (page != null && page.getCurrentVersionNumber() == 0 &&
-						page.getAjaxVersionNumber() == 0)
+					page.getAjaxVersionNumber() == 0)
 				{
 					// remove version info
 					page.versionManager = null;
@@ -654,7 +654,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					levels++;
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath() +
-						":" + Classes.simpleName(component.getClass()));
+					":" + Classes.simpleName(component.getClass()));
 				return null;
 			}
 		});
@@ -750,7 +750,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (getStatelessHint())
 			{
 				log.warn("Page '" + this + "' is not stateless because it is not bookmarkable, " +
-						"but the stateless hint is set to true!");
+					"but the stateless hint is set to true!");
 			}
 		}
 
@@ -782,7 +782,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			if (!stateless.booleanValue() && getStatelessHint())
 			{
 				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0] +
-						"' but the stateless hint is set to true!");
+					"' but the stateless hint is set to true!");
 			}
 		}
 
@@ -811,13 +811,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            will remain unchanged.
 	 */
 	public final void removePersistedFormData(final Class formClass,
-			final boolean disablePersistence)
+		final boolean disablePersistence)
 	{
 		// Check that formClass is an instanceof Form
 		if (!Form.class.isAssignableFrom(formClass))
 		{
 			throw new WicketRuntimeException("Form class " + formClass.getName() +
-					" is not a subclass of Form");
+				" is not a subclass of Form");
 		}
 
 		// Visit all children which are an instance of formClass
@@ -964,8 +964,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (value && !isBookmarkable())
 		{
 			throw new WicketRuntimeException(
-					"Can't set stateless hint to true on a page when the page is not bookmarkable, page: " +
-							this);
+				"Can't set stateless hint to true on a page when the page is not bookmarkable, page: " +
+					this);
 		}
 		setFlag(FLAG_STATELESS_HINT, value);
 	}
@@ -993,13 +993,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (versionManager != null)
 		{
 			return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " +
-					versionManager.getCurrentVersionNumber() + ", ajax = " +
-					versionManager.getAjaxVersionNumber() + "]";
+				versionManager.getCurrentVersionNumber() + ", ajax = " +
+				versionManager.getAjaxVersionNumber() + "]";
 		}
 		else
 		{
 			return "[Page class = " + getClass().getName() + ", id = " + getId() + ", version = " +
-					0 + "]";
+				0 + "]";
 		}
 	}
 
@@ -1034,9 +1034,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 							// Add to explanatory string to buffer
 							buffer.append(Integer.toString(unrenderedComponents.size()) + ". " +
-									component + "\n");
-							String metadata = (String)component
-									.getMetaData(Component.CONSTRUCTED_AT_KEY);
+								component + "\n");
+							String metadata = (String)component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
 								buffer.append(metadata);
@@ -1077,15 +1076,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					{
 						Component sibling = (Component)iterator2.next();
 						if (!sibling.isVisible() && sibling instanceof MarkupContainer &&
-								((MarkupContainer)sibling).isTransparentResolver())
+							((MarkupContainer)sibling).isTransparentResolver())
 						{
 							// we found a transparent container that isn't visible
 							// then ignore this component and only do a debug statement here.
-							log
-									.warn("Component " +
-											component +
-											" wasn't rendered but most likely it has a transparent parent: " +
-											sibling);
+							log.warn("Component " + component +
+								" wasn't rendered but most likely it has a transparent parent: " +
+								sibling);
 							iterator.remove();
 							break;
 						}
@@ -1096,8 +1093,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 				{
 					// Throw exception
 					throw new WicketRuntimeException(
-							"The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n" +
-									buffer.toString());
+						"The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n" +
+							buffer.toString());
 				}
 			}
 		}
@@ -1206,7 +1203,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
 		if (component.isAuto() || (parent == null && !component.isVersioned()) ||
-				(parent != null && !parent.isVersioned()))
+			(parent != null && !parent.isVersioned()))
 		{
 			return false;
 		}
@@ -1332,7 +1329,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Write out an xml declaration if the markup stream and settings allow
 		final MarkupStream markupStream = findMarkupStream();
 		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
-				(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
+			(application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
 			response.write("<?xml version='1.0' encoding='");
 			response.write(encoding);
@@ -1378,6 +1375,27 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		setPageMap(map);
 
 		setNextAvailableId();
+	}
+
+	/**
+	 * @return Factory method that creates a version manager for this Page
+	 * @deprecated TODO Remove in 1.4
+	 */
+	protected final IPageVersionManager newVersionManager()
+	{
+		return null;
+	}
+
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+		// If any of the components on page is not stateless, we need to bind the session
+		// before we start rendering components, as then jsessionid won't be appended
+		// for links rendered before first stateful component
+		if (getSession().isTemporary() && !isPageStateless())
+		{
+			getSession().bind();
+		}
 	}
 
 	/**

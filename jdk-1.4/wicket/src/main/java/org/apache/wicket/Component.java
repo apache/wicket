@@ -428,7 +428,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		public String toString()
 		{
 			return "VisibilityChange[component: " + component.getPath() + ", visible: " + visible +
-					"]";
+				"]";
 		}
 
 		/**
@@ -640,7 +640,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
-			FLAG_IS_RENDER_ALLOWED;
+		FLAG_IS_RENDER_ALLOWED;
 
 	/** Component id. */
 	private String id;
@@ -868,7 +868,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY, Strings.toString(this, new MarkupException(
-					"constructed")));
+				"constructed")));
 		}
 	}
 
@@ -969,9 +969,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (getFlag(FLAG_AFTER_RENDERING))
 			{
 				throw new IllegalStateException(Component.class.getName() +
-						" has not been properly detached. Something in the hierarchy of " +
-						getClass().getName() +
-						" has not called super.onAfterRender() in the override of onAfterRender() method");
+					" has not been properly detached. Something in the hierarchy of " +
+					getClass().getName() +
+					" has not called super.onAfterRender() in the override of onAfterRender() method");
 			}
 			// always detach children because components can be attached
 			// independently of their parents
@@ -995,9 +995,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (!getFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED))
 			{
 				throw new IllegalStateException(Component.class.getName() +
-						" has not been properly rendered. Something in the hierarchy of " +
-						getClass().getName() +
-						" has not called super.onBeforeRender() in the override of onBeforeRender() method");
+					" has not been properly rendered. Something in the hierarchy of " +
+					getClass().getName() +
+					" has not called super.onBeforeRender() in the override of onBeforeRender() method");
 			}
 		}
 	}
@@ -1035,14 +1035,6 @@ public abstract class Component implements IClusterable, IConverterLocator
 				getRequestCycle().setMetaData(FEEDBACK_LIST, (Serializable)feedbacks);
 			}
 			feedbacks.add(this);
-		}
-
-		// If any of the components on page is not stateless, we need to bind the session
-		// before we start rendering components, as then jsessionid won't be appended
-		// for links rendered before first stateful component
-		if (!isStateless() && getSession().isTemporary())
-		{
-			getSession().bind();
 		}
 	}
 
@@ -1082,9 +1074,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (getFlag(FLAG_DETACHING))
 		{
 			throw new IllegalStateException(Component.class.getName() +
-					" has not been properly detached. Something in the hierarchy of " +
-					getClass().getName() +
-					" has not called super.onDetach() in the override of onDetach() method");
+				" has not been properly detached. Something in the hierarchy of " +
+				getClass().getName() +
+				" has not called super.onDetach() in the override of onDetach() method");
 		}
 		setFlag(FLAG_ATTACHED, false);
 
@@ -1384,9 +1376,9 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (page == null)
 		{
 			throw new WicketRuntimeException(
-					"This component is not (yet) coupled to a page. It has to be able "
-							+ "to find the page it is supposed to operate in before you can call "
-							+ "this method (Component#getMarkupId)");
+				"This component is not (yet) coupled to a page. It has to be able "
+					+ "to find the page it is supposed to operate in before you can call "
+					+ "this method (Component#getMarkupId)");
 		}
 
 		return page.getAutoIndex();
@@ -1415,7 +1407,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		}
 
 		final int generatedMarkupId = storedMarkupId instanceof Integer ? ((Integer)storedMarkupId)
-				.intValue() : nextAutoIndex();
+			.intValue() : nextAutoIndex();
 
 		if (storedMarkupId == null)
 		{
@@ -2177,8 +2169,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		else
 		{
 			throw new IllegalStateException(
-					"Tried to remove a behavior that was not added to the component. Behavior: " +
-							behavior.toString());
+				"Tried to remove a behavior that was not added to the component. Behavior: " +
+					behavior.toString());
 		}
 		return this;
 	}
@@ -2389,14 +2381,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 		{
 			// We were something other than <tag> or <tag/>
 			markupStream
-					.throwMarkupException("Method renderComponent called on bad markup element: " +
-							tag);
+				.throwMarkupException("Method renderComponent called on bad markup element: " + tag);
 		}
 
 		if (tag.isOpenClose() && openTag.isOpen())
 		{
 			markupStream
-					.throwMarkupException("You can not modify a open tag to open-close: " + tag);
+				.throwMarkupException("You can not modify a open tag to open-close: " + tag);
 		}
 
 		try
@@ -2431,7 +2422,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 					if (getRenderBodyOnly() == false)
 					{
 						final boolean stripWicketTags = Application.get().getMarkupSettings()
-								.getStripWicketTags();
+							.getStripWicketTags();
 						if (!(openTag instanceof WicketTag) || !stripWicketTags)
 						{
 							// Close the manually opened panel tag.
@@ -2523,13 +2514,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!getId().equals(replacement.getId()))
 		{
 			throw new IllegalArgumentException(
-					"Replacement component must have the same id as the component it will replace. Replacement id [[" +
-							replacement.getId() + "]], replaced id [[" + getId() + "]].");
+				"Replacement component must have the same id as the component it will replace. Replacement id [[" +
+					replacement.getId() + "]], replaced id [[" + getId() + "]].");
 		}
 		if (parent == null)
 		{
 			throw new IllegalStateException(
-					"This method can only be called on a component that has already been added to its parent.");
+				"This method can only be called on a component that has already been added to its parent.");
 		}
 		parent.replace(replacement);
 	}
@@ -2801,8 +2792,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (model == null)
 		{
 			throw new IllegalStateException(
-					"Attempt to set model object on null model of component: " +
-							getPageRelativePath());
+				"Attempt to set model object on null model of component: " + getPageRelativePath());
 		}
 
 		// Check authorization
@@ -2994,16 +2984,16 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (page == null)
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(
-						", page = <No Page>, path = ").append(getPath()).append(".").append(
-						Classes.simpleName(getClass())).append("]").toString();
+					", page = <No Page>, path = ").append(getPath()).append(".").append(
+					Classes.simpleName(getClass())).append("]").toString();
 			}
 			else
 			{
 				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
-						.append(getPage().getClass().getName()).append(", path = ").append(
-								getPath()).append(".").append(Classes.simpleName(getClass()))
-						.append(", isVisible = ").append((isRenderAllowed() && isVisible()))
-						.append(", isVersioned = ").append(isVersioned()).append("]").toString();
+					.append(getPage().getClass().getName()).append(", path = ").append(getPath())
+					.append(".").append(Classes.simpleName(getClass())).append(", isVisible = ")
+					.append((isRenderAllowed() && isVisible())).append(", isVersioned = ").append(
+						isVersioned()).append("]").toString();
 			}
 		}
 		else
@@ -3041,7 +3031,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @return The URL
 	 */
 	public final CharSequence urlFor(final IBehavior behaviour,
-			final RequestListenerInterface listener)
+		final RequestListenerInterface listener)
 	{
 		return getRequestCycle().urlFor(this, behaviour, listener);
 	}
@@ -3064,7 +3054,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * @return Bookmarkable URL to page
 	 */
 	public final CharSequence urlFor(final IPageMap pageMap, final Class pageClass,
-			final PageParameters parameters)
+		final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
@@ -3228,8 +3218,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!tag.getName().equalsIgnoreCase(name))
 		{
 			findMarkupStream().throwMarkupException(
-					"Component " + getId() + " must be applied to a tag of type '" + name +
-							"', not " + tag.toUserDebugString());
+				"Component " + getId() + " must be applied to a tag of type '" + name + "', not " +
+					tag.toUserDebugString());
 		}
 	}
 
@@ -3246,7 +3236,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *             Thrown if the tag does not have the required attribute value
 	 */
 	protected final void checkComponentTagAttribute(final ComponentTag tag, final String key,
-			final String value)
+		final String value)
 	{
 		if (key != null)
 		{
@@ -3254,9 +3244,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 			if (tagAttributeValue == null || !value.equalsIgnoreCase(tagAttributeValue))
 			{
 				findMarkupStream().throwMarkupException(
-						"Component " + getId() + " must be applied to a tag with '" + key +
-								"' attribute matching '" + value + "', not '" + tagAttributeValue +
-								"'");
+					"Component " + getId() + " must be applied to a tag with '" + key +
+						"' attribute matching '" + value + "', not '" + tagAttributeValue + "'");
 			}
 		}
 	}
@@ -3274,7 +3263,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!component.isAuto() && getFlag(FLAG_RENDERING))
 		{
 			throw new WicketRuntimeException(
-					"Cannot modify component hierarchy during render phase");
+				"Cannot modify component hierarchy during render phase");
 		}
 	}
 
@@ -3319,7 +3308,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (parent == null)
 		{
 			throw new IllegalStateException("Cannot find markupstream for " + this +
-					" as there is no parent");
+				" as there is no parent");
 		}
 
 		return parent.findMarkupStream();
@@ -3535,7 +3524,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	{
 		// Ignore AttributeModifiers when FLAG_IGNORE_ATTRIBUTE_MODIFIER is set
 		if ((behavior instanceof AttributeModifier) &&
-				(getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false))
+			(getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER) != false))
 		{
 			return false;
 		}
@@ -3703,7 +3692,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			// Apply behavior modifiers
 			List behaviors = getBehaviorsImpl();
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose() &&
-					(isIgnoreAttributeModifier() == false))
+				(isIgnoreAttributeModifier() == false))
 			{
 				tag = tag.mutable();
 
@@ -3732,8 +3721,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 			// Write the tag
 			tag
-					.writeOutput(getResponse(), stripWicketTags, findMarkupStream()
-							.getWicketNamespace());
+				.writeOutput(getResponse(), stripWicketTags, findMarkupStream()
+					.getWicketNamespace());
 		}
 	}
 
@@ -3748,7 +3737,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            The new markup
 	 */
 	protected final void replaceComponentTagBody(final MarkupStream markupStream,
-			final ComponentTag tag, final CharSequence body)
+		final ComponentTag tag, final CharSequence body)
 	{
 		// The tag might have been changed from open-close to open. Hence
 		// we'll need what was in the markup itself
@@ -3787,8 +3776,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 			{
 				// There must be a component in this discarded body
 				markupStream.throwMarkupException("Expected close tag for '" + markupOpenTag +
-						"' Possible attempt to embed component(s) '" + markupStream.get() +
-						"' in the body of this component which discards its body");
+					"' Possible attempt to embed component(s) '" + markupStream.get() +
+					"' in the body of this component which discards its body");
 			}
 		}
 	}
@@ -3902,8 +3891,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 			return this;
 		}
 		throw new IllegalArgumentException(
-				exceptionMessage("Component is not a container and so does " +
-						"not contain the path " + path));
+			exceptionMessage("Component is not a container and so does " + "not contain the path " +
+				path));
 	}
 
 	/**
@@ -3969,7 +3958,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 *            if true, the tag will not be written to the output
 	 */
 	final void renderClosingComponentTag(final MarkupStream markupStream,
-			final ComponentTag openTag, final boolean renderTagOnly)
+		final ComponentTag openTag, final boolean renderTagOnly)
 	{
 		// Tag should be open tag and not openclose tag
 		if (openTag.isOpen())
