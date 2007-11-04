@@ -185,7 +185,7 @@ public class MockWebApplication
 		// Construct mock session, request and response
 		servletSession = new MockHttpSession(context);
 		servletRequest = new MockHttpServletRequest(this.application, servletSession, context);
-		servletResponse = new MockHttpServletResponse();
+		servletResponse = new MockHttpServletResponse(servletRequest);
 
 		// Construct request and response using factories
 		wicketRequest = this.application.newWebRequest(servletRequest);
@@ -195,7 +195,7 @@ public class MockWebApplication
 		createRequestCycle();
 
 		this.application.getRequestCycleSettings().setRenderStrategy(
-				IRequestCycleSettings.ONE_PASS_RENDER);
+			IRequestCycleSettings.ONE_PASS_RENDER);
 		this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
 
@@ -380,6 +380,7 @@ public class MockWebApplication
 		try
 		{
 			cycle.request();
+			createRequestCycle();
 		}
 		finally
 		{
@@ -400,15 +401,15 @@ public class MockWebApplication
 		{
 			// handle redirects which are usually managed by the browser
 			// transparently
-			final MockHttpServletResponse httpResponse = (MockHttpServletResponse)cycle
-					.getWebResponse().getHttpServletResponse();
+			final MockHttpServletResponse httpResponse = (MockHttpServletResponse)cycle.getWebResponse()
+				.getHttpServletResponse();
 
 			if (httpResponse.isRedirect())
 			{
 				lastRenderedPage = generateLastRenderedPage(cycle);
 
 				MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(application,
-						servletSession, application.getServletContext());
+					servletSession, application.getServletContext());
 				newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
 				wicketRequest = application.newWebRequest(newHttpRequest);
 
@@ -454,13 +455,15 @@ public class MockWebApplication
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{
-						newLastRenderedPage = application.getSessionSettings().getPageFactory()
-								.newPage(pageClass);
+						newLastRenderedPage = application.getSessionSettings()
+							.getPageFactory()
+							.newPage(pageClass);
 					}
 					else
 					{
-						newLastRenderedPage = application.getSessionSettings().getPageFactory()
-								.newPage(pageClass, parameters);
+						newLastRenderedPage = application.getSessionSettings()
+							.getPageFactory()
+							.newPage(pageClass, parameters);
 					}
 				}
 			}
@@ -484,7 +487,7 @@ public class MockWebApplication
 		// Create a web request cycle using factory
 
 		final WebRequestCycle cycle = (WebRequestCycle)application.newRequestCycle(wicketRequest,
-				wicketResponse);
+			wicketResponse);
 
 		// Construct session
 		wicketSession = (WebSession)Session.findOrCreate();

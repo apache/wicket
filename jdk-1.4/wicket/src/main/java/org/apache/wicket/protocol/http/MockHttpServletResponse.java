@@ -35,7 +35,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.RequestCycle;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -79,11 +78,16 @@ public class MockHttpServletResponse implements HttpServletResponse
 
 	private StringWriter stringWriter;
 
+	private final MockHttpServletRequest servletRequest;
+
 	/**
 	 * Create the response object.
+	 * 
+	 * @param servletRequest
 	 */
-	public MockHttpServletResponse()
+	public MockHttpServletResponse(MockHttpServletRequest servletRequest)
 	{
+		this.servletRequest = servletRequest;
 		initialize();
 	}
 
@@ -517,6 +521,46 @@ public class MockHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
+	 * @see org.apache.wicket.Request#getURL()
+	 */
+	private String getURL()
+	{
+		/*
+		 * Servlet 2.3 specification :
+		 * 
+		 * Servlet Path: The path section that directly corresponds to the mapping which activated
+		 * this request. This path starts with a "/" character except in the case where the request
+		 * is matched with the "/*" pattern, in which case it is the empty string.
+		 * 
+		 * PathInfo: The part of the request path that is not part of the Context Path or the
+		 * Servlet Path. It is either null if there is no extra path, or is a string with a leading
+		 * "/".
+		 */
+		String url = servletRequest.getServletPath();
+		final String pathInfo = servletRequest.getPathInfo();
+
+		if (pathInfo != null)
+		{
+			url += pathInfo;
+		}
+
+		final String queryString = servletRequest.getQueryString();
+
+		if (queryString != null)
+		{
+			url += ("?" + queryString);
+		}
+
+		// If url is non-empty it will start with '/', which we should lose
+		if (url.length() > 0 && url.charAt(0) == '/')
+		{
+			// Remove leading '/'
+			url = url.substring(1);
+		}
+		return url;
+	}
+
+	/**
 	 * Indicate sending of a redirectLocation to a particular named resource. This implementation
 	 * just keeps hold of the redirectLocation info and makes it available for query.
 	 * 
@@ -531,7 +575,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 		if (location.startsWith("../"))
 		{
 			// Test if the current url has a / in it. (a mount)
-			String url = RequestCycle.get().getRequest().getURL();
+			String url = getURL();
 			int index = url.lastIndexOf("/");
 			if (index != -1)
 			{

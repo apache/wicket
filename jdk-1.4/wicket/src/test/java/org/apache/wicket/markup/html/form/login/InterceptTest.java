@@ -27,6 +27,7 @@ import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
+import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.HttpSessionStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -34,6 +35,7 @@ import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 
 
@@ -74,26 +76,51 @@ public class InterceptTest extends TestCase
 	/**
 	 * 
 	 */
+	public void testFormSubmit()
+	{
+		application = new WicketTester(new MyMockWebApplication()
+		{
+			protected WebResponse newWebResponse(HttpServletResponse response)
+			{
+				return new BufferedWebResponse(response);
+			}
+		});
+		// same as above but uses different technique to login
+		application.setupRequestAndResponse();
+		application.processRequestCycle();
+		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
+		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(),
+			loginPage.getClass());
+		FormTester form = application.newFormTester("form");
+		form.setValue("username", "admin");
+		form.submit();
+		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
+			.getClass());
+	}
+
+	/**
+	 * 
+	 */
 	public void testClickLink()
 	{
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
-		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(), loginPage
-				.getClass());
+		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(),
+			loginPage.getClass());
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(loginPage.getForm());
 		application.getServletRequest().setParameter(loginPage.getTextField().getInputName(),
-				"admin");
+			"admin");
 		application.processRequestCycle();
 
 		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
-				.getClass());
+			.getClass());
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(
-				application.getLastRenderedPage().get("link"));
+			application.getLastRenderedPage().get("link"));
 		application.processRequestCycle();
 		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
 	}
@@ -107,8 +134,8 @@ public class InterceptTest extends TestCase
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
-		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(), loginPage
-				.getClass());
+		assertEquals(((MyMockWebApplication)application.getApplication()).getLoginPage(),
+			loginPage.getClass());
 
 		// bypass form completely to login but continue to intercept page
 		application.setupRequestAndResponse();
@@ -117,11 +144,11 @@ public class InterceptTest extends TestCase
 		application.processRequestCycle(requestCycle);
 
 		assertEquals(application.getApplication().getHomePage(), application.getLastRenderedPage()
-				.getClass());
+			.getClass());
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(
-				application.getLastRenderedPage().get("link"));
+			application.getLastRenderedPage().get("link"));
 		application.processRequestCycle();
 		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
 	}
@@ -228,7 +255,7 @@ public class InterceptTest extends TestCase
 		public boolean isInstantiationAuthorized(Class componentClass)
 		{
 			if (MockHomePage.class.equals(componentClass) &&
-					!((MySession)Session.get()).isLoggedIn())
+				!((MySession)Session.get()).isLoggedIn())
 			{
 				throw new RestartResponseAtInterceptPageException(MockLoginPage.class);
 			}

@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.protocol.http;
 
+import junit.framework.TestCase;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import junit.framework.TestCase;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class WebResponseTest extends TestCase
 	 */
 	public void testRedirect_normal()
 	{
-		MockHttpServletResponse mockResponse = new MockHttpServletResponse();
+		MockHttpServletResponse mockResponse = new MockHttpServletResponse(null);
 
 		WebResponse webResponse = new WebResponse(mockResponse);
 
@@ -50,7 +50,7 @@ public class WebResponseTest extends TestCase
 	 */
 	public void testRedirect_ajax()
 	{
-		MockHttpServletResponse mockResponse = new MockHttpServletResponse();
+		MockHttpServletResponse mockResponse = new MockHttpServletResponse(null);
 
 		WebResponse webResponse = new WebResponse(mockResponse);
 		webResponse.setAjax(true);
