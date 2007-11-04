@@ -259,6 +259,9 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 */
 	public final void setCurrentPage(int page)
 	{
+		// If page == 0, short-circuit the range check. This saves a call to
+		// getPageCount(), but more importantly avoids it being called until
+		// your AbstractPageableView is actually rendered.
 		if (page != 0 && (page < 0 || (page >= getPageCount() && getPageCount() > 0)))
 		{
 			throw new IndexOutOfBoundsException("argument [page]=" + page + ", must be 0<=page<" +
