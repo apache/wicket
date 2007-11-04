@@ -93,18 +93,17 @@ public class AjaxEditableLabel extends Panel
 		{
 			super.onComponentTag(tag);
 			final String saveCall = "{" +
-					generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
-							"&save=true&'+this.name+'='+wicketEncode(this.value)") +
-					"; return false;}";
+				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() +
+					"&save=true&'+this.name+'='+wicketEncode(this.value)") + "; return false;}";
 
 
 			final String cancelCall = "{" +
-					generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "&save=false'") +
-					"; return false;}";
+				generateCallbackScript("wicketAjaxGet('" + getCallbackUrl() + "&save=false'") +
+				"; return false;}";
 
 
 			final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall +
-					" else if (kc!=13) { return true; } else " + saveCall;
+				" else if (kc!=13) { return true; } else " + saveCall;
 
 			tag.put("onblur", saveCall);
 			tag.put("onkeypress", keypress);
@@ -115,7 +114,7 @@ public class AjaxEditableLabel extends Panel
 		{
 			RequestCycle requestCycle = RequestCycle.get();
 			boolean save = Boolean.valueOf(requestCycle.getRequest().getParameter("save"))
-					.booleanValue();
+				.booleanValue();
 
 			if (save)
 			{
@@ -334,6 +333,7 @@ public class AjaxEditableLabel extends Panel
 		{
 			initLabelAndEditor(getParentModel());
 		}
+		label.setEnabled(isEnableAllowed() && isEnabled());
 	}
 
 	/**
@@ -364,9 +364,9 @@ public class AjaxEditableLabel extends Panel
 		// put focus on the textfield and stupid explorer hack to move the
 		// caret to the end
 		target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');" +
-				"   if (el.createTextRange) { " +
-				"     var v = el.value; var r = el.createTextRange(); " +
-				"     r.moveStart('character', v.length); r.select(); } }");
+			"   if (el.createTextRange) { " +
+			"     var v = el.value; var r = el.createTextRange(); " +
+			"     r.moveStart('character', v.length); r.select(); } }");
 		target.focusComponent(editor);
 	}
 
@@ -382,7 +382,7 @@ public class AjaxEditableLabel extends Panel
 		if (errorMessage instanceof String)
 		{
 			target.appendJavascript("window.status='" +
-					JavascriptUtils.escapeQuotes((String)errorMessage) + "';");
+				JavascriptUtils.escapeQuotes((String)errorMessage) + "';");
 		}
 		String editorMarkupId = editor.getMarkupId();
 		target.appendJavascript(editorMarkupId + ".select();");
@@ -437,13 +437,13 @@ public class AjaxEditableLabel extends Panel
 		{
 			Component parent = getParent();
 			String msg = "No model found for this component, either pass one explicitly or "
-					+ "make sure an inheritable model is available.";
+				+ "make sure an inheritable model is available.";
 			if (parent == null)
 			{
 				msg += " This component is not added to a parent yet, so if this component "
-						+ "is supposed to use the model of the parent (e.g. when it uses a "
-						+ "compound property model), add it first before further configuring "
-						+ "the component calling methods like e.g. setType and addValidator.";
+					+ "is supposed to use the model of the parent (e.g. when it uses a "
+					+ "compound property model), add it first before further configuring "
+					+ "the component calling methods like e.g. setType and addValidator.";
 			}
 			throw new IllegalStateException(msg);
 		}
