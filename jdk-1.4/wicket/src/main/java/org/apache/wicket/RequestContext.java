@@ -26,11 +26,17 @@ public class RequestContext
 	/** Thread-local that holds the current request context. */
 	private static final ThreadLocal current = new ThreadLocal();
 
+	/**
+	 * Construct.
+	 */
 	public RequestContext()
 	{
 		set(this);
 	}
 
+	/**
+	 * @return The current threads request context, will make one if there wasn't one.
+	 */
 	public static final RequestContext get()
 	{
 		RequestContext context = (RequestContext)current.get();
@@ -41,46 +47,83 @@ public class RequestContext
 		return context;
 	}
 
+	/**
+	 * 
+	 */
+	public static final void unset()
+	{
+		current.set(null);
+	}
+
 	protected static final void set(RequestContext context)
 	{
 		current.set(context);
 	}
 
+	/**
+	 * @return CharSequence
+	 */
 	public CharSequence getNamespace()
 	{
 		return "";
 	}
 
+	/**
+	 * @param markupId
+	 * @return The encoded markup
+	 */
 	public String encodeMarkupId(String markupId)
 	{
 		return markupId;
 	}
 
+	/**
+	 * @param path
+	 * @return The encoded url
+	 */
 	public CharSequence encodeActionURL(CharSequence path)
 	{
 		return path;
 	}
 
+	/**
+	 * @param path
+	 * @return The encoded url
+	 */
 	public CharSequence encodeRenderURL(CharSequence path)
 	{
 		return path;
 	}
 
+	/**
+	 * @param path
+	 * @return The encoded url
+	 */
 	public CharSequence encodeResourceURL(CharSequence path)
 	{
 		return path;
 	}
 
+	/**
+	 * @param path
+	 * @return The encoded url
+	 */
 	public CharSequence encodeSharedResourceURL(CharSequence path)
 	{
 		return path;
 	}
 
+	/**
+	 * @return The IHeaderResponse
+	 */
 	public IHeaderResponse getHeaderResponse()
 	{
 		return null;
 	}
 
+	/**
+	 * @return boolean if this is a portlet request
+	 */
 	public boolean isPortletRequest()
 	{
 		return false;

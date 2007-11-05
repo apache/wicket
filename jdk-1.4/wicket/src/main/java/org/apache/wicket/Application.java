@@ -165,7 +165,7 @@ public abstract class Application
 		if (application == null)
 		{
 			throw new WicketRuntimeException("There is no application attached to current thread " +
-					Thread.currentThread().getName());
+				Thread.currentThread().getName());
 		}
 		return application;
 	}
@@ -275,12 +275,12 @@ public abstract class Application
 			{
 				// If component instantiation is not authorized
 				if (!Session.get().getAuthorizationStrategy().isInstantiationAuthorized(
-						component.getClass()))
+					component.getClass()))
 				{
 					// then call any unauthorized component instantiation
 					// listener
 					getSecuritySettings().getUnauthorizedComponentInstantiationListener()
-							.onUnauthorizedInstantiation(component);
+						.onUnauthorizedInstantiation(component);
 				}
 			}
 		});
@@ -296,7 +296,7 @@ public abstract class Application
 	 *            the listener to add
 	 */
 	public final void addComponentInstantiationListener(
-			final IComponentInstantiationListener listener)
+		final IComponentInstantiationListener listener)
 	{
 		if (listener == null)
 		{
@@ -314,7 +314,7 @@ public abstract class Application
 
 		final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[componentInstantiationListeners.length + 1];
 		System.arraycopy(componentInstantiationListeners, 0, newListeners, 0,
-				componentInstantiationListeners.length);
+			componentInstantiationListeners.length);
 		newListeners[componentInstantiationListeners.length] = listener;
 		componentInstantiationListeners = newListeners;
 	}
@@ -334,7 +334,7 @@ public abstract class Application
 			getDebugSettings().setComponentUseCheck(true);
 			getMarkupSettings().setStripWicketTags(false);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_EXCEPTION_PAGE);
+				IExceptionSettings.SHOW_EXCEPTION_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(true);
 			getResourceSettings().setStripJavascriptCommentsAndWhitespace(false);
 		}
@@ -344,14 +344,14 @@ public abstract class Application
 			getDebugSettings().setComponentUseCheck(false);
 			getMarkupSettings().setStripWicketTags(true);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+				IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 			getDebugSettings().setAjaxDebugModeEnabled(false);
 			getResourceSettings().setStripJavascriptCommentsAndWhitespace(true);
 		}
 		else
 		{
 			throw new IllegalArgumentException("Invalid configuration type: '" + configurationType +
-					"'.  Must be \"development\" or \"deployment\".");
+				"'.  Must be \"development\" or \"deployment\".");
 		}
 	}
 
@@ -594,8 +594,9 @@ public abstract class Application
 		try
 		{
 			// Load properties files used by all libraries
-			final Enumeration resources = Thread.currentThread().getContextClassLoader()
-					.getResources("wicket.properties");
+			final Enumeration resources = Thread.currentThread()
+				.getContextClassLoader()
+				.getResources("wicket.properties");
 			while (resources.hasMoreElements())
 			{
 				InputStream in = null;
@@ -670,7 +671,7 @@ public abstract class Application
 	 *             {@link #newRequestCycle(Request, Response)}
 	 */
 	public final RequestCycle newRequestCycle(Application application, Request request,
-			Response response)
+		Response response)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -699,7 +700,7 @@ public abstract class Application
 	 *            the listener to remove
 	 */
 	public final void removeComponentInstantiationListener(
-			final IComponentInstantiationListener listener)
+		final IComponentInstantiationListener listener)
 	{
 		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
 		final int len = listeners.length;
@@ -809,7 +810,7 @@ public abstract class Application
 		if (!settingsAccessible)
 		{
 			throw new WicketRuntimeException(
-					"Use Application.init() method for configuring your application object");
+				"Use Application.init() method for configuring your application object");
 		}
 
 		if (settings == null)
@@ -890,6 +891,7 @@ public abstract class Application
 		callDestroyers();
 		applicationKeyToApplication.remove(getApplicationKey());
 		Session.unset();
+		RequestContext.unset();
 		RequestCycle.set(null);
 	}
 
@@ -920,7 +922,7 @@ public abstract class Application
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
-				new DefaultButtonImageResourceFactory());
+			new DefaultButtonImageResourceFactory());
 
 		String applicationKey = getApplicationKey();
 		applicationKeyToApplication.put(applicationKey, this);
@@ -1001,7 +1003,7 @@ public abstract class Application
 	 * @param listener
 	 */
 	final public void removeComponentOnBeforeRenderListener(
-			IComponentOnBeforeRenderListener listener)
+		IComponentOnBeforeRenderListener listener)
 	{
 		if (componentOnBeforeRenderListeners != null)
 		{
@@ -1024,8 +1026,7 @@ public abstract class Application
 		{
 			for (Iterator i = componentOnBeforeRenderListeners.iterator(); i.hasNext();)
 			{
-				IComponentOnBeforeRenderListener listener = (IComponentOnBeforeRenderListener)i
-						.next();
+				IComponentOnBeforeRenderListener listener = (IComponentOnBeforeRenderListener)i.next();
 				listener.onBeforeRender(component);
 			}
 		}
@@ -1080,8 +1081,7 @@ public abstract class Application
 		{
 			for (Iterator i = componentOnAfterRenderListeners.iterator(); i.hasNext();)
 			{
-				IComponentOnAfterRenderListener listener = (IComponentOnAfterRenderListener)i
-						.next();
+				IComponentOnAfterRenderListener listener = (IComponentOnAfterRenderListener)i.next();
 				listener.onAfterRender(component);
 			}
 		}
