@@ -69,7 +69,7 @@ public class LocalizerTest extends WicketTestCase
 
 	private IResourceSettings settings;
 
-	private Localizer localizer;
+	protected Localizer localizer;
 
 	/**
 	 * Create the test case.
@@ -98,8 +98,8 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testGetStringValidString()
 	{
-		Assert.assertEquals("Expected string should be returned", "This is a test", localizer
-				.getString("test.string", null, null, "DEFAULT"));
+		Assert.assertEquals("Expected string should be returned", "This is a test",
+			localizer.getString("test.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class LocalizerTest extends WicketTestCase
 	{
 		settings.setUseDefaultOnMissingResource(true);
 		Assert.assertEquals("Default string should be returned", "DEFAULT", localizer.getString(
-				"unknown.string", null, null, "DEFAULT"));
+			"unknown.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -121,8 +121,8 @@ public class LocalizerTest extends WicketTestCase
 		settings.setThrowExceptionOnMissingResource(false);
 
 		Assert.assertEquals("Wrapped key should be returned on no default",
-				"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
-						"unknown.string", null, null, null));
+			"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+				"unknown.string", null, null, null));
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class LocalizerTest extends WicketTestCase
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(false);
 		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-				"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
-						"unknown.string", null, null, "DEFAULT"));
+			"[Warning: String resource for 'unknown.string' not found]", localizer.getString(
+				"unknown.string", null, null, "DEFAULT"));
 	}
 
 	/**
@@ -163,8 +163,8 @@ public class LocalizerTest extends WicketTestCase
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
 		Model model = new Model(vm);
-		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe", localizer
-				.getString("test.substitute", null, model, null));
+		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe",
+			localizer.getString("test.substitute", null, model, null));
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class LocalizerTest extends WicketTestCase
 		Session.get().setLocale(Locale.ENGLISH);
 		MyMockPage page = new MyMockPage();
 		Application.get().getResourceSettings().addStringResourceLoader(
-				new ComponentStringResourceLoader());
+			new ComponentStringResourceLoader());
 
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 		assertEquals("value 1", localizer.getString("null", page.drop1));
@@ -203,13 +203,13 @@ public class LocalizerTest extends WicketTestCase
 		HashMap model = new HashMap();
 		model.put("user", "juergen");
 
-		Assert.assertEquals("Expected string should be returned", "Welcome, juergen", localizer
-				.getString("test.substitute", null, new PropertyModel(model, null),
-						"DEFAULT {user}"));
+		Assert.assertEquals("Expected string should be returned", "Welcome, juergen",
+			localizer.getString("test.substitute", null, new PropertyModel(model, null),
+				"DEFAULT {user}"));
 
-		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen", localizer
-				.getString("test.substituteDoesNotExist", null, new PropertyModel(model, null),
-						"DEFAULT ${user}"));
+		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen",
+			localizer.getString("test.substituteDoesNotExist", null,
+				new PropertyModel(model, null), "DEFAULT ${user}"));
 	}
 
 	/**
@@ -232,8 +232,8 @@ public class LocalizerTest extends WicketTestCase
 
 			// should work properly in a component constructor (without parent)
 			// as well
-			Assert.assertEquals("Expected string should be returned", "This is a test", localizer
-					.getString("test.string", this, "DEFAULT"));
+			Assert.assertEquals("Expected string should be returned", "This is a test",
+				localizer.getString("test.string", this, "DEFAULT"));
 
 		}
 	}

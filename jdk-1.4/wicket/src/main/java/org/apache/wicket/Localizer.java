@@ -51,11 +51,11 @@ public class Localizer
 {
 	private static final Logger logger = LoggerFactory.getLogger(Localizer.class);
 
-	/** Cache properties */
-	private Map cache = new ConcurrentHashMap();
-
 	/** ConcurrentHashMap does not allow null values */
 	private static final String NULL_VALUE = "<null-value>";
+
+	/** Cache properties */
+	private Map cache = newCache();
 
 	/**
 	 * Create the utils instance class backed by the configuration information contained within the
@@ -70,7 +70,10 @@ public class Localizer
 	 */
 	public final void clearCache()
 	{
-		cache = new ConcurrentHashMap();
+		if (cache != null)
+		{
+			cache = new ConcurrentHashMap();
+		}
 	}
 
 	/**
@@ -182,12 +185,11 @@ public class Localizer
 
 			if (!addedToPage)
 			{
-				logger
-					.warn(
-						"Tried to retrieve a localized string for a component that has not yet been added to the page. "
-							+ "This can sometimes lead to an invalid or no localized resource returned. "
-							+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
-							+ "Offending component: {}", component);
+				logger.warn(
+					"Tried to retrieve a localized string for a component that has not yet been added to the page. "
+						+ "This can sometimes lead to an invalid or no localized resource returned. "
+						+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
+						+ "Offending component: {}", component);
 			}
 		}
 
@@ -197,13 +199,13 @@ public class Localizer
 
 		// If this component is not yet added to page we do not want to check
 		// cache as we can generate an invalid cache key
-		if (addedToPage)
+		if ((cache != null) && addedToPage)
 		{
 			cacheKey = getCacheKey(key, component);
 		}
 
 		// Value not found are cached as well (value = null)
-		if (cacheKey != null && cache.containsKey(cacheKey))
+		if ((cacheKey != null) && cache.containsKey(cacheKey))
 		{
 			string = getFromCache(cacheKey);
 		}
@@ -257,8 +259,8 @@ public class Localizer
 				message.append(component.getPageRelativePath());
 				message.append(" [class=").append(component.getClass().getName()).append("]");
 			}
-			throw new MissingResourceException(message.toString(), (component != null ? component
-				.getClass().getName() : ""), key);
+			throw new MissingResourceException(message.toString(), (component != null
+				? component.getClass().getName() : ""), key);
 		}
 
 		return "[Warning: String resource for '" + key + "' not found]";
@@ -348,5 +350,32 @@ public class Localizer
 			return PropertyVariableInterpolator.interpolate(string, model.getObject());
 		}
 		return string;
+	}
+
+	/**
+	 * By default the cache is enabled. Disabling the cache will disable it and clear the cache.
+	 * 
+	 * @param value
+	 */
+	public final void setEnableCache(boolean value)
+	{
+		if (value == false)
+		{
+			cache = null;
+		}
+		else if (cache == null)
+		{
+			cache = newCache();
+		}
+	}
+
+	/**
+	 * Create a new cache
+	 * 
+	 * @return
+	 */
+	private Map newCache()
+	{
+		return new ConcurrentHashMap();
 	}
 }
