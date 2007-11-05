@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import java.util.Locale;
+
 import org.apache.wicket.WicketTestCase;
 
 /**
@@ -39,30 +41,25 @@ public class ImageTest extends WicketTestCase
 	 */
 	public void test_1() throws Exception
 	{
+		Locale.setDefault(new Locale("en", "US"));
 		tester.startPage(Home.class);
 
 		tester.clickLink("goCanadian");
-		tester
-			.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_en_CA.gif\"");
+		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_en_CA.gif\"");
 
 		tester.clickLink("goChinese");
-		tester
-			.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_zh_CN.gif\"");
+		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_zh_CN.gif\"");
 
 		tester.clickLink("goDanish");
-		tester
-			.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_da_DK.gif\"");
+		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_da_DK.gif\"");
 
 		tester.clickLink("goDutch");
-		tester
-			.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_nl_NL.gif\"");
+		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_nl_NL.gif\"");
 
 		tester.clickLink("goGerman");
-		tester
-			.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_de_DE.gif\"");
+		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer_de_DE.gif\"");
 
 		tester.clickLink("goUS");
-		tester
-			.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer.gif\"");
+		tester.assertContains("src=\"resources/org.apache.wicket.markup.html.image.Home/Beer.gif\"");
 	}
 }

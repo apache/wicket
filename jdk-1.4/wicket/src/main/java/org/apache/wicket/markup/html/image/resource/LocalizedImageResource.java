@@ -181,6 +181,11 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 
 			// Then dereference the resource
 			resource = resourceReference.getResource();
+
+			if (resource instanceof PackageResource)
+			{
+				resourceReference.setLocale(((PackageResource)resource).getLocale());
+			}
 		}
 	}
 
@@ -254,8 +259,8 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		Locale l = component.getLocale();
 		String s = component.getStyle();
 		if (resourceKind == null &&
-			(!Objects.equal(locale, component.getLocale()) || !Objects.equal(style, component
-				.getStyle())))
+			(!Objects.equal(locale, component.getLocale()) || !Objects.equal(style,
+				component.getStyle())))
 		{
 			// Get new component locale and style
 			locale = component.getLocale();
@@ -415,8 +420,7 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 		if (valueParser.matches())
 		{
 			final String imageReferenceName = valueParser.getImageReferenceName();
-			final String specification = Strings.replaceHtmlEscapeNumber(valueParser
-				.getSpecification());
+			final String specification = Strings.replaceHtmlEscapeNumber(valueParser.getSpecification());
 			final String factoryName = valueParser.getFactoryName();
 			final Application application = component.getApplication();
 
@@ -429,8 +433,8 @@ public final class LocalizedImageResource implements IClusterable, IResourceList
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
-					final Resource imageResource = getResourceFactory(application, factoryName)
-						.newResource(specification, locale, style);
+					final Resource imageResource = getResourceFactory(application, factoryName).newResource(
+						specification, locale, style);
 					application.getSharedResources().add(Application.class, imageReferenceName,
 						locale, style, imageResource);
 				}

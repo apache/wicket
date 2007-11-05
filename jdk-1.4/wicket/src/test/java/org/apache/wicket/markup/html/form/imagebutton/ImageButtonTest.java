@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.imagebutton;
 
+import java.util.Locale;
+
 import org.apache.wicket.WicketTestCase;
 
 /**
@@ -39,6 +41,8 @@ public class ImageButtonTest extends WicketTestCase
 	 */
 	public void test_1() throws Exception
 	{
+		Locale.setDefault(new Locale("en", "US"));
+
 		tester.startPage(Home.class);
 
 		tester.clickLink("goCanadian");
