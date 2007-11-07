@@ -148,7 +148,7 @@ public class DatePicker extends AbstractBehavior implements IHeaderContributor
 		response.write("\" src=\"");
 		CharSequence iconUrl = getIconUrl();
 		response.write(Strings.escapeMarkup(iconUrl != null ? iconUrl.toString() : ""));
-		response.write("\" />");
+		response.write("\" alt=\"\"/>");
 		if (renderOnLoad())
 		{
 			response.write("<br style=\"clear:left;\"/>");
