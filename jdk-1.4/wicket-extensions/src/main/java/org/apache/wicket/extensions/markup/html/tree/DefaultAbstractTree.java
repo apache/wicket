@@ -124,25 +124,25 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * Reference to the css file.
 	 */
 	private static final ResourceReference CSS = new ResourceReference(DefaultAbstractTree.class,
-			"res/tree.css");
+		"res/tree.css");
 
 	/** Reference to the icon of closed tree folder */
 	private static final ResourceReference FOLDER_CLOSED = new ResourceReference(
-			DefaultAbstractTree.class, "res/folder-closed.gif");
+		DefaultAbstractTree.class, "res/folder-closed.gif");
 
 	/** Reference to the icon of open tree folder */
 	private static final ResourceReference FOLDER_OPEN = new ResourceReference(
-			DefaultAbstractTree.class, "res/folder-open.gif");
+		DefaultAbstractTree.class, "res/folder-open.gif");
 
 	/** Reference to the icon of tree item (not a folder) */
 	private static final ResourceReference ITEM = new ResourceReference(DefaultAbstractTree.class,
-			"res/item.gif");
+		"res/item.gif");
 
 	/** The link type, default is {@link LinkType#AJAX ajax}. */
 	private LinkType linkType = LinkType.AJAX;
 
 	/**
-	 * Tree contructor.
+	 * Tree constructor.
 	 * 
 	 * @param id
 	 *            The component id
@@ -275,21 +275,21 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Creates the indentation element. This element should be placed as first element in the tree
-	 * item markup to ensure proper indentaion of the tree item. This implementation also takes care
-	 * of lines that connect nodes.
+	 * item markup to ensure proper indentation of the tree item. This implementation also takes
+	 * care of lines that connect nodes.
 	 * 
 	 * @param parent
 	 *            The component parent
 	 * @param id
 	 *            The component id
 	 * @param node
-	 *            The tree node for which to create the identation element
+	 *            The tree node for which to create the indentation element
 	 * @param level
 	 *            The current level
 	 * @return The indentation component
 	 */
 	protected Component newIndentation(MarkupContainer parent, String id, final TreeNode node,
-			final int level)
+		final int level)
 	{
 		WebMarkupContainer result = new WebMarkupContainer(id)
 		{
@@ -340,10 +340,10 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 *            The component id
 	 * @param node
 	 *            The tree node
-	 * @return The component that resprents a junction
+	 * @return The component that represents a junction
 	 */
 	protected MarkupContainer newJunctionImage(MarkupContainer parent, final String id,
-			final TreeNode node)
+		final TreeNode node)
 	{
 		return (MarkupContainer)new WebMarkupContainer(id)
 		{
@@ -370,7 +370,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 				Response response = RequestCycle.get().getResponse();
 				response.write("<span class=\"" + cssClassOuter + "\"><span class=\"" +
-						cssClassInner + "\"></span></span>");
+					cssClassInner + "\"></span></span>");
 			}
 		}.setRenderBodyOnly(true);
 	}
@@ -394,7 +394,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @return The link component
 	 */
 	protected Component newJunctionLink(MarkupContainer parent, final String id,
-			final String imageId, final TreeNode node)
+		final String imageId, final TreeNode node)
 	{
 		final MarkupContainer junctionLink;
 
@@ -458,7 +458,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * @return The link component
 	 */
 	protected MarkupContainer newLink(MarkupContainer parent, String id,
-			final ILinkCallback callback)
+		final ILinkCallback callback)
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
@@ -529,14 +529,14 @@ public abstract class DefaultAbstractTree extends AbstractTree
 			{
 				super.onComponentTag(tag);
 				tag.put("style", "background-image: url('" +
-						RequestCycle.get().urlFor(getNodeIcon(node)) + "')");
+					RequestCycle.get().urlFor(getNodeIcon(node)) + "')");
 			}
 		};
 
 	}
 
 	/**
-	 * Creates a link that can be used to select / unselect the specified node.
+	 * Creates a link that can be used to select / deselect the specified node.
 	 * 
 	 * @param parent
 	 *            The parent component
