@@ -62,8 +62,6 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 			locale = Locale.getDefault();
 		}
 
-		final NumberFormat numberFormat = getNumberFormat(locale);
-
 		if (value == null)
 		{
 			return null;
@@ -77,6 +75,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 			value = v.replace(' ', '\u00A0');
 		}
 
+		final NumberFormat numberFormat = getNumberFormat(locale);
 		final Number number = (Number)parse(numberFormat, value, locale);
 
 		if (number == null)
