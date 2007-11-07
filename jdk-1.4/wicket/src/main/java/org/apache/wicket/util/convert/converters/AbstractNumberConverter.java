@@ -64,7 +64,11 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 
 		final NumberFormat numberFormat = getNumberFormat(locale);
 
-		if (value instanceof String)
+		if (value == null)
+		{
+			return null;
+		}
+		else if (value instanceof String)
 		{
 			// Convert spaces to no-break space (U+00A0) to fix problems with
 			// browser conversions.
@@ -82,14 +86,14 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 
 		if (number.doubleValue() < min)
 		{
-			throw newConversionException("Value cannot be less than " + min, value, locale)
-					.setFormat(numberFormat);
+			throw newConversionException("Value cannot be less than " + min, value, locale).setFormat(
+				numberFormat);
 		}
 
 		if (number.doubleValue() > max)
 		{
-			throw newConversionException("Value cannot be greater than " + max, value, locale)
-					.setFormat(numberFormat);
+			throw newConversionException("Value cannot be greater than " + max, value, locale).setFormat(
+				numberFormat);
 		}
 
 		return number;
