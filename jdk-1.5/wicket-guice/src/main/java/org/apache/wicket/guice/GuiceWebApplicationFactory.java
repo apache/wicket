@@ -71,6 +71,9 @@ import com.google.inject.Module;
  *    &lt;/servlet&gt;
  * </pre>
  * 
+ * <b>NB: You no longer have to add a GuiceComponentInjector manually in your
+ * {@link WebApplication#init()} method - this factory will do that for you automatically.</b>
+ * 
  * @author Alastair Maw (almaw)
  * 
  */
@@ -130,8 +133,8 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 			throw new RuntimeException(
 					"To use GuiceWebApplicationFactory, you must specify either an 'injectorContextAttribute' or a 'module' init-param.");
 		}
-		WebApplication result = injector.getInstance(WebApplication.class);
-		result.addComponentInstantiationListener(new GuiceComponentInjector(result, injector));
-		return result;
+		WebApplication app = injector.getInstance(WebApplication.class);
+		app.addComponentInstantiationListener(new GuiceComponentInjector(app, injector));
+		return app;
 	}
 }
