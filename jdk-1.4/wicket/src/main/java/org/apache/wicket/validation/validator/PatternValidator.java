@@ -131,7 +131,7 @@ public class PatternValidator extends StringValidator
 	protected Map variablesMap(IValidatable validatable)
 	{
 		final Map map = super.variablesMap(validatable);
-		map.put("pattern", pattern);
+		map.put("pattern", pattern.pattern());
 		return map;
 	}
 
