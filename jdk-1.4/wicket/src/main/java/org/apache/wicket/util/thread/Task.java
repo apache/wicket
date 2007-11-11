@@ -159,7 +159,7 @@ public final class Task
 		if (isStarted)
 		{
 			throw new IllegalStateException(
-					"Attempt to set daemon state of a task that has already been started");
+				"Attempt to set daemon state of a task that has already been started");
 		}
 
 		isDaemon = daemon;
@@ -190,7 +190,7 @@ public final class Task
 		if (isStarted)
 		{
 			throw new IllegalStateException(
-					"Attempt to set start time of task that has already been started");
+				"Attempt to set start time of task that has already been started");
 		}
 
 		this.startTime = startTime;
@@ -202,7 +202,7 @@ public final class Task
 	public String toString()
 	{
 		return "[name=" + name + ", startTime=" + startTime + ", isDaemon=" + isDaemon +
-				", isStarted=" + isStarted + ", codeListener=" + log + "]";
+			", isStarted=" + isStarted + ", codeListener=" + log + "]";
 	}
 
 	/**
@@ -237,5 +237,33 @@ public final class Task
 		{
 			thread.interrupt();
 		}
+	}
+
+	/**
+	 * Sets the priority of the thread
+	 * 
+	 * @param prio
+	 */
+	public void setPriority(int prio)
+	{
+		if (prio < Thread.MIN_PRIORITY)
+		{
+			prio = Thread.MIN_PRIORITY;
+		}
+		else if (prio > Thread.MAX_PRIORITY)
+		{
+			prio = Thread.MAX_PRIORITY;
+		}
+		thread.setPriority(prio);
+	}
+
+	/**
+	 * Gets the thread priority
+	 * 
+	 * @return
+	 */
+	public int getPriority()
+	{
+		return thread.getPriority();
 	}
 }
