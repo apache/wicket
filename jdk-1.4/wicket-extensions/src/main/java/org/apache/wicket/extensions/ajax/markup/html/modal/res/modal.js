@@ -1103,7 +1103,7 @@ Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idConten
 		 							"<div class=\"w_content\">";
 				if (isFrame) {
 					s+=								
-										"<iframe src='://0' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\">"+
+										"<iframe src='\/\/:' frameborder=\"0\" id='"+idContent+"' allowtransparency=\"false\" style=\"height: 200px\">"+
 										"</iframe>";
 				} else {
 					s+=
