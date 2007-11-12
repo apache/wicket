@@ -68,4 +68,16 @@ public class PortletServletResponseWrapper extends HttpServletResponseWrapper
 	{
 		responseState.setStatusCode(statusCode);
 	}
+
+	public String encodeRedirectUrl(String url)
+	{
+		String s = super.encodeRedirectUrl(url);
+		return s != null ? s : url;
+	}
+
+	public String encodeRedirectURL(String url)
+	{
+		String s = super.encodeRedirectURL(url);
+		return s != null ? s : url;
+	}
 }

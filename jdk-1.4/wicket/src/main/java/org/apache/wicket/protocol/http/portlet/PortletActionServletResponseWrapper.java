@@ -52,16 +52,6 @@ public class PortletActionServletResponseWrapper extends PortletServletResponseW
 	{
 	}
 
-	public String encodeRedirectUrl(String s)
-	{
-		return s;
-	}
-
-	public String encodeRedirectURL(String s)
-	{
-		return s;
-	}
-
 	public String encodeUrl(String s)
 	{
 		return s;
