@@ -490,19 +490,34 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 		String lastSubstring = "";
 		while (begin != -1)
 		{
-			lastSubstring = url.substring(begin);
-			if (lastSubstring.length() > getBeginSeparator().length() + getEndSeparator().length() &&
-				lastSubstring.startsWith(getBeginSeparator()) &&
-				lastSubstring.endsWith(getEndSeparator()))
+			String substring = url.substring(begin);
+			if (substring.length() > getBeginSeparator().length() + getEndSeparator().length() &&
+				substring.startsWith(getBeginSeparator()) && substring.endsWith(getEndSeparator()))
 			{
-				String pageInfoString = lastSubstring.substring(getBeginSeparator().length(), //
-					lastSubstring.length() - getEndSeparator().length());
+				String pageInfoString = substring.substring(getBeginSeparator().length(), //
+					substring.length() - getEndSeparator().length());
 				PageInfo info = PageInfo.parsePageInfo(pageInfoString);
-				last = info;
+				if (info != null)
+				{
+					last = info;
+					lastSubstring = substring;
+				}
+				else
+				{
+					break;
+				}
 			}
 			begin = url.lastIndexOf(getBeginSeparator(), begin - 1);
 		}
-		return new PageInfoExtraction(url.substring(0, url.length() - lastSubstring.length()), last);
+		if (last != null)
+		{
+			return new PageInfoExtraction(url.substring(0, url.length() - lastSubstring.length()),
+				last);
+		}
+		else
+		{
+			return new PageInfoExtraction(url, null);
+		}
 	}
 
 	protected String getBeginSeparator()
@@ -720,6 +735,19 @@ public class HybridUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrat
 			if (segments.length > 3)
 			{
 				return null;
+			}
+
+			// go trhough the segments to determine if they don't contains invalid characters
+			for (int i = 0; i < segments.length; ++i)
+			{
+				for (int j = 0; j < segments[i].length(); ++j)
+				{
+					char c = segments[i].charAt(j);
+					if (!Character.isLetterOrDigit(c) && c != '-' && c != '_')
+					{
+						return null;
+					}
+				}
 			}
 
 			if (segments.length == 1 && isNumber(segments[0]))
