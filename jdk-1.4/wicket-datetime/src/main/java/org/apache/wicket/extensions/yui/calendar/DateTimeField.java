@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.yui.calendar;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -34,21 +35,23 @@ import org.apache.wicket.request.ClientInfo;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converters.ZeroPaddingIntegerConverter;
 import org.apache.wicket.util.lang.EnumeratedType;
+import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.validator.NumberValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
+import org.joda.time.format.DateTimeFormat;
 
 
 /**
- * Works on a {@link java.util.Date} object. Displays a date field and a date picker, a field for
- * hours and a field for minutes, and a AM/ PM field.
+ * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a
+ * field for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours
+ * field depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the
+ * visibility of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
  */
-// TODO AM/PM should really be locale dependent; some locales have 12 hour
-// systems with AM/PM, others have 24 hour systems
 public class DateTimeField extends FormComponentPanel
 {
 	/**
@@ -127,7 +130,7 @@ public class DateTimeField extends FormComponentPanel
 			}
 		});
 		add(hoursField = new TextField("hours", new PropertyModel(this, "hours"), Integer.class));
-		hoursField.add(NumberValidator.range(0, 12));
+		hoursField.add(new HoursValidator());
 		hoursField.setLabel(new Model("hours"));
 		add(minutesField = new TextField("minutes", new PropertyModel(this, "minutes"),
 				Integer.class)
@@ -291,18 +294,16 @@ public class DateTimeField extends FormComponentPanel
 					date.setZone(DateTimeZone.forTimeZone(zone));
 				}
 
+				boolean use12HourFormat = use12HourFormat();
 				if (hours != null)
 				{
-					date.set(DateTimeFieldType.hourOfHalfday(), hours.intValue() % 12);
+					date.set(DateTimeFieldType.hourOfDay(), hours.intValue() %
+							getMaximumHours(use12HourFormat));
 					date.setMinuteOfHour((minutes != null) ? minutes.intValue() : 0);
 				}
-				if (amOrPm == AM_PM.PM)
+				if (use12HourFormat)
 				{
-					date.set(DateTimeFieldType.halfdayOfDay(), 1);
-				}
-				else
-				{
-					date.set(DateTimeFieldType.halfdayOfDay(), 0);
+					date.set(DateTimeFieldType.halfdayOfDay(), amOrPm == AM_PM.PM ? 1 : 0);
 				}
 
 				// the date will be in the server's timezone
@@ -355,6 +356,9 @@ public class DateTimeField extends FormComponentPanel
 		minutesField.setEnabled(isEnabled() && isEnableAllowed());
 		amOrPmChoice.setEnabled(isEnabled() && isEnableAllowed());
 
+		boolean use12HourFormat = use12HourFormat();
+		amOrPmChoice.setVisible(use12HourFormat);
+
 		Date d = (Date)getModelObject();
 		if (d != null)
 		{
@@ -375,10 +379,18 @@ public class DateTimeField extends FormComponentPanel
 				date.setZone(DateTimeZone.forTimeZone(zone));
 			}
 
-			int hourOfHalfDay = date.get(DateTimeFieldType.hourOfHalfday());
-			hours = new Integer(hourOfHalfDay == 0 ? 12 : hourOfHalfDay);
-			minutes = new Integer(date.getMinuteOfHour());
+			if (use12HourFormat)
+			{
+				int hourOfHalfDay = date.get(DateTimeFieldType.hourOfHalfday());
+				hours = new Integer(hourOfHalfDay == 0 ? 12 : hourOfHalfDay);
+			}
+			else
+			{
+				hours = new Integer(date.get(DateTimeFieldType.hourOfDay()));
+			}
 			amOrPm = (date.get(DateTimeFieldType.halfdayOfDay()) == 0) ? AM_PM.AM : AM_PM.PM;
+			minutes = new Integer(date.getMinuteOfHour());
+
 
 			// we don't really have to reset the date field to the server's
 			// timezone, as it's the same milliseconds from EPOCH anyway, and toDate
@@ -387,5 +399,81 @@ public class DateTimeField extends FormComponentPanel
 		}
 
 		super.onBeforeRender();
+	}
+
+	/**
+	 * Checks whether the current {@link Locale} uses the 12h or 24h time format. This method can be
+	 * overridden to e.g. always use 24h format.
+	 * 
+	 * @return true, if the current {@link Locale} uses the 12h format.<br/>false, otherwise
+	 */
+	protected boolean use12HourFormat()
+	{
+		String pattern = DateTimeFormat.patternForStyle("-S", getLocale());
+		return pattern.indexOf('a') != -1;
+	}
+
+	/**
+	 * @return either 12 or 24, depending on the hour format of the current {@link Locale}
+	 */
+	private int getMaximumHours()
+	{
+		return getMaximumHours(use12HourFormat());
+	}
+
+	/**
+	 * Convenience method (mainly for optimization purposes), in case {@link #use12HourFormat()} has already been stored in a local
+	 * variable and thus doesn't need to be computed again.
+	 * 
+	 * @param use12HourFormat
+	 *            the hour format to use
+	 * @return either 12 or 24, depending on the parameter <code>use12HourFormat</code>
+	 */
+	private int getMaximumHours(boolean use12HourFormat)
+	{
+		return use12HourFormat ? 12 : 24;
+	}
+
+	/**
+	 * Validator for the {@link DateTimeField}'s hours field. Behaves like
+	 * <code>RangeValidator</code>, with a flexible maximum value.
+	 * 
+	 * @see DateTimeField#getMaximumHours()
+	 * @author Gerolf Seitz
+	 */
+	private class HoursValidator extends NumberValidator
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#onValidate(org.apache.wicket.validation.IValidatable)
+		 */
+		protected void onValidate(IValidatable validatable)
+		{
+			Number value = (Number)validatable.getValue();
+			if (value.longValue() < 0 || value.longValue() > getMaximumHours())
+			{
+				error(validatable);
+			}
+		}
+
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#variablesMap(org.apache.wicket.validation.IValidatable)
+		 */
+		protected Map variablesMap(IValidatable validatable)
+		{
+			final Map map = super.variablesMap(validatable);
+			map.put("minimum", new Long(0));
+			map.put("maximum", new Long(getMaximumHours()));
+			return map;
+		}
+
+		/**
+		 * @see org.apache.wicket.validation.validator.AbstractValidator#resourceKey()
+		 */
+		protected String resourceKey()
+		{
+			return "NumberValidator.range";
+		}
 	}
 }
