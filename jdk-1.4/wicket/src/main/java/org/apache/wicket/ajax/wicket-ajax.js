@@ -1625,7 +1625,7 @@ Wicket.Drag = {
 			var deltaX = e.clientX - o.lastMouseX;
 			var deltaY = e.clientY - o.lastMouseY;
 				
-			var res = o.onDrag(o, deltaX, deltaY);
+			var res = o.onDrag(o, deltaX, deltaY, e);
 			
 			if (res == null)
 				res = [0, 0];
