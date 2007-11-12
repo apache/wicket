@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -191,7 +190,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				// yes, write empty div with id
 				// this is necessary for createElement js to work correctly
 				getResponse().write(
-						"<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
+					"<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
 				markupStream.skipComponent();
 			}
 			else
@@ -927,7 +926,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 						while (previous.getChildren() != null && previous.getChildren().size() > 0)
 						{
 							previous = (TreeItem)previous.getChildren().get(
-									previous.getChildren().size() - 1);
+								previous.getChildren().size() - 1);
 						}
 					}
 					// check if the previous item isn't waiting to be inserted
@@ -936,7 +935,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 						// it's already in dom, so we can use it as point of
 						// insertion
 						target.prependJavascript("Wicket.Tree.createElement(\"" +
-								item.getMarkupId() + "\"," + "\"" + previous.getMarkupId() + "\")");
+							item.getMarkupId() + "\"," + "\"" + previous.getMarkupId() + "\")");
 
 						// remove the item so we don't process it again
 						i.remove();
@@ -1041,12 +1040,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		{
 			// build the items for children of the items' treenode.
 			items = buildTreeItems(nodeChildren((TreeNode)item.getModelObject()),
-					item.getLevel() + 1);
+				item.getLevel() + 1);
 		}
 		else
 		{
 			// it's not expanded, just set children to an empty list
-			items = Collections.EMPTY_LIST;
+			items = new ArrayList(0);
 		}
 
 		item.setChildren(items);
@@ -1175,7 +1174,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	private final static ResourceReference JAVASCRIPT = new JavascriptResourceReference(
-			AbstractTree.class, "res/tree.js");
+		AbstractTree.class, "res/tree.js");
 
 	/**
 	 * Initialize the component.
