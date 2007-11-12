@@ -149,7 +149,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			{
 				PageMapEntry entry = (PageMapEntry)i.next();
 				if (entry.pageMapName == pageMapName ||
-						(entry.pageMapName != null && entry.pageMapName.equals(pageMapName)))
+					(entry.pageMapName != null && entry.pageMapName.equals(pageMapName)))
 				{
 					result = entry;
 				}
@@ -204,8 +204,8 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 				PageMapEntry entry = getPageMapEntry(page.getPageMapName(), true);
 
 				// allocate window for page
-				PageWindow window = entry.manager.createPageWindow(page.getPageId(), page
-						.getVersionNumber(), page.getAjaxVersionNumber(), page.getData().length);
+				PageWindow window = entry.manager.createPageWindow(page.getPageId(),
+					page.getVersionNumber(), page.getAjaxVersionNumber(), page.getData().length);
 
 				// remove the entry and add it to the end of entry list (to mark
 				// it as last accessed(
@@ -297,14 +297,14 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		 * @return page data or null if the page is no longer in pagemap file
 		 */
 		public synchronized byte[] loadPage(String pageMapName, int id, int versionNumber,
-				int ajaxVersionNumber)
+			int ajaxVersionNumber)
 		{
 			byte[] result = null;
 			PageMapEntry entry = getPageMapEntry(pageMapName, false);
 			if (entry != null)
 			{
 				PageWindow window = entry.manager.getPageWindow(id, versionNumber,
-						ajaxVersionNumber);
+					ajaxVersionNumber);
 				if (window != null)
 				{
 					result = loadPage(window, entry.fileName);
@@ -341,7 +341,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		{
 			PageMapEntry entry = getPageMapEntry(pageMapName, false);
 			return entry != null &&
-					entry.getManager().getPageWindow(pageId, versionNumber, -1) != null;
+				entry.getManager().getPageWindow(pageId, versionNumber, -1) != null;
 		}
 	}
 
@@ -403,7 +403,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @return file name for pagemap
 	 */
 	private String getPageMapFileName(String sessionId, String pageMapName,
-			boolean createSessionFolder)
+		boolean createSessionFolder)
 	{
 		File sessionFolder = getSessionFolder(sessionId, createSessionFolder);
 		return new File(sessionFolder, "pm-" + pageMapName).getAbsolutePath();
@@ -464,7 +464,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 *            performance under heavy load).
 	 */
 	public DiskPageStore(File fileStoreFolder, int maxSizePerPagemap, int maxSizePerSession,
-			int fileChannelPoolCapacity)
+		int fileChannelPoolCapacity)
 	{
 		maxSizePerPageMap = maxSizePerPagemap;
 		this.maxSizePerSession = maxSizePerSession;
@@ -474,7 +474,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		if (maxSizePerSession < maxSizePerPageMap)
 		{
 			throw new IllegalArgumentException(
-					"Provided maximum session size must be bigger than maximum pagemap size");
+				"Provided maximum session size must be bigger than maximum pagemap size");
 		}
 
 		this.fileStoreFolder.mkdirs();
@@ -486,7 +486,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	private static File getDefaultFileStoreFolder()
 	{
 		final File dir = (File)((WebApplication)Application.get()).getServletContext()
-				.getAttribute("javax.servlet.context.tempdir");
+			.getAttribute("javax.servlet.context.tempdir");
 		if (dir != null)
 		{
 			return dir;
@@ -519,7 +519,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	public DiskPageStore(int maxSizePerPagemap, int maxSizePerSession, int fileChannelPoolCapacity)
 	{
 		this(getDefaultFileStoreFolder(), maxSizePerPagemap, maxSizePerSession,
-				fileChannelPoolCapacity);
+			fileChannelPoolCapacity);
 	}
 
 	/**
@@ -576,7 +576,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 *      java.lang.String, int, int, int)
 	 */
 	public Page getPage(String sessionId, String pagemap, int id, int versionNumber,
-			int ajaxVersionNumber)
+		int ajaxVersionNumber)
 	{
 		SessionEntry entry = getSessionEntry(sessionId, false);
 		if (entry != null)
@@ -851,10 +851,9 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 						}
 						catch (Exception e)
 						{
-							log
-									.error(
-											"Error flushing serialized pages from worker thread for session " +
-													sessionId, e);
+							log.error(
+								"Error flushing serialized pages from worker thread for session " +
+									sessionId, e);
 						}
 						i.remove();
 					}
@@ -932,7 +931,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	}
 
 	private final List /* SerializedPageWithSession */lastRecentlySerializedPagesCache = new ArrayList(
-			lastRecentlySerializedPagesCacheSize);
+		lastRecentlySerializedPagesCacheSize);
 
 	private SerializedPageWithSession removePageFromLastRecentlySerializedPagesCache(Page page)
 	{
@@ -956,12 +955,12 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 	 * @param pagesList
 	 */
 	private void cacheSerializedPage(String sessionId, Page page,
-			List /* <SerializedPage> */pagesList)
+		List /* <SerializedPage> */pagesList)
 	{
 		if (getLastRecentlySerializedPagesCacheSize() > 0)
 		{
 			SerializedPageWithSession entry = new SerializedPageWithSession(sessionId, page,
-					pagesList);
+				pagesList);
 
 			synchronized (lastRecentlySerializedPagesCache)
 			{
@@ -1000,7 +999,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		private final int ajaxVersionNumber;
 
 		private SerializedPageWithSession(String sessionId, Page page,
-				List /* <SerializablePage> */pages)
+			List /* <SerializablePage> */pages)
 		{
 			this.sessionId = sessionId;
 			pageId = page.getNumericId();
@@ -1014,7 +1013,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 		public String toString()
 		{
 			return getClass().getName() + " [ pageId:" + pageId + ", pageMapName: " + pageMapName +
-					", session: " + sessionId + "]";
+				", session: " + sessionId + "]";
 		}
 	};
 
@@ -1056,7 +1055,7 @@ public class DiskPageStore extends AbstractPageStore implements ISerializationAw
 			SerializedPageWithSession page = (SerializedPageWithSession)serializable;
 			storeSerializedPages(page.sessionId, page.pages);
 			return getPage(page.sessionId, page.pageMapName, page.pageId, page.versionNumber,
-					page.ajaxVersionNumber);
+				page.ajaxVersionNumber);
 		}
 		else
 		{
