@@ -347,6 +347,13 @@ public class DateTimeField extends FormComponentPanel
 	protected void onBeforeRender()
 	{
 		dateField.setRequired(isRequired());
+		hoursField.setRequired(isRequired());
+		minutesField.setRequired(isRequired());
+
+		dateField.setEnabled(isEnabled() && isEnableAllowed());
+		hoursField.setEnabled(isEnabled() && isEnableAllowed());
+		minutesField.setEnabled(isEnabled() && isEnableAllowed());
+		amOrPmChoice.setEnabled(isEnabled() && isEnableAllowed());
 
 		Date d = (Date)getModelObject();
 		if (d != null)
@@ -374,7 +381,7 @@ public class DateTimeField extends FormComponentPanel
 			amOrPm = (date.get(DateTimeFieldType.halfdayOfDay()) == 0) ? AM_PM.AM : AM_PM.PM;
 
 			// we don't really have to reset the date field to the server's
-			// timezone, as it's the same milis from EPOCH anyway, and toDate
+			// timezone, as it's the same milliseconds from EPOCH anyway, and toDate
 			// will always get the Date object initialized for the time zone
 			// of the server
 		}
