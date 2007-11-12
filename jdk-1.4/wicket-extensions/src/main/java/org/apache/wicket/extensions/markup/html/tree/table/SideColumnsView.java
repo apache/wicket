@@ -43,7 +43,7 @@ final class SideColumnsView extends WebMarkupContainer
 
 	private final List components = new ArrayList();
 
-	private TreeNode node;
+	private final TreeNode node;
 
 	private final List renderables = new ArrayList();
 
@@ -144,7 +144,7 @@ final class SideColumnsView extends WebMarkupContainer
 			else
 			{
 				throw new IllegalStateException(
-						"Either renderable or cell component must be created for this noode");
+						"Either renderable or cell component must be created for this node");
 			}
 
 			response.write("</span></span>\n");
