@@ -116,8 +116,9 @@ public final class PropertyResolver
 		}
 		if (object == null)
 		{
-			throw new WicketRuntimeException("Null object setting value: " + value +
-				" with expression: " + expression);
+			throw new WicketRuntimeException(
+				"Attempted to set property value on a null object. Property expression: " +
+					expression + " Value: " + value);
 		}
 
 		ObjectAndGetSetter setter = getObjectAndGetSetter(expression, object, CREATE_NEW_VALUE);
@@ -223,8 +224,7 @@ public final class PropertyResolver
 				index = getNextDotIndex(expressionBracketsSeperated, index + 1);
 				if (index != -1)
 				{
-					String indexExpression = expressionBracketsSeperated
-						.substring(lastIndex, index);
+					String indexExpression = expressionBracketsSeperated.substring(lastIndex, index);
 					getAndSetter = getGetAndSetter(indexExpression, clz);
 				}
 				else
