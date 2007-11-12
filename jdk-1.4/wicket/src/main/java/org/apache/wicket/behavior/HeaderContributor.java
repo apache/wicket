@@ -21,6 +21,7 @@ import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.resources.CompressedResourceReference;
+import org.apache.wicket.markup.html.resources.JavascriptResourceReference;
 
 /**
  * A {@link org.apache.wicket.behavior.AbstractHeaderContributor} behavior that is specialized on
@@ -78,7 +79,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forCss(final Class scope, final String path,
-			final String media)
+		final String media)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -122,7 +123,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forCss(final ResourceReference reference,
-			final String media)
+		final String media)
 	{
 		return new HeaderContributor(new IHeaderContributor()
 		{
@@ -210,7 +211,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 
 			public void renderHead(IHeaderResponse response)
 			{
-				response.renderJavascriptReference(new CompressedResourceReference(scope, path));
+				response.renderJavascriptReference(new JavascriptResourceReference(scope, path));
 			}
 		});
 	}
@@ -269,7 +270,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		// WICKET-59 allow external URLs, WICKET-612 allow absolute URLs.
 		if (location.startsWith("http://") || location.startsWith("https://") ||
-				location.startsWith("/"))
+			location.startsWith("/"))
 		{
 			return location;
 		}
