@@ -172,9 +172,13 @@ public abstract class RefreshingView extends RepeatingView
 	 */
 	protected void addItems(Iterator items)
 	{
+		int index = 0;
 		while (items.hasNext())
 		{
-			add((Item)items.next());
+			Item item = (Item)items.next();
+			item.setIndex(index);
+			add(item);
+			++index;
 		}
 	}
 
@@ -231,7 +235,7 @@ public abstract class RefreshingView extends RepeatingView
 					public String toString()
 					{
 						return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: " +
-								old + "]";
+							old + "]";
 					}
 				});
 			}
