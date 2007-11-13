@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IWrapModel;
 
 /**
  * Default implementation of {@link ILabelProvider}.
@@ -26,8 +26,8 @@ import org.apache.wicket.model.IModel;
  * @author almaw
  */
 public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
-		implements
-			ILabelProvider
+	implements
+		ILabelProvider
 {
 	/**
 	 * 
@@ -38,6 +38,19 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	 * have any specific meaning to FormComponent itself.
 	 */
 	private IModel labelModel = null;
+
+	protected void onDetach()
+	{
+		super.onDetach();
+		if (labelModel != null)
+		{
+			labelModel.detach();
+			if (labelModel instanceof IWrapModel)
+			{
+				((IWrapModel)labelModel).getWrappedModel().detach();
+			}
+		}
+	}
 
 	/**
 	 * @see org.apache.wicket.Component#Component(String)
@@ -74,10 +87,6 @@ public abstract class LabeledWebMarkupContainer extends WebMarkupContainer
 	 */
 	protected void setLabelInternal(IModel labelModel)
 	{
-		if (labelModel instanceof IComponentAssignedModel)
-		{
-			labelModel = ((IComponentAssignedModel)labelModel).wrapOnAssignment(this);
-		}
-		this.labelModel = labelModel;
+		this.labelModel = wrap(labelModel);
 	}
 }
