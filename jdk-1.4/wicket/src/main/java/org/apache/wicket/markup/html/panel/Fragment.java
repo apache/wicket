@@ -127,7 +127,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 *            The model for this fragment
 	 */
 	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider,
-			final IModel model)
+		final IModel model)
 	{
 		super(id, model);
 
@@ -199,8 +199,8 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		if (providerMarkupStream == null)
 		{
 			throw new MarkupNotFoundException(
-					"Fragment: No markup stream found for providing markup container " +
-							markupProvider.toString() + ". Fragment: " + toString());
+				"Fragment: No markup stream found for providing markup container " +
+					markupProvider.toString() + ". Fragment: " + toString());
 		}
 
 		renderFragment(providerMarkupStream, openTag);
@@ -254,9 +254,9 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		if (index == -1)
 		{
 			throw new MarkupException("Markup of component class `" +
-					providerMarkupStream.getContainerClass().getName() +
-					"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
-					toString());
+				providerMarkupStream.getContainerClass().getName() +
+				"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
+				toString());
 		}
 
 		// Set the markup stream position to where the fragment begins
@@ -267,12 +267,16 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 			// Get the fragments open tag
 			ComponentTag fragmentOpenTag = providerMarkupStream.getTag();
 
-			// We'll completely ignore the fragments open tag. It'll not be
-			// rendered
-			providerMarkupStream.next();
+			// if it is an open close tag, skip this fragment.
+			if (!fragmentOpenTag.isOpenClose())
+			{
+				// We'll completely ignore the fragments open tag. It'll not be
+				// rendered
+				providerMarkupStream.next();
 
-			// Render the body of the fragment
-			super.onComponentTagBody(providerMarkupStream, fragmentOpenTag);
+				// Render the body of the fragment
+				super.onComponentTagBody(providerMarkupStream, fragmentOpenTag);
+			}
 		}
 		finally
 		{
@@ -286,7 +290,7 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 	 * Position the markup stream at the child component relative to the <b>provider</b> markup
 	 * 
 	 * @param path
-	 * @return
+	 * @return The markup stream for the given component.
 	 */
 	public MarkupStream findComponentIndex(final String path)
 	{
@@ -295,9 +299,9 @@ public class Fragment extends WebMarkupContainerWithAssociatedMarkup
 		if (index == -1)
 		{
 			throw new MarkupException("Markup of component class `" +
-					markupStream.getContainerClass().getName() +
-					"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
-					toString());
+				markupStream.getContainerClass().getName() +
+				"` does not contain a fragment with wicket:id `" + markupId + "`. Context: " +
+				toString());
 		}
 		markupStream.setCurrentIndex(index);
 		return markupStream;
