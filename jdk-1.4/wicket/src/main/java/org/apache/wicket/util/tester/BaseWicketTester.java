@@ -330,7 +330,7 @@ public class BaseWicketTester extends MockWebApplication
 	public FormTester newFormTester(String path, boolean fillBlankString)
 	{
 		return new FormTester(path, (Form)getComponentFromLastRenderedPage(path), this,
-				fillBlankString);
+			fillBlankString);
 	}
 
 	/**
@@ -467,7 +467,7 @@ public class BaseWicketTester extends MockWebApplication
 		if (component == null)
 		{
 			fail("path: '" + path + "' does not exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+				Classes.simpleName(getLastRenderedPage().getClass()));
 			return component;
 		}
 		if (component.isVisibleInHierarchy())
@@ -538,8 +538,8 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		Component component = getComponentFromLastRenderedPage(path);
 		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
-				Classes.simpleName(expectedComponentClass), expectedComponentClass
-				.isAssignableFrom(component.getClass()));
+			Classes.simpleName(expectedComponentClass),
+			expectedComponentClass.isAssignableFrom(component.getClass()));
 	}
 
 	/**
@@ -555,7 +555,7 @@ public class BaseWicketTester extends MockWebApplication
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 
 		return isTrue("component '" + path + "' is not visible", component.isVisible());
@@ -583,7 +583,7 @@ public class BaseWicketTester extends MockWebApplication
 	public Result ifContains(String pattern)
 	{
 		return isTrue("pattern '" + pattern + "' not found", getServletResponse().getDocument()
-				.matches("(?s).*" + pattern + ".*"));
+			.matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -652,7 +652,7 @@ public class BaseWicketTester extends MockWebApplication
 			if (isAjax == false)
 			{
 				fail("Link " + path + "is an AjaxLink and will " +
-						"not be invoked when AJAX (javascript) is disabled.");
+					"not be invoked when AJAX (javascript) is disabled.");
 			}
 
 			AjaxLink link = (AjaxLink)linkComponent;
@@ -666,6 +666,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			// process the request target
 			target.respond(requestCycle);
+			requestCycle.detach();
 		}
 		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
 		// If it's not handling of the linkComponent is passed through to the
@@ -683,6 +684,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			// process the request target
 			target.respond(requestCycle);
+			requestCycle.detach();
 		}
 		// if the link is an AjaxSubmitLink, we need to find the form
 		// from it using reflection so we know what to submit.
@@ -692,7 +694,7 @@ public class BaseWicketTester extends MockWebApplication
 			if (isAjax == false)
 			{
 				fail("Link " + path + "is an AjaxSubmitLink and " +
-						"will not be invoked when AJAX (javascript) is disabled.");
+					"will not be invoked when AJAX (javascript) is disabled.");
 			}
 
 			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
@@ -724,6 +726,7 @@ public class BaseWicketTester extends MockWebApplication
 
 			// process the request target
 			requestCycle.getRequestTarget().respond(requestCycle);
+			requestCycle.detach();
 		}
 		// if the link is a normal link (or ResourceLink)
 		else if (linkComponent instanceof AbstractLink)
@@ -739,20 +742,19 @@ public class BaseWicketTester extends MockWebApplication
 				BookmarkablePageLink bookmarkablePageLink = (BookmarkablePageLink)link;
 				try
 				{
-					Field parametersField = BookmarkablePageLink.class
-							.getDeclaredField("parameters");
+					Field parametersField = BookmarkablePageLink.class.getDeclaredField("parameters");
 					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
-							"getPageParameters", null);
+						"getPageParameters", null);
 					getParametersMethod.setAccessible(true);
 
 					PageParameters parameters = (PageParameters)getParametersMethod.invoke(
-							bookmarkablePageLink, null);
+						bookmarkablePageLink, null);
 					setParametersForNextRequest(parameters);
 				}
 				catch (Exception e)
 				{
 					fail("Internal error in WicketTester. "
-							+ "Please report this in Wickets Issue Tracker.");
+						+ "Please report this in Wickets Issue Tracker.");
 				}
 
 			}
@@ -831,8 +833,8 @@ public class BaseWicketTester extends MockWebApplication
 		}
 		if (!page.getClass().isAssignableFrom(expectedRenderedPageClass))
 		{
-			return isEqual(Classes.simpleName(expectedRenderedPageClass), Classes.simpleName(page
-					.getClass()));
+			return isEqual(Classes.simpleName(expectedRenderedPageClass),
+				Classes.simpleName(page.getClass()));
 		}
 		return Result.pass();
 	}
@@ -882,7 +884,7 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		List messages = getMessages(FeedbackMessage.ERROR);
 		return isTrue("expect no error message, but contains\n" +
-				WicketTesterHelper.asLined(messages), messages.isEmpty());
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
@@ -894,7 +896,7 @@ public class BaseWicketTester extends MockWebApplication
 	{
 		List messages = getMessages(FeedbackMessage.INFO);
 		return isTrue("expect no info message, but contains\n" +
-				WicketTesterHelper.asLined(messages), messages.isEmpty());
+			WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
 
 	/**
@@ -952,8 +954,7 @@ public class BaseWicketTester extends MockWebApplication
 	public void debugComponentTrees(String filter)
 	{
 		log.info("debugging ----------------------------------------------");
-		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter
-				.hasNext();)
+		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter.hasNext();)
 		{
 			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)iter.next();
 			if (obj.path.matches(".*" + filter + ".*"))
@@ -986,9 +987,8 @@ public class BaseWicketTester extends MockWebApplication
 
 		// Test that the previous response was actually a AJAX response
 		failMessage = "The Previous response was not an AJAX response. "
-				+ "You need to execute an AJAX event, using clickLink, before using this assert";
-		boolean isAjaxResponse = ajaxResponse
-				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
+			+ "You need to execute an AJAX event, using clickLink, before using this assert";
+		boolean isAjaxResponse = ajaxResponse.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
 		Result result = isTrue(failMessage, isAjaxResponse);
 		if (result.wasFailed())
 		{
@@ -999,7 +999,7 @@ public class BaseWicketTester extends MockWebApplication
 		String markupId = component.getMarkupId();
 
 		failMessage = "The component doesn't have a markup id, "
-				+ "which means that it can't have been added to the AJAX response";
+			+ "which means that it can't have been added to the AJAX response";
 		result = isTrue(failMessage, !Strings.isEmpty(markupId));
 		if (result.wasFailed())
 		{
@@ -1008,7 +1008,7 @@ public class BaseWicketTester extends MockWebApplication
 
 		// Look for that the component is on the response, using the markup id
 		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" +
-				markupId + "\" ?>.*");
+			markupId + "\" ?>.*");
 		failMessage = "Component wasn't found in the AJAX response";
 		return isTrue(failMessage, isComponentInAjaxResponse);
 	}
@@ -1099,7 +1099,7 @@ public class BaseWicketTester extends MockWebApplication
 		// If there haven't been found any event behaviors on the component
 		// which matches the parameters we fail.
 		failMessage = "No AjaxEventBehavior found on component: " + component.getId() +
-				" which matches the event: " + event.toString();
+			" which matches the event: " + event.toString();
 		notNull(failMessage, ajaxEventBehavior);
 
 		// initialize the request only if needed to allow the user to pass
@@ -1140,7 +1140,7 @@ public class BaseWicketTester extends MockWebApplication
 	public TagTester getTagByWicketId(String wicketId)
 	{
 		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "wicket:id",
-				wicketId);
+			wicketId);
 	}
 
 	/**
@@ -1187,7 +1187,7 @@ public class BaseWicketTester extends MockWebApplication
 			public void onFormComponent(FormComponent formComponent)
 			{
 				if (!(formComponent instanceof Button) && !(formComponent instanceof RadioGroup) &&
-						!(formComponent instanceof CheckGroup))
+					!(formComponent instanceof CheckGroup))
 				{
 					String name = formComponent.getInputName();
 					String value = formComponent.getValue();
@@ -1212,8 +1212,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public String getContentTypeFromResponseHeader()
 	{
-		String contentType = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Type");
+		String contentType = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Content-Type");
 		if (contentType == null)
 		{
 			throw new WicketRuntimeException("No Content-Type header found");
@@ -1228,8 +1227,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public int getContentLengthFromResponseHeader()
 	{
-		String contentLength = ((MockHttpServletResponse)getWicketResponse()
-				.getHttpServletResponse()).getHeader("Content-Length");
+		String contentLength = ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Content-Length");
 		if (contentLength == null)
 		{
 			throw new WicketRuntimeException("No Content-Length header found");
@@ -1244,8 +1242,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public String getLastModifiedFromResponseHeader()
 	{
-		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getHeader("Last-Modified");
+		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Last-Modified");
 	}
 
 	/**
@@ -1255,8 +1252,7 @@ public class BaseWicketTester extends MockWebApplication
 	 */
 	public String getContentDispositionFromResponseHeader()
 	{
-		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse())
-				.getHeader("Content-Disposition");
+		return ((MockHttpServletResponse)getWicketResponse().getHttpServletResponse()).getHeader("Content-Disposition");
 	}
 
 	private Result isTrue(String message, boolean condition)
