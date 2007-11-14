@@ -26,8 +26,8 @@ import org.apache.wicket.util.lang.PropertyResolver;
  * @author Jonathan Locke
  */
 public class ComponentPropertyModel extends AbstractReadOnlyModel
-		implements
-			IComponentAssignedModel
+	implements
+		IComponentAssignedModel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -94,7 +94,14 @@ public class ComponentPropertyModel extends AbstractReadOnlyModel
 		public Object getObject()
 		{
 			return PropertyResolver.getValue(propertyName, component.getParent()
-					.getInnermostModel().getObject());
+				.getInnermostModel()
+				.getObject());
+		}
+
+		public void detach()
+		{
+			super.detach();
+			ComponentPropertyModel.this.detach();
 		}
 	}
 }

@@ -71,7 +71,7 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 	{
 		// this shouldn't be called always wrapped!
 		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-				(Component)null, defaultValue);
+			(Component)null, defaultValue);
 	}
 
 
@@ -119,7 +119,14 @@ public class ResourceModel extends AbstractReadOnlyModel implements IComponentAs
 		public Object getObject()
 		{
 			return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-					component, defaultValue);
+				component, defaultValue);
 		}
+
+		public void detach()
+		{
+			super.detach();
+			ResourceModel.this.detach();
+		}
+
 	}
 }

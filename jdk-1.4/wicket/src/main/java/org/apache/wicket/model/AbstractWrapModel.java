@@ -44,12 +44,4 @@ public abstract class AbstractWrapModel implements IWrapModel
 	public void setObject(Object object)
 	{
 	}
-
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	public void detach()
-	{
-	}
-
 }
