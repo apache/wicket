@@ -298,7 +298,8 @@ public class AjaxEditableLabel extends Panel
 
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				if (getModelObject() == null)
+				Object modelObject = getModelObject();
+				if (modelObject == null || "".equals(modelObject))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
