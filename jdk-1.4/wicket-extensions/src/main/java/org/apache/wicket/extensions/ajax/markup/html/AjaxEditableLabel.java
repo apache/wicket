@@ -335,6 +335,10 @@ public class AjaxEditableLabel extends Panel
 	 */
 	protected final Component getLabel()
 	{
+		if (label == null)
+		{
+			initLabelAndEditor(getParentModel());
+		}
 		return label;
 	}
 
