@@ -28,18 +28,18 @@
 			<item name="License" href="/license.html" />
 		</menu>
 		<menu name="Components">
-			<item name="Repeaters" href="/apidocs/wicket/extensions/markup/html/repeater/package-summary.html" />
-			<item name="Ajax" href="/apidocs/wicket/extensions/ajax/markup/html/package-summary.html" />
-			<item name="AutoComplete" href="/apidocs/wicket/extensions/ajax/markup/html/autocomplete/package-summary.html" />
-			<item name="File Upload" href="/apidocs/wicket/extensions/ajax/markup/html/form/upload/package-summary.html" />
-			<item name="Modal Window" href="/apidocs/wicket/extensions/ajax/markup/html/modal/package-summary.html" />
-			<item name="Rating Panel" href="/apidocs/wicket/extensions/rating/RatingPanel.html" />
-			<item name="Tabbed Panel" href="/apidocs/wicket/extensions/markup/html/tabs/package-summary.html" />
-			<item name="Ajax Tabbed Panel" href="/apidocs/wicket/extensions/ajax/markup/html/tabs/AjaxTabbedPanel.html" />
-			<item name="Tree/TreeTable" href="/apidocs/wicket/extensions/markup/html/tree/package-summary.html" />
-			<item name="Breadcrumbs" href="/apidocs/wicket/extensions/breadcrumb/package-summary.html" />
-			<item name="Captcha" href="/apidocs/wicket/extensions/markup/html/captcha/package-summary.html" />
-			<item name="Wizard" href="/apidocs/wicket/extensions/wizard/package-summary.html" />
+			<item name="Repeaters" href="/apidocs/org/apache/wicket/extensions/markup/html/repeater/package-summary.html" />
+			<item name="Ajax" href="/apidocs/org/apache/wicket/extensions/ajax/markup/html/package-summary.html" />
+			<item name="AutoComplete" href="/apidocs/org/apache/wicket/extensions/ajax/markup/html/autocomplete/package-summary.html" />
+			<item name="File Upload" href="/apidocs/org/apache/wicket/extensions/ajax/markup/html/form/upload/package-summary.html" />
+			<item name="Modal Window" href="/apidocs/org/apache/wicket/extensions/ajax/markup/html/modal/package-summary.html" />
+			<item name="Rating Panel" href="/apidocs/org/apache/wicket/extensions/rating/RatingPanel.html" />
+			<item name="Tabbed Panel" href="/apidocs/org/apache/wicket/extensions/markup/html/tabs/package-summary.html" />
+			<item name="Ajax Tabbed Panel" href="/apidocs/org/apache/wicket/extensions/ajax/markup/html/tabs/AjaxTabbedPanel.html" />
+			<item name="Tree/TreeTable" href="/apidocs/org/apache/wicket/extensions/markup/html/tree/package-summary.html" />
+			<item name="Breadcrumbs" href="/apidocs/org/apache/wicket/extensions/breadcrumb/package-summary.html" />
+			<item name="Captcha" href="/apidocs/org/apache/wicket/extensions/markup/html/captcha/package-summary.html" />
+			<item name="Wizard" href="/apidocs/org/apache/wicket/extensions/wizard/package-summary.html" />
 		</menu>
 		<menu name="Project Info">
 	        <item name="Dependencies" href="/dependencies.html"/>
