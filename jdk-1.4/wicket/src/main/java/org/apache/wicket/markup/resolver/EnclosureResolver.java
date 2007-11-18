@@ -42,13 +42,22 @@ public class EnclosureResolver implements IComponentResolver
 	 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+		final ComponentTag tag)
 	{
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
 		{
-			String id = "enclosure-" + container.getPage().getAutoIndex();
-			final Enclosure enclosure = new Enclosure(id, tag
-					.getString(EnclosureHandler.CHILD_ATTRIBUTE));
+			CharSequence wicketId = tag.getString("wicket:id");
+			String id = null;
+			if (wicketId != null)
+			{
+				id = wicketId.toString();
+			}
+			if (id == null)
+			{
+				id = "enclosure-" + container.getPage().getAutoIndex();
+			}
+			final Enclosure enclosure = new Enclosure(id,
+				tag.getString(EnclosureHandler.CHILD_ATTRIBUTE));
 			container.autoAdd(enclosure, markupStream);
 
 			// Yes, we handled the tag
