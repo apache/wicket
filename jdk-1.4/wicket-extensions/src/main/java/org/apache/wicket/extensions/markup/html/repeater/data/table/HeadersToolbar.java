@@ -96,13 +96,13 @@ public class HeadersToolbar extends AbstractToolbar
 	 * @param headerId
 	 *            header component id
 	 * @param property
-	 *            propert this header represents
+	 *            property this header represents
 	 * @param locator
 	 *            sort state locator
 	 * @return created header component
 	 */
 	protected WebMarkupContainer newSortableHeader(String headerId, String property,
-			ISortStateLocator locator)
+		ISortStateLocator locator)
 	{
 		return new OrderByBorder(headerId, property, locator)
 		{

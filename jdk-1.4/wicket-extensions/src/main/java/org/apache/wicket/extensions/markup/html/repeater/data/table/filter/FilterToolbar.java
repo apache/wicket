@@ -28,7 +28,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
  * Toolbar that creates a form to hold form components used to filter data in the data table. Form
  * components are provided by columns that implement IFilteredColumn.
  * 
- * @author Igor Vaynberg (ivaynber)
+ * @author Igor Vaynberg (ivaynberg)
  * 
  */
 public class FilterToolbar extends AbstractToolbar
@@ -45,7 +45,7 @@ public class FilterToolbar extends AbstractToolbar
 	 *            locator responsible for finding object used to store filter's state
 	 */
 	public FilterToolbar(final DataTable table, final FilterForm form,
-			final IFilterStateLocator stateLocator)
+		final IFilterStateLocator stateLocator)
 	{
 		super(table);
 
@@ -88,13 +88,11 @@ public class FilterToolbar extends AbstractToolbar
 				if (!filter.getId().equals(FILTER_COMPONENT_ID))
 				{
 					throw new IllegalStateException(
-							"filter component returned  with an invalid component id. invalid component id [" +
-									filter.getId() +
-									"] required component id [" +
-									FILTER_COMPONENT_ID +
-									"] generating column [" +
-									col.toString() +
-									"] ");
+						"filter component returned  with an invalid component id. invalid component id [" +
+							filter.getId() +
+							"] required component id [" +
+							FILTER_COMPONENT_ID +
+							"] generating column [" + col.toString() + "] ");
 				}
 			}
 

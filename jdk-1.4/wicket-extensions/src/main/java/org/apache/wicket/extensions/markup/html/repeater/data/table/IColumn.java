@@ -21,7 +21,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulato
 
 
 /**
- * An inteface that represents a column in the {@link DefaultDataTable}
+ * An interface that represents a column in the {@link DefaultDataTable}
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
