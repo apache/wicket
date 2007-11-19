@@ -57,6 +57,7 @@ public class DatesPage extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
+		@Override
 		public Object getDisplayValue(Object object)
 		{
 			Locale locale = (Locale)object;
@@ -93,7 +94,7 @@ public class DatesPage extends WicketExamplePage
 						public int compare(Locale o1, Locale o2)
 						{
 							return o1.getDisplayName(selectedLocale).compareTo(
-									o2.getDisplayName(selectedLocale));
+								o2.getDisplayName(selectedLocale));
 						}
 					});
 					return locales;
@@ -106,6 +107,7 @@ public class DatesPage extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
+		@Override
 		public void onSelectionChanged(Object newSelection)
 		{
 		}
@@ -113,6 +115,7 @@ public class DatesPage extends WicketExamplePage
 		/**
 		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 		 */
+		@Override
 		protected boolean wantOnSelectionChangedNotifications()
 		{
 			return true;
@@ -149,7 +152,7 @@ public class DatesPage extends WicketExamplePage
 		});
 		add(localeForm);
 		DateTextField dateTextField = new DateTextField("dateTextField", new PropertyModel(this,
-				"date"), new StyleDateConverter("S-", true))
+			"date"), new StyleDateConverter("S-", true))
 		{
 			@Override
 			public Locale getLocale()
@@ -167,14 +170,7 @@ public class DatesPage extends WicketExamplePage
 		};
 		add(form);
 		form.add(dateTextField);
-		dateTextField.add(new DatePicker()
-		{
-			@Override
-			protected boolean enableMonthYearSelection()
-			{
-				return false;
-			}
-		});
+		dateTextField.add(new DatePicker());
 		add(new FeedbackPanel("feedback"));
 	}
 
