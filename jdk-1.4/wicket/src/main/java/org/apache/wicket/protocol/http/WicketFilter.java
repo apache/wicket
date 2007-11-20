@@ -195,7 +195,16 @@ public class WicketFilter implements Filter
 				}
 				else
 				{
-					long ifModifiedSince = httpServletRequest.getDateHeader("If-Modified-Since");
+					long ifModifiedSince;
+					try 
+					{
+						ifModifiedSince = httpServletRequest.getDateHeader("If-Modified-Since");
+					}
+					catch (IllegalArgumentException e) 
+					{
+						log.warn("Invalid If-Modified-Since header", e);
+						ifModifiedSince = -1;
+					}
 					if (ifModifiedSince < (lastModified / 1000 * 1000))
 					{
 						// If the servlet mod time is later, call doGet()
