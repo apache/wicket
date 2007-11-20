@@ -24,7 +24,9 @@ import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
  * Represents a text template that can do variable interpolation.
- * 
+ *
+ * @see org.apache.wicket.util.string.interpolator.VariableInterpolator
+ *
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * @since 1.2.6
