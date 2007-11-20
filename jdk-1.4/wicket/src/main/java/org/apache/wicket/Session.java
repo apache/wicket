@@ -149,7 +149,7 @@ public abstract class Session implements IClusterable
 
 	/** meta data key for missing body tags logging. */
 	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
-			PageMapAccessMetaData.class)
+		PageMapAccessMetaData.class)
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -201,7 +201,7 @@ public abstract class Session implements IClusterable
 		if (requestCycle == null)
 		{
 			throw new IllegalStateException(
-					"you can only locate or create sessions in the context of a request cycle");
+				"you can only locate or create sessions in the context of a request cycle");
 		}
 		Response response = requestCycle.getResponse();
 		Request request = requestCycle.getRequest();
@@ -211,7 +211,7 @@ public abstract class Session implements IClusterable
 	/**
 	 * @param response
 	 * @param request
-	 * @return
+	 * @return The Session that is found in the current request or created if not.
 	 */
 	public static Session findOrCreate(Request request, Response response)
 	{
@@ -388,6 +388,11 @@ public abstract class Session implements IClusterable
 	 */
 	public final void bind()
 	{
+		// If there is no request cycle then this is not a normal request but for example a last
+		// modified call.
+		if (RequestCycle.get() == null)
+			return;
+
 		ISessionStore store = getSessionStore();
 		Request request = RequestCycle.get().getRequest();
 		if (store.lookup(request) == null)
@@ -462,20 +467,20 @@ public abstract class Session implements IClusterable
 	public synchronized final String createAutoPageMapName()
 	{
 		String name = getAutoPageMapNamePrefix() + currentCreateAutoPageMapCounter() +
-				getAutoPageMapNameSuffix();
+			getAutoPageMapNameSuffix();
 		IPageMap pm = pageMapForName(name, false);
 		while (pm != null)
 		{
 			incrementCreateAutoPageMapCounter();
 			name = getAutoPageMapNamePrefix() + currentCreateAutoPageMapCounter() +
-					getAutoPageMapNameSuffix();
+				getAutoPageMapNameSuffix();
 			pm = pageMapForName(name, false);
 		}
 		return name;
 	}
 
 	/**
-	 * @return
+	 * @return The prefixed string default "wicket-".
 	 */
 	protected String getAutoPageMapNamePrefix()
 	{
@@ -483,7 +488,7 @@ public abstract class Session implements IClusterable
 	}
 
 	/**
-	 * @return
+	 * @return The suffix default an empty string.
 	 */
 	protected String getAutoPageMapNameSuffix()
 	{
@@ -628,14 +633,14 @@ public abstract class Session implements IClusterable
 	 * 
 	 * @param pageId
 	 * @param versionNumber
-	 * @return
+	 * @return The page of that pageid and version, null if not found
 	 */
 	public final Page getPage(final int pageId, final int versionNumber)
 	{
 		if (Application.get().getSessionSettings().isPageIdUniquePerSession() == false)
 		{
 			throw new IllegalStateException(
-					"To call this method ISessionSettings.setPageIdUniquePerSession must be set to true");
+				"To call this method ISessionSettings.setPageIdUniquePerSession must be set to true");
 		}
 
 		List pageMaps = getPageMaps();
@@ -694,8 +699,7 @@ public abstract class Session implements IClusterable
 				// later
 				Duration timeout = Application.get().getRequestCycleSettings().getTimeout();
 
-				PageMapsUsedInRequestEntry entry = (PageMapsUsedInRequestEntry)pageMapsUsedInRequest
-						.get(pageMap);
+				PageMapsUsedInRequestEntry entry = (PageMapsUsedInRequestEntry)pageMapsUsedInRequest.get(pageMap);
 
 				// Get page entry for id and version
 				Thread t = entry != null ? entry.thread : null;
@@ -722,14 +726,14 @@ public abstract class Session implements IClusterable
 					t = entry != null ? entry.thread : null;
 
 					if (t != null && t != Thread.currentThread() &&
-							(startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
+						(startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
 					{
 						// if it is still not the right thread..
 						// This either points to long running code (a report
 						// page?) or a deadlock or such
 						throw new WicketRuntimeException("After " + timeout + " the Pagemap " +
-								pageMapName + " is still locked by: " + t +
-								", giving up trying to get the page for path: " + path);
+							pageMapName + " is still locked by: " + t +
+							", giving up trying to get the page for path: " + path);
 					}
 				}
 
@@ -1245,7 +1249,7 @@ public abstract class Session implements IClusterable
 			if (cycle == null)
 			{
 				throw new IllegalStateException(
-						"Cannot set the attribute: no RequestCycle available.  If you get this error when using WicketTester.startPage(Page), make sure to call WicketTester.createRequestCycle() beforehand.");
+					"Cannot set the attribute: no RequestCycle available.  If you get this error when using WicketTester.startPage(Page), make sure to call WicketTester.createRequestCycle() beforehand.");
 			}
 
 			ISessionStore store = getSessionStore();
