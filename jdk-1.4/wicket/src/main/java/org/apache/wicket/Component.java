@@ -987,7 +987,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 
 	private final void internalBeforeRender()
 	{
-		if (isVisible() && !getFlag(FLAG_RENDERING) && !getFlag(FLAG_PREPARED_FOR_RENDER))
+		if ((isVisible() || callOnBeforeRenderIfNotVisible()) && !getFlag(FLAG_RENDERING) &&
+			!getFlag(FLAG_PREPARED_FOR_RENDER))
 		{
 			setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, false);
 
@@ -3596,12 +3597,28 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
 	 * </p>
+	 * 
+	 * @see Component#callOnBeforeRenderIfNotVisible()
 	 */
 	protected void onBeforeRender()
 	{
 		setFlag(FLAG_PREPARED_FOR_RENDER, true);
 		onBeforeRenderChildren();
 		setFlag(FLAG_BEFORE_RENDERING_SUPER_CALL_VERIFIED, true);
+	}
+
+	/**
+	 * Override this method if you want onBeforeRender to be called even when your component is not
+	 * visible. default this returns false.
+	 * 
+	 * @return boolean, if true then onBeforeRender is called even for none visible components,
+	 *         default false.
+	 * 
+	 * @see Component#onBeforeRender()
+	 */
+	protected boolean callOnBeforeRenderIfNotVisible()
+	{
+		return false;
 	}
 
 	/**

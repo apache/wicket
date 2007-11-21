@@ -78,6 +78,11 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 		setVisible(Session.get().getFeedbackMessages().hasMessage(getFeedbackMessageFilter()));
 	}
 
+	protected boolean callOnBeforeRenderIfNotVisible()
+	{
+		return true;
+	}
+
 	/**
 	 * @return Let subclass specify some other filter
 	 */
