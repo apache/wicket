@@ -124,12 +124,12 @@ public class StringResourceModelTest extends TestCase
 		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
 		Assert.assertEquals(
 			"Text should be as expected",
-			"Weather station \"Europe''s main weather station\" reports that the temperature is 25.7 \u00B0C",
+			"Weather station \"Europe's main weather station\" reports that the temperature is 25.7 \u00B0C",
 			model.getString());
 		ws.setCurrentTemperature(11.5);
 		Assert.assertEquals(
 			"Text should be as expected",
-			"Weather station \"Europe''s main weather station\" reports that the temperature is 11.5 \u00B0C",
+			"Weather station \"Europe's main weather station\" reports that the temperature is 11.5 \u00B0C",
 			model.getString());
 	}
 

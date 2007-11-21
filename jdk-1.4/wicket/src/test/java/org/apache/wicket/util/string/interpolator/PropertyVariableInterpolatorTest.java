@@ -44,16 +44,6 @@ public class PropertyVariableInterpolatorTest extends TestCase
 		assertEquals("${key}", result.toString());
 	}
 
-	/**
-	 * 
-	 */
-	public void testWithValueWithSingleQuotes()
-	{
-		TestClass object = new TestClass("'value '' with multiple' quotes'");
-		String result = PropertyVariableInterpolator.interpolate("${key}", object);
-		assertEquals("''value '''' with multiple'' quotes''", result);
-	}
-
 	private static class TestClass
 	{
 		private final String key;

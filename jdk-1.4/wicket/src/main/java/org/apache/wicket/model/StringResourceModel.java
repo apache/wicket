@@ -25,6 +25,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.PropertyVariableInterpolator;
 
 
@@ -214,7 +215,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-			final IModel model)
+		final IModel model)
 	{
 		this(resourceKey, component, model, null, null);
 	}
@@ -234,7 +235,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 * @see #StringResourceModel(String, Component, IModel, Object[])
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-			final IModel model, final String defaultValue)
+		final IModel model, final String defaultValue)
 	{
 		this(resourceKey, component, model, null, defaultValue);
 	}
@@ -262,7 +263,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 *            The parameters to substitute using a Java MessageFormat object
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-			final IModel model, final Object[] parameters)
+		final IModel model, final Object[] parameters)
 	{
 		this(resourceKey, component, model, parameters, null);
 	}
@@ -292,7 +293,7 @@ public class StringResourceModel extends LoadableDetachableModel
 	 *            The default value if the resource key is not found.
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-			final IModel model, final Object[] parameters, final String defaultValue)
+		final IModel model, final Object[] parameters, final String defaultValue)
 	{
 		if (resourceKey == null)
 		{
@@ -362,7 +363,7 @@ public class StringResourceModel extends LoadableDetachableModel
 					else if (model != null && parameters[i] instanceof String)
 					{
 						realParams[i] = PropertyVariableInterpolator.interpolate(
-								(String)parameters[i], model.getObject());
+							(String)parameters[i], model.getObject());
 					}
 					else
 					{
@@ -370,9 +371,11 @@ public class StringResourceModel extends LoadableDetachableModel
 					}
 				}
 
+				// escape single quotes for MessageFormat
+				value = Strings.replaceAll(value, "'", "''").toString();
 				// Apply the parameters
-				final MessageFormat format = new MessageFormat(value, component != null ? component
-						.getLocale() : locale);
+				final MessageFormat format = new MessageFormat(value, component != null
+					? component.getLocale() : locale);				
 				value = format.format(realParams);
 			}
 		}
@@ -461,7 +464,7 @@ public class StringResourceModel extends LoadableDetachableModel
 		else
 		{
 			throw new WicketRuntimeException(
-					"Cannot attach a string resource model without a Session context because that is required to get a Localizer");
+				"Cannot attach a string resource model without a Session context because that is required to get a Localizer");
 		}
 		return getString();
 	}
