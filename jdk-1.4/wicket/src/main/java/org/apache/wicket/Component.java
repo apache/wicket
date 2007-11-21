@@ -43,6 +43,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.settings.IDebugSettings;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Classes;
@@ -1406,8 +1407,8 @@ public abstract class Component implements IClusterable, IConverterLocator
 			return (String)storedMarkupId;
 		}
 
-		final int generatedMarkupId = storedMarkupId instanceof Integer ? ((Integer)storedMarkupId)
-			.intValue() : nextAutoIndex();
+		final int generatedMarkupId = storedMarkupId instanceof Integer
+			? ((Integer)storedMarkupId).intValue() : nextAutoIndex();
 
 		if (storedMarkupId == null)
 		{
@@ -2380,14 +2381,13 @@ public abstract class Component implements IClusterable, IConverterLocator
 		if (!tag.isOpenClose() && !tag.isOpen())
 		{
 			// We were something other than <tag> or <tag/>
-			markupStream
-				.throwMarkupException("Method renderComponent called on bad markup element: " + tag);
+			markupStream.throwMarkupException("Method renderComponent called on bad markup element: " +
+				tag);
 		}
 
 		if (tag.isOpenClose() && openTag.isOpen())
 		{
-			markupStream
-				.throwMarkupException("You can not modify a open tag to open-close: " + tag);
+			markupStream.throwMarkupException("You can not modify a open tag to open-close: " + tag);
 		}
 
 		try
@@ -2421,8 +2421,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 					// rendered.
 					if (getRenderBodyOnly() == false)
 					{
-						final boolean stripWicketTags = Application.get().getMarkupSettings()
-							.getStripWicketTags();
+						final boolean ajaxRequest = getRequest() instanceof WebRequest &&
+							((WebRequest)getRequest()).isAjax();
+
+						final boolean stripWicketTags = ajaxRequest ||
+							Application.get().getMarkupSettings().getStripWicketTags();
+
 						if (!(openTag instanceof WicketTag) || !stripWicketTags)
 						{
 							// Close the manually opened panel tag.
@@ -2989,11 +2993,19 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 			else
 			{
-				return new StringBuffer("[Component id = ").append(getId()).append(", page = ")
-					.append(getPage().getClass().getName()).append(", path = ").append(getPath())
-					.append(".").append(Classes.simpleName(getClass())).append(", isVisible = ")
-					.append((isRenderAllowed() && isVisible())).append(", isVersioned = ").append(
-						isVersioned()).append("]").toString();
+				return new StringBuffer("[Component id = ").append(getId())
+					.append(", page = ")
+					.append(getPage().getClass().getName())
+					.append(", path = ")
+					.append(getPath())
+					.append(".")
+					.append(Classes.simpleName(getClass()))
+					.append(", isVisible = ")
+					.append((isRenderAllowed() && isVisible()))
+					.append(", isVersioned = ")
+					.append(isVersioned())
+					.append("]")
+					.toString();
 			}
 		}
 		else
@@ -3686,7 +3698,12 @@ public abstract class Component implements IClusterable, IConverterLocator
 	 */
 	protected final void renderComponentTag(ComponentTag tag)
 	{
-		final boolean stripWicketTags = Application.get().getMarkupSettings().getStripWicketTags();
+		final boolean ajaxRequest = getRequest() instanceof WebRequest &&
+			((WebRequest)getRequest()).isAjax();
+
+		final boolean stripWicketTags = ajaxRequest ||
+			Application.get().getMarkupSettings().getStripWicketTags();
+
 		if (!(tag instanceof WicketTag) || !stripWicketTags)
 		{
 			// Apply behavior modifiers
@@ -3720,9 +3737,7 @@ public abstract class Component implements IClusterable, IConverterLocator
 			}
 
 			// Write the tag
-			tag
-				.writeOutput(getResponse(), stripWicketTags, findMarkupStream()
-					.getWicketNamespace());
+			tag.writeOutput(getResponse(), stripWicketTags, findMarkupStream().getWicketNamespace());
 		}
 	}
 
