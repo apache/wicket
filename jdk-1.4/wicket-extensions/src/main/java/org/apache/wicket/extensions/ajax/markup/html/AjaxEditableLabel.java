@@ -152,7 +152,10 @@ public class AjaxEditableLabel extends Panel
 
 		protected void onEvent(AjaxRequestTarget target)
 		{
-			onEdit(target);
+			if (AjaxEditableLabel.this.isEnabled())
+			{
+				onEdit(target);
+			}
 		}
 	}
 
