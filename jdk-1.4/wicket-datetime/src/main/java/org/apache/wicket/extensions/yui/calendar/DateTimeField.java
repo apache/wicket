@@ -42,7 +42,6 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
-
 /**
  * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a
  * field for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours
@@ -391,10 +390,9 @@ public class DateTimeField extends FormComponentPanel
 			amOrPm = (date.get(DateTimeFieldType.halfdayOfDay()) == 0) ? AM_PM.AM : AM_PM.PM;
 			minutes = new Integer(date.getMinuteOfHour());
 
-
 			// we don't really have to reset the date field to the server's
-			// timezone, as it's the same milliseconds from EPOCH anyway, and toDate
-			// will always get the Date object initialized for the time zone
+			// timezone, as it's the same milliseconds from EPOCH anyway, and
+			// toDate will always get the Date object initialized for the time zone
 			// of the server
 		}
 
@@ -410,7 +408,8 @@ public class DateTimeField extends FormComponentPanel
 	protected boolean use12HourFormat()
 	{
 		String pattern = DateTimeFormat.patternForStyle("-S", getLocale());
-		return pattern.indexOf('a') != -1;
+		return pattern.indexOf('a') != -1 || pattern.indexOf('h') != -1 ||
+				pattern.indexOf('K') != -1;
 	}
 
 	/**
