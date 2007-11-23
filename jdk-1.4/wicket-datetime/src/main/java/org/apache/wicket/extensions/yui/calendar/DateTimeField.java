@@ -253,7 +253,7 @@ public class DateTimeField extends FormComponentPanel
 	 * 
 	 * @return The client's time zone or null
 	 */
-	private TimeZone getClientTimeZone()
+	protected TimeZone getClientTimeZone()
 	{
 		ClientInfo info = Session.get().getClientInfo();
 		if (info instanceof WebClientInfo)
@@ -422,8 +422,8 @@ public class DateTimeField extends FormComponentPanel
 	}
 
 	/**
-	 * Convenience method (mainly for optimization purposes), in case {@link #use12HourFormat()} has already been stored in a local
-	 * variable and thus doesn't need to be computed again.
+	 * Convenience method (mainly for optimization purposes), in case {@link #use12HourFormat()} has
+	 * already been stored in a local variable and thus doesn't need to be computed again.
 	 * 
 	 * @param use12HourFormat
 	 *            the hour format to use
