@@ -38,13 +38,13 @@ import org.apache.wicket.validation.IValidator;
 /**
  * An implementation of ajaxified edit-in-place component using a {@link TextField} as it's editor.
  * <p>
- * There are several methods that can be overriden for customization.
+ * There are several methods that can be overridden for customization.
  * <ul>
  * <li>{@link #onEdit(AjaxRequestTarget)} is called when the label is clicked and the editor is to
- * be displayed. The default implementation switches the label for the editor and places the curret
+ * be displayed. The default implementation switches the label for the editor and places the caret
  * at the end of the text. </li>
  * <li>{@link #onSubmit(AjaxRequestTarget)} is called when in edit mode, the user submitted new
- * content, that content validated well, and the model value succesfully updated. This
+ * content, that content validated well, and the model value successfully updated. This
  * implementation also clears any <code>window.status</code> set. </li>
  * <li>{@link #onError(AjaxRequestTarget)} is called when in edit mode, the user submitted new
  * content, but that content did not validate. Get the current input by calling
@@ -58,7 +58,7 @@ import org.apache.wicket.validation.IValidator;
  * <code>window.status</code>, redisplays the editor, selects the editor's content and sets the
  * focus on it.
  * <li>{@link #onCancel(AjaxRequestTarget)} is called when in edit mode, the user choose not to
- * submit the contents (he/she pressed espace). The default implementation displays the label again
+ * submit the contents (he/she pressed escape). The default implementation displays the label again
  * without any further action.</li>
  * </ul>
  * </p>
@@ -152,10 +152,7 @@ public class AjaxEditableLabel extends Panel
 
 		protected void onEvent(AjaxRequestTarget target)
 		{
-			if (AjaxEditableLabel.this.isEnabled())
-			{
-				onEdit(target);
-			}
+			onEdit(target);
 		}
 	}
 
@@ -414,9 +411,9 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
-	 * Invoked when the editor was succesfully updated. Use this method e.g. to persist the changed
-	 * value. This implemention displays the label and clears any window status that might have been
-	 * set in onError.
+	 * Invoked when the editor was successfully updated. Use this method e.g. to persist the changed
+	 * value. This implementation displays the label and clears any window status that might have
+	 * been set in onError.
 	 * 
 	 * @param target
 	 *            The ajax request target
